@@ -44,7 +44,7 @@ public class FooterWidget extends Widget<FooterDisplayable> {
       getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
           .newStoreTabGridRecyclerFragment(event, Translator.translate(displayable.getPojo()
                   .getTitle(), getContext().getApplicationContext(), marketName), null,
-              displayable.getTag(), displayable.getStoreContext()));
+              displayable.getTag(), displayable.getStoreContext()), true);
     };
     compositeSubscription.add(RxView.clicks(button)
         .subscribe(handleButtonClick));

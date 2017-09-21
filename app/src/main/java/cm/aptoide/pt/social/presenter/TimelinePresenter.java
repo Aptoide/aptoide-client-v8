@@ -202,7 +202,7 @@ public class TimelinePresenter implements Presenter {
   @NonNull private TimelineUser convertUser(User user) {
     return new TimelineUser(user.isLogged(), user.hasNotification(), user.getBodyMessage(),
         user.getImage(), user.getUrlAction(), user.getNotificationId(), user.hasStats(),
-        user.getFollowers(), user.getFollowing());
+        user.getFollowers(), user.getFollowing(), user.getAnalyticsUrl());
   }
 
   private void onViewCreatedClickOnAddressBook() {
@@ -239,7 +239,9 @@ public class TimelinePresenter implements Presenter {
                 ((TimelineUser) cardTouchEvent.getCard()).getNotificationUrlAction())
                 .launch())
             .flatMapCompletable(cardTouchEvent -> timeline.notificationDismissed(
-                ((TimelineUser) cardTouchEvent.getCard()).getNotificationId())))
+                ((TimelineUser) cardTouchEvent.getCard()).getNotificationId())
+                .andThen(Completable.fromAction(() -> timelineAnalytics.notificationShown(
+                    ((TimelineUser) cardTouchEvent.getCard()).getAnalyticsUrl())))))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
         }, throwable -> crashReport.log(throwable));
@@ -272,7 +274,7 @@ public class TimelinePresenter implements Presenter {
                         .getComments()
                         .size() - 1)
                     .getUserId(), "DEFAULT", Event.Name.getUserTimeline,
-                StoreFragment.OpenType.GetHome))))
+                StoreFragment.OpenType.GetHome), true)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
         }, throwable -> view.showGenericError());
@@ -341,7 +343,8 @@ public class TimelinePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(__ -> view.floatingActionButtonClicked()
-            .doOnNext(__2 -> fragmentNavigator.navigateTo(PostFragment.newInstanceFromTimeline())))
+            .doOnNext(
+                __2 -> fragmentNavigator.navigateTo(PostFragment.newInstanceFromTimeline(), true)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
         }, throwable -> view.showGenericError());
@@ -560,7 +563,8 @@ public class TimelinePresenter implements Presenter {
                   RatedRecommendation card = (RatedRecommendation) post;
                   timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                       AppViewFragment.OpenType.OPEN_ONLY);
-                } else if (type.equals(CardType.AGGREGATED_SOCIAL_INSTALL)) {
+                } else if (type.equals(CardType.AGGREGATED_SOCIAL_INSTALL) || type.equals(
+                    CardType.AGGREGATED_SOCIAL_APP)) {
                   AggregatedRecommendation card = (AggregatedRecommendation) post;
                   timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                       AppViewFragment.OpenType.OPEN_ONLY);

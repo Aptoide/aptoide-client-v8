@@ -82,7 +82,7 @@ public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
   void openStoreFragment(FragmentNavigator navigator) {
     navigator.navigateTo(AptoideApplication.getFragmentProvider()
         .newStoreFragment(getPojo().getName(), getPojo().getAppearance()
-            .getTheme()));
+            .getTheme()), true);
   }
 
   public String getOrigin() {

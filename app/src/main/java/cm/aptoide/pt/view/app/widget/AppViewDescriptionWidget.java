@@ -59,7 +59,7 @@ public class AppViewDescriptionWidget extends Widget<AppViewDescriptionDisplayab
                 .sendReadMoreEvent();
             Fragment fragment = AptoideApplication.getFragmentProvider()
                 .newDescriptionFragment(app.getName(), media.getDescription(), storeTheme);
-            getFragmentNavigator().navigateTo(fragment);
+            getFragmentNavigator().navigateTo(fragment, true);
           }));
     } else {
       // only show "default" description if the app doesn't have one

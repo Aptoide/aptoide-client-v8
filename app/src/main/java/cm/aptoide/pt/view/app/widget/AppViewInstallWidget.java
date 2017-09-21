@@ -28,6 +28,7 @@ import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.Install;
 import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.analytics.Analytics;
@@ -51,6 +52,7 @@ import cm.aptoide.pt.download.InstallEvent;
 import cm.aptoide.pt.download.InstallEventConverter;
 import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
@@ -62,8 +64,8 @@ import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.app.displayable.AppViewInstallDisplayable;
 import cm.aptoide.pt.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.view.install.InstallWarningDialog;
+import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.recycler.widget.Widget;
-import cm.aptoide.pt.view.share.NotLoggedInShareFragment;
 import com.facebook.appevents.AppEventsLogger;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -107,6 +109,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
   private String marketName;
   private boolean createStoreUserPrivacyEnabled;
   private SharedPreferences sharedPreferences;
+  private AccountNavigator accountNavigator;
 
   public AppViewInstallWidget(View itemView) {
     super(itemView);
@@ -140,6 +143,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     this.displayable = displayable;
     this.displayable.setInstallButton(actionButton);
 
+    accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
     createStoreUserPrivacyEnabled =
         ((AptoideApplication) getContext().getApplicationContext()).isCreateStoreUserPrivacyEnabled();
     marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
@@ -153,7 +157,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
     BodyInterceptor<BaseBody> bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     final TokenInvalidator tokenInvalidator =
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     downloadInstallEventConverter =
@@ -173,7 +177,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
             new TimelineAnalytics(analytics,
                 AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
                 httpClient, WebService.getDefaultConverter(), tokenInvalidator,
-                BuildConfig.APPLICATION_ID, sharedPreferences), tokenInvalidator,
+                BuildConfig.APPLICATION_ID, sharedPreferences,
+                new NotificationAnalytics(httpClient, analytics)), tokenInvalidator,
             sharedPreferences);
 
     GetApp getApp = this.displayable.getPojo();
@@ -188,7 +193,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
       Fragment fragment = AptoideApplication.getFragmentProvider()
           .newOtherVersionsFragment(currentApp.getName(), currentApp.getIcon(),
               currentApp.getPackageName());
-      getFragmentNavigator().navigateTo(fragment);
+      getFragmentNavigator().navigateTo(fragment, true);
     });
 
     //setup the ui
@@ -548,9 +553,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                   } else if (!accountManager.isLoggedIn()
                       && (ManagerPreferences.getNotLoggedInInstallClicks(sharedPreferences) == 2
                       || ManagerPreferences.getNotLoggedInInstallClicks(sharedPreferences) == 4)) {
-                    NotLoggedInShareFragment fragment = NotLoggedInShareFragment.newInstance(app);
-                    getFragmentNavigator().navigateForResult(fragment,
-                        AppViewFragment.LOGIN_REQUEST_CODE);
+                    accountNavigator.navigateToNotLoggedInViewForResult(
+                        AppViewFragment.LOGIN_REQUEST_CODE, app);
                   }
                   ShowMessage.asSnack(v, installOrUpgradeMsg);
                 });
@@ -580,7 +584,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
         fragment = AptoideApplication.getFragmentProvider()
             .newSearchFragment(app.getName(), true);
       }
-      getFragmentNavigator().navigateTo(fragment);
+      getFragmentNavigator().navigateTo(fragment, true);
     };
 
     return v -> {

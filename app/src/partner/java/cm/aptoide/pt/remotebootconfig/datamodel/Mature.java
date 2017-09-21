@@ -8,7 +8,7 @@ import lombok.Data;
  * Mature Class
  */
 
-@SuppressWarnings("WeakerAccess") @Data class Mature {
+@SuppressWarnings("WeakerAccess") @Data public class Mature {
   private boolean enable;
   private boolean value;
 

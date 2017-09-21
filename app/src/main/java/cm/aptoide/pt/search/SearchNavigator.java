@@ -19,7 +19,7 @@ public class SearchNavigator {
   }
 
   public void navigate(String query) {
-    navigator.navigateTo(resolveFragment(query));
+    navigator.navigateTo(resolveFragment(query), true);
   }
 
   private Fragment resolveFragment(String query) {

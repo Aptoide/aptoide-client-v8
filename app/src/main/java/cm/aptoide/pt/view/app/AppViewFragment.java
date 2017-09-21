@@ -28,6 +28,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.AdsRepository;
@@ -72,6 +73,7 @@ import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.search.SearchBuilder;
@@ -90,7 +92,6 @@ import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.view.ThemeUtils;
-import cm.aptoide.pt.view.account.AccountNavigator;
 import cm.aptoide.pt.view.app.displayable.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.view.app.displayable.AppViewDeveloperDisplayable;
 import cm.aptoide.pt.view.app.displayable.AppViewFlagThisDisplayable;
@@ -102,7 +103,7 @@ import cm.aptoide.pt.view.app.displayable.AppViewSuggestedAppsDisplayable;
 import cm.aptoide.pt.view.dialog.DialogBadgeV7;
 import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.view.install.remote.RemoteInstallDialog;
-import cm.aptoide.pt.view.navigator.NavigateFragment;
+import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.share.ShareAppHelper;
@@ -181,6 +182,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private String marketName;
   private String defaultTheme;
   private long storeId;
+  private AccountNavigator accountNavigator;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -296,23 +298,24 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         ((AptoideApplication) getContext().getApplicationContext()).getPurchaseBundleMapper();
     final AptoideAccountManager accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-    final AccountNavigator accountNavigator =
-        new AccountNavigator(getFragmentNavigator(), accountManager);
+    accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
 
     installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
     final BodyInterceptor<BaseBody> bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     billingAnalytics =
         ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
     final TokenInvalidator tokenInvalidator =
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
+    Analytics analytics = Analytics.getInstance();
+    timelineAnalytics = new TimelineAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+        new NotificationAnalytics(httpClient, analytics));
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
             timelineAnalytics, tokenInvalidator,
@@ -328,11 +331,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
         ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), StoredMinimalAd.class);
-    final SpotAndShareAnalytics spotAndShareAnalytics =
-        new SpotAndShareAnalytics(Analytics.getInstance());
-    appViewAnalytics = new AppViewAnalytics(Analytics.getInstance(),
+    final SpotAndShareAnalytics spotAndShareAnalytics = new SpotAndShareAnalytics(analytics);
+    appViewAnalytics = new AppViewAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
-    appViewSimilarAppAnalytics = new AppViewSimilarAppAnalytics(Analytics.getInstance(),
+    appViewSimilarAppAnalytics = new AppViewSimilarAppAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
 
     installAppRelay = PublishRelay.create();
@@ -342,11 +344,11 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             ((AptoideApplication) getContext().getApplicationContext()).isCreateStoreUserPrivacyEnabled());
     downloadFactory = new DownloadFactory(marketName);
-    appViewAnalytics = new AppViewAnalytics(Analytics.getInstance(),
+    appViewAnalytics = new AppViewAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
     storeAnalytics =
         new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance());
+            analytics);
   }
 
   private void handleSavedInstance(Bundle savedInstanceState) {
@@ -396,8 +398,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     getLifecycle().filter(lifecycleEvent -> lifecycleEvent.equals(LifecycleEvent.CREATE))
-        .flatMap(viewCreated -> getFragmentNavigator().results(LOGIN_REQUEST_CODE)
-            .filter(result -> result.getResultCode() == NavigateFragment.RESULT_OK)
+        .flatMap(viewCreated -> accountNavigator.notLoggedInViewResults(LOGIN_REQUEST_CODE)
+            .filter(success -> success)
             .doOnNext(result -> socialRepository.share(packageName, storeId, "app")))
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(result -> {

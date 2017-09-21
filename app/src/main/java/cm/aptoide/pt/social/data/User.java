@@ -14,15 +14,17 @@ public class User {
   private final int notificationId;
   private final long followers;
   private final long following;
+  private final String analyticsUrl;
   private boolean isLogged;
 
   public User(String bodyMessage, String image, String urlAction, int notificationId,
-      boolean isLogged) {
+      boolean isLogged, String analyticsUrl) {
     this.bodyMessage = bodyMessage;
     this.image = image;
     this.urlAction = urlAction;
     this.notificationId = notificationId;
     this.isLogged = isLogged;
+    this.analyticsUrl = analyticsUrl;
     followers = NO_FOLLOWERS;
     following = NO_FOLLOWINGS;
   }
@@ -35,6 +37,7 @@ public class User {
     notificationId = NO_NOTIFICATION_ID;
     followers = NO_FOLLOWERS;
     following = NO_FOLLOWINGS;
+    analyticsUrl = null;
   }
 
   public User(long followers, long following, boolean isLogged) {
@@ -45,6 +48,7 @@ public class User {
     image = null;
     urlAction = null;
     notificationId = NO_NOTIFICATION_ID;
+    analyticsUrl = null;
   }
 
   public long getFollowers() {
@@ -84,5 +88,9 @@ public class User {
 
   public boolean hasStats() {
     return getFollowers() != User.NO_FOLLOWERS && getFollowing() != User.NO_FOLLOWINGS;
+  }
+
+  public String getAnalyticsUrl() {
+    return analyticsUrl;
   }
 }

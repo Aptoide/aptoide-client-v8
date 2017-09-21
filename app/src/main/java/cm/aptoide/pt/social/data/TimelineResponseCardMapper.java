@@ -7,6 +7,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AdTimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialAppTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialArticle;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialArticleTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialInstall;
@@ -452,6 +453,10 @@ public class TimelineResponseCardMapper {
                   .getLikes(), minimalCard.getUsersLikes(), minimalCard.getComments(),
                   CardType.MINIMAL_CARD));
         }
+        CardType cardType = CardType.AGGREGATED_SOCIAL_INSTALL;
+        if (item instanceof AggregatedSocialAppTimelineItem) {
+          cardType = CardType.AGGREGATED_SOCIAL_APP;
+        }
         cards.add(new AggregatedRecommendation("n/a", posters, subposts,
             aggregatedSocialInstall.getApp()
                 .getIcon(), aggregatedSocialInstall.getApp()
@@ -462,8 +467,8 @@ public class TimelineResponseCardMapper {
             .getAvg(), aggregatedSocialInstall.getApp()
             .getStore()
             .getId(), aggregatedSocialInstall.getApp()
-            .getPackageName(), aggregatedSocialInstall.getDate(), abUrl,
-            CardType.AGGREGATED_SOCIAL_INSTALL, getMarkAsReadUrl(aggregatedSocialInstall)));
+            .getPackageName(), aggregatedSocialInstall.getDate(), abUrl, cardType,
+            getMarkAsReadUrl(aggregatedSocialInstall)));
       } else if (item instanceof AggregatedSocialStoreLatestAppsTimelineItem) {
         final AggregatedSocialStoreLatestApps aggregatedSocialStoreLatestApps =
             ((AggregatedSocialStoreLatestAppsTimelineItem) item).getData();

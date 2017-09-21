@@ -20,9 +20,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import rx.Observable;
 
-/**
- * Created by trinkes on 4/29/16.
- */
 public class CreateUserRequest extends V3<BaseV3Response> {
 
   private final MultipartBody.Part multipartBodyFile;

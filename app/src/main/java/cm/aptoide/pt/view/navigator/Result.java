@@ -3,9 +3,6 @@ package cm.aptoide.pt.view.navigator;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 
-/**
- * Created by trinkes on 08/09/2017.
- */
 public class Result {
 
   private final int requestCode;

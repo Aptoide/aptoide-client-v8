@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import cm.aptoide.accountmanager.Account;
-import cm.aptoide.pt.view.account.LoginSignUpFragment;
+import cm.aptoide.pt.account.view.LoginSignUpFragment;
 
 public class WizardPagerAdapter extends FragmentPagerAdapter {
 

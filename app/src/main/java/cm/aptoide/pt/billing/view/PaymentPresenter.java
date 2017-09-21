@@ -69,6 +69,7 @@ public class PaymentPresenter implements Presenter {
   private void onViewCreatedNavigateToPayerAuthentication() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .doOnNext(__ -> view.showPaymentLoading())
         .flatMap(__ -> billing.getPayer()
             .isAuthenticated()
             .first())
@@ -79,7 +80,7 @@ public class PaymentPresenter implements Presenter {
             PAYER_AUTHORIZATION_REQUEST_CODE))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> navigator.popPaymentViewWithResult(throwable));
+        }, throwable -> navigator.popViewWithResult(throwable));
   }
 
   private void onViewCreatedHandlePayerAuthenticationResult() {
@@ -89,10 +90,10 @@ public class PaymentPresenter implements Presenter {
         .doOnNext(authenticated -> analytics.sendPayerAuthenticationResultEvent(authenticated))
         .filter(authenticated -> !authenticated)
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(__ -> navigator.popPaymentViewWithResult())
+        .doOnNext(__ -> navigator.popViewWithResult())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> navigator.popPaymentViewWithResult(throwable));
+        }, throwable -> navigator.popViewWithResult(throwable));
   }
 
   private void onViewCreatedShowPaymentInformation() {
@@ -101,8 +102,6 @@ public class PaymentPresenter implements Presenter {
         .flatMap(__ -> billing.getPayer()
             .isAuthenticated())
         .filter(authenticated -> authenticated)
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(__ -> view.showPaymentLoading())
         .flatMapSingle(loading -> billing.getProduct(sellerId, productId))
         .flatMapCompletable(product -> billing.getPaymentMethods(sellerId, productId)
             .observeOn(AndroidSchedulers.mainThread())
@@ -113,7 +112,7 @@ public class PaymentPresenter implements Presenter {
         .subscribe(__ -> {
         }, throwable -> {
           view.hidePaymentLoading();
-          navigator.popPaymentViewWithResult(throwable);
+          navigator.popViewWithResult(throwable);
         });
   }
 
@@ -136,7 +135,7 @@ public class PaymentPresenter implements Presenter {
 
               if (purchase.isCompleted()) {
                 analytics.sendPaymentSuccessEvent();
-                navigator.popPaymentViewWithResult(purchase);
+                navigator.popViewWithResult(purchase);
               }
 
               if (purchase.isFailed()) {
@@ -160,10 +159,10 @@ public class PaymentPresenter implements Presenter {
         .flatMap(product -> view.cancelEvent())
         .flatMapCompletable(
             product -> sendPaymentCancelAnalytics().observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(() -> navigator.popPaymentViewWithResult()))
+                .doOnCompleted(() -> navigator.popViewWithResult()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> navigator.popPaymentViewWithResult());
+        }, throwable -> navigator.popViewWithResult());
   }
 
   private void handleSelectPaymentMethodEvent() {
@@ -176,7 +175,7 @@ public class PaymentPresenter implements Presenter {
                 sellerId, productId))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> navigator.popPaymentViewWithResult(throwable));
+        }, throwable -> navigator.popViewWithResult(throwable));
   }
 
   private void handleBuyEvent() {
@@ -204,7 +203,7 @@ public class PaymentPresenter implements Presenter {
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> navigator.popPaymentViewWithResult(throwable));
+        }, throwable -> navigator.popViewWithResult(throwable));
   }
 
   private Completable navigateToAuthorizationView(PaymentMethod paymentMethod,

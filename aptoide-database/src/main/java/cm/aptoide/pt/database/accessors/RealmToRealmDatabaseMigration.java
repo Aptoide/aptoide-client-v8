@@ -324,5 +324,14 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
 
       oldVersion++;
     }
+
+    if (oldVersion == 8088) {
+      schema.get("Notification")
+          .addField(Notification.NOTIFICATION_CENTER_URL_TRACK_KEY, String.class)
+          .transform(
+              notification -> notification.set(Notification.NOTIFICATION_CENTER_URL_TRACK_KEY,
+                  null));
+      oldVersion++;
+    }
   }
 }

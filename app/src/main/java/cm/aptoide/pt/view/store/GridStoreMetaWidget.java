@@ -15,6 +15,7 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -30,7 +31,6 @@ import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.view.account.store.ManageStoreFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import java.text.NumberFormat;
 import java.util.List;
@@ -87,7 +87,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     final BodyInterceptor<BaseBody> bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     final OkHttpClient httpClient =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor,
@@ -309,7 +309,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     ManageStoreFragment.ViewModel viewModel =
         new ManageStoreFragment.ViewModel(storeId, StoreTheme.fromName(storeThemeName), storeName,
             storeDescription, storeImagePath);
-    getFragmentNavigator().navigateTo(ManageStoreFragment.newInstance(viewModel, false));
+    getFragmentNavigator().navigateTo(ManageStoreFragment.newInstance(viewModel, false), true);
   }
 
   private void setSecondaryInfoVisibility(boolean userVisibility) {

@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.billing.Billing;
@@ -19,9 +18,8 @@ import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.Product;
 import cm.aptoide.pt.billing.view.BillingNavigator;
 import cm.aptoide.pt.billing.view.PaymentActivity;
-import cm.aptoide.pt.billing.view.PaymentThrowableCodeMapper;
-import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.permission.PermissionServiceFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import com.braintreepayments.api.models.CardBuilder;
@@ -51,9 +49,8 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
   private TextView productName;
   private TextView productDescription;
   private TextView productPrice;
-  private AptoideAccountManager accountManager;
   private BillingAnalytics billingAnalytics;
-  private String marketName;
+  private BillingNavigator billingNavigator;
 
   public static Fragment create(Bundle bundle) {
     final BraintreeCreditCardFragment fragment = new BraintreeCreditCardFragment();
@@ -74,11 +71,9 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
     super.onCreate(savedInstanceState);
     cardBuilderRelay = PublishRelay.create();
     billing = ((AptoideApplication) getContext().getApplicationContext()).getBilling();
-    accountManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     billingAnalytics =
         ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
-    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
+    billingNavigator = ((ActivityResultNavigator) getContext()).getBillingNavigator();
   }
 
   @Nullable @Override
@@ -124,14 +119,13 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
     cardForm.setOnCardFormSubmitListener(() -> {
       cardBuilderRelay.call(createCard());
     });
-    attachPresenter(new BraintreePresenter(this, braintree, billing, billingAnalytics,
-        new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
-            getActivityNavigator(), getFragmentNavigator(), accountManager, marketName),
-        AndroidSchedulers.mainThread(),
-        getArguments().getString(PaymentActivity.EXTRA_APPLICATION_ID),
-        getArguments().getString(PaymentActivity.EXTRA_PRODUCT_ID),
-        getArguments().getString(PaymentActivity.EXTRA_PAYMENT_METHOD_NAME),
-        getArguments().getString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD)), savedInstanceState);
+    attachPresenter(
+        new BraintreePresenter(this, braintree, billing, billingAnalytics, billingNavigator,
+            AndroidSchedulers.mainThread(),
+            getArguments().getString(PaymentActivity.EXTRA_APPLICATION_ID),
+            getArguments().getString(PaymentActivity.EXTRA_PRODUCT_ID),
+            getArguments().getString(PaymentActivity.EXTRA_PAYMENT_METHOD_NAME),
+            getArguments().getString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD)), savedInstanceState);
   }
 
   @Override public void onDestroyView() {

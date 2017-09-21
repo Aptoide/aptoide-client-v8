@@ -15,11 +15,11 @@ import rx.Observable;
 public class GetMySubscribedStoresRequest
     extends V7<GetMySubscribedStoresResponse, GetMySubscribedStoresRequest.Body> {
 
-  public GetMySubscribedStoresRequest(String accessToken, BodyInterceptor<BaseBody> bodyInterceptor,
+  public GetMySubscribedStoresRequest(BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    super(new Body(accessToken), getHost(sharedPreferences), httpClient, converterFactory,
-        bodyInterceptor, tokenInvalidator);
+    super(new Body(), getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
   }
 
   @Override
@@ -35,10 +35,6 @@ public class GetMySubscribedStoresRequest
     private int offset;
     private Order order;
     private boolean refresh;
-
-    public Body(String accessToken) {
-      setAccessToken(accessToken);
-    }
 
     public Sort getSort() {
       return sort;

@@ -39,6 +39,7 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.social.AccountNotificationManagerUserProvider;
@@ -176,7 +177,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     storeId = getArguments().containsKey(STORE_ID) ? getArguments().getLong(STORE_ID) : null;
     storeContext = (StoreContext) getArguments().getSerializable(STORE_CONTEXT);
     baseBodyInterceptorV7 =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     defaultConverter = WebService.getDefaultConverter();
     defaultClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     accountManager =
@@ -203,15 +204,13 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), baseBodyInterceptorV7,
         defaultClient, defaultConverter, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        sharedPreferences);
+        sharedPreferences, new NotificationAnalytics(defaultClient, Analytics.getInstance()));
 
-    OkHttpClient okhttp =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
-
-    timelineService = new TimelineService(userId, baseBodyInterceptorV7, okhttp, defaultConverter,
-        new TimelineResponseCardMapper(
-            () -> new TimelineAdsRepository(getContext(), BehaviorRelay.create()), marketName),
-        tokenInvalidator, sharedPreferences);
+    timelineService =
+        new TimelineService(userId, baseBodyInterceptorV7, defaultClient, defaultConverter,
+            new TimelineResponseCardMapper(
+                () -> new TimelineAdsRepository(getContext(), BehaviorRelay.create()), marketName),
+            tokenInvalidator, sharedPreferences);
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
