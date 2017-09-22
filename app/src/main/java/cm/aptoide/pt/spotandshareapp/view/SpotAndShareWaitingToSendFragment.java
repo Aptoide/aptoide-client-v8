@@ -181,7 +181,8 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
     return selectedApp;
   }
 
-  @Override public void onCreateGroupError(Throwable throwable) {
+  @Override public void onCreateGroupError(
+      Throwable throwable) { //// TODO: 22-09-2017 filipe ADD strings for different error types.
     getActivity().runOnUiThread(new Runnable() {
       @Override public void run() {
         Toast.makeText(getContext(), R.string.spotandshare_message_error_create_group,

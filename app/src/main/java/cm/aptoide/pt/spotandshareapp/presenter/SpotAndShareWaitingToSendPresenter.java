@@ -51,7 +51,8 @@ public class SpotAndShareWaitingToSendPresenter implements Presenter {
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return permissionManager.requestLocationAndExternalStoragePermission(permissionService)
                 .flatMap(accessToLocation -> permissionManager.requestWriteSettingsPermission(
-                    permissionService));
+                    permissionService))
+                .doOnError(throwable -> view.navigateBack());
           } else {
             return Observable.empty();
           }
@@ -125,15 +126,6 @@ public class SpotAndShareWaitingToSendPresenter implements Presenter {
           }
         });
   }
-
-  //private Action0 listenToFriends() {
-  //  return spotAndShare.observeFriends()
-  //      .filter(friendsList -> friendsList.size() > 0)
-  //      .doOnNext(friendsList -> sendApp())
-  //      .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-  //      .subscribe(created -> {
-  //      }, error -> error.printStackTrace());
-  //}
 
   private void handleCreateGroupError(Throwable throwable) {
     if (throwable instanceof TimeoutException) {

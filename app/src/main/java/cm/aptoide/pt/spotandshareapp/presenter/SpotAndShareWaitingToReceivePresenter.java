@@ -40,7 +40,8 @@ public class SpotAndShareWaitingToReceivePresenter implements Presenter {
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return permissionManager.requestLocationAndExternalStoragePermission(permissionService)
                 .flatMap(accessToLocation -> permissionManager.requestWriteSettingsPermission(
-                    permissionService));
+                    permissionService))
+                .doOnError(throwable -> view.navigateBack());
           } else {
             return Observable.empty();
           }
