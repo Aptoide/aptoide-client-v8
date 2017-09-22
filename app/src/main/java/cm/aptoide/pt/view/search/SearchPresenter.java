@@ -69,6 +69,7 @@ public class SearchPresenter implements Presenter {
         }, err -> crashReport.log(err));
   }
 
+  // TODO: 22/9/2017 sithengineer break this method even more
   private void search() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
@@ -81,9 +82,7 @@ public class SearchPresenter implements Presenter {
             viewModel.getStoreName(), viewModel.isOnlyTrustedApps()).observeOn(mainThreadScheduler)
             .doOnNext(__2 -> view.hideLoading())
             .doOnNext(result -> {
-              if (hasResults(result)) {
-                adapter.setData(result);
-              } else {
+              if (!hasResults(result)) {
                 view.showNoResultsImage();
                 searchAnalytics.searchNoResults(viewModel.getCurrentQuery());
               }
@@ -96,18 +95,24 @@ public class SearchPresenter implements Presenter {
 
   private boolean hasResults(ListSearchApps listSearchApps) {
     DataList<ListSearchApps.SearchAppsApp> dataList = listSearchApps.getDataList();
-    return dataList.getList()
+    return dataList != null
+        && dataList.getList() != null
+        && dataList.getList()
         .size() > 0;
   }
 
+  // TODO: 22/9/2017 sithengineer break this method even more
   private Observable<ListSearchApps> executeSearchRequests(String query, String storeName,
       boolean onlyTrustedApps) {
 
     if (storeName != null) {
-      return searchManager.searchInStore(query, storeName);
+      return searchManager.searchInStore(query, storeName)
+          .doOnNext(result -> adapter.addResultForSearchFollowedStores(result));
     }
 
-    return Observable.merge(searchManager.searchInSubscribedStores(query, onlyTrustedApps),
-        searchManager.searchInNonSubscribedStores(query, onlyTrustedApps));
+    return Observable.merge(searchManager.searchInFollowedStores(query, onlyTrustedApps)
+            .doOnNext(result -> adapter.addResultForSearchFollowedStores(result)),
+        searchManager.searchInNonSubscribedStores(query, onlyTrustedApps)
+            .doOnNext(result -> adapter.addResultForSearchEverywhere(result)));
   }
 }

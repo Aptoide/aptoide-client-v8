@@ -21,6 +21,7 @@ import java.util.Date;
 /**
  * Created by neuro on 05-11-2015.
  */
+@Deprecated
 public class SearchAdWidget extends Widget<SearchAdDisplayable> {
 
   private TextView name;

@@ -162,10 +162,12 @@ public class SearchFragment extends FragmentView implements SearchView {
 
   @Override public void showLoading() {
     // TODO: 22/9/2017 sithengineer
+    resultList.setVisibility(View.GONE);
   }
 
   @Override public void hideLoading() {
     // TODO: 22/9/2017 sithengineer
+    resultList.setVisibility(View.VISIBLE);
   }
 
   @Override public Model getViewModel() {
@@ -252,7 +254,6 @@ public class SearchFragment extends FragmentView implements SearchView {
     final SearchResultAdapter adapter = new SearchResultAdapter();
     resultList.setAdapter(adapter);
     resultList.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(getContext()));
-
     return new SearchPresenter(this, searchAnalytics, crashReport, ioScheduler, mainThreadScheduler,
         searchManager, adapter);
   }

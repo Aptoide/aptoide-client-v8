@@ -30,6 +30,7 @@ import rx.functions.Action1;
 /**
  * Created by neuro on 01-06-2016.
  */
+@Deprecated
 public class SearchWidget extends Widget<SearchDisplayable> {
 
   private TextView nameTextView;

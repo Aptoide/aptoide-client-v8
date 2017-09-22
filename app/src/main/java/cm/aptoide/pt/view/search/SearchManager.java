@@ -42,7 +42,7 @@ public class SearchManager {
         .observe();
   }
 
-  public Observable<ListSearchApps> searchInSubscribedStores(String query,
+  public Observable<ListSearchApps> searchInFollowedStores(String query,
       boolean onlyTrustedApps) {
     return ListSearchAppsRequest.of(query, true, onlyTrustedApps, subscribedStoresIds,
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
