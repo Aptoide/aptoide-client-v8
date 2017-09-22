@@ -44,7 +44,8 @@ public class WSWidgetsUtils {
       String url = null;
       // Can be null in legacy ws :/
       if (wsWidget.getView() != null) {
-        url = wsWidget.getView().replace(V7.BASE_HOST, "");
+        url = wsWidget.getView()
+            .replace(V7.BASE_HOST, "");
       }
       switch (wsWidget.getType()) {
         case APPS_GROUP:
@@ -73,22 +74,14 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case ADS:
-          return AdsOptimizer.optimizeAds(accessToken, GetAdsRequest.Location.homepage, true,
-                  Type.ADS.getPerLineCount() *
-                          Application.getConfiguration().numberOfAdsRowOnHomepage(),
-                  aptoideClientUuid, googlePlayServicesAvailable, oemid, mature, new ArrayList<>(),
-                  null, null, null, null)
-                  .observeOn(Schedulers.io())
-                  .doOnNext(wsWidget::setViewObject)
-                  .onErrorResumeNext(throwable -> Observable.empty())
-                  .map(listApps -> wsWidget);
-          //return GetAdsRequest.ofHomepage(aptoideClientUuid, googlePlayServicesAvailable, oemid,
-          //    mature, Application.getConfiguration().numberOfAdsRowOnHomepage())
-          //    .observe()
-          //    .observeOn(Schedulers.io())
-          //    .doOnNext(wsWidget::setViewObject)
-          //    .onErrorResumeNext(throwable -> Observable.empty())
-          //    .map(listApps -> wsWidget);
+          return AdsOptimizer.optimizeHomepageAds(accessToken, true,
+              Type.ADS.getPerLineCount() * Application.getConfiguration()
+                  .numberOfAdsRowOnHomepage(), aptoideClientUuid, googlePlayServicesAvailable,
+              oemid, mature)
+              .observeOn(Schedulers.io())
+              .doOnNext(wsWidget::setViewObject)
+              .onErrorResumeNext(throwable -> Observable.empty())
+              .map(listApps -> wsWidget);
 
         case STORE_META:
           return GetStoreMetaRequest.ofAction(url, storeCredentials, accessToken, aptoideClientUuid)
