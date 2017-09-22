@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonSubTypes({
     @JsonSubTypes.Type(value = ArticleTimelineItem.class, name = "ARTICLE"),
     @JsonSubTypes.Type(value = FeatureTimelineItem.class, name = "FEATURE"),
+    @JsonSubTypes.Type(value = GameTimelineItem.class, name = "GAME"),
     @JsonSubTypes.Type(value = StoreLatestAppsTimelineItem.class, name = "APPS_LATEST"),
     @JsonSubTypes.Type(value = AppUpdateTimelineItem.class, name = "APP_UPDATE"),
     @JsonSubTypes.Type(value = RecommendationTimelineItem.class, name = "RECOMMENDATION"),

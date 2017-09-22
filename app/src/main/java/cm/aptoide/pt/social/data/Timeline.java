@@ -4,6 +4,7 @@ import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.Install;
 import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.dataprovider.ws.v7.UpdateLeaderboardResponse;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.social.TimelineUserProvider;
@@ -196,6 +197,8 @@ public class Timeline {
     }
   }
 
-
+  public Observable<UpdateLeaderboardResponse> updateLeaderboard(int answer){
+    return service.updateLeaderboard(answer);
+  }
 }
 

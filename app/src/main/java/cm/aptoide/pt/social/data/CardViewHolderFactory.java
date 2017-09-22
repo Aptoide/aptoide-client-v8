@@ -9,6 +9,10 @@ import cm.aptoide.pt.social.view.viewholder.AggregatedMediaViewHolder;
 import cm.aptoide.pt.social.view.viewholder.AggregatedRecommendationViewHolder;
 import cm.aptoide.pt.social.view.viewholder.AggregatedStoreViewHolder;
 import cm.aptoide.pt.social.view.viewholder.AppUpdateViewHolder;
+import cm.aptoide.pt.social.view.viewholder.Game1ViewHolder;
+import cm.aptoide.pt.social.view.viewholder.Game2ViewHolder;
+import cm.aptoide.pt.social.view.viewholder.Game3ViewHolder;
+import cm.aptoide.pt.social.view.viewholder.GameAnswerViewHolder;
 import cm.aptoide.pt.social.view.viewholder.MediaViewHolder;
 import cm.aptoide.pt.social.view.viewholder.Notifications;
 import cm.aptoide.pt.social.view.viewholder.PopularAppViewHolder;
@@ -143,6 +147,22 @@ public class CardViewHolderFactory {
         return new TimelineNoNotificationHeaderViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_no_notification, parent, false),
             cardTouchEventPublishSubject);
+      case GAME1:
+        return new Game1ViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.timeline_game1, parent, false), cardTouchEventPublishSubject,
+            spannableFactory, marketName);
+      case GAME2:
+        return new Game2ViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.timeline_game2, parent, false), cardTouchEventPublishSubject,
+            spannableFactory, marketName);
+      case GAME3:
+        return new Game3ViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.timeline_game3, parent, false), cardTouchEventPublishSubject,
+            spannableFactory, marketName);
+      case GAMEANSWER:
+        return new GameAnswerViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.timeline_game_answer, parent, false),
+            cardTouchEventPublishSubject, spannableFactory, marketName);
       default:
         throw new IllegalStateException("Wrong cardType" + cardType.name());
     }

@@ -7,6 +7,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.*;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.Game;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.social.data.publisher.AptoidePublisher;
 import cm.aptoide.pt.social.data.publisher.MediaPublisher;
@@ -480,7 +481,7 @@ public class TimelineResponseCardMapper {
       }
 
       else if (item instanceof GameTimelineItem) {
-        final cm.aptoide.pt.dataprovider.model.v7.timeline.Game game = ((GameTimelineItem) item).getData();
+        final Game game = ((GameTimelineItem) item).getData();
         if(game.getGameType() == 1) {
           cards.add(new Game1(game.getCardId(), game.getRightAnswer(), game.getAnswerURL(),
               game.getQuestion(), game.getRankings().getScore(), game.getRankings().getGRanking(), game.getRankings().getLRanking(),

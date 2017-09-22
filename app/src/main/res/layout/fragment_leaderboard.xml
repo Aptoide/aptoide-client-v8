@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+  <android.support.design.widget.AppBarLayout
+      android:id="@+id/appbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="?attr/toolbarTheme"
+        app:titleMarginStart="30dp"
+        />
+  </android.support.design.widget.AppBarLayout>
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="60dp"
+      >
+
+    <ImageView
+        android:id="@+id/global_icon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="47dp"
+        android:src="@drawable/fake_app"
+        />
+
+    <TextView
+        android:id="@+id/global_name"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_below="@id/global_icon"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="35dp"
+        style="@style/Aptoide.TextView.Medium.M"
+        android:text="Global"
+        />
+
+    <ImageView
+        android:id="@+id/country_icon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="173dp"
+        android:src="@drawable/fake_app"
+        />
+
+    <TextView
+        android:id="@+id/country_name"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_below="@id/country_icon"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="155dp"
+        style="@style/Aptoide.TextView.Medium.M"
+        android:text="Country"
+        android:layout_alignBottom="@+id/friends_name"
+        />
+
+    <ImageView
+        android:id="@+id/friends_icon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="295dp"
+        android:src="@drawable/fake_app"
+        />
+
+    <TextView
+        android:id="@+id/friends_name"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_below="@id/friends_icon"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="280dp"
+        style="@style/Aptoide.TextView.Medium.M"
+        android:text="Friends"
+        />
+
+    <!--<TextView-->
+    <!--android:id="@+id/rank_id"-->
+    <!--android:layout_width="50dp"-->
+    <!--android:layout_height="25dp"-->
+    <!--android:layout_marginTop="35dp"-->
+    <!--android:layout_marginLeft="20dp"-->
+    <!--android:layout_toRightOf="@id/user_icon"-->
+    <!--android:gravity="center"-->
+    <!--style="@style/Aptoide.TextView.Medium.M"-->
+    <!--android:text="Rank"-->
+    <!--/>-->
+    <!--<TextView-->
+    <!--android:id="@+id/rank_value"-->
+    <!--android:layout_width="50dp"-->
+    <!--android:layout_height="20dp"-->
+    <!--android:layout_below="@id/rank_id"-->
+    <!--android:layout_toRightOf="@id/user_icon"-->
+    <!--android:layout_marginLeft="20dp"-->
+    <!--android:gravity="center"-->
+    <!--android:text="100"-->
+    <!--&lt;!&ndash;/>&ndash;&gt;-->
+    <!--<include layout="@layout/separator_vertical"-->
+    <!--android:id="@+id/separator"-->
+    <!--android:layout_width="1dp"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:layout_toRightOf="@id/rank_id"-->
+    <!--android:layout_marginLeft="20dp"-->
+    <!--android:layout_marginTop="40dp"-->
+    <!--/>-->
+    <!--<TextView-->
+    <!--android:id="@+id/score_id"-->
+    <!--android:layout_width="50dp"-->
+    <!--android:layout_height="25dp"-->
+    <!--android:layout_marginTop="35dp"-->
+    <!--android:layout_marginLeft="20dp"-->
+    <!--android:layout_toRightOf="@id/separator"-->
+    <!--android:gravity="center"-->
+    <!--style="@style/Aptoide.TextView.Medium.M"-->
+    <!--android:text="Score"-->
+    <!--/>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/score_value"-->
+    <!--android:layout_width="50dp"-->
+    <!--android:layout_height="20dp"-->
+    <!--android:layout_below="@id/score_id"-->
+    <!--android:layout_toRightOf="@id/separator"-->
+    <!--android:layout_marginLeft="20dp"-->
+    <!--android:gravity="center"-->
+    <!--android:text="100"-->
+    <!--/>-->
+  </RelativeLayout>
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      >
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fragment_leaderboard_global"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <include layout="@layout/separator_vertical"
+        android:id="@+id/separator1"
+        android:layout_width="3dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="119dp"
+        />
+
+
+    <!--<android.support.v7.widget.RecyclerView-->
+    <!--android:id="@+id/fragment_leaderboard_country"-->
+    <!--android:layout_width="115dp"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_toRightOf="@id/fragment_leaderboard_global"-->
+    <!--android:layout_marginLeft="10dp"-->
+    <!--/>-->
+
+    <include layout="@layout/separator_vertical"
+        android:id="@+id/separator2"
+        android:layout_width="3dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="244dp"
+        />
+
+    <!--<android.support.v7.widget.RecyclerView-->
+    <!--android:id="@+id/fragment_leaderboard_friends"-->
+    <!--android:layout_width="115dp"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_toRightOf="@id/fragment_leaderboard_country"-->
+    <!--android:layout_marginLeft="10dp"-->
+    <!--/>-->
+
+  </RelativeLayout>
+
+
+</LinearLayout>

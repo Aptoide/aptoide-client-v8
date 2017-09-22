@@ -9,11 +9,14 @@ import cm.aptoide.pt.dataprovider.ws.v7.LikeCardRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForTimelineArticle;
 import cm.aptoide.pt.dataprovider.ws.v7.PostReadRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ShareCardRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.UpdateLeaderboardRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.UpdateLeaderboardResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.repository.exception.RepositoryIllegalArgumentException;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
+import rx.Observable;
 import rx.Single;
 
 /**
@@ -139,4 +142,11 @@ public class TimelineService {
       return followings;
     }
   }
+
+  public Observable<UpdateLeaderboardResponse> updateLeaderboard(int answer) {
+    return UpdateLeaderboardRequest.of("", answer, bodyInterceptor, okhttp, converterFactory, "",
+        tokenInvalidator, sharedPreferences)
+        .observe(true);
+  }
+
 }

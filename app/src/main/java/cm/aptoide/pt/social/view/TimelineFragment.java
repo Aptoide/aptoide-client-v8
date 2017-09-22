@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +64,9 @@ import cm.aptoide.pt.social.data.share.ShareEvent;
 import cm.aptoide.pt.social.data.share.SharePostViewSetup;
 import cm.aptoide.pt.social.presenter.TimelineNavigator;
 import cm.aptoide.pt.social.presenter.TimelinePresenter;
+import cm.aptoide.pt.social.view.viewholder.Game1ViewHolder;
+import cm.aptoide.pt.social.view.viewholder.Game2ViewHolder;
+import cm.aptoide.pt.social.view.viewholder.Game3ViewHolder;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
@@ -244,6 +248,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     list.setLayoutManager(layoutManager);
     loginPrompt = PublishRelay.create();
     helper = RecyclerViewPositionHelper.createHelper(list);
+    item.attachToRecyclerView(list);
     // Pull-to-refresh
     swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
@@ -594,4 +599,60 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     }
     list.smoothScrollToPosition(0);
   }
+
+  public void updateGameCardScores(){
+    adapter.notifyDataSetChanged();
+  }
+
+  ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+    @Override public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+        RecyclerView.ViewHolder target) {
+      return false;
+    }
+
+    @Override
+    public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+      if (!((viewHolder instanceof Game1ViewHolder)||(viewHolder instanceof Game2ViewHolder)||(viewHolder instanceof Game3ViewHolder))) return 0;
+      return super.getSwipeDirs(recyclerView, viewHolder);
+    }
+
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+
+      int position = viewHolder.getAdapterPosition();
+
+      if(viewHolder instanceof Game1ViewHolder){
+        Game1ViewHolder view = (Game1ViewHolder) viewHolder;
+        if(swipeDir == ItemTouchHelper.LEFT) {
+          view.onPostDismissedLeft(view.getCard(), position);
+        }
+        else if(swipeDir == ItemTouchHelper.RIGHT){
+          view.onPostDismissedRight(view.getCard(), position);
+        }
+      }
+      if (viewHolder instanceof Game2ViewHolder){
+        Game2ViewHolder view = (Game2ViewHolder) viewHolder;
+        if(swipeDir == ItemTouchHelper.LEFT) {
+          view.onPostDismissedLeft(view.getCard(), position);
+        }
+        else if(swipeDir == ItemTouchHelper.RIGHT){
+          view.onPostDismissedRight(view.getCard(), position);
+        }
+      }
+      if (viewHolder instanceof Game3ViewHolder){
+        Game3ViewHolder view = (Game3ViewHolder) viewHolder;
+        if(swipeDir == ItemTouchHelper.LEFT) {
+          view.onPostDismissedLeft(view.getCard(), position);
+        }
+        else if(swipeDir == ItemTouchHelper.RIGHT){
+          view.onPostDismissedRight(view.getCard(), position);
+        }
+      }
+    }
+  };
+
+
+  ItemTouchHelper item = new ItemTouchHelper(simpleItemTouchCallback);
+
 }

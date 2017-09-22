@@ -139,6 +139,8 @@
   <string name="timeline_title_sponsored">Sponsored</string>
   <string name="timeline_title_header_notifications">Notifications</string>
   <string name="timeline_title_header_add_friend">Follow Friend</string>
+  <string name="timeline_title_card_title_game_quiz_present_singular">%s Timeline Quiz</string>
+
 
 
 </resources>

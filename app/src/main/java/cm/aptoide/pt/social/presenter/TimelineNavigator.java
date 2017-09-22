@@ -129,4 +129,9 @@ public class TimelineNavigator implements TimelineNavigation {
   @Override public void navigateToNotificationCenter() {
     fragmentNavigator.navigateTo(new InboxFragment(), true);
   }
+
+  @Override public void navigateToLeaderboard(){
+    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
+        .newLeaderboardFragment(), true);
+  }
 }

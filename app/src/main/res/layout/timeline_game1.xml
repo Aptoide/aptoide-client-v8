@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardUseCompatPadding="true"
+    style="@style/Widget.Aptoide.Card"
+    >
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="63.3dp"
+        android:orientation="horizontal"
+        >
+
+      <ImageView
+          android:id="@+id/displayable_social_timeline_game_card_icon"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:layout_marginLeft="12.7dp"
+          android:layout_marginStart="12.7dp"
+          android:layout_marginTop="14dp"
+          tools:ignore="contentDescription"
+          tools:src="@mipmap/ic_launcher"
+          />
+
+      <TextView
+          android:id="@+id/displayable_social_timeline_game_card_title"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="48dp"
+          android:layout_marginLeft="72dp"
+          android:layout_marginRight="48dp"
+          android:layout_marginStart="72dp"
+          android:layout_marginTop="14.7dp"
+          android:lines="1"
+          tools:text="Aptoide Timeline Quiz"
+          style="@style/Aptoide.TextView.Regular.S.Grey"
+          />
+
+      <TextView
+          android:id="@+id/displayable_social_timeline_game_card_subtitle"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/displayable_social_timeline_game_card_title"
+          android:layout_marginEnd="48dp"
+          android:layout_marginLeft="72dp"
+          android:layout_marginRight="48dp"
+          android:layout_marginStart="72dp"
+          android:lines="1"
+          tools:text="Há duas horas"
+          style="@style/Aptoide.TextView.Regular.XS.Grey"
+          />
+
+
+      <ImageView
+          android:id="@+id/displayable_social_timeline_game_card_leaderboard_icon"
+          android:layout_width="15dp"
+          android:layout_height="15dp"
+          android:layout_toLeftOf="@+id/displayable_social_timeline_game_card_leaderboard"
+          android:layout_marginRight="5dp"
+          android:layout_marginTop="@dimen/appstimeline_card_icon"
+          android:src="@drawable/appstimeline_recommendation_compass_icon"
+          />
+
+      <ProgressBar
+          android:id="@+id/rank_progress"
+          android:layout_width="10dp"
+          android:layout_height="10dp"
+          android:layout_toRightOf="@id/displayable_social_timeline_game_card_leaderboard_icon"
+          android:layout_marginLeft="7dp"
+          android:layout_marginTop="15dp"
+          android:visibility="visible"
+          android:indeterminate="true" />
+
+      <TextView
+          android:id="@id/displayable_social_timeline_game_card_leaderboard"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignEnd="@+id/card_custom_view_line_separator"
+          android:layout_marginRight="3dp"
+          android:layout_marginTop="18dp"
+          android:text="#1234"
+          android:visibility="invisible"
+          style="@style/Aptoide.TextView.Regular.XS.Grey"
+          android:layout_alignRight="@+id/card_custom_view_line_separator"
+          />
+
+      <ImageView
+          android:id="@+id/displayable_social_timeline_game_card_score_icon"
+          android:layout_width="15dp"
+          android:layout_height="15dp"
+          android:layout_toLeftOf="@+id/displayable_social_timeline_game_card_score"
+          android:layout_marginRight="5dp"
+          android:layout_marginTop="@dimen/appstimeline_card_icon"
+          android:src="@drawable/appstimeline_recommendation_compass_icon"
+          />
+
+      <TextView
+          android:id="@id/displayable_social_timeline_game_card_score"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_toLeftOf="@id/displayable_social_timeline_game_card_leaderboard_icon"
+          android:layout_marginRight="5dp"
+          android:layout_marginTop="18dp"
+          android:text="2000"
+          android:visibility="invisible"
+          style="@style/Aptoide.TextView.Regular.XS.Grey"
+          />
+
+      <ProgressBar
+          android:id="@+id/score_progress"
+          android:layout_width="10dp"
+          android:layout_height="10dp"
+          android:layout_toLeftOf="@id/displayable_social_timeline_game_card_leaderboard_icon"
+          android:layout_marginRight="7dp"
+          android:layout_marginTop="15dp"
+          android:visibility="visible"
+          android:indeterminate="true" />
+
+      <View
+          android:id="@+id/card_custom_view_line_separator"
+          android:layout_width="match_parent"
+          android:layout_height="0.7dp"
+          android:layout_alignParentBottom="true"
+          android:layout_marginEnd="12dp"
+          android:layout_marginLeft="12dp"
+          android:layout_marginRight="12dp"
+          android:layout_marginStart="12dp"
+          android:background="@color/timeline_separator"
+          />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/displayable_social_timeline_game_card_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+      <RelativeLayout
+          android:id="@+id/displayable_social_timeline_game_card_question1"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_alignParentLeft="true"
+          android:layout_alignParentTop="true"
+          android:orientation="vertical"
+          android:visibility="visible"
+          >
+
+        <ImageView
+            android:id="@+id/game_card_question1_icon"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            tools:src="@mipmap/ic_launcher"
+            />
+
+        <TextView
+            android:id="@+id/game_card_question1_question"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/game_card_question1_icon"
+            android:textAlignment="center"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Insert question here!"
+            style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+            />
+
+        <TextView
+            android:id="@+id/game_card_question1_answerLeft"
+            style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/game_card_question1_question"
+            android:layout_toRightOf="@+id/left_arrow"
+            android:gravity="center"
+            android:padding="5dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="32dp"
+            android:text="Left: Answer1"
+            />
+
+        <ImageView
+            android:id="@id/left_arrow"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="155dp"
+            android:src="@drawable/game_arrow_left"
+            />
+
+        <ImageView
+            android:id="@+id/right_arrow"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="155dp"
+            android:rotation="180"
+            android:src="@drawable/game_arrow_left"
+            />
+
+        <TextView
+            android:id="@+id/game_card_question1_answerRight"
+            style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/game_card_question1_question"
+            android:layout_toLeftOf="@id/right_arrow"
+            android:gravity="center"
+            android:padding="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="32dp"
+            android:text="Right: Answer2"
+            />
+
+        <!--<ImageView-->
+        <!--android:layout_width="50dp"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:layout_below="@id/game_card_question1_question"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:src="@drawable/appstimeline_game_swipe_icon"-->
+        <!--/>-->
+
+      </RelativeLayout>
+
+
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.7dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="14dp"
+        android:background="@color/timeline_separator"
+        android:visibility="visible"
+        />
+
+    <include layout="@layout/social_bar_timeline" />
+  </LinearLayout>
+</android.support.v7.widget.CardView>
+

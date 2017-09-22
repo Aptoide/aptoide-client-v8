@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card1"
+    android:layout_width="115dp"
+    android:layout_height="65dp"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:layout_marginBottom="5dp"
+    style="?attr/backgroundCard"
+    >
+
+  <LinearLayout
+      android:id="@+id/names_layout"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_toRightOf="@id/main_icon"
+      android:orientation="vertical"
+      >
+
+    <TextView
+        android:id="@+id/leaderboard_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="true"
+        android:layout_alignParentLeft="true"
+        style="@style/Aptoide.TextView.Medium.M"
+        android:text="me - #100"
+        />
+
+    <TextView
+        android:id="@+id/leaderboard_user_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/leaderboard_user_name"
+        android:paddingTop="5dp"
+        android:layout_alignParentLeft="true"
+        style="@style/Aptoide.TextView.Regular.S"
+        android:text="100 points"
+        />
+
+  </LinearLayout>
+
+</RelativeLayout>

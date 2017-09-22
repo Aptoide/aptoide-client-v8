@@ -30,6 +30,7 @@ import cm.aptoide.pt.social.data.Game;
 import cm.aptoide.pt.social.data.Game2;
 import cm.aptoide.pt.social.data.GameAnswer;
 import cm.aptoide.pt.social.data.GameCardTouchEvent;
+import cm.aptoide.pt.social.data.LeaderboardTouchEvent;
 import cm.aptoide.pt.social.data.LikesPreviewCardTouchEvent;
 import cm.aptoide.pt.social.data.Media;
 import cm.aptoide.pt.social.data.MinimalPostTouchEvent;
@@ -578,9 +579,18 @@ public class TimelinePresenter implements Presenter {
                   GameAnswer gameAnswer = mapToGameAnswer(event);
                   timeline.swapGameAnswer(gameAnswer, (Game) event.getCard());
                   view.swapPost(gameAnswer, event.getCardPosition());
-                  //PROBLEMS HERE!!! updateAnswer(gameAnswer, event.getCardPosition());
+                  updateAnswer(gameAnswer, event.getCardPosition());
                   Logger.d(this.getClass()
                       .getCanonicalName(), "Clicked on: " + event.getAnswerText());
+                } else if (type.equals(CardType.GAMEANSWER)) {
+                  if (cardTouchEvent instanceof LeaderboardTouchEvent) {
+                    timelineNavigation.navigateToLeaderboard();
+                  } else {
+                    GameAnswer card = (GameAnswer) post;
+                    timelineNavigation.navigateToAppView(card.getRightAnswer()
+                        .getId(), card.getRightAnswer()
+                        .getPackageName(), AppViewFragment.OpenType.OPEN_ONLY);
+                  }
                 }
               }
             })
@@ -1069,5 +1079,32 @@ public class TimelinePresenter implements Presenter {
     return answer;
   }
 
+  private void updateAnswer(GameAnswer gameAnswer, int position) {
+    int answer;
+
+    if (gameAnswer.getStatus() == "Correct") {
+      answer = 1;
+    } else {
+      answer = 0;
+    }
+
+    timeline.updateLeaderboard(answer)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(updateLeaderboardResponse -> {
+          if (updateLeaderboardResponse.isOk()) {
+            int global = updateLeaderboardResponse.getData().getGlobal();
+            int country = updateLeaderboardResponse.getData().getCountry();
+            int friends = updateLeaderboardResponse.getData()
+                .getFriends();
+            gameAnswer.setgRanking(global);
+            gameAnswer.setlRanking(country);
+            gameAnswer.setfRanking(friends);
+
+            timeline.updateGameScores(gameAnswer.getScore(), gameAnswer.getCardsLeft(), global);
+            view.updateGameCardScores();
+            view.updatePost(position);
+          }
+        }, throwable -> throwable.printStackTrace());
+  }
 
 }
