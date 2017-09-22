@@ -3,11 +3,12 @@ package cm.aptoide.pt.view.search;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.view.PagerAdapter;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -15,51 +16,49 @@ import android.widget.LinearLayout;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.model.v7.DataList;
-import cm.aptoide.pt.dataprovider.model.v7.ListSearchApps;
+import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
+import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.search.SearchAnalytics;
 import cm.aptoide.pt.search.SearchBuilder;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.store.StoreUtils;
-import cm.aptoide.pt.view.fragment.BasePagerToolbarFragment;
+import cm.aptoide.pt.view.fragment.FragmentView;
 import com.facebook.appevents.AppEventsLogger;
+import com.jakewharton.rxbinding.view.RxView;
 import java.util.List;
 import okhttp3.OkHttpClient;
+import org.parceler.Parcel;
+import org.parceler.Parcels;
 import retrofit2.Converter;
+import rx.Observable;
+import rx.Scheduler;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by neuro on 01-06-2016.
  */
-public class SearchFragment extends BasePagerToolbarFragment {
+public class SearchFragment extends FragmentView implements SearchView {
 
-  private SharedPreferences sharedPreferences;
-  private String currentQuery;
-
-  transient private boolean hasSubscribedResults;
-  transient private boolean hasEverywhereResults;
-  transient private boolean shouldFinishLoading = false;
-
-  private Button subscribedButton;
-  private Button everywhereButton;
+  private static final int LAYOUT = R.layout.global_search_fragment;
+  private static final String VIEW_MODEL = "view_model";
+  private SearchViewModel viewModel;
+  private Button followedStoresButton;
+  private Button allStoresButton;
   private LinearLayout buttonsLayout;
   private View noSearchLayout;
   private EditText noSearchLayoutSearchQuery;
   private ImageView noSearchLayoutSearchButton;
-  private String storeName;
-  private boolean onlyTrustedApps;
-  private int selectedButton = 0;
-  private BodyInterceptor<BaseBody> bodyInterceptor;
-  private OkHttpClient httpClient;
-  private Converter.Factory converterFactory;
-  private SearchAnalytics searchAnalytics;
-  private TokenInvalidator tokenInvalidator;
+  private PublishSubject<Long> selectedElementSubject;
+  private RecyclerView resultList;
 
   public static SearchFragment newInstance(String currentQuery) {
     return newInstance(currentQuery, false);
@@ -67,11 +66,11 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
   public static SearchFragment newInstance(String currentQuery, boolean onlyTrustedApps,
       String storeName) {
-    Bundle args = new Bundle();
 
-    args.putString(BundleCons.QUERY, currentQuery);
-    args.putBoolean(BundleCons.ONLY_TRUSTED, onlyTrustedApps);
-    args.putString(BundleCons.STORE_NAME, storeName);
+    SearchViewModel viewModel = new SearchViewModel(currentQuery, storeName, onlyTrustedApps);
+
+    Bundle args = new Bundle();
+    args.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
 
     SearchFragment fragment = new SearchFragment();
     fragment.setArguments(args);
@@ -79,10 +78,11 @@ public class SearchFragment extends BasePagerToolbarFragment {
   }
 
   public static SearchFragment newInstance(String currentQuery, boolean onlyTrustedApps) {
-    Bundle args = new Bundle();
 
-    args.putString(BundleCons.QUERY, currentQuery);
-    args.putBoolean(BundleCons.ONLY_TRUSTED, onlyTrustedApps);
+    SearchViewModel viewModel = new SearchViewModel(currentQuery, onlyTrustedApps);
+
+    Bundle args = new Bundle();
+    args.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
 
     SearchFragment fragment = new SearchFragment();
     fragment.setArguments(args);
@@ -90,258 +90,90 @@ public class SearchFragment extends BasePagerToolbarFragment {
   }
 
   public static SearchFragment newInstance(String currentQuery, String storeName) {
-    Bundle args = new Bundle();
 
-    args.putString(BundleCons.QUERY, currentQuery);
-    args.putString(BundleCons.STORE_NAME, storeName);
+    SearchViewModel viewModel = new SearchViewModel(currentQuery, storeName);
+
+    Bundle args = new Bundle();
+    args.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
 
     SearchFragment fragment = new SearchFragment();
     fragment.setArguments(args);
     return fragment;
   }
 
+  @Override public void showFollowedStoresResult() {
+
+  }
+
+  @Override public void showAllStoresResult() {
+
+  }
+
+  @Override public Observable<Integer> selectedTab() {
+    return Observable.merge(RxView.clicks(followedStoresButton)
+        .map(__ -> 1), RxView.clicks(allStoresButton)
+        .map(__ -> 2));
+  }
+
+  @Override public Observable<Long> selectedOneElementFromSearch() {
+    return selectedElementSubject.asObservable();
+  }
+
+  @Override public Observable<Void> noSearchLayoutSearchButtonClick() {
+    return RxView.clicks(noSearchLayoutSearchButton);
+  }
+
+  @Override public void showNoResultsImage() {
+    searchAnalytics.searchNoResults(viewModel.getCurrentQuery());
+
+    noSearchLayout.setVisibility(View.VISIBLE);
+    buttonsLayout.setVisibility(View.INVISIBLE);
+    noSearchLayoutSearchButtonClick().subscribe(__ -> {
+      String s = noSearchLayoutSearchQuery.getText()
+          .toString();
+
+      if (s.length() > 1) {
+        getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
+            .newSearchFragment(s, viewModel.getStoreName()), true);
+      }
+    });
+  }
+
+  @Override public void setSubscribedSearchButtonHighlighted() {
+    followedStoresButton.setBackgroundResource(R.drawable.search_button_background);
+    followedStoresButton.setTextColor(getResources().getColor(R.color.white));
+    allStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
+    allStoresButton.setBackgroundResource(0);
+  }
+
+  @Override public void setEverywhereSearchButtonHighlighted() {
+    allStoresButton.setBackgroundResource(R.drawable.search_button_background);
+    allStoresButton.setTextColor(getResources().getColor(R.color.white));
+    followedStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
+    followedStoresButton.setBackgroundResource(0);
+  }
+
+  @Override public void showLoading() {
+
+  }
+
+  @Override public Observable<Void> clickFollowedStoresSearchButton() {
+    return RxView.clicks(followedStoresButton);
+  }
+
+  @Override public Observable<Void> clickEverywhereSearchButton() {
+    return RxView.clicks(allStoresButton);
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    sharedPreferences =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
-    tokenInvalidator =
-        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
-    bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
-    converterFactory = WebService.getDefaultConverter();
-    searchAnalytics = new SearchAnalytics(Analytics.getInstance(),
-        AppEventsLogger.newLogger(getContext().getApplicationContext()));
-  }
-
-  @Override public void loadExtras(Bundle args) {
-    super.loadExtras(args);
-
-    currentQuery = args.getString(BundleCons.QUERY);
-    storeName = args.getString(BundleCons.STORE_NAME);
-    onlyTrustedApps = args.getBoolean(BundleCons.ONLY_TRUSTED, false);
-  }
-
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
-
-    subscribedButton = (Button) view.findViewById(R.id.subscribed);
-    everywhereButton = (Button) view.findViewById(R.id.everywhere);
-    buttonsLayout = (LinearLayout) view.findViewById(R.id.buttons_layout);
-    noSearchLayout = view.findViewById(R.id.no_search_results_layout);
-    noSearchLayoutSearchQuery = (EditText) view.findViewById(R.id.search_text);
-    noSearchLayoutSearchButton = (ImageView) view.findViewById(R.id.ic_search_button);
-    setButtonBackgrounds(selectedButton);
-    setHasOptionsMenu(true);
-  }
-
-  @Override public void onDestroyView() {
-    noSearchLayoutSearchButton.setOnClickListener(null);
-    noSearchLayoutSearchButton = null;
-    noSearchLayoutSearchQuery = null;
-    noSearchLayout = null;
-    buttonsLayout = null;
-    everywhereButton.setOnClickListener(null);
-    everywhereButton = null;
-    subscribedButton.setOnClickListener(null);
-    subscribedButton = null;
-    super.onDestroyView();
-  }
-
-  @Override protected void setupViewPager() {
-    viewPager.setPagingEnabled(false);
-
-    if (hasSubscribedResults || hasEverywhereResults) {
-      super.setupViewPager();
-    } else {
-      searchAnalytics.searchNoResults(currentQuery);
-
-      noSearchLayout.setVisibility(View.VISIBLE);
-      buttonsLayout.setVisibility(View.INVISIBLE);
-      noSearchLayoutSearchButton.setOnClickListener(v -> {
-        String s = noSearchLayoutSearchQuery.getText()
-            .toString();
-
-        if (s.length() > 1) {
-          getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-              .newSearchFragment(s, storeName), true);
-        }
-      });
-    }
-  }
-
-  @Override protected PagerAdapter createPagerAdapter() {
-    if (storeName != null) {
-      return new SearchPagerAdapter(getChildFragmentManager(), currentQuery, storeName);
-    } else {
-      return new SearchPagerAdapter(getChildFragmentManager(), currentQuery, hasSubscribedResults,
-          hasEverywhereResults);
-    }
-  }
-
-  private void setButtonBackgrounds(int currentItem) {
-    if (currentItem == 0) {
-      subscribedButtonListener();
-    } else if (currentItem == 1) {
-      everywhereButtonListener(true);
-    }
-  }
-
-  protected void subscribedButtonListener() {
-    selectedButton = 0;
-    viewPager.setCurrentItem(0);
-    subscribedButton.setBackgroundResource(R.drawable.search_button_background);
-    subscribedButton.setTextColor(getResources().getColor(R.color.white));
-    everywhereButton.setTextColor(getResources().getColor(R.color.silver_dark));
-    everywhereButton.setBackgroundResource(0);
-  }
-
-  protected Void everywhereButtonListener(boolean smoothScroll) {
-    selectedButton = 1;
-    viewPager.setCurrentItem(1, smoothScroll);
-    everywhereButton.setBackgroundResource(R.drawable.search_button_background);
-    everywhereButton.setTextColor(getResources().getColor(R.color.white));
-    subscribedButton.setTextColor(getResources().getColor(R.color.silver_dark));
-    subscribedButton.setBackgroundResource(0);
-    return null;
-  }
-
-  private void setupButtonVisibility() {
-    if (storeName != null) {
-      subscribedButton.setText(storeName);
-      subscribedButton.setVisibility(View.VISIBLE);
-    } else {
-      if (hasSubscribedResults) {
-        subscribedButton.setVisibility(View.VISIBLE);
-      }
-      if (hasEverywhereResults) {
-        everywhereButton.setVisibility(View.VISIBLE);
-      }
-    }
-  }
-
-  private void handleFinishLoading(boolean create) {
-
-    if (!shouldFinishLoading) {
-      shouldFinishLoading = true;
-    } else {
-      setupButtonVisibility();
-      setupButtonsListeners();
-      setupViewPager();
-      if (create) {
-        // AB testing was removed from here: AN-1836: Search: remove ab testing
-        // This sets the All stores tab as the selected tab of the search
-        everywhereButtonListener(false);
-      }
-      finishLoading();
-    }
-  }
-
-  protected void executeSearchRequests(String storeName, boolean create) {
-    //TODO (pedro): Don't have search source (which tab)
-    searchAnalytics.search(currentQuery);
-    if (storeName != null) {
-      searchInStore(storeName, create);
-    } else {
-      searchInSubscribedStores(create);
-      searchInNonSubscribedStores(create);
-    }
-  }
-
-  private void searchInNonSubscribedStores(boolean create) {
-    ListSearchAppsRequest.of(currentQuery, false, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(
-        AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
-            .getApplicationContext()).getDatabase(), Store.class)), bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator, sharedPreferences)
-        .execute(listSearchApps -> {
-          List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDataList()
-              .getList();
-
-          if (list != null && hasMoreResults(listSearchApps)) {
-            hasEverywhereResults = true;
-            handleFinishLoading(create);
-          } else {
-            hasEverywhereResults = false;
-            handleFinishLoading(create);
-          }
-        }, e -> finishLoading());
-  }
-
-  private void searchInSubscribedStores(boolean create) {
-    ListSearchAppsRequest.of(currentQuery, true, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(
-        AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
-            .getApplicationContext()).getDatabase(), Store.class)), bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator, sharedPreferences)
-        .execute(listSearchApps -> {
-          List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDataList()
-              .getList();
-
-          if (list != null && hasMoreResults(listSearchApps)) {
-            hasSubscribedResults = true;
-            handleFinishLoading(create);
-          } else {
-            hasSubscribedResults = false;
-            handleFinishLoading(create);
-          }
-        }, e -> finishLoading());
-  }
-
-  private void searchInStore(String storeName, boolean create) {
-    shouldFinishLoading = true;
-    ListSearchAppsRequest of = ListSearchAppsRequest.of(currentQuery, storeName,
-        StoreUtils.getSubscribedStoresAuthMap(AccessorFactory.getAccessorFor(
-            ((AptoideApplication) getContext().getApplicationContext()
-                .getApplicationContext()).getDatabase(), Store.class)), bodyInterceptor,
-        httpClient, converterFactory, tokenInvalidator, sharedPreferences);
-    of.execute(listSearchApps -> {
-      List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDataList()
-          .getList();
-
-      if (list != null && hasMoreResults(listSearchApps)) {
-        hasSubscribedResults = true;
-        handleFinishLoading(create);
-      } else {
-        hasSubscribedResults = false;
-        handleFinishLoading(create);
-      }
-    }, e -> finishLoading());
-  }
-
-  private boolean hasMoreResults(ListSearchApps listSearchApps) {
-    DataList<ListSearchApps.SearchAppsApp> datalist = listSearchApps.getDataList();
-
-    return datalist.getList()
-        .size() > 0 || listSearchApps.getTotal() > listSearchApps.getNextSize();
-  }
-
-  @Override protected boolean displayHomeUpAsEnabled() {
-    return true;
-  }
-
-  @Override public void setupToolbarDetails(Toolbar toolbar) {
-    toolbar.setTitle(currentQuery);
-  }
-
-  private void setupButtonsListeners() {
-    if (hasSubscribedResults) {
-      subscribedButton.setOnClickListener(v -> subscribedButtonListener());
-    }
-
-    if (hasEverywhereResults) {
-      everywhereButton.setOnClickListener(v -> everywhereButtonListener(true));
-    }
-  }
-
-  @Override public int getContentViewId() {
-    return R.layout.global_search_fragment;
+    selectedElementSubject = PublishSubject.create();
+    attachPresenter(createPresenter(), null);
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
-
-    outState.putString(BundleCons.QUERY, currentQuery);
-    outState.putString(BundleCons.STORE_NAME, storeName);
-    outState.putInt(BundleCons.SELECTED_BUTTON, selectedButton);
+    outState.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -349,8 +181,10 @@ public class SearchFragment extends BasePagerToolbarFragment {
     inflater.inflate(R.menu.menu_search_results, menu);
 
     final SearchNavigator searchNavigator;
-    if (storeName != null && storeName.length() > 0) {
-      searchNavigator = new SearchNavigator(getFragmentNavigator(), storeName);
+    if (viewModel.getStoreName() != null
+        && viewModel.getStoreName()
+        .length() > 0) {
+      searchNavigator = new SearchNavigator(getFragmentNavigator(), viewModel.getStoreName());
     } else {
       searchNavigator = new SearchNavigator(getFragmentNavigator());
     }
@@ -360,35 +194,161 @@ public class SearchFragment extends BasePagerToolbarFragment {
     searchBuilder.validateAndAttachSearch();
   }
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    if (savedInstanceState != null) {
-      currentQuery = savedInstanceState.getString(BundleCons.QUERY);
-      storeName = savedInstanceState.getString(BundleCons.STORE_NAME);
-      setButtonBackgrounds(savedInstanceState.getInt(BundleCons.SELECTED_BUTTON));
+  private Presenter createPresenter() {
+    final AptoideApplication applicationContext =
+        (AptoideApplication) getContext().getApplicationContext();
+
+    final SharedPreferences sharedPreferences = applicationContext.getDefaultSharedPreferences();
+
+    final TokenInvalidator tokenInvalidator = applicationContext.getTokenInvalidator();
+
+    final BodyInterceptor<BaseBody> bodyInterceptor =
+        applicationContext.getAccountSettingsBodyInterceptorPoolV7();
+
+    final OkHttpClient httpClient = applicationContext.getDefaultClient();
+
+    final Converter.Factory converterFactory = WebService.getDefaultConverter();
+
+    final SearchAnalytics searchAnalytics =
+        new SearchAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(applicationContext));
+
+    final HashMapNotNull<String, List<String>> subscribedStores =
+        StoreUtils.getSubscribedStoresAuthMap(
+            AccessorFactory.getAccessorFor(applicationContext.getDatabase(), Store.class));
+
+    final CrashReport crashReport = CrashReport.getInstance();
+    final Scheduler ioScheduler = Schedulers.io();
+    final Scheduler mainThreadScheduler = AndroidSchedulers.mainThread();
+
+    return new SearchPresenter(this, sharedPreferences, tokenInvalidator, bodyInterceptor,
+        httpClient, converterFactory, searchAnalytics, subscribedStores, crashReport, ioScheduler,
+        mainThreadScheduler);
+  }
+
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    setHasOptionsMenu(true);
+
+    /*
+    @Override protected boolean displayHomeUpAsEnabled() {
+      return true;
+    }
+
+    @Override public void setupToolbarDetails(Toolbar toolbar) {
+      toolbar.setTitle(currentQuery);
+    }
+    */
+
+    final View view = inflater.inflate(LAYOUT, container, false);
+    bindViews(view);
+    return view;
+  }
+
+  private void bindViews(View view) {
+    resultList = (RecyclerView) view.findViewById(R.id.search_result_list);
+    followedStoresButton = (Button) view.findViewById(R.id.subscribed);
+    allStoresButton = (Button) view.findViewById(R.id.everywhere);
+    buttonsLayout = (LinearLayout) view.findViewById(R.id.buttons_layout);
+    noSearchLayout = view.findViewById(R.id.no_search_results_layout);
+    noSearchLayoutSearchQuery = (EditText) view.findViewById(R.id.search_text);
+    noSearchLayoutSearchButton = (ImageView) view.findViewById(R.id.ic_search_button);
+  }
+
+  private void setupButtonVisibility() {
+    if (viewModel.getStoreName() != null) {
+      followedStoresButton.setText(viewModel.getStoreName());
+      followedStoresButton.setVisibility(View.VISIBLE);
+    } else {
+      if (hasSubscribedResults) {
+        followedStoresButton.setVisibility(View.VISIBLE);
+      }
+      if (hasEverywhereResults) {
+        allStoresButton.setVisibility(View.VISIBLE);
+      }
     }
   }
 
-  @Override protected int[] getViewsToShowAfterLoadingId() {
-    return new int[] {};
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+
+    if (savedInstanceState != null) {
+      viewModel = Parcels.unwrap(savedInstanceState.getParcelable(VIEW_MODEL));
+    }
+
+    if (viewModel.getSelectedButton() == 0) {
+      setSubscribedSearchButtonHighlighted();
+    } else {
+      setEverywhereSearchButtonHighlighted();
+    }
   }
 
-  @Override protected int getViewToShowAfterLoadingId() {
-    return R.id.search_results_layout;
+  @Override public void onDestroyView() {
+    noSearchLayoutSearchButton.setOnClickListener(null);
+    noSearchLayoutSearchButton = null;
+    noSearchLayoutSearchQuery = null;
+    noSearchLayout = null;
+    buttonsLayout = null;
+    allStoresButton.setOnClickListener(null);
+    allStoresButton = null;
+    followedStoresButton.setOnClickListener(null);
+    followedStoresButton = null;
+    super.onDestroyView();
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create) {
-      executeSearchRequests(storeName, create);
+      executeSearchRequests(viewModel.getStoreName(), create);
     } else {
       handleFinishLoading(create);
     }
   }
 
-  private static final class BundleCons {
-    private static final String QUERY = "query";
-    private static final String STORE_NAME = "storeName";
-    private static final String ONLY_TRUSTED = "onlyTrustedApps";
-    private static final String SELECTED_BUTTON = "selectedButton";
+  @Parcel private static class SearchViewModel {
+    private final String currentQuery;
+    private final String storeName;
+    private final boolean onlyTrustedApps;
+    private int selectedButton;
+
+    private SearchViewModel(String currentQuery, String storeName, boolean onlyTrustedApps) {
+      this.currentQuery = currentQuery;
+      this.storeName = storeName;
+      this.onlyTrustedApps = onlyTrustedApps;
+      this.selectedButton = -1;
+    }
+
+    public SearchViewModel(String currentQuery, boolean onlyTrustedApps) {
+      this.currentQuery = currentQuery;
+      this.storeName = "";
+      this.onlyTrustedApps = onlyTrustedApps;
+      this.selectedButton = -1;
+    }
+
+    public SearchViewModel(String currentQuery, String storeName) {
+      this.currentQuery = currentQuery;
+      this.storeName = storeName;
+      this.onlyTrustedApps = true;
+      this.selectedButton = -1;
+    }
+
+    public String getCurrentQuery() {
+      return currentQuery;
+    }
+
+    public String getStoreName() {
+      return storeName;
+    }
+
+    public boolean isOnlyTrustedApps() {
+      return onlyTrustedApps;
+    }
+
+    public int getSelectedButton() {
+      return selectedButton;
+    }
+
+    public void setSelectedButton(int selectedButton) {
+      this.selectedButton = selectedButton;
+    }
   }
 }

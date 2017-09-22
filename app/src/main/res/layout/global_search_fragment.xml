@@ -3,21 +3,33 @@
   ~ Copyright (c) 2016.
   ~ Modified by Neurophobic Animal on 07/06/2016.
   -->
-
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
 
-  <include layout="@layout/partial_view_incl_no_network"/>
+  <include
+      layout="@layout/partial_view_incl_no_network"
+      tools:visibility="gone"
+      />
 
-  <include layout="@layout/partial_view_error"/>
+  <include
+      layout="@layout/partial_view_error"
+      tools:visibility="gone"
+      />
 
-  <include layout="@layout/partial_view_progress_bar"/>
+  <include
+      layout="@layout/partial_view_progress_bar"
+      tools:visibility="gone"
+      />
 
-  <include layout="@layout/incl_no_search_results_layout"/>
+  <include
+      layout="@layout/incl_no_search_results_layout"
+      tools:visibility="gone"
+      />
 
   <RelativeLayout
       android:id="@+id/search_results_layout"
@@ -26,6 +38,7 @@
       android:layout_marginTop="?attr/actionBarSize"
       android:paddingTop="15dp"
       android:visibility="gone"
+      tools:visibility="visible"
       >
 
     <LinearLayout
@@ -47,6 +60,7 @@
           android:textColor="@color/white"
           android:textSize="12sp"
           android:visibility="gone"
+          tools:visibility="visible"
           />
 
       <Button
@@ -58,16 +72,18 @@
           android:textColor="@color/silver_dark"
           android:textSize="12sp"
           android:visibility="gone"
+          tools:visibility="visible"
           />
 
     </LinearLayout>
 
-    <include
-        layout="@layout/view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/search_result_list"
         android:layout_below="@id/buttons_layout"
-        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="visible"
         />
 
   </RelativeLayout>

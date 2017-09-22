@@ -3,7 +3,7 @@
  * Modified on 24/06/2016.
  */
 
-package cm.aptoide.pt.view.search;
+package cm.aptoide.pt.view.search.result;
 
 import android.support.v4.app.FragmentActivity;
 import android.view.View;

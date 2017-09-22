@@ -10,7 +10,6 @@ import cm.aptoide.pt.presenter.InviteFriendsContract;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.downloads.scheduled.ScheduledDownloadsFragment;
 import cm.aptoide.pt.view.store.StoreFragment;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,8 +19,6 @@ import java.util.List;
  * navigators instantiate the proper fragment or activity.
  */
 @Deprecated public interface FragmentProvider {
-
-  @Deprecated Fragment newScreenshotsViewerFragment(ArrayList<String> uris, int currentItem);
 
   Fragment newSendFeedbackFragment(String screenshotFilePath);
 
@@ -36,12 +33,6 @@ import java.util.List;
       StoreFragment.OpenType openType);
 
   Fragment newStoreFragment(long userId, String storeTheme, StoreFragment.OpenType openType);
-
-  /**
-   * @param storeContext is needed to give context to fragment ex: store downloads vs global
-   * downloads
-   */
-  Fragment newHomeFragment(String storeName, StoreContext storeContext, String storeTheme);
 
   Fragment newSearchFragment(String query);
 
@@ -105,17 +96,9 @@ import java.util.List;
 
   Fragment newSubscribedStoresFragment(Event event, String storeTheme, String tag);
 
-  Fragment newSearchPagerTabFragment(String query, boolean subscribedStores,
-      boolean hasMultipleFragments);
-
-  Fragment newSearchPagerTabFragment(String query, String storeName);
-
   Fragment newDownloadsFragment();
 
   Fragment newOtherVersionsFragment(String appName, String appImgUrl, String appPackage);
-
-  Fragment newOtherVersionsFragment(String appName, String appImgUrl, String appPackage,
-      String storeName);
 
   Fragment newRollbackFragment();
 

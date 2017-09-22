@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.search;
+package cm.aptoide.pt.view.search.result;
 
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
