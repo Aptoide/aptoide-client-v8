@@ -17,9 +17,26 @@ public interface SearchView extends View {
 
   void setEverywhereSearchButtonHighlighted();
 
-  void showLoading();
-
   Observable<Void> clickFollowedStoresSearchButton();
 
   Observable<Void> clickEverywhereSearchButton();
+
+  void showLoading();
+
+  void hideLoading();
+
+  Model getViewModel();
+
+  void setupButtonVisibility(boolean hasSubscribedResults, boolean hasEverywhereResults);
+
+  interface Model {
+
+    String getCurrentQuery();
+
+    String getStoreName();
+
+    boolean isOnlyTrustedApps();
+
+    int getSelectedButton();
+  }
 }

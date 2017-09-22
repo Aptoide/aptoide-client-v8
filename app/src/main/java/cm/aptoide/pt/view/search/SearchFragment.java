@@ -18,6 +18,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
+import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -30,11 +31,11 @@ import cm.aptoide.pt.search.SearchBuilder;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.view.fragment.FragmentView;
+import cm.aptoide.pt.view.recycler.LinearLayoutManagerWithSmoothScroller;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.List;
 import okhttp3.OkHttpClient;
-import org.parceler.Parcel;
 import org.parceler.Parcels;
 import retrofit2.Converter;
 import rx.Observable;
@@ -124,8 +125,6 @@ public class SearchFragment extends FragmentView implements SearchView {
   }
 
   @Override public void showNoResultsImage() {
-    searchAnalytics.searchNoResults(viewModel.getCurrentQuery());
-
     noSearchLayout.setVisibility(View.VISIBLE);
     buttonsLayout.setVisibility(View.INVISIBLE);
     noSearchLayoutSearchButtonClick().subscribe(__ -> {
@@ -153,16 +152,40 @@ public class SearchFragment extends FragmentView implements SearchView {
     followedStoresButton.setBackgroundResource(0);
   }
 
-  @Override public void showLoading() {
-
-  }
-
   @Override public Observable<Void> clickFollowedStoresSearchButton() {
     return RxView.clicks(followedStoresButton);
   }
 
   @Override public Observable<Void> clickEverywhereSearchButton() {
     return RxView.clicks(allStoresButton);
+  }
+
+  @Override public void showLoading() {
+    // TODO: 22/9/2017 sithengineer
+  }
+
+  @Override public void hideLoading() {
+    // TODO: 22/9/2017 sithengineer
+  }
+
+  @Override public Model getViewModel() {
+    return viewModel;
+  }
+
+  @Override
+  public void setupButtonVisibility(boolean hasSubscribedResults, boolean hasEverywhereResults) {
+    if (viewModel.getStoreName() != null) {
+      followedStoresButton.setText(viewModel.getStoreName());
+      followedStoresButton.setVisibility(View.VISIBLE);
+      return;
+    }
+
+    if (hasSubscribedResults) {
+      followedStoresButton.setVisibility(View.VISIBLE);
+    }
+    if (hasEverywhereResults) {
+      allStoresButton.setVisibility(View.VISIBLE);
+    }
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -212,17 +235,26 @@ public class SearchFragment extends FragmentView implements SearchView {
     final SearchAnalytics searchAnalytics =
         new SearchAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(applicationContext));
 
-    final HashMapNotNull<String, List<String>> subscribedStores =
-        StoreUtils.getSubscribedStoresAuthMap(
-            AccessorFactory.getAccessorFor(applicationContext.getDatabase(), Store.class));
+    final StoreAccessor storeAccessor =
+        AccessorFactory.getAccessorFor(applicationContext.getDatabase(), Store.class);
+    final HashMapNotNull<String, List<String>> subscribedStoresAuthMap =
+        StoreUtils.getSubscribedStoresAuthMap(storeAccessor);
+    final List<Long> subscribedStoresIds = StoreUtils.getSubscribedStoresIds(storeAccessor);
+
+    final SearchManager searchManager =
+        new SearchManager(sharedPreferences, tokenInvalidator, bodyInterceptor, httpClient,
+            converterFactory, subscribedStoresAuthMap, subscribedStoresIds);
 
     final CrashReport crashReport = CrashReport.getInstance();
     final Scheduler ioScheduler = Schedulers.io();
     final Scheduler mainThreadScheduler = AndroidSchedulers.mainThread();
 
-    return new SearchPresenter(this, sharedPreferences, tokenInvalidator, bodyInterceptor,
-        httpClient, converterFactory, searchAnalytics, subscribedStores, crashReport, ioScheduler,
-        mainThreadScheduler);
+    final SearchResultAdapter adapter = new SearchResultAdapter();
+    resultList.setAdapter(adapter);
+    resultList.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(getContext()));
+
+    return new SearchPresenter(this, searchAnalytics, crashReport, ioScheduler, mainThreadScheduler,
+        searchManager, adapter);
   }
 
   @Nullable @Override
@@ -255,20 +287,6 @@ public class SearchFragment extends FragmentView implements SearchView {
     noSearchLayoutSearchButton = (ImageView) view.findViewById(R.id.ic_search_button);
   }
 
-  private void setupButtonVisibility() {
-    if (viewModel.getStoreName() != null) {
-      followedStoresButton.setText(viewModel.getStoreName());
-      followedStoresButton.setVisibility(View.VISIBLE);
-    } else {
-      if (hasSubscribedResults) {
-        followedStoresButton.setVisibility(View.VISIBLE);
-      }
-      if (hasEverywhereResults) {
-        allStoresButton.setVisibility(View.VISIBLE);
-      }
-    }
-  }
-
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
@@ -280,75 +298,6 @@ public class SearchFragment extends FragmentView implements SearchView {
       setSubscribedSearchButtonHighlighted();
     } else {
       setEverywhereSearchButtonHighlighted();
-    }
-  }
-
-  @Override public void onDestroyView() {
-    noSearchLayoutSearchButton.setOnClickListener(null);
-    noSearchLayoutSearchButton = null;
-    noSearchLayoutSearchQuery = null;
-    noSearchLayout = null;
-    buttonsLayout = null;
-    allStoresButton.setOnClickListener(null);
-    allStoresButton = null;
-    followedStoresButton.setOnClickListener(null);
-    followedStoresButton = null;
-    super.onDestroyView();
-  }
-
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    if (create) {
-      executeSearchRequests(viewModel.getStoreName(), create);
-    } else {
-      handleFinishLoading(create);
-    }
-  }
-
-  @Parcel private static class SearchViewModel {
-    private final String currentQuery;
-    private final String storeName;
-    private final boolean onlyTrustedApps;
-    private int selectedButton;
-
-    private SearchViewModel(String currentQuery, String storeName, boolean onlyTrustedApps) {
-      this.currentQuery = currentQuery;
-      this.storeName = storeName;
-      this.onlyTrustedApps = onlyTrustedApps;
-      this.selectedButton = -1;
-    }
-
-    public SearchViewModel(String currentQuery, boolean onlyTrustedApps) {
-      this.currentQuery = currentQuery;
-      this.storeName = "";
-      this.onlyTrustedApps = onlyTrustedApps;
-      this.selectedButton = -1;
-    }
-
-    public SearchViewModel(String currentQuery, String storeName) {
-      this.currentQuery = currentQuery;
-      this.storeName = storeName;
-      this.onlyTrustedApps = true;
-      this.selectedButton = -1;
-    }
-
-    public String getCurrentQuery() {
-      return currentQuery;
-    }
-
-    public String getStoreName() {
-      return storeName;
-    }
-
-    public boolean isOnlyTrustedApps() {
-      return onlyTrustedApps;
-    }
-
-    public int getSelectedButton() {
-      return selectedButton;
-    }
-
-    public void setSelectedButton(int selectedButton) {
-      this.selectedButton = selectedButton;
     }
   }
 }

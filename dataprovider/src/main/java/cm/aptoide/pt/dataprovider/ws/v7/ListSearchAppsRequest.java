@@ -38,18 +38,17 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
       stores = Collections.singletonList(storeName);
     }
 
+    final Body body;
     if (subscribedStoresAuthMap != null && subscribedStoresAuthMap.containsKey(storeName)) {
       HashMapNotNull<String, List<String>> storesAuthMap = new HashMapNotNull<>();
       storesAuthMap.put(storeName, subscribedStoresAuthMap.get(storeName));
-      return new ListSearchAppsRequest(
-          new Body(Endless.DEFAULT_LIMIT, query, storesAuthMap, stores, false, sharedPreferences),
-          getHost(sharedPreferences), bodyInterceptor, httpClient, converterFactory,
-          tokenInvalidator);
+      body =
+          new Body(Endless.DEFAULT_LIMIT, query, storesAuthMap, stores, false, sharedPreferences);
+    } else {
+      body = new Body(Endless.DEFAULT_LIMIT, query, stores, false, sharedPreferences);
     }
-    return new ListSearchAppsRequest(
-        new Body(Endless.DEFAULT_LIMIT, query, stores, false, sharedPreferences),
-        getHost(sharedPreferences), bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator);
+    return new ListSearchAppsRequest(body, getHost(sharedPreferences), bodyInterceptor, httpClient,
+        converterFactory, tokenInvalidator);
   }
 
   public static ListSearchAppsRequest of(String query, boolean addSubscribedStores,
