@@ -1,21 +1,17 @@
 package cm.aptoide.pt.spotandshareapp.view;
 
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.spotandshareandroid.transfermanager.Transfer;
-import cm.aptoide.pt.spotandshareapp.TransferAppModel;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareTransfer;
 import java.util.LinkedList;
 import java.util.List;
-import rx.subjects.PublishSubject;
 
 /**
  * Created by filipe on 05-07-2017.
@@ -27,26 +23,24 @@ public class SpotAndShareTransferRecordAdapter
   private static final int RECEIVED_APP = 0;
   private static final int SENT_APP = 1;
 
-  private List<TransferAppModel> appsTransfered;
-  private PublishSubject<TransferAppModel> acceptSubject;
-  private PublishSubject<TransferAppModel> installSubject;
+  private List<SpotAndShareTransfer> appsTransfered;
+  private SpotAndShareTransferRecordCardProvider spotAndShareTransferRecordCardProvider;
 
-  public SpotAndShareTransferRecordAdapter(PublishSubject<TransferAppModel> acceptSubject,
-      PublishSubject<TransferAppModel> installApp) {
-    this.installSubject = installApp;
+  public SpotAndShareTransferRecordAdapter(
+      SpotAndShareTransferRecordCardProvider spotAndShareTransferRecordCardProvider) {
+    this.spotAndShareTransferRecordCardProvider = spotAndShareTransferRecordCardProvider;
     this.appsTransfered = new LinkedList<>();
-    this.acceptSubject = acceptSubject;
   }
 
   @Override public TransferViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     if (viewType == SENT_APP) {
       View view = LayoutInflater.from(parent.getContext())
           .inflate(R.layout.fragment_spotandshare_transfer_record_item_sent, parent, false);
-      return new TransferViewHolder(view);
+      return new TransferViewHolder(view, spotAndShareTransferRecordCardProvider);
     } else if (viewType == RECEIVED_APP) {
       View view = LayoutInflater.from(parent.getContext())
           .inflate(R.layout.fragment_spotandshare_transfer_record_item_received, parent, false);
-      return new TransferViewHolder(view);
+      return new TransferViewHolder(view, spotAndShareTransferRecordCardProvider);
     }
     throw new IllegalArgumentException(
         "ViewType argument must be either " + RECEIVED_APP + " or " + SENT_APP);
@@ -62,6 +56,8 @@ public class SpotAndShareTransferRecordAdapter
 
   @Override public int getItemViewType(int position) {
     if (appsTransfered.get(position)
+        .getAppsList()
+        .get(0)
         .getTransferState() == Transfer.State.SERVING) {
       return SENT_APP;
     } else {
@@ -69,7 +65,7 @@ public class SpotAndShareTransferRecordAdapter
     }
   }
 
-  public void updateTransferList(List<TransferAppModel> transferAppModelList) {
+  public void updateTransferList(List<SpotAndShareTransfer> transferAppModelList) {
     this.appsTransfered = transferAppModelList;
     notifyDataSetChanged();
   }
@@ -77,90 +73,36 @@ public class SpotAndShareTransferRecordAdapter
   public void removeAll() {
     appsTransfered.clear();
     notifyDataSetChanged();
-    acceptSubject = null;
-    installSubject = null;
     appsTransfered = null;
   }
 
-  class TransferViewHolder extends ViewHolder {
+  class TransferViewHolder extends RecyclerView.ViewHolder {
 
+    private SpotAndShareTransferRecordCardProvider cardProvider;
     private ImageView senderAvatar;
     private TextView senderName;
-    private TextView appName;
-    private TextView appSize;
-    private ImageView appIcon;
-    private ImageButton acceptButton;
-    private Button installButton;
-    private ProgressBar transferProgressBar;
+    private LinearLayout cardContentLayout;
 
-    public TransferViewHolder(View itemView) {
+    public TransferViewHolder(View itemView, SpotAndShareTransferRecordCardProvider cardProvider) {
       super(itemView);
-      appName = (TextView) itemView.findViewById(R.id.transfer_record_app_name);
-      appSize = (TextView) itemView.findViewById(R.id.transfer_record_app_size);
+      this.cardProvider = cardProvider;
       senderAvatar = (ImageView) itemView.findViewById(R.id.transfer_record_header_sender_avatar);
       senderName = (TextView) itemView.findViewById(R.id.transfer_record_header_sender_info);
-      appIcon = (ImageView) itemView.findViewById(R.id.transfer_app_icon);
-      acceptButton = (ImageButton) itemView.findViewById(R.id.transfer_record_accept_app_button);
-      installButton = (Button) itemView.findViewById(R.id.transfer_record_install_app_button);
-      transferProgressBar = (ProgressBar) itemView.findViewById(R.id.transfer_record_progress_bar);
+      cardContentLayout =
+          (LinearLayout) itemView.findViewById(R.id.spotandshare_transfer_card_content);
     }
 
-    public void setTransferItem(TransferAppModel transferItem) {
-      System.out.println("item:"
-          + transferItem.getAppName()
-          + " transfer state: "
-          + transferItem.getTransferState());
-      senderAvatar.setImageDrawable(transferItem.getFriend()
+    public void setTransferItem(SpotAndShareTransfer transfer) {
+      senderAvatar.setImageDrawable(transfer.getSenderUser()
           .getAvatar());
       senderName.setText(itemView.getContext()
           .getResources()
-          .getString(R.string.spotandshare_message_app_sender_info_sending, transferItem.getFriend()
+          .getString(R.string.spotandshare_message_app_sender_info_sending, transfer.getSenderUser()
               .getUsername()));
-      appName.setText(transferItem.getAppName());
-      appSize.setText(itemView.getContext()
-          .getResources()
-          .getString(R.string.spotandshare_short_megabytes,
-              String.valueOf(transferItem.getApkSize())));
-      appIcon.setImageDrawable(transferItem.getAppIcon());
-      acceptButton.setOnClickListener(accept -> acceptSubject.onNext(transferItem));
-      installButton.setOnClickListener(accept -> installSubject.onNext(transferItem));
 
-      resetState();
-
-      if (transferItem.getTransferState() == Transfer.State.PENDING_ACCEPTION) {
-        acceptButton.setVisibility(View.VISIBLE);
-      } else if (transferItem.getTransferState() == Transfer.State.RECEIVING) {
-        acceptButton.setVisibility(View.GONE);
-        transferProgressBar.setVisibility(View.VISIBLE);
-        transferProgressBar.setIndeterminate(true);
-      } else if (transferItem.getTransferState() == Transfer.State.RECEIVED) {
-        senderName.setText(itemView.getContext()
-            .getResources()
-            .getString(R.string.spotandshare_message_app_sender_info_sent, transferItem.getFriend()
-                .getUsername()));
-        acceptButton.setVisibility(View.GONE);
-        if (!transferItem.isInstalled()) {
-          installButton.setVisibility(View.VISIBLE);
-          appSize.setText(R.string.spotandshare_short_download_completed);
-        } else {
-          installButton.setVisibility(View.GONE);
-          appSize.setText(R.string.spotandshare_short_installed);
-        }
-        transferProgressBar.setVisibility(View.INVISIBLE);
-      } else if (transferItem.getTransferState() == Transfer.State.SERVING) {
-        acceptButton.setVisibility(View.GONE);
-        transferProgressBar.setIndeterminate(true);
-      } else {
-        acceptButton.setVisibility(View.GONE);
-        transferProgressBar.setVisibility(View.INVISIBLE);
-        installButton.setVisibility(View.GONE);
-      }
-    }
-
-    private void resetState() {
-      acceptButton.setVisibility(View.GONE);
-      transferProgressBar.setVisibility(View.INVISIBLE);
-      installButton.setVisibility(View.GONE);
+      cardContentLayout.addView(
+          cardProvider.getView(LayoutInflater.from(itemView.getContext()), transfer.getAppsList(),
+              itemView.getContext()));
     }
   }
 }

@@ -47,6 +47,53 @@ public class SpotAndShareTransferRecordManager {
     return appModelList;
   }
 
+  public List<SpotAndShareTransfer> getTransfersList(List<Transfer> transferList) {
+    this.transferList = transferList;
+    List<SpotAndShareTransfer> newTransfersList = new LinkedList<>();
+    for (int i = 0; i < transferList.size(); i++) {
+      Transfer transfer = transferList.get(i);
+
+      if (i > 0 && transferList.get(i - 1)
+          .getAndroidAppInfo()
+          .getFriend()
+          .getUsername()
+          .equals(transfer.getAndroidAppInfo()
+              .getFriend()
+              .getUsername())) {//add to the previous card
+
+        newTransfersList.get(newTransfersList.size() - 1)
+            .getAppsList()
+            .add(new TransferAppModel(transfer.getAndroidAppInfo()
+                .getAppName(), transfer.getAndroidAppInfo()
+                .getPackageName(), fileSizeConverter.convertToMB(
+                (double) transfer.getAndroidAppInfo()
+                    .getFilesSize()), downloadsPath + "/" + transfer.getAndroidAppInfo()
+                .getPackageName(), convertByteToDrawable(transfer.getAndroidAppInfo()
+                .getIcon()), transfer.getState(), userMapper.getSpotAndShareUser(
+                transfer.getAndroidAppInfo()
+                    .getFriend()), transfer.hashCode()));
+      } else { //create new element
+
+        List<TransferAppModel> appList = new LinkedList<>();
+
+        appList.add(new TransferAppModel(transfer.getAndroidAppInfo()
+            .getAppName(), transfer.getAndroidAppInfo()
+            .getPackageName(), fileSizeConverter.convertToMB((double) transfer.getAndroidAppInfo()
+            .getFilesSize()), downloadsPath + "/" + transfer.getAndroidAppInfo()
+            .getPackageName(), convertByteToDrawable(transfer.getAndroidAppInfo()
+            .getIcon()), transfer.getState(), userMapper.getSpotAndShareUser(
+            transfer.getAndroidAppInfo()
+                .getFriend()), transfer.hashCode()));
+
+        newTransfersList.add(new SpotAndShareTransfer(userMapper.getSpotAndShareUser(
+            transferList.get(i)
+                .getAndroidAppInfo()
+                .getFriend()), appList));
+      }
+    }
+    return newTransfersList;
+  }
+
   private Drawable convertByteToDrawable(byte[] icon) {
     return new BitmapDrawable(context.getResources(),
         BitmapFactory.decodeByteArray(icon, 0, icon.length));

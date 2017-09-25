@@ -47,7 +47,7 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .switchMap(created -> spotAndShare.observeTransfers()
             .map(transfers -> new LinkedList<>(transfers))
-            .map(transfers -> transferRecordManager.getTransferAppModelList(transfers))
+            .map(transfers -> transferRecordManager.getTransfersList(transfers))
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(transferAppModels -> view.updateReceivedAppsList(transferAppModels)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

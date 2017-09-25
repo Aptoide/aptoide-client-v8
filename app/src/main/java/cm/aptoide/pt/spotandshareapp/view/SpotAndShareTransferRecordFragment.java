@@ -37,6 +37,7 @@ import cm.aptoide.pt.spotandshareapp.Header;
 import cm.aptoide.pt.spotandshareapp.ObbsProvider;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareAppProvider;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareInstallManager;
+import cm.aptoide.pt.spotandshareapp.SpotAndShareTransfer;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareTransferRecordManager;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUser;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUserMapper;
@@ -193,7 +194,8 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   private void setupTransferRecordRecyclerView() {
     transferRecordRecyclerView.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-    transferRecordAdapter = new SpotAndShareTransferRecordAdapter(acceptApp, installApp);
+    transferRecordAdapter = new SpotAndShareTransferRecordAdapter(
+        new SpotAndShareTransferRecordCardProvider(acceptApp, installApp));
     transferRecordRecyclerView.setAdapter(transferRecordAdapter);
   }
 
@@ -342,7 +344,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     pickAppsProgressBarContainer.setVisibility(View.VISIBLE);
   }
 
-  @Override public void updateReceivedAppsList(List<TransferAppModel> transferAppModelList) {
+  @Override public void updateReceivedAppsList(List<SpotAndShareTransfer> transferAppModelList) {
     transferRecordAdapter.updateTransferList(transferAppModelList);
     if (transferAppModelList.size() > 0) {
       transferRecordRecyclerView.smoothScrollToPosition(transferAppModelList.size() - 1);

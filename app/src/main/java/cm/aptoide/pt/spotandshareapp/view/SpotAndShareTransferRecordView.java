@@ -1,5 +1,6 @@
 package cm.aptoide.pt.spotandshareapp.view;
 
+import cm.aptoide.pt.spotandshareapp.SpotAndShareTransfer;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareUser;
 import cm.aptoide.pt.spotandshareapp.TransferAppModel;
 import java.util.List;
@@ -25,7 +26,7 @@ public interface SpotAndShareTransferRecordView extends SpotAndSharePickAppsView
 
   void onLeaveGroupError();
 
-  void updateReceivedAppsList(List<TransferAppModel> transferAppModelList);
+  void updateReceivedAppsList(List<SpotAndShareTransfer> transferAppModelList);
 
   Observable<TransferAppModel> installApp();
 
