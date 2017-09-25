@@ -142,8 +142,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
         ((AptoideApplication) getContext().getApplicationContext()).getNotificationSyncScheduler();
     aptoideNavigationTracker =
         ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker();
-    aptoideNavigationTracker.registerView(this.getClass()
-        .getSimpleName());
 
     repository = RepositoryFactory.getUpdateRepository(getContext(),
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
@@ -202,6 +200,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
   @Override public void onDestroyView() {
     subscriptions.clear();
     super.onDestroyView();
+  }
+
+  @Override public void onResume() {
+    super.onResume();
+    aptoideNavigationTracker.registerView(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
