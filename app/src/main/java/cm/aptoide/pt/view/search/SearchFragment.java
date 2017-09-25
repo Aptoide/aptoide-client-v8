@@ -155,6 +155,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
   @Override protected void setupViewPager() {
     viewPager.setPagingEnabled(false);
+    viewPager.setAptoideNavigationTracker(navigationTracker);
 
     if (hasSubscribedResults || hasEverywhereResults) {
       super.setupViewPager();

@@ -292,7 +292,6 @@ public abstract class AptoideApplication extends Application {
   private BillingSyncManager billingSyncManager;
   private TimelineRepositoryFactory timelineRepositoryFactory;
   private BillingIdResolver billingiIdResolver;
-  private AptoideNavigationTracker aptoideNavigationTracker;
   private AuthenticationPersistence authenticationPersistence;
   private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody>
       noAuthorizationBodyInterceptorV3;
@@ -300,6 +299,7 @@ public abstract class AptoideApplication extends Application {
   private CallbackManager facebookCallbackManager;
   private Map<Integer, Result> fragmentResulMap;
   private PublishRelay<FacebookLoginResult> facebookLoginResultRelay;
+  private AptoideNavigationTracker aptoideNavigationTracker;
 
   public LeakTool getLeakTool() {
     if (leakTool == null) {
