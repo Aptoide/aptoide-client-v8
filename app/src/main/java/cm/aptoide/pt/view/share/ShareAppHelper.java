@@ -96,7 +96,7 @@ public class ShareAppHelper {
           @Override public void onClick(View v) {
             installAppRelay.call(null);
           }
-        }, Snackbar.LENGTH_INDEFINITE);
+        }, Snackbar.LENGTH_SHORT);
   }
 
   public void shareApp(String appName, String packageName, String iconPath, String origin) {
