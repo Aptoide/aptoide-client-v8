@@ -11,13 +11,20 @@
     >
 
   <LinearLayout
-      android:id="@+id/spotandshare_transfer_card_content"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:orientation="vertical"
       >
     <include layout="@layout/spotandshare_transfer_record_card_header"/>
     <!--<include layout="@layout/spotandshare_transfer_record_item"/>-->
+
+
+    <LinearLayout
+        android:id="@+id/spotandshare_transfer_card_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        />
   </LinearLayout>
 
 </android.support.v7.widget.CardView>

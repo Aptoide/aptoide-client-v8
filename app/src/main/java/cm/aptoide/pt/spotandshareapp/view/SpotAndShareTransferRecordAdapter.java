@@ -100,6 +100,7 @@ public class SpotAndShareTransferRecordAdapter
           .getString(R.string.spotandshare_message_app_sender_info_sending, transfer.getSenderUser()
               .getUsername()));
 
+      cardContentLayout.removeAllViews();
       cardContentLayout.addView(
           cardProvider.getView(LayoutInflater.from(itemView.getContext()), transfer.getAppsList(),
               itemView.getContext()));
