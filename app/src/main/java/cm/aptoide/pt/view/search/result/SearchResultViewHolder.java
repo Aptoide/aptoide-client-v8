@@ -3,15 +3,12 @@ package cm.aptoide.pt.view.search.result;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.util.Pair;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.abtesting.ABTest;
 import cm.aptoide.pt.abtesting.SearchTabOptions;
@@ -20,17 +17,15 @@ import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.AptoideUtils;
-import com.jakewharton.rxbinding.view.RxMenuItem;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Date;
-import rx.functions.Action0;
-import rx.functions.Action1;
 import rx.subjects.PublishSubject;
 
 public class SearchResultViewHolder extends RecyclerView.ViewHolder {
 
   public static final int LAYOUT = R.layout.search_app_row;
-  private final PublishSubject<Integer> subject;
+  private final PublishSubject<ListSearchApps.SearchAppsApp> openPopupMenu;
+  private final PublishSubject<Pair<ListSearchApps.SearchAppsApp, String>> openAppView;
 
   private TextView nameTextView;
   private ImageView iconImageView;
@@ -41,21 +36,21 @@ public class SearchResultViewHolder extends RecyclerView.ViewHolder {
   private TextView storeTextView;
   private ImageView icTrustedImageView;
   private View bottomView;
+  private ListSearchApps.SearchAppsApp searchAppsApp;
+  private String query;
 
-  public SearchResultViewHolder(View itemView, PublishSubject<Integer> subject) {
+  public SearchResultViewHolder(View itemView,
+      PublishSubject<ListSearchApps.SearchAppsApp> openPopupMenu,
+      PublishSubject<Pair<ListSearchApps.SearchAppsApp, String>> openAppView) {
     super(itemView);
-    this.subject = subject;
+    this.openPopupMenu = openPopupMenu;
+    this.openAppView = openAppView;
     bindViews(itemView);
   }
 
-  public void setupWith(ListSearchApps.SearchAppsApp searchAppsApp) {
-
-    final Action0 clickCallback = displayable.getClickCallback();
-    final Action1<Void> clickToOpenStore =
-        __ -> handleClickToOpenPopupMenu(clickCallback, overflowImageView, searchAppsApp);
-
-    RxView.clicks(overflowImageView)
-        .subscribe(clickToOpenStore);
+  public void setupWith(ListSearchApps.SearchAppsApp searchAppsApp, String query) {
+    this.searchAppsApp = searchAppsApp;
+    this.query = query;
 
     nameTextView.setText(searchAppsApp.getName());
     String downloadNumber = AptoideUtils.StringU.withSuffix(searchAppsApp.getStats()
@@ -122,70 +117,6 @@ public class SearchResultViewHolder extends RecyclerView.ViewHolder {
     } else {
       icTrustedImageView.setVisibility(View.GONE);
     }
-
-    final Action1<Void> clickToOpenAppView =
-        v -> handleClickToOpenAppView(clickCallback, searchAppsApp, displayable.getQuery());
-
-    RxView.clicks(itemView)
-        .subscribe(clickToOpenAppView);
-  }
-
-  private void handleClickToOpenAppView(Action0 clickCallback,
-      ListSearchApps.SearchAppsApp searchAppsApp, String query) {
-    if (clickCallback != null) {
-      clickCallback.call();
-    }
-
-    searchAnalytics.searchAppClick(query, searchAppsApp.getPackageName());
-    getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-        .newAppViewFragment(searchAppsApp.getId(), searchAppsApp.getPackageName(),
-            searchAppsApp.getStore()
-                .getAppearance()
-                .getTheme(), searchAppsApp.getStore()
-                .getName()), true);
-  }
-
-  private void handleClickToOpenPopupMenu(Action0 clickCallback, View view,
-      ListSearchApps.SearchAppsApp searchAppsApp) {
-
-    final PopupMenu popup = new PopupMenu(view.getContext(), view);
-    MenuInflater inflater = popup.getMenuInflater();
-    inflater.inflate(R.menu.menu_search_item, popup.getMenu());
-
-    MenuItem menuItemVersions = popup.getMenu()
-        .findItem(R.id.versions);
-    if (searchAppsApp.isHasVersions()) {
-      menuItemVersions.setVisible(true);
-      RxMenuItem.clicks(menuItemVersions)
-          .subscribe(aVoid -> {
-            if (clickCallback != null) {
-              clickCallback.call();
-            }
-
-            String name = searchAppsApp.getName();
-            String icon = searchAppsApp.getIcon();
-            String packageName = searchAppsApp.getPackageName();
-
-            getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-                .newOtherVersionsFragment(name, icon, packageName), true);
-          });
-    }
-
-    MenuItem menuItemGoToStore = popup.getMenu()
-        .findItem(R.id.go_to_store);
-    RxMenuItem.clicks(menuItemGoToStore)
-        .subscribe(__ -> {
-          if (clickCallback != null) {
-            clickCallback.call();
-          }
-          getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-              .newStoreFragment(searchAppsApp.getStore()
-                  .getName(), searchAppsApp.getStore()
-                  .getAppearance()
-                  .getTheme()), true);
-        });
-
-    popup.show();
   }
 
   private boolean isConvert(ABTest<SearchTabOptions> searchAbTest, boolean addSubscribedStores,
@@ -204,5 +135,13 @@ public class SearchResultViewHolder extends RecyclerView.ViewHolder {
     storeTextView = (TextView) itemView.findViewById(R.id.search_store);
     icTrustedImageView = (ImageView) itemView.findViewById(R.id.ic_trusted_search);
     bottomView = itemView.findViewById(R.id.bottom_view);
+
+    RxView.clicks(overflowImageView)
+        .doOnError(err -> openPopupMenu.onError(err))
+        .subscribe(__ -> openPopupMenu.onNext(searchAppsApp));
+
+    RxView.clicks(itemView)
+        .doOnError(err -> openAppView.onError(err))
+        .subscribe(v -> openAppView.onNext(new Pair<>(searchAppsApp, query)));
   }
 }

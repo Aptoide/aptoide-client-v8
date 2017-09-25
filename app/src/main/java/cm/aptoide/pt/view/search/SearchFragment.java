@@ -28,6 +28,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.search.SearchAnalytics;
 import cm.aptoide.pt.search.SearchBuilder;
+import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.view.fragment.FragmentView;

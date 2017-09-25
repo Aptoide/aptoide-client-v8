@@ -7,6 +7,7 @@ import cm.aptoide.pt.dataprovider.model.v7.ListSearchApps;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.search.SearchAnalytics;
+import cm.aptoide.pt.search.SearchManager;
 import rx.Observable;
 import rx.Scheduler;
 
