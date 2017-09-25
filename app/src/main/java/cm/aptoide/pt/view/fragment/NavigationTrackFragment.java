@@ -23,10 +23,6 @@ public class NavigationTrackFragment extends FragmentView {
     getFragmentExtras();
   }
 
-  @Override public void onDestroy() {
-    super.onDestroy();
-  }
-
   @Override public void onResume() {
     super.onResume();
     if (!registerFragment) {

@@ -4,8 +4,6 @@ import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
 import cm.aptoide.pt.NavigationTrackerPagerAdapterHelper;
 import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 
@@ -23,10 +21,6 @@ public class AptoideViewPager extends ViewPager {
 
   public AptoideViewPager(Context context, AttributeSet attrs) {
     super(context, attrs);
-  }
-
-  @Override public void addView(View child, int index, ViewGroup.LayoutParams params) {
-    super.addView(child, index, params);
   }
 
   @Override protected void onAttachedToWindow() {
