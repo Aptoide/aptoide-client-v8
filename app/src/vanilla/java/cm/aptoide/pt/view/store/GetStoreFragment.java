@@ -1,5 +1,7 @@
 package cm.aptoide.pt.view.store;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
@@ -14,6 +16,10 @@ import rx.schedulers.Schedulers;
  */
 
 public class GetStoreFragment extends StoreTabWidgetsGridRecyclerFragment {
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+  }
 
   @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {
     Observable<GetStore> getStoreObservable;

@@ -45,10 +45,12 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     attachPresenter(new InboxPresenter(this,
-        ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
-        new LinksHandlerFactory(getContext()), CrashReport.getInstance(), new NotificationAnalytics(
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient(),
-        Analytics.getInstance())), savedInstanceState);
+            ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
+            new LinksHandlerFactory(getContext()), CrashReport.getInstance(),
+        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker(),
+        new NotificationAnalytics(
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient(),
+            Analytics.getInstance())), savedInstanceState);
     notificationSubject = PublishSubject.create();
     adapter = new InboxAdapter(Collections.emptyList(), notificationSubject);
   }
