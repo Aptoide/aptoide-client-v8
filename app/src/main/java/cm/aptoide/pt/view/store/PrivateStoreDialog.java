@@ -86,7 +86,7 @@ public class PrivateStoreDialog extends BaseDialog {
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor,
         new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
             ((AptoideApplication) getContext().getApplicationContext()

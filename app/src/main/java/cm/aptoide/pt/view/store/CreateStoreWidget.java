@@ -4,9 +4,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.view.store.ManageStoreFragment;
+import cm.aptoide.pt.account.view.user.CreateStoreDisplayable;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.view.account.store.ManageStoreFragment;
-import cm.aptoide.pt.view.account.user.CreateStoreDisplayable;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.android.schedulers.AndroidSchedulers;
@@ -45,7 +45,7 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
     compositeSubscription.add(RxView.clicks(button)
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(click -> getFragmentNavigator().navigateTo(
-            ManageStoreFragment.newInstance(new ManageStoreFragment.ViewModel(), false)))
+            ManageStoreFragment.newInstance(new ManageStoreFragment.ViewModel(), false), true))
         .doOnNext(__ -> displayable.getStoreAnalytics()
             .sendStoreTabInteractEvent("Login"))
         .subscribe(__ -> {

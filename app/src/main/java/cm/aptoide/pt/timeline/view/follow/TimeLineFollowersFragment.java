@@ -70,7 +70,7 @@ public class TimeLineFollowersFragment extends TimeLineFollowFragment {
     super.onCreate(savedInstanceState);
     defaultTheme = ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
     baseBodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     tokenInvalidator =

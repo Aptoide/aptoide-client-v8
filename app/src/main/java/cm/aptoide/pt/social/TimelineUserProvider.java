@@ -15,16 +15,19 @@ public interface TimelineUserProvider {
   Observable<User> getUser(boolean refresh);
 
   class TimelineNotification {
-    private String body;
-    private String img;
-    private String url;
-    private int notificationId;
+    private final String body;
+    private final String img;
+    private final String url;
+    private final int notificationId;
+    private final String analyticsUrl;
 
-    public TimelineNotification(String body, String img, String url, int notificationId) {
+    public TimelineNotification(String body, String img, String url, int notificationId,
+        String analyticsUrl) {
       this.body = body;
       this.img = img;
       this.url = url;
       this.notificationId = notificationId;
+      this.analyticsUrl = analyticsUrl;
     }
 
     public String getBody() {
@@ -41,6 +44,10 @@ public interface TimelineUserProvider {
 
     public int getNotificationId() {
       return notificationId;
+    }
+
+    public String getAnalyticsUrl() {
+      return analyticsUrl;
     }
   }
 }

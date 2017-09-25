@@ -3,7 +3,6 @@ package cm.aptoide.accountmanager;
 import android.text.TextUtils;
 import java.util.Collections;
 import java.util.List;
-import rx.Completable;
 
 public class LocalAccount implements Account {
 
@@ -11,14 +10,6 @@ public class LocalAccount implements Account {
 
   public LocalAccount(Store store) {
     this.store = store;
-  }
-
-  @Override public Completable logout() {
-    return Completable.complete();
-  }
-
-  @Override public Completable refreshToken() {
-    return Completable.error(new Exception("Can not refresh token of local account."));
   }
 
   @Override public List<Store> getSubscribedStores() {
@@ -55,22 +46,6 @@ public class LocalAccount implements Account {
 
   @Override public String getEmail() {
     return "";
-  }
-
-  @Override public String getAccessToken() {
-    return "";
-  }
-
-  @Override public String getRefreshToken() {
-    return "";
-  }
-
-  @Override public String getPassword() {
-    return "";
-  }
-
-  @Override public Type getType() {
-    return Type.LOCAL;
   }
 
   @Override public Store getStore() {

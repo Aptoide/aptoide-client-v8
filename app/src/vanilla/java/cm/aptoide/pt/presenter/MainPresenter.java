@@ -156,12 +156,12 @@ public class MainPresenter implements Presenter {
   }
 
   private void showWizard() {
-    fragmentNavigator.navigateTo(WizardFragment.newInstance());
+    fragmentNavigator.navigateTo(WizardFragment.newInstance(), true);
   }
 
   private void showHome() {
     Fragment home = HomeFragment.newInstance(defaultStore, StoreContext.home, defaultTheme);
-    fragmentNavigator.navigateToWithoutBackSave(home);
+    fragmentNavigator.navigateToWithoutBackSave(home, true);
   }
 
   private void watchInstalls(List<Install> installs) {

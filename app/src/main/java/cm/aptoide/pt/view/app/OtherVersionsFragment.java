@@ -74,11 +74,11 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
   }
 
   /**
-   *
    * @param appName
    * @param appImgUrl
    * @param appPackage
    * @param storeName
+   *
    * @return
    */
   public static OtherVersionsFragment newInstance(String appName, String appImgUrl,
@@ -98,7 +98,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     sharedPreferences =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     baseBodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
   }
@@ -241,7 +241,9 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
           switch (state) {
             case EXPANDED: {
               if (animationsEnabled) {
-                appIcon.animate().alpha(1F).start();
+                appIcon.animate()
+                    .alpha(1F)
+                    .start();
               } else {
                 appIcon.setVisibility(View.VISIBLE);
               }
@@ -252,7 +254,9 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
             case IDLE:
             case COLLAPSED: {
               if (animationsEnabled) {
-                appIcon.animate().alpha(0F).start();
+                appIcon.animate()
+                    .alpha(0F)
+                    .start();
               } else {
                 appIcon.setVisibility(View.INVISIBLE);
               }
@@ -265,7 +269,8 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     }
 
     private void setImage(String imgUrl) {
-      ImageLoader.with(view.getContext()).load(imgUrl, appIcon);
+      ImageLoader.with(view.getContext())
+          .load(imgUrl, appIcon);
     }
   }
 

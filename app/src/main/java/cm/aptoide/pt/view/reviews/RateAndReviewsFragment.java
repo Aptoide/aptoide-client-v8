@@ -32,7 +32,6 @@ import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.view.ThemeUtils;
-import cm.aptoide.pt.view.account.AccountNavigator;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.comments.CommentDisplayable;
 import cm.aptoide.pt.view.comments.CommentsAdapter;
@@ -42,6 +41,7 @@ import cm.aptoide.pt.view.comments.RateAndReviewCommentDisplayable;
 import cm.aptoide.pt.view.comments.SimpleReviewCommentAdder;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
+import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.recycler.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.ProgressBarDisplayable;
@@ -134,7 +134,8 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     }
     if (itemId == R.id.menu_install) {
       getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-          .newAppViewFragment(packageName, storeName, AppViewFragment.OpenType.OPEN_AND_INSTALL));
+              .newAppViewFragment(packageName, storeName, AppViewFragment.OpenType.OPEN_AND_INSTALL),
+          true);
       return true;
     }
     return super.onOptionsItemSelected(item);
@@ -185,7 +186,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   @Override public void onViewCreated() {
     super.onViewCreated();
     dialogUtils = new DialogUtils(accountManager,
-        new AccountNavigator(getFragmentNavigator(), accountManager), baseBodyInterceptor,
+        ((ActivityResultNavigator) getContext()).getAccountNavigator(), baseBodyInterceptor,
         httpClient, converterFactory, installedRepository, tokenInvalidator,
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         getContext().getResources());
@@ -268,7 +269,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     baseBodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getBaseBodyInterceptorV7Pool();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
         ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class));
