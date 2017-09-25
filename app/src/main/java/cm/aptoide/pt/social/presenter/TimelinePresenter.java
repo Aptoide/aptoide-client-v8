@@ -926,11 +926,13 @@ public class TimelinePresenter implements Presenter {
   private void clickOnLikesPreview() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.postClicked())
-        .filter(cardTouchEvent -> cardTouchEvent.getActionType()
-            .equals(CardTouchEvent.Type.LIKES_PREVIEW))
-        .doOnNext(cardTouchEvent -> timelineNavigation.navigateToLikesView(cardTouchEvent.getCard()
-            .getCardId(), ((LikesPreviewCardTouchEvent) cardTouchEvent).getLikesNumber()))
+        .flatMap(created -> view.postClicked()
+            .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+                .equals(CardTouchEvent.Type.LIKES_PREVIEW))
+            .doOnNext(cardTouchEvent -> timelineNavigation.navigateToLikesView(
+                cardTouchEvent.getCard()
+                    .getCardId(), ((LikesPreviewCardTouchEvent) cardTouchEvent).getLikesNumber()))
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
             .getAbUrl()), throwable -> {
