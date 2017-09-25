@@ -255,7 +255,7 @@ public class SearchFragment extends FragmentView implements SearchView {
     final SearchResultAdapter adapter = new SearchResultAdapter();
     resultList.setAdapter(adapter);
     resultList.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(getContext()));
-    return new SearchPresenter(this, searchAnalytics, crashReport, ioScheduler, mainThreadScheduler,
+    return new SearchPresenter(this, searchAnalytics, crashReport, mainThreadScheduler,
         searchManager, adapter);
   }
 

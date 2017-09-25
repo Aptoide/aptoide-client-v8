@@ -9,7 +9,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.abtesting.ABTest;
 import cm.aptoide.pt.abtesting.SearchTabOptions;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.model.v7.ListSearchApps;
+import cm.aptoide.pt.dataprovider.model.v7.search.SearchApp;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 import lombok.Getter;
 import rx.functions.Action0;
@@ -17,7 +17,7 @@ import rx.functions.Action0;
 /**
  * Created by neuro on 01-06-2016.
  */
-public class SearchDisplayable extends DisplayablePojo<ListSearchApps.SearchAppsApp> {
+public class SearchDisplayable extends DisplayablePojo<SearchApp> {
 
   @Getter private Action0 clickCallback;
   private String query;
@@ -25,14 +25,14 @@ public class SearchDisplayable extends DisplayablePojo<ListSearchApps.SearchApps
   public SearchDisplayable() {
   }
 
-  public SearchDisplayable(ListSearchApps.SearchAppsApp searchAppsApp) {
-    super(searchAppsApp);
+  public SearchDisplayable(SearchApp searchApp) {
+    super(searchApp);
   }
 
-  public SearchDisplayable(ListSearchApps.SearchAppsApp searchAppsApp,
+  public SearchDisplayable(SearchApp searchApp,
       ABTest<SearchTabOptions> searchAbTest, boolean addSubscribedStores,
       boolean hasMultipleFragments, String query) {
-    super(searchAppsApp);
+    super(searchApp);
     this.query = query;
     if (searchAbTest != null) {
       clickCallback = () -> {

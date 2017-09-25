@@ -2,7 +2,7 @@ package cm.aptoide.pt.search;
 
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.model.v7.ListSearchApps;
+import cm.aptoide.pt.dataprovider.model.v7.search.ListSearchApps;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -22,10 +22,8 @@ public class SearchManager {
   private final List<Long> subscribedStoresIds;
 
   public SearchManager(SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory,
-      HashMapNotNull<String, List<String>> subscribedStoresAuthMap,
-      List<Long> subscribedStoresIds) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient, Converter.Factory converterFactory,
+      HashMapNotNull<String, List<String>> subscribedStoresAuthMap, List<Long> subscribedStoresIds) {
     this.sharedPreferences = sharedPreferences;
     this.tokenInvalidator = tokenInvalidator;
     this.bodyInterceptor = bodyInterceptor;

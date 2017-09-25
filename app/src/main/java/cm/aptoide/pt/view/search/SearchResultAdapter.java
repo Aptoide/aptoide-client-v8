@@ -5,15 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.dataprovider.model.v7.DataList;
-import cm.aptoide.pt.dataprovider.model.v7.ListSearchApps;
+import cm.aptoide.pt.dataprovider.model.v7.search.ListSearchApps;
+import cm.aptoide.pt.dataprovider.model.v7.search.SearchApp;
 import cm.aptoide.pt.view.search.result.SearchResultViewHolder;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultViewHolder> {
 
-  private final ArrayList<ListSearchApps.SearchAppsApp> resultsForSearchFollowedStores;
-  private final ArrayList<ListSearchApps.SearchAppsApp> resultsForSearchEverywhere;
+  private final ArrayList<SearchApp> resultsForSearchFollowedStores;
+  private final ArrayList<SearchApp> resultsForSearchEverywhere;
   private boolean showingResultsFromEverywhere;
 
   public SearchResultAdapter() {
@@ -31,7 +32,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultViewHo
 
   @Override public void onBindViewHolder(SearchResultViewHolder holder, int position) {
     boolean resultsFromEveryWhere = false;
-    ListSearchApps.SearchAppsApp app = resultsFromEveryWhere ? resultsForSearchEverywhere.get(position)
+    SearchApp app = resultsFromEveryWhere ? resultsForSearchEverywhere.get(position)
         : resultsForSearchFollowedStores.get(position);
     holder.setupWith(app);
   }
@@ -64,19 +65,19 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultViewHo
   }
 
   public void addResultForSearchFollowedStores(ListSearchApps data) {
-    final List<ListSearchApps.SearchAppsApp> dataList = data.getDataList()
+    final List<SearchApp> dataList = data.getDataList()
         .getList();
     resultsForSearchFollowedStores.addAll(dataList);
   }
 
   public void addResultForSearchEverywhere(ListSearchApps data) {
-    final List<ListSearchApps.SearchAppsApp> dataList = data.getDataList()
+    final List<SearchApp> dataList = data.getDataList()
         .getList();
     resultsForSearchEverywhere.addAll(dataList);
   }
 
   private boolean hasMoreResults(ListSearchApps data) {
-    DataList<ListSearchApps.SearchAppsApp> dataList = data.getDataList();
+    DataList<SearchApp> dataList = data.getDataList();
     return dataList.getList()
         .size() > 0 || data.getTotal() > data.getNextSize();
   }

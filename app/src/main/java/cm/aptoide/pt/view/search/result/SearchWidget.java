@@ -13,8 +13,8 @@ import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.dataprovider.model.v7.ListSearchApps;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
+import cm.aptoide.pt.dataprovider.model.v7.search.SearchApp;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.search.SearchAnalytics;
 import cm.aptoide.pt.store.StoreTheme;
@@ -64,21 +64,21 @@ public class SearchWidget extends Widget<SearchDisplayable> {
   }
 
   @Override public void bindView(SearchDisplayable displayable) {
-    ListSearchApps.SearchAppsApp searchAppsApp = displayable.getPojo();
+    SearchApp searchApp = displayable.getPojo();
 
     final Action0 clickCallback = displayable.getClickCallback();
     final Action1<Void> clickToOpenStore =
-        __ -> handleClickToOpenPopupMenu(clickCallback, overflowImageView, searchAppsApp);
+        __ -> handleClickToOpenPopupMenu(clickCallback, overflowImageView, searchApp);
     compositeSubscription.add(RxView.clicks(overflowImageView)
         .subscribe(clickToOpenStore));
 
-    nameTextView.setText(searchAppsApp.getName());
-    String downloadNumber = AptoideUtils.StringU.withSuffix(searchAppsApp.getStats()
+    nameTextView.setText(searchApp.getName());
+    String downloadNumber = AptoideUtils.StringU.withSuffix(searchApp.getStats()
         .getPdownloads()) + " " + bottomView.getContext()
         .getString(R.string.downloads);
     downloadsTextView.setText(downloadNumber);
 
-    float avg = searchAppsApp.getStats()
+    float avg = searchApp.getStats()
         .getRating()
         .getAvg();
     if (avg <= 0) {
@@ -88,7 +88,7 @@ public class SearchWidget extends Widget<SearchDisplayable> {
       ratingBar.setRating(avg);
     }
 
-    Date modified = searchAppsApp.getModified();
+    Date modified = searchApp.getModified();
     if (modified != null) {
       String timeSinceUpdate = AptoideUtils.DateTimeU.getInstance(itemView.getContext())
           .getTimeDiffAll(itemView.getContext(), modified.getTime(), getContext().getResources());
@@ -97,7 +97,7 @@ public class SearchWidget extends Widget<SearchDisplayable> {
       }
     }
 
-    final StoreTheme theme = StoreTheme.get(searchAppsApp.getStore()
+    final StoreTheme theme = StoreTheme.get(searchApp.getStore()
         .getAppearance()
         .getTheme());
 
@@ -125,12 +125,12 @@ public class SearchWidget extends Widget<SearchDisplayable> {
           .getColor(theme.getPrimaryColor()));
     }
 
-    storeTextView.setText(searchAppsApp.getStore()
+    storeTextView.setText(searchApp.getStore()
         .getName());
     ImageLoader.with(getContext())
-        .load(searchAppsApp.getIcon(), iconImageView);
+        .load(searchApp.getIcon(), iconImageView);
 
-    if (Malware.Rank.TRUSTED.equals(searchAppsApp.getFile()
+    if (Malware.Rank.TRUSTED.equals(searchApp.getFile()
         .getMalware()
         .getRank())) {
       icTrustedImageView.setVisibility(View.VISIBLE);
@@ -139,13 +139,13 @@ public class SearchWidget extends Widget<SearchDisplayable> {
     }
 
     final Action1<Void> clickToOpenAppView =
-        v -> handleClickToOpenAppView(clickCallback, searchAppsApp, displayable.getQuery());
+        v -> handleClickToOpenAppView(clickCallback, searchApp, displayable.getQuery());
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(clickToOpenAppView));
   }
 
   private void handleClickToOpenPopupMenu(Action0 clickCallback, View view,
-      ListSearchApps.SearchAppsApp searchAppsApp) {
+      SearchApp searchApp) {
 
     final PopupMenu popup = new PopupMenu(view.getContext(), view);
     MenuInflater inflater = popup.getMenuInflater();
@@ -153,7 +153,7 @@ public class SearchWidget extends Widget<SearchDisplayable> {
 
     MenuItem menuItemVersions = popup.getMenu()
         .findItem(R.id.versions);
-    if (searchAppsApp.isHasVersions()) {
+    if (searchApp.hasVersions()) {
       menuItemVersions.setVisible(true);
       compositeSubscription.add(RxMenuItem.clicks(menuItemVersions)
           .subscribe(aVoid -> {
@@ -161,9 +161,9 @@ public class SearchWidget extends Widget<SearchDisplayable> {
               clickCallback.call();
             }
 
-            String name = searchAppsApp.getName();
-            String icon = searchAppsApp.getIcon();
-            String packageName = searchAppsApp.getPackageName();
+            String name = searchApp.getName();
+            String icon = searchApp.getIcon();
+            String packageName = searchApp.getPackageName();
 
             getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
                 .newOtherVersionsFragment(name, icon, packageName), true);
@@ -178,8 +178,8 @@ public class SearchWidget extends Widget<SearchDisplayable> {
             clickCallback.call();
           }
           getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-              .newStoreFragment(searchAppsApp.getStore()
-                  .getName(), searchAppsApp.getStore()
+              .newStoreFragment(searchApp.getStore()
+                  .getName(), searchApp.getStore()
                   .getAppearance()
                   .getTheme()), true);
         }));
@@ -188,17 +188,17 @@ public class SearchWidget extends Widget<SearchDisplayable> {
   }
 
   private void handleClickToOpenAppView(Action0 clickCallback,
-      ListSearchApps.SearchAppsApp searchAppsApp, String query) {
+      SearchApp searchApp, String query) {
     if (clickCallback != null) {
       clickCallback.call();
     }
 
-    searchAnalytics.searchAppClick(query, searchAppsApp.getPackageName());
+    searchAnalytics.searchAppClick(query, searchApp.getPackageName());
     getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-        .newAppViewFragment(searchAppsApp.getId(), searchAppsApp.getPackageName(),
-            searchAppsApp.getStore()
+        .newAppViewFragment(searchApp.getId(), searchApp.getPackageName(),
+            searchApp.getStore()
                 .getAppearance()
-                .getTheme(), searchAppsApp.getStore()
+                .getTheme(), searchApp.getStore()
                 .getName()), true);
   }
 }
