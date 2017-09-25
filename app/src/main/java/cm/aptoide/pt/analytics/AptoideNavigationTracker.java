@@ -50,10 +50,8 @@ public class AptoideNavigationTracker implements NavigationTracker {
       insert = false;
     } else if (viewName.equals(LoginSignUpCredentialsFragment.class.getSimpleName())) {
       insert = false;
-    } else if (viewName.equals(SearchPagerTabFragment.class.getSimpleName())) {
-      insert = false;
     } else {
-      insert = true;
+      insert = !viewName.equals(SearchPagerTabFragment.class.getSimpleName());
     }
     return insert;
   }
