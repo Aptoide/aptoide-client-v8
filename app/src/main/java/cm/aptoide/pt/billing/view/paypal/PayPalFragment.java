@@ -55,11 +55,11 @@ public class PayPalFragment extends PermissionServiceFragment implements PayPalV
 
     networkErrorDialog =
         new RxAlertDialog.Builder(getContext()).setMessage(R.string.connection_error)
-            .setPositiveButton(R.string.ok)
+            .setPositiveButton(R.string.settings_button_ok_option)
             .build();
     unknownErrorDialog =
         new RxAlertDialog.Builder(getContext()).setMessage(R.string.all_message_general_error)
-            .setPositiveButton(R.string.ok)
+            .setPositiveButton(R.string.settings_button_ok_option)
             .build();
 
     attachPresenter(new PayPalPresenter(this, billing, billingAnalytics, billingNavigator,

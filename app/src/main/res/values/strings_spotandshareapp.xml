@@ -31,7 +31,10 @@
   <string name="spotandshare_message_leave_group_error">There was an error while trying to leave the group</string>
 
   <string name="spotandshare_button_invite_friends">Invite nearby friends to use Spot&amp;Share</string>
+  <string name="spotandshare_title_spotandshare">Spot &amp; Share</string>
+
   <!-- share aptoide -->
+  <string name="spotandshare_button_share">Share</string>
   <string name="spotandshare_message_share_aptoide_initial_message">Your friends don\'t use Aptoide yet?</string>
   <string name="spotandshare_message_share_aptoide_follow_steps_order">Follow these 3 steps:</string>
   <string name="spotandshare_message_first_share_instruction">Ask your friends to connect via Wi-Fi to %1$s hotspot</string>

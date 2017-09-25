@@ -118,19 +118,19 @@ public class SettingsFragment extends PreferenceFragmentCompat
             .build();
     enableAdultContentPinDialog =
         new PinDialog.Builder(getContext()).setMessage(R.string.request_adult_pin)
-            .setPositiveButton(R.string.ok)
+            .setPositiveButton(R.string.settings_button_ok_option)
             .setNegativeButton(R.string.cancel)
             .setView(R.layout.dialog_requestpin)
             .setEditText(R.id.pininput)
             .build();
     removePinDialog = new PinDialog.Builder(getContext()).setMessage(R.string.request_adult_pin)
-        .setPositiveButton(R.string.ok)
+        .setPositiveButton(R.string.settings_button_ok_option)
         .setNegativeButton(R.string.cancel)
         .setView(R.layout.dialog_requestpin)
         .setEditText(R.id.pininput)
         .build();
     setPinDialog = new PinDialog.Builder(getContext()).setMessage(R.string.asksetadultpinmessage)
-        .setPositiveButton(R.string.ok)
+        .setPositiveButton(R.string.settings_button_ok_option)
         .setNegativeButton(R.string.cancel)
         .setView(R.layout.dialog_requestpin)
         .setEditText(R.id.pininput)

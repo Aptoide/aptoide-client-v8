@@ -124,7 +124,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
-            android:text="@string/spot_share_share"
+            android:text="@string/spotandshare_button_share"
             android:textColor="@color/grey_fog_dark"
             android:textSize="12sp"
             />

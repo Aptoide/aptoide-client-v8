@@ -55,7 +55,7 @@ public abstract class WebViewFragment extends PermissionServiceFragment
     determinateProgressBar.setMax(100);
     unknownErrorDialog =
         new RxAlertDialog.Builder(getContext()).setMessage(R.string.all_message_general_error)
-            .setPositiveButton(R.string.ok)
+            .setPositiveButton(R.string.settings_button_ok_option)
             .build();
     clickHandler = () -> {
       backButtonSelectionSubject.call(null);

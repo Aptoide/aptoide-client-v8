@@ -276,7 +276,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
         break;
       case "Spot & Share":
       case "Spot&Share":
-        translated = context.getString(R.string.spot_share);
+        translated = context.getString(R.string.spotandshare_title_spotandshare);
         break;
       case "Followed Stores":
         translated = context.getString(R.string.followed_stores);

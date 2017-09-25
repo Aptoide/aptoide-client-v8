@@ -302,7 +302,7 @@ public class HomeFragment extends StoreFragment {
         //TODO emoji did not work on xml file. this sould be deleted in the next release
         navigationView.getMenu()
             .findItem(R.id.shareapps)
-            .setTitle(getString(R.string.spot_share) + new String(" \uD83D\uDD38"));
+            .setTitle(getString(R.string.spotandshare_title) + new String(" \uD83D\uDD38"));
       } catch (Exception e) {
         CrashReport.getInstance()
             .log(e);

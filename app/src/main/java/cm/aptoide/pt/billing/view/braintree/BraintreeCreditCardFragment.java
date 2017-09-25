@@ -93,7 +93,7 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
 
     unknownErrorDialog =
         new RxAlertDialog.Builder(getContext()).setMessage(R.string.all_message_general_error)
-            .setPositiveButton(R.string.ok)
+            .setPositiveButton(R.string.settings_button_ok_option)
             .build();
 
     cancelButton = (Button) view.findViewById(R.id.include_payment_buttons_cancel_button);
