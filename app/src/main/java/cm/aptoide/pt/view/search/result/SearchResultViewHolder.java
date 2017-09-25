@@ -1,5 +1,7 @@
 package cm.aptoide.pt.view.search.result;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
@@ -51,65 +53,17 @@ public class SearchResultViewHolder extends RecyclerView.ViewHolder {
   public void setupWith(ListSearchApps.SearchAppsApp searchAppsApp, String query) {
     this.searchAppsApp = searchAppsApp;
     this.query = query;
+    setAppName();
+    setDownloadCount();
+    setAverageValue();
+    setDateModified();
+    setBackground();
+    setStoreName();
+    setIconView();
+    setTrustedBadge();
+  }
 
-    nameTextView.setText(searchAppsApp.getName());
-    String downloadNumber = AptoideUtils.StringU.withSuffix(searchAppsApp.getStats()
-        .getPdownloads()) + " " + bottomView.getContext()
-        .getString(R.string.downloads);
-    downloadsTextView.setText(downloadNumber);
-
-    float avg = searchAppsApp.getStats()
-        .getRating()
-        .getAvg();
-    if (avg <= 0) {
-      ratingBar.setVisibility(View.GONE);
-    } else {
-      ratingBar.setVisibility(View.VISIBLE);
-      ratingBar.setRating(avg);
-    }
-
-    Date modified = searchAppsApp.getModified();
-    if (modified != null) {
-      String timeSinceUpdate = AptoideUtils.DateTimeU.getInstance(itemView.getContext())
-          .getTimeDiffAll(itemView.getContext(), modified.getTime(), itemView.getResources());
-      if (timeSinceUpdate != null && !timeSinceUpdate.equals("")) {
-        timeTextView.setText(timeSinceUpdate);
-      }
-    }
-
-    final StoreTheme theme = StoreTheme.get(searchAppsApp.getStore()
-        .getAppearance()
-        .getTheme());
-
-    Drawable background = bottomView.getBackground();
-    if (background instanceof ShapeDrawable) {
-      ((ShapeDrawable) background).getPaint()
-          .setColor(itemView.getContext()
-              .getResources()
-              .getColor(theme.getPrimaryColor()));
-    } else if (background instanceof GradientDrawable) {
-      ((GradientDrawable) background).setColor(itemView.getContext()
-          .getResources()
-          .getColor(theme.getPrimaryColor()));
-    }
-
-    background = storeTextView.getBackground();
-    if (background instanceof ShapeDrawable) {
-      ((ShapeDrawable) background).getPaint()
-          .setColor(itemView.getContext()
-              .getResources()
-              .getColor(theme.getPrimaryColor()));
-    } else if (background instanceof GradientDrawable) {
-      ((GradientDrawable) background).setColor(itemView.getContext()
-          .getResources()
-          .getColor(theme.getPrimaryColor()));
-    }
-
-    storeTextView.setText(searchAppsApp.getStore()
-        .getName());
-    ImageLoader.with(itemView.getContext())
-        .load(searchAppsApp.getIcon(), iconImageView);
-
+  private void setTrustedBadge() {
     if (Malware.Rank.TRUSTED.equals(searchAppsApp.getFile()
         .getMalware()
         .getRank())) {
@@ -119,6 +73,76 @@ public class SearchResultViewHolder extends RecyclerView.ViewHolder {
     }
   }
 
+  private void setIconView() {
+    ImageLoader.with(iconImageView.getContext())
+        .load(searchAppsApp.getIcon(), iconImageView);
+  }
+
+  private void setStoreName() {
+    storeTextView.setText(searchAppsApp.getStore()
+        .getName());
+  }
+
+  private void setBackground() {
+    final Resources resources = itemView.getResources();
+    final StoreTheme theme = StoreTheme.get(searchAppsApp.getStore()
+        .getAppearance()
+        .getTheme());
+    Drawable background = bottomView.getBackground();
+
+    if (background instanceof ShapeDrawable) {
+      ((ShapeDrawable) background).getPaint()
+          .setColor(resources.getColor(theme.getPrimaryColor()));
+    } else if (background instanceof GradientDrawable) {
+      ((GradientDrawable) background).setColor(resources.getColor(theme.getPrimaryColor()));
+    }
+
+    background = storeTextView.getBackground();
+    if (background instanceof ShapeDrawable) {
+      ((ShapeDrawable) background).getPaint()
+          .setColor(resources.getColor(theme.getPrimaryColor()));
+    } else if (background instanceof GradientDrawable) {
+      ((GradientDrawable) background).setColor(resources.getColor(theme.getPrimaryColor()));
+    }
+  }
+
+  private void setDateModified() {
+    Date modified = searchAppsApp.getModified();
+    if (modified != null) {
+      final Resources resources = itemView.getResources();
+      final Context context = itemView.getContext();
+      String timeSinceUpdate = AptoideUtils.DateTimeU.getInstance(context)
+          .getTimeDiffAll(context, modified.getTime(), resources);
+      if (timeSinceUpdate != null && !timeSinceUpdate.equals("")) {
+        timeTextView.setText(timeSinceUpdate);
+      }
+    }
+  }
+
+  private void setAverageValue() {
+    float avg = searchAppsApp.getStats()
+        .getRating()
+        .getAvg();
+    if (avg <= 0) {
+      ratingBar.setVisibility(View.GONE);
+    } else {
+      ratingBar.setVisibility(View.VISIBLE);
+      ratingBar.setRating(avg);
+    }
+  }
+
+  private void setDownloadCount() {
+    String downloadNumber = AptoideUtils.StringU.withSuffix(searchAppsApp.getStats()
+        .getPdownloads()) + " " + bottomView.getContext()
+        .getString(R.string.downloads);
+    downloadsTextView.setText(downloadNumber);
+  }
+
+  private void setAppName() {
+    nameTextView.setText(searchAppsApp.getName());
+  }
+
+  // FIXME what should this method do?
   private boolean isConvert(ABTest<SearchTabOptions> searchAbTest, boolean addSubscribedStores,
       boolean hasMultipleFragments) {
     return hasMultipleFragments && (addSubscribedStores == (searchAbTest.alternative()
