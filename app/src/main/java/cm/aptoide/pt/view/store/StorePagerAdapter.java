@@ -12,7 +12,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.NavigationTrackerPagerAdapterHelper;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreTabs;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -20,6 +19,8 @@ import cm.aptoide.pt.view.Translator;
 import java.util.EnumMap;
 import java.util.Iterator;
 import java.util.List;
+
+import static cm.aptoide.pt.view.fragment.NavigationTrackFragment.DO_NOT_REGISTER_VIEW;
 
 /**
  * Created by neuro on 28-04-2016.
@@ -202,7 +203,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter
     if (bundle == null) {
       bundle = new Bundle();
     }
-    bundle.putBoolean(AptoideNavigationTracker.DO_NOT_REGISTER_VIEW, true);
+    bundle.putBoolean(DO_NOT_REGISTER_VIEW, true);
     fragment.setArguments(bundle);
     return fragment;
   }

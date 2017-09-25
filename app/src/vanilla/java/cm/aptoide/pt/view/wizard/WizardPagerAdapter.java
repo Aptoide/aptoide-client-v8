@@ -7,7 +7,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.pt.NavigationTrackerPagerAdapterHelper;
 import cm.aptoide.pt.account.view.LoginSignUpFragment;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+
+import static cm.aptoide.pt.view.fragment.NavigationTrackFragment.DO_NOT_REGISTER_VIEW;
 
 public class WizardPagerAdapter extends FragmentPagerAdapter
     implements NavigationTrackerPagerAdapterHelper {
@@ -58,7 +59,7 @@ public class WizardPagerAdapter extends FragmentPagerAdapter
     if (bundle == null) {
       bundle = new Bundle();
     }
-    bundle.putBoolean(AptoideNavigationTracker.DO_NOT_REGISTER_VIEW, true);
+    bundle.putBoolean(DO_NOT_REGISTER_VIEW, true);
     fragment.setArguments(bundle);
     return fragment;
   }

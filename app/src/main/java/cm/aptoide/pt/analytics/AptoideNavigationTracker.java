@@ -14,7 +14,6 @@ import java.util.List;
 
 public class AptoideNavigationTracker implements NavigationTracker {
 
-  public static final String DO_NOT_REGISTER_VIEW = "do_not_register_view";
   private List<String> viewList;
   private boolean insert;
 

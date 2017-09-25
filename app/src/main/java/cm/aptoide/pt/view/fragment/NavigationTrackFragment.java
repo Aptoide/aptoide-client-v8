@@ -11,6 +11,7 @@ import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 
 public class NavigationTrackFragment extends FragmentView {
 
+  public static final String DO_NOT_REGISTER_VIEW = "do_not_register_view";
   protected AptoideNavigationTracker navigationTracker;
   private boolean registerFragment = false;
 
@@ -33,7 +34,7 @@ public class NavigationTrackFragment extends FragmentView {
 
   private void getFragmentExtras() {
     if (getArguments() != null) {
-      registerFragment = getArguments().getBoolean(AptoideNavigationTracker.DO_NOT_REGISTER_VIEW);
+      registerFragment = getArguments().getBoolean(DO_NOT_REGISTER_VIEW);
     }
   }
 }
