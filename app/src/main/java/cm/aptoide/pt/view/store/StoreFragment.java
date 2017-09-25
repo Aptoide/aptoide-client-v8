@@ -229,6 +229,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override protected void setupViewPager() {
     super.setupViewPager();
+    viewPager.setAptoideNavigationTracker(navigationTracker);
     pagerSlidingTabStrip = (PagerSlidingTabStrip) getView().findViewById(R.id.tabs);
 
     if (pagerSlidingTabStrip != null) {
