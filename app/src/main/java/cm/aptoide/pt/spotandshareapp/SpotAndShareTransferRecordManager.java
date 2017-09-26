@@ -31,22 +31,6 @@ public class SpotAndShareTransferRecordManager {
     this.fileSizeConverter = fileSizeConverter;
   }
 
-  public List<TransferAppModel> getTransferAppModelList(List<Transfer> transferList) {
-    this.transferList = transferList;
-    List<TransferAppModel> appModelList = new LinkedList<>();
-    for (Transfer transfer : transferList) {
-      appModelList.add(new TransferAppModel(transfer.getAndroidAppInfo()
-          .getAppName(), transfer.getAndroidAppInfo()
-          .getPackageName(), fileSizeConverter.convertToMB((double) transfer.getAndroidAppInfo()
-          .getFilesSize()), downloadsPath + "/" + transfer.getAndroidAppInfo()
-          .getPackageName(), convertByteToDrawable(transfer.getAndroidAppInfo()
-          .getIcon()), transfer.getState(), userMapper.getSpotAndShareUser(
-          transfer.getAndroidAppInfo()
-              .getFriend()), transfer.hashCode()));
-    }
-    return appModelList;
-  }
-
   public List<SpotAndShareTransfer> getTransfersList(List<Transfer> transferList) {
     this.transferList = transferList;
     List<SpotAndShareTransfer> newTransfersList = new LinkedList<>();
@@ -56,10 +40,9 @@ public class SpotAndShareTransferRecordManager {
       if (i > 0 && transferList.get(i - 1)
           .getAndroidAppInfo()
           .getFriend()
-          .getUsername()
-          .equals(transfer.getAndroidAppInfo()
-              .getFriend()
-              .getUsername())) {//add to the previous card
+          .hashCode() == transfer.getAndroidAppInfo()
+          .getFriend()
+          .hashCode()) {//add to the previous card
 
         newTransfersList.get(newTransfersList.size() - 1)
             .getAppsList()
