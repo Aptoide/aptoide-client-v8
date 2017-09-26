@@ -6,6 +6,7 @@ import cm.aptoide.pt.account.view.MyAccountFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.notification.view.InboxFragment;
+import cm.aptoide.pt.timeline.post.PostFragment;
 import cm.aptoide.pt.timeline.view.navigation.AppsTimelineTabNavigation;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
@@ -128,5 +129,9 @@ public class TimelineNavigator implements TimelineNavigation {
 
   @Override public void navigateToNotificationCenter() {
     fragmentNavigator.navigateTo(new InboxFragment(), true);
+  }
+
+  @Override public void navigateToCreatePost() {
+    fragmentNavigator.navigateTo(PostFragment.newInstanceFromTimeline(), true);
   }
 }

@@ -49,7 +49,6 @@ import cm.aptoide.pt.social.view.viewholder.NativeAdErrorEvent;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
-import cm.aptoide.pt.timeline.post.PostFragment;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
@@ -174,6 +173,8 @@ public class TimelinePresenter implements Presenter {
     onViewCreatedClickOnAddressBook();
 
     onViewCreatedShowUser();
+
+    clickOnEmptyStateAction();
   }
 
   @Override public void saveState(Bundle state) {
@@ -181,6 +182,19 @@ public class TimelinePresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
 
+  }
+
+  private void clickOnEmptyStateAction() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.postClicked()
+            .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+                .equals(CardTouchEvent.Type.POST))
+            .doOnNext(__ -> timelineNavigation.navigateToCreatePost())
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cardTouchEvent -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   private void onViewCreatedShowUser() {
@@ -303,7 +317,15 @@ public class TimelinePresenter implements Presenter {
             .doOnNext(__ -> view.showPostProgressIndicator())
             .flatMapSingle(cardId -> timeline.getFreshCards(cardId))
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(cards -> showCardsAndHidePostProgress(cards))
+            .doOnNext(cards -> {
+              if (cards != null && cards.size() > 0) {
+                showCardsAndHidePostProgress(cards);
+              } else if (cards != null && cards.size() == 0) {
+                showEmptyStateAndHidePostProgress();
+              } else {
+                view.showGenericViewError();
+              }
+            })
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
@@ -343,8 +365,7 @@ public class TimelinePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(__ -> view.floatingActionButtonClicked()
-            .doOnNext(
-                __2 -> fragmentNavigator.navigateTo(PostFragment.newInstanceFromTimeline(), true)))
+            .doOnNext(__2 -> timelineNavigation.navigateToCreatePost()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
         }, throwable -> view.showGenericError());
@@ -363,6 +384,8 @@ public class TimelinePresenter implements Presenter {
         .doOnNext(cards -> {
           if (cards != null && cards.size() > 0) {
             showCardsAndHideProgress(cards);
+          } else if (cards != null && cards.size() == 0) {
+            showEmptyStateAndHideProgress();
           } else {
             view.showGenericViewError();
           }
@@ -375,6 +398,11 @@ public class TimelinePresenter implements Presenter {
         });
   }
 
+  private void showEmptyStateAndHideProgress() {
+    view.hideGeneralProgressIndicator();
+    view.showEmptyState();
+  }
+
   private void onPullToRefreshRefreshPosts() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -385,7 +413,15 @@ public class TimelinePresenter implements Presenter {
             .observeOn(Schedulers.io())
             .flatMapSingle(account -> timeline.getFreshCards())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(cards -> showCardsAndHideRefresh(cards))
+            .doOnNext(cards -> {
+              if (cards != null && cards.size() > 0) {
+                showCardsAndHideRefresh(cards);
+              } else if (cards != null && cards.size() == 0) {
+                showEmptyStateAndHideRefresh();
+              } else {
+                view.showGenericViewError();
+              }
+            })
             .flatMap(posts -> timeline.getUser(true))
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(user -> view.showUser(convertUser(user)))
@@ -435,6 +471,8 @@ public class TimelinePresenter implements Presenter {
             .doOnNext(posts -> {
               if (posts != null && posts.size() > 0) {
                 showCardsAndHideProgress(posts);
+              } else if (posts != null && posts.size() == 0) {
+                showEmptyStateAndHideProgress();
               } else {
                 view.showGenericViewError();
               }
@@ -973,9 +1011,19 @@ public class TimelinePresenter implements Presenter {
     view.showCards(cards);
   }
 
+  private void showEmptyStateAndHidePostProgress() {
+    view.hidePostProgressIndicator();
+    view.showEmptyState();
+  }
+
   private void showCardsAndHideRefresh(List<Post> cards) {
     view.hideRefresh();
     view.showCards(cards);
+  }
+
+  private void showEmptyStateAndHideRefresh() {
+    view.hideRefresh();
+    view.showEmptyState();
   }
 
   private void showMoreCardsAndHideLoadMoreProgress(List<Post> cards) {
