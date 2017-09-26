@@ -30,7 +30,7 @@
         android:layout_height="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="47dp"
-        android:src="@drawable/fake_app"
+        android:src="@drawable/leaderboard_global"
         />
 
     <TextView
@@ -50,7 +50,7 @@
         android:layout_height="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="173dp"
-        android:src="@drawable/fake_app"
+        android:src="@drawable/leaderboard_local"
         />
 
     <TextView
@@ -71,7 +71,7 @@
         android:layout_height="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="295dp"
-        android:src="@drawable/fake_app"
+        android:src="@drawable/leaderboard_friends"
         />
 
     <TextView

@@ -9,7 +9,7 @@
       android:layout_toRightOf="@id/get_app_button"
       android:layout_marginTop="10dp"
       android:layout_marginLeft="5dp"
-      android:src="@drawable/full_star"
+      android:src="@drawable/leaderboard_score"
       />
 
   <TextView

@@ -68,7 +68,7 @@
           android:layout_marginRight="5dp"
           android:layout_marginTop="@dimen/appstimeline_card_icon"
           android:layout_toLeftOf="@+id/displayable_social_timeline_answer_card_leaderboard"
-          android:src="@drawable/appstimeline_recommendation_compass_icon"
+          android:src="@drawable/leaderboard_global"
           />
 
       <TextView
@@ -128,7 +128,7 @@
           android:layout_marginRight="3dp"
           android:layout_marginTop="@dimen/appstimeline_card_icon"
           android:layout_toLeftOf="@id/displayable_social_timeline_answer_card_score"
-          android:src="@drawable/appstimeline_recommendation_compass_icon"
+          android:src="@drawable/leaderboard_score"
           />
 
       <View
@@ -183,26 +183,22 @@
             style="@style/Aptoide.Button.Ghost.ThinBlackAlpha"
             />
 
-        <TextView
+        <ImageView
             android:id="@+id/answer_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginTop="35dp"
             android:layout_marginLeft="45dp"
-            android:text="Correct!"
-            android:textColor="@color/green"
-            style="@style/Aptoide.TextView.Medium.L.Black"
             />
 
         <TextView
             android:id="@+id/answer_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/answer_status"
-            android:layout_marginTop="0dp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="155dp"
             android:gravity="center"
-            android:text="The answer was:"
+            android:text="Answer:"
             android:visibility="visible"
             />
 

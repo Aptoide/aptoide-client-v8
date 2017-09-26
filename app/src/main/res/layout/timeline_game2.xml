@@ -68,7 +68,7 @@
           android:layout_marginRight="5dp"
           android:layout_marginTop="@dimen/appstimeline_card_icon"
           android:layout_toLeftOf="@id/displayable_social_timeline_game_card_leaderboard"
-          android:src="@drawable/appstimeline_recommendation_compass_icon"
+          android:src="@drawable/leaderboard_global"
           />
 
       <ProgressBar
@@ -101,7 +101,7 @@
           android:layout_marginRight="5dp"
           android:layout_marginTop="@dimen/appstimeline_card_icon"
           android:layout_toLeftOf="@id/displayable_social_timeline_game_card_score"
-          android:src="@drawable/appstimeline_recommendation_compass_icon"
+          android:src="@drawable/leaderboard_score"
           />
 
       <TextView

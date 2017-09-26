@@ -37,7 +37,7 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
   private final ImageView appIcon;
   private final TextView appName;
   private final Button getApp;
-  private final TextView answerStatus;
+  private final ImageView answerStatus;
   private final TextView answerMessage;
   private final View leaderboards;
   private final ImageView leaderboardStatus;
@@ -68,7 +68,7 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
     this.appIcon = (ImageView) itemView.findViewById(R.id.get_app_icon);
     this.appName = (TextView) itemView.findViewById(R.id.app_name);
     this.getApp = (Button) itemView.findViewById(R.id.get_app_button);
-    this.answerStatus = (TextView) itemView.findViewById(R.id.answer_status);
+    this.answerStatus = (ImageView) itemView.findViewById(R.id.answer_status);
     this.answerMessage = (TextView) itemView.findViewById(R.id.answer_message);
 
     this.headerIcon = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_answer_card_icon);
@@ -107,14 +107,13 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
         .load(card.getRightAnswer()
             .getIcon(), appIcon);
     this.appName.setText(card.getRightAnswer().getName());
-    this.answerStatus.setText(card.getStatus());
     if(card.getStatus() == "Wrong") {
-      this.answerStatus.setTextColor(Color.RED);
+      this.answerStatus.setImageResource(R.drawable.gameanswer_wrong);
       this.incrementStatus.setVisibility(View.GONE);
     }
     else
-      this.answerStatus.setTextColor(Color.GREEN);
-    this.answerMessage.setText("The answer was:");
+      this.answerStatus.setImageResource(R.drawable.gameanswer_correct);
+    this.answerMessage.setText("Answer:");
 
     this.getApp.setText("get app");
 
