@@ -17,7 +17,6 @@ import rx.Single;
 public class AptoideAccountManager {
 
   public static final String APTOIDE_SIGN_UP_TYPE = "APTOIDE";
-  private final AccountAnalytics accountAnalytics;
   private final CredentialsValidator credentialsValidator;
   private final PublishRelay<Account> accountRelay;
   private final SignUpAdapterRegistry adapterRegistry;
@@ -29,7 +28,6 @@ public class AptoideAccountManager {
       AccountService accountService, PublishRelay<Account> accountRelay,
       SignUpAdapterRegistry adapterRegistry) {
     this.credentialsValidator = credentialsValidator;
-    this.accountAnalytics = accountAnalytics;
     this.accountPersistence = accountPersistence;
     this.accountService = accountService;
     this.accountRelay = accountRelay;
@@ -82,14 +80,12 @@ public class AptoideAccountManager {
   public Completable login(AptoideCredentials credentials) {
     return credentialsValidator.validate(credentials, false)
         .andThen(accountService.getAccount(credentials.getEmail(), credentials.getPassword()))
-        .flatMapCompletable(account -> saveAccount(account))
-        .doOnCompleted(() -> accountAnalytics.login(credentials.getEmail()));
+        .flatMapCompletable(account -> saveAccount(account));
   }
 
   public <T> Completable signUp(String type, T data) {
     return adapterRegistry.signUp(type, data)
-        .flatMapCompletable(account -> saveAccount(account).doOnCompleted(
-            () -> accountAnalytics.login(account.getEmail())));
+        .flatMapCompletable(account -> saveAccount(account));
   }
 
   public boolean isSignUpEnabled(String type) {

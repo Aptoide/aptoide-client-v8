@@ -35,6 +35,7 @@ import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountPersistence;
 import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
 import cm.aptoide.pt.account.AndroidAccountDataMigration;
 import cm.aptoide.pt.account.AndroidAccountManagerPersistence;
@@ -43,7 +44,6 @@ import cm.aptoide.pt.account.DatabaseStoreDataPersist;
 import cm.aptoide.pt.account.FacebookLoginResult;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
-import cm.aptoide.pt.account.LogAccountAnalytics;
 import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.account.V3AccountService;
 import cm.aptoide.pt.account.view.store.StoreManager;
@@ -716,7 +716,11 @@ public abstract class AptoideApplication extends Application {
               Schedulers.io());
 
       accountManager = new AptoideAccountManager.Builder().setAccountPersistence(accountPersistence)
-          .setAccountAnalytics(new LogAccountAnalytics())
+          .setAccountAnalytics(
+              new AccountAnalytics(Analytics.getInstance(), getBodyInterceptorPoolV7(),
+                  getDefaultClient(), WebService.getDefaultConverter(), tokenInvalidator,
+                  BuildConfig.APPLICATION_ID, getDefaultSharedPreferences(),
+                  AppEventsLogger.newLogger(this)))
           .setAccountService(accountService)
           .registerSignUpAdapter(GoogleSignUpAdapter.TYPE,
               new GoogleSignUpAdapter(getGoogleSignInClient(), getLoginPreferences()))
