@@ -166,10 +166,11 @@
         <TextView
             android:id="@+id/game_card_question3_answer_left"
             style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/game_card_question3_icon_left"
             android:gravity="center"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="155dp"
             android:text="Answer1"
             />
@@ -182,13 +183,14 @@
             android:layout_marginLeft="5dp"
             android:layout_marginTop="150dp"
             android:src="@drawable/game_arrow_left"
+            android:visibility="gone"
             />
 
         <ImageView
             android:id="@id/game_card_question3_icon_left"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_toRightOf="@id/left_arrow"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="143dp"
             tools:src="@mipmap/ic_launcher"
             />
@@ -202,15 +204,17 @@
             android:layout_marginTop="150dp"
             android:rotation="180"
             android:src="@drawable/game_arrow_left"
+            android:visibility="gone"
             />
 
         <TextView
             android:id="@+id/game_card_question3_answer_right"
             style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/game_card_question3_icon_right"
             android:gravity="center"
+            android:layout_marginRight="10dp"
             android:layout_marginTop="155dp"
             android:text="Answer2"
             />
@@ -219,8 +223,9 @@
             android:id="@id/game_card_question3_icon_right"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_toLeftOf="@id/right_arrow"
+            android:layout_alignParentRight="true"
             android:layout_marginTop="143dp"
+            android:layout_marginRight="10dp"
             tools:src="@mipmap/ic_launcher"
             />
 

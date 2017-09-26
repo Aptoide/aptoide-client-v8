@@ -186,34 +186,35 @@
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/game_card_question1_question"
-            android:layout_toRightOf="@+id/left_arrow"
+            android:layout_alignParentRight="true"
             android:gravity="center"
             android:padding="5dp"
-            android:layout_marginLeft="0dp"
             android:layout_marginTop="32dp"
             android:text="Left: Answer1"
             />
 
-        <ImageView
-            android:id="@id/left_arrow"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="155dp"
-            android:src="@drawable/game_arrow_left"
-            />
+        <!--<ImageView-->
+            <!--android:id="@id/left_arrow"-->
+            <!--android:layout_width="30dp"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:layout_marginLeft="5dp"-->
+            <!--android:layout_marginTop="155dp"-->
+            <!--android:src="@drawable/game_arrow_left"-->
+            <!--android:visibility="gone"-->
+            <!--/>-->
 
-        <ImageView
-            android:id="@+id/right_arrow"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="155dp"
-            android:rotation="180"
-            android:src="@drawable/game_arrow_left"
-            />
+        <!--<ImageView-->
+            <!--android:id="@+id/right_arrow"-->
+            <!--android:layout_width="30dp"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_marginRight="5dp"-->
+            <!--android:layout_marginTop="155dp"-->
+            <!--android:rotation="180"-->
+            <!--android:src="@drawable/game_arrow_left"-->
+            <!--android:visibility="gone"-->
+            <!--/>-->
 
         <TextView
             android:id="@+id/game_card_question1_answerRight"
@@ -221,7 +222,6 @@
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/game_card_question1_question"
-            android:layout_toLeftOf="@id/right_arrow"
             android:gravity="center"
             android:padding="5dp"
             android:layout_marginRight="10dp"

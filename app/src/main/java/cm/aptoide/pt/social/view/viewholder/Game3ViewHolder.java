@@ -15,6 +15,7 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.Game3;
 import cm.aptoide.pt.social.data.GameCardTouchEvent;
+import cm.aptoide.pt.social.data.LeaderboardTouchEvent;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
 import rx.subjects.PublishSubject;
@@ -142,10 +143,16 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
       this.answerRight.setText(card.getApp().getName());
     }
 
-    arrowLeft.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+    answerLeftIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(answerLeft.getText()))));
-    arrowRight.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+    answerRightIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(answerRight.getText()))));
+
+    LeaderboardTouchEvent event = new LeaderboardTouchEvent(card, CardTouchEvent.Type.BODY);
+
+    score.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
+    leaderboard.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
+
 
     if(card.getScore()==-1){
       scoreProgress.setVisibility(View.VISIBLE);

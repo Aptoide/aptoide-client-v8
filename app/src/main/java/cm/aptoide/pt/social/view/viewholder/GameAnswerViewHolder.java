@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
+import android.text.Layout;
 import android.text.Spannable;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -49,6 +51,7 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
   private final ProgressBar rankProgress;
   private final ProgressBar leaderboardProgress;
   private final String marketName;
+  private final View leaderboardElement;
 
   private int scoreValue;
 
@@ -89,6 +92,7 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
     this.rankProgress = (ProgressBar) itemView.findViewById(R.id.rank_progress);
     this.leaderboardProgress = (ProgressBar) itemView.findViewById(R.id.leaderboard_progress);
 
+    this.leaderboardElement = itemView.findViewById(R.id.card_leaderboard);
 
   }
 
@@ -129,7 +133,7 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
     getApp.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
 
-    leaderboardStatus.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+    leaderboardElement.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new LeaderboardTouchEvent(card, CardTouchEvent.Type.BODY)));
 
 

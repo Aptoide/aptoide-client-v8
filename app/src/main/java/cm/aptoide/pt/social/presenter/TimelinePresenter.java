@@ -575,6 +575,10 @@ public class TimelinePresenter implements Presenter {
                       AppViewFragment.OpenType.OPEN_ONLY);
                 }
                 else if (type.isGame()) {
+                  if(cardTouchEvent instanceof LeaderboardTouchEvent){
+                    timelineNavigation.navigateToLeaderboard();
+                  }
+                  else{
                   GameCardTouchEvent event = (GameCardTouchEvent) cardTouchEvent;
                   GameAnswer gameAnswer = mapToGameAnswer(event);
                   timeline.swapGameAnswer(gameAnswer, (Game) event.getCard());
@@ -582,6 +586,7 @@ public class TimelinePresenter implements Presenter {
                   updateAnswer(gameAnswer, event.getCardPosition());
                   Logger.d(this.getClass()
                       .getCanonicalName(), "Clicked on: " + event.getAnswerText());
+                  }
                 } else if (type.equals(CardType.GAMEANSWER)) {
                   if (cardTouchEvent instanceof LeaderboardTouchEvent) {
                     timelineNavigation.navigateToLeaderboard();

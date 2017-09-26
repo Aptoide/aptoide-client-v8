@@ -13,6 +13,7 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.Game1;
 import cm.aptoide.pt.social.data.GameCardTouchEvent;
+import cm.aptoide.pt.social.data.LeaderboardTouchEvent;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
 import rx.subjects.PublishSubject;
@@ -35,8 +36,8 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
   private final ImageView headerIcon;
   private final TextView headerTitle;
   private final TextView headerSubTitle;
-  private final ImageView leftArrow;
-  private final ImageView rightArrow;
+  //private final ImageView leftArrow;
+  //private final ImageView rightArrow;
 
   private final ProgressBar scoreProgress;
   private final ProgressBar leaderboardProgress;
@@ -73,8 +74,8 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
     this.headerSubTitle =
         (TextView) itemView.findViewById(R.id.displayable_social_timeline_game_card_subtitle);
 
-    this.leftArrow = (ImageView) itemView.findViewById(R.id.left_arrow);
-    this.rightArrow = (ImageView) itemView.findViewById(R.id.right_arrow);
+    //this.leftArrow = (ImageView) itemView.findViewById(R.id.left_arrow);
+    //this.rightArrow = (ImageView) itemView.findViewById(R.id.right_arrow);
 
     this.scoreProgress = (ProgressBar) itemView.findViewById(R.id.score_progress);
     this.leaderboardProgress = (ProgressBar) itemView.findViewById(R.id.rank_progress);
@@ -121,11 +122,17 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
       this.stampLeft.setText(card.getApp().getName());
     }
 
-    leftArrow.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+    leftAnswer.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(leftAnswer.getText()))));
-    rightArrow.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+    rightAnswer.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position,
             String.valueOf(rightAnswer.getText()))));
+    LeaderboardTouchEvent event = new LeaderboardTouchEvent(card, CardTouchEvent.Type.BODY);
+
+    score.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
+    leaderboard.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
+
+
 
     if(card.getScore()==-1){
       scoreProgress.setVisibility(View.VISIBLE);

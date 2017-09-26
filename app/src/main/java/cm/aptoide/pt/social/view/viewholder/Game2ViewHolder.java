@@ -13,6 +13,7 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.Game2;
 import cm.aptoide.pt.social.data.GameCardTouchEvent;
+import cm.aptoide.pt.social.data.LeaderboardTouchEvent;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
 import rx.subjects.PublishSubject;
@@ -132,9 +133,9 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
       ImageLoader.with(itemView.getContext()).load(card.getWrongIcon(), answerRight);
       ImageLoader.with(itemView.getContext()).load(card.getWrongIcon(), stampLeft);
 
-      arrowLeft.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+      answerLeft.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
           new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(card.getApp().getIcon()))));
-      arrowRight.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+      answerRight.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
           new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(card.getWrongIcon()))));
     }
     else{
@@ -149,6 +150,12 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
       answerRight.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
           new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(card.getApp().getIcon()))));
     }
+
+    LeaderboardTouchEvent event = new LeaderboardTouchEvent(card, CardTouchEvent.Type.BODY);
+
+    score.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
+    leaderboard.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
+
 
     if(card.getScore()==-1){
       scoreProgress.setVisibility(View.VISIBLE);
