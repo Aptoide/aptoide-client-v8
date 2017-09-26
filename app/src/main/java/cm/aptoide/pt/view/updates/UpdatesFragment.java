@@ -169,13 +169,15 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
             tokenInvalidator, BuildConfig.APPLICATION_ID,
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
-            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
+            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
+            ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker());
     installConverter =
         new InstallEventConverter(bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator,
             BuildConfig.APPLICATION_ID,
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
-            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
+            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
+            navigationTracker);
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     updateRepository = RepositoryFactory.getUpdateRepository(getContext(),

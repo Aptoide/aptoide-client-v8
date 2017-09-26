@@ -167,12 +167,14 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
         new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
             BuildConfig.APPLICATION_ID, sharedPreferences,
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
-            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
+            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
+            ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker());
     installConverter =
         new InstallEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
             BuildConfig.APPLICATION_ID, sharedPreferences,
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
-            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
+            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
+            ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker());
     analytics = Analytics.getInstance();
     downloadFactory = displayable.getDownloadFactory();
     socialRepository =

@@ -18,6 +18,7 @@ import retrofit2.Converter;
 
 public class DownloadInstallBaseEvent implements Event {
   private final SharedPreferences sharedPreferences;
+  private final String previousContext;
   private Action action;
   private int versionCode;
   private Origin origin;
@@ -42,12 +43,13 @@ public class DownloadInstallBaseEvent implements Event {
       DownloadInstallEventConverter downloadInstallEventConverter, String eventName,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
+      SharedPreferences sharedPreferences, String previousContext) {
     this.action = action;
     this.versionCode = versionCode;
     this.origin = origin;
     this.packageName = packageName;
     this.url = url;
+    this.previousContext = previousContext;
     this.obbType = ObbType.MAIN;
     this.obbUrl = obbUrl;
     this.patchObbType = ObbType.PATCH;
@@ -274,6 +276,10 @@ public class DownloadInstallBaseEvent implements Event {
 
   @CallSuper public boolean isReadyToSend() {
     return resultStatus != null;
+  }
+
+  public String getPreviousContext() {
+    return previousContext;
   }
 
   public enum Action {
