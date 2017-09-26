@@ -35,7 +35,7 @@ import lombok.ToString;
 
   public AptoideNotification(String body, String img, String title, String url, int type,
       long timeStamp, String appName, String graphic, long dismissed, String ownerId,
-      long expireSecsUtc, String urlTrack, String notificationCenterUrlTrack) {
+      Long expireSecsUtc, String urlTrack, String notificationCenterUrlTrack) {
     this.body = body;
     this.img = img;
     this.title = title;
@@ -46,7 +46,7 @@ import lombok.ToString;
     this.graphic = graphic;
     this.dismissed = dismissed;
     this.ownerId = ownerId;
-    this.expire = expireSecsUtc * 1000;
+    this.expire = expireSecsUtc;
     this.urlTrack = urlTrack;
     this.notificationCenterUrlTrack = notificationCenterUrlTrack;
   }
@@ -55,7 +55,7 @@ import lombok.ToString;
       String appName, String graphic, long dismissed, String ownerId, Long expireSecsUtc,
       String urlTrack, String notificationCenterUrlTrack) {
     this(body, img, title, url, type, System.currentTimeMillis(), appName, graphic, dismissed,
-        ownerId, expireSecsUtc, urlTrack, notificationCenterUrlTrack);
+        ownerId, expireSecsUtc * 1000, urlTrack, notificationCenterUrlTrack);
   }
 
   public AptoideNotification(String abTestingGroup, String body, int campaignId, String img,
