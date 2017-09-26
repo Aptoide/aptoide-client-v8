@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -20,13 +19,12 @@ import cm.aptoide.pt.view.ItemView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Date;
-import rx.Observable;
 
-public class SearchResultViewHolder extends RecyclerView.ViewHolder implements ItemView<SearchApp> {
+public class SearchResultViewHolder extends ItemView<SearchApp> {
 
   public static final int LAYOUT = R.layout.search_app_row;
-  private final PublishRelay<Void> onOtherVersionsClickSubject;
-  private final PublishRelay<Void> onOpenStoreClickSubject;
+  private final PublishRelay<SearchApp> onItemViewClick;
+  private final PublishRelay<SearchApp> onOpenPopupMenuClick;
 
   private TextView nameTextView;
   private ImageView iconImageView;
@@ -39,11 +37,11 @@ public class SearchResultViewHolder extends RecyclerView.ViewHolder implements I
   private View bottomView;
   private SearchApp searchApp;
 
-  public SearchResultViewHolder(View itemView, PublishRelay<Void> onOtherVersionsClickSubject,
-      PublishRelay<Void> onOpenStoreClickSubject) {
+  public SearchResultViewHolder(View itemView, PublishRelay<SearchApp> onItemViewClick,
+      PublishRelay<SearchApp> onOpenPopupMenuClick) {
     super(itemView);
-    this.onOtherVersionsClickSubject = onOtherVersionsClickSubject;
-    this.onOpenStoreClickSubject = onOpenStoreClickSubject;
+    this.onItemViewClick = onItemViewClick;
+    this.onOpenPopupMenuClick = onOpenPopupMenuClick;
     bindViews(itemView);
   }
 
@@ -148,23 +146,13 @@ public class SearchResultViewHolder extends RecyclerView.ViewHolder implements I
     icTrustedImageView = (ImageView) itemView.findViewById(R.id.ic_trusted_search);
     bottomView = itemView.findViewById(R.id.bottom_view);
     overflowImageView = (ImageView) itemView.findViewById(R.id.overflow);
-  }
 
-  public Observable<SearchApp> onOpenAppViewClick() {
-    return RxView.clicks(itemView)
-        .map(__ -> searchApp);
-  }
+    RxView.clicks(itemView)
+        .map(__ -> searchApp)
+        .subscribe(data -> onItemViewClick.call(data));
 
-  public Observable<SearchApp> onOpenPopupMenuClick() {
-    return RxView.clicks(overflowImageView)
-        .map(__ -> searchApp);
-  }
-
-  public Observable<Void> onOtherVersionsClick() {
-    return onOtherVersionsClickSubject.asObservable();
-  }
-
-  public Observable<Void> onOpenStoreClick() {
-    return onOpenStoreClickSubject.asObservable();
+    RxView.clicks(overflowImageView)
+        .map(__ -> searchApp)
+        .subscribe(data -> onOpenPopupMenuClick.call(data));
   }
 }

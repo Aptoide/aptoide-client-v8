@@ -128,12 +128,16 @@ public class SearchFragment extends FragmentView implements SearchView {
     allStoresButton.setBackgroundResource(R.drawable.search_button_background);
   }
 
-  @Override public Observable<Long> selectedOneElementFromSearch() {
-    return selectedElementSubject.asObservable();
+  @Override public Observable<Void> clickFollowedStoresSearchButton() {
+    return RxView.clicks(followedStoresButton);
   }
 
-  @Override public Observable<Void> noSearchLayoutSearchButtonClick() {
-    return RxView.clicks(noSearchLayoutSearchButton);
+  @Override public Observable<Void> clickEverywhereSearchButton() {
+    return RxView.clicks(allStoresButton);
+  }
+
+  @Override public Observable<Long> selectedOneElementFromSearch() {
+    return selectedElementSubject.asObservable();
   }
 
   @Override public void showNoResultsImage() {
@@ -150,12 +154,8 @@ public class SearchFragment extends FragmentView implements SearchView {
     });
   }
 
-  @Override public Observable<Void> clickFollowedStoresSearchButton() {
-    return RxView.clicks(followedStoresButton);
-  }
-
-  @Override public Observable<Void> clickEverywhereSearchButton() {
-    return RxView.clicks(allStoresButton);
+  @Override public Observable<Void> noSearchLayoutSearchButtonClick() {
+    return RxView.clicks(noSearchLayoutSearchButton);
   }
 
   @Override public void showLoading() {
@@ -171,7 +171,7 @@ public class SearchFragment extends FragmentView implements SearchView {
     }
   }
 
-  @Override public void addFollowedStoresResult(ListSearchApps data){
+  @Override public void addFollowedStoresResult(ListSearchApps data) {
 
   }
 
@@ -233,7 +233,9 @@ public class SearchFragment extends FragmentView implements SearchView {
         .length() > 0) {
       searchNavigator = new SearchNavigator(getFragmentNavigator(), viewModel.getStoreName());
     } else {
-      searchNavigator = new SearchNavigator(getFragmentNavigator());
+      final String defaultStore =
+          ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore();
+      searchNavigator = new SearchNavigator(getFragmentNavigator(), defaultStore);
     }
 
     SearchBuilder searchBuilder =
@@ -272,17 +274,20 @@ public class SearchFragment extends FragmentView implements SearchView {
     final CrashReport crashReport = CrashReport.getInstance();
     final Scheduler mainThreadScheduler = AndroidSchedulers.mainThread();
 
-    final SearchNavigator navigator = new SearchNavigator(getFragmentNavigator());
+    final String defaultStore =
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore();
 
-    final PublishRelay<Void> onOtherVersionsClickRelay = PublishRelay.create();
-    final PublishRelay<Void> onOpenStoreClickRelay = PublishRelay.create();
-    final PublishRelay<Void> onAdClickRelay = PublishRelay.create();
+    final SearchNavigator navigator = new SearchNavigator(getFragmentNavigator(), defaultStore);
+
+    final PublishRelay<SearchApp> onItemViewClickRelay = PublishRelay.create();
+    final PublishRelay<SearchApp> onOpenPopupMenuClickRelay = PublishRelay.create();
+    final PublishRelay<MinimalAd> onAdClickRelay = PublishRelay.create();
 
     final List<MinimalAd> searchResultAdsFollowedStores = new ArrayList<>();
     final List<SearchApp> searchResultFollowedStores = new ArrayList<>();
 
     final SearchResultAdapter followedStoresResultAdapter =
-        new SearchResultAdapter(onOtherVersionsClickRelay, onOpenStoreClickRelay, onAdClickRelay,
+        new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, onOpenPopupMenuClickRelay,
             searchResultAdsFollowedStores, searchResultFollowedStores);
     followedStoresResultList.setAdapter(followedStoresResultAdapter);
     followedStoresResultList.setLayoutManager(
@@ -292,13 +297,13 @@ public class SearchFragment extends FragmentView implements SearchView {
     final List<SearchApp> searchResultAllStores = new ArrayList<>();
 
     final SearchResultAdapter allStoresResultAdapter =
-        new SearchResultAdapter(onOtherVersionsClickRelay, onOpenStoreClickRelay, onAdClickRelay,
+        new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, onOpenPopupMenuClickRelay,
             searchResultAdsAllStores, searchResultAllStores);
     allStoresResultList.setAdapter(allStoresResultAdapter);
     allStoresResultList.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(getContext()));
 
     return new SearchPresenter(this, searchAnalytics, navigator, crashReport, mainThreadScheduler,
-        searchManager);
+        searchManager, onAdClickRelay, onItemViewClickRelay, onOpenPopupMenuClickRelay);
   }
 
   @Nullable @Override

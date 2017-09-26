@@ -17,18 +17,18 @@ import java.util.List;
 
 public class SearchResultAdapter extends RecyclerView.Adapter<ItemView> {
 
-  private final PublishRelay<Void> onAdClickRelay;
-  private final PublishRelay<Void> onOtherVersionsClickRelay;
-  private final PublishRelay<Void> onOpenStoreClickRelay;
+  private final PublishRelay<MinimalAd> onAdClickRelay;
+  private final PublishRelay<SearchApp> onItemViewClick;
+  private final PublishRelay<SearchApp> onOpenPopupMenuClick;
   private final List<MinimalAd> searchResultAds;
   private final List<SearchApp> searchResult;
 
-  public SearchResultAdapter(PublishRelay<Void> onOtherVersionsClickRelay,
-      PublishRelay<Void> onOpenStoreClickRelay, PublishRelay<Void> onAdClickRelay,
-      List<MinimalAd> searchResultAds, List<SearchApp> searchResult) {
-    this.onOtherVersionsClickRelay = onOtherVersionsClickRelay;
-    this.onOpenStoreClickRelay = onOpenStoreClickRelay;
+  public SearchResultAdapter(PublishRelay<MinimalAd> onAdClickRelay,
+      PublishRelay<SearchApp> onItemViewClick, PublishRelay<SearchApp> onOpenPopupMenuClick, List<MinimalAd> searchResultAds,
+      List<SearchApp> searchResult) {
     this.onAdClickRelay = onAdClickRelay;
+    this.onItemViewClick = onItemViewClick;
+    this.onOpenPopupMenuClick = onOpenPopupMenuClick;
     this.searchResultAds = searchResultAds;
     this.searchResult = searchResult;
   }
@@ -39,7 +39,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<ItemView> {
     if (viewType == SearchResultAdViewHolder.LAYOUT) {
       return new SearchResultAdViewHolder(view, onAdClickRelay);
     }
-    return new SearchResultViewHolder(view, onOtherVersionsClickRelay, onOpenStoreClickRelay);
+    return new SearchResultViewHolder(view, onItemViewClick, onOpenPopupMenuClick);
   }
 
   @Override public void onBindViewHolder(ItemView holder, int position) {

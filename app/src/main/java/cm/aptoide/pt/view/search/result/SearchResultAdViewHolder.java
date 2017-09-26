@@ -2,7 +2,6 @@ package cm.aptoide.pt.view.search.result;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -16,19 +15,19 @@ import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Date;
 
-public class SearchResultAdViewHolder extends RecyclerView.ViewHolder implements
-    ItemView<MinimalAd> {
+public class SearchResultAdViewHolder extends ItemView<MinimalAd> {
 
   public static final int LAYOUT = R.layout.search_ad;
-  private final PublishRelay<Void> onItemViewClickRelay;
+  private final PublishRelay<MinimalAd> onItemViewClickRelay;
 
   private TextView name;
   private ImageView icon;
   private TextView downloadsTextView;
   private RatingBar ratingBar;
   private TextView timeTextView;
+  private MinimalAd minimalAd;
 
-  public SearchResultAdViewHolder(View itemView, PublishRelay<Void> onItemViewClickRelay) {
+  public SearchResultAdViewHolder(View itemView, PublishRelay<MinimalAd> onItemViewClickRelay) {
     super(itemView);
     this.onItemViewClickRelay = onItemViewClickRelay;
     bind(itemView);
@@ -41,7 +40,8 @@ public class SearchResultAdViewHolder extends RecyclerView.ViewHolder implements
     ratingBar = (RatingBar) itemView.findViewById(R.id.ratingbar);
     timeTextView = (TextView) itemView.findViewById(R.id.search_time);
     RxView.clicks(itemView)
-        .subscribe(__ -> onItemViewClickRelay.call(__));
+        .map(__ -> minimalAd)
+        .subscribe(data -> onItemViewClickRelay.call(data));
     /*
     itemView.setOnClickListener(view -> {
       getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
@@ -53,6 +53,7 @@ public class SearchResultAdViewHolder extends RecyclerView.ViewHolder implements
   @Override public void setup(MinimalAd minimalAd) {
     final Context context = itemView.getContext();
     final Resources resources = itemView.getResources();
+    this.minimalAd = minimalAd;
     setName(minimalAd);
     setIcon(minimalAd, context);
     setDownloadsCount(minimalAd, resources);

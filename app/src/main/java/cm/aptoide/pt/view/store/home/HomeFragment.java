@@ -247,9 +247,11 @@ public class HomeFragment extends StoreFragment {
   }
 
   @Override protected void setupSearch(Menu menu) {
-    SearchBuilder searchBuilder =
+    final String defaultStore =
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore();
+    final SearchBuilder searchBuilder =
         new SearchBuilder(menu.findItem(R.id.action_search), getActivity(),
-            new SearchNavigator(getFragmentNavigator()));
+            new SearchNavigator(getFragmentNavigator(), defaultStore));
     searchBuilder.validateAndAttachSearch();
   }
 

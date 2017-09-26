@@ -3,10 +3,12 @@ package cm.aptoide.pt.view.search;
 import org.parceler.Parcel;
 
 @Parcel class SearchViewModel implements SearchView.Model {
-  private final String currentQuery;
-  private final String storeName;
-  private final boolean onlyTrustedApps;
+  private String currentQuery;
+  private String storeName;
+  private boolean onlyTrustedApps;
   private boolean allStoresSelected;
+
+  SearchViewModel() { }
 
   SearchViewModel(String currentQuery, String storeName, boolean onlyTrustedApps) {
     this.currentQuery = currentQuery;

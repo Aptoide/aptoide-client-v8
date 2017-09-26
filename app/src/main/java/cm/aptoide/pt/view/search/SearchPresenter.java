@@ -2,6 +2,7 @@ package cm.aptoide.pt.view.search;
 
 import android.os.Bundle;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.DataList;
 import cm.aptoide.pt.dataprovider.model.v7.search.ListSearchApps;
 import cm.aptoide.pt.dataprovider.model.v7.search.SearchApp;
@@ -10,6 +11,7 @@ import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.search.SearchAnalytics;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
+import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
 import rx.Scheduler;
 
@@ -20,35 +22,34 @@ public class SearchPresenter implements Presenter {
   private final CrashReport crashReport;
   private final Scheduler viewScheduler;
   private final SearchManager searchManager;
-  private final Observable<SearchApp> onOpenPopupMenuClick;
-  private final Observable<SearchApp> onOpenStoreClick;
-  private final Observable<SearchApp> onOtherVersionsClick;
-  private final Observable<SearchApp> onAppViewClick;
+  private final PublishRelay<MinimalAd> onAdClickRelay;
+  private final PublishRelay<SearchApp> onItemViewClickRelay;
+  private final PublishRelay<SearchApp> onOpenPopupMenuClickRelay;
 
   public SearchPresenter(SearchView view, SearchAnalytics analytics, SearchNavigator navigator,
       CrashReport crashReport, Scheduler viewScheduler, SearchManager searchManager,
-      Observable<SearchApp> onOpenPopupMenuClick, Observable<SearchApp> onOpenStoreClick,
-      Observable<SearchApp> onOtherVersionsClick, Observable<SearchApp> onAppViewClick) {
+      PublishRelay<MinimalAd> onAdClickRelay, PublishRelay<SearchApp> onItemViewClickRelay,
+      PublishRelay<SearchApp> onOpenPopupMenuClickRelay) {
     this.view = view;
     this.analytics = analytics;
     this.navigator = navigator;
     this.crashReport = crashReport;
     this.viewScheduler = viewScheduler;
     this.searchManager = searchManager;
-    this.onOpenPopupMenuClick = onOpenPopupMenuClick;
-    this.onOpenStoreClick = onOpenStoreClick;
-    this.onOtherVersionsClick = onOtherVersionsClick;
-    this.onAppViewClick = onAppViewClick;
+    this.onAdClickRelay = onAdClickRelay;
+    this.onItemViewClickRelay = onItemViewClickRelay;
+    this.onOpenPopupMenuClickRelay = onOpenPopupMenuClickRelay;
   }
 
   @Override public void present() {
     search();
     onFollowedStoresSearchButtonClicked();
     onEverywhereSearchButtonClick();
-    handleClickToOpenAppView();
+    handleClickToOpenAppViewFromItemClick();
+    handleClickToOpenAppViewFromAdd();
     handleClickToOpenPopupMenu();
-    handleOpenStore();
-    handleOtherVersionsClick();
+    //handleOpenStore();
+    //handleOtherVersionsClick();
   }
 
   @Override public void saveState(Bundle state) {
@@ -59,12 +60,27 @@ public class SearchPresenter implements Presenter {
     // does nothing
   }
 
-  private void handleClickToOpenAppView() {
+  private void handleClickToOpenAppViewFromItemClick() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
-        .flatMap(__ -> onAppViewClick)
+        .flatMap(__ -> onItemViewClickRelay)
         .doOnNext(data -> openAppView(data))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
+  }
+
+  private void handleClickToOpenAppViewFromAdd() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .observeOn(viewScheduler)
+        .flatMap(__ -> onAdClickRelay)
+        .doOnNext(data -> {
+          analytics.searchAppClick(view.getViewModel()
+              .getCurrentQuery(), data.getPackageName());
+          navigator.goToAppView(data);
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -74,7 +90,7 @@ public class SearchPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
-        .flatMap(__ -> onOpenPopupMenuClick)
+        .flatMap(__ -> onOpenPopupMenuClickRelay)
         .doOnNext(data -> {
           final boolean hasVersions = data.hasVersions();
           final String appName = data.getName();
@@ -96,6 +112,7 @@ public class SearchPresenter implements Presenter {
         }, err -> crashReport.log(err));
   }
 
+  /*
   private void handleOpenStore() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
@@ -114,7 +131,9 @@ public class SearchPresenter implements Presenter {
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
   }
+  */
 
+  /*
   private void handleOtherVersionsClick() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
@@ -126,6 +145,7 @@ public class SearchPresenter implements Presenter {
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
   }
+  */
 
   private void openAppView(SearchApp searchApp) {
     final String packageName = searchApp.getPackageName();
