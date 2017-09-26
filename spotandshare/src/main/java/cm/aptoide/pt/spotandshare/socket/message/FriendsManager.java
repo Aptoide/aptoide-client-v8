@@ -41,6 +41,8 @@ public class FriendsManager {
     }
 
     map.remove(host);
+    behaviorRelay.call(Collections.unmodifiableCollection(map.values()));
+    numberOfFriendsRelay.call(map.size());
   }
 
   public Observable<Collection<Friend>> observe() {
