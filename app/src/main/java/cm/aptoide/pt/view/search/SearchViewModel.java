@@ -14,21 +14,21 @@ import org.parceler.Parcel;
     this.currentQuery = currentQuery;
     this.storeName = storeName;
     this.onlyTrustedApps = onlyTrustedApps;
-    this.allStoresSelected = false;
+    this.allStoresSelected = true;
   }
 
   SearchViewModel(String currentQuery, boolean onlyTrustedApps) {
     this.currentQuery = currentQuery;
-    this.storeName = "";
+    this.storeName = null;
     this.onlyTrustedApps = onlyTrustedApps;
-    this.allStoresSelected = false;
+    this.allStoresSelected = true;
   }
 
   SearchViewModel(String currentQuery, String storeName) {
     this.currentQuery = currentQuery;
     this.storeName = storeName;
     this.onlyTrustedApps = true;
-    this.allStoresSelected = false;
+    this.allStoresSelected = true;
   }
 
   @Override public String getCurrentQuery() {

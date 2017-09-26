@@ -72,8 +72,6 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class StoreFragment extends BasePagerToolbarFragment {
 
-  private static final String TAG = StoreFragment.class.getSimpleName();
-
   private final int PRIVATE_STORE_REQUEST_CODE = 20;
   protected PagerSlidingTabStrip pagerSlidingTabStrip;
   private AptoideAccountManager accountManager;

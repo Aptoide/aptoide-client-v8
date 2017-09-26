@@ -10,6 +10,8 @@ public class SearchActionsHandler
     implements SearchView.OnQueryTextListener, SearchView.OnSuggestionListener,
     View.OnFocusChangeListener, View.OnClickListener {
 
+  private static final String TAG = SearchActionsHandler.class.getName();
+
   private final static String SEARCH_WEB_SOCKET = "9000";
 
   private final SearchAppsWebSocket searchAppsWebSocket;
@@ -17,15 +19,17 @@ public class SearchActionsHandler
   private final SearchNavigator searchNavigator;
   private final UnableToSearchAction unableToSearchAction;
   private final QueryResultRepository queryResultRepository;
+  private final String lastQuery;
 
   public SearchActionsHandler(SearchAppsWebSocket searchAppsWebSocket, MenuItem menuItem,
       SearchNavigator searchNavigator, UnableToSearchAction unableToSearchAction,
-      QueryResultRepository queryResultRepository) {
+      QueryResultRepository queryResultRepository, String lastQuery) {
     this.searchAppsWebSocket = searchAppsWebSocket;
     this.menuItem = menuItem;
     this.searchNavigator = searchNavigator;
     this.unableToSearchAction = unableToSearchAction;
     this.queryResultRepository = queryResultRepository;
+    this.lastQuery = lastQuery;
   }
 
   @Override public boolean onQueryTextSubmit(String query) {
@@ -53,7 +57,11 @@ public class SearchActionsHandler
   }
 
   @Override public void onFocusChange(View v, boolean hasFocus) {
-    if (!hasFocus) {
+    if (hasFocus && lastQuery != null && !lastQuery.trim()
+        .equals("")) {
+      SearchView searchView = (SearchView) v;
+      searchView.setQuery(lastQuery, false);
+    } else {
       MenuItemCompat.collapseActionView(menuItem);
       searchAppsWebSocket.disconnect();
     }

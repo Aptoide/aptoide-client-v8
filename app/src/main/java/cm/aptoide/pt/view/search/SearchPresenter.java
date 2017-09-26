@@ -203,14 +203,21 @@ public class SearchPresenter implements Presenter {
   private Observable<ListSearchApps> executeSearchRequests(String query, String storeName,
       boolean onlyTrustedApps) {
 
-    if (storeName != null) {
+    if (storeName != null && !storeName.trim()
+        .equals("")) {
       return searchManager.searchInStore(query, storeName)
+          .observeOn(viewScheduler)
+          .doOnNext(result -> view.changeFollowedStoresButtonVisibility(hasResults(result)))
           .doOnNext(result -> view.addFollowedStoresResult(result));
     }
 
     return Observable.merge(searchManager.searchInFollowedStores(query, onlyTrustedApps)
+            .observeOn(viewScheduler)
+            .doOnNext(result -> view.changeFollowedStoresButtonVisibility(hasResults(result)))
             .doOnNext(result -> view.addFollowedStoresResult(result)),
         searchManager.searchInNonSubscribedStores(query, onlyTrustedApps)
+            .observeOn(viewScheduler)
+            .doOnNext(result -> view.changeAllStoresButtonVisibility(hasResults(result)))
             .doOnNext(result -> view.addAllStoresResult(result)));
   }
 
@@ -224,7 +231,7 @@ public class SearchPresenter implements Presenter {
         .flatMap(viewModel -> executeSearchRequests(viewModel.getCurrentQuery(),
             viewModel.getStoreName(), viewModel.isOnlyTrustedApps()).onErrorResumeNext(err -> {
           crashReport.log(err);
-          return Observable.empty();
+          return Observable.just(null);
         })
             .observeOn(viewScheduler)
             .doOnNext(__2 -> view.hideLoading())
@@ -232,6 +239,13 @@ public class SearchPresenter implements Presenter {
               if (result == null || !hasResults(result)) {
                 view.showNoResultsImage();
                 analytics.searchNoResults(viewModel.getCurrentQuery());
+              } else {
+                view.showResultsLayout();
+                if (viewModel.isAllStoresSelected()) {
+                  view.showAllStoresResult();
+                } else {
+                  view.showFollowedStoresResult();
+                }
               }
             }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

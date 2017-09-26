@@ -17,9 +17,15 @@ public interface SearchView extends View {
 
   void showNoResultsImage();
 
+  void showResultsLayout();
+
   void showLoading();
 
   void hideLoading();
+
+  void changeFollowedStoresButtonVisibility(boolean visible);
+
+  void changeAllStoresButtonVisibility(boolean visible);
 
   void addFollowedStoresResult(ListSearchApps data);
 

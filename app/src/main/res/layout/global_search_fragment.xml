@@ -79,20 +79,18 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/followed_stores_result_list"
-        android:layout_below="@id/buttons_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/buttons_layout"
         android:visibility="gone"
-        tools:visibility="visible"
         />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/all_stores_result_list"
-        android:layout_below="@id/buttons_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        tools:visibility="gone"
+        android:layout_below="@id/buttons_layout"
+        android:visibility="visible"
         />
 
   </RelativeLayout>
@@ -102,12 +100,13 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       >
-
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         android:theme="?attr/toolbarTheme"
+        android:elevation="4dp"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:layout_scrollFlags="scroll|enterAlways"
         />
 

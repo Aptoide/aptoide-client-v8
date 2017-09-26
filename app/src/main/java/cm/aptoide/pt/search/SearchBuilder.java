@@ -10,6 +10,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.SearchView;
 import android.view.MenuItem;
 import cm.aptoide.pt.R;
@@ -26,12 +27,19 @@ public class SearchBuilder {
   private final Context applicationContext;
   private final SearchNavigator searchNavigator;
   private final SearchManager searchManager;
+  private final String lastQuery;
 
   public SearchBuilder(MenuItem menuItem, Context context, SearchNavigator searchNavigator) {
+    this(menuItem, context, searchNavigator, null);
+  }
+
+  public SearchBuilder(MenuItem menuItem, Context context, SearchNavigator searchNavigator,
+      @Nullable String lastQuery) {
     this.applicationContext = context.getApplicationContext();
     this.searchManager = (SearchManager) context.getSystemService(Context.SEARCH_SERVICE);
     this.menuItem = menuItem;
     this.searchNavigator = searchNavigator;
+    this.lastQuery = lastQuery;
   }
 
   public void validateAndAttachSearch() {
@@ -60,7 +68,7 @@ public class SearchBuilder {
     };
 
     return new SearchActionsHandler(new SearchAppsWebSocket(), menuItem, searchNavigator,
-        unableToSearchAction, queryResultRepository);
+        unableToSearchAction, queryResultRepository, lastQuery);
   }
 
   private void setSearchableInfo(SearchView searchView, SearchManager searchManager) {

@@ -65,17 +65,14 @@ public class SearchResultAdapter extends RecyclerView.Adapter<ItemView> {
   }
 
   public void addResultForSearch(ListSearchApps data) {
-    final int insertionPosition = searchResultAds.size() + searchResult.size();
     final List<SearchApp> dataList = data.getDataList()
         .getList();
     searchResult.addAll(dataList);
-    final int insertedElementsCount = dataList.size();
-    notifyItemRangeInserted(insertionPosition, insertedElementsCount);
+    notifyDataSetChanged();
   }
 
   public void addResultForAds(MinimalAd... minimalAds) {
-    final int insertionPosition = searchResultAds.size();
     searchResultAds.addAll(Arrays.asList(minimalAds));
-    notifyItemRangeInserted(insertionPosition, searchResultAds.size());
+    notifyDataSetChanged();
   }
 }
