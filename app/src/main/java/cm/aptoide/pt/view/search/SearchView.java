@@ -13,11 +13,9 @@ public interface SearchView extends View {
 
   Observable<Void> clickEverywhereSearchButton();
 
-  Observable<Long> selectedOneElementFromSearch(); // ??
+  Observable<String> clickNoResultsSearchButton();
 
   void showNoResultsImage();
-
-  Observable<Void> noSearchLayoutSearchButtonClick();
 
   void showLoading();
 

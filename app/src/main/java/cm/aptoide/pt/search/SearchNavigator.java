@@ -48,13 +48,17 @@ public class SearchNavigator {
   }
 
   public void goToAppView(MinimalAd minimalAd) {
-    final Fragment fragment =
-        AppViewFragment.newInstance(minimalAd);
+    final Fragment fragment = AppViewFragment.newInstance(minimalAd);
     navigator.navigateTo(fragment, true);
   }
 
   public void goToStoreFragment(String storeName, String theme) {
     final Fragment fragment = StoreFragment.newInstance(storeName, theme);
+    navigator.navigateTo(fragment, true);
+  }
+
+  public void goToSearchFragment(String query, String storeName) {
+    final Fragment fragment = SearchFragment.newInstance(query, storeName);
     navigator.navigateTo(fragment, true);
   }
 }

@@ -47,7 +47,6 @@ import retrofit2.Converter;
 import rx.Observable;
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.subjects.PublishSubject;
 
 /**
  * Created by neuro on 01-06-2016.
@@ -62,10 +61,11 @@ public class SearchFragment extends FragmentView implements SearchView {
   private LinearLayout buttonsLayout;
   private View noSearchLayout;
   private EditText noSearchLayoutSearchQuery;
-  private ImageView noSearchLayoutSearchButton;
-  private PublishSubject<Long> selectedElementSubject;
+  private ImageView noResultsSearchButton;
   private RecyclerView followedStoresResultList;
   private RecyclerView allStoresResultList;
+  private SearchResultAdapter allStoresResultAdapter;
+  private SearchResultAdapter followedStoresResultAdapter;
 
   public static SearchFragment newInstance(String currentQuery) {
     return newInstance(currentQuery, false);
@@ -136,26 +136,16 @@ public class SearchFragment extends FragmentView implements SearchView {
     return RxView.clicks(allStoresButton);
   }
 
-  @Override public Observable<Long> selectedOneElementFromSearch() {
-    return selectedElementSubject.asObservable();
-  }
-
   @Override public void showNoResultsImage() {
     noSearchLayout.setVisibility(View.VISIBLE);
-    buttonsLayout.setVisibility(View.INVISIBLE);
-    noSearchLayoutSearchButtonClick().subscribe(__ -> {
-      String s = noSearchLayoutSearchQuery.getText()
-          .toString();
-
-      if (s.length() > 1) {
-        getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-            .newSearchFragment(s, viewModel.getStoreName()), true);
-      }
-    });
+    buttonsLayout.setVisibility(View.GONE);
+    followedStoresResultList.setVisibility(View.GONE);
+    allStoresResultList.setVisibility(View.GONE);
   }
 
-  @Override public Observable<Void> noSearchLayoutSearchButtonClick() {
-    return RxView.clicks(noSearchLayoutSearchButton);
+  @Override public Observable<String> clickNoResultsSearchButton() {
+    return RxView.clicks(noResultsSearchButton).map(__ -> noSearchLayoutSearchQuery.getText()
+        .toString());
   }
 
   @Override public void showLoading() {
@@ -172,11 +162,11 @@ public class SearchFragment extends FragmentView implements SearchView {
   }
 
   @Override public void addFollowedStoresResult(ListSearchApps data) {
-
+    followedStoresResultAdapter.addResultForSearch(data);
   }
 
   @Override public void addAllStoresResult(ListSearchApps data) {
-
+    allStoresResultAdapter.addResultForSearch(data);
   }
 
   @Override public Model getViewModel() {
@@ -212,12 +202,6 @@ public class SearchFragment extends FragmentView implements SearchView {
     */
   }
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    selectedElementSubject = PublishSubject.create();
-    attachPresenter(createPresenter(), null);
-  }
-
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     outState.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
@@ -233,14 +217,61 @@ public class SearchFragment extends FragmentView implements SearchView {
         .length() > 0) {
       searchNavigator = new SearchNavigator(getFragmentNavigator(), viewModel.getStoreName());
     } else {
-      final String defaultStore =
-          ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore();
-      searchNavigator = new SearchNavigator(getFragmentNavigator(), defaultStore);
+      searchNavigator = new SearchNavigator(getFragmentNavigator(), getDefaultStore());
     }
 
     SearchBuilder searchBuilder =
         new SearchBuilder(menu.findItem(R.id.action_search), getActivity(), searchNavigator);
     searchBuilder.validateAndAttachSearch();
+  }
+
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    setHasOptionsMenu(true);
+
+    /*
+    @Override protected boolean displayHomeUpAsEnabled() {
+      return true;
+    }
+
+    @Override public void setupToolbarDetails(Toolbar toolbar) {
+      toolbar.setTitle(currentQuery);
+    }
+    */
+
+    final View view = inflater.inflate(LAYOUT, container, false);
+    bindViews(view);
+    return view;
+  }
+
+  private void bindViews(View view) {
+    followedStoresResultList = (RecyclerView) view.findViewById(R.id.followed_stores_result_list);
+    allStoresResultList = (RecyclerView) view.findViewById(R.id.all_stores_result_list);
+    followedStoresButton = (Button) view.findViewById(R.id.subscribed);
+    allStoresButton = (Button) view.findViewById(R.id.everywhere);
+    buttonsLayout = (LinearLayout) view.findViewById(R.id.buttons_layout);
+    noSearchLayout = view.findViewById(R.id.no_search_results_layout);
+    noSearchLayoutSearchQuery = (EditText) view.findViewById(R.id.search_text);
+    noResultsSearchButton = (ImageView) view.findViewById(R.id.ic_search_button);
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+
+    if (savedInstanceState != null) {
+      viewModel = Parcels.unwrap(savedInstanceState.getParcelable(VIEW_MODEL));
+    } else {
+      viewModel = Parcels.unwrap(getArguments().getParcelable(VIEW_MODEL));
+    }
+
+    if (viewModel.isAllStoresSelected()) {
+      showAllStoresResult();
+    } else {
+      showFollowedStoresResult();
+    }
+
+    attachPresenter(createPresenter(), null);
   }
 
   private Presenter createPresenter() {
@@ -273,11 +304,7 @@ public class SearchFragment extends FragmentView implements SearchView {
 
     final CrashReport crashReport = CrashReport.getInstance();
     final Scheduler mainThreadScheduler = AndroidSchedulers.mainThread();
-
-    final String defaultStore =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore();
-
-    final SearchNavigator navigator = new SearchNavigator(getFragmentNavigator(), defaultStore);
+    final SearchNavigator navigator = new SearchNavigator(getFragmentNavigator(), getDefaultStore());
 
     final PublishRelay<SearchApp> onItemViewClickRelay = PublishRelay.create();
     final PublishRelay<SearchApp> onOpenPopupMenuClickRelay = PublishRelay.create();
@@ -286,7 +313,7 @@ public class SearchFragment extends FragmentView implements SearchView {
     final List<MinimalAd> searchResultAdsFollowedStores = new ArrayList<>();
     final List<SearchApp> searchResultFollowedStores = new ArrayList<>();
 
-    final SearchResultAdapter followedStoresResultAdapter =
+    followedStoresResultAdapter =
         new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, onOpenPopupMenuClickRelay,
             searchResultAdsFollowedStores, searchResultFollowedStores);
     followedStoresResultList.setAdapter(followedStoresResultAdapter);
@@ -296,7 +323,7 @@ public class SearchFragment extends FragmentView implements SearchView {
     final List<MinimalAd> searchResultAdsAllStores = new ArrayList<>();
     final List<SearchApp> searchResultAllStores = new ArrayList<>();
 
-    final SearchResultAdapter allStoresResultAdapter =
+    allStoresResultAdapter =
         new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, onOpenPopupMenuClickRelay,
             searchResultAdsAllStores, searchResultAllStores);
     allStoresResultList.setAdapter(allStoresResultAdapter);
@@ -304,50 +331,5 @@ public class SearchFragment extends FragmentView implements SearchView {
 
     return new SearchPresenter(this, searchAnalytics, navigator, crashReport, mainThreadScheduler,
         searchManager, onAdClickRelay, onItemViewClickRelay, onOpenPopupMenuClickRelay);
-  }
-
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    setHasOptionsMenu(true);
-
-    /*
-    @Override protected boolean displayHomeUpAsEnabled() {
-      return true;
-    }
-
-    @Override public void setupToolbarDetails(Toolbar toolbar) {
-      toolbar.setTitle(currentQuery);
-    }
-    */
-
-    final View view = inflater.inflate(LAYOUT, container, false);
-    bindViews(view);
-    return view;
-  }
-
-  private void bindViews(View view) {
-    followedStoresResultList = (RecyclerView) view.findViewById(R.id.followed_stores_result_list);
-    allStoresResultList = (RecyclerView) view.findViewById(R.id.all_stores_result_list);
-    followedStoresButton = (Button) view.findViewById(R.id.subscribed);
-    allStoresButton = (Button) view.findViewById(R.id.everywhere);
-    buttonsLayout = (LinearLayout) view.findViewById(R.id.buttons_layout);
-    noSearchLayout = view.findViewById(R.id.no_search_results_layout);
-    noSearchLayoutSearchQuery = (EditText) view.findViewById(R.id.search_text);
-    noSearchLayoutSearchButton = (ImageView) view.findViewById(R.id.ic_search_button);
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-
-    if (savedInstanceState != null) {
-      viewModel = Parcels.unwrap(savedInstanceState.getParcelable(VIEW_MODEL));
-    }
-
-    if (viewModel.isAllStoresSelected()) {
-      showAllStoresResult();
-    } else {
-      showFollowedStoresResult();
-    }
   }
 }

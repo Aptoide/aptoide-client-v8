@@ -48,6 +48,7 @@ public class SearchPresenter implements Presenter {
     handleClickToOpenAppViewFromItemClick();
     handleClickToOpenAppViewFromAdd();
     handleClickToOpenPopupMenu();
+    handleClickOnNoResultsImage();
     //handleOpenStore();
     //handleOtherVersionsClick();
   }
@@ -107,6 +108,19 @@ public class SearchPresenter implements Presenter {
 
           view.showPopup(hasVersions, appName, appIcon, packageName, storeName, theme);
         })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
+  }
+
+  private void handleClickOnNoResultsImage() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .observeOn(viewScheduler)
+        .flatMap(__ -> view.clickNoResultsSearchButton())
+        .filter(query -> query.length() > 1)
+        .doOnNext(query -> navigator.goToSearchFragment(query, view.getViewModel()
+            .getStoreName()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -208,15 +222,18 @@ public class SearchPresenter implements Presenter {
         .map(__ -> view.getViewModel())
         .doOnNext(viewModel -> analytics.search(viewModel.getCurrentQuery()))
         .flatMap(viewModel -> executeSearchRequests(viewModel.getCurrentQuery(),
-            viewModel.getStoreName(), viewModel.isOnlyTrustedApps()).observeOn(viewScheduler)
+            viewModel.getStoreName(), viewModel.isOnlyTrustedApps()).onErrorResumeNext(err -> {
+          crashReport.log(err);
+          return Observable.empty();
+        })
+            .observeOn(viewScheduler)
             .doOnNext(__2 -> view.hideLoading())
             .doOnNext(result -> {
-              if (!hasResults(result)) {
+              if (result == null || !hasResults(result)) {
                 view.showNoResultsImage();
                 analytics.searchNoResults(viewModel.getCurrentQuery());
               }
-            })
-            .doOnError(err -> crashReport.log(err)))
+            }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));

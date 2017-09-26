@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.database.realm.MinimalAd;
-import cm.aptoide.pt.dataprovider.model.v7.DataList;
 import cm.aptoide.pt.dataprovider.model.v7.search.ListSearchApps;
 import cm.aptoide.pt.dataprovider.model.v7.search.SearchApp;
 import cm.aptoide.pt.view.ItemView;
@@ -24,8 +23,8 @@ public class SearchResultAdapter extends RecyclerView.Adapter<ItemView> {
   private final List<SearchApp> searchResult;
 
   public SearchResultAdapter(PublishRelay<MinimalAd> onAdClickRelay,
-      PublishRelay<SearchApp> onItemViewClick, PublishRelay<SearchApp> onOpenPopupMenuClick, List<MinimalAd> searchResultAds,
-      List<SearchApp> searchResult) {
+      PublishRelay<SearchApp> onItemViewClick, PublishRelay<SearchApp> onOpenPopupMenuClick,
+      List<MinimalAd> searchResultAds, List<SearchApp> searchResult) {
     this.onAdClickRelay = onAdClickRelay;
     this.onItemViewClick = onItemViewClick;
     this.onOpenPopupMenuClick = onOpenPopupMenuClick;
@@ -66,18 +65,17 @@ public class SearchResultAdapter extends RecyclerView.Adapter<ItemView> {
   }
 
   public void addResultForSearch(ListSearchApps data) {
+    final int insertionPosition = searchResultAds.size() + searchResult.size();
     final List<SearchApp> dataList = data.getDataList()
         .getList();
     searchResult.addAll(dataList);
+    final int insertedElementsCount = dataList.size();
+    notifyItemRangeInserted(insertionPosition, insertedElementsCount);
   }
 
   public void addResultForAds(MinimalAd... minimalAds) {
+    final int insertionPosition = searchResultAds.size();
     searchResultAds.addAll(Arrays.asList(minimalAds));
-  }
-
-  public boolean hasMoreResults(ListSearchApps data) {
-    DataList<SearchApp> dataList = data.getDataList();
-    return dataList.getList()
-        .size() > 0 || data.getTotal() > data.getNextSize();
+    notifyItemRangeInserted(insertionPosition, searchResultAds.size());
   }
 }

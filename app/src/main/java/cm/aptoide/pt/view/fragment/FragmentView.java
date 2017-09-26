@@ -25,16 +25,14 @@ import cm.aptoide.pt.view.navigator.FragmentResultNavigator;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.android.FragmentEvent;
-import lombok.Getter;
 import rx.Observable;
 
 public abstract class FragmentView extends LeakFragment implements View {
 
   private static final String TAG = FragmentView.class.getName();
 
-  @Getter private boolean startActivityForResultCalled;
-
   private Presenter presenter;
+  private boolean startActivityForResultCalled;
   private String defaultStore;
   private String defaultTheme;
   private ActivityResultNavigator activityResultNavigator;
@@ -182,5 +180,17 @@ public abstract class FragmentView extends LeakFragment implements View {
       default:
         throw new IllegalStateException("Unrecognized event: " + event.name());
     }
+  }
+
+  public boolean isStartActivityForResultCalled() {
+    return startActivityForResultCalled;
+  }
+
+  protected String getDefaultStore() {
+    return defaultStore;
+  }
+
+  protected String getDefaultTheme() {
+    return defaultTheme;
   }
 }
