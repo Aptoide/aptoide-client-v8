@@ -8,6 +8,7 @@ import android.net.Uri;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
+import com.appsee.Appsee;
 import rx.Completable;
 
 /**
@@ -41,6 +42,8 @@ public class NotificationReceiver extends BroadcastReceiver {
           notificationCenter.setup();
           break;
         case NOTIFICATION_PRESSED_ACTION:
+          Appsee.startScreen(this.getClass()
+              .getSimpleName());
           callDeepLink(context, intent);
           dismissNotification(intent.getIntExtra(NOTIFICATION_NOTIFICATION_ID, -1)).subscribe(
               () -> {

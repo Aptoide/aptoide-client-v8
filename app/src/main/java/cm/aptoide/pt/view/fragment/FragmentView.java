@@ -7,11 +7,13 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.account.view.LoginSignUpCredentialsFragment;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -22,6 +24,13 @@ import cm.aptoide.pt.view.navigator.ActivityNavigator;
 import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.navigator.FragmentResultNavigator;
+import cm.aptoide.pt.view.search.SearchPagerTabFragment;
+import cm.aptoide.pt.view.store.GetStoreFragment;
+import cm.aptoide.pt.view.store.GetStoreWidgetsFragment;
+import cm.aptoide.pt.view.store.home.HomeFragment;
+import cm.aptoide.pt.view.wizard.WizardFragment;
+import cm.aptoide.pt.view.wizard.WizardPageOneFragment;
+import com.appsee.Appsee;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -72,6 +81,25 @@ public abstract class FragmentView extends LeakFragment implements View {
         .incrementNumberOfScreens();
   }
 
+  @Override public void onResume() {
+    super.onResume();
+
+    if (getUserVisibleHint()) {
+
+      String screen = this.getClass()
+          .getSimpleName();
+      if (!TextUtils.isEmpty(screen) && !HomeFragment.class.getSimpleName()
+          .equals(screen) && !WizardFragment.class.getSimpleName()
+          .equals(screen) && !WizardPageOneFragment.class.getSimpleName()
+          .equals(screen) && !LoginSignUpCredentialsFragment.class.getSimpleName()
+          .equals(screen) && !GetStoreFragment.class.getSimpleName()
+          .equals(screen) && !GetStoreWidgetsFragment.class.getSimpleName()
+          .equals(screen)) {
+        Appsee.startScreen(screen);
+      }
+    }
+  }
+
   @Override public void onDestroy() {
     super.onDestroy();
     ScreenTrackingUtils.getInstance()
@@ -81,6 +109,20 @@ public abstract class FragmentView extends LeakFragment implements View {
   @Override public void setUserVisibleHint(boolean isVisibleToUser) {
     super.setUserVisibleHint(isVisibleToUser);
     if (isVisibleToUser) {
+
+      String screen = this.getClass()
+          .getSimpleName();
+      if (!TextUtils.isEmpty(screen) && !HomeFragment.class.getSimpleName()
+          .equals(screen) && !SearchPagerTabFragment.class.getSimpleName()
+          .equals(screen)) {
+
+        if (GetStoreWidgetsFragment.class.getSimpleName()
+            .equals(screen)) {
+          screen = HomeFragment.class.getSimpleName();
+        }
+        Appsee.startScreen(screen);
+      }
+
       ScreenTrackingUtils.getInstance()
           .addScreenToHistory(getClass().getSimpleName());
     }

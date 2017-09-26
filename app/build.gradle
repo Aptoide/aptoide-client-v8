@@ -228,6 +228,8 @@ android {
       variant.buildConfigField "String", "TWITTER_KEY", "\"" + project.TWITTER_KEY + "\""
       variant.buildConfigField "String", "TWITTER_SECRET", "\"" + project.TWITTER_SECRET + "\""
     }
+    resValue "string", "APPSEE_API_KEY", "\"" + project.APPSEE_API_KEY + "\""
+
 
     variant.outputs.each { output ->
       def SEP = "_"
@@ -406,6 +408,9 @@ dependencies {
   compile('com.mopub:mopub-sdk-native-static:4.11.0@aar') {
     transitive = true
   }
+
+  compile 'com.appsee:appsee-android:+'
+
 }
 
 String getDate() {

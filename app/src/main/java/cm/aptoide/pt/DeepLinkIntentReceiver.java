@@ -28,6 +28,7 @@ import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.ActivityView;
+import com.appsee.Appsee;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -75,6 +76,10 @@ public class DeepLinkIntentReceiver extends ActivityView {
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    Appsee.startScreen(this.getClass()
+        .getSimpleName());
+
     installedRepository = RepositoryFactory.getInstalledRepository(getApplicationContext());
 
     adMapper = new MinimalAdMapper();

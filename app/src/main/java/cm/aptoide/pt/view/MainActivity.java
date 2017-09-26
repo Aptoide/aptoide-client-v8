@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.text.TextUtils;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
@@ -38,6 +39,13 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.navigator.TabNavigatorActivity;
+import com.appsee.Appsee;
+import com.appsee.AppseeListener;
+import com.appsee.AppseeScreenDetectedInfo;
+import com.appsee.AppseeSessionEndedInfo;
+import com.appsee.AppseeSessionEndingInfo;
+import com.appsee.AppseeSessionStartedInfo;
+import com.appsee.AppseeSessionStartingInfo;
 import com.jakewharton.rxrelay.PublishRelay;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -60,6 +68,50 @@ public class MainActivity extends TabNavigatorActivity
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(LAYOUT);
+
+    //AppSee initialization
+    Appsee.start(getString(R.string.APPSEE_API_KEY));
+    Appsee.setUserId(((AptoideApplication) getApplicationContext()).getIdsRepository()
+        .getUniqueIdentifier());
+
+    // Set your AppDelegate as the Appsee delegate
+    Appsee.addAppseeListener(new AppseeListener() {
+
+      @Override
+      public void onAppseeSessionStarting(AppseeSessionStartingInfo appseeSessionStartingInfo) {
+
+      }
+
+      @Override
+      public void onAppseeSessionStarted(AppseeSessionStartedInfo appseeSessionStartedInfo) {
+
+      }
+
+      @Override public void onAppseeSessionEnding(AppseeSessionEndingInfo appseeSessionEndingInfo) {
+
+      }
+
+      @Override public void onAppseeSessionEnded(AppseeSessionEndedInfo appseeSessionEndedInfo) {
+
+      }
+
+      @Override
+      public void onAppseeScreenDetected(AppseeScreenDetectedInfo appseeScreenDetectedInfo) {
+
+        if (appseeScreenDetectedInfo != null) {
+
+          String screen = appseeScreenDetectedInfo.getScreenName();
+
+          if (!TextUtils.isEmpty(screen) && MainActivity.class.getSimpleName()
+              .equals(screen)) {
+
+            // To ignore a new screen
+            appseeScreenDetectedInfo.setScreenName(null);
+          }
+        }
+      }
+    });
+
     installManager =
         ((AptoideApplication) getApplicationContext()).getInstallManager(InstallerFactory.DEFAULT);
     final AptoideAccountManager accountManager =
