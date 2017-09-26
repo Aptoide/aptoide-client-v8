@@ -163,11 +163,10 @@
 
         <ImageView
             android:id="@+id/get_app_icon"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
-            android:layout_below="@+id/answer_status"
-            android:layout_marginLeft="65dp"
-            android:layout_marginTop="20dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="155dp"
+            android:layout_marginTop="30dp"
             android:src="@mipmap/ic_launcher"
             />
 
@@ -177,7 +176,7 @@
             android:layout_height="30dp"
             android:layout_below="@+id/app_name"
             android:layout_toRightOf="@id/get_app_icon"
-            android:layout_marginLeft="40dp"
+            android:layout_marginLeft="20dp"
             android:layout_marginBottom="10dp"
             android:textSize="10sp"
             tools:text="get app"
@@ -188,8 +187,8 @@
             android:id="@+id/answer_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="35dp"
+            android:layout_marginLeft="45dp"
             android:text="Correct!"
             android:textColor="@color/green"
             style="@style/Aptoide.TextView.Medium.L.Black"
@@ -197,11 +196,11 @@
 
         <TextView
             android:id="@+id/answer_message"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/answer_status"
-            android:layout_centerHorizontal="true"
             android:layout_marginTop="0dp"
+            android:layout_marginLeft="30dp"
             android:gravity="center"
             android:text="The answer was:"
             android:visibility="visible"
@@ -211,9 +210,8 @@
             android:id="@id/app_name"
             android:layout_width="110dp"
             android:layout_height="40dp"
-            android:layout_below="@id/answer_status"
             android:layout_toRightOf="@id/get_app_icon"
-            android:layout_marginLeft="35dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:text="Aptoide - App Store"
@@ -239,7 +237,6 @@
             android:layout_height="50dp"
             android:layout_below="@id/get_app_button"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="0dp"
             android:visibility="visible"
             />
 

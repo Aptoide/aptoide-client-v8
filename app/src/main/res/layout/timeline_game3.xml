@@ -223,6 +223,31 @@
             tools:src="@mipmap/ic_launcher"
             />
 
+        <ImageView
+            android:id="@+id/stamp_left"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@mipmap/ic_launcher"
+            android:layout_marginTop="60dp"
+            android:layout_marginLeft="25dp"
+            android:alpha="0.6"
+            android:rotation="-35"
+            android:visibility="invisible"
+            />
+
+        <ImageView
+            android:id="@+id/stamp_right"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@mipmap/ic_launcher"
+            android:layout_marginTop="60dp"
+            android:layout_marginRight="25dp"
+            android:layout_alignParentRight="true"
+            android:alpha="0.6"
+            android:rotation="35"
+            android:visibility="invisible"
+            />
+
       </RelativeLayout>
 
     </RelativeLayout>

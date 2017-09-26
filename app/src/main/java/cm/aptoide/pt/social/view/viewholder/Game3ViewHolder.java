@@ -2,6 +2,8 @@ package cm.aptoide.pt.social.view.viewholder;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.media.Image;
+import android.provider.ContactsContract;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.view.View;
@@ -45,6 +47,9 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
   private final ProgressBar scoreProgress;
   private final ProgressBar leaderboardProgress;
 
+  private final ImageView stampLeft;
+  private final ImageView stampRight;
+
   private final String marketName;
 
   private double rand;
@@ -74,6 +79,9 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
 
     this.arrowLeft = (ImageView) itemView.findViewById(R.id.left_arrow);
     this.arrowRight = (ImageView) itemView.findViewById(R.id.right_arrow);
+
+    this.stampLeft = (ImageView) itemView.findViewById(R.id.stamp_left);
+    this.stampRight = (ImageView) itemView.findViewById(R.id.stamp_right);
 
     this.scoreProgress = (ProgressBar) itemView.findViewById(R.id.score_progress);
     this.leaderboardProgress = (ProgressBar) itemView.findViewById(R.id.rank_progress);
@@ -118,14 +126,19 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
     //Randomize right answer to left or right side (if 0<rand<0.5, right answer is on the left side)
     if(rand<0.5){
       ImageLoader.with(itemView.getContext()).load(card.getApp().getIcon(), answerLeftIcon);
+      ImageLoader.with(itemView.getContext()).load(card.getApp().getIcon(), stampRight);
       this.answerLeft.setText(card.getApp().getName());
+
       ImageLoader.with(itemView.getContext()).load(card.getWrongIcon(), answerRightIcon);
+      ImageLoader.with(itemView.getContext()).load(card.getWrongIcon(), stampLeft);
       this.answerRight.setText(card.getWrongName());
     }
     else{
       ImageLoader.with(itemView.getContext()).load(card.getWrongIcon(), answerLeftIcon);
+      ImageLoader.with(itemView.getContext()).load(card.getWrongIcon(), stampRight);
       this.answerLeft.setText(card.getWrongName());
       ImageLoader.with(itemView.getContext()).load(card.getApp().getIcon(), answerRightIcon);
+      ImageLoader.with(itemView.getContext()).load(card.getApp().getIcon(), stampLeft);
       this.answerRight.setText(card.getApp().getName());
     }
 

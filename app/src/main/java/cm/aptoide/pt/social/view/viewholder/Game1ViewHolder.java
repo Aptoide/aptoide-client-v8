@@ -41,6 +41,10 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
   private final ProgressBar scoreProgress;
   private final ProgressBar leaderboardProgress;
 
+  private final TextView stampLeft;
+  private final TextView stampRight;
+
+
   private final String marketName;
   private Game1 card;
 
@@ -75,6 +79,8 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
     this.scoreProgress = (ProgressBar) itemView.findViewById(R.id.score_progress);
     this.leaderboardProgress = (ProgressBar) itemView.findViewById(R.id.rank_progress);
 
+    this.stampLeft = (TextView) itemView.findViewById(R.id.stamp_left);
+    this.stampRight = (TextView) itemView.findViewById(R.id.stamp_right);
 
     rand = Math.random();
   }
@@ -101,11 +107,18 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
     //Randomize right answer to left or right side (if 0<rand<0.5, right answer is on the left side)
     if(rand<0.5){
       this.leftAnswer.setText(card.getApp().getName());
+      this.stampRight.setText(card.getApp().getName());
+
       this.rightAnswer.setText(card.getWrongName());
+      this.stampLeft.setText(card.getWrongName());
     }
+
     else{
       this.leftAnswer.setText(card.getWrongName());
+      this.stampRight.setText(card.getWrongName());
+
       this.rightAnswer.setText(card.getApp().getName());
+      this.stampLeft.setText(card.getApp().getName());
     }
 
     leftArrow.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(

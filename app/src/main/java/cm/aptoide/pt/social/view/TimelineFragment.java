@@ -2,6 +2,7 @@ package cm.aptoide.pt.social.view;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -615,6 +616,74 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
       if (!((viewHolder instanceof Game1ViewHolder)||(viewHolder instanceof Game2ViewHolder)||(viewHolder instanceof Game3ViewHolder))) return 0;
       return super.getSwipeDirs(recyclerView, viewHolder);
+    }
+
+    @Override
+    public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive){
+      if(actionState==ItemTouchHelper.ACTION_STATE_SWIPE){
+        Logger.d(dX, String.valueOf(dX));
+        if(dX > 0){
+          viewHolder.itemView.findViewById(R.id.stamp_left).setVisibility(View.VISIBLE);
+          if(dX<72)
+            viewHolder.itemView.findViewById(R.id.stamp_left).setAlpha(0.1f);
+          if(dX>=72 && dX<144)
+            viewHolder.itemView.findViewById(R.id.stamp_left).setAlpha(0.2f);
+          if(dX>=144 && dX<216)
+            viewHolder.itemView.findViewById(R.id.stamp_left).setAlpha(0.3f);
+          if(dX>=216 && dX<288)
+            viewHolder.itemView.findViewById(R.id.stamp_left).setAlpha(0.4f);
+          if(dX>=288 && dX<360)
+            viewHolder.itemView.findViewById(R.id.stamp_left).setAlpha(0.5f);
+          if(dX>=360 && dX<432)
+            viewHolder.itemView.findViewById(R.id.stamp_left).setAlpha(0.6f);
+          if(dX>=432 && dX<504)
+            viewHolder.itemView.findViewById(R.id.stamp_left).setAlpha(0.7f);
+          if(dX>=504 && dX<576)
+            viewHolder.itemView.findViewById(R.id.stamp_left).setAlpha(0.8f);
+          if(dX>=576 && dX<648)
+            viewHolder.itemView.findViewById(R.id.stamp_left).setAlpha(0.9f);
+          if(dX>=648)
+            viewHolder.itemView.findViewById(R.id.stamp_left).setAlpha(1f);
+        }
+        else if(dX<0) {
+          viewHolder.itemView.findViewById(R.id.stamp_right)
+              .setVisibility(View.VISIBLE);
+          if(dX>-72)
+            viewHolder.itemView.findViewById(R.id.stamp_right).setAlpha(0.1f);
+          if(dX<=-72 && dX>-144)
+            viewHolder.itemView.findViewById(R.id.stamp_right).setAlpha(0.2f);
+          if(dX<=-144 && dX>-216)
+            viewHolder.itemView.findViewById(R.id.stamp_right).setAlpha(0.3f);
+          if(dX<=-216 && dX>-288)
+            viewHolder.itemView.findViewById(R.id.stamp_right).setAlpha(0.4f);
+          if(dX<=-288 && dX>-360)
+            viewHolder.itemView.findViewById(R.id.stamp_right).setAlpha(0.5f);
+          if(dX<=-360 && dX>-432)
+            viewHolder.itemView.findViewById(R.id.stamp_right).setAlpha(0.6f);
+          if(dX<=-432 && dX>-504)
+            viewHolder.itemView.findViewById(R.id.stamp_right).setAlpha(0.7f);
+          if(dX<=-504 && dX>-576)
+            viewHolder.itemView.findViewById(R.id.stamp_right).setAlpha(0.8f);
+          if(dX<=-576 && dX>-648)
+            viewHolder.itemView.findViewById(R.id.stamp_right).setAlpha(0.9f);
+          if(dX<=-648)
+            viewHolder.itemView.findViewById(R.id.stamp_right).setAlpha(1f);
+        }
+        else{
+          viewHolder.itemView.findViewById(R.id.stamp_right).setVisibility(View.INVISIBLE);
+          viewHolder.itemView.findViewById(R.id.stamp_left).setVisibility(View.INVISIBLE);
+
+        }
+      }
+
+      super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+    }
+
+    @Override public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+      viewHolder.itemView.findViewById(R.id.stamp_left).setVisibility(View.INVISIBLE);
+      viewHolder.itemView.findViewById(R.id.stamp_right).setVisibility(View.INVISIBLE);
+
+      super.clearView(recyclerView, viewHolder);
     }
 
     @Override

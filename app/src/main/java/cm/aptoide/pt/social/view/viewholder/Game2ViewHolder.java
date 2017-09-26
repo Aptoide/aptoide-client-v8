@@ -43,6 +43,9 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
   private final ProgressBar scoreProgress;
   private final ProgressBar leaderboardProgress;
 
+  private final ImageView stampLeft;
+  private final ImageView stampRight;
+
   private final String marketName;
 
   private Game2 card;
@@ -74,6 +77,10 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
     this.scoreProgress = (ProgressBar) itemView.findViewById(R.id.score_progress);
     this.leaderboardProgress = (ProgressBar) itemView.findViewById(R.id.rank_progress);
 
+    this.stampLeft = (ImageView) itemView.findViewById(R.id.stamp_left);
+    this.stampRight = (ImageView) itemView.findViewById(R.id.stamp_right);
+
+
     rand = Math.random();
 
 
@@ -90,10 +97,10 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
     ImageLoader.with(itemView.getContext()).load("http://pool.img.aptoide.com/dfl/783ac07187647799c87c4e1d5cde6b8b_icon.png", this.headerIcon);
     this.headerTitle.setText(getStyledTitle(itemView.getContext(), getTitle(itemView.getContext()
         .getResources()), marketName));
-    if(card.getCardsLeft() == -1)
-      this.headerSubTitle.setText("Out of Cards");
+    if(card.getCardsLeft() == 1)
+      this.headerSubTitle.setText("Last card. Come back tomorrow for more!");
     else
-      this.headerSubTitle.setText("Card "+String.valueOf(card.getCardsLeft())+"/10");
+      this.headerSubTitle.setText(String.valueOf(card.getCardsLeft())+" cards left today.");
 
     if (card.getQuestionIcon() == null){
       itemView.findViewById(R.id.icon_question).setVisibility(View.GONE);
@@ -120,7 +127,11 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
     //Randomize right answer to left or right side (if 0<rand<0.5, right answer is on the left side)
     if(rand < 0.5){
       ImageLoader.with(itemView.getContext()).load(card.getApp().getIcon(), answerLeft);
+      ImageLoader.with(itemView.getContext()).load(card.getApp().getIcon(), stampRight);
+
       ImageLoader.with(itemView.getContext()).load(card.getWrongIcon(), answerRight);
+      ImageLoader.with(itemView.getContext()).load(card.getWrongIcon(), stampLeft);
+
       arrowLeft.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
           new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(card.getApp().getIcon()))));
       arrowRight.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
@@ -128,7 +139,11 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
     }
     else{
       ImageLoader.with(itemView.getContext()).load(card.getWrongIcon(), answerLeft);
+      ImageLoader.with(itemView.getContext()).load(card.getWrongIcon(), stampRight);
+
       ImageLoader.with(itemView.getContext()).load(card.getApp().getIcon(), answerRight);
+      ImageLoader.with(itemView.getContext()).load(card.getApp().getIcon(), stampLeft);
+
       answerLeft.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
           new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(card.getWrongIcon()))));
       answerRight.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
