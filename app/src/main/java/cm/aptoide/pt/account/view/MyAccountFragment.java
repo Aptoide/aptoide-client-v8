@@ -161,10 +161,10 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
         .findViewById(R.id.more);
 
     attachPresenter(new MyAccountPresenter(this, accountManager, crashReport,
-            new MyAccountNavigator(getFragmentNavigator()),
-            ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
-            new LinksHandlerFactory(getContext()),
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+        new MyAccountNavigator(getFragmentNavigator()),
+        ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
+        new LinksHandlerFactory(getContext()),
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker(),
         new NotificationAnalytics(httpClient, Analytics.getInstance())), savedInstanceState);
   }
