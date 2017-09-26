@@ -12,6 +12,7 @@ import cm.aptoide.pt.search.SearchAnalytics;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import com.jakewharton.rxrelay.PublishRelay;
+import java.util.concurrent.TimeUnit;
 import rx.Observable;
 import rx.Scheduler;
 
@@ -43,9 +44,10 @@ public class SearchPresenter implements Presenter {
 
   @Override public void present() {
     search();
-    onFollowedStoresSearchButtonClicked();
-    onEverywhereSearchButtonClick();
-    handleClickToOpenAppViewFromItemClick();
+    loadAds();
+    handleClickFollowedStoresSearchButton();
+    handleClickEverywhereSearchButton();
+    handleClickToOpenAppViewFromItem();
     handleClickToOpenAppViewFromAdd();
     handleClickToOpenPopupMenu();
     handleClickOnNoResultsImage();
@@ -61,7 +63,21 @@ public class SearchPresenter implements Presenter {
     // does nothing
   }
 
-  private void handleClickToOpenAppViewFromItemClick() {
+  private void loadAds() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .delay(4, TimeUnit.SECONDS)
+        .observeOn(viewScheduler)
+        .doOnNext(data -> {
+          view.setFollowedStoresAdsEmpty();
+          view.setAllStoresAdsEmpty();
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
+  }
+
+  private void handleClickToOpenAppViewFromItem() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
@@ -101,7 +117,7 @@ public class SearchPresenter implements Presenter {
               .getName();
 
           //FIXME which theme should be used?
-          // final String theme = aptoideApplication.getDefaultTheme()
+          // final String theme = view.getDefaultTheme()
           final String theme = data.getStore()
               .getAppearance()
               .getTheme();
@@ -134,7 +150,7 @@ public class SearchPresenter implements Presenter {
         .flatMap(__ -> onOpenStoreClick)
         .doOnNext(data -> {
           //FIXME which theme should be used?
-          // final String theme = aptoideApplication.getDefaultTheme()
+          // final String theme = view.getDefaultTheme()
           final String theme = data.getStore()
               .getAppearance()
               .getTheme();
@@ -178,7 +194,7 @@ public class SearchPresenter implements Presenter {
     navigator.goToAppView(appId, packageName, storeTheme, storeName);
   }
 
-  private void onFollowedStoresSearchButtonClicked() {
+  private void handleClickFollowedStoresSearchButton() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
@@ -189,7 +205,7 @@ public class SearchPresenter implements Presenter {
         }, err -> crashReport.log(err));
   }
 
-  private void onEverywhereSearchButtonClick() {
+  private void handleClickEverywhereSearchButton() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
@@ -207,18 +223,20 @@ public class SearchPresenter implements Presenter {
         .equals("")) {
       return searchManager.searchInStore(query, storeName)
           .observeOn(viewScheduler)
-          .doOnNext(result -> view.changeFollowedStoresButtonVisibility(hasResults(result)))
-          .doOnNext(result -> view.addFollowedStoresResult(result));
+          .doOnNext(data -> view.changeFollowedStoresButtonVisibility(hasResults(data)))
+          .doOnNext(data -> view.addFollowedStoresResult(data.getDataList()
+              .getList()));
     }
 
     return Observable.merge(searchManager.searchInFollowedStores(query, onlyTrustedApps)
-            .observeOn(viewScheduler)
-            .doOnNext(result -> view.changeFollowedStoresButtonVisibility(hasResults(result)))
-            .doOnNext(result -> view.addFollowedStoresResult(result)),
-        searchManager.searchInNonSubscribedStores(query, onlyTrustedApps)
-            .observeOn(viewScheduler)
-            .doOnNext(result -> view.changeAllStoresButtonVisibility(hasResults(result)))
-            .doOnNext(result -> view.addAllStoresResult(result)));
+        .observeOn(viewScheduler)
+        .doOnNext(data -> view.changeFollowedStoresButtonVisibility(hasResults(data)))
+        .doOnNext(data -> view.addFollowedStoresResult(data.getDataList()
+            .getList())), searchManager.searchInNonSubscribedStores(query, onlyTrustedApps)
+        .observeOn(viewScheduler)
+        .doOnNext(data -> view.changeAllStoresButtonVisibility(hasResults(data)))
+        .doOnNext(data -> view.addAllStoresResult(data.getDataList()
+            .getList())));
   }
 
   private void search() {

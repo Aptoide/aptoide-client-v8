@@ -5,13 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.database.realm.MinimalAd;
-import cm.aptoide.pt.dataprovider.model.v7.search.ListSearchApps;
 import cm.aptoide.pt.dataprovider.model.v7.search.SearchApp;
 import cm.aptoide.pt.view.ItemView;
+import cm.aptoide.pt.view.search.result.SearchLoadingViewHolder;
 import cm.aptoide.pt.view.search.result.SearchResultAdViewHolder;
 import cm.aptoide.pt.view.search.result.SearchResultViewHolder;
 import com.jakewharton.rxrelay.PublishRelay;
-import java.util.Arrays;
 import java.util.List;
 
 public class SearchResultAdapter extends RecyclerView.Adapter<ItemView> {
@@ -21,6 +20,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<ItemView> {
   private final PublishRelay<SearchApp> onOpenPopupMenuClick;
   private final List<MinimalAd> searchResultAds;
   private final List<SearchApp> searchResult;
+  private boolean adsLoaded = false;
 
   public SearchResultAdapter(PublishRelay<MinimalAd> onAdClickRelay,
       PublishRelay<SearchApp> onItemViewClick, PublishRelay<SearchApp> onOpenPopupMenuClick,
@@ -35,10 +35,20 @@ public class SearchResultAdapter extends RecyclerView.Adapter<ItemView> {
   @Override public ItemView onCreateViewHolder(ViewGroup parent, int viewType) {
     View view = LayoutInflater.from(parent.getContext())
         .inflate(viewType, parent, false);
-    if (viewType == SearchResultAdViewHolder.LAYOUT) {
-      return new SearchResultAdViewHolder(view, onAdClickRelay);
+
+    switch (viewType) {
+      case SearchResultViewHolder.LAYOUT: {
+        return new SearchResultViewHolder(view, onItemViewClick, onOpenPopupMenuClick);
+      }
+
+      case SearchResultAdViewHolder.LAYOUT: {
+        return new SearchResultAdViewHolder(view, onAdClickRelay);
+      }
+
+      default: {
+        return new SearchLoadingViewHolder(view);
+      }
     }
-    return new SearchResultViewHolder(view, onItemViewClick, onOpenPopupMenuClick);
   }
 
   @Override public void onBindViewHolder(ItemView holder, int position) {
@@ -46,9 +56,14 @@ public class SearchResultAdapter extends RecyclerView.Adapter<ItemView> {
   }
 
   @Override public int getItemViewType(int position) {
+    if (position == 0 && searchResultAds.size() == 0 && !adsLoaded) {
+      return SearchLoadingViewHolder.LAYOUT;
+    }
+
     if (position < searchResultAds.size()) {
       return SearchResultAdViewHolder.LAYOUT;
     }
+
     return SearchResultViewHolder.LAYOUT;
   }
 
@@ -58,21 +73,29 @@ public class SearchResultAdapter extends RecyclerView.Adapter<ItemView> {
 
   private Object getItem(int position) {
     final int adsCount = searchResultAds.size();
+
+    if (position == 0 && adsCount == 0 && !adsLoaded) {
+      return null;
+    }
+
     if (position < adsCount) {
       return searchResultAds.get(position);
     }
     return searchResult.get(position - adsCount);
   }
 
-  public void addResultForSearch(ListSearchApps data) {
-    final List<SearchApp> dataList = data.getDataList()
-        .getList();
+  public void addResultForSearch(List<SearchApp> dataList) {
     searchResult.addAll(dataList);
     notifyDataSetChanged();
   }
 
-  public void addResultForAds(MinimalAd... minimalAds) {
-    searchResultAds.addAll(Arrays.asList(minimalAds));
+  public void addResultForAds(List<MinimalAd> minimalAds) {
+    searchResultAds.addAll(minimalAds);
+    setAdsLoaded();
+  }
+
+  public void setAdsLoaded() {
+    adsLoaded = true;
     notifyDataSetChanged();
   }
 }

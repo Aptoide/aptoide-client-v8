@@ -1,13 +1,16 @@
 package cm.aptoide.pt.view.search;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,7 +26,6 @@ import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.model.v7.search.ListSearchApps;
 import cm.aptoide.pt.dataprovider.model.v7.search.SearchApp;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -34,6 +36,7 @@ import cm.aptoide.pt.search.SearchBuilder;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.store.StoreUtils;
+import cm.aptoide.pt.view.custom.DividerItemDecoration;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
@@ -186,24 +189,39 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
     }
   }
 
-  @Override public void addFollowedStoresResult(ListSearchApps data) {
-    followedStoresResultAdapter.addResultForSearch(data);
+  @Override public void addFollowedStoresResult(List<SearchApp> dataList) {
+    followedStoresResultAdapter.addResultForSearch(dataList);
   }
 
-  @Override public void addAllStoresResult(ListSearchApps data) {
-    allStoresResultAdapter.addResultForSearch(data);
+  @Override public void addAllStoresResult(List<SearchApp> dataList) {
+    allStoresResultAdapter.addResultForSearch(dataList);
   }
 
   @Override public Model getViewModel() {
     return viewModel;
   }
 
+  @Override public void addFollowedStoresAdsResult(List<MinimalAd> ads) {
+    followedStoresResultAdapter.addResultForAds(ads);
+  }
+
+  @Override public void addAllStoresAdsResult(List<MinimalAd> ads) {
+    allStoresResultAdapter.addResultForAds(ads);
+  }
+
+  @Override public void setFollowedStoresAdsEmpty() {
+    followedStoresResultAdapter.setAdsLoaded();
+  }
+
+  @Override public void setAllStoresAdsEmpty() {
+    allStoresResultAdapter.setAdsLoaded();
+  }
+
   @Override
   public void showPopup(boolean hasVersions, String appName, String appIcon, String packageName,
-      String storeName, String theme) {
-    /*
+      String storeName, String theme, View anchor) {
     final Context context = getContext();
-    final PopupMenu popupMenu = new PopupMenu(context, this);
+    final PopupMenu popupMenu = new PopupMenu(context, anchor);
 
     MenuInflater inflater = popupMenu.getMenuInflater();
     inflater.inflate(R.menu.menu_search_item, popupMenu.getMenu());
@@ -214,6 +232,7 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
       menuItemVersions.setVisible(true);
     }
 
+    /*
     RxPopupMenu.itemClicks(popupMenu)
         .filter(menuItem -> menuItem.getItemId() == R.id.versions)
         .subscribe(__ -> onOtherVersionsClickSubject.onNext(
@@ -222,9 +241,8 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
     RxPopupMenu.itemClicks(popupMenu)
         .filter(menuItem -> menuItem.getItemId() == R.id.go_to_store)
         .subscribe(__ -> onOpenStoreClickSubject.onNext(new StoreData(storeName, theme)));
-
-    popupMenu.show();
     */
+    popupMenu.show();
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -240,6 +258,10 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
         new SearchBuilder(menu.findItem(R.id.action_search), getContext(), getSearchNavigator(),
             viewModel.getCurrentQuery());
     searchBuilder.validateAndAttachSearch();
+  }
+
+  @Override public String getDefaultTheme() {
+    return super.getDefaultTheme();
   }
 
   @NonNull private SearchNavigator getSearchNavigator() {
@@ -348,6 +370,7 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
     followedStoresResultList.setAdapter(followedStoresResultAdapter);
     followedStoresResultList.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayout.VERTICAL, false));
+    followedStoresResultList.addItemDecoration(new DividerItemDecoration(getContext(), 4));
 
     final List<MinimalAd> searchResultAdsAllStores = new ArrayList<>();
     final List<SearchApp> searchResultAllStores = new ArrayList<>();
@@ -358,6 +381,7 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
     allStoresResultList.setAdapter(allStoresResultAdapter);
     allStoresResultList.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayout.VERTICAL, false));
+    allStoresResultList.addItemDecoration(new DividerItemDecoration(getContext(), 4));
 
     return new SearchPresenter(this, searchAnalytics, navigator, crashReport, mainThreadScheduler,
         searchManager, onAdClickRelay, onItemViewClickRelay, onOpenPopupMenuClickRelay);

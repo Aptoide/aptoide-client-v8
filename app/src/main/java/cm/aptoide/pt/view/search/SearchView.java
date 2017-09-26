@@ -1,7 +1,9 @@
 package cm.aptoide.pt.view.search;
 
-import cm.aptoide.pt.dataprovider.model.v7.search.ListSearchApps;
+import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.dataprovider.model.v7.search.SearchApp;
 import cm.aptoide.pt.presenter.View;
+import java.util.List;
 import rx.Observable;
 
 public interface SearchView extends View {
@@ -27,14 +29,24 @@ public interface SearchView extends View {
 
   void changeAllStoresButtonVisibility(boolean visible);
 
-  void addFollowedStoresResult(ListSearchApps data);
+  void addFollowedStoresResult(List<SearchApp> dataList);
 
-  void addAllStoresResult(ListSearchApps data);
+  void addAllStoresResult(List<SearchApp> dataList);
 
   Model getViewModel();
 
+  void addFollowedStoresAdsResult(List<MinimalAd> ads);
+
+  void addAllStoresAdsResult(List<MinimalAd> ads);
+
+  void setFollowedStoresAdsEmpty();
+
+  void setAllStoresAdsEmpty();
+
   void showPopup(boolean hasVersions, String appName, String appIcon, String packageName,
-      String storeName, String theme);
+      String storeName, String theme, android.view.View anchor);
+
+  String getDefaultTheme();
 
   interface Model {
 

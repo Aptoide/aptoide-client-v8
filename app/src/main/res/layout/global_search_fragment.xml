@@ -36,7 +36,6 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_marginTop="?attr/actionBarSize"
-      android:paddingTop="15dp"
       android:visibility="gone"
       tools:visibility="visible"
       >
@@ -45,6 +44,7 @@
         android:id="@+id/buttons_layout"
         android:layout_width="262dp"
         android:layout_height="29dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_centerHorizontal="true"
         android:background="@drawable/search_buttons_background"
         android:gravity="center_horizontal"
@@ -83,6 +83,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/buttons_layout"
         android:visibility="gone"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
         />
 
     <android.support.v7.widget.RecyclerView
@@ -91,6 +92,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/buttons_layout"
         android:visibility="visible"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
         />
 
   </RelativeLayout>
