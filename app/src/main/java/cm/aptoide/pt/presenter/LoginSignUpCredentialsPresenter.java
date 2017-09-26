@@ -12,7 +12,6 @@ import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.FacebookSignUpException;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.account.view.AccountNavigator;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.view.BackButton;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
@@ -146,8 +145,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
                       view.hideLoading();
                     })
                     .doOnError(throwable -> {
-                      Analytics.Account.signInSuccessAptoide(
-                          Analytics.Account.SignUpLoginStatus.FAILED);
+                      accountAnalytics.sendAptoideSignUpFailEvent();
                       view.showError(errorMapper.map(throwable));
                       crashReport.log(throwable);
                       unlockScreenRotation();

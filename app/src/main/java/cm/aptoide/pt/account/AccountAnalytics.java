@@ -30,7 +30,6 @@ public class AccountAnalytics {
   private static final String FLURRY_SIGNUP_EVENT_NAME = "Account_Signup_Screen";
   private static final String LOGIN_METHOD = "Method";
   private static final String STATUS_DETAIL = "Status Detail";
-  private static final String TAG = AccountAnalytics.class.getSimpleName();
   private final Analytics analytics;
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final OkHttpClient httpClient;
@@ -117,34 +116,33 @@ public class AccountAnalytics {
   }
 
   public void sendAptoideLoginFailEvent() {
-    Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
-        Analytics.Account.SignUpLoginStatus.FAILED,
-        Analytics.Account.LoginStatusDetail.GENERAL_ERROR);
+    sendLoginFailEvents(LoginMethod.APTOIDE, SignUpLoginStatus.FAILED,
+        LoginStatusDetail.GENERAL_ERROR);
   }
 
   public void sendGoogleSignUpFailEvent() {
-    Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
-        Analytics.Account.SignUpLoginStatus.FAILED, Analytics.Account.LoginStatusDetail.SDK_ERROR);
+    sendLoginFailEvents(LoginMethod.GOOGLE, SignUpLoginStatus.FAILED, LoginStatusDetail.SDK_ERROR);
   }
 
   public void sendAptoideSignUpFailEvent() {
-    Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.FAILED);
+    analytics.sendEvent(new FlurryEvent(FLURRY_SIGNUP_EVENT_NAME));
+    Bundle bundle = new Bundle();
+    bundle.putString(STATUS, SignUpLoginStatus.FAILED.getStatus());
+    analytics.sendEvent(new FacebookEvent(facebook, FACEBOOK_SIGNUP_EVENT_NAME, bundle));
   }
 
   public void sendFacebookMissingPermissionsEvent() {
-    Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
-        Analytics.Account.SignUpLoginStatus.FAILED,
-        Analytics.Account.LoginStatusDetail.PERMISSIONS_DENIED);
+    sendLoginFailEvents(LoginMethod.FACEBOOK, SignUpLoginStatus.FAILED,
+        LoginStatusDetail.PERMISSIONS_DENIED);
   }
 
   public void sendFacebookUserCancelledEvent() {
-    Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
-        Analytics.Account.SignUpLoginStatus.FAILED, Analytics.Account.LoginStatusDetail.CANCEL);
+    sendLoginFailEvents(LoginMethod.FACEBOOK, SignUpLoginStatus.FAILED, LoginStatusDetail.CANCEL);
   }
 
   public void sendFacebookErrorEvent() {
-    Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
-        Analytics.Account.SignUpLoginStatus.FAILED, Analytics.Account.LoginStatusDetail.SDK_ERROR);
+    sendLoginFailEvents(LoginMethod.FACEBOOK, SignUpLoginStatus.FAILED,
+        LoginStatusDetail.SDK_ERROR);
   }
 
   private void setupLoginEvents(LoginMethod aptoide) {
@@ -162,6 +160,12 @@ public class AccountAnalytics {
     bundle.putString(STATUS, loginStatus.getStatus());
     bundle.putString(STATUS_DETAIL, loginStatusDetail.getLoginStatusDetail());
     return new FacebookEvent(facebook, FACEBOOK_LOGIN_EVENT_NAME, bundle);
+  }
+
+  private void sendLoginFailEvents(LoginMethod loginMethod, SignUpLoginStatus loginStatus,
+      LoginStatusDetail statusDetail) {
+    analytics.sendEvent(createFlurryEvent(loginMethod, loginStatus, statusDetail));
+    analytics.sendEvent(createFacebookEvent(loginMethod, loginStatus, statusDetail));
   }
 
   private FlurryEvent createFlurryEvent(LoginMethod loginMethod, SignUpLoginStatus loginStatus,
