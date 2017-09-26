@@ -5,11 +5,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.util.Pair;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -20,17 +16,17 @@ import cm.aptoide.pt.dataprovider.model.v7.search.SearchApp;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.AptoideUtils;
-import com.jakewharton.rxbinding.support.v7.widget.RxPopupMenu;
+import cm.aptoide.pt.view.ItemView;
 import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Date;
 import rx.Observable;
-import rx.subjects.PublishSubject;
 
-public class SearchResultViewHolder extends RecyclerView.ViewHolder {
+public class SearchResultViewHolder extends RecyclerView.ViewHolder implements ItemView<SearchApp> {
 
   public static final int LAYOUT = R.layout.search_app_row;
-  private final PublishSubject<OtherVersionsData> onOtherVersionsClickSubject;
-  private final PublishSubject<StoreData> onOpenStoreClickSubject;
+  private final PublishRelay<Void> onOtherVersionsClickSubject;
+  private final PublishRelay<Void> onOpenStoreClickSubject;
 
   private TextView nameTextView;
   private ImageView iconImageView;
@@ -42,18 +38,17 @@ public class SearchResultViewHolder extends RecyclerView.ViewHolder {
   private ImageView overflowImageView;
   private View bottomView;
   private SearchApp searchApp;
-  private String query;
 
-  public SearchResultViewHolder(View itemView) {
+  public SearchResultViewHolder(View itemView, PublishRelay<Void> onOtherVersionsClickSubject,
+      PublishRelay<Void> onOpenStoreClickSubject) {
     super(itemView);
-    this.onOtherVersionsClickSubject = PublishSubject.create();
-    this.onOpenStoreClickSubject = PublishSubject.create();
+    this.onOtherVersionsClickSubject = onOtherVersionsClickSubject;
+    this.onOpenStoreClickSubject = onOpenStoreClickSubject;
     bindViews(itemView);
   }
 
-  public void setupWith(SearchApp searchApp, String query) {
+  @Override public void setup(SearchApp searchApp) {
     this.searchApp = searchApp;
-    this.query = query;
     setAppName();
     setDownloadCount();
     setAverageValue();
@@ -155,9 +150,9 @@ public class SearchResultViewHolder extends RecyclerView.ViewHolder {
     overflowImageView = (ImageView) itemView.findViewById(R.id.overflow);
   }
 
-  public Observable<Pair<SearchApp, String>> onOpenAppViewClick() {
+  public Observable<SearchApp> onOpenAppViewClick() {
     return RxView.clicks(itemView)
-        .map(__ -> new Pair<>(searchApp, query));
+        .map(__ -> searchApp);
   }
 
   public Observable<SearchApp> onOpenPopupMenuClick() {
@@ -165,80 +160,11 @@ public class SearchResultViewHolder extends RecyclerView.ViewHolder {
         .map(__ -> searchApp);
   }
 
-  public Observable<OtherVersionsData> onOtherVersionsClick() {
+  public Observable<Void> onOtherVersionsClick() {
     return onOtherVersionsClickSubject.asObservable();
   }
 
-  public Observable<StoreData> onOpenStoreClick() {
+  public Observable<Void> onOpenStoreClick() {
     return onOpenStoreClickSubject.asObservable();
-  }
-
-  public void showPopup(boolean hasVersions, String appName, String appIcon, String packageName,
-      String storeName, String theme) {
-    final Context context = itemView.getContext();
-    final PopupMenu popupMenu = new PopupMenu(context, itemView);
-
-    MenuInflater inflater = popupMenu.getMenuInflater();
-    inflater.inflate(R.menu.menu_search_item, popupMenu.getMenu());
-
-    if (hasVersions) {
-      MenuItem menuItemVersions = popupMenu.getMenu()
-          .findItem(R.id.versions);
-      menuItemVersions.setVisible(true);
-
-    }
-
-    RxPopupMenu.itemClicks(popupMenu)
-        .filter(menuItem -> menuItem.getItemId() == R.id.versions)
-        .subscribe(__ -> onOtherVersionsClickSubject.onNext(
-            new OtherVersionsData(appName, appIcon, packageName)));
-
-    RxPopupMenu.itemClicks(popupMenu)
-        .filter(menuItem -> menuItem.getItemId() == R.id.go_to_store)
-        .subscribe(__ -> onOpenStoreClickSubject.onNext(new StoreData(storeName, theme)));
-
-    popupMenu.show();
-  }
-
-  static final class StoreData {
-    private final String storeName;
-    private final String theme;
-
-    StoreData(String storeName, String theme) {
-      this.storeName = storeName;
-      this.theme = theme;
-    }
-
-    public String getStoreName() {
-      return storeName;
-    }
-
-    public String getTheme() {
-      return theme;
-    }
-  }
-
-  static final class OtherVersionsData {
-    private final String appName;
-    private final String appIcon;
-    private final String packageName;
-
-    OtherVersionsData(String appName, String appIcon, String packageName) {
-      this.appName = appName;
-      this.appIcon = appIcon;
-      this.packageName = packageName;
-    }
-
-    public String getAppName() {
-      return appName;
-    }
-
-    public String getAppIcon() {
-      return appIcon;
-    }
-
-    public String getPackageName() {
-      return packageName;
-    }
   }
 }

@@ -6,27 +6,27 @@ import org.parceler.Parcel;
   private final String currentQuery;
   private final String storeName;
   private final boolean onlyTrustedApps;
-  private int selectedButton;
+  private boolean allStoresSelected;
 
   SearchViewModel(String currentQuery, String storeName, boolean onlyTrustedApps) {
     this.currentQuery = currentQuery;
     this.storeName = storeName;
     this.onlyTrustedApps = onlyTrustedApps;
-    this.selectedButton = -1;
+    this.allStoresSelected = false;
   }
 
   SearchViewModel(String currentQuery, boolean onlyTrustedApps) {
     this.currentQuery = currentQuery;
     this.storeName = "";
     this.onlyTrustedApps = onlyTrustedApps;
-    this.selectedButton = -1;
+    this.allStoresSelected = false;
   }
 
   SearchViewModel(String currentQuery, String storeName) {
     this.currentQuery = currentQuery;
     this.storeName = storeName;
     this.onlyTrustedApps = true;
-    this.selectedButton = -1;
+    this.allStoresSelected = false;
   }
 
   @Override public String getCurrentQuery() {
@@ -41,11 +41,11 @@ import org.parceler.Parcel;
     return onlyTrustedApps;
   }
 
-  @Override public int getSelectedButton() {
-    return selectedButton;
+  @Override public boolean isAllStoresSelected() {
+    return allStoresSelected;
   }
 
-  public void setSelectedButton(int selectedButton) {
-    this.selectedButton = selectedButton;
+  public void setAllStoresSelected(boolean allStoresSelected) {
+    this.allStoresSelected = allStoresSelected;
   }
 }

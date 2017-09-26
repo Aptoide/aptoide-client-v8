@@ -78,12 +78,21 @@
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/search_result_list"
+        android:id="@+id/followed_stores_result_list"
         android:layout_below="@id/buttons_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
         tools:visibility="visible"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/all_stores_result_list"
+        android:layout_below="@id/buttons_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="gone"
         />
 
   </RelativeLayout>

@@ -19,9 +19,12 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
+import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.search.ListSearchApps;
+import cm.aptoide.pt.dataprovider.model.v7.search.SearchApp;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -35,6 +38,8 @@ import cm.aptoide.pt.view.fragment.FragmentView;
 import cm.aptoide.pt.view.recycler.LinearLayoutManagerWithSmoothScroller;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxrelay.PublishRelay;
+import java.util.ArrayList;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import org.parceler.Parcels;
@@ -42,7 +47,6 @@ import retrofit2.Converter;
 import rx.Observable;
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
 /**
@@ -60,7 +64,8 @@ public class SearchFragment extends FragmentView implements SearchView {
   private EditText noSearchLayoutSearchQuery;
   private ImageView noSearchLayoutSearchButton;
   private PublishSubject<Long> selectedElementSubject;
-  private RecyclerView resultList;
+  private RecyclerView followedStoresResultList;
+  private RecyclerView allStoresResultList;
 
   public static SearchFragment newInstance(String currentQuery) {
     return newInstance(currentQuery, false);
@@ -104,17 +109,23 @@ public class SearchFragment extends FragmentView implements SearchView {
   }
 
   @Override public void showFollowedStoresResult() {
+    followedStoresResultList.setVisibility(View.VISIBLE);
+    followedStoresButton.setTextColor(getResources().getColor(R.color.white));
+    followedStoresButton.setBackgroundResource(R.drawable.search_button_background);
 
+    allStoresResultList.setVisibility(View.GONE);
+    allStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
+    allStoresButton.setBackgroundResource(0);
   }
 
   @Override public void showAllStoresResult() {
+    followedStoresResultList.setVisibility(View.GONE);
+    followedStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
+    followedStoresButton.setBackgroundResource(0);
 
-  }
-
-  @Override public Observable<Integer> selectedTab() {
-    return Observable.merge(RxView.clicks(followedStoresButton)
-        .map(__ -> 1), RxView.clicks(allStoresButton)
-        .map(__ -> 2));
+    allStoresResultList.setVisibility(View.VISIBLE);
+    allStoresButton.setTextColor(getResources().getColor(R.color.white));
+    allStoresButton.setBackgroundResource(R.drawable.search_button_background);
   }
 
   @Override public Observable<Long> selectedOneElementFromSearch() {
@@ -139,20 +150,6 @@ public class SearchFragment extends FragmentView implements SearchView {
     });
   }
 
-  @Override public void setSubscribedSearchButtonHighlighted() {
-    followedStoresButton.setBackgroundResource(R.drawable.search_button_background);
-    followedStoresButton.setTextColor(getResources().getColor(R.color.white));
-    allStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
-    allStoresButton.setBackgroundResource(0);
-  }
-
-  @Override public void setEverywhereSearchButtonHighlighted() {
-    allStoresButton.setBackgroundResource(R.drawable.search_button_background);
-    allStoresButton.setTextColor(getResources().getColor(R.color.white));
-    followedStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
-    followedStoresButton.setBackgroundResource(0);
-  }
-
   @Override public Observable<Void> clickFollowedStoresSearchButton() {
     return RxView.clicks(followedStoresButton);
   }
@@ -162,13 +159,24 @@ public class SearchFragment extends FragmentView implements SearchView {
   }
 
   @Override public void showLoading() {
-    // TODO: 22/9/2017 sithengineer
-    resultList.setVisibility(View.GONE);
+    followedStoresResultList.setVisibility(View.GONE);
+    allStoresResultList.setVisibility(View.GONE);
   }
 
   @Override public void hideLoading() {
-    // TODO: 22/9/2017 sithengineer
-    resultList.setVisibility(View.VISIBLE);
+    if (followedStoresButton.getVisibility() == View.VISIBLE) {
+      followedStoresResultList.setVisibility(View.VISIBLE);
+    } else if (allStoresButton.getVisibility() == View.VISIBLE) {
+      allStoresResultList.setVisibility(View.VISIBLE);
+    }
+  }
+
+  @Override public void addFollowedStoresResult(ListSearchApps data){
+
+  }
+
+  @Override public void addAllStoresResult(ListSearchApps data) {
+
   }
 
   @Override public Model getViewModel() {
@@ -176,19 +184,32 @@ public class SearchFragment extends FragmentView implements SearchView {
   }
 
   @Override
-  public void setupButtonVisibility(boolean hasSubscribedResults, boolean hasEverywhereResults) {
-    if (viewModel.getStoreName() != null) {
-      followedStoresButton.setText(viewModel.getStoreName());
-      followedStoresButton.setVisibility(View.VISIBLE);
-      return;
+  public void showPopup(boolean hasVersions, String appName, String appIcon, String packageName,
+      String storeName, String theme) {
+    /*
+    final Context context = getContext();
+    final PopupMenu popupMenu = new PopupMenu(context, this);
+
+    MenuInflater inflater = popupMenu.getMenuInflater();
+    inflater.inflate(R.menu.menu_search_item, popupMenu.getMenu());
+
+    if (hasVersions) {
+      MenuItem menuItemVersions = popupMenu.getMenu()
+          .findItem(R.id.versions);
+      menuItemVersions.setVisible(true);
     }
 
-    if (hasSubscribedResults) {
-      followedStoresButton.setVisibility(View.VISIBLE);
-    }
-    if (hasEverywhereResults) {
-      allStoresButton.setVisibility(View.VISIBLE);
-    }
+    RxPopupMenu.itemClicks(popupMenu)
+        .filter(menuItem -> menuItem.getItemId() == R.id.versions)
+        .subscribe(__ -> onOtherVersionsClickSubject.onNext(
+            new OtherVersionsData(appName, appIcon, packageName)));
+
+    RxPopupMenu.itemClicks(popupMenu)
+        .filter(menuItem -> menuItem.getItemId() == R.id.go_to_store)
+        .subscribe(__ -> onOpenStoreClickSubject.onNext(new StoreData(storeName, theme)));
+
+    popupMenu.show();
+    */
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -249,14 +270,35 @@ public class SearchFragment extends FragmentView implements SearchView {
             converterFactory, subscribedStoresAuthMap, subscribedStoresIds);
 
     final CrashReport crashReport = CrashReport.getInstance();
-    final Scheduler ioScheduler = Schedulers.io();
     final Scheduler mainThreadScheduler = AndroidSchedulers.mainThread();
 
-    final SearchResultAdapter adapter = new SearchResultAdapter();
-    resultList.setAdapter(adapter);
-    resultList.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(getContext()));
-    return new SearchPresenter(this, searchAnalytics, crashReport, mainThreadScheduler,
-        searchManager, adapter);
+    final SearchNavigator navigator = new SearchNavigator(getFragmentNavigator());
+
+    final PublishRelay<Void> onOtherVersionsClickRelay = PublishRelay.create();
+    final PublishRelay<Void> onOpenStoreClickRelay = PublishRelay.create();
+    final PublishRelay<Void> onAdClickRelay = PublishRelay.create();
+
+    final List<MinimalAd> searchResultAdsFollowedStores = new ArrayList<>();
+    final List<SearchApp> searchResultFollowedStores = new ArrayList<>();
+
+    final SearchResultAdapter followedStoresResultAdapter =
+        new SearchResultAdapter(onOtherVersionsClickRelay, onOpenStoreClickRelay, onAdClickRelay,
+            searchResultAdsFollowedStores, searchResultFollowedStores);
+    followedStoresResultList.setAdapter(followedStoresResultAdapter);
+    followedStoresResultList.setLayoutManager(
+        new LinearLayoutManagerWithSmoothScroller(getContext()));
+
+    final List<MinimalAd> searchResultAdsAllStores = new ArrayList<>();
+    final List<SearchApp> searchResultAllStores = new ArrayList<>();
+
+    final SearchResultAdapter allStoresResultAdapter =
+        new SearchResultAdapter(onOtherVersionsClickRelay, onOpenStoreClickRelay, onAdClickRelay,
+            searchResultAdsAllStores, searchResultAllStores);
+    allStoresResultList.setAdapter(allStoresResultAdapter);
+    allStoresResultList.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(getContext()));
+
+    return new SearchPresenter(this, searchAnalytics, navigator, crashReport, mainThreadScheduler,
+        searchManager);
   }
 
   @Nullable @Override
@@ -280,7 +322,8 @@ public class SearchFragment extends FragmentView implements SearchView {
   }
 
   private void bindViews(View view) {
-    resultList = (RecyclerView) view.findViewById(R.id.search_result_list);
+    followedStoresResultList = (RecyclerView) view.findViewById(R.id.followed_stores_result_list);
+    allStoresResultList = (RecyclerView) view.findViewById(R.id.all_stores_result_list);
     followedStoresButton = (Button) view.findViewById(R.id.subscribed);
     allStoresButton = (Button) view.findViewById(R.id.everywhere);
     buttonsLayout = (LinearLayout) view.findViewById(R.id.buttons_layout);
@@ -296,10 +339,10 @@ public class SearchFragment extends FragmentView implements SearchView {
       viewModel = Parcels.unwrap(savedInstanceState.getParcelable(VIEW_MODEL));
     }
 
-    if (viewModel.getSelectedButton() == 0) {
-      setSubscribedSearchButtonHighlighted();
+    if (viewModel.isAllStoresSelected()) {
+      showAllStoresResult();
     } else {
-      setEverywhereSearchButtonHighlighted();
+      showFollowedStoresResult();
     }
   }
 }
