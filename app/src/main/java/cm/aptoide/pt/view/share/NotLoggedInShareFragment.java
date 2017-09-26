@@ -127,7 +127,8 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
             ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
             BuildConfig.APPLICATION_ID,
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-            AppEventsLogger.newLogger(getContext().getApplicationContext()))), null);
+            AppEventsLogger.newLogger(getContext().getApplicationContext()), navigationTracker)),
+        null);
   }
 
   private Analytics.Account.StartupClickOrigin getStartupClickOrigin() {

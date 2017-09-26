@@ -349,7 +349,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
             ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
             BuildConfig.APPLICATION_ID,
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-            AppEventsLogger.newLogger(getContext().getApplicationContext())));
+            AppEventsLogger.newLogger(getContext().getApplicationContext()), navigationTracker));
     attachPresenter(presenter, null);
     registerClickHandler(presenter);
   }

@@ -243,7 +243,8 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
                 ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
                 BuildConfig.APPLICATION_ID,
                 ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-                AppEventsLogger.newLogger(getContext().getApplicationContext()))),
+                AppEventsLogger.newLogger(getContext().getApplicationContext()),
+                navigationTracker)),
         savedInstanceState);
   }
 

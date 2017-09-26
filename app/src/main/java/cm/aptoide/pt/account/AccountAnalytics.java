@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.events.AptoideEvent;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
 import cm.aptoide.pt.analytics.events.FlurryEvent;
@@ -29,6 +30,7 @@ public class AccountAnalytics {
   private static final String FACEBOOK_SIGNUP_EVENT_NAME = "Account_Signup_Screen";
   private static final String FLURRY_SIGNUP_EVENT_NAME = "Account_Signup_Screen";
   private static final String LOGIN_METHOD = "Method";
+  private static final String PREVIOUS_CONTEXT = "previous_context";
   private static final String STATUS_DETAIL = "Status Detail";
   private final Analytics analytics;
   private final BodyInterceptor<BaseBody> bodyInterceptor;
@@ -38,6 +40,7 @@ public class AccountAnalytics {
   private final String appId;
   private final SharedPreferences sharedPreferences;
   private final AppEventsLogger facebook;
+  private final NavigationTracker navigationTracker;
   private AptoideEvent aptoideSuccessLoginEvent;
   private FacebookEvent facebookSuccessLoginEvent;
   private FlurryEvent flurrySuccessLoginEvent;
@@ -47,7 +50,7 @@ public class AccountAnalytics {
   public AccountAnalytics(Analytics analytics, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, String appId, SharedPreferences sharedPreferences,
-      AppEventsLogger facebook) {
+      AppEventsLogger facebook, NavigationTracker navigationTracker) {
     this.analytics = analytics;
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
@@ -56,6 +59,7 @@ public class AccountAnalytics {
     this.appId = appId;
     this.sharedPreferences = sharedPreferences;
     this.facebook = facebook;
+    this.navigationTracker = navigationTracker;
   }
 
   public void loginSuccess() {
@@ -178,7 +182,9 @@ public class AccountAnalytics {
   }
 
   @NonNull private AptoideEvent createAptoideLoginEvent() {
-    return new AptoideEvent(null, APTOIDE_EVENT_NAME, ACTION, CONTEXT, bodyInterceptor, httpClient,
+    Map<String, Object> map = new HashMap<>();
+    map.put(PREVIOUS_CONTEXT, navigationTracker.getPreviousViewName());
+    return new AptoideEvent(map, APTOIDE_EVENT_NAME, ACTION, CONTEXT, bodyInterceptor, httpClient,
         converterFactory, tokenInvalidator, appId, sharedPreferences);
   }
 
