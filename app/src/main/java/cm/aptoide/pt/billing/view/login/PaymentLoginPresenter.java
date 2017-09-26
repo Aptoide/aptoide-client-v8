@@ -1,8 +1,8 @@
 package cm.aptoide.pt.billing.view.login;
 
 import android.os.Bundle;
-import cm.aptoide.accountmanager.AccountAnalytics;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.FacebookSignUpException;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;

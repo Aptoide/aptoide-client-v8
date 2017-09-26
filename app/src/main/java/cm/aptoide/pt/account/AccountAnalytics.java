@@ -20,7 +20,7 @@ import retrofit2.Converter;
 /**
  * Created by trinkes on 22/05/2017.
  */
-public class AccountAnalytics implements cm.aptoide.accountmanager.AccountAnalytics {
+public class AccountAnalytics {
   public static final String APTOIDE_EVENT_NAME = "LOGIN";
   public static final String ACTION = "CLICK";
   public static final String CONTEXT = "LOGIN";
@@ -56,7 +56,7 @@ public class AccountAnalytics implements cm.aptoide.accountmanager.AccountAnalyt
     this.facebook = facebook;
   }
 
-  @Override public void loginSuccess() {
+  public void loginSuccess() {
     if (aptoideSuccessLoginEvent != null) {
       analytics.sendEvent(aptoideSuccessLoginEvent);
     }
@@ -68,53 +68,53 @@ public class AccountAnalytics implements cm.aptoide.accountmanager.AccountAnalyt
     }
   }
 
-  @Override public void signUp() {
+  public void signUp() {
     Logger.d(TAG, "signUp() called");
   }
 
-  @Override public void sendAptoideLoginButtonPressed() {
+  public void sendAptoideLoginButtonPressed() {
     setupEvents(LoginMethod.APTOIDE);
   }
 
-  @Override public void sendGoogleLoginButtonPressed() {
+  public void sendGoogleLoginButtonPressed() {
     setupEvents(LoginMethod.GOOGLE);
   }
 
-  @Override public void sendFacebookLoginButtonPressed() {
+  public void sendFacebookLoginButtonPressed() {
     setupEvents(LoginMethod.FACEBOOK);
   }
 
-  @Override public void sendAptoideLoginFailEvent() {
+  public void sendAptoideLoginFailEvent() {
     Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
         Analytics.Account.SignUpLoginStatus.FAILED,
         Analytics.Account.LoginStatusDetail.GENERAL_ERROR);
   }
 
-  @Override public void sendGoogleSignUpFailEvent() {
+  public void sendGoogleSignUpFailEvent() {
     Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
         Analytics.Account.SignUpLoginStatus.FAILED, Analytics.Account.LoginStatusDetail.SDK_ERROR);
   }
 
-  @Override public void sendAptoideSignUpSuccessEvent() {
+  public void sendAptoideSignUpSuccessEvent() {
     Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.SUCCESS);
   }
 
-  @Override public void sendAptoideSignUpFailEvent() {
+  public void sendAptoideSignUpFailEvent() {
     Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.FAILED);
   }
 
-  @Override public void sendFacebookMissingPermissionsEvent() {
+  public void sendFacebookMissingPermissionsEvent() {
     Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
         Analytics.Account.SignUpLoginStatus.FAILED,
         Analytics.Account.LoginStatusDetail.PERMISSIONS_DENIED);
   }
 
-  @Override public void sendFacebookUserCancelledEvent() {
+  public void sendFacebookUserCancelledEvent() {
     Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
         Analytics.Account.SignUpLoginStatus.FAILED, Analytics.Account.LoginStatusDetail.CANCEL);
   }
 
-  @Override public void sendFacebookErrorEvent() {
+  public void sendFacebookErrorEvent() {
     Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
         Analytics.Account.SignUpLoginStatus.FAILED, Analytics.Account.LoginStatusDetail.SDK_ERROR);
   }

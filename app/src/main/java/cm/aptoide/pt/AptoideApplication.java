@@ -35,7 +35,6 @@ import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountPersistence;
 import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
 import cm.aptoide.pt.account.AndroidAccountDataMigration;
 import cm.aptoide.pt.account.AndroidAccountManagerPersistence;
@@ -716,11 +715,6 @@ public abstract class AptoideApplication extends Application {
               Schedulers.io());
 
       accountManager = new AptoideAccountManager.Builder().setAccountPersistence(accountPersistence)
-          .setAccountAnalytics(
-              new AccountAnalytics(Analytics.getInstance(), getBodyInterceptorPoolV7(),
-                  getDefaultClient(), WebService.getDefaultConverter(), tokenInvalidator,
-                  BuildConfig.APPLICATION_ID, getDefaultSharedPreferences(),
-                  AppEventsLogger.newLogger(this)))
           .setAccountService(accountService)
           .registerSignUpAdapter(GoogleSignUpAdapter.TYPE,
               new GoogleSignUpAdapter(getGoogleSignInClient(), getLoginPreferences()))

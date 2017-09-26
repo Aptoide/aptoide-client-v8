@@ -23,10 +23,9 @@ public class AptoideAccountManager {
   private final AccountPersistence accountPersistence;
   private final AccountService accountService;
 
-  private AptoideAccountManager(AccountAnalytics accountAnalytics,
-      CredentialsValidator credentialsValidator, AccountPersistence accountPersistence,
-      AccountService accountService, PublishRelay<Account> accountRelay,
-      SignUpAdapterRegistry adapterRegistry) {
+  private AptoideAccountManager(CredentialsValidator credentialsValidator,
+      AccountPersistence accountPersistence, AccountService accountService,
+      PublishRelay<Account> accountRelay, SignUpAdapterRegistry adapterRegistry) {
     this.credentialsValidator = credentialsValidator;
     this.accountPersistence = accountPersistence;
     this.accountService = accountService;
@@ -179,7 +178,6 @@ public class AptoideAccountManager {
     private CredentialsValidator credentialsValidator;
     private AccountService accountService;
     private PublishRelay<Account> accountRelay;
-    private AccountAnalytics accountAnalytics;
     private AccountPersistence accountPersistence;
 
     public Builder() {
@@ -201,11 +199,6 @@ public class AptoideAccountManager {
       return this;
     }
 
-    public Builder setAccountAnalytics(AccountAnalytics accountAnalytics) {
-      this.accountAnalytics = accountAnalytics;
-      return this;
-    }
-
     public Builder setAccountPersistence(AccountPersistence accountPersistence) {
       this.accountPersistence = accountPersistence;
       return this;
@@ -217,10 +210,6 @@ public class AptoideAccountManager {
     }
 
     public AptoideAccountManager build() {
-
-      if (accountAnalytics == null) {
-        throw new IllegalArgumentException("AccountAnalytics is mandatory.");
-      }
 
       if (accountPersistence == null) {
         throw new IllegalArgumentException("AccountDataPersist is mandatory.");
@@ -242,9 +231,9 @@ public class AptoideAccountManager {
           new SignUpAdapterRegistry(adapters, accountService);
 
       adapterRegistry.register(APTOIDE_SIGN_UP_TYPE,
-          new AptoideSignUpAdapter(credentialsValidator, accountAnalytics));
+          new AptoideSignUpAdapter(credentialsValidator));
 
-      return new AptoideAccountManager(accountAnalytics, credentialsValidator, accountPersistence,
+      return new AptoideAccountManager(credentialsValidator, accountPersistence,
           accountService, accountRelay, adapterRegistry);
     }
   }
