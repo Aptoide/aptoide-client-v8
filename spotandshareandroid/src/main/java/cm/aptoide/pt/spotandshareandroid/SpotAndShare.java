@@ -23,10 +23,9 @@ import rx.functions.Action1;
 
 public class SpotAndShare {
 
-  public static final String DUMMY_HOTSPOT = "DummyHotspot";
+  public static final String APTOIDE_HOTSPOT = "AptoideHotspot";
   private final String PASSWORD_APTOIDE = "passwordAptoide";
   private final HotspotManager hotspotManager;
-  private final String DUMMY_UUID = "dummy_uuid";
   private final SpotAndShareV2 spotAndShareV2;
   private Map<AndroidAppInfo, Accepter<AndroidAppInfo>> androidAppInfoAccepterMap = new HashMap<>();
   private final ServiceProvider serviceProvider;
@@ -44,7 +43,7 @@ public class SpotAndShare {
   }
 
   public Completable createOpenGroup(Action1<Void> onSuccess) {
-    return spotAndShareV2.enableOpenHotspot(onSuccess, DUMMY_HOTSPOT);
+    return spotAndShareV2.enableOpenHotspot(onSuccess, APTOIDE_HOTSPOT);
   }
 
   public void isGroupCreated(GroupCreated groupCreated) {

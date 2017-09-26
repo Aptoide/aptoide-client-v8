@@ -48,7 +48,7 @@ class NetworkStateManager {
     List<WifiConfiguration> list = wifimanager.getConfiguredNetworks();
     if (list != null) {
       for (WifiConfiguration i : list) {
-        if (i.SSID.contains("DummyHotspot")) {
+        if (i.SSID.contains("AptoideHotspot")) {
           boolean remove = wifimanager.removeNetwork(i.networkId);
           Log.i(TAG, "Removed network " + i.SSID + " :" + remove);
           if (!remove) {
