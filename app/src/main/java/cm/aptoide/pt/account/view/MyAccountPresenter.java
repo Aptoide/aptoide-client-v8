@@ -30,8 +30,7 @@ public class MyAccountPresenter implements Presenter {
   public MyAccountPresenter(MyAccountView view, AptoideAccountManager accountManager,
       CrashReport crashReport, MyAccountNavigator navigator, NotificationCenter notificationCenter,
       LinksHandlerFactory linkFactory, SharedPreferences sharedPreferences,
-      AptoideNavigationTracker aptoideNavigationTracker,
-      NotificationAnalytics analytics) {
+      AptoideNavigationTracker aptoideNavigationTracker, NotificationAnalytics analytics) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
@@ -157,8 +156,7 @@ public class MyAccountPresenter implements Presenter {
             .doOnNext(link -> link.launch())
             .doOnNext(
                 link -> analytics.notificationShown(notification.getNotificationCenterUrlTrack()))
-            .doOnNext(__ -> aptoideNavigationTracker.registerView("Notification"))
-        )
+            .doOnNext(__ -> aptoideNavigationTracker.registerView("Notification")))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, throwable -> crashReport.log(throwable));

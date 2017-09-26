@@ -18,7 +18,7 @@ public class CheckUserCredentialsRequest extends V3<CheckUserCredentialsJson> {
   private static final String CREATE_REPO_VALUE = "1";
   private static final String OAUTH_CREATE_REPO_VALUE = "true";
   private static final String DEFAULT_AUTH_MODE = "aptoide";
-  
+
   private final boolean createStore;
 
   private CheckUserCredentialsRequest(BaseBody baseBody, boolean createStore,
