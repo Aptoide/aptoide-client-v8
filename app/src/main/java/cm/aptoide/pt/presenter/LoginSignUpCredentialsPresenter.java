@@ -133,14 +133,14 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
               view.hideKeyboard();
               view.showLoading();
               lockScreenRotation();
+              accountAnalytics.sendAptoideSignUpButtonPressed();
             })
             .flatMapCompletable(
                 credentials -> accountManager.signUp(AptoideAccountManager.APTOIDE_SIGN_UP_TYPE,
                     credentials)
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnCompleted(() -> {
-                      Analytics.Account.signInSuccessAptoide(
-                          Analytics.Account.SignUpLoginStatus.SUCCESS);
+                      accountAnalytics.loginSuccess();
                       navigateToCreateProfile();
                       unlockScreenRotation();
                       view.hideLoading();

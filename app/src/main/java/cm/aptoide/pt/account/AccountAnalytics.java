@@ -10,7 +10,6 @@ import cm.aptoide.pt.analytics.events.FlurryEvent;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.logger.Logger;
 import com.facebook.appevents.AppEventsLogger;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +26,8 @@ public class AccountAnalytics {
   private static final String STATUS = "Status";
   private static final String FACEBOOK_LOGIN_EVENT_NAME = "Account_Login_Screen";
   private static final String FLURRY_LOGIN_EVENT_NAME = "Account_Login_Screen";
+  private static final String FACEBOOK_SIGNUP_EVENT_NAME = "Account_Signup_Screen";
+  private static final String FLURRY_SIGNUP_EVENT_NAME = "Account_Signup_Screen";
   private static final String LOGIN_METHOD = "Method";
   private static final String STATUS_DETAIL = "Status Detail";
   private static final String TAG = AccountAnalytics.class.getSimpleName();
@@ -41,6 +42,8 @@ public class AccountAnalytics {
   private AptoideEvent aptoideSuccessLoginEvent;
   private FacebookEvent facebookSuccessLoginEvent;
   private FlurryEvent flurrySuccessLoginEvent;
+  private FacebookEvent signUpFacebookEvent;
+  private FlurryEvent signUpFlurryEvent;
 
   public AccountAnalytics(Analytics analytics, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
@@ -59,29 +62,58 @@ public class AccountAnalytics {
   public void loginSuccess() {
     if (aptoideSuccessLoginEvent != null) {
       analytics.sendEvent(aptoideSuccessLoginEvent);
+      aptoideSuccessLoginEvent = null;
     }
     if (facebookSuccessLoginEvent != null) {
       analytics.sendEvent(facebookSuccessLoginEvent);
+      facebookSuccessLoginEvent = null;
     }
     if (flurrySuccessLoginEvent != null) {
       analytics.sendEvent(flurrySuccessLoginEvent);
+      flurrySuccessLoginEvent = null;
+    }
+    if (signUpFacebookEvent != null) {
+      analytics.sendEvent(signUpFacebookEvent);
+      signUpFacebookEvent = null;
+    }
+    if (signUpFlurryEvent != null) {
+      analytics.sendEvent(signUpFlurryEvent);
+      signUpFacebookEvent = null;
     }
   }
 
-  public void signUp() {
-    Logger.d(TAG, "signUp() called");
-  }
-
   public void sendAptoideLoginButtonPressed() {
-    setupEvents(LoginMethod.APTOIDE);
+    clearSignUpEvents();
+    setupLoginEvents(LoginMethod.APTOIDE);
   }
 
   public void sendGoogleLoginButtonPressed() {
-    setupEvents(LoginMethod.GOOGLE);
+    clearSignUpEvents();
+    setupLoginEvents(LoginMethod.GOOGLE);
   }
 
   public void sendFacebookLoginButtonPressed() {
-    setupEvents(LoginMethod.FACEBOOK);
+    clearSignUpEvents();
+    setupLoginEvents(LoginMethod.FACEBOOK);
+  }
+
+  public void sendAptoideSignUpButtonPressed() {
+    Bundle bundle = new Bundle();
+    bundle.putString(STATUS, SignUpLoginStatus.SUCCESS.getStatus());
+    signUpFacebookEvent = new FacebookEvent(facebook, FACEBOOK_SIGNUP_EVENT_NAME, bundle);
+    signUpFlurryEvent = new FlurryEvent(FLURRY_SIGNUP_EVENT_NAME);
+    clearLoginEvents();
+  }
+
+  private void clearSignUpEvents() {
+    signUpFacebookEvent = null;
+    signUpFlurryEvent = null;
+  }
+
+  private void clearLoginEvents() {
+    aptoideSuccessLoginEvent = null;
+    facebookSuccessLoginEvent = null;
+    flurrySuccessLoginEvent = null;
   }
 
   public void sendAptoideLoginFailEvent() {
@@ -93,10 +125,6 @@ public class AccountAnalytics {
   public void sendGoogleSignUpFailEvent() {
     Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
         Analytics.Account.SignUpLoginStatus.FAILED, Analytics.Account.LoginStatusDetail.SDK_ERROR);
-  }
-
-  public void sendAptoideSignUpSuccessEvent() {
-    Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.SUCCESS);
   }
 
   public void sendAptoideSignUpFailEvent() {
@@ -119,7 +147,7 @@ public class AccountAnalytics {
         Analytics.Account.SignUpLoginStatus.FAILED, Analytics.Account.LoginStatusDetail.SDK_ERROR);
   }
 
-  private void setupEvents(LoginMethod aptoide) {
+  private void setupLoginEvents(LoginMethod aptoide) {
     aptoideSuccessLoginEvent = createAptoideLoginEvent();
     facebookSuccessLoginEvent =
         createFacebookEvent(aptoide, SignUpLoginStatus.SUCCESS, LoginStatusDetail.SUCCESS);

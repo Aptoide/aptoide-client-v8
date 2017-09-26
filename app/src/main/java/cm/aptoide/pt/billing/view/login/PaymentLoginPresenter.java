@@ -109,11 +109,11 @@ public class PaymentLoginPresenter implements Presenter {
             .doOnNext(__ -> {
               view.showLoading();
               orientationManager.lock();
+              accountAnalytics.sendAptoideSignUpButtonPressed();
             })
             .flatMapCompletable(
                 result -> accountManager.signUp(AptoideAccountManager.APTOIDE_SIGN_UP_TYPE, result)
                     .observeOn(viewScheduler)
-                    .doOnCompleted(() -> accountAnalytics.sendAptoideSignUpSuccessEvent())
                     .doOnTerminate(() -> {
                       view.hideLoading();
                       orientationManager.unlock();
@@ -218,7 +218,6 @@ public class PaymentLoginPresenter implements Presenter {
         .flatMap(__ -> accountNavigator.googleSignUpResults(RESOLVE_GOOGLE_CREDENTIALS_REQUEST_CODE)
             .flatMapCompletable(result -> accountManager.signUp(GoogleSignUpAdapter.TYPE, result)
                 .observeOn(viewScheduler)
-                .doOnCompleted(() -> accountAnalytics.loginSuccess())
                 .doOnTerminate(() -> view.hideLoading())
                 .doOnError(throwable -> {
                   view.showError(errorMapper.map(throwable));
