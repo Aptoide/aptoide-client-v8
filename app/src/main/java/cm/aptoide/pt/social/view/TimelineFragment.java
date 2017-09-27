@@ -566,7 +566,13 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public void showEmptyState() {
     ArrayList<Post> emptyStatePosts = new ArrayList<>();
-    emptyStatePosts.add(new EmptyStatePost());
+    EmptyStatePost emptyStatePost = new EmptyStatePost();
+    if (userId == null) {
+      emptyStatePost.setAction(EmptyStatePost.ACTION);
+    } else {
+      emptyStatePost.setAction(EmptyStatePost.NO_ACTION);
+    }
+    emptyStatePosts.add(emptyStatePost);
     adapter.updatePosts(emptyStatePosts);
   }
 
