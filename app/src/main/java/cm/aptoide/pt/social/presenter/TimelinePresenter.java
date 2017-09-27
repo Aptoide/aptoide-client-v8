@@ -51,7 +51,7 @@ import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.app.view.AppViewFragment;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.store.view.StoreFragment;
 import java.util.List;
 import java.util.concurrent.TimeUnit;

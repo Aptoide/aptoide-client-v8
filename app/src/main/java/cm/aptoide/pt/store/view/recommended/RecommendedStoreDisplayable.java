@@ -10,7 +10,7 @@ import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 import rx.Observable;
 

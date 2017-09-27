@@ -9,7 +9,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.comments.CommentAdder;
 import cm.aptoide.pt.comments.ReviewWithAppName;
 import cm.aptoide.pt.view.configuration.FragmentProvider;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 import lombok.Getter;
 

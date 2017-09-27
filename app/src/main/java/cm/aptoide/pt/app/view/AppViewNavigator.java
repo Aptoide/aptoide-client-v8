@@ -6,8 +6,8 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.search.view.SearchResultFragment;
 import cm.aptoide.pt.app.view.screenshots.ScreenshotsViewerFragment;
-import cm.aptoide.pt.view.navigator.ActivityNavigator;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.navigator.ActivityNavigator;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import java.util.ArrayList;
 
 public class AppViewNavigator {

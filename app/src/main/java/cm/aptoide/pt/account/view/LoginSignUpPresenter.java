@@ -8,7 +8,7 @@ import cm.aptoide.pt.presenter.LoginSignUpView;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.view.BackButton;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 
 public class LoginSignUpPresenter extends BottomSheetBehavior.BottomSheetCallback
     implements Presenter, BackButton.ClickHandler {

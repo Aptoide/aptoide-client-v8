@@ -10,9 +10,9 @@ import cm.aptoide.pt.notification.view.InboxFragment;
 import cm.aptoide.pt.timeline.post.PostFragment;
 import cm.aptoide.pt.timeline.view.navigation.AppsTimelineTabNavigation;
 import cm.aptoide.pt.app.view.AppViewFragment;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
-import cm.aptoide.pt.view.navigator.TabNavigation;
-import cm.aptoide.pt.view.navigator.TabNavigator;
+import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.navigator.TabNavigation;
+import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.store.view.StoreFragment;
 import rx.Observable;
 

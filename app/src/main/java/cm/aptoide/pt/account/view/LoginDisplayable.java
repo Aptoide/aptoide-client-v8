@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.account.user;
+package cm.aptoide.pt.account.view;
 
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;

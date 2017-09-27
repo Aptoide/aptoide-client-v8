@@ -74,7 +74,7 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.comments.view.CommentDialogFragment;
 import cm.aptoide.pt.view.fragment.FragmentView;
-import cm.aptoide.pt.view.navigator.TabNavigator;
+import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.view.recycler.RecyclerViewPositionHelper;
 import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
 import com.facebook.appevents.AppEventsLogger;

@@ -11,7 +11,7 @@ import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.view.BillingNavigator;
 import cm.aptoide.pt.billing.view.PaymentActivity;
 import cm.aptoide.pt.billing.view.WebViewFragment;
-import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
 
 public class MolFragment extends WebViewFragment {
 

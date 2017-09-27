@@ -17,7 +17,7 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import cm.aptoide.pt.store.view.StoreAddCommentDisplayable;
 import com.jakewharton.rxbinding.view.RxView;

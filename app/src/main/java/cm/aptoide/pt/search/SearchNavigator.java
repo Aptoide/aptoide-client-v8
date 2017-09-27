@@ -3,10 +3,10 @@ package cm.aptoide.pt.search;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.OtherVersionsFragment;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.view.SearchResultFragment;
 import cm.aptoide.pt.store.view.StoreFragment;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
 
 public class SearchNavigator {
 

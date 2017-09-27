@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.navigator;
+package cm.aptoide.pt.navigator;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

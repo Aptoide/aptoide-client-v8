@@ -1,5 +1,6 @@
-package cm.aptoide.pt.view.app;
+package cm.aptoide.pt.app.view;
 
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.billing.BillingIdResolver;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.install.AppAction;

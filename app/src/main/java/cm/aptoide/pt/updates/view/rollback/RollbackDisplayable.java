@@ -12,7 +12,7 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.Installer;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 import rx.Completable;
 

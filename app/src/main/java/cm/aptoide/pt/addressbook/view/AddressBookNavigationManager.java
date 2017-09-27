@@ -6,7 +6,7 @@ import cm.aptoide.pt.addressbook.data.Contact;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.AddressBookNavigation;
 import cm.aptoide.pt.presenter.InviteFriendsContract;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import java.util.List;
 
 /**
