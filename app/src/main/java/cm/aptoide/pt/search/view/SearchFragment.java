@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -397,9 +398,12 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
         StoreUtils.getSubscribedStoresAuthMap(storeAccessor);
     final List<Long> subscribedStoresIds = StoreUtils.getSubscribedStoresIds(storeAccessor);
 
+    final AdsRepository adsRepository =
+        ((AptoideApplication) getActivity().getApplication()).getAdsRepository();
+
     final SearchManager searchManager =
         new SearchManager(sharedPreferences, tokenInvalidator, bodyInterceptor, httpClient,
-            converterFactory, subscribedStoresAuthMap, subscribedStoresIds);
+            converterFactory, subscribedStoresAuthMap, subscribedStoresIds, adsRepository);
 
     final CrashReport crashReport = CrashReport.getInstance();
     final Scheduler mainThreadScheduler = AndroidSchedulers.mainThread();

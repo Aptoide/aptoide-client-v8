@@ -15,7 +15,8 @@ import cm.aptoide.pt.search.SearchAnalytics;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import com.jakewharton.rxrelay.PublishRelay;
-import java.util.concurrent.TimeUnit;
+import java.util.Collections;
+import java.util.List;
 import rx.Observable;
 import rx.Scheduler;
 
@@ -61,6 +62,14 @@ public class SearchPresenter implements Presenter {
     handleAllStoresReachedBottom();
   }
 
+  @Override public void saveState(Bundle state) {
+    // does nothing
+  }
+
+  @Override public void restoreState(Bundle state) {
+    // does nothing
+  }
+
   // TODO: load more elements
   private void handleAllStoresReachedBottom() {
     view.getLifecycle()
@@ -85,24 +94,22 @@ public class SearchPresenter implements Presenter {
         }, err -> crashReport.log(err));
   }
 
-  @Override public void saveState(Bundle state) {
-    // does nothing
-  }
-
-  @Override public void restoreState(Bundle state) {
-    // does nothing
-  }
-
-  // TODO: 27/9/2017 sithengineer
   private void loadAds() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .delay(4, TimeUnit.SECONDS)
         .observeOn(viewScheduler)
-        .doOnNext(data -> {
-
-          view.setFollowedStoresAdsEmpty();
-          view.setAllStoresAdsEmpty();
+        .flatMap(__ -> searchManager.getAdsForQuery(view.getViewModel()
+            .getCurrentQuery()))
+        .observeOn(viewScheduler)
+        .doOnNext(ad -> {
+          if (ad == null) {
+            view.setFollowedStoresAdsEmpty();
+            view.setAllStoresAdsEmpty();
+          } else {
+            final List<MinimalAd> ads = Collections.singletonList(ad);
+            view.addAllStoresAdsResult(ads);
+            view.addFollowedStoresAdsResult(ads);
+          }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
