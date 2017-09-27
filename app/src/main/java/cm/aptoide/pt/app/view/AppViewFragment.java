@@ -112,7 +112,7 @@ import cm.aptoide.pt.app.view.displayable.AppViewStoreDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAppsDisplayable;
 import cm.aptoide.pt.view.dialog.DialogBadgeV7;
 import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
-import cm.aptoide.pt.view.install.remote.RemoteInstallDialog;
+import cm.aptoide.pt.install.view.remote.RemoteInstallDialog;
 import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;

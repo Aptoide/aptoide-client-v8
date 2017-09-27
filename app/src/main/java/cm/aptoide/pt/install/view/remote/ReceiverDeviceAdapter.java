@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.install.remote;
+package cm.aptoide.pt.install.view.remote;
 
 import android.content.Context;
 import android.view.LayoutInflater;

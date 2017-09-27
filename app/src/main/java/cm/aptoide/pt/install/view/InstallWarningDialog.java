@@ -3,7 +3,7 @@
  * Modified on 05/08/2016.
  */
 
-package cm.aptoide.pt.view.install;
+package cm.aptoide.pt.install.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
