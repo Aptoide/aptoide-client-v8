@@ -41,7 +41,7 @@ public class AppViewSuggestedAppsWidget extends Widget<AppViewSuggestedAppsDispl
     for (MinimalAd minimalAd : minimalAds) {
       // TODO: 01-08-2017 neuro fill ad tag
       displayables.add(
-          new AppViewAdDisplayable(minimalAd, displayable.getAptoideNavigationTracker()));
+          new AppViewAdDisplayable(minimalAd, displayable.getNavigationTracker()));
     }
 
     for (App app : appsList) {
@@ -50,7 +50,7 @@ public class AppViewSuggestedAppsWidget extends Widget<AppViewSuggestedAppsDispl
           .setAppearance(new Store.Appearance());
       displayables.add(
           new AppViewSuggestedAppDisplayable(app, displayable.getAppViewSimilarAppAnalytics(),
-              displayable.getAptoideNavigationTracker(), displayable.getStoreContext()));
+              displayable.getNavigationTracker(), displayable.getStoreContext()));
     }
 
     BaseAdapter adapter = new BaseAdapter(displayables) {

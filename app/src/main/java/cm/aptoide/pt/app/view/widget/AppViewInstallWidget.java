@@ -168,13 +168,13 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
             BuildConfig.APPLICATION_ID, sharedPreferences,
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-            application.getAptoideNavigationTracker());
+            application.getNavigationTracker());
     installConverter =
         new InstallEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
             BuildConfig.APPLICATION_ID, sharedPreferences,
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-            application.getAptoideNavigationTracker());
+            application.getNavigationTracker());
     analytics = Analytics.getInstance();
     downloadFactory = displayable.getDownloadFactory();
     socialRepository =
@@ -184,7 +184,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                 httpClient, WebService.getDefaultConverter(), tokenInvalidator,
                 BuildConfig.APPLICATION_ID, sharedPreferences,
                 new NotificationAnalytics(httpClient, analytics),
-                application.getAptoideNavigationTracker()), tokenInvalidator, sharedPreferences);
+                application.getNavigationTracker()), tokenInvalidator, sharedPreferences);
 
     appViewNavigator = getAppViewNavigator();
 

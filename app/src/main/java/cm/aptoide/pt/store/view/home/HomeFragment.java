@@ -196,7 +196,7 @@ public class HomeFragment extends StoreFragment {
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     pageViewsAnalytics =
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            analytics, aptoideNavigationTracker);
+            analytics, navigationTracker);
     setRegisterFragment(false);
     setHasOptionsMenu(true);
   }
@@ -310,7 +310,7 @@ public class HomeFragment extends StoreFragment {
     toolbar.setNavigationOnClickListener(v -> {
       drawerLayout.openDrawer(GravityCompat.START);
       drawerAnalytics.drawerOpen();
-      aptoideNavigationTracker.registerScreen(ScreenTagHistory.Builder.build("Drawer"));
+      navigationTracker.registerScreen(ScreenTagHistory.Builder.build("Drawer"));
       pageViewsAnalytics.sendPageViewedEvent();
     });
   }

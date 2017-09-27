@@ -7,7 +7,7 @@ package cm.aptoide.pt.app.view;
 
 import android.support.annotation.LayoutRes;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -23,18 +23,18 @@ public class GridAppDisplayable extends DisplayablePojo<App> {
 
   @Getter private String tag;
   @Getter private boolean totalDownloads;
-  private AptoideNavigationTracker aptoideNavigationTracker;
+  private NavigationTracker navigationTracker;
   private StoreContext storeContext;
 
   public GridAppDisplayable() {
   }
 
   public GridAppDisplayable(App pojo, String tag, boolean totalDownloads,
-      AptoideNavigationTracker aptoideNavigationTracker, StoreContext storeContext) {
+      NavigationTracker navigationTracker, StoreContext storeContext) {
     super(pojo);
     this.tag = tag;
     this.totalDownloads = totalDownloads;
-    this.aptoideNavigationTracker = aptoideNavigationTracker;
+    this.navigationTracker = navigationTracker;
     this.storeContext = storeContext;
   }
 
@@ -47,8 +47,8 @@ public class GridAppDisplayable extends DisplayablePojo<App> {
     return R.layout.displayable_grid_app;
   }
 
-  public AptoideNavigationTracker getAptoideNavigationTracker() {
-    return aptoideNavigationTracker;
+  public NavigationTracker getNavigationTracker() {
+    return navigationTracker;
   }
 
   public StoreContext getStoreContext() {

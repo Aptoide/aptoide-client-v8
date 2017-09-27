@@ -6,7 +6,7 @@
 package cm.aptoide.pt.app.view.displayable;
 
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
@@ -26,7 +26,7 @@ import lombok.Getter;
   private List<MinimalAd> minimalAds;
   private List<App> appsList;
   @Getter private AppViewSimilarAppAnalytics appViewSimilarAppAnalytics;
-  private AptoideNavigationTracker aptoideNavigationTracker;
+  private NavigationTracker navigationTracker;
   private StoreContext storeContext;
 
   public AppViewSuggestedAppsDisplayable() {
@@ -34,11 +34,11 @@ import lombok.Getter;
 
   public AppViewSuggestedAppsDisplayable(List<MinimalAd> minimalAds, List<App> appsList,
       AppViewSimilarAppAnalytics appViewSimilarAppAnalytics,
-      AptoideNavigationTracker aptoideNavigationTracker, StoreContext storeContext) {
+      NavigationTracker navigationTracker, StoreContext storeContext) {
     this.minimalAds = minimalAds;
     this.appsList = appsList;
     this.appViewSimilarAppAnalytics = appViewSimilarAppAnalytics;
-    this.aptoideNavigationTracker = aptoideNavigationTracker;
+    this.navigationTracker = navigationTracker;
   }
 
   @Override protected Displayable.Configs getConfig() {
@@ -49,8 +49,8 @@ import lombok.Getter;
     return R.layout.displayable_app_view_suggested_apps;
   }
 
-  public AptoideNavigationTracker getAptoideNavigationTracker() {
-    return aptoideNavigationTracker;
+  public NavigationTracker getNavigationTracker() {
+    return navigationTracker;
   }
 
   public StoreContext getStoreContext() {

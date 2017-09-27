@@ -48,7 +48,7 @@ public class GetAdsFragment extends StoreTabGridRecyclerFragment {
         .map(minimalAds -> {
           List<Displayable> displayables = new LinkedList<>();
           for (MinimalAd minimalAd : minimalAds) {
-            displayables.add(new GridAdDisplayable(minimalAd, tag, aptoideNavigationTracker));
+            displayables.add(new GridAdDisplayable(minimalAd, tag, navigationTracker));
           }
 
           return Collections.singletonList(new DisplayableGroup(displayables,

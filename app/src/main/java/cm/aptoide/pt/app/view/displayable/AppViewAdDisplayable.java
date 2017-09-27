@@ -1,7 +1,7 @@
 package cm.aptoide.pt.app.view.displayable;
 
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.view.recycler.displayable.GridAdDisplayable;
 
@@ -14,9 +14,9 @@ public class AppViewAdDisplayable extends GridAdDisplayable {
   }
 
   public AppViewAdDisplayable(MinimalAd minimalAd,
-      AptoideNavigationTracker aptoideNavigationTracker) {
+      NavigationTracker navigationTracker) {
     // TODO: 01-08-2017 neuro tags
-    super(minimalAd, null, aptoideNavigationTracker);
+    super(minimalAd, null, navigationTracker);
   }
 
   @Override protected Configs getConfig() {

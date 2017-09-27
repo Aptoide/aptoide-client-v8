@@ -5,11 +5,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.download.DownloadEventConverter;
 import cm.aptoide.pt.download.InstallEventConverter;
@@ -39,14 +39,14 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
   private final List<Install> completedDownloads;
   private final Resources resources;
   private final StoreTabNavigator storeTabNavigator;
-  private AptoideNavigationTracker aptoideNavigationTracker;
+  private final NavigationTracker navigationTracker;
 
   public DownloadsAdapter(InstallEventConverter installConverter,
       DownloadEventConverter downloadConverter, InstallManager installManager, Analytics analytics,
       Resources resources, StoreTabNavigator storeTabNavigator,
-      AptoideNavigationTracker aptoideNavigationTracker) {
+      NavigationTracker navigationTracker) {
     this.storeTabNavigator = storeTabNavigator;
-    this.aptoideNavigationTracker = aptoideNavigationTracker;
+    this.navigationTracker = navigationTracker;
     this.activeDownloads = new ArrayList<>();
     this.standByDownloads = new ArrayList<>();
     this.completedDownloads = new ArrayList<>();
@@ -109,7 +109,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
     final ItemViewType itemViewType = ItemViewType.values()[getItemViewType(position)];
     switch (itemViewType) {
       case Header: {
-        bindHeader(holder, position, storeTabNavigator, aptoideNavigationTracker);
+        bindHeader(holder, position, storeTabNavigator, navigationTracker);
         break;
       }
 
@@ -209,7 +209,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
   }
 
   private void bindHeader(Widget holder, int position, StoreTabNavigator storeTabNavigator,
-      AptoideNavigationTracker aptoideNavigationTracker) {
+      NavigationTracker navigationTracker) {
     // discover if it's the header for stand by or completed downloads
     position -= (activeDownloads.isEmpty() ? 0 : activeDownloads.size() + 1);
 
@@ -218,12 +218,12 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
       // is the header from stand by downloads
       header.bindView(new StoreGridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(
           AptoideUtils.StringU.getResString(R.string.stand_by, resources)), storeTabNavigator,
-          aptoideNavigationTracker));
+          navigationTracker));
     } else {
       // is the header from completed downloads
       header.bindView(new StoreGridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(
           AptoideUtils.StringU.getResString(R.string.completed, resources)), storeTabNavigator,
-          aptoideNavigationTracker));
+          navigationTracker));
     }
   }
 

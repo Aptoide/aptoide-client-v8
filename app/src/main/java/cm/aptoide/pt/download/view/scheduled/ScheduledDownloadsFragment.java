@@ -105,13 +105,13 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
             BuildConfig.APPLICATION_ID, application.getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-            application.getAptoideNavigationTracker());
+            application.getNavigationTracker());
     installConverter =
         new InstallEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
             BuildConfig.APPLICATION_ID, application.getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-            aptoideNavigationTracker);
+            navigationTracker);
     analytics = Analytics.getInstance();
     setHasOptionsMenu(true);
   }

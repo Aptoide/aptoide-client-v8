@@ -32,6 +32,7 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
@@ -40,7 +41,6 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.app.AppBoughtReceiver;
@@ -178,7 +178,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private AccountNavigator accountNavigator;
   private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
   private CrashReport crashReport;
-  private AptoideNavigationTracker aptoideNavigationTracker;
+  private NavigationTracker navigationTracker;
   private SearchBuilder searchBuilder;
   private IssuesAnalytics issuesAnalytics;
 
@@ -371,7 +371,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
         application.getDefaultSharedPreferences(), new NotificationAnalytics(httpClient, analytics),
-        aptoideNavigationTracker);
+        navigationTracker);
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
             timelineAnalytics, tokenInvalidator, application.getDefaultSharedPreferences());
@@ -405,7 +405,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
             analytics);
     notLoggedInShareAnalytics = application.getNotLoggedInShareAnalytics();
-    aptoideNavigationTracker = application.getAptoideNavigationTracker();
+    navigationTracker = application.getNavigationTracker();
     setHasOptionsMenu(true);
   }
 
@@ -936,7 +936,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             appViewAnalytics, installAppRelay, this,
             new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
                 AppEventsLogger.newLogger(getContext().getApplicationContext())),
-            aptoideNavigationTracker, getEditorsBrickPosition());
+            navigationTracker, getEditorsBrickPosition());
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics, storeAnalytics));
     displayables.add(
@@ -1088,7 +1088,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             .observe(), (minimalAds, listApps) -> new AppViewSuggestedAppsDisplayable(minimalAds,
             removeCurrentAppFromSuggested(listApps.getDataList()
                 // TODO: 04/10/2017 trinkes make some default thing for StoreContext.home
-                .getList()), appViewSimilarAppAnalytics, aptoideNavigationTracker,
+                .getList()), appViewSimilarAppAnalytics, navigationTracker,
             StoreContext.home))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -1375,11 +1375,11 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       badgeText.setText(badgeMessageId);
 
       if (getEditorsBrickPosition() != null) {
-        appViewAnalytics.sendEditorsChoiceClickEvent(aptoideNavigationTracker.getPreviousScreen(),
+        appViewAnalytics.sendEditorsChoiceClickEvent(navigationTracker.getPreviousScreen(),
             getPackageName(), getEditorsBrickPosition());
       }
-      appViewAnalytics.sendAppViewOpenedFromEvent(aptoideNavigationTracker.getPreviousScreen(),
-          aptoideNavigationTracker.getCurrentScreen(), getPackageName(), app.getDeveloper()
+      appViewAnalytics.sendAppViewOpenedFromEvent(navigationTracker.getPreviousScreen(),
+          navigationTracker.getCurrentScreen(), getPackageName(), app.getDeveloper()
               .getName(), app.getFile()
               .getMalware()
               .getRank()

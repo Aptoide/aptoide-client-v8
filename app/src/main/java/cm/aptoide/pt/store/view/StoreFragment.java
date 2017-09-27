@@ -91,7 +91,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
       new AptoideViewPager.SimpleOnPageChangeListener() {
         @Override public void onPageSelected(int position) {
           if (position == 0) {
-            aptoideNavigationTracker.registerScreen(
+            navigationTracker.registerScreen(
                 ScreenTagHistory.Builder.build(HomeFragment.class.getSimpleName(), "home",
                     storeContext));
           }
@@ -185,7 +185,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
         application.getDefaultSharedPreferences(), new NotificationAnalytics(httpClient, analytics),
-        aptoideNavigationTracker);
+        navigationTracker);
     storeAnalytics = new StoreAnalytics(AppEventsLogger.newLogger(getContext()), analytics);
     marketName = application.getMarketName();
     shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);

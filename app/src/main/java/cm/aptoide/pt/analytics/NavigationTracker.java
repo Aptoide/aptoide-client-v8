@@ -1,24 +1,18 @@
 package cm.aptoide.pt.analytics;
 
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
-import cm.aptoide.pt.account.view.LoginSignUpCredentialsFragment;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.store.view.StoreFragment;
-import cm.aptoide.pt.view.wizard.WizardFragment;
 import java.util.List;
 
-/**
- * Created by jdandrade on 06/09/2017.
- */
+public class NavigationTracker {
 
-public class AptoideNavigationTracker {
-
-  private static final String TAG = AptoideNavigationTracker.class.getSimpleName();
+  private static final String TAG = NavigationTracker.class.getSimpleName();
   private List<ScreenTagHistory> historyList;
+  private final TrackerFilter trackerFilter;
 
-  public AptoideNavigationTracker(List<ScreenTagHistory> historyList) {
+  public NavigationTracker(List<ScreenTagHistory> historyList, TrackerFilter trackerFilter) {
     this.historyList = historyList;
+    this.trackerFilter = trackerFilter;
   }
 
   public void registerScreen(ScreenTagHistory screenTagHistory) {
@@ -62,16 +56,6 @@ public class AptoideNavigationTracker {
   }
 
   private boolean filter(ScreenTagHistory screenTagHistory) {
-    String viewName = screenTagHistory.getFragment();
-    if (TextUtils.isEmpty(viewName)) {
-      return false;
-    } else if (viewName.equals(WizardFragment.class.getSimpleName())) {
-      return false;
-    } else if (viewName.equals(LoginSignUpCredentialsFragment.class.getSimpleName())) {
-      return false;
-    } else if (viewName.equals(StoreFragment.class.getSimpleName())) {
-      return false;
-    }
-    return true;
+    return trackerFilter.filter(screenTagHistory.getFragment());
   }
 }

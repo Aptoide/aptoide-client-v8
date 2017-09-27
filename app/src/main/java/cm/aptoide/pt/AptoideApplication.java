@@ -47,8 +47,9 @@ import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
+import cm.aptoide.pt.analytics.TrackerFilter;
 import cm.aptoide.pt.billing.AccountPayer;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
@@ -122,6 +123,7 @@ import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.leak.LeakTool;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
 import cm.aptoide.pt.networking.BodyInterceptorV3;
 import cm.aptoide.pt.networking.BodyInterceptorV7;
@@ -177,7 +179,6 @@ import cm.aptoide.pt.view.configuration.FragmentProvider;
 import cm.aptoide.pt.view.configuration.implementation.ActivityProviderImpl;
 import cm.aptoide.pt.view.entry.EntryActivity;
 import cm.aptoide.pt.view.entry.EntryPointChooser;
-import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
@@ -298,7 +299,7 @@ public abstract class AptoideApplication extends Application {
   private CallbackManager facebookCallbackManager;
   private Map<Integer, Result> fragmentResulMap;
   private PublishRelay<FacebookLoginResult> facebookLoginResultRelay;
-  private AptoideNavigationTracker aptoideNavigationTracker;
+  private NavigationTracker navigationTracker;
   private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
   private AccountAnalytics accountAnalytics;
   private PageViewsAnalytics pageViewsAnalytics;
@@ -1384,18 +1385,11 @@ public abstract class AptoideApplication extends Application {
     return timelineRepositoryFactory.create(action);
   }
 
-  public AptoideNavigationTracker getAptoideNavigationTracker() {
-    if (aptoideNavigationTracker == null) {
-      aptoideNavigationTracker = new AptoideNavigationTracker(new ArrayList<>());
-    }
-    return aptoideNavigationTracker;
-  }
-
   public PageViewsAnalytics getPageViewsAnalytics() {
     if (pageViewsAnalytics == null) {
       pageViewsAnalytics =
           new PageViewsAnalytics(AppEventsLogger.newLogger(this), Analytics.getInstance(),
-              getAptoideNavigationTracker());
+              getNavigationTracker());
     }
     return pageViewsAnalytics;
   }
@@ -1428,6 +1422,14 @@ public abstract class AptoideApplication extends Application {
     return facebookLoginResultRelay;
   }
 
+  public NavigationTracker getNavigationTracker() {
+    if (navigationTracker == null) {
+      navigationTracker =
+          new NavigationTracker(new ArrayList<>(), new TrackerFilter());
+    }
+    return navigationTracker;
+  }
+
   public abstract LoginPreferences getLoginPreferences();
 
   public abstract FragmentProvider createFragmentProvider();
@@ -1446,7 +1448,7 @@ public abstract class AptoideApplication extends Application {
       accountAnalytics = new AccountAnalytics(Analytics.getInstance(), getBodyInterceptorPoolV7(),
           getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
           BuildConfig.APPLICATION_ID, getDefaultSharedPreferences(),
-          AppEventsLogger.newLogger(this), getAptoideNavigationTracker());
+          AppEventsLogger.newLogger(this), getNavigationTracker());
     }
     return accountAnalytics;
   }

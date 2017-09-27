@@ -2,7 +2,7 @@ package cm.aptoide.pt.notification.view;
 
 import android.os.Bundle;
 import cm.aptoide.pt.PageViewsAnalytics;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.link.LinksHandlerFactory;
@@ -23,20 +23,20 @@ public class InboxPresenter implements Presenter {
   private final NotificationCenter notificationCenter;
   private final LinksHandlerFactory linkFactory;
   private final NotificationAnalytics analytics;
-  private PageViewsAnalytics pageViewsAnalytics;
-  private CrashReport crashReport;
-  private AptoideNavigationTracker aptoideNavigationTracker;
-  private int NUMBER_OF_NOTIFICATIONS = 50;
+  private final PageViewsAnalytics pageViewsAnalytics;
+  private final CrashReport crashReport;
+  private final NavigationTracker navigationTracker;
+  private final int NUMBER_OF_NOTIFICATIONS = 50;
 
   public InboxPresenter(InboxView view, NotificationCenter notificationCenter,
       LinksHandlerFactory linkFactory, CrashReport crashReport,
-      AptoideNavigationTracker aptoideNavigationTracker, NotificationAnalytics analytics,
+      NavigationTracker navigationTracker, NotificationAnalytics analytics,
       PageViewsAnalytics pageViewsAnalytics) {
     this.view = view;
     this.notificationCenter = notificationCenter;
     this.linkFactory = linkFactory;
     this.crashReport = crashReport;
-    this.aptoideNavigationTracker = aptoideNavigationTracker;
+    this.navigationTracker = navigationTracker;
     this.analytics = analytics;
     this.pageViewsAnalytics = pageViewsAnalytics;
   }
@@ -58,7 +58,7 @@ public class InboxPresenter implements Presenter {
                 .doOnNext(link -> link.launch())
                 .doOnNext(link -> analytics.notificationShown(
                     notification.getNotificationCenterUrlTrack()))
-                .doOnNext(link -> aptoideNavigationTracker.registerScreen(
+                .doOnNext(link -> navigationTracker.registerScreen(
                     ScreenTagHistory.Builder.build(this.getClass()
                         .getSimpleName())))
                 .doOnNext(link -> pageViewsAnalytics.sendPageViewedEvent())))

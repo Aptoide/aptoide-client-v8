@@ -11,7 +11,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -54,14 +54,14 @@ public class DeepLinkManager {
   private final StoreAccessor storeAccessor;
   private final String defaultTheme;
   private final String defaultStoreName;
-  private AptoideNavigationTracker aptoideNavigationTracker;
+  private NavigationTracker navigationTracker;
   private PageViewsAnalytics pageViewsAnalytics;
 
   public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, StoreRepository storeRepository,
       FragmentNavigator fragmentNavigator, TabNavigator tabNavigator,
       DeepLinkMessages deepLinkMessages, SharedPreferences sharedPreferences,
       StoreAccessor storeAccessor, String defaultTheme, String defaultStoreName,
-      AptoideNavigationTracker aptoideNavigationTracker, PageViewsAnalytics pageViewsAnalytics) {
+      NavigationTracker navigationTracker, PageViewsAnalytics pageViewsAnalytics) {
     this.storeUtilsProxy = storeUtilsProxy;
     this.storeRepository = storeRepository;
     this.fragmentNavigator = fragmentNavigator;
@@ -71,7 +71,7 @@ public class DeepLinkManager {
     this.storeAccessor = storeAccessor;
     this.defaultTheme = defaultTheme;
     this.defaultStoreName = defaultStoreName;
-    this.aptoideNavigationTracker = aptoideNavigationTracker;
+    this.navigationTracker = navigationTracker;
     this.pageViewsAnalytics = pageViewsAnalytics;
   }
 
@@ -115,7 +115,7 @@ public class DeepLinkManager {
       Analytics.ApplicationLaunch.launcher();
       return false;
     }
-    aptoideNavigationTracker.registerScreen(ScreenTagHistory.Builder.build(deeplinkOrNotification));
+    navigationTracker.registerScreen(ScreenTagHistory.Builder.build(deeplinkOrNotification));
     pageViewsAnalytics.sendPageViewedEvent();
     return true;
   }

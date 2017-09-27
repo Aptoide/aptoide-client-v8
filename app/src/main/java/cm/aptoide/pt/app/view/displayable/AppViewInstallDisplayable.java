@@ -6,10 +6,10 @@
 package cm.aptoide.pt.app.view.displayable;
 
 import android.widget.Button;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
@@ -43,7 +43,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   private TimelineAnalytics timelineAnalytics;
   @Getter private AppViewFragment appViewFragment;
   private DownloadCompleteAnalytics analytics;
-  private AptoideNavigationTracker aptoideNavigationTracker;
+  private NavigationTracker navigationTracker;
   private String editorsChoiceBrickPosition;
 
   public AppViewInstallDisplayable() {
@@ -56,7 +56,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
       TimelineAnalytics timelineAnalytics, AppViewAnalytics appViewAnalytics,
       PublishRelay installAppRelay, DownloadFactory downloadFactory,
       AppViewFragment appViewFragment, DownloadCompleteAnalytics analytics,
-      AptoideNavigationTracker aptoideNavigationTracker, String editorsChoiceBrickPosition) {
+      NavigationTracker navigationTracker, String editorsChoiceBrickPosition) {
     super(getApp, appViewAnalytics);
     this.installManager = installManager;
     this.md5 = getApp.getNodes()
@@ -81,7 +81,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
     this.timelineAnalytics = timelineAnalytics;
     this.appViewFragment = appViewFragment;
     this.analytics = analytics;
-    this.aptoideNavigationTracker = aptoideNavigationTracker;
+    this.navigationTracker = navigationTracker;
     this.editorsChoiceBrickPosition = editorsChoiceBrickPosition;
   }
 
@@ -90,10 +90,10 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
       DownloadFactory downloadFactory, TimelineAnalytics timelineAnalytics,
       AppViewAnalytics appViewAnalytics, PublishRelay installAppRelay,
       AppViewFragment appViewFragment, DownloadCompleteAnalytics analytics,
-      AptoideNavigationTracker aptoideNavigationTracker, String editorsBrickPosition) {
+      NavigationTracker navigationTracker, String editorsBrickPosition) {
     return new AppViewInstallDisplayable(installManager, getApp, searchAdResult, shouldInstall,
         installedRepository, timelineAnalytics, appViewAnalytics, installAppRelay, downloadFactory,
-        appViewFragment, analytics, aptoideNavigationTracker, editorsBrickPosition);
+        appViewFragment, analytics, navigationTracker, editorsBrickPosition);
   }
 
   public void startInstallationProcess() {
@@ -134,8 +134,8 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
     GetAppMeta.App app = getPojo().getNodes()
         .getMeta()
         .getData();
-    analytics.installClicked(aptoideNavigationTracker.getPreviousScreen(),
-        aptoideNavigationTracker.getCurrentScreen(), app.getMd5(), app.getPackageName(),
+    analytics.installClicked(navigationTracker.getPreviousScreen(),
+        navigationTracker.getCurrentScreen(), app.getMd5(), app.getPackageName(),
         app.getFile()
             .getMalware()
             .getRank()

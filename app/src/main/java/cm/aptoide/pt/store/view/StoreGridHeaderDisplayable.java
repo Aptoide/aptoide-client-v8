@@ -1,7 +1,7 @@
 package cm.aptoide.pt.store.view;
 
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
@@ -11,7 +11,7 @@ public class StoreGridHeaderDisplayable extends Displayable {
   private final GetStoreWidgets.WSWidget wsWidget;
   private final StoreTabNavigator storeTabNavigator;
   private final Model model;
-  private AptoideNavigationTracker aptoideNavigationTracker;
+  private NavigationTracker navigationTracker;
 
   // this constructor is necessary due to reflection code that generates displayables. that code
   // needs to go as this.
@@ -21,16 +21,16 @@ public class StoreGridHeaderDisplayable extends Displayable {
 
   public StoreGridHeaderDisplayable(GetStoreWidgets.WSWidget wsWidget, String storeTheme,
       String tag, StoreContext storeContext, StoreTabNavigator storeTabNavigator,
-      AptoideNavigationTracker aptoideNavigationTracker) {
+      NavigationTracker navigationTracker) {
     this.model = new Model(storeTheme, tag, storeContext);
     this.wsWidget = wsWidget;
     this.storeTabNavigator = storeTabNavigator;
-    this.aptoideNavigationTracker = aptoideNavigationTracker;
+    this.navigationTracker = navigationTracker;
   }
 
   public StoreGridHeaderDisplayable(GetStoreWidgets.WSWidget wsWidget,
-      StoreTabNavigator storeTabNavigator, AptoideNavigationTracker aptoideNavigationTracker) {
-    this(wsWidget, null, null, null, storeTabNavigator, aptoideNavigationTracker);
+      StoreTabNavigator storeTabNavigator, NavigationTracker navigationTracker) {
+    this(wsWidget, null, null, null, storeTabNavigator, navigationTracker);
   }
 
   @Override protected Displayable.Configs getConfig() {
@@ -53,8 +53,8 @@ public class StoreGridHeaderDisplayable extends Displayable {
     return model;
   }
 
-  public AptoideNavigationTracker getAptoideNavigationTracker() {
-    return aptoideNavigationTracker;
+  public NavigationTracker getNavigationTracker() {
+    return navigationTracker;
   }
 
   public static class Model {

@@ -12,7 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -34,7 +34,7 @@ public abstract class FragmentView extends LeakFragment implements View {
 
   private Presenter presenter;
   private boolean startActivityForResultCalled;
-  private AptoideNavigationTracker navigationTracker;
+  private NavigationTracker navigationTracker;
   private ActivityResultNavigator activityResultNavigator;
   private String defaultThemeName;
 
@@ -70,7 +70,7 @@ public abstract class FragmentView extends LeakFragment implements View {
     ScreenTrackingUtils.getInstance()
         .incrementNumberOfScreens();
     navigationTracker =
-        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker();
+        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
   }
 
   @Override public void onDestroy() {

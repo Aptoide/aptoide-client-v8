@@ -155,7 +155,7 @@ public class CommentDialogFragment
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         new NotificationAnalytics(httpClient, analytics),
-        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker());
+        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker());
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,

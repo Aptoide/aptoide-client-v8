@@ -64,14 +64,14 @@ public class DownloadsFragment extends NavigationTrackFragment implements Downlo
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-            ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker());
+            ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker());
     downloadConverter =
         new DownloadEventConverter(baseBodyInterceptorV7, httpClient, converterFactory,
             tokenInvalidator, BuildConfig.APPLICATION_ID,
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-            ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker());
+            ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker());
     installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
     analytics = Analytics.getInstance();
@@ -104,7 +104,7 @@ public class DownloadsFragment extends NavigationTrackFragment implements Downlo
     downloadsRecyclerView.addItemDecoration(decor);
 
     adapter = new DownloadsAdapter(installConverter, downloadConverter, installManager, analytics,
-        getContext().getResources(), storeTabNavigator, aptoideNavigationTracker);
+        getContext().getResources(), storeTabNavigator, navigationTracker);
     downloadsRecyclerView.setAdapter(adapter);
     noDownloadsView = view.findViewById(R.id.no_apps_downloaded);
 
