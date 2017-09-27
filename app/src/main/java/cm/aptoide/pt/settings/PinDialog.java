@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.settings;
+package cm.aptoide.pt.settings;
 
 import android.content.Context;
 import android.support.annotation.IdRes;

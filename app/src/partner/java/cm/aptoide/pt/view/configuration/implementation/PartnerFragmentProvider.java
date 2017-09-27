@@ -49,7 +49,7 @@ import cm.aptoide.pt.view.fragment.DescriptionFragment;
 import cm.aptoide.pt.reviews.LatestReviewsFragment;
 import cm.aptoide.pt.reviews.ListReviewsFragment;
 import cm.aptoide.pt.reviews.RateAndReviewsFragment;
-import cm.aptoide.pt.view.settings.SettingsFragment;
+import cm.aptoide.pt.settings.SettingsFragment;
 import cm.aptoide.pt.view.store.GetStoreFragment;
 import cm.aptoide.pt.store.view.ads.GetAdsFragment;
 import cm.aptoide.pt.store.view.home.HomeFragment;
