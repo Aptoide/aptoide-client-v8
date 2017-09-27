@@ -9,6 +9,7 @@ import cm.aptoide.pt.social.view.viewholder.AggregatedMediaViewHolder;
 import cm.aptoide.pt.social.view.viewholder.AggregatedRecommendationViewHolder;
 import cm.aptoide.pt.social.view.viewholder.AggregatedStoreViewHolder;
 import cm.aptoide.pt.social.view.viewholder.AppUpdateViewHolder;
+import cm.aptoide.pt.social.view.viewholder.EmptyStateViewHolder;
 import cm.aptoide.pt.social.view.viewholder.MediaViewHolder;
 import cm.aptoide.pt.social.view.viewholder.Notifications;
 import cm.aptoide.pt.social.view.viewholder.PopularAppViewHolder;
@@ -142,6 +143,10 @@ public class CardViewHolderFactory {
       case NO_NOTIFICATIONS:
         return new TimelineNoNotificationHeaderViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_no_notification, parent, false),
+            cardTouchEventPublishSubject);
+      case EMPTY_STATE:
+        return new EmptyStateViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.timeline_empty_state_item, parent, false),
             cardTouchEventPublishSubject);
       default:
         throw new IllegalStateException("Wrong cardType" + cardType.name());
