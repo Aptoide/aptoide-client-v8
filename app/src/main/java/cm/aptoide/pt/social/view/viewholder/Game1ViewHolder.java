@@ -26,6 +26,7 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
 
   private final TextView score;
   private final TextView leaderboard;
+  private final View statsHeader;
   private final ImageView questionIcon;
   private final TextView question;
   private final TextView leftAnswer;
@@ -60,8 +61,8 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
     this.spannableFactory = spannableFactory;
     this.marketName = marketName;
 
-    this.score = (TextView) itemView.findViewById(R.id.displayable_social_timeline_game_card_score);
-    leaderboard = (TextView) itemView.findViewById(R.id.displayable_social_timeline_game_card_leaderboard);
+    this.score = (TextView) itemView.findViewById(R.id.stats_header).findViewById(R.id.displayable_social_timeline_game_card_score);
+    leaderboard = (TextView) itemView.findViewById(R.id.stats_header).findViewById(R.id.displayable_social_timeline_game_card_leaderboard);
     questionIcon = (ImageView) itemView.findViewById(R.id.game_card_question1_icon);
     question = (TextView) itemView.findViewById(R.id.game_card_question1_question);
     leftAnswer = (TextView) itemView.findViewById(R.id.left_answer);
@@ -83,6 +84,7 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
     this.stampLeft = (TextView) itemView.findViewById(R.id.stamp_left);
     this.stampRight = (TextView) itemView.findViewById(R.id.stamp_right);
 
+    this.statsHeader = itemView.findViewById(R.id.stats_header);
     rand = Math.random();
   }
 
@@ -131,7 +133,7 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
 
     score.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
     leaderboard.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
-
+    statsHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
 
 
     if(card.getScore()==-1){

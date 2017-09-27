@@ -1,10 +1,14 @@
 package cm.aptoide.pt.social.leaderboard.view;
 
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.social.leaderboard.data.LeaderboardEntry;
+import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
 import java.util.List;
 import rx.subjects.PublishSubject;
 
@@ -27,6 +31,7 @@ public class LeaderboardViewHolder extends RecyclerView.ViewHolder {
   private final TextView friendsScore;
 
   private final View friendsEntry;
+
   private final PublishSubject<LeaderboardEntry> leaderboardEntryPublishSubject;
 
   public LeaderboardViewHolder(View itemView,
@@ -60,12 +65,17 @@ public class LeaderboardViewHolder extends RecyclerView.ViewHolder {
 
   public void setItem(List<LeaderboardEntry> entries) {
 
+
     globalPosition.setText("#"+String.valueOf(entries.get(0).getPosition()));
     globalName.setText(entries.get(0).getName());
+    if(globalName.getText().equals("paquiquinho"))
+      globalName.setTextColor(itemView.getResources().getColor(R.color.card_store_title));
     globalScore.setText(String.valueOf(entries.get(0).getScore()));
 
     countryPosition.setText("#"+String.valueOf(entries.get(1).getPosition()));
     countryName.setText(entries.get(1).getName());
+    if(countryName.getText().equals("paquiquinho"))
+      countryName.setTextColor(itemView.getResources().getColor(R.color.card_store_title));
     countryScore.setText(String.valueOf(entries.get(1).getScore()));
 
     if(entries.get(2).getName()==null)
@@ -74,6 +84,8 @@ public class LeaderboardViewHolder extends RecyclerView.ViewHolder {
       friendsEntry.setVisibility(View.VISIBLE);
       friendsPosition.setText("#"+String.valueOf(entries.get(2).getPosition()));
       friendsName.setText(entries.get(2).getName());
+      if(friendsName.getText().equals("paquiquinho"))
+        friendsName.setTextColor(itemView.getResources().getColor(R.color.card_store_title));
       friendsScore.setText(String.valueOf(entries.get(2).getScore()));
     }
     //globalName.setOnClickListener(click -> leaderboardEntryPublishSubject.onNext(entries.get(0)));

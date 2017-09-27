@@ -61,71 +61,79 @@
           style="@style/Aptoide.TextView.Regular.XS.Grey"
           />
 
+<include layout="@layout/game_stats_header"
+    android:id="@+id/stats_header"
+    android:layout_width="120dp"
+    android:layout_height="20dp"
+    android:layout_alignParentRight = "true"
+    android:layout_marginTop="18dp"
+    />
+      <!--<ImageView-->
+          <!--android:id="@+id/displayable_social_timeline_game_card_leaderboard_icon"-->
+          <!--android:layout_width="15dp"-->
+          <!--android:layout_height="15dp"-->
+          <!--android:layout_marginRight="5dp"-->
+          <!--android:layout_marginTop="@dimen/appstimeline_card_icon"-->
+          <!--android:layout_toLeftOf="@+id/displayable_social_timeline_game_card_leaderboard"-->
+          <!--android:src="@drawable/leaderboard_global"-->
+          <!--/>-->
 
-      <ImageView
-          android:id="@+id/displayable_social_timeline_game_card_leaderboard_icon"
-          android:layout_width="15dp"
-          android:layout_height="15dp"
-          android:layout_toLeftOf="@+id/displayable_social_timeline_game_card_leaderboard"
-          android:layout_marginRight="5dp"
-          android:layout_marginTop="@dimen/appstimeline_card_icon"
-          android:src="@drawable/leaderboard_global"
-          />
+      <!--<ProgressBar-->
+          <!--android:id="@+id/rank_progress"-->
+          <!--android:layout_width="10dp"-->
+          <!--android:layout_height="10dp"-->
+          <!--android:layout_marginLeft="7dp"-->
+          <!--android:layout_marginTop="15dp"-->
+          <!--android:layout_toRightOf="@id/displayable_social_timeline_game_card_leaderboard_icon"-->
+          <!--android:indeterminate="true"-->
+          <!--android:visibility="visible"-->
+          <!--/>-->
 
-      <ProgressBar
-          android:id="@+id/rank_progress"
-          android:layout_width="10dp"
-          android:layout_height="10dp"
-          android:layout_toRightOf="@id/displayable_social_timeline_game_card_leaderboard_icon"
-          android:layout_marginLeft="7dp"
-          android:layout_marginTop="15dp"
-          android:visibility="visible"
-          android:indeterminate="true" />
+      <!--<TextView-->
+          <!--android:id="@id/displayable_social_timeline_game_card_leaderboard"-->
+          <!--android:layout_width="wrap_content"-->
+          <!--android:layout_height="wrap_content"-->
+          <!--android:layout_alignEnd="@+id/card_custom_view_line_separator"-->
+          <!--android:layout_alignRight="@+id/card_custom_view_line_separator"-->
+          <!--android:layout_marginRight="3dp"-->
+          <!--android:layout_marginTop="18dp"-->
+          <!--android:text="#1234"-->
+          <!--android:visibility="invisible"-->
+          <!--style="@style/Aptoide.TextView.Regular.XS.Grey"-->
+          <!--/>-->
 
-      <TextView
-          android:id="@id/displayable_social_timeline_game_card_leaderboard"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_alignEnd="@+id/card_custom_view_line_separator"
-          android:layout_marginRight="3dp"
-          android:layout_marginTop="18dp"
-          android:text="#1234"
-          android:visibility="invisible"
-          style="@style/Aptoide.TextView.Regular.XS.Grey"
-          android:layout_alignRight="@+id/card_custom_view_line_separator"
-          />
+      <!--<ImageView-->
+          <!--android:id="@+id/displayable_social_timeline_game_card_score_icon"-->
+          <!--android:layout_width="15dp"-->
+          <!--android:layout_height="15dp"-->
+          <!--android:layout_marginRight="5dp"-->
+          <!--android:layout_marginTop="@dimen/appstimeline_card_icon"-->
+          <!--android:layout_toLeftOf="@+id/displayable_social_timeline_game_card_score"-->
+          <!--android:src="@drawable/leaderboard_score"-->
+          <!--/>-->
 
-      <ImageView
-          android:id="@+id/displayable_social_timeline_game_card_score_icon"
-          android:layout_width="15dp"
-          android:layout_height="15dp"
-          android:layout_toLeftOf="@+id/displayable_social_timeline_game_card_score"
-          android:layout_marginRight="5dp"
-          android:layout_marginTop="@dimen/appstimeline_card_icon"
-          android:src="@drawable/leaderboard_score"
-          />
+      <!--<TextView-->
+          <!--android:id="@id/displayable_social_timeline_game_card_score"-->
+          <!--android:layout_width="wrap_content"-->
+          <!--android:layout_height="wrap_content"-->
+          <!--android:layout_marginRight="5dp"-->
+          <!--android:layout_marginTop="18dp"-->
+          <!--android:layout_toLeftOf="@id/displayable_social_timeline_game_card_leaderboard_icon"-->
+          <!--android:text="2000"-->
+          <!--android:visibility="invisible"-->
+          <!--style="@style/Aptoide.TextView.Regular.XS.Grey"-->
+          <!--/>-->
 
-      <TextView
-          android:id="@id/displayable_social_timeline_game_card_score"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_toLeftOf="@id/displayable_social_timeline_game_card_leaderboard_icon"
-          android:layout_marginRight="5dp"
-          android:layout_marginTop="18dp"
-          android:text="2000"
-          android:visibility="invisible"
-          style="@style/Aptoide.TextView.Regular.XS.Grey"
-          />
-
-      <ProgressBar
-          android:id="@+id/score_progress"
-          android:layout_width="10dp"
-          android:layout_height="10dp"
-          android:layout_toLeftOf="@id/displayable_social_timeline_game_card_leaderboard_icon"
-          android:layout_marginRight="7dp"
-          android:layout_marginTop="15dp"
-          android:visibility="visible"
-          android:indeterminate="true" />
+      <!--<ProgressBar-->
+          <!--android:id="@+id/score_progress"-->
+          <!--android:layout_width="10dp"-->
+          <!--android:layout_height="10dp"-->
+          <!--android:layout_marginRight="7dp"-->
+          <!--android:layout_marginTop="15dp"-->
+          <!--android:layout_toLeftOf="@id/displayable_social_timeline_game_card_leaderboard_icon"-->
+          <!--android:indeterminate="true"-->
+          <!--android:visibility="visible"-->
+          <!--/>-->
 
       <View
           android:id="@+id/card_custom_view_line_separator"
@@ -171,73 +179,73 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/game_card_question1_icon"
-            android:textAlignment="center"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
             android:text="Insert question here!"
+            android:textAlignment="center"
             style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
             />
 
         <TextView
-            android:id="@+id/left_answer"
-            style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
+            android:id="@+id/right_answer"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/game_card_question1_question"
             android:layout_alignParentRight="true"
+            android:layout_below="@id/game_card_question1_question"
+            android:layout_marginTop="32dp"
             android:gravity="center"
             android:padding="5dp"
-            android:layout_marginTop="32dp"
-            android:text="Left: Answer1"
+            android:text="Right: Answer1"
+            style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
             />
 
         <!--<ImageView-->
-            <!--android:id="@id/left_arrow"-->
-            <!--android:layout_width="30dp"-->
-            <!--android:layout_height="30dp"-->
-            <!--android:layout_alignParentLeft="true"-->
-            <!--android:layout_marginLeft="5dp"-->
-            <!--android:layout_marginTop="155dp"-->
-            <!--android:src="@drawable/game_arrow_left"-->
-            <!--android:visibility="gone"-->
-            <!--/>-->
+        <!--android:id="@id/left_arrow"-->
+        <!--android:layout_width="30dp"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_marginLeft="5dp"-->
+        <!--android:layout_marginTop="155dp"-->
+        <!--android:src="@drawable/game_arrow_left"-->
+        <!--android:visibility="gone"-->
+        <!--/>-->
 
         <!--<ImageView-->
-            <!--android:id="@+id/right_arrow"-->
-            <!--android:layout_width="30dp"-->
-            <!--android:layout_height="30dp"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_marginRight="5dp"-->
-            <!--android:layout_marginTop="155dp"-->
-            <!--android:rotation="180"-->
-            <!--android:src="@drawable/game_arrow_left"-->
-            <!--android:visibility="gone"-->
-            <!--/>-->
+        <!--android:id="@+id/right_arrow"-->
+        <!--android:layout_width="30dp"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_marginRight="5dp"-->
+        <!--android:layout_marginTop="155dp"-->
+        <!--android:rotation="180"-->
+        <!--android:src="@drawable/game_arrow_left"-->
+        <!--android:visibility="gone"-->
+        <!--/>-->
 
         <TextView
-            android:id="@+id/right_answer"
-            style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
+            android:id="@+id/left_answer"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/game_card_question1_question"
-            android:gravity="center"
-            android:padding="5dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="32dp"
-            android:text="Right: Answer2"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="Left: Answer2"
+            style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
             />
 
         <TextView
             android:id="@+id/stamp_left"
             android:layout_width="90dp"
             android:layout_height="40dp"
-            android:src="@mipmap/ic_launcher"
-            android:layout_marginTop="40dp"
             android:layout_marginLeft="25dp"
+            android:layout_marginTop="40dp"
             android:alpha="0.0"
             android:rotation="-35"
+            android:src="@mipmap/ic_launcher"
             android:text="Facebook"
             android:visibility="invisible"
             />
@@ -246,12 +254,12 @@
             android:id="@+id/stamp_right"
             android:layout_width="90dp"
             android:layout_height="40dp"
-            android:src="@mipmap/ic_launcher"
-            android:layout_marginTop="40dp"
-            android:layout_marginRight="25dp"
             android:layout_alignParentRight="true"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="40dp"
             android:alpha="0.0"
             android:rotation="35"
+            android:src="@mipmap/ic_launcher"
             android:text="Clash Royal"
             android:visibility="invisible"
             />

@@ -26,6 +26,8 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
 
   private final TextView score;
   private final TextView leaderboard;
+  private final ImageView scoreIcon;
+  private final ImageView rankIcon;
   private View wrapper;
   private ImageView questionIcon;
   private TextView question;
@@ -81,6 +83,8 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
     this.stampLeft = (ImageView) itemView.findViewById(R.id.stamp_left);
     this.stampRight = (ImageView) itemView.findViewById(R.id.stamp_right);
 
+    this.scoreIcon = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_game_card_score_icon) ;
+    this.rankIcon = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_game_card_leaderboard_icon);
 
     rand = Math.random();
 
@@ -155,7 +159,8 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
 
     score.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
     leaderboard.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
-
+    scoreIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
+    rankIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
 
     if(card.getScore()==-1){
       scoreProgress.setVisibility(View.VISIBLE);

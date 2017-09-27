@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+  <ImageView
+      android:id="@+id/displayable_social_timeline_game_card_score_icon"
+      android:layout_width="15dp"
+      android:layout_height="15dp"
+      android:layout_marginRight="5dp"
+      android:src="@drawable/leaderboard_score"
+      />
+
+  <TextView
+      android:id="@+id/displayable_social_timeline_game_card_score"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="10dp"
+      android:layout_toRightOf="@id/displayable_social_timeline_game_card_score_icon"
+      android:text="2000"
+      android:visibility="invisible"
+      style="@style/Aptoide.TextView.Regular.XS.Grey"
+      />
+
+  <ImageView
+      android:id="@+id/displayable_social_timeline_game_card_leaderboard_icon"
+      android:layout_width="15dp"
+      android:layout_height="15dp"
+      android:layout_toRightOf="@+id/displayable_social_timeline_game_card_score"
+      android:src="@drawable/leaderboard_global"
+      />
+
+  <ProgressBar
+      android:id="@+id/rank_progress"
+      android:layout_width="10dp"
+      android:layout_height="10dp"
+      android:indeterminate="true"
+      android:layout_marginLeft="10dp"
+      android:layout_toRightOf="@id/displayable_social_timeline_game_card_leaderboard_icon"
+      android:visibility="visible"
+      />
+
+  <TextView
+      android:id="@+id/displayable_social_timeline_game_card_leaderboard"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="#1234"
+      android:visibility="invisible"
+      android:layout_toRightOf="@id/displayable_social_timeline_game_card_leaderboard_icon"
+      android:layout_marginLeft="10dp"
+      style="@style/Aptoide.TextView.Regular.XS.Grey"
+      />
+
+
+  <TextView
+      android:id="@id/displayable_social_timeline_game_card_score"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="10dp"
+      android:layout_toRightOf="@id/displayable_social_timeline_game_card_score_icon"
+      android:text="2000"
+      android:visibility="invisible"
+      style="@style/Aptoide.TextView.Regular.XS.Grey"
+      />
+
+  <ProgressBar
+      android:id="@+id/score_progress"
+      android:layout_width="10dp"
+      android:layout_height="10dp"
+      android:layout_marginRight="7dp"
+      android:layout_toRightOf="@id/displayable_social_timeline_game_card_score_icon"
+      android:indeterminate="true"
+      android:visibility="visible"
+      />
+
+</RelativeLayout>
