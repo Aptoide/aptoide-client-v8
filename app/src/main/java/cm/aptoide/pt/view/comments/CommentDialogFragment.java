@@ -248,6 +248,7 @@ public class CommentDialogFragment
         .flatMap(inputText -> {
           if (commentBeforeSubmissionCallback != null) {
             commentBeforeSubmissionCallback.onCommentBeforeSubmission(inputText);
+            logAnalytics(true);
             this.dismiss();
             return Observable.empty();
           }
