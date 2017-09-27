@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.addressbook;
+package cm.aptoide.pt.addressbook.view;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

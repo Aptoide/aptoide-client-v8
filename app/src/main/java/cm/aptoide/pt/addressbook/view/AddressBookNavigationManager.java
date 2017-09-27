@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.addressbook;
+package cm.aptoide.pt.addressbook.view;
 
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.AptoideApplication;
