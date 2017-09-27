@@ -75,7 +75,7 @@ public class SearchPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
-        .flatMap(__ -> view.followedStoresResultReachedBottom())
+        .flatMap(__ -> view.allStoresResultReachedBottom())
         .doOnNext(__ -> Logger.v(TAG, "all stores list reached bottom"))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

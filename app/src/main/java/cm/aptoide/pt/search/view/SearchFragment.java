@@ -46,6 +46,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import org.parceler.Parcels;
 import retrofit2.Converter;
@@ -60,6 +61,7 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
   private static final String VIEW_MODEL = "view_model";
 
   private static final int VISIBLE_THRESHOLD = 5;
+  private static final long ANIMATION_DURATION = 125L;
 
   private View noSearchLayout;
   private EditText noSearchLayoutSearchQuery;
@@ -71,11 +73,9 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
   private Button allStoresButton;
 
   private RecyclerViewPositionHelper followedStoresResultListPositionHelper;
-  private boolean followedStoresBottomAlreadyReached = false;
   private RecyclerView followedStoresResultList;
 
   private RecyclerViewPositionHelper allStoresResultListPositionHelper;
-  private boolean allStoresBottomAlreadyReached = false;
   private RecyclerView allStoresResultList;
 
   private SearchViewModel viewModel;
@@ -124,33 +124,59 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
   }
 
   @Override public void showFollowedStoresResult() {
-    followedStoresResultList.setVisibility(View.VISIBLE);
-    followedStoresButton.setTextColor(getResources().getColor(R.color.white));
-    followedStoresButton.setBackgroundResource(R.drawable.search_button_background);
+    if (!viewModel.isAllStoresSelected()) {
+      return;
+    }
 
-    allStoresResultList.setVisibility(View.GONE);
-    allStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
-    allStoresButton.setBackgroundResource(0);
+    int viewWidth = allStoresResultList.getWidth();
+
+    followedStoresResultList.setTranslationX(-viewWidth);
+    followedStoresResultList.setVisibility(View.VISIBLE);
+    followedStoresResultList.animate()
+        .translationXBy(viewWidth)
+        .setDuration(ANIMATION_DURATION)
+        .start();
+
+    allStoresResultList.animate()
+        .translationXBy(viewWidth)
+        .setDuration(ANIMATION_DURATION)
+        .withEndAction(() -> {
+          allStoresResultList.setVisibility(View.INVISIBLE);
+          setHighlightedButtons(false);
+        })
+        .start();
   }
 
   @Override public void showAllStoresResult() {
-    followedStoresResultList.setVisibility(View.GONE);
-    followedStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
-    followedStoresButton.setBackgroundResource(0);
+    if (viewModel.isAllStoresSelected()) {
+      return;
+    }
 
+    int viewWidth = followedStoresResultList.getWidth();
+
+    followedStoresResultList.animate()
+        .translationXBy(-viewWidth)
+        .setDuration(ANIMATION_DURATION)
+        .start();
+
+    allStoresResultList.setTranslationX(viewWidth);
     allStoresResultList.setVisibility(View.VISIBLE);
-    allStoresButton.setTextColor(getResources().getColor(R.color.white));
-    allStoresButton.setBackgroundResource(R.drawable.search_button_background);
+    allStoresResultList.animate()
+        .translationXBy(-viewWidth)
+        .setDuration(ANIMATION_DURATION)
+        .withEndAction(() -> {
+          followedStoresResultList.setVisibility(View.INVISIBLE);
+          setHighlightedButtons(true);
+        })
+        .start();
   }
 
   @Override public Observable<Void> clickFollowedStoresSearchButton() {
-    return RxView.clicks(followedStoresButton)
-        .doOnNext(__ -> viewModel.setAllStoresSelected(false));
+    return RxView.clicks(followedStoresButton);
   }
 
   @Override public Observable<Void> clickEverywhereSearchButton() {
-    return RxView.clicks(allStoresButton)
-        .doOnNext(__ -> viewModel.setAllStoresSelected(true));
+    return RxView.clicks(allStoresButton);
   }
 
   @Override public Observable<String> clickNoResultsSearchButton() {
@@ -174,17 +200,10 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
 
   @Override public void showLoading() {
     followedStoresResultList.setVisibility(View.GONE);
-    allStoresResultList.setVisibility(View.GONE);
-    progressBar.setVisibility(View.VISIBLE);
   }
 
   @Override public void hideLoading() {
     progressBar.setVisibility(View.GONE);
-    if (viewModel.isAllStoresSelected()) {
-      allStoresResultList.setVisibility(View.VISIBLE);
-    } else {
-      followedStoresResultList.setVisibility(View.VISIBLE);
-    }
   }
 
   @Override public void changeFollowedStoresButtonVisibility(boolean visible) {
@@ -262,8 +281,8 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
 
   @Override public Observable<Void> followedStoresResultReachedBottom() {
     return RxRecyclerView.scrollEvents(followedStoresResultList)
-        .filter(event -> !followedStoresBottomAlreadyReached
-            && followedStoresResultListPositionHelper.getItemCount() > VISIBLE_THRESHOLD
+        .debounce(1, TimeUnit.SECONDS)
+        .filter(event -> followedStoresResultListPositionHelper.getItemCount() > VISIBLE_THRESHOLD
             && followedStoresResultListPositionHelper != null
             && event.view()
             .isAttachedToWindow()
@@ -272,15 +291,13 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
             followedStoresResultListPositionHelper.findFirstVisibleItemPosition() == -1 ? 0
                 : followedStoresResultListPositionHelper.findFirstVisibleItemPosition())
             + VISIBLE_THRESHOLD))
-        .map(event -> null)
-        .doOnNext(__ -> followedStoresBottomAlreadyReached = true)
-        .cast(Void.class);
+        .map(event -> null);
   }
 
   @Override public Observable<Void> allStoresResultReachedBottom() {
     return RxRecyclerView.scrollEvents(allStoresResultList)
-        .filter(event -> !allStoresBottomAlreadyReached
-            && allStoresResultListPositionHelper.getItemCount() > VISIBLE_THRESHOLD
+        .debounce(1, TimeUnit.SECONDS)
+        .filter(event -> allStoresResultListPositionHelper.getItemCount() > VISIBLE_THRESHOLD
             && allStoresResultListPositionHelper != null
             && event.view()
             .isAttachedToWindow()
@@ -289,9 +306,22 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
             allStoresResultListPositionHelper.findFirstVisibleItemPosition() == -1 ? 0
                 : allStoresResultListPositionHelper.findFirstVisibleItemPosition())
             + VISIBLE_THRESHOLD))
-        .map(event -> null)
-        .doOnNext(__ -> allStoresBottomAlreadyReached = true)
-        .cast(Void.class);
+        .map(event -> null);
+  }
+
+  private void setHighlightedButtons(boolean allStoresSelected) {
+    if (allStoresSelected) {
+      followedStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
+      followedStoresButton.setBackgroundResource(0);
+      allStoresButton.setTextColor(getResources().getColor(R.color.white));
+      allStoresButton.setBackgroundResource(R.drawable.search_button_background);
+    } else {
+      followedStoresButton.setTextColor(getResources().getColor(R.color.white));
+      followedStoresButton.setBackgroundResource(R.drawable.search_button_background);
+      allStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
+      allStoresButton.setBackgroundResource(0);
+    }
+    viewModel.setAllStoresSelected(allStoresSelected);
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -331,9 +361,13 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
 
   @Override public void setupViews() {
     super.setupViews();
-    restoreSelectedTab();
     setHasOptionsMenu(true);
     attachPresenter(createPresenter(), null);
+  }
+
+  @Override public void onResume() {
+    super.onResume();
+    restoreSelectedTab();
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
@@ -368,10 +402,13 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
 
   private void restoreSelectedTab() {
     if (viewModel.isAllStoresSelected()) {
-      showAllStoresResult();
+      followedStoresResultList.setVisibility(View.INVISIBLE);
+      allStoresResultList.setVisibility(View.VISIBLE);
     } else {
-      showFollowedStoresResult();
+      followedStoresResultList.setVisibility(View.INVISIBLE);
+      allStoresResultList.setVisibility(View.VISIBLE);
     }
+    setHighlightedButtons(viewModel.isAllStoresSelected());
   }
 
   private Presenter createPresenter() {
@@ -419,7 +456,7 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
 
     followedStoresResultAdapter =
         new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, onOpenPopupMenuClickRelay,
-            searchResultAdsFollowedStores, searchResultFollowedStores);
+            searchResultAdsFollowedStores, searchResultFollowedStores, crashReport);
     followedStoresResultList.setAdapter(followedStoresResultAdapter);
     followedStoresResultList.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayout.VERTICAL, false));
@@ -435,7 +472,7 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
 
     allStoresResultAdapter =
         new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, onOpenPopupMenuClickRelay,
-            searchResultAdsAllStores, searchResultAllStores);
+            searchResultAdsAllStores, searchResultAllStores, crashReport);
     allStoresResultList.setAdapter(allStoresResultAdapter);
     allStoresResultList.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayout.VERTICAL, false));

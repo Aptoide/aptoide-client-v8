@@ -5,6 +5,7 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.search.SearchApp;
 import cm.aptoide.pt.search.view.item.SearchLoadingViewHolder;
@@ -21,17 +22,19 @@ public class SearchResultAdapter extends RecyclerView.Adapter<ItemView> {
   private final PublishRelay<Pair<SearchApp, android.view.View>> onOpenPopupMenuClick;
   private final List<MinimalAd> searchResultAds;
   private final List<SearchApp> searchResult;
+  private final CrashReport crashReport;
   private boolean adsLoaded = false;
 
   public SearchResultAdapter(PublishRelay<MinimalAd> onAdClickRelay,
       PublishRelay<SearchApp> onItemViewClick,
       PublishRelay<Pair<SearchApp, View>> onOpenPopupMenuClick, List<MinimalAd> searchResultAds,
-      List<SearchApp> searchResult) {
+      List<SearchApp> searchResult, CrashReport crashReport) {
     this.onAdClickRelay = onAdClickRelay;
     this.onItemViewClick = onItemViewClick;
     this.onOpenPopupMenuClick = onOpenPopupMenuClick;
     this.searchResultAds = searchResultAds;
     this.searchResult = searchResult;
+    this.crashReport = crashReport;
   }
 
   @Override public ItemView onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -54,13 +57,18 @@ public class SearchResultAdapter extends RecyclerView.Adapter<ItemView> {
   }
 
   @Override public void onBindViewHolder(ItemView holder, int position) {
-    holder.setup(getItem(position));
+    try {
+      holder.setup(getItem(position));
+    } catch (ClassCastException e) {
+      crashReport.log(e);
+    }
   }
 
   @Override public int getItemViewType(int position) {
     final int adsCount = searchResultAds.size();
     final int appsCount = searchResult.size();
-    if ((position == 0 && !adsLoaded) || position > (appsCount + adsCount - 2)) {
+
+    if (shouldShowLoadingItem(position, adsCount, appsCount)) {
       return SearchLoadingViewHolder.LAYOUT;
     }
 
@@ -73,6 +81,10 @@ public class SearchResultAdapter extends RecyclerView.Adapter<ItemView> {
 
   @Override public int getItemCount() {
     return searchResultAds.size() + searchResult.size();
+  }
+
+  private boolean shouldShowLoadingItem(int position, int adsCount, int appsCount) {
+    return (position == 0 && adsCount == 0 && !adsLoaded);
   }
 
   private Object getItem(int position) {

@@ -55,9 +55,9 @@
           android:id="@+id/subscribed"
           android:layout_width="128dp"
           android:layout_height="match_parent"
-          android:background="@drawable/search_button_background"
           android:text="@string/followed_stores"
-          android:textColor="@color/white"
+          android:background="@null"
+          android:textColor="@color/silver_dark"
           android:textSize="12sp"
           android:visibility="gone"
           tools:visibility="visible"
@@ -67,9 +67,9 @@
           android:id="@+id/everywhere"
           android:layout_width="128dp"
           android:layout_height="match_parent"
-          android:background="@null"
+          android:background="@drawable/search_button_background"
+          android:textColor="@color/white"
           android:text="@string/all_stores"
-          android:textColor="@color/silver_dark"
           android:textSize="12sp"
           android:visibility="gone"
           tools:visibility="visible"
@@ -82,7 +82,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/buttons_layout"
-        android:visibility="gone"
+        android:visibility="invisible"
         />
 
     <android.support.v7.widget.RecyclerView
