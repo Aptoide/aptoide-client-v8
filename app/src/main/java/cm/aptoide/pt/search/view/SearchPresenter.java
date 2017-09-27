@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.search;
+package cm.aptoide.pt.search.view;
 
 import android.os.Bundle;
 import android.util.Pair;
@@ -8,6 +8,7 @@ import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.DataList;
 import cm.aptoide.pt.dataprovider.model.v7.search.ListSearchApps;
 import cm.aptoide.pt.dataprovider.model.v7.search.SearchApp;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.search.SearchAnalytics;
@@ -19,6 +20,9 @@ import rx.Observable;
 import rx.Scheduler;
 
 public class SearchPresenter implements Presenter {
+
+  private static final String TAG = SearchPresenter.class.getName();
+
   private final SearchView view;
   private final SearchAnalytics analytics;
   private final SearchNavigator navigator;
@@ -53,6 +57,32 @@ public class SearchPresenter implements Presenter {
     handleClickToOpenAppViewFromAdd();
     handleClickToOpenPopupMenu();
     handleClickOnNoResultsImage();
+    handleFollowedStoresReachedBottom();
+    handleAllStoresReachedBottom();
+  }
+
+  // TODO: load more elements
+  private void handleAllStoresReachedBottom() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .observeOn(viewScheduler)
+        .flatMap(__ -> view.followedStoresResultReachedBottom())
+        .doOnNext(__ -> Logger.v(TAG, "all stores list reached bottom"))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
+  }
+
+  // TODO: load more elements
+  private void handleFollowedStoresReachedBottom() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .observeOn(viewScheduler)
+        .flatMap(__ -> view.followedStoresResultReachedBottom())
+        .doOnNext(__ -> Logger.v(TAG, "followed stores list reached bottom"))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
   }
 
   @Override public void saveState(Bundle state) {
@@ -63,12 +93,14 @@ public class SearchPresenter implements Presenter {
     // does nothing
   }
 
+  // TODO: 27/9/2017 sithengineer
   private void loadAds() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .delay(4, TimeUnit.SECONDS)
         .observeOn(viewScheduler)
         .doOnNext(data -> {
+          
           view.setFollowedStoresAdsEmpty();
           view.setAllStoresAdsEmpty();
         })

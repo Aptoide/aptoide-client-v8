@@ -36,7 +36,7 @@ import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.spotandshare.view.SpotSharePreviewActivity;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.updates.UpdateRepository;
-import cm.aptoide.pt.search.SearchBuilder;
+import cm.aptoide.pt.search.view.SearchBuilder;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.custom.BadgeView;

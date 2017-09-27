@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.search;
+package cm.aptoide.pt.search.view;
 
 import org.parceler.Parcel;
 

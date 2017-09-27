@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.search;
+package cm.aptoide.pt.search.view;
 
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.search.SearchApp;
@@ -46,6 +46,10 @@ public interface SearchView extends View {
   Observable<Integer> showPopup(boolean hasVersions, android.view.View anchor);
 
   String getDefaultTheme();
+
+  Observable<Void> followedStoresResultReachedBottom();
+
+  Observable<Void> allStoresResultReachedBottom();
 
   interface Model {
 

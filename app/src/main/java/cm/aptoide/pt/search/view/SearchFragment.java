@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.search;
+package cm.aptoide.pt.search.view;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -33,13 +33,14 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.search.SearchAnalytics;
-import cm.aptoide.pt.search.SearchBuilder;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
+import cm.aptoide.pt.view.recycler.RecyclerViewPositionHelper;
 import com.facebook.appevents.AppEventsLogger;
+import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.ArrayList;
@@ -52,23 +53,31 @@ import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.Subscriptions;
 
-/**
- * Created by neuro on 01-06-2016.
- */
 public class SearchFragment extends BaseToolbarFragment implements SearchView {
 
   private static final int LAYOUT = R.layout.global_search_fragment;
   private static final String VIEW_MODEL = "view_model";
-  private SearchViewModel viewModel;
-  private Button followedStoresButton;
-  private Button allStoresButton;
-  private LinearLayout buttonsLayout;
+
+  private static final int VISIBLE_THRESHOLD = 5;
+
   private View noSearchLayout;
-  private View searchResultsLayout;
   private EditText noSearchLayoutSearchQuery;
   private ImageView noResultsSearchButton;
+  private View searchResultsLayout;
+  private View progressBar;
+  private LinearLayout buttonsLayout;
+  private Button followedStoresButton;
+  private Button allStoresButton;
+
+  private RecyclerViewPositionHelper followedStoresResultListPositionHelper;
+  private boolean followedStoresBottomAlreadyReached = false;
   private RecyclerView followedStoresResultList;
+
+  private RecyclerViewPositionHelper allStoresResultListPositionHelper;
+  private boolean allStoresBottomAlreadyReached = false;
   private RecyclerView allStoresResultList;
+
+  private SearchViewModel viewModel;
   private SearchResultAdapter allStoresResultAdapter;
   private SearchResultAdapter followedStoresResultAdapter;
 
@@ -165,11 +174,11 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
   @Override public void showLoading() {
     followedStoresResultList.setVisibility(View.GONE);
     allStoresResultList.setVisibility(View.GONE);
-    // TODO show loading wheel
+    progressBar.setVisibility(View.VISIBLE);
   }
 
   @Override public void hideLoading() {
-    // TODO hide loading wheel
+    progressBar.setVisibility(View.GONE);
     if (viewModel.isAllStoresSelected()) {
       allStoresResultList.setVisibility(View.VISIBLE);
     } else {
@@ -250,6 +259,40 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
     });
   }
 
+  @Override public Observable<Void> followedStoresResultReachedBottom() {
+    return RxRecyclerView.scrollEvents(followedStoresResultList)
+        .filter(event -> !followedStoresBottomAlreadyReached
+            && followedStoresResultListPositionHelper.getItemCount() > VISIBLE_THRESHOLD
+            && followedStoresResultListPositionHelper != null
+            && event.view()
+            .isAttachedToWindow()
+            && (followedStoresResultListPositionHelper.getItemCount() - event.view()
+            .getChildCount()) <= ((
+            followedStoresResultListPositionHelper.findFirstVisibleItemPosition() == -1 ? 0
+                : followedStoresResultListPositionHelper.findFirstVisibleItemPosition())
+            + VISIBLE_THRESHOLD))
+        .map(event -> null)
+        .doOnNext(__ -> followedStoresBottomAlreadyReached = true)
+        .cast(Void.class);
+  }
+
+  @Override public Observable<Void> allStoresResultReachedBottom() {
+    return RxRecyclerView.scrollEvents(allStoresResultList)
+        .filter(event -> !allStoresBottomAlreadyReached
+            && allStoresResultListPositionHelper.getItemCount() > VISIBLE_THRESHOLD
+            && allStoresResultListPositionHelper != null
+            && event.view()
+            .isAttachedToWindow()
+            && (allStoresResultListPositionHelper.getItemCount() - event.view()
+            .getChildCount()) <= ((
+            allStoresResultListPositionHelper.findFirstVisibleItemPosition() == -1 ? 0
+                : allStoresResultListPositionHelper.findFirstVisibleItemPosition())
+            + VISIBLE_THRESHOLD))
+        .map(event -> null)
+        .doOnNext(__ -> allStoresBottomAlreadyReached = true)
+        .cast(Void.class);
+  }
+
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     outState.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
@@ -311,6 +354,7 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
     noSearchLayoutSearchQuery = (EditText) view.findViewById(R.id.search_text);
     noResultsSearchButton = (ImageView) view.findViewById(R.id.ic_search_button);
     searchResultsLayout = view.findViewById(R.id.search_results_layout);
+    progressBar = view.findViewById(R.id.progress_bar);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -375,6 +419,8 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
     followedStoresResultList.setAdapter(followedStoresResultAdapter);
     followedStoresResultList.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayout.VERTICAL, false));
+    followedStoresResultListPositionHelper =
+        RecyclerViewPositionHelper.createHelper(followedStoresResultList);
 
     float padding = getResources().getDimension(R.dimen.padding_very_very_small);
 
@@ -390,6 +436,8 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
     allStoresResultList.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayout.VERTICAL, false));
     allStoresResultList.addItemDecoration(new DividerItemDecoration(getContext(), padding));
+    allStoresResultListPositionHelper =
+        RecyclerViewPositionHelper.createHelper(allStoresResultList);
 
     return new SearchPresenter(this, searchAnalytics, navigator, crashReport, mainThreadScheduler,
         searchManager, onAdClickRelay, onItemViewClickRelay, onOpenPopupMenuClickRelay);

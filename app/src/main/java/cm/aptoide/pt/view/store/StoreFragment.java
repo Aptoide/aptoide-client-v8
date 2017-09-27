@@ -53,7 +53,7 @@ import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
-import cm.aptoide.pt.search.SearchBuilder;
+import cm.aptoide.pt.search.view.SearchBuilder;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.fragment.BasePagerToolbarFragment;

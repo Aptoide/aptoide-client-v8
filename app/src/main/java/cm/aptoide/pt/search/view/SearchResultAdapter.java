@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.search;
+package cm.aptoide.pt.search.view;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
@@ -7,10 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.search.SearchApp;
+import cm.aptoide.pt.search.view.item.SearchLoadingViewHolder;
+import cm.aptoide.pt.search.view.item.SearchResultAdViewHolder;
+import cm.aptoide.pt.search.view.item.SearchResultViewHolder;
 import cm.aptoide.pt.view.ItemView;
-import cm.aptoide.pt.view.search.result.SearchLoadingViewHolder;
-import cm.aptoide.pt.view.search.result.SearchResultAdViewHolder;
-import cm.aptoide.pt.view.search.result.SearchResultViewHolder;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.List;
 
@@ -24,8 +24,9 @@ public class SearchResultAdapter extends RecyclerView.Adapter<ItemView> {
   private boolean adsLoaded = false;
 
   public SearchResultAdapter(PublishRelay<MinimalAd> onAdClickRelay,
-      PublishRelay<SearchApp> onItemViewClick, PublishRelay<Pair<SearchApp, View>> onOpenPopupMenuClick,
-      List<MinimalAd> searchResultAds, List<SearchApp> searchResult) {
+      PublishRelay<SearchApp> onItemViewClick,
+      PublishRelay<Pair<SearchApp, View>> onOpenPopupMenuClick, List<MinimalAd> searchResultAds,
+      List<SearchApp> searchResult) {
     this.onAdClickRelay = onAdClickRelay;
     this.onItemViewClick = onItemViewClick;
     this.onOpenPopupMenuClick = onOpenPopupMenuClick;
@@ -57,11 +58,13 @@ public class SearchResultAdapter extends RecyclerView.Adapter<ItemView> {
   }
 
   @Override public int getItemViewType(int position) {
-    if (position == 0 && searchResultAds.size() == 0 && !adsLoaded) {
+    final int adsCount = searchResultAds.size();
+    final int appsCount = searchResult.size();
+    if ((position == 0 && !adsLoaded) || position > (appsCount + adsCount - 2)) {
       return SearchLoadingViewHolder.LAYOUT;
     }
 
-    if (position < searchResultAds.size()) {
+    if (position < adsCount) {
       return SearchResultAdViewHolder.LAYOUT;
     }
 

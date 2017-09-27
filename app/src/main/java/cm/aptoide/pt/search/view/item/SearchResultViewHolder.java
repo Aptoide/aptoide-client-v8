@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.search.result;
+package cm.aptoide.pt.search.view.item;
 
 import android.content.Context;
 import android.content.res.Resources;

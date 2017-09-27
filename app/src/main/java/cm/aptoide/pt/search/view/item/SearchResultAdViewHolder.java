@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.search.result;
+package cm.aptoide.pt.search.view.item;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -42,12 +42,6 @@ public class SearchResultAdViewHolder extends ItemView<MinimalAd> {
     RxView.clicks(itemView)
         .map(__ -> minimalAd)
         .subscribe(data -> onItemViewClickRelay.call(data));
-    /*
-    itemView.setOnClickListener(view -> {
-      getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-          .newAppViewFragment(minimalAd), true);
-    });
-     */
   }
 
   @Override public void setup(MinimalAd minimalAd) {

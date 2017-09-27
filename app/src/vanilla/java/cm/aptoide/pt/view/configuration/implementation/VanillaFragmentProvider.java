@@ -30,7 +30,7 @@ import cm.aptoide.pt.view.fragment.DescriptionFragment;
 import cm.aptoide.pt.view.reviews.LatestReviewsFragment;
 import cm.aptoide.pt.view.reviews.ListReviewsFragment;
 import cm.aptoide.pt.view.reviews.RateAndReviewsFragment;
-import cm.aptoide.pt.view.search.SearchFragment;
+import cm.aptoide.pt.search.view.SearchFragment;
 import cm.aptoide.pt.view.settings.SettingsFragment;
 import cm.aptoide.pt.view.store.FragmentTopStores;
 import cm.aptoide.pt.view.store.GetStoreFragment;

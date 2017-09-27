@@ -3,7 +3,7 @@
  * Modified by pedroribeiro on 19/01/2017
  */
 
-package cm.aptoide.pt.search;
+package cm.aptoide.pt.search.view;
 
 import android.app.SearchManager;
 import android.content.ComponentName;
@@ -14,9 +14,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.SearchView;
 import android.view.MenuItem;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.search.SearchActionsHandler;
+import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.websocket.SearchAppsWebSocket;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.view.search.SearchActivity;
 
 /**
  * Created by neuro on 01-06-2016.

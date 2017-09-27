@@ -5,7 +5,7 @@ import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.app.OtherVersionsFragment;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
-import cm.aptoide.pt.view.search.SearchFragment;
+import cm.aptoide.pt.search.view.SearchFragment;
 import cm.aptoide.pt.view.store.StoreFragment;
 
 public class SearchNavigator {

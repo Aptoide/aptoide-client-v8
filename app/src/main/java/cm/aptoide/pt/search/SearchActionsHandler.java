@@ -4,6 +4,8 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.view.MenuItem;
 import android.view.View;
+import cm.aptoide.pt.search.view.QueryResultRepository;
+import cm.aptoide.pt.search.view.UnableToSearchAction;
 import cm.aptoide.pt.search.websocket.SearchAppsWebSocket;
 
 public class SearchActionsHandler

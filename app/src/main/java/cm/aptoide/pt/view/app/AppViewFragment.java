@@ -76,7 +76,7 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
-import cm.aptoide.pt.search.SearchBuilder;
+import cm.aptoide.pt.search.view.SearchBuilder;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
