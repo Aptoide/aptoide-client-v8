@@ -18,7 +18,7 @@ import cm.aptoide.pt.billing.view.PaymentThrowableCodeMapper;
 import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import cm.aptoide.pt.view.leak.LeakActivity;
-import cm.aptoide.pt.view.orientation.ScreenOrientationManager;
+import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import com.facebook.login.LoginManager;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;

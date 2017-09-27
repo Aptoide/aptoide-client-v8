@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.recycler.displayable;
+package cm.aptoide.pt.view.spannable;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

@@ -11,7 +11,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
-import cm.aptoide.pt.view.orientation.ScreenOrientationManager;
+import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import java.util.Collection;
 import rx.Observable;
 import rx.Scheduler;

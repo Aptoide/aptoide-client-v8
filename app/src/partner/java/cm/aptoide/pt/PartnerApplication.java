@@ -5,7 +5,7 @@ import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.remotebootconfig.BootConfigJSONUtils;
 import cm.aptoide.pt.remotebootconfig.datamodel.BootConfig;
 import cm.aptoide.pt.remotebootconfig.datamodel.RemoteBootConfig;
-import cm.aptoide.pt.view.configuration.FragmentProvider;
+import cm.aptoide.pt.view.FragmentProvider;
 import cm.aptoide.pt.view.configuration.implementation.PartnerFragmentProvider;
 import rx.Completable;
 import rx.Single;

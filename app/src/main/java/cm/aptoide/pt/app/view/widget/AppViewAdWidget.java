@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.recycler.widget;
+package cm.aptoide.pt.app.view.widget;
 
 import android.view.View;
 import android.widget.RatingBar;
@@ -6,6 +6,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.recycler.displayable.GridAdDisplayable;
+import cm.aptoide.pt.view.recycler.widget.GridAdWidget;
 
 /**
  * Created by neuro on 01-08-2017.

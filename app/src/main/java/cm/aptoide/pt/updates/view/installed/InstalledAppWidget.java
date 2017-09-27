@@ -21,7 +21,7 @@ import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.recycler.widget.Widget;
-import cm.aptoide.pt.view.share.ShareAppHelper;
+import cm.aptoide.pt.share.ShareAppHelper;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Locale;

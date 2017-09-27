@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.recycler.widget;
+package cm.aptoide.pt.app.view.widget;
 
 import android.support.annotation.NonNull;
 import android.view.View;

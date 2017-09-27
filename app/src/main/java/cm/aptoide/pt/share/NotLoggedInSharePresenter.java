@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.share;
+package cm.aptoide.pt.share;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
+import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import java.util.Collection;
 import rx.android.schedulers.AndroidSchedulers;
 

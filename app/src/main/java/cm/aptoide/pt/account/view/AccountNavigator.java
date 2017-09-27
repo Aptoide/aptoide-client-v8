@@ -17,7 +17,7 @@ import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.Result;
-import cm.aptoide.pt.view.share.NotLoggedInShareFragment;
+import cm.aptoide.pt.share.NotLoggedInShareFragment;
 import cm.aptoide.pt.store.view.home.HomeFragment;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;

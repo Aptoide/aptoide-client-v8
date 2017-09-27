@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.share;
+package cm.aptoide.pt.share;
 
 import cm.aptoide.pt.account.view.GooglePlayServicesView;
 import rx.Observable;

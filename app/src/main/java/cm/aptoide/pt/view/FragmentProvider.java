@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.configuration;
+package cm.aptoide.pt.view;
 
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.addressbook.data.Contact;

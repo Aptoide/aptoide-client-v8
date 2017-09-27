@@ -4,7 +4,7 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
-import cm.aptoide.pt.view.configuration.FragmentProvider;
+import cm.aptoide.pt.view.FragmentProvider;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.store.view.StoreFragment;

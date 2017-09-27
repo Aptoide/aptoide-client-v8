@@ -13,7 +13,7 @@ import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.comments.view.ConcreteItemCommentAdder;
 import cm.aptoide.pt.comments.view.RateAndReviewCommentDisplayable;
-import cm.aptoide.pt.view.configuration.FragmentProvider;
+import cm.aptoide.pt.view.FragmentProvider;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.reviews.RateAndReviewsFragment;

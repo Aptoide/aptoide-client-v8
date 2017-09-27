@@ -63,7 +63,7 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.custom.AptoideViewPager;
 import cm.aptoide.pt.view.fragment.BasePagerToolbarFragment;
-import cm.aptoide.pt.view.share.ShareStoreHelper;
+import cm.aptoide.pt.share.ShareStoreHelper;
 import com.astuetz.PagerSlidingTabStrip;
 import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;

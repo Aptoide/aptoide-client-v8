@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.orientation;
+package cm.aptoide.pt.orientation;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;

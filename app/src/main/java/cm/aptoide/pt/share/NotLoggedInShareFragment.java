@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.share;
+package cm.aptoide.pt.share;
 
 import android.app.ProgressDialog;
 import android.graphics.ColorMatrix;

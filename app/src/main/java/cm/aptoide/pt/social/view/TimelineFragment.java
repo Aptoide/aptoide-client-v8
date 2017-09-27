@@ -76,7 +76,7 @@ import cm.aptoide.pt.comments.view.CommentDialogFragment;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.view.recycler.RecyclerViewPositionHelper;
-import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.view.spannable.SpannableFactory;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
