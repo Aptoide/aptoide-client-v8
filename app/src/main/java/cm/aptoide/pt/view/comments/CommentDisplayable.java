@@ -7,7 +7,7 @@ import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import cm.aptoide.pt.view.configuration.FragmentProvider;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.view.store.StoreFragment;
+import cm.aptoide.pt.store.view.StoreFragment;
 
 /**
  * Created by trinkes on 8/4/16.

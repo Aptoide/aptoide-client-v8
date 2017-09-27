@@ -13,7 +13,7 @@ import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.navigator.TabNavigation;
 import cm.aptoide.pt.view.navigator.TabNavigator;
-import cm.aptoide.pt.view.store.StoreFragment;
+import cm.aptoide.pt.store.view.StoreFragment;
 import rx.Observable;
 
 /**

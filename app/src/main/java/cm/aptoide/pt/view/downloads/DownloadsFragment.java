@@ -30,7 +30,7 @@ import cm.aptoide.pt.presenter.DownloadsView;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
-import cm.aptoide.pt.view.store.StoreTabNavigator;
+import cm.aptoide.pt.store.view.StoreTabNavigator;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;

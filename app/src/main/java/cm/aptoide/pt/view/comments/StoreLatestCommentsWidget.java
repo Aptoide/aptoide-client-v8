@@ -29,7 +29,7 @@ import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.widget.Widget;
-import cm.aptoide.pt.view.store.StoreLatestCommentsDisplayable;
+import cm.aptoide.pt.store.view.StoreLatestCommentsDisplayable;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import java.util.List;

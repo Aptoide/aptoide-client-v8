@@ -6,6 +6,8 @@ import android.view.View;
 import cm.aptoide.pt.account.view.user.CreateStoreDisplayable;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.store.view.GridStoreDisplayable;
+import cm.aptoide.pt.store.view.GridStoreWidget;
 import cm.aptoide.pt.timeline.view.displayable.FollowStoreDisplayable;
 import cm.aptoide.pt.timeline.view.displayable.FollowUserDisplayable;
 import cm.aptoide.pt.timeline.view.displayable.TimeLineStatsDisplayable;
@@ -84,25 +86,25 @@ import cm.aptoide.pt.view.reviews.ReviewsLanguageFilterWidget;
 import cm.aptoide.pt.view.reviews.ReviewsRatingDisplayable;
 import cm.aptoide.pt.view.reviews.ReviewsRatingWidget;
 import cm.aptoide.pt.view.reviews.RowReviewDisplayable;
-import cm.aptoide.pt.view.store.CreateStoreWidget;
-import cm.aptoide.pt.view.store.GridDisplayDisplayable;
-import cm.aptoide.pt.view.store.GridStoreMetaDisplayable;
-import cm.aptoide.pt.view.store.GridStoreMetaWidget;
-import cm.aptoide.pt.view.store.LoginWidget;
-import cm.aptoide.pt.view.store.StoreAddCommentDisplayable;
-import cm.aptoide.pt.view.store.StoreGridHeaderDisplayable;
-import cm.aptoide.pt.view.store.StoreGridHeaderWidget;
-import cm.aptoide.pt.view.store.StoreLatestCommentsDisplayable;
-import cm.aptoide.pt.view.store.featured.AppBrickDisplayable;
-import cm.aptoide.pt.view.store.featured.AppBrickListDisplayable;
-import cm.aptoide.pt.view.store.featured.AppBrickListWidget;
-import cm.aptoide.pt.view.store.featured.AppBrickWidget;
-import cm.aptoide.pt.view.store.home.AdultRowDisplayable;
-import cm.aptoide.pt.view.store.home.AdultRowWidget;
-import cm.aptoide.pt.view.store.my.MyStoreDisplayable;
-import cm.aptoide.pt.view.store.my.MyStoreWidget;
-import cm.aptoide.pt.view.store.recommended.RecommendedStoreDisplayable;
-import cm.aptoide.pt.view.store.recommended.RecommendedStoreWidget;
+import cm.aptoide.pt.store.view.CreateStoreWidget;
+import cm.aptoide.pt.store.view.GridDisplayDisplayable;
+import cm.aptoide.pt.store.view.GridStoreMetaDisplayable;
+import cm.aptoide.pt.store.view.GridStoreMetaWidget;
+import cm.aptoide.pt.store.view.LoginWidget;
+import cm.aptoide.pt.store.view.StoreAddCommentDisplayable;
+import cm.aptoide.pt.store.view.StoreGridHeaderDisplayable;
+import cm.aptoide.pt.store.view.StoreGridHeaderWidget;
+import cm.aptoide.pt.store.view.StoreLatestCommentsDisplayable;
+import cm.aptoide.pt.store.view.featured.AppBrickDisplayable;
+import cm.aptoide.pt.store.view.featured.AppBrickListDisplayable;
+import cm.aptoide.pt.store.view.featured.AppBrickListWidget;
+import cm.aptoide.pt.store.view.featured.AppBrickWidget;
+import cm.aptoide.pt.store.view.home.AdultRowDisplayable;
+import cm.aptoide.pt.store.view.home.AdultRowWidget;
+import cm.aptoide.pt.store.view.my.MyStoreDisplayable;
+import cm.aptoide.pt.store.view.my.MyStoreWidget;
+import cm.aptoide.pt.store.view.recommended.RecommendedStoreDisplayable;
+import cm.aptoide.pt.store.view.recommended.RecommendedStoreWidget;
 import cm.aptoide.pt.view.updates.UpdateDisplayable;
 import cm.aptoide.pt.view.updates.UpdateWidget;
 import cm.aptoide.pt.view.updates.UpdatesHeaderDisplayable;
@@ -177,8 +179,8 @@ public class DisplayableWidgetMapping {
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(FooterRowWidget.class, FooterRowDisplayable.class));
     displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(cm.aptoide.pt.view.store.GridStoreWidget.class,
-            cm.aptoide.pt.view.store.GridStoreDisplayable.class));
+        new DisplayableWidgetMapping(GridStoreWidget.class,
+            GridStoreDisplayable.class));
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(GridStoreMetaWidget.class, GridStoreMetaDisplayable.class));
     displayableWidgetMappings.add(

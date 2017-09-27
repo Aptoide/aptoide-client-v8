@@ -6,7 +6,7 @@ import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.notification.view.InboxFragment;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
-import cm.aptoide.pt.view.store.StoreFragment;
+import cm.aptoide.pt.store.view.StoreFragment;
 
 /**
  * Created by pedroribeiro on 16/05/17.

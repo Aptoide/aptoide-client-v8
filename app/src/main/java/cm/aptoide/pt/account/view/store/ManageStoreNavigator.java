@@ -1,7 +1,7 @@
 package cm.aptoide.pt.account.view.store;
 
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
-import cm.aptoide.pt.view.store.home.HomeFragment;
+import cm.aptoide.pt.store.view.home.HomeFragment;
 
 public class ManageStoreNavigator {
 

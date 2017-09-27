@@ -23,7 +23,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.view.DeepLinkManager;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
-import cm.aptoide.pt.view.store.home.HomeFragment;
+import cm.aptoide.pt.store.view.home.HomeFragment;
 import cm.aptoide.pt.view.wizard.WizardFragment;
 import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;

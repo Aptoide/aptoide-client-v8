@@ -33,7 +33,7 @@ import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.navigator.SimpleTabNavigation;
 import cm.aptoide.pt.view.navigator.TabNavigation;
 import cm.aptoide.pt.view.navigator.TabNavigator;
-import cm.aptoide.pt.view.store.StoreTabFragmentChooser;
+import cm.aptoide.pt.store.view.StoreTabFragmentChooser;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;

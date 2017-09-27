@@ -89,6 +89,7 @@ import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
+import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;

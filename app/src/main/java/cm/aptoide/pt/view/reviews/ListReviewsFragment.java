@@ -16,7 +16,7 @@ import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.DisplayableGroup;
-import cm.aptoide.pt.view.store.GetStoreEndlessFragment;
+import cm.aptoide.pt.store.view.GetStoreEndlessFragment;
 import java.util.ArrayList;
 import java.util.List;
 import rx.functions.Action1;

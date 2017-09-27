@@ -4,7 +4,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.pt.account.view.LoginSignUpCredentialsFragment;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.view.store.StoreFragment;
+import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.view.wizard.WizardFragment;
 import java.util.List;
 

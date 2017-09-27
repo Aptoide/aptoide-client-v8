@@ -18,7 +18,7 @@ import cm.aptoide.pt.view.navigator.ActivityNavigator;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.navigator.Result;
 import cm.aptoide.pt.view.share.NotLoggedInShareFragment;
-import cm.aptoide.pt.view.store.home.HomeFragment;
+import cm.aptoide.pt.store.view.home.HomeFragment;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
