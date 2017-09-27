@@ -64,7 +64,7 @@ public class TimelineCardFilter {
       return packageRepository.getPackageVersionCode(packageName)
           .onErrorResumeNext(err -> Single.just(null))
           .flatMapObservable(versionCode -> {
-            if (versionCode != null && versionCode == ((AppUpdate) timelineItem.getData()).getFile()
+            if (versionCode != null && versionCode >= ((AppUpdate) timelineItem.getData()).getFile()
                 .getVercode()) {
               return Observable.empty();
             }
