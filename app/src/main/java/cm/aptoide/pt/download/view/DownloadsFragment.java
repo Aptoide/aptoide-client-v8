@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.downloads;
+package cm.aptoide.pt.download.view;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

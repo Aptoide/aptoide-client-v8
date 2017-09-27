@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.downloads;
+package cm.aptoide.pt.download.view;
 
 import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
@@ -16,12 +16,12 @@ import cm.aptoide.pt.download.InstallEventConverter;
 import cm.aptoide.pt.store.view.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.store.view.StoreGridHeaderWidget;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.view.downloads.active.ActiveDownloadDisplayable;
-import cm.aptoide.pt.view.downloads.active.ActiveDownloadWidget;
-import cm.aptoide.pt.view.downloads.active.ActiveDownloadsHeaderDisplayable;
-import cm.aptoide.pt.view.downloads.active.ActiveDownloadsHeaderWidget;
-import cm.aptoide.pt.view.downloads.completed.CompletedDownloadDisplayable;
-import cm.aptoide.pt.view.downloads.completed.CompletedDownloadWidget;
+import cm.aptoide.pt.download.view.active.ActiveDownloadDisplayable;
+import cm.aptoide.pt.download.view.active.ActiveDownloadWidget;
+import cm.aptoide.pt.download.view.active.ActiveDownloadsHeaderDisplayable;
+import cm.aptoide.pt.download.view.active.ActiveDownloadsHeaderWidget;
+import cm.aptoide.pt.download.view.completed.CompletedDownloadDisplayable;
+import cm.aptoide.pt.download.view.completed.CompletedDownloadWidget;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import cm.aptoide.pt.store.view.StoreTabNavigator;

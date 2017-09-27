@@ -3,7 +3,7 @@
  * Modified on 02/09/2016.
  */
 
-package cm.aptoide.pt.view.downloads.scheduled;
+package cm.aptoide.pt.download.view.scheduled;
 
 import cm.aptoide.pt.Install;
 import cm.aptoide.pt.InstallManager;

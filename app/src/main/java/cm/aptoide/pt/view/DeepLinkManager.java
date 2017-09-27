@@ -28,7 +28,7 @@ import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.timeline.view.navigation.AppsTimelineTabNavigation;
 import cm.aptoide.pt.app.view.AppViewFragment;
-import cm.aptoide.pt.view.downloads.scheduled.ScheduledDownloadsFragment;
+import cm.aptoide.pt.download.view.scheduled.ScheduledDownloadsFragment;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.navigator.SimpleTabNavigation;
 import cm.aptoide.pt.view.navigator.TabNavigation;

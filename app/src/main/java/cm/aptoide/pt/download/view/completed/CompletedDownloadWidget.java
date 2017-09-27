@@ -3,7 +3,7 @@
  * Modified on 27/07/2016.
  */
 
-package cm.aptoide.pt.view.downloads.completed;
+package cm.aptoide.pt.download.view.completed;
 
 import android.content.res.ColorStateList;
 import android.os.Build;

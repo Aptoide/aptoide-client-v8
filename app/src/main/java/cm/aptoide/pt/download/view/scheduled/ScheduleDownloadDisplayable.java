@@ -3,7 +3,7 @@
  * Modified on 14/06/2016.
  */
 
-package cm.aptoide.pt.view.downloads.scheduled;
+package cm.aptoide.pt.download.view.scheduled;
 
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;

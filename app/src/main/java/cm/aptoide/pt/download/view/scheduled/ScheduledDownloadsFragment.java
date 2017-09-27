@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.downloads.scheduled;
+package cm.aptoide.pt.download.view.scheduled;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

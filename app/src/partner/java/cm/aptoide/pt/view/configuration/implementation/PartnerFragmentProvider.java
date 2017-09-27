@@ -24,7 +24,7 @@ import cm.aptoide.pt.view.app.OtherVersionsFragment;
 import cm.aptoide.pt.view.comments.CommentListFragment;
 import cm.aptoide.pt.view.configuration.FragmentProvider;
 import cm.aptoide.pt.view.downloads.DownloadsFragment;
-import cm.aptoide.pt.view.downloads.scheduled.ScheduledDownloadsFragment;
+import cm.aptoide.pt.download.view.scheduled.ScheduledDownloadsFragment;
 import cm.aptoide.pt.view.feedback.SendFeedbackFragment;
 import cm.aptoide.pt.view.fragment.DescriptionFragment;
 import cm.aptoide.pt.view.reviews.LatestReviewsFragment;

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.downloads.active;
+package cm.aptoide.pt.download.view.active;
 
 import android.content.Context;
 import android.text.TextUtils;

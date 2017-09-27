@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.downloads.completed;
+package cm.aptoide.pt.download.view.completed;
 
 import android.content.Context;
 import android.view.View;

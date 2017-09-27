@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.downloads.active;
+package cm.aptoide.pt.download.view.active;
 
 import cm.aptoide.pt.Install;
 import cm.aptoide.pt.InstallManager;

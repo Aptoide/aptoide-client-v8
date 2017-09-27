@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.downloads.active;
+package cm.aptoide.pt.download.view.active;
 
 import android.view.View;
 import android.widget.Button;
