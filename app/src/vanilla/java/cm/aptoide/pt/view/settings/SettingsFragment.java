@@ -42,7 +42,7 @@ import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.filemanager.FileManager;
+import cm.aptoide.pt.file.FileManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.AdultContent;

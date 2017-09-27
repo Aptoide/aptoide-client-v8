@@ -1,6 +1,5 @@
-package cm.aptoide.pt.filemananger;
+package cm.aptoide.pt.file;
 
-import cm.aptoide.pt.filemanager.CacheHelper;
 import cm.aptoide.pt.utils.FileUtils;
 import java.io.File;
 import java.util.LinkedList;
@@ -8,7 +7,7 @@ import java.util.List;
 import org.junit.Test;
 import rx.observers.TestSubscriber;
 
-import static cm.aptoide.pt.filemanager.CacheHelper.VALUE_TO_CONVERT_MB_TO_BYTES;
+import static cm.aptoide.pt.file.CacheHelper.VALUE_TO_CONVERT_MB_TO_BYTES;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

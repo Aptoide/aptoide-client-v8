@@ -3,7 +3,7 @@
  * Modified on 02/09/2016.
  */
 
-package cm.aptoide.pt.filemanager;
+package cm.aptoide.pt.file;
 
 import android.text.format.DateUtils;
 import cm.aptoide.pt.downloadmanager.CacheManager;

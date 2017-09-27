@@ -1,4 +1,4 @@
-package cm.aptoide.pt.filemanager;
+package cm.aptoide.pt.file;
 
 import cm.aptoide.pt.dataprovider.cache.L2Cache;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
