@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -49,6 +50,7 @@ import retrofit2.Converter;
 import rx.Observable;
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.subscriptions.Subscriptions;
 
 /**
  * Created by neuro on 01-06-2016.
@@ -217,32 +219,35 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
     allStoresResultAdapter.setAdsLoaded();
   }
 
-  @Override
-  public void showPopup(boolean hasVersions, String appName, String appIcon, String packageName,
-      String storeName, String theme, View anchor) {
-    final Context context = getContext();
-    final PopupMenu popupMenu = new PopupMenu(context, anchor);
+  @Override public Observable<Integer> showPopup(boolean hasVersions, View anchor) {
+    return Observable.create(subscriber -> {
+      final Context context = getContext();
+      final PopupMenu popupMenu = new PopupMenu(context, anchor);
 
-    MenuInflater inflater = popupMenu.getMenuInflater();
-    inflater.inflate(R.menu.menu_search_item, popupMenu.getMenu());
+      MenuInflater inflater = popupMenu.getMenuInflater();
+      inflater.inflate(R.menu.menu_search_item, popupMenu.getMenu());
 
-    if (hasVersions) {
-      MenuItem menuItemVersions = popupMenu.getMenu()
-          .findItem(R.id.versions);
-      menuItemVersions.setVisible(true);
-    }
+      if (hasVersions) {
+        MenuItem menuItemVersions = popupMenu.getMenu()
+            .findItem(R.id.versions);
+        menuItemVersions.setVisible(true);
+      }
 
-    /*
-    RxPopupMenu.itemClicks(popupMenu)
-        .filter(menuItem -> menuItem.getItemId() == R.id.versions)
-        .subscribe(__ -> onOtherVersionsClickSubject.onNext(
-            new OtherVersionsData(appName, appIcon, packageName)));
+      popupMenu.setOnMenuItemClickListener(item -> {
+        subscriber.onNext(item.getItemId());
+        subscriber.onCompleted();
+        return true;
+      });
 
-    RxPopupMenu.itemClicks(popupMenu)
-        .filter(menuItem -> menuItem.getItemId() == R.id.go_to_store)
-        .subscribe(__ -> onOpenStoreClickSubject.onNext(new StoreData(storeName, theme)));
-    */
-    popupMenu.show();
+      popupMenu.setOnDismissListener(__ -> subscriber.onCompleted());
+
+      subscriber.add(Subscriptions.create(() -> {
+        popupMenu.setOnMenuItemClickListener(null);
+        popupMenu.dismiss();
+      }));
+
+      popupMenu.show();
+    });
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -358,7 +363,7 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
         new SearchNavigator(getFragmentNavigator(), getDefaultStore());
 
     final PublishRelay<SearchApp> onItemViewClickRelay = PublishRelay.create();
-    final PublishRelay<SearchApp> onOpenPopupMenuClickRelay = PublishRelay.create();
+    final PublishRelay<Pair<SearchApp, View>> onOpenPopupMenuClickRelay = PublishRelay.create();
     final PublishRelay<MinimalAd> onAdClickRelay = PublishRelay.create();
 
     final List<MinimalAd> searchResultAdsFollowedStores = new ArrayList<>();
@@ -370,7 +375,10 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
     followedStoresResultList.setAdapter(followedStoresResultAdapter);
     followedStoresResultList.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayout.VERTICAL, false));
-    followedStoresResultList.addItemDecoration(new DividerItemDecoration(getContext(), 4));
+
+    float padding = getResources().getDimension(R.dimen.padding_very_very_small);
+
+    followedStoresResultList.addItemDecoration(new DividerItemDecoration(getContext(), padding));
 
     final List<MinimalAd> searchResultAdsAllStores = new ArrayList<>();
     final List<SearchApp> searchResultAllStores = new ArrayList<>();
@@ -381,7 +389,7 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
     allStoresResultList.setAdapter(allStoresResultAdapter);
     allStoresResultList.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayout.VERTICAL, false));
-    allStoresResultList.addItemDecoration(new DividerItemDecoration(getContext(), 4));
+    allStoresResultList.addItemDecoration(new DividerItemDecoration(getContext(), padding));
 
     return new SearchPresenter(this, searchAnalytics, navigator, crashReport, mainThreadScheduler,
         searchManager, onAdClickRelay, onItemViewClickRelay, onOpenPopupMenuClickRelay);

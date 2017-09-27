@@ -43,8 +43,7 @@ public interface SearchView extends View {
 
   void setAllStoresAdsEmpty();
 
-  void showPopup(boolean hasVersions, String appName, String appIcon, String packageName,
-      String storeName, String theme, android.view.View anchor);
+  Observable<Integer> showPopup(boolean hasVersions, android.view.View anchor);
 
   String getDefaultTheme();
 

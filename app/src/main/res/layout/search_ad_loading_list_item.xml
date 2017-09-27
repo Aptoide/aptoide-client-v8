@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="?attr/appviewRatingCardBarckground"
@@ -9,7 +10,10 @@
     android:padding="@dimen/padding_very_small"
     >
 
-  <include layout="@layout/partial_view_progress_bar"
+  <include
+      layout="@layout/partial_view_progress_bar"
+      android:visibility="visible"
+      tools:visibility="visible"
       />
 
 </FrameLayout>

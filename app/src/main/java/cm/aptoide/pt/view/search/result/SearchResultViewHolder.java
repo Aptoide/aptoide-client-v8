@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
+import android.util.Pair;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -24,7 +25,7 @@ public class SearchResultViewHolder extends ItemView<SearchApp> {
 
   public static final int LAYOUT = R.layout.search_app_row;
   private final PublishRelay<SearchApp> onItemViewClick;
-  private final PublishRelay<SearchApp> onOpenPopupMenuClick;
+  private final PublishRelay<Pair<SearchApp, android.view.View>> onOpenPopupMenuClick;
 
   private TextView nameTextView;
   private ImageView iconImageView;
@@ -38,7 +39,7 @@ public class SearchResultViewHolder extends ItemView<SearchApp> {
   private SearchApp searchApp;
 
   public SearchResultViewHolder(View itemView, PublishRelay<SearchApp> onItemViewClick,
-      PublishRelay<SearchApp> onOpenPopupMenuClick) {
+      PublishRelay<Pair<SearchApp, android.view.View>> onOpenPopupMenuClick) {
     super(itemView);
     this.onItemViewClick = onItemViewClick;
     this.onOpenPopupMenuClick = onOpenPopupMenuClick;
@@ -152,7 +153,7 @@ public class SearchResultViewHolder extends ItemView<SearchApp> {
         .subscribe(data -> onItemViewClick.call(data));
 
     RxView.clicks(overflowImageView)
-        .map(__ -> searchApp)
+        .map(__ -> new Pair<>(searchApp, (View) overflowImageView))
         .subscribe(data -> onOpenPopupMenuClick.call(data));
   }
 }

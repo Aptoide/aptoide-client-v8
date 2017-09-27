@@ -1,6 +1,8 @@
 package cm.aptoide.pt.view.search;
 
 import android.os.Bundle;
+import android.util.Pair;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.DataList;
@@ -25,12 +27,12 @@ public class SearchPresenter implements Presenter {
   private final SearchManager searchManager;
   private final PublishRelay<MinimalAd> onAdClickRelay;
   private final PublishRelay<SearchApp> onItemViewClickRelay;
-  private final PublishRelay<SearchApp> onOpenPopupMenuClickRelay;
+  private final PublishRelay<Pair<SearchApp, android.view.View>> onOpenPopupMenuClickRelay;
 
   public SearchPresenter(SearchView view, SearchAnalytics analytics, SearchNavigator navigator,
       CrashReport crashReport, Scheduler viewScheduler, SearchManager searchManager,
       PublishRelay<MinimalAd> onAdClickRelay, PublishRelay<SearchApp> onItemViewClickRelay,
-      PublishRelay<SearchApp> onOpenPopupMenuClickRelay) {
+      PublishRelay<Pair<SearchApp, android.view.View>> onOpenPopupMenuClickRelay) {
     this.view = view;
     this.analytics = analytics;
     this.navigator = navigator;
@@ -51,8 +53,6 @@ public class SearchPresenter implements Presenter {
     handleClickToOpenAppViewFromAdd();
     handleClickToOpenPopupMenu();
     handleClickOnNoResultsImage();
-    //handleOpenStore();
-    //handleOtherVersionsClick();
   }
 
   @Override public void saveState(Bundle state) {
@@ -108,7 +108,8 @@ public class SearchPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .flatMap(__ -> onOpenPopupMenuClickRelay)
-        .doOnNext(data -> {
+        .flatMap(pair -> {
+          final SearchApp data = pair.first;
           final boolean hasVersions = data.hasVersions();
           final String appName = data.getName();
           final String appIcon = data.getIcon();
@@ -122,7 +123,14 @@ public class SearchPresenter implements Presenter {
               .getAppearance()
               .getTheme();
 
-          view.showPopup(hasVersions, appName, appIcon, packageName, storeName, theme);
+          return view.showPopup(hasVersions, pair.second)
+              .doOnNext(optionId -> {
+                if (optionId == R.id.versions) {
+                  navigator.goToOtherVersions(appName, appIcon, packageName);
+                } else if (optionId == R.id.go_to_store) {
+                  navigator.goToStoreFragment(storeName, theme);
+                }
+              });
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -141,41 +149,6 @@ public class SearchPresenter implements Presenter {
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
   }
-
-  /*
-  private void handleOpenStore() {
-    view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .observeOn(viewScheduler)
-        .flatMap(__ -> onOpenStoreClick)
-        .doOnNext(data -> {
-          //FIXME which theme should be used?
-          // final String theme = view.getDefaultTheme()
-          final String theme = data.getStore()
-              .getAppearance()
-              .getTheme();
-          navigator.goToStoreFragment(data.getStore()
-              .getName(), theme);
-        })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> crashReport.log(err));
-  }
-  */
-
-  /*
-  private void handleOtherVersionsClick() {
-    view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .observeOn(viewScheduler)
-        .flatMap(__ -> onOtherVersionsClick)
-        .doOnNext(data -> navigator.goToOtherVersions(data.getName(), data.getIcon(),
-            data.getPackageName()))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> crashReport.log(err));
-  }
-  */
 
   private void openAppView(SearchApp searchApp) {
     final String packageName = searchApp.getPackageName();

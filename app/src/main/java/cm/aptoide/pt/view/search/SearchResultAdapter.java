@@ -1,6 +1,7 @@
 package cm.aptoide.pt.view.search;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +18,13 @@ public class SearchResultAdapter extends RecyclerView.Adapter<ItemView> {
 
   private final PublishRelay<MinimalAd> onAdClickRelay;
   private final PublishRelay<SearchApp> onItemViewClick;
-  private final PublishRelay<SearchApp> onOpenPopupMenuClick;
+  private final PublishRelay<Pair<SearchApp, android.view.View>> onOpenPopupMenuClick;
   private final List<MinimalAd> searchResultAds;
   private final List<SearchApp> searchResult;
   private boolean adsLoaded = false;
 
   public SearchResultAdapter(PublishRelay<MinimalAd> onAdClickRelay,
-      PublishRelay<SearchApp> onItemViewClick, PublishRelay<SearchApp> onOpenPopupMenuClick,
+      PublishRelay<SearchApp> onItemViewClick, PublishRelay<Pair<SearchApp, View>> onOpenPopupMenuClick,
       List<MinimalAd> searchResultAds, List<SearchApp> searchResult) {
     this.onAdClickRelay = onAdClickRelay;
     this.onItemViewClick = onItemViewClick;
