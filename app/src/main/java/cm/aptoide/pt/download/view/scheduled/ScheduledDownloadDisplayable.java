@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.download.view.scheduled;
 
-import cm.aptoide.pt.Install;
-import cm.aptoide.pt.InstallManager;
+import cm.aptoide.pt.install.Install;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.realm.Scheduled;

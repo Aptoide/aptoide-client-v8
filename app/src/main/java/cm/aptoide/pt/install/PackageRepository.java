@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 27/07/2016.
  */
 
-package cm.aptoide.pt;
+package cm.aptoide.pt.install;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;

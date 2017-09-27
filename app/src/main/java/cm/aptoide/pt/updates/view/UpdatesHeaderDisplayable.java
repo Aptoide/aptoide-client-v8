@@ -1,6 +1,6 @@
 package cm.aptoide.pt.updates.view;
 
-import cm.aptoide.pt.InstallManager;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.database.realm.Download;

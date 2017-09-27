@@ -1,7 +1,7 @@
 package cm.aptoide.pt.download.view.active;
 
 import android.content.Context;
-import cm.aptoide.pt.InstallManager;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import lombok.Getter;

@@ -7,8 +7,8 @@ package cm.aptoide.pt.updates.view;
 
 import android.content.Context;
 import android.content.res.Resources;
-import cm.aptoide.pt.Install;
-import cm.aptoide.pt.InstallManager;
+import cm.aptoide.pt.install.Install;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;

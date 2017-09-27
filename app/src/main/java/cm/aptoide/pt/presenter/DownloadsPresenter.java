@@ -1,8 +1,8 @@
 package cm.aptoide.pt.presenter;
 
 import android.os.Bundle;
-import cm.aptoide.pt.Install;
-import cm.aptoide.pt.InstallManager;
+import cm.aptoide.pt.install.Install;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import java.util.List;
 import rx.Observable;

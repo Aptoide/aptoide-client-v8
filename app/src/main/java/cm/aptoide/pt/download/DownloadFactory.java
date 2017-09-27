@@ -7,7 +7,7 @@ package cm.aptoide.pt.download;
 
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import cm.aptoide.pt.AutoUpdate;
+import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Rollback;

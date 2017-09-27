@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 04/10/2016.
  */
 
-package cm.aptoide.pt;
+package cm.aptoide.pt.install;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -16,6 +16,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
+import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.DeepLinkIntentReceiver;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -26,10 +29,6 @@ import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.Result;
 import cm.aptoide.pt.download.DownloadEvent;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.install.InstallFabricEvents;
-import cm.aptoide.pt.install.InstalledRepository;
-import cm.aptoide.pt.install.Installer;
-import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import com.crashlytics.android.answers.Answers;

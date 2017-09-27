@@ -1,4 +1,4 @@
-package cm.aptoide.pt;
+package cm.aptoide.pt.install;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -10,6 +10,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
 import android.view.ContextThemeWrapper;
+import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.download.DownloadFactory;

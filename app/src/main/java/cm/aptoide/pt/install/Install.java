@@ -1,4 +1,4 @@
-package cm.aptoide.pt;
+package cm.aptoide.pt.install;
 
 import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;

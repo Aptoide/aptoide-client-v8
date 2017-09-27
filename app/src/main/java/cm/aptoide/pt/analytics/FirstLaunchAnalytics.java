@@ -1,4 +1,4 @@
-package cm.aptoide.pt;
+package cm.aptoide.pt.analytics;
 
 import android.os.Bundle;
 import cm.aptoide.pt.analytics.Analytics;

@@ -7,7 +7,7 @@ package cm.aptoide.pt.billing;
 
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import cm.aptoide.pt.PackageRepository;
+import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.billing.exception.ProductNotFoundException;
 import cm.aptoide.pt.billing.exception.PurchaseNotFoundException;
 import cm.aptoide.pt.billing.product.InAppProduct;

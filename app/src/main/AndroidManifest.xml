@@ -340,7 +340,7 @@
     </receiver>
     <receiver android:name=".install.RootInstallNotificationEventReceiver"/>
 
-    <service android:name=".InstallService"/>
+    <service android:name=".install.InstallService"/>
 
     <service android:name=".install.InstalledIntentService"/>
 

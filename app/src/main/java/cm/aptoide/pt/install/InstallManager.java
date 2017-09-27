@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 04/10/2016.
  */
 
-package cm.aptoide.pt;
+package cm.aptoide.pt.install;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,8 +15,6 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadNotFoundException;
-import cm.aptoide.pt.install.InstalledRepository;
-import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.install.installer.DefaultInstaller;
 import cm.aptoide.pt.install.installer.InstallationState;
 import cm.aptoide.pt.install.installer.RollbackInstaller;
