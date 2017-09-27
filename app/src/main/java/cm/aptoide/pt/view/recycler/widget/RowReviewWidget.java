@@ -11,7 +11,7 @@ import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.view.reviews.RowReviewDisplayable;
+import cm.aptoide.pt.reviews.RowReviewDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Locale;
 

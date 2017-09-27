@@ -42,7 +42,7 @@ import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.recycler.LinearLayoutManagerWithSmoothScroller;
 import cm.aptoide.pt.view.recycler.widget.Widget;
-import cm.aptoide.pt.view.reviews.LanguageFilterHelper;
+import cm.aptoide.pt.reviews.LanguageFilterHelper;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.target.Target;
 import com.jakewharton.rxbinding.view.RxView;

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.reviews;
+package cm.aptoide.pt.reviews;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

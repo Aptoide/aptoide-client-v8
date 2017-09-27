@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.reviews;
+package cm.aptoide.pt.reviews;
 
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.FullReview;

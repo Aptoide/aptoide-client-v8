@@ -16,7 +16,7 @@ import cm.aptoide.pt.comments.view.RateAndReviewCommentDisplayable;
 import cm.aptoide.pt.view.configuration.FragmentProvider;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.view.reviews.RateAndReviewsFragment;
+import cm.aptoide.pt.reviews.RateAndReviewsFragment;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.LinkedList;
 import java.util.List;

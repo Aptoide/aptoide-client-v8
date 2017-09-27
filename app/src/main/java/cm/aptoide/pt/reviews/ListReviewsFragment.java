@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.reviews;
+package cm.aptoide.pt.reviews;
 
 import android.content.Context;
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.reviews;
+package cm.aptoide.pt.reviews;
 
 import android.support.annotation.NonNull;
 import android.view.View;

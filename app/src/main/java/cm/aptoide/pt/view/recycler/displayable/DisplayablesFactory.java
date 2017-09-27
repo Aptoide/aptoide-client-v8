@@ -44,7 +44,7 @@ import cm.aptoide.pt.account.view.LoginDisplayable;
 import cm.aptoide.pt.app.view.GridAppDisplayable;
 import cm.aptoide.pt.app.view.GridAppListDisplayable;
 import cm.aptoide.pt.app.view.OfficialAppDisplayable;
-import cm.aptoide.pt.view.reviews.RowReviewDisplayable;
+import cm.aptoide.pt.reviews.RowReviewDisplayable;
 import cm.aptoide.pt.store.view.GridDisplayDisplayable;
 import cm.aptoide.pt.store.view.GridStoreDisplayable;
 import cm.aptoide.pt.store.view.GridStoreMetaDisplayable;
