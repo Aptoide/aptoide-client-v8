@@ -122,19 +122,20 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
         .observeOn(Schedulers.io())
         .switchMap(viewResumed -> {
           if (isExternalOpen()) {
-            return postManager.getSuggestionAppsOnStart(postUrlProvider.getUrlToShare())
-                .toObservable();
+            return Observable.merge(postManager.getSuggestionApps(postUrlProvider.getUrlToShare())
+                .toObservable(), postManager.getSuggestionApps()
+                .toObservable())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnTerminate(() -> view.hideRelatedAppsLoading());
           } else {
             return postManager.getSuggestionApps()
-                .toObservable();
+                .toObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnTerminate(() -> view.hideRelatedAppsLoading());
           }
         })
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(relatedApps -> {
-          view.addRelatedApps(relatedApps);
-          view.hideRelatedAppsLoading();
-        })
-        .doOnError(throwable -> view.hideRelatedAppsLoading())
+        .doOnNext(relatedApps -> view.addRelatedApps(relatedApps))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
