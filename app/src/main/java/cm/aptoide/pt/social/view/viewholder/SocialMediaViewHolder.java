@@ -176,6 +176,13 @@ public class SocialMediaViewHolder extends SocialPostViewHolder<SocialMedia> {
             CardTouchEvent.Type.LIKES_PREVIEW, position)));
     this.numberComments.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, position, CardTouchEvent.Type.COMMENT_NUMBER)));
+    new CardTouchEvent(card, position, CardTouchEvent.Type.COMMENT_NUMBER);
+    this.numberLikes.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new LikesPreviewCardTouchEvent(card, card.getLikesNumber(),
+            CardTouchEvent.Type.LIKES_PREVIEW, position)));
+    this.numberLikesOneLike.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new LikesPreviewCardTouchEvent(card, card.getLikesNumber(),
+            CardTouchEvent.Type.LIKES_PREVIEW, position)));
   }
 
   public Spannable getStyledTitle(Context context, String title) {

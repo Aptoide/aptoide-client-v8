@@ -18,6 +18,7 @@ import cm.aptoide.pt.dataprovider.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.LikesCardTouchEvent;
+import cm.aptoide.pt.social.data.LikesPreviewCardTouchEvent;
 import cm.aptoide.pt.social.data.RatedRecommendation;
 import cm.aptoide.pt.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.social.data.SocialHeaderCardTouchEvent;
@@ -159,8 +160,16 @@ public class SocialPostRecommendationViewHolder extends SocialPostViewHolder<Rat
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, position, CardTouchEvent.Type.SHARE)));
     this.likePreviewContainer.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new LikesCardTouchEvent(card, card.getLikesNumber(), CardTouchEvent.Type.LIKES_PREVIEW,
-            getPosition())));
+        new LikesPreviewCardTouchEvent(card, card.getLikesNumber(),
+            CardTouchEvent.Type.LIKES_PREVIEW, position)));
+    this.numberLikes.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new LikesPreviewCardTouchEvent(card, card.getLikesNumber(),
+            CardTouchEvent.Type.LIKES_PREVIEW, position)));
+    this.numberLikesOneLike.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new LikesPreviewCardTouchEvent(card, card.getLikesNumber(),
+            CardTouchEvent.Type.LIKES_PREVIEW, position)));
+    new LikesCardTouchEvent(card, card.getLikesNumber(), CardTouchEvent.Type.LIKES_PREVIEW,
+        position);
     this.numberComments.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, position, CardTouchEvent.Type.COMMENT_NUMBER)));
   }

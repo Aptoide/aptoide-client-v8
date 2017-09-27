@@ -169,7 +169,13 @@ public class SocialRecommendationViewHolder extends SocialPostViewHolder<RatedRe
         new CardTouchEvent(card, position, CardTouchEvent.Type.SHARE)));
     this.likePreviewContainer.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new LikesPreviewCardTouchEvent(card, card.getLikesNumber(),
-            CardTouchEvent.Type.LIKES_PREVIEW, getPosition())));
+            CardTouchEvent.Type.LIKES_PREVIEW, position)));
+    this.numberLikes.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new LikesPreviewCardTouchEvent(card, card.getLikesNumber(),
+            CardTouchEvent.Type.LIKES_PREVIEW, position)));
+    this.numberLikesOneLike.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new LikesPreviewCardTouchEvent(card, card.getLikesNumber(),
+            CardTouchEvent.Type.LIKES_PREVIEW, position)));
     this.numberComments.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, position, CardTouchEvent.Type.COMMENT_NUMBER)));
   }

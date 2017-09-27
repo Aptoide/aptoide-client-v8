@@ -185,6 +185,12 @@ public class SocialStoreViewHolder extends SocialPostViewHolder<SocialStore> {
     this.likePreviewContainer.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new LikesPreviewCardTouchEvent(card, card.getLikesNumber(),
             CardTouchEvent.Type.LIKES_PREVIEW, getPosition())));
+    this.numberLikes.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new LikesPreviewCardTouchEvent(card, card.getLikesNumber(),
+            CardTouchEvent.Type.LIKES_PREVIEW, position)));
+    this.numberLikesOneLike.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new LikesPreviewCardTouchEvent(card, card.getLikesNumber(),
+            CardTouchEvent.Type.LIKES_PREVIEW, position)));
     this.numberComments.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, position, CardTouchEvent.Type.COMMENT_NUMBER)));
   }
