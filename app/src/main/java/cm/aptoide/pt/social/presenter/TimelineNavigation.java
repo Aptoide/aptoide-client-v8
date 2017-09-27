@@ -1,6 +1,6 @@
 package cm.aptoide.pt.social.presenter;
 
-import cm.aptoide.pt.view.app.AppViewFragment;
+import cm.aptoide.pt.app.view.AppViewFragment;
 
 /**
  * Created by jdandrade on 30/06/2017.

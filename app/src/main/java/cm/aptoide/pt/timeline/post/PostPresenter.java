@@ -14,7 +14,7 @@ import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.timeline.post.exceptions.PostException;
 import cm.aptoide.pt.timeline.view.navigation.AppsTimelineTabNavigation;
 import cm.aptoide.pt.view.BackButton;
-import cm.aptoide.pt.view.app.AppViewFragment;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.navigator.TabNavigator;
 import java.util.Collections;

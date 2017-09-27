@@ -7,7 +7,7 @@ import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.presenter.InviteFriendsContract;
 import cm.aptoide.pt.search.model.SearchAdResult;
-import cm.aptoide.pt.view.app.AppViewFragment;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.view.downloads.scheduled.ScheduledDownloadsFragment;
 import cm.aptoide.pt.store.view.StoreFragment;
 import java.util.List;

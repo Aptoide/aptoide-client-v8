@@ -3,8 +3,8 @@ package cm.aptoide.pt.view.recycler.widget;
 import android.support.annotation.NonNull;
 import android.view.View;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
-import cm.aptoide.pt.view.app.GridAppWidget;
-import cm.aptoide.pt.view.app.displayable.AppViewSuggestedAppDisplayable;
+import cm.aptoide.pt.app.view.GridAppWidget;
+import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAppDisplayable;
 import rx.functions.Action1;
 
 /**

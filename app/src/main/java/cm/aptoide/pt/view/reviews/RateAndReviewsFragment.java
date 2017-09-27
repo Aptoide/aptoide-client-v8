@@ -33,7 +33,7 @@ import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.view.ThemeUtils;
-import cm.aptoide.pt.view.app.AppViewFragment;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.view.comments.CommentDisplayable;
 import cm.aptoide.pt.view.comments.CommentsAdapter;
 import cm.aptoide.pt.view.comments.CommentsReadMoreDisplayable;

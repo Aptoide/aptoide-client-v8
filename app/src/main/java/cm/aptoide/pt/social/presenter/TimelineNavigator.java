@@ -9,7 +9,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.notification.view.InboxFragment;
 import cm.aptoide.pt.timeline.post.PostFragment;
 import cm.aptoide.pt.timeline.view.navigation.AppsTimelineTabNavigation;
-import cm.aptoide.pt.view.app.AppViewFragment;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.navigator.TabNavigation;
 import cm.aptoide.pt.view.navigator.TabNavigator;
