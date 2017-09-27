@@ -2,6 +2,7 @@ package cm.aptoide.pt.search;
 
 import android.content.SharedPreferences;
 import cm.aptoide.pt.ads.AdsRepository;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.search.ListSearchApps;
@@ -9,7 +10,6 @@ import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
-import cm.aptoide.pt.logger.Logger;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -27,12 +27,13 @@ public class SearchManager {
   private final HashMapNotNull<String, List<String>> subscribedStoresAuthMap;
   private final List<Long> subscribedStoresIds;
   private final AdsRepository adsRepository;
+  private final CrashReport crashReport;
 
   public SearchManager(SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory,
       HashMapNotNull<String, List<String>> subscribedStoresAuthMap, List<Long> subscribedStoresIds,
-      AdsRepository adsRepository) {
+      AdsRepository adsRepository, CrashReport crashReport) {
     this.sharedPreferences = sharedPreferences;
     this.tokenInvalidator = tokenInvalidator;
     this.bodyInterceptor = bodyInterceptor;
@@ -41,32 +42,34 @@ public class SearchManager {
     this.subscribedStoresAuthMap = subscribedStoresAuthMap;
     this.subscribedStoresIds = subscribedStoresIds;
     this.adsRepository = adsRepository;
+    this.crashReport = crashReport;
   }
 
   public Observable<MinimalAd> getAdsForQuery(String query) {
     return adsRepository.getAdsFromSearch(query)
         .onErrorReturn(throwable -> {
-          Logger.e(TAG, throwable);
+          crashReport.log(throwable);
           return null;
         });
   }
 
-  public Observable<ListSearchApps> searchInNonFollowedStores(String query,
-      boolean onlyTrustedApps) {
-    return ListSearchAppsRequest.of(query, false, onlyTrustedApps, subscribedStoresIds,
+  public Observable<ListSearchApps> searchInNonFollowedStores(String query, boolean onlyTrustedApps,
+      int offset) {
+    return ListSearchAppsRequest.of(query, offset, false, onlyTrustedApps, subscribedStoresIds,
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
-        .observe();
+        .observe(true);
   }
 
-  public Observable<ListSearchApps> searchInFollowedStores(String query, boolean onlyTrustedApps) {
-    return ListSearchAppsRequest.of(query, true, onlyTrustedApps, subscribedStoresIds,
+  public Observable<ListSearchApps> searchInFollowedStores(String query, boolean onlyTrustedApps,
+      int offset) {
+    return ListSearchAppsRequest.of(query, offset, true, onlyTrustedApps, subscribedStoresIds,
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
-        .observe();
+        .observe(true);
   }
 
-  public Observable<ListSearchApps> searchInStore(String query, String storeName) {
-    return ListSearchAppsRequest.of(query, storeName, subscribedStoresAuthMap, bodyInterceptor,
-        httpClient, converterFactory, tokenInvalidator, sharedPreferences)
-        .observe();
+  public Observable<ListSearchApps> searchInStore(String query, String storeName, int offset) {
+    return ListSearchAppsRequest.of(query, storeName, offset, subscribedStoresAuthMap,
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
+        .observe(true);
   }
 }

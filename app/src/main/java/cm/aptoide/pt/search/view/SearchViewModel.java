@@ -7,28 +7,31 @@ import org.parceler.Parcel;
   private String storeName;
   private boolean onlyTrustedApps;
   private boolean allStoresSelected;
+  private int offset;
+  private boolean reachedBottom;
 
-  SearchViewModel() { }
+  SearchViewModel() {
+  }
 
-  SearchViewModel(String currentQuery, String storeName, boolean onlyTrustedApps) {
+  private SearchViewModel(String currentQuery, String storeName, boolean onlyTrustedApps,
+      boolean allStoresSelected, boolean reachedBottom) {
     this.currentQuery = currentQuery;
     this.storeName = storeName;
     this.onlyTrustedApps = onlyTrustedApps;
-    this.allStoresSelected = true;
+    this.allStoresSelected = allStoresSelected;
+    this.reachedBottom = reachedBottom;
+  }
+
+  SearchViewModel(String currentQuery, String storeName, boolean onlyTrustedApps) {
+    this(currentQuery, storeName, onlyTrustedApps, true, false);
   }
 
   SearchViewModel(String currentQuery, boolean onlyTrustedApps) {
-    this.currentQuery = currentQuery;
-    this.storeName = null;
-    this.onlyTrustedApps = onlyTrustedApps;
-    this.allStoresSelected = true;
+    this(currentQuery, null, onlyTrustedApps, true, false);
   }
 
   SearchViewModel(String currentQuery, String storeName) {
-    this.currentQuery = currentQuery;
-    this.storeName = storeName;
-    this.onlyTrustedApps = true;
-    this.allStoresSelected = true;
+    this(currentQuery, storeName, true, true, false);
   }
 
   @Override public String getCurrentQuery() {
@@ -47,7 +50,22 @@ import org.parceler.Parcel;
     return allStoresSelected;
   }
 
+  @Override public int getOffset() {
+    return offset;
+  }
+
+  @Override public boolean hasReachedBottom() {
+    return reachedBottom;
+  }
+
   public void setAllStoresSelected(boolean allStoresSelected) {
     this.allStoresSelected = allStoresSelected;
+  }
+
+  public void incrementOffset(int offset) {
+    this.offset += offset;
+    if (offset == 0) {
+      reachedBottom = true;
+    }
   }
 }

@@ -51,6 +51,8 @@ public interface SearchView extends View {
 
   Observable<Void> allStoresResultReachedBottom();
 
+  void incrementResultCount(int itemCount);
+
   interface Model {
 
     String getCurrentQuery();
@@ -60,5 +62,9 @@ public interface SearchView extends View {
     boolean isOnlyTrustedApps();
 
     boolean isAllStoresSelected();
+
+    int getOffset();
+
+    boolean hasReachedBottom();
   }
 }

@@ -27,7 +27,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
     super(body, baseHost, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
-  public static ListSearchAppsRequest of(String query, String storeName,
+  public static ListSearchAppsRequest of(String query, String storeName, int offset,
       HashMapNotNull<String, List<String>> subscribedStoresAuthMap,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
@@ -42,16 +42,16 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
     if (subscribedStoresAuthMap != null && subscribedStoresAuthMap.containsKey(storeName)) {
       HashMapNotNull<String, List<String>> storesAuthMap = new HashMapNotNull<>();
       storesAuthMap.put(storeName, subscribedStoresAuthMap.get(storeName));
-      body =
-          new Body(Endless.DEFAULT_LIMIT, query, storesAuthMap, stores, false, sharedPreferences);
+      body = new Body(Endless.DEFAULT_LIMIT, offset, query, storesAuthMap, stores, false,
+          sharedPreferences);
     } else {
-      body = new Body(Endless.DEFAULT_LIMIT, query, stores, false, sharedPreferences);
+      body = new Body(Endless.DEFAULT_LIMIT, offset, query, stores, false, sharedPreferences);
     }
     return new ListSearchAppsRequest(body, getHost(sharedPreferences), bodyInterceptor, httpClient,
         converterFactory, tokenInvalidator);
   }
 
-  public static ListSearchAppsRequest of(String query, boolean addSubscribedStores,
+  public static ListSearchAppsRequest of(String query, int offset, boolean addSubscribedStores,
       List<Long> subscribedStoresIds, HashMapNotNull<String, List<String>> subscribedStoresAuthMap,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
@@ -59,18 +59,18 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 
     if (addSubscribedStores) {
       return new ListSearchAppsRequest(
-          new Body(Endless.DEFAULT_LIMIT, query, subscribedStoresIds, subscribedStoresAuthMap,
-              false, sharedPreferences), getHost(sharedPreferences), bodyInterceptor, httpClient,
-          converterFactory, tokenInvalidator);
+          new Body(Endless.DEFAULT_LIMIT, offset, query, subscribedStoresIds,
+              subscribedStoresAuthMap, false, sharedPreferences), getHost(sharedPreferences),
+          bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
     } else {
       return new ListSearchAppsRequest(
-          new Body(Endless.DEFAULT_LIMIT, query, false, sharedPreferences),
+          new Body(Endless.DEFAULT_LIMIT, offset, query, false, sharedPreferences),
           getHost(sharedPreferences), bodyInterceptor, httpClient, converterFactory,
           tokenInvalidator);
     }
   }
 
-  public static ListSearchAppsRequest of(String query, boolean addSubscribedStores,
+  public static ListSearchAppsRequest of(String query, int offset, boolean addSubscribedStores,
       boolean trustedOnly, List<Long> subscribedStoresIds,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
@@ -78,12 +78,12 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 
     if (addSubscribedStores) {
       return new ListSearchAppsRequest(
-          new Body(Endless.DEFAULT_LIMIT, query, subscribedStoresIds, null, trustedOnly,
+          new Body(Endless.DEFAULT_LIMIT, offset, query, subscribedStoresIds, null, trustedOnly,
               sharedPreferences), getHost(sharedPreferences), bodyInterceptor, httpClient,
           converterFactory, tokenInvalidator);
     } else {
       return new ListSearchAppsRequest(
-          new Body(Endless.DEFAULT_LIMIT, query, trustedOnly, sharedPreferences),
+          new Body(Endless.DEFAULT_LIMIT, offset, query, trustedOnly, sharedPreferences),
           getHost(sharedPreferences), bodyInterceptor, httpClient, converterFactory,
           tokenInvalidator);
     }
@@ -104,39 +104,45 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
     private HashMapNotNull<String, List<String>> storesAuthMap;
     private Boolean trusted;
 
-    public Body(Integer limit, String query, List<Long> storeIds,
+    public Body(Integer limit, int offset, String query, List<Long> storeIds,
         HashMapNotNull<String, List<String>> storesAuthMap, Boolean trusted,
         SharedPreferences sharedPreferences) {
       super(sharedPreferences);
       this.limit = limit;
+      this.offset = offset;
       this.query = query;
       this.storeIds = storeIds;
       this.storesAuthMap = storesAuthMap;
       this.trusted = trusted;
     }
 
-    public Body(Integer limit, String query, List<String> storeNames, Boolean trusted,
+    public Body(Integer limit, int offset, String query, List<String> storeNames, Boolean trusted,
         SharedPreferences sharedPreferences) {
       super(sharedPreferences);
       this.limit = limit;
+      this.offset = offset;
       this.query = query;
       this.storeNames = storeNames;
       this.trusted = trusted;
     }
 
-    public Body(Integer limit, String query, HashMapNotNull<String, List<String>> storesAuthMap,
-        List<String> storeNames, Boolean trusted, SharedPreferences sharedPreferences) {
+    public Body(Integer limit, int offset, String query,
+        HashMapNotNull<String, List<String>> storesAuthMap, List<String> storeNames,
+        Boolean trusted, SharedPreferences sharedPreferences) {
       super(sharedPreferences);
       this.limit = limit;
+      this.offset = offset;
       this.query = query;
       this.storesAuthMap = storesAuthMap;
       this.storeNames = storeNames;
       this.trusted = trusted;
     }
 
-    public Body(Integer limit, String query, Boolean trusted, SharedPreferences sharedPreferences) {
+    public Body(Integer limit, int offset, String query, Boolean trusted,
+        SharedPreferences sharedPreferences) {
       super(sharedPreferences);
       this.limit = limit;
+      this.offset = offset;
       this.query = query;
       this.trusted = trusted;
     }

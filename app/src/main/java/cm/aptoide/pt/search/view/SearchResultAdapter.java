@@ -66,9 +66,8 @@ public class SearchResultAdapter extends RecyclerView.Adapter<ItemView> {
 
   @Override public int getItemViewType(int position) {
     final int adsCount = searchResultAds.size();
-    final int appsCount = searchResult.size();
 
-    if (shouldShowLoadingItem(position, adsCount, appsCount)) {
+    if (shouldShowLoadingItem(position, adsCount)) {
       return SearchLoadingViewHolder.LAYOUT;
     }
 
@@ -83,14 +82,14 @@ public class SearchResultAdapter extends RecyclerView.Adapter<ItemView> {
     return searchResultAds.size() + searchResult.size();
   }
 
-  private boolean shouldShowLoadingItem(int position, int adsCount, int appsCount) {
+  private boolean shouldShowLoadingItem(int position, int adsCount) {
     return (position == 0 && adsCount == 0 && !adsLoaded);
   }
 
   private Object getItem(int position) {
     final int adsCount = searchResultAds.size();
 
-    if (position == 0 && adsCount == 0 && !adsLoaded) {
+    if (shouldShowLoadingItem(position, adsCount)) {
       return null;
     }
 

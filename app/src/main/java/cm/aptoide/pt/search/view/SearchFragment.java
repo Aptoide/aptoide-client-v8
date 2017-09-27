@@ -309,6 +309,10 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
         .map(event -> null);
   }
 
+  @Override public void incrementResultCount(int itemCount) {
+    viewModel.incrementOffset(itemCount);
+  }
+
   private void setHighlightedButtons(boolean allStoresSelected) {
     if (allStoresSelected) {
       followedStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
@@ -438,11 +442,13 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
     final AdsRepository adsRepository =
         ((AptoideApplication) getActivity().getApplication()).getAdsRepository();
 
+    final CrashReport crashReport = CrashReport.getInstance();
+
     final SearchManager searchManager =
         new SearchManager(sharedPreferences, tokenInvalidator, bodyInterceptor, httpClient,
-            converterFactory, subscribedStoresAuthMap, subscribedStoresIds, adsRepository);
+            converterFactory, subscribedStoresAuthMap, subscribedStoresIds, adsRepository,
+            crashReport);
 
-    final CrashReport crashReport = CrashReport.getInstance();
     final Scheduler mainThreadScheduler = AndroidSchedulers.mainThread();
     final SearchNavigator navigator =
         new SearchNavigator(getFragmentNavigator(), getDefaultStore());
