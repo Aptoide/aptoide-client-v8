@@ -43,7 +43,7 @@ public class SpotAndShareWaitingToReceivePresenter implements Presenter {
                     permissionService))
                 .doOnError(throwable -> view.navigateBack());
           } else {
-            return Observable.empty();
+            return Observable.just(null);
           }
         })
         .doOnNext(__ -> joinGroup())

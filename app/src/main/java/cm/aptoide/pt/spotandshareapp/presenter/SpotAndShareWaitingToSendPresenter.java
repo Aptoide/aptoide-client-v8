@@ -54,7 +54,7 @@ public class SpotAndShareWaitingToSendPresenter implements Presenter {
                     permissionService))
                 .doOnError(throwable -> view.navigateBack());
           } else {
-            return Observable.empty();
+            return Observable.just(null);
           }
         })
         .flatMapSingle(lifecycleEvent -> {
