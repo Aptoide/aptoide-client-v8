@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.comments;
+package cm.aptoide.pt.comments.view;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.comments;
+package cm.aptoide.pt.comments.view;
 
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;

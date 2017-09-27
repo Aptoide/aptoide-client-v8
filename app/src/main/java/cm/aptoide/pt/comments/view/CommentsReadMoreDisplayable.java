@@ -3,7 +3,7 @@
  * Modified on 09/08/2016.
  */
 
-package cm.aptoide.pt.view.comments;
+package cm.aptoide.pt.comments.view;
 
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.comments.CommentAdder;

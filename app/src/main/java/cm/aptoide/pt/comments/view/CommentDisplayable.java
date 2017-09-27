@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.comments;
+package cm.aptoide.pt.comments.view;
 
 import android.support.design.widget.Snackbar;
 import android.view.View;

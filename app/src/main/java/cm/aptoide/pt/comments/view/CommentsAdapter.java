@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.comments;
+package cm.aptoide.pt.comments.view;
 
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;

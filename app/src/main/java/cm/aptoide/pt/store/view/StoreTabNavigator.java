@@ -5,11 +5,11 @@
 
 package cm.aptoide.pt.store.view;
 
+import cm.aptoide.pt.comments.view.CommentListFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
-import cm.aptoide.pt.view.comments.CommentListFragment;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 
 public class StoreTabNavigator {

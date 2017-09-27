@@ -21,7 +21,7 @@ import cm.aptoide.pt.view.addressbook.ThankYouConnectingFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.ListAppsFragment;
 import cm.aptoide.pt.app.view.OtherVersionsFragment;
-import cm.aptoide.pt.view.comments.CommentListFragment;
+import cm.aptoide.pt.comments.view.CommentListFragment;
 import cm.aptoide.pt.view.configuration.FragmentProvider;
 import cm.aptoide.pt.view.downloads.DownloadsFragment;
 import cm.aptoide.pt.view.downloads.scheduled.ScheduledDownloadsFragment;
