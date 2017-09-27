@@ -181,7 +181,7 @@
             />
 
         <TextView
-            android:id="@+id/game_card_question1_answerLeft"
+            android:id="@+id/left_answer"
             style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
@@ -217,7 +217,7 @@
             <!--/>-->
 
         <TextView
-            android:id="@+id/game_card_question1_answerRight"
+            android:id="@+id/right_answer"
             style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
@@ -236,7 +236,7 @@
             android:src="@mipmap/ic_launcher"
             android:layout_marginTop="40dp"
             android:layout_marginLeft="25dp"
-            android:alpha="0.6"
+            android:alpha="0.0"
             android:rotation="-35"
             android:text="Facebook"
             android:visibility="invisible"
@@ -250,7 +250,7 @@
             android:layout_marginTop="40dp"
             android:layout_marginRight="25dp"
             android:layout_alignParentRight="true"
-            android:alpha="0.6"
+            android:alpha="0.0"
             android:rotation="35"
             android:text="Clash Royal"
             android:visibility="invisible"

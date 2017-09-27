@@ -165,7 +165,7 @@
 
 
         <ImageView
-            android:id="@+id/game_card_question2_leftA_icon"
+            android:id="@+id/left_answer"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentLeft="true"
@@ -187,7 +187,7 @@
 
 
         <ImageView
-            android:id="@+id/game_card_question2_rightA_icon"
+            android:id="@+id/right_answer"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentRight="true"
@@ -215,7 +215,7 @@
             android:src="@mipmap/ic_launcher"
             android:layout_marginTop="60dp"
             android:layout_marginLeft="25dp"
-            android:alpha="0.6"
+            android:alpha="0.0"
             android:rotation="-35"
             android:visibility="invisible"
             />
@@ -228,7 +228,7 @@
             android:layout_marginTop="60dp"
             android:layout_marginRight="25dp"
             android:layout_alignParentRight="true"
-            android:alpha="0.6"
+            android:alpha="0.0"
             android:rotation="35"
             android:visibility="invisible"
             />

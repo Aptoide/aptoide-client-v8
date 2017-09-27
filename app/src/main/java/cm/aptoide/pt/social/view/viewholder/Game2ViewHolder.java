@@ -62,8 +62,8 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
 
     this.score = (TextView) itemView.findViewById(R.id.displayable_social_timeline_game_card_score);
     leaderboard = (TextView) itemView.findViewById(R.id.displayable_social_timeline_game_card_leaderboard);
-    answerLeft = (ImageView) itemView.findViewById(R.id.game_card_question2_leftA_icon);
-    answerRight = (ImageView) itemView.findViewById(R.id.game_card_question2_rightA_icon);
+    answerLeft = (ImageView) itemView.findViewById(R.id.left_answer);
+    answerRight = (ImageView) itemView.findViewById(R.id.right_answer);
 
     this.headerIcon =
         (ImageView) itemView.findViewById(R.id.displayable_social_timeline_game_card_icon);
