@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.permission;
+package cm.aptoide.pt.permission;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;

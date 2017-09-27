@@ -3,7 +3,7 @@
  * Modified on 21/07/2016.
  */
 
-package cm.aptoide.pt.view.permission;
+package cm.aptoide.pt.permission;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;

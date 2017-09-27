@@ -15,7 +15,7 @@ import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.view.BillingNavigator;
 import cm.aptoide.pt.billing.view.PaymentActivity;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
-import cm.aptoide.pt.view.permission.PermissionServiceFragment;
+import cm.aptoide.pt.permission.PermissionServiceFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;

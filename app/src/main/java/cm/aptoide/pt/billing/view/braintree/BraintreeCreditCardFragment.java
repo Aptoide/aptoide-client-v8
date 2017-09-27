@@ -21,7 +21,7 @@ import cm.aptoide.pt.billing.view.BillingNavigator;
 import cm.aptoide.pt.billing.view.PaymentActivity;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
-import cm.aptoide.pt.view.permission.PermissionServiceFragment;
+import cm.aptoide.pt.permission.PermissionServiceFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import com.braintreepayments.api.models.CardBuilder;
 import com.braintreepayments.api.models.Configuration;

@@ -14,7 +14,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.app.view.displayable.AppViewDeveloperDisplayable;
-import cm.aptoide.pt.view.permission.DialogPermissions;
+import cm.aptoide.pt.permission.DialogPermissions;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 
 /**

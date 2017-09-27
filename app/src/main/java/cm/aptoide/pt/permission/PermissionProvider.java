@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.permission;
+package cm.aptoide.pt.permission;
 
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;

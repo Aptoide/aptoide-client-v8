@@ -7,6 +7,7 @@ package cm.aptoide.pt.view;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.analytics.view.AnalyticsActivity;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;

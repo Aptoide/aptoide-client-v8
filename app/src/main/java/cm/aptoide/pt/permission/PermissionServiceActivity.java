@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 18/01/2017.
  */
 
-package cm.aptoide.pt.view.permission;
+package cm.aptoide.pt.permission;
 
 import android.Manifest;
 import android.annotation.TargetApi;
