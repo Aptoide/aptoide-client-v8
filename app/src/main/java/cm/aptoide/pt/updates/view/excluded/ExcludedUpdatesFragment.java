@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.updates.excluded;
+package cm.aptoide.pt.updates.view.excluded;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

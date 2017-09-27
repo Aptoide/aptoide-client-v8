@@ -3,7 +3,7 @@
  * Modified on 13/07/2016.
  */
 
-package cm.aptoide.pt.view.updates.excluded;
+package cm.aptoide.pt.updates.view.excluded;
 
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.database.realm.Update;

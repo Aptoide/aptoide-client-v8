@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.updates;
+package cm.aptoide.pt.updates.view;
 
 import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.R;

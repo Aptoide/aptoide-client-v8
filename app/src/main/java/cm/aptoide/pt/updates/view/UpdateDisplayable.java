@@ -3,7 +3,7 @@
  * Modified on 27/07/2016.
  */
 
-package cm.aptoide.pt.view.updates;
+package cm.aptoide.pt.updates.view;
 
 import android.content.Context;
 import android.content.res.Resources;

@@ -20,7 +20,7 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.File;
 import cm.aptoide.pt.install.AppAction;
 import cm.aptoide.pt.social.data.AppUpdate;
 import cm.aptoide.pt.utils.IdUtils;
-import cm.aptoide.pt.view.updates.UpdateDisplayable;
+import cm.aptoide.pt.updates.view.UpdateDisplayable;
 import io.realm.RealmList;
 
 /**

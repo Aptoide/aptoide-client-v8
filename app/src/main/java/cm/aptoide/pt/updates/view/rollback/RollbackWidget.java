@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.updates.rollback;
+package cm.aptoide.pt.updates.view.rollback;
 
 import android.support.v4.app.FragmentActivity;
 import android.view.View;

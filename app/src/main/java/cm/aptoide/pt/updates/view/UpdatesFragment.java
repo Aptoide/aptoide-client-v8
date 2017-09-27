@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.updates;
+package cm.aptoide.pt.updates.view;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -39,7 +39,7 @@ import cm.aptoide.pt.view.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.store.view.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.store.view.StoreTabNavigator;
-import cm.aptoide.pt.view.updates.installed.InstalledAppDisplayable;
+import cm.aptoide.pt.updates.view.installed.InstalledAppDisplayable;
 import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.LinkedList;

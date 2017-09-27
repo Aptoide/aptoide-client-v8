@@ -3,7 +3,7 @@
  * Modified by Neurophobic Animal on 25/05/2016.
  */
 
-package cm.aptoide.pt.view.updates.installed;
+package cm.aptoide.pt.updates.view.installed;
 
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.database.realm.Installed;

@@ -3,7 +3,7 @@
  * Modified on 28/07/2016.
  */
 
-package cm.aptoide.pt.view.updates.rollback;
+package cm.aptoide.pt.updates.view.rollback;
 
 import android.content.Context;
 import cm.aptoide.pt.AptoideApplication;

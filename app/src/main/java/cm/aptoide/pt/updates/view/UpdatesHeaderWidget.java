@@ -3,7 +3,7 @@
  * Modified on 02/09/2016.
  */
 
-package cm.aptoide.pt.view.updates;
+package cm.aptoide.pt.updates.view;
 
 import android.view.View;
 import android.widget.Button;

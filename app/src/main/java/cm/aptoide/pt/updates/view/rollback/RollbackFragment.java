@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.updates.rollback;
+package cm.aptoide.pt.updates.view.rollback;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

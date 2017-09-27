@@ -43,8 +43,8 @@ import cm.aptoide.pt.store.view.my.MyStoresFragment;
 import cm.aptoide.pt.store.view.my.MyStoresSubscribedFragment;
 import cm.aptoide.pt.store.view.recommended.RecommendedStoresFragment;
 import cm.aptoide.pt.view.updates.UpdatesFragment;
-import cm.aptoide.pt.view.updates.excluded.ExcludedUpdatesFragment;
-import cm.aptoide.pt.view.updates.rollback.RollbackFragment;
+import cm.aptoide.pt.updates.view.excluded.ExcludedUpdatesFragment;
+import cm.aptoide.pt.updates.view.rollback.RollbackFragment;
 import java.util.List;
 
 public class PartnerFragmentProvider implements FragmentProvider {
