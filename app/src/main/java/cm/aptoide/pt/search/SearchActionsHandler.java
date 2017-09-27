@@ -12,8 +12,6 @@ public class SearchActionsHandler
     implements SearchView.OnQueryTextListener, SearchView.OnSuggestionListener,
     View.OnFocusChangeListener, View.OnClickListener {
 
-  private static final String TAG = SearchActionsHandler.class.getName();
-
   private final static String SEARCH_WEB_SOCKET = "9000";
 
   private final SearchAppsWebSocket searchAppsWebSocket;

@@ -100,7 +100,7 @@ public class SearchPresenter implements Presenter {
         .delay(4, TimeUnit.SECONDS)
         .observeOn(viewScheduler)
         .doOnNext(data -> {
-          
+
           view.setFollowedStoresAdsEmpty();
           view.setAllStoresAdsEmpty();
         })
@@ -237,7 +237,7 @@ public class SearchPresenter implements Presenter {
         .observeOn(viewScheduler)
         .doOnNext(data -> view.changeFollowedStoresButtonVisibility(hasResults(data)))
         .doOnNext(data -> view.addFollowedStoresResult(data.getDataList()
-            .getList())), searchManager.searchInNonSubscribedStores(query, onlyTrustedApps)
+            .getList())), searchManager.searchInNonFollowedStores(query, onlyTrustedApps)
         .observeOn(viewScheduler)
         .doOnNext(data -> view.changeAllStoresButtonVisibility(hasResults(data)))
         .doOnNext(data -> view.addAllStoresResult(data.getDataList()

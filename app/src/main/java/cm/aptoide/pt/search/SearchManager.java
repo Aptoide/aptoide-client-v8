@@ -33,7 +33,7 @@ public class SearchManager {
     this.subscribedStoresIds = subscribedStoresIds;
   }
 
-  public Observable<ListSearchApps> searchInNonSubscribedStores(String query,
+  public Observable<ListSearchApps> searchInNonFollowedStores(String query,
       boolean onlyTrustedApps) {
     return ListSearchAppsRequest.of(query, false, onlyTrustedApps, subscribedStoresIds,
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
