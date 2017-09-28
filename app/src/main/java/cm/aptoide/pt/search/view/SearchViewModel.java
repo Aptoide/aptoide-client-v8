@@ -11,6 +11,7 @@ import org.parceler.Parcel;
   private int followedStoresOffset = 0;
   private boolean reachedBottomAllStores = false;
   private boolean reachedBottomFollowedStores = false;
+  private boolean loadedAds = false;
 
   SearchViewModel() {
   }
@@ -83,5 +84,13 @@ import org.parceler.Parcel;
     if (offset == 0) {
       reachedBottomAllStores = true;
     }
+  }
+
+  @Override public boolean hasLoadedAds() {
+    return loadedAds;
+  }
+
+  @Override public void setHasLoadedAds() {
+    loadedAds = true;
   }
 }

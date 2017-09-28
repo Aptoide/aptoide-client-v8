@@ -47,8 +47,8 @@ public class SearchPresenter implements Presenter {
   }
 
   @Override public void present() {
-    firstDataLoad();
-    loadAds();
+    firstSearchDataLoad();
+    firstAdsDataLoad();
     handleClickFollowedStoresSearchButton();
     handleClickEverywhereSearchButton();
     handleClickToOpenAppViewFromItem();
@@ -123,22 +123,23 @@ public class SearchPresenter implements Presenter {
         }, err -> crashReport.log(err));
   }
 
-  private void loadAds() {
+  private void firstAdsDataLoad() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .observeOn(viewScheduler)
-        .flatMap(__ -> searchManager.getAdsForQuery(view.getViewModel()
-            .getCurrentQuery()))
-        .observeOn(viewScheduler)
-        .doOnNext(ad -> {
-          if (ad == null) {
-            view.setFollowedStoresAdsEmpty();
-            view.setAllStoresAdsEmpty();
-          } else {
-            view.setAllStoresAdsResult(ad);
-            view.setFollowedStoresAdsResult(ad);
-          }
-        })
+        .map(__ -> view.getViewModel())
+        .filter(viewModel -> !viewModel.hasLoadedAds())
+        .flatMap(viewModel -> searchManager.getAdsForQuery(viewModel.getCurrentQuery())
+            .doOnNext(__ -> viewModel.setHasLoadedAds())
+            .observeOn(viewScheduler)
+            .doOnNext(ad -> {
+              if (ad == null) {
+                view.setFollowedStoresAdsEmpty();
+                view.setAllStoresAdsEmpty();
+              } else {
+                view.setAllStoresAdsResult(ad);
+                view.setFollowedStoresAdsResult(ad);
+              }
+            }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -303,7 +304,7 @@ public class SearchPresenter implements Presenter {
             .getList()));
   }
 
-  private void firstDataLoad() {
+  private void firstSearchDataLoad() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .map(__ -> view.getViewModel())

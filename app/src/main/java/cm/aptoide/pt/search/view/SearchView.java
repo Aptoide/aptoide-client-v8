@@ -76,5 +76,9 @@ public interface SearchView extends View {
     void incrementOffsetAndCheckIfReachedBottomOfFollowedStores(int offset);
 
     void incrementOffsetAndCheckIfReachedBottomOfAllStores(int offset);
+
+    boolean hasLoadedAds();
+
+    void setHasLoadedAds();
   }
 }
