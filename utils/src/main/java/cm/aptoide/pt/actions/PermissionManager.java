@@ -32,4 +32,8 @@ public class PermissionManager {
   public Observable<Void> requestWriteSettingsPermission(PermissionService permissionService) {
     return Observable.create(new RequestWriteSettingsOnSubscribe(permissionService));
   }
+
+  public Observable<Void> requestLocationEnabling(PermissionService permissionService) {
+    return Observable.create(new RequestToEnableLocationOnSubscribe(permissionService));
+  }
 }
