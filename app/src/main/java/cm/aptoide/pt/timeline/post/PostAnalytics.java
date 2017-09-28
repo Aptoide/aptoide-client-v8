@@ -32,6 +32,8 @@ public class PostAnalytics {
   private static final String HAS_URL_PREVIEW = "has_url_preview";
   private static final String STATUS = "status";
   private static final String ERROR_MESSAGE = "error_message";
+  private static final String ERROR_TYPE = "error_type";
+  private static final String WEB_CODE = "web_code";
   private final Analytics analytics;
   private final AppEventsLogger facebook;
   private final BodyInterceptor<BaseBody> bodyInterceptor;
@@ -88,15 +90,8 @@ public class PostAnalytics {
       boolean hasSelectedApp, String packageName, boolean hasComment, boolean hasUrl, String url,
       boolean hasUrlPreview) {
     Bundle bundle = new Bundle();
-    bundle.putString(RELATED_APPS_AVAILABLE, String.valueOf(relatedAppsAvailable));
-    bundle.putString(HAS_SELECTED_APP, String.valueOf(hasSelectedApp));
-    bundle.putString(HAS_COMMENT, String.valueOf(hasComment));
-    bundle.putString(HAS_URL, String.valueOf(hasUrl));
-    bundle.putString(HAS_URL_PREVIEW, String.valueOf(hasUrlPreview));
-    bundle.putString(PACKAGE_NAME, packageName);
-    bundle.putString(URL, url);
-    bundle.putString(STATUS, "fail");
-    bundle.putString(ERROR_MESSAGE, "No text inserted");
+    decorateBundle(relatedAppsAvailable, hasSelectedApp, packageName, hasComment, hasUrl, url,
+        hasUrlPreview, bundle, "missing", "No text inserted");
     return bundle;
   }
 
@@ -111,15 +106,8 @@ public class PostAnalytics {
   private Bundle createPostCompleteNoSelectedAppEventBundle(boolean relatedAppsAvailable,
       boolean hasComment, boolean hasUrl, String url, boolean hasUrlPreview) {
     Bundle bundle = new Bundle();
-    bundle.putString(RELATED_APPS_AVAILABLE, String.valueOf(relatedAppsAvailable));
-    bundle.putString(HAS_SELECTED_APP, String.valueOf(false));
-    bundle.putString(HAS_COMMENT, String.valueOf(hasComment));
-    bundle.putString(HAS_URL, String.valueOf(hasUrl));
-    bundle.putString(HAS_URL_PREVIEW, String.valueOf(hasUrlPreview));
-    bundle.putString(PACKAGE_NAME, "");
-    bundle.putString(URL, url);
-    bundle.putString(STATUS, "fail");
-    bundle.putString(ERROR_MESSAGE, "No app selected");
+    decorateBundle(relatedAppsAvailable, false, "", hasComment, hasUrl, url, hasUrlPreview, bundle,
+        "missing", "No app selected");
     return bundle;
   }
 
@@ -135,15 +123,8 @@ public class PostAnalytics {
   private Bundle createNoLoginEventBundle(boolean relatedAppsAvailable, boolean hasSelectedApp,
       String packageName, boolean hasComment, boolean hasUrl, String url, boolean hasUrlPreview) {
     Bundle bundle = new Bundle();
-    bundle.putString(RELATED_APPS_AVAILABLE, String.valueOf(relatedAppsAvailable));
-    bundle.putString(HAS_SELECTED_APP, String.valueOf(hasSelectedApp));
-    bundle.putString(HAS_COMMENT, String.valueOf(hasComment));
-    bundle.putString(HAS_URL, String.valueOf(hasUrl));
-    bundle.putString(HAS_URL_PREVIEW, String.valueOf(hasUrlPreview));
-    bundle.putString(PACKAGE_NAME, packageName);
-    bundle.putString(URL, url);
-    bundle.putString(STATUS, "fail");
-    bundle.putString(ERROR_MESSAGE, "Not logged in");
+    decorateBundle(relatedAppsAvailable, hasSelectedApp, packageName, hasComment, hasUrl, url,
+        hasUrlPreview, bundle, "missing", "Not logged in");
     return bundle;
   }
 
@@ -159,6 +140,14 @@ public class PostAnalytics {
   private Bundle createNoAppFoundEventBundle(boolean relatedAppsAvailable, boolean hasSelectedApp,
       String packageName, boolean hasComment, boolean hasUrl, String url, boolean hasUrlPreview) {
     Bundle bundle = new Bundle();
+    decorateBundle(relatedAppsAvailable, hasSelectedApp, packageName, hasComment, hasUrl, url,
+        hasUrlPreview, bundle, "missing", "App not found");
+    return bundle;
+  }
+
+  private void decorateBundle(boolean relatedAppsAvailable, boolean hasSelectedApp,
+      String packageName, boolean hasComment, boolean hasUrl, String url, boolean hasUrlPreview,
+      Bundle bundle, String status, String errorMessage) {
     bundle.putString(RELATED_APPS_AVAILABLE, String.valueOf(relatedAppsAvailable));
     bundle.putString(HAS_SELECTED_APP, String.valueOf(hasSelectedApp));
     bundle.putString(HAS_COMMENT, String.valueOf(hasComment));
@@ -166,33 +155,26 @@ public class PostAnalytics {
     bundle.putString(HAS_URL_PREVIEW, String.valueOf(hasUrlPreview));
     bundle.putString(PACKAGE_NAME, packageName);
     bundle.putString(URL, url);
-    bundle.putString(STATUS, "fail");
-    bundle.putString(ERROR_MESSAGE, "App not found");
-    return bundle;
+    bundle.putString(STATUS, status);
+    bundle.putString(ERROR_MESSAGE, errorMessage);
   }
 
   public void sendPostCompletedNetworkFailedEvent(boolean relatedAppsAvailable,
       boolean hasSelectedApp, String packageName, boolean hasComment, boolean hasUrl, String url,
-      boolean hasUrlPreview, boolean isExternal) {
+      boolean hasUrlPreview, String errorCode, boolean isExternal) {
     analytics.sendEvent(new FacebookEvent(facebook, POST_COMPLETE,
         createNetworkFailedEventBundle(relatedAppsAvailable, hasSelectedApp, packageName,
-            hasComment, hasUrl, url, hasUrlPreview)));
+            hasComment, hasUrl, url, hasUrlPreview, errorCode)));
     analytics.sendEvent(createAptoideEvent(POST, false, isExternal));
   }
 
   private Bundle createNetworkFailedEventBundle(boolean relatedAppsAvailable,
       boolean hasSelectedApp, String packageName, boolean hasComment, boolean hasUrl, String url,
-      boolean hasUrlPreview) {
+      boolean hasUrlPreview, String errorCode) {
     Bundle bundle = new Bundle();
-    bundle.putString(RELATED_APPS_AVAILABLE, String.valueOf(relatedAppsAvailable));
-    bundle.putString(HAS_SELECTED_APP, String.valueOf(hasSelectedApp));
-    bundle.putString(HAS_COMMENT, String.valueOf(hasComment));
-    bundle.putString(HAS_URL, String.valueOf(hasUrl));
-    bundle.putString(HAS_URL_PREVIEW, String.valueOf(hasUrlPreview));
-    bundle.putString(PACKAGE_NAME, packageName);
-    bundle.putString(URL, url);
-    bundle.putString(STATUS, "fail");
-    bundle.putString(ERROR_MESSAGE, "Network error");
+    decorateBundle(relatedAppsAvailable, hasSelectedApp, packageName, hasComment, hasUrl, url,
+        hasUrlPreview, bundle, "fail", "Network error");
+    bundle.putString(WEB_CODE, errorCode);
     return bundle;
   }
 
@@ -207,15 +189,27 @@ public class PostAnalytics {
   private Bundle createPostCompletedSuccessEventBundle(boolean relatedAppsAvailable,
       String packageName, boolean hasComment, boolean hasUrl, String url, boolean hasUrlPreview) {
     Bundle bundle = new Bundle();
-    bundle.putString(RELATED_APPS_AVAILABLE, String.valueOf(relatedAppsAvailable));
-    bundle.putString(HAS_SELECTED_APP, String.valueOf(true));
-    bundle.putString(HAS_COMMENT, String.valueOf(hasComment));
-    bundle.putString(HAS_URL, String.valueOf(hasUrl));
-    bundle.putString(HAS_URL_PREVIEW, String.valueOf(hasUrlPreview));
-    bundle.putString(PACKAGE_NAME, packageName);
-    bundle.putString(URL, url);
-    bundle.putString(STATUS, "success");
-    bundle.putString(ERROR_MESSAGE, "");
+    decorateBundle(relatedAppsAvailable, true, packageName, hasComment, hasUrl, url, hasUrlPreview,
+        bundle, "success", "");
+    return bundle;
+  }
+
+  public void sendPostFailedEvent(boolean relatedAppsAvailable, boolean hasSelectedApp,
+      String packageName, boolean hasComment, boolean hasUrl, String url, boolean hasUrlPreview,
+      String errorType) {
+    analytics.sendEvent(new FacebookEvent(facebook, POST_COMPLETE,
+        createPostFailEventBundle(relatedAppsAvailable, hasSelectedApp, packageName, hasComment,
+            hasUrl, url, hasUrlPreview, errorType)));
+  }
+
+  private Bundle createPostFailEventBundle(boolean relatedAppsAvailable, boolean hasSelectedApp,
+      String packageName, boolean hasComment, boolean hasUrl, String url, boolean hasUrlPreview,
+      String errorType) {
+    Bundle bundle = new Bundle();
+    bundle.putString(HAS_SELECTED_APP, String.valueOf(hasSelectedApp));
+    bundle.putString(ERROR_TYPE, errorType);
+    decorateBundle(relatedAppsAvailable, true, packageName, hasComment, hasUrl, url, hasUrlPreview,
+        bundle, "fail", "");
     return bundle;
   }
 

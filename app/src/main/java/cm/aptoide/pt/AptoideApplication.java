@@ -1322,7 +1322,9 @@ public abstract class AptoideApplication extends Application {
               getDefaultClient(), getDefaultSharedPreferences(), getTokenInvalidator(),
               new LinksHandlerFactory(this), getPackageRepository(),
               WebService.getDefaultConverter(), new TimelineResponseCardMapper(
-              () -> new TimelineAdsRepository(context, BehaviorRelay.create()), getMarketName()));
+              () -> new TimelineAdsRepository(context, BehaviorRelay.create()), getMarketName()),
+              RepositoryFactory.getUpdateRepository(context,
+                  ((AptoideApplication) context.getApplicationContext()).getDefaultSharedPreferences()));
     }
     return timelineRepositoryFactory.create(action);
   }

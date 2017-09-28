@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -122,19 +124,20 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
         .observeOn(Schedulers.io())
         .switchMap(viewResumed -> {
           if (isExternalOpen()) {
-            return postManager.getSuggestionAppsOnStart(postUrlProvider.getUrlToShare())
-                .toObservable();
+            return Observable.merge(postManager.getSuggestionApps(postUrlProvider.getUrlToShare())
+                .toObservable(), postManager.getSuggestionApps()
+                .toObservable())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnTerminate(() -> view.hideRelatedAppsLoading());
           } else {
             return postManager.getSuggestionApps()
-                .toObservable();
+                .toObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnTerminate(() -> view.hideRelatedAppsLoading());
           }
         })
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(relatedApps -> {
-          view.addRelatedApps(relatedApps);
-          view.hideRelatedAppsLoading();
-        })
-        .doOnError(throwable -> view.hideRelatedAppsLoading())
+        .doOnNext(relatedApps -> view.addRelatedApps(relatedApps))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -339,12 +342,32 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
               android.view.View.VISIBLE == view.getPreviewVisibility(), isExternalOpen());
           break;
       }
-    } else {
-      view.showGenericError();
+    } else if (throwable instanceof AptoideWsV7Exception) {
+      String errorCodes = parseErrorCode(((AptoideWsV7Exception) throwable).getBaseResponse()
+          .getErrors());
       analytics.sendPostCompletedNetworkFailedEvent(postManager.remoteRelatedAppsAvailable(),
           isSelected, packageName, hasComment, hasUrl, url == null ? "" : url,
-          android.view.View.VISIBLE == view.getPreviewVisibility(), isExternalOpen());
+          android.view.View.VISIBLE == view.getPreviewVisibility(), errorCodes, isExternalOpen());
+    } else {
+      view.showGenericError();
+      analytics.sendPostFailedEvent(postManager.remoteRelatedAppsAvailable(), isSelected,
+          packageName, hasComment, hasUrl, url == null ? "" : url,
+          android.view.View.VISIBLE == view.getPreviewVisibility(), throwable.getClass()
+              .getSimpleName());
     }
+  }
+
+  private String parseErrorCode(List<BaseV7Response.Error> errorList) {
+    StringBuilder errorCodes = new StringBuilder();
+    for (int i = 0; i < errorList.size(); i++) {
+      BaseV7Response.Error error = errorList.get(i);
+      errorCodes.append(error.getCode());
+      if (i == errorList.size() - 1) {
+        return errorCodes.toString();
+      }
+      errorCodes.append(',');
+    }
+    return errorCodes.toString();
   }
 
   @Override public boolean handle() {
