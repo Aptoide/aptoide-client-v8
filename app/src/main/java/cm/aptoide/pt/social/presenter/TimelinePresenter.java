@@ -750,6 +750,7 @@ public class TimelinePresenter implements Presenter {
                             () -> timelineAnalytics.sendLikeEvent(cardTouchEvent.getPosition(),
                                 true)));
                   } else {
+                    timelineAnalytics.sendLikeEvent(cardTouchEvent.getPosition(), false);
                     return Completable.complete();
                   }
                 })
