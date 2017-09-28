@@ -8,7 +8,6 @@ import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareWaitingToReceiveView;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -41,9 +40,10 @@ public class SpotAndShareWaitingToReceivePresenter implements Presenter {
             return permissionManager.requestLocationAndExternalStoragePermission(permissionService)
                 .flatMap(accessToLocation -> permissionManager.requestWriteSettingsPermission(
                     permissionService))
+                .flatMap(__1 -> permissionManager.requestLocationEnabling(permissionService))
                 .doOnError(throwable -> view.navigateBack());
           } else {
-            return Observable.just(null);
+            return permissionManager.requestLocationEnabling(permissionService);
           }
         })
         .doOnNext(__ -> joinGroup())

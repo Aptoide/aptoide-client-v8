@@ -52,9 +52,11 @@ public class SpotAndShareWaitingToSendPresenter implements Presenter {
             return permissionManager.requestLocationAndExternalStoragePermission(permissionService)
                 .flatMap(accessToLocation -> permissionManager.requestWriteSettingsPermission(
                     permissionService))
+                .flatMap(
+                    locationResult -> permissionManager.requestLocationEnabling(permissionService))
                 .doOnError(throwable -> view.navigateBack());
           } else {
-            return Observable.just(null);
+            return permissionManager.requestLocationEnabling(permissionService);
           }
         })
         .flatMapSingle(lifecycleEvent -> {
