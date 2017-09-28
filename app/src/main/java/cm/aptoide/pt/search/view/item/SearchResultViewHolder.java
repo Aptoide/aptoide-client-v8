@@ -16,12 +16,11 @@ import cm.aptoide.pt.dataprovider.model.v7.search.SearchApp;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.view.ItemView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Date;
 
-public class SearchResultViewHolder extends ItemView<SearchApp> {
+public class SearchResultViewHolder extends SearchResultItemView<SearchApp> {
 
   public static final int LAYOUT = R.layout.search_app_row;
   private final PublishRelay<SearchApp> onItemViewClick;

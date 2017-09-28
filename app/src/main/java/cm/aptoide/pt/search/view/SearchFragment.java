@@ -46,7 +46,6 @@ import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import org.parceler.Parcels;
 import retrofit2.Converter;
@@ -60,7 +59,7 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
   private static final int LAYOUT = R.layout.global_search_fragment;
   private static final String VIEW_MODEL = "view_model";
 
-  private static final int VISIBLE_THRESHOLD = 5;
+  private static final int VISIBLE_THRESHOLD = 4;
   private static final long ANIMATION_DURATION = 125L;
 
   private View noSearchLayout;
@@ -71,6 +70,7 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
   private LinearLayout buttonsLayout;
   private Button followedStoresButton;
   private Button allStoresButton;
+  private View loadingMoreProgress;
 
   private RecyclerViewPositionHelper followedStoresResultListPositionHelper;
   private RecyclerView followedStoresResultList;
@@ -199,25 +199,11 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
   }
 
   @Override public void showLoading() {
-    followedStoresResultList.setVisibility(View.GONE);
+    progressBar.setVisibility(View.VISIBLE);
   }
 
   @Override public void hideLoading() {
     progressBar.setVisibility(View.GONE);
-  }
-
-  @Override public void changeFollowedStoresButtonVisibility(boolean visible) {
-    followedStoresButton.setVisibility(visible ? View.VISIBLE : View.GONE);
-    if (visible) {
-      buttonsLayout.setVisibility(View.VISIBLE);
-    }
-  }
-
-  @Override public void changeAllStoresButtonVisibility(boolean visible) {
-    allStoresButton.setVisibility(visible ? View.VISIBLE : View.GONE);
-    if (visible) {
-      buttonsLayout.setVisibility(View.VISIBLE);
-    }
   }
 
   @Override public void addFollowedStoresResult(List<SearchApp> dataList) {
@@ -232,12 +218,12 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
     return viewModel;
   }
 
-  @Override public void addFollowedStoresAdsResult(List<MinimalAd> ads) {
-    followedStoresResultAdapter.addResultForAds(ads);
+  @Override public void setFollowedStoresAdsResult(MinimalAd ad) {
+    followedStoresResultAdapter.setResultForAd(ad);
   }
 
-  @Override public void addAllStoresAdsResult(List<MinimalAd> ads) {
-    allStoresResultAdapter.addResultForAds(ads);
+  @Override public void setAllStoresAdsResult(MinimalAd ad) {
+    allStoresResultAdapter.setResultForAd(ad);
   }
 
   @Override public void setFollowedStoresAdsEmpty() {
@@ -281,7 +267,6 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
 
   @Override public Observable<Void> followedStoresResultReachedBottom() {
     return RxRecyclerView.scrollEvents(followedStoresResultList)
-        .debounce(1, TimeUnit.SECONDS)
         .filter(event -> followedStoresResultListPositionHelper.getItemCount() > VISIBLE_THRESHOLD
             && followedStoresResultListPositionHelper != null
             && event.view()
@@ -296,7 +281,6 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
 
   @Override public Observable<Void> allStoresResultReachedBottom() {
     return RxRecyclerView.scrollEvents(allStoresResultList)
-        .debounce(1, TimeUnit.SECONDS)
         .filter(event -> allStoresResultListPositionHelper.getItemCount() > VISIBLE_THRESHOLD
             && allStoresResultListPositionHelper != null
             && event.view()
@@ -311,6 +295,25 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
 
   @Override public void incrementResultCount(int itemCount) {
     viewModel.incrementOffset(itemCount);
+  }
+
+  @Override public void showLoadingMore() {
+    int viewHeight = loadingMoreProgress.getHeight();
+    loadingMoreProgress.setTranslationY(viewHeight);
+    loadingMoreProgress.setVisibility(View.VISIBLE);
+    loadingMoreProgress.animate()
+        .translationYBy(-viewHeight)
+        .start();
+  }
+
+  @Override public void hideLoadingMore() {
+    int viewHeight = loadingMoreProgress.getHeight();
+    loadingMoreProgress.animate()
+        .translationYBy(viewHeight)
+        .withEndAction(() -> {
+          loadingMoreProgress.setVisibility(View.GONE);
+        })
+        .start();
   }
 
   private void setHighlightedButtons(boolean allStoresSelected) {
@@ -369,11 +372,6 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
     attachPresenter(createPresenter(), null);
   }
 
-  @Override public void onResume() {
-    super.onResume();
-    restoreSelectedTab();
-  }
-
   @Override protected boolean displayHomeUpAsEnabled() {
     return true;
   }
@@ -394,6 +392,12 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
     noResultsSearchButton = (ImageView) view.findViewById(R.id.ic_search_button);
     searchResultsLayout = view.findViewById(R.id.search_results_layout);
     progressBar = view.findViewById(R.id.progress_bar);
+    loadingMoreProgress = view.findViewById(R.id.load_more_progress);
+  }
+
+  @Override public void onResume() {
+    super.onResume();
+    restoreSelectedTab();
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -457,12 +461,11 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
     final PublishRelay<Pair<SearchApp, View>> onOpenPopupMenuClickRelay = PublishRelay.create();
     final PublishRelay<MinimalAd> onAdClickRelay = PublishRelay.create();
 
-    final List<MinimalAd> searchResultAdsFollowedStores = new ArrayList<>();
-    final List<SearchApp> searchResultFollowedStores = new ArrayList<>();
+    final List<Object> searchResultFollowedStores = new ArrayList<>();
 
     followedStoresResultAdapter =
         new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, onOpenPopupMenuClickRelay,
-            searchResultAdsFollowedStores, searchResultFollowedStores, crashReport);
+            searchResultFollowedStores, crashReport);
     followedStoresResultList.setAdapter(followedStoresResultAdapter);
     followedStoresResultList.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayout.VERTICAL, false));
@@ -473,12 +476,11 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
 
     followedStoresResultList.addItemDecoration(new DividerItemDecoration(getContext(), padding));
 
-    final List<MinimalAd> searchResultAdsAllStores = new ArrayList<>();
-    final List<SearchApp> searchResultAllStores = new ArrayList<>();
+    final List<Object> searchResultAllStores = new ArrayList<>();
 
     allStoresResultAdapter =
         new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, onOpenPopupMenuClickRelay,
-            searchResultAdsAllStores, searchResultAllStores, crashReport);
+            searchResultAllStores, crashReport);
     allStoresResultList.setAdapter(allStoresResultAdapter);
     allStoresResultList.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayout.VERTICAL, false));

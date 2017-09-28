@@ -44,8 +44,8 @@
         android:id="@+id/buttons_layout"
         android:layout_width="262dp"
         android:layout_height="29dp"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:background="@drawable/search_buttons_background"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
@@ -55,12 +55,11 @@
           android:id="@+id/subscribed"
           android:layout_width="128dp"
           android:layout_height="match_parent"
-          android:text="@string/followed_stores"
           android:background="@null"
+          android:text="@string/followed_stores"
           android:textColor="@color/silver_dark"
           android:textSize="12sp"
-          android:visibility="gone"
-          tools:visibility="visible"
+          android:visibility="visible"
           />
 
       <Button
@@ -68,11 +67,10 @@
           android:layout_width="128dp"
           android:layout_height="match_parent"
           android:background="@drawable/search_button_background"
-          android:textColor="@color/white"
           android:text="@string/all_stores"
+          android:textColor="@color/white"
           android:textSize="12sp"
-          android:visibility="gone"
-          tools:visibility="visible"
+          android:visibility="visible"
           />
 
     </LinearLayout>
@@ -80,7 +78,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/followed_stores_result_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/buttons_layout"
         android:visibility="invisible"
         />
@@ -88,10 +86,32 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/all_stores_result_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/buttons_layout"
         android:visibility="visible"
         />
+
+    <FrameLayout
+        android:id="@+id/load_more_progress"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/padding_very_small"
+        android:background="?attr/appviewRatingCardBarckground"
+        android:backgroundTint="@color/white"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_very_small"
+        android:visibility="gone"
+        tools:visibility="visible"
+        >
+
+      <include
+          layout="@layout/partial_view_progress_bar"
+          android:visibility="visible"
+          tools:visibility="visible"
+          />
+
+    </FrameLayout>
 
   </RelativeLayout>
 
@@ -104,10 +124,10 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:theme="?attr/toolbarTheme"
         android:elevation="4dp"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:theme="?attr/toolbarTheme"
         app:layout_scrollFlags="scroll|enterAlways"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         />
 
   </android.support.design.widget.AppBarLayout>

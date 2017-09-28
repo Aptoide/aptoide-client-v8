@@ -10,34 +10,32 @@ import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.search.SearchApp;
 import cm.aptoide.pt.search.view.item.SearchLoadingViewHolder;
 import cm.aptoide.pt.search.view.item.SearchResultAdViewHolder;
+import cm.aptoide.pt.search.view.item.SearchResultItemView;
 import cm.aptoide.pt.search.view.item.SearchResultViewHolder;
-import cm.aptoide.pt.view.ItemView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.List;
 
-public class SearchResultAdapter extends RecyclerView.Adapter<ItemView> {
+public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemView> {
 
   private final PublishRelay<MinimalAd> onAdClickRelay;
   private final PublishRelay<SearchApp> onItemViewClick;
   private final PublishRelay<Pair<SearchApp, android.view.View>> onOpenPopupMenuClick;
-  private final List<MinimalAd> searchResultAds;
-  private final List<SearchApp> searchResult;
-  private final CrashReport crashReport;
+  private final List<Object> searchResults;
   private boolean adsLoaded = false;
+  private CrashReport crashReport;
 
   public SearchResultAdapter(PublishRelay<MinimalAd> onAdClickRelay,
       PublishRelay<SearchApp> onItemViewClick,
-      PublishRelay<Pair<SearchApp, View>> onOpenPopupMenuClick, List<MinimalAd> searchResultAds,
-      List<SearchApp> searchResult, CrashReport crashReport) {
+      PublishRelay<Pair<SearchApp, View>> onOpenPopupMenuClick, List<Object> searchResults,
+      CrashReport crashReport) {
     this.onAdClickRelay = onAdClickRelay;
     this.onItemViewClick = onItemViewClick;
     this.onOpenPopupMenuClick = onOpenPopupMenuClick;
-    this.searchResultAds = searchResultAds;
-    this.searchResult = searchResult;
+    this.searchResults = searchResults;
     this.crashReport = crashReport;
   }
 
-  @Override public ItemView onCreateViewHolder(ViewGroup parent, int viewType) {
+  @Override public SearchResultItemView onCreateViewHolder(ViewGroup parent, int viewType) {
     View view = LayoutInflater.from(parent.getContext())
         .inflate(viewType, parent, false);
 
@@ -56,7 +54,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<ItemView> {
     }
   }
 
-  @Override public void onBindViewHolder(ItemView holder, int position) {
+  @Override public void onBindViewHolder(SearchResultItemView holder, int position) {
     try {
       holder.setup(getItem(position));
     } catch (ClassCastException e) {
@@ -65,13 +63,11 @@ public class SearchResultAdapter extends RecyclerView.Adapter<ItemView> {
   }
 
   @Override public int getItemViewType(int position) {
-    final int adsCount = searchResultAds.size();
-
-    if (shouldShowLoadingItem(position, adsCount)) {
+    if (!adsLoaded && position == 0) {
       return SearchLoadingViewHolder.LAYOUT;
     }
 
-    if (position < adsCount) {
+    if (adsLoaded && position == 0) {
       return SearchResultAdViewHolder.LAYOUT;
     }
 
@@ -79,33 +75,23 @@ public class SearchResultAdapter extends RecyclerView.Adapter<ItemView> {
   }
 
   @Override public int getItemCount() {
-    return searchResultAds.size() + searchResult.size();
-  }
-
-  private boolean shouldShowLoadingItem(int position, int adsCount) {
-    return (position == 0 && adsCount == 0 && !adsLoaded);
+    return searchResults.size();
   }
 
   private Object getItem(int position) {
-    final int adsCount = searchResultAds.size();
-
-    if (shouldShowLoadingItem(position, adsCount)) {
+    if (!adsLoaded && position == 0) {
       return null;
     }
-
-    if (position < adsCount) {
-      return searchResultAds.get(position);
-    }
-    return searchResult.get(position - adsCount);
+    return searchResults.get(position);
   }
 
   public void addResultForSearch(List<SearchApp> dataList) {
-    searchResult.addAll(dataList);
+    searchResults.addAll(dataList);
     notifyDataSetChanged();
   }
 
-  public void addResultForAds(List<MinimalAd> minimalAds) {
-    searchResultAds.addAll(minimalAds);
+  public void setResultForAd(MinimalAd minimalAd) {
+    searchResults.add(0, minimalAd);
     setAdsLoaded();
   }
 

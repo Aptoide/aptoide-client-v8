@@ -10,12 +10,11 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.view.ItemView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Date;
 
-public class SearchResultAdViewHolder extends ItemView<MinimalAd> {
+public class SearchResultAdViewHolder extends SearchResultItemView<MinimalAd> {
 
   public static final int LAYOUT = R.layout.search_ad;
   private final PublishRelay<MinimalAd> onItemViewClickRelay;

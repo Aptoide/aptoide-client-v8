@@ -25,19 +25,15 @@ public interface SearchView extends View {
 
   void hideLoading();
 
-  void changeFollowedStoresButtonVisibility(boolean visible);
-
-  void changeAllStoresButtonVisibility(boolean visible);
-
   void addFollowedStoresResult(List<SearchApp> dataList);
 
   void addAllStoresResult(List<SearchApp> dataList);
 
   Model getViewModel();
 
-  void addFollowedStoresAdsResult(List<MinimalAd> ads);
+  void setFollowedStoresAdsResult(MinimalAd ad);
 
-  void addAllStoresAdsResult(List<MinimalAd> ads);
+  void setAllStoresAdsResult(MinimalAd ad);
 
   void setFollowedStoresAdsEmpty();
 
@@ -52,6 +48,10 @@ public interface SearchView extends View {
   Observable<Void> allStoresResultReachedBottom();
 
   void incrementResultCount(int itemCount);
+
+  void showLoadingMore();
+
+  void hideLoadingMore();
 
   interface Model {
 

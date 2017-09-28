@@ -15,14 +15,11 @@ import cm.aptoide.pt.search.SearchAnalytics;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import com.jakewharton.rxrelay.PublishRelay;
-import java.util.Collections;
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 import rx.Observable;
 import rx.Scheduler;
 
 public class SearchPresenter implements Presenter {
-
-  private static final String TAG = SearchPresenter.class.getName();
 
   private final SearchView view;
   private final SearchAnalytics analytics;
@@ -58,7 +55,7 @@ public class SearchPresenter implements Presenter {
     handleClickToOpenAppViewFromAdd();
     handleClickToOpenPopupMenu();
     handleClickOnNoResultsImage();
-    handleListReachedBottom();
+    handleAnyListReachedBottom();
   }
 
   @Override public void saveState(Bundle state) {
@@ -69,20 +66,24 @@ public class SearchPresenter implements Presenter {
     // does nothing
   }
 
-  private void handleListReachedBottom() {
+  private void handleAnyListReachedBottom() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .flatMap(__ -> Observable.merge(view.allStoresResultReachedBottom(),
             view.followedStoresResultReachedBottom()))
+        .debounce(250, TimeUnit.MILLISECONDS)
         .map(__ -> view.getViewModel())
         .filter(viewModel -> !viewModel.hasReachedBottom())
+        .observeOn(viewScheduler)
+        .doOnNext(__ -> view.showLoadingMore())
         .flatMap(viewModel -> loadData(viewModel.getCurrentQuery(), viewModel.getStoreName(),
             viewModel.isOnlyTrustedApps(), viewModel.getOffset()).onErrorResumeNext(err -> {
           crashReport.log(err);
           return Observable.just(null);
         }))
         .observeOn(viewScheduler)
+        .doOnNext(__ -> view.hideLoadingMore())
         .filter(data -> data != null)
         .doOnNext(data -> view.incrementResultCount(getItemCount(data)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -102,9 +103,8 @@ public class SearchPresenter implements Presenter {
             view.setFollowedStoresAdsEmpty();
             view.setAllStoresAdsEmpty();
           } else {
-            final List<MinimalAd> ads = Collections.singletonList(ad);
-            view.addAllStoresAdsResult(ads);
-            view.addFollowedStoresAdsResult(ads);
+            view.setAllStoresAdsResult(ad);
+            view.setFollowedStoresAdsResult(ad);
           }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -239,20 +239,14 @@ public class SearchPresenter implements Presenter {
       boolean onlyTrustedApps, int offset) {
     return searchManager.searchInNonFollowedStores(query, onlyTrustedApps, offset)
         .observeOn(viewScheduler)
-        .doOnNext(data -> view.changeAllStoresButtonVisibility(hasItems(data)))
         .doOnNext(data -> view.addAllStoresResult(data.getDataList()
             .getList()));
-  }
-
-  private boolean hasItems(ListSearchApps data) {
-    return getItemCount(data) > 0;
   }
 
   @NonNull private Observable<ListSearchApps> loadDataForAllFollowedStores(String query,
       boolean onlyTrustedApps, int offset) {
     return searchManager.searchInFollowedStores(query, onlyTrustedApps, offset)
         .observeOn(viewScheduler)
-        .doOnNext(data -> view.changeFollowedStoresButtonVisibility(hasItems(data)))
         .doOnNext(data -> view.addFollowedStoresResult(data.getDataList()
             .getList()));
   }
@@ -262,7 +256,6 @@ public class SearchPresenter implements Presenter {
       int offset) {
     return searchManager.searchInStore(query, storeName, offset)
         .observeOn(viewScheduler)
-        .doOnNext(data -> view.changeFollowedStoresButtonVisibility(hasItems(data)))
         .doOnNext(data -> view.addFollowedStoresResult(data.getDataList()
             .getList()));
   }
