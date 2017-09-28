@@ -41,16 +41,19 @@ public class CardViewHolderFactory {
   private final SpannableFactory spannableFactory;
   private final MinimalCardViewFactory minimalCardViewFactory;
   private final String marketName;
+  private final TimelineAdsRepository adsRepository;
   private StoreContext storeContext;
 
   public CardViewHolderFactory(PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
       DateCalculator dateCalculator, SpannableFactory spannableFactory,
-      MinimalCardViewFactory minimalCardViewFactory, String marketName, StoreContext storeContext) {
+      MinimalCardViewFactory minimalCardViewFactory, String marketName,
+      TimelineAdsRepository adsRepository, StoreContext storeContext) {
     this.minimalCardViewFactory = minimalCardViewFactory;
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
     this.marketName = marketName;
+    this.adsRepository = adsRepository;
     this.storeContext = storeContext;
   }
 
@@ -134,8 +137,8 @@ public class CardViewHolderFactory {
             .inflate(R.layout.timeline_login_item, parent, false), cardTouchEventPublishSubject);
       case AD:
         return new TimelineAdPostViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.timeline_native_ad_item, parent, false),
-            cardTouchEventPublishSubject);
+            .inflate(R.layout.timeline_native_ad_item, parent, false), cardTouchEventPublishSubject,
+            adsRepository);
       case NOTIFICATIONS:
         return new Notifications(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_notification, parent, false), cardTouchEventPublishSubject,

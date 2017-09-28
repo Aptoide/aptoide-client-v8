@@ -211,9 +211,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
     timelineService =
         new TimelineService(userId, baseBodyInterceptorV7, defaultClient, defaultConverter,
-            new TimelineResponseCardMapper(
-                () -> new TimelineAdsRepository(getContext(), BehaviorRelay.create()), marketName),
-            tokenInvalidator, sharedPreferences);
+            new TimelineResponseCardMapper(marketName), tokenInvalidator, sharedPreferences);
     crashReport = CrashReport.getInstance();
   }
 
@@ -256,10 +254,13 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     floatingActionButton = (FloatingActionButton) view.findViewById(R.id.floating_action_button);
 
     SpannableFactory spannableFactory = new SpannableFactory();
+    TimelineAdsRepository timelineAdsRepository = new TimelineAdsRepository(BehaviorRelay.create());
+
     adapter = new PostAdapter(new ArrayList<>(),
         new CardViewHolderFactory(postTouchEventPublishSubject, dateCalculator, spannableFactory,
             new MinimalCardViewFactory(dateCalculator, spannableFactory,
-                postTouchEventPublishSubject), marketName, storeContext), new ProgressCard());
+                postTouchEventPublishSubject), marketName, timelineAdsRepository, storeContext),
+        new ProgressCard());
     list.setAdapter(adapter);
 
     final StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(
