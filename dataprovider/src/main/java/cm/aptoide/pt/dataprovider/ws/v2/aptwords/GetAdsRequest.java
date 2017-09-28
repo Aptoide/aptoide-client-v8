@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
+import android.text.TextUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import cm.aptoide.pt.dataprovider.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
@@ -241,7 +242,9 @@ import rx.Observable;
       this.setMature(mature);
       this.limit = limit;
       this.location = location.toString();
-      this.excludedPackage = new ArrayList<>(Arrays.asList(excludedPackage.split(",")));
+      if(!TextUtils.isEmpty(excludedPackage)){
+        this.excludedPackage = new ArrayList<>(Arrays.asList(excludedPackage.split(",")));
+      }
       this.keywords = keywords;
     }
 
@@ -253,7 +256,10 @@ import rx.Observable;
       this.setMature(mature);
       this.limit = limit;
       this.location = location.toString();
-      this.excludedPackage = new ArrayList<>(Arrays.asList(excludedPackage.split(",")));
+      if(!TextUtils.isEmpty(excludedPackage)){
+        this.excludedPackage = new ArrayList<>(Arrays.asList(excludedPackage.split(",")));
+      }
+
     }
   }
 }
