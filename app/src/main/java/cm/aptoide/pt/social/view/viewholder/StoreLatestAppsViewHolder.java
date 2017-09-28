@@ -70,7 +70,7 @@ public class StoreLatestAppsViewHolder extends PostViewHolder<StoreLatestApps> {
 
     headerTitle.setText(getStyledTitle(itemView.getContext(), card.getStoreName()));
     headerSubtitle.setText(getTimeSinceLastUpdate(itemView.getContext(), card.getLatestUpdate()));
-    showStoreLatestApps(card);
+    showStoreLatestApps(card, position);
     if (card.isLiked()) {
       if (card.isLikeFromClick()) {
         likeButton.setHeartState(true);
@@ -102,7 +102,7 @@ public class StoreLatestAppsViewHolder extends PostViewHolder<StoreLatestApps> {
     return dateCalculator.getTimeSinceDate(context, latestUpdate);
   }
 
-  private void showStoreLatestApps(StoreLatestApps card) {
+  private void showStoreLatestApps(StoreLatestApps card, int position) {
     Map<View, Long> apps = new HashMap<>();
     LongSparseArray<String> appsPackages = new LongSparseArray<>();
 
@@ -122,15 +122,15 @@ public class StoreLatestAppsViewHolder extends PostViewHolder<StoreLatestApps> {
       appsPackages.put(latestApp.getId(), latestApp.getPackageName());
     }
 
-    setStoreLatestAppsListeners(card, apps, appsPackages);
+    setStoreLatestAppsListeners(card, apps, appsPackages, position);
   }
 
   private void setStoreLatestAppsListeners(StoreLatestApps card, Map<View, Long> apps,
-      LongSparseArray<String> appsPackages) {
+      LongSparseArray<String> appsPackages, int position) {
     for (View app : apps.keySet()) {
       app.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
           new StoreAppCardTouchEvent(card, CardTouchEvent.Type.BODY,
-              appsPackages.get(apps.get(app)), getPosition())));
+              appsPackages.get(apps.get(app)), position)));
     }
   }
 }
