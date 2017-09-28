@@ -3,11 +3,11 @@ package cm.aptoide.pt.view.share;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.FacebookSignUpException;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.account.view.AccountNavigator;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -27,12 +27,13 @@ public class NotLoggedInSharePresenter implements Presenter {
   private final Collection<String> requiredPermissions;
   private final int requestCode;
   private final ThrowableToStringMapper errorMapper;
+  private final AccountAnalytics accountAnalytics;
 
   public NotLoggedInSharePresenter(NotLoggedInShareView view, SharedPreferences sharedPreferences,
       CrashReport crashReport, AptoideAccountManager accountManager,
       AccountNavigator accountNavigator, Collection<String> permissions,
-      Collection<String> requiredPermissions, int requestCode,
-      ThrowableToStringMapper errorMapper) {
+      Collection<String> requiredPermissions, int requestCode, ThrowableToStringMapper errorMapper,
+      AccountAnalytics accountAnalytics) {
     this.view = view;
     this.sharedPreferences = sharedPreferences;
     this.crashReport = crashReport;
@@ -42,6 +43,7 @@ public class NotLoggedInSharePresenter implements Presenter {
     this.requiredPermissions = requiredPermissions;
     this.requestCode = requestCode;
     this.errorMapper = errorMapper;
+    this.accountAnalytics = accountAnalytics;
   }
 
   @Override public void present() {
@@ -81,6 +83,7 @@ public class NotLoggedInSharePresenter implements Presenter {
         .flatMap(__ -> view.googleSignUpEvent())
         .doOnNext(event -> {
           view.showLoading();
+          accountAnalytics.sendGoogleLoginButtonPressed();
         })
         .flatMapSingle(event -> accountNavigator.navigateToGoogleSignUpForResult(
             RESOLVE_GOOGLE_CREDENTIALS_REQUEST_CODE))
@@ -106,19 +109,14 @@ public class NotLoggedInSharePresenter implements Presenter {
             .flatMapCompletable(result -> accountManager.signUp(GoogleSignUpAdapter.TYPE, result)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> {
-                  Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
-                      Analytics.Account.SignUpLoginStatus.SUCCESS,
-                      Analytics.Account.LoginStatusDetail.SUCCESS);
+                  accountAnalytics.loginSuccess();
                   accountNavigator.popViewWithResult(requestCode, true);
                 })
                 .doOnTerminate(() -> view.hideLoading())
                 .doOnError(throwable -> {
                   view.showError(errorMapper.map(throwable));
                   crashReport.log(throwable);
-
-                  Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
-                      Analytics.Account.SignUpLoginStatus.FAILED,
-                      Analytics.Account.LoginStatusDetail.SDK_ERROR);
+                  accountAnalytics.sendGoogleSignUpFailEvent();
                 }))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -132,6 +130,7 @@ public class NotLoggedInSharePresenter implements Presenter {
         .flatMap(__ -> view.facebookSignUpEvent())
         .doOnNext(event -> {
           view.showLoading();
+          accountAnalytics.sendFacebookLoginButtonPressed();
           accountNavigator.navigateToFacebookSignUpForResult(permissions);
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -150,9 +149,7 @@ public class NotLoggedInSharePresenter implements Presenter {
             .flatMapCompletable(result -> accountManager.signUp(FacebookSignUpAdapter.TYPE, result)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> {
-                  Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
-                      Analytics.Account.SignUpLoginStatus.SUCCESS,
-                      Analytics.Account.LoginStatusDetail.SUCCESS);
+                  accountAnalytics.loginSuccess();
                   accountNavigator.popViewWithResult(requestCode, true);
                 })
                 .doOnTerminate(() -> view.hideLoading())
@@ -177,19 +174,13 @@ public class NotLoggedInSharePresenter implements Presenter {
     if (throwable instanceof FacebookSignUpException) {
       switch (((FacebookSignUpException) throwable).getCode()) {
         case FacebookSignUpException.MISSING_REQUIRED_PERMISSIONS:
-          Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
-              Analytics.Account.SignUpLoginStatus.FAILED,
-              Analytics.Account.LoginStatusDetail.PERMISSIONS_DENIED);
+          accountAnalytics.sendFacebookMissingPermissionsEvent();
           break;
         case FacebookSignUpException.USER_CANCELLED:
-          Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
-              Analytics.Account.SignUpLoginStatus.FAILED,
-              Analytics.Account.LoginStatusDetail.CANCEL);
+          accountAnalytics.sendFacebookUserCancelledEvent();
           break;
         case FacebookSignUpException.ERROR:
-          Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
-              Analytics.Account.SignUpLoginStatus.FAILED,
-              Analytics.Account.LoginStatusDetail.SDK_ERROR);
+          accountAnalytics.sendFacebookErrorEvent();
           break;
       }
     }

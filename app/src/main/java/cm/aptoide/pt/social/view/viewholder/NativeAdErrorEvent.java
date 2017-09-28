@@ -7,14 +7,7 @@ import cm.aptoide.pt.social.data.Post;
  */
 
 public class NativeAdErrorEvent extends cm.aptoide.pt.social.data.CardTouchEvent {
-  private final int postPosition;
-
   public NativeAdErrorEvent(Post card, Type actionType, int postPosition) {
-    super(card, actionType);
-    this.postPosition = postPosition;
-  }
-
-  public int getPostPosition() {
-    return postPosition;
+    super(card, postPosition, actionType);
   }
 }

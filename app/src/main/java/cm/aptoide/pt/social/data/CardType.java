@@ -39,6 +39,12 @@ public enum CardType {
         SOCIAL_POST_ARTICLE);
   }
 
+  public boolean isAggregated() {
+    return equals(AGGREGATED_SOCIAL_ARTICLE) || equals(AGGREGATED_SOCIAL_INSTALL) || equals(
+        AGGREGATED_SOCIAL_STORE) || equals(AGGREGATED_SOCIAL_STORE) || equals(
+        AGGREGATED_SOCIAL_VIDEO);
+  }
+
   public boolean isDummy() {
     return equals(LOGIN) || equals(PROGRESS) || equals(TIMELINE_STATS);
   }

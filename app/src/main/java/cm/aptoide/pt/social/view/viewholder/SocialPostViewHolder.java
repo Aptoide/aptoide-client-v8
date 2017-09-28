@@ -25,11 +25,11 @@ public abstract class SocialPostViewHolder<T extends Post> extends PostViewHolde
 
   @Override public void setPost(T card, int position) {
     this.numberComments.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.COMMENT_NUMBER)));
+        new CardTouchEvent(card, position, CardTouchEvent.Type.COMMENT_NUMBER)));
   }
 
-  @Override protected void handleCommentsInformation(Post post) {
-    super.handleCommentsInformation(post);
+  @Override protected void handleCommentsInformation(Post post, int position) {
+    super.handleCommentsInformation(post, position);
     if (post.getCommentsNumber() > 0) {
       numberComments.setText(itemView.getContext()
           .getResources()

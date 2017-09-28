@@ -1,9 +1,18 @@
 package cm.aptoide.pt.timeline.post;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.events.AptoideEvent;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import com.facebook.appevents.AppEventsLogger;
+import java.util.HashMap;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 
 /**
  * Created by trinkes on 27/07/2017.
@@ -18,6 +27,7 @@ public class PostAnalytics {
   private static final String PACKAGE_NAME = "package_name";
   private static final String HAS_COMMENT = "has_comment";
   private static final String HAS_URL = "has_url";
+  private static final String POST = "POST";
   private static final String URL = "url";
   private static final String HAS_URL_PREVIEW = "has_url_preview";
   private static final String STATUS = "status";
@@ -26,10 +36,25 @@ public class PostAnalytics {
   private static final String WEB_CODE = "web_code";
   private final Analytics analytics;
   private final AppEventsLogger facebook;
+  private final BodyInterceptor<BaseBody> bodyInterceptor;
+  private final OkHttpClient httpClient;
+  private final Converter.Factory converterFactory;
+  private final TokenInvalidator tokenInvalidator;
+  private final String appId;
+  private final SharedPreferences sharedPreferences;
 
-  public PostAnalytics(Analytics analytics, AppEventsLogger facebook) {
+  public PostAnalytics(Analytics analytics, AppEventsLogger facebook,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator, String appId,
+      SharedPreferences sharedPreferences) {
     this.analytics = analytics;
     this.facebook = facebook;
+    this.bodyInterceptor = bodyInterceptor;
+    this.httpClient = httpClient;
+    this.converterFactory = converterFactory;
+    this.tokenInvalidator = tokenInvalidator;
+    this.appId = appId;
+    this.sharedPreferences = sharedPreferences;
   }
 
   public void sendOpenEvent(OpenSource source) {
@@ -45,10 +70,20 @@ public class PostAnalytics {
   }
 
   public void sendPostCompleteNoTextEvent(boolean relatedAppsAvailable, boolean hasSelectedApp,
-      String packageName, boolean hasComment, boolean hasUrl, String url, boolean hasUrlPreview) {
+      String packageName, boolean hasComment, boolean hasUrl, String url, boolean hasUrlPreview,
+      boolean isExternal) {
     analytics.sendEvent(new FacebookEvent(facebook, POST_COMPLETE,
         createPostCompleteNoTextEventBundle(relatedAppsAvailable, hasSelectedApp, packageName,
             hasComment, hasUrl, url, hasUrlPreview)));
+    analytics.sendEvent(createAptoideEvent(POST, false, isExternal));
+  }
+
+  @NonNull
+  private AptoideEvent createAptoideEvent(String eventName, boolean success, boolean isExternal) {
+    HashMap<String, Object> data = new HashMap<>();
+    data.put("status", success ? "success" : "fail");
+    return new AptoideEvent(data, eventName, "CLICK", isExternal ? "EXTERNAL" : "TIMELINE",
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator, appId, sharedPreferences);
   }
 
   private Bundle createPostCompleteNoTextEventBundle(boolean relatedAppsAvailable,
@@ -61,10 +96,11 @@ public class PostAnalytics {
   }
 
   public void sendPostCompleteNoSelectedAppEvent(boolean relatedAppsAvailable, boolean hasComment,
-      boolean hasUrl, String url, boolean hasUrlPreview) {
+      boolean hasUrl, String url, boolean hasUrlPreview, boolean isExternal) {
     analytics.sendEvent(new FacebookEvent(facebook, POST_COMPLETE,
         createPostCompleteNoSelectedAppEventBundle(relatedAppsAvailable, hasComment, hasUrl, url,
             hasUrlPreview)));
+    analytics.sendEvent(createAptoideEvent(POST, false, isExternal));
   }
 
   private Bundle createPostCompleteNoSelectedAppEventBundle(boolean relatedAppsAvailable,
@@ -76,10 +112,12 @@ public class PostAnalytics {
   }
 
   public void sendPostCompleteNoLoginEvent(boolean relatedAppsAvailable, boolean hasSelectedApp,
-      String packageName, boolean hasComment, boolean hasUrl, String url, boolean hasUrlPreview) {
+      String packageName, boolean hasComment, boolean hasUrl, String url, boolean hasUrlPreview,
+      boolean isExternal) {
     analytics.sendEvent(new FacebookEvent(facebook, POST_COMPLETE,
         createNoLoginEventBundle(relatedAppsAvailable, hasSelectedApp, packageName, hasComment,
             hasUrl, url, hasUrlPreview)));
+    analytics.sendEvent(createAptoideEvent(POST, false, isExternal));
   }
 
   private Bundle createNoLoginEventBundle(boolean relatedAppsAvailable, boolean hasSelectedApp,
@@ -91,10 +129,12 @@ public class PostAnalytics {
   }
 
   public void sendPostCompleteNoAppFoundEvent(boolean relatedAppsAvailable, boolean hasSelectedApp,
-      String packageName, boolean hasComment, boolean hasUrl, String url, boolean hasUrlPreview) {
+      String packageName, boolean hasComment, boolean hasUrl, String url, boolean hasUrlPreview,
+      boolean isExternal) {
     analytics.sendEvent(new FacebookEvent(facebook, POST_COMPLETE,
         createNoAppFoundEventBundle(relatedAppsAvailable, hasSelectedApp, packageName, hasComment,
             hasUrl, url, hasUrlPreview)));
+    analytics.sendEvent(createAptoideEvent(POST, false, isExternal));
   }
 
   private Bundle createNoAppFoundEventBundle(boolean relatedAppsAvailable, boolean hasSelectedApp,
@@ -121,10 +161,11 @@ public class PostAnalytics {
 
   public void sendPostCompletedNetworkFailedEvent(boolean relatedAppsAvailable,
       boolean hasSelectedApp, String packageName, boolean hasComment, boolean hasUrl, String url,
-      boolean hasUrlPreview, String errorCode) {
+      boolean hasUrlPreview, String errorCode, boolean isExternal) {
     analytics.sendEvent(new FacebookEvent(facebook, POST_COMPLETE,
         createNetworkFailedEventBundle(relatedAppsAvailable, hasSelectedApp, packageName,
             hasComment, hasUrl, url, hasUrlPreview, errorCode)));
+    analytics.sendEvent(createAptoideEvent(POST, false, isExternal));
   }
 
   private Bundle createNetworkFailedEventBundle(boolean relatedAppsAvailable,
@@ -138,10 +179,11 @@ public class PostAnalytics {
   }
 
   public void sendPostCompleteEvent(boolean relatedAppsAvailable, String packageName,
-      boolean hasComment, boolean hasUrl, String url, boolean hasUrlPreview) {
+      boolean hasComment, boolean hasUrl, String url, boolean hasUrlPreview, boolean isExternal) {
     analytics.sendEvent(new FacebookEvent(facebook, POST_COMPLETE,
         createPostCompletedSuccessEventBundle(relatedAppsAvailable, packageName, hasComment, hasUrl,
             url, hasUrlPreview)));
+    analytics.sendEvent(createAptoideEvent(POST, true, isExternal));
   }
 
   private Bundle createPostCompletedSuccessEventBundle(boolean relatedAppsAvailable,

@@ -26,7 +26,7 @@ public class EmptyStateViewHolder extends PostViewHolder {
   @Override public void setPost(Post post, int position) {
     handleActionButtonVisibility((EmptyStatePost) post);
     getStarted.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(post, CardTouchEvent.Type.POST)));
+        new CardTouchEvent(post, position, CardTouchEvent.Type.POST)));
   }
 
   private void handleActionButtonVisibility(EmptyStatePost post) {

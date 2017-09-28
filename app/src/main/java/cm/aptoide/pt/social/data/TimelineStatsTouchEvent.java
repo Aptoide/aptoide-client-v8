@@ -7,8 +7,9 @@ package cm.aptoide.pt.social.data;
 public class TimelineStatsTouchEvent extends CardTouchEvent {
   private final ButtonClicked buttonClicked;
 
-  public TimelineStatsTouchEvent(Post card, ButtonClicked buttonClicked, Type actionType) {
-    super(card, actionType);
+  public TimelineStatsTouchEvent(Post card, ButtonClicked buttonClicked, Type actionType,
+      int position) {
+    super(card, position, actionType);
     this.buttonClicked = buttonClicked;
   }
 

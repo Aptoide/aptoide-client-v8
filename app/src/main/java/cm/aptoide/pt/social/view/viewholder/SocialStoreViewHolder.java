@@ -140,14 +140,14 @@ public class SocialStoreViewHolder extends SocialPostViewHolder<SocialStore> {
             .getStore()
             .getStoreTheme(), card.getPoster()
             .getUser()
-            .getId(), CardTouchEvent.Type.HEADER)));
+            .getId(), CardTouchEvent.Type.HEADER, getPosition())));
     showStoreLatestApps(card);
     this.followStoreButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new FollowStoreCardTouchEvent(card, card.getStoreId(), card.getStoreName(),
-            CardTouchEvent.Type.BODY)));
+            CardTouchEvent.Type.BODY, getPosition())));
     this.storeAvatarFollow.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new StoreCardTouchEvent(card, card.getStoreName(), card.getStoreTheme(),
-            CardTouchEvent.Type.BODY)));
+            CardTouchEvent.Type.BODY, getPosition())));
     if (card.isLiked()) {
       if (card.isLikeFromClick()) {
         likeButton.setHeartState(true);
@@ -172,7 +172,7 @@ public class SocialStoreViewHolder extends SocialPostViewHolder<SocialStore> {
       sharedBy.setVisibility(View.GONE);
     }
     /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
-    showSocialInformationBar(card);
+    showSocialInformationBar(card, position);
     showLikesPreview(card);
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
     this.like.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
@@ -181,18 +181,18 @@ public class SocialStoreViewHolder extends SocialPostViewHolder<SocialStore> {
     this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new SocialCardTouchEvent(card, CardTouchEvent.Type.COMMENT, position)));
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.SHARE)));
+        new CardTouchEvent(card, position, CardTouchEvent.Type.SHARE)));
     this.likePreviewContainer.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new LikesPreviewCardTouchEvent(card, card.getLikesNumber(),
-            CardTouchEvent.Type.LIKES_PREVIEW)));
+            CardTouchEvent.Type.LIKES_PREVIEW, getPosition())));
     this.numberLikes.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new LikesPreviewCardTouchEvent(card, card.getLikesNumber(),
-            CardTouchEvent.Type.LIKES_PREVIEW)));
+            CardTouchEvent.Type.LIKES_PREVIEW, position)));
     this.numberLikesOneLike.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new LikesPreviewCardTouchEvent(card, card.getLikesNumber(),
-            CardTouchEvent.Type.LIKES_PREVIEW)));
+            CardTouchEvent.Type.LIKES_PREVIEW, position)));
     this.numberComments.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.COMMENT_NUMBER)));
+        new CardTouchEvent(card, position, CardTouchEvent.Type.COMMENT_NUMBER)));
   }
 
   @NonNull private Spannable getStyledStoreName(SocialStore card) {
@@ -228,7 +228,7 @@ public class SocialStoreViewHolder extends SocialPostViewHolder<SocialStore> {
   }
 
   /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
-  private void showSocialInformationBar(SocialStore card) {
+  private void showSocialInformationBar(SocialStore card, int position) {
     if (card.getLikesNumber() > 0 || card.getCommentsNumber() > 0) {
       socialInfoBar.setVisibility(View.VISIBLE);
     } else {
@@ -236,7 +236,7 @@ public class SocialStoreViewHolder extends SocialPostViewHolder<SocialStore> {
     }
 
     handleLikesInformation(card);
-    handleCommentsInformation(card);
+    handleCommentsInformation(card, position);
   }
 
   private void showLikesPreview(SocialStore post) {
@@ -262,7 +262,7 @@ public class SocialStoreViewHolder extends SocialPostViewHolder<SocialStore> {
     for (View app : apps.keySet()) {
       app.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
           new StoreAppCardTouchEvent(card, CardTouchEvent.Type.BODY,
-              appsPackages.get(apps.get(app)))));
+              appsPackages.get(apps.get(app)), getPosition())));
     }
   }
 

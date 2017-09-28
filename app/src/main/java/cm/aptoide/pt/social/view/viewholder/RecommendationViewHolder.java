@@ -88,9 +88,9 @@ public class RecommendationViewHolder extends PostViewHolder<Recommendation> {
     this.relatedToApp.setText(card.getRelatedToAppName());
 
     this.getAppButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
+        new CardTouchEvent(card, position, CardTouchEvent.Type.BODY)));
     this.appIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
+        new CardTouchEvent(card, position, CardTouchEvent.Type.BODY)));
     if (card.isLiked()) {
       if (card.isLikeFromClick()) {
         likeButton.setHeartState(true);
@@ -102,7 +102,7 @@ public class RecommendationViewHolder extends PostViewHolder<Recommendation> {
       likeButton.setHeartState(false);
     }
 
-    handleCommentsInformation(card);
+    handleCommentsInformation(card, position);
 
     this.like.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new SocialCardTouchEvent(card, CardTouchEvent.Type.LIKE, position)));
@@ -110,7 +110,7 @@ public class RecommendationViewHolder extends PostViewHolder<Recommendation> {
     this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new SocialCardTouchEvent(card, CardTouchEvent.Type.COMMENT, position)));
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.SHARE)));
+        new CardTouchEvent(card, position, CardTouchEvent.Type.SHARE)));
   }
 
   private Spannable getStyledTitle(Context context, Recommendation card) {
