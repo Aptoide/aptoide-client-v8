@@ -20,18 +20,21 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
   private final PublishRelay<MinimalAd> onAdClickRelay;
   private final PublishRelay<SearchApp> onItemViewClick;
   private final PublishRelay<Pair<SearchApp, android.view.View>> onOpenPopupMenuClick;
-  private final List<Object> searchResults;
+  private final List<MinimalAd> searchAdResults;
+  private final List<SearchApp> searchResults;
   private boolean adsLoaded = false;
+  private boolean isLoadingMore = false;
   private CrashReport crashReport;
 
   public SearchResultAdapter(PublishRelay<MinimalAd> onAdClickRelay,
       PublishRelay<SearchApp> onItemViewClick,
-      PublishRelay<Pair<SearchApp, View>> onOpenPopupMenuClick, List<Object> searchResults,
-      CrashReport crashReport) {
+      PublishRelay<Pair<SearchApp, View>> onOpenPopupMenuClick, List<SearchApp> searchResults,
+      List<MinimalAd> searchAdResults, CrashReport crashReport) {
     this.onAdClickRelay = onAdClickRelay;
     this.onItemViewClick = onItemViewClick;
     this.onOpenPopupMenuClick = onOpenPopupMenuClick;
     this.searchResults = searchResults;
+    this.searchAdResults = searchAdResults;
     this.crashReport = crashReport;
   }
 
@@ -67,7 +70,12 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
       return SearchLoadingViewHolder.LAYOUT;
     }
 
-    if (adsLoaded && position == 0) {
+    final int totalItems = searchAdResults.size() + searchResults.size();
+    if (isLoadingMore && position >= totalItems) {
+      return SearchLoadingViewHolder.LAYOUT;
+    }
+
+    if (adsLoaded && position < searchAdResults.size()) {
       return SearchResultAdViewHolder.LAYOUT;
     }
 
@@ -75,14 +83,24 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
   }
 
   @Override public int getItemCount() {
-    return searchResults.size();
+    final int itemCount = searchAdResults.size() + searchResults.size();
+    return isLoadingMore ? itemCount + 1 : itemCount;
   }
 
   private Object getItem(int position) {
     if (!adsLoaded && position == 0) {
       return null;
     }
-    return searchResults.get(position);
+
+    final int totalItems = searchAdResults.size() + searchResults.size();
+    if (isLoadingMore && position >= totalItems) {
+      return null;
+    }
+
+    if (adsLoaded && position < searchAdResults.size()) {
+      return searchAdResults.get(position);
+    }
+    return searchResults.get(position - searchAdResults.size());
   }
 
   public void addResultForSearch(List<SearchApp> dataList) {
@@ -91,12 +109,21 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
   }
 
   public void setResultForAd(MinimalAd minimalAd) {
-    searchResults.add(0, minimalAd);
+    searchAdResults.add(minimalAd);
     setAdsLoaded();
   }
 
   public void setAdsLoaded() {
     adsLoaded = true;
     notifyDataSetChanged();
+  }
+
+  public void setIsLoadingMore(boolean isLoadingMore) {
+    this.isLoadingMore = isLoadingMore;
+    if (isLoadingMore) {
+      notifyItemInserted(searchAdResults.size() + searchResults.size());
+    } else {
+      notifyItemRemoved(searchAdResults.size() + searchResults.size() + 1);
+    }
   }
 }

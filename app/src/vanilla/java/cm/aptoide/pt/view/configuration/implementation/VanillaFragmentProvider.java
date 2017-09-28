@@ -30,7 +30,6 @@ import cm.aptoide.pt.view.fragment.DescriptionFragment;
 import cm.aptoide.pt.view.reviews.LatestReviewsFragment;
 import cm.aptoide.pt.view.reviews.ListReviewsFragment;
 import cm.aptoide.pt.view.reviews.RateAndReviewsFragment;
-import cm.aptoide.pt.search.view.SearchFragment;
 import cm.aptoide.pt.view.settings.SettingsFragment;
 import cm.aptoide.pt.view.store.FragmentTopStores;
 import cm.aptoide.pt.view.store.GetStoreFragment;
@@ -79,18 +78,6 @@ public class VanillaFragmentProvider implements FragmentProvider {
   @Override public Fragment newStoreFragment(long userId, String storeTheme,
       StoreFragment.OpenType openType) {
     return StoreFragment.newInstance(userId, storeTheme, openType);
-  }
-
-  @Override public Fragment newSearchFragment(String query) {
-    return SearchFragment.newInstance(query);
-  }
-
-  @Override public Fragment newSearchFragment(String query, boolean onlyTrustedApps) {
-    return SearchFragment.newInstance(query, onlyTrustedApps);
-  }
-
-  @Override public Fragment newSearchFragment(String query, String storeName) {
-    return SearchFragment.newInstance(query, storeName);
   }
 
   @Override public Fragment newAppViewFragment(String packageName, String storeName,

@@ -34,12 +34,6 @@ import java.util.List;
 
   Fragment newStoreFragment(long userId, String storeTheme, StoreFragment.OpenType openType);
 
-  Fragment newSearchFragment(String query);
-
-  Fragment newSearchFragment(String query, boolean onlyTrustedApps);
-
-  Fragment newSearchFragment(String query, String storeName);
-
   Fragment newAppViewFragment(String packageName, String storeName,
       AppViewFragment.OpenType openType);
 

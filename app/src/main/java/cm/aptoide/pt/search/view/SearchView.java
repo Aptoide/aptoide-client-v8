@@ -47,11 +47,15 @@ public interface SearchView extends View {
 
   Observable<Void> allStoresResultReachedBottom();
 
-  void incrementResultCount(int itemCount);
-
   void showLoadingMore();
 
   void hideLoadingMore();
+
+  void setLayoutWithoutTabs();
+
+  void setAllStoresTabVisible();
+
+  void setFollowedStoresTabVisible();
 
   interface Model {
 
@@ -62,9 +66,5 @@ public interface SearchView extends View {
     boolean isOnlyTrustedApps();
 
     boolean isAllStoresSelected();
-
-    int getOffset();
-
-    boolean hasReachedBottom();
   }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -61,6 +62,9 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
 
   private static final int VISIBLE_THRESHOLD = 4;
   private static final long ANIMATION_DURATION = 125L;
+  private static final String ALL_STORES_SEARCH_LIST_STATE = "all_stores_search_list_state";
+  private static final String FOLLOWED_STORES_SEARCH_LIST_STATE =
+      "followed_stores_search_list_state";
 
   private View noSearchLayout;
   private EditText noSearchLayoutSearchQuery;
@@ -70,7 +74,6 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
   private LinearLayout buttonsLayout;
   private Button followedStoresButton;
   private Button allStoresButton;
-  private View loadingMoreProgress;
 
   private RecyclerViewPositionHelper followedStoresResultListPositionHelper;
   private RecyclerView followedStoresResultList;
@@ -84,19 +87,6 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
 
   public static SearchFragment newInstance(String currentQuery) {
     return newInstance(currentQuery, false);
-  }
-
-  public static SearchFragment newInstance(String currentQuery, boolean onlyTrustedApps,
-      String storeName) {
-
-    SearchViewModel viewModel = new SearchViewModel(currentQuery, storeName, onlyTrustedApps);
-
-    Bundle args = new Bundle();
-    args.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
-
-    SearchFragment fragment = new SearchFragment();
-    fragment.setArguments(args);
-    return fragment;
   }
 
   public static SearchFragment newInstance(String currentQuery, boolean onlyTrustedApps) {
@@ -142,7 +132,7 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
         .setDuration(ANIMATION_DURATION)
         .withEndAction(() -> {
           allStoresResultList.setVisibility(View.INVISIBLE);
-          setHighlightedButtons(false);
+          setFollowedStoresButtonSelected();
         })
         .start();
   }
@@ -166,7 +156,7 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
         .setDuration(ANIMATION_DURATION)
         .withEndAction(() -> {
           followedStoresResultList.setVisibility(View.INVISIBLE);
-          setHighlightedButtons(true);
+          setAllStoresButtonSelected();
         })
         .start();
   }
@@ -293,47 +283,58 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
         .map(event -> null);
   }
 
-  @Override public void incrementResultCount(int itemCount) {
-    viewModel.incrementOffset(itemCount);
-  }
-
   @Override public void showLoadingMore() {
-    int viewHeight = loadingMoreProgress.getHeight();
-    loadingMoreProgress.setTranslationY(viewHeight);
-    loadingMoreProgress.setVisibility(View.VISIBLE);
-    loadingMoreProgress.animate()
-        .translationYBy(-viewHeight)
-        .start();
+    allStoresResultAdapter.setIsLoadingMore(true);
+    followedStoresResultAdapter.setIsLoadingMore(true);
   }
 
   @Override public void hideLoadingMore() {
-    int viewHeight = loadingMoreProgress.getHeight();
-    loadingMoreProgress.animate()
-        .translationYBy(viewHeight)
-        .withEndAction(() -> {
-          loadingMoreProgress.setVisibility(View.GONE);
-        })
-        .start();
+    allStoresResultAdapter.setIsLoadingMore(false);
+    followedStoresResultAdapter.setIsLoadingMore(false);
   }
 
-  private void setHighlightedButtons(boolean allStoresSelected) {
-    if (allStoresSelected) {
-      followedStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
-      followedStoresButton.setBackgroundResource(0);
-      allStoresButton.setTextColor(getResources().getColor(R.color.white));
-      allStoresButton.setBackgroundResource(R.drawable.search_button_background);
-    } else {
-      followedStoresButton.setTextColor(getResources().getColor(R.color.white));
-      followedStoresButton.setBackgroundResource(R.drawable.search_button_background);
-      allStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
-      allStoresButton.setBackgroundResource(0);
-    }
-    viewModel.setAllStoresSelected(allStoresSelected);
+  @Override public void setLayoutWithoutTabs() {
+    followedStoresResultList.setVisibility(View.GONE);
+    allStoresResultList.setVisibility(View.VISIBLE);
+    viewModel.setAllStoresSelected(true);
+  }
+
+  @Override public void setAllStoresTabVisible() {
+    followedStoresResultList.setVisibility(View.INVISIBLE);
+    allStoresResultList.setVisibility(View.VISIBLE);
+    setAllStoresButtonSelected();
+  }
+
+  @Override public void setFollowedStoresTabVisible() {
+    followedStoresResultList.setVisibility(View.INVISIBLE);
+    allStoresResultList.setVisibility(View.VISIBLE);
+    setFollowedStoresButtonSelected();
+  }
+
+  private void setFollowedStoresButtonSelected() {
+    followedStoresButton.setTextColor(getResources().getColor(R.color.white));
+    followedStoresButton.setBackgroundResource(R.drawable.search_button_background);
+    allStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
+    allStoresButton.setBackgroundResource(0);
+    viewModel.setAllStoresSelected(false);
+  }
+
+  private void setAllStoresButtonSelected() {
+    followedStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
+    followedStoresButton.setBackgroundResource(0);
+    allStoresButton.setTextColor(getResources().getColor(R.color.white));
+    allStoresButton.setBackgroundResource(R.drawable.search_button_background);
+    viewModel.setAllStoresSelected(true);
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     outState.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
+    outState.putParcelable(ALL_STORES_SEARCH_LIST_STATE, allStoresResultList.getLayoutManager()
+        .onSaveInstanceState());
+    outState.putParcelable(FOLLOWED_STORES_SEARCH_LIST_STATE,
+        followedStoresResultList.getLayoutManager()
+            .onSaveInstanceState());
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -348,6 +349,28 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
 
   @Override public String getDefaultTheme() {
     return super.getDefaultTheme();
+  }
+
+  @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+    super.onViewStateRestored(savedInstanceState);
+    if (savedInstanceState != null) {
+      if (savedInstanceState.containsKey(VIEW_MODEL)) {
+        loadExtras(savedInstanceState);
+      }
+
+      if (savedInstanceState.containsKey(ALL_STORES_SEARCH_LIST_STATE)
+          && allStoresResultList != null) {
+        allStoresResultList.getLayoutManager()
+            .onRestoreInstanceState(savedInstanceState.getParcelable(ALL_STORES_SEARCH_LIST_STATE));
+      }
+
+      if (savedInstanceState.containsKey(FOLLOWED_STORES_SEARCH_LIST_STATE)
+          && followedStoresResultList != null) {
+        followedStoresResultList.getLayoutManager()
+            .onRestoreInstanceState(
+                savedInstanceState.getParcelable(FOLLOWED_STORES_SEARCH_LIST_STATE));
+      }
+    }
   }
 
   @NonNull private SearchNavigator getSearchNavigator() {
@@ -392,31 +415,10 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
     noResultsSearchButton = (ImageView) view.findViewById(R.id.ic_search_button);
     searchResultsLayout = view.findViewById(R.id.search_results_layout);
     progressBar = view.findViewById(R.id.progress_bar);
-    loadingMoreProgress = view.findViewById(R.id.load_more_progress);
-  }
-
-  @Override public void onResume() {
-    super.onResume();
-    restoreSelectedTab();
   }
 
   @Override public void loadExtras(Bundle args) {
-    if (args != null) {
-      viewModel = Parcels.unwrap(args.getParcelable(VIEW_MODEL));
-    } else {
-      viewModel = Parcels.unwrap(getArguments().getParcelable(VIEW_MODEL));
-    }
-  }
-
-  private void restoreSelectedTab() {
-    if (viewModel.isAllStoresSelected()) {
-      followedStoresResultList.setVisibility(View.INVISIBLE);
-      allStoresResultList.setVisibility(View.VISIBLE);
-    } else {
-      followedStoresResultList.setVisibility(View.INVISIBLE);
-      allStoresResultList.setVisibility(View.VISIBLE);
-    }
-    setHighlightedButtons(viewModel.isAllStoresSelected());
+    viewModel = Parcels.unwrap(args.getParcelable(VIEW_MODEL));
   }
 
   private Presenter createPresenter() {
@@ -461,11 +463,12 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
     final PublishRelay<Pair<SearchApp, View>> onOpenPopupMenuClickRelay = PublishRelay.create();
     final PublishRelay<MinimalAd> onAdClickRelay = PublishRelay.create();
 
-    final List<Object> searchResultFollowedStores = new ArrayList<>();
+    final List<SearchApp> searchResultFollowedStores = new ArrayList<>();
+    final List<MinimalAd> searchResultAdsFollowedStores = new ArrayList<>();
 
     followedStoresResultAdapter =
         new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, onOpenPopupMenuClickRelay,
-            searchResultFollowedStores, crashReport);
+            searchResultFollowedStores, searchResultAdsFollowedStores, crashReport);
     followedStoresResultList.setAdapter(followedStoresResultAdapter);
     followedStoresResultList.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayout.VERTICAL, false));
@@ -476,11 +479,12 @@ public class SearchFragment extends BaseToolbarFragment implements SearchView {
 
     followedStoresResultList.addItemDecoration(new DividerItemDecoration(getContext(), padding));
 
-    final List<Object> searchResultAllStores = new ArrayList<>();
+    final List<SearchApp> searchResultAllStores = new ArrayList<>();
+    final List<MinimalAd> searchResultAdsAllStores = new ArrayList<>();
 
     allStoresResultAdapter =
         new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, onOpenPopupMenuClickRelay,
-            searchResultAllStores, crashReport);
+            searchResultAllStores, searchResultAdsAllStores, crashReport);
     allStoresResultList.setAdapter(allStoresResultAdapter);
     allStoresResultList.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayout.VERTICAL, false));
