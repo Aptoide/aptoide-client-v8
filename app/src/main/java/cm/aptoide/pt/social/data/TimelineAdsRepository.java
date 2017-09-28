@@ -19,16 +19,13 @@ import rx.Single;
  */
 
 public class TimelineAdsRepository {
-
-  private final Context context;
   private final BehaviorRelay<AdResponse> ad;
 
-  public TimelineAdsRepository(Context context, BehaviorRelay<AdResponse> ad) {
-    this.context = context;
+  public TimelineAdsRepository(BehaviorRelay<AdResponse> ad) {
     this.ad = ad;
   }
 
-  public void fetchAd() {
+  public void fetchAd(final Context context) {
     MoPubNative moPubNative = new MoPubNative(context, BuildConfig.MOPUB_NATIVE_AD_UNIT_ID,
         new MoPubNative.MoPubNativeNetworkListener() {
           @Override public void onNativeLoad(NativeAd nativeAd) {

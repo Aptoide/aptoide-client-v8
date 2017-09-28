@@ -157,7 +157,6 @@ import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootValueSaver;
 import cm.aptoide.pt.social.TimelineRepositoryFactory;
-import cm.aptoide.pt.social.data.TimelineAdsRepository;
 import cm.aptoide.pt.social.data.TimelinePostsRepository;
 import cm.aptoide.pt.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.spotandshare.AccountGroupNameProvider;
@@ -1323,8 +1322,7 @@ public abstract class AptoideApplication extends Application {
           new TimelineRepositoryFactory(new HashMap<>(), getAccountSettingsBodyInterceptorPoolV7(),
               getDefaultClient(), getDefaultSharedPreferences(), getTokenInvalidator(),
               new LinksHandlerFactory(this), getPackageRepository(),
-              WebService.getDefaultConverter(), new TimelineResponseCardMapper(
-              () -> new TimelineAdsRepository(context, BehaviorRelay.create()), getMarketName()),
+              WebService.getDefaultConverter(), new TimelineResponseCardMapper(getMarketName()),
               RepositoryFactory.getUpdateRepository(context,
                   ((AptoideApplication) context.getApplicationContext()).getDefaultSharedPreferences()));
     }
