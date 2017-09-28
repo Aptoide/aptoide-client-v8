@@ -400,6 +400,11 @@ public abstract class AptoideApplication extends Application {
 
     startNotificationCenter();
     getRootInstallationRetryHandler().start();
+    AptoideApplicationAnalytics aptoideApplicationAnalytics = new AptoideApplicationAnalytics();
+    accountManager.accountStatus()
+        .map(account -> account.isLoggedIn())
+        .distinctUntilChanged()
+        .subscribe(isLoggedIn -> aptoideApplicationAnalytics.updateDimension(isLoggedIn));
 
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
