@@ -23,17 +23,17 @@ public class SpotAndSharePickAppsPresenter implements Presenter {
   private final SpotAndSharePickAppsView view;
   private final SpotAndShare spotAndShare;
   private boolean shouldCreateGroup;
-  private SpotAndShareAppProvider installedRepositoryDummy;
+  private SpotAndShareAppProvider spotandShareAppProvider;
   private DrawableBitmapMapper drawableBitmapMapper;
   private AppModelToAndroidAppInfoMapper appModelToAndroidAppInfoMapper;
 
   public SpotAndSharePickAppsPresenter(SpotAndSharePickAppsView view, boolean shouldCreateGroup,
-      SpotAndShareAppProvider installedRepositoryDummy, SpotAndShare spotAndShare,
+      SpotAndShareAppProvider spotandShareAppProvider, SpotAndShare spotAndShare,
       DrawableBitmapMapper drawableBitmapMapper,
       AppModelToAndroidAppInfoMapper appModelToAndroidAppInfoMapper) {
     this.view = view;
     this.shouldCreateGroup = shouldCreateGroup;
-    this.installedRepositoryDummy = installedRepositoryDummy;
+    this.spotandShareAppProvider = spotandShareAppProvider;
     this.spotAndShare = spotAndShare;
     this.drawableBitmapMapper = drawableBitmapMapper;
     this.appModelToAndroidAppInfoMapper = appModelToAndroidAppInfoMapper;
@@ -44,7 +44,7 @@ public class SpotAndSharePickAppsPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .doOnNext(lifecycleEvent -> view.showLoading())
         .observeOn(Schedulers.io())
-        .map(lifecycleEvent -> installedRepositoryDummy.getInstalledApps())
+        .map(lifecycleEvent -> spotandShareAppProvider.getInstalledApps())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(installedApps -> view.buildInstalledAppsList(installedApps))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

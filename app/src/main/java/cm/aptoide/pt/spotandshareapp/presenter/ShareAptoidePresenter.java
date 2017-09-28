@@ -12,7 +12,6 @@ import cm.aptoide.pt.spotandshareapp.view.ShareAptoideView;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import rx.Completable;
-import rx.Observable;
 
 /**
  * Created by filipe on 12-09-2017.
@@ -45,9 +44,10 @@ public class ShareAptoidePresenter implements Presenter {
             return permissionManager.requestLocationAndExternalStoragePermission(permissionService)
                 .flatMap(accessToLocation -> permissionManager.requestWriteSettingsPermission(
                     permissionService))
+                .flatMap(__1 -> permissionManager.requestLocationEnabling(permissionService))
                 .doOnError(throwable -> view.navigateBack());
           } else {
-            return Observable.empty();
+            return permissionManager.requestLocationEnabling(permissionService);
           }
         })
         .flatMapSingle(created -> createGroup().timeout(10, TimeUnit.SECONDS)

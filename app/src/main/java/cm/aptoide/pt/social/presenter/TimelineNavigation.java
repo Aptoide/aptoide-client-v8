@@ -43,4 +43,6 @@ public interface TimelineNavigation {
   rx.Observable<String> postNavigation();
 
   void navigateToNotificationCenter();
+
+  void navigateToCreatePost();
 }

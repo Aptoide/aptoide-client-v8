@@ -26,12 +26,11 @@ import rx.schedulers.Schedulers;
 
 class SpotAndShareV2 {
 
-  private static final String DUMMY_HOTSPOT = "DummyHotspot";
-
+  private static final String APTOIDE_HOTSPOT = "AptoideHotspot";
   private final String PASSWORD_APTOIDE = "passwordAptoide";
   private final HotspotManager hotspotManager;
   private final TransferManager transferManager;
-  private final String DUMMY_UUID = "dummy_uuid";
+  //private final String DUMMY_UUID = "dummy_uuid";
   private final Context applicationContext;
   private final int TIMEOUT = 15 * 1000;
   private final Friend friend;
@@ -105,7 +104,7 @@ class SpotAndShareV2 {
     hotspotManager.saveActualNetworkState()
         .andThen(hotspotManager.isWifiEnabled()
             .flatMap(wifiEnabled -> hotspotManager.setWifiEnabled(true)))
-        .flatMapCompletable(aBoolean -> hotspotManager.joinHotspot(DUMMY_HOTSPOT, enabled1 -> {
+        .flatMapCompletable(aBoolean -> hotspotManager.joinHotspot(APTOIDE_HOTSPOT, enabled1 -> {
           if (enabled1) {
             enabled = true;
             startSpotAndShareMessageClient(serviceProvider.getConnectivityManager(), onError);
@@ -140,7 +139,7 @@ class SpotAndShareV2 {
   }
 
   private Completable joinHotspot(Action0 onSuccess, OnError onError) {
-    return hotspotManager.joinHotspot(DUMMY_HOTSPOT, enabled -> {
+    return hotspotManager.joinHotspot(APTOIDE_HOTSPOT, enabled -> {
       if (enabled) {
         onSuccess.call();
       } else {
@@ -150,7 +149,7 @@ class SpotAndShareV2 {
   }
 
   private Completable enableHotspot() {
-    return hotspotManager.enablePrivateHotspot(DUMMY_HOTSPOT, PASSWORD_APTOIDE)
+    return hotspotManager.enablePrivateHotspot(APTOIDE_HOTSPOT, PASSWORD_APTOIDE)
         .doOnCompleted(() -> isHotspot = true);
   }
 

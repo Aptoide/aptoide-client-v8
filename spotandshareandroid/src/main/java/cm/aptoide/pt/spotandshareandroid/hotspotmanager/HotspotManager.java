@@ -24,7 +24,7 @@ public class HotspotManager {
     this.createHotspotManager = new CreateHotspotManager(wifimanager, taskQueue);
     this.networkStateManager = new NetworkStateManager(wifimanager);
     this.hotspotScanner =
-        new SsidHotspotScanner(context, taskQueue, SpotAndShare.DUMMY_HOTSPOT, wifiManager);
+        new SsidHotspotScanner(context, taskQueue, SpotAndShare.APTOIDE_HOTSPOT, wifiManager);
   }
 
   public void shutdown() {

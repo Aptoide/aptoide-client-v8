@@ -59,6 +59,7 @@ public class SocialMediaViewHolder extends SocialPostViewHolder<SocialMedia> {
   private final TextView socialCommentBody;
   private final ImageView latestCommentMainAvatar;
   private final TextView sharedBy;
+  private final TextView numberComments;
 
   private int marginOfTheNextLikePreview = 60;
 
@@ -91,6 +92,7 @@ public class SocialMediaViewHolder extends SocialPostViewHolder<SocialMedia> {
     this.numberLikesOneLike = (TextView) itemView.findViewById(R.id.social_one_like);
     this.likePreviewContainer = (RelativeLayout) itemView.findViewById(
         R.id.displayable_social_timeline_likes_preview_container);
+    this.numberComments = (TextView) itemView.findViewById(R.id.social_number_of_comments);
     this.socialCommentBar = (LinearLayout) itemView.findViewById(R.id.social_latest_comment_bar);
     this.socialCommentUsername =
         (TextView) itemView.findViewById(R.id.social_latest_comment_user_name);
@@ -171,6 +173,14 @@ public class SocialMediaViewHolder extends SocialPostViewHolder<SocialMedia> {
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.SHARE)));
     this.likePreviewContainer.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new LikesPreviewCardTouchEvent(card, card.getLikesNumber(),
+            CardTouchEvent.Type.LIKES_PREVIEW)));
+    this.numberComments.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(card, CardTouchEvent.Type.COMMENT_NUMBER)));
+    this.numberLikes.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new LikesPreviewCardTouchEvent(card, card.getLikesNumber(),
+            CardTouchEvent.Type.LIKES_PREVIEW)));
+    this.numberLikesOneLike.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new LikesPreviewCardTouchEvent(card, card.getLikesNumber(),
             CardTouchEvent.Type.LIKES_PREVIEW)));
   }

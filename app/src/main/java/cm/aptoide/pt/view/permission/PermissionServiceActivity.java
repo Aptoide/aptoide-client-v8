@@ -20,6 +20,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionService;
@@ -46,6 +47,7 @@ import rx.functions.Action0;
   private static final int PERMISSIONS_REQUEST_ACCESS_CAMERA = 101;
   private static final int PERMISSIONS_REQUEST_LOCATION_AND_EXTERNAL_STORAGE = 102;
   private static final int PERMISSIONS_REQUEST_WRITE_SETTINGS = 103;
+  private static final int PERMISSIONS_REQUEST_LOCATION_ENABLING = 104;
 
   @Nullable private Action0 toRunWhenAccessToFileSystemIsGranted;
   @Nullable private Action0 toRunWhenAccessToFileSystemIsDenied;
@@ -58,6 +60,8 @@ import rx.functions.Action0;
   @Nullable private Action0 toRunWhenAccessToLocationAndExternalStorageIsDenied;
   @Nullable private Action0 toRunWhenAccessToWriteSettingsIsDenied;
   @Nullable private Action0 toRunWhenAccessToWriteSettingsIsGranted;
+  @Nullable private Action0 toRunWhenLocationEnablingGranted;
+  @Nullable private Action0 toRunWhenLocationEnablingDenied;
 
   private SharedPreferences sharedPreferences;
   private ConnectivityManager connectivityManager;
@@ -365,6 +369,42 @@ import rx.functions.Action0;
         .subscribe(subscriber);
   }
 
+  private boolean checkLocationPermission() {
+    int locationMode = 0;
+    String locationProviders;
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+      try {
+        locationMode =
+            Settings.Secure.getInt(this.getContentResolver(), Settings.Secure.LOCATION_MODE);
+      } catch (Settings.SettingNotFoundException e) {
+        e.printStackTrace();
+        return false;
+      }
+
+      return locationMode != Settings.Secure.LOCATION_MODE_OFF;
+    } else {
+      locationProviders = Settings.Secure.getString(this.getContentResolver(),
+          Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+      return !TextUtils.isEmpty(locationProviders);
+    }
+  }
+
+  @Override public void requestToEnableLocation(@Nullable Action0 toRunWhenAccessIsGranted,
+      @Nullable Action0 toRunWhenAccessIsDenied) {
+    if (checkLocationPermission()) {
+      if (toRunWhenAccessIsGranted != null) {
+        toRunWhenAccessIsGranted.call();
+      }
+    } else {
+      this.toRunWhenLocationEnablingGranted = toRunWhenAccessIsGranted;
+      this.toRunWhenLocationEnablingDenied = toRunWhenAccessIsDenied;
+
+      Intent locationIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+      startActivityForResult(locationIntent, PERMISSIONS_REQUEST_LOCATION_ENABLING);
+    }
+  }
+
   @TargetApi(Build.VERSION_CODES.M) @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
       @NonNull int[] grantResults) {
@@ -473,6 +513,17 @@ import rx.functions.Action0;
           }
         }
         break;
+
+      case PERMISSIONS_REQUEST_LOCATION_ENABLING:
+        if (checkLocationPermission()) {
+          if (toRunWhenLocationEnablingGranted != null) {
+            toRunWhenLocationEnablingGranted.call();
+          }
+        } else {
+          if (toRunWhenLocationEnablingDenied != null) {
+            toRunWhenLocationEnablingDenied.call();
+          }
+        }
 
       default:
         super.onActivityResult(requestCode, resultCode, data);
