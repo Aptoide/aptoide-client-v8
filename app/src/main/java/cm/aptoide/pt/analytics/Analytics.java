@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.FirstLaunchAnalytics;
@@ -384,19 +383,6 @@ public class Analytics {
 
       public static void onResume(android.app.Activity activity) {
 
-        final AptoideAccountManager accountManager =
-            ((AptoideApplication) activity.getApplicationContext()).getAccountManager();
-        //This needs to be cleaned when localytics is killed
-        Bundle bundle = new Bundle();
-        if (!accountManager.isLoggedIn()) {
-          bundle.putString("Logged In", "Not Logged In");
-          AppEventsLogger.updateUserProperties(bundle,
-              response -> Logger.d("Facebook Analytics: ", response.toString()));
-        } else {
-          bundle.putString("Logged In", "Logged In");
-          AppEventsLogger.updateUserProperties(bundle,
-              response -> Logger.d("Facebook Analytics: ", response.toString()));
-        }
       }
 
       public static void onStart(android.app.Activity activity) {
