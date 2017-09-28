@@ -26,7 +26,8 @@ public class JoinHotspotManager {
   public Completable joinHotspot(String ssid, WifiStateListener wifiStateListener, long timeout) {
     return joinHotspot(ssid).andThen(
         Completable.fromAction(() -> wifiStateListener.onStateChanged(true)))
-        .timeout(timeout, TimeUnit.MILLISECONDS);
+        .timeout(timeout, TimeUnit.MILLISECONDS)
+        .retry(1);
   }
 
   private Completable joinHotspot(String ssid) {
