@@ -206,7 +206,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), baseBodyInterceptorV7,
         defaultClient, defaultConverter, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        sharedPreferences, new NotificationAnalytics(defaultClient, Analytics.getInstance()));
+        sharedPreferences, new NotificationAnalytics(defaultClient, Analytics.getInstance()),
+        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker());
 
     timelineService =
         new TimelineService(userId, baseBodyInterceptorV7, defaultClient, defaultConverter,
