@@ -22,6 +22,7 @@ allprojects {
     maven { url 'https://maven.fabric.io/public' }
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url "https://jitpack.io" }
+    maven { url "https://maven.google.com" }
   }
 }
 
@@ -47,7 +48,7 @@ ext {
   //
 
   // Google Android Support
-  SUPPORT_LIB_VERSION = '25.3.1'
+  SUPPORT_LIB_VERSION = '25.4.0'
 
   // Google Play Services
   PLAY_SERVICES_VERSION = '9.8.0'
@@ -72,9 +73,9 @@ ext {
   MOCK_WEB_SERVER_VERSION = '3.4.1'
   JUNIT_VERSION = '4.12'
   MOCKITO_CORE_VERSION = '1.10.19'
-  EXPRESSO_VERSION = '2.2.2'
-  RUNNER_VERSION = '0.5'
-  RULES_VERSION = '0.5'
+  ESPRESSO_VERSION = '3.0.1'
+  RUNNER_VERSION = '1.0.1'
+  RULES_VERSION = '1.0.1'
 
   // Lombok plugin
   LOMBOK_VERSION = '1.16.8'
