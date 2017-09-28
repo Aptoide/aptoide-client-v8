@@ -53,10 +53,6 @@ public interface SearchView extends View {
 
   void setLayoutWithoutTabs();
 
-  void setAllStoresTabVisible();
-
-  void setFollowedStoresTabVisible();
-
   interface Model {
 
     String getCurrentQuery();
@@ -66,5 +62,19 @@ public interface SearchView extends View {
     boolean isOnlyTrustedApps();
 
     boolean isAllStoresSelected();
+
+    void setAllStoresSelected(boolean allStoresSelected);
+
+    int getAllStoresOffset();
+
+    int getFollowedStoresOffset();
+
+    boolean hasReachedBottomOfAllStores();
+
+    boolean hasReachedBottomOfFollowedStores();
+
+    void incrementOffsetAndCheckIfReachedBottomOfFollowedStores(int offset);
+
+    void incrementOffsetAndCheckIfReachedBottomOfAllStores(int offset);
   }
 }

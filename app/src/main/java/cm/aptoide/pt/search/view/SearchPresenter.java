@@ -30,8 +30,6 @@ public class SearchPresenter implements Presenter {
   private final PublishRelay<MinimalAd> onAdClickRelay;
   private final PublishRelay<SearchApp> onItemViewClickRelay;
   private final PublishRelay<Pair<SearchApp, android.view.View>> onOpenPopupMenuClickRelay;
-  private int offset = 0;
-  private boolean reachedBottom = false;
 
   public SearchPresenter(SearchView view, SearchAnalytics analytics, SearchNavigator navigator,
       CrashReport crashReport, Scheduler viewScheduler, SearchManager searchManager,
@@ -57,7 +55,8 @@ public class SearchPresenter implements Presenter {
     handleClickToOpenAppViewFromAdd();
     handleClickToOpenPopupMenu();
     handleClickOnNoResultsImage();
-    handleAnyListReachedBottom();
+    handleAllStoresListReachedBottom();
+    handleFollowedStoresListReachedBottom();
   }
 
   @Override public void saveState(Bundle state) {
@@ -68,26 +67,57 @@ public class SearchPresenter implements Presenter {
     // does nothing
   }
 
-  private void handleAnyListReachedBottom() {
+  private void handleAllStoresListReachedBottom() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
-        .flatMap(__ -> Observable.merge(view.allStoresResultReachedBottom(),
-            view.followedStoresResultReachedBottom()))
+        .flatMap(__ -> view.allStoresResultReachedBottom())
         .debounce(250, TimeUnit.MILLISECONDS)
         .map(__ -> view.getViewModel())
-        .filter(viewModel -> !hasReachedBottom())
+        .filter(viewModel -> !viewModel.hasReachedBottomOfAllStores())
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showLoadingMore())
         .flatMap(viewModel -> loadData(viewModel.getCurrentQuery(), viewModel.getStoreName(),
-            viewModel.isOnlyTrustedApps(), getOffset()).onErrorResumeNext(err -> {
-          crashReport.log(err);
-          return Observable.just(null);
-        }))
+            viewModel.isOnlyTrustedApps(), viewModel.getAllStoresOffset()).onErrorResumeNext(
+            err -> {
+              crashReport.log(err);
+              return Observable.just(null);
+            }))
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.hideLoadingMore())
         .filter(data -> data != null)
-        .doOnNext(data -> incrementOffsetAndCheckIfReachedBottom(getItemCount(data)))
+        .doOnNext(data -> {
+          final SearchView.Model viewModel = view.getViewModel();
+          viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(getItemCount(data));
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
+  }
+
+  private void handleFollowedStoresListReachedBottom() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .observeOn(viewScheduler)
+        .flatMap(__ -> view.followedStoresResultReachedBottom())
+        .debounce(250, TimeUnit.MILLISECONDS)
+        .map(__ -> view.getViewModel())
+        .filter(viewModel -> !viewModel.hasReachedBottomOfFollowedStores())
+        .observeOn(viewScheduler)
+        .doOnNext(__ -> view.showLoadingMore())
+        .flatMap(viewModel -> loadData(viewModel.getCurrentQuery(), viewModel.getStoreName(),
+            viewModel.isOnlyTrustedApps(), viewModel.getFollowedStoresOffset()).onErrorResumeNext(
+            err -> {
+              crashReport.log(err);
+              return Observable.just(null);
+            }))
+        .observeOn(viewScheduler)
+        .doOnNext(__ -> view.hideLoadingMore())
+        .filter(data -> data != null)
+        .doOnNext(data -> {
+          final SearchView.Model viewModel = view.getViewModel();
+          viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(getItemCount(data));
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -231,11 +261,21 @@ public class SearchPresenter implements Presenter {
     if (storeName != null && !storeName.trim()
         .equals("")) {
       return loadDataForSpecificStore(query, storeName, offset).doOnNext(
-          __ -> view.setLayoutWithoutTabs());
+          __ -> view.setLayoutWithoutTabs())
+          .doOnNext(data -> {
+            final SearchView.Model viewModel = view.getViewModel();
+            viewModel.incrementOffsetAndCheckIfReachedBottomOfAllStores(getItemCount(data));
+          });
     }
     // search every store. followed and not followed
-    return Observable.merge(loadDataForAllFollowedStores(query, onlyTrustedApps, offset),
-        loadDataForAllNonFollowedStores(query, onlyTrustedApps, offset));
+    return Observable.merge(
+        loadDataForAllFollowedStores(query, onlyTrustedApps, offset).doOnNext(data -> {
+          final SearchView.Model viewModel = view.getViewModel();
+          viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(getItemCount(data));
+        }), loadDataForAllNonFollowedStores(query, onlyTrustedApps, offset).doOnNext(data -> {
+          final SearchView.Model viewModel = view.getViewModel();
+          viewModel.incrementOffsetAndCheckIfReachedBottomOfAllStores(getItemCount(data));
+        }));
   }
 
   @NonNull private Observable<ListSearchApps> loadDataForAllNonFollowedStores(String query,
@@ -267,11 +307,13 @@ public class SearchPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .map(__ -> view.getViewModel())
+        .filter(viewModel -> viewModel.getAllStoresOffset() == 0
+            && viewModel.getFollowedStoresOffset() == 0)
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showLoading())
         .doOnNext(viewModel -> analytics.search(viewModel.getCurrentQuery()))
         .flatMap(viewModel -> loadData(viewModel.getCurrentQuery(), viewModel.getStoreName(),
-            viewModel.isOnlyTrustedApps(), getOffset()).onErrorResumeNext(err -> {
+            viewModel.isOnlyTrustedApps(), 0).onErrorResumeNext(err -> {
           crashReport.log(err);
           return Observable.just(null);
         })
@@ -283,7 +325,6 @@ public class SearchPresenter implements Presenter {
                 analytics.searchNoResults(viewModel.getCurrentQuery());
               } else {
                 view.showResultsLayout();
-                incrementOffsetAndCheckIfReachedBottom(getItemCount(data));
                 if (viewModel.isAllStoresSelected()) {
                   view.showAllStoresResult();
                 } else {
@@ -300,20 +341,5 @@ public class SearchPresenter implements Presenter {
     DataList<SearchApp> dataList = listSearchApps.getDataList();
     return (dataList != null && dataList.getList() != null) ? dataList.getList()
         .size() : 0;
-  }
-
-  private int getOffset() {
-    return offset;
-  }
-
-  private boolean hasReachedBottom() {
-    return reachedBottom;
-  }
-
-  private void incrementOffsetAndCheckIfReachedBottom(int offset) {
-    this.offset += offset;
-    if (offset == 0) {
-      reachedBottom = true;
-    }
   }
 }

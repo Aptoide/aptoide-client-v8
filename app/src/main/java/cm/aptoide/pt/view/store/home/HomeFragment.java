@@ -33,10 +33,10 @@ import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.view.SearchBuilder;
 import cm.aptoide.pt.spotandshare.view.SpotSharePreviewActivity;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.updates.UpdateRepository;
-import cm.aptoide.pt.search.view.SearchBuilder;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.custom.BadgeView;
@@ -92,9 +92,6 @@ public class HomeFragment extends StoreFragment {
   }
 
   /**
-   * @param defaultStore
-   * @param defaultTheme
-   *
    * @return {@link HomeFragment} instance with default store, store context and theme
    */
   public static HomeFragment newInstance(String defaultStore, String defaultTheme) {
@@ -244,9 +241,6 @@ public class HomeFragment extends StoreFragment {
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     menu.removeItem(R.id.menu_share);
-  }
-
-  @Override protected void setupSearch(Menu menu) {
     final String defaultStore =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore();
     final SearchBuilder searchBuilder =

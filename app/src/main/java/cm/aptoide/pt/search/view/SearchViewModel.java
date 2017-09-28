@@ -7,6 +7,10 @@ import org.parceler.Parcel;
   private String storeName;
   private boolean onlyTrustedApps;
   private boolean allStoresSelected;
+  private int allStoresOffset = 0;
+  private int followedStoresOffset = 0;
+  private boolean reachedBottomAllStores = false;
+  private boolean reachedBottomFollowedStores = false;
 
   SearchViewModel() {
   }
@@ -49,5 +53,35 @@ import org.parceler.Parcel;
 
   public void setAllStoresSelected(boolean allStoresSelected) {
     this.allStoresSelected = allStoresSelected;
+  }
+
+  public int getAllStoresOffset() {
+    return allStoresOffset;
+  }
+
+  public int getFollowedStoresOffset() {
+    return followedStoresOffset;
+  }
+
+  public boolean hasReachedBottomOfAllStores() {
+    return reachedBottomAllStores;
+  }
+
+  public boolean hasReachedBottomOfFollowedStores() {
+    return reachedBottomFollowedStores;
+  }
+
+  public void incrementOffsetAndCheckIfReachedBottomOfFollowedStores(int offset) {
+    this.followedStoresOffset += offset;
+    if (offset == 0) {
+      reachedBottomFollowedStores = true;
+    }
+  }
+
+  public void incrementOffsetAndCheckIfReachedBottomOfAllStores(int offset) {
+    this.allStoresOffset += offset;
+    if (offset == 0) {
+      reachedBottomAllStores = true;
+    }
   }
 }

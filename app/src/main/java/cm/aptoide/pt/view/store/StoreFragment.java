@@ -312,8 +312,10 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_search, menu);
-
-    setupSearch(menu);
+    SearchBuilder searchBuilder =
+        new SearchBuilder(menu.findItem(R.id.action_search), getActivity(),
+            new SearchNavigator(getFragmentNavigator(), storeName));
+    searchBuilder.validateAndAttachSearch();
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -326,13 +328,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
     }
 
     return super.onOptionsItemSelected(item);
-  }
-
-  protected void setupSearch(Menu menu) {
-    SearchBuilder searchBuilder =
-        new SearchBuilder(menu.findItem(R.id.action_search), getActivity(),
-            new SearchNavigator(getFragmentNavigator(), storeName));
-    searchBuilder.validateAndAttachSearch();
   }
 
   /**
