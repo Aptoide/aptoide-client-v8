@@ -47,6 +47,7 @@ import cm.aptoide.pt.social.StatsUserProvider;
 import cm.aptoide.pt.social.TimelineUserProvider;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.CardViewHolderFactory;
+import cm.aptoide.pt.social.data.EmptyStatePost;
 import cm.aptoide.pt.social.data.MinimalCardViewFactory;
 import cm.aptoide.pt.social.data.Post;
 import cm.aptoide.pt.social.data.PostComment;
@@ -208,9 +209,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
     timelineService =
         new TimelineService(userId, baseBodyInterceptorV7, defaultClient, defaultConverter,
-            new TimelineResponseCardMapper(
-                () -> new TimelineAdsRepository(getContext(), BehaviorRelay.create()), marketName),
-            tokenInvalidator, sharedPreferences);
+            new TimelineResponseCardMapper(marketName), tokenInvalidator, sharedPreferences);
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -252,10 +251,13 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     floatingActionButton = (FloatingActionButton) view.findViewById(R.id.floating_action_button);
 
     SpannableFactory spannableFactory = new SpannableFactory();
+    TimelineAdsRepository timelineAdsRepository = new TimelineAdsRepository(BehaviorRelay.create());
+
     adapter = new PostAdapter(new ArrayList<>(),
         new CardViewHolderFactory(postTouchEventPublishSubject, dateCalculator, spannableFactory,
             new MinimalCardViewFactory(dateCalculator, spannableFactory,
-                postTouchEventPublishSubject), marketName, storeContext), new ProgressCard());
+                postTouchEventPublishSubject), marketName, timelineAdsRepository, storeContext),
+        new ProgressCard());
     list.setAdapter(adapter);
 
     final StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(
@@ -561,6 +563,18 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public void hideUser() {
     adapter.hideUser();
+  }
+
+  @Override public void showEmptyState() {
+    ArrayList<Post> emptyStatePosts = new ArrayList<>();
+    EmptyStatePost emptyStatePost = new EmptyStatePost();
+    if (userId == null) {
+      emptyStatePost.setAction(EmptyStatePost.ACTION);
+    } else {
+      emptyStatePost.setAction(EmptyStatePost.NO_ACTION);
+    }
+    emptyStatePosts.add(emptyStatePost);
+    adapter.updatePosts(emptyStatePosts);
   }
 
   private void handleSharePreviewAnswer() {

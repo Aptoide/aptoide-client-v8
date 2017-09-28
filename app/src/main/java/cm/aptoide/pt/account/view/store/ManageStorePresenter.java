@@ -98,9 +98,11 @@ public class ManageStorePresenter implements Presenter {
       }
       return "";
     })
-        .flatMapCompletable(mediaStoragePath -> storeManager.createOrUpdate(storeModel.getStoreName(), storeModel.getStoreDescription(), mediaStoragePath,
-            storeModel.hasNewAvatar(), storeModel.getStoreTheme()
-                .getThemeName(), storeModel.storeExists()));
+        .flatMapCompletable(
+            mediaStoragePath -> storeManager.createOrUpdate(storeModel.getStoreName(),
+                storeModel.getStoreDescription(), mediaStoragePath, storeModel.hasNewAvatar(),
+                storeModel.getStoreTheme()
+                    .getThemeName(), storeModel.storeExists()));
   }
 
   private void navigate() {
