@@ -298,6 +298,7 @@ public abstract class AptoideApplication extends Application {
   private Map<Integer, Result> fragmentResulMap;
   private PublishRelay<FacebookLoginResult> facebookLoginResultRelay;
   private AptoideNavigationTracker aptoideNavigationTracker;
+  private PageViewsAnalytics pageViewsAnalytics;
 
   public LeakTool getLeakTool() {
     if (leakTool == null) {
@@ -1337,6 +1338,15 @@ public abstract class AptoideApplication extends Application {
       aptoideNavigationTracker = new AptoideNavigationTracker(new ArrayList<>());
     }
     return aptoideNavigationTracker;
+  }
+
+  public PageViewsAnalytics getPageViewsAnalytics() {
+    if (pageViewsAnalytics == null) {
+      pageViewsAnalytics =
+          new PageViewsAnalytics(AppEventsLogger.newLogger(this), Analytics.getInstance(),
+              getAptoideNavigationTracker());
+    }
+    return pageViewsAnalytics;
   }
 
   public BehaviorRelay<Map<Integer, Result>> getFragmentResultRelay() {
