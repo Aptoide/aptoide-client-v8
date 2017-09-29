@@ -47,7 +47,7 @@ public class AptoideNavigationTracker implements NavigationTracker {
   }
 
   @Override public String getPreviousViewName() {
-    if (historyList.size() > 1) {
+    if (historyList.size() < 2) {
       return "";
     }
     return historyList.get(historyList.size() - 2)
