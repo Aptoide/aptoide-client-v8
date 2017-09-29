@@ -50,7 +50,7 @@ public class ShareAptoidePresenter implements Presenter {
             return permissionManager.requestLocationEnabling(permissionService);
           }
         })
-        .flatMapSingle(created -> createGroup().timeout(10, TimeUnit.SECONDS)
+        .flatMapSingle(created -> createGroup().timeout(15, TimeUnit.SECONDS)
             .toSingleDefault(2))
         .doOnError(throwable -> view.onCreateGroupError(throwable))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

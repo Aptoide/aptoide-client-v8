@@ -60,7 +60,7 @@ public class SpotAndShareWaitingToSendPresenter implements Presenter {
         })
         .flatMapSingle(lifecycleEvent -> {
           if (shouldCreateGroup) {
-            return createGroup().timeout(10, TimeUnit.SECONDS)
+            return createGroup().timeout(15, TimeUnit.SECONDS)
                 .toSingleDefault(2);
             //// FIXME: 12-07-2017 should not pass this integer
           }
