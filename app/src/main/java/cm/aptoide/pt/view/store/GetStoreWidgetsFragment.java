@@ -28,8 +28,10 @@ public class GetStoreWidgetsFragment extends GetStoreEndlessFragment<GetStoreWid
 
   @Override public void onResume() {
     super.onResume();
-    navigationTracker.registerView(this.getClass()
-        .getSimpleName());
-    pageViewsAnalytics.sendPageViewedEvent();
+    if (getUserVisibleHint()) {
+      navigationTracker.registerView(this.getClass()
+          .getSimpleName());
+      pageViewsAnalytics.sendPageViewedEvent();
+    }
   }
 }
