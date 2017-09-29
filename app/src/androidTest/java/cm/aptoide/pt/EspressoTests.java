@@ -2,13 +2,17 @@ package cm.aptoide.pt;
 
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.ViewAction;
+import android.support.test.espresso.action.CoordinatesProvider;
+import android.support.test.espresso.action.GeneralClickAction;
 import android.support.test.espresso.action.GeneralLocation;
 import android.support.test.espresso.action.GeneralSwipeAction;
 import android.support.test.espresso.action.Press;
 import android.support.test.espresso.action.Swipe;
+import android.support.test.espresso.action.Tap;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
+import android.view.View;
 import cm.aptoide.pt.view.MainActivity;
 import org.junit.Rule;
 import org.junit.Test;
@@ -17,6 +21,8 @@ import org.junit.runner.RunWith;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.pressBack;
+import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -33,92 +39,111 @@ public class EspressoTests {
 
   private final String EMAILTEST2 = "Jose.Messejana@aptoide.com";
   private final String PASS = "passwordteste0123";
-  private boolean isLoggedIn = true;
-  private boolean isFirstTime = true;
-  private final String myAccountbuttonString = "My Account";
+  private final int XCOORDINATE = 144;
+  private final int YCOORDINATE = 144;
 
   @Rule public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
 
   @Test public void signUp() throws InterruptedException {
-    try {
-      onView(withId(R.id.next_icon)).check(matches(isDisplayed()));
-    } catch(NoMatchingViewException e){
-      isFirstTime = false;
-    }
-    if(isFirstTime){
+    if(isFirstTime()){
       onView(withId(R.id.next_icon)).perform(click());
       Thread.sleep(500);
       onView(withId(R.id.next_icon)).perform(click());
       performSignUp();
     }
     else{
-      Thread.sleep(1000);
-      onView(withId(R.id.toolbar)).perform(swipeRigthOnLeftMost());
-      Thread.sleep(2000);
-      onView(withText(myAccountbuttonString)).perform(click());// Should work with navigation_item_my_account
+      goToMyAccount();
       Thread.sleep(500);
-      try { //user not logged in
-        onView(withText(R.id.show_login_with_aptoide_area)).check(matches(isDisplayed()));
-      } catch (NoMatchingViewException e) {
-        isLoggedIn = false;
-      }
-      Thread.sleep(500);
-      if (!isLoggedIn) {
+      if (!isLoggedIn()) {
         performSignUp();
       } else {
         onView(withId(R.id.button_logout)).perform(click());
-        //TO DO
+        goToMyAccount();
+        performSignUp();
       }
     }
   }
 
   @Test public void signIn() throws InterruptedException {
-      try {
-        onView(withId(R.id.next_icon)).check(matches(isDisplayed()));
-      } catch(NoMatchingViewException e){
-        isFirstTime = false;
-      }
-      if(isFirstTime)
+      if(isFirstTime()){
         onView(withId(R.id.next_icon)).perform(click());
         Thread.sleep(500);
         onView(withId(R.id.next_icon)).perform(click());
         performLogin();
       }
       else{
-      Thread.sleep(1000);
-      onView(withId(R.id.toolbar)).perform(swipeRigthOnLeftMost());
-      Thread.sleep(2000);
-      onView(withText(myAccountbuttonString)).perform(click());// Should work with navigation_item_my_account
+        goToMyAccount();
       Thread.sleep(500);
-      try { //user not logged in
-        onView(withText(R.id.show_login_with_aptoide_area)).check(matches(isDisplayed()));
-      } catch (NoMatchingViewException e) {
-        isLoggedIn = false;
-      }
-      Thread.sleep(500);
-      if (!isLoggedIn) {
+      if (!isLoggedIn()) {
         performLogin();
       } else {
         onView(withId(R.id.button_logout)).perform(click());
-        //TO DO
+        goToMyAccount();
+        performLogin();
       }
     }
   }
 
   @Test public void download() throws InterruptedException {
-    try {
-      onView(withId(R.id.next_icon)).check(matches(isDisplayed()));
-    } catch(NoMatchingViewException e){
-      isFirstTime = false;
-    }
-    if(isFirstTime){
+    if(isFirstTime()){
       onView(withId(R.id.next_icon)).perform(click());
       Thread.sleep(500);
       onView(withId(R.id.next_icon)).perform(click());
       Thread.sleep(500);
       onView(withId(R.id.skip_text)).perform(click());
     }
+    else{
+      Thread.sleep(500);
+      onView(withId(R.id.action_search)).perform(click());
+      Thread.sleep(500);
+      onView(withId(R.id.search_src_text)).perform(replaceText("Cut the rope"), pressImeActionButton());
+      Thread.sleep(1000);
+      onView(withId(R.id.pager)).perform(clickXY(XCOORDINATE,YCOORDINATE)); //there's a better solution probably
+      onView(withId(R.id.action_btn)).perform(click());
+      if(popUp()){ //PUT SLEEPS
+        onView(withId(R.id.message)).perform(pressBack());
+      }
+      if(!isLoggedIn()) {
+        onView(withId(R.id.not_logged_in_close)).perform(click());
+      }
+      onView(withText(R.string.installing_msg)).check(matches(isDisplayed())); //Check download bar instead
+
+      //click search button and search for an app
+
+    }
   }
+
+  ////////////////END TESTS/////////////////
+
+  private boolean isFirstTime(){
+    try {
+      onView(withId(R.id.next_icon)).check(matches(isDisplayed()));
+      return true;
+    } catch(NoMatchingViewException e){
+      return false;
+    }
+  }
+
+  private boolean isLoggedIn(){
+    try { onView(withId(R.id.show_login_with_aptoide_area)).check(matches(isDisplayed()));
+      return false;
+    } catch (NoMatchingViewException e) { return true; }
+  }
+
+  private boolean popUp(){
+    try { onView(withId(R.id.message)).check(matches(isDisplayed()));
+      return true;
+    } catch (NoMatchingViewException e) { return false; }
+  }
+
+  private void goToMyAccount() throws InterruptedException {
+    Thread.sleep(1000);
+    onView(withId(R.id.toolbar)).perform(swipeRigthOnLeftMost());
+    Thread.sleep(2000);
+    onView(withText(R.string.my_account_title_my_account)).perform(click());//  TO DO Should work with navigation_item_my_account
+    Thread.sleep(500);
+  }
+
 
   private void performLogin() throws InterruptedException {
     Thread.sleep(500);
@@ -127,6 +152,7 @@ public class EspressoTests {
     onView(withId(R.id.username)).perform(replaceText(EMAILTEST2));
     onView(withId(R.id.password)).perform(replaceText(PASS),closeSoftKeyboard());
     onView(withId(R.id.button_login)).perform(click());
+    //TO DO AFTER FLOW
   }
 
   private void performSignUp() throws InterruptedException {
@@ -143,5 +169,25 @@ public class EspressoTests {
   private static ViewAction swipeRigthOnLeftMost(){
     return new GeneralSwipeAction(Swipe.FAST, GeneralLocation.CENTER_LEFT,
         GeneralLocation.CENTER_RIGHT, Press.FINGER);
+  }
+
+  public static ViewAction clickXY(final int x, final int y){
+    return new GeneralClickAction(
+        Tap.SINGLE,
+        new CoordinatesProvider() {
+          @Override
+          public float[] calculateCoordinates(View view) {
+
+            final int[] screenPos = new int[2];
+            view.getLocationOnScreen(screenPos);
+
+            final float screenX = screenPos[0] + x;
+            final float screenY = screenPos[1] + y;
+            float[] coordinates = {screenX, screenY};
+
+            return coordinates;
+          }
+        },
+        Press.FINGER);
   }
 }
