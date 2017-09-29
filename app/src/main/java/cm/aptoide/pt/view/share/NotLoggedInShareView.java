@@ -28,4 +28,12 @@ public interface NotLoggedInShareView extends GooglePlayServicesView {
   void showGoogleLogin();
 
   void hideGoogleLogin();
+
+  Observable<Void> getFakeToolbarClick();
+
+  Observable<Void> getFakeTimelineClick();
+
+  Observable<Void> backEvent();
+
+  Observable<Void> getOutsideClick();
 }
