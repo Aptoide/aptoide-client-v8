@@ -1,5 +1,8 @@
 package cm.aptoide.pt.search.view;
 
+import cm.aptoide.pt.search.model.SearchAdResult;
+import cm.aptoide.pt.search.model.SearchAppResult;
+import java.util.List;
 import org.parceler.Parcel;
 
 @Parcel class SearchViewModel implements SearchView.Model {
@@ -12,6 +15,12 @@ import org.parceler.Parcel;
   boolean reachedBottomAllStores = false;
   boolean reachedBottomFollowedStores = false;
   boolean loadedAds = false;
+
+  List<SearchAppResult> allStoresSearchAppResults;
+  List<SearchAdResult> allStoresSearchAdResults;
+
+  List<SearchAppResult> followedStoresSearchAppResults;
+  List<SearchAdResult> followedStoresSearchAdResults;
 
   SearchViewModel() {
   }
@@ -34,6 +43,39 @@ import org.parceler.Parcel;
 
   SearchViewModel(String currentQuery, String storeName) {
     this(currentQuery, storeName, true, true);
+  }
+
+  public List<SearchAppResult> getAllStoresSearchAppResults() {
+    return allStoresSearchAppResults;
+  }
+
+  public void setAllStoresSearchAppResults(List<SearchAppResult> allStoresSearchAppResults) {
+    this.allStoresSearchAppResults = allStoresSearchAppResults;
+  }
+
+  public List<SearchAdResult> getAllStoresSearchAdResults() {
+    return allStoresSearchAdResults;
+  }
+
+  public void setAllStoresSearchAdResults(List<SearchAdResult> allStoresSearchAdResults) {
+    this.allStoresSearchAdResults = allStoresSearchAdResults;
+  }
+
+  public List<SearchAppResult> getFollowedStoresSearchAppResults() {
+    return followedStoresSearchAppResults;
+  }
+
+  public void setFollowedStoresSearchAppResults(
+      List<SearchAppResult> followedStoresSearchAppResults) {
+    this.followedStoresSearchAppResults = followedStoresSearchAppResults;
+  }
+
+  public List<SearchAdResult> getFollowedStoresSearchAdResults() {
+    return followedStoresSearchAdResults;
+  }
+
+  public void setFollowedStoresSearchAdResults(List<SearchAdResult> followedStoresSearchAdResults) {
+    this.followedStoresSearchAdResults = followedStoresSearchAdResults;
   }
 
   @Override public String getCurrentQuery() {

@@ -2,11 +2,11 @@ package cm.aptoide.pt.view.configuration;
 
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.addressbook.data.Contact;
-import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.presenter.InviteFriendsContract;
+import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.downloads.scheduled.ScheduledDownloadsFragment;
 import cm.aptoide.pt.view.store.StoreFragment;
@@ -45,7 +45,7 @@ import java.util.List;
 
   Fragment newAppViewFragment(long appId, String packageName, String storeTheme, String storeName);
 
-  Fragment newAppViewFragment(MinimalAd minimalAd);
+  Fragment newAppViewFragment(SearchAdResult searchAdResult);
 
   Fragment newAppViewFragment(String packageName, AppViewFragment.OpenType openType);
 

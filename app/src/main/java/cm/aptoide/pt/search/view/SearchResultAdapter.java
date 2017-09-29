@@ -6,8 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.realm.MinimalAd;
-import cm.aptoide.pt.dataprovider.model.v7.search.SearchApp;
+import cm.aptoide.pt.search.model.SearchAdResult;
+import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.view.item.SearchLoadingViewHolder;
 import cm.aptoide.pt.search.view.item.SearchResultAdViewHolder;
 import cm.aptoide.pt.search.view.item.SearchResultItemView;
@@ -17,19 +17,20 @@ import java.util.List;
 
 public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemView> {
 
-  private final PublishRelay<MinimalAd> onAdClickRelay;
-  private final PublishRelay<SearchApp> onItemViewClick;
-  private final PublishRelay<Pair<SearchApp, android.view.View>> onOpenPopupMenuClick;
-  private final List<MinimalAd> searchAdResults;
-  private final List<SearchApp> searchResults;
+  private final PublishRelay<SearchAdResult> onAdClickRelay;
+  private final PublishRelay<SearchAppResult> onItemViewClick;
+  private final PublishRelay<Pair<SearchAppResult, android.view.View>> onOpenPopupMenuClick;
+  private final List<SearchAdResult> searchAdResults;
+  private final List<SearchAppResult> searchResults;
   private boolean adsLoaded = false;
   private boolean isLoadingMore = false;
   private CrashReport crashReport;
 
-  public SearchResultAdapter(PublishRelay<MinimalAd> onAdClickRelay,
-      PublishRelay<SearchApp> onItemViewClick,
-      PublishRelay<Pair<SearchApp, View>> onOpenPopupMenuClick, List<SearchApp> searchResults,
-      List<MinimalAd> searchAdResults, CrashReport crashReport) {
+  public SearchResultAdapter(PublishRelay<SearchAdResult> onAdClickRelay,
+      PublishRelay<SearchAppResult> onItemViewClick,
+      PublishRelay<Pair<SearchAppResult, View>> onOpenPopupMenuClick,
+      List<SearchAppResult> searchResults, List<SearchAdResult> searchAdResults,
+      CrashReport crashReport) {
     this.onAdClickRelay = onAdClickRelay;
     this.onItemViewClick = onItemViewClick;
     this.onOpenPopupMenuClick = onOpenPopupMenuClick;
@@ -103,13 +104,13 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
     return searchResults.get(position - searchAdResults.size());
   }
 
-  public void addResultForSearch(List<SearchApp> dataList) {
+  public void addResultForSearch(List<SearchAppResult> dataList) {
     searchResults.addAll(dataList);
     notifyDataSetChanged();
   }
 
-  public void setResultForAd(MinimalAd minimalAd) {
-    searchAdResults.add(minimalAd);
+  public void setResultForAd(SearchAdResult searchAd) {
+    searchAdResults.add(searchAd);
     setAdsLoaded();
   }
 
@@ -125,5 +126,20 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
     } else {
       notifyItemRemoved(searchAdResults.size() + searchResults.size() + 1);
     }
+  }
+
+  public Pair<List<SearchAppResult>, List<SearchAdResult>> getState() {
+    return new Pair<>(searchResults, searchAdResults);
+  }
+
+  public void restoreState(List<SearchAppResult> apps, List<SearchAdResult> ads) {
+    this.searchResults.clear();
+    this.searchResults.addAll(apps);
+
+    this.searchAdResults.clear();
+    this.searchAdResults.addAll(ads);
+
+    adsLoaded = true;
+    isLoadingMore = false;
   }
 }

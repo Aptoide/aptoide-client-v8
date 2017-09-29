@@ -7,6 +7,7 @@ import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.presenter.InviteFriendsContract;
+import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.social.view.TimelineFragment;
 import cm.aptoide.pt.spotandshare.view.SpotSharePreviewFragment;
 import cm.aptoide.pt.timeline.view.SocialFragment;
@@ -103,8 +104,8 @@ public class VanillaFragmentProvider implements FragmentProvider {
     return AppViewFragment.newInstance(appId, packageName, storeTheme, storeName);
   }
 
-  @Override public Fragment newAppViewFragment(MinimalAd minimalAd) {
-    return AppViewFragment.newInstance(minimalAd);
+  @Override public Fragment newAppViewFragment(SearchAdResult searchAdResult) {
+    return AppViewFragment.newInstance(searchAdResult);
   }
 
   @Override

@@ -5,16 +5,15 @@ import android.support.annotation.NonNull;
 import android.util.Pair;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.realm.MinimalAd;
-import cm.aptoide.pt.dataprovider.model.v7.DataList;
-import cm.aptoide.pt.dataprovider.model.v7.search.ListSearchApps;
-import cm.aptoide.pt.dataprovider.model.v7.search.SearchApp;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.search.SearchAnalytics;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.model.SearchAdResult;
+import cm.aptoide.pt.search.model.SearchAppResult;
 import com.jakewharton.rxrelay.PublishRelay;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.Observable;
 import rx.Scheduler;
@@ -27,14 +26,15 @@ public class SearchPresenter implements Presenter {
   private final CrashReport crashReport;
   private final Scheduler viewScheduler;
   private final SearchManager searchManager;
-  private final PublishRelay<MinimalAd> onAdClickRelay;
-  private final PublishRelay<SearchApp> onItemViewClickRelay;
-  private final PublishRelay<Pair<SearchApp, android.view.View>> onOpenPopupMenuClickRelay;
+  private final PublishRelay<SearchAdResult> onAdClickRelay;
+  private final PublishRelay<SearchAppResult> onItemViewClickRelay;
+  private final PublishRelay<Pair<SearchAppResult, android.view.View>> onOpenPopupMenuClickRelay;
 
   public SearchPresenter(SearchView view, SearchAnalytics analytics, SearchNavigator navigator,
       CrashReport crashReport, Scheduler viewScheduler, SearchManager searchManager,
-      PublishRelay<MinimalAd> onAdClickRelay, PublishRelay<SearchApp> onItemViewClickRelay,
-      PublishRelay<Pair<SearchApp, android.view.View>> onOpenPopupMenuClickRelay) {
+      PublishRelay<SearchAdResult> onAdClickRelay,
+      PublishRelay<SearchAppResult> onItemViewClickRelay,
+      PublishRelay<Pair<SearchAppResult, android.view.View>> onOpenPopupMenuClickRelay) {
     this.view = view;
     this.analytics = analytics;
     this.navigator = navigator;
@@ -93,6 +93,10 @@ public class SearchPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
+  }
+
+  private int getItemCount(List<SearchAppResult> data) {
+    return data != null ? data.size() : 0;
   }
 
   private void handleFollowedStoresListReachedBottom() {
@@ -181,19 +185,16 @@ public class SearchPresenter implements Presenter {
         .observeOn(viewScheduler)
         .flatMap(__ -> onOpenPopupMenuClickRelay)
         .flatMap(pair -> {
-          final SearchApp data = pair.first;
-          final boolean hasVersions = data.hasVersions();
-          final String appName = data.getName();
+          final SearchAppResult data = pair.first;
+          final boolean hasVersions = data.hasOtherVersions();
+          final String appName = data.getAppName();
           final String appIcon = data.getIcon();
           final String packageName = data.getPackageName();
-          final String storeName = data.getStore()
-              .getName();
+          final String storeName = data.getStoreName();
 
           //FIXME which theme should be used?
           // final String theme = view.getDefaultTheme()
-          final String theme = data.getStore()
-              .getAppearance()
-              .getTheme();
+          final String theme = data.getStoreTheme();
 
           return view.showPopup(hasVersions, pair.second)
               .doOnNext(optionId -> {
@@ -222,17 +223,14 @@ public class SearchPresenter implements Presenter {
         }, err -> crashReport.log(err));
   }
 
-  private void openAppView(SearchApp searchApp) {
+  private void openAppView(SearchAppResult searchApp) {
     final String packageName = searchApp.getPackageName();
-    final long appId = searchApp.getId();
-    final String storeName = searchApp.getStore()
-        .getName();
+    final long appId = searchApp.getAppId();
+    final String storeName = searchApp.getStoreName();
 
     // FIXME which theme should be used?
     //final String storeTheme = aptoideApplication.getDefaultTheme();
-    final String storeTheme = searchApp.getStore()
-        .getAppearance()
-        .getTheme();
+    final String storeTheme = searchApp.getStoreTheme();
 
     analytics.searchAppClick(view.getViewModel()
         .getCurrentQuery(), packageName);
@@ -261,7 +259,7 @@ public class SearchPresenter implements Presenter {
         }, err -> crashReport.log(err));
   }
 
-  private Observable<ListSearchApps> loadData(String query, String storeName,
+  private Observable<List<SearchAppResult>> loadData(String query, String storeName,
       boolean onlyTrustedApps, int offset) {
     if (storeName != null && !storeName.trim()
         .equals("")) {
@@ -276,24 +274,22 @@ public class SearchPresenter implements Presenter {
         loadDataForAllNonFollowedStores(query, onlyTrustedApps, offset));
   }
 
-  @NonNull private Observable<ListSearchApps> loadDataForAllNonFollowedStores(String query,
+  @NonNull private Observable<List<SearchAppResult>> loadDataForAllNonFollowedStores(String query,
       boolean onlyTrustedApps, int offset) {
     return searchManager.searchInNonFollowedStores(query, onlyTrustedApps, offset)
         .observeOn(viewScheduler)
-        .doOnNext(data -> view.addAllStoresResult(data.getDataList()
-            .getList()))
+        .doOnNext(view::addAllStoresResult)
         .doOnNext(data -> {
           final SearchView.Model viewModel = view.getViewModel();
           viewModel.incrementOffsetAndCheckIfReachedBottomOfAllStores(getItemCount(data));
         });
   }
 
-  @NonNull private Observable<ListSearchApps> loadDataForAllFollowedStores(String query,
+  @NonNull private Observable<List<SearchAppResult>> loadDataForAllFollowedStores(String query,
       boolean onlyTrustedApps, int offset) {
     return searchManager.searchInFollowedStores(query, onlyTrustedApps, offset)
         .observeOn(viewScheduler)
-        .doOnNext(data -> view.addFollowedStoresResult(data.getDataList()
-            .getList()))
+        .doOnNext(view::addFollowedStoresResult)
         .doOnNext(data -> {
           final SearchView.Model viewModel = view.getViewModel();
           viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(getItemCount(data));
@@ -301,12 +297,11 @@ public class SearchPresenter implements Presenter {
   }
 
   @NonNull
-  private Observable<ListSearchApps> loadDataForSpecificStore(String query, String storeName,
+  private Observable<List<SearchAppResult>> loadDataForSpecificStore(String query, String storeName,
       int offset) {
     return searchManager.searchInStore(query, storeName, offset)
         .observeOn(viewScheduler)
-        .doOnNext(data -> view.addFollowedStoresResult(data.getDataList()
-            .getList()))
+        .doOnNext(view::addFollowedStoresResult)
         .doOnNext(data -> {
           final SearchView.Model viewModel = view.getViewModel();
           viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(getItemCount(data));
@@ -345,11 +340,5 @@ public class SearchPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
-  }
-
-  private int getItemCount(ListSearchApps listSearchApps) {
-    DataList<SearchApp> dataList = listSearchApps.getDataList();
-    return (dataList != null && dataList.getList() != null) ? dataList.getList()
-        .size() : 0;
   }
 }

@@ -7,26 +7,27 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Date;
 
-public class SearchResultAdViewHolder extends SearchResultItemView<MinimalAd> {
+public class SearchResultAdViewHolder extends SearchResultItemView<SearchAdResult> {
 
   public static final int LAYOUT = R.layout.search_ad;
-  private final PublishRelay<MinimalAd> onItemViewClickRelay;
+  private final PublishRelay<SearchAdResult> onItemViewClickRelay;
 
   private TextView name;
   private ImageView icon;
   private TextView downloadsTextView;
   private RatingBar ratingBar;
   private TextView timeTextView;
-  private MinimalAd minimalAd;
+  private SearchAdResult adResult;
 
-  public SearchResultAdViewHolder(View itemView, PublishRelay<MinimalAd> onItemViewClickRelay) {
+  public SearchResultAdViewHolder(View itemView,
+      PublishRelay<SearchAdResult> onItemViewClickRelay) {
     super(itemView);
     this.onItemViewClickRelay = onItemViewClickRelay;
     bind(itemView);
@@ -39,44 +40,44 @@ public class SearchResultAdViewHolder extends SearchResultItemView<MinimalAd> {
     ratingBar = (RatingBar) itemView.findViewById(R.id.ratingbar);
     timeTextView = (TextView) itemView.findViewById(R.id.search_time);
     RxView.clicks(itemView)
-        .map(__ -> minimalAd)
+        .map(__ -> adResult)
         .subscribe(data -> onItemViewClickRelay.call(data));
   }
 
-  @Override public void setup(MinimalAd minimalAd) {
+  @Override public void setup(SearchAdResult searchAd) {
     final Context context = itemView.getContext();
     final Resources resources = itemView.getResources();
-    this.minimalAd = minimalAd;
-    setName(minimalAd);
-    setIcon(minimalAd, context);
-    setDownloadsCount(minimalAd, resources);
-    setRatingStars(minimalAd);
-    setModifiedDate(minimalAd, resources);
+    this.adResult = searchAd;
+    setName(searchAd);
+    setIcon(searchAd, context);
+    setDownloadsCount(searchAd, resources);
+    setRatingStars(searchAd);
+    setModifiedDate(searchAd, resources);
   }
 
-  private void setIcon(MinimalAd minimalAd, Context context) {
+  private void setIcon(SearchAdResult searchAd, Context context) {
     ImageLoader.with(context)
-        .load(minimalAd.getIconPath(), icon);
+        .load(searchAd.getIcon(), icon);
   }
 
-  private void setName(MinimalAd minimalAd) {
-    name.setText(minimalAd.getName());
+  private void setName(SearchAdResult searchAd) {
+    name.setText(searchAd.getAppName());
   }
 
-  private void setDownloadsCount(MinimalAd minimalAd, Resources resources) {
+  private void setDownloadsCount(SearchAdResult searchAd, Resources resources) {
     String downloadNumber =
-        AptoideUtils.StringU.withSuffix(minimalAd.getDownloads()) + " " + resources.getString(
+        AptoideUtils.StringU.withSuffix(searchAd.getTotalDownloads()) + " " + resources.getString(
             R.string.downloads);
     downloadsTextView.setText(downloadNumber);
   }
 
-  private void setRatingStars(MinimalAd minimalAd) {
-    ratingBar.setRating(minimalAd.getStars());
+  private void setRatingStars(SearchAdResult searchAd) {
+    ratingBar.setRating(searchAd.getStarRating());
   }
 
-  private void setModifiedDate(MinimalAd minimalAd, Resources resources) {
-    if (minimalAd.getModified() != null) {
-      Date modified = new Date(minimalAd.getModified());
+  private void setModifiedDate(SearchAdResult searchAd, Resources resources) {
+    if (searchAd.getModifiedDate() > 0) {
+      Date modified = new Date(searchAd.getModifiedDate());
       String timeSinceUpdate = AptoideUtils.DateTimeU.getInstance(itemView.getContext())
           .getTimeDiffAll(itemView.getContext(), modified.getTime(), resources);
       if (timeSinceUpdate != null && !timeSinceUpdate.equals("")) {

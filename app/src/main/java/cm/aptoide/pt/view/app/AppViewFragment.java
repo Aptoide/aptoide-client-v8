@@ -51,7 +51,6 @@ import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
-import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
@@ -76,8 +75,10 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
-import cm.aptoide.pt.search.view.SearchBuilder;
+import cm.aptoide.pt.search.ReferrerUtils;
 import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.model.SearchAdResult;
+import cm.aptoide.pt.search.view.SearchBuilder;
 import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
@@ -85,7 +86,6 @@ import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
-import cm.aptoide.pt.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
@@ -117,6 +117,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import okhttp3.OkHttpClient;
+import org.parceler.Parcels;
 import retrofit2.Converter;
 import rx.Observable;
 import rx.Subscription;
@@ -144,7 +145,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private long appId;
   private OpenType openType;
   private String storeTheme;
-  private MinimalAd minimalAd;
+  private SearchAdResult searchAdResult;
   private InstallManager installManager;
   private Action0 unInstallAction;
   private MenuItem uninstallMenuItem;
@@ -225,11 +226,11 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     return fragment;
   }
 
-  public static AppViewFragment newInstance(MinimalAd minimalAd) {
+  public static AppViewFragment newInstance(SearchAdResult searchAdResult) {
     Bundle bundle = new Bundle();
-    bundle.putLong(BundleKeys.APP_ID.name(), minimalAd.getAppId());
-    bundle.putString(BundleKeys.PACKAGE_NAME.name(), minimalAd.getPackageName());
-    bundle.putParcelable(BundleKeys.MINIMAL_AD.name(), minimalAd);
+    bundle.putLong(BundleKeys.APP_ID.name(), searchAdResult.getAppId());
+    bundle.putString(BundleKeys.PACKAGE_NAME.name(), searchAdResult.getPackageName());
+    bundle.putParcelable(BundleKeys.MINIMAL_AD.name(), Parcels.wrap(searchAdResult));
 
     AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
@@ -237,11 +238,11 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     return fragment;
   }
 
-  public static AppViewFragment newInstance(MinimalAd minimalAd, String storeTheme) {
+  public static AppViewFragment newInstance(SearchAdResult searchAdResult, String storeTheme) {
     Bundle bundle = new Bundle();
-    bundle.putLong(BundleKeys.APP_ID.name(), minimalAd.getAppId());
-    bundle.putString(BundleKeys.PACKAGE_NAME.name(), minimalAd.getPackageName());
-    bundle.putParcelable(BundleKeys.MINIMAL_AD.name(), minimalAd);
+    bundle.putLong(BundleKeys.APP_ID.name(), searchAdResult.getAppId());
+    bundle.putString(BundleKeys.PACKAGE_NAME.name(), searchAdResult.getPackageName());
+    bundle.putParcelable(BundleKeys.MINIMAL_AD.name(), Parcels.wrap(searchAdResult));
     bundle.putString(StoreFragment.BundleCons.STORE_THEME, storeTheme);
 
     AppViewFragment fragment = new AppViewFragment();
@@ -369,9 +370,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     } else {
       args.remove(BundleKeys.SHOULD_INSTALL.name());
     }
-    minimalAd = args.getParcelable(BundleKeys.MINIMAL_AD.name());
+    searchAdResult = Parcels.unwrap(args.getParcelable(BundleKeys.MINIMAL_AD.name()));
     storeName = args.getString(BundleKeys.STORE_NAME.name());
-    sponsored = minimalAd != null;
+    sponsored = searchAdResult != null;
     storeTheme = args.getString(StoreFragment.BundleCons.STORE_THEME);
   }
 
@@ -647,22 +648,23 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         .getStore()
         .getName();
 
-    if (minimalAd == null) {
+    if (searchAdResult == null) {
       return adsRepository.getAdsFromAppView(packageName, storeName)
+          .map(SearchAdResult::new)
           .doOnNext(ad -> {
-            minimalAd = ad;
-            handleAdsLogic(minimalAd);
+            searchAdResult = ad;
+            handleAdsLogic(searchAdResult);
           })
           .map(ad -> getApp)
           .onErrorReturn(throwable -> getApp);
     } else {
-      handleAdsLogic(minimalAd);
+      handleAdsLogic(searchAdResult);
       return Observable.just(getApp);
     }
   }
 
-  private void storeMinimalAdd(MinimalAd minimalAd) {
-    storedMinimalAdAccessor.insert(adMapper.map(minimalAd, null));
+  private void storeMinimalAdd(SearchAdResult searchAdResult) {
+    storedMinimalAdAccessor.insert(adMapper.map(searchAdResult, null));
   }
 
   @NonNull private Observable<GetApp> setKeywords(GetApp getApp) {
@@ -755,12 +757,13 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     finishLoading();
   }
 
-  private void handleAdsLogic(MinimalAd minimalAd) {
-    storeMinimalAdd(minimalAd);
-    AdNetworkUtils.knockCpc(adMapper.map(minimalAd));
+  private void handleAdsLogic(SearchAdResult searchAdResult) {
+    storeMinimalAdd(searchAdResult);
+    AdNetworkUtils.knockCpc(adMapper.map(searchAdResult));
     AptoideUtils.ThreadU.runOnUiThread(
-        () -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, false, adsRepository,
-            httpClient, converterFactory, qManager, getContext().getApplicationContext(),
+        () -> ReferrerUtils.extractReferrer(searchAdResult, ReferrerUtils.RETRIES, false,
+            adsRepository, httpClient, converterFactory, qManager,
+            getContext().getApplicationContext(),
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             new MinimalAdMapper()));
   }
@@ -830,7 +833,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       openType = null;
     }
     installDisplayable =
-        AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd, shouldInstall,
+        AppViewInstallDisplayable.newInstance(getApp, installManager, searchAdResult, shouldInstall,
             installedRepository, downloadFactory, timelineAnalytics, appViewAnalytics,
             installAppRelay, this,
             new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),

@@ -30,17 +30,17 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
-import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.model.v7.search.SearchApp;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.search.SearchAnalytics;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.model.SearchAdResult;
+import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
@@ -69,6 +69,8 @@ public class SearchFragment extends BackButtonFragment implements SearchView {
   private static final String ALL_STORES_SEARCH_LIST_STATE = "all_stores_search_list_state";
   private static final String FOLLOWED_STORES_SEARCH_LIST_STATE =
       "followed_stores_search_list_state";
+  private static final String ALL_STORES_LIST_ITEMS = "all_store_items";
+  private static final String FOLLOWED_STORES_LIST_ITEMS = "followed_store_items";
 
   private View noSearchLayout;
   private EditText noSearchLayoutSearchQuery;
@@ -89,9 +91,9 @@ public class SearchFragment extends BackButtonFragment implements SearchView {
   private SearchResultAdapter allStoresResultAdapter;
   private SearchResultAdapter followedStoresResultAdapter;
   private Toolbar toolbar;
-  private PublishRelay<SearchApp> onItemViewClickRelay;
-  private PublishRelay<Pair<SearchApp, View>> onOpenPopupMenuClickRelay;
-  private PublishRelay<MinimalAd> onAdClickRelay;
+  private PublishRelay<SearchAppResult> onItemViewClickRelay;
+  private PublishRelay<Pair<SearchAppResult, View>> onOpenPopupMenuClickRelay;
+  private PublishRelay<SearchAdResult> onAdClickRelay;
   private SearchManager searchManager;
   private Scheduler mainThreadScheduler;
   private SearchNavigator searchNavigator;
@@ -234,11 +236,11 @@ public class SearchFragment extends BackButtonFragment implements SearchView {
     progressBar.setVisibility(View.GONE);
   }
 
-  @Override public void addFollowedStoresResult(List<SearchApp> dataList) {
+  @Override public void addFollowedStoresResult(List<SearchAppResult> dataList) {
     followedStoresResultAdapter.addResultForSearch(dataList);
   }
 
-  @Override public void addAllStoresResult(List<SearchApp> dataList) {
+  @Override public void addAllStoresResult(List<SearchAppResult> dataList) {
     allStoresResultAdapter.addResultForSearch(dataList);
   }
 
@@ -246,11 +248,11 @@ public class SearchFragment extends BackButtonFragment implements SearchView {
     return viewModel;
   }
 
-  @Override public void setFollowedStoresAdsResult(MinimalAd ad) {
+  @Override public void setFollowedStoresAdsResult(SearchAdResult ad) {
     followedStoresResultAdapter.setResultForAd(ad);
   }
 
-  @Override public void setAllStoresAdsResult(MinimalAd ad) {
+  @Override public void setAllStoresAdsResult(SearchAdResult ad) {
     allStoresResultAdapter.setResultForAd(ad);
   }
 
@@ -354,6 +356,21 @@ public class SearchFragment extends BackButtonFragment implements SearchView {
 
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
+
+    if (allStoresResultAdapter != null) {
+      final Pair<List<SearchAppResult>, List<SearchAdResult>> allStoresState =
+          allStoresResultAdapter.getState();
+      viewModel.setAllStoresSearchAppResults(allStoresState.first);
+      viewModel.setAllStoresSearchAdResults(allStoresState.second);
+    }
+
+    if (followedStoresResultAdapter != null) {
+      final Pair<List<SearchAppResult>, List<SearchAdResult>> followedStoresState =
+          followedStoresResultAdapter.getState();
+      viewModel.setFollowedStoresSearchAppResults(followedStoresState.first);
+      viewModel.setFollowedStoresSearchAdResults(followedStoresState.second);
+    }
+
     outState.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
     outState.putParcelable(ALL_STORES_SEARCH_LIST_STATE, allStoresResultList.getLayoutManager()
         .onSaveInstanceState());
@@ -431,8 +448,8 @@ public class SearchFragment extends BackButtonFragment implements SearchView {
     onOpenPopupMenuClickRelay = PublishRelay.create();
     onAdClickRelay = PublishRelay.create();
 
-    final List<SearchApp> searchResultFollowedStores = new ArrayList<>();
-    final List<MinimalAd> searchResultAdsFollowedStores = new ArrayList<>();
+    final List<SearchAppResult> searchResultFollowedStores = new ArrayList<>();
+    final List<SearchAdResult> searchResultAdsFollowedStores = new ArrayList<>();
 
     followedStoresResultAdapter =
         new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, onOpenPopupMenuClickRelay,
@@ -440,8 +457,8 @@ public class SearchFragment extends BackButtonFragment implements SearchView {
 
     listItemPadding = getResources().getDimension(R.dimen.padding_very_very_small);
 
-    final List<SearchApp> searchResultAllStores = new ArrayList<>();
-    final List<MinimalAd> searchResultAdsAllStores = new ArrayList<>();
+    final List<SearchAppResult> searchResultAllStores = new ArrayList<>();
+    final List<SearchAdResult> searchResultAdsAllStores = new ArrayList<>();
 
     allStoresResultAdapter =
         new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, onOpenPopupMenuClickRelay,
@@ -471,11 +488,18 @@ public class SearchFragment extends BackButtonFragment implements SearchView {
     super.onViewStateRestored(savedInstanceState);
     if (savedInstanceState != null) {
       if (savedInstanceState.containsKey(VIEW_MODEL)) {
-        loadViewModel(savedInstanceState);
+        viewModel = loadViewModel(savedInstanceState);
+      }
+
+      if (allStoresResultAdapter != null) {
+        allStoresResultAdapter.restoreState(viewModel.allStoresSearchAppResults,
+            viewModel.allStoresSearchAdResults);
+        allStoresResultAdapter.notifyDataSetChanged();
       }
 
       if (savedInstanceState.containsKey(ALL_STORES_SEARCH_LIST_STATE)
           && allStoresResultList != null) {
+
         RecyclerView.LayoutManager layoutManager = allStoresResultList.getLayoutManager();
         if (layoutManager == null) {
           layoutManager = getDefaultLayoutManager();
@@ -483,6 +507,12 @@ public class SearchFragment extends BackButtonFragment implements SearchView {
         }
         layoutManager.onRestoreInstanceState(
             savedInstanceState.getParcelable(ALL_STORES_SEARCH_LIST_STATE));
+      }
+
+      if (followedStoresResultAdapter != null) {
+        followedStoresResultAdapter.restoreState(viewModel.followedStoresSearchAppResults,
+            viewModel.followedStoresSearchAdResults);
+        followedStoresResultAdapter.notifyDataSetChanged();
       }
 
       if (savedInstanceState.containsKey(FOLLOWED_STORES_SEARCH_LIST_STATE)

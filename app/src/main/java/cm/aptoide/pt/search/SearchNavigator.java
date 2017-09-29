@@ -1,11 +1,11 @@
 package cm.aptoide.pt.search;
 
 import android.support.v4.app.Fragment;
-import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.search.model.SearchAdResult;
+import cm.aptoide.pt.search.view.SearchFragment;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.app.OtherVersionsFragment;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
-import cm.aptoide.pt.search.view.SearchFragment;
 import cm.aptoide.pt.view.store.StoreFragment;
 
 public class SearchNavigator {
@@ -47,8 +47,8 @@ public class SearchNavigator {
     navigator.navigateTo(fragment, true);
   }
 
-  public void goToAppView(MinimalAd minimalAd) {
-    final Fragment fragment = AppViewFragment.newInstance(minimalAd);
+  public void goToAppView(SearchAdResult searchAdResult) {
+    final Fragment fragment = AppViewFragment.newInstance(searchAdResult);
     navigator.navigateTo(fragment, true);
   }
 

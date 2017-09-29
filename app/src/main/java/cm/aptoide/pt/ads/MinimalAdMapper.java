@@ -4,6 +4,7 @@ import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.model.MinimalAdInterface;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
+import cm.aptoide.pt.search.model.SearchAdResult;
 
 public class MinimalAdMapper {
 
@@ -33,13 +34,13 @@ public class MinimalAdMapper {
         .getTime());
   }
 
-  public StoredMinimalAd map(MinimalAd minimalAd, String referrer) {
+  public StoredMinimalAd map(SearchAdResult searchAdResult, String referrer) {
 
-    String packageName = minimalAd.getPackageName();
-    String cpcUrl = minimalAd.getCpcUrl();
-    String cpdUrl = minimalAd.getCpdUrl();
-    String cpiUrl = minimalAd.getCpiUrl();
-    Long adId = minimalAd.getAdId();
+    String packageName = searchAdResult.getPackageName();
+    String cpcUrl = searchAdResult.getCpcUrl();
+    String cpdUrl = searchAdResult.getClickPerDownloadUrl();
+    String cpiUrl = searchAdResult.getClickPerInstallUrl();
+    long adId = searchAdResult.getAdId();
 
     return new StoredMinimalAd(packageName, referrer, cpcUrl, cpdUrl, cpiUrl, adId);
   }
@@ -67,17 +68,17 @@ public class MinimalAdMapper {
     };
   }
 
-  public MinimalAdInterface map(MinimalAd minimalAd) {
+  public MinimalAdInterface map(SearchAdResult searchAdResult) {
     return new MinimalAdInterface() {
 
       public String cpdUrl;
 
       @Override public String getCpcUrl() {
-        return minimalAd.getCpcUrl();
+        return searchAdResult.getCpcUrl();
       }
 
       @Override public String getCpdUrl() {
-        return (cpdUrl == null) ? minimalAd.getCpdUrl() : cpdUrl;
+        return (cpdUrl == null) ? searchAdResult.getClickPerDownloadUrl() : cpdUrl;
       }
 
       @Override public void setCpdUrl(String cpdUrl) {
@@ -85,7 +86,7 @@ public class MinimalAdMapper {
       }
 
       @Override public String getCpiUrl() {
-        return minimalAd.getCpiUrl();
+        return searchAdResult.getClickPerInstallUrl();
       }
     };
   }

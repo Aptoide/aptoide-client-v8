@@ -1,8 +1,8 @@
 package cm.aptoide.pt.search.view;
 
-import cm.aptoide.pt.database.realm.MinimalAd;
-import cm.aptoide.pt.dataprovider.model.v7.search.SearchApp;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.search.model.SearchAdResult;
+import cm.aptoide.pt.search.model.SearchAppResult;
 import java.util.List;
 import rx.Observable;
 
@@ -25,15 +25,15 @@ public interface SearchView extends View {
 
   void hideLoading();
 
-  void addFollowedStoresResult(List<SearchApp> dataList);
+  void addFollowedStoresResult(List<SearchAppResult> dataList);
 
-  void addAllStoresResult(List<SearchApp> dataList);
+  void addAllStoresResult(List<SearchAppResult> dataList);
 
   Model getViewModel();
 
-  void setFollowedStoresAdsResult(MinimalAd ad);
+  void setFollowedStoresAdsResult(SearchAdResult ad);
 
-  void setAllStoresAdsResult(MinimalAd ad);
+  void setAllStoresAdsResult(SearchAdResult ad);
 
   void setFollowedStoresAdsEmpty();
 
