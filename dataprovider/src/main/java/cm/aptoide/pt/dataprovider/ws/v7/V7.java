@@ -36,6 +36,8 @@ import cm.aptoide.pt.dataprovider.util.ToRetryThrowable;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetBillingPackageRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.billing.GetProductsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.billing.GetServicesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.CardPreviewRequest;
@@ -60,7 +62,6 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
 import retrofit2.Converter;
 import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.http.Body;
@@ -339,7 +340,8 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @Multipart @POST("store/set") Observable<BaseV7Response> editStore(
-        @Part MultipartBody.Part multipartBody, @PartMap HashMapNotNull<String, RequestBody> body);
+        @Part MultipartBody.Part multipartBody,
+        @PartMap HashMapNotNull<String, okhttp3.RequestBody> body);
 
     @POST("user/getTimelineStats") Observable<TimelineStats> getTimelineStats(
         @Body GetTimelineStatsRequest.Body body,
@@ -362,7 +364,8 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
     @POST("user/set") Observable<BaseV7Response> setUser(@Body SetUserRequest.Body body);
 
     @Multipart @POST("user/set") Observable<BaseV7Response> editUser(
-        @Part MultipartBody.Part user_avatar, @PartMap HashMapNotNull<String, RequestBody> body);
+        @Part MultipartBody.Part user_avatar,
+        @PartMap HashMapNotNull<String, okhttp3.RequestBody> body);
 
     @POST("user/connections/add") Observable<GetFollowers> setConnections(
         @Body SyncAddressBookRequest.Body body);
@@ -413,6 +416,13 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
     @POST("inapp/getPackage") Observable<BaseV7Response> getBillingPackage(
         @Body GetBillingPackageRequest.PackageNameBody body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("inapp/products/get") Observable<GetProductsRequest.ResponseBody> getBillingProducts(
+        @Body GetProductsRequest.RequestBody requestBody,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("inapp/bank/services/get") Observable<GetServicesRequest.ResponseBody> getBillingServices(
+        @Body BaseBody body, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
   }
 }
 

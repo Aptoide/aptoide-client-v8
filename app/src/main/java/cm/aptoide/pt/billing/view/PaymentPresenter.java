@@ -103,7 +103,7 @@ public class PaymentPresenter implements Presenter {
             .isAuthenticated())
         .filter(authenticated -> authenticated)
         .flatMapSingle(loading -> billing.getProduct(sellerId, productId))
-        .flatMapCompletable(product -> billing.getPaymentMethods(sellerId, productId)
+        .flatMapCompletable(product -> billing.getPaymentMethods()
             .observeOn(AndroidSchedulers.mainThread())
             .flatMapCompletable(payments -> showPaymentInformation(product, payments))
             .doOnCompleted(() -> view.hidePaymentLoading()))
@@ -171,8 +171,7 @@ public class PaymentPresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(created -> view.selectPaymentEvent())
         .flatMapCompletable(
-            paymentMethodViewModel -> billing.selectPaymentMethod(paymentMethodViewModel.getId(),
-                sellerId, productId))
+            paymentMethodViewModel -> billing.selectPaymentMethod(paymentMethodViewModel.getId()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> navigator.popViewWithResult(throwable));
@@ -184,7 +183,7 @@ public class PaymentPresenter implements Presenter {
         .flatMap(__ -> view.buyEvent()
             .doOnNext(buySelection -> view.showBuyLoading())
             .flatMapSingle(selection -> billing.getProduct(sellerId, productId))
-            .flatMapCompletable(product -> billing.getSelectedPaymentMethod(sellerId, productId)
+            .flatMapCompletable(product -> billing.getSelectedPaymentMethod()
                 .doOnSuccess(
                     payment -> analytics.sendPaymentViewBuyEvent(product, payment.getName()))
                 .flatMapCompletable(payment -> billing.processPayment(sellerId, productId, payload)
@@ -238,13 +237,13 @@ public class PaymentPresenter implements Presenter {
 
   private Completable sendPaymentCancelAnalytics() {
     return billing.getProduct(sellerId, productId)
-        .flatMapCompletable(product -> billing.getSelectedPaymentMethod(sellerId, productId)
+        .flatMapCompletable(product -> billing.getSelectedPaymentMethod()
             .doOnSuccess(payment -> analytics.sendPaymentViewCancelEvent(product))
             .toCompletable());
   }
 
   private Completable showSelectedPaymentMethod() {
-    return billing.getSelectedPaymentMethod(sellerId, productId)
+    return billing.getSelectedPaymentMethod()
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSuccess(payment -> view.selectPayment(payment))
         .toCompletable();

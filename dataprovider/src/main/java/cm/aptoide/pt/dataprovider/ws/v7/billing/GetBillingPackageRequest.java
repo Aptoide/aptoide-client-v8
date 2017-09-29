@@ -18,7 +18,7 @@ import rx.Observable;
 public class GetBillingPackageRequest
     extends V7<BaseV7Response, GetBillingPackageRequest.PackageNameBody> {
 
-  public GetBillingPackageRequest(PackageNameBody baseBody,
+  private GetBillingPackageRequest(PackageNameBody baseBody,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {

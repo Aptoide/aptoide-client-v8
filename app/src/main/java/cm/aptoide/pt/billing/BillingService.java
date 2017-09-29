@@ -6,7 +6,7 @@ import rx.Single;
 
 public interface BillingService {
 
-  Single<List<PaymentMethod>> getPaymentMethods(Product product);
+  Single<List<PaymentMethod>> getPaymentMethods();
 
   Completable getBilling(String sellerId, String type);
 

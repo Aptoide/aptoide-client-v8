@@ -49,7 +49,7 @@ public class V3TransactionService implements TransactionService {
         .flatMap(isInAppBilling -> {
           if (isInAppBilling) {
             return GetTransactionRequest.of(((InAppProduct) product).getInternalId(),
-                ((InAppProduct) product).getApiVersion(), bodyInterceptorV3, httpClient,
+                3, bodyInterceptorV3, httpClient,
                 converterFactory, tokenInvalidator, sharedPreferences)
                 .observe()
                 .cast(TransactionResponse.class)

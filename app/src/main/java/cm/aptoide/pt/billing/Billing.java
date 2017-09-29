@@ -68,13 +68,12 @@ public class Billing {
             .andThen(transactionRepository.remove(purchase.getProductId(), sellerId)));
   }
 
-  public Single<List<PaymentMethod>> getPaymentMethods(String sellerId, String productId) {
-    return getProduct(sellerId, productId).flatMap(
-        product -> billingService.getPaymentMethods(product));
+  public Single<List<PaymentMethod>> getPaymentMethods() {
+    return billingService.getPaymentMethods();
   }
 
   public Completable processPayment(String sellerId, String productId, String payload) {
-    return getSelectedPaymentMethod(sellerId, productId).flatMap(
+    return getSelectedPaymentMethod().flatMap(
         paymentMethod -> getProduct(sellerId, productId).flatMap(
             product -> transactionRepository.createTransaction(sellerId, paymentMethod.getId(),
                 product, payload)))
@@ -97,7 +96,7 @@ public class Billing {
 
   public Completable processLocalPayment(String sellerId, String productId, String payload,
       String localMetadata) {
-    return getSelectedPaymentMethod(sellerId, productId).flatMap(
+    return getSelectedPaymentMethod().flatMap(
         paymentMethod -> getProduct(sellerId, productId).flatMap(
             product -> transactionRepository.createTransaction(sellerId, paymentMethod.getId(),
                 product, localMetadata, payload)))
@@ -132,30 +131,29 @@ public class Billing {
         });
   }
 
-  public Observable<Authorization> getAuthorization(String sellerId, String productId) {
-    return getSelectedPaymentMethod(sellerId, productId).flatMapObservable(
+  public Observable<Authorization> getAuthorization() {
+    return getSelectedPaymentMethod().flatMapObservable(
         paymentMethod -> authorizationRepository.getAuthorization(paymentMethod.getId()));
   }
 
-  public Completable authorize(String sellerId, String productId) {
-    return getSelectedPaymentMethod(sellerId, productId).flatMap(
+  public Completable authorize() {
+    return getSelectedPaymentMethod().flatMap(
         paymentMethod -> authorizationRepository.createAuthorization(paymentMethod.getId()))
         .toCompletable();
   }
 
-  public Completable selectPaymentMethod(int paymentMethodId, String sellerId, String productId) {
-    return getPaymentMethod(paymentMethodId, sellerId, productId).flatMapCompletable(
+  public Completable selectPaymentMethod(int paymentMethodId) {
+    return getPaymentMethod(paymentMethodId).flatMapCompletable(
         paymentMethod -> paymentMethodSelector.selectPaymentMethod(paymentMethod));
   }
 
-  public Single<PaymentMethod> getSelectedPaymentMethod(String sellerId, String productId) {
-    return getPaymentMethods(sellerId, productId).flatMap(
+  public Single<PaymentMethod> getSelectedPaymentMethod() {
+    return getPaymentMethods().flatMap(
         paymentMethods -> paymentMethodSelector.selectedPaymentMethod(paymentMethods));
   }
 
-  private Single<PaymentMethod> getPaymentMethod(int paymentMethodId, String sellerId,
-      String productId) {
-    return getPaymentMethods(sellerId, productId).flatMapObservable(
+  private Single<PaymentMethod> getPaymentMethod(int paymentMethodId) {
+    return getPaymentMethods().flatMapObservable(
         payments -> Observable.from(payments)
             .filter(payment -> payment.getId() == paymentMethodId)
             .switchIfEmpty(Observable.error(

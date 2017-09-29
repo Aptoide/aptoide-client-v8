@@ -8,9 +8,9 @@ package cm.aptoide.pt.billing.product;
 import cm.aptoide.pt.billing.BillingIdResolver;
 import cm.aptoide.pt.billing.Price;
 import cm.aptoide.pt.billing.Product;
-import cm.aptoide.pt.dataprovider.model.v3.InAppBillingSkuDetailsResponse;
 import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
 import cm.aptoide.pt.dataprovider.model.v3.PaymentServiceResponse;
+import cm.aptoide.pt.dataprovider.ws.v7.billing.GetProductsRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,52 +35,30 @@ public class ProductFactory {
     final PaymentServiceResponse paymentService =
         getPaymentServiceResponse(payment.getPaymentServices());
     final String currency = (paymentService != null) ? paymentService.getCurrency() : "";
-    final double taxRate = (paymentService != null) ? paymentService.getTaxRate() : 0.0;
 
     return new PaidAppProduct(idResolver.resolveProductId(app.getPath()
         .getAppId()), productId, icon, app.getApp()
         .getName(), app.getApp()
         .getDescription(), app.getPath()
-        .getAppId(), new Price(payment.getAmount(), currency, payment.getSymbol(), taxRate),
-        app.getPath()
-            .getVersionCode());
+        .getAppId(), new Price(payment.getAmount(), currency, payment.getSymbol()), app.getPath()
+        .getVersionCode());
   }
 
-  public List<Product> create(int apiVersion, String packageName,
-      InAppBillingSkuDetailsResponse response, int packageVersionCode, String applicationName) {
+  public List<Product> create(String packageName,
+      List<GetProductsRequest.ResponseBody.Product> responseList, int packageVersionCode,
+      String applicationName) {
 
-    final PaymentServiceResponse paymentServiceResponse =
-        getPaymentServiceResponse(response.getPaymentServices());
+    final List<Product> products = new ArrayList<>(responseList.size());
 
-    double taxRate = 0f;
-    String sign = "";
-
-    if (paymentServiceResponse != null) {
-      taxRate = paymentServiceResponse.getTaxRate();
-      sign = paymentServiceResponse.getSign();
-    }
-
-    final List<Product> products = new ArrayList<>();
-
-    final InAppBillingSkuDetailsResponse.Metadata metadata = response.getMetadata();
-
-    int id = 0;
-    String icon = "";
-
-    if (metadata != null) {
-      id = metadata.getId();
-      icon = metadata.getIcon();
-    }
-
-    for (InAppBillingSkuDetailsResponse.PurchaseDataObject purchaseDataObject : response.getPublisherResponse()
-        .getDetailList()) {
+    for (GetProductsRequest.ResponseBody.Product response : responseList) {
 
       products.add(
-          new InAppProduct(idResolver.resolveProductId(purchaseDataObject.getProductId()), id, icon,
-              purchaseDataObject.getTitle(), purchaseDataObject.getDescription(), apiVersion,
-              purchaseDataObject.getProductId(), packageName,
-              new Price(purchaseDataObject.getPriceAmount(), purchaseDataObject.getCurrency(), sign,
-                  taxRate), packageVersionCode, applicationName));
+          new InAppProduct(idResolver.resolveProductId(response.getSku()), response.getId(),
+              response.getIcon(), response.getTitle(), response.getDescription(), response.getSku(),
+              packageName, new Price(response.getPrice()
+              .getAmount(), response.getPrice()
+              .getCurrency(), response.getPrice()
+              .getSign()), packageVersionCode, applicationName));
     }
 
     return products;

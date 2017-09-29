@@ -6,7 +6,7 @@
 package cm.aptoide.pt.billing;
 
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.dataprovider.model.v3.PaymentServiceResponse;
+import cm.aptoide.pt.dataprovider.ws.v7.billing.GetServicesRequest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,14 +20,10 @@ public class PaymentMethodMapper {
   public static final int MOL_POINTS = 10;
   public static final int BRAINTREE_CREDIT_CARD = 11;
 
-  public List<PaymentMethod> map(List<PaymentServiceResponse> response) {
+  public List<PaymentMethod> map(List<GetServicesRequest.ResponseBody.Service> responseList) {
 
-    if (response == null || response.isEmpty()) {
-      return Collections.emptyList();
-    }
-
-    final List<PaymentMethod> paymentMethods = new ArrayList<>(response.size());
-    for (PaymentServiceResponse service : response) {
+    final List<PaymentMethod> paymentMethods = new ArrayList<>(responseList.size());
+    for (GetServicesRequest.ResponseBody.Service service : responseList) {
       try {
         paymentMethods.add(map(service));
       } catch (IllegalArgumentException ignored) {
@@ -36,19 +32,19 @@ public class PaymentMethodMapper {
     return paymentMethods;
   }
 
-  private PaymentMethod map(PaymentServiceResponse response) {
+  private PaymentMethod map(GetServicesRequest.ResponseBody.Service response) {
     switch (response.getId()) {
       case BRAINTREE_CREDIT_CARD:
-        return new PaymentMethod(response.getId(), response.getName(), response.getDescription(),
+        return new PaymentMethod(response.getId(), response.getName(), response.getLabel(),
             R.drawable.credit_cards);
       case PAYPAL:
-        return new PaymentMethod(response.getId(), response.getName(), response.getDescription(),
+        return new PaymentMethod(response.getId(), response.getName(), response.getLabel(),
             R.drawable.paypal);
       case BOA_COMPRA:
       case BOA_COMPRA_GOLD:
       case MOL_POINTS:
       case SANDBOX:
-        return new PaymentMethod(response.getId(), response.getName(), response.getDescription());
+        return new PaymentMethod(response.getId(), response.getName(), response.getLabel());
       default:
         throw new IllegalArgumentException("Payment not supported: " + response.getName());
     }
