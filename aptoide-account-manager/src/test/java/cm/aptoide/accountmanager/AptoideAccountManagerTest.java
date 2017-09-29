@@ -61,7 +61,7 @@ public class AptoideAccountManagerTest {
     testSubscriber.assertCompleted();
     testSubscriber.assertNoErrors();
 
-    verify(accountAnalyticsMock).login("marcelo.benites@aptoide.com");
+    verify(accountAnalyticsMock).loginSuccess();
     verify(accountRelayMock).call(accountMock);
   }
 
@@ -120,7 +120,6 @@ public class AptoideAccountManagerTest {
     testSubscriber.assertCompleted();
     testSubscriber.assertNoErrors();
 
-    verify(accountAnalyticsMock).login("john.lennon@aptoide.com");
     verify(accountRelayMock).call(accountMock);
   }
 }

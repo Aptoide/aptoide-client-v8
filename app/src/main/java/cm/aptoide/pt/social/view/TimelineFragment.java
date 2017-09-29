@@ -143,6 +143,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private TimelineAnalytics timelineAnalytics;
   private OkHttpClient defaultClient;
   private String marketName;
+  private CrashReport crashReport;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -205,11 +206,13 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), baseBodyInterceptorV7,
         defaultClient, defaultConverter, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        sharedPreferences, new NotificationAnalytics(defaultClient, Analytics.getInstance()));
+        sharedPreferences, new NotificationAnalytics(defaultClient, Analytics.getInstance()),
+        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker());
 
     timelineService =
         new TimelineService(userId, baseBodyInterceptorV7, defaultClient, defaultConverter,
             new TimelineResponseCardMapper(marketName), tokenInvalidator, sharedPreferences);
+    crashReport = CrashReport.getInstance();
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -493,7 +496,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             .getCardId());
     commentDialogFragment.setCommentBeforeSubmissionCallbackContract((inputText) -> {
       PostComment postComment =
-          new PostComment(touchEvent.getCard(), inputText, touchEvent.getPostPosition());
+          new PostComment(touchEvent.getCard(), inputText, touchEvent.getPosition());
       commentPostResponseSubject.onNext(postComment);
     });
     commentDialogFragment.show(fm, "fragment_comment_dialog");
@@ -579,14 +582,19 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   private void handleSharePreviewAnswer() {
     shareDialog.cancels()
-        .doOnNext(__ -> shareDialog.dismiss())
+        .doOnNext(shareEvent -> timelineAnalytics.sendShareCompleted(false))
         .compose(bindUntilEvent(LifecycleEvent.PAUSE))
         .subscribe();
 
     shareDialog.shares()
         .doOnNext(event -> sharePostPublishSubject.onNext(event))
+        .doOnNext(shareEvent -> timelineAnalytics.sendShareCompleted(true))
         .compose(bindUntilEvent(LifecycleEvent.PAUSE))
-        .subscribe();
+        .subscribe(shareEvent -> {
+        }, throwable -> {
+          crashReport.log(throwable);
+          timelineAnalytics.sendShareCompleted(false);
+        });
     shareDialog.show();
   }
 

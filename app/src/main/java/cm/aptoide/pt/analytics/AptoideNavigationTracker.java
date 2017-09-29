@@ -35,7 +35,7 @@ public class AptoideNavigationTracker implements NavigationTracker {
     if (viewList.isEmpty()) {
       return "";
     }
-    return viewList.get(viewList.size() - 1);
+    return viewList.get(viewList.size() - 2);
   }
 
   @Override public String getCurrentViewName() {

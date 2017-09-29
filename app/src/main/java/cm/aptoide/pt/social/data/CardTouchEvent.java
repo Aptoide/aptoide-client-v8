@@ -8,9 +8,11 @@ public class CardTouchEvent {
 
   private final Post card;
   private final Type actionType;
+  private final int position;
 
-  public CardTouchEvent(Post card, Type actionType) {
+  public CardTouchEvent(Post card, int position, Type actionType) {
     this.card = card;
+    this.position = position;
     this.actionType = actionType;
   }
 
@@ -20,6 +22,10 @@ public class CardTouchEvent {
 
   public Type getActionType() {
     return actionType;
+  }
+
+  public int getPosition() {
+    return position;
   }
 
   public enum Type {HEADER, LIKE, TIMELINE_STATS, LOGIN, COMMENT, SHARE, LIKES_PREVIEW, COMMENT_NUMBER, LAST_COMMENT, BODY, ERROR, NOTIFICATION, NOTIFICATION_CENTER, POST, ADD_FRIEND}

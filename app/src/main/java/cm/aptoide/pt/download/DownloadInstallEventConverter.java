@@ -76,6 +76,7 @@ abstract class DownloadInstallEventConverter<T extends DownloadInstallBaseEvent>
     }
 
     data.setResult(result);
+    data.setPreviousContext(report.getPreviousContext());
     return new DownloadInstallAnalyticsBaseBody(appId, convertSpecificFields(report, data));
   }
 

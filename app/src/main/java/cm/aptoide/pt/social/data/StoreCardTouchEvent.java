@@ -8,8 +8,9 @@ public class StoreCardTouchEvent extends CardTouchEvent {
   private final String storeName;
   private final String storeTheme;
 
-  public StoreCardTouchEvent(Post card, String storeName, String storeTheme, Type actionType) {
-    super(card, actionType);
+  public StoreCardTouchEvent(Post card, String storeName, String storeTheme, Type actionType,
+      int position) {
+    super(card, position, actionType);
     this.storeName = storeName;
     this.storeTheme = storeTheme;
   }

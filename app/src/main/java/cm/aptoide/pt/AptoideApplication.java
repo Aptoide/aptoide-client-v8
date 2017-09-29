@@ -43,7 +43,6 @@ import cm.aptoide.pt.account.DatabaseStoreDataPersist;
 import cm.aptoide.pt.account.FacebookLoginResult;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
-import cm.aptoide.pt.account.LogAccountAnalytics;
 import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.account.V3AccountService;
 import cm.aptoide.pt.account.view.store.StoreManager;
@@ -400,6 +399,11 @@ public abstract class AptoideApplication extends Application {
 
     startNotificationCenter();
     getRootInstallationRetryHandler().start();
+    AptoideApplicationAnalytics aptoideApplicationAnalytics = new AptoideApplicationAnalytics();
+    accountManager.accountStatus()
+        .map(account -> account.isLoggedIn())
+        .distinctUntilChanged()
+        .subscribe(isLoggedIn -> aptoideApplicationAnalytics.updateDimension(isLoggedIn));
 
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
@@ -715,7 +719,6 @@ public abstract class AptoideApplication extends Application {
               Schedulers.io());
 
       accountManager = new AptoideAccountManager.Builder().setAccountPersistence(accountPersistence)
-          .setAccountAnalytics(new LogAccountAnalytics())
           .setAccountService(accountService)
           .registerSignUpAdapter(GoogleSignUpAdapter.TYPE,
               new GoogleSignUpAdapter(getGoogleSignInClient(), getLoginPreferences()))
@@ -1329,6 +1332,13 @@ public abstract class AptoideApplication extends Application {
     return timelineRepositoryFactory.create(action);
   }
 
+  public AptoideNavigationTracker getAptoideNavigationTracker() {
+    if (aptoideNavigationTracker == null) {
+      aptoideNavigationTracker = new AptoideNavigationTracker(new ArrayList<>());
+    }
+    return aptoideNavigationTracker;
+  }
+
   public BehaviorRelay<Map<Integer, Result>> getFragmentResultRelay() {
     if (fragmentResultRelay == null) {
       fragmentResultRelay = BehaviorRelay.create();
@@ -1355,13 +1365,6 @@ public abstract class AptoideApplication extends Application {
       facebookLoginResultRelay = PublishRelay.create();
     }
     return facebookLoginResultRelay;
-  }
-
-  public AptoideNavigationTracker getAptoideNavigationTracker() {
-    if (aptoideNavigationTracker == null) {
-      aptoideNavigationTracker = new AptoideNavigationTracker(new ArrayList<>());
-    }
-    return aptoideNavigationTracker;
   }
 
   public abstract LoginPreferences getLoginPreferences();
