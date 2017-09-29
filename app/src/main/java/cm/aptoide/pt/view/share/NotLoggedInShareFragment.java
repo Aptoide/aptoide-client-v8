@@ -116,18 +116,18 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
         .load(getArguments().getString(APP_ICON), appIcon);
 
     attachPresenter(new NotLoggedInSharePresenter(this,
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        CrashReport.getInstance(), accountManager,
-        ((ActivityResultNavigator) getContext()).getAccountNavigator(),
-        Arrays.asList("email", "user_friends"), Arrays.asList("email"), requestCode, errorMapper,
-        new AccountAnalytics(Analytics.getInstance(),
-            ((AptoideApplication) getContext().getApplicationContext()).getBodyInterceptorPoolV7(),
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient(),
-            WebService.getDefaultConverter(),
-            ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
-            BuildConfig.APPLICATION_ID,
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-            AppEventsLogger.newLogger(getContext().getApplicationContext()), navigationTracker)),
+            CrashReport.getInstance(), accountManager,
+            ((ActivityResultNavigator) getContext()).getAccountNavigator(),
+            Arrays.asList("email", "user_friends"), Arrays.asList("email"), requestCode, errorMapper,
+            new AccountAnalytics(Analytics.getInstance(),
+                ((AptoideApplication) getContext().getApplicationContext()).getBodyInterceptorPoolV7(),
+                ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient(),
+                WebService.getDefaultConverter(),
+                ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
+                BuildConfig.APPLICATION_ID,
+                ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+                AppEventsLogger.newLogger(getContext().getApplicationContext()), navigationTracker)),
         null);
   }
 
