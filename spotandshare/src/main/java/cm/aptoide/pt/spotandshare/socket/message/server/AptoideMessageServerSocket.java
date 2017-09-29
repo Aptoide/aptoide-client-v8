@@ -14,6 +14,7 @@ import cm.aptoide.pt.spotandshare.socket.message.messages.v1.SendApk;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.ServerLeftMessage;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
@@ -178,7 +179,19 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
   }
 
   public void onNewFriend(Friend friend, Host host) {
+    sendFriendsList(host);
     friendsManager.addFriend(friend, host);
     sendToOthers(host, new NewFriendMessage(host, friend));
+  }
+
+  private void sendFriendsList(Host host) {
+    Collection<Friend> friends = friendsManager.observe()
+        .toBlocking()
+        .first();
+    Iterator<Friend> iterator = friends.iterator();
+    while (iterator.hasNext()) {
+      Friend friend = iterator.next();
+      send(host, new NewFriendMessage(getHost(), friend));
+    }
   }
 }
