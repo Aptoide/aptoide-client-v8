@@ -17,9 +17,9 @@ public interface SearchView extends View {
 
   Observable<String> clickNoResultsSearchButton();
 
-  void showNoResultsImage();
+  void showNoResultsView();
 
-  void showResultsLayout();
+  void showResultsView();
 
   void showLoading();
 
@@ -51,7 +51,7 @@ public interface SearchView extends View {
 
   void hideLoadingMore();
 
-  void setLayoutWithoutTabs();
+  void setViewWithStoreNameAsSingleTab();
 
   interface Model {
 

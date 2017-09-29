@@ -129,8 +129,12 @@ public class SearchPresenter implements Presenter {
         .map(__ -> view.getViewModel())
         .filter(viewModel -> !viewModel.hasLoadedAds())
         .flatMap(viewModel -> searchManager.getAdsForQuery(viewModel.getCurrentQuery())
-            .doOnNext(__ -> viewModel.setHasLoadedAds())
+            .onErrorReturn(err -> {
+              crashReport.log(err);
+              return null;
+            })
             .observeOn(viewScheduler)
+            .doOnNext(__ -> viewModel.setHasLoadedAds())
             .doOnNext(ad -> {
               if (ad == null) {
                 view.setFollowedStoresAdsEmpty();
@@ -261,22 +265,15 @@ public class SearchPresenter implements Presenter {
       boolean onlyTrustedApps, int offset) {
     if (storeName != null && !storeName.trim()
         .equals("")) {
-      return loadDataForSpecificStore(query, storeName, offset).doOnNext(
-          __ -> view.setLayoutWithoutTabs())
-          .doOnNext(data -> {
-            final SearchView.Model viewModel = view.getViewModel();
-            viewModel.incrementOffsetAndCheckIfReachedBottomOfAllStores(getItemCount(data));
-          });
+      return Observable.fromCallable(() -> {
+        view.setViewWithStoreNameAsSingleTab();
+        return null;
+      })
+          .flatMap(__ -> loadDataForSpecificStore(query, storeName, offset));
     }
     // search every store. followed and not followed
-    return Observable.merge(
-        loadDataForAllFollowedStores(query, onlyTrustedApps, offset).doOnNext(data -> {
-          final SearchView.Model viewModel = view.getViewModel();
-          viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(getItemCount(data));
-        }), loadDataForAllNonFollowedStores(query, onlyTrustedApps, offset).doOnNext(data -> {
-          final SearchView.Model viewModel = view.getViewModel();
-          viewModel.incrementOffsetAndCheckIfReachedBottomOfAllStores(getItemCount(data));
-        }));
+    return Observable.merge(loadDataForAllFollowedStores(query, onlyTrustedApps, offset),
+        loadDataForAllNonFollowedStores(query, onlyTrustedApps, offset));
   }
 
   @NonNull private Observable<ListSearchApps> loadDataForAllNonFollowedStores(String query,
@@ -284,7 +281,11 @@ public class SearchPresenter implements Presenter {
     return searchManager.searchInNonFollowedStores(query, onlyTrustedApps, offset)
         .observeOn(viewScheduler)
         .doOnNext(data -> view.addAllStoresResult(data.getDataList()
-            .getList()));
+            .getList()))
+        .doOnNext(data -> {
+          final SearchView.Model viewModel = view.getViewModel();
+          viewModel.incrementOffsetAndCheckIfReachedBottomOfAllStores(getItemCount(data));
+        });
   }
 
   @NonNull private Observable<ListSearchApps> loadDataForAllFollowedStores(String query,
@@ -292,7 +293,11 @@ public class SearchPresenter implements Presenter {
     return searchManager.searchInFollowedStores(query, onlyTrustedApps, offset)
         .observeOn(viewScheduler)
         .doOnNext(data -> view.addFollowedStoresResult(data.getDataList()
-            .getList()));
+            .getList()))
+        .doOnNext(data -> {
+          final SearchView.Model viewModel = view.getViewModel();
+          viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(getItemCount(data));
+        });
   }
 
   @NonNull
@@ -301,7 +306,11 @@ public class SearchPresenter implements Presenter {
     return searchManager.searchInStore(query, storeName, offset)
         .observeOn(viewScheduler)
         .doOnNext(data -> view.addFollowedStoresResult(data.getDataList()
-            .getList()));
+            .getList()))
+        .doOnNext(data -> {
+          final SearchView.Model viewModel = view.getViewModel();
+          viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(getItemCount(data));
+        });
   }
 
   private void firstSearchDataLoad() {
@@ -322,10 +331,10 @@ public class SearchPresenter implements Presenter {
             .doOnNext(__2 -> view.hideLoading())
             .doOnNext(data -> {
               if (data == null || getItemCount(data) == 0) {
-                view.showNoResultsImage();
+                view.showNoResultsView();
                 analytics.searchNoResults(viewModel.getCurrentQuery());
               } else {
-                view.showResultsLayout();
+                view.showResultsView();
                 if (viewModel.isAllStoresSelected()) {
                   view.showAllStoresResult();
                 } else {

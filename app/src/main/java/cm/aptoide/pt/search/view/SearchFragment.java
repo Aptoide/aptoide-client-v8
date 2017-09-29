@@ -140,9 +140,9 @@ public class SearchFragment extends BackButtonFragment implements SearchView {
     progressBar = view.findViewById(R.id.progress_bar);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
   }
-  
+
   @Override public void showFollowedStoresResult() {
-    if (!viewModel.isAllStoresSelected()) {
+    if (followedStoresResultList.getVisibility() == View.VISIBLE) {
       return;
     }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -170,7 +170,7 @@ public class SearchFragment extends BackButtonFragment implements SearchView {
   }
 
   @Override public void showAllStoresResult() {
-    if (viewModel.isAllStoresSelected()) {
+    if (allStoresResultList.getVisibility() == View.VISIBLE) {
       return;
     }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -211,7 +211,7 @@ public class SearchFragment extends BackButtonFragment implements SearchView {
             .toString());
   }
 
-  @Override public void showNoResultsImage() {
+  @Override public void showNoResultsView() {
     noSearchLayout.setVisibility(View.VISIBLE);
     searchResultsLayout.setVisibility(View.GONE);
     buttonsLayout.setVisibility(View.GONE);
@@ -219,13 +219,15 @@ public class SearchFragment extends BackButtonFragment implements SearchView {
     allStoresResultList.setVisibility(View.GONE);
   }
 
-  @Override public void showResultsLayout() {
+  @Override public void showResultsView() {
     noSearchLayout.setVisibility(View.GONE);
     searchResultsLayout.setVisibility(View.VISIBLE);
   }
 
   @Override public void showLoading() {
     progressBar.setVisibility(View.VISIBLE);
+    noSearchLayout.setVisibility(View.GONE);
+    searchResultsLayout.setVisibility(View.GONE);
   }
 
   @Override public void hideLoading() {
@@ -329,10 +331,9 @@ public class SearchFragment extends BackButtonFragment implements SearchView {
     followedStoresResultAdapter.setIsLoadingMore(false);
   }
 
-  @Override public void setLayoutWithoutTabs() {
-    followedStoresResultList.setVisibility(View.GONE);
-    allStoresResultList.setVisibility(View.VISIBLE);
-    viewModel.setAllStoresSelected(true);
+  @Override public void setViewWithStoreNameAsSingleTab() {
+    followedStoresButton.setText(viewModel.getStoreName());
+    allStoresButton.setVisibility(View.GONE);
   }
 
   private void setFollowedStoresButtonSelected() {
@@ -377,12 +378,14 @@ public class SearchFragment extends BackButtonFragment implements SearchView {
 
   @NonNull private SearchNavigator getSearchNavigator() {
     final SearchNavigator searchNavigator;
+    final String defaultStore = getDefaultStore();
     if (viewModel.getStoreName() != null
         && viewModel.getStoreName()
         .length() > 0) {
-      searchNavigator = new SearchNavigator(getFragmentNavigator(), viewModel.getStoreName());
+      searchNavigator =
+          new SearchNavigator(getFragmentNavigator(), viewModel.getStoreName(), defaultStore);
     } else {
-      searchNavigator = new SearchNavigator(getFragmentNavigator(), getDefaultStore());
+      searchNavigator = new SearchNavigator(getFragmentNavigator(), defaultStore);
     }
     return searchNavigator;
   }
@@ -419,8 +422,7 @@ public class SearchFragment extends BackButtonFragment implements SearchView {
 
     searchManager =
         new SearchManager(sharedPreferences, tokenInvalidator, bodyInterceptor, httpClient,
-            converterFactory, subscribedStoresAuthMap, subscribedStoresIds, adsRepository,
-            crashReport);
+            converterFactory, subscribedStoresAuthMap, subscribedStoresIds, adsRepository);
 
     mainThreadScheduler = AndroidSchedulers.mainThread();
     searchNavigator = new SearchNavigator(getFragmentNavigator(), getDefaultStore());

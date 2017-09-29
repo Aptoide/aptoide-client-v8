@@ -44,8 +44,9 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.notification.NotificationAnalytics;
+import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.view.SearchBuilder;
 import cm.aptoide.pt.social.view.TimelineFragment;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
@@ -53,7 +54,6 @@ import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
-import cm.aptoide.pt.search.view.SearchBuilder;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.fragment.BasePagerToolbarFragment;
@@ -312,9 +312,10 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_search, menu);
+    String defaultStore = getDefaultStore();
     SearchBuilder searchBuilder =
         new SearchBuilder(menu.findItem(R.id.action_search), getActivity(),
-            new SearchNavigator(getFragmentNavigator(), storeName));
+            new SearchNavigator(getFragmentNavigator(), storeName, defaultStore));
     searchBuilder.validateAndAttachSearch();
   }
 
