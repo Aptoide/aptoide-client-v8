@@ -31,9 +31,14 @@ public class AptoideViewPager extends ViewPager {
     addOnPageChangeListener(new SimpleOnPageChangeListener() {
       @Override public void onPageSelected(int position) {
         super.onPageSelected(position);
-        aptoideNavigationTracker.registerView(
-            ((NavigationTrackerPagerAdapterHelper) getAdapter()).getItemName(position));
-        pageViewAnalytics.sendPageViewedEvent();
+
+        String currentView =
+            ((NavigationTrackerPagerAdapterHelper) getAdapter()).getItemName(position);
+
+        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker()
+            .registerView(currentView);
+        ((AptoideApplication) getContext().getApplicationContext()).getPageViewsAnalytics()
+            .sendPageViewedEvent();
       }
     });
   }
