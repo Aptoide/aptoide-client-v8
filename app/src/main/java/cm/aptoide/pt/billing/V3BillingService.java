@@ -7,7 +7,6 @@ package cm.aptoide.pt.billing;
 
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.billing.exception.ProductNotFoundException;
 import cm.aptoide.pt.billing.exception.PurchaseNotFoundException;
 import cm.aptoide.pt.billing.product.InAppProduct;
@@ -22,11 +21,13 @@ import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.GetApkInfoRequest;
-import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingAvailableRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.V7;
+import cm.aptoide.pt.dataprovider.ws.v7.billing.GetBillingPackageRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingConsumeRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingPurchasesRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingSkuDetailsRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
+import cm.aptoide.pt.install.PackageRepository;
 import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -50,13 +51,15 @@ public class V3BillingService implements BillingService {
   private final Resources resources;
   private final BillingIdResolver idResolver;
   private final int apiVersion;
+  private final BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorV7;
 
-  public V3BillingService(BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, PurchaseMapper purchaseMapper,
-      ProductFactory productFactory, PackageRepository packageRepository,
-      PaymentMethodMapper paymentMethodMapper, Resources resources, BillingIdResolver idResolver,
-      int apiVersion) {
+  public V3BillingService(BodyInterceptor<BaseBody> bodyInterceptorV3,
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorV7,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
+      PurchaseMapper purchaseMapper, ProductFactory productFactory,
+      PackageRepository packageRepository, PaymentMethodMapper paymentMethodMapper,
+      Resources resources, BillingIdResolver idResolver, int apiVersion) {
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
@@ -69,6 +72,7 @@ public class V3BillingService implements BillingService {
     this.resources = resources;
     this.idResolver = idResolver;
     this.apiVersion = apiVersion;
+    this.bodyInterceptorV7 = bodyInterceptorV7;
   }
 
   @Override public Single<List<PaymentMethod>> getPaymentMethods(Product product) {
@@ -94,20 +98,15 @@ public class V3BillingService implements BillingService {
   }
 
   @Override public Completable getBilling(String sellerId, String type) {
-    return InAppBillingAvailableRequest.of(apiVersion, idResolver.resolvePackageName(sellerId),
-        type, bodyInterceptorV3, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
+    return GetBillingPackageRequest.of(idResolver.resolvePackageName(sellerId),
+        bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe()
         .toSingle()
         .flatMapCompletable(response -> {
           if (response != null && response.isOk()) {
-            if (response.getInAppBillingAvailable()
-                .isAvailable()) {
               return Completable.complete();
-            } else {
-              return Completable.error(new IllegalArgumentException(V3.getErrorMessage(response)));
-            }
           } else {
-            return Completable.error(new IllegalArgumentException(V3.getErrorMessage(response)));
+            return Completable.error(new IllegalArgumentException(V7.getErrorMessage(response)));
           }
         });
   }

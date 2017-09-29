@@ -176,7 +176,6 @@ import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.view.ActivityProvider;
 import cm.aptoide.pt.view.FragmentProvider;
-import cm.aptoide.pt.view.configuration.implementation.ActivityProviderImpl;
 import cm.aptoide.pt.view.entry.EntryActivity;
 import cm.aptoide.pt.view.entry.EntryPointChooser;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
@@ -869,8 +868,8 @@ public abstract class AptoideApplication extends Application {
               getAuthorizationService(), getAuthorizationPersistence());
 
       final BillingService billingService =
-          new V3BillingService(getBodyInterceptorV3(), getDefaultClient(),
-              WebService.getDefaultConverter(), getTokenInvalidator(),
+          new V3BillingService(getBodyInterceptorV3(), getAccountSettingsBodyInterceptorPoolV7(),
+              getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
               getDefaultSharedPreferences(),
               new PurchaseMapper(getInAppBillingSerializer(), getBillingIdResolver()),
               new ProductFactory(getBillingIdResolver()), getPackageRepository(),
@@ -1079,10 +1078,6 @@ public abstract class AptoideApplication extends Application {
         Logger.w(TAG, "application has debug flag active");
       }
     });
-  }
-
-  protected ActivityProvider createActivityProvider() {
-    return new ActivityProviderImpl();
   }
 
   protected DisplayableWidgetMapping createDisplayableWidgetMapping() {
@@ -1424,8 +1419,7 @@ public abstract class AptoideApplication extends Application {
 
   public NavigationTracker getNavigationTracker() {
     if (navigationTracker == null) {
-      navigationTracker =
-          new NavigationTracker(new ArrayList<>(), new TrackerFilter());
+      navigationTracker = new NavigationTracker(new ArrayList<>(), new TrackerFilter());
     }
     return navigationTracker;
   }
@@ -1433,6 +1427,8 @@ public abstract class AptoideApplication extends Application {
   public abstract LoginPreferences getLoginPreferences();
 
   public abstract FragmentProvider createFragmentProvider();
+
+  public abstract ActivityProvider createActivityProvider();
 
   public NotLoggedInShareAnalytics getNotLoggedInShareAnalytics() {
     if (notLoggedInShareAnalytics == null) {

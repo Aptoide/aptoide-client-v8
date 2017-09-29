@@ -3,7 +3,6 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v3.BaseV3Response;
 import cm.aptoide.pt.dataprovider.model.v3.CheckUserCredentialsJson;
-import cm.aptoide.pt.dataprovider.model.v3.InAppBillingAvailableResponse;
 import cm.aptoide.pt.dataprovider.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.dataprovider.model.v3.InAppBillingSkuDetailsResponse;
 import cm.aptoide.pt.dataprovider.model.v3.OAuth;
@@ -31,9 +30,6 @@ public interface Service {
 
   @POST("getApkInfo") @FormUrlEncoded Observable<PaidApp> getApkInfo(@FieldMap BaseBody args,
       @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-  @POST("processInAppBilling") @FormUrlEncoded
-  Observable<InAppBillingAvailableResponse> getInAppBillingAvailable(@FieldMap BaseBody args);
 
   @POST("processInAppBilling") @FormUrlEncoded
   Observable<InAppBillingSkuDetailsResponse> getInAppBillingSkuDetails(@FieldMap BaseBody args);

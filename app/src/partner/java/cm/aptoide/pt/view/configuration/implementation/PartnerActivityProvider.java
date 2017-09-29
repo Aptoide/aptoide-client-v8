@@ -10,7 +10,7 @@ import cm.aptoide.pt.view.ActivityProvider;
  * activity provider implementation
  */
 
-public class ActivityProviderImpl implements ActivityProvider {
+public class PartnerActivityProvider implements ActivityProvider {
 
   /**
    * @return partners default main activity

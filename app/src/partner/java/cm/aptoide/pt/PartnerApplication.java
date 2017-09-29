@@ -5,7 +5,9 @@ import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.remotebootconfig.BootConfigJSONUtils;
 import cm.aptoide.pt.remotebootconfig.datamodel.BootConfig;
 import cm.aptoide.pt.remotebootconfig.datamodel.RemoteBootConfig;
+import cm.aptoide.pt.view.ActivityProvider;
 import cm.aptoide.pt.view.FragmentProvider;
+import cm.aptoide.pt.view.configuration.implementation.PartnerActivityProvider;
 import cm.aptoide.pt.view.configuration.implementation.PartnerFragmentProvider;
 import rx.Completable;
 import rx.Single;
@@ -93,6 +95,10 @@ public class PartnerApplication extends AptoideApplication {
 
   @Override public boolean isCreateStoreUserPrivacyEnabled() {
     return false;
+  }
+
+  @Override public ActivityProvider createActivityProvider() {
+    return new PartnerActivityProvider();
   }
 
   @Override public Completable createShortcut() {
