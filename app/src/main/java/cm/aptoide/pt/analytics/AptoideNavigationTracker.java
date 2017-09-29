@@ -33,7 +33,7 @@ public class AptoideNavigationTracker implements NavigationTracker {
   }
 
   @Override public String getPreviousViewName() {
-    if (viewList.isEmpty() || viewList.size() < 2) {
+    if (viewList.size() < 2) {
       return "";
     }
     return viewList.get(viewList.size() - 2);
