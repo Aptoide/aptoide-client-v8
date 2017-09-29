@@ -21,11 +21,16 @@ import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.PaymentMethod;
 import cm.aptoide.pt.billing.Product;
-import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.PermissionServiceFragment;
-import cm.aptoide.pt.view.spannable.SpannableFactory;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
+import cm.aptoide.pt.view.spannable.SpannableFactory;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxRadioGroup;
 import java.util.List;
@@ -194,9 +199,10 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
           .inflate(R.layout.payment_item, paymentRadioGroup, false);
       radioButton.setId(payment.getId());
 
-      if (payment.hasIcon()) {
-        radioButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, payment.getIcon(), 0);
-      }
+      Glide.with(this)
+          .load(payment.getIcon())
+          .into(new RadioButtonTarget(AptoideUtils.ScreenU.getPixelsForDip(24, getResources()),
+              radioButton));
 
       if (TextUtils.isEmpty(payment.getDescription())) {
         radioText = payment.getName();
@@ -268,6 +274,27 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   @Override public void showUnknownError() {
     if (!networkErrorDialog.isShowing() && !unknownErrorDialog.isShowing()) {
       unknownErrorDialog.show();
+    }
+  }
+
+  private static class RadioButtonTarget extends SimpleTarget<GlideDrawable> {
+
+    private RadioButton radioButton;
+
+    public RadioButtonTarget(int pixels, RadioButton radioButton) {
+      super(pixels, pixels);
+      this.radioButton = radioButton;
+    }
+
+    @Override public void onResourceReady(GlideDrawable glideDrawable,
+        GlideAnimation<? super GlideDrawable> glideAnimation) {
+      radioButton.setCompoundDrawablesWithIntrinsicBounds(null, null, glideDrawable.getCurrent(),
+          null);
+    }
+
+    @Override public void onDestroy() {
+      radioButton = null;
+      super.onDestroy();
     }
   }
 }

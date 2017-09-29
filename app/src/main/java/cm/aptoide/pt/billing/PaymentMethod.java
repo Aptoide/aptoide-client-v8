@@ -10,23 +10,13 @@ public class PaymentMethod {
   private final int id;
   private final String name;
   private final String description;
-  private final boolean hasIcon;
+  private final String icon;
 
-  private int icon;
-
-  public PaymentMethod(int id, String name, String description, int icon) {
+  public PaymentMethod(int id, String name, String description, String icon) {
     this.id = id;
     this.name = name;
     this.description = description;
     this.icon = icon;
-    this.hasIcon = true;
-  }
-
-  public PaymentMethod(int id, String name, String description) {
-    this.id = id;
-    this.name = name;
-    this.description = description;
-    this.hasIcon = false;
   }
 
   public int getId() {
@@ -41,11 +31,7 @@ public class PaymentMethod {
     return description;
   }
 
-  public boolean hasIcon() {
-    return hasIcon;
-  }
-
-  public int getIcon() {
+  public String getIcon() {
     return icon;
   }
 }

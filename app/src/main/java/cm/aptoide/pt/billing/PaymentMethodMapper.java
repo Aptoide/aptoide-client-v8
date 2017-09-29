@@ -5,10 +5,8 @@
 
 package cm.aptoide.pt.billing;
 
-import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetServicesRequest;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class PaymentMethodMapper {
@@ -36,15 +34,16 @@ public class PaymentMethodMapper {
     switch (response.getId()) {
       case BRAINTREE_CREDIT_CARD:
         return new PaymentMethod(response.getId(), response.getName(), response.getLabel(),
-            R.drawable.credit_cards);
+            response.getIcon());
       case PAYPAL:
         return new PaymentMethod(response.getId(), response.getName(), response.getLabel(),
-            R.drawable.paypal);
+            response.getIcon());
       case BOA_COMPRA:
       case BOA_COMPRA_GOLD:
       case MOL_POINTS:
       case SANDBOX:
-        return new PaymentMethod(response.getId(), response.getName(), response.getLabel());
+        return new PaymentMethod(response.getId(), response.getName(), response.getLabel(),
+            response.getIcon());
       default:
         throw new IllegalArgumentException("Payment not supported: " + response.getName());
     }
