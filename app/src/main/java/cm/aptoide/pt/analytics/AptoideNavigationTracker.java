@@ -15,37 +15,62 @@ import java.util.List;
 
 public class AptoideNavigationTracker implements NavigationTracker {
 
-  private List<String> viewList;
+  private List<ScreenTagHistory> historyList;
   private boolean insert;
+  private ScreenTagHistory screenHistory;
 
-  public AptoideNavigationTracker(List<String> viewList) {
-    this.viewList = viewList;
+  public AptoideNavigationTracker(List<ScreenTagHistory> historyList) {
+    this.historyList = historyList;
   }
 
   @Override public void registerView(String viewName) {
     insert = filter(viewName);
     if (insert) {
-      viewList.add(checkViewname(viewName));
+      screenHistory = new ScreenTagHistory();
+      screenHistory.setFragment(checkViewName(viewName));
+      historyList.add(screenHistory);
       Logger.d(this.getClass()
-          .getName(), "View is: " + getCurrentViewName());
+          .getName(), "View is: " + getCurrentViewName() + " - Tag is: " + getCurrentViewTag());
     }
+  }
+
+  @Override public void registerTag(String tag) {
+    getCurrentScreen().setTag(tag);
+  }
+
+  @Override public ScreenTagHistory getCurrentScreen() {
+    if (historyList.isEmpty()) {
+      screenHistory = new ScreenTagHistory();
+      historyList.add(screenHistory);
+    }
+    return historyList.get(historyList.size() - 1);
   }
 
   @Override public String getPreviousViewName() {
-    if (viewList.isEmpty()) {
+    if (historyList.size() > 1) {
       return "";
     }
-    return viewList.get(viewList.size() - 2);
+    return historyList.get(historyList.size() - 2)
+        .getFragment();
   }
 
   @Override public String getCurrentViewName() {
-    if (viewList.isEmpty()) {
+    if (historyList.isEmpty()) {
       return "";
     }
-    return viewList.get(viewList.size() - 1);
+    return historyList.get(historyList.size() - 1)
+        .getFragment();
   }
 
-  private String checkViewname(String viewName) {
+  @Override public String getPreviousViewTag() {
+    return null;
+  }
+
+  @Override public String getCurrentViewTag() {
+    return getCurrentScreen().getTag();
+  }
+
+  private String checkViewName(String viewName) {
     if (viewName.equals(GetStoreFragment.class.getSimpleName()) || viewName.equals(
         GetStoreWidgetsFragment.class.getSimpleName())) {
       return HomeFragment.class.getSimpleName();

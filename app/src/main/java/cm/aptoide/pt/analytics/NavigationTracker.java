@@ -7,7 +7,15 @@ package cm.aptoide.pt.analytics;
 public interface NavigationTracker {
   void registerView(String viewName);
 
+  void registerTag(String tag);
+
+  ScreenTagHistory getCurrentScreen();
+
   String getPreviousViewName();
 
   String getCurrentViewName();
+
+  String getPreviousViewTag();
+
+  String getCurrentViewTag();
 }
