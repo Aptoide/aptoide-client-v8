@@ -2,6 +2,7 @@ package cm.aptoide.pt.search.view;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -139,53 +140,61 @@ public class SearchFragment extends BackButtonFragment implements SearchView {
     progressBar = view.findViewById(R.id.progress_bar);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
   }
-
+  
   @Override public void showFollowedStoresResult() {
     if (!viewModel.isAllStoresSelected()) {
       return;
     }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+      int viewWidth = allStoresResultList.getWidth();
 
-    int viewWidth = allStoresResultList.getWidth();
+      followedStoresResultList.setTranslationX(-viewWidth);
+      followedStoresResultList.setVisibility(View.VISIBLE);
+      followedStoresResultList.animate()
+          .translationXBy(viewWidth)
+          .setDuration(ANIMATION_DURATION)
+          .start();
 
-    followedStoresResultList.setTranslationX(-viewWidth);
-    followedStoresResultList.setVisibility(View.VISIBLE);
-    followedStoresResultList.animate()
-        .translationXBy(viewWidth)
-        .setDuration(ANIMATION_DURATION)
-        .start();
-
-    allStoresResultList.animate()
-        .translationXBy(viewWidth)
-        .setDuration(ANIMATION_DURATION)
-        .withEndAction(() -> {
-          allStoresResultList.setVisibility(View.INVISIBLE);
-          setFollowedStoresButtonSelected();
-        })
-        .start();
+      allStoresResultList.animate()
+          .translationXBy(viewWidth)
+          .setDuration(ANIMATION_DURATION)
+          .withEndAction(() -> {
+            allStoresResultList.setVisibility(View.INVISIBLE);
+            setFollowedStoresButtonSelected();
+          })
+          .start();
+    } else {
+      followedStoresResultList.setVisibility(View.VISIBLE);
+      allStoresResultList.setVisibility(View.INVISIBLE);
+    }
   }
 
   @Override public void showAllStoresResult() {
     if (viewModel.isAllStoresSelected()) {
       return;
     }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+      int viewWidth = followedStoresResultList.getWidth();
 
-    int viewWidth = followedStoresResultList.getWidth();
+      followedStoresResultList.animate()
+          .translationXBy(-viewWidth)
+          .setDuration(ANIMATION_DURATION)
+          .start();
 
-    followedStoresResultList.animate()
-        .translationXBy(-viewWidth)
-        .setDuration(ANIMATION_DURATION)
-        .start();
-
-    allStoresResultList.setTranslationX(viewWidth);
-    allStoresResultList.setVisibility(View.VISIBLE);
-    allStoresResultList.animate()
-        .translationXBy(-viewWidth)
-        .setDuration(ANIMATION_DURATION)
-        .withEndAction(() -> {
-          followedStoresResultList.setVisibility(View.INVISIBLE);
-          setAllStoresButtonSelected();
-        })
-        .start();
+      allStoresResultList.setTranslationX(viewWidth);
+      allStoresResultList.setVisibility(View.VISIBLE);
+      allStoresResultList.animate()
+          .translationXBy(-viewWidth)
+          .setDuration(ANIMATION_DURATION)
+          .withEndAction(() -> {
+            followedStoresResultList.setVisibility(View.INVISIBLE);
+            setAllStoresButtonSelected();
+          })
+          .start();
+    } else {
+      followedStoresResultList.setVisibility(View.INVISIBLE);
+      allStoresResultList.setVisibility(View.VISIBLE);
+    }
   }
 
   @Override public Observable<Void> clickFollowedStoresSearchButton() {
