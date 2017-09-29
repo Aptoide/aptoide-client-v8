@@ -27,6 +27,7 @@ import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
+import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -96,6 +97,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private String iconPath;
   private String marketName;
   private String defaultTheme;
+  private PageViewsAnalytics pageViewAnalytics;
 
   public static StoreFragment newInstance(long userId, String storeTheme, OpenType openType) {
     return newInstance(userId, storeTheme, null, openType);
@@ -161,6 +163,9 @@ public class StoreFragment extends BasePagerToolbarFragment {
     storeAnalytics = new StoreAnalytics(AppEventsLogger.newLogger(getContext()), analytics);
     marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);
+    pageViewAnalytics =
+        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance(), navigationTracker);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -229,6 +234,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override protected void setupViewPager() {
     super.setupViewPager();
     viewPager.setAptoideNavigationTracker(navigationTracker);
+    viewPager.setPageViewAnalytics(pageViewAnalytics);
     pagerSlidingTabStrip = (PagerSlidingTabStrip) getView().findViewById(R.id.tabs);
 
     if (pagerSlidingTabStrip != null) {

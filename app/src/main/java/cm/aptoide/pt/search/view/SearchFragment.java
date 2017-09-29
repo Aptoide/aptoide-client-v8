@@ -69,8 +69,6 @@ public class SearchFragment extends BackButtonFragment implements SearchView {
   private static final String ALL_STORES_SEARCH_LIST_STATE = "all_stores_search_list_state";
   private static final String FOLLOWED_STORES_SEARCH_LIST_STATE =
       "followed_stores_search_list_state";
-  private static final String ALL_STORES_LIST_ITEMS = "all_store_items";
-  private static final String FOLLOWED_STORES_LIST_ITEMS = "followed_store_items";
 
   private View noSearchLayout;
   private EditText noSearchLayoutSearchQuery;

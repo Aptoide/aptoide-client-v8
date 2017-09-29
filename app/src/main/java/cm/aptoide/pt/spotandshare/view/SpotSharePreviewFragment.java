@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.AptoideNavigationTracker;
@@ -20,6 +21,7 @@ import cm.aptoide.pt.presenter.SpotSharePreviewPresenter;
 import cm.aptoide.pt.presenter.SpotSharePreviewView;
 import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.view.fragment.FragmentView;
+import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
 
@@ -34,6 +36,7 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
   private boolean showToolbar;
   private SpotAndShareAnalytics spotAndShareAnalytics;
   private AptoideNavigationTracker aptoideNavigationTracker;
+  private PageViewsAnalytics pageViewsAnalytics;
 
   public static Fragment newInstance(boolean showToolbar) {
     Bundle args = new Bundle();
@@ -54,8 +57,12 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
     spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
     aptoideNavigationTracker =
         ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker();
+    pageViewsAnalytics =
+        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance(), aptoideNavigationTracker);
     aptoideNavigationTracker.registerView(this.getClass()
         .getSimpleName());
+    pageViewsAnalytics.sendPageViewedEvent();
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {

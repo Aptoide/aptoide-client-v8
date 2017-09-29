@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
+import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -52,12 +53,13 @@ public class DeepLinkManager {
   private final StoreAccessor storeAccessor;
   private final String defaultTheme;
   private AptoideNavigationTracker aptoideNavigationTracker;
+  private PageViewsAnalytics pageViewsAnalytics;
 
   public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, StoreRepository storeRepository,
       FragmentNavigator fragmentNavigator, TabNavigator tabNavigator,
       DeepLinkMessages deepLinkMessages, SharedPreferences sharedPreferences,
       StoreAccessor storeAccessor, String defaultTheme,
-      AptoideNavigationTracker aptoideNavigationTracker) {
+      AptoideNavigationTracker aptoideNavigationTracker, PageViewsAnalytics pageViewsAnalytics) {
     this.storeUtilsProxy = storeUtilsProxy;
     this.storeRepository = storeRepository;
     this.fragmentNavigator = fragmentNavigator;
@@ -67,6 +69,7 @@ public class DeepLinkManager {
     this.storeAccessor = storeAccessor;
     this.defaultTheme = defaultTheme;
     this.aptoideNavigationTracker = aptoideNavigationTracker;
+    this.pageViewsAnalytics = pageViewsAnalytics;
   }
 
   public boolean showDeepLink(Intent intent) {
@@ -110,6 +113,7 @@ public class DeepLinkManager {
       return false;
     }
     aptoideNavigationTracker.registerView(deeplinkOrNotification);
+    pageViewsAnalytics.sendPageViewedEvent();
     return true;
   }
 
