@@ -25,4 +25,13 @@ public class GetStoreWidgetsFragment extends GetStoreEndlessFragment<GetStoreWid
       addDisplayables(first);
     };
   }
+
+  @Override public void onResume() {
+    super.onResume();
+    if (getUserVisibleHint()) {
+      navigationTracker.registerView(this.getClass()
+          .getSimpleName());
+      pageViewsAnalytics.sendPageViewedEvent();
+    }
+  }
 }

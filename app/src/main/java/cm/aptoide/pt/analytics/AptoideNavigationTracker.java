@@ -1,5 +1,6 @@
 package cm.aptoide.pt.analytics;
 
+import android.text.TextUtils;
 import cm.aptoide.pt.account.view.LoginSignUpCredentialsFragment;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.view.search.SearchPagerTabFragment;
@@ -32,7 +33,7 @@ public class AptoideNavigationTracker implements NavigationTracker {
   }
 
   @Override public String getPreviousViewName() {
-    if (viewList.isEmpty()) {
+    if (viewList.size() < 2) {
       return "";
     }
     return viewList.get(viewList.size() - 2);
@@ -55,11 +56,19 @@ public class AptoideNavigationTracker implements NavigationTracker {
   }
 
   private boolean filter(String viewName) {
-    if (viewName.equals(WizardFragment.class.getSimpleName())) {
+    if (TextUtils.isEmpty(viewName)) {
+      insert = false;
+    } else if (viewName.equals(HomeFragment.class.getSimpleName())) {
+      insert = false;
+    } else if (viewName.equals(WizardFragment.class.getSimpleName())) {
       insert = false;
     } else if (viewName.equals(LoginSignUpCredentialsFragment.class.getSimpleName())) {
       insert = false;
     } else if (viewName.equals(SearchPagerTabFragment.class.getSimpleName())) {
+      insert = false;
+    } else if (getCurrentViewName().equals(viewName)) {
+      insert = false;
+    } else if (getCurrentViewName().equals(checkViewname(viewName))) {
       insert = false;
     } else {
       insert = true;
