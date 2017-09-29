@@ -244,8 +244,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
                 BuildConfig.APPLICATION_ID,
                 ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
                 AppEventsLogger.newLogger(getContext().getApplicationContext()),
-                navigationTracker)),
-        savedInstanceState);
+                navigationTracker)), savedInstanceState);
   }
 
   @Override public void onDestroyView() {
