@@ -30,9 +30,8 @@ public class AptoideViewPager extends ViewPager {
     addOnPageChangeListener(new SimpleOnPageChangeListener() {
       @Override public void onPageSelected(int position) {
         super.onPageSelected(position);
-        String currentView =
-            ((NavigationTrackerPagerAdapterHelper) getAdapter()).getItemName(position);
-        aptoideNavigationTracker.registerView(currentView);
+        aptoideNavigationTracker.registerView(
+            ((NavigationTrackerPagerAdapterHelper) getAdapter()).getItemName(position));
         pageViewAnalytics.sendPageViewedEvent();
       }
     });
@@ -65,5 +64,4 @@ public class AptoideViewPager extends ViewPager {
   public void setPageViewAnalytics(PageViewsAnalytics pageViewAnalytics) {
     this.pageViewAnalytics = pageViewAnalytics;
   }
-
 }
