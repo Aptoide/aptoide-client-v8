@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import rx.Completable;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -99,34 +98,6 @@ public class SpotAndShareWaitingToSendPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> error.printStackTrace());
-  }
-
-  //private Completable createGroupObservable() {
-  //  return view.getLifecycle()
-  //      .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-  //      .flatMapSingle(lifecycleEvent -> {
-  //        if (shouldCreateGroup) {
-  //          return createGroup().timeout(10, TimeUnit.SECONDS)
-  //              .toSingleDefault(2);
-  //          //// FIXME: 12-07-2017 should not pass this integer
-  //        }
-  //        return Completable.complete()
-  //            .toSingleDefault(2);
-  //      });
-  //}
-
-  private Observable<Void> requestPermissions() {
-    return view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> {
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return permissionManager.requestLocationAndExternalStoragePermission(permissionService)
-                .flatMap(accessToLocation -> permissionManager.requestWriteSettingsPermission(
-                    permissionService));
-          } else {
-            return Observable.empty();
-          }
-        });
   }
 
   private void handleCreateGroupError(Throwable throwable) {
