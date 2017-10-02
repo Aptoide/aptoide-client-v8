@@ -7,6 +7,7 @@ import cm.aptoide.pt.spotandshare.socket.interfaces.TransferLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientController;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
 import java.io.IOException;
+import java.util.concurrent.Executors;
 
 /**
  * Created by neuro on 29-01-2017.
@@ -16,7 +17,7 @@ public class ExampleMessageController extends AptoideMessageClientController {
 
   public ExampleMessageController(AptoideMessageClientSocket aptoideMessageClientSocket) {
     super(aptoideMessageClientSocket, "/tmp/a", bytes -> true, newTransferLifecycleProvider(), null,
-        null, null, new Friend("username"));
+        null, null, new Friend("username"), Executors.newCachedThreadPool());
   }
 
   private static TransferLifecycleProvider<AndroidAppInfo> newTransferLifecycleProvider() {

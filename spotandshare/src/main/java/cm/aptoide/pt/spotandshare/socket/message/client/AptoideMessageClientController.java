@@ -13,6 +13,7 @@ import cm.aptoide.pt.spotandshare.socket.message.interfaces.Sender;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.WelcomeMessage;
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Created by neuro on 29-01-2017.
@@ -25,14 +26,20 @@ public class AptoideMessageClientController extends AptoideMessageController
   public AptoideMessageClientController(AptoideMessageClientSocket aptoideMessageClientSocket,
       String rootDir, StorageCapacity storageCapacity,
       TransferLifecycleProvider<AndroidAppInfo> transferLifecycleProvider,
-      SocketBinder socketBinder,
-      OnError<IOException> onError, AndroidAppInfoAccepter androidAppInfoAccepter, Friend friend) {
+      SocketBinder socketBinder, OnError<IOException> onError,
+      AndroidAppInfoAccepter androidAppInfoAccepter, Friend friend,
+      ExecutorService executorService) {
     super(DefaultClientHandlersListV1.create(rootDir, storageCapacity, transferLifecycleProvider,
-        aptoideMessageClientSocket, socketBinder, androidAppInfoAccepter), onError);
+        aptoideMessageClientSocket, socketBinder, androidAppInfoAccepter), onError,
+        executorService);
     this.friend = friend;
   }
 
   @Override protected void doOnConnect() {
-    send(new WelcomeMessage(getLocalhost(), friend));
+    try {
+      sendWithAck(new WelcomeMessage(getLocalhost(), friend));
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
   }
 }

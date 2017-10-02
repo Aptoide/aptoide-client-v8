@@ -14,6 +14,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
@@ -36,9 +37,10 @@ public abstract class AptoideMessageController implements Sender<Message> {
   @Getter private boolean connected;
 
   public AptoideMessageController(List<MessageHandler<? extends Message>> messageHandlers,
-      OnError<IOException> onError) {
+      OnError<IOException> onError, ExecutorService executorService) {
     this.messageHandlersMap = buildMessageHandlersMap(messageHandlers);
     this.onError = onError;
+    this.executorService = executorService;
   }
 
   protected HashMap<Class, MessageHandler> buildMessageHandlersMap(
@@ -52,6 +54,8 @@ public abstract class AptoideMessageController implements Sender<Message> {
     return messageHandlersMap;
   }
 
+  private final ExecutorService executorService;
+
   public void onConnect(Socket socket) throws IOException {
     this.socket = socket;
     objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
@@ -59,7 +63,8 @@ public abstract class AptoideMessageController implements Sender<Message> {
     localhost = Host.fromLocalhost(socket);
     host = Host.from(socket);
     connected = true;
-    doOnConnect();
+
+    executorService.submit(this::doOnConnect);
     startListening(objectInputStream);
   }
 

@@ -43,7 +43,7 @@ public class AptoideMessageClientSocket extends AptoideClientSocket {
     super(host, port, timeout);
     this.aptoideMessageController =
         new AptoideMessageClientController(this, rootDir, storageCapacity, fileLifecycleProvider,
-            socketBinder, onError, androidAppInfoAccepter, friend);
+            socketBinder, onError, androidAppInfoAccepter, friend, executorService);
     this.onError = onError;
     this.friendsManager = new FriendsManager();
   }
@@ -56,7 +56,7 @@ public class AptoideMessageClientSocket extends AptoideClientSocket {
     super(host, fallbackHostName, port, timeout);
     this.aptoideMessageController =
         new AptoideMessageClientController(this, rootDir, storageCapacity, fileLifecycleProvider,
-            socketBinder, onError, androidAppInfoAccepter, friend);
+            socketBinder, onError, androidAppInfoAccepter, friend, executorService);
     this.onError = onError;
     this.friendsManager = new FriendsManager();
   }

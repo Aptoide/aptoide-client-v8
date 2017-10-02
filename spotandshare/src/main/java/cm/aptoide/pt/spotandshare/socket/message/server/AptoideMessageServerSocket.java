@@ -68,7 +68,7 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
 
     aptoideMessageServerController =
         new AptoideMessageServerController(this, Host.fromLocalhost(socket), Host.from(socket),
-            onError);
+            onError, executorService);
     aptoideMessageControllers.add(aptoideMessageServerController);
     aptoideMessageServerController.onConnect(socket);
   }
