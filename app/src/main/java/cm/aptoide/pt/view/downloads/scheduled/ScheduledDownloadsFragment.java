@@ -109,7 +109,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-            navigationTracker);
+            aptoideNavigationTracker);
     analytics = Analytics.getInstance();
   }
 

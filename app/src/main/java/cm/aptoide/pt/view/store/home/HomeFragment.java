@@ -172,7 +172,7 @@ public class HomeFragment extends StoreFragment {
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     pageViewsAnalytics =
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), navigationTracker);
+            Analytics.getInstance(), aptoideNavigationTracker);
   }
 
   @Nullable @Override
@@ -273,7 +273,7 @@ public class HomeFragment extends StoreFragment {
     toolbar.setNavigationOnClickListener(v -> {
       drawerLayout.openDrawer(GravityCompat.START);
       drawerAnalytics.drawerOpen();
-      navigationTracker.registerView("Drawer");
+      aptoideNavigationTracker.registerView("Drawer");
       pageViewsAnalytics.sendPageViewedEvent();
     });
   }

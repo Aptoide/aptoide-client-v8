@@ -160,13 +160,13 @@ public class StoreFragment extends BasePagerToolbarFragment {
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        new NotificationAnalytics(httpClient, analytics), navigationTracker);
+        new NotificationAnalytics(httpClient, analytics), aptoideNavigationTracker);
     storeAnalytics = new StoreAnalytics(AppEventsLogger.newLogger(getContext()), analytics);
     marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);
     pageViewAnalytics =
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), navigationTracker);
+            Analytics.getInstance(), aptoideNavigationTracker);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -234,7 +234,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override protected void setupViewPager() {
     super.setupViewPager();
-    viewPager.setAptoideNavigationTracker(navigationTracker);
+    viewPager.setAptoideNavigationTracker(aptoideNavigationTracker);
     viewPager.setPageViewAnalytics(pageViewAnalytics);
     pagerSlidingTabStrip = (PagerSlidingTabStrip) getView().findViewById(R.id.tabs);
 

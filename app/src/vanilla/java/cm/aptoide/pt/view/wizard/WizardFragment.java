@@ -84,7 +84,7 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
     super.onCreate(savedInstanceState);
     pageViewAnalytics =
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), navigationTracker);
+            Analytics.getInstance(), aptoideNavigationTracker);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -226,7 +226,7 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
 
   @Override public void bindViews(@Nullable View view) {
     viewPager = (AptoideViewPager) view.findViewById(R.id.view_pager);
-    viewPager.setAptoideNavigationTracker(navigationTracker);
+    viewPager.setAptoideNavigationTracker(aptoideNavigationTracker);
     viewPager.setPageViewAnalytics(pageViewAnalytics);
     skipOrNextLayout = view.findViewById(R.id.skip_next_layout);
     radioGroup = (RadioGroup) view.findViewById(R.id.view_pager_radio_group);

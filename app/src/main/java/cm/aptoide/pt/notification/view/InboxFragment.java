@@ -54,7 +54,7 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient(),
             Analytics.getInstance()),
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), navigationTracker)), savedInstanceState);
+            Analytics.getInstance(), aptoideNavigationTracker)), savedInstanceState);
     notificationSubject = PublishSubject.create();
     adapter = new InboxAdapter(Collections.emptyList(), notificationSubject);
   }

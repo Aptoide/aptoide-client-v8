@@ -93,7 +93,7 @@ public class AptoideNavigationTracker implements NavigationTracker {
       insert = false;
     } else if (getCurrentViewName().equals(viewName)) {
       insert = false;
-    } else if (getCurrentViewName().equals(checkViewname(viewName))) {
+    } else if (getCurrentViewName().equals(checkViewName(viewName))) {
       insert = false;
     } else {
       insert = true;

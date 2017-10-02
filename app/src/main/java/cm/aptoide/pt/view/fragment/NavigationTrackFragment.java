@@ -15,26 +15,26 @@ import com.facebook.appevents.AppEventsLogger;
 public class NavigationTrackFragment extends FragmentView {
 
   public static final String DO_NOT_REGISTER_VIEW = "do_not_register_view";
-  protected AptoideNavigationTracker navigationTracker;
+  protected AptoideNavigationTracker aptoideNavigationTracker;
   protected PageViewsAnalytics pageViewsAnalytics;
   private boolean registerFragment = false;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    if (navigationTracker == null) {
-      navigationTracker =
+    if (aptoideNavigationTracker == null) {
+      aptoideNavigationTracker =
           ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker();
     }
     pageViewsAnalytics =
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), navigationTracker);
+            Analytics.getInstance(), aptoideNavigationTracker);
     getFragmentExtras();
   }
 
   @Override public void onResume() {
     super.onResume();
     if (!registerFragment) {
-      navigationTracker.registerView(this.getClass()
+      aptoideNavigationTracker.registerView(this.getClass()
           .getSimpleName());
       pageViewsAnalytics.sendPageViewedEvent();
     }

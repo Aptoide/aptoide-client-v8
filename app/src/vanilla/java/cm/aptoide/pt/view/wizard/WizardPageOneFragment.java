@@ -23,7 +23,7 @@ public class WizardPageOneFragment extends BackButtonFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    navigationTracker.registerView(getClass().getSimpleName());
+    aptoideNavigationTracker.registerView(getClass().getSimpleName());
     pageViewsAnalytics.sendPageViewedEvent();
   }
 

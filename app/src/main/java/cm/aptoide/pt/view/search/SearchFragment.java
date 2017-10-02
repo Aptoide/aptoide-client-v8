@@ -121,7 +121,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
     pageViewAnalytics =
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), navigationTracker);
+            Analytics.getInstance(), aptoideNavigationTracker);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -160,7 +160,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
   @Override protected void setupViewPager() {
     viewPager.setPagingEnabled(false);
-    viewPager.setAptoideNavigationTracker(navigationTracker);
+    viewPager.setAptoideNavigationTracker(aptoideNavigationTracker);
     viewPager.setPageViewAnalytics(pageViewAnalytics);
 
     if (hasSubscribedResults || hasEverywhereResults) {

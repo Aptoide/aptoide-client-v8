@@ -177,7 +177,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-            navigationTracker);
+            aptoideNavigationTracker);
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     updateRepository = RepositoryFactory.getUpdateRepository(getContext(),
@@ -250,7 +250,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
               bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator,
               BuildConfig.APPLICATION_ID,
               ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-              new NotificationAnalytics(httpClient, analytics), navigationTracker),
+              new NotificationAnalytics(httpClient, analytics), aptoideNavigationTracker),
           installedRepository));
     }
     addDisplayables(installedDisplayablesList, false);

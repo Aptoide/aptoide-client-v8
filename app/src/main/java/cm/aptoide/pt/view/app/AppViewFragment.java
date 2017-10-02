@@ -326,7 +326,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        new NotificationAnalytics(httpClient, analytics), navigationTracker);
+        new NotificationAnalytics(httpClient, analytics), aptoideNavigationTracker);
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
             timelineAnalytics, tokenInvalidator,
