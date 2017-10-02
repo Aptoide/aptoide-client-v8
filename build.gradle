@@ -56,8 +56,8 @@ ext {
   //
   // gradle build script vars
   //
-  TARGET_SDK_VERSION = 25
-  COMPILE_SDK_VERSION = 25
+  TARGET_SDK_VERSION = 26
+  COMPILE_SDK_VERSION = 26
   MIN_SDK_VERSION = 15
   USE_JACK = false // http://tools.android.com/tech-docs/jackandjill
   BUILD_TOOLS_VERSION = '25.0.0'
@@ -67,8 +67,8 @@ ext {
   //
 
   // Google Android Support
-  SUPPORT_LIB_VERSION = '25.4.0'
-  SUPPORT_ANNOTATIONS_LIB_VERSION = '25.4.0'
+  SUPPORT_LIB_VERSION = '26.0.1'
+  SUPPORT_ANNOTATIONS_LIB_VERSION = '26.0.1'
 
   // Google Play Services
   PLAY_SERVICES_VERSION = '11.0.4'
