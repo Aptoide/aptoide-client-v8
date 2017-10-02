@@ -7,6 +7,7 @@ import cm.aptoide.pt.search.view.SearchFragment;
 import cm.aptoide.pt.view.store.GetStoreFragment;
 import cm.aptoide.pt.view.store.GetStoreWidgetsFragment;
 import cm.aptoide.pt.view.store.home.HomeFragment;
+import cm.aptoide.pt.view.wizard.WizardFragment;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ public class AptoideNavigationTracker implements NavigationTracker {
 
   @Override public void registerView(String viewName) {
     if (filter(viewName)) {
-      viewList.add(checkViewname(viewName));
+      viewList.add(checkViewName(viewName));
       Logger.d(this.getClass()
           .getName(), "View is: " + getCurrentViewName());
     }
@@ -61,11 +62,11 @@ public class AptoideNavigationTracker implements NavigationTracker {
       return false;
     } else if (viewName.equals(LoginSignUpCredentialsFragment.class.getSimpleName())) {
       return false;
-    } else if (viewName.equals(SearchPagerTabFragment.class.getSimpleName())) {
+    } else if (viewName.equals(SearchFragment.class.getSimpleName())) {
       return false;
     } else if (getCurrentViewName().equals(viewName)) {
       return false;
-    } else if (getCurrentViewName().equals(checkViewname(viewName))) {
+    } else if (getCurrentViewName().equals(checkViewName(viewName))) {
       return false;
     }
     return true;

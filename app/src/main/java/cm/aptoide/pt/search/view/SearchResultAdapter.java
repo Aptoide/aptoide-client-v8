@@ -58,7 +58,8 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
     }
   }
 
-  @Override public void onBindViewHolder(SearchResultItemView holder, int position) {
+  @SuppressWarnings("unchecked") @Override
+  public void onBindViewHolder(SearchResultItemView holder, int position) {
     try {
       holder.setup(getItem(position));
     } catch (ClassCastException e) {
@@ -121,11 +122,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
 
   public void setIsLoadingMore(boolean isLoadingMore) {
     this.isLoadingMore = isLoadingMore;
-    if (isLoadingMore) {
-      notifyItemInserted(searchAdResults.size() + searchResults.size());
-    } else {
-      notifyItemRemoved(searchAdResults.size() + searchResults.size() + 1);
-    }
+    notifyDataSetChanged();
   }
 
   public Pair<List<SearchAppResult>, List<SearchAdResult>> getState() {
