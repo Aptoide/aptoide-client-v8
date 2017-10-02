@@ -111,10 +111,10 @@ public class AggregatedStoreViewHolder extends PostViewHolder<AggregatedStore> {
 
     this.followStoreButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new FollowStoreCardTouchEvent(card, card.getStoreId(), card.getStoreName(),
-            CardTouchEvent.Type.BODY)));
+            CardTouchEvent.Type.BODY, getPosition())));
     this.storeAvatarFollow.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new StoreCardTouchEvent(card, card.getStoreName(), card.getStoreTheme(),
-            CardTouchEvent.Type.BODY)));
+            CardTouchEvent.Type.BODY, getPosition())));
   }
 
   public String getCardHeaderNames(AggregatedStore card) {
@@ -171,7 +171,7 @@ public class AggregatedStoreViewHolder extends PostViewHolder<AggregatedStore> {
     for (View app : apps.keySet()) {
       app.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
           new StoreAppCardTouchEvent(card, CardTouchEvent.Type.BODY,
-              appsPackages.get(apps.get(app)))));
+              appsPackages.get(apps.get(app)), getPosition())));
     }
   }
 }

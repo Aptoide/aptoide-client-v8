@@ -90,9 +90,9 @@ public class AggregatedRecommendationViewHolder extends PostViewHolder<Aggregate
     this.appName.setText(card.getAppName());
     this.appRating.setRating(card.getAppAverageRating());
     this.getAppButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
+        new CardTouchEvent(card, position, CardTouchEvent.Type.BODY)));
     this.appIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
+        new CardTouchEvent(card, position, CardTouchEvent.Type.BODY)));
     showMorePostersLabel(card);
     minimalCardContainer.removeAllViews();
     minimalCardContainer.addView(minimalCardViewFactory.getView(card, card.getMinimalPosts(),

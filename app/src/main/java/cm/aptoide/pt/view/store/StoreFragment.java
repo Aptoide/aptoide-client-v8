@@ -27,6 +27,7 @@ import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
+import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -35,10 +36,10 @@ import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
-import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreTabs;
 import cm.aptoide.pt.dataprovider.model.v7.store.HomeUser;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
+import cm.aptoide.pt.dataprovider.model.v7.store.StoreUserAbstraction;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeRequest;
@@ -97,6 +98,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private String iconPath;
   private String marketName;
   private String defaultTheme;
+  private PageViewsAnalytics pageViewAnalytics;
 
   public static StoreFragment newInstance(long userId, String storeTheme, OpenType openType) {
     return newInstance(userId, storeTheme, null, openType);
@@ -155,13 +157,16 @@ public class StoreFragment extends BasePagerToolbarFragment {
     converterFactory = WebService.getDefaultConverter();
     Analytics analytics = Analytics.getInstance();
     timelineAnalytics = new TimelineAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()), null, null, null,
-        tokenInvalidator, BuildConfig.APPLICATION_ID,
+        AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
+        httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        new NotificationAnalytics(httpClient, analytics));
+        new NotificationAnalytics(httpClient, analytics), navigationTracker);
     storeAnalytics = new StoreAnalytics(AppEventsLogger.newLogger(getContext()), analytics);
     marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);
+    pageViewAnalytics =
+        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance(), navigationTracker);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -229,6 +234,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override protected void setupViewPager() {
     super.setupViewPager();
+    viewPager.setAptoideNavigationTracker(navigationTracker);
+    viewPager.setPageViewAnalytics(pageViewAnalytics);
     pagerSlidingTabStrip = (PagerSlidingTabStrip) getView().findViewById(R.id.tabs);
 
     if (pagerSlidingTabStrip != null) {
@@ -353,9 +360,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
               String storeName = store != null ? store.getName() : null;
               Long storeId = store != null ? store.getId() : null;
               String avatar = store != null ? store.getAvatar() : null;
-              setupVariables(getHome.getNodes()
-                  .getTabs()
-                  .getList(), storeId, storeName, storeUrl, avatar);
+              setupVariables(parseTabs(getHome), storeId, storeName, storeUrl, avatar);
               HomeUser user = getHome.getNodes()
                   .getMeta()
                   .getData()
@@ -394,8 +399,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
     }
   }
 
-  private List<GetStoreTabs.Tab> parseTabs(GetStore getStore) {
-    GetStoreTabs.Tab tab = getStore.getNodes()
+  private List<GetStoreTabs.Tab> parseTabs(StoreUserAbstraction<?> storeUserAbstraction) {
+    GetStoreTabs.Tab tab = storeUserAbstraction.getNodes()
         .getTabs()
         .getList()
         .get(0);
@@ -411,7 +416,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
           .setAction(parsedEventAction);
     }
 
-    return getStore.getNodes()
+    return storeUserAbstraction.getNodes()
         .getTabs()
         .getList();
   }

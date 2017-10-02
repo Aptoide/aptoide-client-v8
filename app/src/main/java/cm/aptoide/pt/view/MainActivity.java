@@ -99,7 +99,9 @@ public class MainActivity extends TabNavigatorActivity
         new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator, this, this,
             sharedPreferences, AccessorFactory.getAccessorFor(
             ((AptoideApplication) getApplicationContext().getApplicationContext()).getDatabase(),
-            Store.class), defaultTheme);
+            Store.class), defaultTheme,
+            ((AptoideApplication) getApplicationContext()).getAptoideNavigationTracker(),
+            ((AptoideApplication) getApplicationContext()).getPageViewsAnalytics());
 
     final ApkFy apkFy = new ApkFy(this, getIntent(), securePreferences);
 

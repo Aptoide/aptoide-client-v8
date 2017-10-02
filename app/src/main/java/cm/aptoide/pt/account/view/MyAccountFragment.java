@@ -25,6 +25,7 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -43,6 +44,7 @@ import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.view.InboxAdapter;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
 import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
+import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Collections;
 import java.util.List;
@@ -165,7 +167,10 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
         ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
         new LinksHandlerFactory(getContext()),
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        new NotificationAnalytics(httpClient, Analytics.getInstance())), savedInstanceState);
+        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker(),
+        new NotificationAnalytics(httpClient, Analytics.getInstance()),
+        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance(), navigationTracker)), savedInstanceState);
   }
 
   @Override public int getContentViewId() {

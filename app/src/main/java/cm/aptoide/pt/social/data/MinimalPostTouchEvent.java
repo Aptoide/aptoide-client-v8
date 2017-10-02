@@ -7,8 +7,8 @@ package cm.aptoide.pt.social.data;
 public class MinimalPostTouchEvent extends CardTouchEvent {
   private final Post originalPost;
 
-  public MinimalPostTouchEvent(Post originalPost, MinimalPost post, Type share) {
-    super(post, share);
+  public MinimalPostTouchEvent(Post originalPost, MinimalPost post, Type share, int position) {
+    super(post, position, share);
     this.originalPost = originalPost;
   }
 

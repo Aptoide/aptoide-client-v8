@@ -5,7 +5,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
@@ -13,11 +12,15 @@ import android.widget.RadioGroup;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.LoginBottomSheet;
+import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.view.custom.AptoideViewPager;
 import cm.aptoide.pt.view.fragment.UIComponentFragment;
+import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
@@ -38,7 +41,7 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
   private static final String PAGE_INDEX = "page_index";
 
   private WizardPagerAdapter viewPagerAdapter;
-  private ViewPager viewPager;
+  private AptoideViewPager viewPager;
   private RadioGroup radioGroup;
   private View skipText;
   private View nextIcon;
@@ -48,6 +51,7 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
 
   private boolean isInPortraitMode;
   private int currentPosition;
+  private PageViewsAnalytics pageViewAnalytics;
 
   public static WizardFragment newInstance() {
     return new WizardFragment();
@@ -61,6 +65,26 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
       throw new IllegalStateException(
           "Context should implement " + LoginBottomSheet.class.getSimpleName());
     }
+  }
+
+  @Override public void onDestroy() {
+    if (viewPager != null) {
+      viewPager.removeOnPageChangeListener(null);
+      viewPager = null;
+    }
+    super.onDestroy();
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putInt(PAGE_INDEX, viewPager.getCurrentItem());
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    pageViewAnalytics =
+        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance(), navigationTracker);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -91,19 +115,6 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
         new WizardPresenter(this, accountManager, CrashReport.getInstance());
     attachPresenter(presenter, null);
     viewPager.addOnPageChangeListener(presenter);
-  }
-
-  @Override public void onDestroy() {
-    if (viewPager != null) {
-      viewPager.removeOnPageChangeListener(null);
-      viewPager = null;
-    }
-    super.onDestroy();
-  }
-
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    outState.putInt(PAGE_INDEX, viewPager.getCurrentItem());
   }
 
   @Override public void onDestroyView() {
@@ -214,7 +225,9 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
   }
 
   @Override public void bindViews(@Nullable View view) {
-    viewPager = (ViewPager) view.findViewById(R.id.view_pager);
+    viewPager = (AptoideViewPager) view.findViewById(R.id.view_pager);
+    viewPager.setAptoideNavigationTracker(navigationTracker);
+    viewPager.setPageViewAnalytics(pageViewAnalytics);
     skipOrNextLayout = view.findViewById(R.id.skip_next_layout);
     radioGroup = (RadioGroup) view.findViewById(R.id.view_pager_radio_group);
     skipText = view.findViewById(R.id.skip_text);

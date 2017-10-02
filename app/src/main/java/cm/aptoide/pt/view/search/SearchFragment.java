@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -65,6 +66,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
   private Converter.Factory converterFactory;
   private SearchAnalytics searchAnalytics;
   private TokenInvalidator tokenInvalidator;
+  private PageViewsAnalytics pageViewAnalytics;
 
   public static SearchFragment newInstance(String query) {
     return newInstance(query, false);
@@ -117,6 +119,9 @@ public class SearchFragment extends BasePagerToolbarFragment {
     converterFactory = WebService.getDefaultConverter();
     searchAnalytics = new SearchAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    pageViewAnalytics =
+        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance(), navigationTracker);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -155,6 +160,8 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
   @Override protected void setupViewPager() {
     viewPager.setPagingEnabled(false);
+    viewPager.setAptoideNavigationTracker(navigationTracker);
+    viewPager.setPageViewAnalytics(pageViewAnalytics);
 
     if (hasSubscribedResults || hasEverywhereResults) {
       super.setupViewPager();
