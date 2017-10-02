@@ -136,7 +136,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
 
   private CharSequence menuIconWithText(Drawable r, String title) {
 
-    r.setBounds(0, 0, r.getIntrinsicWidth() / 2, r.getIntrinsicHeight() / 2);
+    r.setBounds(0, 0, 65, 65);
     SpannableString sb = new SpannableString("  " + title);
     ImageSpan imageSpan = new ImageSpan(r, ImageSpan.ALIGN_BASELINE);
     sb.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
