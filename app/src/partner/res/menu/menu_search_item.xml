@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by Neurophobic Animal on 07/06/2016.
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <item
+      android:id="@+id/versions"
+      android:title="@string/more_versions"
+      android:visible="false"/>
+</menu>

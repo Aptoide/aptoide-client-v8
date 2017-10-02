@@ -17,15 +17,13 @@ import java.util.List;
 public class AptoideNavigationTracker implements NavigationTracker {
 
   private List<String> viewList;
-  private boolean insert;
 
   public AptoideNavigationTracker(List<String> viewList) {
     this.viewList = viewList;
   }
 
   @Override public void registerView(String viewName) {
-    insert = filter(viewName);
-    if (insert) {
+    if (filter(viewName)) {
       viewList.add(checkViewname(viewName));
       Logger.d(this.getClass()
           .getName(), "View is: " + getCurrentViewName());
@@ -57,22 +55,20 @@ public class AptoideNavigationTracker implements NavigationTracker {
 
   private boolean filter(String viewName) {
     if (TextUtils.isEmpty(viewName)) {
-      insert = false;
+      return false;
     } else if (viewName.equals(HomeFragment.class.getSimpleName())) {
-      insert = false;
+      return false;
     } else if (viewName.equals(WizardFragment.class.getSimpleName())) {
-      insert = false;
+      return false;
     } else if (viewName.equals(LoginSignUpCredentialsFragment.class.getSimpleName())) {
-      insert = false;
+      return false;
     } else if (viewName.equals(SearchPagerTabFragment.class.getSimpleName())) {
-      insert = false;
+      return false;
     } else if (getCurrentViewName().equals(viewName)) {
-      insert = false;
+      return false;
     } else if (getCurrentViewName().equals(checkViewname(viewName))) {
-      insert = false;
-    } else {
-      insert = true;
+      return false;
     }
-    return insert;
+    return true;
   }
 }
