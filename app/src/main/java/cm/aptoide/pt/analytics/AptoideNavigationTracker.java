@@ -6,7 +6,6 @@ import cm.aptoide.pt.search.view.SearchFragment;
 import cm.aptoide.pt.view.store.GetStoreFragment;
 import cm.aptoide.pt.view.store.GetStoreWidgetsFragment;
 import cm.aptoide.pt.view.store.home.HomeFragment;
-import cm.aptoide.pt.view.wizard.WizardFragment;
 import java.util.List;
 
 /**
@@ -16,16 +15,14 @@ import java.util.List;
 public class AptoideNavigationTracker implements NavigationTracker {
 
   private List<String> viewList;
-  private boolean insert;
 
   public AptoideNavigationTracker(List<String> viewList) {
     this.viewList = viewList;
   }
 
   @Override public void registerView(String viewName) {
-    insert = filter(viewName);
-    if (insert) {
-      viewList.add(checkViewname(viewName));
+    if (filter(viewName)) {
+      viewList.add(checkViewName(viewName));
       Logger.d(this.getClass()
           .getName(), "View is: " + getCurrentViewName());
     }
@@ -45,7 +42,7 @@ public class AptoideNavigationTracker implements NavigationTracker {
     return viewList.get(viewList.size() - 1);
   }
 
-  private String checkViewname(String viewName) {
+  private String checkViewName(String viewName) {
     if (viewName.equals(GetStoreFragment.class.getSimpleName()) || viewName.equals(
         GetStoreWidgetsFragment.class.getSimpleName())) {
       return HomeFragment.class.getSimpleName();
@@ -55,15 +52,11 @@ public class AptoideNavigationTracker implements NavigationTracker {
   }
 
   private boolean filter(String viewName) {
-    if (viewName.equals(WizardFragment.class.getSimpleName())) {
-      insert = false;
-    } else if (viewName.equals(LoginSignUpCredentialsFragment.class.getSimpleName())) {
-      insert = false;
+    if (viewName.equals(LoginSignUpCredentialsFragment.class.getSimpleName())) {
+      return false;
     } else if (viewName.equals(SearchFragment.class.getSimpleName())) {
-      insert = false;
-    } else {
-      insert = true;
+      return false;
     }
-    return insert;
+    return true;
   }
 }

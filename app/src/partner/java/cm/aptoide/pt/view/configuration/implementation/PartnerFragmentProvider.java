@@ -3,11 +3,11 @@ package cm.aptoide.pt.view.configuration.implementation;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.PartnerApplication;
 import cm.aptoide.pt.addressbook.data.Contact;
-import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.presenter.InviteFriendsContract;
+import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.social.view.TimelineFragment;
 import cm.aptoide.pt.spotandshare.view.SpotSharePreviewFragment;
 import cm.aptoide.pt.timeline.view.SocialFragment;
@@ -31,7 +31,6 @@ import cm.aptoide.pt.view.fragment.DescriptionFragment;
 import cm.aptoide.pt.view.reviews.LatestReviewsFragment;
 import cm.aptoide.pt.view.reviews.ListReviewsFragment;
 import cm.aptoide.pt.view.reviews.RateAndReviewsFragment;
-import cm.aptoide.pt.view.search.SearchFragment;
 import cm.aptoide.pt.view.settings.SettingsFragment;
 import cm.aptoide.pt.view.store.FragmentTopStores;
 import cm.aptoide.pt.view.store.GetStoreFragment;
@@ -87,37 +86,6 @@ public class PartnerFragmentProvider implements FragmentProvider {
     return StoreFragment.newInstance(userId, aptoideApplication.getDefaultTheme(), openType);
   }
 
-  @Override public Fragment newSearchFragment(String query) {
-    if (aptoideApplication.getBootConfig()
-        .getPartner()
-        .getSwitches()
-        .getOptions()
-        .getMultistore()
-        .isSearch()) {
-      return SearchFragment.newInstance(query);
-    } else {
-      return SearchFragment.newInstance(query, aptoideApplication.getDefaultStore());
-    }
-  }
-
-  @Override public Fragment newSearchFragment(String query, boolean onlyTrustedApps) {
-    if (aptoideApplication.getBootConfig()
-        .getPartner()
-        .getSwitches()
-        .getOptions()
-        .getMultistore()
-        .isSearch()) {
-      return SearchFragment.newInstance(query, onlyTrustedApps);
-    } else {
-      return SearchFragment.newInstance(query, onlyTrustedApps,
-          aptoideApplication.getDefaultStore());
-    }
-  }
-
-  @Override public Fragment newSearchFragment(String query, String storeName) {
-    return SearchFragment.newInstance(query, storeName);
-  }
-
   @Override public Fragment newAppViewFragment(String packageName, String storeName,
       AppViewFragment.OpenType openType) {
     return AppViewFragment.newInstance(packageName, storeName, openType);
@@ -143,8 +111,8 @@ public class PartnerFragmentProvider implements FragmentProvider {
         storeName);
   }
 
-  @Override public Fragment newAppViewFragment(MinimalAd minimalAd) {
-    return AppViewFragment.newInstance(minimalAd, aptoideApplication.getDefaultTheme());
+  @Override public Fragment newAppViewFragment(SearchAdResult adResult) {
+    return AppViewFragment.newInstance(adResult, aptoideApplication.getDefaultTheme());
   }
 
   @Override
