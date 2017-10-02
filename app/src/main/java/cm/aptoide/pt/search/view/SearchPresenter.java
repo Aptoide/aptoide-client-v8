@@ -304,6 +304,7 @@ public class SearchPresenter implements Presenter {
         .doOnNext(view::addFollowedStoresResult)
         .doOnNext(data -> {
           final SearchView.Model viewModel = view.getViewModel();
+          viewModel.setAllStoresSelected(false);
           viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(getItemCount(data));
         });
   }

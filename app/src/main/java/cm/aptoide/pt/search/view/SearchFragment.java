@@ -166,6 +166,7 @@ public class SearchFragment extends BackButtonFragment implements SearchView {
     } else {
       followedStoresResultList.setVisibility(View.VISIBLE);
       allStoresResultList.setVisibility(View.INVISIBLE);
+      setFollowedStoresButtonSelected();
     }
   }
 
@@ -194,6 +195,7 @@ public class SearchFragment extends BackButtonFragment implements SearchView {
     } else {
       followedStoresResultList.setVisibility(View.INVISIBLE);
       allStoresResultList.setVisibility(View.VISIBLE);
+      setAllStoresButtonSelected();
     }
   }
 
