@@ -35,6 +35,7 @@ import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountPersistence;
 import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
 import cm.aptoide.pt.account.AndroidAccountDataMigration;
 import cm.aptoide.pt.account.AndroidAccountManagerPersistence;
@@ -178,6 +179,7 @@ import cm.aptoide.pt.view.entry.EntryActivity;
 import cm.aptoide.pt.view.entry.EntryPointChooser;
 import cm.aptoide.pt.view.navigator.Result;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
+import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
 import com.crashlytics.android.answers.Answers;
 import com.facebook.CallbackManager;
@@ -298,6 +300,9 @@ public abstract class AptoideApplication extends Application {
   private Map<Integer, Result> fragmentResulMap;
   private PublishRelay<FacebookLoginResult> facebookLoginResultRelay;
   private AptoideNavigationTracker aptoideNavigationTracker;
+  private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
+  private AccountAnalytics accountAnalytics;
+  private PageViewsAnalytics pageViewsAnalytics;
 
   public LeakTool getLeakTool() {
     if (leakTool == null) {
@@ -1339,6 +1344,15 @@ public abstract class AptoideApplication extends Application {
     return aptoideNavigationTracker;
   }
 
+  public PageViewsAnalytics getPageViewsAnalytics() {
+    if (pageViewsAnalytics == null) {
+      pageViewsAnalytics =
+          new PageViewsAnalytics(AppEventsLogger.newLogger(this), Analytics.getInstance(),
+              getAptoideNavigationTracker());
+    }
+    return pageViewsAnalytics;
+  }
+
   public BehaviorRelay<Map<Integer, Result>> getFragmentResultRelay() {
     if (fragmentResultRelay == null) {
       fragmentResultRelay = BehaviorRelay.create();
@@ -1386,5 +1400,24 @@ public abstract class AptoideApplication extends Application {
   public abstract boolean isCreateStoreUserPrivacyEnabled();
 
   public abstract FragmentProvider createFragmentProvider();
+
+  public NotLoggedInShareAnalytics getNotLoggedInShareAnalytics() {
+    if (notLoggedInShareAnalytics == null) {
+      notLoggedInShareAnalytics =
+          new NotLoggedInShareAnalytics(getAccountAnalytics(), AppEventsLogger.newLogger(this),
+              Analytics.getInstance());
+    }
+    return notLoggedInShareAnalytics;
+  }
+
+  public AccountAnalytics getAccountAnalytics() {
+    if (accountAnalytics == null) {
+      accountAnalytics = new AccountAnalytics(Analytics.getInstance(), getBodyInterceptorPoolV7(),
+          getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
+          BuildConfig.APPLICATION_ID, getDefaultSharedPreferences(),
+          AppEventsLogger.newLogger(this), getAptoideNavigationTracker());
+    }
+    return accountAnalytics;
+  }
 }
 

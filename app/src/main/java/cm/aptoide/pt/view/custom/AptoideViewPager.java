@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.NavigationTrackerPagerAdapterHelper;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.analytics.AptoideNavigationTracker;
@@ -30,10 +31,14 @@ public class AptoideViewPager extends ViewPager {
     addOnPageChangeListener(new SimpleOnPageChangeListener() {
       @Override public void onPageSelected(int position) {
         super.onPageSelected(position);
+
         String currentView =
             ((NavigationTrackerPagerAdapterHelper) getAdapter()).getItemName(position);
-        aptoideNavigationTracker.registerView(currentView);
-        pageViewAnalytics.sendPageViewedEvent();
+
+        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker()
+            .registerView(currentView);
+        ((AptoideApplication) getContext().getApplicationContext()).getPageViewsAnalytics()
+            .sendPageViewedEvent();
       }
     });
   }
@@ -65,5 +70,4 @@ public class AptoideViewPager extends ViewPager {
   public void setPageViewAnalytics(PageViewsAnalytics pageViewAnalytics) {
     this.pageViewAnalytics = pageViewAnalytics;
   }
-
 }

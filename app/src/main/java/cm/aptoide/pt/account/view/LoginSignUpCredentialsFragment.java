@@ -16,12 +16,9 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -29,7 +26,6 @@ import cm.aptoide.pt.view.ThrowableToStringMapper;
 import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
-import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Arrays;
 import rx.Observable;
@@ -342,14 +338,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     presenter = new LoginSignUpCredentialsPresenter(this, accountManager, crashReport,
         dismissToNavigateToMainView, navigateToHome, accountNavigator,
         Arrays.asList("email", "user_friends"), Arrays.asList("email"), errorMapper,
-        new AccountAnalytics(Analytics.getInstance(),
-            ((AptoideApplication) getContext().getApplicationContext()).getBodyInterceptorPoolV7(),
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient(),
-            WebService.getDefaultConverter(),
-            ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
-            BuildConfig.APPLICATION_ID,
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-            AppEventsLogger.newLogger(getContext().getApplicationContext()), navigationTracker));
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountAnalytics());
     attachPresenter(presenter, null);
     registerClickHandler(presenter);
   }

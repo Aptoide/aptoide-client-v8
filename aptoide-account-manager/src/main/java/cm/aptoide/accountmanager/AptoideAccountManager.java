@@ -233,8 +233,8 @@ public class AptoideAccountManager {
       adapterRegistry.register(APTOIDE_SIGN_UP_TYPE,
           new AptoideSignUpAdapter(credentialsValidator));
 
-      return new AptoideAccountManager(credentialsValidator, accountPersistence,
-          accountService, accountRelay, adapterRegistry);
+      return new AptoideAccountManager(credentialsValidator, accountPersistence, accountService,
+          accountRelay, adapterRegistry);
     }
   }
 }
