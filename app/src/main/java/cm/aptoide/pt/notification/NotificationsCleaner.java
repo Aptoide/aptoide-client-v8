@@ -4,6 +4,7 @@ import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.realm.Notification;
 import io.realm.Sort;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -14,10 +15,12 @@ import rx.Observable;
 
 public class NotificationsCleaner {
 
-  private NotificationAccessor notificationAccessor;
+  private final Calendar calendar;
+  private final NotificationAccessor notificationAccessor;
 
-  public NotificationsCleaner(NotificationAccessor notificationAccessor) {
+  public NotificationsCleaner(NotificationAccessor notificationAccessor, Calendar calendar) {
     this.notificationAccessor = notificationAccessor;
+    this.calendar = calendar;
   }
 
   public Completable cleanOtherUsersNotifications(String id) {
@@ -37,7 +40,7 @@ public class NotificationsCleaner {
         .first()
         .flatMapIterable(notifications -> notifications)
         .flatMap(notification -> {
-          if (notification.isExpired()) {
+          if (isNotificationExpired(notification)) {
             return Observable.just(notification);
           } else {
             return Observable.empty();
@@ -46,6 +49,15 @@ public class NotificationsCleaner {
         .toList()
         .flatMapCompletable(notifications -> removeNotifications(notifications))
         .toCompletable();
+  }
+
+  private boolean isNotificationExpired(Notification notification) {
+    Long expire = notification.getExpire();
+    if (expire != null) {
+      long now = calendar.getTimeInMillis();
+      return now > expire;
+    }
+    return false;
   }
 
   private Completable removeExceededLimitNotifications(int limit) {
