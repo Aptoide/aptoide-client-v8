@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import java.util.List;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by jdandrade on 28/09/2017.
@@ -15,17 +16,20 @@ public class PostCommentsAdapter extends RecyclerView.Adapter<PostCommentViewHol
 
   private static final int PARENT = R.layout.parent_comment_item;
   private static final int CHILD = R.layout.child_comment_item;
+  private final PublishSubject<String> replyEventPublishSubject;
   private List<Comment> comments;
 
-  public PostCommentsAdapter(List<Comment> comments) {
+  public PostCommentsAdapter(List<Comment> comments,
+      PublishSubject<String> replyEventPublishSubject) {
     this.comments = comments;
+    this.replyEventPublishSubject = replyEventPublishSubject;
   }
 
   @Override public PostCommentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     switch (viewType) {
       case PARENT:
         return new ParentCommentViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(PARENT, parent, false));
+            .inflate(PARENT, parent, false), replyEventPublishSubject);
       case CHILD:
         return new ChildCommentViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(CHILD, parent, false));

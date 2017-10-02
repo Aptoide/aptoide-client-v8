@@ -27,6 +27,7 @@ import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by jdandrade on 28/09/2017.
@@ -53,6 +54,8 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
 
+  private PublishSubject<String> replyEventPublishSubject;
+
   public static Fragment newInstance(String postId) {
     Fragment fragment = new PostCommentsFragment();
     final Bundle args = new Bundle();
@@ -75,21 +78,25 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     sharedPreferences =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
+    replyEventPublishSubject = PublishSubject.create();
     attachPresenter(new PostCommentsPresenter(this, new Comments(
             new PostCommentsRepository(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
                 sharedPreferences)),
             getArguments().containsKey(POST_ID_KEY) ? getArguments().getString(POST_ID_KEY) : null),
         savedInstanceState);
-    adapter = new PostCommentsAdapter(new ArrayList<>());
+    adapter = new PostCommentsAdapter(new ArrayList<>(), replyEventPublishSubject);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     list = (RecyclerView) view.findViewById(R.id.recycler_view);
     list.setAdapter(adapter);
+    list.addItemDecoration(new ItemDividerDecoration(this));
     list.setLayoutManager(new LinearLayoutManager(getContext()));
     helper = RecyclerViewPositionHelper.createHelper(list);
     floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fabAdd);
+
     super.onViewCreated(view, savedInstanceState);
+    setHasOptionsMenu(true);
   }
 
   @Nullable @Override
