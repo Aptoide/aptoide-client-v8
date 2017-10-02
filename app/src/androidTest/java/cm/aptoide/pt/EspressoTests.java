@@ -104,31 +104,22 @@ import static org.hamcrest.Matchers.not;
 
   @Test public void download() throws InterruptedException {
     if (isFirstTime()) {
-      onView(withId(R.id.next_icon)).perform(click());
-      onView(withId(R.id.next_icon)).perform(click());
-      onView(withId(R.id.skip_text)).perform(click());
+      skipWizard();
     }
-    onView(withId(R.id.action_search)).perform(click());
-    onView(withId(R.id.search_src_text)).perform(replaceText(APP_TO_SEARCH),
-        pressImeActionButton());
-    onView(withId(R.id.pager)).perform(
-        clickXY(XCOORDINATE, YCOORDINATE)); //there's a better solution probably
+    goToApp();
     cancelIfDownloading();
     onView(withId(R.id.action_btn)).perform(click());
     closePopUp();
     closeIfIsNotLoggedInOnDownload();
-    onView(withId(R.id.download_progress)).check(
-        matches(isDisplayed()));
+    onView(withId(R.id.download_progress)).check(matches(isDisplayed()));
     Thread.sleep(WAIT_FOR_DOWNLOAD_TIME);
     onView(withId(R.id.ic_action_pause)).perform(click());
     onView(withId(R.id.ic_action_resume)).perform(click());
-    onView(withId(R.id.download_progress)).check(
-        matches(isDisplayed()));
+    onView(withId(R.id.download_progress)).check(matches(isDisplayed()));
     onView(withId(R.id.text_progress)).check(matches(not(withText("0%"))));
     onView(withId(R.id.ic_action_cancel)).perform(click());
     onView(withId(R.id.action_btn)).check(matches(isDisplayed()));
     onView(withId(R.id.action_btn)).check(matches(withText(R.string.appview_button_install)));
-
   }
 
   private boolean isFirstTime() {
@@ -195,5 +186,19 @@ import static org.hamcrest.Matchers.not;
     onView(withId(R.id.button_sign_up)).perform(click());
     //TO DO PROFILE FLOW
     //TO DO Logout user after registration
+  }
+
+  private void skipWizard() {
+    onView(withId(R.id.next_icon)).perform(click());
+    onView(withId(R.id.next_icon)).perform(click());
+    onView(withId(R.id.skip_text)).perform(click());
+  }
+
+  private void goToApp() {
+    onView(withId(R.id.action_search)).perform(click());
+    onView(withId(R.id.search_src_text)).perform(replaceText(APP_TO_SEARCH),
+        pressImeActionButton());
+    onView(withId(R.id.pager)).perform(
+        clickXY(XCOORDINATE, YCOORDINATE)); //there's a better solution probably
   }
 }
