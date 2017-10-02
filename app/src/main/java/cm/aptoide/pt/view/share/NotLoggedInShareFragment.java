@@ -15,14 +15,11 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
 import cm.aptoide.pt.account.view.GooglePlayServicesFragment;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -30,8 +27,8 @@ import cm.aptoide.pt.view.ThrowableToStringMapper;
 import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
-import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Arrays;
 import rx.Observable;
 
@@ -56,6 +53,9 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
   private ImageView loginProgressIndicator;
   private AptoideAccountManager accountManager;
   private int requestCode;
+  private View fakeTimeline;
+  private PublishRelay<Void> backButtonPress;
+  private View outerLayout;
 
   public static NotLoggedInShareFragment newInstance(GetAppMeta.App app) {
     NotLoggedInShareFragment fragment = new NotLoggedInShareFragment();
@@ -75,6 +75,7 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     requestCode = getArguments().getInt(FragmentNavigator.REQUEST_CODE_EXTRA);
+    backButtonPress = PublishRelay.create();
   }
 
   @Nullable @Override
@@ -97,6 +98,8 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
     previewSocialContent = (ImageView) view.findViewById(R.id.not_logged_in_preview_social_content);
     fakeToolbar = (ImageView) view.findViewById(R.id.fake_toolbar);
     loginProgressIndicator = (ImageView) view.findViewById(R.id.login_progress_indicator);
+    fakeTimeline = view.findViewById(R.id.fake_timeline);
+    outerLayout = view.findViewById(R.id.outer_layout);
 
     facebookEmailRequiredDialog = new RxAlertDialog.Builder(getContext()).setMessage(
         R.string.facebook_email_permission_regected_message)
@@ -114,20 +117,17 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
 
     ImageLoader.with(getContext())
         .load(getArguments().getString(APP_ICON), appIcon);
+    registerClickHandler(() -> {
+      backButtonPress.call(null);
+      return true;
+    });
 
     attachPresenter(new NotLoggedInSharePresenter(this,
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             CrashReport.getInstance(), accountManager,
             ((ActivityResultNavigator) getContext()).getAccountNavigator(),
             Arrays.asList("email", "user_friends"), Arrays.asList("email"), requestCode, errorMapper,
-            new AccountAnalytics(Analytics.getInstance(),
-                ((AptoideApplication) getContext().getApplicationContext()).getBodyInterceptorPoolV7(),
-                ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient(),
-                WebService.getDefaultConverter(),
-                ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
-                BuildConfig.APPLICATION_ID,
-                ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-                AppEventsLogger.newLogger(getContext().getApplicationContext()), navigationTracker)),
+            ((AptoideApplication) getContext().getApplicationContext()).getNotLoggedInShareAnalytics()),
         null);
   }
 
@@ -193,6 +193,22 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
 
   @Override public void hideGoogleLogin() {
     googleLoginButton.setVisibility(View.GONE);
+  }
+
+  @Override public Observable<Void> getFakeToolbarClick() {
+    return RxView.clicks(fakeToolbar);
+  }
+
+  @Override public Observable<Void> getFakeTimelineClick() {
+    return RxView.clicks(fakeTimeline);
+  }
+
+  @Override public Observable<Void> backEvent() {
+    return backButtonPress;
+  }
+
+  @Override public Observable<Void> getOutsideClick() {
+    return RxView.clicks(outerLayout);
   }
 
   private ColorMatrixColorFilter getColorMatrixColorFilter(float saturation) {

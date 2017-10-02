@@ -27,12 +27,12 @@ public class AptoideAccountManagerTest {
     dataPersistMock = mock(AccountPersistence.class);
     serviceMock = mock(AccountService.class);
     accountRelayMock = mock(PublishRelay.class);
-    accountManager = new AptoideAccountManager.Builder()
-        .setCredentialsValidator(credentialsValidatorMock)
-        .setAccountPersistence(dataPersistMock)
-        .setAccountService(serviceMock)
-        .setAccountRelay(accountRelayMock)
-        .build();
+    accountManager =
+        new AptoideAccountManager.Builder().setCredentialsValidator(credentialsValidatorMock)
+            .setAccountPersistence(dataPersistMock)
+            .setAccountService(serviceMock)
+            .setAccountRelay(accountRelayMock)
+            .build();
   }
 
   @Test public void shouldLogin() throws Exception {
