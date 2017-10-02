@@ -36,8 +36,8 @@ import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class) @LargeTest public class EspressoTests {
 
-  private final String EMAILTEST2 = "Jose.Messejana@aptoide.com";
-  private final String PASS = "passwordteste0123";
+  private final String EMAILTEST2 = "jose.messejana@aptoide.com";
+  private final String PASS = "aptoide1234";
   private final String APP_TO_SEARCH = "Cut the Rope";
   private final int XCOORDINATE = 144;
   private final int YCOORDINATE = 144;
@@ -83,6 +83,10 @@ import static org.hamcrest.Matchers.not;
         performSignUp();
       }
     }
+    onView(withId(R.id.create_user_username_inserted)).perform(replaceText("a1"));
+    onView(withId(R.id.create_user_create_profile)).perform(click());
+    onView(withId(R.id.logged_in_continue)).perform(click());
+    onView(withId(R.id.create_store_skip)).perform(click());
   }
 
   @Test public void signIn() throws InterruptedException {
@@ -100,6 +104,8 @@ import static org.hamcrest.Matchers.not;
         performLogin();
       }
     }
+    goToMyAccount();
+    onView(withId(R.id.button_logout)).check(matches(isDisplayed()));
   }
 
   @Test public void download() throws InterruptedException {
