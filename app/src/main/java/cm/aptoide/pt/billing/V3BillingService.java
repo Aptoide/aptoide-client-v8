@@ -15,17 +15,16 @@ import cm.aptoide.pt.billing.product.PaidAppProduct;
 import cm.aptoide.pt.billing.product.ProductFactory;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v3.ErrorResponse;
-import cm.aptoide.pt.dataprovider.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.GetApkInfoRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingConsumeRequest;
-import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingPurchasesRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetBillingPackageRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetProductsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.billing.GetPurchasesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetServicesRequest;
 import cm.aptoide.pt.install.PackageRepository;
 import java.util.Collections;
@@ -35,7 +34,6 @@ import retrofit2.Converter;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
-import rx.schedulers.Schedulers;
 
 public class V3BillingService implements BillingService {
 
@@ -122,15 +120,16 @@ public class V3BillingService implements BillingService {
   }
 
   @Override public Single<List<Purchase>> getPurchases(String sellerId) {
-    return getServerInAppPurchase(apiVersion, idResolver.resolvePackageName(sellerId), true).first()
+    return GetPurchasesRequest.of(idResolver.resolvePackageName(sellerId), bodyInterceptorV7,
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences)
+        .observe(true)
         .toSingle()
-        .map(purchaseInformation -> purchaseMapper.map(purchaseInformation))
-        .onErrorResumeNext(throwable -> {
-          if (throwable instanceof IllegalArgumentException) {
-            // If user not logged in return a empty purchase list.
-            return Single.just(Collections.emptyList());
+        .flatMap(response -> {
+          if (response != null && response.isOk()) {
+            return Single.just(purchaseMapper.map(response.getList()));
           }
-          return Single.error(throwable);
+          // If user not logged in return a empty purchase list.
+          return Single.<List<Purchase>>just(Collections.emptyList());
         });
   }
 
@@ -149,11 +148,11 @@ public class V3BillingService implements BillingService {
 
   @Override public Single<Purchase> getPurchase(Product product) {
     if (product instanceof InAppProduct) {
-      return getServerInAppPurchase(3, ((InAppProduct) product).getPackageName(), true).map(
-          purchaseInformation -> purchaseMapper.map(purchaseInformation,
-              ((InAppProduct) product).getSku()))
-          .toSingle()
-          .subscribeOn(Schedulers.io());
+      return getPurchases(((InAppProduct) product).getPackageName()).flatMapObservable(
+          purchases -> Observable.from(purchases))
+          .first(purchase -> purchase.getProductId()
+              .equals(idResolver.resolveSku(product.getId())))
+          .toSingle();
     }
 
     if (product instanceof PaidAppProduct) {
@@ -210,23 +209,6 @@ public class V3BillingService implements BillingService {
             return Single.error(new IllegalArgumentException(V7.getErrorMessage(response)));
           }
         });
-  }
-
-  private Observable<InAppBillingPurchasesResponse> getServerInAppPurchase(int apiVersion,
-      String packageName, boolean bypassCache) {
-    return packageRepository.getPackageVersionCode(packageName)
-        .flatMapObservable(
-            packageVersionCode -> InAppBillingPurchasesRequest.of(apiVersion, packageName,
-                bodyInterceptorV3, httpClient, converterFactory, tokenInvalidator,
-                sharedPreferences, packageVersionCode)
-                .observe(bypassCache)
-                .flatMap(response -> {
-                  if (response != null && response.isOk()) {
-                    return Observable.just(response);
-                  }
-                  return Observable.error(
-                      new IllegalArgumentException(V3.getErrorMessage(response)));
-                }));
   }
 
   private boolean isDeletionItemNotFound(List<ErrorResponse> errors) {

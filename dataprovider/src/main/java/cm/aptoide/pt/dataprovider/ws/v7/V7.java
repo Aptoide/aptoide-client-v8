@@ -37,6 +37,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetBillingPackageRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetProductsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.billing.GetPurchasesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetServicesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
@@ -423,6 +424,11 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
 
     @POST("inapp/bank/services/get") Observable<GetServicesRequest.ResponseBody> getBillingServices(
         @Body BaseBody body, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("inapp/purchases/get")
+    Observable<GetPurchasesRequest.ResponseBody> getBillingPurchases(
+        @Body GetPurchasesRequest.RequestBody body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
   }
 }
 
