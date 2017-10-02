@@ -115,8 +115,10 @@ public class TimelineNavigator implements TimelineNavigation {
   }
 
   @Override public void navigateToComments(String cardId) {
+    //fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
+    //    .newCommentGridRecyclerFragment(CommentType.TIMELINE, cardId), true);
     fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newCommentGridRecyclerFragment(CommentType.TIMELINE, cardId), true);
+        .newPostCommentListFragment(cardId), true);
   }
 
   @Override public Observable<String> postNavigation() {
