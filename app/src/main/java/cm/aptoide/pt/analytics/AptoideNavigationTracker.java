@@ -1,5 +1,6 @@
 package cm.aptoide.pt.analytics;
 
+import android.text.TextUtils;
 import cm.aptoide.pt.account.view.LoginSignUpCredentialsFragment;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.search.view.SearchFragment;
@@ -22,14 +23,14 @@ public class AptoideNavigationTracker implements NavigationTracker {
 
   @Override public void registerView(String viewName) {
     if (filter(viewName)) {
-      viewList.add(checkViewName(viewName));
+      viewList.add(checkViewname(viewName));
       Logger.d(this.getClass()
           .getName(), "View is: " + getCurrentViewName());
     }
   }
 
   @Override public String getPreviousViewName() {
-    if (viewList.isEmpty()) {
+    if (viewList.size() < 2) {
       return "";
     }
     return viewList.get(viewList.size() - 2);
@@ -52,9 +53,19 @@ public class AptoideNavigationTracker implements NavigationTracker {
   }
 
   private boolean filter(String viewName) {
-    if (viewName.equals(LoginSignUpCredentialsFragment.class.getSimpleName())) {
+    if (TextUtils.isEmpty(viewName)) {
       return false;
-    } else if (viewName.equals(SearchFragment.class.getSimpleName())) {
+    } else if (viewName.equals(HomeFragment.class.getSimpleName())) {
+      return false;
+    } else if (viewName.equals(WizardFragment.class.getSimpleName())) {
+      return false;
+    } else if (viewName.equals(LoginSignUpCredentialsFragment.class.getSimpleName())) {
+      return false;
+    } else if (viewName.equals(SearchPagerTabFragment.class.getSimpleName())) {
+      return false;
+    } else if (getCurrentViewName().equals(viewName)) {
+      return false;
+    } else if (getCurrentViewName().equals(checkViewname(viewName))) {
       return false;
     }
     return true;
