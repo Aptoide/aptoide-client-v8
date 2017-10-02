@@ -18,8 +18,7 @@ class ParentCommentViewHolder extends PostCommentViewHolder {
   private final PublishSubject<String> replyEventPublishSubject;
   private final ImageView userIcon;
   private final TextView userName;
-  private final TextView datePos1;
-  private final TextView datePos2;
+  private final TextView date;
   private final TextView comment;
   private final View replyLayout;
 
@@ -27,9 +26,8 @@ class ParentCommentViewHolder extends PostCommentViewHolder {
     super(view);
     this.userIcon = (ImageView) view.findViewById(R.id.user_icon);
     this.userName = (TextView) view.findViewById(R.id.user_name);
-    this.datePos1 = (TextView) view.findViewById(R.id.added_date_pos1);
     this.replyEventPublishSubject = replyEventPublishSubject;
-    this.datePos2 = (TextView) itemView.findViewById(R.id.added_date_pos2);
+    this.date = (TextView) itemView.findViewById(R.id.added_date_pos2);
     this.comment = (TextView) itemView.findViewById(R.id.comment);
     this.replyLayout = itemView.findViewById(R.id.reply_layout);
   }
@@ -44,10 +42,10 @@ class ParentCommentViewHolder extends PostCommentViewHolder {
         .getTimeDiffString(itemView.getContext(), comment.getAdded()
             .getTime(), itemView.getContext()
             .getResources());
-    datePos1.setText(date);
-    datePos2.setText(date);
+    this.date.setText(date);
     this.comment.setText(comment.getBody());
     replyLayout.setVisibility(View.VISIBLE);
+    this.date.setVisibility(View.VISIBLE);
 
     replyLayout.setOnClickListener(view -> replyEventPublishSubject.onNext(comment.getBody()));
   }

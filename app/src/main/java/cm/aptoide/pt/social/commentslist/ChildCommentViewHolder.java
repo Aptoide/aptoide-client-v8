@@ -15,8 +15,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 class ChildCommentViewHolder extends PostCommentViewHolder {
   private final ImageView userIcon;
   private final TextView userName;
-  private final TextView datePos1;
-  private final TextView datePos2;
+  private final TextView date;
   private final TextView comment;
   private final View replyLayout;
 
@@ -24,8 +23,7 @@ class ChildCommentViewHolder extends PostCommentViewHolder {
     super(view);
     userIcon = (ImageView) view.findViewById(R.id.user_icon);
     userName = (TextView) view.findViewById(R.id.user_name);
-    datePos1 = (TextView) view.findViewById(R.id.added_date_pos1);
-    datePos2 = (TextView) itemView.findViewById(R.id.added_date_pos2);
+    date = (TextView) itemView.findViewById(R.id.added_date_pos2);
     comment = (TextView) itemView.findViewById(R.id.comment);
     replyLayout = itemView.findViewById(R.id.reply_layout);
   }
@@ -40,9 +38,9 @@ class ChildCommentViewHolder extends PostCommentViewHolder {
         .getTimeDiffString(itemView.getContext(), comment.getAdded()
             .getTime(), itemView.getContext()
             .getResources());
-    datePos1.setText(date);
-    datePos2.setText(date);
+    this.date.setText(date);
     this.comment.setText(comment.getBody());
     replyLayout.setVisibility(View.GONE);
+    this.date.setVisibility(View.VISIBLE);
   }
 }

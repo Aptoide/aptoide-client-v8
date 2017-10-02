@@ -47,23 +47,6 @@
         />
 
     <TextView
-        android:id="@+id/added_date_pos1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/user_name"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_toEndOf="@id/user_name"
-        android:layout_toRightOf="@id/user_name"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textSize="@dimen/text_size_extra_small"
-        android:visibility="gone"
-        tools:text="28 days ago"
-        tools:visibility="visible"
-        />
-
-    <TextView
         android:id="@+id/added_date_pos2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -84,9 +67,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@id/added_date_pos1"
-        android:layout_toEndOf="@id/added_date_pos1"
-        android:layout_toRightOf="@id/added_date_pos1"
+        android:layout_alignTop="@id/user_name"
+        android:layout_toEndOf="@id/user_name"
+        android:layout_toRightOf="@id/user_name"
         android:gravity="right|end"
         android:orientation="horizontal"
         android:visibility="gone"
