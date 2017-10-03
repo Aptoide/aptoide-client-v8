@@ -6,6 +6,7 @@
 package cm.aptoide.pt.preferences.managed;
 
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 /**
  * Created by neuro on 21-04-2016.
@@ -222,5 +223,13 @@ public class ManagerPreferences {
     sharedPreferences.edit()
         .putInt(ManagedKeys.NOT_LOGGED_IN_NUMBER_OF_INSTALL_CLICKS, value)
         .apply();
+  }
+
+  public static boolean isDebug(SharedPreferences sharedPreferences) {
+    return sharedPreferences.getBoolean(ManagedKeys.DEBUG, false);
+  }
+
+  public static String getNotificationType(SharedPreferences sharedPreferences) {
+    return sharedPreferences.getString(ManagedKeys.NOTIFICATION_TYPE, "");
   }
 }

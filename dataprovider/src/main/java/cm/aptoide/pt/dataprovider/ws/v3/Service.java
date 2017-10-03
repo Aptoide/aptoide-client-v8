@@ -26,6 +26,10 @@ import rx.Observable;
 
 public interface Service {
 
+  @POST("getPushNotifications") @FormUrlEncoded
+  Observable<GetPushNotificationsResponse> getPushNotifications(@FieldMap BaseBody arg,
+      @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
   @POST("addApkFlag") @FormUrlEncoded Observable<GenericResponseV2> addApkFlag(
       @FieldMap BaseBody arg, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
