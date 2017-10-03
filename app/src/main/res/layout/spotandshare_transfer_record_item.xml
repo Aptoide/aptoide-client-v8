@@ -21,6 +21,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginLeft="8dp"
+      android:layout_toLeftOf="@+id/transfer_record_accept_app_button"
       android:layout_toRightOf="@id/transfer_app_icon"
       android:orientation="vertical"
       >
@@ -29,6 +30,8 @@
         android:id="@+id/transfer_record_app_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="2"
         tools:text="Aptoide Lite"
         style="@style/Aptoide.TextView.Medium.S.BlackAlpha"
         >
