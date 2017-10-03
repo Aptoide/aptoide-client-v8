@@ -45,7 +45,6 @@ import cm.aptoide.pt.social.data.TimelineStatsTouchEvent;
 import cm.aptoide.pt.social.data.User;
 import cm.aptoide.pt.social.view.TimelineUser;
 import cm.aptoide.pt.social.view.TimelineView;
-import cm.aptoide.pt.social.view.viewholder.NativeAdErrorEvent;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
@@ -269,8 +268,7 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
                 .equals(CardTouchEvent.Type.ERROR))
-            .doOnNext(cardTouchEvent -> view.removePost(
-                ((NativeAdErrorEvent) cardTouchEvent).getPosition()))
+            .doOnNext(cardTouchEvent -> view.removePost(cardTouchEvent.getPosition()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
@@ -596,8 +594,7 @@ public class TimelinePresenter implements Presenter {
                         .doOnNext(install -> {
                           // TODO: 26/06/2017 get this logic out of here?  this is not working properly yet
                           ((AppUpdate) post).setInstallationStatus(install.getState());
-                          view.swapPost(post,
-                              ((AppUpdateCardTouchEvent) cardTouchEvent).getPosition());
+                          view.swapPost(post, cardTouchEvent.getPosition());
                         })
                         .subscribe(downloadProgress -> {
                         }, throwable -> Logger.d(this.getClass()
@@ -660,7 +657,7 @@ public class TimelinePresenter implements Presenter {
                     } else {
                       cardTouchEvent.getCard()
                           .setLiked(true);
-                      view.updatePost(((SocialCardTouchEvent) cardTouchEvent).getPosition());
+                      view.updatePost(cardTouchEvent.getPosition());
                     }
                   }
                 })
@@ -734,7 +731,7 @@ public class TimelinePresenter implements Presenter {
                     } else {
                       cardTouchEvent.getCard()
                           .setLiked(true);
-                      view.updatePost(((SocialCardTouchEvent) cardTouchEvent).getPosition());
+                      view.updatePost(cardTouchEvent.getPosition());
                     }
                   }
                 })
