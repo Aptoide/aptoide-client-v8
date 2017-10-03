@@ -40,7 +40,7 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
   //private final ImageView leftArrow;
   //private final ImageView rightArrow;
 
-  private final ProgressBar scoreProgress;
+  //private final ProgressBar scoreProgress;
   private final ProgressBar leaderboardProgress;
 
   private final TextView stampLeft;
@@ -78,7 +78,7 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
     //this.leftArrow = (ImageView) itemView.findViewById(R.id.left_arrow);
     //this.rightArrow = (ImageView) itemView.findViewById(R.id.right_arrow);
 
-    this.scoreProgress = (ProgressBar) itemView.findViewById(R.id.score_progress);
+    //this.scoreProgress = (ProgressBar) itemView.findViewById(R.id.score_progress);
     this.leaderboardProgress = (ProgressBar) itemView.findViewById(R.id.rank_progress);
 
     this.stampLeft = (TextView) itemView.findViewById(R.id.stamp_left);
@@ -131,19 +131,19 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
             String.valueOf(rightAnswer.getText()))));
     LeaderboardTouchEvent event = new LeaderboardTouchEvent(card, CardTouchEvent.Type.BODY);
 
-    score.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
-    leaderboard.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
+    //score.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
+    //leaderboard.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
     statsHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
 
 
     if(card.getScore()==-1){
-      scoreProgress.setVisibility(View.VISIBLE);
+      //scoreProgress.setVisibility(View.VISIBLE);
       leaderboardProgress.setVisibility(View.VISIBLE);
       score.setVisibility(View.INVISIBLE);
       leaderboard.setVisibility(View.INVISIBLE);
     }
     else{
-      scoreProgress.setVisibility(View.INVISIBLE);
+      //scoreProgress.setVisibility(View.INVISIBLE);
       leaderboardProgress.setVisibility(View.INVISIBLE);
       score.setVisibility(View.VISIBLE);
       leaderboard.setVisibility(View.VISIBLE);

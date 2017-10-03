@@ -43,13 +43,15 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
   private final ImageView arrowLeft;
   private final ImageView arrowRight;
 
-  private final ProgressBar scoreProgress;
+  //private final ProgressBar scoreProgress;
   private final ProgressBar leaderboardProgress;
 
   private final ImageView stampLeft;
   private final ImageView stampRight;
 
   private final String marketName;
+
+  private final View headerStats;
 
   private Game2 card;
   private double rand;
@@ -62,8 +64,8 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
     this.spannableFactory = spannableFactory;
     this.marketName = marketName;
 
-    this.score = (TextView) itemView.findViewById(R.id.displayable_social_timeline_game_card_score);
-    leaderboard = (TextView) itemView.findViewById(R.id.displayable_social_timeline_game_card_leaderboard);
+    this.score = (TextView) itemView.findViewById(R.id.stats_header).findViewById(R.id.displayable_social_timeline_game_card_score);
+    leaderboard = (TextView) itemView.findViewById(R.id.stats_header).findViewById(R.id.displayable_social_timeline_game_card_leaderboard);
     answerLeft = (ImageView) itemView.findViewById(R.id.left_answer);
     answerRight = (ImageView) itemView.findViewById(R.id.right_answer);
 
@@ -77,7 +79,7 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
     this.arrowLeft = (ImageView) itemView.findViewById(R.id.left_arrow);
     this.arrowRight = (ImageView) itemView.findViewById(R.id.right_arrow);
 
-    this.scoreProgress = (ProgressBar) itemView.findViewById(R.id.score_progress);
+    //this.scoreProgress = (ProgressBar) itemView.findViewById(R.id.score_progress);
     this.leaderboardProgress = (ProgressBar) itemView.findViewById(R.id.rank_progress);
 
     this.stampLeft = (ImageView) itemView.findViewById(R.id.stamp_left);
@@ -85,6 +87,9 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
 
     this.scoreIcon = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_game_card_score_icon) ;
     this.rankIcon = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_game_card_leaderboard_icon);
+
+    this.headerStats = itemView.findViewById(R.id.stats_header);
+
 
     rand = Math.random();
 
@@ -157,19 +162,21 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
 
     LeaderboardTouchEvent event = new LeaderboardTouchEvent(card, CardTouchEvent.Type.BODY);
 
-    score.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
-    leaderboard.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
-    scoreIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
-    rankIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
+    //score.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
+    //leaderboard.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
+    //scoreIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
+    //rankIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
+    headerStats.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
+
 
     if(card.getScore()==-1){
-      scoreProgress.setVisibility(View.VISIBLE);
+      //scoreProgress.setVisibility(View.VISIBLE);
       leaderboardProgress.setVisibility(View.VISIBLE);
       score.setVisibility(View.INVISIBLE);
       leaderboard.setVisibility(View.INVISIBLE);
     }
     else{
-      scoreProgress.setVisibility(View.INVISIBLE);
+      //scoreProgress.setVisibility(View.INVISIBLE);
       leaderboardProgress.setVisibility(View.INVISIBLE);
       score.setVisibility(View.VISIBLE);
       leaderboard.setVisibility(View.VISIBLE);

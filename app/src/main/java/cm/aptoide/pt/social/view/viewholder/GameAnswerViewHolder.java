@@ -17,6 +17,7 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.GameAnswer;
 import cm.aptoide.pt.social.data.LeaderboardTouchEvent;
+import cm.aptoide.pt.social.leaderboard.data.Leaderboard;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
 import rx.subjects.PublishSubject;
@@ -52,6 +53,7 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
   private final ProgressBar leaderboardProgress;
   private final String marketName;
   private final View leaderboardElement;
+  private final View headerStats;
 
   private int scoreValue;
 
@@ -65,9 +67,10 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
     this.spannableFactory = spannableFactory;
     this.marketName = marketName;
 
-    this.score = (TextView) itemView.findViewById(R.id.displayable_social_timeline_answer_card_score);
-    this.headerIncrement = (TextView) itemView.findViewById(R.id.score_increment);
-    this.leaderboard = (TextView) itemView.findViewById(R.id.displayable_social_timeline_answer_card_leaderboard);
+    this.score = (TextView) itemView.findViewById(R.id.stats_header).findViewById(R.id.displayable_social_timeline_game_card_score);
+    this.headerIncrement = (TextView) itemView.findViewById(R.id.stats_header).findViewById(R.id.score_increment);
+    this.leaderboard = (TextView) itemView.findViewById(R.id.stats_header).findViewById(R.id.displayable_social_timeline_game_card_leaderboard);
+
     this.appIcon = (ImageView) itemView.findViewById(R.id.get_app_icon);
     this.appName = (TextView) itemView.findViewById(R.id.app_name);
     this.getApp = (Button) itemView.findViewById(R.id.get_app_button);
@@ -77,8 +80,8 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
     this.headerIcon = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_answer_card_icon);
     this.headerTitle = (TextView) itemView.findViewById(R.id.displayable_social_timeline_answer_card_title);
     this.headerSubTitle = (TextView) itemView.findViewById(R.id.displayable_social_timeline_answer_card_subtitle);
-    this.leaderboardIcon = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_answer_card_leaderboard_icon);
-    this.scoreIcon = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_answer_card_score_icon);
+    this.leaderboardIcon = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_game_card_leaderboard_icon);
+    this.scoreIcon = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_game_card_score_icon);
 
     this.leaderboards = itemView.findViewById(R.id.card_leaderboard);
 
@@ -93,6 +96,9 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
     this.leaderboardProgress = (ProgressBar) itemView.findViewById(R.id.leaderboard_progress);
 
     this.leaderboardElement = itemView.findViewById(R.id.card_leaderboard);
+
+    this.headerStats = itemView.findViewById(R.id.stats_header);
+
 
   }
 
@@ -115,8 +121,10 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
       this.answerStatus.setImageResource(R.drawable.gameanswer_wrong);
       this.incrementStatus.setVisibility(View.GONE);
     }
-    else
+    else{
       this.answerStatus.setImageResource(R.drawable.gameanswer_correct);
+      this.incrementStatus.setVisibility(View.VISIBLE);
+    }
     this.answerMessage.setText("Answer:");
 
     this.getApp.setText("get app");
@@ -130,11 +138,15 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
     else
       this.headerSubTitle.setText(String.valueOf(card.getCardsLeft())+" cards left today.");
 
+    LeaderboardTouchEvent event  = new LeaderboardTouchEvent(card, CardTouchEvent.Type.BODY);
+
     getApp.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
 
-    leaderboardElement.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new LeaderboardTouchEvent(card, CardTouchEvent.Type.BODY)));
+    leaderboardElement.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
+
+    headerStats.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
+
 
 
     //if(!card.getLoginButton()){
