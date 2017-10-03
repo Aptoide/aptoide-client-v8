@@ -7,8 +7,8 @@ package cm.aptoide.pt.social.data;
 public class StoreAppCardTouchEvent extends CardTouchEvent {
   private final String packageName;
 
-  public StoreAppCardTouchEvent(Post card, Type actionType, String packageName) {
-    super(card, actionType);
+  public StoreAppCardTouchEvent(Post card, Type actionType, String packageName, int position) {
+    super(card, position, actionType);
     this.packageName = packageName;
   }
 

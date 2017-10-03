@@ -10,6 +10,15 @@ public class Data {
   private String teleco; //typo telco - this will change in v2
   private Result result;
   private Root root;
+  private String previousContext;
+
+  public String getPreviousContext() {
+    return previousContext;
+  }
+
+  public void setPreviousContext(String previousContext) {
+    this.previousContext = previousContext;
+  }
 
   public DataOrigin getOrigin() {
     return origin;

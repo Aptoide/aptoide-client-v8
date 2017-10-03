@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -15,6 +16,7 @@ import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.notification.AptoideNotification;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
+import com.facebook.appevents.AppEventsLogger;
 import java.util.Collections;
 import java.util.List;
 import rx.Observable;
@@ -50,7 +52,9 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
         ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker(),
         new NotificationAnalytics(
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient(),
-            Analytics.getInstance())), savedInstanceState);
+            Analytics.getInstance()),
+        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance(), navigationTracker)), savedInstanceState);
     notificationSubject = PublishSubject.create();
     adapter = new InboxAdapter(Collections.emptyList(), notificationSubject);
   }

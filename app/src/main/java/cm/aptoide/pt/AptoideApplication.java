@@ -36,6 +36,7 @@ import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountPersistence;
 import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
 import cm.aptoide.pt.account.AndroidAccountDataMigration;
 import cm.aptoide.pt.account.AndroidAccountManagerPersistence;
@@ -44,7 +45,6 @@ import cm.aptoide.pt.account.DatabaseStoreDataPersist;
 import cm.aptoide.pt.account.FacebookLoginResult;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
-import cm.aptoide.pt.account.LogAccountAnalytics;
 import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.account.V3AccountService;
 import cm.aptoide.pt.account.view.store.StoreManager;
@@ -158,7 +158,6 @@ import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootValueSaver;
 import cm.aptoide.pt.social.TimelineRepositoryFactory;
-import cm.aptoide.pt.social.data.TimelineAdsRepository;
 import cm.aptoide.pt.social.data.TimelinePostsRepository;
 import cm.aptoide.pt.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.spotandshare.socket.entities.Friend;
@@ -182,6 +181,7 @@ import cm.aptoide.pt.view.entry.EntryActivity;
 import cm.aptoide.pt.view.entry.EntryPointChooser;
 import cm.aptoide.pt.view.navigator.Result;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
+import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
 import com.crashlytics.android.answers.Answers;
 import com.facebook.CallbackManager;
@@ -204,12 +204,14 @@ import io.realm.RealmConfiguration;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import lombok.Setter;
@@ -303,6 +305,9 @@ public abstract class AptoideApplication extends Application {
   private Map<Integer, Result> fragmentResulMap;
   private PublishRelay<FacebookLoginResult> facebookLoginResultRelay;
   private AptoideNavigationTracker aptoideNavigationTracker;
+  private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
+  private AccountAnalytics accountAnalytics;
+  private PageViewsAnalytics pageViewsAnalytics;
 
   public LeakTool getLeakTool() {
     if (leakTool == null) {
@@ -403,6 +408,11 @@ public abstract class AptoideApplication extends Application {
 
     startNotificationCenter();
     getRootInstallationRetryHandler().start();
+    AptoideApplicationAnalytics aptoideApplicationAnalytics = new AptoideApplicationAnalytics();
+    accountManager.accountStatus()
+        .map(account -> account.isLoggedIn())
+        .distinctUntilChanged()
+        .subscribe(isLoggedIn -> aptoideApplicationAnalytics.updateDimension(isLoggedIn));
 
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
@@ -492,7 +502,8 @@ public abstract class AptoideApplication extends Application {
       notificationCenter = new NotificationCenter(getNotificationHandler(), notificationProvider,
           getNotificationSyncScheduler(), systemNotificationShower, CrashReport.getInstance(),
           new NotificationPolicyFactory(notificationProvider),
-          new NotificationsCleaner(notificationAccessor), getAccountManager());
+          new NotificationsCleaner(notificationAccessor,
+              Calendar.getInstance(TimeZone.getTimeZone("UTC"))), getAccountManager());
     }
     return notificationCenter;
   }
@@ -713,7 +724,6 @@ public abstract class AptoideApplication extends Application {
               Schedulers.io());
 
       accountManager = new AptoideAccountManager.Builder().setAccountPersistence(accountPersistence)
-          .setAccountAnalytics(new LogAccountAnalytics())
           .setAccountService(accountService)
           .registerSignUpAdapter(GoogleSignUpAdapter.TYPE,
               new GoogleSignUpAdapter(getGoogleSignInClient(), getLoginPreferences()))
@@ -1320,10 +1330,27 @@ public abstract class AptoideApplication extends Application {
           new TimelineRepositoryFactory(new HashMap<>(), getAccountSettingsBodyInterceptorPoolV7(),
               getDefaultClient(), getDefaultSharedPreferences(), getTokenInvalidator(),
               new LinksHandlerFactory(this), getPackageRepository(),
-              WebService.getDefaultConverter(), new TimelineResponseCardMapper(
-              () -> new TimelineAdsRepository(context, BehaviorRelay.create()), getMarketName()));
+              WebService.getDefaultConverter(), new TimelineResponseCardMapper(getMarketName()),
+              RepositoryFactory.getUpdateRepository(context,
+                  ((AptoideApplication) context.getApplicationContext()).getDefaultSharedPreferences()));
     }
     return timelineRepositoryFactory.create(action);
+  }
+
+  public AptoideNavigationTracker getAptoideNavigationTracker() {
+    if (aptoideNavigationTracker == null) {
+      aptoideNavigationTracker = new AptoideNavigationTracker(new ArrayList<>());
+    }
+    return aptoideNavigationTracker;
+  }
+
+  public PageViewsAnalytics getPageViewsAnalytics() {
+    if (pageViewsAnalytics == null) {
+      pageViewsAnalytics =
+          new PageViewsAnalytics(AppEventsLogger.newLogger(this), Analytics.getInstance(),
+              getAptoideNavigationTracker());
+    }
+    return pageViewsAnalytics;
   }
 
   public BehaviorRelay<Map<Integer, Result>> getFragmentResultRelay() {
@@ -1352,13 +1379,6 @@ public abstract class AptoideApplication extends Application {
       facebookLoginResultRelay = PublishRelay.create();
     }
     return facebookLoginResultRelay;
-  }
-
-  public AptoideNavigationTracker getAptoideNavigationTracker() {
-    if (aptoideNavigationTracker == null) {
-      aptoideNavigationTracker = new AptoideNavigationTracker(new ArrayList<>());
-    }
-    return aptoideNavigationTracker;
   }
 
   public abstract LoginPreferences getLoginPreferences();
@@ -1406,6 +1426,25 @@ public abstract class AptoideApplication extends Application {
   public void updateFriendProfileOnSpotAndShare() {
     spotAndShare = null;
     getSpotAndShare();
+  }
+
+  public NotLoggedInShareAnalytics getNotLoggedInShareAnalytics() {
+    if (notLoggedInShareAnalytics == null) {
+      notLoggedInShareAnalytics =
+          new NotLoggedInShareAnalytics(getAccountAnalytics(), AppEventsLogger.newLogger(this),
+              Analytics.getInstance());
+    }
+    return notLoggedInShareAnalytics;
+  }
+
+  public AccountAnalytics getAccountAnalytics() {
+    if (accountAnalytics == null) {
+      accountAnalytics = new AccountAnalytics(Analytics.getInstance(), getBodyInterceptorPoolV7(),
+          getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
+          BuildConfig.APPLICATION_ID, getDefaultSharedPreferences(),
+          AppEventsLogger.newLogger(this), getAptoideNavigationTracker());
+    }
+    return accountAnalytics;
   }
 }
 

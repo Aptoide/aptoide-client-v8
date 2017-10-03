@@ -1,6 +1,7 @@
 package cm.aptoide.pt.notification.view;
 
 import android.os.Bundle;
+import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.link.LinksHandlerFactory;
@@ -21,19 +22,22 @@ public class InboxPresenter implements Presenter {
   private final NotificationCenter notificationCenter;
   private final LinksHandlerFactory linkFactory;
   private final NotificationAnalytics analytics;
+  private PageViewsAnalytics pageViewsAnalytics;
   private CrashReport crashReport;
   private AptoideNavigationTracker aptoideNavigationTracker;
   private int NUMBER_OF_NOTIFICATIONS = 50;
 
   public InboxPresenter(InboxView view, NotificationCenter notificationCenter,
       LinksHandlerFactory linkFactory, CrashReport crashReport,
-      AptoideNavigationTracker aptoideNavigationTracker, NotificationAnalytics analytics) {
+      AptoideNavigationTracker aptoideNavigationTracker, NotificationAnalytics analytics,
+      PageViewsAnalytics pageViewsAnalytics) {
     this.view = view;
     this.notificationCenter = notificationCenter;
     this.linkFactory = linkFactory;
     this.crashReport = crashReport;
     this.aptoideNavigationTracker = aptoideNavigationTracker;
     this.analytics = analytics;
+    this.pageViewsAnalytics = pageViewsAnalytics;
   }
 
   @Override public void present() {
@@ -53,7 +57,8 @@ public class InboxPresenter implements Presenter {
                 .doOnNext(link -> link.launch())
                 .doOnNext(link -> analytics.notificationShown(
                     notification.getNotificationCenterUrlTrack()))
-                .doOnNext(link -> aptoideNavigationTracker.registerView("Notification"))))
+                .doOnNext(link -> aptoideNavigationTracker.registerView("Notification"))
+                .doOnNext(link -> pageViewsAnalytics.sendPageViewedEvent())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, throwable -> crashReport.log(throwable));

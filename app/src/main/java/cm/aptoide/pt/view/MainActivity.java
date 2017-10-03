@@ -100,7 +100,8 @@ public class MainActivity extends TabNavigatorActivity
             sharedPreferences, AccessorFactory.getAccessorFor(
             ((AptoideApplication) getApplicationContext().getApplicationContext()).getDatabase(),
             Store.class), defaultTheme,
-            ((AptoideApplication) getApplicationContext()).getAptoideNavigationTracker());
+            ((AptoideApplication) getApplicationContext()).getAptoideNavigationTracker(),
+            ((AptoideApplication) getApplicationContext()).getPageViewsAnalytics());
 
     final ApkFy apkFy = new ApkFy(this, getIntent(), securePreferences);
 

@@ -26,8 +26,8 @@ public class TimelineNoNotificationHeaderViewHolder extends PostViewHolder<Timel
 
   @Override public void setPost(TimelineUser card, int position) {
     notificationCenterButton.setOnClickListener(view -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.NOTIFICATION_CENTER)));
+        new CardTouchEvent(card, position, CardTouchEvent.Type.NOTIFICATION_CENTER)));
     addFriendsButton.setOnClickListener(view -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.ADD_FRIEND)));
+        new CardTouchEvent(card, position, CardTouchEvent.Type.ADD_FRIEND)));
   }
 }

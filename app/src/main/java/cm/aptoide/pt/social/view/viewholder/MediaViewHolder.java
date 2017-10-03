@@ -87,19 +87,19 @@ public class MediaViewHolder extends PostViewHolder<Media> {
     ImageLoader.with(itemView.getContext())
         .loadWithCenterCrop(media.getMediaThumbnailUrl(), articleThumbnail);
 
-    handleCommentsInformation(media);
+    handleCommentsInformation(media, position);
 
     articleThumbnail.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(media, CardTouchEvent.Type.BODY)));
+        new CardTouchEvent(media, position, CardTouchEvent.Type.BODY)));
     articleTitle.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(media, CardTouchEvent.Type.BODY)));
+        new CardTouchEvent(media, position, CardTouchEvent.Type.BODY)));
     articleHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(media, CardTouchEvent.Type.HEADER)));
+        new CardTouchEvent(media, position, CardTouchEvent.Type.HEADER)));
 
     this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new SocialCardTouchEvent(media, CardTouchEvent.Type.COMMENT, position)));
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(media, CardTouchEvent.Type.SHARE)));
+        new CardTouchEvent(media, position, CardTouchEvent.Type.SHARE)));
 
     if (media.isLiked()) {
       if (media.isLikeFromClick()) {

@@ -2,11 +2,11 @@ package cm.aptoide.pt.billing.view.login;
 
 import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.FacebookSignUpException;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.account.view.AccountNavigator;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -29,12 +29,13 @@ public class PaymentLoginPresenter implements Presenter {
   private final ThrowableToStringMapper errorMapper;
   private final Scheduler viewScheduler;
   private final ScreenOrientationManager orientationManager;
+  private final AccountAnalytics accountAnalytics;
 
   public PaymentLoginPresenter(PaymentLoginView view, int requestCode,
       Collection<String> permissions, AccountNavigator accountNavigator,
       Collection<String> requiredPermissions, AptoideAccountManager accountManager,
       CrashReport crashReport, ThrowableToStringMapper errorMapper, Scheduler viewScheduler,
-      ScreenOrientationManager orientationManager) {
+      ScreenOrientationManager orientationManager, AccountAnalytics accountAnalytics) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.requestCode = requestCode;
@@ -45,6 +46,7 @@ public class PaymentLoginPresenter implements Presenter {
     this.errorMapper = errorMapper;
     this.viewScheduler = viewScheduler;
     this.orientationManager = orientationManager;
+    this.accountAnalytics = accountAnalytics;
   }
 
   @Override public void present() {
@@ -93,6 +95,7 @@ public class PaymentLoginPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> accountManager.accountStatus())
         .filter(account -> account.isLoggedIn())
+        .doOnNext(account -> accountAnalytics.loginSuccess())
         .observeOn(viewScheduler)
         .doOnNext(__ -> accountNavigator.popViewWithResult(requestCode, true))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -106,17 +109,17 @@ public class PaymentLoginPresenter implements Presenter {
             .doOnNext(__ -> {
               view.showLoading();
               orientationManager.lock();
+              accountAnalytics.sendAptoideSignUpButtonPressed();
             })
             .flatMapCompletable(
                 result -> accountManager.signUp(AptoideAccountManager.APTOIDE_SIGN_UP_TYPE, result)
                     .observeOn(viewScheduler)
-                    .doOnCompleted(() -> sendAptoideSignUpSuccessEvent())
                     .doOnTerminate(() -> {
                       view.hideLoading();
                       orientationManager.unlock();
                     })
                     .doOnError(throwable -> {
-                      sendAptoideSignUpFailEvent();
+                      accountAnalytics.sendAptoideSignUpFailEvent();
                       view.showError(errorMapper.map(throwable));
                       crashReport.log(throwable);
                     }))
@@ -132,16 +135,16 @@ public class PaymentLoginPresenter implements Presenter {
             .doOnNext(__ -> {
               view.showLoading();
               orientationManager.lock();
+              accountAnalytics.sendAptoideLoginButtonPressed();
             })
             .flatMapCompletable(result -> accountManager.login(result)
                 .observeOn(viewScheduler)
-                .doOnCompleted(() -> sendAptoideLoginSuccessEvent())
                 .doOnTerminate(() -> {
                   view.hideLoading();
                   orientationManager.unlock();
                 })
                 .doOnError(throwable -> {
-                  sendAptoideLoginFailEvent();
+                  accountAnalytics.sendAptoideLoginFailEvent();
                   view.showError(errorMapper.map(throwable));
                   crashReport.log(throwable);
                 }))
@@ -156,7 +159,6 @@ public class PaymentLoginPresenter implements Presenter {
         .flatMap(__ -> accountNavigator.facebookSignUpResults()
             .flatMapCompletable(result -> accountManager.signUp(FacebookSignUpAdapter.TYPE, result)
                 .observeOn(viewScheduler)
-                .doOnCompleted(() -> sendFacebookSignUpSuccessEvent())
                 .doOnTerminate(() -> view.hideLoading())
                 .doOnError(throwable -> {
                   sendFacebookSignUpErrorEvent(throwable);
@@ -180,6 +182,7 @@ public class PaymentLoginPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.facebookSignUpEvent())
         .doOnNext(__ -> view.showLoading())
+        .doOnNext(click -> accountAnalytics.sendFacebookLoginButtonPressed())
         .doOnNext(__ -> accountNavigator.navigateToFacebookSignUpForResult(permissions))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
@@ -190,6 +193,7 @@ public class PaymentLoginPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.googleSignUpEvent())
         .doOnNext(event -> view.showLoading())
+        .doOnNext(event -> accountAnalytics.sendGoogleLoginButtonPressed())
         .flatMapSingle(event -> accountNavigator.navigateToGoogleSignUpForResult(
             RESOLVE_GOOGLE_CREDENTIALS_REQUEST_CODE))
         .observeOn(viewScheduler)
@@ -214,12 +218,11 @@ public class PaymentLoginPresenter implements Presenter {
         .flatMap(__ -> accountNavigator.googleSignUpResults(RESOLVE_GOOGLE_CREDENTIALS_REQUEST_CODE)
             .flatMapCompletable(result -> accountManager.signUp(GoogleSignUpAdapter.TYPE, result)
                 .observeOn(viewScheduler)
-                .doOnCompleted(() -> sendGoogleSignUpSuccessEvent())
                 .doOnTerminate(() -> view.hideLoading())
                 .doOnError(throwable -> {
                   view.showError(errorMapper.map(throwable));
                   crashReport.log(throwable);
-                  sendGoogleSignUpFailEvent();
+                  accountAnalytics.sendGoogleSignUpFailEvent();
                 }))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -248,55 +251,15 @@ public class PaymentLoginPresenter implements Presenter {
     if (throwable instanceof FacebookSignUpException) {
       switch (((FacebookSignUpException) throwable).getCode()) {
         case FacebookSignUpException.MISSING_REQUIRED_PERMISSIONS:
-          Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
-              Analytics.Account.SignUpLoginStatus.FAILED,
-              Analytics.Account.LoginStatusDetail.PERMISSIONS_DENIED);
+          accountAnalytics.sendFacebookMissingPermissionsEvent();
           break;
         case FacebookSignUpException.USER_CANCELLED:
-          Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
-              Analytics.Account.SignUpLoginStatus.FAILED,
-              Analytics.Account.LoginStatusDetail.CANCEL);
+          accountAnalytics.sendFacebookUserCancelledEvent();
           break;
         case FacebookSignUpException.ERROR:
-          Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
-              Analytics.Account.SignUpLoginStatus.FAILED,
-              Analytics.Account.LoginStatusDetail.SDK_ERROR);
+          accountAnalytics.sendFacebookErrorEvent();
           break;
       }
     }
-  }
-
-  private void sendAptoideLoginSuccessEvent() {
-    Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
-        Analytics.Account.SignUpLoginStatus.SUCCESS, Analytics.Account.LoginStatusDetail.SUCCESS);
-  }
-
-  private void sendFacebookSignUpSuccessEvent() {
-    Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
-        Analytics.Account.SignUpLoginStatus.SUCCESS, Analytics.Account.LoginStatusDetail.SUCCESS);
-  }
-
-  private void sendGoogleSignUpSuccessEvent() {
-    Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
-        Analytics.Account.SignUpLoginStatus.SUCCESS, Analytics.Account.LoginStatusDetail.SUCCESS);
-  }
-
-  private void sendGoogleSignUpFailEvent() {
-    Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
-        Analytics.Account.SignUpLoginStatus.FAILED, Analytics.Account.LoginStatusDetail.SDK_ERROR);
-  }
-
-  private void sendAptoideLoginFailEvent() {
-    Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
-        Analytics.Account.SignUpLoginStatus.FAILED,
-        Analytics.Account.LoginStatusDetail.GENERAL_ERROR);
-  }
-
-  private void sendAptoideSignUpSuccessEvent() {
-    Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.SUCCESS);
-  }
-
-  private void sendAptoideSignUpFailEvent() {
-    Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.FAILED);
   }
 }

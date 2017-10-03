@@ -110,6 +110,7 @@ import cm.aptoide.pt.view.install.remote.RemoteInstallDialog;
 import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import cm.aptoide.pt.view.share.ShareAppHelper;
 import cm.aptoide.pt.view.store.StoreFragment;
 import com.crashlytics.android.answers.Answers;
@@ -206,6 +207,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private String marketName;
   private String defaultTheme;
   private long storeId;
+  private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
+  private CrashReport crashReport;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -322,7 +325,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        new NotificationAnalytics(httpClient, analytics));
+        new NotificationAnalytics(httpClient, analytics), navigationTracker);
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
             timelineAnalytics, tokenInvalidator,
@@ -359,6 +362,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storeAnalytics =
         new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
             analytics);
+    notLoggedInShareAnalytics =
+        ((AptoideApplication) getContext().getApplicationContext()).getNotLoggedInShareAnalytics();
   }
 
   private void handleSavedInstance(Bundle savedInstanceState) {
@@ -410,11 +415,19 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     getLifecycle().filter(lifecycleEvent -> lifecycleEvent.equals(LifecycleEvent.CREATE))
         .flatMap(viewCreated -> accountNavigator.notLoggedInViewResults(LOGIN_REQUEST_CODE)
             .filter(success -> success)
-            .doOnNext(result -> socialRepository.share(packageName, storeId, "app")))
+            .flatMapCompletable(result -> socialRepository.asyncShare(packageName, storeId, "app")
+                .doOnCompleted(() -> notLoggedInShareAnalytics.sendShareSuccess()))
+            .doOnError(throwable -> {
+              notLoggedInShareAnalytics.sendShareFail();
+              crashReport.log(throwable);
+            })
+            .retry())
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(result -> {
-        }, throwable -> CrashReport.getInstance()
-            .log(throwable));
+        }, throwable -> {
+          crashReport = CrashReport.getInstance();
+          crashReport.log(throwable);
+        });
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
