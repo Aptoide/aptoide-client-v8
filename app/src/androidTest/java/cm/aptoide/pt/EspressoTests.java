@@ -34,15 +34,17 @@ import static org.hamcrest.Matchers.not;
  * Created by jose_messejana on 26-09-2017.
  */
 
-@RunWith(AndroidJUnit4.class) @LargeTest public class EspressoTests {
+@RunWith(AndroidJUnit4.class)
 
-  private final String EMAILTEST2 = "jose.messejana@aptoide.com";
+@LargeTest public class EspressoTests {
+
+  private final String EMAILTEST2 = "jose.messejana+14@aptoide.com";
   private final String PASS = "aptoide1234";
   private final String APP_TO_SEARCH = "Cut the Rope";
   private final int XCOORDINATE = 144;
   private final int YCOORDINATE = 144;
   private final int WAIT_TIME = 550;
-  private final int WAIT_FOR_DOWNLOAD_TIME = 7500;
+  private final int WAIT_FOR_DOWNLOAD_TIME = 5000;
 
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
@@ -124,8 +126,21 @@ import static org.hamcrest.Matchers.not;
     onView(withId(R.id.download_progress)).check(matches(isDisplayed()));
     onView(withId(R.id.text_progress)).check(matches(not(withText("0%"))));
     onView(withId(R.id.ic_action_cancel)).perform(click());
+    Thread.sleep(WAIT_TIME);
     onView(withId(R.id.action_btn)).check(matches(isDisplayed()));
     onView(withId(R.id.action_btn)).check(matches(withText(R.string.appview_button_install)));
+    /* while (isDownloading()) {
+      Thread.sleep(WAIT_FOR_DOWNLOAD_TIME);
+    }
+    Thread.sleep(3000);
+    onView(withText("Continue installing")).perform(click());
+    onView(withText("Install")).perform(click());
+    while (isInstalling()) {
+      Thread.sleep(WAIT_TIME * 2);
+    }
+    onView(withText("App installed")).check(matches(isDisplayed()));
+    onView(withText("Done")).perform(click());
+    onView(withText(R.string.open)).check(matches(isDisplayed())); */
   }
 
   private boolean isFirstTime() {
@@ -154,6 +169,25 @@ import static org.hamcrest.Matchers.not;
       return true;
     }
   }
+
+  private boolean isDownloading() {
+    try {
+      onView(withId(R.id.download_progress)).check(matches(isDisplayed()));
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
+  private boolean isInstalling() {
+    try {
+      onView(withText("Installing...")).check(matches(isDisplayed()));
+      return true;
+    } catch (NoMatchingViewException e) {
+      return false;
+    }
+  }
+
 
   private void closePopUp() {
     try {
@@ -189,6 +223,7 @@ import static org.hamcrest.Matchers.not;
     onView(withId(R.id.show_join_aptoide_area)).perform(click());
     onView(withId(R.id.username)).perform(replaceText(EMAILTEST2));
     onView(withId(R.id.password)).perform(replaceText(PASS), closeSoftKeyboard());
+    Thread.sleep(WAIT_TIME);
     onView(withId(R.id.button_sign_up)).perform(click());
     //TO DO PROFILE FLOW
     //TO DO Logout user after registration
