@@ -51,6 +51,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import org.parceler.Parcels;
 import retrofit2.Converter;
@@ -296,31 +297,12 @@ public class SearchFragment extends BackButtonFragment implements SearchView {
   }
 
   @Override public Observable<Void> followedStoresResultReachedBottom() {
-    return RxRecyclerView.scrollEvents(followedStoresResultList)
-        .filter(event -> followedStoresResultListPositionHelper.getItemCount() > VISIBLE_THRESHOLD
-            && followedStoresResultListPositionHelper != null
-            && event.view()
-            .isAttachedToWindow()
-            && (followedStoresResultListPositionHelper.getItemCount() - event.view()
-            .getChildCount()) <= ((
-            followedStoresResultListPositionHelper.findFirstVisibleItemPosition() == -1 ? 0
-                : followedStoresResultListPositionHelper.findFirstVisibleItemPosition())
-            + VISIBLE_THRESHOLD))
-        .map(event -> null);
+    return recyclerViewReachedBottom(followedStoresResultList,
+        followedStoresResultListPositionHelper);
   }
 
   @Override public Observable<Void> allStoresResultReachedBottom() {
-    return RxRecyclerView.scrollEvents(allStoresResultList)
-        .filter(event -> allStoresResultListPositionHelper.getItemCount() > VISIBLE_THRESHOLD
-            && allStoresResultListPositionHelper != null
-            && event.view()
-            .isAttachedToWindow()
-            && (allStoresResultListPositionHelper.getItemCount() - event.view()
-            .getChildCount()) <= ((
-            allStoresResultListPositionHelper.findFirstVisibleItemPosition() == -1 ? 0
-                : allStoresResultListPositionHelper.findFirstVisibleItemPosition())
-            + VISIBLE_THRESHOLD))
-        .map(event -> null);
+    return recyclerViewReachedBottom(allStoresResultList, allStoresResultListPositionHelper);
   }
 
   @Override public void showLoadingMore() {
@@ -336,6 +318,29 @@ public class SearchFragment extends BackButtonFragment implements SearchView {
   @Override public void setViewWithStoreNameAsSingleTab() {
     followedStoresButton.setText(viewModel.getStoreName());
     allStoresButton.setVisibility(View.GONE);
+  }
+
+  private Observable<Void> recyclerViewReachedBottom(RecyclerView recyclerView,
+      RecyclerViewPositionHelper positionHelper) {
+    return RxRecyclerView.scrollEvents(recyclerView)
+        .throttleLast(500, TimeUnit.MILLISECONDS)
+        .filter(event -> event.dy() > 4)
+        .filter(event -> event.view()
+            .isAttachedToWindow())
+        .filter(event -> {
+          final int itemCount = positionHelper.getItemCount();
+
+          final int lastVisibleItemPosition = positionHelper.findFirstVisibleItemPosition();
+
+          final int lastNonVisibleItemIndex = itemCount - event.view()
+              .getChildCount();
+
+          final int lastVisibleItemIndex =
+              (lastVisibleItemPosition == -1 ? 0 : lastVisibleItemPosition) + VISIBLE_THRESHOLD;
+
+          return lastVisibleItemIndex >= lastNonVisibleItemIndex;
+        })
+        .map(event -> null);
   }
 
   private void setFollowedStoresButtonSelected() {

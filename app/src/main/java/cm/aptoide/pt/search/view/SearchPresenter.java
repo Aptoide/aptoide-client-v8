@@ -14,7 +14,6 @@ import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import rx.Observable;
 import rx.Scheduler;
 
@@ -72,12 +71,11 @@ public class SearchPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .flatMap(__ -> view.allStoresResultReachedBottom())
-        .debounce(250, TimeUnit.MILLISECONDS)
         .map(__ -> view.getViewModel())
         .filter(viewModel -> !viewModel.hasReachedBottomOfAllStores())
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showLoadingMore())
-        .flatMap(viewModel -> loadData(viewModel.getCurrentQuery(), viewModel.getStoreName(),
+        .flatMap(viewModel -> loadDataForAllNonFollowedStores(viewModel.getCurrentQuery(),
             viewModel.isOnlyTrustedApps(), viewModel.getAllStoresOffset()).onErrorResumeNext(
             err -> {
               crashReport.log(err);
@@ -104,12 +102,11 @@ public class SearchPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .flatMap(__ -> view.followedStoresResultReachedBottom())
-        .debounce(250, TimeUnit.MILLISECONDS)
         .map(__ -> view.getViewModel())
         .filter(viewModel -> !viewModel.hasReachedBottomOfFollowedStores())
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showLoadingMore())
-        .flatMap(viewModel -> loadData(viewModel.getCurrentQuery(), viewModel.getStoreName(),
+        .flatMap(viewModel -> loadDataForAllFollowedStores(viewModel.getCurrentQuery(),
             viewModel.isOnlyTrustedApps(), viewModel.getFollowedStoresOffset()).onErrorResumeNext(
             err -> {
               crashReport.log(err);
