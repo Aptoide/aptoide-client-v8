@@ -9,6 +9,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -60,5 +61,13 @@ class GetStoreWidgetsRequestFactory {
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
         resources, windowManager, clientUniqueId, googlePlayServicesAvailable, partnerId,
         accountMature, filters, systemService, versionCodeProvider);
+  }
+
+  public GetStoreWidgetsRequest newStoreWidgets(String url, boolean googlePlayServicesAvailable,
+      String storeName, StoreContext storeContext) {
+    return GetStoreWidgetsRequest.ofAction(url, storeCredentialsProvider.fromUrl(url),
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
+        resources, windowManager, clientUniqueId, googlePlayServicesAvailable, partnerId,
+        accountMature, filters, systemService, versionCodeProvider, storeName, storeContext);
   }
 }
