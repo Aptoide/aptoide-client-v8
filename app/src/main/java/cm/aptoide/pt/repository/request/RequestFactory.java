@@ -16,6 +16,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -103,6 +104,12 @@ public class RequestFactory {
 
   public GetStoreWidgetsRequest newStoreWidgets(String url) {
     return this.getStoreWidgetsRequestFactory.newStoreWidgets(url, googlePlayServicesAvailable);
+  }
+
+  public GetStoreWidgetsRequest newStoreWidgets(String url, String storeName,
+      StoreContext storeContext) {
+    return this.getStoreWidgetsRequestFactory.newStoreWidgets(url, googlePlayServicesAvailable,
+        storeName, storeContext);
   }
 
   public GetUserRequest newGetUser(String url) {
