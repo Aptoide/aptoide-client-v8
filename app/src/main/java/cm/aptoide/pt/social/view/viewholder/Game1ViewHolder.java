@@ -5,6 +5,8 @@ import android.content.res.Resources;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -17,6 +19,8 @@ import cm.aptoide.pt.social.data.LeaderboardTouchEvent;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
 import rx.subjects.PublishSubject;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by franciscocalado on 9/22/17.
@@ -93,6 +97,11 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
     int played;
 
     this.card = card;
+    stampLeft.setVisibility(View.GONE);
+    stampRight.setVisibility(View.GONE);
+    rightAnswer.setVisibility(View.VISIBLE);
+    leftAnswer.setVisibility(View.VISIBLE);
+    itemView.setVisibility(View.VISIBLE);
 
     this.score.setText(String.valueOf(card.getScore()));
     this.leaderboard.setText(String.valueOf(card.getgRanking()));
@@ -124,11 +133,8 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
       this.stampLeft.setText(card.getApp().getName());
     }
 
-    leftAnswer.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(leftAnswer.getText()))));
-    rightAnswer.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position,
-            String.valueOf(rightAnswer.getText()))));
+    leftAnswer.setOnClickListener(click -> onClickLeft(position));
+    rightAnswer.setOnClickListener(click -> onClickRight(position));
     LeaderboardTouchEvent event = new LeaderboardTouchEvent(card, CardTouchEvent.Type.BODY);
 
     //score.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
@@ -173,6 +179,54 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
 
   public Game1 getCard() {
     return card;
+  }
+
+  public void onClickLeft(int position){
+    Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),
+        R.anim.slide_out_left);
+    animation.setAnimationListener(new Animation.AnimationListener(){
+      @Override public void onAnimationStart(Animation animation) {
+        leftAnswer.setVisibility(View.INVISIBLE);
+        rightAnswer.setVisibility(View.INVISIBLE);
+        stampRight.setAlpha(1f);
+        stampRight.setVisibility(View.VISIBLE);
+      }
+
+      @Override public void onAnimationEnd(Animation animation) {
+        itemView.setVisibility(View.INVISIBLE);
+        cardTouchEventPublishSubject.onNext(
+            new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(leftAnswer.getText())));
+      }
+
+      @Override public void onAnimationRepeat(Animation animation) {
+
+      }
+    });
+    this.itemView.startAnimation(animation);
+  }
+
+  public void onClickRight(int position){
+    Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),
+        R.anim.slide_out_right);
+    animation.setAnimationListener(new Animation.AnimationListener(){
+      @Override public void onAnimationStart(Animation animation) {
+        leftAnswer.setVisibility(View.INVISIBLE);
+        rightAnswer.setVisibility(View.INVISIBLE);
+        stampLeft.setAlpha(1f);
+        stampLeft.setVisibility(View.VISIBLE);
+      }
+
+      @Override public void onAnimationEnd(Animation animation) {
+        itemView.setVisibility(View.INVISIBLE);
+        cardTouchEventPublishSubject.onNext(
+            new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(rightAnswer.getText())));
+      }
+
+      @Override public void onAnimationRepeat(Animation animation) {
+
+      }
+    });
+    this.itemView.startAnimation(animation);
   }
 
 }
