@@ -188,4 +188,14 @@ public class AdsRepository {
                 sharedPreferences, connectivityManager, resources, versionCodeProvider)
                 .observe()));
   }
+
+  public Observable<List<MinimalAd>> getAdsFromFirstInstall(int limitOfAds) {
+    return mapToMinimalAds(GetAdsRequest.ofFirstInstall(idsRepository.getUniqueIdentifier(),
+        googlePlayServicesAvailabilityChecker.isAvailable(context),
+        partnerIdProvider.getPartnerId(), limitOfAds, accountManager.isAccountMature(), httpClient,
+        converterFactory,
+        qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
+        sharedPreferences, connectivityManager, resources, versionCodeProvider)
+        .observe());
+  }
 }
