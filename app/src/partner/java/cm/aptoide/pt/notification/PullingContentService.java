@@ -152,7 +152,7 @@ public class PullingContentService extends Service {
         String imageUrl = pushNotification.getImages()
             .getBannerUrl();
         RemoteViews expandedView = new RemoteViews(getApplicationContext().getPackageName(),
-            R.layout.pushnotificationlayout);
+            R.layout.push_notification_layout);
         expandedView.setImageViewBitmap(R.id.icon,
             BitmapFactory.decodeResource(getApplicationContext().getResources(),
                 R.mipmap.ic_launcher));
