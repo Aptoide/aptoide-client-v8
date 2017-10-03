@@ -7,4 +7,6 @@ package cm.aptoide.pt;
 public interface NavigationTrackerPagerAdapterHelper {
 
   String getItemName(int position);
+
+  String getItemLabel(int position);
 }

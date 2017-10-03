@@ -54,6 +54,10 @@ public class WizardPagerAdapter extends FragmentPagerAdapter
         .getSimpleName();
   }
 
+  @Override public String getItemLabel(int position) {
+    return String.valueOf(position);
+  }
+
   private Fragment setFragmentLogFlag(Fragment fragment) {
     Bundle bundle = fragment.getArguments();
     if (bundle == null) {

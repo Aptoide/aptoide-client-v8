@@ -84,4 +84,8 @@ public class SearchPagerAdapter extends FragmentStatePagerAdapter
     return getItem(position).getClass()
         .getSimpleName();
   }
+
+  @Override public String getItemLabel(int position) {
+    return String.valueOf(position);
+  }
 }

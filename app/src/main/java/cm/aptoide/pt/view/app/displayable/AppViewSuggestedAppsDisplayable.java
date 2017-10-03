@@ -6,6 +6,7 @@
 package cm.aptoide.pt.view.app.displayable;
 
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
@@ -24,15 +25,18 @@ import lombok.Getter;
   private List<MinimalAd> minimalAds;
   private List<App> appsList;
   @Getter private AppViewSimilarAppAnalytics appViewSimilarAppAnalytics;
+  private AptoideNavigationTracker aptoideNavigationTracker;
 
   public AppViewSuggestedAppsDisplayable() {
   }
 
   public AppViewSuggestedAppsDisplayable(List<MinimalAd> minimalAds, List<App> appsList,
-      AppViewSimilarAppAnalytics appViewSimilarAppAnalytics) {
+      AppViewSimilarAppAnalytics appViewSimilarAppAnalytics,
+      AptoideNavigationTracker aptoideNavigationTracker) {
     this.minimalAds = minimalAds;
     this.appsList = appsList;
     this.appViewSimilarAppAnalytics = appViewSimilarAppAnalytics;
+    this.aptoideNavigationTracker = aptoideNavigationTracker;
   }
 
   @Override protected Displayable.Configs getConfig() {
@@ -41,5 +45,9 @@ import lombok.Getter;
 
   @Override public int getViewLayout() {
     return R.layout.displayable_app_view_suggested_apps;
+  }
+
+  public AptoideNavigationTracker getAptoideNavigationTracker() {
+    return aptoideNavigationTracker;
   }
 }

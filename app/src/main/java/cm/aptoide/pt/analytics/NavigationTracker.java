@@ -9,6 +9,8 @@ public interface NavigationTracker {
 
   void registerTag(String tag);
 
+  void registerTagNewObject(String tag);
+
   ScreenTagHistory getCurrentScreen();
 
   String getPreviousViewName();

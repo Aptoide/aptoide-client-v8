@@ -28,12 +28,12 @@ import cm.aptoide.pt.presenter.DownloadsPresenter;
 import cm.aptoide.pt.presenter.DownloadsView;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
-import cm.aptoide.pt.view.fragment.FragmentView;
+import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
-public class DownloadsFragment extends FragmentView implements DownloadsView {
+public class DownloadsFragment extends NavigationTrackFragment implements DownloadsView {
 
   private DownloadsAdapter adapter;
   private View noDownloadsView;
@@ -74,6 +74,12 @@ public class DownloadsFragment extends FragmentView implements DownloadsView {
     analytics = Analytics.getInstance();
   }
 
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+
+    attachPresenter(new DownloadsPresenter(this, installManager), savedInstanceState);
+  }
+
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
@@ -88,17 +94,11 @@ public class DownloadsFragment extends FragmentView implements DownloadsView {
     downloadsRecyclerView.addItemDecoration(decor);
 
     adapter = new DownloadsAdapter(installConverter, downloadConverter, installManager, analytics,
-        getContext().getResources());
+        getContext().getResources(), aptoideNavigationTracker);
     downloadsRecyclerView.setAdapter(adapter);
     noDownloadsView = view.findViewById(R.id.no_apps_downloaded);
 
     return view;
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-
-    attachPresenter(new DownloadsPresenter(this, installManager), savedInstanceState);
   }
 
   @UiThread @Override public void showActiveDownloads(List<Install> downloads) {

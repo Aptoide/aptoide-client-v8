@@ -49,6 +49,8 @@ public class AppBrickListWidget extends Widget<AppBrickListDisplayable> {
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(v -> {
           Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
+          displayable.getAptoideNavigationTracker()
+              .registerTag(displayable.getTag());
           getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
               .newAppViewFragment(app.getId(), app.getPackageName(), app.getStore()
                   .getAppearance()

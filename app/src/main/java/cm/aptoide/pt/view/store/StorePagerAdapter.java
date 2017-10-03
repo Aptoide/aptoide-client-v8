@@ -212,4 +212,9 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter
     return getItem(position).getClass()
         .getSimpleName();
   }
+
+  @Override public String getItemLabel(int position) {
+    return tabs.get(position)
+        .getLabel();
+  }
 }

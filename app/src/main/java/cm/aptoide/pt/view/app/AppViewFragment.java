@@ -1001,7 +1001,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         .zipWith(requestFactoryCdnWeb.newGetRecommendedRequest(6, packageName)
             .observe(), (minimalAds, listApps) -> new AppViewSuggestedAppsDisplayable(minimalAds,
             removeCurrentAppFromSuggested(listApps.getDataList()
-                .getList()), appViewSimilarAppAnalytics))
+                .getList()), appViewSimilarAppAnalytics, aptoideNavigationTracker))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(appViewSuggestedAppsDisplayable -> {

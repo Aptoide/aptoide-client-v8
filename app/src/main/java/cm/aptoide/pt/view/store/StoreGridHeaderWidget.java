@@ -69,6 +69,8 @@ public class StoreGridHeaderWidget extends Widget<StoreGridHeaderDisplayable> {
 
             getFragmentNavigator().navigateTo(fragment, true);
             Analytics.AppViewViewedFrom.addStepToList(wsWidget.getTag());
+            displayable.getAptoideNavigationTracker()
+                .registerTagNewObject(displayable.getTag());
           }));
     }
   }

@@ -34,9 +34,11 @@ public class AptoideViewPager extends ViewPager {
 
         String currentView =
             ((NavigationTrackerPagerAdapterHelper) getAdapter()).getItemName(position);
-
+        String tag = ((NavigationTrackerPagerAdapterHelper) getAdapter()).getItemLabel(position);
         ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker()
             .registerView(currentView);
+        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker()
+            .registerTag(tag);
         ((AptoideApplication) getContext().getApplicationContext()).getPageViewsAnalytics()
             .sendPageViewedEvent();
       }

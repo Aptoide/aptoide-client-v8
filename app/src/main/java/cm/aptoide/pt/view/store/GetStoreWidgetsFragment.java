@@ -28,10 +28,11 @@ public class GetStoreWidgetsFragment extends GetStoreEndlessFragment<GetStoreWid
 
   @Override public void onResume() {
     super.onResume();
-    if (getUserVisibleHint()) {
-      aptoideNavigationTracker.registerView(this.getClass()
-          .getSimpleName());
-      pageViewsAnalytics.sendPageViewedEvent();
-    }
+    //if (getUserVisibleHint()) {
+    //  registerFragment = false;
+    //  aptoideNavigationTracker.registerView(this.getClass()
+    //      .getSimpleName());
+    //  pageViewsAnalytics.sendPageViewedEvent();
+    //}
   }
 }
