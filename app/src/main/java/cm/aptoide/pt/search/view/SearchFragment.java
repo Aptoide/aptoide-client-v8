@@ -44,7 +44,6 @@ import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
-import cm.aptoide.pt.view.recycler.RecyclerViewPositionHelper;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
@@ -65,7 +64,7 @@ public class SearchFragment extends BackButtonFragment implements SearchView {
   private static final int LAYOUT = R.layout.global_search_fragment;
   private static final String VIEW_MODEL = "view_model";
 
-  private static final int VISIBLE_THRESHOLD = 4;
+  private static final int VISIBLE_THRESHOLD = 5;
   private static final long ANIMATION_DURATION = 125L;
   private static final String ALL_STORES_SEARCH_LIST_STATE = "all_stores_search_list_state";
   private static final String FOLLOWED_STORES_SEARCH_LIST_STATE =
@@ -80,10 +79,7 @@ public class SearchFragment extends BackButtonFragment implements SearchView {
   private Button followedStoresButton;
   private Button allStoresButton;
 
-  private RecyclerViewPositionHelper followedStoresResultListPositionHelper;
   private RecyclerView followedStoresResultList;
-
-  private RecyclerViewPositionHelper allStoresResultListPositionHelper;
   private RecyclerView allStoresResultList;
 
   private SearchViewModel viewModel;
@@ -297,12 +293,11 @@ public class SearchFragment extends BackButtonFragment implements SearchView {
   }
 
   @Override public Observable<Void> followedStoresResultReachedBottom() {
-    return recyclerViewReachedBottom(followedStoresResultList,
-        followedStoresResultListPositionHelper);
+    return recyclerViewReachedBottom(followedStoresResultList);
   }
 
   @Override public Observable<Void> allStoresResultReachedBottom() {
-    return recyclerViewReachedBottom(allStoresResultList, allStoresResultListPositionHelper);
+    return recyclerViewReachedBottom(allStoresResultList);
   }
 
   @Override public void showLoadingMore() {
@@ -320,26 +315,20 @@ public class SearchFragment extends BackButtonFragment implements SearchView {
     allStoresButton.setVisibility(View.GONE);
   }
 
-  private Observable<Void> recyclerViewReachedBottom(RecyclerView recyclerView,
-      RecyclerViewPositionHelper positionHelper) {
+  private Observable<Void> recyclerViewReachedBottom(RecyclerView recyclerView) {
     return RxRecyclerView.scrollEvents(recyclerView)
-        .throttleLast(500, TimeUnit.MILLISECONDS)
         .filter(event -> event.dy() > 4)
         .filter(event -> event.view()
             .isAttachedToWindow())
         .filter(event -> {
-          final int itemCount = positionHelper.getItemCount();
-
-          final int lastVisibleItemPosition = positionHelper.findFirstVisibleItemPosition();
-
-          final int lastNonVisibleItemIndex = itemCount - event.view()
-              .getChildCount();
-
-          final int lastVisibleItemIndex =
-              (lastVisibleItemPosition == -1 ? 0 : lastVisibleItemPosition) + VISIBLE_THRESHOLD;
-
-          return lastVisibleItemIndex >= lastNonVisibleItemIndex;
+          final LinearLayoutManager layoutManager = (LinearLayoutManager) event.view()
+              .getLayoutManager();
+          final int visibleItemCount = layoutManager.getChildCount();
+          final int totalItemCount = layoutManager.getItemCount();
+          final int pastVisibleItems = layoutManager.findFirstVisibleItemPosition();
+          return (visibleItemCount + pastVisibleItems) >= (totalItemCount - VISIBLE_THRESHOLD);
         })
+        .debounce(650, TimeUnit.MILLISECONDS)
         .map(event -> null);
   }
 
@@ -536,19 +525,10 @@ public class SearchFragment extends BackButtonFragment implements SearchView {
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     findChildViews(view);
-
     viewModel = loadViewModel(getArguments());
-
     attachFollowedStoresResultListDependencies();
-    followedStoresResultListPositionHelper =
-        RecyclerViewPositionHelper.createHelper(followedStoresResultList);
-
     attachAllStoresResultListDependencies();
-    allStoresResultListPositionHelper =
-        RecyclerViewPositionHelper.createHelper(allStoresResultList);
-
     attachToolbar();
-
     attachPresenter(new SearchPresenter(this, searchAnalytics, searchNavigator, crashReport,
         mainThreadScheduler, searchManager, onAdClickRelay, onItemViewClickRelay,
         onOpenPopupMenuClickRelay), null);
