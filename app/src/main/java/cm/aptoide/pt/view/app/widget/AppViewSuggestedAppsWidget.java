@@ -50,7 +50,7 @@ public class AppViewSuggestedAppsWidget extends Widget<AppViewSuggestedAppsDispl
           .setAppearance(new Store.Appearance());
       displayables.add(
           new AppViewSuggestedAppDisplayable(app, displayable.getAppViewSimilarAppAnalytics(),
-              displayable.getAptoideNavigationTracker()));
+              displayable.getAptoideNavigationTracker(), displayable.getStoreContext()));
     }
 
     BaseAdapter adapter = new BaseAdapter(displayables) {

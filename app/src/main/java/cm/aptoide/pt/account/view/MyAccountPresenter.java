@@ -5,6 +5,7 @@ import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.notification.NotificationAnalytics;
@@ -160,7 +161,8 @@ public class MyAccountPresenter implements Presenter {
             .doOnNext(link -> link.launch())
             .doOnNext(
                 link -> analytics.notificationShown(notification.getNotificationCenterUrlTrack()))
-            .doOnNext(__ -> aptoideNavigationTracker.registerView("Notification"))
+            .doOnNext(__ -> aptoideNavigationTracker.registerView(
+                ScreenTagHistory.Builder.build("Notification")))
             .doOnNext(__ -> pageViewsAnalytics.sendPageViewedEvent()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {

@@ -146,8 +146,8 @@ public class VanillaFragmentProvider implements FragmentProvider {
     return UpdatesFragment.newInstance();
   }
 
-  @Override public Fragment newLatestReviewsFragment(long storeId) {
-    return LatestReviewsFragment.newInstance(storeId);
+  @Override public Fragment newLatestReviewsFragment(long storeId, StoreContext storeContext) {
+    return LatestReviewsFragment.newInstance(storeId, storeContext);
   }
 
   @Override
@@ -199,9 +199,9 @@ public class VanillaFragmentProvider implements FragmentProvider {
     return TimelineFragment.newInstance(action, userId, storeId, storeContext);
   }
 
-  @Override
-  public Fragment newSubscribedStoresFragment(Event event, String storeTheme, String tag) {
-    return MyStoresFragment.newInstance(event, storeTheme, tag);
+  @Override public Fragment newSubscribedStoresFragment(Event event, String storeTheme, String tag,
+      StoreContext storeName) {
+    return MyStoresFragment.newInstance(event, storeTheme, tag, storeName);
   }
 
   @Override public Fragment newSearchPagerTabFragment(String query, boolean subscribedStores,
@@ -269,46 +269,52 @@ public class VanillaFragmentProvider implements FragmentProvider {
   }
 
   @Override public Fragment newTimeLineFollowersUsingUserIdFragment(Long userId, String storeTheme,
-      String title) {
-    return TimeLineFollowersFragment.newInstanceUsingUser(userId, storeTheme, title);
+      String title, StoreContext storeName) {
+    return TimeLineFollowersFragment.newInstanceUsingUser(userId, storeTheme, title, storeName);
   }
 
-  @Override public Fragment newTimeLineFollowingFragmentUsingUserId(Long id, String storeTheme,
-      String title) {
-    return TimeLineFollowingFragment.newInstanceUsingUserId(id, storeTheme, title);
+  @Override
+  public Fragment newTimeLineFollowingFragmentUsingUserId(Long id, String storeTheme, String title,
+      StoreContext storeContext) {
+    return TimeLineFollowingFragment.newInstanceUsingUserId(id, storeTheme, title, storeContext);
   }
 
   @Override
   public Fragment newTimeLineFollowersUsingStoreIdFragment(Long storeId, String storeTheme,
-      String title) {
-    return TimeLineFollowersFragment.newInstanceUsingStore(storeId, storeTheme, title);
+      String title, StoreContext storeContext) {
+    return TimeLineFollowersFragment.newInstanceUsingStore(storeId, storeTheme, title,
+        storeContext);
   }
 
-  @Override public Fragment newTimeLineFollowingFragmentUsingStoreId(Long id, String storeTheme,
-      String title) {
-    return TimeLineFollowingFragment.newInstanceUsingStoreId(id, storeTheme, title);
+  @Override
+  public Fragment newTimeLineFollowingFragmentUsingStoreId(Long id, String storeTheme, String title,
+      StoreContext storeName) {
+    return TimeLineFollowingFragment.newInstanceUsingStoreId(id, storeTheme, title, storeName);
   }
 
   @Override
   public Fragment newTimeLineLikesFragment(String cardUid, long numberOfLikes, String storeTheme,
-      String title) {
-    return TimeLineLikesFragment.newInstance(storeTheme, cardUid, numberOfLikes, title);
+      String title, StoreContext storeContext) {
+    return TimeLineLikesFragment.newInstance(storeTheme, cardUid, numberOfLikes, title,
+        storeContext);
   }
 
   @Override
-  public Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId) {
-    return CommentListFragment.newInstance(commentType, elementId);
+  public Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId,
+      StoreContext storeContext) {
+    return CommentListFragment.newInstance(commentType, elementId, storeContext);
   }
 
   @Override public Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url,
-      String storeAnalyticsAction) {
-    return CommentListFragment.newInstanceUrl(commentType, url, storeAnalyticsAction);
+      String storeAnalyticsAction, StoreContext storeContext) {
+    return CommentListFragment.newInstanceUrl(commentType, url, storeAnalyticsAction, storeContext);
   }
 
   @Override
   public Fragment newCommentGridRecyclerFragmentWithCommentDialogOpen(CommentType commentType,
-      String elementId) {
-    return CommentListFragment.newInstanceWithCommentDialogOpen(commentType, elementId);
+      String elementId, StoreContext storeContext) {
+    return CommentListFragment.newInstanceWithCommentDialogOpen(commentType, elementId,
+        storeContext);
   }
 
   @Override public Fragment newAddressBookFragment() {
@@ -336,8 +342,9 @@ public class VanillaFragmentProvider implements FragmentProvider {
     return ThankYouConnectingFragment.newInstance(tag);
   }
 
-  @Override public Fragment newTimeLineFollowersFragment(String storeTheme, String title) {
-    return TimeLineFollowersFragment.newInstanceUsingUser(storeTheme, title);
+  @Override public Fragment newTimeLineFollowersFragment(String storeTheme, String title,
+      StoreContext storeContext) {
+    return TimeLineFollowersFragment.newInstanceUsingUser(storeTheme, title, storeContext);
   }
 
   @Override public Fragment newRecommendedStoresFragment() {

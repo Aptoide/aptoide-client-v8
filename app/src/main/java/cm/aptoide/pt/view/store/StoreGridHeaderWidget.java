@@ -61,7 +61,8 @@ public class StoreGridHeaderWidget extends Widget<StoreGridHeaderDisplayable> {
               String url =
                   action != null ? action.replace(V7.getHost(sharedPreferences), "") : null;
               fragment = AptoideApplication.getFragmentProvider()
-                  .newCommentGridRecyclerFragmentUrl(CommentType.STORE, url, "View Comments");
+                  .newCommentGridRecyclerFragmentUrl(CommentType.STORE, url, "View Comments",
+                      storeContext);
             } else {
               fragment = AptoideApplication.getFragmentProvider()
                   .newStoreTabGridRecyclerFragment(event, title, storeTheme, tag, storeContext);

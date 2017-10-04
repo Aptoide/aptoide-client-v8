@@ -17,6 +17,7 @@ import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.presenter.SpotSharePreviewPresenter;
 import cm.aptoide.pt.presenter.SpotSharePreviewView;
 import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
@@ -60,8 +61,8 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
     pageViewsAnalytics =
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
             Analytics.getInstance(), aptoideNavigationTracker);
-    aptoideNavigationTracker.registerView(this.getClass()
-        .getSimpleName());
+    aptoideNavigationTracker.registerView(ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName()));
     pageViewsAnalytics.sendPageViewedEvent();
   }
 

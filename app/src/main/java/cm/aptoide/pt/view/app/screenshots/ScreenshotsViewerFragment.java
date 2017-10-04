@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.view.fragment.UIComponentFragment;
 import java.util.ArrayList;
 
@@ -73,6 +74,11 @@ public class ScreenshotsViewerFragment extends UIComponentFragment {
   @Override public void onResume() {
     super.onResume();
     hideSystemUI();
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onPause() {

@@ -9,6 +9,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.view.app.GridAppDisplayable;
 import lombok.Getter;
 
@@ -24,9 +25,9 @@ public class AppViewSuggestedAppDisplayable extends GridAppDisplayable {
 
   public AppViewSuggestedAppDisplayable(App app,
       AppViewSimilarAppAnalytics appViewSimilarAppAnalytics,
-      AptoideNavigationTracker aptoideNavigationTracker) {
+      AptoideNavigationTracker aptoideNavigationTracker, StoreContext storeContext) {
     // TODO: 01-08-2017 neuro tags
-    super(app, null, true, aptoideNavigationTracker);
+    super(app, null, true, aptoideNavigationTracker, storeContext);
 
     this.appViewSimilarAppAnalytics = appViewSimilarAppAnalytics;
   }

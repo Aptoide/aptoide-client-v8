@@ -10,6 +10,7 @@ import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import java.util.List;
 import lombok.Data;
@@ -26,13 +27,14 @@ import lombok.Getter;
   private List<App> appsList;
   @Getter private AppViewSimilarAppAnalytics appViewSimilarAppAnalytics;
   private AptoideNavigationTracker aptoideNavigationTracker;
+  private StoreContext storeContext;
 
   public AppViewSuggestedAppsDisplayable() {
   }
 
   public AppViewSuggestedAppsDisplayable(List<MinimalAd> minimalAds, List<App> appsList,
       AppViewSimilarAppAnalytics appViewSimilarAppAnalytics,
-      AptoideNavigationTracker aptoideNavigationTracker) {
+      AptoideNavigationTracker aptoideNavigationTracker, StoreContext storeContext) {
     this.minimalAds = minimalAds;
     this.appsList = appsList;
     this.appViewSimilarAppAnalytics = appViewSimilarAppAnalytics;
@@ -49,5 +51,9 @@ import lombok.Getter;
 
   public AptoideNavigationTracker getAptoideNavigationTracker() {
     return aptoideNavigationTracker;
+  }
+
+  public StoreContext getStoreContext() {
+    return storeContext;
   }
 }

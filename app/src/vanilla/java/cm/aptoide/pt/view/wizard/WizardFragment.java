@@ -16,6 +16,7 @@ import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.LoginBottomSheet;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.custom.AptoideViewPager;
@@ -78,6 +79,11 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     outState.putInt(PAGE_INDEX, viewPager.getCurrentItem());
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -226,8 +232,6 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
 
   @Override public void bindViews(@Nullable View view) {
     viewPager = (AptoideViewPager) view.findViewById(R.id.view_pager);
-    viewPager.setAptoideNavigationTracker(aptoideNavigationTracker);
-    viewPager.setPageViewAnalytics(pageViewAnalytics);
     skipOrNextLayout = view.findViewById(R.id.skip_next_layout);
     radioGroup = (RadioGroup) view.findViewById(R.id.view_pager_radio_group);
     skipText = view.findViewById(R.id.skip_text);

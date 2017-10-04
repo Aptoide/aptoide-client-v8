@@ -7,8 +7,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.pt.NavigationTrackerPagerAdapterHelper;
 import cm.aptoide.pt.account.view.LoginSignUpFragment;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 
-import static cm.aptoide.pt.view.fragment.NavigationTrackFragment.DO_NOT_REGISTER_VIEW;
+import static cm.aptoide.pt.view.fragment.NavigationTrackFragment.SHOULD_REGISTER_VIEW;
 
 public class WizardPagerAdapter extends FragmentPagerAdapter
     implements NavigationTrackerPagerAdapterHelper {
@@ -54,8 +55,12 @@ public class WizardPagerAdapter extends FragmentPagerAdapter
         .getSimpleName();
   }
 
-  @Override public String getItemLabel(int position) {
+  @Override public String getItemTag(int position) {
     return String.valueOf(position);
+  }
+
+  @Override public StoreContext getItemStore() {
+    return StoreContext.home;
   }
 
   private Fragment setFragmentLogFlag(Fragment fragment) {
@@ -63,7 +68,7 @@ public class WizardPagerAdapter extends FragmentPagerAdapter
     if (bundle == null) {
       bundle = new Bundle();
     }
-    bundle.putBoolean(DO_NOT_REGISTER_VIEW, true);
+    bundle.putBoolean(SHOULD_REGISTER_VIEW, false);
     fragment.setArguments(bundle);
     return fragment;
   }

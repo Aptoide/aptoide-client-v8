@@ -4,7 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.analytics.events.AptoideEvent;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -74,13 +74,13 @@ public class TimelineAnalytics {
   private final String appId;
   private final SharedPreferences sharedPreferences;
   private final NotificationAnalytics notificationAnalytics;
-  private final NavigationTracker navigationTracker;
+  private final AptoideNavigationTracker navigationTracker;
 
   public TimelineAnalytics(Analytics analytics, AppEventsLogger facebook,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator, String appId,
       SharedPreferences sharedPreferences, NotificationAnalytics notificationAnalytics,
-      NavigationTracker navigationTracker) {
+      AptoideNavigationTracker navigationTracker) {
     this.analytics = analytics;
     this.facebook = facebook;
     this.bodyInterceptor = bodyInterceptor;

@@ -20,7 +20,7 @@ import java.util.EnumMap;
 import java.util.Iterator;
 import java.util.List;
 
-import static cm.aptoide.pt.view.fragment.NavigationTrackFragment.DO_NOT_REGISTER_VIEW;
+import static cm.aptoide.pt.view.fragment.NavigationTrackFragment.SHOULD_REGISTER_VIEW;
 
 /**
  * Created by neuro on 28-04-2016.
@@ -149,7 +149,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter
             .newSpotShareFragment(false);
       case myStores:
         return AptoideApplication.getFragmentProvider()
-            .newSubscribedStoresFragment(event, storeTheme, tab.getTag());
+            .newSubscribedStoresFragment(event, storeTheme, tab.getTag(), storeContext);
       default:
         // Safe to throw exception as the tab should be filtered prior to getting here.
         throw new RuntimeException("Fragment type not implemented!");
@@ -160,7 +160,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter
     switch (event.getName()) {
       case getReviews:
         return AptoideApplication.getFragmentProvider()
-            .newLatestReviewsFragment(storeId);
+            .newLatestReviewsFragment(storeId, storeContext);
       default:
         // Safe to throw exception as the tab should be filtered prior to getting here.
         throw new RuntimeException("Fragment type not implemented!");
@@ -203,7 +203,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter
     if (bundle == null) {
       bundle = new Bundle();
     }
-    bundle.putBoolean(DO_NOT_REGISTER_VIEW, true);
+    bundle.putBoolean(SHOULD_REGISTER_VIEW, false);
     fragment.setArguments(bundle);
     return fragment;
   }
@@ -213,8 +213,12 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter
         .getSimpleName();
   }
 
-  @Override public String getItemLabel(int position) {
+  @Override public String getItemTag(int position) {
     return tabs.get(position)
         .getLabel();
+  }
+
+  @Override public StoreContext getItemStore() {
+    return storeContext;
   }
 }

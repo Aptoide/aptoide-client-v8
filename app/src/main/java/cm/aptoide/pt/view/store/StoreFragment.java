@@ -30,6 +30,7 @@ import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
@@ -141,6 +142,11 @@ public class StoreFragment extends BasePagerToolbarFragment {
     return newInstance(storeName, storeTheme, OpenType.GetStore);
   }
 
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName(), "", storeContext);
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     defaultTheme = ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
@@ -235,8 +241,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override protected void setupViewPager() {
     super.setupViewPager();
-    viewPager.setAptoideNavigationTracker(aptoideNavigationTracker);
-    viewPager.setPageViewAnalytics(pageViewAnalytics);
     pagerSlidingTabStrip = (PagerSlidingTabStrip) getView().findViewById(R.id.tabs);
 
     if (pagerSlidingTabStrip != null) {

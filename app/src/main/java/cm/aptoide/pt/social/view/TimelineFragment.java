@@ -97,12 +97,12 @@ import rx.subjects.PublishSubject;
 
 public class TimelineFragment extends FragmentView implements TimelineView {
 
+  public static final String STORE_NAME = "store_name";
   private static final String ACTION_KEY = "action";
   private static final String USER_ID_KEY = "USER_ID_KEY";
   private static final String STORE_ID = "STORE_ID";
   private static final String STORE_CONTEXT = "STORE_CONTEXT";
   private static final String LIST_STATE_KEY = "LIST_STATE";
-
   /**
    * The minimum number of items to have below your current scroll position before loading more.
    */
@@ -284,7 +284,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             timelineAnalytics, timelinePostsRepository, marketName, timelineUserProvider);
 
     TimelineNavigator timelineNavigation = new TimelineNavigator(getFragmentNavigator(),
-        getContext().getString(R.string.timeline_title_likes), tabNavigator);
+        getContext().getString(R.string.timeline_title_likes), tabNavigator, storeContext);
 
     StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager(),

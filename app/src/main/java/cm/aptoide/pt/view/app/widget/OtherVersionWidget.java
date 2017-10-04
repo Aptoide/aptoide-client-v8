@@ -15,6 +15,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.app.OtherVersionDisplayable;
+import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import java.util.Locale;
 
@@ -38,6 +39,7 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable>
   private long appId;
   private String packageName;
   private String storeName;
+  private OtherVersionDisplayable displayable;
 
   public OtherVersionWidget(View itemView) {
     super(itemView);
@@ -61,6 +63,7 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable>
   @Override public void bindView(OtherVersionDisplayable displayable) {
     setItemBackgroundColor(itemView);
     try {
+      this.displayable = displayable;
       final App app = displayable.getPojo();
       appId = app.getId();
       storeName = app.getStore()

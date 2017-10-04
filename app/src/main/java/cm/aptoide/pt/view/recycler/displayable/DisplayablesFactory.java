@@ -130,7 +130,8 @@ public class DisplayablesFactory {
               aptoideNavigationTracker));
 
         case MY_STORE_META:
-          return Observable.from(createMyStoreDisplayables(widget.getViewObject(), storeAnalytics));
+          return Observable.from(
+              createMyStoreDisplayables(widget.getViewObject(), storeAnalytics, storeContext));
 
         case STORES_RECOMMENDED:
           return Observable.just(
@@ -219,7 +220,7 @@ public class DisplayablesFactory {
       for (App app : apps) {
         DisplayablePojo<App> diplayable =
             new GridAppDisplayable(app, wsWidget.getTag(), storeContext == StoreContext.home,
-                aptoideNavigationTracker);
+                aptoideNavigationTracker, storeContext);
         displayables.add(diplayable);
       }
     }
@@ -355,13 +356,13 @@ public class DisplayablesFactory {
   }
 
   private static List<Displayable> createMyStoreDisplayables(Object viewObject,
-      StoreAnalytics storeAnalytics) {
+      StoreAnalytics storeAnalytics, StoreContext storeContext) {
     LinkedList<Displayable> displayables = new LinkedList<>();
 
     if (viewObject instanceof MyStore) {
       MyStore store = (MyStore) viewObject;
       if (!store.isCreateStore()) {
-        displayables.add(new MyStoreDisplayable(store));
+        displayables.add(new MyStoreDisplayable(store, storeContext));
       } else if (store.isLogged()) {
         displayables.add(new CreateStoreDisplayable(storeAnalytics, store.getTimelineStats()));
       } else {

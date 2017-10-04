@@ -1,10 +1,10 @@
 package cm.aptoide.pt.analytics;
 
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.pt.account.view.LoginSignUpCredentialsFragment;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.view.search.SearchPagerTabFragment;
-import cm.aptoide.pt.view.store.GetStoreFragment;
+import cm.aptoide.pt.view.store.StoreFragment;
 import cm.aptoide.pt.view.store.home.HomeFragment;
 import cm.aptoide.pt.view.wizard.WizardFragment;
 import java.util.List;
@@ -13,55 +13,31 @@ import java.util.List;
  * Created by jdandrade on 06/09/2017.
  */
 
-public class AptoideNavigationTracker implements NavigationTracker {
+public class AptoideNavigationTracker {
 
+  private static final String TAG = AptoideNavigationTracker.class.getSimpleName();
   private List<ScreenTagHistory> historyList;
-  private boolean insert;
-  private ScreenTagHistory screenHistory;
 
   public AptoideNavigationTracker(List<ScreenTagHistory> historyList) {
     this.historyList = historyList;
   }
 
-  @Override public void registerView(String viewName) {
-    insert = filter(viewName);
-    if (insert) {
-      screenHistory = getScreenToEditFragment();
-      screenHistory.setFragment(checkViewName(viewName));
-      historyList.add(screenHistory);
+  public void registerView(ScreenTagHistory screenTagHistory) {
+    if (screenTagHistory != null && filter(screenTagHistory.getFragment())) {
+      historyList.add(screenTagHistory);
       Logger.d(this.getClass()
-              .getName(),
-          "VIEW - " + "View is: " + getCurrentViewName() + " - Tag is: " + getCurrentViewTag());
+          .getName(), "VIEW - " + screenTagHistory);
     }
   }
 
-  @Override public void registerTag(String tag) {
-    screenHistory = getScreenToEditTag();
-    screenHistory.setTag(tag);
-    historyList.add(screenHistory);
-    Logger.d(this.getClass()
-            .getName(),
-        "TAG - " + "View is: " + getCurrentViewName() + " - Tag is: " + getCurrentViewTag());
-  }
-
-  @Override public void registerTagNewObject(String tag) {
-    screenHistory = new ScreenTagHistory();
-    screenHistory.setTag(tag);
-    historyList.add(screenHistory);
-    Logger.d(this.getClass()
-            .getName(),
-        "[NEW]TAG - " + "View is: " + getCurrentViewName() + " - Tag is: " + getCurrentViewTag());
-  }
-
-  @Override public ScreenTagHistory getCurrentScreen() {
-    if (historyList.isEmpty()) {
-      screenHistory = new ScreenTagHistory();
-      historyList.add(screenHistory);
+  public @Nullable ScreenTagHistory getPreviousScreen() {
+    if (historyList.size() < 2) {
+      return null;
     }
-    return historyList.get(historyList.size() - 1);
+    return historyList.get(historyList.size() - 2);
   }
 
-  @Override public String getPreviousViewName() {
+  public String getPreviousViewName() {
     if (historyList.size() < 2) {
       return "";
     }
@@ -69,7 +45,7 @@ public class AptoideNavigationTracker implements NavigationTracker {
         .getFragment();
   }
 
-  @Override public String getCurrentViewName() {
+  public String getCurrentViewName() {
     if (historyList.isEmpty()) {
       return "";
     } else if (historyList.get(historyList.size() - 1)
@@ -80,54 +56,29 @@ public class AptoideNavigationTracker implements NavigationTracker {
         .getFragment();
   }
 
-  @Override public String getPreviousViewTag() {
-    return null;
-  }
-
-  @Override public String getCurrentViewTag() {
-    return getCurrentScreen().getTag();
-  }
-
-  private ScreenTagHistory getScreenToEditFragment() {
-    if (historyList.isEmpty()
-        || historyList.get(historyList.size() - 1)
-        .getFragment() != null) {
-      historyList.add(new ScreenTagHistory());
-    }
-    return historyList.get(historyList.size() - 1);
-  }
-
-  private ScreenTagHistory getScreenToEditTag() {
-    if (historyList.isEmpty()
-        || historyList.get(historyList.size() - 1)
-        .getTag() != null) {
-      historyList.add(new ScreenTagHistory());
-    }
-    return historyList.get(historyList.size() - 1);
-  }
-
-  private String checkViewName(String viewName) {
-    if (viewName.equals(GetStoreFragment.class.getSimpleName())) {
-      return HomeFragment.class.getSimpleName();
-    } else {
-      return viewName;
-    }
-  }
-
   private boolean filter(String viewName) {
     if (TextUtils.isEmpty(viewName)) {
-      insert = false;
+      return false;
     } else if (viewName.equals(HomeFragment.class.getSimpleName())) {
-      insert = false;
+      return false;
     } else if (viewName.equals(WizardFragment.class.getSimpleName())) {
-      insert = false;
+      return false;
     } else if (viewName.equals(LoginSignUpCredentialsFragment.class.getSimpleName())) {
-      insert = false;
-    } else if (viewName.equals(SearchPagerTabFragment.class.getSimpleName())) {
-      insert = false;
+      return false;
+    } else if (viewName.equals(StoreFragment.class.getSimpleName())) {
+      return false;
     } else {
-      insert = true;
+      return true;
     }
-    return insert;
+  }
+
+  public void registerTag(String tag) {
+    // TODO: 04/10/2017 trinkes change tags logic
+    //Logger.d(TAG, "registerTag() called with: " + "tag = [" + tag + "]");
+  }
+
+  public void registerTagNewObject(String tag) {
+    // TODO: 04/10/2017 trinkes change tags logic
+    //Logger.d(TAG, "registerTagNewObject() called with: " + "tag = [" + tag + "]");
   }
 }
