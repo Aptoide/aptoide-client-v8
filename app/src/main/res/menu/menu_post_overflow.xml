@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by Neurophobic Animal on 07/06/2016.
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <item
+      android:id="@+id/delete"
+      android:title="@string/timeline_button_delete_post"/>
+  <item
+      android:id="@+id/report"
+      android:title="@string/timeline_button_report_abuse"/>
+  <item
+      android:id="@+id/unfollow"
+      android:title="@string/timeline_button_unfollow_store"/>
+</menu>

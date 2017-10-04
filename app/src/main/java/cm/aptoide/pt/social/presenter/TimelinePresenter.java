@@ -176,6 +176,21 @@ public class TimelinePresenter implements Presenter {
     clickOnEmptyStateAction();
 
     handleScrollEvents();
+
+    clickOnDeletePost();
+  }
+
+  private void clickOnDeletePost() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.postClicked()
+            .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+                .equals(CardTouchEvent.Type.DELETE_POST))
+            .doOnNext(cardTouchEvent -> view.removePost(cardTouchEvent.getPosition()))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cardTouchEvent -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   private void handleScrollEvents() {

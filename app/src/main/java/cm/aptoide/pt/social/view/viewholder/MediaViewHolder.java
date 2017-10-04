@@ -87,7 +87,7 @@ public class MediaViewHolder extends PostViewHolder<Media> {
     ImageLoader.with(itemView.getContext())
         .loadWithCenterCrop(media.getMediaThumbnailUrl(), articleThumbnail);
 
-    setupOverflowMenu();
+    setupOverflowMenu(media, position);
     handleCommentsInformation(media, position);
 
     articleThumbnail.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
