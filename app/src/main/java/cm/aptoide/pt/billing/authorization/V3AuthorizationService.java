@@ -32,21 +32,21 @@ public class V3AuthorizationService implements AuthorizationService {
     this.sharedPreferences = sharedPreferences;
   }
 
-  @Override public Single<Authorization> createAuthorization(String payerId, int paymentMethodId) {
+  @Override public Single<Authorization> createAuthorization(String customerId, int paymentMethodId) {
     return CreatePaymentAuthorizationRequest.of(paymentMethodId, bodyInterceptorV3, httpClient,
         converterFactory, tokenInvalidator, sharedPreferences)
         .observe(true)
         .toSingle()
         .flatMap(
-            response -> Single.just(authorizationFactory.map(response, payerId, paymentMethodId)));
+            response -> Single.just(authorizationFactory.map(response, customerId, paymentMethodId)));
   }
 
   @Override
-  public Single<List<Authorization>> getAuthorizations(String payerId, int paymentMethodId) {
+  public Single<List<Authorization>> getAuthorizations(String customerId, int paymentMethodId) {
     return GetPaymentAuthorizationsRequest.of(bodyInterceptorV3, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences)
         .observe()
         .toSingle()
-        .map(response -> authorizationFactory.map(response, payerId, paymentMethodId));
+        .map(response -> authorizationFactory.map(response, customerId, paymentMethodId));
   }
 }

@@ -2,16 +2,16 @@ package cm.aptoide.pt.billing.transaction;
 
 public class Transaction {
   private final String productId;
-  private final String payerId;
+  private final String customerId;
   private final Status status;
   private final int paymentMethodId;
   private final String payload;
   private final String sellerId;
 
-  public Transaction(String productId, String payerId, Status status, int paymentMethodId,
+  public Transaction(String productId, String customerId, Status status, int paymentMethodId,
       String payload, String sellerId) {
     this.productId = productId;
-    this.payerId = payerId;
+    this.customerId = customerId;
     this.status = status;
     this.paymentMethodId = paymentMethodId;
     this.payload = payload;
@@ -22,8 +22,8 @@ public class Transaction {
     return payload;
   }
 
-  public String getPayerId() {
-    return payerId;
+  public String getCustomerId() {
+    return customerId;
   }
 
   public String getProductId() {

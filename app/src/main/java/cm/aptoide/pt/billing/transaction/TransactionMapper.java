@@ -18,9 +18,9 @@ public class TransactionMapper {
     this.transactionFactory = transactionFactory;
   }
 
-  public Transaction map(String productId, TransactionResponse response, String payerId,
+  public Transaction map(String productId, TransactionResponse response, String customerId,
       String payload, String sellerId) {
-    return transactionFactory.create(sellerId, payerId, response.getPaymentMethodId(), productId,
+    return transactionFactory.create(sellerId, customerId, response.getPaymentMethodId(), productId,
         Transaction.Status.valueOf(response.getTransactionStatus()), response.getLocalMetadata(),
         response.getConfirmationUrl(), response.getSuccessUrl(), response.getClientToken(),
         payload);
@@ -49,13 +49,13 @@ public class TransactionMapper {
 
     return new PaymentConfirmation(id, metadata, transaction.getProductId(),
         transaction.getSellerId(), transaction.getStatus()
-        .name(), transaction.getPayerId(), transaction.getPaymentMethodId(), confirmationUrl,
+        .name(), transaction.getCustomerId(), transaction.getPaymentMethodId(), confirmationUrl,
         successUrl, clientToken, transaction.getPayload());
   }
 
   public Transaction map(PaymentConfirmation persistedTransaction) {
     return transactionFactory.create(persistedTransaction.getSellerId(),
-        persistedTransaction.getPayerId(), persistedTransaction.getPaymentMethodId(),
+        persistedTransaction.getCustomerId(), persistedTransaction.getPaymentMethodId(),
         persistedTransaction.getProductId(),
         Transaction.Status.valueOf(persistedTransaction.getStatus()),
         persistedTransaction.getLocalMetadata(), persistedTransaction.getConfirmationUrl(),

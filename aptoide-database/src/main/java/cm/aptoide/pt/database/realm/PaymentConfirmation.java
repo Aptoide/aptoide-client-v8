@@ -12,13 +12,13 @@ import io.realm.annotations.Required;
 public class PaymentConfirmation extends RealmObject {
 
   public static final String PRODUCT_ID = "productId";
-  public static final String PAYER_ID = "payerId";
+  public static final String CUSTOMER_ID = "customerId";
   public static final String SELLER_ID = "sellerId";
 
   @PrimaryKey private String id;
   @Required private String productId;
   @Required private String sellerId;
-  @Required private String payerId;
+  @Required private String customerId;
   @Required private String status;
 
   private int paymentMethodId;
@@ -33,14 +33,14 @@ public class PaymentConfirmation extends RealmObject {
   }
 
   public PaymentConfirmation(String id, String localMetadata, String productId, String sellerId,
-      String status, String payerId, int paymentMethodId, String confirmationUrl, String successUrl,
+      String status, String customerId, int paymentMethodId, String confirmationUrl, String successUrl,
       String clientToken, String payload) {
     this.id = id;
     this.paymentConfirmationId = localMetadata;
     this.sellerId = sellerId;
     this.status = status;
     this.productId = productId;
-    this.payerId = payerId;
+    this.customerId = customerId;
     this.paymentMethodId = paymentMethodId;
     this.confirmationUrl = confirmationUrl;
     this.successUrl = successUrl;
@@ -56,8 +56,8 @@ public class PaymentConfirmation extends RealmObject {
     return sellerId;
   }
 
-  public String getPayerId() {
-    return payerId;
+  public String getCustomerId() {
+    return customerId;
   }
 
   public String getLocalMetadata() {

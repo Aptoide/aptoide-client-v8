@@ -23,16 +23,16 @@ public class InMemoryAuthorizationPersistence implements AuthorizationPersistenc
   @Override public Completable saveAuthorization(Authorization authorization) {
     return Completable.fromAction(() -> {
       authorizations.put(
-          getAuthorizationKey(authorization.getPayerId(), authorization.getPaymentId()),
+          getAuthorizationKey(authorization.getCustomerId(), authorization.getPaymentId()),
           authorization);
       authorizationRelay.call(authorization);
     });
   }
 
-  @Override public Observable<Authorization> getAuthorization(String payerId, int paymentMethodId) {
+  @Override public Observable<Authorization> getAuthorization(String customerId, int paymentMethodId) {
     return authorizationRelay.startWith(Observable.defer(() -> {
-      if (authorizations.containsKey(getAuthorizationKey(payerId, paymentMethodId))) {
-        return Observable.just(authorizations.get(getAuthorizationKey(payerId, paymentMethodId)));
+      if (authorizations.containsKey(getAuthorizationKey(customerId, paymentMethodId))) {
+        return Observable.just(authorizations.get(getAuthorizationKey(customerId, paymentMethodId)));
       }
       return Observable.empty();
     }))
@@ -45,14 +45,14 @@ public class InMemoryAuthorizationPersistence implements AuthorizationPersistenc
         .toCompletable();
   }
 
-  @Override public Single<Authorization> createAuthorization(String payerId, int paymentMethodId,
+  @Override public Single<Authorization> createAuthorization(String customerId, int paymentMethodId,
       Authorization.Status status) {
     final Authorization authorization =
-        authorizationFactory.create(paymentMethodId, status, payerId, "", "");
+        authorizationFactory.create(paymentMethodId, status, customerId, "", "");
     return saveAuthorization(authorization).andThen(Single.just(authorization));
   }
 
-  private String getAuthorizationKey(String payerId, int paymentMethodId) {
-    return payerId + paymentMethodId;
+  private String getAuthorizationKey(String customerId, int paymentMethodId) {
+    return customerId + paymentMethodId;
   }
 }

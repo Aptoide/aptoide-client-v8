@@ -7,9 +7,9 @@ public class MolTransaction extends Transaction {
   private final String confirmationUrl;
   private final String successUrl;
 
-  public MolTransaction(String productId, String payerId, Status status, int paymentMethodId,
+  public MolTransaction(String productId, String customerId, Status status, int paymentMethodId,
       String confirmationUrl, String successUrl, String payload, String sellerId) {
-    super(productId, payerId, status, paymentMethodId, payload, sellerId);
+    super(productId, customerId, status, paymentMethodId, payload, sellerId);
     this.confirmationUrl = confirmationUrl;
     this.successUrl = successUrl;
   }

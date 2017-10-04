@@ -37,11 +37,11 @@ public class BillingNavigator {
     this.marketName = marketName;
   }
 
-  public void navigateToPayerAuthenticationForResult(int requestCode) {
+  public void navigateToCustomerAuthenticationForResult(int requestCode) {
     fragmentNavigator.navigateForResult(PaymentLoginFragment.newInstance(), requestCode, true);
   }
 
-  public Observable<Boolean> payerAuthenticationResults(int requestCode) {
+  public Observable<Boolean> customerAuthenticationResults(int requestCode) {
     return fragmentNavigator.results(requestCode)
         .map(result -> result.getResultCode() == Activity.RESULT_OK);
   }

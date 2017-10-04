@@ -4,11 +4,11 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import rx.Observable;
 import rx.Single;
 
-public class AccountPayer implements Payer {
+public class AccountCustomer implements Customer {
 
   private final AptoideAccountManager accountManager;
 
-  public AccountPayer(AptoideAccountManager accountManager) {
+  public AccountCustomer(AptoideAccountManager accountManager) {
     this.accountManager = accountManager;
   }
 
@@ -18,10 +18,10 @@ public class AccountPayer implements Payer {
         .toSingle()
         .flatMap(account -> {
           if (account.isLoggedIn()) {
-            return Single.just(account.getEmail());
+            return Single.just(account.getId());
           }
           return Single.error(
-              new IllegalStateException("User not logged in can not obtain payer id"));
+              new IllegalStateException("User not logged in can not obtain customer id"));
         });
   }
 

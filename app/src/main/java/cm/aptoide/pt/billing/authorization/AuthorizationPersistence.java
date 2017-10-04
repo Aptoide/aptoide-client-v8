@@ -9,10 +9,10 @@ public interface AuthorizationPersistence {
 
   Completable saveAuthorization(Authorization authorization);
 
-  Observable<Authorization> getAuthorization(String payerId, int paymentId);
+  Observable<Authorization> getAuthorization(String customerId, int paymentId);
 
   Completable saveAuthorizations(List<Authorization> authorizations);
 
-  Single<Authorization> createAuthorization(String payerId, int paymentId,
+  Single<Authorization> createAuthorization(String customerId, int paymentId,
       Authorization.Status status);
 }

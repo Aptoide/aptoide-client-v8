@@ -23,20 +23,20 @@ public class Billing {
   private final BillingService billingService;
   private final AuthorizationRepository authorizationRepository;
   private final PaymentMethodSelector paymentMethodSelector;
-  private final Payer payer;
+  private final Customer customer;
 
   public Billing(TransactionRepository transactionRepository, BillingService billingService,
       AuthorizationRepository authorizationRepository, PaymentMethodSelector paymentMethodSelector,
-      Payer payer) {
+      Customer customer) {
     this.transactionRepository = transactionRepository;
     this.billingService = billingService;
     this.authorizationRepository = authorizationRepository;
     this.paymentMethodSelector = paymentMethodSelector;
-    this.payer = payer;
+    this.customer = customer;
   }
 
-  public Payer getPayer() {
-    return payer;
+  public Customer getCustomer() {
+    return customer;
   }
 
   public Single<Boolean> isSupported(String sellerId, String type) {

@@ -340,6 +340,9 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
           .transform(
               notification -> notification.set(Notification.NOTIFICATION_CENTER_PROCESSED_KEY,
                   true));
+      realm.delete("PaymentConfirmation");
+      schema.get("PaymentConfirmation")
+          .renameField("payerId", "customerId");
       oldVersion++;
     }
   }

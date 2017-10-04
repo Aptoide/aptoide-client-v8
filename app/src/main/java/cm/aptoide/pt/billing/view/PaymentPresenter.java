@@ -20,7 +20,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class PaymentPresenter implements Presenter {
 
-  private static final int PAYER_AUTHORIZATION_REQUEST_CODE = 2001;
+  private static final int CUSTOMER_AUTHORIZATION_REQUEST_CODE = 2001;
 
   private final PaymentView view;
   private final Billing billing;
@@ -43,9 +43,9 @@ public class PaymentPresenter implements Presenter {
 
   @Override public void present() {
 
-    onViewCreatedNavigateToPayerAuthentication();
+    onViewCreatedNavigateToCustomerAuthentication();
 
-    onViewCreatedHandlePayerAuthenticationResult();
+    onViewCreatedHandleCustomerAuthenticationResult();
 
     onViewCreatedShowPaymentInformation();
 
@@ -66,28 +66,28 @@ public class PaymentPresenter implements Presenter {
 
   }
 
-  private void onViewCreatedNavigateToPayerAuthentication() {
+  private void onViewCreatedNavigateToCustomerAuthentication() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.showPaymentLoading())
-        .flatMap(__ -> billing.getPayer()
+        .flatMap(__ -> billing.getCustomer()
             .isAuthenticated()
             .first())
-        .doOnNext(authenticated -> analytics.sendPayerAuthenticatedEvent(authenticated))
+        .doOnNext(authenticated -> analytics.sendCustomerAuthenticatedEvent(authenticated))
         .filter(authenticated -> !authenticated)
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(__ -> navigator.navigateToPayerAuthenticationForResult(
-            PAYER_AUTHORIZATION_REQUEST_CODE))
+        .doOnNext(__ -> navigator.navigateToCustomerAuthenticationForResult(
+            CUSTOMER_AUTHORIZATION_REQUEST_CODE))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> navigator.popViewWithResult(throwable));
   }
 
-  private void onViewCreatedHandlePayerAuthenticationResult() {
+  private void onViewCreatedHandleCustomerAuthenticationResult() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> navigator.payerAuthenticationResults(PAYER_AUTHORIZATION_REQUEST_CODE))
-        .doOnNext(authenticated -> analytics.sendPayerAuthenticationResultEvent(authenticated))
+        .flatMap(__ -> navigator.customerAuthenticationResults(CUSTOMER_AUTHORIZATION_REQUEST_CODE))
+        .doOnNext(authenticated -> analytics.sendCustomerAuthenticationResultEvent(authenticated))
         .filter(authenticated -> !authenticated)
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(__ -> navigator.popViewWithResult())
@@ -99,7 +99,7 @@ public class PaymentPresenter implements Presenter {
   private void onViewCreatedShowPaymentInformation() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> billing.getPayer()
+        .flatMap(__ -> billing.getCustomer()
             .isAuthenticated())
         .filter(authenticated -> authenticated)
         .flatMapSingle(loading -> billing.getProduct(sellerId, productId))
@@ -119,7 +119,7 @@ public class PaymentPresenter implements Presenter {
   private void onViewCreatedCheckPurchase() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> billing.getPayer()
+        .flatMap(__ -> billing.getCustomer()
             .isAuthenticated())
         .filter(authenticated -> authenticated)
         .observeOn(AndroidSchedulers.mainThread())

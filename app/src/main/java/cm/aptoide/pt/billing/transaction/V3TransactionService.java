@@ -44,7 +44,7 @@ public class V3TransactionService implements TransactionService {
   }
 
   @Override
-  public Single<Transaction> getTransaction(String sellerId, String payerId, Product product) {
+  public Single<Transaction> getTransaction(String sellerId, String customerId, Product product) {
     return Single.just(product instanceof InAppProduct)
         .flatMap(isInAppBilling -> {
           if (isInAppBilling) {
@@ -62,20 +62,20 @@ public class V3TransactionService implements TransactionService {
         })
         .map(response -> {
           if (response != null && response.isOk()) {
-            return transactionMapper.map(product.getId(), response, payerId, null, sellerId);
+            return transactionMapper.map(product.getId(), response, customerId, null, sellerId);
           }
-          return getErrorTransaction(sellerId, response.getErrors(), payerId, product, -1, null,
+          return getErrorTransaction(sellerId, response.getErrors(), customerId, product, -1, null,
               null);
         });
   }
 
   @Override
-  public Single<Transaction> createTransaction(String sellerId, String payerId, int paymentMethodId,
+  public Single<Transaction> createTransaction(String sellerId, String customerId, int paymentMethodId,
       Product product, String payload) {
 
     if (paymentMethodId == PaymentMethodMapper.PAYPAL) {
       return Single.just(
-          transactionFactory.create(sellerId, payerId, paymentMethodId, product.getId(),
+          transactionFactory.create(sellerId, customerId, paymentMethodId, product.getId(),
               Transaction.Status.PENDING_USER_AUTHORIZATION, null, null, null, null, payload));
     }
 
@@ -98,15 +98,15 @@ public class V3TransactionService implements TransactionService {
         })
         .map(response -> {
           if (response.isOk()) {
-            return transactionMapper.map(product.getId(), response, payerId, payload, sellerId);
+            return transactionMapper.map(product.getId(), response, customerId, payload, sellerId);
           }
-          return getErrorTransaction(sellerId, response.getErrors(), payerId, product,
+          return getErrorTransaction(sellerId, response.getErrors(), customerId, product,
               paymentMethodId, null, payload);
         });
   }
 
   @Override
-  public Single<Transaction> createTransaction(String sellerId, String payerId, int paymentMethodId,
+  public Single<Transaction> createTransaction(String sellerId, String customerId, int paymentMethodId,
       Product product, String metadata, String payload) {
     return Single.just(product instanceof InAppProduct)
         .flatMap(isInAppBilling -> {
@@ -127,18 +127,18 @@ public class V3TransactionService implements TransactionService {
         })
         .map(response -> {
           if (response.isOk()) {
-            return transactionMapper.map(product.getId(), response, payerId, payload, sellerId);
+            return transactionMapper.map(product.getId(), response, customerId, payload, sellerId);
           }
-          return getErrorTransaction(sellerId, response.getErrors(), payerId, product,
+          return getErrorTransaction(sellerId, response.getErrors(), customerId, product,
               paymentMethodId, metadata, payload);
         });
   }
 
   private Transaction getErrorTransaction(String sellerId, List<ErrorResponse> errors,
-      String payerId, Product product, int paymentMethodId, String metadata, String payload) {
+      String customerId, Product product, int paymentMethodId, String metadata, String payload) {
 
     Transaction transaction =
-        transactionFactory.create(sellerId, payerId, paymentMethodId, product.getId(),
+        transactionFactory.create(sellerId, customerId, paymentMethodId, product.getId(),
             Transaction.Status.FAILED, metadata, null, null, null, payload);
 
     if (errors == null || errors.isEmpty()) {
@@ -148,22 +148,22 @@ public class V3TransactionService implements TransactionService {
     final ErrorResponse error = errors.get(0);
 
     if ("PRODUCT-204".equals(error.code) || "PRODUCT-209".equals(error.code)) {
-      transaction = transactionFactory.create(sellerId, payerId, paymentMethodId, product.getId(),
+      transaction = transactionFactory.create(sellerId, customerId, paymentMethodId, product.getId(),
           Transaction.Status.PENDING_USER_AUTHORIZATION, metadata, null, null, null, payload);
     }
 
     if ("PRODUCT-200".equals(error.code)) {
-      transaction = transactionFactory.create(sellerId, payerId, paymentMethodId, product.getId(),
+      transaction = transactionFactory.create(sellerId, customerId, paymentMethodId, product.getId(),
           Transaction.Status.COMPLETED, metadata, null, null, null, payload);
     }
 
     if ("PRODUCT-214".equals(error.code)) {
-      transaction = transactionFactory.create(sellerId, payerId, paymentMethodId, product.getId(),
+      transaction = transactionFactory.create(sellerId, customerId, paymentMethodId, product.getId(),
           Transaction.Status.NEW, metadata, null, null, null, payload);
     }
 
     if ("PRODUCT-216".equals(error.code)) {
-      transaction = transactionFactory.create(sellerId, payerId, paymentMethodId, product.getId(),
+      transaction = transactionFactory.create(sellerId, customerId, paymentMethodId, product.getId(),
           Transaction.Status.PENDING, metadata, null, null, null, payload);
     }
 
@@ -177,7 +177,7 @@ public class V3TransactionService implements TransactionService {
         || "PRODUCT-208".equals(error.code)
         || "PRODUCT-215".equals(error.code)
         || "PRODUCT-217".equals(error.code)) {
-      transaction = transactionFactory.create(sellerId, payerId, paymentMethodId, product.getId(),
+      transaction = transactionFactory.create(sellerId, customerId, paymentMethodId, product.getId(),
           Transaction.Status.FAILED, metadata, null, null, null, payload);
     }
 

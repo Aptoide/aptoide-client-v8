@@ -50,12 +50,12 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
 import cm.aptoide.pt.analytics.TrackerFilter;
-import cm.aptoide.pt.billing.AccountPayer;
+import cm.aptoide.pt.billing.AccountCustomer;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.BillingIdResolver;
 import cm.aptoide.pt.billing.BillingService;
-import cm.aptoide.pt.billing.Payer;
+import cm.aptoide.pt.billing.Customer;
 import cm.aptoide.pt.billing.PaymentMethodMapper;
 import cm.aptoide.pt.billing.PaymentMethodSelector;
 import cm.aptoide.pt.billing.PurchaseMapper;
@@ -283,7 +283,7 @@ public abstract class AptoideApplication extends Application {
   private TransactionFactory transactionFactory;
   private TransactionMapper transactionMapper;
   private TransactionService transactionService;
-  private Payer payer;
+  private Customer customer;
   private AuthorizationFactory authorizationFactory;
   private AuthorizationService authorizationService;
   private TransactionPersistence transactionPersistence;
@@ -860,11 +860,11 @@ public abstract class AptoideApplication extends Application {
     if (billing == null) {
 
       final TransactionRepository transactionRepository =
-          new TransactionRepository(geTransactionPersistence(), getBillingSyncManager(), getPayer(),
+          new TransactionRepository(geTransactionPersistence(), getBillingSyncManager(), getCustomer(),
               getTransactionService());
 
       final AuthorizationRepository authorizationRepository =
-          new AuthorizationRepository(getBillingSyncManager(), getPayer(),
+          new AuthorizationRepository(getBillingSyncManager(), getCustomer(),
               getAuthorizationService(), getAuthorizationPersistence());
 
       final BillingService billingService =
@@ -881,7 +881,7 @@ public abstract class AptoideApplication extends Application {
               getDefaultSharedPreferences());
 
       billing = new Billing(transactionRepository, billingService, authorizationRepository,
-          paymentMethodSelector, getPayer());
+          paymentMethodSelector, getCustomer());
     }
     return billing;
   }
@@ -896,7 +896,7 @@ public abstract class AptoideApplication extends Application {
   public BillingSyncManager getBillingSyncManager() {
     if (billingSyncManager == null) {
       billingSyncManager = new BillingSyncManager(
-          new BillingSyncFactory(getPayer(), getTransactionService(), getAuthorizationService(),
+          new BillingSyncFactory(getCustomer(), getTransactionService(), getAuthorizationService(),
               geTransactionPersistence(), getAuthorizationPersistence()), getSyncScheduler(),
           new HashSet<>());
     }
@@ -938,11 +938,11 @@ public abstract class AptoideApplication extends Application {
     return authorizationFactory;
   }
 
-  public Payer getPayer() {
-    if (payer == null) {
-      payer = new AccountPayer(getAccountManager());
+  public Customer getCustomer() {
+    if (customer == null) {
+      customer = new AccountCustomer(getAccountManager());
     }
-    return payer;
+    return customer;
   }
 
   public TransactionService getTransactionService() {

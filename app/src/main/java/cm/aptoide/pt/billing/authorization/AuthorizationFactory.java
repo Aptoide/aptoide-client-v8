@@ -14,22 +14,22 @@ import java.util.List;
 
 public class AuthorizationFactory {
 
-  public Authorization create(int paymentMethodId, Authorization.Status status, String payerId,
+  public Authorization create(int paymentMethodId, Authorization.Status status, String customerId,
       String url, String redirectUrl) {
     switch (paymentMethodId) {
       case PaymentMethodMapper.BOA_COMPRA:
       case PaymentMethodMapper.BOA_COMPRA_GOLD:
-        return new BoaCompraAuthorization(paymentMethodId, url, redirectUrl, status, payerId);
+        return new BoaCompraAuthorization(paymentMethodId, url, redirectUrl, status, customerId);
       case PaymentMethodMapper.PAYPAL:
       case PaymentMethodMapper.BRAINTREE_CREDIT_CARD:
       case PaymentMethodMapper.MOL_POINTS:
       case PaymentMethodMapper.SANDBOX:
       default:
-        return new Authorization(paymentMethodId, payerId, status);
+        return new Authorization(paymentMethodId, customerId, status);
     }
   }
 
-  public List<Authorization> map(PaymentAuthorizationsResponse response, String payerId,
+  public List<Authorization> map(PaymentAuthorizationsResponse response, String customerId,
       int paymentId) {
 
     final List<Authorization> authorizations = new ArrayList<>();
@@ -41,25 +41,25 @@ public class AuthorizationFactory {
 
       for (PaymentAuthorizationResponse authorizationResponse : response.getAuthorizations()) {
         authorizations.add(create(authorizationResponse.getPaymentId(),
-            Authorization.Status.valueOf(authorizationResponse.getAuthorizationStatus()), payerId,
+            Authorization.Status.valueOf(authorizationResponse.getAuthorizationStatus()), customerId,
             authorizationResponse.getUrl(), authorizationResponse.getSuccessUrl()));
       }
     } else {
-      authorizations.add(create(paymentId, getStatus(response), payerId, "", ""));
+      authorizations.add(create(paymentId, getStatus(response), customerId, "", ""));
     }
 
     return authorizations;
   }
 
-  public Authorization map(PaymentAuthorizationResponse response, String payerId, int paymentId) {
+  public Authorization map(PaymentAuthorizationResponse response, String customerId, int paymentId) {
 
     if (response != null && response.isOk()) {
 
       return create(response.getPaymentId(),
-          Authorization.Status.valueOf(response.getAuthorizationStatus()), payerId,
+          Authorization.Status.valueOf(response.getAuthorizationStatus()), customerId,
           response.getUrl(), response.getSuccessUrl());
     } else {
-      return create(paymentId, Authorization.Status.UNKNOWN_ERROR, payerId, "", "");
+      return create(paymentId, Authorization.Status.UNKNOWN_ERROR, customerId, "", "");
     }
   }
 

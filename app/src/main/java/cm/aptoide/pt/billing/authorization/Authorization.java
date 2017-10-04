@@ -8,17 +8,17 @@ package cm.aptoide.pt.billing.authorization;
 public class Authorization {
 
   private final int paymentId;
-  private final String payerId;
+  private final String customerId;
   private final Status status;
 
-  public Authorization(int paymentId, String payerId, Status status) {
+  public Authorization(int paymentId, String customerId, Status status) {
     this.paymentId = paymentId;
-    this.payerId = payerId;
+    this.customerId = customerId;
     this.status = status;
   }
 
-  public String getPayerId() {
-    return payerId;
+  public String getCustomerId() {
+    return customerId;
   }
 
   public int getPaymentId() {

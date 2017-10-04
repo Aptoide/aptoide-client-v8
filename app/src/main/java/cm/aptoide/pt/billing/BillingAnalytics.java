@@ -44,15 +44,15 @@ public class BillingAnalytics {
     analytics.sendEvent(getFacebookPaymentEvent("Payment_Pop_Up", "Error", new Bundle()));
   }
 
-  public void sendPayerAuthenticatedEvent(boolean payerAuthenticated) {
-    if (payerAuthenticated) {
+  public void sendCustomerAuthenticatedEvent(boolean customerAuthenticated) {
+    if (customerAuthenticated) {
       analytics.sendEvent(getFacebookPaymentEvent("Payment_Login", "Success", new Bundle()));
     }
   }
 
-  public void sendPayerAuthenticationResultEvent(boolean payerAuthenticated) {
+  public void sendCustomerAuthenticationResultEvent(boolean customerAuthenticated) {
     final String action;
-    if (payerAuthenticated) {
+    if (customerAuthenticated) {
       action = "Success";
     } else {
       action = "Cancel";

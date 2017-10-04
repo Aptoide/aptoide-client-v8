@@ -13,8 +13,8 @@ public class BoaCompraAuthorization extends Authorization {
   private final String redirectUrl;
 
   public BoaCompraAuthorization(int paymentId, String url, String redirectUrl, Status status,
-      String payerId) {
-    super(paymentId, payerId, status);
+      String customerId) {
+    super(paymentId, customerId, status);
     this.url = url;
     this.redirectUrl = redirectUrl;
   }

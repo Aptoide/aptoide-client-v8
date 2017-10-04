@@ -8,7 +8,7 @@ package cm.aptoide.pt.billing;
 import rx.Observable;
 import rx.Single;
 
-public interface Payer {
+public interface Customer {
 
   Single<String> getId();
 
