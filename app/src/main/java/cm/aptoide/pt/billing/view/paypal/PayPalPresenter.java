@@ -24,12 +24,12 @@ public class PayPalPresenter implements Presenter {
   private final BillingNavigator billingNavigator;
   private final String paymentMethodName;
   private final Scheduler viewScheduler;
-  private final String sellerId;
+  private final String merchantName;
   private final String productId;
   private final String developerPayload;
 
   public PayPalPresenter(PayPalView view, Billing billing, BillingAnalytics analytics,
-      BillingNavigator billingNavigator, Scheduler viewScheduler, String sellerId, String productId,
+      BillingNavigator billingNavigator, Scheduler viewScheduler, String merchantName, String productId,
       String developerPayload, String paymentMethodName) {
     this.view = view;
     this.billing = billing;
@@ -37,7 +37,7 @@ public class PayPalPresenter implements Presenter {
     this.billingNavigator = billingNavigator;
     this.paymentMethodName = paymentMethodName;
     this.viewScheduler = viewScheduler;
-    this.sellerId = sellerId;
+    this.merchantName = merchantName;
     this.productId = productId;
     this.developerPayload = developerPayload;
   }
@@ -62,7 +62,7 @@ public class PayPalPresenter implements Presenter {
   private void onViewCreatedShowPayPalPayment() {
     view.getLifecycle()
         .first(event -> event.equals(View.LifecycleEvent.RESUME))
-        .flatMapSingle(created -> billing.getProduct(sellerId, productId))
+        .flatMapSingle(created -> billing.getProduct(merchantName, productId))
         .delay(100, TimeUnit.MILLISECONDS)
         .observeOn(viewScheduler)
         .doOnNext(product -> billingNavigator.navigateToPayPalForResult(PAY_APP_REQUEST_CODE,
@@ -106,7 +106,7 @@ public class PayPalPresenter implements Presenter {
     switch (result.getStatus()) {
       case BillingNavigator.PayPalResult.SUCCESS:
         analytics.sendAuthorizationSuccessEvent(paymentMethodName);
-        return billing.processLocalPayment(sellerId, productId, developerPayload,
+        return billing.processLocalPayment(merchantName, productId, developerPayload,
             result.getPaymentConfirmationId());
       case BillingNavigator.PayPalResult.CANCELLED:
         analytics.sendAuthorizationCancelEvent(paymentMethodName);

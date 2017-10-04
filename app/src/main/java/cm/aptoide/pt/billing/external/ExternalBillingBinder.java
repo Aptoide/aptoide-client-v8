@@ -13,6 +13,7 @@ import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.BillingIdResolver;
 import cm.aptoide.pt.billing.Purchase;
+import cm.aptoide.pt.billing.exception.MerchantNotFoundException;
 import cm.aptoide.pt.billing.product.InAppPurchase;
 import cm.aptoide.pt.billing.view.PaymentActivity;
 import cm.aptoide.pt.billing.view.PaymentThrowableCodeMapper;
@@ -83,8 +84,14 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
         return RESULT_BILLING_UNAVAILABLE;
       }
 
-      return billing.isSupported(idResolver.resolveSellerId(packageName), type)
-          .map(available -> available ? RESULT_OK : RESULT_BILLING_UNAVAILABLE)
+      return billing.getMerchant(idResolver.resolveSellerId(packageName))
+          .map(merchant -> RESULT_OK)
+          .onErrorResumeNext(throwable -> {
+            if (throwable instanceof MerchantNotFoundException) {
+              return Single.just(RESULT_BILLING_UNAVAILABLE);
+            }
+            return Single.error(throwable);
+          })
           .toBlocking()
           .value();
     } catch (Exception exception) {

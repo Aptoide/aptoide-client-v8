@@ -4,5 +4,5 @@ public interface BillingSyncScheduler {
 
   void syncAuthorization(int paymentId);
 
-  void syncTransaction(String sellerId, Product product);
+  void syncTransaction(String merchantName, Product product);
 }

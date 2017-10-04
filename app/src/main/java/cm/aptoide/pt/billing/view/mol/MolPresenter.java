@@ -16,17 +16,17 @@ public class MolPresenter implements Presenter {
   private final Billing billing;
   private final BillingAnalytics analytics;
   private final BillingNavigator navigator;
-  private final String sellerId;
+  private final String merchantName;
   private final String paymentMethodName;
   private final String productId;
 
   public MolPresenter(WebView view, Billing billing, BillingAnalytics analytics,
-      BillingNavigator navigator, String sellerId, String paymentMethodName, String productId) {
+      BillingNavigator navigator, String merchantName, String paymentMethodName, String productId) {
     this.view = view;
     this.billing = billing;
     this.analytics = analytics;
     this.navigator = navigator;
-    this.sellerId = sellerId;
+    this.merchantName = merchantName;
     this.paymentMethodName = paymentMethodName;
     this.productId = productId;
   }
@@ -59,7 +59,7 @@ public class MolPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(__ -> view.showLoading())
-        .flatMap(__ -> billing.getTransaction(sellerId, productId)
+        .flatMap(__ -> billing.getTransaction(merchantName, productId)
             .first(transaction -> transaction.isPendingAuthorization())
             .cast(MolTransaction.class)
             .observeOn(AndroidSchedulers.mainThread())
@@ -78,7 +78,7 @@ public class MolPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(__ -> view.showLoading())
-        .flatMap(__ -> billing.getTransaction(sellerId, productId)
+        .flatMap(__ -> billing.getTransaction(merchantName, productId)
             .first(transaction -> transaction.isFailed())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(transaction -> showError()))
@@ -93,7 +93,7 @@ public class MolPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(__ -> view.showLoading())
-        .flatMap(__ -> billing.getTransaction(sellerId, productId)
+        .flatMap(__ -> billing.getTransaction(merchantName, productId)
             .first(transaction -> transaction.isCompleted())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(transaction -> {
@@ -112,7 +112,7 @@ public class MolPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.redirectUrlEvent()
             .doOnNext(backToStorePressed -> view.showLoading())
-            .flatMapSingle(loading -> billing.getProduct(sellerId, productId))
+            .flatMapSingle(loading -> billing.getProduct(merchantName, productId))
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(sent -> view.showLoading()))
         .observeOn(AndroidSchedulers.mainThread())

@@ -20,20 +20,20 @@ public class BraintreePresenter implements Presenter {
   private final BillingNavigator navigator;
   private final Scheduler viewScheduler;
   private final String paymentMethodName;
-  private final String sellerId;
+  private final String merchantName;
   private final String productId;
   private final String developerPayload;
 
   public BraintreePresenter(BraintreeCreditCardView view, Braintree braintree, Billing billing,
       BillingAnalytics analytics, BillingNavigator navigator, Scheduler viewScheduler,
-      String sellerId, String productId, String paymentMethodName, String developerPayload) {
+      String merchantName, String productId, String paymentMethodName, String developerPayload) {
     this.view = view;
     this.braintree = braintree;
     this.billing = billing;
     this.analytics = analytics;
     this.navigator = navigator;
     this.viewScheduler = viewScheduler;
-    this.sellerId = sellerId;
+    this.merchantName = merchantName;
     this.productId = productId;
     this.paymentMethodName = paymentMethodName;
     this.developerPayload = developerPayload;
@@ -95,7 +95,7 @@ public class BraintreePresenter implements Presenter {
         .flatMapCompletable(nonce -> {
           switch (nonce.getStatus()) {
             case Braintree.NonceResult.SUCCESS:
-              return billing.processLocalPayment(sellerId, productId, developerPayload,
+              return billing.processLocalPayment(merchantName, productId, developerPayload,
                   nonce.getNonce())
                   .observeOn(viewScheduler)
                   .doOnCompleted(() -> {
@@ -140,7 +140,7 @@ public class BraintreePresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.showLoading())
         .flatMap(__ -> braintree.getConfiguration()
-            .flatMapSingle(configuration -> billing.getProduct(sellerId, productId)
+            .flatMapSingle(configuration -> billing.getProduct(merchantName, productId)
                 .observeOn(viewScheduler)
                 .doOnSuccess(product -> {
                   view.showCreditCardForm(configuration);
@@ -158,7 +158,7 @@ public class BraintreePresenter implements Presenter {
   private void onViewCreatedValidatePendingTransaction() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.RESUME))
-        .flatMapSingle(__ -> billing.getTransaction(sellerId, productId)
+        .flatMapSingle(__ -> billing.getTransaction(merchantName, productId)
             .first()
             .toSingle())
         .cast(BraintreeTransaction.class)

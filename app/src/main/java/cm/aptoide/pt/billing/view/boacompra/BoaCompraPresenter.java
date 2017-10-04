@@ -22,19 +22,19 @@ public class BoaCompraPresenter implements Presenter {
   private final BillingAnalytics analytics;
   private final BillingNavigator navigator;
   private final String paymentMethodName;
-  private final String sellerId;
+  private final String merchantName;
   private final String productId;
   private final String payload;
 
   public BoaCompraPresenter(WebView view, Billing billing, BillingAnalytics analytics,
-      BillingNavigator navigator, String sellerId, String productId, String payload,
+      BillingNavigator navigator, String merchantName, String productId, String payload,
       String paymentMethodName) {
     this.view = view;
     this.billing = billing;
     this.analytics = analytics;
     this.navigator = navigator;
     this.paymentMethodName = paymentMethodName;
-    this.sellerId = sellerId;
+    this.merchantName = merchantName;
     this.productId = productId;
     this.payload = payload;
   }
@@ -92,7 +92,7 @@ public class BoaCompraPresenter implements Presenter {
         .first(authorization -> authorization.isAuthorized())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(__ -> view.showLoading())
-        .flatMapCompletable(authorization -> billing.processPayment(sellerId, productId, payload)
+        .flatMapCompletable(authorization -> billing.processPayment(merchantName, productId, payload)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnCompleted(() -> {
               analytics.sendAuthorizationSuccessEvent(paymentMethodName);

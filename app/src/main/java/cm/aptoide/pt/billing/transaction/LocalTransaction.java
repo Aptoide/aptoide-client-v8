@@ -10,8 +10,8 @@ public class LocalTransaction extends Transaction {
   private final String localMetadata;
 
   public LocalTransaction(String productId, String customerId, Status status, int paymentMethodId,
-      String localMetadata, String payload, String sellerId) {
-    super(productId, customerId, status, paymentMethodId, payload, sellerId);
+      String localMetadata, String payload, String merchantName) {
+    super(productId, customerId, status, paymentMethodId, payload, merchantName);
     this.localMetadata = localMetadata;
   }
 

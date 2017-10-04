@@ -27,11 +27,11 @@ public class PaymentActivity extends BraintreeActivity {
 
   private BillingSyncManager syncManager;
 
-  public static Intent getIntent(Context context, String productId, String sellerId,
+  public static Intent getIntent(Context context, String productId, String merchantName,
       String developerPayload) {
     final Intent intent = new Intent(context, PaymentActivity.class);
     intent.putExtra(EXTRA_PRODUCT_ID, productId);
-    intent.putExtra(EXTRA_APPLICATION_ID, sellerId);
+    intent.putExtra(EXTRA_APPLICATION_ID, merchantName);
     intent.putExtra(EXTRA_DEVELOPER_PAYLOAD, developerPayload);
     return intent;
   }

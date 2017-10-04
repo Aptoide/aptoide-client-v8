@@ -46,11 +46,11 @@ public class BillingNavigator {
         .map(result -> result.getResultCode() == Activity.RESULT_OK);
   }
 
-  public void navigateToTransactionAuthorizationView(String sellerId, String productId,
+  public void navigateToTransactionAuthorizationView(String merchantName, String productId,
       String developerPayload, PaymentMethod paymentMethod) {
 
     final Bundle bundle =
-        getProductBundle(sellerId, productId, developerPayload, paymentMethod.getName());
+        getProductBundle(merchantName, productId, developerPayload, paymentMethod.getName());
     switch (paymentMethod.getId()) {
       case PaymentMethodMapper.PAYPAL:
         fragmentNavigator.navigateTo(PayPalFragment.create(bundle), true);
@@ -111,12 +111,12 @@ public class BillingNavigator {
         bundleMapper.mapCancellation());
   }
 
-  private Bundle getProductBundle(String sellerId, String productId, String developerPayload,
+  private Bundle getProductBundle(String merchantName, String productId, String developerPayload,
       String paymentMethodName) {
-    if (productId != null && sellerId != null) {
+    if (productId != null && merchantName != null) {
       final Bundle bundle = new Bundle();
       bundle.putString(PaymentActivity.EXTRA_PRODUCT_ID, productId);
-      bundle.putString(PaymentActivity.EXTRA_APPLICATION_ID, sellerId);
+      bundle.putString(PaymentActivity.EXTRA_APPLICATION_ID, merchantName);
       bundle.putString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD, developerPayload);
       bundle.putString(PaymentActivity.EXTRA_PAYMENT_METHOD_NAME, paymentMethodName);
       return bundle;

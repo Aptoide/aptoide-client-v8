@@ -19,8 +19,8 @@ public class TransactionMapper {
   }
 
   public Transaction map(String productId, TransactionResponse response, String customerId,
-      String payload, String sellerId) {
-    return transactionFactory.create(sellerId, customerId, response.getPaymentMethodId(), productId,
+      String payload, String merchantName) {
+    return transactionFactory.create(merchantName, customerId, response.getPaymentMethodId(), productId,
         Transaction.Status.valueOf(response.getTransactionStatus()), response.getLocalMetadata(),
         response.getConfirmationUrl(), response.getSuccessUrl(), response.getClientToken(),
         payload);

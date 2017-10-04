@@ -27,33 +27,33 @@ public class TransactionRepository {
     this.transactionService = transactionService;
   }
 
-  public Single<Transaction> createTransaction(String sellerId, int paymentMethodId,
+  public Single<Transaction> createTransaction(String merchantName, int paymentMethodId,
       Product product, String payload) {
     return customer.getId()
-        .flatMap(customerId -> transactionService.createTransaction(sellerId, customerId, paymentMethodId,
+        .flatMap(customerId -> transactionService.createTransaction(merchantName, customerId, paymentMethodId,
             product, payload))
         .flatMap(transaction -> transactionPersistence.saveTransaction(transaction)
             .andThen(Single.just(transaction)));
   }
 
-  public Observable<Transaction> getTransaction(Product product, String sellerId) {
+  public Observable<Transaction> getTransaction(Product product, String merchantName) {
     return customer.getId()
-        .doOnSuccess(__ -> syncScheduler.syncTransaction(sellerId, product))
+        .doOnSuccess(__ -> syncScheduler.syncTransaction(merchantName, product))
         .flatMapObservable(
-            customer -> transactionPersistence.getTransaction(sellerId, customer, product.getId()));
+            customer -> transactionPersistence.getTransaction(merchantName, customer, product.getId()));
   }
 
-  public Single<Transaction> createTransaction(String sellerId, int paymentMethodId,
+  public Single<Transaction> createTransaction(String merchantName, int paymentMethodId,
       Product product, String metadata, String payload) {
     return customer.getId()
         .flatMap(
-            customerId -> transactionPersistence.createTransaction(sellerId, customerId, paymentMethodId,
+            customerId -> transactionPersistence.createTransaction(merchantName, customerId, paymentMethodId,
                 product.getId(), Transaction.Status.PENDING, payload, metadata));
   }
 
-  public Completable remove(String productId, String sellerId) {
+  public Completable remove(String productId, String merchantName) {
     return customer.getId()
         .flatMapCompletable(
-            customerId -> transactionPersistence.removeTransaction(sellerId, customerId, productId));
+            customerId -> transactionPersistence.removeTransaction(merchantName, customerId, productId));
   }
 }

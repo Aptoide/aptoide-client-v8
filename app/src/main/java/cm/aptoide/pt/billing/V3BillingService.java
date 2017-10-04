@@ -7,6 +7,7 @@ package cm.aptoide.pt.billing;
 
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import cm.aptoide.pt.billing.exception.MerchantNotFoundException;
 import cm.aptoide.pt.billing.exception.ProductNotFoundException;
 import cm.aptoide.pt.billing.exception.PurchaseNotFoundException;
 import cm.aptoide.pt.billing.product.InAppProduct;
@@ -22,7 +23,7 @@ import cm.aptoide.pt.dataprovider.ws.v3.GetApkInfoRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingConsumeRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.dataprovider.ws.v7.billing.GetBillingPackageRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.billing.GetMerchantRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetProductsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetPurchasesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetServicesRequest;
@@ -87,24 +88,25 @@ public class V3BillingService implements BillingService {
         });
   }
 
-  @Override public Completable getBilling(String sellerId, String type) {
-    return GetBillingPackageRequest.of(idResolver.resolvePackageName(sellerId), bodyInterceptorV7,
-        httpClient, converterFactory, tokenInvalidator, sharedPreferences)
+  @Override public Single<Merchant> getMerchant(String merchantName) {
+    return GetMerchantRequest.of(merchantName, bodyInterceptorV7, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences)
         .observe()
         .toSingle()
-        .flatMapCompletable(response -> {
+        .flatMap(response -> {
           if (response != null && response.isOk()) {
-            return Completable.complete();
+            return Single.just(new Merchant(response.getData()
+                .getId(), response.getData()
+                .getName()));
           } else {
-            return Completable.error(new IllegalArgumentException(V7.getErrorMessage(response)));
+            return Single.error(new MerchantNotFoundException(V7.getErrorMessage(response)));
           }
         });
   }
 
-  @Override public Completable deletePurchase(String sellerId, String purchaseToken) {
-    return InAppBillingConsumeRequest.of(apiVersion, idResolver.resolvePackageName(sellerId),
-        purchaseToken, bodyInterceptorV3, httpClient, converterFactory, tokenInvalidator,
-        sharedPreferences)
+  @Override public Completable deletePurchase(String merchantName, String purchaseToken) {
+    return InAppBillingConsumeRequest.of(apiVersion, merchantName, purchaseToken, bodyInterceptorV3,
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe()
         .first()
         .toSingle()
@@ -119,9 +121,9 @@ public class V3BillingService implements BillingService {
         });
   }
 
-  @Override public Single<List<Purchase>> getPurchases(String sellerId) {
-    return GetPurchasesRequest.of(idResolver.resolvePackageName(sellerId), bodyInterceptorV7,
-        httpClient, converterFactory, tokenInvalidator, sharedPreferences)
+  @Override public Single<List<Purchase>> getPurchases(String merchantName) {
+    return GetPurchasesRequest.of(merchantName, bodyInterceptorV7, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences)
         .observe(true)
         .toSingle()
         .flatMap(response -> {
@@ -133,17 +135,16 @@ public class V3BillingService implements BillingService {
         });
   }
 
-  @Override public Single<Purchase> getPurchase(String sellerId, String purchaseToken) {
-    return getPurchases(sellerId).flatMapObservable(purchases -> Observable.from(purchases))
+  @Override public Single<Purchase> getPurchase(String merchantName, String purchaseToken) {
+    return getPurchases(merchantName).flatMapObservable(purchases -> Observable.from(purchases))
         .filter(purchase -> purchaseToken.equals(((InAppPurchase) purchase).getToken()))
         .first()
         .toSingle();
   }
 
-  @Override public Single<List<Product>> getProducts(String sellerId, List<String> productIds) {
-    return getServerSKUs(idResolver.resolvePackageName(sellerId),
-        idResolver.resolveSkus(productIds), false).flatMap(
-        response -> mapToProducts(idResolver.resolvePackageName(sellerId), response.getList()));
+  @Override public Single<List<Product>> getProducts(String merchantName, List<String> productIds) {
+    return getServerSKUs(merchantName, idResolver.resolveSkus(productIds), false).flatMap(
+        response -> mapToProducts(merchantName, response.getList()));
   }
 
   @Override public Single<Purchase> getPurchase(Product product) {
@@ -166,9 +167,9 @@ public class V3BillingService implements BillingService {
         + PaidAppProduct.class.getSimpleName());
   }
 
-  @Override public Single<Product> getProduct(String sellerId, String productId) {
+  @Override public Single<Product> getProduct(String merchantName, String productId) {
     if (idResolver.isInAppId(productId)) {
-      return getInAppProduct(sellerId, productId);
+      return getInAppProduct(merchantName, productId);
     }
     if (idResolver.isPaidAppId(productId)) {
       return getPaidAppProduct(productId);
@@ -177,10 +178,9 @@ public class V3BillingService implements BillingService {
     return Single.error(new IllegalArgumentException("Invalid product id " + productId));
   }
 
-  private Single<Product> getInAppProduct(String sellerId, String productId) {
-    return getServerSKUs(idResolver.resolvePackageName(sellerId),
-        Collections.singletonList(idResolver.resolveSku(productId)), false).flatMap(
-        response -> mapToProducts(idResolver.resolvePackageName(sellerId), response.getList()))
+  private Single<Product> getInAppProduct(String merchantName, String productId) {
+    return getServerSKUs(merchantName, Collections.singletonList(idResolver.resolveSku(productId)),
+        false).flatMap(response -> mapToProducts(merchantName, response.getList()))
         .flatMap(products -> {
           if (products.isEmpty()) {
             return Single.error(new ProductNotFoundException(

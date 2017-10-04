@@ -24,32 +24,32 @@ public class TransactionSync extends Sync {
   private final TransactionPersistence transactionPersistence;
   private final Customer customer;
   private final TransactionService transactionService;
-  private final String sellerId;
+  private final String merchantName;
 
   public TransactionSync(Product product, TransactionPersistence transactionPersistence,
       Customer customer, TransactionService transactionService, boolean periodic, boolean exact,
-      long interval, long trigger, String sellerId) {
+      long interval, long trigger, String merchantName) {
     super(String.valueOf(product.getId()), periodic, exact, trigger, interval);
     this.product = product;
     this.transactionPersistence = transactionPersistence;
     this.customer = customer;
     this.transactionService = transactionService;
-    this.sellerId = sellerId;
+    this.merchantName = merchantName;
   }
 
   @Override public Completable execute() {
     return customer.getId()
-        .flatMap(customerId -> syncLocalTransaction(customerId, sellerId).onErrorResumeNext(throwable -> {
+        .flatMap(customerId -> syncLocalTransaction(customerId, merchantName).onErrorResumeNext(throwable -> {
           if (throwable instanceof NoSuchElementException) {
-            return syncTransaction(customerId, sellerId);
+            return syncTransaction(customerId, merchantName);
           }
           return Single.error(throwable);
         }))
         .toCompletable();
   }
 
-  private Single<Transaction> syncLocalTransaction(String customerId, String sellerId) {
-    return transactionPersistence.getTransaction(sellerId, customerId, product.getId())
+  private Single<Transaction> syncLocalTransaction(String customerId, String merchantName) {
+    return transactionPersistence.getTransaction(merchantName, customerId, product.getId())
         .timeout(1, TimeUnit.SECONDS, Observable.empty())
         .first()
         .filter(transaction -> transaction instanceof LocalTransaction)
@@ -64,8 +64,8 @@ public class TransactionSync extends Sync {
             .andThen(Single.just(transaction)));
   }
 
-  private Single<Transaction> syncTransaction(String customerId, String sellerId) {
-    return transactionService.getTransaction(sellerId, customerId, product)
+  private Single<Transaction> syncTransaction(String customerId, String merchantName) {
+    return transactionService.getTransaction(merchantName, customerId, product)
         .flatMap(transaction -> transactionPersistence.saveTransaction(transaction)
             .andThen(Single.just(transaction)));
   }

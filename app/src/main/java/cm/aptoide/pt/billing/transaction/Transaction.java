@@ -6,16 +6,16 @@ public class Transaction {
   private final Status status;
   private final int paymentMethodId;
   private final String payload;
-  private final String sellerId;
+  private final String merchantName;
 
   public Transaction(String productId, String customerId, Status status, int paymentMethodId,
-      String payload, String sellerId) {
+      String payload, String merchantName) {
     this.productId = productId;
     this.customerId = customerId;
     this.status = status;
     this.paymentMethodId = paymentMethodId;
     this.payload = payload;
-    this.sellerId = sellerId;
+    this.merchantName = merchantName;
   }
 
   public String getPayload() {
@@ -65,7 +65,7 @@ public class Transaction {
   }
 
   public String getSellerId() {
-    return sellerId;
+    return merchantName;
   }
 
   public enum Status {

@@ -13,11 +13,11 @@ public class PaymentConfirmation extends RealmObject {
 
   public static final String PRODUCT_ID = "productId";
   public static final String CUSTOMER_ID = "customerId";
-  public static final String SELLER_ID = "sellerId";
+  public static final String SELLER_ID = "merchantName";
 
   @PrimaryKey private String id;
   @Required private String productId;
-  @Required private String sellerId;
+  @Required private String merchantName;
   @Required private String customerId;
   @Required private String status;
 
@@ -32,12 +32,12 @@ public class PaymentConfirmation extends RealmObject {
   public PaymentConfirmation() {
   }
 
-  public PaymentConfirmation(String id, String localMetadata, String productId, String sellerId,
+  public PaymentConfirmation(String id, String localMetadata, String productId, String merchantName,
       String status, String customerId, int paymentMethodId, String confirmationUrl, String successUrl,
       String clientToken, String payload) {
     this.id = id;
     this.paymentConfirmationId = localMetadata;
-    this.sellerId = sellerId;
+    this.merchantName = merchantName;
     this.status = status;
     this.productId = productId;
     this.customerId = customerId;
@@ -53,7 +53,7 @@ public class PaymentConfirmation extends RealmObject {
   }
 
   public String getSellerId() {
-    return sellerId;
+    return merchantName;
   }
 
   public String getCustomerId() {

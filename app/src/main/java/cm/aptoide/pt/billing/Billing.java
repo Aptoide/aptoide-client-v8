@@ -39,43 +39,36 @@ public class Billing {
     return customer;
   }
 
-  public Single<Boolean> isSupported(String sellerId, String type) {
-    return billingService.getBilling(sellerId, type)
-        .andThen(Single.just(true))
-        .onErrorResumeNext(throwable -> {
-          if (throwable instanceof IllegalArgumentException) {
-            return Single.just(false);
-          }
-          return Single.error(throwable);
-        });
+  public Single<Merchant> getMerchant(String merchantName) {
+    return billingService.getMerchant(merchantName);
   }
 
-  public Single<Product> getProduct(String sellerId, String productId) {
-    return billingService.getProduct(sellerId, productId);
+  public Single<Product> getProduct(String merchantName, String productId) {
+    return billingService.getProduct(merchantName, productId);
   }
 
-  public Single<List<Product>> getProducts(String sellerId, List<String> productIds) {
-    return billingService.getProducts(sellerId, productIds);
+  public Single<List<Product>> getProducts(String merchantName, List<String> productIds) {
+    return billingService.getProducts(merchantName, productIds);
   }
 
-  public Single<List<Purchase>> getPurchases(String sellerId) {
-    return billingService.getPurchases(sellerId);
+  public Single<List<Purchase>> getPurchases(String merchantName) {
+    return billingService.getPurchases(merchantName);
   }
 
-  public Completable consumePurchase(String sellerId, String purchaseToken) {
-    return billingService.getPurchase(sellerId, purchaseToken)
-        .flatMapCompletable(purchase -> billingService.deletePurchase(sellerId, purchaseToken)
-            .andThen(transactionRepository.remove(purchase.getProductId(), sellerId)));
+  public Completable consumePurchase(String merchantName, String purchaseToken) {
+    return billingService.getPurchase(merchantName, purchaseToken)
+        .flatMapCompletable(purchase -> billingService.deletePurchase(merchantName, purchaseToken)
+            .andThen(transactionRepository.remove(purchase.getProductId(), merchantName)));
   }
 
   public Single<List<PaymentMethod>> getPaymentMethods() {
     return billingService.getPaymentMethods();
   }
 
-  public Completable processPayment(String sellerId, String productId, String payload) {
+  public Completable processPayment(String merchantName, String productId, String payload) {
     return getSelectedPaymentMethod().flatMap(
-        paymentMethod -> getProduct(sellerId, productId).flatMap(
-            product -> transactionRepository.createTransaction(sellerId, paymentMethod.getId(),
+        paymentMethod -> getProduct(merchantName, productId).flatMap(
+            product -> transactionRepository.createTransaction(merchantName, paymentMethod.getId(),
                 product, payload)))
         .flatMapCompletable(transaction -> {
           if (transaction.isPendingAuthorization()) {
@@ -94,22 +87,22 @@ public class Billing {
         });
   }
 
-  public Completable processLocalPayment(String sellerId, String productId, String payload,
+  public Completable processLocalPayment(String merchantName, String productId, String payload,
       String localMetadata) {
     return getSelectedPaymentMethod().flatMap(
-        paymentMethod -> getProduct(sellerId, productId).flatMap(
-            product -> transactionRepository.createTransaction(sellerId, paymentMethod.getId(),
+        paymentMethod -> getProduct(merchantName, productId).flatMap(
+            product -> transactionRepository.createTransaction(merchantName, paymentMethod.getId(),
                 product, localMetadata, payload)))
         .toCompletable();
   }
 
-  public Observable<Transaction> getTransaction(String sellerId, String productId) {
-    return getProduct(sellerId, productId).flatMapObservable(
-        product -> transactionRepository.getTransaction(product, sellerId));
+  public Observable<Transaction> getTransaction(String merchantName, String productId) {
+    return getProduct(merchantName, productId).flatMapObservable(
+        product -> transactionRepository.getTransaction(product, merchantName));
   }
 
-  public Observable<Purchase> getPurchase(String sellerId, String productId) {
-    return getTransaction(sellerId, productId).flatMapSingle(transaction -> {
+  public Observable<Purchase> getPurchase(String merchantName, String productId) {
+    return getTransaction(merchantName, productId).flatMapSingle(transaction -> {
 
       if (transaction.isPending() || transaction.isUnknown()) {
         return Single.just(new SimplePurchase(SimplePurchase.Status.PENDING, productId));
@@ -119,12 +112,12 @@ public class Billing {
         return Single.just(new SimplePurchase(SimplePurchase.Status.NEW, productId));
       }
 
-      return getProduct(sellerId, productId).flatMap(
+      return getProduct(merchantName, productId).flatMap(
           product -> billingService.getPurchase(product));
     })
         .flatMap(purchase -> {
           if (purchase.isFailed()) {
-            return transactionRepository.remove(productId, sellerId)
+            return transactionRepository.remove(productId, merchantName)
                 .andThen(Observable.just(purchase));
           }
           return Observable.just(purchase);
@@ -153,11 +146,10 @@ public class Billing {
   }
 
   private Single<PaymentMethod> getPaymentMethod(int paymentMethodId) {
-    return getPaymentMethods().flatMapObservable(
-        payments -> Observable.from(payments)
-            .filter(payment -> payment.getId() == paymentMethodId)
-            .switchIfEmpty(Observable.error(
-                new IllegalArgumentException("Payment " + paymentMethodId + " not found."))))
+    return getPaymentMethods().flatMapObservable(payments -> Observable.from(payments)
+        .filter(payment -> payment.getId() == paymentMethodId)
+        .switchIfEmpty(Observable.error(
+            new IllegalArgumentException("Payment " + paymentMethodId + " not found."))))
         .first()
         .toSingle();
   }

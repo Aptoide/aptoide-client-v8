@@ -35,7 +35,7 @@ import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.util.ToRetryThrowable;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.billing.GetBillingPackageRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.billing.GetMerchantRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetProductsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetPurchasesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetServicesRequest;
@@ -414,8 +414,8 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
         @Body GetRecommendedRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("inapp/getPackage") Observable<BaseV7Response> getBillingPackage(
-        @Body GetBillingPackageRequest.PackageNameBody body,
+    @POST("inapp/getPackage") Observable<GetMerchantRequest.ResponseBody> getBillingMerchant(
+        @Body GetMerchantRequest.RequestBody body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("inapp/products/get") Observable<GetProductsRequest.ResponseBody> getBillingProducts(

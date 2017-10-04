@@ -34,10 +34,6 @@ public class BillingIdResolver {
     return appId + divider + paidAppId;
   }
 
-  public String resolvePackageName(String sellerId) {
-    return sellerId;
-  }
-
   public boolean isPaidAppId(String productId) {
     return productId.split(divider)[1].equals(paidAppId);
   }
@@ -62,8 +58,8 @@ public class BillingIdResolver {
     return productIds;
   }
 
-  public String resolveStoreName(String sellerId) {
-    return sellerId.split(divider)[1];
+  public String resolveStoreName(String merchantName) {
+    return merchantName.split(divider)[1];
   }
 
   public List<String> resolveSkus(List<String> productIds) {

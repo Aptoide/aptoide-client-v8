@@ -7,8 +7,8 @@ public class BraintreeTransaction extends Transaction {
   private final String token;
 
   public BraintreeTransaction(String productId, String customerId, Status status, int paymentMethodId,
-      String token, String payload, String sellerId) {
-    super(productId, customerId, status, paymentMethodId, payload, sellerId);
+      String token, String payload, String merchantName) {
+    super(productId, customerId, status, paymentMethodId, payload, merchantName);
     this.token = token;
   }
 

@@ -6,7 +6,7 @@ import cm.aptoide.pt.billing.transaction.mol.MolTransaction;
 
 public class TransactionFactory {
 
-  public Transaction create(String sellerId, String customerId, int paymentMethodId, String productId,
+  public Transaction create(String merchantName, String customerId, int paymentMethodId, String productId,
       Transaction.Status status, String metadata, String confirmationUrl, String successUrl,
       String clientToken, String payload) {
     switch (paymentMethodId) {
@@ -14,18 +14,18 @@ public class TransactionFactory {
       case PaymentMethodMapper.BRAINTREE_CREDIT_CARD:
         if (clientToken == null) {
           return new LocalTransaction(productId, customerId, status, paymentMethodId, metadata,
-              payload, sellerId);
+              payload, merchantName);
         }
         return new BraintreeTransaction(productId, customerId, status, paymentMethodId, clientToken,
-            payload, sellerId);
+            payload, merchantName);
       case PaymentMethodMapper.MOL_POINTS:
         return new MolTransaction(productId, customerId, status, paymentMethodId, confirmationUrl,
-            successUrl, payload, sellerId);
+            successUrl, payload, merchantName);
       case PaymentMethodMapper.BOA_COMPRA:
       case PaymentMethodMapper.BOA_COMPRA_GOLD:
       case PaymentMethodMapper.SANDBOX:
       default:
-        return new Transaction(productId, customerId, status, paymentMethodId, payload, sellerId);
+        return new Transaction(productId, customerId, status, paymentMethodId, payload, merchantName);
     }
   }
 }

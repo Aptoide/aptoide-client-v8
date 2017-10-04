@@ -15,10 +15,10 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 
-public class GetBillingPackageRequest
-    extends V7<BaseV7Response, GetBillingPackageRequest.PackageNameBody> {
+public class GetMerchantRequest
+    extends V7<GetMerchantRequest.ResponseBody, GetMerchantRequest.RequestBody> {
 
-  private GetBillingPackageRequest(PackageNameBody baseBody,
+  private GetMerchantRequest(RequestBody baseBody,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
@@ -26,22 +26,22 @@ public class GetBillingPackageRequest
         tokenInvalidator);
   }
 
-  public static GetBillingPackageRequest of(String packageName,
+  public static GetMerchantRequest of(String merchantName,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
-    final PackageNameBody body = new PackageNameBody();
-    body.setPackageName(packageName);
-    return new GetBillingPackageRequest(body, bodyInterceptor, httpClient, converterFactory,
+    final RequestBody body = new RequestBody();
+    body.setPackageName(merchantName);
+    return new GetMerchantRequest(body, bodyInterceptor, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences);
   }
 
-  @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
+  @Override protected Observable<GetMerchantRequest.ResponseBody> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getBillingPackage(body, bypassCache);
+    return interfaces.getBillingMerchant(body, bypassCache);
   }
 
-  public static class PackageNameBody extends BaseBody {
+  public static class RequestBody extends BaseBody {
 
     private String packageName;
 
@@ -51,6 +51,41 @@ public class GetBillingPackageRequest
 
     public void setPackageName(String packageName) {
       this.packageName = packageName;
+    }
+  }
+
+  public static class ResponseBody extends BaseV7Response {
+
+    private Merchant data;
+
+    public Merchant getData() {
+      return data;
+    }
+
+    public void setData(Merchant data) {
+      this.data = data;
+    }
+
+    public static class Merchant {
+
+      private int id;
+      private String name;
+
+      public int getId() {
+        return id;
+      }
+
+      public void setId(int id) {
+        this.id = id;
+      }
+
+      public String getName() {
+        return name;
+      }
+
+      public void setName(String name) {
+        this.name = name;
+      }
     }
   }
 }
