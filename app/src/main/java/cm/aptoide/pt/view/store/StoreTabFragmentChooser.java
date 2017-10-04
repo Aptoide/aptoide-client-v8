@@ -13,7 +13,7 @@ public class StoreTabFragmentChooser {
 
   private static FragmentProvider fragmentProvider = AptoideApplication.getFragmentProvider();
 
-  public static Fragment choose(Event.Name name) {
+  public static Fragment choose(Event.Name name, boolean addAdultFilter) {
     switch (name) {
       case listApps:
         return fragmentProvider.newListAppsFragment();
@@ -27,7 +27,7 @@ public class StoreTabFragmentChooser {
       case myStores:
         return fragmentProvider.newMyStoresFragment();
       case getStoreWidgets:
-        return fragmentProvider.newGetStoreWidgetsFragment();
+        return fragmentProvider.newGetStoreWidgetsFragment(addAdultFilter);
       case listReviews:
         return fragmentProvider.newListReviewsFragment();
       case getAds:

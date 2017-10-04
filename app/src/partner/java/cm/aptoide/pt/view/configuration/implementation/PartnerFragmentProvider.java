@@ -179,16 +179,16 @@ public class PartnerFragmentProvider implements FragmentProvider {
 
   @Override
   public Fragment newStoreTabGridRecyclerFragment(Event event, String storeTheme, String tag,
-      StoreContext storeContext) {
+      StoreContext storeContext, boolean addAdultFilter) {
     return StoreTabGridRecyclerFragment.newInstance(event, aptoideApplication.getDefaultTheme(),
-        tag, storeContext);
+        tag, storeContext, addAdultFilter);
   }
 
   @Override
   public Fragment newStoreTabGridRecyclerFragment(Event event, String title, String storeTheme,
-      String tag, StoreContext storeContext) {
+      String tag, StoreContext storeContext, boolean addAdultFilter) {
     return StoreTabGridRecyclerFragment.newInstance(event, title,
-        aptoideApplication.getDefaultTheme(), tag, storeContext);
+        aptoideApplication.getDefaultTheme(), tag, storeContext, addAdultFilter);
   }
 
   @Override public Fragment newListAppsFragment() {
@@ -207,8 +207,8 @@ public class PartnerFragmentProvider implements FragmentProvider {
     return new MyStoresFragment();
   }
 
-  @Override public Fragment newGetStoreWidgetsFragment() {
-    return new GetStoreWidgetsFragment();
+  @Override public Fragment newGetStoreWidgetsFragment(boolean addAdultFilter) {
+    return GetStoreWidgetsFragment.newInstance(addAdultFilter);
   }
 
   @Override public Fragment newListReviewsFragment() {
