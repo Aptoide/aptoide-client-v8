@@ -3,7 +3,7 @@ package cm.aptoide.pt.analytics;
 import android.text.TextUtils;
 import cm.aptoide.pt.account.view.LoginSignUpCredentialsFragment;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.search.view.SearchFragment;
+import cm.aptoide.pt.search.view.SearchResultFragment;
 import cm.aptoide.pt.view.store.GetStoreFragment;
 import cm.aptoide.pt.view.store.GetStoreWidgetsFragment;
 import cm.aptoide.pt.view.store.home.HomeFragment;
@@ -62,7 +62,7 @@ public class AptoideNavigationTracker implements NavigationTracker {
       return false;
     } else if (viewName.equals(LoginSignUpCredentialsFragment.class.getSimpleName())) {
       return false;
-    } else if (viewName.equals(SearchFragment.class.getSimpleName())) {
+    } else if (viewName.equals(SearchResultFragment.class.getSimpleName())) {
       return false;
     } else if (getCurrentViewName().equals(viewName)) {
       return false;

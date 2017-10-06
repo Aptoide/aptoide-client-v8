@@ -59,7 +59,7 @@ import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.Subscriptions;
 
-public class SearchFragment extends BackButtonFragment implements SearchView {
+public class SearchResultFragment extends BackButtonFragment implements SearchView {
 
   private static final int LAYOUT = R.layout.global_search_fragment;
   private static final String VIEW_MODEL = "view_model";
@@ -96,30 +96,30 @@ public class SearchFragment extends BackButtonFragment implements SearchView {
   private SearchAnalytics searchAnalytics;
   private float listItemPadding;
 
-  public static SearchFragment newInstance(String currentQuery) {
+  public static SearchResultFragment newInstance(String currentQuery) {
     return newInstance(currentQuery, false);
   }
 
-  public static SearchFragment newInstance(String currentQuery, boolean onlyTrustedApps) {
+  public static SearchResultFragment newInstance(String currentQuery, boolean onlyTrustedApps) {
 
     SearchViewModel viewModel = new SearchViewModel(currentQuery, onlyTrustedApps);
 
     Bundle args = new Bundle();
     args.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
 
-    SearchFragment fragment = new SearchFragment();
+    SearchResultFragment fragment = new SearchResultFragment();
     fragment.setArguments(args);
     return fragment;
   }
 
-  public static SearchFragment newInstance(String currentQuery, String storeName) {
+  public static SearchResultFragment newInstance(String currentQuery, String storeName) {
 
     SearchViewModel viewModel = new SearchViewModel(currentQuery, storeName);
 
     Bundle args = new Bundle();
     args.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
 
-    SearchFragment fragment = new SearchFragment();
+    SearchResultFragment fragment = new SearchResultFragment();
     fragment.setArguments(args);
     return fragment;
   }
@@ -529,7 +529,7 @@ public class SearchFragment extends BackButtonFragment implements SearchView {
     attachFollowedStoresResultListDependencies();
     attachAllStoresResultListDependencies();
     attachToolbar();
-    attachPresenter(new SearchPresenter(this, searchAnalytics, searchNavigator, crashReport,
+    attachPresenter(new SearchResultPresenter(this, searchAnalytics, searchNavigator, crashReport,
         mainThreadScheduler, searchManager, onAdClickRelay, onItemViewClickRelay,
         onOpenPopupMenuClickRelay), null);
   }

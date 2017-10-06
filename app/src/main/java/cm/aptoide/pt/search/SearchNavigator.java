@@ -2,7 +2,7 @@ package cm.aptoide.pt.search;
 
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.search.model.SearchAdResult;
-import cm.aptoide.pt.search.view.SearchFragment;
+import cm.aptoide.pt.search.view.SearchResultFragment;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.app.OtherVersionsFragment;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
@@ -36,9 +36,9 @@ public class SearchNavigator {
 
   private Fragment resolveFragment(String query) {
     if (storeName != null && storeName.length() > 0) {
-      return SearchFragment.newInstance(query, storeName);
+      return SearchResultFragment.newInstance(query, storeName);
     }
-    return SearchFragment.newInstance(query);
+    return SearchResultFragment.newInstance(query);
   }
 
   public void goToAppView(long appId, String packageName, String storeTheme, String storeName) {
@@ -58,7 +58,7 @@ public class SearchNavigator {
   }
 
   public void goToSearchFragment(String query, String storeName) {
-    final Fragment fragment = SearchFragment.newInstance(query, storeName);
+    final Fragment fragment = SearchResultFragment.newInstance(query, storeName);
     navigator.navigateTo(fragment, true);
   }
 }

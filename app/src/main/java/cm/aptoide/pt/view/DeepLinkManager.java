@@ -22,7 +22,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.repository.StoreRepository;
-import cm.aptoide.pt.search.view.SearchFragment;
+import cm.aptoide.pt.search.view.SearchResultFragment;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.timeline.view.navigation.AppsTimelineTabNavigation;
@@ -140,7 +140,7 @@ public class DeepLinkManager {
   }
 
   private void searchDeepLink(String query) {
-    final Fragment fragment = SearchFragment.newInstance(query);
+    final Fragment fragment = SearchResultFragment.newInstance(query);
     fragmentNavigator.navigateTo(fragment, true);
   }
 

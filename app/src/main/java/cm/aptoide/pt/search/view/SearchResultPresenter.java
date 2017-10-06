@@ -17,7 +17,7 @@ import java.util.List;
 import rx.Observable;
 import rx.Scheduler;
 
-public class SearchPresenter implements Presenter {
+public class SearchResultPresenter implements Presenter {
 
   private final SearchView view;
   private final SearchAnalytics analytics;
@@ -29,9 +29,9 @@ public class SearchPresenter implements Presenter {
   private final PublishRelay<SearchAppResult> onItemViewClickRelay;
   private final PublishRelay<Pair<SearchAppResult, android.view.View>> onOpenPopupMenuClickRelay;
 
-  public SearchPresenter(SearchView view, SearchAnalytics analytics, SearchNavigator navigator,
-      CrashReport crashReport, Scheduler viewScheduler, SearchManager searchManager,
-      PublishRelay<SearchAdResult> onAdClickRelay,
+  public SearchResultPresenter(SearchView view, SearchAnalytics analytics,
+      SearchNavigator navigator, CrashReport crashReport, Scheduler viewScheduler,
+      SearchManager searchManager, PublishRelay<SearchAdResult> onAdClickRelay,
       PublishRelay<SearchAppResult> onItemViewClickRelay,
       PublishRelay<Pair<SearchAppResult, android.view.View>> onOpenPopupMenuClickRelay) {
     this.view = view;
@@ -46,6 +46,7 @@ public class SearchPresenter implements Presenter {
   }
 
   @Override public void present() {
+    stopLoadingMoreOnDestroy();
     firstSearchDataLoad();
     firstAdsDataLoad();
     handleClickFollowedStoresSearchButton();
@@ -64,6 +65,15 @@ public class SearchPresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
     // does nothing
+  }
+
+  private void stopLoadingMoreOnDestroy() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.DESTROY))
+        .first()
+        .toSingle()
+        .observeOn(viewScheduler)
+        .subscribe(__ -> view.hideLoadingMore(), err -> crashReport.log(err));
   }
 
   private void handleAllStoresListReachedBottom() {
@@ -167,8 +177,7 @@ public class SearchPresenter implements Presenter {
         .observeOn(viewScheduler)
         .flatMap(__ -> onAdClickRelay)
         .doOnNext(data -> {
-          analytics.searchAppClick(view.getViewModel()
-              .getCurrentQuery(), data.getPackageName());
+          analytics.searchAppClick(view.getViewModel().getCurrentQuery(), data.getPackageName());
           navigator.goToAppView(data);
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -193,14 +202,13 @@ public class SearchPresenter implements Presenter {
           // final String theme = view.getDefaultTheme()
           final String theme = data.getStoreTheme();
 
-          return view.showPopup(hasVersions, pair.second)
-              .doOnNext(optionId -> {
-                if (optionId == R.id.versions) {
-                  navigator.goToOtherVersions(appName, appIcon, packageName);
-                } else if (optionId == R.id.go_to_store) {
-                  navigator.goToStoreFragment(storeName, theme);
-                }
-              });
+          return view.showPopup(hasVersions, pair.second).doOnNext(optionId -> {
+            if (optionId == R.id.versions) {
+              navigator.goToOtherVersions(appName, appIcon, packageName);
+            } else if (optionId == R.id.go_to_store) {
+              navigator.goToStoreFragment(storeName, theme);
+            }
+          });
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -213,8 +221,7 @@ public class SearchPresenter implements Presenter {
         .observeOn(viewScheduler)
         .flatMap(__ -> view.clickNoResultsSearchButton())
         .filter(query -> query.length() > 1)
-        .doOnNext(query -> navigator.goToSearchFragment(query, view.getViewModel()
-            .getStoreName()))
+        .doOnNext(query -> navigator.goToSearchFragment(query, view.getViewModel().getStoreName()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -229,8 +236,7 @@ public class SearchPresenter implements Presenter {
     //final String storeTheme = aptoideApplication.getDefaultTheme();
     final String storeTheme = searchApp.getStoreTheme();
 
-    analytics.searchAppClick(view.getViewModel()
-        .getCurrentQuery(), packageName);
+    analytics.searchAppClick(view.getViewModel().getCurrentQuery(), packageName);
     navigator.goToAppView(appId, packageName, storeTheme, storeName);
   }
 
@@ -258,13 +264,11 @@ public class SearchPresenter implements Presenter {
 
   private Observable<List<SearchAppResult>> loadData(String query, String storeName,
       boolean onlyTrustedApps, int offset) {
-    if (storeName != null && !storeName.trim()
-        .equals("")) {
+    if (storeName != null && !storeName.trim().equals("")) {
       return Observable.fromCallable(() -> {
         view.setViewWithStoreNameAsSingleTab();
         return null;
-      })
-          .flatMap(__ -> loadDataForSpecificStore(query, storeName, offset));
+      }).flatMap(__ -> loadDataForSpecificStore(query, storeName, offset));
     }
     // search every store. followed and not followed
     return Observable.merge(loadDataForAllFollowedStores(query, onlyTrustedApps, offset),
@@ -319,22 +323,19 @@ public class SearchPresenter implements Presenter {
             viewModel.isOnlyTrustedApps(), 0).onErrorResumeNext(err -> {
           crashReport.log(err);
           return Observable.just(null);
-        })
-            .observeOn(viewScheduler)
-            .doOnNext(__2 -> view.hideLoading())
-            .doOnNext(data -> {
-              if (data == null || getItemCount(data) == 0) {
-                view.showNoResultsView();
-                analytics.searchNoResults(viewModel.getCurrentQuery());
-              } else {
-                view.showResultsView();
-                if (viewModel.isAllStoresSelected()) {
-                  view.showAllStoresResult();
-                } else {
-                  view.showFollowedStoresResult();
-                }
-              }
-            }))
+        }).observeOn(viewScheduler).doOnNext(__2 -> view.hideLoading()).doOnNext(data -> {
+          if (data == null || getItemCount(data) == 0) {
+            view.showNoResultsView();
+            analytics.searchNoResults(viewModel.getCurrentQuery());
+          } else {
+            view.showResultsView();
+            if (viewModel.isAllStoresSelected()) {
+              view.showAllStoresResult();
+            } else {
+              view.showFollowedStoresResult();
+            }
+          }
+        }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
