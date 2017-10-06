@@ -40,8 +40,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @LargeTest public class EspressoTests {
 
-  private boolean isFirst = true;
-  private String SIGNUPEMAILTEST = "";
   private final String SIGNUPEMAILTESTBGN = "jose.messejana+";
   private final String SIGNUPEMAILTESTEND = "@aptoide.com";
   private final String LOGINEMAIL = "jose.messejana@aptoide.com";
@@ -51,8 +49,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
   private final int LONGER_WAIT_TIME = 2000;
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
-
-
+  private boolean isFirst = true;
+  private String SIGNUPEMAILTEST = "";
 
   private static ViewAction swipeRigthOnLeftMost() {
     return new GeneralSwipeAction(Swipe.FAST, GeneralLocation.CENTER_LEFT,
@@ -134,7 +132,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
     logOutorGoBack();
     goToApp();
     cancelIfDownloading();
-    while(!hasOpenedAppView()){
+    while (!hasOpenedAppView()) {
       Thread.sleep(WAIT_TIME);
     }
     closePopUp();
@@ -185,7 +183,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
     }
   }
 
-  private boolean hasCreatedUser(){
+  private boolean hasCreatedUser() {
     try {
       onView(withId(R.id.logged_in_continue)).perform(click());
       return true;
@@ -194,7 +192,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
     }
   }
 
-  private boolean hasCreatedStore(){
+  private boolean hasCreatedStore() {
     try {
       onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
       return true;
@@ -203,7 +201,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
     }
   }
 
-  private boolean hasOpenedAppView(){
+  private boolean hasOpenedAppView() {
     try {
       onView(withId(R.id.action_btn)).perform(click());
       return true;
@@ -218,7 +216,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
     try {
       onView(withText("OK")).perform(click());
       //onView(withText("ALLOW")).perform(click()); doesn't work needs to give permissions before initiating tests android 7+
-    }catch(NoMatchingViewException e){
+    } catch (NoMatchingViewException e) {
       try {
         onView(withId(R.id.download_progress)).check(matches(isDisplayed()));
       } catch (NoMatchingViewException e1) {
@@ -236,7 +234,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
   private void logOutorGoBack() {
     try {
       onView(withId(R.id.toolbar)).perform(swipeRigthOnLeftMost());
-      onView(withId(R.id.profile_email_text)).check(matches(isDisplayed()));
+      onView(withId(R.id.profile_email_text)).perform(click());
       onView(withId(R.id.toolbar)).perform(swipeLeft());
       goToMyAccount();
       onView(withId(R.id.button_logout)).perform(click());
@@ -294,7 +292,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
     Thread.sleep(WAIT_TIME);
     onView(withId(R.id.search_src_text)).perform(replaceText(APP_TO_SEARCH),
         pressImeActionButton());
-    Thread.sleep(2*WAIT_TIME);
+    Thread.sleep(2 * WAIT_TIME);
     onView(withIndex(withId(R.id.recycler_view), 0)).perform(
         RecyclerViewActions.actionOnItemAtPosition(1, click()));
   }
@@ -309,14 +307,13 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
   private void complete_sign_up() throws InterruptedException {
     onView(withId(R.id.create_user_username_inserted)).perform(replaceText("a1"));
     onView(withId(R.id.create_user_create_profile)).perform(click());
-    while(!hasCreatedUser()){
+    while (!hasCreatedUser()) {
       Thread.sleep(WAIT_TIME);
     }
-    while(!hasCreatedStore()){
+    while (!hasCreatedStore()) {
       Thread.sleep(WAIT_TIME);
     }
     Thread.sleep(WAIT_TIME);
     onView(withId(R.id.create_store_skip)).perform(click());
   }
-
 }
