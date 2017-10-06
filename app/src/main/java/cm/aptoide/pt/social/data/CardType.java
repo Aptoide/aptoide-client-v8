@@ -46,6 +46,10 @@ public enum CardType {
   }
 
   public boolean isDummy() {
-    return equals(LOGIN) || equals(PROGRESS) || equals(TIMELINE_STATS);
+    return equals(LOGIN)
+        || equals(PROGRESS)
+        || equals(TIMELINE_STATS)
+        || equals(NO_NOTIFICATIONS)
+        || equals(NOTIFICATIONS);
   }
 }
