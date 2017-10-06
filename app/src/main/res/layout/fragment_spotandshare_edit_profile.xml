@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     >
 
   <android.support.v7.widget.Toolbar
@@ -82,7 +83,7 @@
         tools:layout_editor_absoluteY="25dp"
         />
 
-    <Button
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/save_profile_edition_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -101,8 +102,9 @@
         app:layout_constraintTop_toBottomOf="@id/pick_avatar_recyclerView"
         tools:layout_editor_absoluteX="38dp"
         tools:layout_editor_absoluteY="25dp"
+        style="@style/Aptoide.Button"
         >
-    </Button>
+    </android.support.v7.widget.AppCompatButton>
 
   </android.support.constraint.ConstraintLayout>
 
