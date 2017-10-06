@@ -78,10 +78,7 @@
           android:layout_alignRight="@+id/card_custom_view_line_separator"
           android:padding="16.5dp"
           android:src="@drawable/ic_action_overflow"
-          >
-
-      </ImageView>
-
+          />
 
       <View
           android:id="@+id/card_custom_view_line_separator"
