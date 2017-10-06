@@ -64,17 +64,17 @@ public class StoreLatestAppsViewHolder extends PostViewHolder<StoreLatestApps> {
     this.shareButton = (TextView) view.findViewById(R.id.social_share);
   }
 
-  @Override public void setPost(StoreLatestApps card, int position) {
+  @Override public void setPost(StoreLatestApps post, int position) {
     ImageLoader.with(itemView.getContext())
-        .loadWithShadowCircleTransform(card.getStoreAvatar(), headerIcon);
+        .loadWithShadowCircleTransform(post.getStoreAvatar(), headerIcon);
 
-    headerTitle.setText(getStyledTitle(itemView.getContext(), card.getStoreName()));
-    headerSubtitle.setText(getTimeSinceLastUpdate(itemView.getContext(), card.getLatestUpdate()));
-    showStoreLatestApps(card, position);
-    if (card.isLiked()) {
-      if (card.isLikeFromClick()) {
+    headerTitle.setText(getStyledTitle(itemView.getContext(), post.getStoreName()));
+    headerSubtitle.setText(getTimeSinceLastUpdate(itemView.getContext(), post.getLatestUpdate()));
+    showStoreLatestApps(post, position);
+    if (post.isLiked()) {
+      if (post.isLikeFromClick()) {
         likeButton.setHeartState(true);
-        card.setLikedFromClick(false);
+        post.setLikedFromClick(false);
       } else {
         likeButton.setHeartStateWithoutAnimation(true);
       }
@@ -82,14 +82,15 @@ public class StoreLatestAppsViewHolder extends PostViewHolder<StoreLatestApps> {
       likeButton.setHeartState(false);
     }
 
-    handleCommentsInformation(card, position);
+    setupOverflowMenu(post, position);
+    handleCommentsInformation(post, position);
 
     this.like.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new SocialCardTouchEvent(card, CardTouchEvent.Type.LIKE, position)));
+        new SocialCardTouchEvent(post, CardTouchEvent.Type.LIKE, position)));
     this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new SocialCardTouchEvent(card, CardTouchEvent.Type.COMMENT, position)));
+        new SocialCardTouchEvent(post, CardTouchEvent.Type.COMMENT, position)));
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, position, CardTouchEvent.Type.SHARE)));
+        new CardTouchEvent(post, position, CardTouchEvent.Type.SHARE)));
   }
 
   public Spannable getStyledTitle(Context context, String storeName) {
