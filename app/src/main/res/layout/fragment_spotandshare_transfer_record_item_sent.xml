@@ -4,8 +4,10 @@
     android:id="@+id/spotandshare_transfer_record_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginEnd="8dp"
     android:layout_marginLeft="32dp"
     android:layout_marginRight="8dp"
+    android:layout_marginStart="32dp"
     android:layout_marginTop="16dp"
     style="@style/Widget.Aptoide.Card"
     >
