@@ -184,6 +184,7 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
   public void onClickLeft(int position){
     Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),
         R.anim.slide_out_left);
+    animation.setDuration(1000);
     animation.setAnimationListener(new Animation.AnimationListener(){
       @Override public void onAnimationStart(Animation animation) {
         leftAnswer.setVisibility(View.INVISIBLE);
@@ -208,6 +209,7 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
   public void onClickRight(int position){
     Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),
         R.anim.slide_out_right);
+    animation.setDuration(1000);
     animation.setAnimationListener(new Animation.AnimationListener(){
       @Override public void onAnimationStart(Animation animation) {
         leftAnswer.setVisibility(View.INVISIBLE);

@@ -230,6 +230,7 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
   public void onClickLeft(int position, String status){
     Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),
         R.anim.slide_out_left);
+    animation.setDuration(1000);
     animation.setAnimationListener(new Animation.AnimationListener(){
       @Override public void onAnimationStart(Animation animation) {
         answerLeft.setVisibility(View.INVISIBLE);
@@ -254,6 +255,7 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
   public void onClickRight(int position, String status){
     Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),
         R.anim.slide_out_right);
+    animation.setDuration(1000);
     animation.setAnimationListener(new Animation.AnimationListener(){
       @Override public void onAnimationStart(Animation animation) {
         answerLeft.setVisibility(View.INVISIBLE);
