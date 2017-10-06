@@ -38,7 +38,8 @@ public class TimelineNavigator implements TimelineNavigation {
   @Override
   public void navigateToAppView(long appId, String packageName, AppViewFragment.OpenType openType) {
     fragmentNavigator.navigateTo(
-        AppViewFragment.newInstance(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY), true);
+        AppViewFragment.newInstance(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY, ""),
+        true);
   }
 
   @Override public void navigateToAppView(String packageName, AppViewFragment.OpenType openType) {

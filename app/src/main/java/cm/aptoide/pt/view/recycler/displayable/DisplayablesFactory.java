@@ -208,7 +208,7 @@ public class DisplayablesFactory {
       }
 
       for (App app : apps) {
-        displayables.add(new GridAppListDisplayable(app));
+        displayables.add(new GridAppListDisplayable(app, wsWidget.getTag()));
       }
     } else {
       if (apps.size() > 0) {

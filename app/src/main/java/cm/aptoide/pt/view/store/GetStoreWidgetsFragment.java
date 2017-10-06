@@ -1,6 +1,5 @@
 package cm.aptoide.pt.view.store;
 
-import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
@@ -29,11 +28,10 @@ public class GetStoreWidgetsFragment extends GetStoreEndlessFragment<GetStoreWid
 
   @Override public void onResume() {
     super.onResume();
-    if (getUserVisibleHint()) {
-      setRegisterFragment(false);
-      aptoideNavigationTracker.registerView(ScreenTagHistory.Builder.build(this.getClass()
-          .getSimpleName(), "home", storeContext));
-      pageViewsAnalytics.sendPageViewedEvent();
-    }
+    //if (getUserVisibleHint() && alreadyRegistered) {
+    //  aptoideNavigationTracker.registerView(ScreenTagHistory.Builder.build(this.getClass()
+    //      .getSimpleName(), "home", storeContext));
+    //  pageViewsAnalytics.sendPageViewedEvent();
+    //}
   }
 }

@@ -19,7 +19,6 @@ import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.repository.StoreRepository;
@@ -129,7 +128,7 @@ public class DeepLinkManager {
     AppViewFragment.OpenType openType = showPopup ? AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
         : AppViewFragment.OpenType.OPEN_ONLY;
     fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newAppViewFragment(appId, packageName, openType), true);
+        .newAppViewFragment(appId, packageName, openType, ""), true);
   }
 
   private void appViewDeepLink(String packageName, String storeName, boolean showPopup) {

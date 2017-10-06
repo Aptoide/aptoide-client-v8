@@ -59,6 +59,7 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.fragment.BasePagerToolbarFragment;
 import cm.aptoide.pt.view.share.ShareStoreHelper;
+import cm.aptoide.pt.view.store.home.HomeFragment;
 import com.astuetz.PagerSlidingTabStrip;
 import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -81,6 +82,16 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private String storeName;
   private String title;
   private StoreContext storeContext;
+  ViewPager.SimpleOnPageChangeListener pageChangeListener =
+      new ViewPager.SimpleOnPageChangeListener() {
+        @Override public void onPageSelected(int position) {
+          if (position == 0) {
+            aptoideNavigationTracker.registerView(
+                ScreenTagHistory.Builder.build(HomeFragment.class.getSimpleName(), "home",
+                    storeContext));
+          }
+        }
+      };
   private String storeTheme;
   private StoreCredentialsProvider storeCredentialsProvider;
   private Event.Name defaultTab;
@@ -287,6 +298,12 @@ public class StoreFragment extends BasePagerToolbarFragment {
           storeAnalytics.sendStoreInteractEvent("Open Tab", adapter.getPageTitle(position)
               .toString(), storeName);
         }
+      }
+    });
+    viewPager.addOnPageChangeListener(pageChangeListener);
+    viewPager.post(new Runnable() {
+      @Override public void run() {
+        pageChangeListener.onPageSelected(viewPager.getCurrentItem());
       }
     });
     changeToTab(defaultTab);

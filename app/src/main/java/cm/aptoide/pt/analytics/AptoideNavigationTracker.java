@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import cm.aptoide.pt.account.view.LoginSignUpCredentialsFragment;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.view.store.StoreFragment;
-import cm.aptoide.pt.view.store.home.HomeFragment;
 import cm.aptoide.pt.view.wizard.WizardFragment;
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class AptoideNavigationTracker {
   }
 
   public void registerView(ScreenTagHistory screenTagHistory) {
-    if (screenTagHistory != null && filter(screenTagHistory.getFragment())) {
+    if (screenTagHistory != null && filter(screenTagHistory)) {
       historyList.add(screenTagHistory);
       Logger.d(this.getClass()
           .getName(), "VIEW - " + screenTagHistory);
@@ -56,10 +55,9 @@ public class AptoideNavigationTracker {
         .getFragment();
   }
 
-  private boolean filter(String viewName) {
+  private boolean filter(ScreenTagHistory screenTagHistory) {
+    String viewName = screenTagHistory.getFragment();
     if (TextUtils.isEmpty(viewName)) {
-      return false;
-    } else if (viewName.equals(HomeFragment.class.getSimpleName())) {
       return false;
     } else if (viewName.equals(WizardFragment.class.getSimpleName())) {
       return false;
@@ -75,10 +73,5 @@ public class AptoideNavigationTracker {
   public void registerTag(String tag) {
     // TODO: 04/10/2017 trinkes change tags logic
     //Logger.d(TAG, "registerTag() called with: " + "tag = [" + tag + "]");
-  }
-
-  public void registerTagNewObject(String tag) {
-    // TODO: 04/10/2017 trinkes change tags logic
-    //Logger.d(TAG, "registerTagNewObject() called with: " + "tag = [" + tag + "]");
   }
 }

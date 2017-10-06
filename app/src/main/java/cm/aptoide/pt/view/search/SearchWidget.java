@@ -19,7 +19,6 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.search.SearchAnalytics;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxMenuItem;
@@ -199,6 +198,6 @@ public class SearchWidget extends Widget<SearchDisplayable> {
             searchAppsApp.getStore()
                 .getAppearance()
                 .getTheme(), searchAppsApp.getStore()
-                .getName()), true);
+                .getName(), ""), true);
   }
 }

@@ -54,13 +54,15 @@ import java.util.List;
 
   Fragment newAppViewFragment(String md5);
 
-  Fragment newAppViewFragment(long appId, String packageName, AppViewFragment.OpenType openType);
+  Fragment newAppViewFragment(long appId, String packageName, AppViewFragment.OpenType openType,
+      String tag);
 
-  Fragment newAppViewFragment(long appId, String packageName);
+  Fragment newAppViewFragment(long appId, String packageName, String tag);
 
-  Fragment newAppViewFragment(long appId, String packageName, String storeTheme, String storeName);
+  Fragment newAppViewFragment(long appId, String packageName, String storeTheme, String storeName,
+      String tag);
 
-  Fragment newAppViewFragment(MinimalAd minimalAd);
+  Fragment newAppViewFragment(MinimalAd minimalAd, String tag);
 
   Fragment newAppViewFragment(String packageName, AppViewFragment.OpenType openType);
 

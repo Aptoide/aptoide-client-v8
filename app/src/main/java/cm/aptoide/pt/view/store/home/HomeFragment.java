@@ -174,6 +174,7 @@ public class HomeFragment extends StoreFragment {
     pageViewsAnalytics =
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
             Analytics.getInstance(), aptoideNavigationTracker);
+    setRegisterFragment(false);
   }
 
   @Nullable @Override

@@ -49,13 +49,11 @@ public class AppBrickListWidget extends Widget<AppBrickListDisplayable> {
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(v -> {
           Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
-          displayable.getAptoideNavigationTracker()
-              .registerTag(displayable.getTag());
           getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
               .newAppViewFragment(app.getId(), app.getPackageName(), app.getStore()
                   .getAppearance()
                   .getTheme(), app.getStore()
-                  .getName()), true);
+                  .getName(), displayable.getTag()), true);
           Analytics.HomePageEditorsChoice.clickOnEditorsChoiceItem(getAdapterPosition(),
               app.getPackageName(), false);
         }, throwable -> CrashReport.getInstance()

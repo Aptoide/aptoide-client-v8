@@ -145,6 +145,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private static final String TAG = AppViewFragment.class.getSimpleName();
   private static final String BAR_EXPANDED = "BAR_EXPANDED";
   private static final int PAY_APP_REQUEST_CODE = 12;
+  private static final String ORIGIN_TAG = "TAG";
   private final String key_appId = "appId";
   private final String key_packageName = "packageName";
   private final String key_uname = "uname";
@@ -232,8 +233,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     return fragment;
   }
 
-  public static AppViewFragment newInstance(long appId, String packageName, OpenType openType) {
+  public static AppViewFragment newInstance(long appId, String packageName, OpenType openType,
+      String tag) {
     Bundle bundle = new Bundle();
+    bundle.putString(ORIGIN_TAG, tag);
     bundle.putLong(BundleKeys.APP_ID.name(), appId);
     bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
     bundle.putSerializable(BundleKeys.SHOULD_INSTALL.name(), openType);
@@ -244,8 +247,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   public static AppViewFragment newInstance(long appId, String packageName, String storeTheme,
-      String storeName) {
+      String storeName, String tag) {
     Bundle bundle = new Bundle();
+    bundle.putString(ORIGIN_TAG, tag);
     bundle.putLong(BundleKeys.APP_ID.name(), appId);
     bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
     bundle.putString(BundleKeys.STORE_NAME.name(), storeName);
@@ -255,25 +259,12 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     return fragment;
   }
 
-  public static AppViewFragment newInstance(MinimalAd minimalAd) {
+  public static AppViewFragment newInstance(MinimalAd minimalAd, String tag) {
     Bundle bundle = new Bundle();
     bundle.putLong(BundleKeys.APP_ID.name(), minimalAd.getAppId());
     bundle.putString(BundleKeys.PACKAGE_NAME.name(), minimalAd.getPackageName());
     bundle.putParcelable(BundleKeys.MINIMAL_AD.name(), minimalAd);
-
-    AppViewFragment fragment = new AppViewFragment();
-    fragment.setArguments(bundle);
-
-    return fragment;
-  }
-
-  public static AppViewFragment newInstance(MinimalAd minimalAd, String storeTheme) {
-    Bundle bundle = new Bundle();
-    bundle.putLong(BundleKeys.APP_ID.name(), minimalAd.getAppId());
-    bundle.putString(BundleKeys.PACKAGE_NAME.name(), minimalAd.getPackageName());
-    bundle.putParcelable(BundleKeys.MINIMAL_AD.name(), minimalAd);
-    bundle.putString(StoreFragment.BundleCons.STORE_THEME, storeTheme);
-
+    bundle.putString(ORIGIN_TAG, tag);
     AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
 
@@ -365,8 +356,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             analytics);
     notLoggedInShareAnalytics =
         ((AptoideApplication) getContext().getApplicationContext()).getNotLoggedInShareAnalytics();
-    // TODO: 04/10/2017 trinkes fill tag
-    originTag = "dummy";
   }
 
   private void handleSavedInstance(Bundle savedInstanceState) {
@@ -391,6 +380,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storeName = args.getString(BundleKeys.STORE_NAME.name());
     sponsored = minimalAd != null;
     storeTheme = args.getString(StoreFragment.BundleCons.STORE_THEME);
+    originTag = args.getString(ORIGIN_TAG);
   }
 
   @Override public int getContentViewId() {
