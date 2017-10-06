@@ -70,27 +70,27 @@ public class AppUpdateViewHolder extends PostViewHolder<AppUpdate> {
     this.shareButton = (TextView) itemView.findViewById(R.id.social_share);
   }
 
-  @Override public void setPost(AppUpdate card, int position) {
+  @Override public void setPost(AppUpdate post, int position) {
     ImageLoader.with(itemView.getContext())
-        .loadWithShadowCircleTransform(card.getStoreAvatar(), headerIcon);
-    this.headerTitle.setText(getStyledTitle(itemView.getContext(), card.getStoreName()));
+        .loadWithShadowCircleTransform(post.getStoreAvatar(), headerIcon);
+    this.headerTitle.setText(getStyledTitle(itemView.getContext(), post.getStoreName()));
     this.headerSubTitle.setText(
-        getTimeSinceLastUpdate(itemView.getContext(), card.getUpdateAddedDate()));
+        getTimeSinceLastUpdate(itemView.getContext(), post.getUpdateAddedDate()));
     ImageLoader.with(itemView.getContext())
-        .load(card.getAppUpdateIcon(), appIcon);
-    this.appName.setText(getAppTitle(itemView.getContext(), card.getAppUpdateName()));
-    setAppUpdateButtonText(card);
+        .load(post.getAppUpdateIcon(), appIcon);
+    this.appName.setText(getAppTitle(itemView.getContext(), post.getAppUpdateName()));
+    setAppUpdateButtonText(post);
     this.errorText.setVisibility(View.GONE);
     this.appUpdate.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new AppUpdateCardTouchEvent(card, CardTouchEvent.Type.BODY, position)));
+        new AppUpdateCardTouchEvent(post, CardTouchEvent.Type.BODY, position)));
     this.appIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, position, CardTouchEvent.Type.BODY)));
+        new CardTouchEvent(post, position, CardTouchEvent.Type.BODY)));
     this.cardHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, position, CardTouchEvent.Type.HEADER)));
-    if (card.isLiked()) {
-      if (card.isLikeFromClick()) {
+        new CardTouchEvent(post, position, CardTouchEvent.Type.HEADER)));
+    if (post.isLiked()) {
+      if (post.isLikeFromClick()) {
         likeButton.setHeartState(true);
-        card.setLikedFromClick(false);
+        post.setLikedFromClick(false);
       } else {
         likeButton.setHeartStateWithoutAnimation(true);
       }
@@ -98,15 +98,16 @@ public class AppUpdateViewHolder extends PostViewHolder<AppUpdate> {
       likeButton.setHeartState(false);
     }
 
-    handleCommentsInformation(card, position);
+    setupOverflowMenu(post, position);
+    handleCommentsInformation(post, position);
 
     this.like.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new SocialCardTouchEvent(card, CardTouchEvent.Type.LIKE, position)));
+        new SocialCardTouchEvent(post, CardTouchEvent.Type.LIKE, position)));
 
     this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new SocialCardTouchEvent(card, CardTouchEvent.Type.COMMENT, position)));
+        new SocialCardTouchEvent(post, CardTouchEvent.Type.COMMENT, position)));
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, position, CardTouchEvent.Type.SHARE)));
+        new CardTouchEvent(post, position, CardTouchEvent.Type.SHARE)));
   }
 
   private Spannable getStyledTitle(Context context, String storeName) {
