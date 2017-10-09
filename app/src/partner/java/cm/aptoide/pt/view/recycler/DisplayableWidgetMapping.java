@@ -4,6 +4,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.firstinstall.displayable.FirstInstallAdDisplayable;
+import cm.aptoide.pt.firstinstall.widget.FirstInstallAdWidget;
+import cm.aptoide.pt.firstinstall.displayable.FirstInstallAppDisplayable;
+import cm.aptoide.pt.firstinstall.widget.FirstInstallAppWidget;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.timeline.view.displayable.FollowStoreDisplayable;
 import cm.aptoide.pt.timeline.view.displayable.FollowUserDisplayable;
@@ -85,7 +89,6 @@ import cm.aptoide.pt.view.search.SearchAdDisplayable;
 import cm.aptoide.pt.view.search.SearchAdWidget;
 import cm.aptoide.pt.view.search.SearchDisplayable;
 import cm.aptoide.pt.view.search.SearchWidget;
-import cm.aptoide.pt.view.store.CreateStoreWidget;
 import cm.aptoide.pt.view.store.GridDisplayDisplayable;
 import cm.aptoide.pt.view.store.GridStoreMetaDisplayable;
 import cm.aptoide.pt.view.store.GridStoreMetaWidget;
@@ -315,6 +318,12 @@ public class DisplayableWidgetMapping {
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping((LoginWidget.class), LoginDisplayable.class));
+
+    displayableWidgetMappings.add(new DisplayableWidgetMapping((FirstInstallAppWidget.class),
+        FirstInstallAppDisplayable.class));
+
+    displayableWidgetMappings.add(new DisplayableWidgetMapping((FirstInstallAdWidget.class),
+        FirstInstallAdDisplayable.class));
 
     return displayableWidgetMappings;
   }

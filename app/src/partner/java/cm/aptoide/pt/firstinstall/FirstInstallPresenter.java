@@ -1,6 +1,7 @@
 package cm.aptoide.pt.firstinstall;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -9,7 +10,9 @@ import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.firstinstall.displayable.FirstInstallAdDisplayable;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -18,8 +21,6 @@ import cm.aptoide.pt.repository.request.RequestFactory;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.view.recycler.displayable.DisplayablesFactory;
-import cm.aptoide.pt.view.recycler.displayable.GridAdDisplayable;
 import java.util.LinkedList;
 import java.util.List;
 import rx.Observable;
@@ -46,6 +47,8 @@ public class FirstInstallPresenter implements Presenter {
   protected StoreAnalytics storeAnalytics;
   protected StoreRepository storeRepository;
   protected String storeTheme;
+  private Resources resources;
+  private final WindowManager windowManager;
 
   private AdsRepository adsRepository;
 
@@ -58,6 +61,8 @@ public class FirstInstallPresenter implements Presenter {
     this.storeName = storeName;
     this.url = url;
     adsRepository = ((AptoideApplication) context.getApplicationContext()).getAdsRepository();
+    this.resources = context.getResources();
+    this.windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 
     // TODO: 03/10/2017 instantiate all variables with the constructor
   }
@@ -65,9 +70,7 @@ public class FirstInstallPresenter implements Presenter {
   @Override public void present() {
     handleInstallAllClick();
     handleCloseClick();
-
     getFirstInstallWidget();
-    getAds();
   }
 
   @Override public void saveState(Bundle state) {
@@ -78,6 +81,9 @@ public class FirstInstallPresenter implements Presenter {
     //does nothing
   }
 
+  /**
+   * handle the install all button click
+   */
   private void handleInstallAllClick() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
@@ -87,6 +93,13 @@ public class FirstInstallPresenter implements Presenter {
         }, crashReport::log);
   }
 
+  private Observable<Void> installAllClick() {
+    return view.installAllClick();
+  }
+
+  /**
+   * handle the close button click
+   */
   private void handleCloseClick() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
@@ -96,48 +109,79 @@ public class FirstInstallPresenter implements Presenter {
         }, crashReport::log);
   }
 
-  private Observable<Void> installAllClick() {
-    return view.installAllClick();
-  }
-
   private Observable<Void> closeClick() {
     return view.closeClick();
   }
 
+  /**
+   * get the apps from the firstInstall Widget to display
+   */
   private void getFirstInstallWidget() {
     requestFactoryCdnPool.newStoreWidgets(url, storeName, StoreContext.first_install)
         .observe(true)
         .subscribeOn(Schedulers.newThread())
         .observeOn(Schedulers.io())
+        .doOnCompleted(() -> getAds(getNumberOfAdsToShow(3)))
         .flatMap(this::parseDisplayables)
         .subscribe(displayables -> view.addFirstInstallDisplayables(displayables, true),
             crashReport::log);
   }
 
-  private void getAds() {
-    adsRepository.getAdsFromFirstInstall(3)
+  /**
+   * parse displayables from the getStoreWidgets list received
+   *
+   * @param getStoreWidgets received list
+   *
+   * @return observable of displayables from the parsed list
+   */
+  private Observable<List<Displayable>> parseDisplayables(GetStoreWidgets getStoreWidgets) {
+    return Observable.from(getStoreWidgets.getDataList()
+        .getList())
+        .concatMapEager(
+            wsWidget -> FirstInstallDisplayablesFactory.parse(wsWidget, storeTheme, context,
+                (WindowManager) context.getSystemService(Context.WINDOW_SERVICE))
+                .toList()
+                .first());
+  }
+
+  /**
+   * request ads for the first install window
+   *
+   * @param limitOfAds max limit of ads to receive on the response
+   */
+  private void getAds(int limitOfAds) {
+    adsRepository.getAdsFromFirstInstall(limitOfAds)
         .subscribeOn(Schedulers.newThread())
         .observeOn(Schedulers.io())
         .flatMap(this::parseDisplayables)
         .subscribe(displayables -> view.addFirstInstallDisplayables(displayables, true));
   }
 
-  private Observable<List<Displayable>> parseDisplayables(GetStoreWidgets getStoreWidgets) {
-    return Observable.from(getStoreWidgets.getDataList()
-        .getList())
-        .concatMapEager(wsWidget -> DisplayablesFactory.parse(wsWidget, storeTheme, storeRepository,
-            StoreContext.first_install, context, accountManager, storeUtilsProxy,
-            (WindowManager) context.getSystemService(Context.WINDOW_SERVICE),
-            context.getResources(), installedRepository, storeAnalytics))
-        .toList()
-        .first();
-  }
-
+  /**
+   * parse displayables from the minimalads list received
+   *
+   * @param minimalAds received list
+   *
+   * @return observable of displayables from the parsed list
+   */
   private Observable<List<Displayable>> parseDisplayables(List<MinimalAd> minimalAds) {
     List<Displayable> displayables = new LinkedList<>();
     for (MinimalAd minimalAd : minimalAds) {
-      displayables.add(new GridAdDisplayable(minimalAd, "tagexample"));
+      displayables.add(new FirstInstallAdDisplayable(minimalAd, minimalAd.getAdId()
+          .toString()));
     }
     return Observable.just(displayables);
+  }
+
+  /**
+   * get the number of ads needed to fill the first install window
+   *
+   * @param numberOfApps number of apps displayed
+   *
+   * @return number of ads to request
+   */
+  private int getNumberOfAdsToShow(int numberOfApps) {
+    int numberOfAds = Type.ADS.getPerLineCount(resources, windowManager) * 2 - numberOfApps;
+    return numberOfAds > 0 ? numberOfAds : 0;
   }
 }

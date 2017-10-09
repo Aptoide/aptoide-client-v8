@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?selectableItemBackground"
+    >
+
+  <RelativeLayout
+      android:id="@+id/store_widget"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginBottom="5dp"
+      android:layout_marginEnd="3dp"
+      android:layout_marginLeft="3dp"
+      android:layout_marginRight="3dp"
+      android:layout_marginStart="3dp"
+      android:layout_marginTop="3dp"
+      android:background="@drawable/first_install_displayable_background"
+      android:orientation="vertical"
+      style="?attr/backgroundCard"
+      >
+
+    <ImageView
+        android:id="@+id/app_icon"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:contentDescription="@null"
+        android:src="@mipmap/ic_launcher"
+        />
+
+    <ImageView
+        android:id="@+id/app_install_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/app_icon"
+        android:layout_alignEnd="@+id/app_icon"
+        android:layout_alignRight="@+id/app_icon"
+        android:contentDescription="@null"
+        android:src="@drawable/check"
+        />
+
+    <TextView
+        android:id="@+id/app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/app_icon"
+        android:layout_alignLeft="@id/app_icon"
+        android:layout_alignRight="@id/app_icon"
+        android:layout_alignStart="@id/app_icon"
+        android:layout_below="@id/app_icon"
+        android:layout_centerHorizontal="true"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAlignment="center"
+        style="?android:attr/textAppearanceSmall"
+        />
+  </RelativeLayout>
+</FrameLayout>
