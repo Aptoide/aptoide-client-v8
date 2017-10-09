@@ -23,7 +23,6 @@ import cm.aptoide.pt.install.PackageRepository;
 import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
-import okio.ByteString;
 import retrofit2.Converter;
 import rx.Completable;
 import rx.Single;
@@ -86,8 +85,7 @@ public class V7BillingService implements BillingService {
         });
   }
 
-  @Override public Completable deletePurchase(String merchantName, String purchaseToken) {
-    final long purchaseId = getPurchaseId(purchaseToken);
+  @Override public Completable deletePurchase(long purchaseId) {
     return DeletePurchaseRequest.of(purchaseId, httpClient, converterFactory, bodyInterceptorV7,
         tokenInvalidator, sharedPreferences)
         .observe(true)
@@ -115,9 +113,9 @@ public class V7BillingService implements BillingService {
         });
   }
 
-  @Override public Single<Purchase> getPurchase(String merchantName, String purchaseToken) {
-    return GetPurchasesRequest.of(getPurchaseId(purchaseToken), bodyInterceptorV7, httpClient,
-        converterFactory, tokenInvalidator, sharedPreferences)
+  @Override public Single<Purchase> getPurchase(long purchaseId) {
+    return GetPurchasesRequest.of(purchaseId, bodyInterceptorV7, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences)
         .observe(true)
         .toSingle()
         .flatMap(response -> {
@@ -173,11 +171,5 @@ public class V7BillingService implements BillingService {
         packageRepository.getPackageLabel(merchantName),
         (packageVersionCode, applicationName) -> productFactory.create(merchantName,
             packageVersionCode, applicationName, response));
-  }
-
-  private long getPurchaseId(String purchaseToken) {
-    return ByteString.decodeBase64(purchaseToken)
-        .asByteBuffer()
-        .getLong();
   }
 }

@@ -210,7 +210,7 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
     }
 
     try {
-      return billing.consumePurchase(packageName, purchaseToken)
+      return billing.consumePurchase(purchaseToken)
           .andThen(Single.just(RESULT_OK))
           .toBlocking()
           .value();

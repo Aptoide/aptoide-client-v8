@@ -15,6 +15,7 @@ import cm.aptoide.pt.billing.product.SimplePurchase;
 import cm.aptoide.pt.billing.transaction.Transaction;
 import cm.aptoide.pt.billing.transaction.TransactionRepository;
 import java.util.List;
+import okio.ByteString;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -29,8 +30,9 @@ public class Billing {
   private final AuthorizationFactory authorizationFactory;
 
   public Billing(TransactionRepository transactionRepository, BillingService billingService,
-      AuthorizationRepository authorizationRepository, PaymentServiceSelector paymentServiceSelector,
-      Customer customer, AuthorizationFactory authorizationFactory) {
+      AuthorizationRepository authorizationRepository,
+      PaymentServiceSelector paymentServiceSelector, Customer customer,
+      AuthorizationFactory authorizationFactory) {
     this.transactionRepository = transactionRepository;
     this.billingService = billingService;
     this.authorizationRepository = authorizationRepository;
@@ -59,9 +61,9 @@ public class Billing {
     return billingService.getPurchases(merchantName);
   }
 
-  public Completable consumePurchase(String merchantName, String purchaseToken) {
-    return billingService.getPurchase(merchantName, purchaseToken)
-        .flatMapCompletable(purchase -> billingService.deletePurchase(merchantName, purchaseToken)
+  public Completable consumePurchase(String purchaseToken) {
+    return billingService.getPurchase(getPurchaseId(purchaseToken))
+        .flatMapCompletable(purchase -> billingService.deletePurchase(getPurchaseId(purchaseToken))
             .andThen(transactionRepository.remove(purchase.getProductId())));
   }
 
@@ -70,10 +72,9 @@ public class Billing {
   }
 
   public Completable processPayment(String merchantName, String sku, String payload) {
-    return getSelectedService().flatMap(
-        service -> getProduct(merchantName, sku).flatMap(
-            product -> transactionRepository.createTransaction(product.getProductId(),
-                service.getId(), payload)))
+    return getSelectedService().flatMap(service -> getProduct(merchantName, sku).flatMap(
+        product -> transactionRepository.createTransaction(product.getProductId(), service.getId(),
+            payload)))
         .flatMapCompletable(transaction -> {
           if (transaction.isPendingAuthorization()) {
             return Completable.error(
@@ -120,7 +121,7 @@ public class Billing {
             new SimplePurchase(SimplePurchase.Status.NEW, transaction.getProductId()));
       }
 
-      return billingService.getPurchase(merchantName, sku);
+      return billingService.getPurchase(getPurchaseId(sku));
     })
         .flatMap(purchase -> {
           if (purchase.isFailed()) {
@@ -149,9 +150,15 @@ public class Billing {
   private Single<PaymentService> getService(int serviceId) {
     return getPaymentServices().flatMapObservable(payments -> Observable.from(payments)
         .filter(payment -> payment.getId() == serviceId)
-        .switchIfEmpty(Observable.error(
-            new IllegalArgumentException("Payment " + serviceId + " not found."))))
+        .switchIfEmpty(
+            Observable.error(new IllegalArgumentException("Payment " + serviceId + " not found."))))
         .first()
         .toSingle();
+  }
+
+  private long getPurchaseId(String purchaseToken) {
+    return ByteString.decodeBase64(purchaseToken)
+        .asByteBuffer()
+        .getLong();
   }
 }
