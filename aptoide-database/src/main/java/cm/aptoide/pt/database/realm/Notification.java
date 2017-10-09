@@ -2,8 +2,6 @@ package cm.aptoide.pt.database.realm;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import java.util.Calendar;
-import java.util.TimeZone;
 
 /**
  * Created by trinkes on 10/05/2017.
@@ -130,15 +128,6 @@ public class Notification extends RealmObject {
 
   public void setDismissed(long dismissed) {
     this.dismissed = dismissed;
-  }
-
-  public boolean isExpired() {
-    if (expire != null) {
-      Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-      long now = calendar.getTimeInMillis();
-      return now > expire;
-    }
-    return false;
   }
 
   public String getNotificationCenterUrlTrack() {
