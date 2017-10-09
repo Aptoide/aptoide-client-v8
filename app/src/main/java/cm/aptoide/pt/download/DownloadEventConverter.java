@@ -60,6 +60,9 @@ public class DownloadEventConverter extends DownloadInstallEventConverter<Downlo
       String patchObbUrl, DownloadInstallBaseEvent.AppContext context, int versionCode) {
     return new DownloadEvent(action, origin, packageName, url, obbUrl, patchObbUrl, context,
         versionCode, this, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-        sharedPreferences, navigationTracker.getPreviousViewName());
+        sharedPreferences, navigationTracker.getPreviousViewName(),
+        navigationTracker.getPreviousScreen() == null ? null : navigationTracker.getPreviousScreen()
+            .getStore(), navigationTracker.getCurrentScreen()
+        .getTag());
   }
 }

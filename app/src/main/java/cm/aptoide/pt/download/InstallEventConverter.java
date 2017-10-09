@@ -53,7 +53,11 @@ public class InstallEventConverter extends DownloadInstallEventConverter<Install
     InstallEvent installEvent =
         new InstallEvent(action, origin, packageName, url, obbUrl, patchObbUrl, context,
             versionCode, this, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            sharedPreferences, navigationTracker.getPreviousViewName());
+            sharedPreferences, navigationTracker.getPreviousViewName(),
+            navigationTracker.getPreviousScreen() == null ? null
+                : navigationTracker.getPreviousScreen()
+                    .getStore(), navigationTracker.getCurrentScreen()
+            .getTag());
     installEvent.setAptoideSettings(ManagerPreferences.allowRootInstallation(sharedPreferences));
     return installEvent;
   }

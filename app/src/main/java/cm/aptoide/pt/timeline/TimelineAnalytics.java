@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.analytics.events.AptoideEvent;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -41,6 +42,8 @@ public class TimelineAnalytics {
 
   public static final String SOCIAL_CARD_ACTION_SHARE_CONTINUE = "Continue";
   public static final String SOCIAL_CARD_ACTION_SHARE_CANCEL = "Cancel";
+  public static final String PREVIOUS_CONTEXT = "previous_context";
+  public static final String STORE = "store";
   private static final String CARD_TYPE = "card_type";
   private static final String ACTION = "action";
   private static final String SOCIAL_ACTION = "social_action";
@@ -279,10 +282,11 @@ public class TimelineAnalytics {
   public void sendTimelineTabOpened() {
     analytics.sendEvent(new FacebookEvent(facebook, TIMELINE_OPENED));
     Map<String, Object> map = new HashMap<>();
-    map.put("previous_context", navigationTracker.getPreviousViewName());
+    map.put(PREVIOUS_CONTEXT, navigationTracker.getPreviousViewName());
     analytics.sendEvent(
-        new AptoideEvent(map, "OPEN_TIMELINE", "CLICK", "TIMELINE", bodyInterceptor, httpClient,
-            converterFactory, tokenInvalidator, appId, sharedPreferences));
+        new AptoideEvent(decorateWithScreenHistory(map), "OPEN_TIMELINE", "CLICK", "TIMELINE",
+            bodyInterceptor, httpClient, converterFactory, tokenInvalidator, appId,
+            sharedPreferences));
   }
 
   public void sendFollowFriendsEvent() {
@@ -310,6 +314,16 @@ public class TimelineAnalytics {
     result.put("card_type", cardType);
     result.put("source", source);
     result.put("specific", specific);
+    return decorateWithScreenHistory(result);
+  }
+
+  private Map<String, Object> decorateWithScreenHistory(Map<String, Object> result) {
+    result.put(PREVIOUS_CONTEXT, navigationTracker.getPreviousViewName());
+    ScreenTagHistory previousScreen = navigationTracker.getPreviousScreen();
+    if (previousScreen != null && !previousScreen.getStore()
+        .isEmpty()) {
+      result.put(STORE, previousScreen.getStore());
+    }
     return result;
   }
 
