@@ -147,14 +147,14 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
         });
   }
 
-  @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName());
-  }
-
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     //super.load(create, refresh, savedInstanceState);
     // overridden to avoid calling super, since it removes the displayables automatically
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {

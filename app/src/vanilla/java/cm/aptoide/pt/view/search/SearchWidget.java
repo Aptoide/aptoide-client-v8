@@ -138,7 +138,8 @@ public class SearchWidget extends Widget<SearchDisplayable> {
     }
 
     final Action1<Void> clickToOpenAppView =
-        v -> handleClickToOpenAppView(clickCallback, searchAppsApp, displayable.getQuery(), displayable);
+        v -> handleClickToOpenAppView(clickCallback, searchAppsApp, displayable.getQuery(),
+            displayable);
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(clickToOpenAppView));
   }

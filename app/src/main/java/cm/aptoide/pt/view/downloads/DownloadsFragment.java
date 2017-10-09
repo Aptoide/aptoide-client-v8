@@ -47,11 +47,6 @@ public class DownloadsFragment extends NavigationTrackFragment implements Downlo
     return new DownloadsFragment();
   }
 
-  @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName());
-  }
-
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     final OkHttpClient httpClient =
@@ -84,6 +79,11 @@ public class DownloadsFragment extends NavigationTrackFragment implements Downlo
     super.onViewCreated(view, savedInstanceState);
 
     attachPresenter(new DownloadsPresenter(this, installManager), savedInstanceState);
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Nullable @Override

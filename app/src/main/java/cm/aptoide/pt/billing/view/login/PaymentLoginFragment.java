@@ -87,11 +87,6 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     return new PaymentLoginFragment();
   }
 
-  @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName());
-  }
-
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     requestCode = getArguments().getInt(FragmentNavigator.REQUEST_CODE_EXTRA);
@@ -112,6 +107,11 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
         .doOnNext(__ -> facebookEmailRequiredDialogVisible = false)
         .compose(bindUntilEvent(FragmentEvent.PAUSE))
         .subscribe();
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {

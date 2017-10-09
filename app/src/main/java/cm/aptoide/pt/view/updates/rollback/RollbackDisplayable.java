@@ -10,7 +10,6 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Rollback;
-import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;

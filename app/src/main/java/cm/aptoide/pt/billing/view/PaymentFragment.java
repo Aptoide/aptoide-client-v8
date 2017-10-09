@@ -65,11 +65,6 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     return fragment;
   }
 
-  @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName());
-  }
-
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     billing = ((AptoideApplication) getContext().getApplicationContext()).getBilling();
@@ -111,6 +106,11 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
         getArguments().getString(PaymentActivity.EXTRA_APPLICATION_ID),
         getArguments().getString(PaymentActivity.EXTRA_PRODUCT_ID),
         getArguments().getString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD)), savedInstanceState);
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Nullable @Override
