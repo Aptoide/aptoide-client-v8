@@ -39,6 +39,9 @@ public class SpotAndShare {
 
   public Completable createGroup(Action1<SpotAndShareSender> onSuccess, OnError onError,
       AndroidAppInfoAccepter androidAppInfoAccepter) {
+    if (spotAndShareV2.isHotspot()) {
+      return Completable.complete();
+    }
     return spotAndShareV2.send(onSuccess, onError::onError);
   }
 
