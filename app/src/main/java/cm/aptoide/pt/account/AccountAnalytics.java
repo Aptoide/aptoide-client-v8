@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.analytics.events.AptoideEvent;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
 import cm.aptoide.pt.analytics.events.FlurryEvent;
@@ -24,6 +25,7 @@ public class AccountAnalytics {
   public static final String APTOIDE_EVENT_NAME = "LOGIN";
   public static final String ACTION = "CLICK";
   public static final String CONTEXT = "LOGIN";
+  public static final String STORE = "store";
   private static final String STATUS = "Status";
   private static final String FACEBOOK_LOGIN_EVENT_NAME = "Account_Login_Screen";
   private static final String FLURRY_LOGIN_EVENT_NAME = "Account_Login_Screen";
@@ -183,6 +185,11 @@ public class AccountAnalytics {
 
   @NonNull private AptoideEvent createAptoideLoginEvent() {
     Map<String, Object> map = new HashMap<>();
+    map.put(PREVIOUS_CONTEXT, navigationTracker.getPreviousViewName());
+    ScreenTagHistory previousScreen = navigationTracker.getPreviousScreen();
+    if (previousScreen != null) {
+      map.put(STORE, previousScreen.getStore());
+    }
     map.put(PREVIOUS_CONTEXT, navigationTracker.getPreviousViewName());
     return new AptoideEvent(map, APTOIDE_EVENT_NAME, ACTION, CONTEXT, bodyInterceptor, httpClient,
         converterFactory, tokenInvalidator, appId, sharedPreferences);
