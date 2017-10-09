@@ -189,7 +189,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
     storeName = args.getString(BundleCons.STORE_NAME);
-    aptoideNavigationTracker.registerTag(storeName);
     storeContext = (StoreContext) args.get(BundleCons.STORE_CONTEXT);
     openType = args.containsKey(BundleCons.OPEN_TYPE) ? (OpenType) args.get(BundleCons.OPEN_TYPE)
         : OpenType.GetStore;

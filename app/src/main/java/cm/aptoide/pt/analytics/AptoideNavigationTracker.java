@@ -24,8 +24,7 @@ public class AptoideNavigationTracker {
   public void registerView(ScreenTagHistory screenTagHistory) {
     if (screenTagHistory != null && filter(screenTagHistory)) {
       historyList.add(screenTagHistory);
-      Logger.d(this.getClass()
-          .getName(), "VIEW - " + screenTagHistory);
+      Logger.d(TAG, "VIEW - " + screenTagHistory);
     }
   }
 
@@ -68,10 +67,5 @@ public class AptoideNavigationTracker {
     } else {
       return true;
     }
-  }
-
-  public void registerTag(String tag) {
-    // TODO: 04/10/2017 trinkes change tags logic
-    //Logger.d(TAG, "registerTag() called with: " + "tag = [" + tag + "]");
   }
 }
