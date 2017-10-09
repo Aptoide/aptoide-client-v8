@@ -6,7 +6,7 @@ import rx.Single;
 
 public interface BillingService {
 
-  Single<List<PaymentMethod>> getPaymentMethods();
+  Single<List<PaymentService>> getPaymentServices();
 
   Single<Merchant> getMerchant(String merchantName);
 

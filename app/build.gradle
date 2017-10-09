@@ -200,7 +200,7 @@ android {
         "\"" + project.APTOIDE_WEB_SERVICES_SIXPACK_HOST + "\""
     variant.buildConfigField "String", "GOOGLE_SENDER_ID", "\"" + project.GOOGLE_SENDER_ID + "\""
     variant.buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID + "\""
-    variant.buildConfigField "int", "DEFAULT_PAYMENT_ID", project.DEFAULT_PAYMENT_ID
+    variant.buildConfigField "String", "DEFAULT_PAYMENT_SERVICE_TYPE", "\"" + project.DEFAULT_PAYMENT_SERVICE_TYPE + "\""
     variant.buildConfigField "String", "APTOIDE_WEBSOCKETS_SCHEME",
         "\"" + project.APTOIDE_WEBSOCKETS_SCHEME + "\""
     variant.buildConfigField "String", "APTOIDE_WEBSOCKETS_HOST",

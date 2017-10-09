@@ -30,9 +30,9 @@ public class BillingAnalytics {
         getFacebookPaymentEvent("Payment_Pop_Up", "Cancel", getProductBundle(product)));
   }
 
-  public void sendPaymentViewBuyEvent(Product product, String paymentMethodName) {
+  public void sendPaymentViewBuyEvent(Product product, String serviceName) {
     final Bundle bundle = getProductBundle(product);
-    bundle.putString("payment_method", paymentMethodName);
+    bundle.putString("payment_method", serviceName);
     analytics.sendEvent(getFacebookPaymentEvent("Payment_Pop_Up", "Buy", bundle));
   }
 
@@ -60,21 +60,21 @@ public class BillingAnalytics {
     analytics.sendEvent(getFacebookPaymentEvent("Payment_Login", action, new Bundle()));
   }
 
-  public void sendAuthorizationSuccessEvent(String paymentMethodName) {
+  public void sendAuthorizationSuccessEvent(String serviceName) {
     final Bundle bundle = new Bundle();
-    bundle.putString("payment_method", paymentMethodName);
+    bundle.putString("payment_method", serviceName);
     analytics.sendEvent(getFacebookPaymentEvent("Payment_Authorization_Page", "Success", bundle));
   }
 
-  public void sendAuthorizationCancelEvent(String paymentMethodName) {
+  public void sendAuthorizationCancelEvent(String serviceName) {
     final Bundle bundle = new Bundle();
-    bundle.putString("payment_method", paymentMethodName);
+    bundle.putString("payment_method", serviceName);
     analytics.sendEvent(getFacebookPaymentEvent("Payment_Authorization_Page", "Cancel", bundle));
   }
 
-  public void sendAuthorizationErrorEvent(String paymentMethodName) {
+  public void sendAuthorizationErrorEvent(String serviceName) {
     final Bundle bundle = new Bundle();
-    bundle.putString("payment_method", paymentMethodName);
+    bundle.putString("payment_method", serviceName);
     analytics.sendEvent(getFacebookPaymentEvent("Payment_Authorization_Page", "Error", bundle));
   }
 

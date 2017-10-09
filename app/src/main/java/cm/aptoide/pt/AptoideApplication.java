@@ -56,10 +56,10 @@ import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.BillingIdResolver;
 import cm.aptoide.pt.billing.BillingService;
 import cm.aptoide.pt.billing.Customer;
-import cm.aptoide.pt.billing.PaymentMethodMapper;
-import cm.aptoide.pt.billing.PaymentMethodSelector;
+import cm.aptoide.pt.billing.PaymentServiceMapper;
+import cm.aptoide.pt.billing.PaymentServiceSelector;
 import cm.aptoide.pt.billing.PurchaseMapper;
-import cm.aptoide.pt.billing.SharedPreferencesPaymentMethodSelector;
+import cm.aptoide.pt.billing.SharedPreferencesPaymentServiceSelector;
 import cm.aptoide.pt.billing.V7BillingService;
 import cm.aptoide.pt.billing.authorization.AuthorizationFactory;
 import cm.aptoide.pt.billing.authorization.AuthorizationMapper;
@@ -874,14 +874,15 @@ public abstract class AptoideApplication extends Application {
           new V7BillingService(getAccountSettingsBodyInterceptorPoolV7(), getDefaultClient(),
               WebService.getDefaultConverter(), getTokenInvalidator(),
               getDefaultSharedPreferences(), new PurchaseMapper(getInAppBillingSerializer()),
-              new ProductFactory(), getPackageRepository(), new PaymentMethodMapper());
+              new ProductFactory(), getPackageRepository(),
+              new PaymentServiceMapper(CrashReport.getInstance()));
 
-      final PaymentMethodSelector paymentMethodSelector =
-          new SharedPreferencesPaymentMethodSelector(BuildConfig.DEFAULT_PAYMENT_ID,
+      final PaymentServiceSelector paymentServiceSelector =
+          new SharedPreferencesPaymentServiceSelector(BuildConfig.DEFAULT_PAYMENT_SERVICE_TYPE,
               getDefaultSharedPreferences());
 
       billing = new Billing(transactionRepository, billingService, authorizationRepository,
-          paymentMethodSelector, getCustomer(), getAuthorizationFactory());
+          paymentServiceSelector, getCustomer(), getAuthorizationFactory());
     }
     return billing;
   }

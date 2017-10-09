@@ -3,12 +3,12 @@ package cm.aptoide.pt.billing.view;
 import android.app.Activity;
 import android.os.Bundle;
 import cm.aptoide.pt.BuildConfig;
-import cm.aptoide.pt.billing.PaymentMethod;
-import cm.aptoide.pt.billing.PaymentMethodMapper;
+import cm.aptoide.pt.billing.PaymentService;
+import cm.aptoide.pt.billing.PaymentServiceMapper;
 import cm.aptoide.pt.billing.Purchase;
 import cm.aptoide.pt.billing.view.login.PaymentLoginFragment;
-import cm.aptoide.pt.billing.view.web.WebAuthorizationFragment;
 import cm.aptoide.pt.billing.view.paypal.PayPalAuthorizationFragment;
+import cm.aptoide.pt.billing.view.web.WebAuthorizationFragment;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.Result;
@@ -44,24 +44,23 @@ public class BillingNavigator {
         .map(result -> result.getResultCode() == Activity.RESULT_OK);
   }
 
-  public void navigateToTransactionAuthorizationView(String merchantName, PaymentMethod service,
+  public void navigateToTransactionAuthorizationView(String merchantName, PaymentService service,
       String sku) {
 
-    final Bundle bundle = getAuthorizationBundle(merchantName, sku, service.getName());
+    final Bundle bundle = getAuthorizationBundle(merchantName, sku, service.getType());
 
-    switch (service.getId()) {
-      case PaymentMethodMapper.PAYPAL:
+    switch (service.getType()) {
+      case PaymentServiceMapper.PAYPAL:
         fragmentNavigator.navigateTo(PayPalAuthorizationFragment.create(bundle), true);
         break;
-      case PaymentMethodMapper.MOL_POINTS:
-      case PaymentMethodMapper.BOA_COMPRA:
-      case PaymentMethodMapper.BOA_COMPRA_GOLD:
+      case PaymentServiceMapper.MOL_POINTS:
+      case PaymentServiceMapper.BOA_COMPRA:
+      case PaymentServiceMapper.BOA_COMPRA_GOLD:
         fragmentNavigator.navigateTo(WebAuthorizationFragment.create(bundle), true);
         break;
-      case PaymentMethodMapper.SANDBOX:
+      case PaymentServiceMapper.SANDBOX:
       default:
-        throw new IllegalArgumentException("Service "
-            + service.getId()
+        throw new IllegalArgumentException(service.getType()
             + " does not require authorization. Can not navigate to authorization view.");
     }
   }
@@ -105,15 +104,11 @@ public class BillingNavigator {
   }
 
   private Bundle getAuthorizationBundle(String merchantName, String sku, String serviceName) {
-    if (sku != null && merchantName != null) {
-      final Bundle bundle = new Bundle();
-      bundle.putString(PaymentActivity.EXTRA_SKU, sku);
-      bundle.putString(PaymentActivity.EXTRA_MERCHANT_NAME, merchantName);
-      bundle.putString(PaymentActivity.EXTRA_SERVICE_NAME, serviceName);
-      return bundle;
-    }
-
-    throw new IllegalArgumentException("Invalid product. Only in-app and paid apps supported");
+    final Bundle bundle = new Bundle();
+    bundle.putString(PaymentActivity.EXTRA_SKU, sku);
+    bundle.putString(PaymentActivity.EXTRA_MERCHANT_NAME, merchantName);
+    bundle.putString(PaymentActivity.EXTRA_SERVICE_NAME, serviceName);
+    return bundle;
   }
 
   private PayPalResult map(Result result) {

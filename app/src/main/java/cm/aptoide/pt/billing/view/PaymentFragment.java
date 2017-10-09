@@ -19,7 +19,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
-import cm.aptoide.pt.billing.PaymentMethod;
+import cm.aptoide.pt.billing.PaymentService;
 import cm.aptoide.pt.billing.Product;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -41,7 +41,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
 
   private View overlay;
   private View progressView;
-  private RadioGroup paymentRadioGroup;
+  private RadioGroup serviceRadioGroup;
   private ImageView productIcon;
   private TextView productName;
   private TextView productDescription;
@@ -52,7 +52,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
 
   private RxAlertDialog networkErrorDialog;
   private RxAlertDialog unknownErrorDialog;
-  private SparseArray<PaymentMethod> paymentMap;
+  private SparseArray<PaymentService> serviceMap;
   private SpannableFactory spannableFactory;
 
   private boolean paymentLoading;
@@ -91,12 +91,12 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     productDescription = (TextView) view.findViewById(R.id.include_payment_product_description);
 
     productPrice = (TextView) view.findViewById(R.id.include_payment_product_price);
-    paymentRadioGroup = (RadioGroup) view.findViewById(R.id.fragment_payment_list);
+    serviceRadioGroup = (RadioGroup) view.findViewById(R.id.fragment_payment_list);
 
     cancelButton = (Button) view.findViewById(R.id.include_payment_buttons_cancel_button);
     buyButton = (Button) view.findViewById(R.id.include_payment_buttons_buy_button);
 
-    paymentMap = new SparseArray<>();
+    serviceMap = new SparseArray<>();
 
     networkErrorDialog =
         new RxAlertDialog.Builder(getContext()).setMessage(R.string.connection_error)
@@ -134,10 +134,10 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     productName = null;
     productDescription = null;
     productPrice = null;
-    paymentRadioGroup = null;
+    serviceRadioGroup = null;
     cancelButton = null;
     buyButton = null;
-    paymentMap = null;
+    serviceMap = null;
     networkErrorDialog.dismiss();
     networkErrorDialog = null;
     unknownErrorDialog.dismiss();
@@ -148,10 +148,10 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     super.onDestroyView();
   }
 
-  @Override public Observable<PaymentMethod> selectPaymentEvent() {
-    return RxRadioGroup.checkedChanges(paymentRadioGroup)
-        .map(paymentId -> paymentMap.get(paymentId))
-        .filter(PaymentMethod -> PaymentMethod != null);
+  @Override public Observable<PaymentService> selectServiceEvent() {
+    return RxRadioGroup.checkedChanges(serviceRadioGroup)
+        .map(paymentId -> serviceMap.get(paymentId))
+        .filter(service -> service != null);
   }
 
   @Override public Observable<Void> cancelEvent() {
@@ -166,8 +166,8 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
         .unsubscribeOn(AndroidSchedulers.mainThread());
   }
 
-  @Override public void selectPayment(PaymentMethod payment) {
-    paymentRadioGroup.check(payment.getId());
+  @Override public void selectService(PaymentService payment) {
+    serviceRadioGroup.check(payment.getId());
   }
 
   @Override public void showPaymentLoading() {
@@ -185,18 +185,18 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     progressView.setVisibility(View.VISIBLE);
   }
 
-  @Override public void showPayments(List<PaymentMethod> payments) {
-    paymentRadioGroup.removeAllViews();
+  @Override public void showPayments(List<PaymentService> payments) {
+    serviceRadioGroup.removeAllViews();
     noPaymentsText.setVisibility(View.GONE);
     buyButton.setVisibility(View.VISIBLE);
-    paymentMap.clear();
+    serviceMap.clear();
 
     RadioButton radioButton;
     CharSequence radioText;
-    for (PaymentMethod payment : payments) {
+    for (PaymentService payment : payments) {
 
       radioButton = (RadioButton) getActivity().getLayoutInflater()
-          .inflate(R.layout.payment_item, paymentRadioGroup, false);
+          .inflate(R.layout.payment_item, serviceRadioGroup, false);
       radioButton.setId(payment.getId());
 
       Glide.with(this)
@@ -213,8 +213,8 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
       }
       radioButton.setText(radioText);
 
-      paymentMap.append(payment.getId(), payment);
-      paymentRadioGroup.addView(radioButton);
+      serviceMap.append(payment.getId(), payment);
+      serviceRadioGroup.addView(radioButton);
     }
   }
 

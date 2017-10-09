@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
 
   @JsonProperty("payStatus") private String transactionStatus;
   @JsonProperty("paykey") private String localMetadata;
-  @JsonProperty("paymentId") private int paymentMethodId;
+  @JsonProperty("paymentId") private int serviceId;
   @JsonProperty("confirmationUrl") private String confirmationUrl;
   @JsonProperty("successUrl") private String successUrl;
   @JsonProperty("clientToken") private String clientToken;

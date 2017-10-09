@@ -37,14 +37,14 @@ public class V7BillingService implements BillingService {
   private final PurchaseMapper purchaseMapper;
   private final ProductFactory productFactory;
   private final PackageRepository packageRepository;
-  private final PaymentMethodMapper paymentMethodMapper;
+  private final PaymentServiceMapper serviceMapper;
   private final BodyInterceptor<BaseBody> bodyInterceptorV7;
 
   public V7BillingService(BodyInterceptor<BaseBody> bodyInterceptorV7, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, PurchaseMapper purchaseMapper,
       ProductFactory productFactory, PackageRepository packageRepository,
-      PaymentMethodMapper paymentMethodMapper) {
+      PaymentServiceMapper serviceMapper) {
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
@@ -52,18 +52,18 @@ public class V7BillingService implements BillingService {
     this.purchaseMapper = purchaseMapper;
     this.productFactory = productFactory;
     this.packageRepository = packageRepository;
-    this.paymentMethodMapper = paymentMethodMapper;
+    this.serviceMapper = serviceMapper;
     this.bodyInterceptorV7 = bodyInterceptorV7;
   }
 
-  @Override public Single<List<PaymentMethod>> getPaymentMethods() {
+  @Override public Single<List<PaymentService>> getPaymentServices() {
     return GetServicesRequest.of(sharedPreferences, httpClient, converterFactory, bodyInterceptorV7,
         tokenInvalidator)
         .observe(false)
         .toSingle()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
-            return Single.just(paymentMethodMapper.map(response.getList()));
+            return Single.just(serviceMapper.map(response.getList()));
           } else {
             return Single.error(new IllegalArgumentException(V7.getErrorMessage(response)));
           }

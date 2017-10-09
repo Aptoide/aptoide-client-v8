@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.billing.view;
 
-import cm.aptoide.pt.billing.PaymentMethod;
+import cm.aptoide.pt.billing.PaymentService;
 import cm.aptoide.pt.billing.Product;
 import cm.aptoide.pt.presenter.View;
 import java.util.List;
@@ -13,13 +13,13 @@ import rx.Observable;
 
 public interface PaymentView extends View {
 
-  Observable<PaymentMethod> selectPaymentEvent();
+  Observable<PaymentService> selectServiceEvent();
 
   Observable<Void> cancelEvent();
 
   Observable<Void> buyEvent();
 
-  void selectPayment(PaymentMethod payment);
+  void selectService(PaymentService payment);
 
   void showPaymentLoading();
 
@@ -27,7 +27,7 @@ public interface PaymentView extends View {
 
   void showBuyLoading();
 
-  void showPayments(List<PaymentMethod> paymentList);
+  void showPayments(List<PaymentService> paymentList);
 
   void showProduct(Product product);
 

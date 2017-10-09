@@ -49,6 +49,7 @@ public class GetServicesRequest extends V7<GetServicesRequest.ResponseBody, Base
       private String name;
       private String label;
       private String icon;
+      private String description;
 
       public int getId() {
         return id;
@@ -80,6 +81,14 @@ public class GetServicesRequest extends V7<GetServicesRequest.ResponseBody, Base
 
       public void setIcon(String icon) {
         this.icon = icon;
+      }
+
+      public String getDescription() {
+        return description;
+      }
+
+      public void setDescription(String description) {
+        this.description = description;
       }
     }
   }

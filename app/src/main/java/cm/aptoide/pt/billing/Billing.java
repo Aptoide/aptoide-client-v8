@@ -24,17 +24,17 @@ public class Billing {
   private final TransactionRepository transactionRepository;
   private final BillingService billingService;
   private final AuthorizationRepository authorizationRepository;
-  private final PaymentMethodSelector paymentMethodSelector;
+  private final PaymentServiceSelector paymentServiceSelector;
   private final Customer customer;
   private final AuthorizationFactory authorizationFactory;
 
   public Billing(TransactionRepository transactionRepository, BillingService billingService,
-      AuthorizationRepository authorizationRepository, PaymentMethodSelector paymentMethodSelector,
+      AuthorizationRepository authorizationRepository, PaymentServiceSelector paymentServiceSelector,
       Customer customer, AuthorizationFactory authorizationFactory) {
     this.transactionRepository = transactionRepository;
     this.billingService = billingService;
     this.authorizationRepository = authorizationRepository;
-    this.paymentMethodSelector = paymentMethodSelector;
+    this.paymentServiceSelector = paymentServiceSelector;
     this.customer = customer;
     this.authorizationFactory = authorizationFactory;
   }
@@ -65,15 +65,15 @@ public class Billing {
             .andThen(transactionRepository.remove(purchase.getProductId())));
   }
 
-  public Single<List<PaymentMethod>> getPaymentMethods() {
-    return billingService.getPaymentMethods();
+  public Single<List<PaymentService>> getPaymentServices() {
+    return billingService.getPaymentServices();
   }
 
   public Completable processPayment(String merchantName, String sku, String payload) {
-    return getSelectedPaymentMethod().flatMap(
-        paymentMethod -> getProduct(merchantName, sku).flatMap(
+    return getSelectedService().flatMap(
+        service -> getProduct(merchantName, sku).flatMap(
             product -> transactionRepository.createTransaction(product.getProductId(),
-                paymentMethod.getId(), payload)))
+                service.getId(), payload)))
         .flatMapCompletable(transaction -> {
           if (transaction.isPendingAuthorization()) {
             return Completable.error(
@@ -92,7 +92,7 @@ public class Billing {
     return getAuthorization(merchantName, sku).first()
         .cast(PayPalAuthorization.class)
         .toSingle()
-        .flatMapCompletable(authorization -> getSelectedPaymentMethod().flatMapCompletable(
+        .flatMapCompletable(authorization -> getSelectedService().flatMapCompletable(
             service -> authorizationRepository.updateAuthorization(
                 authorizationFactory.create(authorization.getId(), authorization.getCustomerId(),
                     AuthorizationFactory.PAYPAL_SDK, Authorization.Status.PENDING_SYNC, null, null,
@@ -131,14 +131,14 @@ public class Billing {
         });
   }
 
-  public Completable selectPaymentMethod(int paymentMethodId) {
-    return getPaymentMethod(paymentMethodId).flatMapCompletable(
-        paymentMethod -> paymentMethodSelector.selectPaymentMethod(paymentMethod));
+  public Completable selectService(int serviceId) {
+    return getService(serviceId).flatMapCompletable(
+        service -> paymentServiceSelector.selectService(service));
   }
 
-  public Single<PaymentMethod> getSelectedPaymentMethod() {
-    return getPaymentMethods().flatMap(
-        paymentMethods -> paymentMethodSelector.selectedPaymentMethod(paymentMethods));
+  public Single<PaymentService> getSelectedService() {
+    return getPaymentServices().flatMap(
+        services -> paymentServiceSelector.selectedService(services));
   }
 
   private Observable<Transaction> getTransaction(String merchantName, String sku) {
@@ -146,11 +146,11 @@ public class Billing {
         product -> transactionRepository.getTransaction(product.getProductId()));
   }
 
-  private Single<PaymentMethod> getPaymentMethod(int paymentMethodId) {
-    return getPaymentMethods().flatMapObservable(payments -> Observable.from(payments)
-        .filter(payment -> payment.getId() == paymentMethodId)
+  private Single<PaymentService> getService(int serviceId) {
+    return getPaymentServices().flatMapObservable(payments -> Observable.from(payments)
+        .filter(payment -> payment.getId() == serviceId)
         .switchIfEmpty(Observable.error(
-            new IllegalArgumentException("Payment " + paymentMethodId + " not found."))))
+            new IllegalArgumentException("Payment " + serviceId + " not found."))))
         .first()
         .toSingle();
   }

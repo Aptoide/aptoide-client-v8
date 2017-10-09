@@ -8,7 +8,7 @@ package cm.aptoide.pt.billing.view;
 import android.os.Bundle;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
-import cm.aptoide.pt.billing.PaymentMethod;
+import cm.aptoide.pt.billing.PaymentService;
 import cm.aptoide.pt.billing.Product;
 import cm.aptoide.pt.billing.exception.ServiceNotAuthorizedException;
 import cm.aptoide.pt.presenter.Presenter;
@@ -51,7 +51,7 @@ public class PaymentPresenter implements Presenter {
 
     onViewCreatedCheckPurchase();
 
-    handleSelectPaymentMethodEvent();
+    handleSelectServiceEvent();
 
     handleCancelEvent();
 
@@ -103,7 +103,7 @@ public class PaymentPresenter implements Presenter {
             .isAuthenticated())
         .filter(authenticated -> authenticated)
         .flatMapSingle(loading -> billing.getProduct(merchantName, sku))
-        .flatMapCompletable(product -> billing.getPaymentMethods()
+        .flatMapCompletable(product -> billing.getPaymentServices()
             .observeOn(AndroidSchedulers.mainThread())
             .flatMapCompletable(payments -> showPaymentInformation(product, payments))
             .doOnCompleted(() -> view.hidePaymentLoading()))
@@ -165,13 +165,13 @@ public class PaymentPresenter implements Presenter {
         }, throwable -> navigator.popViewWithResult());
   }
 
-  private void handleSelectPaymentMethodEvent() {
+  private void handleSelectServiceEvent() {
     view.getLifecycle()
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
         .observeOn(AndroidSchedulers.mainThread())
-        .flatMap(created -> view.selectPaymentEvent())
+        .flatMap(created -> view.selectServiceEvent())
         .flatMapCompletable(
-            paymentMethodViewModel -> billing.selectPaymentMethod(paymentMethodViewModel.getId()))
+            serviceViewModel -> billing.selectService(serviceViewModel.getId()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> navigator.popViewWithResult(throwable));
@@ -183,13 +183,13 @@ public class PaymentPresenter implements Presenter {
         .flatMap(__ -> view.buyEvent()
             .doOnNext(buySelection -> view.showBuyLoading())
             .flatMapSingle(selection -> billing.getProduct(merchantName, sku))
-            .flatMapCompletable(product -> billing.getSelectedPaymentMethod()
+            .flatMapCompletable(product -> billing.getSelectedService()
                 .doOnSuccess(
-                    payment -> analytics.sendPaymentViewBuyEvent(product, payment.getName()))
+                    payment -> analytics.sendPaymentViewBuyEvent(product, payment.getType()))
                 .flatMapCompletable(payment -> billing.processPayment(merchantName, sku, payload)
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnCompleted(() -> {
-                      analytics.sendAuthorizationSuccessEvent(payment.getName());
+                      analytics.sendAuthorizationSuccessEvent(payment.getType());
                       view.hideBuyLoading();
                     })
                     .onErrorResumeNext(
@@ -205,7 +205,7 @@ public class PaymentPresenter implements Presenter {
         }, throwable -> navigator.popViewWithResult(throwable));
   }
 
-  private Completable navigateToAuthorizationView(PaymentMethod service, Throwable throwable) {
+  private Completable navigateToAuthorizationView(PaymentService service, Throwable throwable) {
     if (throwable instanceof ServiceNotAuthorizedException) {
       navigator.navigateToTransactionAuthorizationView(merchantName, service, sku);
       return Completable.complete();
@@ -221,30 +221,31 @@ public class PaymentPresenter implements Presenter {
     }
   }
 
-  private Completable showPaymentInformation(Product product, List<PaymentMethod> paymentMethods) {
+  private Completable showPaymentInformation(Product product,
+      List<PaymentService> paymentServices) {
     view.showProduct(product);
-    if (paymentMethods.isEmpty()) {
+    if (paymentServices.isEmpty()) {
       view.showPaymentsNotFoundMessage();
     } else {
-      view.showPayments(paymentMethods);
+      view.showPayments(paymentServices);
     }
-    if (paymentMethods.isEmpty()) {
+    if (paymentServices.isEmpty()) {
       return Completable.complete();
     }
-    return showSelectedPaymentMethod();
+    return showSelectedService();
   }
 
   private Completable sendPaymentCancelAnalytics() {
     return billing.getProduct(merchantName, sku)
-        .flatMapCompletable(product -> billing.getSelectedPaymentMethod()
+        .flatMapCompletable(product -> billing.getSelectedService()
             .doOnSuccess(payment -> analytics.sendPaymentViewCancelEvent(product))
             .toCompletable());
   }
 
-  private Completable showSelectedPaymentMethod() {
-    return billing.getSelectedPaymentMethod()
+  private Completable showSelectedService() {
+    return billing.getSelectedService()
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnSuccess(payment -> view.selectPayment(payment))
+        .doOnSuccess(payment -> view.selectService(payment))
         .toCompletable();
   }
 }
