@@ -57,7 +57,7 @@ public class FirstInstallFragment extends AptoideBaseFragment<BaseAdapter>
 
     attachPresenter(
         new FirstInstallPresenter(this, crashReport, requestFactoryCdnPool, getContext(), storeName,
-            ""), savedInstanceState);
+            ""));
   }
 
   @Override public Observable<Void> installAllClick() {
@@ -70,6 +70,7 @@ public class FirstInstallFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override
   public void addFirstInstallDisplayables(List<Displayable> displayables, boolean finishLoading) {
-    clearDisplayables().addDisplayables(displayables, finishLoading);
+    //clearDisplayables().
+    addDisplayables(displayables, finishLoading);
   }
 }
