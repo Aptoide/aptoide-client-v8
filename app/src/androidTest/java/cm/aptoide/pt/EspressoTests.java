@@ -12,6 +12,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.view.View;
 import cm.aptoide.pt.view.MainActivity;
+import java.io.IOException;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -49,7 +50,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
   private final int LONGER_WAIT_TIME = 2000;
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
-  private boolean isFirst = true;
   private String SIGNUPEMAILTEST = "";
 
   private static ViewAction swipeRigthOnLeftMost() {
@@ -73,11 +73,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
     };
   }
 
-  @Before public void setUpEmail() {
-    if (isFirst) {
+  @Before public void setUpEmail() throws IOException {
       SIGNUPEMAILTEST = SIGNUPEMAILTESTBGN + System.currentTimeMillis() + SIGNUPEMAILTESTEND;
-      isFirst = false;
-    }
   }
 
   @Test public void signUp() throws InterruptedException {
@@ -91,6 +88,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
         performSignUp();
       } else {
         onView(withId(R.id.button_logout)).perform(click());
+        Thread.sleep(WAIT_TIME);
         goToMyAccount();
         performSignUp();
       }
@@ -112,6 +110,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
         performLogin();
       } else {
         onView(withId(R.id.button_logout)).perform(click());
+        Thread.sleep(WAIT_TIME);
         goToMyAccount();
         performLogin();
       }
@@ -135,8 +134,10 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
     while (!hasOpenedAppView()) {
       Thread.sleep(WAIT_TIME);
     }
+    Thread.sleep(LONGER_WAIT_TIME);
     closePopUp();
     closeIfIsNotLoggedInOnDownload();
+    Thread.sleep(WAIT_TIME);
     onView(withId(R.id.download_progress)).check(matches(isDisplayed()));
     Thread.sleep(WAIT_TIME);
     testIc_ActionButtons();
@@ -195,6 +196,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
   private boolean hasCreatedStore() {
     try {
       onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
+      onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
       return true;
     } catch (NoMatchingViewException e) {
       return false;
@@ -205,7 +207,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
     try {
       onView(withId(R.id.action_btn)).perform(click());
       return true;
-    } catch (NoMatchingViewException e) {
+    } catch (Exception e) {
       return false;
     }
   }
@@ -215,7 +217,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
   private void closePopUp() throws InterruptedException {
     try {
       onView(withText("OK")).perform(click());
-      //onView(withText("ALLOW")).perform(click()); doesn't work needs to give permissions before initiating tests android 7+
     } catch (NoMatchingViewException e) {
       try {
         onView(withId(R.id.download_progress)).check(matches(isDisplayed()));
@@ -254,6 +255,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
   private void goToMyAccount() throws InterruptedException {
     onView(withId(R.id.toolbar)).perform(swipeRigthOnLeftMost());
+    Thread.sleep(WAIT_TIME);
     onView(withText(R.string.my_account_title_my_account)).perform(click());
   }
 
@@ -297,10 +299,10 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
         RecyclerViewActions.actionOnItemAtPosition(1, click()));
   }
 
-  private void testIc_ActionButtons() {
+  private void testIc_ActionButtons() throws InterruptedException {
     onView(withId(R.id.ic_action_pause)).perform(click());
+    Thread.sleep(WAIT_TIME);
     onView(withId(R.id.ic_action_resume)).perform(click());
-    onView(withId(R.id.download_progress)).check(matches(isDisplayed()));
     onView(withId(R.id.ic_action_cancel)).perform(click());
   }
 

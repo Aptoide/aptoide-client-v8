@@ -325,6 +325,10 @@ dependencies {
   androidTestCompile "com.android.support.test.espresso:espresso-contrib:${ESPRESSO_VERSION}"
   androidTestCompile "com.android.support.test.espresso:espresso-intents:${ESPRESSO_VERSION}"
   androidTestCompile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
+  compile "com.google.dagger:dagger-android:${DAGGER_VERSION}"
+  compile "com.google.dagger:dagger-android-support:${DAGGER_VERSION}"
+  annotationProcessor "com.google.dagger:dagger-android-processor:${DAGGER_VERSION}"
+  annotationProcessor "com.google.dagger:dagger-compiler:${DAGGER_VERSION}"
 
   compile "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
 
