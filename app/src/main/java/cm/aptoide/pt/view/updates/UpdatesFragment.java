@@ -37,6 +37,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.store.StoreGridHeaderDisplayable;
+import cm.aptoide.pt.view.store.StoreTabNavigator;
 import cm.aptoide.pt.view.updates.installed.InstalledAppDisplayable;
 import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -77,6 +78,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   private Converter.Factory converterFactory;
   private CrashReport crashReport;
   private String marketName;
+  private StoreTabNavigator storeTabNavigator;
 
   @NonNull public static UpdatesFragment newInstance() {
     return new UpdatesFragment();
@@ -182,6 +184,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     updateRepository = RepositoryFactory.getUpdateRepository(getContext(),
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
+    storeTabNavigator = new StoreTabNavigator(getFragmentNavigator());
   }
 
   private void setUpdates(List<Update> updateList) {
@@ -242,7 +245,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     installedDisplayablesList.add(new StoreGridHeaderDisplayable(
         new GetStoreWidgets.WSWidget().setTitle(
             AptoideUtils.StringU.getResString(R.string.updatetab_title_installed,
-                getContext().getResources()))));
+                getContext().getResources())), storeTabNavigator));
 
     for (Installed installedApp : installedApps) {
       installedDisplayablesList.add(new InstalledAppDisplayable(installedApp,

@@ -29,6 +29,7 @@ import cm.aptoide.pt.presenter.DownloadsView;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
 import cm.aptoide.pt.view.fragment.FragmentView;
+import cm.aptoide.pt.view.store.StoreTabNavigator;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -41,6 +42,7 @@ public class DownloadsFragment extends FragmentView implements DownloadsView {
   private DownloadEventConverter downloadConverter;
   private InstallManager installManager;
   private Analytics analytics;
+  private StoreTabNavigator storeTabNavigator;
 
   public static DownloadsFragment newInstance() {
     return new DownloadsFragment();
@@ -72,6 +74,8 @@ public class DownloadsFragment extends FragmentView implements DownloadsView {
     installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
     analytics = Analytics.getInstance();
+
+    storeTabNavigator = new StoreTabNavigator(getFragmentNavigator());
   }
 
   @Nullable @Override
@@ -88,7 +92,7 @@ public class DownloadsFragment extends FragmentView implements DownloadsView {
     downloadsRecyclerView.addItemDecoration(decor);
 
     adapter = new DownloadsAdapter(installConverter, downloadConverter, installManager, analytics,
-        getContext().getResources());
+        getContext().getResources(), storeTabNavigator);
     downloadsRecyclerView.setAdapter(adapter);
     noDownloadsView = view.findViewById(R.id.no_apps_downloaded);
 

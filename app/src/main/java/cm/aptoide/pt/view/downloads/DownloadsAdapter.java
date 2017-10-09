@@ -23,6 +23,7 @@ import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import cm.aptoide.pt.view.store.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.view.store.StoreGridHeaderWidget;
+import cm.aptoide.pt.view.store.StoreTabNavigator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,10 +37,12 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
   private final List<Install> standByDownloads;
   private final List<Install> completedDownloads;
   private final Resources resources;
+  private final StoreTabNavigator storeTabNavigator;
 
   public DownloadsAdapter(InstallEventConverter installConverter,
       DownloadEventConverter downloadConverter, InstallManager installManager, Analytics analytics,
-      Resources resources) {
+      Resources resources, StoreTabNavigator storeTabNavigator) {
+    this.storeTabNavigator = storeTabNavigator;
     this.activeDownloads = new ArrayList<>();
     this.standByDownloads = new ArrayList<>();
     this.completedDownloads = new ArrayList<>();
@@ -102,7 +105,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
     final ItemViewType itemViewType = ItemViewType.values()[getItemViewType(position)];
     switch (itemViewType) {
       case Header: {
-        bindHeader(holder, position);
+        bindHeader(holder, position, storeTabNavigator);
         break;
       }
 
@@ -201,7 +204,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
     super.onViewRecycled(holder);
   }
 
-  private void bindHeader(Widget holder, int position) {
+  private void bindHeader(Widget holder, int position, StoreTabNavigator storeTabNavigator) {
     // discover if it's the header for stand by or completed downloads
     position -= (activeDownloads.isEmpty() ? 0 : activeDownloads.size() + 1);
 
@@ -209,11 +212,11 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
     if (position < standByDownloads.size()) {
       // is the header from stand by downloads
       header.bindView(new StoreGridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(
-          AptoideUtils.StringU.getResString(R.string.stand_by, resources))));
+          AptoideUtils.StringU.getResString(R.string.stand_by, resources)), storeTabNavigator));
     } else {
       // is the header from completed downloads
       header.bindView(new StoreGridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(
-          AptoideUtils.StringU.getResString(R.string.completed, resources))));
+          AptoideUtils.StringU.getResString(R.string.completed, resources)), storeTabNavigator));
     }
   }
 

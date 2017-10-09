@@ -1,7 +1,6 @@
 package cm.aptoide.pt.view.store;
 
 import android.content.SharedPreferences;
-import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -54,21 +53,19 @@ public class StoreGridHeaderWidget extends Widget<StoreGridHeaderDisplayable> {
             final String tag = displayable.getTag();
             final StoreContext storeContext = displayable.getStoreContext();
             final String title = wsWidget.getTitle();
-            final Fragment fragment;
 
             if (event.getName() == Event.Name.listComments) {
               String action = event.getAction();
               String url =
                   action != null ? action.replace(V7.getHost(sharedPreferences), "") : null;
-              fragment = AptoideApplication.getFragmentProvider()
-                  .newCommentGridRecyclerFragmentUrl(CommentType.STORE, url, "View Comments");
+              displayable.getStoreTabNavigator()
+                  .navigateToCommentGridRecyclerView(CommentType.STORE, url, "View Comments");
             } else {
-              fragment = AptoideApplication.getFragmentProvider()
-                  .newStoreTabGridRecyclerFragment(event, title, storeTheme, tag, storeContext,
+              displayable.getStoreTabNavigator()
+                  .navigateToStoreTabGridRecyclerView(event, title, storeTheme, tag, storeContext,
                       false);
             }
 
-            getFragmentNavigator().navigateTo(fragment, true);
             Analytics.AppViewViewedFrom.addStepToList(wsWidget.getTag());
           }));
     }
