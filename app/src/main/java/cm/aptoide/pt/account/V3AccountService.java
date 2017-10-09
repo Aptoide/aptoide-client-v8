@@ -79,33 +79,28 @@ public class V3AccountService implements AccountService {
   }
 
   @Override public Single<Account> getAccount(String email, String password) {
-    return createAccount(email, password, null, AptoideAccountManager.APTOIDE_SIGN_UP_TYPE);
+    return createAccount(email.toLowerCase(), password, null,
+        AptoideAccountManager.APTOIDE_SIGN_UP_TYPE);
   }
 
   @Override
   public Single<Account> createAccount(String email, String metadata, String name, String type) {
     return OAuth2AuthenticationRequest.of(email, metadata, type, null,
         v3NoAuthorizationBodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-        sharedPreferences, extraId)
-        .observe()
-        .toSingle()
-        .flatMap(oAuth -> {
-          if (!oAuth.hasErrors()) {
-            return authenticationPersistence.createAuthentication(email, metadata,
-                oAuth.getRefreshToken(), oAuth.getAccessToken(), type)
-                .andThen(getAccount());
-          } else {
-            return Single.error(new AccountException(oAuth.getError()));
-          }
-        })
-        .onErrorResumeNext(throwable -> {
-          if (throwable instanceof AptoideWsV3Exception) {
-            return Single.error(new AccountException(
-                ((AptoideWsV3Exception) throwable).getBaseResponse()
-                    .getError()));
-          }
-          return Single.error(throwable);
-        });
+        sharedPreferences, extraId).observe().toSingle().flatMap(oAuth -> {
+      if (!oAuth.hasErrors()) {
+        return authenticationPersistence.createAuthentication(email, metadata,
+            oAuth.getRefreshToken(), oAuth.getAccessToken(), type).andThen(getAccount());
+      } else {
+        return Single.error(new AccountException(oAuth.getError()));
+      }
+    }).onErrorResumeNext(throwable -> {
+      if (throwable instanceof AptoideWsV3Exception) {
+        return Single.error(
+            new AccountException(((AptoideWsV3Exception) throwable).getBaseResponse().getError()));
+      }
+      return Single.error(throwable);
+    });
   }
 
   @Override public Single<Account> createAccount(String email, String password) {
@@ -122,8 +117,7 @@ public class V3AccountService implements AccountService {
         .onErrorResumeNext(throwable -> {
           if (throwable instanceof AptoideWsV3Exception) {
             return Single.error(new AccountException(
-                ((AptoideWsV3Exception) throwable).getBaseResponse()
-                    .getError()));
+                ((AptoideWsV3Exception) throwable).getBaseResponse().getError()));
           }
           return Single.error(throwable);
         });
@@ -215,8 +209,7 @@ public class V3AccountService implements AccountService {
     return observableError.zipWith(Observable.range(2, 4), (throwable, count) -> {
       try {
         AptoideWsV7Exception v7Exception = (AptoideWsV7Exception) throwable;
-        List<BaseV7Response.Error> errors = v7Exception.getBaseResponse()
-            .getErrors();
+        List<BaseV7Response.Error> errors = v7Exception.getBaseResponse().getErrors();
         if (errors != null && !errors.isEmpty() && errors.get(0)
             .getCode()
             .equalsIgnoreCase("user-1")) {
@@ -227,22 +220,16 @@ public class V3AccountService implements AccountService {
         // does nothing
       }
       return Observable.<Throwable>error(throwable);
-    })
-        .flatMap(observable -> observable);
+    }).flatMap(observable -> observable);
   }
 
   private Account mapServerAccountToAccount(GetUserInfo userInfo, List<Store> subscribedStores) {
-    final GetUserMeta.Data userData = userInfo.getNodes()
-        .getMeta()
-        .getData();
-    final GetUserSettings.Data userSettings = userInfo.getNodes()
-        .getSettings()
-        .getData();
+    final GetUserMeta.Data userData = userInfo.getNodes().getMeta().getData();
+    final GetUserSettings.Data userSettings = userInfo.getNodes().getSettings().getData();
     return accountFactory.createAccount(userData.getAccess(), subscribedStores,
-        String.valueOf(userData.getId()), userData.getIdentity()
-            .getEmail(), userData.getName(), userData.getAvatar(), mapToStore(userData.getStore()),
-        userSettings.isMature(), userSettings.getAccess()
-            .isConfirmed());
+        String.valueOf(userData.getId()), userData.getIdentity().getEmail(), userData.getName(),
+        userData.getAvatar(), mapToStore(userData.getStore()), userSettings.isMature(),
+        userSettings.getAccess().isConfirmed());
   }
 
   private Completable changeSubscription(String storeName, String storeUserName,
@@ -257,8 +244,7 @@ public class V3AccountService implements AccountService {
   private Single<List<Store>> getSubscribedStores() {
     return new GetMySubscribedStoresRequest(bodyInterceptorPoolV7, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences).observe()
-        .map(getUserRepoSubscription -> getUserRepoSubscription.getDataList()
-            .getList())
+        .map(getUserRepoSubscription -> getUserRepoSubscription.getDataList().getList())
         .flatMapIterable(list -> list)
         .map(store -> mapToStore(store))
         .toList()
@@ -271,26 +257,22 @@ public class V3AccountService implements AccountService {
     }
     final String publicAccessConstant =
         cm.aptoide.pt.dataprovider.model.v7.store.Store.PUBLIC_ACCESS;
-    return new Store(store.getStats() == null ? 0 : store.getStats()
-        .getDownloads(), store.getAvatar(), store.getId(), store.getName(),
-        store.getAppearance() == null ? "DEFAULT" : store.getAppearance()
-            .getTheme(), null, null, publicAccessConstant.equalsIgnoreCase(store.getAccess()));
+    return new Store(store.getStats() == null ? 0 : store.getStats().getDownloads(),
+        store.getAvatar(), store.getId(), store.getName(),
+        store.getAppearance() == null ? "DEFAULT" : store.getAppearance().getTheme(), null, null,
+        publicAccessConstant.equalsIgnoreCase(store.getAccess()));
   }
 
   private Single<GetUserInfo> getServerAccount() {
     return GetUserInfoRequest.of(httpClient, converterFactory, bodyInterceptorWebV7,
-        tokenInvalidator)
-        .observe(true)
-        .toSingle()
-        .flatMap(response -> {
-          if (response.isOk()) {
-            return Single.just(response);
-          } else {
-            return Single.error(new Exception(V7.getErrorMessage(response)));
-          }
-        })
-        .retryWhen(observableError -> retryOnTicket(observableError).doOnNext(__ -> {
-          Logger.w("AccountManagerService", "retryOnTicket() doOnNext()");
-        }));
+        tokenInvalidator).observe(true).toSingle().flatMap(response -> {
+      if (response.isOk()) {
+        return Single.just(response);
+      } else {
+        return Single.error(new Exception(V7.getErrorMessage(response)));
+      }
+    }).retryWhen(observableError -> retryOnTicket(observableError).doOnNext(__ -> {
+      Logger.w("AccountManagerService", "retryOnTicket() doOnNext()");
+    }));
   }
 }
