@@ -68,6 +68,8 @@ public class ScreenTagHistory {
       String store;
       if (storeContext == null) {
         store = "";
+      } else if (storeContext.equals(StoreContext.home)) {
+        store = "aptoide_main";
       } else {
         store = storeContext.name();
       }
