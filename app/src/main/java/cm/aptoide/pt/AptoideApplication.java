@@ -60,24 +60,25 @@ import cm.aptoide.pt.billing.PaymentMethodMapper;
 import cm.aptoide.pt.billing.PaymentMethodSelector;
 import cm.aptoide.pt.billing.PurchaseMapper;
 import cm.aptoide.pt.billing.SharedPreferencesPaymentMethodSelector;
-import cm.aptoide.pt.billing.V3BillingService;
+import cm.aptoide.pt.billing.V7BillingService;
 import cm.aptoide.pt.billing.authorization.AuthorizationFactory;
+import cm.aptoide.pt.billing.authorization.AuthorizationMapper;
 import cm.aptoide.pt.billing.authorization.AuthorizationPersistence;
 import cm.aptoide.pt.billing.authorization.AuthorizationRepository;
 import cm.aptoide.pt.billing.authorization.AuthorizationService;
-import cm.aptoide.pt.billing.authorization.InMemoryAuthorizationPersistence;
-import cm.aptoide.pt.billing.authorization.V3AuthorizationService;
+import cm.aptoide.pt.billing.authorization.AuthorizationServiceV7;
+import cm.aptoide.pt.billing.authorization.RealmAuthorizationPersistence;
 import cm.aptoide.pt.billing.external.ExternalBillingSerializer;
 import cm.aptoide.pt.billing.product.ProductFactory;
 import cm.aptoide.pt.billing.sync.BillingSyncFactory;
 import cm.aptoide.pt.billing.sync.BillingSyncManager;
-import cm.aptoide.pt.billing.transaction.RealmTransactionPersistence;
+import cm.aptoide.pt.billing.transaction.InMemoryTransactionPersistence;
 import cm.aptoide.pt.billing.transaction.TransactionFactory;
 import cm.aptoide.pt.billing.transaction.TransactionMapper;
 import cm.aptoide.pt.billing.transaction.TransactionPersistence;
 import cm.aptoide.pt.billing.transaction.TransactionRepository;
 import cm.aptoide.pt.billing.transaction.TransactionService;
-import cm.aptoide.pt.billing.transaction.V3TransactionService;
+import cm.aptoide.pt.billing.transaction.TransactionServiceV7;
 import cm.aptoide.pt.billing.view.PaymentThrowableCodeMapper;
 import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.crashreports.ConsoleLogger;
@@ -284,7 +285,7 @@ public abstract class AptoideApplication extends Application {
   private TransactionMapper transactionMapper;
   private TransactionService transactionService;
   private Customer customer;
-  private AuthorizationFactory authorizationFactory;
+  private AuthorizationMapper authorizationMapper;
   private AuthorizationService authorizationService;
   private TransactionPersistence transactionPersistence;
   private AuthorizationPersistence authorizationPersistence;
@@ -299,11 +300,12 @@ public abstract class AptoideApplication extends Application {
   private Map<Integer, Result> fragmentResulMap;
   private PublishRelay<FacebookLoginResult> facebookLoginResultRelay;
   private NavigationTracker navigationTracker;
+  private AuthorizationFactory authorizationFactory;
   private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
   private AccountAnalytics accountAnalytics;
   private PageViewsAnalytics pageViewsAnalytics;
-  private AccountSettingsBodyInterceptorV7 accountSettingsBodyInterceptorPoolV7;
-  private AccountSettingsBodyInterceptorV7 accountSettingsBodyInterceptorWebV7;
+  private BodyInterceptor<BaseBody> accountSettingsBodyInterceptorPoolV7;
+  private BodyInterceptor<BaseBody> accountSettingsBodyInterceptorWebV7;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -751,7 +753,8 @@ public abstract class AptoideApplication extends Application {
               WebService.getDefaultConverter(), getNonNullObjectMapper(),
               getDefaultSharedPreferences(), getExtraId(), getTokenInvalidator(),
               getAuthenticationPersistence(), getNoAuthenticationBodyInterceptorV3(),
-              getMultipartBodyInterceptor(), getBodyInterceptorWebV7(), getBodyInterceptorPoolV7());
+              getMultipartBodyInterceptor(), getBodyInterceptorPoolV7(),
+              getBodyInterceptorPoolV7());
 
       final AndroidAccountDataMigration accountDataMigration = new AndroidAccountDataMigration(
           SecurePreferencesImplementation.getInstance(this, getDefaultSharedPreferences()),
@@ -860,35 +863,32 @@ public abstract class AptoideApplication extends Application {
     if (billing == null) {
 
       final TransactionRepository transactionRepository =
-          new TransactionRepository(geTransactionPersistence(), getBillingSyncManager(), getCustomer(),
-              getTransactionService());
+          new TransactionRepository(geTransactionPersistence(), getBillingSyncManager(),
+              getCustomer(), getTransactionService());
 
       final AuthorizationRepository authorizationRepository =
           new AuthorizationRepository(getBillingSyncManager(), getCustomer(),
-              getAuthorizationService(), getAuthorizationPersistence());
+              getAuthorizationPersistence());
 
       final BillingService billingService =
-          new V3BillingService(getBodyInterceptorV3(), getAccountSettingsBodyInterceptorPoolV7(),
-              getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
-              getDefaultSharedPreferences(),
-              new PurchaseMapper(getInAppBillingSerializer(), getBillingIdResolver()),
-              new ProductFactory(getBillingIdResolver()), getPackageRepository(),
-              new PaymentMethodMapper(), getResources(), getBillingIdResolver(),
-              BuildConfig.IN_BILLING_SUPPORTED_API_VERSION);
+          new V7BillingService(getAccountSettingsBodyInterceptorPoolV7(), getDefaultClient(),
+              WebService.getDefaultConverter(), getTokenInvalidator(),
+              getDefaultSharedPreferences(), new PurchaseMapper(getInAppBillingSerializer()),
+              new ProductFactory(), getPackageRepository(), new PaymentMethodMapper());
 
       final PaymentMethodSelector paymentMethodSelector =
           new SharedPreferencesPaymentMethodSelector(BuildConfig.DEFAULT_PAYMENT_ID,
               getDefaultSharedPreferences());
 
       billing = new Billing(transactionRepository, billingService, authorizationRepository,
-          paymentMethodSelector, getCustomer());
+          paymentMethodSelector, getCustomer(), getAuthorizationFactory());
     }
     return billing;
   }
 
   public BillingIdResolver getBillingIdResolver() {
     if (billingiIdResolver == null) {
-      billingiIdResolver = new BillingIdResolver(getAptoidePackage(), "/", "paid-app", "in-app");
+      billingiIdResolver = new BillingIdResolver(getAptoidePackage(), "/", "paid-app");
     }
     return billingiIdResolver;
   }
@@ -906,8 +906,8 @@ public abstract class AptoideApplication extends Application {
   public AuthorizationPersistence getAuthorizationPersistence() {
     if (authorizationPersistence == null) {
       authorizationPersistence =
-          new InMemoryAuthorizationPersistence(new HashMap<>(), PublishRelay.create(),
-              getAuthorizationFactory());
+          new RealmAuthorizationPersistence(new HashMap<>(), PublishRelay.create(), getDatabase(),
+              getAuthorizationMapper(), authorizationFactory);
     }
     return authorizationPersistence;
   }
@@ -915,8 +915,8 @@ public abstract class AptoideApplication extends Application {
   public TransactionPersistence geTransactionPersistence() {
     if (transactionPersistence == null) {
       transactionPersistence =
-          new RealmTransactionPersistence(new HashMap<>(), PublishRelay.create(), getDatabase(),
-              getTransactionMapper(), getTransactionFactory());
+          new InMemoryTransactionPersistence(new HashMap<>(), PublishRelay.create(),
+              getTransactionFactory());
     }
     return transactionPersistence;
   }
@@ -924,11 +924,18 @@ public abstract class AptoideApplication extends Application {
   public AuthorizationService getAuthorizationService() {
     if (authorizationService == null) {
       authorizationService =
-          new V3AuthorizationService(getAuthorizationFactory(), getBodyInterceptorV3(),
-              getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
-              getDefaultSharedPreferences());
+          new AuthorizationServiceV7(getAuthorizationMapper(), getDefaultClient(),
+              WebService.getDefaultConverter(), getTokenInvalidator(),
+              getDefaultSharedPreferences(), getBodyInterceptorPoolV7());
     }
     return authorizationService;
+  }
+
+  public AuthorizationMapper getAuthorizationMapper() {
+    if (authorizationMapper == null) {
+      authorizationMapper = new AuthorizationMapper(getAuthorizationFactory());
+    }
+    return authorizationMapper;
   }
 
   public AuthorizationFactory getAuthorizationFactory() {
@@ -947,9 +954,10 @@ public abstract class AptoideApplication extends Application {
 
   public TransactionService getTransactionService() {
     if (transactionService == null) {
-      transactionService = new V3TransactionService(getTransactionMapper(), getBodyInterceptorV3(),
-          WebService.getDefaultConverter(), getDefaultClient(), getTokenInvalidator(),
-          getDefaultSharedPreferences(), getTransactionFactory(), getBillingIdResolver());
+      transactionService =
+          new TransactionServiceV7(getTransactionMapper(), getBodyInterceptorPoolV7(),
+              WebService.getDefaultConverter(), getDefaultClient(), getTokenInvalidator(),
+              getDefaultSharedPreferences());
     }
     return transactionService;
   }

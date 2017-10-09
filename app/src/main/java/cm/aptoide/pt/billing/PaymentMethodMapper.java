@@ -16,7 +16,6 @@ public class PaymentMethodMapper {
   public static final int SANDBOX = 8;
   public static final int BOA_COMPRA_GOLD = 9;
   public static final int MOL_POINTS = 10;
-  public static final int BRAINTREE_CREDIT_CARD = 11;
 
   public List<PaymentMethod> map(List<GetServicesRequest.ResponseBody.Service> responseList) {
 
@@ -32,12 +31,7 @@ public class PaymentMethodMapper {
 
   private PaymentMethod map(GetServicesRequest.ResponseBody.Service response) {
     switch (response.getId()) {
-      case BRAINTREE_CREDIT_CARD:
-        return new PaymentMethod(response.getId(), response.getName(), response.getLabel(),
-            response.getIcon());
       case PAYPAL:
-        return new PaymentMethod(response.getId(), response.getName(), response.getLabel(),
-            response.getIcon());
       case BOA_COMPRA:
       case BOA_COMPRA_GOLD:
       case MOL_POINTS:

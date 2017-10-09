@@ -7,51 +7,51 @@ package cm.aptoide.pt.billing.authorization;
 
 public class Authorization {
 
-  private final int paymentId;
+  private final long id;
   private final String customerId;
   private final Status status;
+  private final long transactionId;
 
-  public Authorization(int paymentId, String customerId, Status status) {
-    this.paymentId = paymentId;
+  public Authorization(long id, String customerId, Status status, long transactionId) {
+    this.id = id;
     this.customerId = customerId;
     this.status = status;
+    this.transactionId = transactionId;
+  }
+
+  public long getId() {
+    return id;
   }
 
   public String getCustomerId() {
     return customerId;
   }
 
-  public int getPaymentId() {
-    return paymentId;
-  }
-
-  public boolean isAuthorized() {
-    return Status.ACTIVE.equals(status) || Status.NONE.equals(status);
+  public boolean isInactive() {
+    return Status.PENDING.equals(status);
   }
 
   public boolean isPending() {
-    return Status.PENDING.equals(status) || isInitialized();
-  }
-
-  public boolean isInactive() {
-    return Status.INACTIVE.equals(status)
-        || Status.EXPIRED.equals(status)
-        || Status.SESSION_EXPIRED.equals(status);
-  }
-
-  public boolean isInitialized() {
-    return Status.INITIATED.equals(status);
+    return Status.PENDING_SYNC.equals(status);
   }
 
   public boolean isFailed() {
-    return Status.CANCELLED.equals(status) || Status.UNKNOWN_ERROR.equals(status);
+    return Status.FAILED.equals(status) || Status.UNKNOWN_ERROR.equals(status);
+  }
+
+  public boolean isActive() {
+    return Status.ACTIVE.equals(status);
   }
 
   public Status getStatus() {
     return status;
   }
 
+  public long getTransactionId() {
+    return transactionId;
+  }
+
   public enum Status {
-    UNKNOWN, NONE, INACTIVE, ACTIVE, INITIATED, PENDING, CANCELLED, EXPIRED, SESSION_EXPIRED, UNKNOWN_ERROR
+    PENDING, ACTIVE, FAILED, PENDING_SYNC, UNKNOWN_ERROR
   }
 }

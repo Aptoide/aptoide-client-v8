@@ -108,8 +108,8 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
             .build();
 
     attachPresenter(new PaymentPresenter(this, billing, billingNavigator, billingAnalytics,
-        getArguments().getString(PaymentActivity.EXTRA_APPLICATION_ID),
-        getArguments().getString(PaymentActivity.EXTRA_PRODUCT_ID),
+        getArguments().getString(PaymentActivity.EXTRA_MERCHANT_NAME),
+        getArguments().getString(PaymentActivity.EXTRA_SKU),
         getArguments().getString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD)), savedInstanceState);
   }
 

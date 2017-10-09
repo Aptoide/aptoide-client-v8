@@ -7,7 +7,7 @@ package cm.aptoide.pt.billing;
 
 public interface Purchase {
 
-  String getProductId();
+  long getProductId();
 
   boolean isCompleted();
 

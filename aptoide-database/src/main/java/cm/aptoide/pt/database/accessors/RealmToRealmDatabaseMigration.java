@@ -343,7 +343,10 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
       realm.delete("PaymentConfirmation");
       schema.get("PaymentConfirmation")
           .renameField("sellerId", "merchantName")
-          .renameField("payerId", "customerId");
+          .renameField("payerId", "customerId")
+          .removeField("productId")
+          .addField("productId", long.class);
+
       oldVersion++;
     }
   }

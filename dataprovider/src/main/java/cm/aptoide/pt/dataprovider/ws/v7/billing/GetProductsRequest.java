@@ -16,7 +16,8 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 
-public class GetProductsRequest extends V7<GetProductsRequest.ResponseBody, GetProductsRequest.RequestBody> {
+public class GetProductsRequest
+    extends V7<GetProductsRequest.ResponseBody, GetProductsRequest.RequestBody> {
 
   private GetProductsRequest(RequestBody requestBody, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
@@ -46,15 +47,31 @@ public class GetProductsRequest extends V7<GetProductsRequest.ResponseBody, GetP
         tokenInvalidator, sharedPreferences);
   }
 
-  @Override protected Observable<GetProductsRequest.ResponseBody> loadDataFromNetwork(Interfaces interfaces,
+  public static GetProductsRequest of(String packageName, String sku,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
+    final RequestBody requestBody = new RequestBody();
+    requestBody.setPackageName(packageName);
+    requestBody.setSku(sku);
+    return new GetProductsRequest(requestBody, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences);
+  }
+
+  @Override
+  protected Observable<GetProductsRequest.ResponseBody> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getBillingProducts(body, bypassCache);
+    if (body.getSkus() != null) {
+      return interfaces.getBillingProducts(body, bypassCache);
+    }
+    return interfaces.getBillingProduct(body, bypassCache);
   }
 
   public static class RequestBody extends BaseBody {
 
     private String packageName;
     private String skus;
+    private String sku;
 
     public String getPackageName() {
       return packageName;
@@ -71,11 +88,20 @@ public class GetProductsRequest extends V7<GetProductsRequest.ResponseBody, GetP
     public void setSkus(String skus) {
       this.skus = skus;
     }
+
+    public String getSku() {
+      return sku;
+    }
+
+    public void setSku(String sku) {
+      this.sku = sku;
+    }
   }
 
   public static class ResponseBody extends BaseV7Response {
 
     private List<Product> list;
+    private Product data;
 
     public List<Product> getList() {
       return list;
@@ -85,16 +111,24 @@ public class GetProductsRequest extends V7<GetProductsRequest.ResponseBody, GetP
       this.list = list;
     }
 
+    public Product getData() {
+      return data;
+    }
+
+    public void setData(Product data) {
+      this.data = data;
+    }
+
     public static class Product {
 
-      private int id;
+      private long id;
       private String sku;
       private String title;
       private String description;
       private String icon;
       private Price price;
 
-      public int getId() {
+      public long getId() {
         return id;
       }
 

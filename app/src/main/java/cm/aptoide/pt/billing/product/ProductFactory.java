@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.billing.product;
 
-import cm.aptoide.pt.billing.BillingIdResolver;
 import cm.aptoide.pt.billing.Price;
 import cm.aptoide.pt.billing.Product;
 import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
@@ -15,12 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductFactory {
-
-  private final BillingIdResolver idResolver;
-
-  public ProductFactory(BillingIdResolver idResolver) {
-    this.idResolver = idResolver;
-  }
 
   public Product create(PaidApp app) {
 
@@ -36,8 +29,8 @@ public class ProductFactory {
         getPaymentServiceResponse(payment.getPaymentServices());
     final String currency = (paymentService != null) ? paymentService.getCurrency() : "";
 
-    return new PaidAppProduct(idResolver.resolveProductId(app.getPath()
-        .getAppId()), productId, icon, app.getApp()
+    return new PaidAppProduct(productId, app.getPath()
+        .getStoreName(), icon, app.getApp()
         .getName(), app.getApp()
         .getDescription(), app.getPath()
         .getAppId(), new Price(payment.getAmount(), currency, payment.getSymbol()), app.getPath()
@@ -52,16 +45,19 @@ public class ProductFactory {
 
     for (GetProductsRequest.ResponseBody.Product response : responseList) {
 
-      products.add(
-          new InAppProduct(idResolver.resolveProductId(response.getSku()), response.getId(),
-              response.getIcon(), response.getTitle(), response.getDescription(), response.getSku(),
-              packageName, new Price(response.getPrice()
-              .getAmount(), response.getPrice()
-              .getCurrency(), response.getPrice()
-              .getSign()), packageVersionCode, applicationName));
+      products.add(create(packageName, packageVersionCode, applicationName, response));
     }
 
     return products;
+  }
+
+  public Product create(String packageName, int packageVersionCode, String applicationName,
+      GetProductsRequest.ResponseBody.Product response) {
+    return new InAppProduct(response.getId(), response.getSku(), response.getIcon(),
+        response.getTitle(), response.getDescription(), packageName, new Price(response.getPrice()
+        .getAmount(), response.getPrice()
+        .getCurrency(), response.getPrice()
+        .getSign()), packageVersionCode, applicationName);
   }
 
   private PaymentServiceResponse getPaymentServiceResponse(

@@ -35,10 +35,15 @@ import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.util.ToRetryThrowable;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.billing.CreateTransactionRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.billing.DeletePurchaseRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.billing.GetAuthorizationRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetMerchantRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetProductsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetPurchasesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetServicesRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.billing.GetTransactionsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.billing.UpdateAuthorizationRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.CardPreviewRequest;
@@ -425,9 +430,39 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
     @POST("inapp/bank/services/get") Observable<GetServicesRequest.ResponseBody> getBillingServices(
         @Body BaseBody body, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("inapp/purchases/get")
-    Observable<GetPurchasesRequest.ResponseBody> getBillingPurchases(
+    @POST("inapp/purchases/get") Observable<GetPurchasesRequest.ResponseBody> getBillingPurchases(
         @Body GetPurchasesRequest.RequestBody body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("inapp/purchase/getMeta") Observable<GetPurchasesRequest.ResponseBody> getBillingPurchase(
+        @Body GetPurchasesRequest.RequestBody body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("inapp/bank/transactions/get")
+    Observable<GetTransactionsRequest.ResponseBody> getBillingTransaction(@Body BaseBody body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("inapp/bank/transaction/set")
+    Observable<CreateTransactionRequest.ResponseBody> createBillingTransaction(
+        @Body CreateTransactionRequest.RequestBody body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("inapp/product/getMeta") Observable<GetProductsRequest.ResponseBody> getBillingProduct(
+        @Body GetProductsRequest.RequestBody body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("inapp/purchase/consume") Observable<BaseV7Response> deleteBillingPurchase(
+        @Body DeletePurchaseRequest.RequestBody body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("inapp/bank/authorization/set")
+    Observable<UpdateAuthorizationRequest.ResponseBody> updateBillingAuthorization(
+        @Body UpdateAuthorizationRequest.RequestBody body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("inapp/bank/authorization/get")
+    Observable<GetAuthorizationRequest.ResponseBody> getBillingAuthorization(
+        @Body GetAuthorizationRequest.RequestBody body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
   }
 }

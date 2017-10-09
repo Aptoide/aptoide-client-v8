@@ -18,41 +18,42 @@ import java.util.List;
 public class PurchaseMapper {
 
   private final ExternalBillingSerializer serializer;
-  private final BillingIdResolver idResolver;
 
-  public PurchaseMapper(ExternalBillingSerializer serializer, BillingIdResolver idResolver) {
+  public PurchaseMapper(ExternalBillingSerializer serializer) {
     this.serializer = serializer;
-    this.idResolver = idResolver;
   }
 
   public Purchase map(PaidApp response) {
     return new PaidAppPurchase(response.getPath()
         .getStringPath(), response.getPayment()
         .isPaid() ? SimplePurchase.Status.COMPLETED : SimplePurchase.Status.FAILED,
-        idResolver.resolveProductId(response.getPath()
-            .getAppId()));
+        response.getPayment()
+            .getMetadata()
+            .getProductId());
   }
 
   public List<Purchase> map(List<GetPurchasesRequest.ResponseBody.Purchase> responseList) {
 
     final List<Purchase> purchases = new ArrayList<>(responseList.size());
 
-    try {
-      for (GetPurchasesRequest.ResponseBody.Purchase response : responseList) {
-        purchases.add(new InAppPurchase(response.getSignature(), serializer.serializePurchase(
-            response.getData()
-                .getDeveloperData()), response.getProduct()
-            .getSku(), response.getData()
-            .getDeveloperData()
-            .getPurchaseToken(), response.getData()
-            .getDeveloperData()
-            .getPurchaseState() == 0 ? SimplePurchase.Status.COMPLETED : SimplePurchase.Status.NEW,
-            idResolver.resolveProductId(response.getProduct()
-                .getId())));
-      }
-    } catch (JsonProcessingException ignored) {
+    for (GetPurchasesRequest.ResponseBody.Purchase response : responseList) {
+      purchases.add(map(response));
     }
-
     return purchases;
+  }
+
+  public Purchase map(GetPurchasesRequest.ResponseBody.Purchase response) {
+    try {
+      return new InAppPurchase(response.getProduct()
+          .getId(), response.getSignature(), serializer.serializePurchase(response.getData()
+          .getDeveloperData()), response.getProduct()
+          .getSku(), response.getData()
+          .getDeveloperData()
+          .getPurchaseToken(), response.getData()
+          .getDeveloperData()
+          .getPurchaseState() == 0 ? SimplePurchase.Status.COMPLETED : SimplePurchase.Status.NEW);
+    } catch (JsonProcessingException e) {
+      throw new IllegalArgumentException(e);
+    }
   }
 }

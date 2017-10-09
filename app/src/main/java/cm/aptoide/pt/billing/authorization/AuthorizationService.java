@@ -1,11 +1,10 @@
 package cm.aptoide.pt.billing.authorization;
 
-import java.util.List;
 import rx.Single;
 
 public interface AuthorizationService {
 
-  Single<Authorization> createAuthorization(String customerId, int paymentMethodId);
+  Single<Authorization> getAuthorization(long transactionId);
 
-  Single<List<Authorization>> getAuthorizations(String customerId, int paymentMethodId);
+  Single<Authorization> updateAuthorization(long transactionId, String metadata);
 }

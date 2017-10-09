@@ -6,9 +6,11 @@
 package cm.aptoide.pt.billing;
 
 import cm.aptoide.pt.billing.authorization.Authorization;
+import cm.aptoide.pt.billing.authorization.AuthorizationFactory;
 import cm.aptoide.pt.billing.authorization.AuthorizationRepository;
+import cm.aptoide.pt.billing.authorization.PayPalAuthorization;
 import cm.aptoide.pt.billing.exception.PaymentFailureException;
-import cm.aptoide.pt.billing.exception.PaymentMethodNotAuthorizedException;
+import cm.aptoide.pt.billing.exception.ServiceNotAuthorizedException;
 import cm.aptoide.pt.billing.product.SimplePurchase;
 import cm.aptoide.pt.billing.transaction.Transaction;
 import cm.aptoide.pt.billing.transaction.TransactionRepository;
@@ -24,15 +26,17 @@ public class Billing {
   private final AuthorizationRepository authorizationRepository;
   private final PaymentMethodSelector paymentMethodSelector;
   private final Customer customer;
+  private final AuthorizationFactory authorizationFactory;
 
   public Billing(TransactionRepository transactionRepository, BillingService billingService,
       AuthorizationRepository authorizationRepository, PaymentMethodSelector paymentMethodSelector,
-      Customer customer) {
+      Customer customer, AuthorizationFactory authorizationFactory) {
     this.transactionRepository = transactionRepository;
     this.billingService = billingService;
     this.authorizationRepository = authorizationRepository;
     this.paymentMethodSelector = paymentMethodSelector;
     this.customer = customer;
+    this.authorizationFactory = authorizationFactory;
   }
 
   public Customer getCustomer() {
@@ -43,12 +47,12 @@ public class Billing {
     return billingService.getMerchant(merchantName);
   }
 
-  public Single<Product> getProduct(String merchantName, String productId) {
-    return billingService.getProduct(merchantName, productId);
+  public Single<Product> getProduct(String merchantName, String sku) {
+    return billingService.getProduct(merchantName, sku);
   }
 
-  public Single<List<Product>> getProducts(String merchantName, List<String> productIds) {
-    return billingService.getProducts(merchantName, productIds);
+  public Single<List<Product>> getProducts(String merchantName, List<String> skus) {
+    return billingService.getProducts(merchantName, skus);
   }
 
   public Single<List<Purchase>> getPurchases(String merchantName) {
@@ -58,25 +62,22 @@ public class Billing {
   public Completable consumePurchase(String merchantName, String purchaseToken) {
     return billingService.getPurchase(merchantName, purchaseToken)
         .flatMapCompletable(purchase -> billingService.deletePurchase(merchantName, purchaseToken)
-            .andThen(transactionRepository.remove(purchase.getProductId(), merchantName)));
+            .andThen(transactionRepository.remove(purchase.getProductId())));
   }
 
   public Single<List<PaymentMethod>> getPaymentMethods() {
     return billingService.getPaymentMethods();
   }
 
-  public Completable processPayment(String merchantName, String productId, String payload) {
+  public Completable processPayment(String merchantName, String sku, String payload) {
     return getSelectedPaymentMethod().flatMap(
-        paymentMethod -> getProduct(merchantName, productId).flatMap(
-            product -> transactionRepository.createTransaction(merchantName, paymentMethod.getId(),
-                product, payload)))
+        paymentMethod -> getProduct(merchantName, sku).flatMap(
+            product -> transactionRepository.createTransaction(product.getProductId(),
+                paymentMethod.getId(), payload)))
         .flatMapCompletable(transaction -> {
           if (transaction.isPendingAuthorization()) {
-            return authorizationRepository.createAuthorization(transaction.getPaymentMethodId(),
-                Authorization.Status.INACTIVE)
-                .flatMapCompletable(authorization -> Completable.error(
-                    new PaymentMethodNotAuthorizedException(
-                        "Pending payment method authorization.")));
+            return Completable.error(
+                new ServiceNotAuthorizedException("Pending service authorization."));
           }
 
           if (transaction.isFailed()) {
@@ -87,52 +88,47 @@ public class Billing {
         });
   }
 
-  public Completable processLocalPayment(String merchantName, String productId, String payload,
-      String localMetadata) {
-    return getSelectedPaymentMethod().flatMap(
-        paymentMethod -> getProduct(merchantName, productId).flatMap(
-            product -> transactionRepository.createTransaction(merchantName, paymentMethod.getId(),
-                product, localMetadata, payload)))
-        .toCompletable();
+  public Completable authorize(String merchantName, String sku, String metadata) {
+    return getAuthorization(merchantName, sku).first()
+        .cast(PayPalAuthorization.class)
+        .toSingle()
+        .flatMapCompletable(authorization -> getSelectedPaymentMethod().flatMapCompletable(
+            service -> authorizationRepository.updateAuthorization(
+                authorizationFactory.create(authorization.getId(), authorization.getCustomerId(),
+                    AuthorizationFactory.PAYPAL_SDK, Authorization.Status.PENDING_SYNC, null, null,
+                    metadata, authorization.getPrice(), authorization.getDescription(),
+                    authorization.getTransactionId()))));
   }
 
-  public Observable<Transaction> getTransaction(String merchantName, String productId) {
-    return getProduct(merchantName, productId).flatMapObservable(
-        product -> transactionRepository.getTransaction(product, merchantName));
+  public Observable<Authorization> getAuthorization(String merchantName, String sku) {
+    return getTransaction(merchantName, sku).first()
+        .toSingle()
+        .flatMapObservable(
+            transaction -> authorizationRepository.getAuthorization(transaction.getId()));
   }
 
-  public Observable<Purchase> getPurchase(String merchantName, String productId) {
-    return getTransaction(merchantName, productId).flatMapSingle(transaction -> {
+  public Observable<Purchase> getPurchase(String merchantName, String sku) {
+    return getTransaction(merchantName, sku).flatMapSingle(transaction -> {
 
       if (transaction.isPending() || transaction.isUnknown()) {
-        return Single.just(new SimplePurchase(SimplePurchase.Status.PENDING, productId));
+        return Single.just(
+            new SimplePurchase(SimplePurchase.Status.PENDING, transaction.getProductId()));
       }
 
       if (transaction.isNew() || transaction.isFailed() || transaction.isPendingAuthorization()) {
-        return Single.just(new SimplePurchase(SimplePurchase.Status.NEW, productId));
+        return Single.just(
+            new SimplePurchase(SimplePurchase.Status.NEW, transaction.getProductId()));
       }
 
-      return getProduct(merchantName, productId).flatMap(
-          product -> billingService.getPurchase(product));
+      return billingService.getPurchase(merchantName, sku);
     })
         .flatMap(purchase -> {
           if (purchase.isFailed()) {
-            return transactionRepository.remove(productId, merchantName)
+            return transactionRepository.remove(purchase.getProductId())
                 .andThen(Observable.just(purchase));
           }
           return Observable.just(purchase);
         });
-  }
-
-  public Observable<Authorization> getAuthorization() {
-    return getSelectedPaymentMethod().flatMapObservable(
-        paymentMethod -> authorizationRepository.getAuthorization(paymentMethod.getId()));
-  }
-
-  public Completable authorize() {
-    return getSelectedPaymentMethod().flatMap(
-        paymentMethod -> authorizationRepository.createAuthorization(paymentMethod.getId()))
-        .toCompletable();
   }
 
   public Completable selectPaymentMethod(int paymentMethodId) {
@@ -143,6 +139,11 @@ public class Billing {
   public Single<PaymentMethod> getSelectedPaymentMethod() {
     return getPaymentMethods().flatMap(
         paymentMethods -> paymentMethodSelector.selectedPaymentMethod(paymentMethods));
+  }
+
+  private Observable<Transaction> getTransaction(String merchantName, String sku) {
+    return getProduct(merchantName, sku).flatMapObservable(
+        product -> transactionRepository.getTransaction(product.getProductId()));
   }
 
   private Single<PaymentMethod> getPaymentMethod(int paymentMethodId) {

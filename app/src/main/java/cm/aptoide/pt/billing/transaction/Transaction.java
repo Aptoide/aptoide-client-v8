@@ -1,32 +1,26 @@
 package cm.aptoide.pt.billing.transaction;
 
 public class Transaction {
-  private final String productId;
+
+  private final long id;
+  private final long productId;
   private final String customerId;
   private final Status status;
-  private final int paymentMethodId;
-  private final String payload;
-  private final String merchantName;
+  private final int serviceId;
 
-  public Transaction(String productId, String customerId, Status status, int paymentMethodId,
-      String payload, String merchantName) {
+  public Transaction(long id, long productId, String customerId, Status status, int serviceId) {
     this.productId = productId;
     this.customerId = customerId;
     this.status = status;
-    this.paymentMethodId = paymentMethodId;
-    this.payload = payload;
-    this.merchantName = merchantName;
-  }
-
-  public String getPayload() {
-    return payload;
+    this.serviceId = serviceId;
+    this.id = id;
   }
 
   public String getCustomerId() {
     return customerId;
   }
 
-  public String getProductId() {
+  public long getProductId() {
     return productId;
   }
 
@@ -43,7 +37,7 @@ public class Transaction {
   }
 
   public boolean isPendingAuthorization() {
-    return Status.PENDING_USER_AUTHORIZATION.equals(status);
+    return Status.PENDING_SERVICE_AUTHORIZATION.equals(status);
   }
 
   public boolean isPending() {
@@ -56,19 +50,19 @@ public class Transaction {
     return Status.CANCELED.equals(status) || Status.FAILED.equals(status);
   }
 
-  public int getPaymentMethodId() {
-    return paymentMethodId;
+  public int getServiceId() {
+    return serviceId;
   }
 
   public boolean isUnknown() {
     return Status.UNKNOWN.equals(status);
   }
 
-  public String getSellerId() {
-    return merchantName;
+  public long getId() {
+    return id;
   }
 
   public enum Status {
-    UNKNOWN, NEW, CREATED, PENDING_USER_AUTHORIZATION, PROCESSING, PENDING, COMPLETED, FAILED, CANCELED
+    UNKNOWN, NEW, CREATED, PENDING_SERVICE_AUTHORIZATION, PROCESSING, PENDING, COMPLETED, FAILED, CANCELED
   }
 }

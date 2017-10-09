@@ -19,8 +19,8 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 
-public class GetPurchasesRequest extends
-    V7<GetPurchasesRequest.ResponseBody, GetPurchasesRequest.RequestBody> {
+public class GetPurchasesRequest
+    extends V7<GetPurchasesRequest.ResponseBody, GetPurchasesRequest.RequestBody> {
 
   public GetPurchasesRequest(RequestBody body, String baseHost, OkHttpClient httpClient,
       Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
@@ -28,24 +28,45 @@ public class GetPurchasesRequest extends
     super(body, baseHost, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
-  public static GetPurchasesRequest of(String packageName,
+  public static GetPurchasesRequest of(String merchantName,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
     final RequestBody body = new RequestBody();
-    body.setPackageName(packageName);
-    return new GetPurchasesRequest(body, getHost(sharedPreferences), httpClient,
-        converterFactory, bodyInterceptor, tokenInvalidator);
+    body.setPackageName(merchantName);
+    return new GetPurchasesRequest(body, getHost(sharedPreferences), httpClient, converterFactory,
+        bodyInterceptor, tokenInvalidator);
+  }
+
+  public static GetPurchasesRequest of(long productId, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    final RequestBody body = new RequestBody();
+    body.setProductId(productId);
+    return new GetPurchasesRequest(body, getHost(sharedPreferences), httpClient, converterFactory,
+        bodyInterceptor, tokenInvalidator);
   }
 
   @Override protected Observable<ResponseBody> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
+    if (body.getProductId() != 0) {
+      return interfaces.getBillingPurchase(body, bypassCache);
+    }
     return interfaces.getBillingPurchases(body, bypassCache);
   }
 
   public static class RequestBody extends BaseBody {
 
+    private long productId;
     private String packageName;
+
+    public long getProductId() {
+      return productId;
+    }
+
+    public void setProductId(long productId) {
+      this.productId = productId;
+    }
 
     public String getPackageName() {
       return packageName;
@@ -59,6 +80,7 @@ public class GetPurchasesRequest extends
   public static class ResponseBody extends BaseV7Response {
 
     private List<Purchase> list;
+    private Purchase data;
 
     public List<Purchase> getList() {
       return list;
@@ -66,6 +88,14 @@ public class GetPurchasesRequest extends
 
     public void setList(List<Purchase> list) {
       this.list = list;
+    }
+
+    public Purchase getData() {
+      return data;
+    }
+
+    public void setData(Purchase data) {
+      this.data = data;
     }
 
     public static class Purchase {

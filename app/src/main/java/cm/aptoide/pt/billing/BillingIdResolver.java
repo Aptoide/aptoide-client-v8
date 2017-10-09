@@ -1,72 +1,26 @@
 package cm.aptoide.pt.billing;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class BillingIdResolver {
 
   private final String divider;
   private final String applicationPackage;
   private final String paidAppId;
-  private final String inAppId;
 
-  public BillingIdResolver(String applicationPackage, String divider, String paidAppId,
-      String inAppId) {
+  public BillingIdResolver(String applicationPackage, String divider, String paidAppId) {
     this.divider = divider;
     this.applicationPackage = applicationPackage;
     this.paidAppId = paidAppId;
-    this.inAppId = inAppId;
   }
 
-  public String resolveSellerId(String packageName) {
-    return packageName;
-  }
-
-  public String resolveStoreSellerId(String storeName) {
+  public String resolveMerchantName(String storeName) {
     return applicationPackage + divider + storeName;
-  }
-
-  public String resolveProductId(String sku) {
-    return sku + divider + inAppId;
   }
 
   public String resolveProductId(long appId) {
     return appId + divider + paidAppId;
   }
 
-  public boolean isPaidAppId(String productId) {
-    return productId.split(divider)[1].equals(paidAppId);
-  }
-
-  public boolean isInAppId(String productId) {
-    return productId.split(divider)[1].equals(inAppId);
-  }
-
-  public String resolveSku(String productId) {
-    return productId.split(divider)[0];
-  }
-
-  public long resolveAppId(String productId) {
-    return Long.valueOf(productId.split(divider)[0]);
-  }
-
-  public List<String> resolveProductIds(List<String> skuList) {
-    final List<String> productIds = new ArrayList<>();
-    for (String sku : skuList) {
-      productIds.add(resolveProductId(sku));
-    }
-    return productIds;
-  }
-
   public String resolveStoreName(String merchantName) {
     return merchantName.split(divider)[1];
-  }
-
-  public List<String> resolveSkus(List<String> productIds) {
-    final List<String> skus = new ArrayList<>();
-    for (String productId : productIds) {
-      skus.add(resolveSku(productId));
-    }
-    return skus;
   }
 }

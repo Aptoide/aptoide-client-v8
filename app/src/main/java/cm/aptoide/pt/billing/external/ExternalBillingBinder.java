@@ -84,7 +84,7 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
         return RESULT_BILLING_UNAVAILABLE;
       }
 
-      return billing.getMerchant(idResolver.resolveSellerId(packageName))
+      return billing.getMerchant(packageName)
           .map(merchant -> RESULT_OK)
           .onErrorResumeNext(throwable -> {
             if (throwable instanceof MerchantNotFoundException) {
@@ -111,26 +111,24 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
       return result;
     }
 
-    final List<String> itemIdList = skusBundle.getStringArrayList(ITEM_ID_LIST);
+    final List<String> skus = skusBundle.getStringArrayList(ITEM_ID_LIST);
 
-    if (itemIdList == null || itemIdList.size() <= 0) {
+    if (skus == null || skus.size() <= 0) {
       result.putInt(RESPONSE_CODE, RESULT_DEVELOPER_ERROR);
       return result;
     }
 
     try {
-      final List<String> serializedProducts =
-          billing.getProducts(idResolver.resolveSellerId(packageName),
-              idResolver.resolveProductIds(itemIdList))
-              .flatMap(products -> {
-                try {
-                  return Single.just(serializer.serializeProducts(products));
-                } catch (IOException e) {
-                  return Single.error(e);
-                }
-              })
-              .toBlocking()
-              .value();
+      final List<String> serializedProducts = billing.getProducts(packageName, skus)
+          .flatMap(products -> {
+            try {
+              return Single.just(serializer.serializeProducts(products));
+            } catch (IOException e) {
+              return Single.error(e);
+            }
+          })
+          .toBlocking()
+          .value();
 
       result.putInt(RESPONSE_CODE, RESULT_OK);
       result.putStringArrayList(DETAILS_LIST, new ArrayList<>(serializedProducts));
@@ -155,8 +153,7 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
     try {
       result.putInt(RESPONSE_CODE, RESULT_OK);
       result.putParcelable(BUY_INTENT, PendingIntent.getActivity(context, 0,
-          PaymentActivity.getIntent(context, idResolver.resolveProductId(sku),
-              idResolver.resolveSellerId(packageName), developerPayload),
+          PaymentActivity.getIntent(context, sku, packageName, developerPayload),
           PendingIntent.FLAG_UPDATE_CURRENT));
       analytics.sendPaymentViewShowEvent();
     } catch (Exception exception) {
@@ -179,7 +176,7 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
 
     try {
 
-      final List<Purchase> purchases = billing.getPurchases(idResolver.resolveSellerId(packageName))
+      final List<Purchase> purchases = billing.getPurchases(packageName)
           .toBlocking()
           .value();
 
@@ -213,7 +210,7 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
     }
 
     try {
-      return billing.consumePurchase(idResolver.resolveSellerId(packageName), purchaseToken)
+      return billing.consumePurchase(packageName, purchaseToken)
           .andThen(Single.just(RESULT_OK))
           .toBlocking()
           .value();

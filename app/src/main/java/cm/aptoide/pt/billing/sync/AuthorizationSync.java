@@ -6,27 +6,24 @@
 package cm.aptoide.pt.billing.sync;
 
 import cm.aptoide.pt.billing.Customer;
-import cm.aptoide.pt.billing.authorization.Authorization;
 import cm.aptoide.pt.billing.authorization.AuthorizationPersistence;
 import cm.aptoide.pt.billing.authorization.AuthorizationService;
+import cm.aptoide.pt.billing.authorization.PayPalAuthorization;
 import cm.aptoide.pt.sync.Sync;
-import java.util.List;
 import rx.Completable;
-import rx.Observable;
-import rx.Single;
 
 public class AuthorizationSync extends Sync {
 
-  private final int paymentId;
+  private final long transactionId;
   private final Customer customer;
   private final AuthorizationService authorizationService;
   private final AuthorizationPersistence authorizationPersistence;
 
-  public AuthorizationSync(int paymentId, Customer customer, AuthorizationService authorizationService,
-      AuthorizationPersistence authorizationPersistence, boolean periodic, boolean exact,
-      long interval, long trigger) {
-    super(String.valueOf(paymentId), periodic, exact, trigger, interval);
-    this.paymentId = paymentId;
+  public AuthorizationSync(String id, Customer customer, long transactionId,
+      AuthorizationService authorizationService, AuthorizationPersistence authorizationPersistence,
+      boolean periodic, boolean exact, long interval, long trigger) {
+    super(id, periodic, exact, trigger, interval);
+    this.transactionId = transactionId;
     this.customer = customer;
     this.authorizationService = authorizationService;
     this.authorizationPersistence = authorizationPersistence;
@@ -34,24 +31,27 @@ public class AuthorizationSync extends Sync {
 
   @Override public Completable execute() {
     return customer.getId()
-        .flatMapCompletable(customerId -> authorizationService.getAuthorizations(customerId, paymentId)
-            .flatMap(authorizations -> saveAuthorizations(customerId, authorizations))
-            .toCompletable());
+        .flatMapCompletable(
+            customerId -> syncPayPalAuthorization(customerId, transactionId).andThen(
+                syncRemoteAuthorization(customerId, transactionId)));
   }
 
-  private Single<List<Authorization>> saveAuthorizations(String customerId,
-      List<Authorization> authorizations) {
-    return createLocalAuthorization(customerId, authorizations).andThen(
-        authorizationPersistence.saveAuthorizations(authorizations))
-        .andThen(Single.just(authorizations));
-  }
-
-  private Completable createLocalAuthorization(String customerId, List<Authorization> authorizations) {
-    return Observable.from(authorizations)
-        .filter(authorization -> authorization.getPaymentId() == paymentId)
-        .switchIfEmpty(authorizationPersistence.createAuthorization(customerId, paymentId,
-            Authorization.Status.INACTIVE)
-            .toObservable())
+  private Completable syncPayPalAuthorization(String customerId, long transactionId) {
+    return authorizationPersistence.getAuthorization(customerId, transactionId)
+        .first()
+        .filter(transaction -> transaction instanceof PayPalAuthorization)
+        .cast(PayPalAuthorization.class)
+        .filter(authorization -> authorization.isPending())
+        .flatMapSingle(authorization -> authorizationService.updateAuthorization(
+            authorization.getTransactionId(), authorization.getMetadata()))
+        .flatMapCompletable(
+            authorization -> authorizationPersistence.saveAuthorization(authorization))
         .toCompletable();
+  }
+
+  private Completable syncRemoteAuthorization(String customerId, long transactionId) {
+    return authorizationService.getAuthorization(transactionId)
+        .flatMapCompletable(
+            authorization -> authorizationPersistence.saveAuthorization(authorization));
   }
 }

@@ -5,10 +5,9 @@
 
 package cm.aptoide.pt.billing.transaction;
 
-import cm.aptoide.pt.billing.transaction.braintree.BraintreeTransaction;
-import cm.aptoide.pt.billing.transaction.mol.MolTransaction;
-import cm.aptoide.pt.database.realm.PaymentConfirmation;
-import cm.aptoide.pt.dataprovider.model.v3.TransactionResponse;
+import cm.aptoide.pt.dataprovider.ws.v7.billing.GetTransactionsRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TransactionMapper {
 
@@ -18,48 +17,21 @@ public class TransactionMapper {
     this.transactionFactory = transactionFactory;
   }
 
-  public Transaction map(String productId, TransactionResponse response, String customerId,
-      String payload, String merchantName) {
-    return transactionFactory.create(merchantName, customerId, response.getPaymentMethodId(), productId,
-        Transaction.Status.valueOf(response.getTransactionStatus()), response.getLocalMetadata(),
-        response.getConfirmationUrl(), response.getSuccessUrl(), response.getClientToken(),
-        payload);
+  public Transaction map(GetTransactionsRequest.ResponseBody.Data.Transaction response) {
+    return transactionFactory.create(response.getId(), String.valueOf(response.getUser()
+        .getId()), response.getService()
+        .getId(), response.getProduct()
+        .getId(), Transaction.Status.valueOf(response.getStatus()));
   }
 
-  public PaymentConfirmation map(Transaction transaction, String id) {
-    String metadata = null;
-    String confirmationUrl = null;
-    String successUrl = null;
-    String clientToken = null;
+  public List<Transaction> map(
+      List<GetTransactionsRequest.ResponseBody.Data.Transaction> responseList) {
 
-    if (transaction instanceof BraintreeTransaction) {
-      clientToken = ((BraintreeTransaction) transaction).getToken();
+    final List<Transaction> transactions = new ArrayList<>(responseList.size());
+
+    for (GetTransactionsRequest.ResponseBody.Data.Transaction response : responseList) {
+      transactions.add(map(response));
     }
-
-    {
-      if (transaction instanceof LocalTransaction) {
-        metadata = ((LocalTransaction) transaction).getLocalMetadata();
-      }
-    }
-
-    if (transaction instanceof MolTransaction) {
-      confirmationUrl = ((MolTransaction) transaction).getConfirmationUrl();
-      successUrl = ((MolTransaction) transaction).getSuccessUrl();
-    }
-
-    return new PaymentConfirmation(id, metadata, transaction.getProductId(),
-        transaction.getSellerId(), transaction.getStatus()
-        .name(), transaction.getCustomerId(), transaction.getPaymentMethodId(), confirmationUrl,
-        successUrl, clientToken, transaction.getPayload());
-  }
-
-  public Transaction map(PaymentConfirmation persistedTransaction) {
-    return transactionFactory.create(persistedTransaction.getSellerId(),
-        persistedTransaction.getCustomerId(), persistedTransaction.getPaymentMethodId(),
-        persistedTransaction.getProductId(),
-        Transaction.Status.valueOf(persistedTransaction.getStatus()),
-        persistedTransaction.getLocalMetadata(), persistedTransaction.getConfirmationUrl(),
-        persistedTransaction.getSuccessUrl(), persistedTransaction.getClientToken(),
-        persistedTransaction.getPayload());
+    return transactions;
   }
 }

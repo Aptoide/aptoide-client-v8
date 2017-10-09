@@ -573,7 +573,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     billingAnalytics.sendPaymentViewShowEvent();
     startActivityForResult(PaymentActivity.getIntent(getActivity(),
         getBillingIdResolver().resolveProductId(app.getId()),
-        getBillingIdResolver().resolveStoreSellerId(app.getStore()
+        getBillingIdResolver().resolveMerchantName(app.getStore()
             .getName()), null), PAY_APP_REQUEST_CODE);
   }
 

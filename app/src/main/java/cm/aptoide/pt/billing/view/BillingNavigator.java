@@ -6,11 +6,9 @@ import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.billing.PaymentMethod;
 import cm.aptoide.pt.billing.PaymentMethodMapper;
 import cm.aptoide.pt.billing.Purchase;
-import cm.aptoide.pt.billing.view.boacompra.BoaCompraFragment;
-import cm.aptoide.pt.billing.view.braintree.BraintreeCreditCardFragment;
 import cm.aptoide.pt.billing.view.login.PaymentLoginFragment;
-import cm.aptoide.pt.billing.view.mol.MolFragment;
-import cm.aptoide.pt.billing.view.paypal.PayPalFragment;
+import cm.aptoide.pt.billing.view.web.WebAuthorizationFragment;
+import cm.aptoide.pt.billing.view.paypal.PayPalAuthorizationFragment;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.Result;
@@ -46,29 +44,24 @@ public class BillingNavigator {
         .map(result -> result.getResultCode() == Activity.RESULT_OK);
   }
 
-  public void navigateToTransactionAuthorizationView(String merchantName, String productId,
-      String developerPayload, PaymentMethod paymentMethod) {
+  public void navigateToTransactionAuthorizationView(String merchantName, PaymentMethod service,
+      String sku) {
 
-    final Bundle bundle =
-        getProductBundle(merchantName, productId, developerPayload, paymentMethod.getName());
-    switch (paymentMethod.getId()) {
+    final Bundle bundle = getAuthorizationBundle(merchantName, sku, service.getName());
+
+    switch (service.getId()) {
       case PaymentMethodMapper.PAYPAL:
-        fragmentNavigator.navigateTo(PayPalFragment.create(bundle), true);
+        fragmentNavigator.navigateTo(PayPalAuthorizationFragment.create(bundle), true);
         break;
       case PaymentMethodMapper.MOL_POINTS:
-        fragmentNavigator.navigateTo(MolFragment.create(bundle), true);
-        break;
       case PaymentMethodMapper.BOA_COMPRA:
       case PaymentMethodMapper.BOA_COMPRA_GOLD:
-        fragmentNavigator.navigateTo(BoaCompraFragment.create(bundle), true);
-        break;
-      case PaymentMethodMapper.BRAINTREE_CREDIT_CARD:
-        fragmentNavigator.navigateTo(BraintreeCreditCardFragment.create(bundle), true);
+        fragmentNavigator.navigateTo(WebAuthorizationFragment.create(bundle), true);
         break;
       case PaymentMethodMapper.SANDBOX:
       default:
-        throw new IllegalArgumentException("Invalid payment method "
-            + paymentMethod.getId()
+        throw new IllegalArgumentException("Service "
+            + service.getId()
             + " does not require authorization. Can not navigate to authorization view.");
     }
   }
@@ -111,14 +104,12 @@ public class BillingNavigator {
         bundleMapper.mapCancellation());
   }
 
-  private Bundle getProductBundle(String merchantName, String productId, String developerPayload,
-      String paymentMethodName) {
-    if (productId != null && merchantName != null) {
+  private Bundle getAuthorizationBundle(String merchantName, String sku, String serviceName) {
+    if (sku != null && merchantName != null) {
       final Bundle bundle = new Bundle();
-      bundle.putString(PaymentActivity.EXTRA_PRODUCT_ID, productId);
-      bundle.putString(PaymentActivity.EXTRA_APPLICATION_ID, merchantName);
-      bundle.putString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD, developerPayload);
-      bundle.putString(PaymentActivity.EXTRA_PAYMENT_METHOD_NAME, paymentMethodName);
+      bundle.putString(PaymentActivity.EXTRA_SKU, sku);
+      bundle.putString(PaymentActivity.EXTRA_MERCHANT_NAME, merchantName);
+      bundle.putString(PaymentActivity.EXTRA_SERVICE_NAME, serviceName);
       return bundle;
     }
 
