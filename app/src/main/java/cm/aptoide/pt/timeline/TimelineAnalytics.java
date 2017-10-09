@@ -621,13 +621,6 @@ public class TimelineAnalytics {
     }
   }
 
-  public void sendPostPositionEvent(CardTouchEvent cardTouchEvent) {
-    analytics.sendEvent(
-        new AptoideEvent(createScrollingEventData(cardTouchEvent.getPosition()), "SCROLLING",
-            "SCROLL", "TIMELINE", bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            appId, sharedPreferences));
-  }
-
   private Map<String, Object> createScrollingEventData(int position) {
     final Map<String, Object> eventMap = new HashMap<>();
     eventMap.put("position", position);
@@ -663,5 +656,12 @@ public class TimelineAnalytics {
   public void sendFabClicked() {
     HashMap<String, Object> data = new HashMap<>();
     analytics.sendEvent(createEvent(FAB, data));
+  }
+
+  public void scrollToPosition(int position) {
+    analytics.sendEvent(
+        new AptoideEvent(createScrollingEventData(position), "SCROLLING", "SCROLL", "TIMELINE",
+            bodyInterceptor, httpClient, converterFactory, tokenInvalidator, appId,
+            sharedPreferences));
   }
 }
