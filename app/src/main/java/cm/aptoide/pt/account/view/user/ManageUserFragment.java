@@ -32,6 +32,7 @@ import cm.aptoide.pt.account.view.ImageValidator;
 import cm.aptoide.pt.account.view.PhotoFileGenerator;
 import cm.aptoide.pt.account.view.UriToPathResolver;
 import cm.aptoide.pt.account.view.exception.InvalidImageException;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.presenter.CompositePresenter;
@@ -56,7 +57,6 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   private static final String EXTRA_USER_MODEL = "user_model";
   private static final String EXTRA_IS_EDIT = "is_edit";
   @DrawableRes private static final int DEFAULT_IMAGE_PLACEHOLDER = R.drawable.create_user_avatar;
-
   private ImageView userPicture;
   private RelativeLayout userPictureLayout;
   private EditText userName;
@@ -96,6 +96,11 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
     ManageUserFragment manageUserFragment = new ManageUserFragment();
     manageUserFragment.setArguments(args);
     return manageUserFragment;
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -140,6 +145,18 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
 
     uploadWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(context,
         context.getString(R.string.please_wait_upload));
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    bindViews(view);
+    setupToolbar();
+    if (isEditProfile) {
+      createUserButton.setText(getString(R.string.edit_profile_save_button));
+      cancelUserProfile.setVisibility(View.VISIBLE);
+      header.setText(getString(R.string.edit_profile_header_message));
+    }
+    attachPresenters();
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -187,18 +204,6 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
 
     attachPresenter(
         new CompositePresenter(Arrays.asList(manageUserPresenter, imagePickerPresenter)), null);
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    bindViews(view);
-    setupToolbar();
-    if (isEditProfile) {
-      createUserButton.setText(getString(R.string.edit_profile_save_button));
-      cancelUserProfile.setVisibility(View.VISIBLE);
-      header.setText(getString(R.string.edit_profile_header_message));
-    }
-    attachPresenters();
   }
 
   @Override public void onDestroyView() {

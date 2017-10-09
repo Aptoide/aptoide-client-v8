@@ -36,6 +36,7 @@ import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
@@ -151,8 +152,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
     pageViewsAnalytics =
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
             Analytics.getInstance(), aptoideNavigationTracker);
-    aptoideNavigationTracker.registerView(this.getClass()
-        .getSimpleName());
+    aptoideNavigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName()));
     pageViewsAnalytics.sendPageViewedEvent();
   }
 

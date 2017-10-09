@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.AdsRepository;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -19,6 +20,7 @@ import cm.aptoide.pt.dataprovider.model.v7.ListSearchApps;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.view.fragment.GridRecyclerFragmentWithDecorator;
 import cm.aptoide.pt.view.recycler.EndlessRecyclerOnScrollListener;
@@ -64,7 +66,8 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
         from.forEach(searchAppsApp -> {
           mapPackages.put(searchAppsApp.getPackageName(), null);
-          displayables.add(new SearchDisplayable(searchAppsApp));
+          displayables.add(new SearchDisplayable(searchAppsApp,
+              storeName == null ? StoreContext.home : StoreContext.meta));
         });
 
         addDisplayables(displayables);

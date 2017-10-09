@@ -12,6 +12,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetFollowingRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.timeline.view.displayable.FollowUserDisplayable;
 import cm.aptoide.pt.view.recycler.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
@@ -35,8 +36,8 @@ public class TimeLineFollowingFragment extends TimeLineFollowFragment {
   private String defaultTheme;
 
   public static TimeLineFollowFragment newInstanceUsingUserId(Long id, String storeTheme,
-      String title) {
-    Bundle args = buildBundle(storeTheme, title);
+      String title, StoreContext storeContext) {
+    Bundle args = buildBundle(storeTheme, title, storeContext);
     if (id != null) {
       args.putLong(BundleKeys.USER_ID, id);
     }
@@ -45,23 +46,25 @@ public class TimeLineFollowingFragment extends TimeLineFollowFragment {
     return fragment;
   }
 
-  public static TimeLineFollowFragment newInstanceUsingUser(String storeTheme, String title) {
-    Bundle args = buildBundle(storeTheme, title);
+  public static TimeLineFollowFragment newInstanceUsingUser(String storeTheme, String title,
+      StoreContext storeContext) {
+    Bundle args = buildBundle(storeTheme, title, storeContext);
     TimeLineFollowingFragment fragment = new TimeLineFollowingFragment();
     fragment.setArguments(args);
     return fragment;
   }
 
-  @NonNull private static Bundle buildBundle(String storeTheme, String title) {
-    Bundle args = new Bundle();
+  @NonNull
+  private static Bundle buildBundle(String storeTheme, String title, StoreContext storeContext) {
+    Bundle args = TimeLineFollowFragment.buildBundle(storeContext);
     args.putString(TITLE_KEY, title);
     args.putString(BundleCons.STORE_THEME, storeTheme);
     return args;
   }
 
   public static TimeLineFollowFragment newInstanceUsingStoreId(Long id, String storeTheme,
-      String title) {
-    Bundle args = buildBundle(storeTheme, title);
+      String title, StoreContext storeContext) {
+    Bundle args = buildBundle(storeTheme, title, storeContext);
     if (id != null) {
       args.putLong(BundleKeys.STORE_ID, id);
     }

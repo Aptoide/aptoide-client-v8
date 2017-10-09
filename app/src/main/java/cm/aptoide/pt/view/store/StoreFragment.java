@@ -30,6 +30,7 @@ import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
@@ -58,6 +59,7 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.fragment.BasePagerToolbarFragment;
 import cm.aptoide.pt.view.share.ShareStoreHelper;
+import cm.aptoide.pt.view.store.home.HomeFragment;
 import com.astuetz.PagerSlidingTabStrip;
 import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -80,6 +82,16 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private String storeName;
   private String title;
   private StoreContext storeContext;
+  ViewPager.SimpleOnPageChangeListener pageChangeListener =
+      new ViewPager.SimpleOnPageChangeListener() {
+        @Override public void onPageSelected(int position) {
+          if (position == 0) {
+            aptoideNavigationTracker.registerScreen(
+                ScreenTagHistory.Builder.build(HomeFragment.class.getSimpleName(), "home",
+                    storeContext));
+          }
+        }
+      };
   private String storeTheme;
   private StoreCredentialsProvider storeCredentialsProvider;
   private Event.Name defaultTab;
@@ -141,6 +153,11 @@ public class StoreFragment extends BasePagerToolbarFragment {
     return newInstance(storeName, storeTheme, OpenType.GetStore);
   }
 
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName(), "", storeContext);
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     defaultTheme = ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
@@ -160,13 +177,13 @@ public class StoreFragment extends BasePagerToolbarFragment {
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        new NotificationAnalytics(httpClient, analytics), navigationTracker);
+        new NotificationAnalytics(httpClient, analytics), aptoideNavigationTracker);
     storeAnalytics = new StoreAnalytics(AppEventsLogger.newLogger(getContext()), analytics);
     marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);
     pageViewAnalytics =
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), navigationTracker);
+            Analytics.getInstance(), aptoideNavigationTracker);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -234,8 +251,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override protected void setupViewPager() {
     super.setupViewPager();
-    viewPager.setAptoideNavigationTracker(navigationTracker);
-    viewPager.setPageViewAnalytics(pageViewAnalytics);
     pagerSlidingTabStrip = (PagerSlidingTabStrip) getView().findViewById(R.id.tabs);
 
     if (pagerSlidingTabStrip != null) {
@@ -282,6 +297,12 @@ public class StoreFragment extends BasePagerToolbarFragment {
           storeAnalytics.sendStoreInteractEvent("Open Tab", adapter.getPageTitle(position)
               .toString(), storeName);
         }
+      }
+    });
+    viewPager.addOnPageChangeListener(pageChangeListener);
+    viewPager.post(new Runnable() {
+      @Override public void run() {
+        pageChangeListener.onPageSelected(viewPager.getCurrentItem());
       }
     });
     changeToTab(defaultTab);

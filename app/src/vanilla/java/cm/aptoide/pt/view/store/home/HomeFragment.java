@@ -27,6 +27,7 @@ import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -169,7 +170,8 @@ public class HomeFragment extends StoreFragment {
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     pageViewsAnalytics =
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), navigationTracker);
+            Analytics.getInstance(), aptoideNavigationTracker);
+    setRegisterFragment(false);
   }
 
   @Nullable @Override
@@ -270,7 +272,7 @@ public class HomeFragment extends StoreFragment {
     toolbar.setNavigationOnClickListener(v -> {
       drawerLayout.openDrawer(GravityCompat.START);
       drawerAnalytics.drawerOpen();
-      navigationTracker.registerView("Drawer");
+      aptoideNavigationTracker.registerScreen(ScreenTagHistory.Builder.build("Drawer"));
       pageViewsAnalytics.sendPageViewedEvent();
     });
   }

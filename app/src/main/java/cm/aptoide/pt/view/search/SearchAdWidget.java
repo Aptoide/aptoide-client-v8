@@ -52,7 +52,7 @@ public class SearchAdWidget extends Widget<SearchAdDisplayable> {
     itemView.setOnClickListener(view -> {
       //	        AptoideUtils.FlurryAppviewOrigin.addAppviewOrigin("Suggested_Search Result");
       getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-          .newAppViewFragment(minimalAd), true);
+          .newAppViewFragment(minimalAd, ""), true);
     });
 
     String downloadNumber =

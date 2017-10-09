@@ -11,6 +11,7 @@ import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
@@ -110,7 +111,7 @@ public class DeepLinkManager {
       Analytics.ApplicationLaunch.launcher();
       return false;
     }
-    aptoideNavigationTracker.registerView(deeplinkOrNotification);
+    aptoideNavigationTracker.registerScreen(ScreenTagHistory.Builder.build(deeplinkOrNotification));
     pageViewsAnalytics.sendPageViewedEvent();
     return true;
   }
@@ -127,7 +128,7 @@ public class DeepLinkManager {
     AppViewFragment.OpenType openType = showPopup ? AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
         : AppViewFragment.OpenType.OPEN_ONLY;
     fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newAppViewFragment(appId, packageName, openType), true);
+        .newAppViewFragment(appId, packageName, openType, ""), true);
   }
 
   private void appViewDeepLink(String packageName, String storeName, boolean showPopup) {
