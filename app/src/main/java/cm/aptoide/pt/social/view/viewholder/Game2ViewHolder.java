@@ -166,7 +166,8 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
       answerRight.setOnClickListener(click -> onClickRight(position, String.valueOf(card.getApp().getIcon())));
     }
 
-    LeaderboardTouchEvent event = new LeaderboardTouchEvent(card, CardTouchEvent.Type.BODY);
+    LeaderboardTouchEvent event = new LeaderboardTouchEvent(card, CardTouchEvent.Type.BODY,
+        position);
 
     //score.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
     //leaderboard.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));

@@ -2,8 +2,6 @@ package cm.aptoide.pt.social.view.viewholder;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.media.Image;
-import android.provider.ContactsContract;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.view.View;
@@ -171,7 +169,8 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
     answerRight.setOnClickListener(click -> onClickLeft(position));
     answerLeft.setOnClickListener(click -> onClickLeft(position));
 
-    headerStats.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(new LeaderboardTouchEvent(card, CardTouchEvent.Type.BODY)));
+    headerStats.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(new LeaderboardTouchEvent(card, CardTouchEvent.Type.BODY,
+        position)));
 
 
 

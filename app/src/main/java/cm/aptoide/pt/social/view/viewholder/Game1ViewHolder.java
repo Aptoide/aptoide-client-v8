@@ -135,7 +135,8 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
 
     leftAnswer.setOnClickListener(click -> onClickLeft(position));
     rightAnswer.setOnClickListener(click -> onClickRight(position));
-    LeaderboardTouchEvent event = new LeaderboardTouchEvent(card, CardTouchEvent.Type.BODY);
+    LeaderboardTouchEvent event = new LeaderboardTouchEvent(card, CardTouchEvent.Type.BODY,
+        position);
 
     //score.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
     //leaderboard.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));

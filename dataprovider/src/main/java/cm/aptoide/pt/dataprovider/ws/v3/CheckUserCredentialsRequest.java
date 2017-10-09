@@ -15,6 +15,10 @@ import rx.Observable;
 
 public class CheckUserCredentialsRequest extends V3<CheckUserCredentialsJson> {
 
+  private static final String CREATE_REPO_VALUE = "1";
+  private static final String OAUTH_CREATE_REPO_VALUE = "true";
+  private static final String DEFAULT_AUTH_MODE = "aptoide";
+
   private final boolean createStore;
 
   private CheckUserCredentialsRequest(BaseBody baseBody, boolean createStore,
@@ -31,9 +35,10 @@ public class CheckUserCredentialsRequest extends V3<CheckUserCredentialsJson> {
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, String storeName) {
 
     final BaseBody body = new BaseBody();
-    body.put("createRepo", "1");
-    body.put("oauthCreateRepo", "true");
+    body.put("createRepo", CREATE_REPO_VALUE);
+    body.put("oauthCreateRepo", OAUTH_CREATE_REPO_VALUE);
     body.put("repo", storeName);
+    body.setAuthMode(DEFAULT_AUTH_MODE);
 
     return new CheckUserCredentialsRequest(body, true, bodyInterceptor, httpClient,
         converterFactory, tokenInvalidator, sharedPreferences);

@@ -9,11 +9,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.NavigationTrackerPagerAdapterHelper;
 
 /**
  * Created by neuro on 28-04-2016.
  */
-public class SearchPagerAdapter extends FragmentStatePagerAdapter {
+public class SearchPagerAdapter extends FragmentStatePagerAdapter
+    implements NavigationTrackerPagerAdapterHelper {
 
   private final String query;
   private final boolean hasSubscribedResults;
@@ -76,5 +78,10 @@ public class SearchPagerAdapter extends FragmentStatePagerAdapter {
 
       return count;
     }
+  }
+
+  @Override public String getItemName(int position) {
+    return getItem(position).getClass()
+        .getSimpleName();
   }
 }

@@ -23,6 +23,7 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DrawerAnalytics;
+import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.analytics.Analytics;
@@ -78,6 +79,7 @@ public class HomeFragment extends StoreFragment {
   private InstalledRepository installedRepository;
   private DrawerAnalytics drawerAnalytics;
   private ClickHandler backClickHandler;
+  private PageViewsAnalytics pageViewsAnalytics;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -91,9 +93,6 @@ public class HomeFragment extends StoreFragment {
   }
 
   /**
-   * @param defaultStore
-   * @param defaultTheme
-   *
    * @return {@link HomeFragment} instance with default store, store context and theme
    */
   public static HomeFragment newInstance(String defaultStore, String defaultTheme) {
@@ -168,6 +167,9 @@ public class HomeFragment extends StoreFragment {
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
+    pageViewsAnalytics =
+        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance(), navigationTracker);
   }
 
   @Nullable @Override
@@ -268,6 +270,8 @@ public class HomeFragment extends StoreFragment {
     toolbar.setNavigationOnClickListener(v -> {
       drawerLayout.openDrawer(GravityCompat.START);
       drawerAnalytics.drawerOpen();
+      navigationTracker.registerView("Drawer");
+      pageViewsAnalytics.sendPageViewedEvent();
     });
   }
 

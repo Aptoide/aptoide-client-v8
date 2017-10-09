@@ -21,12 +21,9 @@ import java.util.List;
  */
 
 public class TimelineResponseCardMapper {
-  private final AdsRepositoryProvider adsRepositoryProvider;
   private final String marketName;
 
-  public TimelineResponseCardMapper(AdsRepositoryProvider adsRepositoryProvider,
-      String marketName) {
-    this.adsRepositoryProvider = adsRepositoryProvider;
+  public TimelineResponseCardMapper(String marketName) {
     this.marketName = marketName;
   }
 
@@ -474,10 +471,7 @@ public class TimelineResponseCardMapper {
             aggregatedSocialStoreLatestApps.getApps(), abUrl, CardType.AGGREGATED_SOCIAL_STORE,
             getMarkAsReadUrl(aggregatedSocialStoreLatestApps)));
       } else if (item instanceof AdTimelineItem) {
-
-        AdPost adPost = new AdPost(adsRepositoryProvider.getAdsRepository());
-        adPost.init();
-        cards.add(adPost);
+        cards.add(new AdPost());
       }
 
       else if (item instanceof GameTimelineItem) {
@@ -522,9 +516,5 @@ public class TimelineResponseCardMapper {
   @Nullable private String getMarkAsReadUrl(TimelineCard card) {
     return card.getUrls() == null ? null : card.getUrls()
         .getRead();
-  }
-
-  public interface AdsRepositoryProvider {
-    TimelineAdsRepository getAdsRepository();
   }
 }

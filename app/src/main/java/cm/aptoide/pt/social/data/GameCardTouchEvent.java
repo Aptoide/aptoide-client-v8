@@ -10,7 +10,7 @@ public class GameCardTouchEvent extends CardTouchEvent {
   private final String answerText;
 
   public GameCardTouchEvent(Post card, Type actionType, int position, String text) {
-    super(card, actionType);
+    super(card, position, actionType);
     this.cardPosition = position;
     this.answerText = text;
   }

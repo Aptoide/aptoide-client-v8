@@ -181,5 +181,19 @@ public class SocialRepository {
         .subscribe(() -> {
         }, throwable -> throwable.printStackTrace());
   }
+
+  public Completable asyncShare(String packageName, Long storeId, String shareType) {
+    return ShareInstallCardRequest.of(packageName, storeId, shareType, bodyInterceptor, httpClient,
+        converterFactory, tokenInvalidator, sharedPreferences)
+        .observe()
+        .toSingle()
+        .flatMapCompletable(response -> {
+          if (response.isOk()) {
+            return Completable.complete();
+          }
+          return Completable.error(
+              new RepositoryIllegalArgumentException(V7.getErrorMessage(response)));
+        });
+  }
 }
 

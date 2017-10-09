@@ -101,9 +101,9 @@ public class AggregatedMediaViewHolder extends PostViewHolder<AggregatedMedia> {
         .load(card.getMediaThumbnailUrl(), mediaThumbnail);
 
     this.mediaThumbnail.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
+        new CardTouchEvent(card, position, CardTouchEvent.Type.BODY)));
     this.mediaTitle.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
+        new CardTouchEvent(card, position, CardTouchEvent.Type.BODY)));
     showMorePostersLabel(card);
 
     minimalCardContainer.removeAllViews();

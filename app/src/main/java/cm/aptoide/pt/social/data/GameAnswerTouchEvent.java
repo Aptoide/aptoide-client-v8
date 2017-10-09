@@ -9,7 +9,7 @@ public class GameAnswerTouchEvent extends CardTouchEvent {
   private final int cardPosition;
 
   public GameAnswerTouchEvent(Post card, Type actionType, int position) {
-    super(card, actionType);
+    super(card, position, actionType);
     this.cardPosition = position;
   }
 

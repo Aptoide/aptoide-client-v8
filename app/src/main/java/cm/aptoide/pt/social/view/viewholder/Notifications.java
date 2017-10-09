@@ -37,12 +37,12 @@ public class Notifications extends PostViewHolder<TimelineUser> {
     imageLoader.loadUsingCircleTransform(card.getNotificationImage(), notificationImage);
     notificationBody.setText(card.getNotificationBody());
     goToNotificationsButton.setOnClickListener(view -> publishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.NOTIFICATION_CENTER)));
-    addFriendsButton.setOnClickListener(
-        view -> publishSubject.onNext(new CardTouchEvent(card, CardTouchEvent.Type.ADD_FRIEND)));
-    notificationImage.setOnClickListener(
-        view -> publishSubject.onNext(new CardTouchEvent(card, CardTouchEvent.Type.NOTIFICATION)));
-    notificationBody.setOnClickListener(
-        view -> publishSubject.onNext(new CardTouchEvent(card, CardTouchEvent.Type.NOTIFICATION)));
+        new CardTouchEvent(card, position, CardTouchEvent.Type.NOTIFICATION_CENTER)));
+    addFriendsButton.setOnClickListener(view -> publishSubject.onNext(
+        new CardTouchEvent(card, position, CardTouchEvent.Type.ADD_FRIEND)));
+    notificationImage.setOnClickListener(view -> publishSubject.onNext(
+        new CardTouchEvent(card, position, CardTouchEvent.Type.NOTIFICATION)));
+    notificationBody.setOnClickListener(view -> publishSubject.onNext(
+        new CardTouchEvent(card, position, CardTouchEvent.Type.NOTIFICATION)));
   }
 }

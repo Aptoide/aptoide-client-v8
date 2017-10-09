@@ -13,6 +13,7 @@ import cm.aptoide.pt.social.view.viewholder.Game1ViewHolder;
 import cm.aptoide.pt.social.view.viewholder.Game2ViewHolder;
 import cm.aptoide.pt.social.view.viewholder.Game3ViewHolder;
 import cm.aptoide.pt.social.view.viewholder.GameAnswerViewHolder;
+import cm.aptoide.pt.social.view.viewholder.EmptyStateViewHolder;
 import cm.aptoide.pt.social.view.viewholder.MediaViewHolder;
 import cm.aptoide.pt.social.view.viewholder.Notifications;
 import cm.aptoide.pt.social.view.viewholder.PopularAppViewHolder;
@@ -44,16 +45,19 @@ public class CardViewHolderFactory {
   private final SpannableFactory spannableFactory;
   private final MinimalCardViewFactory minimalCardViewFactory;
   private final String marketName;
+  private final TimelineAdsRepository adsRepository;
   private StoreContext storeContext;
 
   public CardViewHolderFactory(PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
       DateCalculator dateCalculator, SpannableFactory spannableFactory,
-      MinimalCardViewFactory minimalCardViewFactory, String marketName, StoreContext storeContext) {
+      MinimalCardViewFactory minimalCardViewFactory, String marketName,
+      TimelineAdsRepository adsRepository, StoreContext storeContext) {
     this.minimalCardViewFactory = minimalCardViewFactory;
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
     this.marketName = marketName;
+    this.adsRepository = adsRepository;
     this.storeContext = storeContext;
   }
 
@@ -137,8 +141,8 @@ public class CardViewHolderFactory {
             .inflate(R.layout.timeline_login_item, parent, false), cardTouchEventPublishSubject);
       case AD:
         return new TimelineAdPostViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.timeline_native_ad_item, parent, false),
-            cardTouchEventPublishSubject);
+            .inflate(R.layout.timeline_native_ad_item, parent, false), cardTouchEventPublishSubject,
+            adsRepository);
       case NOTIFICATIONS:
         return new Notifications(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_notification, parent, false), cardTouchEventPublishSubject,
@@ -147,22 +151,18 @@ public class CardViewHolderFactory {
         return new TimelineNoNotificationHeaderViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_no_notification, parent, false),
             cardTouchEventPublishSubject);
+      case EMPTY_STATE:
+        return new EmptyStateViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.timeline_empty_state_item, parent, false),
+            cardTouchEventPublishSubject);
       case GAME1:
-        return new Game1ViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.timeline_game1, parent, false), cardTouchEventPublishSubject,
-            spannableFactory, marketName);
+        return new Game1ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.timeline_game1, parent, false),cardTouchEventPublishSubject, spannableFactory, marketName);
       case GAME2:
-        return new Game2ViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.timeline_game2, parent, false), cardTouchEventPublishSubject,
-            spannableFactory, marketName);
+        return new Game2ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.timeline_game2, parent, false),cardTouchEventPublishSubject, spannableFactory, marketName);
       case GAME3:
-        return new Game3ViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.timeline_game3, parent, false), cardTouchEventPublishSubject,
-            spannableFactory, marketName);
+        return new Game3ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.timeline_game3, parent, false),cardTouchEventPublishSubject, spannableFactory, marketName);
       case GAMEANSWER:
-        return new GameAnswerViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.timeline_game_answer, parent, false),
-            cardTouchEventPublishSubject, spannableFactory, marketName);
+        return new GameAnswerViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.timeline_game_answer, parent, false),cardTouchEventPublishSubject, spannableFactory, marketName);
       default:
         throw new IllegalStateException("Wrong cardType" + cardType.name());
     }

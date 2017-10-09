@@ -5,7 +5,7 @@ package cm.aptoide.pt.social.data;
  */
 
 public class LeaderboardTouchEvent extends CardTouchEvent {
-  public LeaderboardTouchEvent(Post card, Type type) {
-    super(card, type);
+  public LeaderboardTouchEvent(Post card, Type type, int position) {
+    super(card, position, type);
   }
 }

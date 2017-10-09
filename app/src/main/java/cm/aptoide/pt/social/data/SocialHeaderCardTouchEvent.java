@@ -10,8 +10,8 @@ public class SocialHeaderCardTouchEvent extends CardTouchEvent {
   private final Long userId;
 
   public SocialHeaderCardTouchEvent(Post card, String storeName, String storeTheme, Long userId,
-      Type actionType) {
-    super(card, actionType);
+      Type actionType, int position) {
+    super(card, position, actionType);
     this.storeName = storeName;
     this.storeTheme = storeTheme;
     this.userId = userId;

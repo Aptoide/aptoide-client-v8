@@ -100,6 +100,14 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     orientationManager = ((ActivityResultNavigator) getContext()).getScreenOrientationManager();
   }
 
+  @Override public void onResume() {
+    super.onResume();
+    facebookEmailRequiredDialog.dismisses()
+        .doOnNext(__ -> facebookEmailRequiredDialogVisible = false)
+        .compose(bindUntilEvent(FragmentEvent.PAUSE))
+        .subscribe();
+  }
+
   @Override public void onSaveInstanceState(Bundle outState) {
     outState.putBoolean(EXTRA_USERNAME_PASSWORD_CONTAINER_VISIBLE,
         usernamePasswordContainerVisible);
@@ -222,7 +230,9 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     attachPresenter(
         new PaymentLoginPresenter(this, requestCode, Arrays.asList("email", "user_friends"),
             accountNavigator, Arrays.asList("email"), accountManager, crashReport, errorMapper,
-            AndroidSchedulers.mainThread(), orientationManager), savedInstanceState);
+            AndroidSchedulers.mainThread(), orientationManager,
+            ((AptoideApplication) getContext().getApplicationContext()).getAccountAnalytics()),
+        savedInstanceState);
   }
 
   @Override public void onDestroyView() {
@@ -248,14 +258,6 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     passwordEditText = null;
     passwordShowHideToggle = null;
     super.onDestroyView();
-  }
-
-  @Override public void onResume() {
-    super.onResume();
-    facebookEmailRequiredDialog.dismisses()
-        .doOnNext(__ -> facebookEmailRequiredDialogVisible = false)
-        .compose(bindUntilEvent(FragmentEvent.PAUSE))
-        .subscribe();
   }
 
   @Override public Observable<Void> backButtonEvent() {

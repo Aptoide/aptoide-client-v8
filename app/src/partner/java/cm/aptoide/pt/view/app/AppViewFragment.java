@@ -7,7 +7,6 @@ package cm.aptoide.pt.view.app;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -15,7 +14,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -102,11 +100,9 @@ import cm.aptoide.pt.view.app.displayable.AppViewFlagThisDisplayable;
 import cm.aptoide.pt.view.app.displayable.AppViewInstallDisplayable;
 import cm.aptoide.pt.view.app.displayable.AppViewRateAndCommentsDisplayable;
 import cm.aptoide.pt.view.app.displayable.AppViewScreenshotsDisplayable;
-import cm.aptoide.pt.view.app.displayable.AppViewStoreDisplayable;
 import cm.aptoide.pt.view.app.displayable.AppViewSuggestedAppsDisplayable;
 import cm.aptoide.pt.view.dialog.DialogBadgeV7;
 import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
-import cm.aptoide.pt.view.install.remote.RemoteInstallDialog;
 import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
@@ -323,7 +319,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        new NotificationAnalytics(httpClient, analytics));
+        new NotificationAnalytics(httpClient, analytics), navigationTracker);
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
             timelineAnalytics, tokenInvalidator,
@@ -545,24 +541,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     int i = item.getItemId();
     if (i == R.id.menu_share) {
-
-      final boolean appRatingExists = app != null
-          && app.getStats() != null
-          && app.getStats()
-          .getRating() != null;
-
-      final float averageRating = appRatingExists ? app.getStats()
-          .getRating()
-          .getAvg() : 0f;
-
-      final boolean appHasStore = app != null && app.getStore() != null;
-
-      final Long storeId = appHasStore ? app.getStore()
-          .getId() : null;
-
-      shareAppHelper.shareApp(appName, packageName, wUrl, (app == null ? null : app.getIcon()),
-          averageRating, SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW, storeId);
-
+      shareAppHelper.caseDefaultShare(appName, wUrl);
       appViewAnalytics.sendAppShareEvent();
       return true;
     } else if (i == R.id.menu_schedule) {
@@ -580,22 +559,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     } else if (i == R.id.menu_uninstall && unInstallAction != null) {
       unInstallAction.call();
       return true;
-    } else if (i == R.id.menu_remote_install) {
-      appViewAnalytics.sendRemoteInstallEvent();
-      if (AptoideUtils.SystemU.getConnectionType(
-          (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE))
-          .equals("mobile")) {
-        GenericDialogs.createGenericOkMessage(getContext(),
-            getContext().getString(R.string.remote_install_menu_title),
-            getContext().getString(R.string.install_on_tv_mobile_error))
-            .subscribe(__ -> {
-            }, err -> CrashReport.getInstance()
-                .log(err));
-      } else {
-        DialogFragment newFragment = RemoteInstallDialog.newInstance(appId);
-        newFragment.show(getActivity().getSupportFragmentManager(),
-            RemoteInstallDialog.class.getSimpleName());
-      }
     }
 
     return super.onOptionsItemSelected(item);
@@ -839,7 +802,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
                 AppEventsLogger.newLogger(getContext().getApplicationContext())));
     displayables.add(installDisplayable);
-    displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics, storeAnalytics));
     displayables.add(
         new AppViewRateAndCommentsDisplayable(getApp, storeCredentialsProvider, appViewAnalytics,
             installedRepository));

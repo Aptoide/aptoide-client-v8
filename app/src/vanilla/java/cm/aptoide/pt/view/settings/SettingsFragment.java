@@ -32,8 +32,10 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
@@ -56,6 +58,7 @@ import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.dialog.EditableTextDialog;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import cm.aptoide.pt.view.rx.RxPreference;
+import com.facebook.appevents.AppEventsLogger;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -97,6 +100,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private SharedPreferences sharedPreferences;
   private String marketName;
   private Database database;
+  private AptoideNavigationTracker aptoideNavigationTracker;
+  private UpdateRepository repository;
+  private PageViewsAnalytics pageViewsAnalytics;
 
   public static Fragment newInstance() {
     return new SettingsFragment();
@@ -137,6 +143,17 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     notificationSyncScheduler =
         ((AptoideApplication) getContext().getApplicationContext()).getNotificationSyncScheduler();
+    aptoideNavigationTracker =
+        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker();
+
+    repository = RepositoryFactory.getUpdateRepository(getContext(),
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
+    pageViewsAnalytics =
+        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance(), aptoideNavigationTracker);
+    aptoideNavigationTracker.registerView(this.getClass()
+        .getSimpleName());
+    pageViewsAnalytics.sendPageViewedEvent();
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
@@ -198,8 +215,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
     if (shouldRefreshUpdates(key)) {
       UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(database, Update.class);
       updateAccessor.removeAll();
-      UpdateRepository repository = RepositoryFactory.getUpdateRepository(getContext(),
-          ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
       repository.sync(true)
           .andThen(repository.getAll(false))
           .first()

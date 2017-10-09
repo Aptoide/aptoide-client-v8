@@ -97,4 +97,6 @@ public interface TimelineView extends View {
   void hideUser();
 
   void updateGameCardScores();
+
+  void showEmptyState();
 }

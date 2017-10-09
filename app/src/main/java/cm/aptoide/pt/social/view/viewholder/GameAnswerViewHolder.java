@@ -4,9 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
-import android.text.Layout;
 import android.text.Spannable;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -17,7 +15,6 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.GameAnswer;
 import cm.aptoide.pt.social.data.LeaderboardTouchEvent;
-import cm.aptoide.pt.social.leaderboard.data.Leaderboard;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
 import rx.subjects.PublishSubject;
@@ -138,10 +135,11 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
     else
       this.headerSubTitle.setText(String.valueOf(card.getCardsLeft())+" cards left today.");
 
-    LeaderboardTouchEvent event  = new LeaderboardTouchEvent(card, CardTouchEvent.Type.BODY);
+    LeaderboardTouchEvent event  = new LeaderboardTouchEvent(card, CardTouchEvent.Type.BODY,
+        position);
 
     getApp.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
+        new CardTouchEvent(card, position, CardTouchEvent.Type.BODY)));
 
     leaderboardElement.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
 

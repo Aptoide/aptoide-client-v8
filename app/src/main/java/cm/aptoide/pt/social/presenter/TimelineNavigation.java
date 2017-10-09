@@ -45,4 +45,6 @@ public interface TimelineNavigation {
   void navigateToNotificationCenter();
 
   void navigateToLeaderboard();
+
+  void navigateToCreatePost();
 }

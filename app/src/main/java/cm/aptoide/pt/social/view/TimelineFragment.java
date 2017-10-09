@@ -49,6 +49,7 @@ import cm.aptoide.pt.social.StatsUserProvider;
 import cm.aptoide.pt.social.TimelineUserProvider;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.CardViewHolderFactory;
+import cm.aptoide.pt.social.data.EmptyStatePost;
 import cm.aptoide.pt.social.data.MinimalCardViewFactory;
 import cm.aptoide.pt.social.data.Post;
 import cm.aptoide.pt.social.data.PostComment;
@@ -147,6 +148,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private TimelineAnalytics timelineAnalytics;
   private OkHttpClient defaultClient;
   private String marketName;
+  private CrashReport crashReport;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -209,13 +211,13 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), baseBodyInterceptorV7,
         defaultClient, defaultConverter, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        sharedPreferences, new NotificationAnalytics(defaultClient, Analytics.getInstance()));
+        sharedPreferences, new NotificationAnalytics(defaultClient, Analytics.getInstance()),
+        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker());
 
     timelineService =
         new TimelineService(userId, baseBodyInterceptorV7, defaultClient, defaultConverter,
-            new TimelineResponseCardMapper(
-                () -> new TimelineAdsRepository(getContext(), BehaviorRelay.create()), marketName),
-            tokenInvalidator, sharedPreferences);
+            new TimelineResponseCardMapper(marketName), tokenInvalidator, sharedPreferences);
+    crashReport = CrashReport.getInstance();
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -258,10 +260,13 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     floatingActionButton = (FloatingActionButton) view.findViewById(R.id.floating_action_button);
 
     SpannableFactory spannableFactory = new SpannableFactory();
+    TimelineAdsRepository timelineAdsRepository = new TimelineAdsRepository(BehaviorRelay.create());
+
     adapter = new PostAdapter(new ArrayList<>(),
         new CardViewHolderFactory(postTouchEventPublishSubject, dateCalculator, spannableFactory,
             new MinimalCardViewFactory(dateCalculator, spannableFactory,
-                postTouchEventPublishSubject), marketName, storeContext), new ProgressCard());
+                postTouchEventPublishSubject), marketName, timelineAdsRepository, storeContext),
+        new ProgressCard());
     list.setAdapter(adapter);
 
     final StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(
@@ -497,7 +502,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             .getCardId());
     commentDialogFragment.setCommentBeforeSubmissionCallbackContract((inputText) -> {
       PostComment postComment =
-          new PostComment(touchEvent.getCard(), inputText, touchEvent.getPostPosition());
+          new PostComment(touchEvent.getCard(), inputText, touchEvent.getPosition());
       commentPostResponseSubject.onNext(postComment);
     });
     commentDialogFragment.show(fm, "fragment_comment_dialog");
@@ -569,16 +574,33 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     adapter.hideUser();
   }
 
+  @Override public void showEmptyState() {
+    ArrayList<Post> emptyStatePosts = new ArrayList<>();
+    EmptyStatePost emptyStatePost = new EmptyStatePost();
+    if (userId == null) {
+      emptyStatePost.setAction(EmptyStatePost.ACTION);
+    } else {
+      emptyStatePost.setAction(EmptyStatePost.NO_ACTION);
+    }
+    emptyStatePosts.add(emptyStatePost);
+    adapter.updatePosts(emptyStatePosts);
+  }
+
   private void handleSharePreviewAnswer() {
     shareDialog.cancels()
-        .doOnNext(__ -> shareDialog.dismiss())
+        .doOnNext(shareEvent -> timelineAnalytics.sendShareCompleted(false))
         .compose(bindUntilEvent(LifecycleEvent.PAUSE))
         .subscribe();
 
     shareDialog.shares()
         .doOnNext(event -> sharePostPublishSubject.onNext(event))
+        .doOnNext(shareEvent -> timelineAnalytics.sendShareCompleted(true))
         .compose(bindUntilEvent(LifecycleEvent.PAUSE))
-        .subscribe();
+        .subscribe(shareEvent -> {
+        }, throwable -> {
+          crashReport.log(throwable);
+          timelineAnalytics.sendShareCompleted(false);
+        });
     shareDialog.show();
   }
 

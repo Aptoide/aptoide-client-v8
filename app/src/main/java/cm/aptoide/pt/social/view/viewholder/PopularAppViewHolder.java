@@ -70,9 +70,9 @@ public class PopularAppViewHolder extends PostViewHolder<PopularApp> {
     this.appRating.setRating(card.getAppAverageRating());
     showFriendsAvatars(card, itemView.getContext());
     this.appIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
+        new CardTouchEvent(card, position, CardTouchEvent.Type.BODY)));
     this.getAppButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
+        new CardTouchEvent(card, position, CardTouchEvent.Type.BODY)));
     if (card.isLiked()) {
       if (card.isLikeFromClick()) {
         likeButton.setHeartState(true);
@@ -84,7 +84,7 @@ public class PopularAppViewHolder extends PostViewHolder<PopularApp> {
       likeButton.setHeartState(false);
     }
 
-    handleCommentsInformation(card);
+    handleCommentsInformation(card, position);
 
     this.like.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new SocialCardTouchEvent(card, CardTouchEvent.Type.LIKE, position)));
@@ -92,7 +92,7 @@ public class PopularAppViewHolder extends PostViewHolder<PopularApp> {
     this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new SocialCardTouchEvent(card, CardTouchEvent.Type.COMMENT, position)));
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.SHARE)));
+        new CardTouchEvent(card, position, CardTouchEvent.Type.SHARE)));
   }
 
   private void showFriendsAvatars(PopularApp card, Context context) {
@@ -106,7 +106,8 @@ public class PopularAppViewHolder extends PostViewHolder<PopularApp> {
           .loadWithShadowCircleTransform(friend.getAvatar(), friendAvatar);
 
       friendView.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-          new PopularAppTouchEvent(card, friend.getId(), "DEFAULT", CardTouchEvent.Type.HEADER)));
+          new PopularAppTouchEvent(card, friend.getId(), "DEFAULT", CardTouchEvent.Type.HEADER,
+              getPosition())));
 
       headerUsersContainer.addView(friendView);
     }
