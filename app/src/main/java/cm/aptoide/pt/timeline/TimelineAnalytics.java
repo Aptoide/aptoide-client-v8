@@ -664,4 +664,11 @@ public class TimelineAnalytics {
     HashMap<String, Object> data = new HashMap<>();
     analytics.sendEvent(createEvent(FAB, data));
   }
+
+  public void scrollToPosition(int position) {
+    analytics.sendEvent(
+        new AptoideEvent(createScrollingEventData(position), "SCROLLING", "SCROLL", "TIMELINE",
+            bodyInterceptor, httpClient, converterFactory, tokenInvalidator, appId,
+            sharedPreferences));
+  }
 }

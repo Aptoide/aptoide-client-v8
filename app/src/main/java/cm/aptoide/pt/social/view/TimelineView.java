@@ -97,4 +97,6 @@ public interface TimelineView extends View {
   void hideUser();
 
   void showEmptyState();
+
+  Observable<Integer> getScrollEvents();
 }
