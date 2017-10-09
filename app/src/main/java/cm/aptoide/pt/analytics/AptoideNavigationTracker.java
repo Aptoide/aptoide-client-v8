@@ -21,7 +21,7 @@ public class AptoideNavigationTracker {
     this.historyList = historyList;
   }
 
-  public void registerView(ScreenTagHistory screenTagHistory) {
+  public void registerScreen(ScreenTagHistory screenTagHistory) {
     if (screenTagHistory != null && filter(screenTagHistory)) {
       historyList.add(screenTagHistory);
       Logger.d(TAG, "VIEW - " + screenTagHistory);

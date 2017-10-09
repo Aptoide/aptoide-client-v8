@@ -111,7 +111,7 @@ public class DeepLinkManager {
       Analytics.ApplicationLaunch.launcher();
       return false;
     }
-    aptoideNavigationTracker.registerView(ScreenTagHistory.Builder.build(deeplinkOrNotification));
+    aptoideNavigationTracker.registerScreen(ScreenTagHistory.Builder.build(deeplinkOrNotification));
     pageViewsAnalytics.sendPageViewedEvent();
     return true;
   }

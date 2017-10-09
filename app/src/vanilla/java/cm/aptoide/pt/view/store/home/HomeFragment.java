@@ -272,7 +272,7 @@ public class HomeFragment extends StoreFragment {
     toolbar.setNavigationOnClickListener(v -> {
       drawerLayout.openDrawer(GravityCompat.START);
       drawerAnalytics.drawerOpen();
-      aptoideNavigationTracker.registerView(ScreenTagHistory.Builder.build("Drawer"));
+      aptoideNavigationTracker.registerScreen(ScreenTagHistory.Builder.build("Drawer"));
       pageViewsAnalytics.sendPageViewedEvent();
     });
   }

@@ -58,7 +58,7 @@ public class InboxPresenter implements Presenter {
                 .doOnNext(link -> link.launch())
                 .doOnNext(link -> analytics.notificationShown(
                     notification.getNotificationCenterUrlTrack()))
-                .doOnNext(link -> aptoideNavigationTracker.registerView(
+                .doOnNext(link -> aptoideNavigationTracker.registerScreen(
                     ScreenTagHistory.Builder.build(this.getClass()
                         .getSimpleName())))
                 .doOnNext(link -> pageViewsAnalytics.sendPageViewedEvent())))

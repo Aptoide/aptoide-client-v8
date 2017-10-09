@@ -45,7 +45,7 @@ public class AptoideViewPager extends ViewPager {
           StoreContext storeContext = adapter.getItemStore();
 
           ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker()
-              .registerView(ScreenTagHistory.Builder.build(currentView, tag, storeContext));
+              .registerScreen(ScreenTagHistory.Builder.build(currentView, tag, storeContext));
 
           ((AptoideApplication) getContext().getApplicationContext()).getPageViewsAnalytics()
               .sendPageViewedEvent();

@@ -161,7 +161,7 @@ public class MyAccountPresenter implements Presenter {
             .doOnNext(link -> link.launch())
             .doOnNext(
                 link -> analytics.notificationShown(notification.getNotificationCenterUrlTrack()))
-            .doOnNext(__ -> aptoideNavigationTracker.registerView(
+            .doOnNext(__ -> aptoideNavigationTracker.registerScreen(
                 ScreenTagHistory.Builder.build("Notification")))
             .doOnNext(__ -> pageViewsAnalytics.sendPageViewedEvent()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

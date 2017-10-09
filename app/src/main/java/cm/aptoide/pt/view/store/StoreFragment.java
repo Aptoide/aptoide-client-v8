@@ -86,7 +86,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
       new ViewPager.SimpleOnPageChangeListener() {
         @Override public void onPageSelected(int position) {
           if (position == 0) {
-            aptoideNavigationTracker.registerView(
+            aptoideNavigationTracker.registerScreen(
                 ScreenTagHistory.Builder.build(HomeFragment.class.getSimpleName(), "home",
                     storeContext));
           }

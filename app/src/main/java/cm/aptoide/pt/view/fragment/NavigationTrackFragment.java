@@ -53,7 +53,7 @@ public abstract class NavigationTrackFragment extends FragmentView {
             .getSimpleName()
             + " should be logged to screen history, it has to return a value on method NavigationTrackFragment#getHistoryTracker");
       }
-      aptoideNavigationTracker.registerView(historyTracker);
+      aptoideNavigationTracker.registerScreen(historyTracker);
       pageViewsAnalytics.sendPageViewedEvent();
     }
   }
