@@ -36,19 +36,20 @@ public class AptoideViewPager extends ViewPager {
               + " has to implement "
               + NavigationTrackerPagerAdapterHelper.class.getSimpleName());
         }
+        if (position != 0) {
+          final NavigationTrackerPagerAdapterHelper adapter =
+              (NavigationTrackerPagerAdapterHelper) getAdapter();
 
-        final NavigationTrackerPagerAdapterHelper adapter =
-            (NavigationTrackerPagerAdapterHelper) getAdapter();
+          String currentView = adapter.getItemName(position);
+          String tag = adapter.getItemTag(position);
+          StoreContext storeContext = adapter.getItemStore();
 
-        String currentView = adapter.getItemName(position);
-        String tag = adapter.getItemTag(position);
-        StoreContext storeContext = adapter.getItemStore();
+          ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker()
+              .registerView(ScreenTagHistory.Builder.build(currentView, tag, storeContext));
 
-        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker()
-            .registerView(ScreenTagHistory.Builder.build(currentView, tag, storeContext));
-
-        ((AptoideApplication) getContext().getApplicationContext()).getPageViewsAnalytics()
-            .sendPageViewedEvent();
+          ((AptoideApplication) getContext().getApplicationContext()).getPageViewsAnalytics()
+              .sendPageViewedEvent();
+        }
       }
     });
   }
