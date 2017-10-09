@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     >
 
@@ -30,36 +33,48 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/padding_medium_small"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingEnd="@dimen/padding_small"
-        android:paddingLeft="@dimen/padding_small"
-        android:paddingRight="@dimen/padding_small"
-        android:paddingStart="@dimen/padding_small"
+        android:layout_marginEnd="@dimen/padding_small"
+        android:layout_marginLeft="@dimen/padding_small"
+        android:layout_marginRight="@dimen/padding_small"
+        android:layout_marginStart="@dimen/padding_small"
+        android:gravity="bottom"
+        android:orientation="vertical"
         >
 
-      <Button
-          android:id="@+id/logged_in_more_info_button"
-          android:layout_width="0dp"
-          android:layout_marginEnd="11dp"
-          android:layout_marginRight="11dp"
-          android:layout_weight="1"
-          android:gravity="center"
-          android:text="@string/more_info"
-          style="@style/Aptoide.Button.Ghost"
-          />
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          >
 
-      <Button
-          android:id="@+id/logged_in_continue"
-          android:layout_width="0dp"
-          android:layout_height="@dimen/button_height"
-          android:layout_marginLeft="11dp"
-          android:layout_marginStart="11dp"
-          android:layout_weight="1"
-          android:text="@string/continue_option"
-          android:theme="@style/Aptoide.Button"
-          style="@style/Widget.AppCompat.Button"
+        <Button
+            android:id="@+id/logged_in_more_info_button"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginEnd="11dp"
+            android:layout_marginRight="11dp"
+            android:layout_weight="1"
+            android:text="@string/more_info"
+            style="@style/Aptoide.Button.Ghost"
+            />
+
+        <Button
+            android:id="@+id/logged_in_continue"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginLeft="11dp"
+            android:layout_marginStart="11dp"
+            android:layout_weight="1"
+            android:text="@string/continue_option"
+            android:theme="@style/Aptoide.Button"
+            style="@style/Widget.AppCompat.Button"
+            />
+
+      </LinearLayout>
+
+      <!--fake space-->
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/padding_medium_small"
           />
 
     </LinearLayout>
@@ -69,7 +84,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/bottom_buttons"
-        android:padding="@dimen/padding_very_small"
+        android:paddingEnd="@dimen/padding_very_small"
+        android:paddingLeft="@dimen/padding_very_small"
+        android:paddingRight="@dimen/padding_very_small"
+        android:paddingStart="@dimen/padding_very_small"
         >
 
       <LinearLayout
@@ -77,6 +95,7 @@
           android:layout_height="wrap_content"
           android:gravity="center"
           android:orientation="vertical"
+          android:paddingTop="@dimen/padding_medium_default"
           >
 
         <ImageView
