@@ -21,6 +21,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -44,10 +45,8 @@ import retrofit2.Converter;
  */
 public class SearchFragment extends BasePagerToolbarFragment {
   private static final String TAG = SearchFragment.class.getSimpleName();
-
   private SharedPreferences sharedPreferences;
   private String query;
-
   transient private boolean hasSubscribedResults;
   transient private boolean hasEverywhereResults;
   transient private boolean shouldFinishLoading = false;
@@ -121,7 +120,8 @@ public class SearchFragment extends BasePagerToolbarFragment {
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
     pageViewAnalytics =
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), navigationTracker);
+            Analytics.getInstance(), aptoideNavigationTracker);
+    setRegisterFragment(false);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -160,8 +160,6 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
   @Override protected void setupViewPager() {
     viewPager.setPagingEnabled(false);
-    viewPager.setAptoideNavigationTracker(navigationTracker);
-    viewPager.setPageViewAnalytics(pageViewAnalytics);
 
     if (hasSubscribedResults || hasEverywhereResults) {
       super.setupViewPager();

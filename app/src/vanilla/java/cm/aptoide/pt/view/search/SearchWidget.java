@@ -138,7 +138,7 @@ public class SearchWidget extends Widget<SearchDisplayable> {
     }
 
     final Action1<Void> clickToOpenAppView =
-        v -> handleClickToOpenAppView(clickCallback, searchAppsApp, displayable.getQuery());
+        v -> handleClickToOpenAppView(clickCallback, searchAppsApp, displayable.getQuery(), displayable);
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(clickToOpenAppView));
   }
@@ -187,7 +187,7 @@ public class SearchWidget extends Widget<SearchDisplayable> {
   }
 
   private void handleClickToOpenAppView(Action0 clickCallback,
-      ListSearchApps.SearchAppsApp searchAppsApp, String query) {
+      ListSearchApps.SearchAppsApp searchAppsApp, String query, SearchDisplayable displayable) {
     if (clickCallback != null) {
       clickCallback.call();
     }
@@ -198,6 +198,6 @@ public class SearchWidget extends Widget<SearchDisplayable> {
             searchAppsApp.getStore()
                 .getAppearance()
                 .getTheme(), searchAppsApp.getStore()
-                .getName()), true);
+                .getName(), ""), true);
   }
 }

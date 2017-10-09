@@ -7,6 +7,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.dataprovider.model.v7.store.ListStores;
@@ -49,6 +51,10 @@ public class FragmentTopStores extends AptoideBaseFragment<BaseAdapter> implemen
     super.onCreate(savedInstanceState);
     storeAnalytics =
         new StoreAnalytics(AppEventsLogger.newLogger(getContext()), Analytics.getInstance());
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass().getSimpleName());
   }
 
   @NonNull private List<Displayable> createDisplayables(ListStores listStores) {

@@ -18,6 +18,7 @@ import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
@@ -81,6 +82,11 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     fragment.setArguments(bundle);
 
     return fragment;
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {

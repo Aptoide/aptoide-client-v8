@@ -38,6 +38,7 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable>
   private long appId;
   private String packageName;
   private String storeName;
+  private OtherVersionDisplayable displayable;
 
   public OtherVersionWidget(View itemView) {
     super(itemView);
@@ -61,6 +62,7 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable>
   @Override public void bindView(OtherVersionDisplayable displayable) {
     setItemBackgroundColor(itemView);
     try {
+      this.displayable = displayable;
       final App app = displayable.getPojo();
       appId = app.getId();
       storeName = app.getStore()
@@ -153,6 +155,6 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable>
   @Override public void onClick(View v) {
     Logger.d(TAG, "showing other version for app with id = " + appId);
     getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-        .newAppViewFragment(appId, packageName, null, storeName), true);
+        .newAppViewFragment(appId, packageName, null, storeName, ""), true);
   }
 }

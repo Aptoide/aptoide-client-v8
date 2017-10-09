@@ -19,6 +19,7 @@ import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.addressbook.data.ContactsRepository;
 import cm.aptoide.pt.addressbook.utils.ContactUtils;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.FacebookModel;
 import cm.aptoide.pt.dataprovider.model.v7.TwitterModel;
@@ -233,6 +234,11 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
 
   @Override public void onResume() {
     super.onResume();
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void finishView() {

@@ -63,7 +63,7 @@ public class GridAppListWidget extends Widget<GridAppListDisplayable> {
         .subscribe(v -> {
           // FIXME
           getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-              .newAppViewFragment(app.getId(), app.getPackageName()), true);
+              .newAppViewFragment(app.getId(), app.getPackageName(), displayable.getTag()), true);
         }, throwable -> CrashReport.getInstance()
             .log(throwable)));
 

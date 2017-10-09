@@ -37,14 +37,16 @@ public class ListAppsFragment extends GetStoreEndlessFragment<ListApps> {
             for (App app : list) {
               app.getStore()
                   .setAppearance(new Store.Appearance(storeTheme, null));
-              displayables.add(new AppBrickListDisplayable(app, tag));
+              displayables.add(new AppBrickListDisplayable(app, tag, aptoideNavigationTracker,
+                  storeContext));
             }
             break;
           default:
             for (App app : list) {
               app.getStore()
                   .setAppearance(new Store.Appearance(storeTheme, null));
-              displayables.add(new GridAppDisplayable(app, tag, storeContext == StoreContext.home));
+              displayables.add(new GridAppDisplayable(app, tag, storeContext == StoreContext.home,
+                  aptoideNavigationTracker, storeContext));
             }
             break;
         }
@@ -52,7 +54,8 @@ public class ListAppsFragment extends GetStoreEndlessFragment<ListApps> {
         for (App app : list) {
           app.getStore()
               .setAppearance(new Store.Appearance(storeTheme, null));
-          displayables.add(new GridAppDisplayable(app, tag, storeContext == StoreContext.home));
+          displayables.add(new GridAppDisplayable(app, tag, storeContext == StoreContext.home,
+              aptoideNavigationTracker, storeContext));
         }
       }
 

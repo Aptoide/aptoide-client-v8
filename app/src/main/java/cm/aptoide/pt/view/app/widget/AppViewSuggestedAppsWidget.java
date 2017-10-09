@@ -40,7 +40,8 @@ public class AppViewSuggestedAppsWidget extends Widget<AppViewSuggestedAppsDispl
     List<Displayable> displayables = new LinkedList<>();
     for (MinimalAd minimalAd : minimalAds) {
       // TODO: 01-08-2017 neuro fill ad tag
-      displayables.add(new AppViewAdDisplayable(minimalAd));
+      displayables.add(
+          new AppViewAdDisplayable(minimalAd, displayable.getAptoideNavigationTracker()));
     }
 
     for (App app : appsList) {
@@ -48,7 +49,8 @@ public class AppViewSuggestedAppsWidget extends Widget<AppViewSuggestedAppsDispl
       app.getStore()
           .setAppearance(new Store.Appearance());
       displayables.add(
-          new AppViewSuggestedAppDisplayable(app, displayable.getAppViewSimilarAppAnalytics()));
+          new AppViewSuggestedAppDisplayable(app, displayable.getAppViewSimilarAppAnalytics(),
+              displayable.getAptoideNavigationTracker(), displayable.getStoreContext()));
     }
 
     BaseAdapter adapter = new BaseAdapter(displayables) {
