@@ -68,4 +68,8 @@ public class AptoideNavigationTracker {
       return true;
     }
   }
+
+  public ScreenTagHistory getCurrentScreen() {
+    return historyList.get(historyList.size() - 1);
+  }
 }

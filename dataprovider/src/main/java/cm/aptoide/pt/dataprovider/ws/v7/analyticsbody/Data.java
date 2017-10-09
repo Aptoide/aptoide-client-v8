@@ -11,6 +11,24 @@ public class Data {
   private Result result;
   private Root root;
   private String previousContext;
+  private String store;
+  private String previousTag;
+
+  public String getStore() {
+    return store;
+  }
+
+  public void setStore(String store) {
+    this.store = store;
+  }
+
+  public String getPreviousTag() {
+    return previousTag;
+  }
+
+  public void setPreviousTag(String previousTag) {
+    this.previousTag = previousTag;
+  }
 
   public String getPreviousContext() {
     return previousContext;
