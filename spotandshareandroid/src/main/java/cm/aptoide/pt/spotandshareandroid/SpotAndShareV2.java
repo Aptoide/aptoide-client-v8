@@ -204,6 +204,10 @@ class SpotAndShareV2 {
         .first();
   }
 
+  public boolean isHotspot() {
+    return isHotspot;
+  }
+
   public interface OnError {
     void onError(Throwable throwable);
   }

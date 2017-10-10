@@ -11,6 +11,7 @@
       android:layout_height="wrap_content"
       android:paddingBottom="16dp"
       android:paddingLeft="24dp"
+      android:paddingStart="24dp"
       android:paddingTop="16dp"
       android:text="@string/spotandshare_title_share_an_app"
       style="@style/Aptoide.TextView.Regular.M.BlackAlpha"

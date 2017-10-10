@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     >
 
   <android.support.v7.widget.Toolbar
@@ -16,60 +18,94 @@
       />
 
 
-  <TextView
-      android:id="@+id/edit_profile_instruction"
+  <android.support.constraint.ConstraintLayout
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
+      android:layout_height="match_parent"
       android:layout_below="@id/spotandshare_toolbar"
-      android:layout_marginBottom="45dp"
-      android:layout_marginLeft="38dp"
-      android:layout_marginRight="38dp"
-      android:layout_marginTop="70dp"
-      android:gravity="center_horizontal"
-      android:text="@string/spotandshare_message_choose_name_avatar"
-      android:textColor="@color/black"
-      style="@style/Aptoide.TextView.Regular.L"
-      />
-
-  <EditText
-      android:id="@+id/username_edit_text"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_below="@id/edit_profile_instruction"
-      android:layout_gravity="center"
-      android:layout_marginBottom="45dp"
-      android:layout_marginLeft="32dp"
-      android:layout_marginRight="32dp"
-      android:background="@drawable/spotandshare_edit_text_edit_profile_background"
-      android:hint="@string/spotandshare_short_your_name_edit_profile"
-      android:imeOptions="actionDone"
-      android:inputType="textPersonName"
-      android:maxLines="1"
-      android:textSize="16sp"
-      style="@style/Widget.AppCompat.EditText"
-      />
-
-  <android.support.v7.widget.RecyclerView
-      android:id="@+id/pick_avatar_recyclerView"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_below="@id/username_edit_text"
-      android:layout_marginLeft="10dp"
-      android:layout_marginRight="10dp"
-      android:clipChildren="false"
-      />
-
-  <Button
-      android:id="@+id/save_profile_edition_button"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_alignParentBottom="true"
-      android:layout_marginBottom="22dp"
-      android:layout_marginLeft="32dp"
-      android:layout_marginRight="32dp"
-      android:text="@string/spotandshare_button_save_profile_edition"
-      android:textAllCaps="true"
       >
-  </Button>
+    <TextView
+        android:id="@+id/edit_profile_instruction"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="38dp"
+        android:layout_marginLeft="38dp"
+        android:layout_marginRight="38dp"
+        android:layout_marginStart="38dp"
+        android:gravity="center_horizontal"
+        android:text="@string/spotandshare_message_choose_name_avatar"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/Aptoide.TextView.Regular.L"
+        />
+
+    <EditText
+        android:id="@+id/username_edit_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginEnd="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginStart="32dp"
+        android:background="@drawable/spotandshare_edit_text_edit_profile_background"
+        android:hint="@string/spotandshare_short_your_name_edit_profile"
+        android:imeOptions="actionDone"
+        android:inputType="textPersonName"
+        android:maxLines="1"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/pick_avatar_recyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_profile_instruction"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="25dp"
+        style="@style/Widget.AppCompat.EditText"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/pick_avatar_recyclerView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:clipChildren="false"
+        app:layout_constraintBottom_toTopOf="@+id/save_profile_edition_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/username_edit_text"
+        tools:layout_editor_absoluteX="18dp"
+        tools:layout_editor_absoluteY="25dp"
+        />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/save_profile_edition_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginStart="30dp"
+        android:text="@string/spotandshare_button_save_profile_edition"
+        android:textAllCaps="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pick_avatar_recyclerView"
+        tools:layout_editor_absoluteX="38dp"
+        tools:layout_editor_absoluteY="25dp"
+        style="@style/Aptoide.Button"
+        >
+    </android.support.v7.widget.AppCompatButton>
+
+  </android.support.constraint.ConstraintLayout>
 
 </RelativeLayout>

@@ -28,6 +28,7 @@
           android:layout_height="wrap_content"
           android:layout_gravity="end"
           android:layout_marginBottom="8dp"
+          android:layout_marginEnd="8dp"
           android:layout_marginRight="8dp"
           android:layout_marginTop="8dp"
           android:orientation="horizontal"
@@ -44,8 +45,10 @@
             android:id="@+id/spotandshare_toolbar_number_of_friends_connected"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
+            android:layout_marginStart="4dp"
             android:text="0"
             style="@style/Aptoide.TextView.Medium.S"
             />
