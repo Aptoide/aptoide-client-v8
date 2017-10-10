@@ -2,28 +2,36 @@ package cm.aptoide.pt.firstinstall;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.os.Bundle;
 import android.view.WindowManager;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.AdsRepository;
+import cm.aptoide.pt.app.AppRepository;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.dataprovider.model.v7.Layout;
+import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.firstinstall.displayable.FirstInstallAdDisplayable;
-import cm.aptoide.pt.install.InstalledRepository;
+import cm.aptoide.pt.firstinstall.displayable.FirstInstallAppDisplayable;
+import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.repository.request.RequestFactory;
-import cm.aptoide.pt.store.StoreAnalytics;
-import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.view.recycler.displayable.DisplayableGroup;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
@@ -34,40 +42,47 @@ import rx.schedulers.Schedulers;
 
 public class FirstInstallPresenter implements Presenter {
 
+  private final String TAG = FirstInstallPresenter.class.getCanonicalName();
+
   private FirstInstallView view;
   private CrashReport crashReport;
+  private RequestFactory requestFactoryCdnPool;
   private Context context;
   private String storeName;
   private String url;
-
-  private RequestFactory requestFactoryCdnPool;
-  protected AptoideAccountManager accountManager;
-  protected StoreUtilsProxy storeUtilsProxy;
-  protected InstalledRepository installedRepository;
-  protected StoreAnalytics storeAnalytics;
-  protected StoreRepository storeRepository;
-  protected String storeTheme;
-  private final WindowManager windowManager;
-  private Resources resources;
-
   private AdsRepository adsRepository;
+  private Resources resources;
+  private WindowManager windowManager;
+  private AppRepository appRepository;
+
+  private List<FirstInstallAppDisplayable> appDisplayables;
+  private PermissionManager permissionManager;
+  private PermissionService permissionService;
+  private InstallManager installManager;
 
   FirstInstallPresenter(FirstInstallView view, CrashReport crashReport,
-      RequestFactory requestFactoryCdnPool, Context context, String storeName, String url) {
+      RequestFactory requestFactoryCdnPool, Context context, String storeName, String url,
+      AdsRepository adsRepository, Resources resources, WindowManager windowManager,
+      AppRepository appRepository) {
     this.view = view;
     this.crashReport = crashReport;
     this.requestFactoryCdnPool = requestFactoryCdnPool;
     this.context = context;
     this.storeName = storeName;
     this.url = url;
-    adsRepository = ((AptoideApplication) context.getApplicationContext()).getAdsRepository();
-    this.resources = context.getResources();
-    this.windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-
-    // TODO: 03/10/2017 instantiate all variables with the constructor
+    this.adsRepository = adsRepository;
+    this.resources = resources;
+    this.windowManager = windowManager;
+    this.appRepository = appRepository;
   }
 
   @Override public void present() {
+    appDisplayables = new ArrayList<>();
+    permissionManager = new PermissionManager();
+    permissionService = ((PermissionService) context);
+    installManager = ((AptoideApplication) context.getApplicationContext()).getInstallManager(
+        InstallerFactory.ROLLBACK);
+
     handleInstallAllClick();
     handleCloseClick();
     getFirstInstallWidget();
@@ -79,14 +94,9 @@ public class FirstInstallPresenter implements Presenter {
   private void handleInstallAllClick() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(resumed -> installAllClick())
+        .flatMap(resumed -> view.installAllClick())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(installAllClick -> {
-        }, crashReport::log);
-  }
-
-  private Observable<Void> installAllClick() {
-    return view.installAllClick();
+        .subscribe(installAllClick -> installAllApps(appDisplayables), crashReport::log);
   }
 
   /**
@@ -95,14 +105,10 @@ public class FirstInstallPresenter implements Presenter {
   private void handleCloseClick() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(resumed -> closeClick())
+        .flatMap(resumed -> view.closeClick())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(closeClick -> {
         }, crashReport::log);
-  }
-
-  private Observable<Void> closeClick() {
-    return view.closeClick();
   }
 
   /**
@@ -112,10 +118,11 @@ public class FirstInstallPresenter implements Presenter {
     requestFactoryCdnPool.newStoreWidgets(url, storeName, StoreContext.first_install)
         .observe(true)
         .subscribeOn(Schedulers.newThread())
-        .observeOn(Schedulers.io())
-        .doOnCompleted(() -> getAds(getNumberOfAdsToShow(3)))
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnCompleted(() -> getAds(getNumberOfAdsToShow(appDisplayables.size())))
         .flatMap(this::parseDisplayables)
-        .subscribe(displayables -> view.addFirstInstallDisplayables(displayables, true), crashReport::log);
+        .subscribe(displayables -> view.addFirstInstallDisplayables(displayables, true),
+            crashReport::log);
   }
 
   /**
@@ -128,11 +135,36 @@ public class FirstInstallPresenter implements Presenter {
   private Observable<List<Displayable>> parseDisplayables(GetStoreWidgets getStoreWidgets) {
     return Observable.from(getStoreWidgets.getDataList()
         .getList())
-        .concatMapEager(
-            wsWidget -> FirstInstallDisplayablesFactory.parse(wsWidget, storeTheme, context,
-                (WindowManager) context.getSystemService(Context.WINDOW_SERVICE))
-                .toList()
-                .first());
+        .concatMapEager(wsWidget -> wsWidgetParser(wsWidget).toList()
+            .first());
+  }
+
+  /**
+   * parse the wsWidget to displayables
+   *
+   * @param wsWidget first install wsWidget
+   *
+   * @return Observable
+   */
+  private Observable<Displayable> wsWidgetParser(GetStoreWidgets.WSWidget wsWidget) {
+    ListApps listApps = (ListApps) wsWidget.getViewObject();
+    if (listApps == null) {
+      return Observable.empty();
+    }
+
+    List<Displayable> displayables = new ArrayList<>(listApps.getDataList()
+        .getList()
+        .size());
+    if (Layout.LIST.equals(wsWidget.getData()
+        .getLayout())) {
+      for (App app : listApps.getDataList()
+          .getList()) {
+        FirstInstallAppDisplayable firstInstallAppDisplayable = new FirstInstallAppDisplayable(app);
+        displayables.add(firstInstallAppDisplayable);
+        appDisplayables.add(firstInstallAppDisplayable);
+      }
+    }
+    return Observable.just(new DisplayableGroup(displayables, windowManager, resources));
   }
 
   /**
@@ -143,7 +175,7 @@ public class FirstInstallPresenter implements Presenter {
   private void getAds(int limitOfAds) {
     adsRepository.getAdsFromFirstInstall(limitOfAds)
         .subscribeOn(Schedulers.newThread())
-        .observeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
         .flatMap(this::parseDisplayables)
         .subscribe(displayables -> view.addFirstInstallDisplayables(displayables, true));
   }
@@ -174,5 +206,46 @@ public class FirstInstallPresenter implements Presenter {
   private int getNumberOfAdsToShow(int numberOfApps) {
     int numberOfAds = Type.ADS.getPerLineCount(resources, windowManager) * 2 - numberOfApps;
     return numberOfAds > 0 ? numberOfAds : 0;
+  }
+
+  /**
+   * request for external storage permission
+   * do a get app request for every displayable received
+   * download all the apps received
+   * call the installer for all downloaded apps
+   *
+   * @param appDisplayablesList list of firstInstallAppDisplayables to download and install
+   */
+  private void installAllApps(List<FirstInstallAppDisplayable> appDisplayablesList) {
+    permissionManager.requestDownloadAccess(permissionService)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionService))
+        .map(success -> Observable.just(appDisplayablesList)
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .flatMapIterable(displayables -> displayables)
+            .map(firstInstallAppDisplayable -> appRepository.getApp(
+                firstInstallAppDisplayable.getPojo()
+                    .getId(), true, false, firstInstallAppDisplayable.getPojo()
+                    .getStore()
+                    .getName(), firstInstallAppDisplayable.getPojo()
+                    .getPackageName())
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(app -> new DownloadFactory(app.getNodes()
+                    .getMeta()
+                    .getData()
+                    .getStore()
+                    .getName()).create(app.getNodes()
+                    .getMeta()
+                    .getData(), Download.ACTION_INSTALL))
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMapCompletable(download -> installManager.install(download))
+                .subscribe())
+            .subscribe())
+        .subscribe(ok -> {
+        }, crashReport::log);
   }
 }
