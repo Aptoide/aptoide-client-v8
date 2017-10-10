@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.billing.transaction;
 
-import cm.aptoide.pt.dataprovider.ws.v7.billing.GetTransactionsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.billing.GetTransactionRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +17,7 @@ public class TransactionMapper {
     this.transactionFactory = transactionFactory;
   }
 
-  public Transaction map(GetTransactionsRequest.ResponseBody.Data.Transaction response) {
+  public Transaction map(GetTransactionRequest.ResponseBody.Transaction response) {
     return transactionFactory.create(response.getId(), String.valueOf(response.getUser()
         .getId()), response.getService()
         .getId(), response.getProduct()
@@ -25,11 +25,11 @@ public class TransactionMapper {
   }
 
   public List<Transaction> map(
-      List<GetTransactionsRequest.ResponseBody.Data.Transaction> responseList) {
+      List<GetTransactionRequest.ResponseBody.Transaction> responseList) {
 
     final List<Transaction> transactions = new ArrayList<>(responseList.size());
 
-    for (GetTransactionsRequest.ResponseBody.Data.Transaction response : responseList) {
+    for (GetTransactionRequest.ResponseBody.Transaction response : responseList) {
       transactions.add(map(response));
     }
     return transactions;

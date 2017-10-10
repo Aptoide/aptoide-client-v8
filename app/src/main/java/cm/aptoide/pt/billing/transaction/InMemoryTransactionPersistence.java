@@ -14,19 +14,19 @@ import rx.Observable;
 
 public class InMemoryTransactionPersistence implements TransactionPersistence {
 
-  private final Map<Long, Transaction> inMemoryTransactions;
+  private final Map<Long, Transaction> transactions;
   private final PublishRelay<List<Transaction>> transactionRelay;
   private final TransactionFactory transactionFactory;
 
-  public InMemoryTransactionPersistence(Map<Long, Transaction> inMemoryTransactions,
+  public InMemoryTransactionPersistence(Map<Long, Transaction> transactions,
       PublishRelay<List<Transaction>> transactionRelay, TransactionFactory transactionFactory) {
-    this.inMemoryTransactions = inMemoryTransactions;
+    this.transactions = transactions;
     this.transactionRelay = transactionRelay;
     this.transactionFactory = transactionFactory;
   }
 
   @Override public Observable<Transaction> getTransaction(String customerId, long productId) {
-    return transactionRelay.startWith(new ArrayList<Transaction>(inMemoryTransactions.values()))
+    return transactionRelay.startWith(new ArrayList<Transaction>(transactions.values()))
         .flatMap(transactions -> Observable.from(transactions)
             .filter(transaction -> transaction.getCustomerId()
                 .equals(customerId) && transaction.getProductId() == productId)
@@ -35,27 +35,19 @@ public class InMemoryTransactionPersistence implements TransactionPersistence {
   }
 
   @Override public Completable removeTransaction(String customerId, long productId) {
-    return Observable.from(inMemoryTransactions.values())
+    return Observable.from(transactions.values())
         .filter(
             transaction -> transaction.getProductId() == productId && transaction.getCustomerId()
                 .equals(customerId))
-        .doOnNext(transaction -> inMemoryTransactions.remove(transaction.getId()))
+        .doOnNext(transaction -> transactions.remove(transaction.getId()))
         .toList()
         .toCompletable();
   }
 
   @Override public Completable saveTransaction(Transaction transaction) {
     return Completable.fromAction(() -> {
-      inMemoryTransactions.put(transaction.getId(), transaction);
-      transactionRelay.call(new ArrayList<>(inMemoryTransactions.values()));
+      transactions.put(transaction.getId(), transaction);
+      transactionRelay.call(new ArrayList<>(transactions.values()));
     });
-  }
-
-  @Override public Completable saveTransactions(List<Transaction> transactions) {
-    return Observable.from(transactions)
-        .doOnNext(transaction -> inMemoryTransactions.put(transaction.getId(), transaction))
-        .toList()
-        .toCompletable()
-        .doOnCompleted(() -> transactionRelay.call(new ArrayList<>(inMemoryTransactions.values())));
   }
 }

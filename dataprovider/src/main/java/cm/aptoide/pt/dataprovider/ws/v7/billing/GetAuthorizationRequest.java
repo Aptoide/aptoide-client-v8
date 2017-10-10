@@ -62,7 +62,7 @@ public class GetAuthorizationRequest
 
       private long id;
       private String type;
-      private int serviceId;
+      private long serviceId;
       private Price price;
       private User user;
       private String status;
@@ -84,11 +84,11 @@ public class GetAuthorizationRequest
         this.type = type;
       }
 
-      public int getServiceId() {
+      public long getServiceId() {
         return serviceId;
       }
 
-      public void setServiceId(int serviceId) {
+      public void setServiceId(long serviceId) {
         this.serviceId = serviceId;
       }
 

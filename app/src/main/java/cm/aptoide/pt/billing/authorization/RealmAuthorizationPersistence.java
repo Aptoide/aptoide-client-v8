@@ -18,18 +18,18 @@ import rx.Observable;
 
 public class RealmAuthorizationPersistence implements AuthorizationPersistence {
 
-  private final Map<Long, Authorization> remoteAuthorizations;
+  private final Map<Long, Authorization> authorizations;
   private final PublishRelay<List<Authorization>> authorizationRelay;
-  private final Database localAuthorizationsDatabase;
+  private final Database database;
   private final AuthorizationMapper authorizationMapper;
   private final AuthorizationFactory authorizationFactory;
 
-  public RealmAuthorizationPersistence(Map<Long, Authorization> remoteAuthorizations,
+  public RealmAuthorizationPersistence(Map<Long, Authorization> authorizations,
       PublishRelay<List<Authorization>> authorizationRelay, Database database,
       AuthorizationMapper authorizationMapper, AuthorizationFactory authorizationFactory) {
-    this.remoteAuthorizations = remoteAuthorizations;
+    this.authorizations = authorizations;
     this.authorizationRelay = authorizationRelay;
-    this.localAuthorizationsDatabase = database;
+    this.database = database;
     this.authorizationMapper = authorizationMapper;
     this.authorizationFactory = authorizationFactory;
   }
@@ -37,73 +37,54 @@ public class RealmAuthorizationPersistence implements AuthorizationPersistence {
   @Override public Completable saveAuthorization(Authorization authorization) {
     return Completable.fromAction(() -> {
 
-      if (authorization instanceof PayPalAuthorization) {
-        localAuthorizationsDatabase.insert(
-            authorizationMapper.map((PayPalAuthorization) authorization));
-        remoteAuthorizations.remove(authorization.getId());
-      } else {
-        remoteAuthorizations.put(authorization.getId(), authorization);
+      if (authorization.isPendingSync()) {
+        database.insert(authorizationMapper.map((PayPalAuthorization) authorization));
       }
+      authorizations.put(authorization.getId(), authorization);
 
-      authorizationRelay.call(new ArrayList<>(remoteAuthorizations.values()));
+      authorizationRelay.call(new ArrayList<>(authorizations.values()));
     });
   }
 
   @Override
   public Observable<Authorization> getAuthorization(String customerId, long transactionId) {
-    return authorizationRelay.startWith(new ArrayList<Authorization>(remoteAuthorizations.values()))
+    return authorizationRelay.startWith(new ArrayList<Authorization>(authorizations.values()))
         .flatMap(authorizations -> Observable.from(authorizations)
             .filter(authorization -> authorization.getCustomerId()
                 .equals(customerId) && authorization.getTransactionId() == transactionId)
             .flatMap(authorization -> resolveAuthorization(authorization))
             .defaultIfEmpty(
-                authorizationFactory.create(-1, customerId, "", Authorization.Status.PENDING, null,
+                authorizationFactory.create(-1, customerId, "", Authorization.Status.NEW, null,
                     null, null, null, null, transactionId)));
   }
 
-  private Observable<Authorization> resolveAuthorization(Authorization remoteAuthorization) {
+  private Observable<Authorization> resolveAuthorization(Authorization authorization) {
 
-    final Authorization localAuthorization = getLocalAuthorization(remoteAuthorization.getId());
+    final Authorization pendingSyncAuthorization =
+        getPendingSyncAuthorization(authorization.getId());
 
-    if (localAuthorization == null && remoteAuthorization == null) {
+    if (pendingSyncAuthorization == null && authorization == null) {
       return Observable.empty();
     }
 
-    if (remoteAuthorization == null) {
-      return Observable.just(localAuthorization);
+    if (pendingSyncAuthorization == null || authorization.isActive()) {
+      return Observable.just(authorization);
     }
 
-    if (localAuthorization == null) {
-      return Observable.just(remoteAuthorization);
-    }
-
-    if (remoteAuthorization.getStatus()
-        .equals(Authorization.Status.PENDING)) {
-      return Observable.just(localAuthorization);
-    }
-
-    if (localAuthorization.isInactive()) {
-      return Observable.just(localAuthorization);
-    }
-
-    return Observable.just(remoteAuthorization);
+    return Observable.just(pendingSyncAuthorization);
   }
 
-  private Authorization getLocalAuthorization(long id) {
-    @Cleanup Realm realm = localAuthorizationsDatabase.get();
+  private Authorization getPendingSyncAuthorization(long id) {
+    @Cleanup Realm realm = database.get();
 
-    final RealmAuthorization realmAuthorization = getRealmAuthorization(id, realm);
-
-    Authorization localAuthorization = null;
-    if (realmAuthorization != null) {
-      localAuthorization = authorizationMapper.map(realmAuthorization);
-    }
-    return localAuthorization;
-  }
-
-  private RealmAuthorization getRealmAuthorization(long id, Realm realm) {
-    return realm.where(RealmAuthorization.class)
+    final RealmAuthorization realmAuthorization = realm.where(RealmAuthorization.class)
         .equalTo(RealmAuthorization.ID, id)
         .findFirst();
+
+    Authorization pendingSyncAuthorization = null;
+    if (realmAuthorization != null) {
+      pendingSyncAuthorization = authorizationMapper.map(realmAuthorization);
+    }
+    return pendingSyncAuthorization;
   }
 }

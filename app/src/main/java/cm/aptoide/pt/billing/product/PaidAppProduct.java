@@ -12,7 +12,7 @@ public class PaidAppProduct extends AbstractProduct {
   private final String storeName;
   private final long appId;
 
-  public PaidAppProduct(int id, String storeName, String icon, String title, String description,
+  public PaidAppProduct(long id, String storeName, String icon, String title, String description,
       long appId, Price price, int packageVersionCode) {
     super(id, icon, title, description, price, packageVersionCode);
     this.storeName = storeName;

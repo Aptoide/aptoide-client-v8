@@ -2,7 +2,6 @@ package cm.aptoide.pt.billing.authorization;
 
 import rx.Completable;
 import rx.Observable;
-import rx.Single;
 
 public interface AuthorizationPersistence {
 

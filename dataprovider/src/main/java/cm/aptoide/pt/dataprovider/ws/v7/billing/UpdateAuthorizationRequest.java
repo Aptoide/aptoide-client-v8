@@ -6,6 +6,7 @@ import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -25,7 +26,9 @@ public class UpdateAuthorizationRequest
       TokenInvalidator tokenInvalidator) {
     final RequestBody requestBody = new RequestBody();
     requestBody.setTransactionId(transactionId);
-    requestBody.setMetadata(metadata);
+    final RequestBody.Data data = new RequestBody.Data();
+    data.setPayKey(metadata);
+    requestBody.setServiceData(data);
     return new UpdateAuthorizationRequest(requestBody, getHost(sharedPreferences), httpClient,
         converterFactory, bodyInterceptorV7, tokenInvalidator);
   }
@@ -38,7 +41,15 @@ public class UpdateAuthorizationRequest
   public static class RequestBody extends BaseBody {
 
     private long transactionId;
-    private String metadata;
+    private Data serviceData;
+
+    public Data getServiceData() {
+      return serviceData;
+    }
+
+    public void setServiceData(Data serviceData) {
+      this.serviceData = serviceData;
+    }
 
     public long getTransactionId() {
       return transactionId;
@@ -48,12 +59,16 @@ public class UpdateAuthorizationRequest
       this.transactionId = transactionId;
     }
 
-    public String getMetadata() {
-      return metadata;
-    }
+    public static class Data {
+      @JsonProperty("paykey") private String payKey;
 
-    public void setMetadata(String metadata) {
-      this.metadata = metadata;
+      public String getPayKey() {
+        return payKey;
+      }
+
+      public void setPayKey(String payKey) {
+        this.payKey = payKey;
+      }
     }
   }
 

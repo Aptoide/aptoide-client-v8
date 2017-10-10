@@ -32,8 +32,9 @@ public class BillingSyncFactory {
         BuildConfig.PAYMENT_AUTHORIZATION_SYNC_INTERVAL_MILLIS, 0);
   }
 
-  public Sync createTransactionSync() {
-    return new TransactionsSync("TransactionsSync", transactionPersistence, transactionService,
-        true, true, BuildConfig.PAYMENT_TRANSACTION_SYNC_INTERVAL_MILLIS, 0);
+  public Sync createTransactionSync(long productId) {
+    return new TransactionsSync(String.valueOf(productId), transactionPersistence,
+        transactionService, true, true, BuildConfig.PAYMENT_TRANSACTION_SYNC_INTERVAL_MILLIS, 0,
+        productId);
   }
 }

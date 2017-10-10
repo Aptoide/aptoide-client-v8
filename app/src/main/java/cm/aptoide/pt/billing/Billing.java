@@ -15,7 +15,6 @@ import cm.aptoide.pt.billing.product.SimplePurchase;
 import cm.aptoide.pt.billing.transaction.Transaction;
 import cm.aptoide.pt.billing.transaction.TransactionRepository;
 import java.util.List;
-import okio.ByteString;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -28,17 +27,19 @@ public class Billing {
   private final PaymentServiceSelector paymentServiceSelector;
   private final Customer customer;
   private final AuthorizationFactory authorizationFactory;
+  private final PurchaseTokenDecoder tokenDecoder;
 
   public Billing(TransactionRepository transactionRepository, BillingService billingService,
       AuthorizationRepository authorizationRepository,
       PaymentServiceSelector paymentServiceSelector, Customer customer,
-      AuthorizationFactory authorizationFactory) {
+      AuthorizationFactory authorizationFactory, PurchaseTokenDecoder tokenDecoder) {
     this.transactionRepository = transactionRepository;
     this.billingService = billingService;
     this.authorizationRepository = authorizationRepository;
     this.paymentServiceSelector = paymentServiceSelector;
     this.customer = customer;
     this.authorizationFactory = authorizationFactory;
+    this.tokenDecoder = tokenDecoder;
   }
 
   public Customer getCustomer() {
@@ -62,9 +63,11 @@ public class Billing {
   }
 
   public Completable consumePurchase(String purchaseToken) {
-    return billingService.getPurchase(getPurchaseId(purchaseToken))
-        .flatMapCompletable(purchase -> billingService.deletePurchase(getPurchaseId(purchaseToken))
-            .andThen(transactionRepository.remove(purchase.getProductId())));
+    return billingService.getPurchase(tokenDecoder.
+        decode(purchaseToken))
+        .flatMapCompletable(
+            purchase -> billingService.deletePurchase(tokenDecoder.decode(purchaseToken))
+                .andThen(transactionRepository.remove(purchase.getProductId())));
   }
 
   public Single<List<PaymentService>> getPaymentServices() {
@@ -110,8 +113,7 @@ public class Billing {
 
   public Observable<Purchase> getPurchase(String merchantName, String sku) {
     return getTransaction(merchantName, sku).flatMapSingle(transaction -> {
-
-      if (transaction.isPending() || transaction.isUnknown()) {
+        if (transaction.isProcessing()) {
         return Single.just(
             new SimplePurchase(SimplePurchase.Status.PENDING, transaction.getProductId()));
       }
@@ -121,7 +123,7 @@ public class Billing {
             new SimplePurchase(SimplePurchase.Status.NEW, transaction.getProductId()));
       }
 
-      return billingService.getPurchase(getPurchaseId(sku));
+      return billingService.getPurchase(tokenDecoder.decode(sku));
     })
         .flatMap(purchase -> {
           if (purchase.isFailed()) {
@@ -132,7 +134,7 @@ public class Billing {
         });
   }
 
-  public Completable selectService(int serviceId) {
+  public Completable selectService(long serviceId) {
     return getService(serviceId).flatMapCompletable(
         service -> paymentServiceSelector.selectService(service));
   }
@@ -147,18 +149,12 @@ public class Billing {
         product -> transactionRepository.getTransaction(product.getProductId()));
   }
 
-  private Single<PaymentService> getService(int serviceId) {
+  private Single<PaymentService> getService(long serviceId) {
     return getPaymentServices().flatMapObservable(payments -> Observable.from(payments)
         .filter(payment -> payment.getId() == serviceId)
         .switchIfEmpty(
             Observable.error(new IllegalArgumentException("Payment " + serviceId + " not found."))))
         .first()
         .toSingle();
-  }
-
-  private long getPurchaseId(String purchaseToken) {
-    return ByteString.decodeBase64(purchaseToken)
-        .asByteBuffer()
-        .getLong();
   }
 }

@@ -4,5 +4,5 @@ public interface BillingSyncScheduler {
 
   void syncAuthorization(long transactionId);
 
-  void syncTransactions();
+  void syncTransaction(long productId);
 }

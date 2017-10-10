@@ -6,9 +6,9 @@ public class Transaction {
   private final long productId;
   private final String customerId;
   private final Status status;
-  private final int serviceId;
+  private final long serviceId;
 
-  public Transaction(long id, long productId, String customerId, Status status, int serviceId) {
+  public Transaction(long id, long productId, String customerId, Status status, long serviceId) {
     this.productId = productId;
     this.customerId = customerId;
     this.status = status;
@@ -24,10 +24,6 @@ public class Transaction {
     return productId;
   }
 
-  public Status getStatus() {
-    return status;
-  }
-
   public boolean isNew() {
     return Status.NEW.equals(status);
   }
@@ -40,22 +36,16 @@ public class Transaction {
     return Status.PENDING_SERVICE_AUTHORIZATION.equals(status);
   }
 
-  public boolean isPending() {
-    return Status.CREATED.equals(status)
-        || Status.PROCESSING.equals(status)
-        || Status.PENDING.equals(status);
+  public boolean isProcessing() {
+    return Status.PROCESSING.equals(status);
   }
 
   public boolean isFailed() {
-    return Status.CANCELED.equals(status) || Status.FAILED.equals(status);
+    return Status.FAILED.equals(status);
   }
 
-  public int getServiceId() {
+  public long getServiceId() {
     return serviceId;
-  }
-
-  public boolean isUnknown() {
-    return Status.UNKNOWN.equals(status);
   }
 
   public long getId() {
@@ -63,6 +53,6 @@ public class Transaction {
   }
 
   public enum Status {
-    UNKNOWN, NEW, CREATED, PENDING_SERVICE_AUTHORIZATION, PROCESSING, PENDING, COMPLETED, FAILED, CANCELED
+    NEW, PENDING_SERVICE_AUTHORIZATION, PROCESSING, COMPLETED, FAILED
   }
 }

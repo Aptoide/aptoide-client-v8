@@ -6,8 +6,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.CreateTransactionRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.billing.GetTransactionsRequest;
-import java.util.List;
+import cm.aptoide.pt.dataprovider.ws.v7.billing.GetTransactionRequest;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Single;
@@ -32,21 +31,21 @@ public class TransactionServiceV7 implements TransactionService {
     this.sharedPreferences = sharedPreferences;
   }
 
-  @Override public Single<List<Transaction>> getTransactions() {
-    return GetTransactionsRequest.of(bodyInterceptorV7, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences)
+  @Override public Single<Transaction> getTransaction(long productId) {
+    return GetTransactionRequest.of(bodyInterceptorV7, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences, productId)
         .observe(true)
         .toSingle()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
-            return Single.just(transactionMapper.map(response.getData().getList()));
+            return Single.just(transactionMapper.map(response.getData()));
           }
           return Single.error(new IllegalArgumentException(V7.getErrorMessage(response)));
         });
   }
 
   @Override
-  public Single<Transaction> createTransaction(long productId, int serviceId, String payload) {
+  public Single<Transaction> createTransaction(long productId, long serviceId, String payload) {
     return CreateTransactionRequest.of(productId, serviceId, payload, bodyInterceptorV7, httpClient,
         converterFactory, tokenInvalidator, sharedPreferences)
         .observe(true)

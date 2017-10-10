@@ -19,7 +19,7 @@ public class CreateTransactionRequest
     super(body, baseHost, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
-  public static CreateTransactionRequest of(long productId, int serviceId, String payload,
+  public static CreateTransactionRequest of(long productId, long serviceId, String payload,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
@@ -39,7 +39,7 @@ public class CreateTransactionRequest
   public static class RequestBody extends BaseBody {
 
     private long productId;
-    private int serviceId;
+    private long serviceId;
     private String payload;
 
     public long getProductId() {
@@ -50,11 +50,11 @@ public class CreateTransactionRequest
       this.productId = productId;
     }
 
-    public int getServiceId() {
+    public long getServiceId() {
       return serviceId;
     }
 
-    public void setServiceId(int serviceId) {
+    public void setServiceId(long serviceId) {
       this.serviceId = serviceId;
     }
 
@@ -69,13 +69,13 @@ public class CreateTransactionRequest
 
   public static class ResponseBody extends BaseV7Response {
 
-    private GetTransactionsRequest.ResponseBody.Data.Transaction data;
+    private GetTransactionRequest.ResponseBody.Transaction data;
 
-    public GetTransactionsRequest.ResponseBody.Data.Transaction getData() {
+    public GetTransactionRequest.ResponseBody.Transaction getData() {
       return data;
     }
 
-    public void setData(GetTransactionsRequest.ResponseBody.Data.Transaction data) {
+    public void setData(GetTransactionRequest.ResponseBody.Transaction data) {
       this.data = data;
     }
   }

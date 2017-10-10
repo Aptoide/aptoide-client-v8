@@ -59,7 +59,7 @@ public class WebAuthorizationPresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(__ -> view.showLoading())
         .flatMap(__ -> billing.getAuthorization(merchantName, sku)
-            .first(authorization -> authorization.isInactive())
+            .first(authorization -> authorization.isPending())
             .cast(WebAuthorization.class)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(authorization -> {

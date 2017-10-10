@@ -100,16 +100,16 @@ public class GetPurchasesRequest
 
     public static class Purchase {
 
-      private int id;
+      private long id;
       private String signature;
       private Product product;
       private Data data;
 
-      public int getId() {
+      public long getId() {
         return id;
       }
 
-      public void setId(int id) {
+      public void setId(long id) {
         this.id = id;
       }
 
@@ -139,15 +139,15 @@ public class GetPurchasesRequest
 
       public static class Product {
 
-        private int id;
+        private long id;
         @JsonProperty("package") private String packageName;
         private String sku;
 
-        public int getId() {
+        public long getId() {
           return id;
         }
 
-        public void setId(int id) {
+        public void setId(long id) {
           this.id = id;
         }
 
@@ -170,14 +170,14 @@ public class GetPurchasesRequest
 
       public static class Data {
 
-        private SignatureData developerData;
+        private DeveloperPurchase developerPurchase;
 
-        public SignatureData getDeveloperData() {
-          return developerData;
+        public DeveloperPurchase getDeveloperPurchase() {
+          return developerPurchase;
         }
 
-        public void setDeveloperData(SignatureData developerData) {
-          this.developerData = developerData;
+        public void setDeveloperPurchase(DeveloperPurchase developerPurchase) {
+          this.developerPurchase = developerPurchase;
         }
 
         // Order must be kept here because the resulting JSON String must be validated against a digital
@@ -185,7 +185,7 @@ public class GetPurchasesRequest
         @JsonPropertyOrder({
             "orderId", "packageName", "productId", "purchaseTime", "purchaseToken", "purchaseState",
             "developerPayload"
-        }) @JsonInclude(JsonInclude.Include.NON_NULL) public static class SignatureData {
+        }) @JsonInclude(JsonInclude.Include.NON_NULL) public static class DeveloperPurchase {
           @JsonProperty("orderId") private String orderId;
           @JsonProperty("packageName") private String packageName;
           @JsonProperty("productId") private String productId;

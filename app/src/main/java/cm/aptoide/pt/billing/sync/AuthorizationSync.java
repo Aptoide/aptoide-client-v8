@@ -33,7 +33,7 @@ public class AuthorizationSync extends Sync {
     return customer.getId()
         .flatMapCompletable(
             customerId -> syncPayPalAuthorization(customerId, transactionId).andThen(
-                syncRemoteAuthorization(customerId, transactionId)));
+                syncRemoteAuthorization(transactionId)));
   }
 
   private Completable syncPayPalAuthorization(String customerId, long transactionId) {
@@ -41,7 +41,7 @@ public class AuthorizationSync extends Sync {
         .first()
         .filter(transaction -> transaction instanceof PayPalAuthorization)
         .cast(PayPalAuthorization.class)
-        .filter(authorization -> authorization.isPending())
+        .filter(authorization -> authorization.isPendingSync())
         .flatMapSingle(authorization -> authorizationService.updateAuthorization(
             authorization.getTransactionId(), authorization.getMetadata()))
         .flatMapCompletable(
@@ -49,7 +49,7 @@ public class AuthorizationSync extends Sync {
         .toCompletable();
   }
 
-  private Completable syncRemoteAuthorization(String customerId, long transactionId) {
+  private Completable syncRemoteAuthorization(long transactionId) {
     return authorizationService.getAuthorization(transactionId)
         .flatMapCompletable(
             authorization -> authorizationPersistence.saveAuthorization(authorization));

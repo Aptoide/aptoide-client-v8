@@ -38,14 +38,27 @@ public class AuthorizationMapper {
   }
 
   public Authorization map(GetAuthorizationRequest.ResponseBody.Authorization response) {
+
+    Price price = null;
+    if (response.getPrice() != null) {
+      price = new Price(response.getPrice()
+          .getAmount(), response.getPrice()
+          .getCurrency(), response.getPrice()
+          .getCurrencySymbol());
+    }
+
+    final GetAuthorizationRequest.ResponseBody.Authorization.Metadata metadata = response.getData();
+    String url = null;
+    String redirectUrl = null;
+    String description = null;
+    if (metadata != null) {
+      url = metadata.getUrl();
+      redirectUrl = metadata.getRedirectUrl();
+      description = metadata.getDescription();
+    }
+
     return authorizationFactory.create(response.getId(), String.valueOf(response.getUser()
-            .getId()), response.getType(), Authorization.Status.valueOf(response.getStatus()),
-        response.getData()
-            .getUrl(), response.getData()
-            .getRedirectUrl(), null, new Price(response.getPrice()
-            .getAmount(), response.getPrice()
-            .getCurrency(), response.getPrice()
-            .getCurrencySymbol()), response.getData()
-            .getDescription(), response.getId());
+            .getId()), response.getType(), Authorization.Status.valueOf(response.getStatus()), url,
+        redirectUrl, null, price, description, response.getId());
   }
 }

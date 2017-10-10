@@ -56,6 +56,7 @@ import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.BillingIdResolver;
 import cm.aptoide.pt.billing.BillingService;
 import cm.aptoide.pt.billing.Customer;
+import cm.aptoide.pt.billing.OkioPurchaseTokenDecoder;
 import cm.aptoide.pt.billing.PaymentServiceMapper;
 import cm.aptoide.pt.billing.PaymentServiceSelector;
 import cm.aptoide.pt.billing.PurchaseMapper;
@@ -882,7 +883,7 @@ public abstract class AptoideApplication extends Application {
               getDefaultSharedPreferences());
 
       billing = new Billing(transactionRepository, billingService, authorizationRepository,
-          paymentServiceSelector, getCustomer(), getAuthorizationFactory());
+          paymentServiceSelector, getCustomer(), getAuthorizationFactory(), new OkioPurchaseTokenDecoder());
     }
     return billing;
   }

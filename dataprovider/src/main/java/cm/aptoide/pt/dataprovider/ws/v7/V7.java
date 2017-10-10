@@ -42,7 +42,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.billing.GetMerchantRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetProductsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetPurchasesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetServicesRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.billing.GetTransactionsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.billing.GetTransactionRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.UpdateAuthorizationRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
@@ -438,8 +438,9 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
         @Body GetPurchasesRequest.RequestBody body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("inapp/bank/transactions/get")
-    Observable<GetTransactionsRequest.ResponseBody> getBillingTransaction(@Body BaseBody body,
+    @POST("inapp/bank/transaction/getMeta")
+    Observable<GetTransactionRequest.ResponseBody> getBillingTransaction(
+        @Body GetTransactionRequest.RequestBody body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("inapp/bank/transaction/set")
@@ -460,7 +461,7 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
         @Body UpdateAuthorizationRequest.RequestBody body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("inapp/bank/authorization/get")
+    @POST("inapp/bank/authorization/getMeta")
     Observable<GetAuthorizationRequest.ResponseBody> getBillingAuthorization(
         @Body GetAuthorizationRequest.RequestBody body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);

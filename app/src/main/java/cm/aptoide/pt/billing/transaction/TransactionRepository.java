@@ -27,7 +27,7 @@ public class TransactionRepository {
     this.transactionService = transactionService;
   }
 
-  public Single<Transaction> createTransaction(long productId, int serviceId, String payload) {
+  public Single<Transaction> createTransaction(long productId, long serviceId, String payload) {
     return transactionService.createTransaction(productId, serviceId, payload)
         .flatMap(transaction -> transactionPersistence.saveTransaction(transaction)
             .andThen(Single.just(transaction)));
@@ -35,7 +35,7 @@ public class TransactionRepository {
 
   public Observable<Transaction> getTransaction(long productId) {
     return customer.getId()
-        .doOnSuccess(__ -> syncScheduler.syncTransactions())
+        .doOnSuccess(__ -> syncScheduler.syncTransaction(productId))
         .flatMapObservable(
             customerId -> transactionPersistence.getTransaction(customerId, productId));
   }

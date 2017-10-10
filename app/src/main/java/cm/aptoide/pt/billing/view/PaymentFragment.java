@@ -3,8 +3,8 @@ package cm.aptoide.pt.billing.view;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.LongSparseArray;
 import android.text.TextUtils;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +52,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
 
   private RxAlertDialog networkErrorDialog;
   private RxAlertDialog unknownErrorDialog;
-  private SparseArray<PaymentService> serviceMap;
+  private LongSparseArray<PaymentService> serviceMap;
   private SpannableFactory spannableFactory;
 
   private boolean paymentLoading;
@@ -96,7 +96,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     cancelButton = (Button) view.findViewById(R.id.include_payment_buttons_cancel_button);
     buyButton = (Button) view.findViewById(R.id.include_payment_buttons_buy_button);
 
-    serviceMap = new SparseArray<>();
+    serviceMap = new LongSparseArray<>();
 
     networkErrorDialog =
         new RxAlertDialog.Builder(getContext()).setMessage(R.string.connection_error)
@@ -167,7 +167,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   }
 
   @Override public void selectService(PaymentService payment) {
-    serviceRadioGroup.check(payment.getId());
+    serviceRadioGroup.check((int) payment.getId());
   }
 
   @Override public void showPaymentLoading() {
@@ -197,7 +197,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
 
       radioButton = (RadioButton) getActivity().getLayoutInflater()
           .inflate(R.layout.payment_item, serviceRadioGroup, false);
-      radioButton.setId(payment.getId());
+      radioButton.setId((int) payment.getId());
 
       Glide.with(this)
           .load(payment.getIcon())

@@ -14,17 +14,19 @@ public class TransactionsSync extends Sync {
 
   private final TransactionPersistence transactionPersistence;
   private final TransactionService transactionService;
+  private final long productId;
 
   public TransactionsSync(String id, TransactionPersistence transactionPersistence,
       TransactionService transactionService, boolean periodic, boolean exact, long interval,
-      long trigger) {
+      long trigger, long productId) {
     super(id, periodic, exact, trigger, interval);
     this.transactionPersistence = transactionPersistence;
     this.transactionService = transactionService;
+    this.productId = productId;
   }
 
   @Override public Completable execute() {
-    return transactionService.getTransactions()
-        .flatMapCompletable(transactions -> transactionPersistence.saveTransactions(transactions));
+    return transactionService.getTransaction(productId)
+        .flatMapCompletable(transaction -> transactionPersistence.saveTransaction(transaction));
   }
 }

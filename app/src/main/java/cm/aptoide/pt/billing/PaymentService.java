@@ -7,13 +7,13 @@ package cm.aptoide.pt.billing;
 
 public class PaymentService {
 
-  private final int id;
+  private final long id;
   private final String type;
   private final String name;
   private final String description;
   private final String icon;
 
-  public PaymentService(int id, String type, String name, String description, String icon) {
+  public PaymentService(long id, String type, String name, String description, String icon) {
     this.id = id;
     this.type = type;
     this.name = name;
@@ -21,7 +21,7 @@ public class PaymentService {
     this.icon = icon;
   }
 
-  public int getId() {
+  public long getId() {
     return id;
   }
 

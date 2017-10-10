@@ -46,11 +46,11 @@ public class PurchaseMapper {
     try {
       return new InAppPurchase(response.getProduct()
           .getId(), response.getSignature(), serializer.serializePurchase(response.getData()
-          .getDeveloperData()), response.getProduct()
+          .getDeveloperPurchase()), response.getProduct()
           .getSku(), response.getData()
-          .getDeveloperData()
+          .getDeveloperPurchase()
           .getPurchaseToken(), response.getData()
-          .getDeveloperData()
+          .getDeveloperPurchase()
           .getPurchaseState() == 0 ? SimplePurchase.Status.COMPLETED : SimplePurchase.Status.NEW);
     } catch (JsonProcessingException e) {
       throw new IllegalArgumentException(e);

@@ -27,20 +27,24 @@ public class Authorization {
     return customerId;
   }
 
-  public boolean isInactive() {
+  public boolean isPending() {
     return Status.PENDING.equals(status);
   }
 
-  public boolean isPending() {
+  public boolean isProcessing() {
+    return Status.PENDING_SYNC.equals(status) || Status.PROCESSING.equals(status);
+  }
+
+  public boolean isPendingSync() {
     return Status.PENDING_SYNC.equals(status);
   }
 
   public boolean isFailed() {
-    return Status.FAILED.equals(status) || Status.UNKNOWN_ERROR.equals(status);
+    return Status.FAILED.equals(status);
   }
 
   public boolean isActive() {
-    return Status.ACTIVE.equals(status);
+    return Status.ACTIVE.equals(status) || Status.REDEEMED.equals(status);
   }
 
   public Status getStatus() {
@@ -52,6 +56,6 @@ public class Authorization {
   }
 
   public enum Status {
-    PENDING, ACTIVE, FAILED, PENDING_SYNC, UNKNOWN_ERROR
+    NEW, PENDING, PENDING_SYNC, PROCESSING, REDEEMED, ACTIVE, FAILED
   }
 }
