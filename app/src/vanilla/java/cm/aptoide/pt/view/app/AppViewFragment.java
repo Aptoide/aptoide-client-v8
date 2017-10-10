@@ -224,6 +224,18 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   public static AppViewFragment newInstance(long appId, String packageName, String storeTheme,
+      String storeName) {
+    Bundle bundle = new Bundle();
+    bundle.putLong(BundleKeys.APP_ID.name(), appId);
+    bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
+    bundle.putString(BundleKeys.STORE_NAME.name(), storeName);
+    bundle.putString(StoreFragment.BundleCons.STORE_THEME, storeTheme);
+    AppViewFragment fragment = new AppViewFragment();
+    fragment.setArguments(bundle);
+    return fragment;
+  }
+
+  public static AppViewFragment newInstance(long appId, String packageName, String storeTheme,
       String storeName, String tag) {
     Bundle bundle = new Bundle();
     bundle.putString(ORIGIN_TAG, tag);
@@ -233,6 +245,17 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     bundle.putString(StoreFragment.BundleCons.STORE_THEME, storeTheme);
     AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
+    return fragment;
+  }
+
+  public static AppViewFragment newInstance(SearchAdResult searchAdResult) {
+    Bundle bundle = new Bundle();
+    bundle.putLong(BundleKeys.APP_ID.name(), searchAdResult.getAppId());
+    bundle.putString(BundleKeys.PACKAGE_NAME.name(), searchAdResult.getPackageName());
+    bundle.putParcelable(BundleKeys.MINIMAL_AD.name(), Parcels.wrap(searchAdResult));
+    AppViewFragment fragment = new AppViewFragment();
+    fragment.setArguments(bundle);
+
     return fragment;
   }
 
@@ -248,8 +271,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     return fragment;
   }
 
-  /*
-  public static AppViewFragment newInstance(SearchAdResult searchAdResult, String storeTheme) {
+  public static AppViewFragment newInstance(SearchAdResult searchAdResult, String storeTheme,
+      String tag) {
     Bundle bundle = new Bundle();
     bundle.putLong(BundleKeys.APP_ID.name(), searchAdResult.getAppId());
     bundle.putString(BundleKeys.PACKAGE_NAME.name(), searchAdResult.getPackageName());
@@ -262,7 +285,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
     return fragment;
   }
-  */
 
   public static Fragment newInstance(String packageName, OpenType openType) {
     return newInstance(packageName, null, openType);
@@ -389,7 +411,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storeName = args.getString(BundleKeys.STORE_NAME.name());
     sponsored = searchAdResult != null;
     storeTheme = args.getString(StoreFragment.BundleCons.STORE_THEME);
-    originTag = args.getString(ORIGIN_TAG);
+    originTag = args.getString(ORIGIN_TAG, null);
   }
 
   @Override public int getContentViewId() {

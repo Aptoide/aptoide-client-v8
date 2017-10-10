@@ -27,6 +27,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -101,24 +102,18 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   }
 
   public static SearchResultFragment newInstance(String currentQuery, boolean onlyTrustedApps) {
-
     SearchViewModel viewModel = new SearchViewModel(currentQuery, onlyTrustedApps);
-
     Bundle args = new Bundle();
     args.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
-
     SearchResultFragment fragment = new SearchResultFragment();
     fragment.setArguments(args);
     return fragment;
   }
 
   public static SearchResultFragment newInstance(String currentQuery, String storeName) {
-
     SearchViewModel viewModel = new SearchViewModel(currentQuery, storeName);
-
     Bundle args = new Bundle();
     args.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
-
     SearchResultFragment fragment = new SearchResultFragment();
     fragment.setArguments(args);
     return fragment;
@@ -459,6 +454,23 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
             searchResultAllStores, searchResultAdsAllStores, crashReport);
   }
 
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    findChildViews(view);
+    viewModel = loadViewModel(getArguments());
+    attachFollowedStoresResultListDependencies();
+    attachAllStoresResultListDependencies();
+    attachToolbar();
+    attachPresenter(new SearchResultPresenter(this, searchAnalytics, searchNavigator, crashReport,
+        mainThreadScheduler, searchManager, onAdClickRelay, onItemViewClickRelay,
+        onOpenPopupMenuClickRelay), null);
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
+  }
+
   @NonNull private DividerItemDecoration getDefaultItemDecoration() {
     return new DividerItemDecoration(getContext(), listItemPadding);
   }
@@ -520,18 +532,6 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
             savedInstanceState.getParcelable(FOLLOWED_STORES_SEARCH_LIST_STATE));
       }
     }
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    findChildViews(view);
-    viewModel = loadViewModel(getArguments());
-    attachFollowedStoresResultListDependencies();
-    attachAllStoresResultListDependencies();
-    attachToolbar();
-    attachPresenter(new SearchResultPresenter(this, searchAnalytics, searchNavigator, crashReport,
-        mainThreadScheduler, searchManager, onAdClickRelay, onItemViewClickRelay,
-        onOpenPopupMenuClickRelay), null);
   }
 
   private void attachFollowedStoresResultListDependencies() {
