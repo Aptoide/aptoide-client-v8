@@ -1,13 +1,17 @@
 package cm.aptoide.pt.firstinstall;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PartnerApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.view.BackButton;
 import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
@@ -50,14 +54,18 @@ public class FirstInstallFragment extends AptoideBaseFragment<BaseAdapter>
     installAllButton = (Button) view.findViewById(R.id.install_all_button);
     closeButton = (ImageView) view.findViewById(R.id.close_image_view);
 
-    String storeName = ((PartnerApplication) getApplicationContext()).getBootConfig()
-        .getPartner()
-        .getStore()
-        .getName();
-
     attachPresenter(
-        new FirstInstallPresenter(this, crashReport, requestFactoryCdnPool, getContext(), storeName,
-            ""), savedInstanceState);
+        new FirstInstallPresenter(this, crashReport, requestFactoryCdnPool, getContext(),
+            ((PartnerApplication) getApplicationContext()).getBootConfig()
+                .getPartner()
+                .getStore()
+                .getName(), "",
+            ((AptoideApplication) getContext().getApplicationContext()).getAdsRepository(),
+            getContext().getResources(),
+            (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
+            RepositoryFactory.getAppRepository(getContext(),
+                ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
+        savedInstanceState);
   }
 
   @Override public Observable<Void> installAllClick() {
@@ -71,6 +79,6 @@ public class FirstInstallFragment extends AptoideBaseFragment<BaseAdapter>
   @Override
   public void addFirstInstallDisplayables(List<Displayable> displayables, boolean finishLoading) {
     //clearDisplayables().
-        addDisplayables(displayables, finishLoading);
+    addDisplayables(displayables, finishLoading);
   }
 }
