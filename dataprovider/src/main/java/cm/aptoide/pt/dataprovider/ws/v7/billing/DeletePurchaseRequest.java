@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -31,7 +32,7 @@ public class DeletePurchaseRequest extends V7<BaseV7Response, DeletePurchaseRequ
     return interfaces.deleteBillingPurchase(body, bypassCache);
   }
 
-  public static class RequestBody {
+  public static class RequestBody extends BaseBody {
 
     private long purchaseId;
 

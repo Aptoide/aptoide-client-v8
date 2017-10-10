@@ -113,7 +113,7 @@ public class Billing {
 
   public Observable<Purchase> getPurchase(String merchantName, String sku) {
     return getTransaction(merchantName, sku).flatMapSingle(transaction -> {
-        if (transaction.isProcessing()) {
+      if (transaction.isProcessing()) {
         return Single.just(
             new SimplePurchase(SimplePurchase.Status.PENDING, transaction.getProductId()));
       }
@@ -123,7 +123,7 @@ public class Billing {
             new SimplePurchase(SimplePurchase.Status.NEW, transaction.getProductId()));
       }
 
-      return billingService.getPurchase(transaction.getProductId());
+      return billingService.getProductPurchase(transaction.getProductId());
     })
         .flatMap(purchase -> {
           if (purchase.isFailed()) {

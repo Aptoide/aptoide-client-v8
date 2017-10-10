@@ -174,32 +174,33 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
       return result;
     }
 
-    try {
+    final List<String> dataList = new ArrayList<>();
+    final List<String> signatureList = new ArrayList<>();
+    final List<String> skuList = new ArrayList<>();
 
-      final List<Purchase> purchases = billing.getPurchases(packageName)
-          .toBlocking()
-          .value();
+    if (type.equals(ITEM_TYPE_INAPP)) {
+      try {
+        final List<Purchase> purchases = billing.getPurchases(packageName)
+            .toBlocking()
+            .value();
 
-      final List<String> dataList = new ArrayList<>();
-      final List<String> signatureList = new ArrayList<>();
-      final List<String> skuList = new ArrayList<>();
-
-      for (Purchase purchase : purchases) {
-        dataList.add(((InAppPurchase) purchase).getSignatureData());
-        signatureList.add(((InAppPurchase) purchase).getSignature());
-        skuList.add(((InAppPurchase) purchase).getSku());
+        for (Purchase purchase : purchases) {
+          dataList.add(((InAppPurchase) purchase).getSignatureData());
+          signatureList.add(((InAppPurchase) purchase).getSignature());
+          skuList.add(((InAppPurchase) purchase).getSku());
+        }
+      } catch (Exception exception) {
+        crashReport.log(exception);
+        result.putInt(RESPONSE_CODE, errorCodeFactory.map(exception.getCause()));
+        return result;
       }
-
-      result.putStringArrayList(INAPP_PURCHASE_DATA_LIST, (ArrayList<String>) dataList);
-      result.putStringArrayList(INAPP_PURCHASE_ITEM_LIST, (ArrayList<String>) skuList);
-      result.putStringArrayList(INAPP_DATA_SIGNATURE_LIST, (ArrayList<String>) signatureList);
-      result.putInt(RESPONSE_CODE, RESULT_OK);
-      return result;
-    } catch (Exception exception) {
-      crashReport.log(exception);
-      result.putInt(RESPONSE_CODE, errorCodeFactory.map(exception.getCause()));
-      return result;
     }
+
+    result.putStringArrayList(INAPP_PURCHASE_DATA_LIST, (ArrayList<String>) dataList);
+    result.putStringArrayList(INAPP_PURCHASE_ITEM_LIST, (ArrayList<String>) skuList);
+    result.putStringArrayList(INAPP_DATA_SIGNATURE_LIST, (ArrayList<String>) signatureList);
+    result.putInt(RESPONSE_CODE, RESULT_OK);
+    return result;
   }
 
   @Override public int consumePurchase(int apiVersion, String packageName, String purchaseToken)

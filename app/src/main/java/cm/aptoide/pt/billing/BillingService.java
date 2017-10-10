@@ -14,7 +14,9 @@ public interface BillingService {
 
   Single<List<Purchase>> getPurchases(String merchantName);
 
-  Single<Purchase> getPurchase(long productId);
+  Single<Purchase> getProductPurchase(long productId);
+
+  Single<Purchase> getPurchase(long purchaseId);
 
   Single<List<Product>> getProducts(String merchantName, List<String> skus);
 

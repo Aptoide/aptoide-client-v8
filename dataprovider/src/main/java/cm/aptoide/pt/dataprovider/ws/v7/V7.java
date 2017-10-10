@@ -438,6 +438,11 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
         @Body GetPurchasesRequest.RequestBody body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
+    @POST("inapp/purchase/getMeta")
+    Observable<GetPurchasesRequest.ResponseBody> getBillingProductPurchase(
+        @Body GetPurchasesRequest.ProductRequestBody body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
     @POST("inapp/bank/transaction/getMeta")
     Observable<GetTransactionRequest.ResponseBody> getBillingTransaction(
         @Body GetTransactionRequest.RequestBody body,
@@ -461,7 +466,7 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
         @Body UpdateAuthorizationRequest.RequestBody body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("inapp/bank/authorization/getMeta")
+    @POST("inapp/bank/authorization/get")
     Observable<GetAuthorizationRequest.ResponseBody> getBillingAuthorization(
         @Body GetAuthorizationRequest.RequestBody body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);

@@ -113,8 +113,21 @@ public class V7BillingService implements BillingService {
         });
   }
 
-  @Override public Single<Purchase> getPurchase(long productId) {
-    return GetPurchasesRequest.of(productId, bodyInterceptorV7, httpClient, converterFactory,
+  @Override public Single<Purchase> getProductPurchase(long productId) {
+    return GetPurchasesRequest.ofProduct(productId, bodyInterceptorV7, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences)
+        .observe(true)
+        .toSingle()
+        .flatMap(response -> {
+          if (response != null && response.isOk()) {
+            return Single.just(purchaseMapper.map(response.getData()));
+          }
+          return Single.error(new PurchaseNotFoundException());
+        });
+  }
+
+  @Override public Single<Purchase> getPurchase(long purchaseId) {
+    return GetPurchasesRequest.of(purchaseId, bodyInterceptorV7, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences)
         .observe(true)
         .toSingle()

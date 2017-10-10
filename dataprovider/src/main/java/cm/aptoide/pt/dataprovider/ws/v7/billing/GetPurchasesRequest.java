@@ -19,10 +19,9 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 
-public class GetPurchasesRequest
-    extends V7<GetPurchasesRequest.ResponseBody, GetPurchasesRequest.RequestBody> {
+public class GetPurchasesRequest extends V7<GetPurchasesRequest.ResponseBody, BaseBody> {
 
-  public GetPurchasesRequest(RequestBody body, String baseHost, OkHttpClient httpClient,
+  public GetPurchasesRequest(BaseBody body, String baseHost, OkHttpClient httpClient,
       Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
       TokenInvalidator tokenInvalidator) {
     super(body, baseHost, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
@@ -38,34 +37,48 @@ public class GetPurchasesRequest
         bodyInterceptor, tokenInvalidator);
   }
 
-  public static GetPurchasesRequest of(long productId, BodyInterceptor<BaseBody> bodyInterceptor,
+  public static GetPurchasesRequest ofProduct(long productId,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
+    final ProductRequestBody body = new ProductRequestBody();
+    body.setProductId(productId);
+    return new GetPurchasesRequest(body, getHost(sharedPreferences), httpClient, converterFactory,
+        bodyInterceptor, tokenInvalidator);
+  }
+
+  public static GetPurchasesRequest of(long purchaseId, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     final RequestBody body = new RequestBody();
-    body.setProductId(productId);
+    body.setPurchaseId(purchaseId);
     return new GetPurchasesRequest(body, getHost(sharedPreferences), httpClient, converterFactory,
         bodyInterceptor, tokenInvalidator);
   }
 
   @Override protected Observable<ResponseBody> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    if (body.getProductId() != 0) {
-      return interfaces.getBillingPurchase(body, bypassCache);
+
+    if (body instanceof ProductRequestBody) {
+      return interfaces.getBillingProductPurchase((ProductRequestBody) body, bypassCache);
+    } else if (((RequestBody) body).getPurchaseId() != 0) {
+      return interfaces.getBillingPurchase((RequestBody) body, bypassCache);
     }
-    return interfaces.getBillingPurchases(body, bypassCache);
+
+    return interfaces.getBillingPurchases((RequestBody) body, bypassCache);
   }
 
   public static class RequestBody extends BaseBody {
 
-    private long productId;
+    private long purchaseId;
     private String packageName;
 
-    public long getProductId() {
-      return productId;
+    public long getPurchaseId() {
+      return purchaseId;
     }
 
-    public void setProductId(long productId) {
-      this.productId = productId;
+    public void setPurchaseId(long purchaseId) {
+      this.purchaseId = purchaseId;
     }
 
     public String getPackageName() {
@@ -74,6 +87,19 @@ public class GetPurchasesRequest
 
     public void setPackageName(String packageName) {
       this.packageName = packageName;
+    }
+  }
+
+  public static class ProductRequestBody extends BaseBody {
+
+    private long productId;
+
+    public long getProductId() {
+      return productId;
+    }
+
+    public void setProductId(long productId) {
+      this.productId = productId;
     }
   }
 
@@ -140,7 +166,6 @@ public class GetPurchasesRequest
       public static class Product {
 
         private long id;
-        @JsonProperty("package") private String packageName;
         private String sku;
 
         public long getId() {
@@ -149,14 +174,6 @@ public class GetPurchasesRequest
 
         public void setId(long id) {
           this.id = id;
-        }
-
-        public String getPackageName() {
-          return packageName;
-        }
-
-        public void setPackageName(String packageName) {
-          this.packageName = packageName;
         }
 
         public String getSku() {
