@@ -2,15 +2,14 @@ package cm.aptoide.pt.view.configuration;
 
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.addressbook.data.Contact;
-import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.presenter.InviteFriendsContract;
+import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.downloads.scheduled.ScheduledDownloadsFragment;
 import cm.aptoide.pt.view.store.StoreFragment;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,8 +19,6 @@ import java.util.List;
  * navigators instantiate the proper fragment or activity.
  */
 @Deprecated public interface FragmentProvider {
-
-  @Deprecated Fragment newScreenshotsViewerFragment(ArrayList<String> uris, int currentItem);
 
   Fragment newSendFeedbackFragment(String screenshotFilePath);
 
@@ -37,30 +34,20 @@ import java.util.List;
 
   Fragment newStoreFragment(long userId, String storeTheme, StoreFragment.OpenType openType);
 
-  /**
-   * @param storeContext is needed to give context to fragment ex: store downloads vs global
-   * downloads
-   */
-  Fragment newHomeFragment(String storeName, StoreContext storeContext, String storeTheme);
-
-  Fragment newSearchFragment(String query);
-
-  Fragment newSearchFragment(String query, boolean onlyTrustedApps);
-
-  Fragment newSearchFragment(String query, String storeName);
-
   Fragment newAppViewFragment(String packageName, String storeName,
       AppViewFragment.OpenType openType);
 
   Fragment newAppViewFragment(String md5);
 
-  Fragment newAppViewFragment(long appId, String packageName, AppViewFragment.OpenType openType);
+  Fragment newAppViewFragment(long appId, String packageName, AppViewFragment.OpenType openType,
+      String tag);
 
-  Fragment newAppViewFragment(long appId, String packageName);
+  Fragment newAppViewFragment(long appId, String packageName, String tag);
 
-  Fragment newAppViewFragment(long appId, String packageName, String storeTheme, String storeName);
+  Fragment newAppViewFragment(long appId, String packageName, String storeTheme, String storeName,
+      String tag);
 
-  Fragment newAppViewFragment(MinimalAd minimalAd);
+  Fragment newAppViewFragment(SearchAdResult searchAdResult, String tag);
 
   Fragment newAppViewFragment(String packageName, AppViewFragment.OpenType openType);
 
@@ -68,7 +55,7 @@ import java.util.List;
 
   Fragment newUpdatesFragment();
 
-  Fragment newLatestReviewsFragment(long storeId);
+  Fragment newLatestReviewsFragment(long storeId, StoreContext storeContext);
 
   /**
    * @param storeContext is needed to give context to fragment ex: store downloads vs global
@@ -103,19 +90,12 @@ import java.util.List;
   Fragment newAppsTimelineFragment(String action, Long userId, Long storeId,
       StoreContext storeContext);
 
-  Fragment newSubscribedStoresFragment(Event event, String storeTheme, String tag);
-
-  Fragment newSearchPagerTabFragment(String query, boolean subscribedStores,
-      boolean hasMultipleFragments);
-
-  Fragment newSearchPagerTabFragment(String query, String storeName);
+  Fragment newSubscribedStoresFragment(Event event, String storeTheme, String tag,
+      StoreContext storeName);
 
   Fragment newDownloadsFragment();
 
   Fragment newOtherVersionsFragment(String appName, String appImgUrl, String appPackage);
-
-  Fragment newOtherVersionsFragment(String appName, String appImgUrl, String appPackage,
-      String storeName);
 
   Fragment newRollbackFragment();
 
@@ -137,24 +117,29 @@ import java.util.List;
 
   Fragment newSettingsFragment();
 
-  Fragment newTimeLineFollowersUsingUserIdFragment(Long id, String storeTheme, String title);
+  Fragment newTimeLineFollowersUsingUserIdFragment(Long id, String storeTheme, String title,
+      StoreContext storeName);
 
-  Fragment newTimeLineFollowingFragmentUsingUserId(Long id, String storeTheme, String title);
+  Fragment newTimeLineFollowingFragmentUsingUserId(Long id, String storeTheme, String title,
+      StoreContext storeContext);
 
-  Fragment newTimeLineFollowersUsingStoreIdFragment(Long id, String storeTheme, String title);
+  Fragment newTimeLineFollowersUsingStoreIdFragment(Long id, String storeTheme, String title,
+      StoreContext storeContext);
 
-  Fragment newTimeLineFollowingFragmentUsingStoreId(Long id, String storeTheme, String title);
+  Fragment newTimeLineFollowingFragmentUsingStoreId(Long id, String storeTheme, String title,
+      StoreContext storeName);
 
   Fragment newTimeLineLikesFragment(String cardUid, long numberOfLikes, String storeTheme,
-      String title);
+      String title, StoreContext storeContext);
 
-  Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId);
+  Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId,
+      StoreContext storeContext);
 
   Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url,
-      String storeAnalyticsAction);
+      String storeAnalyticsAction, StoreContext storeContext);
 
   Fragment newCommentGridRecyclerFragmentWithCommentDialogOpen(CommentType commentType,
-      String elementId);
+      String elementId, StoreContext storeContext);
 
   Fragment newAddressBookFragment();
 
@@ -168,7 +153,7 @@ import java.util.List;
 
   Fragment newThankYouConnectingFragment(String tag);
 
-  Fragment newTimeLineFollowersFragment(String storeTheme, String title);
+  Fragment newTimeLineFollowersFragment(String storeTheme, String title, StoreContext storeContext);
 
   Fragment newRecommendedStoresFragment();
 }

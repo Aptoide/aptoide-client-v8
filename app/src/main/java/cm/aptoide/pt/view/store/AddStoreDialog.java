@@ -47,7 +47,7 @@ import cm.aptoide.pt.view.MainActivity;
 import cm.aptoide.pt.view.dialog.BaseDialog;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.navigator.FragmentResultNavigator;
-import cm.aptoide.pt.view.search.StoreSearchActivity;
+import cm.aptoide.pt.search.view.StoreSearchActivity;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;

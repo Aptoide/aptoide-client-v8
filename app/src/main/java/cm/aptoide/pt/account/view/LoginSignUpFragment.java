@@ -6,6 +6,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.presenter.LoginSignUpView;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
 
@@ -147,5 +148,10 @@ public class LoginSignUpFragment extends BaseToolbarFragment implements LoginSig
 
   @Override public int getContentViewId() {
     return R.layout.fragment_login_sign_up;
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 }

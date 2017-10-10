@@ -11,6 +11,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserLikesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.timeline.view.displayable.FollowUserDisplayable;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowFragment;
 import cm.aptoide.pt.view.recycler.EndlessRecyclerOnScrollListener;
@@ -33,8 +34,8 @@ public class TimeLineLikesFragment extends TimeLineFollowFragment {
   private String defaultTheme;
 
   public static TimeLineLikesFragment newInstance(String storeTheme, String cardUid,
-      long numberOfLikes, String title) {
-    Bundle args = new Bundle();
+      long numberOfLikes, String title, StoreContext storeContext) {
+    Bundle args = TimeLineFollowFragment.buildBundle(storeContext);
     args.putString(TITLE_KEY, title);
     args.putString(BundleCons.STORE_THEME, storeTheme);
     args.putString(BundleKeys.CARD_UID, cardUid);

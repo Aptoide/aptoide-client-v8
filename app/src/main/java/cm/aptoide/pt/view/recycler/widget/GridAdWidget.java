@@ -11,6 +11,7 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.recycler.displayable.GridAdDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
@@ -48,7 +49,7 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
         .subscribe(v -> {
           Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
           getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-              .newAppViewFragment(pojo), true);
+              .newAppViewFragment(new SearchAdResult(pojo), displayable.getTag()), true);
         }, throwable -> CrashReport.getInstance()
             .log(throwable)));
     downloadsNumber.setText(

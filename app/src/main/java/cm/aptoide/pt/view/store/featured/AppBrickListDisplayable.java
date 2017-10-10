@@ -7,7 +7,9 @@ package cm.aptoide.pt.view.store.featured;
 
 import android.support.annotation.LayoutRes;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 import lombok.Getter;
 
@@ -17,13 +19,18 @@ import lombok.Getter;
 public class AppBrickListDisplayable extends DisplayablePojo<App> {
 
   @Getter private String tag;
+  private AptoideNavigationTracker aptoideNavigationTracker;
+  private StoreContext storeContext;
 
   public AppBrickListDisplayable() {
   }
 
-  public AppBrickListDisplayable(App pojo, String tag) {
+  public AppBrickListDisplayable(App pojo, String tag,
+      AptoideNavigationTracker aptoideNavigationTracker, StoreContext storeContext) {
     super(pojo);
     this.tag = tag;
+    this.aptoideNavigationTracker = aptoideNavigationTracker;
+    this.storeContext = storeContext;
   }
 
   @Override protected Configs getConfig() {
@@ -32,5 +39,13 @@ public class AppBrickListDisplayable extends DisplayablePojo<App> {
 
   @LayoutRes @Override public int getViewLayout() {
     return R.layout.brick_app_item_list;
+  }
+
+  public AptoideNavigationTracker getAptoideNavigationTracker() {
+    return aptoideNavigationTracker;
+  }
+
+  public StoreContext getStoreContext() {
+    return storeContext;
   }
 }

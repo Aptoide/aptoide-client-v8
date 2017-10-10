@@ -3,11 +3,11 @@ package cm.aptoide.pt.view.configuration.implementation;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.PartnerApplication;
 import cm.aptoide.pt.addressbook.data.Contact;
-import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.presenter.InviteFriendsContract;
+import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.social.view.TimelineFragment;
 import cm.aptoide.pt.spotandshare.view.SpotSharePreviewFragment;
 import cm.aptoide.pt.timeline.view.SocialFragment;
@@ -22,7 +22,6 @@ import cm.aptoide.pt.view.addressbook.ThankYouConnectingFragment;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.app.ListAppsFragment;
 import cm.aptoide.pt.view.app.OtherVersionsFragment;
-import cm.aptoide.pt.view.app.screenshots.ScreenshotsViewerFragment;
 import cm.aptoide.pt.view.comments.CommentListFragment;
 import cm.aptoide.pt.view.configuration.FragmentProvider;
 import cm.aptoide.pt.view.downloads.DownloadsFragment;
@@ -32,8 +31,6 @@ import cm.aptoide.pt.view.fragment.DescriptionFragment;
 import cm.aptoide.pt.view.reviews.LatestReviewsFragment;
 import cm.aptoide.pt.view.reviews.ListReviewsFragment;
 import cm.aptoide.pt.view.reviews.RateAndReviewsFragment;
-import cm.aptoide.pt.view.search.SearchFragment;
-import cm.aptoide.pt.view.search.SearchPagerTabFragment;
 import cm.aptoide.pt.view.settings.SettingsFragment;
 import cm.aptoide.pt.view.store.FragmentTopStores;
 import cm.aptoide.pt.view.store.GetStoreFragment;
@@ -42,14 +39,12 @@ import cm.aptoide.pt.view.store.ListStoresFragment;
 import cm.aptoide.pt.view.store.StoreFragment;
 import cm.aptoide.pt.view.store.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.view.store.ads.GetAdsFragment;
-import cm.aptoide.pt.view.store.home.HomeFragment;
 import cm.aptoide.pt.view.store.my.MyStoresFragment;
 import cm.aptoide.pt.view.store.my.MyStoresSubscribedFragment;
 import cm.aptoide.pt.view.store.recommended.RecommendedStoresFragment;
 import cm.aptoide.pt.view.updates.UpdatesFragment;
 import cm.aptoide.pt.view.updates.excluded.ExcludedUpdatesFragment;
 import cm.aptoide.pt.view.updates.rollback.RollbackFragment;
-import java.util.ArrayList;
 import java.util.List;
 
 public class PartnerFragmentProvider implements FragmentProvider {
@@ -58,10 +53,6 @@ public class PartnerFragmentProvider implements FragmentProvider {
 
   public PartnerFragmentProvider(PartnerApplication aptoideApplication) {
     this.aptoideApplication = aptoideApplication;
-  }
-
-  @Override public Fragment newScreenshotsViewerFragment(ArrayList<String> uris, int currentItem) {
-    return ScreenshotsViewerFragment.newInstance(uris, currentItem);
   }
 
   @Override public Fragment newSendFeedbackFragment(String screenshotFilePath) {
@@ -95,42 +86,6 @@ public class PartnerFragmentProvider implements FragmentProvider {
     return StoreFragment.newInstance(userId, aptoideApplication.getDefaultTheme(), openType);
   }
 
-  @Override
-  public Fragment newHomeFragment(String storeName, StoreContext storeContext, String storeTheme) {
-    return HomeFragment.newInstance(storeName, storeContext, aptoideApplication.getDefaultTheme());
-  }
-
-  @Override public Fragment newSearchFragment(String query) {
-    if (aptoideApplication.getBootConfig()
-        .getPartner()
-        .getSwitches()
-        .getOptions()
-        .getMultistore()
-        .isSearch()) {
-      return SearchFragment.newInstance(query);
-    } else {
-      return SearchFragment.newInstance(query, aptoideApplication.getDefaultStore());
-    }
-  }
-
-  @Override public Fragment newSearchFragment(String query, boolean onlyTrustedApps) {
-    if (aptoideApplication.getBootConfig()
-        .getPartner()
-        .getSwitches()
-        .getOptions()
-        .getMultistore()
-        .isSearch()) {
-      return SearchFragment.newInstance(query, onlyTrustedApps);
-    } else {
-      return SearchFragment.newInstance(query, onlyTrustedApps,
-          aptoideApplication.getDefaultStore());
-    }
-  }
-
-  @Override public Fragment newSearchFragment(String query, String storeName) {
-    return SearchFragment.newInstance(query, storeName);
-  }
-
   @Override public Fragment newAppViewFragment(String packageName, String storeName,
       AppViewFragment.OpenType openType) {
     return AppViewFragment.newInstance(packageName, storeName, openType);
@@ -156,8 +111,8 @@ public class PartnerFragmentProvider implements FragmentProvider {
         storeName);
   }
 
-  @Override public Fragment newAppViewFragment(MinimalAd minimalAd) {
-    return AppViewFragment.newInstance(minimalAd, aptoideApplication.getDefaultTheme());
+  @Override public Fragment newAppViewFragment(SearchAdResult adResult) {
+    return AppViewFragment.newInstance(adResult, aptoideApplication.getDefaultTheme());
   }
 
   @Override
@@ -233,15 +188,6 @@ public class PartnerFragmentProvider implements FragmentProvider {
     return MyStoresFragment.newInstance(event, aptoideApplication.getDefaultTheme(), tag);
   }
 
-  @Override public Fragment newSearchPagerTabFragment(String query, boolean subscribedStores,
-      boolean hasMultipleFragments) {
-    return SearchPagerTabFragment.newInstance(query, subscribedStores, hasMultipleFragments);
-  }
-
-  @Override public Fragment newSearchPagerTabFragment(String query, String storeName) {
-    return SearchPagerTabFragment.newInstance(query, storeName);
-  }
-
   @Override public Fragment newDownloadsFragment() {
     return DownloadsFragment.newInstance();
   }
@@ -259,12 +205,6 @@ public class PartnerFragmentProvider implements FragmentProvider {
       return OtherVersionsFragment.newInstance(appName, appImgUrl, appPackage,
           aptoideApplication.getDefaultStore());
     }
-  }
-
-  @Override
-  public Fragment newOtherVersionsFragment(String appName, String appImgUrl, String appPackage,
-      String storeName) {
-    return OtherVersionsFragment.newInstance(appName, appImgUrl, appPackage, storeName);
   }
 
   @Override public Fragment newRollbackFragment() {

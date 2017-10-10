@@ -12,7 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -26,19 +26,17 @@ import cm.aptoide.pt.view.navigator.FragmentResultNavigator;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.android.FragmentEvent;
-import lombok.Getter;
 import rx.Observable;
 
 public abstract class FragmentView extends LeakFragment implements View {
 
   private static final String TAG = FragmentView.class.getName();
 
-  @Getter private boolean startActivityForResultCalled;
-
   private Presenter presenter;
+  private boolean startActivityForResultCalled;
   private String defaultStore;
   private String defaultTheme;
-  private NavigationTracker navigationTracker;
+  private AptoideNavigationTracker navigationTracker;
   private ActivityResultNavigator activityResultNavigator;
 
   public FragmentNavigator getFragmentNavigator() {
@@ -186,5 +184,17 @@ public abstract class FragmentView extends LeakFragment implements View {
       default:
         throw new IllegalStateException("Unrecognized event: " + event.name());
     }
+  }
+
+  public boolean isStartActivityForResultCalled() {
+    return startActivityForResultCalled;
+  }
+
+  protected String getDefaultStore() {
+    return defaultStore;
+  }
+
+  protected String getDefaultTheme() {
+    return defaultTheme;
   }
 }

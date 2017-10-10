@@ -22,10 +22,11 @@ public class InstallEvent extends DownloadInstallBaseEvent {
       DownloadInstallEventConverter downloadInstallEventConverter,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, String previousContext) {
+      SharedPreferences sharedPreferences, String previousContext, String screenHistoryStore,
+      String screenHistoryTag) {
     super(action, origin, packageName, url, obbUrl, patchObbUrl, context, versionCode,
         downloadInstallEventConverter, EVENT_NAME, bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences, previousContext);
+        tokenInvalidator, sharedPreferences, previousContext, screenHistoryStore, screenHistoryTag);
   }
 
   public boolean getAptoideSettings() {

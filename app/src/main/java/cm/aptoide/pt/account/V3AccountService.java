@@ -79,7 +79,8 @@ public class V3AccountService implements AccountService {
   }
 
   @Override public Single<Account> getAccount(String email, String password) {
-    return createAccount(email, password, null, AptoideAccountManager.APTOIDE_SIGN_UP_TYPE);
+    return createAccount(email.toLowerCase(), password, null,
+        AptoideAccountManager.APTOIDE_SIGN_UP_TYPE);
   }
 
   @Override

@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -24,6 +25,7 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -93,6 +95,11 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     return fragment;
   }
 
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     sharedPreferences =
@@ -157,7 +164,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
           List<App> apps = listAppVersions.getList();
           ArrayList<Displayable> displayables = new ArrayList<>(apps.size());
           for (final App app : apps) {
-            displayables.add(new OtherVersionDisplayable(app));
+            displayables.add(new OtherVersionDisplayable(app, StoreContext.home));
           }
           addDisplayables(displayables);
           getRecyclerView().setVisibility(View.VISIBLE);

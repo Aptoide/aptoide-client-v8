@@ -27,6 +27,7 @@ import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -34,9 +35,10 @@ import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareActivity;
+import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.view.SearchBuilder;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.updates.UpdateRepository;
-import cm.aptoide.pt.util.SearchUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.custom.BadgeView;
@@ -169,7 +171,8 @@ public class HomeFragment extends StoreFragment {
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     pageViewsAnalytics =
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), navigationTracker);
+            Analytics.getInstance(), aptoideNavigationTracker);
+    setRegisterFragment(false);
   }
 
   @Nullable @Override
@@ -244,12 +247,13 @@ public class HomeFragment extends StoreFragment {
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
-
     menu.removeItem(R.id.menu_share);
-  }
-
-  @Override protected void setupSearch(Menu menu) {
-    SearchUtils.setupGlobalSearchView(menu, getActivity(), getFragmentNavigator());
+    final String defaultStore =
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore();
+    final SearchBuilder searchBuilder =
+        new SearchBuilder(menu.findItem(R.id.action_search), getActivity(),
+            new SearchNavigator(getFragmentNavigator(), defaultStore));
+    searchBuilder.validateAndAttachSearch();
   }
 
   @Override public void setupViews() {
@@ -270,7 +274,7 @@ public class HomeFragment extends StoreFragment {
     toolbar.setNavigationOnClickListener(v -> {
       drawerLayout.openDrawer(GravityCompat.START);
       drawerAnalytics.drawerOpen();
-      navigationTracker.registerView("Drawer");
+      aptoideNavigationTracker.registerScreen(ScreenTagHistory.Builder.build("Drawer"));
       pageViewsAnalytics.sendPageViewedEvent();
     });
   }

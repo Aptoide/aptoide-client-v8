@@ -19,6 +19,8 @@ import retrofit2.Converter;
 public class DownloadInstallBaseEvent implements Event {
   private final SharedPreferences sharedPreferences;
   private final String previousContext;
+  private final String screenHistoryStore;
+  private final String screenHistoryTag;
   private Action action;
   private int versionCode;
   private Origin origin;
@@ -43,13 +45,16 @@ public class DownloadInstallBaseEvent implements Event {
       DownloadInstallEventConverter downloadInstallEventConverter, String eventName,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, String previousContext) {
+      SharedPreferences sharedPreferences, String previousContext, String screenHistoryStore,
+      String screenHistoryTag) {
     this.action = action;
     this.versionCode = versionCode;
     this.origin = origin;
     this.packageName = packageName;
     this.url = url;
     this.previousContext = previousContext;
+    this.screenHistoryStore = screenHistoryStore;
+    this.screenHistoryTag = screenHistoryTag;
     this.obbType = ObbType.MAIN;
     this.obbUrl = obbUrl;
     this.patchObbType = ObbType.PATCH;
@@ -62,6 +67,14 @@ public class DownloadInstallBaseEvent implements Event {
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
+  }
+
+  public String getScreenHistoryStore() {
+    return screenHistoryStore;
+  }
+
+  public String getScreenHistoryTag() {
+    return screenHistoryTag;
   }
 
   @Override public String toString() {

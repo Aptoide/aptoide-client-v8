@@ -81,7 +81,7 @@ public class GridAppWidget<T extends GridAppDisplayable> extends Widget<T> {
           .newAppViewFragment(appId, pojo.getPackageName(), pojo.getStore()
               .getAppearance()
               .getTheme(), tvStoreName.getText()
-              .toString()), true);
+              .toString(), displayable.getTag()), true);
     };
   }
 }

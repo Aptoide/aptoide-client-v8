@@ -11,6 +11,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.notification.AptoideNotification;
@@ -44,6 +45,11 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
     return super.onOptionsItemSelected(item);
   }
 
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     attachPresenter(new InboxPresenter(this,
@@ -54,7 +60,7 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient(),
             Analytics.getInstance()),
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), navigationTracker)), savedInstanceState);
+            Analytics.getInstance(), aptoideNavigationTracker)), savedInstanceState);
     notificationSubject = PublishSubject.create();
     adapter = new InboxAdapter(Collections.emptyList(), notificationSubject);
   }

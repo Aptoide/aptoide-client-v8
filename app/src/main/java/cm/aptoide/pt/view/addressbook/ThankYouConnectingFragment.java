@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.view.fragment.UIComponentFragment;
 import com.jakewharton.rxbinding.view.RxView;
 
@@ -22,6 +23,11 @@ public class ThankYouConnectingFragment extends UIComponentFragment {
     extras.putString(TAG, tag);
     thankYouConnectingFragment.setArguments(extras);
     return thankYouConnectingFragment;
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public int getContentViewId() {

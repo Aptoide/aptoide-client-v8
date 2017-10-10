@@ -85,7 +85,6 @@ import cm.aptoide.pt.view.search.SearchAdDisplayable;
 import cm.aptoide.pt.view.search.SearchAdWidget;
 import cm.aptoide.pt.view.search.SearchDisplayable;
 import cm.aptoide.pt.view.search.SearchWidget;
-import cm.aptoide.pt.view.store.CreateStoreWidget;
 import cm.aptoide.pt.view.store.GridDisplayDisplayable;
 import cm.aptoide.pt.view.store.GridStoreMetaDisplayable;
 import cm.aptoide.pt.view.store.GridStoreMetaWidget;

@@ -173,9 +173,9 @@ public class TimelinePresenter implements Presenter {
 
     onViewCreatedShowUser();
 
-    clickOnPost();
-
     clickOnEmptyStateAction();
+
+    handleScrollEvents();
   }
 
   @Override public void saveState(Bundle state) {
@@ -183,6 +183,16 @@ public class TimelinePresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
 
+  }
+
+  private void handleScrollEvents() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.getScrollEvents())
+        .doOnNext(position -> timelineAnalytics.scrollToPosition(position))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cardTouchEvent -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   private void clickOnEmptyStateAction() {
@@ -483,17 +493,6 @@ public class TimelinePresenter implements Presenter {
               crashReport.log(err);
               view.showGenericViewError();
             })
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
-  }
-
-  private void clickOnPost() {
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.postClicked()
-            .doOnNext(cardTouchEvent -> timelineAnalytics.sendPostPositionEvent(cardTouchEvent))
-            .doOnError(throwable -> crashReport.log(throwable))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();

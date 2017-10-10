@@ -6,17 +6,20 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.NavigationTrackerPagerAdapterHelper;
-import cm.aptoide.pt.PageViewsAnalytics;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 
 /**
  * Created by neuro on 29-07-2016.
  */
+
+/**
+ * this class extends an old v4 component. avoid its usage.
+ */
+@Deprecated
 public class AptoideViewPager extends ViewPager {
 
   private boolean enabled = true;
-  private AptoideNavigationTracker aptoideNavigationTracker;
-  private PageViewsAnalytics pageViewAnalytics;
 
   public AptoideViewPager(Context context) {
     super(context);
@@ -32,13 +35,26 @@ public class AptoideViewPager extends ViewPager {
       @Override public void onPageSelected(int position) {
         super.onPageSelected(position);
 
-        String currentView =
-            ((NavigationTrackerPagerAdapterHelper) getAdapter()).getItemName(position);
+        if (!(getAdapter() instanceof NavigationTrackerPagerAdapterHelper)) {
+          throw new RuntimeException(getAdapter().getClass()
+              .getSimpleName()
+              + " has to implement "
+              + NavigationTrackerPagerAdapterHelper.class.getSimpleName());
+        }
+        if (position != 0) {
+          final NavigationTrackerPagerAdapterHelper adapter =
+              (NavigationTrackerPagerAdapterHelper) getAdapter();
 
-        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker()
-            .registerView(currentView);
-        ((AptoideApplication) getContext().getApplicationContext()).getPageViewsAnalytics()
-            .sendPageViewedEvent();
+          String currentView = adapter.getItemName(position);
+          String tag = adapter.getItemTag(position);
+          StoreContext storeContext = adapter.getItemStore();
+
+          ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker()
+              .registerScreen(ScreenTagHistory.Builder.build(currentView, tag, storeContext));
+
+          ((AptoideApplication) getContext().getApplicationContext()).getPageViewsAnalytics()
+              .sendPageViewedEvent();
+        }
       }
     });
   }
@@ -61,13 +77,5 @@ public class AptoideViewPager extends ViewPager {
 
   public void setPagingEnabled(boolean enabled) {
     this.enabled = enabled;
-  }
-
-  public void setAptoideNavigationTracker(AptoideNavigationTracker aptoideNavigationTracker) {
-    this.aptoideNavigationTracker = aptoideNavigationTracker;
-  }
-
-  public void setPageViewAnalytics(PageViewsAnalytics pageViewAnalytics) {
-    this.pageViewAnalytics = pageViewAnalytics;
   }
 }
