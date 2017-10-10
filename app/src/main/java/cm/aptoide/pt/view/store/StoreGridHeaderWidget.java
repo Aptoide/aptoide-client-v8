@@ -40,7 +40,8 @@ public class StoreGridHeaderWidget extends Widget<StoreGridHeaderDisplayable> {
     title.setText(Translator.translate(wsWidget.getTitle(), getContext().getApplicationContext(),
         marketName));
 
-    more.setVisibility(moreIsVisible && displayable.isMoreVisible() ? View.VISIBLE : View.GONE);
+    StoreGridHeaderDisplayable.Model model = displayable.getModel();
+    more.setVisibility(moreIsVisible && model.isMoreVisible() ? View.VISIBLE : View.GONE);
 
     if (moreIsVisible) {
       compositeSubscription.add(RxView.clicks(more)
@@ -49,9 +50,9 @@ public class StoreGridHeaderWidget extends Widget<StoreGridHeaderDisplayable> {
             final Event event = wsWidget.getActions()
                 .get(0)
                 .getEvent();
-            final String storeTheme = displayable.getStoreTheme();
-            final String tag = displayable.getTag();
-            final StoreContext storeContext = displayable.getStoreContext();
+            final String storeTheme = model.getStoreTheme();
+            final String tag = model.getTag();
+            final StoreContext storeContext = model.getStoreContext();
             final String title = wsWidget.getTitle();
 
             if (event.getName() == Event.Name.listComments) {

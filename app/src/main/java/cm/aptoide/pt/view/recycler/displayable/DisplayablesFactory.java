@@ -254,7 +254,8 @@ public class DisplayablesFactory {
             new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag(), storeContext,
                 storeTabNavigator);
         if (stores.size() <= maxStoresToShow) {
-          header.setMoreVisible(false);
+          header.getModel()
+              .setMoreVisible(false);
         }
         tmp.add(0, header);
       }
