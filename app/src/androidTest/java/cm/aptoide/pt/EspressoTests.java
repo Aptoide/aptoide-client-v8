@@ -9,7 +9,6 @@ import android.support.test.espresso.action.Swipe;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.LargeTest;
 import android.view.View;
 import cm.aptoide.pt.view.MainActivity;
 import java.io.IOException;
@@ -39,7 +38,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 
-@LargeTest public class EspressoTests {
+public class EspressoTests {
 
   private final String SIGNUPEMAILTESTBGN = "jose.messejana+";
   private final String SIGNUPEMAILTESTEND = "@aptoide.com";
@@ -48,8 +47,10 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
   private final String APP_TO_SEARCH = "Cut the Rope";
   private final int WAIT_TIME = 550;
   private final int LONGER_WAIT_TIME = 2000;
+  private final int NUMBER_OF_RETRIES = 3;
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
+  @Rule public RetryTestRule retry = new RetryTestRule(NUMBER_OF_RETRIES);
   private String SIGNUPEMAILTEST = "";
 
   private static ViewAction swipeRigthOnLeftMost() {
@@ -74,25 +75,16 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
   }
 
   @Before public void setUpEmail() throws IOException {
-      SIGNUPEMAILTEST = SIGNUPEMAILTESTBGN + System.currentTimeMillis() + SIGNUPEMAILTESTEND;
+    SIGNUPEMAILTEST = SIGNUPEMAILTESTBGN + System.currentTimeMillis() + SIGNUPEMAILTESTEND;
+    if (isFirstTime()) {
+      skipWizard();
+    }
+    logOutorGoBack();
   }
 
   @Test public void signUp() throws InterruptedException {
-    if (isFirstTime()) {
-      onView(withId(R.id.next_icon)).perform(click());
-      onView(withId(R.id.next_icon)).perform(click());
-      performSignUp();
-    } else {
-      goToMyAccount();
-      if (!isLoggedIn()) {
-        performSignUp();
-      } else {
-        onView(withId(R.id.button_logout)).perform(click());
-        Thread.sleep(WAIT_TIME);
-        goToMyAccount();
-        performSignUp();
-      }
-    }
+    goToMyAccount();
+    performSignUp();
     while (notSignUp()) {
       Thread.sleep(LONGER_WAIT_TIME);
     }
@@ -100,21 +92,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
   }
 
   @Test public void signIn() throws InterruptedException {
-    if (isFirstTime()) {
-      onView(withId(R.id.next_icon)).perform(click());
-      onView(withId(R.id.next_icon)).perform(click());
-      performLogin();
-    } else {
-      goToMyAccount();
-      if (!isLoggedIn()) {
-        performLogin();
-      } else {
-        onView(withId(R.id.button_logout)).perform(click());
-        Thread.sleep(WAIT_TIME);
-        goToMyAccount();
-        performLogin();
-      }
-    }
+    goToMyAccount();
+    performLogin();
     while (!hasLoggedIn()) {
       Thread.sleep(LONGER_WAIT_TIME);
     }
@@ -125,10 +104,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
   }
 
   @Test public void download() throws InterruptedException {
-    if (isFirstTime()) {
-      skipWizard();
-    }
-    logOutorGoBack();
     goToApp();
     cancelIfDownloading();
     while (!hasOpenedAppView()) {
@@ -154,15 +129,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
       return true;
     } catch (NoMatchingViewException e) {
       return false;
-    }
-  }
-
-  private boolean isLoggedIn() {
-    try {
-      onView(withId(R.id.show_login_with_aptoide_area)).check(matches(isDisplayed()));
-      return false;
-    } catch (NoMatchingViewException e) {
-      return true;
     }
   }
 
@@ -235,6 +201,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
   private void logOutorGoBack() {
     try {
       onView(withId(R.id.toolbar)).perform(swipeRigthOnLeftMost());
+      Thread.sleep(WAIT_TIME);
       onView(withId(R.id.profile_email_text)).perform(click());
       onView(withId(R.id.toolbar)).perform(swipeLeft());
       goToMyAccount();
