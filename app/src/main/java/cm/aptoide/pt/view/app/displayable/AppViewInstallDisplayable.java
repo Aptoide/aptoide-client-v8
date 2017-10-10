@@ -9,6 +9,7 @@ import android.widget.Button;
 import cm.aptoide.pt.Install;
 import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.database.realm.MinimalAd;
@@ -42,6 +43,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   private TimelineAnalytics timelineAnalytics;
   @Getter private AppViewFragment appViewFragment;
   private DownloadCompleteAnalytics analytics;
+  private AptoideNavigationTracker aptoideNavigationTracker;
 
   public AppViewInstallDisplayable() {
     super();
@@ -52,7 +54,8 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
       MinimalAd minimalAd, boolean shouldInstall, InstalledRepository installedRepository,
       TimelineAnalytics timelineAnalytics, AppViewAnalytics appViewAnalytics,
       PublishRelay installAppRelay, DownloadFactory downloadFactory,
-      AppViewFragment appViewFragment, DownloadCompleteAnalytics analytics) {
+      AppViewFragment appViewFragment, DownloadCompleteAnalytics analytics,
+      AptoideNavigationTracker aptoideNavigationTracker) {
     super(getApp, appViewAnalytics);
     this.installManager = installManager;
     this.md5 = getApp.getNodes()
@@ -77,16 +80,18 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
     this.timelineAnalytics = timelineAnalytics;
     this.appViewFragment = appViewFragment;
     this.analytics = analytics;
+    this.aptoideNavigationTracker = aptoideNavigationTracker;
   }
 
   public static AppViewInstallDisplayable newInstance(GetApp getApp, InstallManager installManager,
       MinimalAd minimalAd, boolean shouldInstall, InstalledRepository installedRepository,
       DownloadFactory downloadFactory, TimelineAnalytics timelineAnalytics,
       AppViewAnalytics appViewAnalytics, PublishRelay installAppRelay,
-      AppViewFragment appViewFragment, DownloadCompleteAnalytics analytics) {
+      AppViewFragment appViewFragment, DownloadCompleteAnalytics analytics,
+      AptoideNavigationTracker aptoideNavigationTracker) {
     return new AppViewInstallDisplayable(installManager, getApp, minimalAd, shouldInstall,
         installedRepository, timelineAnalytics, appViewAnalytics, installAppRelay, downloadFactory,
-        appViewFragment, analytics);
+        appViewFragment, analytics, aptoideNavigationTracker);
   }
 
   public void startInstallationProcess() {
@@ -127,9 +132,11 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
     GetAppMeta.App app = getPojo().getNodes()
         .getMeta()
         .getData();
-    analytics.installClicked(app.getMd5(), app.getPackageName(), app.getFile()
-        .getMalware()
-        .getRank()
-        .name());
+    analytics.installClicked(aptoideNavigationTracker.getPreviousScreen(),
+        aptoideNavigationTracker.getCurrentScreen(), app.getMd5(), app.getPackageName(),
+        app.getFile()
+            .getMalware()
+            .getRank()
+            .name());
   }
 }

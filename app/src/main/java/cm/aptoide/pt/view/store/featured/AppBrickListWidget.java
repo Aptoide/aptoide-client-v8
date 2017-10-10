@@ -53,10 +53,14 @@ public class AppBrickListWidget extends Widget<AppBrickListDisplayable> {
               .newAppViewFragment(app.getId(), app.getPackageName(), app.getStore()
                   .getAppearance()
                   .getTheme(), app.getStore()
-                  .getName(), displayable.getTag()), true);
+                  .getName(), displayable.getTag(), editorsBrickPosition()), true);
           Analytics.HomePageEditorsChoice.clickOnEditorsChoiceItem(getAdapterPosition(),
               app.getPackageName(), false);
         }, throwable -> CrashReport.getInstance()
             .log(throwable)));
+  }
+
+  private String editorsBrickPosition() {
+    return "More_" + getAdapterPosition();
   }
 }

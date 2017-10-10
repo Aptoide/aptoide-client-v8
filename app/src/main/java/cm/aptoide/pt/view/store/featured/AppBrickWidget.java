@@ -43,11 +43,15 @@ public class AppBrickWidget extends Widget<AppBrickDisplayable> {
           getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
               .newAppViewFragment(displayable.getPojo()
                   .getId(), displayable.getPojo()
-                  .getPackageName(), displayable.getTag()), true);
+                  .getPackageName(), displayable.getTag(), editorsBrickPosition()), true);
           Analytics.HomePageEditorsChoice.clickOnEditorsChoiceItem(getAdapterPosition(),
               displayable.getPojo()
                   .getPackageName(), true);
         }, throwable -> CrashReport.getInstance()
             .log(throwable)));
+  }
+
+  private String editorsBrickPosition() {
+    return "Home_" + getAdapterPosition();
   }
 }

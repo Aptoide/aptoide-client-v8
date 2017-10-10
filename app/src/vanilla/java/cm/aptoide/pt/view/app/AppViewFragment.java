@@ -39,6 +39,7 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.app.AppBoughtReceiver;
@@ -146,6 +147,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private static final String BAR_EXPANDED = "BAR_EXPANDED";
   private static final int PAY_APP_REQUEST_CODE = 12;
   private static final String ORIGIN_TAG = "TAG";
+  private static final String EDITORS_CHOICE_POSITION = "editorsBrickPosition";
   private final String key_appId = "appId";
   private final String key_packageName = "packageName";
   private final String key_uname = "uname";
@@ -214,6 +216,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
   private CrashReport crashReport;
   private String originTag;
+  private AptoideNavigationTracker aptoideNavigationTracker;
+  private String editorsBrickPosition;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -240,7 +244,18 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     bundle.putLong(BundleKeys.APP_ID.name(), appId);
     bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
     bundle.putSerializable(BundleKeys.SHOULD_INSTALL.name(), openType);
+    AppViewFragment fragment = new AppViewFragment();
+    fragment.setArguments(bundle);
+    return fragment;
+  }
 
+  public static AppViewFragment newInstance(long appId, String packageName, String tag,
+      String editorsBrickPosition) {
+    Bundle bundle = new Bundle();
+    bundle.putString(ORIGIN_TAG, tag);
+    bundle.putString(EDITORS_CHOICE_POSITION, editorsBrickPosition);
+    bundle.putLong(BundleKeys.APP_ID.name(), appId);
+    bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
     AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     return fragment;
@@ -250,6 +265,20 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       String storeName, String tag) {
     Bundle bundle = new Bundle();
     bundle.putString(ORIGIN_TAG, tag);
+    bundle.putLong(BundleKeys.APP_ID.name(), appId);
+    bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
+    bundle.putString(BundleKeys.STORE_NAME.name(), storeName);
+    bundle.putString(StoreFragment.BundleCons.STORE_THEME, storeTheme);
+    AppViewFragment fragment = new AppViewFragment();
+    fragment.setArguments(bundle);
+    return fragment;
+  }
+
+  public static AppViewFragment newInstance(long appId, String packageName, String storeTheme,
+      String storeName, String tag, String editorsPosition) {
+    Bundle bundle = new Bundle();
+    bundle.putString(ORIGIN_TAG, tag);
+    bundle.putString(EDITORS_CHOICE_POSITION, editorsPosition);
     bundle.putLong(BundleKeys.APP_ID.name(), appId);
     bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
     bundle.putString(BundleKeys.STORE_NAME.name(), storeName);
@@ -356,6 +385,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             analytics);
     notLoggedInShareAnalytics =
         ((AptoideApplication) getContext().getApplicationContext()).getNotLoggedInShareAnalytics();
+    aptoideNavigationTracker =
+        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker();
   }
 
   private void handleSavedInstance(Bundle savedInstanceState) {
@@ -381,6 +412,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     sponsored = minimalAd != null;
     storeTheme = args.getString(StoreFragment.BundleCons.STORE_THEME);
     originTag = args.getString(ORIGIN_TAG);
+    editorsBrickPosition = args.getString(EDITORS_CHOICE_POSITION);
   }
 
   @Override public int getContentViewId() {
@@ -850,7 +882,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             installedRepository, downloadFactory, timelineAnalytics, appViewAnalytics,
             installAppRelay, this,
             new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
-                AppEventsLogger.newLogger(getContext().getApplicationContext())));
+                AppEventsLogger.newLogger(getContext().getApplicationContext()), crashReport),
+            aptoideNavigationTracker);
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics, storeAnalytics));
     displayables.add(
@@ -1002,7 +1035,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             .observe(), (minimalAds, listApps) -> new AppViewSuggestedAppsDisplayable(minimalAds,
             removeCurrentAppFromSuggested(listApps.getDataList()
                 // TODO: 04/10/2017 trinkes make some default thing for StoreContext.home
-                .getList()), appViewSimilarAppAnalytics, aptoideNavigationTracker, StoreContext.home))
+                .getList()), appViewSimilarAppAnalytics, aptoideNavigationTracker,
+            StoreContext.home))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(appViewSuggestedAppsDisplayable -> {
@@ -1196,6 +1230,16 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           .getRank()
           .name());
 
+      if (editorsBrickPosition != null) {
+        appViewAnalytics.sendEditorsChoiceClickEvent(aptoideNavigationTracker.getPreviousScreen(),
+            packageName, editorsBrickPosition);
+      }
+      appViewAnalytics.sendAppViewOpenedFromEvent(aptoideNavigationTracker.getPreviousScreen(),
+          aptoideNavigationTracker.getCurrentScreen(), packageName, app.getDeveloper()
+              .getName(), app.getFile()
+              .getMalware()
+              .getRank()
+              .name());
       final Malware malware = app.getFile()
           .getMalware();
       badge.setOnClickListener(v -> {

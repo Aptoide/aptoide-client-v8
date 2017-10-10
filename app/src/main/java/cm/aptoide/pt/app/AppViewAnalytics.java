@@ -2,6 +2,7 @@ package cm.aptoide.pt.app;
 
 import android.os.Bundle;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
 import com.facebook.appevents.AppEventsLogger;
 
@@ -11,6 +12,7 @@ import com.facebook.appevents.AppEventsLogger;
 
 public class AppViewAnalytics {
 
+  public static final String EDITORS_CHOICE_CLICKS = "Editors_Choice_Clicks";
   private static final String ACTION = "Action";
   private static final String APP_VIEW_INTERACT = "App_View_Interact";
   private Analytics analytics;
@@ -19,6 +21,49 @@ public class AppViewAnalytics {
   public AppViewAnalytics(Analytics analytics, AppEventsLogger facebook) {
     this.analytics = analytics;
     this.facebook = facebook;
+  }
+
+  public void sendEditorsChoiceClickEvent(ScreenTagHistory previousScreen, String packageName,
+      String editorsBrickPosition) {
+    analytics.sendEvent(new FacebookEvent(facebook, EDITORS_CHOICE_CLICKS,
+        createEditorsChoiceClickEventBundle(previousScreen, packageName, editorsBrickPosition)));
+  }
+
+  private Bundle createEditorsChoiceClickEventBundle(ScreenTagHistory previousScreen,
+      String packageName, String editorsBrickPosition) {
+    Bundle bundle = new Bundle();
+    if (previousScreen.getFragment() != null) {
+      bundle.putString("fragment", previousScreen.getFragment());
+    }
+    bundle.putString("package_name", packageName);
+    bundle.putString("position", editorsBrickPosition);
+    return bundle;
+  }
+
+  public void sendAppViewOpenedFromEvent(ScreenTagHistory previousScreen,
+      ScreenTagHistory currentScreen, String packageName, String appPublisher, String badge) {
+    analytics.sendEvent(new FacebookEvent(facebook, "App_Viewed_Open_From",
+        createAppViewedFromBundle(previousScreen, currentScreen, packageName, appPublisher,
+            badge)));
+  }
+
+  private Bundle createAppViewedFromBundle(ScreenTagHistory previousScreen,
+      ScreenTagHistory currentScreen, String packageName, String appPublisher, String badge)
+      throws NullPointerException {
+    Bundle bundle = new Bundle();
+    if (previousScreen.getFragment() != null) {
+      bundle.putString("fragment", previousScreen.getFragment());
+    }
+    if (currentScreen.getTag() != null) {
+      bundle.putString("tag", currentScreen.getTag());
+    }
+    if (previousScreen.getStore() != null) {
+      bundle.putString("store", previousScreen.getStore());
+    }
+    bundle.putString("package_name", packageName);
+    bundle.putString("application_publisher", appPublisher);
+    bundle.putString("trusted_badge", badge);
+    return bundle;
   }
 
   public void sendOpenScreenshotEvent() {
