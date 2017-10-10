@@ -110,10 +110,7 @@ public class PaymentPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(__ -> {
-        }, throwable -> {
-          view.hidePaymentLoading();
-          navigator.popViewWithResult(throwable);
-        });
+        }, throwable -> navigator.popViewWithResult(throwable));
   }
 
   private void onViewCreatedCheckPurchase() {
@@ -146,10 +143,7 @@ public class PaymentPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(__ -> {
-        }, throwable -> {
-          view.hidePurchaseLoading();
-          showError(throwable);
-        });
+        }, throwable -> navigator.popViewWithResult(throwable));
   }
 
   private void handleCancelEvent() {
@@ -170,8 +164,7 @@ public class PaymentPresenter implements Presenter {
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(created -> view.selectServiceEvent())
-        .flatMapCompletable(
-            serviceViewModel -> billing.selectService(serviceViewModel.getId()))
+        .flatMapCompletable(serviceViewModel -> billing.selectService(serviceViewModel.getId()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> navigator.popViewWithResult(throwable));

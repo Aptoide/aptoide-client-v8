@@ -123,7 +123,7 @@ public class Billing {
             new SimplePurchase(SimplePurchase.Status.NEW, transaction.getProductId()));
       }
 
-      return billingService.getPurchase(tokenDecoder.decode(sku));
+      return billingService.getPurchase(transaction.getProductId());
     })
         .flatMap(purchase -> {
           if (purchase.isFailed()) {

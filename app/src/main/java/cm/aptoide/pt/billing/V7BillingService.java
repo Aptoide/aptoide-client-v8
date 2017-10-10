@@ -113,8 +113,8 @@ public class V7BillingService implements BillingService {
         });
   }
 
-  @Override public Single<Purchase> getPurchase(long purchaseId) {
-    return GetPurchasesRequest.of(purchaseId, bodyInterceptorV7, httpClient, converterFactory,
+  @Override public Single<Purchase> getPurchase(long productId) {
+    return GetPurchasesRequest.of(productId, bodyInterceptorV7, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences)
         .observe(true)
         .toSingle()
