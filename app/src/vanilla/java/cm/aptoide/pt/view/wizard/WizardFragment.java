@@ -12,16 +12,13 @@ import android.widget.RadioGroup;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.LoginBottomSheet;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.custom.AptoideViewPager;
 import cm.aptoide.pt.view.fragment.UIComponentFragment;
-import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
@@ -39,9 +36,8 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class WizardFragment extends UIComponentFragment implements WizardView {
 
-  private static final String PAGE_INDEX = "page_index";
   public static final int LAYOUT = R.layout.fragment_wizard;
-
+  private static final String PAGE_INDEX = "page_index";
   private WizardPagerAdapter viewPagerAdapter;
   private AptoideViewPager viewPager;
   private RadioGroup radioGroup;
@@ -53,7 +49,6 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
 
   private boolean isInPortraitMode;
   private int currentPosition;
-  private PageViewsAnalytics pageViewAnalytics;
 
   public static WizardFragment newInstance() {
     return new WizardFragment();
@@ -91,14 +86,7 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName());
   }
-
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    pageViewAnalytics =
-        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), aptoideNavigationTracker);
-  }
-
+  
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
     currentPosition = 0;
@@ -186,7 +174,7 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
   }
 
   @Override public int getWizardButtonsCount() {
-     return wizardButtons.size();
+    return wizardButtons.size();
   }
 
   /**
