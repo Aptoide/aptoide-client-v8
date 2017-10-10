@@ -12,6 +12,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetFollowersRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.timeline.view.displayable.FollowUserDisplayable;
 import cm.aptoide.pt.view.recycler.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
@@ -35,31 +36,34 @@ public class TimeLineFollowersFragment extends TimeLineFollowFragment {
   private String defaultTheme;
 
   public static TimeLineFollowFragment newInstanceUsingUser(Long id, String storeTheme,
-      String title) {
-    Bundle args = getBundle(storeTheme, title);
+      String title, StoreContext storeContext) {
+    Bundle args = getBundle(storeTheme, title, storeContext);
     args.putLong(BundleKeys.USER_ID, id);
     TimeLineFollowersFragment fragment = new TimeLineFollowersFragment();
     fragment.setArguments(args);
     return fragment;
   }
 
-  @NonNull private static Bundle getBundle(String storeTheme, String title) {
+  @NonNull
+  private static Bundle getBundle(String storeTheme, String title, StoreContext storeContext) {
     Bundle args = new Bundle();
+    TimeLineFollowFragment.buildBundle(storeContext);
     args.putString(TITLE_KEY, title);
     args.putString(BundleCons.STORE_THEME, storeTheme);
     return args;
   }
 
-  public static TimeLineFollowFragment newInstanceUsingUser(String storeTheme, String title) {
-    Bundle args = getBundle(storeTheme, title);
+  public static TimeLineFollowFragment newInstanceUsingUser(String storeTheme, String title,
+      StoreContext storeContext) {
+    Bundle args = getBundle(storeTheme, title, storeContext);
     TimeLineFollowersFragment fragment = new TimeLineFollowersFragment();
     fragment.setArguments(args);
     return fragment;
   }
 
   public static TimeLineFollowFragment newInstanceUsingStore(Long id, String storeTheme,
-      String title) {
-    Bundle args = getBundle(storeTheme, title);
+      String title, StoreContext storeContext) {
+    Bundle args = getBundle(storeTheme, title, storeContext);
     args.putLong(BundleKeys.STORE_ID, id);
     TimeLineFollowersFragment fragment = new TimeLineFollowersFragment();
     fragment.setArguments(args);

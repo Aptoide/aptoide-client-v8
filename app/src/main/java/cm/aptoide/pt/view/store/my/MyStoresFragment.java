@@ -9,6 +9,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.timeline.view.displayable.FollowStoreDisplayable;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
@@ -29,9 +30,10 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment {
 
   private static final String TAG = MyStoresFragment.class.getSimpleName();
 
-  public static MyStoresFragment newInstance(Event event, String storeTheme, String tag) {
+  public static MyStoresFragment newInstance(Event event, String storeTheme, String tag,
+      StoreContext storeContext) {
     // TODO: 28-12-2016 neuro ia saltando um preguito com este null lolz
-    Bundle args = buildBundle(event, null, storeTheme, tag, null);
+    Bundle args = buildBundle(event, null, storeTheme, tag, storeContext);
     MyStoresFragment fragment = new MyStoresFragment();
     fragment.setArguments(args);
     return fragment;

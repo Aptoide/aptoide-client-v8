@@ -21,6 +21,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
@@ -84,6 +85,11 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
     return scheduledDownloadsFragment;
   }
 
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
@@ -109,7 +115,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-            navigationTracker);
+            aptoideNavigationTracker);
     analytics = Analytics.getInstance();
   }
 

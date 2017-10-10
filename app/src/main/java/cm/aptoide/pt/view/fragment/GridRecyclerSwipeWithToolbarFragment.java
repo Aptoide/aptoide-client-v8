@@ -14,7 +14,7 @@ import cm.aptoide.pt.view.Translator;
  * Created by trinkes on 16/12/2016.
  */
 
-public class GridRecyclerSwipeWithToolbarFragment extends GridRecyclerSwipeFragment {
+public abstract class GridRecyclerSwipeWithToolbarFragment extends GridRecyclerSwipeFragment {
   public static final String TITLE_KEY = "TITLE_KEY";
   private String title;
   private String marketName;

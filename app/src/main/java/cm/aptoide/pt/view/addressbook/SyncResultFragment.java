@@ -13,6 +13,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.addressbook.data.Contact;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.presenter.SyncResultContract;
 import cm.aptoide.pt.presenter.SyncResultPresenter;
 import cm.aptoide.pt.view.fragment.UIComponentFragment;
@@ -62,6 +63,11 @@ public class SyncResultFragment extends UIComponentFragment implements SyncResul
     allowFind = (Button) view.findViewById(R.id.addressbook_allow_find);
     done = (Button) view.findViewById(R.id.addressbook_done);
     successMessage = (TextView) view.findViewById(R.id.addressbook_successful_message);
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {

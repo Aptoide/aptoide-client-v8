@@ -1,5 +1,7 @@
 package cm.aptoide.pt;
 
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+
 /**
  * Created by pedroribeiro on 15/09/17.
  */
@@ -7,4 +9,8 @@ package cm.aptoide.pt;
 public interface NavigationTrackerPagerAdapterHelper {
 
   String getItemName(int position);
+
+  String getItemTag(int position);
+
+  StoreContext getItemStore();
 }

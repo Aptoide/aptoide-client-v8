@@ -9,6 +9,7 @@ import cm.aptoide.pt.Install;
 import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.download.DownloadEventConverter;
 import cm.aptoide.pt.download.InstallEventConverter;
@@ -36,10 +37,12 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
   private final List<Install> standByDownloads;
   private final List<Install> completedDownloads;
   private final Resources resources;
+  private AptoideNavigationTracker aptoideNavigationTracker;
 
   public DownloadsAdapter(InstallEventConverter installConverter,
       DownloadEventConverter downloadConverter, InstallManager installManager, Analytics analytics,
-      Resources resources) {
+      Resources resources, AptoideNavigationTracker aptoideNavigationTracker) {
+    this.aptoideNavigationTracker = aptoideNavigationTracker;
     this.activeDownloads = new ArrayList<>();
     this.standByDownloads = new ArrayList<>();
     this.completedDownloads = new ArrayList<>();
@@ -102,7 +105,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
     final ItemViewType itemViewType = ItemViewType.values()[getItemViewType(position)];
     switch (itemViewType) {
       case Header: {
-        bindHeader(holder, position);
+        bindHeader(holder, position, aptoideNavigationTracker);
         break;
       }
 
@@ -201,7 +204,8 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
     super.onViewRecycled(holder);
   }
 
-  private void bindHeader(Widget holder, int position) {
+  private void bindHeader(Widget holder, int position,
+      AptoideNavigationTracker aptoideNavigationTracker) {
     // discover if it's the header for stand by or completed downloads
     position -= (activeDownloads.isEmpty() ? 0 : activeDownloads.size() + 1);
 
@@ -209,11 +213,13 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
     if (position < standByDownloads.size()) {
       // is the header from stand by downloads
       header.bindView(new StoreGridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(
-          AptoideUtils.StringU.getResString(R.string.stand_by, resources))));
+          AptoideUtils.StringU.getResString(R.string.stand_by, resources)),
+          aptoideNavigationTracker));
     } else {
       // is the header from completed downloads
       header.bindView(new StoreGridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(
-          AptoideUtils.StringU.getResString(R.string.completed, resources))));
+          AptoideUtils.StringU.getResString(R.string.completed, resources)),
+          aptoideNavigationTracker));
     }
   }
 

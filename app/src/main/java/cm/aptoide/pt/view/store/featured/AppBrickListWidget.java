@@ -53,7 +53,7 @@ public class AppBrickListWidget extends Widget<AppBrickListDisplayable> {
               .newAppViewFragment(app.getId(), app.getPackageName(), app.getStore()
                   .getAppearance()
                   .getTheme(), app.getStore()
-                  .getName()), true);
+                  .getName(), displayable.getTag()), true);
           Analytics.HomePageEditorsChoice.clickOnEditorsChoiceItem(getAdapterPosition(),
               app.getPackageName(), false);
         }, throwable -> CrashReport.getInstance()

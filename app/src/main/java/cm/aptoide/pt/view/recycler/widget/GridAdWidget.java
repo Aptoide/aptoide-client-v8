@@ -49,7 +49,7 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
         .subscribe(v -> {
           Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
           getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-              .newAppViewFragment(new SearchAdResult(pojo)), true);
+              .newAppViewFragment(new SearchAdResult(pojo), displayable.getTag()), true);
         }, throwable -> CrashReport.getInstance()
             .log(throwable)));
     downloadsNumber.setText(

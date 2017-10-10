@@ -35,6 +35,7 @@ import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.app.AppBoughtReceiver;
 import cm.aptoide.pt.app.AppRepository;
 import cm.aptoide.pt.app.AppViewAnalytics;
@@ -66,6 +67,7 @@ import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.AppAction;
 import cm.aptoide.pt.install.InstalledRepository;
@@ -134,6 +136,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   public static final int LOGIN_REQUEST_CODE = 13;
   private static final String TAG = AppViewFragment.class.getSimpleName();
   private static final int PAY_APP_REQUEST_CODE = 12;
+  private static final String ORIGIN_TAG = "TAG";
 
   private final String key_appId = "appId";
   private final String key_packageName = "packageName";
@@ -187,6 +190,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private AccountNavigator accountNavigator;
   private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
   private CrashReport crashReport;
+  private String originTag;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -206,8 +210,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     return fragment;
   }
 
-  public static AppViewFragment newInstance(long appId, String packageName, OpenType openType) {
+  public static AppViewFragment newInstance(long appId, String packageName, OpenType openType,
+      String tag) {
     Bundle bundle = new Bundle();
+    bundle.putString(ORIGIN_TAG, tag);
     bundle.putLong(BundleKeys.APP_ID.name(), appId);
     bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
     bundle.putSerializable(BundleKeys.SHOULD_INSTALL.name(), openType);
@@ -218,8 +224,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   public static AppViewFragment newInstance(long appId, String packageName, String storeTheme,
-      String storeName) {
+      String storeName, String tag) {
     Bundle bundle = new Bundle();
+    bundle.putString(ORIGIN_TAG, tag);
     bundle.putLong(BundleKeys.APP_ID.name(), appId);
     bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
     bundle.putString(BundleKeys.STORE_NAME.name(), storeName);
@@ -229,30 +236,33 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     return fragment;
   }
 
-  public static AppViewFragment newInstance(SearchAdResult searchAdResult) {
+  public static AppViewFragment newInstance(SearchAdResult searchAdResult, String tag) {
     Bundle bundle = new Bundle();
     bundle.putLong(BundleKeys.APP_ID.name(), searchAdResult.getAppId());
     bundle.putString(BundleKeys.PACKAGE_NAME.name(), searchAdResult.getPackageName());
     bundle.putParcelable(BundleKeys.MINIMAL_AD.name(), Parcels.wrap(searchAdResult));
-
+    bundle.putString(ORIGIN_TAG, tag);
     AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
 
     return fragment;
   }
 
+  /*
   public static AppViewFragment newInstance(SearchAdResult searchAdResult, String storeTheme) {
     Bundle bundle = new Bundle();
     bundle.putLong(BundleKeys.APP_ID.name(), searchAdResult.getAppId());
     bundle.putString(BundleKeys.PACKAGE_NAME.name(), searchAdResult.getPackageName());
     bundle.putParcelable(BundleKeys.MINIMAL_AD.name(), Parcels.wrap(searchAdResult));
     bundle.putString(StoreFragment.BundleCons.STORE_THEME, storeTheme);
+    bundle.putString(ORIGIN_TAG, tag);
 
     AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
 
     return fragment;
   }
+  */
 
   public static Fragment newInstance(String packageName, OpenType openType) {
     return newInstance(packageName, null, openType);
@@ -319,7 +329,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        new NotificationAnalytics(httpClient, analytics), navigationTracker);
+        new NotificationAnalytics(httpClient, analytics), aptoideNavigationTracker);
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
             timelineAnalytics, tokenInvalidator,
@@ -379,6 +389,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storeName = args.getString(BundleKeys.STORE_NAME.name());
     sponsored = searchAdResult != null;
     storeTheme = args.getString(StoreFragment.BundleCons.STORE_THEME);
+    originTag = args.getString(ORIGIN_TAG);
   }
 
   @Override public int getContentViewId() {
@@ -502,6 +513,11 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onSaveInstanceState(outState);
 
     outState.putBoolean(Keys.SUGGESTED_SHOWING, suggestedShowing);
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName(), originTag, null);
   }
 
   private boolean hasDescription(GetAppMeta.Media media) {
@@ -1001,7 +1017,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         .zipWith(requestFactoryCdnWeb.newGetRecommendedRequest(6, packageName)
             .observe(), (minimalAds, listApps) -> new AppViewSuggestedAppsDisplayable(minimalAds,
             removeCurrentAppFromSuggested(listApps.getDataList()
-                .getList()), appViewSimilarAppAnalytics))
+                // TODO: 04/10/2017 trinkes make some default thing for StoreContext.home
+                .getList()), appViewSimilarAppAnalytics, aptoideNavigationTracker,
+            StoreContext.home))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(appViewSuggestedAppsDisplayable -> {

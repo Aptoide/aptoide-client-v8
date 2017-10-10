@@ -19,6 +19,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
 import cm.aptoide.pt.account.view.GooglePlayServicesFragment;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -76,6 +77,11 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     requestCode = getArguments().getInt(FragmentNavigator.REQUEST_CODE_EXTRA);
     backButtonPress = PublishRelay.create();
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Nullable @Override

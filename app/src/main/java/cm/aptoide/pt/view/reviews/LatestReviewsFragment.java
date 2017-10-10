@@ -9,6 +9,7 @@ import android.view.View;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -17,6 +18,7 @@ import cm.aptoide.pt.dataprovider.model.v7.ListFullReviews;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
@@ -35,6 +37,7 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
   // on v6, 50 was the limit
   private static final int REVIEWS_LIMIT = 25;
   private static final String STORE_ID = "storeId";
+  private static final String STORE_CONTEXT = "STORE_CONTEXT";
 
   private long storeId;
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
@@ -44,11 +47,13 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private StoreAnalytics storeAnalytics;
+  private StoreContext storeContext;
 
-  public static LatestReviewsFragment newInstance(long storeId) {
+  public static LatestReviewsFragment newInstance(long storeId, StoreContext storeContext) {
     LatestReviewsFragment fragment = new LatestReviewsFragment();
     Bundle args = new Bundle();
     args.putLong(STORE_ID, storeId);
+    args.putSerializable(STORE_CONTEXT, storeContext);
     fragment.setArguments(args);
     return fragment;
   }
@@ -65,6 +70,11 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
     storeAnalytics =
         new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
             Analytics.getInstance());
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName(), "", storeContext);
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
@@ -88,6 +98,7 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
     this.storeId = args.getLong(STORE_ID, -1);
+    storeContext = ((StoreContext) args.getSerializable(STORE_CONTEXT));
   }
 
   @Override public void bindViews(View view) {
