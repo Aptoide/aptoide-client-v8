@@ -1,5 +1,6 @@
 package cm.aptoide.pt.spotandshareapp;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
@@ -23,8 +24,8 @@ public class SpotAndShareActivity extends BackButtonActivity implements JoinGrou
     super.onCreate(savedInstanceState);
 
     setContentView(R.layout.activity_spotandshare_main);
+    spotAndShare = ((AptoideApplication) getApplicationContext()).getSpotAndShare();
     if (savedInstanceState == null) {
-      spotAndShare = ((AptoideApplication) getApplicationContext()).getSpotAndShare();
       openSpotAndShareStart();
     }
   }
@@ -61,5 +62,9 @@ public class SpotAndShareActivity extends BackButtonActivity implements JoinGrou
     Toast.makeText(getApplicationContext(), R.string.spotandshare_message_leave_group_error,
         Toast.LENGTH_SHORT)
         .show();
+  }
+
+  @Override public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
   }
 }
