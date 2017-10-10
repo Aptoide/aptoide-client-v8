@@ -25,7 +25,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
   /**
    * @param space in pixels for the spacing between items
    */
-  public DividerItemDecoration(Context context, int space) {
+  public DividerItemDecoration(Context context, float space) {
     this(context, space, ALL);
   }
 
@@ -33,12 +33,12 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
    * @param spaceInDips in dips for the spacing between items
    * @param spacingFlag specifies in which part of the item the spacing is applied
    */
-  public DividerItemDecoration(Context context, int spaceInDips, int spacingFlag) {
+  public DividerItemDecoration(Context context, float spaceInDips, int spacingFlag) {
     this.space = getPixelsFromDips(context, spaceInDips);
     this.spacingFlag = spacingFlag;
   }
 
-  private int getPixelsFromDips(Context context, int dipValue) {
+  private int getPixelsFromDips(Context context, float dipValue) {
     Resources r = context.getResources();
     return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue,
         r.getDisplayMetrics());
