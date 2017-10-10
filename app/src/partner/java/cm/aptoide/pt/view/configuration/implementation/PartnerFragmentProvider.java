@@ -8,7 +8,7 @@ import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.presenter.InviteFriendsContract;
-import cm.aptoide.pt.social.view.TimelineFragment;
+//import cm.aptoide.pt.social.view.TimelineFragment;
 import cm.aptoide.pt.spotandshare.view.SpotSharePreviewFragment;
 import cm.aptoide.pt.timeline.view.SocialFragment;
 import cm.aptoide.pt.timeline.view.TimeLineLikesFragment;
@@ -223,10 +223,10 @@ public class PartnerFragmentProvider implements FragmentProvider {
     return new ListStoresFragment();
   }
 
-  @Override public Fragment newAppsTimelineFragment(String action, Long userId, Long storeId,
-      StoreContext storeContext) {
-    return TimelineFragment.newInstance(action, userId, storeId, storeContext);
-  }
+  //@Override public Fragment newAppsTimelineFragment(String action, Long userId, Long storeId,
+  //    StoreContext storeContext) {
+  //  return TimelineFragment.newInstance(action, userId, storeId, storeContext);
+  //}
 
   @Override
   public Fragment newSubscribedStoresFragment(Event event, String storeTheme, String tag) {
@@ -309,37 +309,37 @@ public class PartnerFragmentProvider implements FragmentProvider {
     return SettingsFragment.newInstance();
   }
 
-  @Override public Fragment newTimeLineFollowersUsingUserIdFragment(Long userId, String storeTheme,
-      String title) {
-    return TimeLineFollowersFragment.newInstanceUsingUser(userId,
-        aptoideApplication.getDefaultTheme(), title);
-  }
-
-  @Override public Fragment newTimeLineFollowingFragmentUsingUserId(Long id, String storeTheme,
-      String title) {
-    return TimeLineFollowingFragment.newInstanceUsingUserId(id,
-        aptoideApplication.getDefaultTheme(), title);
-  }
-
-  @Override
-  public Fragment newTimeLineFollowersUsingStoreIdFragment(Long storeId, String storeTheme,
-      String title) {
-    return TimeLineFollowersFragment.newInstanceUsingStore(storeId,
-        aptoideApplication.getDefaultTheme(), title);
-  }
-
-  @Override public Fragment newTimeLineFollowingFragmentUsingStoreId(Long id, String storeTheme,
-      String title) {
-    return TimeLineFollowingFragment.newInstanceUsingStoreId(id,
-        aptoideApplication.getDefaultTheme(), title);
-  }
-
-  @Override
-  public Fragment newTimeLineLikesFragment(String cardUid, long numberOfLikes, String storeTheme,
-      String title) {
-    return TimeLineLikesFragment.newInstance(aptoideApplication.getDefaultTheme(), cardUid,
-        numberOfLikes, title);
-  }
+  //@Override public Fragment newTimeLineFollowersUsingUserIdFragment(Long userId, String storeTheme,
+  //    String title) {
+  //  return TimeLineFollowersFragment.newInstanceUsingUser(userId,
+  //      aptoideApplication.getDefaultTheme(), title);
+  //}
+//
+  //@Override public Fragment newTimeLineFollowingFragmentUsingUserId(Long id, String storeTheme,
+  //    String title) {
+  //  return TimeLineFollowingFragment.newInstanceUsingUserId(id,
+  //      aptoideApplication.getDefaultTheme(), title);
+  //}
+//
+  //@Override
+  //public Fragment newTimeLineFollowersUsingStoreIdFragment(Long storeId, String storeTheme,
+  //    String title) {
+  //  return TimeLineFollowersFragment.newInstanceUsingStore(storeId,
+  //      aptoideApplication.getDefaultTheme(), title);
+  //}
+//
+  //@Override public Fragment newTimeLineFollowingFragmentUsingStoreId(Long id, String storeTheme,
+  //    String title) {
+  //  return TimeLineFollowingFragment.newInstanceUsingStoreId(id,
+  //      aptoideApplication.getDefaultTheme(), title);
+  //}
+//
+  //@Override
+  //public Fragment newTimeLineLikesFragment(String cardUid, long numberOfLikes, String storeTheme,
+  //    String title) {
+  //  return TimeLineLikesFragment.newInstance(aptoideApplication.getDefaultTheme(), cardUid,
+  //      numberOfLikes, title);
+  //}
 
   @Override
   public Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId) {
@@ -382,10 +382,10 @@ public class PartnerFragmentProvider implements FragmentProvider {
     return ThankYouConnectingFragment.newInstance(tag);
   }
 
-  @Override public Fragment newTimeLineFollowersFragment(String storeTheme, String title) {
-    return TimeLineFollowersFragment.newInstanceUsingUser(aptoideApplication.getDefaultTheme(),
-        title);
-  }
+  //@Override public Fragment newTimeLineFollowersFragment(String storeTheme, String title) {
+  //  return TimeLineFollowersFragment.newInstanceUsingUser(aptoideApplication.getDefaultTheme(),
+  //      title);
+  //}
 
   @Override public Fragment newRecommendedStoresFragment() {
     return new RecommendedStoresFragment();
