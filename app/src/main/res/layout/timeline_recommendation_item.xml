@@ -62,21 +62,14 @@
           />
 
       <ImageView
-          android:layout_width="15dp"
-          android:layout_height="15dp"
-          android:layout_marginTop="@dimen/appstimeline_card_icon"
-          android:layout_toLeftOf="@+id/overflow_menu"
-          android:layout_toStartOf="@id/overflow_menu"
-          android:src="@drawable/appstimeline_recommendation_compass_icon"
-          />
-      <ImageView
           android:id="@+id/overflow_menu"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_alignEnd="@+id/card_custom_view_line_separator"
           android:layout_alignRight="@+id/card_custom_view_line_separator"
-          android:padding="16.5dp"
-          android:src="@drawable/ic_action_overflow"
+          android:layout_marginTop="8dp"
+          android:padding="8dp"
+          android:src="@drawable/menu_overflow_24dp"
           />
 
       <View

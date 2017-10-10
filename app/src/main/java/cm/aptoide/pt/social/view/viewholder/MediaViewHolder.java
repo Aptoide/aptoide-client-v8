@@ -31,7 +31,6 @@ public class MediaViewHolder extends PostViewHolder<Media> {
   private final TextView relatedTo;
   private final SpannableFactory spannableFactory;
   private final DateCalculator dateCalculator;
-  private final ImageView cardIcon;
   private final ImageView playIcon;
   private final LikeButtonView likeButton;
   private final View likeView;
@@ -53,7 +52,6 @@ public class MediaViewHolder extends PostViewHolder<Media> {
     articleThumbnail = (ImageView) itemView.findViewById(R.id.featured_graphic);
     articleHeader = itemView.findViewById(R.id.displayable_social_timeline_article_header);
     relatedTo = (TextView) itemView.findViewById(R.id.app_name);
-    cardIcon = (ImageView) itemView.findViewById(R.id.timeline_header_card_type_icon);
     playIcon = (ImageView) itemView.findViewById(R.id.play_button);
     likeButton = (LikeButtonView) itemView.findViewById(R.id.social_like_button);
     likeView = itemView.findViewById(R.id.social_like);
@@ -64,11 +62,9 @@ public class MediaViewHolder extends PostViewHolder<Media> {
   @Override public void setPost(Media media, int position) {
     if (media.getType()
         .equals(CardType.ARTICLE)) {
-      setIcon(R.drawable.appstimeline_article_icon);
       playIcon.setVisibility(View.GONE);
     } else if (media.getType()
         .equals(CardType.VIDEO)) {
-      setIcon(R.drawable.appstimeline_video_play_icon);
       playIcon.setVisibility(View.VISIBLE);
     }
 
@@ -115,15 +111,5 @@ public class MediaViewHolder extends PostViewHolder<Media> {
 
     this.likeView.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new SocialCardTouchEvent(media, CardTouchEvent.Type.LIKE, position)));
-  }
-
-  private void setIcon(int drawableId) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      cardIcon.setImageDrawable(itemView.getContext()
-          .getDrawable(drawableId));
-    } else {
-      cardIcon.setImageDrawable(itemView.getResources()
-          .getDrawable(drawableId));
-    }
   }
 }
