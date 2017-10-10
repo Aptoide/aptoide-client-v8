@@ -48,10 +48,10 @@
   <string name="spotandshare_message_share_apk_welcome_install_when_completed">Install Aptoide as soon as the download is complete and start using Spot&amp;Share with your friends.</string>
   <string name="spotandshare_message_share_apk_welcome_ask_your_friend">Ask your friends to guide you\nduring installation :)</string>
 
-  <string name="spotandshare_message_create_hotspot_error">Unable to create the hotspot</string>
-  <string name="spotandshare_button_retry_enable_hotspot">Retry</string>
   <string name="spotandshare_button_number_one" translatable="false">1</string>
   <string name="spotandshare_button_number_two" translatable="false">2</string>
   <string name="spotandshare_button_number_three" translatable="false">3</string>
+  <string name="spotandshare_message_share_aptoide_leave_group">There was an error while leaving and recovering network state</string>
+  <string name="spotandshare_message_share_aptoide_timeout_creating_hotspot">Creating hotspot is taking too long. Please try again</string>
 
 </resources>

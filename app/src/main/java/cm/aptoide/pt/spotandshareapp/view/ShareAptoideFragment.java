@@ -21,6 +21,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.spotandshareapp.ShareApkSandbox;
 import cm.aptoide.pt.spotandshareapp.presenter.ShareAptoidePresenter;
 import cm.aptoide.pt.view.BackButtonFragment;
@@ -73,9 +74,10 @@ public class ShareAptoideFragment extends BackButtonFragment implements ShareApt
     setupBackClick();
 
     attachPresenter(new ShareAptoidePresenter(this,
-        ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
-        new ShareApkSandbox(getActivity().getApplicationContext(), getActivity().getAssets()),
-        new PermissionManager(), (PermissionService) getContext()), savedInstanceState);
+            ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
+            new ShareApkSandbox(getActivity().getApplicationContext(), getActivity().getAssets()),
+            new PermissionManager(), (PermissionService) getContext(), CrashReport.getInstance()),
+        savedInstanceState);
   }
 
   private void setupBackClick() {
@@ -173,12 +175,17 @@ public class ShareAptoideFragment extends BackButtonFragment implements ShareApt
   }
 
   @Override public void onLeaveGroupError() {
-    Toast.makeText(getContext(), "There was an error while trying to leave the group",
+    Toast.makeText(getContext(), R.string.spotandshare_message_share_aptoide_leave_group,
         Toast.LENGTH_SHORT)
         .show();
   }
 
-  @Override public void onCreateGroupError(Throwable throwable) {
+  @Override public void showHotspotCreationTimeoutError() {
+    Toast.makeText(getContext(),
+        R.string.spotandshare_message_share_aptoide_timeout_creating_hotspot, Toast.LENGTH_SHORT);
+  }
+
+  @Override public void showGeneralHotspotError() {
     Toast.makeText(getContext(), R.string.spotandshare_message_error_create_group,
         Toast.LENGTH_SHORT)
         .show();

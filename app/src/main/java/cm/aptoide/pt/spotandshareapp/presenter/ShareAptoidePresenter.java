@@ -4,6 +4,7 @@ import android.os.Build;
 import android.os.Bundle;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
@@ -11,6 +12,7 @@ import cm.aptoide.pt.spotandshareapp.ShareApkSandbox;
 import cm.aptoide.pt.spotandshareapp.view.ShareAptoideView;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import rx.Completable;
 
 /**
@@ -24,15 +26,17 @@ public class ShareAptoidePresenter implements Presenter {
   private ShareApkSandbox shareApkSandbox;
   private final PermissionManager permissionManager;
   private final PermissionService permissionService;
+  private final CrashReport crashReport;
 
   public ShareAptoidePresenter(ShareAptoideView view, SpotAndShare spotAndShare,
       ShareApkSandbox shareApkSandbox, PermissionManager permissionManager,
-      PermissionService permissionService) {
+      PermissionService permissionService, CrashReport crashReport) {
     this.view = view;
     this.spotAndShare = spotAndShare;
     this.shareApkSandbox = shareApkSandbox;
     this.permissionManager = permissionManager;
     this.permissionService = permissionService;
+    this.crashReport = crashReport;
   }
 
   @Override public void present() {
@@ -52,10 +56,10 @@ public class ShareAptoidePresenter implements Presenter {
         })
         .flatMapSingle(created -> createGroup().timeout(15, TimeUnit.SECONDS)
             .toSingleDefault(2))
-        .doOnError(throwable -> view.onCreateGroupError(throwable))
+        .doOnError(throwable -> handleError(throwable))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> error.printStackTrace());
+        }, error -> crashReport.log(error));
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -63,7 +67,7 @@ public class ShareAptoidePresenter implements Presenter {
         .doOnNext(click -> view.showExitWarning())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> error.printStackTrace());
+        }, error -> crashReport.log(error));
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -72,13 +76,13 @@ public class ShareAptoidePresenter implements Presenter {
         .doOnNext(__ -> view.navigateBack())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> error.printStackTrace());
+        }, error -> crashReport.log(error));
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.DESTROY))
         .doOnNext(__ -> shareApkSandbox.stop())
         .subscribe(__ -> {
-        }, error -> error.printStackTrace());
+        }, error -> crashReport.log(error));
   }
 
   private Completable createGroup() {
@@ -93,6 +97,14 @@ public class ShareAptoidePresenter implements Presenter {
 
   private void leaveGroup() {
     spotAndShare.leaveGroup(error -> view.onLeaveGroupError());
+  }
+
+  private void handleError(Throwable throwable) {
+    if (throwable instanceof TimeoutException) {
+      view.showHotspotCreationTimeoutError();
+    } else {
+      view.showGeneralHotspotError();
+    }
   }
 
   @Override public void saveState(Bundle state) {

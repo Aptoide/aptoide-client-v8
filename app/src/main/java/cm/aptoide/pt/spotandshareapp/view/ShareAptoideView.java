@@ -19,5 +19,7 @@ public interface ShareAptoideView extends View {
 
   void onLeaveGroupError();
 
-  void onCreateGroupError(Throwable throwable);
+  void showHotspotCreationTimeoutError();
+
+  void showGeneralHotspotError();
 }
