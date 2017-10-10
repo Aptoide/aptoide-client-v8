@@ -40,6 +40,7 @@ import rx.android.schedulers.AndroidSchedulers;
 public class WizardFragment extends UIComponentFragment implements WizardView {
 
   private static final String PAGE_INDEX = "page_index";
+  public static final int LAYOUT = R.layout.fragment_wizard;
 
   private WizardPagerAdapter viewPagerAdapter;
   private AptoideViewPager viewPager;
@@ -81,6 +82,11 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
     outState.putInt(PAGE_INDEX, viewPager.getCurrentItem());
   }
 
+  @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+    super.onViewStateRestored(savedInstanceState);
+    loadExtras(savedInstanceState);
+  }
+
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName());
@@ -95,7 +101,6 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
 
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
-
     currentPosition = 0;
     // restore state
     if (args != null) {
@@ -137,9 +142,8 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
   @Override public Completable createWizardAdapter(Account account) {
     return Completable.fromAction(() -> {
       viewPagerAdapter = new WizardPagerAdapter(getChildFragmentManager(), account);
-      viewPager.setAdapter(viewPagerAdapter);
-
       createRadioButtons();
+      viewPager.setAdapter(viewPagerAdapter);
       viewPager.setCurrentItem(currentPosition);
       handleSelectedPage(currentPosition);
     });
@@ -182,7 +186,7 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
   }
 
   @Override public int getWizardButtonsCount() {
-    return wizardButtons.size();
+     return wizardButtons.size();
   }
 
   /**
@@ -227,7 +231,7 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
   }
 
   @Override public int getContentViewId() {
-    return R.layout.fragment_wizard;
+    return LAYOUT;
   }
 
   @Override public void bindViews(@Nullable View view) {
