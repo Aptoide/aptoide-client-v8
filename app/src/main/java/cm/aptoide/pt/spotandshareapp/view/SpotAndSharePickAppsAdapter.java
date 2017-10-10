@@ -92,11 +92,13 @@ public class SpotAndSharePickAppsAdapter extends RecyclerView.Adapter<ViewHolder
   }
 
   public void removeAll() {
-    installedApps.clear();
-    notifyDataSetChanged();
-    appSubject = null;
-    installedApps = null;
-    headerSubject = null;
+    if (installedApps != null && !installedApps.isEmpty()) {
+      installedApps.clear();
+      notifyDataSetChanged();
+      appSubject = null;
+      installedApps = null;
+      headerSubject = null;
+    }
   }
 
   public Observable<Void> onBottomSheetHeaderClick() {
