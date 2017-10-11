@@ -648,8 +648,8 @@ public abstract class AptoideApplication extends Application {
           getCacheHelper(), new FileUtils(action -> Analytics.File.moveFile(action)),
           new DownloadAnalytics(Analytics.getInstance(),
               new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
-                  AppEventsLogger.newLogger(this))), FileDownloader.getImpl(), getCachePath(),
-          apkPath, obbPath);
+                  AppEventsLogger.newLogger(this))),
+          FileDownloader.getImpl(), getCachePath(), apkPath, obbPath);
     }
     return downloadManager;
   }

@@ -47,6 +47,9 @@ import java.util.List;
   Fragment newAppViewFragment(long appId, String packageName, String storeTheme, String storeName,
       String tag);
 
+  Fragment newAppViewFragment(long appId, String packageName, String storeTheme, String storeName,
+      String tag, String editorsBrickPosition);
+
   Fragment newAppViewFragment(SearchAdResult searchAdResult, String tag);
 
   Fragment newAppViewFragment(String packageName, AppViewFragment.OpenType openType);
