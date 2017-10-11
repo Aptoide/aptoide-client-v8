@@ -87,6 +87,13 @@ android {
     leak {
       dimension "mode"
     }
+
+    fairy {
+      dimension "mode"
+      applicationIdSuffix "testfairy"
+      versionName "8.5.1." + getDate()
+      versionCode project.DEV_VERSION_CODE.toInteger()
+    }
   }
 
   buildTypes {
@@ -227,6 +234,7 @@ android {
       variant.buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_PRODUCTION_KEY + "\""
       variant.buildConfigField "String", "TWITTER_KEY", "\"" + project.TWITTER_KEY + "\""
       variant.buildConfigField "String", "TWITTER_SECRET", "\"" + project.TWITTER_SECRET + "\""
+      resValue "string", "TEST_FAIRY_TOKEN", "\"" + project.TEST_FAIRY_TOKEN + "\""
     }
 
     variant.outputs.each { output ->
@@ -295,8 +303,8 @@ dependencies {
   prodCompile project(path: ':dataprovider', configuration: 'prodRelease')
   prodCompile project(path: ':aptoide-account-manager', configuration: 'prodRelease')
 
-  leakCompile project(path: ':dataprovider', configuration: 'prodRelease')
-  leakCompile project(path: ':aptoide-account-manager', configuration: 'prodRelease')
+  fairyCompile project(path: ':dataprovider', configuration: 'prodRelease')
+  fairyCompile project(path: ':aptoide-account-manager', configuration: 'prodRelease')
 
 
   compile project(path: ':utils', configuration: 'release')
@@ -406,6 +414,9 @@ dependencies {
   compile('com.mopub:mopub-sdk-native-static:4.11.0@aar') {
     transitive = true
   }
+
+  fairyCompile 'testfairy:testfairy-android-sdk:1.+@aar'
+
 }
 
 String getDate() {
