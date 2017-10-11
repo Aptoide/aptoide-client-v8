@@ -22,6 +22,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.Accepter;
@@ -146,7 +147,8 @@ public class SpotAndShareMainFragment extends FragmentView
     setupToolbar();
     shareAptoideTextView = (TextView) view.findViewById(R.id.share_aptoide_apk_button);
     presenter = new SpotAndShareMainFragmentPresenter(this,
-        ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShareUserManager());
+        ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShareUserManager(),
+        CrashReport.getInstance());
     attachPresenter(presenter, savedInstanceState);
   }
 

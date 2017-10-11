@@ -1,6 +1,7 @@
 package cm.aptoide.pt.spotandshareapp.presenter;
 
 import android.os.Bundle;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareLocalUser;
@@ -18,12 +19,14 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
   public static final int WRITE_SETTINGS_REQUEST_CODE_SHARE_APTOIDE = 5;
 
   private SpotAndShareLocalUserManager spotAndShareUserManager;
+  private final CrashReport crashReport;
   private SpotAndShareMainFragmentView view;
 
   public SpotAndShareMainFragmentPresenter(SpotAndShareMainFragmentView view,
-      SpotAndShareLocalUserManager spotAndShareUserManager) {
+      SpotAndShareLocalUserManager spotAndShareUserManager, CrashReport crashReport) {
     this.view = view;
     this.spotAndShareUserManager = spotAndShareUserManager;
+    this.crashReport = crashReport;
   }
 
   @Override public void present() {
@@ -35,7 +38,7 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
         .doOnNext(__ -> view.openAppSelectionFragment(true))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> err.printStackTrace());
+        }, err -> crashReport.log(err));
 
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.RESUME))
@@ -46,7 +49,7 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> err.printStackTrace());
+        }, err -> crashReport.log(err));
 
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.RESUME))
@@ -57,7 +60,7 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> err.printStackTrace());
+        }, err -> crashReport.log(err));
 
     loadProfileInformationOnView();
 
@@ -69,7 +72,7 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> err.printStackTrace());
+        }, err -> crashReport.log(err));
   }
 
   @Override public void saveState(Bundle state) {
@@ -91,6 +94,6 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
         .doOnNext(__ -> view.loadProfileInformation(getSpotAndShareProfileInformation()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> error.printStackTrace());
+        }, error -> crashReport.log(error));
   }
 }
