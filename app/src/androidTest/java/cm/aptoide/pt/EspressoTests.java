@@ -261,9 +261,9 @@ public class EspressoTests {
     Thread.sleep(WAIT_TIME);
     onView(withId(R.id.search_src_text)).perform(replaceText(APP_TO_SEARCH),
         pressImeActionButton());
-    Thread.sleep(2 * WAIT_TIME);
-    onView(withIndex(withId(R.id.recycler_view), 0)).perform(
-        RecyclerViewActions.actionOnItemAtPosition(1, click()));
+    Thread.sleep(LONGER_WAIT_TIME);
+    onView(withId(R.id.all_stores_result_list)).perform(
+          RecyclerViewActions.actionOnItemAtPosition(1, click()));
   }
 
   private void testIc_ActionButtons() throws InterruptedException {
