@@ -47,6 +47,9 @@ import java.util.List;
   Fragment newAppViewFragment(long appId, String packageName, String storeTheme, String storeName,
       String tag);
 
+  Fragment newAppViewFragment(long appId, String packageName, String storeTheme, String storeName,
+      String tag, String editorsBrickPosition);
+
   Fragment newAppViewFragment(SearchAdResult searchAdResult, String tag);
 
   Fragment newAppViewFragment(String packageName, AppViewFragment.OpenType openType);
@@ -60,16 +63,18 @@ import java.util.List;
   /**
    * @param storeContext is needed to give context to fragment ex: store downloads vs global
    * downloads
+   * @param addAdultFilter When true, adds adult switch to Fragment's bottom.
    */
   Fragment newStoreTabGridRecyclerFragment(Event event, String storeTheme, String tag,
-      StoreContext storeContext);
+      StoreContext storeContext, boolean addAdultFilter);
 
   /**
    * @param storeContext is needed to give context to fragment ex: store downloads vs global
    * downloads
+   * @param addAdultFilter When true, adds adult switch to Fragment's bottom.
    */
   Fragment newStoreTabGridRecyclerFragment(Event event, String title, String storeTheme, String tag,
-      StoreContext storeContext);
+      StoreContext storeContext, boolean addAdultFilter);
 
   Fragment newListAppsFragment();
 
@@ -79,7 +84,7 @@ import java.util.List;
 
   Fragment newMyStoresFragment();
 
-  Fragment newGetStoreWidgetsFragment();
+  Fragment newGetStoreWidgetsFragment(boolean addAdultFilter);
 
   Fragment newListReviewsFragment();
 

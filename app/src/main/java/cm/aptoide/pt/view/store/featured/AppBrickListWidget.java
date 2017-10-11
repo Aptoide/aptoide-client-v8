@@ -11,7 +11,6 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -48,14 +47,11 @@ public class AppBrickListWidget extends Widget<AppBrickListDisplayable> {
         .getAvg());
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(v -> {
-          Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
           getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
               .newAppViewFragment(app.getId(), app.getPackageName(), app.getStore()
                   .getAppearance()
                   .getTheme(), app.getStore()
-                  .getName(), displayable.getTag()), true);
-          Analytics.HomePageEditorsChoice.clickOnEditorsChoiceItem(getAdapterPosition(),
-              app.getPackageName(), false);
+                  .getName(), displayable.getTag(), String.valueOf(getAdapterPosition())), true);
         }, throwable -> CrashReport.getInstance()
             .log(throwable)));
   }

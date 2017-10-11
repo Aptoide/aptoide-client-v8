@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
@@ -19,6 +18,7 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.store.GridDisplayDisplayable;
 import cm.aptoide.pt.view.store.StoreTabFragmentChooser;
+import cm.aptoide.pt.view.store.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.view.store.home.HomeFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.functions.Action1;
@@ -50,9 +50,10 @@ public class GridDisplayWidget extends Widget<GridDisplayDisplayable> {
       Event event = pojo.getEvent();
       Event.Name name = event.getName();
       if (StoreTabFragmentChooser.validateAcceptedName(name)) {
-        getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-            .newStoreTabGridRecyclerFragment(event, pojo.getLabel(), displayable.getStoreTheme(),
-                displayable.getTag(), displayable.getStoreContext()), true);
+        getFragmentNavigator().navigateTo(
+            StoreTabGridRecyclerFragment.newInstance(event, pojo.getLabel(),
+                displayable.getStoreTheme(), displayable.getTag(), displayable.getStoreContext(),
+                false), true);
       } else {
         switch (name) {
           case facebook:

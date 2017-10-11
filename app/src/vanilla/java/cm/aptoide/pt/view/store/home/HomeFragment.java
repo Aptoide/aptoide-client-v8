@@ -498,7 +498,5 @@ public class HomeFragment extends StoreFragment {
     drawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
 
     setHasOptionsMenu(true);
-
-    Analytics.AppViewViewedFrom.addStepToList("HOME");
   }
 }

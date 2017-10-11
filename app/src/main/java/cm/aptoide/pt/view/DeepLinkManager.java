@@ -231,7 +231,7 @@ public class DeepLinkManager {
             .newStoreTabGridRecyclerFragment(event,
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.TITLE),
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.STORE_THEME),
-                defaultTheme, StoreContext.home), true);
+                defaultTheme, StoreContext.home, true), true);
       } catch (UnsupportedEncodingException | IllegalArgumentException e) {
         e.printStackTrace();
       }

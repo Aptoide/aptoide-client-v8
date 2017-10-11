@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
@@ -132,5 +133,9 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
       }
     }
     return storesDisplayables;
+  }
+
+  public static Fragment newInstance() {
+    return new MyStoresSubscribedFragment();
   }
 }

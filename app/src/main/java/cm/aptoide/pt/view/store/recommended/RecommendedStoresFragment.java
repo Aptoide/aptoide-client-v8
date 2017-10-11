@@ -2,6 +2,7 @@ package cm.aptoide.pt.view.store.recommended;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -65,5 +66,9 @@ public class RecommendedStoresFragment extends GetStoreEndlessFragment<ListStore
         .toList()
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(disp -> addDisplayables(new ArrayList<>(disp), true));
+  }
+
+  public static Fragment newInstance() {
+    return new RecommendedStoresFragment();
   }
 }
