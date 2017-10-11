@@ -28,7 +28,7 @@
   <string name="spotandshare_short_download_completed">Download completed</string>
   <string name="spotandshare_short_installed">Installed</string>
   <string name="spotandshare_short_megabytes">%1$s mb</string>
-  <string name="spotandshare_message_leave_group_error">There was an error while trying to leave the group</string>
+  <string name="spotandshare_message_waiting_to_receive_leave_group_error">There was an error while trying to leave the group</string>
 
   <string name="spotandshare_button_invite_friends">Invite nearby friends to use Spot&amp;Share</string>
   <string name="spotandshare_title_spotandshare">Spot &amp; Share</string>
@@ -53,6 +53,9 @@
   <string name="spotandshare_button_number_three" translatable="false">3</string>
 
   <string name="spotandshare_message_share_aptoide_leave_group">There was an error while leaving and recovering network state</string>
+  <string name="spotandshare_message_app_selection_leave_group">There was an error while leaving and recovering network state</string>
+  <string name="spotandshare_message_waiting_to_send_leave_group">There was an error while leaving and recovering network state</string>
+  <string name="spotandshare_message_transfer_record_leave_group">There was an error while leaving and recovering network state</string>
   <string name="spotandshare_message_share_aptoide_timeout_creating_hotspot">Creating hotspot is taking too long. Please try again</string>
   <string name="spotandshare_message_timeout_creating_hotspot">Creating hotspot is taking too long. Please try again</string>
 

@@ -59,7 +59,8 @@ public class SpotAndShareActivity extends BackButtonActivity implements JoinGrou
   }
 
   private void showLeaveGroupErrorMessage() {
-    Toast.makeText(getApplicationContext(), R.string.spotandshare_message_leave_group_error,
+    Toast.makeText(getApplicationContext(),
+        R.string.spotandshare_message_waiting_to_receive_leave_group_error,
         Toast.LENGTH_SHORT)
         .show();
   }

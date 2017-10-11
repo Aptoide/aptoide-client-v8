@@ -312,7 +312,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
   }
 
   @Override public void onLeaveGroupError() {
-    Toast.makeText(getContext(), "There was an error while trying to leave the group",
+    Toast.makeText(getContext(), R.string.spotandshare_message_transfer_record_leave_group,
         Toast.LENGTH_SHORT)
         .show();
   }
@@ -330,10 +330,6 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
     getFragmentNavigator().cleanBackStack();
     getFragmentNavigator().navigateTo(
         SpotAndShareWaitingToSendFragment.newInstance(selectedApp, false), true);
-  }
-
-  @Override public void onCreateGroupError(Throwable throwable) {
-
   }
 
   @Override public void hideLoading() {

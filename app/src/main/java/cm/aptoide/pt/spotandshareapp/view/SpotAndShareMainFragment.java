@@ -17,15 +17,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
-import cm.aptoide.pt.spotandshare.socket.message.interfaces.Accepter;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareLocalUser;
 import cm.aptoide.pt.spotandshareapp.SpotAndSharePermissionProvider;
 import cm.aptoide.pt.spotandshareapp.WriteSettingsPermissionProvider;
@@ -98,19 +95,6 @@ public class SpotAndShareMainFragment extends FragmentView
   @Override public void openAppSelectionFragment(boolean shouldCreateGroup) {
     getFragmentNavigator().navigateTo(
         SpotAndShareAppSelectionFragment.newInstance(shouldCreateGroup), true);
-  }
-
-  @Override
-  public boolean requestPermissionToReceiveApp(Accepter<AndroidAppInfo> androidAppInfoAccepter) {
-    // TODO: 19-06-2017 filipe
-    return true;
-  }
-
-  @Override public void onCreateGroupError(Throwable throwable) {
-    // TODO: 19-06-2017 filipe
-    Toast.makeText(getContext(), R.string.spotandshare_message_error_create_group,
-        Toast.LENGTH_SHORT)
-        .show();
   }
 
   @Override public void openEditProfile() {

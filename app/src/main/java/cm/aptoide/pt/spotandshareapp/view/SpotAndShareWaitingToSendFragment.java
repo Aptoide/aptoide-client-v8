@@ -165,7 +165,7 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
   }
 
   @Override public void onLeaveGroupError() {
-    Toast.makeText(getContext(), "There was an error while trying to leave the group",
+    Toast.makeText(getContext(), R.string.spotandshare_message_waiting_to_send_leave_group,
         Toast.LENGTH_SHORT)
         .show();
   }

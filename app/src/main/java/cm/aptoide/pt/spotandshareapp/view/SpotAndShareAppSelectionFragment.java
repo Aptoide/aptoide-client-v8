@@ -180,7 +180,7 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
   }
 
   @Override public void onLeaveGroupError() {
-    Toast.makeText(getContext(), "There was an error while trying to leave the group",
+    Toast.makeText(getContext(), R.string.spotandshare_message_app_selection_leave_group,
         Toast.LENGTH_SHORT)
         .show();
   }
@@ -198,16 +198,6 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
     getFragmentNavigator().cleanBackStack();
     getFragmentNavigator().navigateTo(
         SpotAndShareWaitingToSendFragment.newInstance(selectedApp, shouldCreateGroup), true);
-  }
-
-  @Override public void onCreateGroupError(Throwable throwable) {
-    getActivity().runOnUiThread(new Runnable() {
-      @Override public void run() {
-        Toast.makeText(getContext(), R.string.spotandshare_message_error_create_group,
-            Toast.LENGTH_SHORT)
-            .show();
-      }
-    });
   }
 
   private void setupLayoutManager() {

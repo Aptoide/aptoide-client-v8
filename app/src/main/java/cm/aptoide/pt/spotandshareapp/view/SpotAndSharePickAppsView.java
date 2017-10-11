@@ -23,8 +23,6 @@ public interface SpotAndSharePickAppsView extends View {
 
   void openWaitingToSendScreen(AppModel selectedApp);
 
-  void onCreateGroupError(Throwable throwable);
-
   void hideLoading();
 
   void showLoading();

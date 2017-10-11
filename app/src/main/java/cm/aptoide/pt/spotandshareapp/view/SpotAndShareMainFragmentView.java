@@ -1,8 +1,6 @@
 package cm.aptoide.pt.spotandshareapp.view;
 
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
-import cm.aptoide.pt.spotandshare.socket.message.interfaces.Accepter;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareLocalUser;
 import rx.Observable;
 
@@ -23,10 +21,6 @@ public interface SpotAndShareMainFragmentView extends View {
   void openWaitingToReceiveFragment();
 
   void openAppSelectionFragment(boolean fromMainFragment);
-
-  boolean requestPermissionToReceiveApp(Accepter<AndroidAppInfo> androidAppInfoAccepter);
-
-  void onCreateGroupError(Throwable throwable);
 
   void openEditProfile();
 

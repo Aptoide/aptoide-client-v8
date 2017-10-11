@@ -139,17 +139,13 @@ public class SpotAndShareWaitingToReceiveFragment extends BackButtonFragment
   }
 
   @Override public void onLeaveGroupError() {
-    showLeaveGroupErrorMessage();
+    Toast.makeText(getContext(), R.string.spotandshare_message_waiting_to_receive_leave_group_error,
+        Toast.LENGTH_SHORT)
+        .show();
   }
 
   @Override public void joinGroup() {
     joinGroupView.joinGroup();
-  }
-
-  private void showLeaveGroupErrorMessage() {
-    Toast.makeText(getContext(), R.string.spotandshare_message_leave_group_error,
-        Toast.LENGTH_SHORT)
-        .show();
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
