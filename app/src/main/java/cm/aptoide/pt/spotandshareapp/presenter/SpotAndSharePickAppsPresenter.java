@@ -1,6 +1,7 @@
 package cm.aptoide.pt.spotandshareapp.presenter;
 
 import android.os.Bundle;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
@@ -24,15 +25,17 @@ public class SpotAndSharePickAppsPresenter implements Presenter {
   private boolean shouldCreateGroup;
   private SpotAndShareAppProvider spotandShareAppProvider;
   private AppModelToAndroidAppInfoMapper appModelToAndroidAppInfoMapper;
+  private final CrashReport crashReport;
 
   public SpotAndSharePickAppsPresenter(SpotAndSharePickAppsView view, boolean shouldCreateGroup,
       SpotAndShareAppProvider spotandShareAppProvider, SpotAndShare spotAndShare,
-      AppModelToAndroidAppInfoMapper appModelToAndroidAppInfoMapper) {
+      AppModelToAndroidAppInfoMapper appModelToAndroidAppInfoMapper, CrashReport crashReport) {
     this.view = view;
     this.shouldCreateGroup = shouldCreateGroup;
     this.spotandShareAppProvider = spotandShareAppProvider;
     this.spotAndShare = spotAndShare;
     this.appModelToAndroidAppInfoMapper = appModelToAndroidAppInfoMapper;
+    this.crashReport = crashReport;
   }
 
   @Override public void present() {
@@ -45,7 +48,7 @@ public class SpotAndSharePickAppsPresenter implements Presenter {
         .doOnNext(installedApps -> view.buildInstalledAppsList(installedApps))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> error.printStackTrace());
+        }, error -> crashReport.log(error));
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -53,7 +56,7 @@ public class SpotAndSharePickAppsPresenter implements Presenter {
         .doOnNext(appModel -> selectedApp(appModel))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> error.printStackTrace());
+        }, error -> crashReport.log(error));
   }
 
   @Override public void saveState(Bundle state) {

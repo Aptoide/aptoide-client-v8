@@ -1,6 +1,7 @@
 package cm.aptoide.pt.spotandshareapp.presenter;
 
 import android.os.Bundle;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
@@ -14,11 +15,13 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
 
   private final SpotAndShareAppSelectionView view;
   private final SpotAndShare spotAndShare;
+  private final CrashReport crashReport;
 
   public SpotAndShareAppSelectionPresenter(SpotAndShareAppSelectionView view,
-      SpotAndShare spotAndShare) {
+      SpotAndShare spotAndShare, CrashReport crashReport) {
     this.view = view;
     this.spotAndShare = spotAndShare;
+    this.crashReport = crashReport;
   }
 
   @Override public void present() {
@@ -28,7 +31,7 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
         .doOnNext(click -> view.showExitWarning())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> error.printStackTrace());
+        }, error -> crashReport.log(error));
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -37,7 +40,7 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
         .doOnNext(__ -> view.navigateBack())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> error.printStackTrace());
+        }, error -> crashReport.log(error));
   }
 
   private void leaveGroup() {

@@ -16,6 +16,7 @@ import android.widget.Toast;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.CompositePresenter;
 import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.AppModelToAndroidAppInfoMapper;
@@ -99,14 +100,15 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
   private void attachPresenters() {
     SpotAndShareAppSelectionPresenter spotAndShareAppSelectionPresenter =
         new SpotAndShareAppSelectionPresenter(this,
-            ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare());
+            ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
+            CrashReport.getInstance());
 
     SpotAndSharePickAppsPresenter spotAndSharePickAppsPresenter =
         new SpotAndSharePickAppsPresenter(this, shouldCreateGroup,
             new SpotAndShareAppProvider(getActivity().getApplicationContext(),
                 getContext().getPackageManager()),
             ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
-            new AppModelToAndroidAppInfoMapper(new ObbsProvider()));
+            new AppModelToAndroidAppInfoMapper(new ObbsProvider()), CrashReport.getInstance());
 
     attachPresenter(new CompositePresenter(
         Arrays.asList(spotAndShareAppSelectionPresenter, spotAndSharePickAppsPresenter)), null);
