@@ -4,6 +4,7 @@ import android.os.Build;
 import android.os.Bundle;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
@@ -20,14 +21,16 @@ public class SpotAndShareWaitingToReceivePresenter implements Presenter {
   private SpotAndShare spotAndShare;
   private final PermissionManager permissionManager;
   private final PermissionService permissionService;
+  private final CrashReport crashReport;
 
   public SpotAndShareWaitingToReceivePresenter(SpotAndShareWaitingToReceiveView view,
       SpotAndShare spotAndShare, PermissionManager permissionManager,
-      PermissionService permissionService) {
+      PermissionService permissionService, CrashReport crashReport) {
     this.view = view;
     this.spotAndShare = spotAndShare;
     this.permissionManager = permissionManager;
     this.permissionService = permissionService;
+    this.crashReport = crashReport;
   }
 
   @Override public void present() {
@@ -49,7 +52,7 @@ public class SpotAndShareWaitingToReceivePresenter implements Presenter {
         .doOnNext(__ -> joinGroup())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> err.printStackTrace());
+        }, err -> crashReport.log(err));
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -57,7 +60,7 @@ public class SpotAndShareWaitingToReceivePresenter implements Presenter {
         .doOnNext(click -> view.showExitWarning())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> error.printStackTrace());
+        }, error -> crashReport.log(error));
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -66,7 +69,7 @@ public class SpotAndShareWaitingToReceivePresenter implements Presenter {
         .doOnNext(__ -> view.navigateBack())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> error.printStackTrace());
+        }, error -> crashReport.log(error));
   }
 
   private void leaveGroup() {
