@@ -1,6 +1,7 @@
 package cm.aptoide.pt.firstinstall;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.view.WindowManager;
 import cm.aptoide.pt.AptoideApplication;
@@ -145,10 +146,10 @@ public class FirstInstallPresenter implements Presenter {
         .observe(true)
         .subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnCompleted(() -> getAds(getNumberOfAdsToShow(appDisplayables.size())))
         .flatMap(this::parseGetStoreWidgetsToDisplayables)
-        .subscribe(displayables -> view.addFirstInstallDisplayables(displayables, true),
-            crashReport::log);
+        .doOnCompleted(() -> getAds(getNumberOfAdsToShow(appDisplayables.size())))
+        .doOnError(crashReport::log)
+        .subscribe();
   }
 
   /**
@@ -186,10 +187,12 @@ public class FirstInstallPresenter implements Presenter {
         .getLayout())) {
       for (App app : listApps.getDataList()
           .getList()) {
-        FirstInstallAppDisplayable firstInstallAppDisplayable =
-            new FirstInstallAppDisplayable(app, true);
-        displayables.add(firstInstallAppDisplayable);
-        appDisplayables.add(firstInstallAppDisplayable);
+        if (!isPackageInstalled(app.getPackageName(), context.getPackageManager())) {
+          FirstInstallAppDisplayable firstInstallAppDisplayable =
+              new FirstInstallAppDisplayable(app, true);
+          displayables.add(firstInstallAppDisplayable);
+          appDisplayables.add(firstInstallAppDisplayable);
+        }
       }
     }
     return Observable.just(new DisplayableGroup(displayables, windowManager, resources));
@@ -205,7 +208,14 @@ public class FirstInstallPresenter implements Presenter {
         .subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(this::parseMinimalAdsToDisplayables)
-        .subscribe(displayables -> view.addFirstInstallDisplayables(displayables, true));
+        .doOnCompleted(() -> view.addFirstInstallDisplayables(new ArrayList<Displayable>() {
+          {
+            addAll(appDisplayables);
+            addAll(adDisplayables);
+          }
+        }, true))
+        .doOnError(crashReport::log)
+        .subscribe();
   }
 
   /**
@@ -319,5 +329,22 @@ public class FirstInstallPresenter implements Presenter {
             .subscribe())
         .subscribe(ok -> {
         }, crashReport::log);
+  }
+
+  /**
+   * check if an application is installed
+   *
+   * @param packagename app's packagename
+   * @param packageManager packagemanager
+   *
+   * @return true if installed, false if not
+   */
+  private boolean isPackageInstalled(String packagename, PackageManager packageManager) {
+    try {
+      packageManager.getPackageInfo(packagename, 0);
+      return true;
+    } catch (PackageManager.NameNotFoundException e) {
+      return false;
+    }
   }
 }
