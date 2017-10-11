@@ -7,7 +7,6 @@ import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.AppModelToAndroidAppInfoMapper;
-import cm.aptoide.pt.spotandshareapp.DrawableBitmapMapper;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareAppProvider;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndSharePickAppsView;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -24,18 +23,15 @@ public class SpotAndSharePickAppsPresenter implements Presenter {
   private final SpotAndShare spotAndShare;
   private boolean shouldCreateGroup;
   private SpotAndShareAppProvider spotandShareAppProvider;
-  private DrawableBitmapMapper drawableBitmapMapper;
   private AppModelToAndroidAppInfoMapper appModelToAndroidAppInfoMapper;
 
   public SpotAndSharePickAppsPresenter(SpotAndSharePickAppsView view, boolean shouldCreateGroup,
       SpotAndShareAppProvider spotandShareAppProvider, SpotAndShare spotAndShare,
-      DrawableBitmapMapper drawableBitmapMapper,
       AppModelToAndroidAppInfoMapper appModelToAndroidAppInfoMapper) {
     this.view = view;
     this.shouldCreateGroup = shouldCreateGroup;
     this.spotandShareAppProvider = spotandShareAppProvider;
     this.spotAndShare = spotAndShare;
-    this.drawableBitmapMapper = drawableBitmapMapper;
     this.appModelToAndroidAppInfoMapper = appModelToAndroidAppInfoMapper;
   }
 

@@ -19,7 +19,6 @@ import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.presenter.CompositePresenter;
 import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.AppModelToAndroidAppInfoMapper;
-import cm.aptoide.pt.spotandshareapp.DrawableBitmapMapper;
 import cm.aptoide.pt.spotandshareapp.Header;
 import cm.aptoide.pt.spotandshareapp.ObbsProvider;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareAppProvider;
@@ -107,7 +106,6 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
             new SpotAndShareAppProvider(getActivity().getApplicationContext(),
                 getContext().getPackageManager()),
             ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
-            new DrawableBitmapMapper(getActivity().getApplicationContext()),
             new AppModelToAndroidAppInfoMapper(new ObbsProvider()));
 
     attachPresenter(new CompositePresenter(

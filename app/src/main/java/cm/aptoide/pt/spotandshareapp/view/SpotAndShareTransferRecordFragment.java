@@ -217,7 +217,6 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
             new SpotAndShareAppProvider(getActivity().getApplicationContext(),
                 getContext().getPackageManager()),
             ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
-            new DrawableBitmapMapper(getActivity().getApplicationContext()),
             new AppModelToAndroidAppInfoMapper(new ObbsProvider()));
 
     attachPresenter(
