@@ -1,6 +1,7 @@
 package cm.aptoide.pt.view.store;
 
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
@@ -9,24 +10,26 @@ public class StoreGridHeaderDisplayable extends Displayable {
 
   private final GetStoreWidgets.WSWidget wsWidget;
   private final StoreTabNavigator storeTabNavigator;
+  private AptoideNavigationTracker aptoideNavigationTracker;
   private final Model model;
 
   // this constructor is necessary due to reflection code that generates displayables. that code
   // needs to go as this.
   public StoreGridHeaderDisplayable() {
-    this(null, null, null, null, null);
+    this(null, null, null, null, null, null);
   }
 
   public StoreGridHeaderDisplayable(GetStoreWidgets.WSWidget wsWidget, String storeTheme,
-      String tag, StoreContext storeContext, StoreTabNavigator storeTabNavigator) {
+      String tag, StoreContext storeContext, StoreTabNavigator storeTabNavigator, AptoideNavigationTracker aptoideNavigationTracker) {
     this.model = new Model(storeTheme, tag, storeContext);
     this.wsWidget = wsWidget;
     this.storeTabNavigator = storeTabNavigator;
+    this.aptoideNavigationTracker = aptoideNavigationTracker;
   }
 
   public StoreGridHeaderDisplayable(GetStoreWidgets.WSWidget wsWidget,
-      StoreTabNavigator storeTabNavigator) {
-    this(wsWidget, null, null, null, storeTabNavigator);
+      StoreTabNavigator storeTabNavigator, AptoideNavigationTracker aptoideNavigationTracker) {
+    this(wsWidget, null, null, null, storeTabNavigator, aptoideNavigationTracker);
   }
 
   @Override protected Displayable.Configs getConfig() {
@@ -82,5 +85,9 @@ public class StoreGridHeaderDisplayable extends Displayable {
     public void setMoreVisible(boolean moreVisible) {
       this.moreVisible = moreVisible;
     }
+  }
+
+  public AptoideNavigationTracker getAptoideNavigationTracker() {
+    return aptoideNavigationTracker;
   }
 }

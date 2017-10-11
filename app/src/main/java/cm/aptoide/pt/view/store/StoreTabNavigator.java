@@ -27,8 +27,9 @@ public class StoreTabNavigator {
   }
 
   public void navigateToCommentGridRecyclerView(CommentType commentType, String url,
-      String storeAnalyticsAction) {
+      String storeAnalyticsAction, StoreContext storeContext) {
     fragmentNavigator.navigateTo(
-        CommentListFragment.newInstanceUrl(commentType, url, storeAnalyticsAction), true);
+        CommentListFragment.newInstanceUrl(commentType, url, storeAnalyticsAction, storeContext),
+        true);
   }
 }

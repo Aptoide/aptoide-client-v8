@@ -60,7 +60,8 @@ public class StoreGridHeaderWidget extends Widget<StoreGridHeaderDisplayable> {
               String url =
                   action != null ? action.replace(V7.getHost(sharedPreferences), "") : null;
               displayable.getStoreTabNavigator()
-                  .navigateToCommentGridRecyclerView(CommentType.STORE, url, "View Comments");
+                  .navigateToCommentGridRecyclerView(CommentType.STORE, url, "View Comments",
+                      storeContext);
             } else {
               displayable.getStoreTabNavigator()
                   .navigateToStoreTabGridRecyclerView(event, title, storeTheme, tag, storeContext,

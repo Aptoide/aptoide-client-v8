@@ -21,7 +21,7 @@ public interface View {
 
   Observable<LifecycleEvent> getLifecycle();
 
-  void attachPresenter(Presenter presenter, Bundle savedInstanceState);
+  void attachPresenter(Presenter presenter, @Deprecated Bundle savedInstanceState);
 
   enum LifecycleEvent {
     CREATE, START, RESUME, PAUSE, STOP, DESTROY,

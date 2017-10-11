@@ -3,7 +3,7 @@
  * Modified on 02/09/2016.
  */
 
-package cm.aptoide.pt.util.referrer;
+package cm.aptoide.pt.search;
 
 import android.content.Context;
 import android.content.Intent;
@@ -25,7 +25,6 @@ import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
-import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.util.referrer.SimpleTimedFuture;
@@ -33,6 +32,7 @@ import cm.aptoide.pt.dataprovider.ws.v2.aptwords.RegisterAdRefererRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.q.QManager;
 import java.util.List;
@@ -51,13 +51,13 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 
   private static final String TAG = ReferrerUtils.class.getSimpleName();
 
-  public static void extractReferrer(MinimalAd minimalAd, final int retries,
+  public static void extractReferrer(SearchAdResult searchAdResult, final int retries,
       boolean broadcastReferrer, AdsRepository adsRepository, final OkHttpClient httpClient,
       final Converter.Factory converterFactory, final QManager qManager, Context context,
       final SharedPreferences sharedPreferences, MinimalAdMapper adMapper) {
-    String packageName = minimalAd.getPackageName();
-    long networkId = minimalAd.getNetworkId();
-    String clickUrl = minimalAd.getClickUrl();
+    String packageName = searchAdResult.getPackageName();
+    long networkId = searchAdResult.getNetworkId();
+    String clickUrl = searchAdResult.getClickUrl();
 
     if (clickUrl == null) {
       Logger.d("ExtractReferrer", "No click_url for packageName " + packageName);
@@ -127,17 +127,17 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
               } else {
                 //@Cleanup Realm realm = DeprecatedDatabase.get();
                 //DeprecatedDatabase.save(
-                //    new StoredMinimalAd(packageName, referrer, minimalAd.getCpiUrl(),
-                //        minimalAd.getAdId()), realm);
+                //    new StoredMinimalAd(packageName, referrer, searchAdResult.getCpiUrl(),
+                //        searchAdResult.getAdId()), realm);
 
                 StoredMinimalAdAccessor storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
                     ((AptoideApplication) context.getApplicationContext()
                         .getApplicationContext()).getDatabase(), StoredMinimalAd.class);
-                storedMinimalAdAccessor.insert(adMapper.map(minimalAd, referrer));
+                storedMinimalAdAccessor.insert(adMapper.map(searchAdResult, referrer));
               }
 
               future.cancel(false);
-              postponeReferrerExtraction(minimalAd, 0, true, httpClient, converterFactory,
+              postponeReferrerExtraction(searchAdResult, 0, true, httpClient, converterFactory,
                   qManager);
             }
           }
@@ -151,39 +151,39 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
           Logger.d("ExtractReferrer", "Openened clickUrl: " + url);
 
           if (future == null) {
-            future = postponeReferrerExtraction(minimalAd, TIME_OUT, retries, httpClient,
+            future = postponeReferrerExtraction(searchAdResult, TIME_OUT, retries, httpClient,
                 converterFactory, qManager);
           }
         }
 
-        private ScheduledFuture<Void> postponeReferrerExtraction(MinimalAd minimalAd, int delta,
-            int retries, OkHttpClient httpClient, Converter.Factory converterFactory,
+        private ScheduledFuture<Void> postponeReferrerExtraction(SearchAdResult searchAdResult,
+            int delta, int retries, OkHttpClient httpClient, Converter.Factory converterFactory,
             QManager qManager) {
-          return postponeReferrerExtraction(minimalAd, delta, false, retries, httpClient,
+          return postponeReferrerExtraction(searchAdResult, delta, false, retries, httpClient,
               converterFactory,
               qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
               qManager);
         }
 
-        private ScheduledFuture<Void> postponeReferrerExtraction(MinimalAd minimalAd, int delta,
-            boolean success, OkHttpClient httpClient, Converter.Factory converterFactory,
+        private ScheduledFuture<Void> postponeReferrerExtraction(SearchAdResult searchAdResult,
+            int delta, boolean success, OkHttpClient httpClient, Converter.Factory converterFactory,
             QManager qManager) {
-          return postponeReferrerExtraction(minimalAd, delta, success, 0, httpClient,
+          return postponeReferrerExtraction(searchAdResult, delta, success, 0, httpClient,
               converterFactory,
               qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
               qManager);
         }
 
-        private ScheduledFuture<Void> postponeReferrerExtraction(MinimalAd minimalAd, int delta,
-            final boolean success, final int retries, OkHttpClient httpClient,
+        private ScheduledFuture<Void> postponeReferrerExtraction(SearchAdResult searchAdResult,
+            int delta, final boolean success, final int retries, OkHttpClient httpClient,
             Converter.Factory converterFactory, String q, QManager qManager) {
           Logger.d("ExtractReferrer", "Referrer postponed " + delta + " seconds.");
 
           Callable<Void> callable = () -> {
             Logger.d("ExtractReferrer", "Sending RegisterAdRefererRequest with value " + success);
 
-            RegisterAdRefererRequest.of(minimalAd.getAdId(), minimalAd.getAppId(),
-                minimalAd.getClickUrl(), success, httpClient, converterFactory,
+            RegisterAdRefererRequest.of(searchAdResult.getAdId(), searchAdResult.getAppId(),
+                searchAdResult.getClickUrl(), success, httpClient, converterFactory,
                 qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
                 sharedPreferences)
                 .execute();
@@ -199,11 +199,11 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
                   adsRepository.getAdsFromSecondTry(packageName)
                       .observeOn(AndroidSchedulers.mainThread())
                       .onErrorReturn(throwable -> null)
-                      .filter(minimalAd1 -> minimalAd != null)
+                      .filter(minimalAd1 -> searchAdResult != null)
                       .subscribe(
-                          minimalAd1 -> extractReferrer(minimalAd1, retries - 1, broadcastReferrer,
-                              adsRepository, httpClient, converterFactory, qManager, context,
-                              sharedPreferences, new MinimalAdMapper()),
+                          minimalAd1 -> extractReferrer(new SearchAdResult(minimalAd1), retries - 1,
+                              broadcastReferrer, adsRepository, httpClient, converterFactory,
+                              qManager, context, sharedPreferences, new MinimalAdMapper()),
                           throwable -> clearExcludedNetworks(packageName));
                 } else {
                   // A lista de excluded networks deve ser limpa a cada "ronda"

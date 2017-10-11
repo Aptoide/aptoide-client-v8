@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.view.BillingNavigator;
@@ -22,6 +23,11 @@ public class MolFragment extends WebViewFragment {
     final MolFragment fragment = new MolFragment();
     fragment.setArguments(bundle);
     return fragment;
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {

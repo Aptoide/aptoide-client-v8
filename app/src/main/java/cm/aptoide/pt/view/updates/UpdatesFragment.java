@@ -13,6 +13,7 @@ import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
@@ -153,6 +154,11 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     // overridden to avoid calling super, since it removes the displayables automatically
   }
 
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
@@ -179,7 +185,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-            navigationTracker);
+            aptoideNavigationTracker);
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     updateRepository = RepositoryFactory.getUpdateRepository(getContext(),
@@ -245,7 +251,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     installedDisplayablesList.add(new StoreGridHeaderDisplayable(
         new GetStoreWidgets.WSWidget().setTitle(
             AptoideUtils.StringU.getResString(R.string.updatetab_title_installed,
-                getContext().getResources())), storeTabNavigator));
+                getContext().getResources())), storeTabNavigator, aptoideNavigationTracker));
 
     for (Installed installedApp : installedApps) {
       installedDisplayablesList.add(new InstalledAppDisplayable(installedApp,
@@ -253,7 +259,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
               bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator,
               BuildConfig.APPLICATION_ID,
               ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-              new NotificationAnalytics(httpClient, analytics), navigationTracker),
+              new NotificationAnalytics(httpClient, analytics), aptoideNavigationTracker),
           installedRepository));
     }
     addDisplayables(installedDisplayablesList, false);

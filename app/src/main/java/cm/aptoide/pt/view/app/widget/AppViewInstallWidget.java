@@ -576,7 +576,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
     final View.OnClickListener onSearchTrustedAppHandler = v -> {
       if (hasTrustedVersion) {
-        appViewNavigator.navigateToAppView(trustedVersion.getId(), trustedVersion.getPackageName());
+        appViewNavigator.navigateToAppView(trustedVersion.getId(), trustedVersion.getPackageName(),
+            "");
         return;
       }
       appViewNavigator.navigateToSearch(app.getName(), true);

@@ -5,6 +5,7 @@
   -->
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/no_search_results_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -47,6 +48,7 @@
           android:background="@null"
           android:imeOptions="actionSearch"
           android:inputType="text"
+          tools:text="search query"
           />
 
       <ImageButton

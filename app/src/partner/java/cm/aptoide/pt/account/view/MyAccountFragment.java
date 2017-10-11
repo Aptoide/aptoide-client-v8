@@ -31,7 +31,6 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
-import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
@@ -62,18 +61,12 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
   private AptoideAccountManager accountManager;
   private Button logoutButton;
   private TextView usernameTextView;
-  private TextView storeNameTextView;
   private ImageView userAvatar;
-  private ImageView storeAvatar;
   private Button userProfileEditButton;
-  private Button userStoreEditButton;
-  private View separator;
-  private RelativeLayout storeLayout;
   private String userAvatarUrl = null;
   private RelativeLayout header;
   private TextView headerText;
   private Button moreNotificationsButton;
-  private View userLayout;
 
   private PublishSubject<AptoideNotification> notificationSubject;
   private InboxAdapter adapter;
@@ -92,17 +85,11 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     super.onDestroy();
     logoutButton = null;
     usernameTextView = null;
-    storeNameTextView = null;
     userProfileEditButton = null;
-    userStoreEditButton = null;
-    storeLayout = null;
     userAvatar = null;
-    storeAvatar = null;
-    separator = null;
     header = null;
     headerText = null;
     moreNotificationsButton = null;
-    userLayout = null;
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -146,14 +133,8 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     logoutButton.setAllCaps(true);
 
     usernameTextView = (TextView) view.findViewById(R.id.my_account_username);
-    storeNameTextView = (TextView) view.findViewById(R.id.my_account_store_name);
-    userLayout = view.findViewById(R.id.my_account_user);
     userProfileEditButton = (Button) view.findViewById(R.id.my_account_edit_user_profile);
-    userStoreEditButton = (Button) view.findViewById(R.id.my_account_edit_user_store);
-    storeLayout = (RelativeLayout) view.findViewById(R.id.my_account_store);
     userAvatar = (ImageView) view.findViewById(R.id.my_account_user_avatar);
-    storeAvatar = (ImageView) view.findViewById(R.id.my_account_store_avatar);
-    separator = view.findViewById(R.id.my_account_separator);
     header = (RelativeLayout) view.findViewById(R.id.my_account_notifications_header);
     headerText = (TextView) view.findViewById(R.id.my_account_notifications_header)
         .findViewById(R.id.title);
@@ -186,10 +167,6 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     }
 
     setUserAvatar(account);
-
-    setOrHideUserStore(account.getStore()
-        .getName(), account.getStore()
-        .getAvatar());
   }
 
   @Override public Observable<Void> signOutClick() {
@@ -200,24 +177,12 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     return RxView.clicks(moreNotificationsButton);
   }
 
-  @Override public Observable<Void> storeClick() {
-    return RxView.clicks(storeLayout);
-  }
-
-  @Override public Observable<Void> userClick() {
-    return RxView.clicks(userLayout);
-  }
-
   @Override public Observable<AptoideNotification> notificationSelection() {
     return notificationSubject;
   }
 
   @Override public void showNotifications(List<AptoideNotification> notifications) {
     adapter.updateNotifications(notifications);
-  }
-
-  @Override public Observable<Void> editStoreClick() {
-    return RxView.clicks(userStoreEditButton);
   }
 
   @Override public Observable<GetStore> getStore() {
@@ -248,24 +213,6 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
 
   @Override public void hideHeader() {
     header.setVisibility(View.INVISIBLE);
-  }
-
-  @Override public void refreshUI(Store store) {
-    storeNameTextView.setText(store.
-        getName());
-    setOrHideUserStore(store.getName(), store.getAvatar());
-  }
-
-  private void setOrHideUserStore(String storeName, String storeAvatar) {
-    if (!TextUtils.isEmpty(storeName)) {
-      storeNameTextView.setText(storeName);
-      ImageLoader.with(getContext())
-          .loadWithShadowCircleTransformWithPlaceholder(storeAvatar, this.storeAvatar, STROKE_SIZE,
-              R.drawable.my_account_placeholder);
-    } else {
-      separator.setVisibility(View.GONE);
-      storeLayout.setVisibility(View.GONE);
-    }
   }
 
   private void setUserAvatar(Account account) {

@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
+import cm.aptoide.pt.search.view.SearchResultFragment;
 import cm.aptoide.pt.view.app.screenshots.ScreenshotsViewerFragment;
 import cm.aptoide.pt.view.navigator.ActivityNavigator;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
@@ -35,15 +36,14 @@ public class AppViewNavigator {
     fragmentNavigator.navigateTo(fragment, true);
   }
 
-  public void navigateToAppView(long appId, String packageName) {
+  public void navigateToAppView(long appId, String packageName, String tag) {
     Fragment fragment = AptoideApplication.getFragmentProvider()
-        .newAppViewFragment(appId, packageName);
+        .newAppViewFragment(appId, packageName, tag);
     fragmentNavigator.navigateTo(fragment, true);
   }
 
   public void navigateToSearch(String appName, boolean onlyShowTrustedApps) {
-    Fragment fragment = AptoideApplication.getFragmentProvider()
-        .newSearchFragment(appName, onlyShowTrustedApps);
+    Fragment fragment = SearchResultFragment.newInstance(appName, onlyShowTrustedApps);
     fragmentNavigator.navigateTo(fragment, true);
   }
 

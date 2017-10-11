@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.design.widget.FloatingActionButton;
@@ -84,6 +85,7 @@ import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
@@ -97,12 +99,12 @@ import rx.subjects.PublishSubject;
 
 public class TimelineFragment extends FragmentView implements TimelineView {
 
+  public static final String STORE_NAME = "store_name";
   private static final String ACTION_KEY = "action";
   private static final String USER_ID_KEY = "USER_ID_KEY";
   private static final String STORE_ID = "STORE_ID";
   private static final String STORE_CONTEXT = "STORE_CONTEXT";
   private static final String LIST_STATE_KEY = "LIST_STATE";
-
   /**
    * The minimum number of items to have below your current scroll position before loading more.
    */
@@ -284,7 +286,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             timelineAnalytics, timelinePostsRepository, marketName, timelineUserProvider);
 
     TimelineNavigator timelineNavigation = new TimelineNavigator(getFragmentNavigator(),
-        getContext().getString(R.string.timeline_title_likes), tabNavigator);
+        getContext().getString(R.string.timeline_title_likes), tabNavigator, storeContext);
 
     StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager(),
@@ -578,6 +580,13 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     }
     emptyStatePosts.add(emptyStatePost);
     adapter.updatePosts(emptyStatePosts);
+  }
+
+  @NonNull public Observable<Integer> getScrollEvents() {
+    return RxRecyclerView.scrollEvents(list)
+        .debounce(1, TimeUnit.SECONDS)
+        .map(recyclerViewScrollEvent -> layoutManager.findFirstVisibleItemPosition())
+        .distinctUntilChanged();
   }
 
   private void handleSharePreviewAnswer() {
