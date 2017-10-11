@@ -3,6 +3,7 @@ package cm.aptoide.pt.social.view.viewholder;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.PopupMenu;
 import android.text.Spannable;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.CardTouchEvent;
+import cm.aptoide.pt.social.data.Post;
+import cm.aptoide.pt.social.data.PostPopupMenuBuilder;
 import cm.aptoide.pt.social.data.Recommendation;
 import cm.aptoide.pt.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.timeline.view.LikeButtonView;
@@ -42,6 +45,7 @@ public class RecommendationViewHolder extends PostViewHolder<Recommendation> {
   private final TextView commentButton;
   private final TextView shareButton;
   private final String marketName;
+  private final View overflowMenu;
 
   public RecommendationViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
@@ -71,6 +75,7 @@ public class RecommendationViewHolder extends PostViewHolder<Recommendation> {
     this.commentButton = (TextView) view.findViewById(R.id.social_comment);
     this.shareButton = (TextView) view.findViewById(R.id.social_share);
     this.marketName = marketName;
+    this.overflowMenu = itemView.findViewById(R.id.overflow_menu);
   }
 
   @Override public void setPost(Recommendation post, int position) {
@@ -127,5 +132,18 @@ public class RecommendationViewHolder extends PostViewHolder<Recommendation> {
   public String getTitle(Resources resources) {
     return AptoideUtils.StringU.getFormattedString(
         R.string.timeline_title_card_title_recommend_present_singular, resources, marketName);
+  }
+
+  private void setupOverflowMenu(Post post, int position) {
+    overflowMenu.setOnClickListener(view -> {
+      PopupMenu popupMenu = new PostPopupMenuBuilder().prepMenu(itemView.getContext(), overflowMenu)
+          .addReportAbuse(menuItem -> {
+            cardTouchEventPublishSubject.onNext(
+                new CardTouchEvent(post, position, CardTouchEvent.Type.REPORT_ABUSE));
+            return false;
+          })
+          .getPopupMenu();
+      popupMenu.show();
+    });
   }
 }

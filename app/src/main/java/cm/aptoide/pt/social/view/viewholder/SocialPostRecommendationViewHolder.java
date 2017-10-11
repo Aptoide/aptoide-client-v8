@@ -2,6 +2,7 @@ package cm.aptoide.pt.social.view.viewholder;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.PopupMenu;
 import android.text.Spannable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -19,6 +20,8 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.LikesCardTouchEvent;
 import cm.aptoide.pt.social.data.LikesPreviewCardTouchEvent;
+import cm.aptoide.pt.social.data.Post;
+import cm.aptoide.pt.social.data.PostPopupMenuBuilder;
 import cm.aptoide.pt.social.data.RatedRecommendation;
 import cm.aptoide.pt.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.social.data.SocialHeaderCardTouchEvent;
@@ -49,6 +52,7 @@ public class SocialPostRecommendationViewHolder extends SocialPostViewHolder<Rat
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final TextView commentButton;
   private final TextView shareButton;
+  private final View overflowMenu;
 
   /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
   private final LinearLayout socialInfoBar;
@@ -106,72 +110,74 @@ public class SocialPostRecommendationViewHolder extends SocialPostViewHolder<Rat
     this.inflater = LayoutInflater.from(itemView.getContext());
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
     this.postContent = (TextView) itemView.findViewById(R.id.post_content);
+    this.overflowMenu = itemView.findViewById(R.id.overflow_menu);
   }
 
-  @Override public void setPost(RatedRecommendation card, int position) {
+  @Override public void setPost(RatedRecommendation post, int position) {
     ImageLoader.with(itemView.getContext())
-        .loadWithShadowCircleTransform(card.getPoster()
+        .loadWithShadowCircleTransform(post.getPoster()
             .getPrimaryAvatar(), headerPrimaryAvatar);
     ImageLoader.with(itemView.getContext())
-        .loadWithShadowCircleTransform(card.getPoster()
+        .loadWithShadowCircleTransform(post.getPoster()
             .getSecondaryAvatar(), headerSecondaryAvatar);
-    this.headerPrimaryName.setText(getStyledTitle(itemView.getContext(), card.getPoster()
+    this.headerPrimaryName.setText(getStyledTitle(itemView.getContext(), post.getPoster()
         .getPrimaryName()));
-    showHeaderSecondaryName(card);
+    showHeaderSecondaryName(post);
     this.timestamp.setText(
-        dateCalculator.getTimeSinceDate(itemView.getContext(), card.getTimestamp()));
+        dateCalculator.getTimeSinceDate(itemView.getContext(), post.getTimestamp()));
     ImageLoader.with(itemView.getContext())
-        .load(card.getAppIcon(), appIcon);
-    this.appName.setText(card.getAppName());
-    this.appRating.setRating(card.getAppAverageRating());
-    this.postContent.setText(card.getContent());
+        .load(post.getAppIcon(), appIcon);
+    this.appName.setText(post.getAppName());
+    this.appRating.setRating(post.getAppAverageRating());
+    this.postContent.setText(post.getContent());
 
     this.getAppButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, position, CardTouchEvent.Type.BODY)));
+        new CardTouchEvent(post, position, CardTouchEvent.Type.BODY)));
     this.appIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, position, CardTouchEvent.Type.BODY)));
+        new CardTouchEvent(post, position, CardTouchEvent.Type.BODY)));
     this.cardHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new SocialHeaderCardTouchEvent(card, card.getPoster()
+        new SocialHeaderCardTouchEvent(post, post.getPoster()
             .getStore()
-            .getName(), card.getPoster()
+            .getName(), post.getPoster()
             .getStore()
-            .getStoreTheme(), card.getPoster()
+            .getStoreTheme(), post.getPoster()
             .getUser()
             .getId(), CardTouchEvent.Type.HEADER, getPosition())));
-    if (card.isLiked()) {
-      if (card.isLikeFromClick()) {
+    if (post.isLiked()) {
+      if (post.isLikeFromClick()) {
         likeButton.setHeartState(true);
-        card.setLikedFromClick(false);
+        post.setLikedFromClick(false);
       } else {
         likeButton.setHeartStateWithoutAnimation(true);
       }
     } else {
       likeButton.setHeartState(false);
     }
+    setupOverflowMenu(post, position);
     /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
-    showSocialInformationBar(card, position);
-    showLikesPreview(card);
+    showSocialInformationBar(post, position);
+    showLikesPreview(post);
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
     this.like.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new SocialCardTouchEvent(card, CardTouchEvent.Type.LIKE, position)));
+        new SocialCardTouchEvent(post, CardTouchEvent.Type.LIKE, position)));
 
     this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new SocialCardTouchEvent(card, CardTouchEvent.Type.COMMENT, position)));
+        new SocialCardTouchEvent(post, CardTouchEvent.Type.COMMENT, position)));
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, position, CardTouchEvent.Type.SHARE)));
+        new CardTouchEvent(post, position, CardTouchEvent.Type.SHARE)));
     this.likePreviewContainer.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new LikesPreviewCardTouchEvent(card, card.getLikesNumber(),
+        new LikesPreviewCardTouchEvent(post, post.getLikesNumber(),
             CardTouchEvent.Type.LIKES_PREVIEW, position)));
     this.numberLikes.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new LikesPreviewCardTouchEvent(card, card.getLikesNumber(),
+        new LikesPreviewCardTouchEvent(post, post.getLikesNumber(),
             CardTouchEvent.Type.LIKES_PREVIEW, position)));
     this.numberLikesOneLike.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new LikesPreviewCardTouchEvent(card, card.getLikesNumber(),
+        new LikesPreviewCardTouchEvent(post, post.getLikesNumber(),
             CardTouchEvent.Type.LIKES_PREVIEW, position)));
-    new LikesCardTouchEvent(card, card.getLikesNumber(), CardTouchEvent.Type.LIKES_PREVIEW,
+    new LikesCardTouchEvent(post, post.getLikesNumber(), CardTouchEvent.Type.LIKES_PREVIEW,
         position);
     this.numberComments.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, position, CardTouchEvent.Type.COMMENT_NUMBER)));
+        new CardTouchEvent(post, position, CardTouchEvent.Type.COMMENT_NUMBER)));
   }
 
   public Spannable getStyledTitle(Context context, String title) {
@@ -297,5 +303,18 @@ public class SocialPostRecommendationViewHolder extends SocialPostViewHolder<Rat
         .getString(R.string.timeline_short_like_present_plural, likesNumber)
         .toLowerCase());
     numberLikesOneLike.setVisibility(View.INVISIBLE);
+  }
+
+  private void setupOverflowMenu(Post post, int position) {
+    overflowMenu.setOnClickListener(view -> {
+      PopupMenu popupMenu = new PostPopupMenuBuilder().prepMenu(itemView.getContext(), overflowMenu)
+          .addReportAbuse(menuItem -> {
+            cardTouchEventPublishSubject.onNext(
+                new CardTouchEvent(post, position, CardTouchEvent.Type.REPORT_ABUSE));
+            return false;
+          })
+          .getPopupMenu();
+      popupMenu.show();
+    });
   }
 }

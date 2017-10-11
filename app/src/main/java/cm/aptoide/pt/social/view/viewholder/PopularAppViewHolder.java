@@ -1,6 +1,7 @@
 package cm.aptoide.pt.social.view.viewholder;
 
 import android.content.Context;
+import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.PopularApp;
 import cm.aptoide.pt.social.data.PopularAppTouchEvent;
+import cm.aptoide.pt.social.data.Post;
+import cm.aptoide.pt.social.data.PostPopupMenuBuilder;
 import cm.aptoide.pt.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.timeline.view.LikeButtonView;
 import cm.aptoide.pt.util.DateCalculator;
@@ -38,6 +41,7 @@ public class PopularAppViewHolder extends PostViewHolder<PopularApp> {
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final TextView commentButton;
   private final TextView shareButton;
+  private final View overflowMenu;
 
   public PopularAppViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator) {
@@ -59,6 +63,7 @@ public class PopularAppViewHolder extends PostViewHolder<PopularApp> {
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.commentButton = (TextView) view.findViewById(R.id.social_comment);
     this.shareButton = (TextView) itemView.findViewById(R.id.social_share);
+    this.overflowMenu = itemView.findViewById(R.id.overflow_menu);
   }
 
   @Override public void setPost(PopularApp post, int position) {
@@ -112,5 +117,18 @@ public class PopularAppViewHolder extends PostViewHolder<PopularApp> {
 
       headerUsersContainer.addView(friendView);
     }
+  }
+
+  private void setupOverflowMenu(Post post, int position) {
+    overflowMenu.setOnClickListener(view -> {
+      PopupMenu popupMenu = new PostPopupMenuBuilder().prepMenu(itemView.getContext(), overflowMenu)
+          .addReportAbuse(menuItem -> {
+            cardTouchEventPublishSubject.onNext(
+                new CardTouchEvent(post, position, CardTouchEvent.Type.REPORT_ABUSE));
+            return false;
+          })
+          .getPopupMenu();
+      popupMenu.show();
+    });
   }
 }

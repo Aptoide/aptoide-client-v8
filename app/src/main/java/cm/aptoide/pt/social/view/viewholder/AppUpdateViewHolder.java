@@ -3,6 +3,7 @@ package cm.aptoide.pt.social.view.viewholder;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.PopupMenu;
 import android.text.Spannable;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +17,8 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.AppUpdate;
 import cm.aptoide.pt.social.data.AppUpdateCardTouchEvent;
 import cm.aptoide.pt.social.data.CardTouchEvent;
+import cm.aptoide.pt.social.data.Post;
+import cm.aptoide.pt.social.data.PostPopupMenuBuilder;
 import cm.aptoide.pt.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.timeline.view.LikeButtonView;
 import cm.aptoide.pt.util.DateCalculator;
@@ -43,6 +46,7 @@ public class AppUpdateViewHolder extends PostViewHolder<AppUpdate> {
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final TextView commentButton;
   private final TextView shareButton;
+  private final View overflowMenu;
 
   public AppUpdateViewHolder(View view, PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
       DateCalculator dateCalculator, SpannableFactory spannableFactory) {
@@ -68,6 +72,7 @@ public class AppUpdateViewHolder extends PostViewHolder<AppUpdate> {
     this.like = (LinearLayout) itemView.findViewById(R.id.social_like);
     this.commentButton = (TextView) itemView.findViewById(R.id.social_comment);
     this.shareButton = (TextView) itemView.findViewById(R.id.social_share);
+    this.overflowMenu = itemView.findViewById(R.id.overflow_menu);
   }
 
   @Override public void setPost(AppUpdate post, int position) {
@@ -153,5 +158,23 @@ public class AppUpdateViewHolder extends PostViewHolder<AppUpdate> {
     return spannableFactory.createStyleSpan(
         context.getString(R.string.displayable_social_timeline_app_update_button, application),
         Typeface.NORMAL, application);
+  }
+
+  private void setupOverflowMenu(Post post, int position) {
+    overflowMenu.setOnClickListener(view -> {
+      PopupMenu popupMenu = new PostPopupMenuBuilder().prepMenu(itemView.getContext(), overflowMenu)
+          .addReportAbuse(menuItem -> {
+            cardTouchEventPublishSubject.onNext(
+                new CardTouchEvent(post, position, CardTouchEvent.Type.REPORT_ABUSE));
+            return false;
+          })
+          .addIgnoreUpdate(menuItem -> {
+            cardTouchEventPublishSubject.onNext(
+                new CardTouchEvent(post, position, CardTouchEvent.Type.IGNORE_UPDATE));
+            return false;
+          })
+          .getPopupMenu();
+      popupMenu.show();
+    });
   }
 }

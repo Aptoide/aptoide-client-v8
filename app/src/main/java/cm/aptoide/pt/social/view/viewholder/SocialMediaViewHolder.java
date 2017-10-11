@@ -3,6 +3,7 @@ package cm.aptoide.pt.social.view.viewholder;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.PopupMenu;
 import android.text.Spannable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -18,6 +19,8 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.CardType;
 import cm.aptoide.pt.social.data.LikesPreviewCardTouchEvent;
+import cm.aptoide.pt.social.data.Post;
+import cm.aptoide.pt.social.data.PostPopupMenuBuilder;
 import cm.aptoide.pt.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.social.data.SocialHeaderCardTouchEvent;
 import cm.aptoide.pt.social.data.SocialMedia;
@@ -48,6 +51,7 @@ public class SocialMediaViewHolder extends SocialPostViewHolder<SocialMedia> {
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final TextView commentButton;
   private final TextView shareButton;
+  private final View overflowMenu;
   /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
   private final LinearLayout socialInfoBar;
   private final TextView numberLikes;
@@ -86,6 +90,7 @@ public class SocialMediaViewHolder extends SocialPostViewHolder<SocialMedia> {
     this.like = (LinearLayout) itemView.findViewById(R.id.social_like);
     this.commentButton = (TextView) itemView.findViewById(R.id.social_comment);
     this.shareButton = (TextView) itemView.findViewById(R.id.social_share);
+    this.overflowMenu = itemView.findViewById(R.id.overflow_menu);
     /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
     this.socialInfoBar = (LinearLayout) itemView.findViewById(R.id.social_info_bar);
     this.numberLikes = (TextView) itemView.findViewById(R.id.social_number_of_likes);
@@ -310,5 +315,18 @@ public class SocialMediaViewHolder extends SocialPostViewHolder<SocialMedia> {
         .getString(R.string.timeline_short_like_present_plural, likesNumber)
         .toLowerCase());
     numberLikesOneLike.setVisibility(View.INVISIBLE);
+  }
+
+  private void setupOverflowMenu(Post post, int position) {
+    overflowMenu.setOnClickListener(view -> {
+      PopupMenu popupMenu = new PostPopupMenuBuilder().prepMenu(itemView.getContext(), overflowMenu)
+          .addReportAbuse(menuItem -> {
+            cardTouchEventPublishSubject.onNext(
+                new CardTouchEvent(post, position, CardTouchEvent.Type.REPORT_ABUSE));
+            return false;
+          })
+          .getPopupMenu();
+      popupMenu.show();
+    });
   }
 }

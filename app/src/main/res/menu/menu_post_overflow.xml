@@ -4,15 +4,27 @@
   ~ Modified by Neurophobic Animal on 07/06/2016.
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
   <item
       android:id="@+id/delete"
-      android:title="@string/timeline_button_delete_post"/>
-  <item
-      android:id="@+id/report"
-      android:title="@string/timeline_button_report_abuse"/>
+      android:title="@string/timeline_button_delete_post"
+      android:visible="false"
+      tools:visible="true"/>
   <item
       android:id="@+id/unfollow"
-      android:title="@string/timeline_button_unfollow_store"/>
+      android:title="@string/timeline_button_unfollow_store"
+      android:visible="false"
+      tools:visible="true"/>
+  <item
+      android:id="@+id/ignore_update"
+      android:title="@string/ignore_update"
+      android:visible="false"
+      tools:visible="true"/>
+  <item
+      android:id="@+id/report"
+      android:title="@string/timeline_button_report_abuse"
+      android:visible="false"
+      tools:visible="true"/>
 </menu>
