@@ -20,5 +20,5 @@ public interface BillingService {
 
   Single<List<Product>> getProducts(String merchantName, List<String> skus);
 
-  Single<Product> getProduct(String merchantName, String sku);
+  Single<Product> getProduct(String sku, String merchantName);
 }

@@ -15,17 +15,15 @@ public class WebAuthorizationPresenter implements Presenter {
   private final Billing billing;
   private final BillingAnalytics analytics;
   private final BillingNavigator navigator;
-  private final String merchantName;
   private final String serviceName;
   private final String sku;
 
-  public WebAuthorizationPresenter(WebAuthorizationView view, Billing billing, BillingAnalytics analytics,
-      BillingNavigator navigator, String merchantName, String serviceName, String sku) {
+  public WebAuthorizationPresenter(WebAuthorizationView view, Billing billing,
+      BillingAnalytics analytics, BillingNavigator navigator, String serviceName, String sku) {
     this.view = view;
     this.billing = billing;
     this.analytics = analytics;
     this.navigator = navigator;
-    this.merchantName = merchantName;
     this.serviceName = serviceName;
     this.sku = sku;
   }
@@ -58,7 +56,7 @@ public class WebAuthorizationPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(__ -> view.showLoading())
-        .flatMap(__ -> billing.getAuthorization(merchantName, sku)
+        .flatMap(__ -> billing.getAuthorization(sku)
             .first(authorization -> authorization.isPending())
             .cast(WebAuthorization.class)
             .observeOn(AndroidSchedulers.mainThread())
@@ -77,7 +75,7 @@ public class WebAuthorizationPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(__ -> view.showLoading())
-        .flatMap(__ -> billing.getAuthorization(merchantName, sku)
+        .flatMap(__ -> billing.getAuthorization(sku)
             .first(authorization -> authorization.isFailed())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(authorization -> showError()))
@@ -92,7 +90,7 @@ public class WebAuthorizationPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(__ -> view.showLoading())
-        .flatMap(__ -> billing.getAuthorization(merchantName, sku)
+        .flatMap(__ -> billing.getAuthorization(sku)
             .first(authorization -> authorization.isActive())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(authorization -> {

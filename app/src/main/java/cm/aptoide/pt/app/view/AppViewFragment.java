@@ -48,7 +48,6 @@ import cm.aptoide.pt.app.AppRepository;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
 import cm.aptoide.pt.billing.BillingAnalytics;
-import cm.aptoide.pt.billing.BillingIdResolver;
 import cm.aptoide.pt.billing.exception.BillingException;
 import cm.aptoide.pt.billing.product.PaidAppPurchase;
 import cm.aptoide.pt.billing.view.PaymentActivity;
@@ -341,7 +340,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         (AptoideApplication) getContext().getApplicationContext();
     this.appViewModel.setDefaultTheme(application.getDefaultThemeName());
     this.appViewModel.setMarketName(application.getMarketName());
-    this.appViewModel.setBillingIdResolver(application.getBillingIdResolver());
 
     final SearchManager searchManager =
         (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
@@ -572,9 +570,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   public void buyApp(GetAppMeta.App app) {
     billingAnalytics.sendPaymentViewShowEvent();
     startActivityForResult(PaymentActivity.getIntent(getActivity(),
-        getBillingIdResolver().resolveProductId(app.getId()),
-        getBillingIdResolver().resolveMerchantName(app.getStore()
-            .getName()), null), PAY_APP_REQUEST_CODE);
+        app.getId(), BuildConfig.APPLICATION_ID), PAY_APP_REQUEST_CODE);
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -1167,10 +1163,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   public GetAppMeta.App getApp() {
     return appViewModel.getApp();
-  }
-
-  public BillingIdResolver getBillingIdResolver() {
-    return appViewModel.getBillingIdResolver();
   }
 
   public String getMarketName() {

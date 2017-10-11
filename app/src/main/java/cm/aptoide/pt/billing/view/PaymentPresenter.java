@@ -102,7 +102,7 @@ public class PaymentPresenter implements Presenter {
         .flatMap(__ -> billing.getCustomer()
             .isAuthenticated())
         .filter(authenticated -> authenticated)
-        .flatMapSingle(loading -> billing.getProduct(merchantName, sku))
+        .flatMapSingle(loading -> billing.getProduct(sku))
         .flatMapCompletable(product -> billing.getPaymentServices()
             .observeOn(AndroidSchedulers.mainThread())
             .flatMapCompletable(payments -> showPaymentInformation(product, payments))
@@ -121,7 +121,7 @@ public class PaymentPresenter implements Presenter {
         .filter(authenticated -> authenticated)
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(__ -> view.showPurchaseLoading())
-        .flatMap(__ -> billing.getPurchase(merchantName, sku)
+        .flatMap(__ -> billing.getPurchase(sku)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(purchase -> {
               if (purchase.isPending()) {
@@ -175,11 +175,11 @@ public class PaymentPresenter implements Presenter {
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
         .flatMap(__ -> view.buyEvent()
             .doOnNext(buySelection -> view.showBuyLoading())
-            .flatMapSingle(selection -> billing.getProduct(merchantName, sku))
+            .flatMapSingle(selection -> billing.getProduct(sku))
             .flatMapCompletable(product -> billing.getSelectedService()
                 .doOnSuccess(
                     payment -> analytics.sendPaymentViewBuyEvent(product, payment.getType()))
-                .flatMapCompletable(payment -> billing.processPayment(merchantName, sku, payload)
+                .flatMapCompletable(payment -> billing.processPayment(sku, payload)
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnCompleted(() -> {
                       analytics.sendAuthorizationSuccessEvent(payment.getType());
@@ -229,7 +229,7 @@ public class PaymentPresenter implements Presenter {
   }
 
   private Completable sendPaymentCancelAnalytics() {
-    return billing.getProduct(merchantName, sku)
+    return billing.getProduct(sku)
         .flatMapCompletable(product -> billing.getSelectedService()
             .doOnSuccess(payment -> analytics.sendPaymentViewCancelEvent(product))
             .toCompletable());

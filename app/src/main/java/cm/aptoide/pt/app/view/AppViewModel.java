@@ -1,7 +1,6 @@
 package cm.aptoide.pt.app.view;
 
 import cm.aptoide.pt.app.view.AppViewFragment;
-import cm.aptoide.pt.billing.BillingIdResolver;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.install.AppAction;
 import cm.aptoide.pt.search.model.SearchAdResult;
@@ -24,7 +23,6 @@ public class AppViewModel {
   private AppAction appAction;
   private boolean suggestedShowing;
   private List<String> keywords;
-  private BillingIdResolver billingIdResolver;
   private String marketName;
   private String defaultTheme;
   private long storeId;
@@ -154,14 +152,6 @@ public class AppViewModel {
 
   void setKeywords(List<String> keywords) {
     this.keywords = keywords;
-  }
-
-  BillingIdResolver getBillingIdResolver() {
-    return billingIdResolver;
-  }
-
-  void setBillingIdResolver(BillingIdResolver billingIdResolver) {
-    this.billingIdResolver = billingIdResolver;
   }
 
   public String getMarketName() {

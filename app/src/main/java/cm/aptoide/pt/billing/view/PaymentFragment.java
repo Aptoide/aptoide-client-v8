@@ -72,7 +72,8 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    billing = ((AptoideApplication) getContext().getApplicationContext()).getBilling();
+    billing = ((AptoideApplication) getContext().getApplicationContext()).getBilling(
+        getArguments().getString(PaymentActivity.EXTRA_MERCHANT_NAME));
     billingAnalytics =
         ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
     billingNavigator = ((ActivityResultNavigator) getContext()).getBillingNavigator();

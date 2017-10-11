@@ -48,7 +48,8 @@ public class WebAuthorizationFragment extends PermissionServiceFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    billing = ((AptoideApplication) getContext().getApplicationContext()).getBilling();
+    billing = ((AptoideApplication) getContext().getApplicationContext()).getBilling(
+        getArguments().getString(PaymentActivity.EXTRA_MERCHANT_NAME));
     billingAnalytics =
         ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
     billingNavigator = ((ActivityResultNavigator) getContext()).getBillingNavigator();
@@ -86,7 +87,6 @@ public class WebAuthorizationFragment extends PermissionServiceFragment
     registerClickHandler(clickHandler);
 
     attachPresenter(new WebAuthorizationPresenter(this, billing, billingAnalytics, billingNavigator,
-        getArguments().getString(PaymentActivity.EXTRA_MERCHANT_NAME),
         getArguments().getString(PaymentActivity.EXTRA_SERVICE_NAME),
         getArguments().getString(PaymentActivity.EXTRA_SKU)), savedInstanceState);
   }

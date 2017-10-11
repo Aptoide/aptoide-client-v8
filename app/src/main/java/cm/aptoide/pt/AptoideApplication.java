@@ -50,36 +50,10 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
 import cm.aptoide.pt.analytics.TrackerFilter;
-import cm.aptoide.pt.billing.AccountCustomer;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
-import cm.aptoide.pt.billing.BillingIdResolver;
-import cm.aptoide.pt.billing.BillingService;
-import cm.aptoide.pt.billing.Customer;
-import cm.aptoide.pt.billing.OkioPurchaseTokenDecoder;
-import cm.aptoide.pt.billing.PaymentServiceMapper;
-import cm.aptoide.pt.billing.PaymentServiceSelector;
-import cm.aptoide.pt.billing.PurchaseMapper;
-import cm.aptoide.pt.billing.SharedPreferencesPaymentServiceSelector;
-import cm.aptoide.pt.billing.V7BillingService;
-import cm.aptoide.pt.billing.authorization.AuthorizationFactory;
-import cm.aptoide.pt.billing.authorization.AuthorizationMapper;
-import cm.aptoide.pt.billing.authorization.AuthorizationPersistence;
-import cm.aptoide.pt.billing.authorization.AuthorizationRepository;
-import cm.aptoide.pt.billing.authorization.AuthorizationService;
-import cm.aptoide.pt.billing.authorization.AuthorizationServiceV7;
-import cm.aptoide.pt.billing.authorization.RealmAuthorizationPersistence;
+import cm.aptoide.pt.billing.BillingPool;
 import cm.aptoide.pt.billing.external.ExternalBillingSerializer;
-import cm.aptoide.pt.billing.product.ProductFactory;
-import cm.aptoide.pt.billing.sync.BillingSyncFactory;
-import cm.aptoide.pt.billing.sync.BillingSyncManager;
-import cm.aptoide.pt.billing.transaction.InMemoryTransactionPersistence;
-import cm.aptoide.pt.billing.transaction.TransactionFactory;
-import cm.aptoide.pt.billing.transaction.TransactionMapper;
-import cm.aptoide.pt.billing.transaction.TransactionPersistence;
-import cm.aptoide.pt.billing.transaction.TransactionRepository;
-import cm.aptoide.pt.billing.transaction.TransactionService;
-import cm.aptoide.pt.billing.transaction.TransactionServiceV7;
 import cm.aptoide.pt.billing.view.PaymentThrowableCodeMapper;
 import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.crashreports.ConsoleLogger;
@@ -207,7 +181,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -260,7 +233,6 @@ public abstract class AptoideApplication extends Application {
   private ObjectMapper nonNullObjectMapper;
   private RequestBodyFactory requestBodyFactory;
   private ExternalBillingSerializer inAppBillingSerialzer;
-  private Billing billing;
   private PurchaseBundleMapper purchaseBundleMapper;
   private PaymentThrowableCodeMapper paymentThrowableCodeMapper;
   private MultipartBodyInterceptor multipartBodyInterceptor;
@@ -282,17 +254,7 @@ public abstract class AptoideApplication extends Application {
   private NotificationProvider notificationProvider;
   private SyncStorage syncStorage;
   private SyncScheduler syncScheduler;
-  private TransactionFactory transactionFactory;
-  private TransactionMapper transactionMapper;
-  private TransactionService transactionService;
-  private Customer customer;
-  private AuthorizationMapper authorizationMapper;
-  private AuthorizationService authorizationService;
-  private TransactionPersistence transactionPersistence;
-  private AuthorizationPersistence authorizationPersistence;
-  private BillingSyncManager billingSyncManager;
   private TimelineRepositoryFactory timelineRepositoryFactory;
-  private BillingIdResolver billingiIdResolver;
   private AuthenticationPersistence authenticationPersistence;
   private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody>
       noAuthorizationBodyInterceptorV3;
@@ -301,7 +263,7 @@ public abstract class AptoideApplication extends Application {
   private Map<Integer, Result> fragmentResulMap;
   private PublishRelay<FacebookLoginResult> facebookLoginResultRelay;
   private NavigationTracker navigationTracker;
-  private AuthorizationFactory authorizationFactory;
+  private BillingPool billingPool;
   private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
   private AccountAnalytics accountAnalytics;
   private PageViewsAnalytics pageViewsAnalytics;
@@ -859,123 +821,16 @@ public abstract class AptoideApplication extends Application {
     return billingAnalytics;
   }
 
-  public Billing getBilling() {
-
-    if (billing == null) {
-
-      final TransactionRepository transactionRepository =
-          new TransactionRepository(geTransactionPersistence(), getBillingSyncManager(),
-              getCustomer(), getTransactionService());
-
-      final AuthorizationRepository authorizationRepository =
-          new AuthorizationRepository(getBillingSyncManager(), getCustomer(),
-              getAuthorizationPersistence());
-
-      final BillingService billingService =
-          new V7BillingService(getAccountSettingsBodyInterceptorPoolV7(), getDefaultClient(),
-              WebService.getDefaultConverter(), getTokenInvalidator(),
-              getDefaultSharedPreferences(), new PurchaseMapper(getInAppBillingSerializer()),
-              new ProductFactory(), getPackageRepository(),
-              new PaymentServiceMapper(CrashReport.getInstance()));
-
-      final PaymentServiceSelector paymentServiceSelector =
-          new SharedPreferencesPaymentServiceSelector(BuildConfig.DEFAULT_PAYMENT_SERVICE_TYPE,
-              getDefaultSharedPreferences());
-
-      billing = new Billing(transactionRepository, billingService, authorizationRepository,
-          paymentServiceSelector, getCustomer(), getAuthorizationFactory(), new OkioPurchaseTokenDecoder());
+  public Billing getBilling(String merchantName) {
+    if (billingPool == null) {
+      billingPool =
+          new BillingPool(getDefaultSharedPreferences(), getBodyInterceptorV3(), getDefaultClient(),
+              getAccountManager(), getDatabase(), getResources(), getPackageRepository(),
+              getTokenInvalidator(), getSyncScheduler(), getInAppBillingSerializer(),
+              getBodyInterceptorPoolV7(), getAccountSettingsBodyInterceptorPoolV7(),
+              new HashMap<>(), WebService.getDefaultConverter(), CrashReport.getInstance());
     }
-    return billing;
-  }
-
-  public BillingIdResolver getBillingIdResolver() {
-    if (billingiIdResolver == null) {
-      billingiIdResolver = new BillingIdResolver(getAptoidePackage(), "/", "paid-app");
-    }
-    return billingiIdResolver;
-  }
-
-  public BillingSyncManager getBillingSyncManager() {
-    if (billingSyncManager == null) {
-      billingSyncManager = new BillingSyncManager(
-          new BillingSyncFactory(getCustomer(), getTransactionService(), getAuthorizationService(),
-              geTransactionPersistence(), getAuthorizationPersistence()), getSyncScheduler(),
-          new HashSet<>());
-    }
-    return billingSyncManager;
-  }
-
-  public AuthorizationPersistence getAuthorizationPersistence() {
-    if (authorizationPersistence == null) {
-      authorizationPersistence =
-          new RealmAuthorizationPersistence(new HashMap<>(), PublishRelay.create(), getDatabase(),
-              getAuthorizationMapper(), authorizationFactory);
-    }
-    return authorizationPersistence;
-  }
-
-  public TransactionPersistence geTransactionPersistence() {
-    if (transactionPersistence == null) {
-      transactionPersistence =
-          new InMemoryTransactionPersistence(new HashMap<>(), PublishRelay.create(),
-              getTransactionFactory());
-    }
-    return transactionPersistence;
-  }
-
-  public AuthorizationService getAuthorizationService() {
-    if (authorizationService == null) {
-      authorizationService =
-          new AuthorizationServiceV7(getAuthorizationMapper(), getDefaultClient(),
-              WebService.getDefaultConverter(), getTokenInvalidator(),
-              getDefaultSharedPreferences(), getBodyInterceptorPoolV7());
-    }
-    return authorizationService;
-  }
-
-  public AuthorizationMapper getAuthorizationMapper() {
-    if (authorizationMapper == null) {
-      authorizationMapper = new AuthorizationMapper(getAuthorizationFactory());
-    }
-    return authorizationMapper;
-  }
-
-  public AuthorizationFactory getAuthorizationFactory() {
-    if (authorizationFactory == null) {
-      authorizationFactory = new AuthorizationFactory();
-    }
-    return authorizationFactory;
-  }
-
-  public Customer getCustomer() {
-    if (customer == null) {
-      customer = new AccountCustomer(getAccountManager());
-    }
-    return customer;
-  }
-
-  public TransactionService getTransactionService() {
-    if (transactionService == null) {
-      transactionService =
-          new TransactionServiceV7(getTransactionMapper(), getBodyInterceptorPoolV7(),
-              WebService.getDefaultConverter(), getDefaultClient(), getTokenInvalidator(),
-              getDefaultSharedPreferences());
-    }
-    return transactionService;
-  }
-
-  public TransactionMapper getTransactionMapper() {
-    if (transactionMapper == null) {
-      transactionMapper = new TransactionMapper(getTransactionFactory());
-    }
-    return transactionMapper;
-  }
-
-  public TransactionFactory getTransactionFactory() {
-    if (transactionFactory == null) {
-      transactionFactory = new TransactionFactory();
-    }
-    return transactionFactory;
+    return billingPool.get(merchantName);
   }
 
   public Database getDatabase() {

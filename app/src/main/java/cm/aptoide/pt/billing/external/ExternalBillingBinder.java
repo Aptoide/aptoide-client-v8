@@ -7,11 +7,14 @@ package cm.aptoide.pt.billing.external;
 
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Binder;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.os.RemoteException;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
-import cm.aptoide.pt.billing.BillingIdResolver;
 import cm.aptoide.pt.billing.Purchase;
 import cm.aptoide.pt.billing.exception.MerchantNotFoundException;
 import cm.aptoide.pt.billing.product.InAppPurchase;
@@ -57,23 +60,32 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
   private final Context context;
   private final ExternalBillingSerializer serializer;
   private final PaymentThrowableCodeMapper errorCodeFactory;
-  private final Billing billing;
+  private final PackageManager packageManager;
   private final CrashReport crashReport;
-  private final BillingIdResolver idResolver;
   private final int supportedApiVersion;
   private final BillingAnalytics analytics;
 
+  private Billing billing;
+  private String merchantName;
+
   public ExternalBillingBinder(Context context, ExternalBillingSerializer serializer,
-      PaymentThrowableCodeMapper errorCodeFactory, Billing billing, CrashReport crashReport,
-      BillingIdResolver idResolver, int apiVersion, BillingAnalytics analytics) {
+      PaymentThrowableCodeMapper errorCodeFactory, CrashReport crashReport, int apiVersion,
+      BillingAnalytics analytics, PackageManager packageManager) {
     this.context = context;
     this.serializer = serializer;
     this.errorCodeFactory = errorCodeFactory;
+    this.packageManager = packageManager;
     this.billing = billing;
     this.crashReport = crashReport;
-    this.idResolver = idResolver;
     this.supportedApiVersion = apiVersion;
     this.analytics = analytics;
+  }
+
+  @Override public boolean onTransact(int code, Parcel data, Parcel reply, int flags)
+      throws RemoteException {
+    merchantName = packageManager.getPackagesForUid(Binder.getCallingUid())[0];
+    billing = ((AptoideApplication) context.getApplicationContext()).getBilling(merchantName);
+    return super.onTransact(code, data, reply, flags);
   }
 
   @Override public int isBillingSupported(int apiVersion, String packageName, String type)
@@ -84,7 +96,7 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
         return RESULT_BILLING_UNAVAILABLE;
       }
 
-      return billing.getMerchant(packageName)
+      return billing.getMerchant()
           .map(merchant -> RESULT_OK)
           .onErrorResumeNext(throwable -> {
             if (throwable instanceof MerchantNotFoundException) {
@@ -119,7 +131,7 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
     }
 
     try {
-      final List<String> serializedProducts = billing.getProducts(packageName, skus)
+      final List<String> serializedProducts = billing.getProducts(skus)
           .flatMap(products -> {
             try {
               return Single.just(serializer.serializeProducts(products));
@@ -153,7 +165,7 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
     try {
       result.putInt(RESPONSE_CODE, RESULT_OK);
       result.putParcelable(BUY_INTENT, PendingIntent.getActivity(context, 0,
-          PaymentActivity.getIntent(context, sku, packageName, developerPayload),
+          PaymentActivity.getIntent(context, sku, merchantName, developerPayload),
           PendingIntent.FLAG_UPDATE_CURRENT));
       analytics.sendPaymentViewShowEvent();
     } catch (Exception exception) {
@@ -180,7 +192,7 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
 
     if (type.equals(ITEM_TYPE_INAPP)) {
       try {
-        final List<Purchase> purchases = billing.getPurchases(packageName)
+        final List<Purchase> purchases = billing.getPurchases()
             .toBlocking()
             .value();
 

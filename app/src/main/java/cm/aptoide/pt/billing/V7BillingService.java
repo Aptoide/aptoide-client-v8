@@ -155,7 +155,7 @@ public class V7BillingService implements BillingService {
         });
   }
 
-  @Override public Single<Product> getProduct(String merchantName, String sku) {
+  @Override public Single<Product> getProduct(String sku, String merchantName) {
     return GetProductsRequest.of(merchantName, sku, bodyInterceptorV7, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences)
         .observe(false)

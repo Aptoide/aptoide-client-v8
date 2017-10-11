@@ -29,25 +29,11 @@ public interface Service {
   @POST("getApkInfo") @FormUrlEncoded Observable<PaidApp> getApkInfo(@FieldMap BaseBody args,
       @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-  @POST("processInAppBilling") @FormUrlEncoded
-  Observable<BaseV3Response> deleteInAppBillingPurchase(@FieldMap BaseBody args);
-
   @POST("checkProductPayment") @FormUrlEncoded Observable<TransactionResponse> getTransaction(
       @FieldMap BaseBody args);
 
-  @POST("productPurchaseAuthorization") @FormUrlEncoded
-  Observable<PaymentAuthorizationsResponse> getPaymentAuthorization(@FieldMap BaseBody args);
-
-  @POST("productPurchaseAuthorization") @FormUrlEncoded
-  Observable<PaymentAuthorizationResponse> createPaymentAuthorizationWithCode(
-      @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
   @POST("payProduct") @FormUrlEncoded Observable<TransactionResponse> createTransaction(
       @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-  @POST("createPurchaseAuthorization") @FormUrlEncoded
-  Observable<PaymentAuthorizationResponse> createPaymentAuthorization(@FieldMap BaseBody args,
-      @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
   @POST("oauth2Authentication") @FormUrlEncoded Observable<OAuth> oauth2Authentication(
       @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);

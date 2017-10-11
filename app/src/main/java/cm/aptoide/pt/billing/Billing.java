@@ -28,11 +28,14 @@ public class Billing {
   private final Customer customer;
   private final AuthorizationFactory authorizationFactory;
   private final PurchaseTokenDecoder tokenDecoder;
+  private final String merchantName;
+  private final BillingSyncScheduler syncScheduler;
 
-  public Billing(TransactionRepository transactionRepository, BillingService billingService,
-      AuthorizationRepository authorizationRepository,
+  public Billing(String merchantName, BillingService billingService,
+      TransactionRepository transactionRepository, AuthorizationRepository authorizationRepository,
       PaymentServiceSelector paymentServiceSelector, Customer customer,
-      AuthorizationFactory authorizationFactory, PurchaseTokenDecoder tokenDecoder) {
+      AuthorizationFactory authorizationFactory, PurchaseTokenDecoder tokenDecoder,
+      BillingSyncScheduler syncScheduler) {
     this.transactionRepository = transactionRepository;
     this.billingService = billingService;
     this.authorizationRepository = authorizationRepository;
@@ -40,25 +43,27 @@ public class Billing {
     this.customer = customer;
     this.authorizationFactory = authorizationFactory;
     this.tokenDecoder = tokenDecoder;
+    this.merchantName = merchantName;
+    this.syncScheduler = syncScheduler;
   }
 
   public Customer getCustomer() {
     return customer;
   }
 
-  public Single<Merchant> getMerchant(String merchantName) {
+  public Single<Merchant> getMerchant() {
     return billingService.getMerchant(merchantName);
   }
 
-  public Single<Product> getProduct(String merchantName, String sku) {
-    return billingService.getProduct(merchantName, sku);
+  public Single<Product> getProduct(String sku) {
+    return billingService.getProduct(sku, merchantName);
   }
 
-  public Single<List<Product>> getProducts(String merchantName, List<String> skus) {
+  public Single<List<Product>> getProducts(List<String> skus) {
     return billingService.getProducts(merchantName, skus);
   }
 
-  public Single<List<Purchase>> getPurchases(String merchantName) {
+  public Single<List<Purchase>> getPurchases() {
     return billingService.getPurchases(merchantName);
   }
 
@@ -74,8 +79,8 @@ public class Billing {
     return billingService.getPaymentServices();
   }
 
-  public Completable processPayment(String merchantName, String sku, String payload) {
-    return getSelectedService().flatMap(service -> getProduct(merchantName, sku).flatMap(
+  public Completable processPayment(String sku, String payload) {
+    return getSelectedService().flatMap(service -> getProduct(sku).flatMap(
         product -> transactionRepository.createTransaction(product.getProductId(), service.getId(),
             payload)))
         .flatMapCompletable(transaction -> {
@@ -92,8 +97,8 @@ public class Billing {
         });
   }
 
-  public Completable authorize(String merchantName, String sku, String metadata) {
-    return getAuthorization(merchantName, sku).first()
+  public Completable authorize(String sku, String metadata) {
+    return getAuthorization(sku).first()
         .cast(PayPalAuthorization.class)
         .toSingle()
         .flatMapCompletable(authorization -> getSelectedService().flatMapCompletable(
@@ -104,15 +109,15 @@ public class Billing {
                     authorization.getTransactionId()))));
   }
 
-  public Observable<Authorization> getAuthorization(String merchantName, String sku) {
-    return getTransaction(merchantName, sku).first()
+  public Observable<Authorization> getAuthorization(String sku) {
+    return getTransaction(sku).first()
         .toSingle()
         .flatMapObservable(
             transaction -> authorizationRepository.getAuthorization(transaction.getId()));
   }
 
-  public Observable<Purchase> getPurchase(String merchantName, String sku) {
-    return getTransaction(merchantName, sku).flatMapSingle(transaction -> {
+  public Observable<Purchase> getPurchase(String sku) {
+    return getTransaction(sku).flatMapSingle(transaction -> {
       if (transaction.isProcessing()) {
         return Single.just(
             new SimplePurchase(SimplePurchase.Status.PENDING, transaction.getProductId()));
@@ -144,8 +149,8 @@ public class Billing {
         services -> paymentServiceSelector.selectedService(services));
   }
 
-  private Observable<Transaction> getTransaction(String merchantName, String sku) {
-    return getProduct(merchantName, sku).flatMapObservable(
+  private Observable<Transaction> getTransaction(String sku) {
+    return getProduct(sku).flatMapObservable(
         product -> transactionRepository.getTransaction(product.getProductId()));
   }
 
@@ -156,5 +161,9 @@ public class Billing {
             Observable.error(new IllegalArgumentException("Payment " + serviceId + " not found."))))
         .first()
         .toSingle();
+  }
+
+  public void stopSync() {
+    syncScheduler.stopSyncs();
   }
 }

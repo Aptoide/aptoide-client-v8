@@ -22,31 +22,14 @@ public class GetTransactionRequest extends V3<TransactionResponse> {
         sharedPreferences);
   }
 
-  public static GetTransactionRequest of(int productId, int apiVersion,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
-    final BaseBody args = getBaseBody(productId);
-    args.put("reqtype", "iabpurchasestatus");
-    args.put("apiversion", String.valueOf(apiVersion));
-    return new GetTransactionRequest(args, bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences);
-  }
-
-  private static BaseBody getBaseBody(int productId) {
+  public static GetTransactionRequest of(long productId, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     final BaseBody args = new BaseBody();
+    args.put("reqtype", "apkpurchasestatus");
     args.put("mode", "json");
     args.put("payreqtype", "rest");
     args.put("productid", String.valueOf(productId));
-
-    return args;
-  }
-
-  public static GetTransactionRequest of(int productId, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    final BaseBody args = getBaseBody(productId);
-    args.put("reqtype", "apkpurchasestatus");
     return new GetTransactionRequest(args, bodyInterceptor, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences);
   }

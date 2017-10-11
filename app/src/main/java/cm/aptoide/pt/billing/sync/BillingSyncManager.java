@@ -35,7 +35,7 @@ public class BillingSyncManager implements BillingSyncScheduler {
     syncScheduler.schedule(sync);
   }
 
-  public void cancelAll() {
+  @Override public void stopSyncs() {
     for (String syncId : currentSyncs) {
       syncScheduler.cancel(syncId);
     }

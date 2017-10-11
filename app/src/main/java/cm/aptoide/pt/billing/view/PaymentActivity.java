@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.billing.sync.BillingSyncManager;
+import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.view.BackButtonActivity;
 
 public class PaymentActivity extends BackButtonActivity {
@@ -24,7 +24,7 @@ public class PaymentActivity extends BackButtonActivity {
   public static final String EXTRA_SERVICE_NAME =
       "cm.aptoide.pt.view.payment.intent.extra.SERVICE_NAME";
 
-  private BillingSyncManager syncManager;
+  private Billing billing;
 
   public static Intent getIntent(Context context, String sku, String merchantName,
       String developerPayload) {
@@ -32,6 +32,13 @@ public class PaymentActivity extends BackButtonActivity {
     intent.putExtra(EXTRA_SKU, sku);
     intent.putExtra(EXTRA_MERCHANT_NAME, merchantName);
     intent.putExtra(EXTRA_DEVELOPER_PAYLOAD, developerPayload);
+    return intent;
+  }
+
+  public static Intent getIntent(Context context, long appId, String merchantName) {
+    final Intent intent = new Intent(context, PaymentActivity.class);
+    intent.putExtra(EXTRA_SKU, String.valueOf(appId));
+    intent.putExtra(EXTRA_MERCHANT_NAME, merchantName);
     return intent;
   }
 
@@ -44,11 +51,12 @@ public class PaymentActivity extends BackButtonActivity {
           PaymentFragment.create(getIntent().getExtras()), true);
     }
 
-    syncManager = ((AptoideApplication) getApplication()).getBillingSyncManager();
+    billing = ((AptoideApplication) getApplication()).getBilling(
+        getIntent().getStringExtra(EXTRA_MERCHANT_NAME));
   }
 
   @Override protected void onDestroy() {
-    syncManager.cancelAll();
+    billing.stopSync();
     super.onDestroy();
   }
 }

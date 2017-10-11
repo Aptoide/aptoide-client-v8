@@ -38,7 +38,8 @@ public class PayPalAuthorizationFragment extends PermissionServiceFragment imple
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    billing = ((AptoideApplication) getContext().getApplicationContext()).getBilling();
+    billing = ((AptoideApplication) getContext().getApplicationContext()).getBilling(
+        getArguments().getString(PaymentActivity.EXTRA_MERCHANT_NAME));
     billingAnalytics =
         ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
     billingNavigator = ((ActivityResultNavigator) getContext()).getBillingNavigator();
@@ -59,9 +60,7 @@ public class PayPalAuthorizationFragment extends PermissionServiceFragment imple
 
     attachPresenter(
         new PayPalAuthorizationPresenter(this, billing, billingAnalytics, billingNavigator,
-            AndroidSchedulers.mainThread(),
-            getArguments().getString(PaymentActivity.EXTRA_MERCHANT_NAME),
-            getArguments().getString(PaymentActivity.EXTRA_SKU),
+            AndroidSchedulers.mainThread(), getArguments().getString(PaymentActivity.EXTRA_SKU),
             getArguments().getString(PaymentActivity.EXTRA_SERVICE_NAME)), savedInstanceState);
   }
 
