@@ -82,6 +82,7 @@ public class AdsRepository {
 
   public Observable<MinimalAd> getAdsFromAppView(String packageName, String storeName) {
     return accountManager.accountStatus()
+        .first()
         .flatMap(account -> mapToMinimalAd(GetAdsRequest.ofAppviewOrganic(packageName, storeName,
             idsRepository.getUniqueIdentifier(),
             googlePlayServicesAvailabilityChecker.isAvailable(context),
@@ -106,6 +107,7 @@ public class AdsRepository {
 
   public Observable<List<MinimalAd>> getAdsFromHomepageMore(boolean refresh) {
     return accountManager.accountStatus()
+        .first()
         .flatMap(account -> mapToMinimalAds(
             GetAdsRequest.ofHomepageMore(idsRepository.getUniqueIdentifier(),
                 googlePlayServicesAvailabilityChecker.isAvailable(context),
@@ -137,6 +139,7 @@ public class AdsRepository {
   public Observable<List<MinimalAd>> getAdsFromAppviewSuggested(String packageName,
       List<String> keywords) {
     return accountManager.accountStatus()
+        .first()
         .flatMap(account -> mapToMinimalAds(
             GetAdsRequest.ofAppviewSuggested(keywords, idsRepository.getUniqueIdentifier(),
                 googlePlayServicesAvailabilityChecker.isAvailable(context), packageName,
@@ -149,6 +152,7 @@ public class AdsRepository {
 
   public Observable<MinimalAd> getAdsFromSearch(String query) {
     return accountManager.accountStatus()
+        .first()
         .flatMap(account -> mapToMinimalAd(
             GetAdsRequest.ofSearch(query, idsRepository.getUniqueIdentifier(),
                 googlePlayServicesAvailabilityChecker.isAvailable(context),
@@ -162,8 +166,7 @@ public class AdsRepository {
   public Observable<MinimalAd> getAdsFromSecondInstall(String packageName) {
     return accountManager.accountStatus()
         .first()
-        .toSingle()
-        .flatMapObservable(account -> mapToMinimalAd(
+        .flatMap(account -> mapToMinimalAd(
             GetAdsRequest.ofSecondInstall(packageName, idsRepository.getUniqueIdentifier(),
                 googlePlayServicesAvailabilityChecker.isAvailable(context),
                 partnerIdProvider.getPartnerId(), account.isAdultContentEnabled(), httpClient,
