@@ -7,10 +7,16 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.AdsRepository;
+import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.app.AppRepository;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.database.AccessorFactory;
+import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.database.realm.StoredMinimalAd;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.dataprovider.model.v7.ListApps;
@@ -25,11 +31,16 @@ import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.repository.request.RequestFactory;
+import cm.aptoide.pt.util.referrer.ReferrerUtils;
+import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.DisplayableGroup;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -41,8 +52,6 @@ import rx.schedulers.Schedulers;
  */
 
 public class FirstInstallPresenter implements Presenter {
-
-  private final String TAG = FirstInstallPresenter.class.getCanonicalName();
 
   private FirstInstallView view;
   private CrashReport crashReport;
@@ -56,9 +65,16 @@ public class FirstInstallPresenter implements Presenter {
   private AppRepository appRepository;
 
   private List<FirstInstallAppDisplayable> appDisplayables;
+  private List<FirstInstallAdDisplayable> adDisplayables;
   private PermissionManager permissionManager;
   private PermissionService permissionService;
   private InstallManager installManager;
+
+  private MinimalAdMapper adMapper;
+  private OkHttpClient httpClient;
+  private Converter.Factory converterFactory;
+  private QManager qManager;
+  private StoredMinimalAdAccessor storedMinimalAdAccessor;
 
   FirstInstallPresenter(FirstInstallView view, CrashReport crashReport,
       RequestFactory requestFactoryCdnPool, Context context, String storeName, String url,
@@ -78,10 +94,19 @@ public class FirstInstallPresenter implements Presenter {
 
   @Override public void present() {
     appDisplayables = new ArrayList<>();
+    adDisplayables = new ArrayList<>();
     permissionManager = new PermissionManager();
     permissionService = ((PermissionService) context);
     installManager = ((AptoideApplication) context.getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
+
+    adMapper = new MinimalAdMapper();
+    httpClient = ((AptoideApplication) context.getApplicationContext()).getDefaultClient();
+    converterFactory = WebService.getDefaultConverter();
+    qManager = ((AptoideApplication) context.getApplicationContext()).getQManager();
+    storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
+        ((AptoideApplication) context.getApplicationContext()
+            .getApplicationContext()).getDatabase(), StoredMinimalAd.class);
 
     handleInstallAllClick();
     handleCloseClick();
@@ -96,7 +121,8 @@ public class FirstInstallPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(resumed -> view.installAllClick())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(installAllClick -> installAllApps(appDisplayables), crashReport::log);
+        .subscribe(installAllClick -> installAll(appDisplayables, adDisplayables),
+            crashReport::log);
   }
 
   /**
@@ -120,7 +146,7 @@ public class FirstInstallPresenter implements Presenter {
         .subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnCompleted(() -> getAds(getNumberOfAdsToShow(appDisplayables.size())))
-        .flatMap(this::parseDisplayables)
+        .flatMap(this::parseGetStoreWidgetsToDisplayables)
         .subscribe(displayables -> view.addFirstInstallDisplayables(displayables, true),
             crashReport::log);
   }
@@ -132,7 +158,8 @@ public class FirstInstallPresenter implements Presenter {
    *
    * @return observable of displayables from the parsed list
    */
-  private Observable<List<Displayable>> parseDisplayables(GetStoreWidgets getStoreWidgets) {
+  private Observable<List<Displayable>> parseGetStoreWidgetsToDisplayables(
+      GetStoreWidgets getStoreWidgets) {
     return Observable.from(getStoreWidgets.getDataList()
         .getList())
         .concatMapEager(wsWidget -> wsWidgetParser(wsWidget).toList()
@@ -159,7 +186,8 @@ public class FirstInstallPresenter implements Presenter {
         .getLayout())) {
       for (App app : listApps.getDataList()
           .getList()) {
-        FirstInstallAppDisplayable firstInstallAppDisplayable = new FirstInstallAppDisplayable(app);
+        FirstInstallAppDisplayable firstInstallAppDisplayable =
+            new FirstInstallAppDisplayable(app, true);
         displayables.add(firstInstallAppDisplayable);
         appDisplayables.add(firstInstallAppDisplayable);
       }
@@ -176,7 +204,7 @@ public class FirstInstallPresenter implements Presenter {
     adsRepository.getAdsFromFirstInstall(limitOfAds)
         .subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())
-        .flatMap(this::parseDisplayables)
+        .flatMap(this::parseMinimalAdsToDisplayables)
         .subscribe(displayables -> view.addFirstInstallDisplayables(displayables, true));
   }
 
@@ -187,13 +215,32 @@ public class FirstInstallPresenter implements Presenter {
    *
    * @return observable of displayables from the parsed list
    */
-  private Observable<List<Displayable>> parseDisplayables(List<MinimalAd> minimalAds) {
+  private Observable<List<Displayable>> parseMinimalAdsToDisplayables(List<MinimalAd> minimalAds) {
     List<Displayable> displayables = new LinkedList<>();
     for (MinimalAd minimalAd : minimalAds) {
-      displayables.add(new FirstInstallAdDisplayable(minimalAd, minimalAd.getAdId()
-          .toString()));
+      handleAdsLogic(minimalAd);
+      FirstInstallAdDisplayable firstInstallAdDisplayable = new FirstInstallAdDisplayable(minimalAd,
+          minimalAd.getAdId()
+              .toString(), true);
+      adDisplayables.add(firstInstallAdDisplayable);
+      displayables.add(firstInstallAdDisplayable);
     }
     return Observable.just(displayables);
+  }
+
+  /**
+   * handle ads logic by storing it and extracting the referrer
+   *
+   * @param minimalAd minimal ad to store and extract referrer
+   */
+  private void handleAdsLogic(MinimalAd minimalAd) {
+    storedMinimalAdAccessor.insert(adMapper.map(minimalAd, null));
+    AdNetworkUtils.knockCpc(adMapper.map(minimalAd));
+    AptoideUtils.ThreadU.runOnUiThread(
+        () -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, false, adsRepository,
+            httpClient, converterFactory, qManager, context.getApplicationContext(),
+            ((AptoideApplication) context.getApplicationContext()).getDefaultSharedPreferences(),
+            new MinimalAdMapper()));
   }
 
   /**
@@ -216,7 +263,8 @@ public class FirstInstallPresenter implements Presenter {
    *
    * @param appDisplayablesList list of firstInstallAppDisplayables to download and install
    */
-  private void installAllApps(List<FirstInstallAppDisplayable> appDisplayablesList) {
+  private void installAll(List<FirstInstallAppDisplayable> appDisplayablesList,
+      List<FirstInstallAdDisplayable> adDisplayablesList) {
     permissionManager.requestDownloadAccess(permissionService)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
@@ -225,11 +273,35 @@ public class FirstInstallPresenter implements Presenter {
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .flatMapIterable(displayables -> displayables)
+            .filter(FirstInstallAppDisplayable::isSelected)
             .map(firstInstallAppDisplayable -> appRepository.getApp(
                 firstInstallAppDisplayable.getPojo()
                     .getId(), true, false, firstInstallAppDisplayable.getPojo()
                     .getStore()
                     .getName(), firstInstallAppDisplayable.getPojo()
+                    .getPackageName())
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(app -> new DownloadFactory(app.getNodes()
+                    .getMeta()
+                    .getData()
+                    .getStore()
+                    .getName()).create(app.getNodes()
+                    .getMeta()
+                    .getData(), Download.ACTION_INSTALL))
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMapCompletable(download -> installManager.install(download))
+                .subscribe())
+            .subscribe())
+        .map(success -> Observable.just(adDisplayablesList)
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .flatMapIterable(displayables -> displayables)
+            .filter(FirstInstallAdDisplayable::isSelected)
+            .map(firstInstallAdDisplayable -> appRepository.getApp(
+                firstInstallAdDisplayable.getPojo()
+                    .getAppId(), true, true, null, firstInstallAdDisplayable.getPojo()
                     .getPackageName())
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())

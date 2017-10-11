@@ -87,6 +87,7 @@
       android:paddingLeft="@dimen/recycler_margin"
       android:paddingRight="@dimen/recycler_margin"
       android:paddingStart="@dimen/recycler_margin"
+      android:paddingTop="@dimen/recycler_margin"
       android:visibility="gone"
       tools:visibility="visible"
       />

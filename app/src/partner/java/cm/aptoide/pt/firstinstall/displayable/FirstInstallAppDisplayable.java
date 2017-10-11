@@ -10,12 +10,15 @@ import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 
 public class FirstInstallAppDisplayable extends DisplayablePojo<App> {
 
+  private boolean isSelected;
+
   public FirstInstallAppDisplayable() {
 
   }
 
-  public FirstInstallAppDisplayable(App pojo) {
+  public FirstInstallAppDisplayable(App pojo, boolean isSelected) {
     super(pojo);
+    this.isSelected = isSelected;
   }
 
   @Override protected Configs getConfig() {
@@ -24,5 +27,13 @@ public class FirstInstallAppDisplayable extends DisplayablePojo<App> {
 
   @Override public int getViewLayout() {
     return R.layout.first_install_app_displayable;
+  }
+
+  public boolean isSelected() {
+    return isSelected;
+  }
+
+  public void setSelected(boolean selected) {
+    isSelected = selected;
   }
 }
