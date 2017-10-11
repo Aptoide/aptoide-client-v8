@@ -16,6 +16,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.spotandshareapp.JoinGroupView;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareWaitingToReceivePresenter;
 import cm.aptoide.pt.view.BackButtonFragment;
@@ -154,5 +155,10 @@ public class SpotAndShareWaitingToReceiveFragment extends BackButtonFragment
       backRelay.call(null);
     }
     return false;
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 }

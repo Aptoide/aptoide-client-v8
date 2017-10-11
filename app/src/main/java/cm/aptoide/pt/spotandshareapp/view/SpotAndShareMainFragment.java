@@ -20,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.Accepter;
@@ -50,6 +52,7 @@ public class SpotAndShareMainFragment extends FragmentView
   private SpotAndShareMainFragmentPresenter presenter;
   private SpotAndSharePermissionProvider spotAndSharePermissionProvider;
   private PublishRelay<Integer> writeSettingsPermissionRelay;
+  private AptoideNavigationTracker aptoideNavigationTracker;
 
   public static Fragment newInstance() {
     Fragment fragment = new SpotAndShareMainFragment();
@@ -61,6 +64,14 @@ public class SpotAndShareMainFragment extends FragmentView
     writeSettingsPermissionRelay = PublishRelay.create();
     spotAndSharePermissionProvider =
         new SpotAndSharePermissionProvider((PermissionProvider) getActivity(), this);
+    aptoideNavigationTracker =
+        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker();
+  }
+
+  @Override public void onResume() {
+    super.onResume();
+    aptoideNavigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName()));
   }
 
   @Override public void finish() {

@@ -16,6 +16,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareLocalAvatarsProvider;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareLocalUser;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareEditProfilePresenter;
@@ -38,6 +40,7 @@ public class SpotAndShareEditProfileFragment extends FragmentView
   private RecyclerView avatarsRecyclerView;
   private SpotAndShareEditProfileAdapter pickAvatarAdapter;
   private PublishSubject<SpotAndShareAvatar> pickAvatarSubject;
+  private AptoideNavigationTracker aptoideNavigationTracker;
 
   public static Fragment newInstance() {
     Fragment fragment = new SpotAndShareEditProfileFragment();
@@ -47,6 +50,14 @@ public class SpotAndShareEditProfileFragment extends FragmentView
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     pickAvatarSubject = PublishSubject.create();
+    aptoideNavigationTracker =
+        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker();
+  }
+
+  @Override public void onResume() {
+    super.onResume();
+    aptoideNavigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName()));
   }
 
   @Override public void finish() {

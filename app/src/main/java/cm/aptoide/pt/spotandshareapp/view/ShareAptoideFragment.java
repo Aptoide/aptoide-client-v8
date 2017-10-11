@@ -21,6 +21,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.spotandshareapp.ShareApkSandbox;
 import cm.aptoide.pt.spotandshareapp.presenter.ShareAptoidePresenter;
@@ -189,5 +190,10 @@ public class ShareAptoideFragment extends BackButtonFragment implements ShareApt
     Toast.makeText(getContext(), R.string.spotandshare_message_error_create_group,
         Toast.LENGTH_SHORT)
         .show();
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 }

@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.CompositePresenter;
 import cm.aptoide.pt.spotandshareapp.AppModel;
@@ -414,5 +415,10 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
       backRelay.call(null);
     }
     return false;
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 }
