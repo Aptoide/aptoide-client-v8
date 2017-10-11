@@ -52,7 +52,7 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
             .doOnNext(transferAppModels -> view.updateReceivedAppsList(transferAppModels)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> err.printStackTrace());
+        }, err -> crashReport.log(err));
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -60,7 +60,7 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
         .doOnNext(transferAppModel -> acceptedApp(transferAppModel))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> error.printStackTrace());
+        }, error -> crashReport.log(error));
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -71,7 +71,7 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
         .doOnNext(transferAppModel -> view.updateTransferInstallStatus(transferAppModel))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> error.printStackTrace());
+        }, error -> crashReport.log(error));
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -79,7 +79,7 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
         .doOnNext(click -> view.back())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> error.printStackTrace());
+        }, error -> crashReport.log(error));
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -88,7 +88,7 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
         .doOnNext(__ -> view.navigateBack())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> error.printStackTrace());
+        }, error -> crashReport.log(error));
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -96,7 +96,7 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
         .doOnNext(__ -> view.pressedBottomSheetHeader())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> error.printStackTrace());
+        }, error -> crashReport.log(error));
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -111,7 +111,7 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> error.printStackTrace());
+        }, error -> crashReport.log(error));
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -119,7 +119,7 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
         .doOnNext(__ -> startListeningToFriendsChanges())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> error.printStackTrace());
+        }, error -> crashReport.log(error));
   }
 
   private void stopListeningToFriendsChanges() {
@@ -135,7 +135,7 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
         .doOnNext(__ -> stopListeningToFriendsChanges())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> error.printStackTrace());
+        }, error -> crashReport.log(error));
   }
 
   private void startListeningToFriendsChanges() {
