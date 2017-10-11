@@ -29,7 +29,6 @@ import rx.Observable;
  */
 public class AppViewInstallDisplayable extends AppViewDisplayable {
 
-  private static String editorsBrickPosition;
   private final Observable<Void> installAppRelay;
   private int versionCode;
   @Getter @Setter private boolean shouldInstall;
@@ -94,8 +93,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
       AptoideNavigationTracker aptoideNavigationTracker, String editorsBrickPosition) {
     return new AppViewInstallDisplayable(installManager, getApp, searchAdResult, shouldInstall,
         installedRepository, timelineAnalytics, appViewAnalytics, installAppRelay, downloadFactory,
-        appViewFragment, analytics, aptoideNavigationTracker,
-        AppViewInstallDisplayable.editorsBrickPosition);
+        appViewFragment, analytics, aptoideNavigationTracker, editorsBrickPosition);
   }
 
   public void startInstallationProcess() {

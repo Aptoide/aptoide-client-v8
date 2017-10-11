@@ -37,14 +37,8 @@ public class DownloadCompleteAnalytics {
 
   public void installClicked(ScreenTagHistory previousScreen, ScreenTagHistory currentScreen,
       String id, String packageName, String trustedValue, String editorsBrickPosition) {
-    try {
-      createEvents(previousScreen, currentScreen, id, packageName, trustedValue,
-          editorsBrickPosition);
-    } catch (NullPointerException e) {
-      crashReport.log(this.getClass()
-              .getSimpleName(),
-          "Null pointer while trying to get current or previous screen from AptoideNavigation Tracker");
-    }
+    createEvents(previousScreen, currentScreen, id, packageName, trustedValue,
+        editorsBrickPosition);
   }
 
   @NonNull private Bundle mapToBundle(Map<String, String> map) {
@@ -72,13 +66,14 @@ public class DownloadCompleteAnalytics {
   }
 
   private void createEvents(ScreenTagHistory previousScreen, ScreenTagHistory currentScreen,
-      String id, String packageName, String trustedValue, String editorsChoiceBrickPosition)
-      throws NullPointerException {
+      String id, String packageName, String trustedValue, String editorsChoiceBrickPosition) {
 
     if (editorsChoiceBrickPosition != null) {
       HashMap<String, String> map = new HashMap<>();
       map.put(PACKAGE_NAME, packageName);
-      map.put("fragment", previousScreen.getFragment());
+      if (previousScreen.getFragment() != null) {
+        map.put("fragment", previousScreen.getFragment());
+      }
       map.put("position", editorsChoiceBrickPosition);
       FlurryEvent editorsEvent = new FlurryEvent(PARTIAL_EVENT_NAME, map);
       FacebookEvent editorsChoiceFacebookEvent =
@@ -90,9 +85,15 @@ public class DownloadCompleteAnalytics {
     HashMap<String, String> downloadMap = new HashMap<>();
     downloadMap.put(PACKAGE_NAME, packageName);
     downloadMap.put(TRUSTED_BADGE, trustedValue);
-    downloadMap.put("fragment", previousScreen.getFragment());
-    downloadMap.put("tag", currentScreen.getTag());
-    downloadMap.put("store", previousScreen.getStore());
+    if (previousScreen.getFragment() != null) {
+      downloadMap.put("fragment", previousScreen.getFragment());
+    }
+    if (currentScreen.getTag() != null) {
+      downloadMap.put("tag", currentScreen.getTag());
+    }
+    if (previousScreen.getStore() != null) {
+      downloadMap.put("store", previousScreen.getStore());
+    }
 
     FacebookEvent downloadFacebookEvent =
         new FacebookEvent(facebookLogger, EVENT_NAME, mapToBundle(downloadMap));
