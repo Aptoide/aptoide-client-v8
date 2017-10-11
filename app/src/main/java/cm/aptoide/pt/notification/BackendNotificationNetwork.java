@@ -2,23 +2,19 @@ package cm.aptoide.pt.notification;
 
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.notifications.GetPullNotificationsResponse;
 import cm.aptoide.pt.dataprovider.ws.notifications.PullCampaignNotificationsRequest;
 import cm.aptoide.pt.dataprovider.ws.notifications.PullSocialNotificationRequest;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
 import cm.aptoide.pt.networking.IdsRepository;
-import com.jakewharton.rxrelay.PublishRelay;
 import java.util.LinkedList;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
-import rx.Observable;
 import rx.Single;
 
-public class NotificationHandler implements NotificationNetworkService {
-  private final PublishRelay<AptoideNotification> handler;
+public class BackendNotificationNetwork implements NotificationNetworkService {
   private final String applicationId;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
@@ -30,18 +26,16 @@ public class NotificationHandler implements NotificationNetworkService {
   private final SharedPreferences sharedPreferences;
   private final Resources resources;
 
-  public NotificationHandler(String applicationId, OkHttpClient httpClient,
+  public BackendNotificationNetwork(String applicationId, OkHttpClient httpClient,
       Converter.Factory converterFactory, IdsRepository idsRepository, String versionName,
-      String extraId, PublishRelay<AptoideNotification> relay, SharedPreferences sharedPreferences,
-      Resources resources, AuthenticationPersistence authenticationPersistence,
-      AptoideAccountManager accountManager) {
+      String extraId, SharedPreferences sharedPreferences, Resources resources,
+      AuthenticationPersistence authenticationPersistence, AptoideAccountManager accountManager) {
     this.applicationId = applicationId;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.idsRepository = idsRepository;
     this.versionName = versionName;
     this.authenticationPersistence = authenticationPersistence;
-    this.handler = relay;
     this.extraId = extraId;
     this.sharedPreferences = sharedPreferences;
     this.resources = resources;
@@ -58,7 +52,6 @@ public class NotificationHandler implements NotificationNetworkService {
         .flatMap(response -> accountManager.accountStatus()
             .first()
             .map(account -> convertSocialNotifications(response, account.getId())))
-        .flatMap(notifications -> handle(notifications))
         .toSingle();
   }
 
@@ -70,19 +63,7 @@ public class NotificationHandler implements NotificationNetworkService {
             .first()
             .map(account -> convertCampaignNotifications(response, account.getId())))
         .first()
-        .flatMap(notifications -> handle(notifications))
         .toSingle();
-  }
-
-  @NonNull private Observable<List<AptoideNotification>> handle(
-      List<AptoideNotification> aptoideNotifications) {
-    return Observable.from(aptoideNotifications)
-        .doOnNext(notification -> handler.call(notification))
-        .toList();
-  }
-
-  public Observable<AptoideNotification> getHandlerNotifications() {
-    return handler;
   }
 
   private List<AptoideNotification> convertSocialNotifications(
@@ -102,7 +83,7 @@ public class NotificationHandler implements NotificationNetworkService {
           new AptoideNotification(notification.getBody(), notification.getImg(),
               notification.getTitle(), notification.getUrl(), notification.getType(), appName,
               graphic, AptoideNotification.NOT_DISMISSED, id, notification.getExpire(),
-              notification.getUrlTrack(), notification.getUrlTrackNc()));
+              notification.getUrlTrack(), notification.getUrlTrackNc(), false));
     }
     return aptoideNotifications;
   }
@@ -124,7 +105,7 @@ public class NotificationHandler implements NotificationNetworkService {
           new AptoideNotification(notification.getAbTestingGroup(), notification.getBody(),
               notification.getCampaignId(), notification.getImg(), notification.getLang(),
               notification.getTitle(), notification.getUrl(), notification.getUrlTrack(), appName,
-              graphic, id, notification.getExpire(), notification.getUrlTrackNc()));
+              graphic, id, notification.getExpire(), notification.getUrlTrackNc(), false));
     }
     return aptoideNotifications;
   }

@@ -134,10 +134,9 @@ import cm.aptoide.pt.networking.NoAuthenticationBodyInterceptorV3;
 import cm.aptoide.pt.networking.NoOpTokenInvalidator;
 import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
+import cm.aptoide.pt.notification.BackendNotificationNetwork;
 import cm.aptoide.pt.notification.NotificationCenter;
-import cm.aptoide.pt.notification.NotificationHandler;
 import cm.aptoide.pt.notification.NotificationIdsMapper;
-import cm.aptoide.pt.notification.NotificationNetworkService;
 import cm.aptoide.pt.notification.NotificationPolicyFactory;
 import cm.aptoide.pt.notification.NotificationProvider;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
@@ -265,7 +264,7 @@ public abstract class AptoideApplication extends Application {
   private PurchaseBundleMapper purchaseBundleMapper;
   private PaymentThrowableCodeMapper paymentThrowableCodeMapper;
   private MultipartBodyInterceptor multipartBodyInterceptor;
-  private NotificationHandler notificationHandler;
+  private BackendNotificationNetwork backendNotificationNetwork;
   private NotificationCenter notificationCenter;
   private QManager qManager;
   private EntryPointChooser entryPointChooser;
@@ -481,10 +480,6 @@ public abstract class AptoideApplication extends Application {
     return rootInstallationRetryHandler;
   }
 
-  public NotificationNetworkService getNotificationNetworkService() {
-    return getNotificationHandler();
-  }
-
   public NotificationCenter getNotificationCenter() {
     if (notificationCenter == null) {
 
@@ -497,11 +492,12 @@ public abstract class AptoideApplication extends Application {
 
       final NotificationProvider notificationProvider = getNotificationProvider();
 
-      notificationCenter = new NotificationCenter(getNotificationHandler(), notificationProvider,
-          getNotificationSyncScheduler(), systemNotificationShower, CrashReport.getInstance(),
-          new NotificationPolicyFactory(notificationProvider),
-          new NotificationsCleaner(notificationAccessor,
-              Calendar.getInstance(TimeZone.getTimeZone("UTC"))), getAccountManager());
+      notificationCenter =
+          new NotificationCenter(notificationProvider, getNotificationSyncScheduler(),
+              systemNotificationShower, CrashReport.getInstance(),
+              new NotificationPolicyFactory(notificationProvider),
+              new NotificationsCleaner(notificationAccessor,
+                  Calendar.getInstance(TimeZone.getTimeZone("UTC"))), getAccountManager());
     }
     return notificationCenter;
   }
@@ -530,7 +526,7 @@ public abstract class AptoideApplication extends Application {
     if (notificationSyncScheduler == null) {
       notificationSyncScheduler = new NotificationSyncManager(getSyncScheduler(), true,
           new NotificationSyncFactory(getDefaultSharedPreferences(),
-              getNotificationNetworkService(), getNotificationProvider()));
+              getBackendNotificationNetwork(), getNotificationProvider()));
     }
     return notificationSyncScheduler;
   }
@@ -553,14 +549,15 @@ public abstract class AptoideApplication extends Application {
         Build.ID);
   }
 
-  public NotificationHandler getNotificationHandler() {
-    if (notificationHandler == null) {
-      notificationHandler = new NotificationHandler(BuildConfig.APPLICATION_ID, getDefaultClient(),
-          WebService.getDefaultConverter(), getIdsRepository(), BuildConfig.VERSION_NAME,
-          getExtraId(), PublishRelay.create(), getDefaultSharedPreferences(), getResources(),
-          getAuthenticationPersistence(), getAccountManager());
+  public BackendNotificationNetwork getBackendNotificationNetwork() {
+    if (backendNotificationNetwork == null) {
+      backendNotificationNetwork =
+          new BackendNotificationNetwork(BuildConfig.APPLICATION_ID, getDefaultClient(),
+              WebService.getDefaultConverter(), getIdsRepository(), BuildConfig.VERSION_NAME,
+              getExtraId(), getDefaultSharedPreferences(), getResources(),
+              getAuthenticationPersistence(), getAccountManager());
     }
-    return notificationHandler;
+    return backendNotificationNetwork;
   }
 
   public OkHttpClient getLongTimeoutClient() {
