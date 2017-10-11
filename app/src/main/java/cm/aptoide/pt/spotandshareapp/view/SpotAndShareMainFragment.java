@@ -24,11 +24,9 @@ import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareLocalUser;
-import cm.aptoide.pt.spotandshareapp.SpotAndSharePermissionProvider;
 import cm.aptoide.pt.spotandshareapp.WriteSettingsPermissionProvider;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareMainFragmentPresenter;
 import cm.aptoide.pt.view.fragment.FragmentView;
-import cm.aptoide.pt.view.permission.PermissionProvider;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
@@ -48,7 +46,6 @@ public class SpotAndShareMainFragment extends FragmentView
   private Toolbar toolbar;
   private TextView shareAptoideTextView;
   private SpotAndShareMainFragmentPresenter presenter;
-  private SpotAndSharePermissionProvider spotAndSharePermissionProvider;
   private PublishRelay<Integer> writeSettingsPermissionRelay;
   private AptoideNavigationTracker aptoideNavigationTracker;
 
@@ -60,8 +57,6 @@ public class SpotAndShareMainFragment extends FragmentView
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     writeSettingsPermissionRelay = PublishRelay.create();
-    spotAndSharePermissionProvider =
-        new SpotAndSharePermissionProvider((PermissionProvider) getActivity(), this);
     aptoideNavigationTracker =
         ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker();
   }
