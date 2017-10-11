@@ -81,14 +81,15 @@ public class AdsRepository {
   }
 
   public Observable<MinimalAd> getAdsFromAppView(String packageName, String storeName) {
-    return mapToMinimalAd(
-        GetAdsRequest.ofAppviewOrganic(packageName, storeName, idsRepository.getUniqueIdentifier(),
+    return accountManager.accountStatus()
+        .flatMap(account -> mapToMinimalAd(GetAdsRequest.ofAppviewOrganic(packageName, storeName,
+            idsRepository.getUniqueIdentifier(),
             googlePlayServicesAvailabilityChecker.isAvailable(context),
-            partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
+            partnerIdProvider.getPartnerId(), account.isAdultContentEnabled(), httpClient,
             converterFactory,
             qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
             sharedPreferences, connectivityManager, resources, versionCodeProvider)
-            .observe());
+            .observe()));
   }
 
   private Observable<MinimalAd> mapToMinimalAd(
@@ -104,13 +105,15 @@ public class AdsRepository {
   }
 
   public Observable<List<MinimalAd>> getAdsFromHomepageMore(boolean refresh) {
-    return mapToMinimalAds(GetAdsRequest.ofHomepageMore(idsRepository.getUniqueIdentifier(),
-        googlePlayServicesAvailabilityChecker.isAvailable(context),
-        partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
-        converterFactory,
-        qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
-        sharedPreferences, connectivityManager, resources, versionCodeProvider)
-        .observe(refresh));
+    return accountManager.accountStatus()
+        .flatMap(account -> mapToMinimalAds(
+            GetAdsRequest.ofHomepageMore(idsRepository.getUniqueIdentifier(),
+                googlePlayServicesAvailabilityChecker.isAvailable(context),
+                partnerIdProvider.getPartnerId(), account.isAdultContentEnabled(), httpClient,
+                converterFactory,
+                qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
+                sharedPreferences, connectivityManager, resources, versionCodeProvider)
+                .observe(refresh)));
   }
 
   private Observable<List<MinimalAd>> mapToMinimalAds(
@@ -133,24 +136,27 @@ public class AdsRepository {
 
   public Observable<List<MinimalAd>> getAdsFromAppviewSuggested(String packageName,
       List<String> keywords) {
-    return mapToMinimalAds(
-        GetAdsRequest.ofAppviewSuggested(keywords, idsRepository.getUniqueIdentifier(),
-            googlePlayServicesAvailabilityChecker.isAvailable(context), packageName,
-            partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
-            converterFactory,
-            qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
-            sharedPreferences, connectivityManager, resources, versionCodeProvider)
-            .observe()).subscribeOn(Schedulers.io());
+    return accountManager.accountStatus()
+        .flatMap(account -> mapToMinimalAds(
+            GetAdsRequest.ofAppviewSuggested(keywords, idsRepository.getUniqueIdentifier(),
+                googlePlayServicesAvailabilityChecker.isAvailable(context), packageName,
+                partnerIdProvider.getPartnerId(), account.isAdultContentEnabled(), httpClient,
+                converterFactory,
+                qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
+                sharedPreferences, connectivityManager, resources, versionCodeProvider)
+                .observe()).subscribeOn(Schedulers.io()));
   }
 
   public Observable<MinimalAd> getAdsFromSearch(String query) {
-    return mapToMinimalAd(GetAdsRequest.ofSearch(query, idsRepository.getUniqueIdentifier(),
-        googlePlayServicesAvailabilityChecker.isAvailable(context),
-        partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
-        converterFactory,
-        qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
-        sharedPreferences, connectivityManager, resources, versionCodeProvider)
-        .observe());
+    return accountManager.accountStatus()
+        .flatMap(account -> mapToMinimalAd(
+            GetAdsRequest.ofSearch(query, idsRepository.getUniqueIdentifier(),
+                googlePlayServicesAvailabilityChecker.isAvailable(context),
+                partnerIdProvider.getPartnerId(), account.isAdultContentEnabled(), httpClient,
+                converterFactory,
+                qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
+                sharedPreferences, connectivityManager, resources, versionCodeProvider)
+                .observe()));
   }
 
   public Observable<MinimalAd> getAdsFromSecondInstall(String packageName) {
@@ -168,13 +174,14 @@ public class AdsRepository {
   }
 
   public Observable<MinimalAd> getAdsFromSecondTry(String packageName) {
-    return mapToMinimalAd(
-        GetAdsRequest.ofSecondTry(packageName, idsRepository.getUniqueIdentifier(),
-            googlePlayServicesAvailabilityChecker.isAvailable(context),
-            partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
-            converterFactory,
-            qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
-            sharedPreferences, connectivityManager, resources, versionCodeProvider)
-            .observe());
+    return accountManager.accountStatus()
+        .flatMap(account -> mapToMinimalAd(
+            GetAdsRequest.ofSecondTry(packageName, idsRepository.getUniqueIdentifier(),
+                googlePlayServicesAvailabilityChecker.isAvailable(context),
+                partnerIdProvider.getPartnerId(), account.isAdultContentEnabled(), httpClient,
+                converterFactory,
+                qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
+                sharedPreferences, connectivityManager, resources, versionCodeProvider)
+                .observe()));
   }
 }

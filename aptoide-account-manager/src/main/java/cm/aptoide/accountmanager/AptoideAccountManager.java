@@ -132,10 +132,13 @@ public class AptoideAccountManager {
     return account != null && account.isAccessConfirmed();
   }
 
+  /**
+   * Updates the server account status with the latest adult content enabled option (true or false).
+   * Does not sync the account locally since the server would return the old switch value.
+   */
   public Completable updateAccount(boolean adultContentEnabled) {
     return singleAccountStatus().flatMapCompletable(
-        account -> accountService.updateAccount(adultContentEnabled)
-            .andThen(syncAccount()));
+        account -> accountService.updateAccount(adultContentEnabled));
   }
 
   public Completable updateAccount(String username) {

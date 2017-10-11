@@ -111,8 +111,10 @@ public class SearchFragment extends BasePagerToolbarFragment {
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     tokenInvalidator =
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
+
     bodyInterceptor =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
+
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     searchAnalytics = new SearchAnalytics(Analytics.getInstance(),
