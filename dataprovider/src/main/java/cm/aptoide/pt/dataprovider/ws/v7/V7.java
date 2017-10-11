@@ -466,7 +466,7 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
         @Body UpdateAuthorizationRequest.RequestBody body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("inapp/bank/authorization/get")
+    @POST("inapp/bank/authorization/getMeta")
     Observable<GetAuthorizationRequest.ResponseBody> getBillingAuthorization(
         @Body GetAuthorizationRequest.RequestBody body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
