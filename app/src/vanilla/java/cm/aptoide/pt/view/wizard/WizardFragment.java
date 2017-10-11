@@ -86,7 +86,7 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName());
   }
-  
+
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
     currentPosition = 0;
