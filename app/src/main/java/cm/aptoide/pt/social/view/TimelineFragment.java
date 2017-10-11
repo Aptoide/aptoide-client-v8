@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.design.widget.FloatingActionButton;
@@ -84,6 +85,7 @@ import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
@@ -578,6 +580,13 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     }
     emptyStatePosts.add(emptyStatePost);
     adapter.updatePosts(emptyStatePosts);
+  }
+
+  @NonNull public Observable<Integer> getScrollEvents() {
+    return RxRecyclerView.scrollEvents(list)
+        .debounce(1, TimeUnit.SECONDS)
+        .map(recyclerViewScrollEvent -> layoutManager.findFirstVisibleItemPosition())
+        .distinctUntilChanged();
   }
 
   private void handleSharePreviewAnswer() {

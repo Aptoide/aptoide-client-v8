@@ -99,11 +99,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     return fragment;
   }
 
-  @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName());
-  }
-
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     currentModel = Parcels.unwrap(getArguments().getParcelable(EXTRA_STORE_MODEL));
@@ -140,6 +135,11 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     setupThemeSelector();
     setupViewsDefaultDataUsingCurrentModel();
     attachPresenters();
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {

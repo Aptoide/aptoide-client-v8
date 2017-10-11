@@ -37,8 +37,8 @@ public class ListAppsFragment extends GetStoreEndlessFragment<ListApps> {
             for (App app : list) {
               app.getStore()
                   .setAppearance(new Store.Appearance(storeTheme, null));
-              displayables.add(new AppBrickListDisplayable(app, tag, aptoideNavigationTracker,
-                  storeContext));
+              displayables.add(
+                  new AppBrickListDisplayable(app, tag, aptoideNavigationTracker, storeContext));
             }
             break;
           default:

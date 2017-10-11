@@ -71,8 +71,11 @@ public class AptoideNavigationTracker {
       return false;
     } else if (viewName.equals(StoreFragment.class.getSimpleName())) {
       return false;
-    } else {
-      return true;
     }
+    return true;
+  }
+
+  public ScreenTagHistory getCurrentScreen() {
+    return historyList.get(historyList.size() - 1);
   }
 }

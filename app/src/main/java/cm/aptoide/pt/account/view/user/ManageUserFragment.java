@@ -98,11 +98,6 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
     return manageUserFragment;
   }
 
-  @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName());
-  }
-
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
@@ -157,6 +152,11 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
       header.setText(getString(R.string.edit_profile_header_message));
     }
     attachPresenters();
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {

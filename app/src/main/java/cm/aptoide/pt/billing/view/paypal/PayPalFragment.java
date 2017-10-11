@@ -36,11 +36,6 @@ public class PayPalFragment extends PermissionServiceFragment implements PayPalV
     return fragment;
   }
 
-  @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName());
-  }
-
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     billing = ((AptoideApplication) getContext().getApplicationContext()).getBilling();
@@ -68,6 +63,11 @@ public class PayPalFragment extends PermissionServiceFragment implements PayPalV
         getArguments().getString(PaymentActivity.EXTRA_PRODUCT_ID),
         getArguments().getString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD),
         getArguments().getString(PaymentActivity.EXTRA_PAYMENT_METHOD_NAME)), savedInstanceState);
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Nullable @Override

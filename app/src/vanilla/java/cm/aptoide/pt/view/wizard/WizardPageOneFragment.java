@@ -22,11 +22,6 @@ public class WizardPageOneFragment extends BackButtonFragment {
     return new WizardPageOneFragment();
   }
 
-  @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName());
-  }
-
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     pageViewsAnalytics.sendPageViewedEvent();
@@ -40,6 +35,11 @@ public class WizardPageOneFragment extends BackButtonFragment {
       }
     };
     registerClickHandler(clickHandler);
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,

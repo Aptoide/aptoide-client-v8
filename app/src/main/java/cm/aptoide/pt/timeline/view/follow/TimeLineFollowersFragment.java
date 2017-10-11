@@ -44,7 +44,8 @@ public class TimeLineFollowersFragment extends TimeLineFollowFragment {
     return fragment;
   }
 
-  @NonNull private static Bundle getBundle(String storeTheme, String title, StoreContext storeContext) {
+  @NonNull
+  private static Bundle getBundle(String storeTheme, String title, StoreContext storeContext) {
     Bundle args = new Bundle();
     TimeLineFollowFragment.buildBundle(storeContext);
     args.putString(TITLE_KEY, title);
@@ -62,7 +63,7 @@ public class TimeLineFollowersFragment extends TimeLineFollowFragment {
 
   public static TimeLineFollowFragment newInstanceUsingStore(Long id, String storeTheme,
       String title, StoreContext storeContext) {
-    Bundle args = getBundle(storeTheme, title,storeContext);
+    Bundle args = getBundle(storeTheme, title, storeContext);
     args.putLong(BundleKeys.STORE_ID, id);
     TimeLineFollowersFragment fragment = new TimeLineFollowersFragment();
     fragment.setArguments(args);

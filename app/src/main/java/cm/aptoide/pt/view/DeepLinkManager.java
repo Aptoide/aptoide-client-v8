@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
@@ -22,6 +23,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.repository.StoreRepository;
+import cm.aptoide.pt.search.view.SearchResultFragment;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.timeline.view.navigation.AppsTimelineTabNavigation;
@@ -139,8 +141,8 @@ public class DeepLinkManager {
   }
 
   private void searchDeepLink(String query) {
-    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newSearchFragment(query), true);
+    final Fragment fragment = SearchResultFragment.newInstance(query);
+    fragmentNavigator.navigateTo(fragment, true);
   }
 
   private void newrepoDeepLink(Intent intent, ArrayList<String> repos,

@@ -36,12 +36,6 @@ public abstract class WebViewFragment extends PermissionServiceFragment
     backButtonSelectionSubject = PublishRelay.create();
   }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_web_view, container, false);
-  }
-
   @SuppressLint("SetJavaScriptEnabled") @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
@@ -62,6 +56,12 @@ public abstract class WebViewFragment extends PermissionServiceFragment
       return false;
     };
     registerClickHandler(clickHandler);
+  }
+
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    return inflater.inflate(R.layout.fragment_web_view, container, false);
   }
 
   @Override public void onDestroyView() {

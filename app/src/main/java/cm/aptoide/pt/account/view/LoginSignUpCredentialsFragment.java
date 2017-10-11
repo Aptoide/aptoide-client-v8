@@ -84,11 +84,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     return fragment;
   }
 
-  @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName());
-  }
-
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     marketName = ((AptoideApplication) getActivity().getApplication()).getMarketName();
@@ -100,6 +95,11 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     navigateToHome = getArguments().getBoolean(CLEAN_BACK_STACK);
     accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
     orientationManager = ((ActivityResultNavigator) getContext()).getScreenOrientationManager();
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
