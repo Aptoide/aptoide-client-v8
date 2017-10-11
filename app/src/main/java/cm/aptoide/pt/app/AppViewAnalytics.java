@@ -49,7 +49,7 @@ public class AppViewAnalytics {
   private Bundle createEditorsChoiceClickEventBundle(ScreenTagHistory previousScreen,
       String packageName, String editorsBrickPosition) {
     Bundle bundle = new Bundle();
-    if (previousScreen.getFragment() != null) {
+    if (previousScreen != null && previousScreen.getFragment() != null) {
       bundle.putString("fragment", previousScreen.getFragment());
     }
     bundle.putString("package_name", packageName);
@@ -69,14 +69,18 @@ public class AppViewAnalytics {
   private Map<String, String> createAppViewedFromMap(ScreenTagHistory previousScreen,
       ScreenTagHistory currentScreen, String packageName, String appPublisher, String badge) {
     Map<String, String> map = new HashMap<>();
-    if (previousScreen.getFragment() != null) {
-      map.put("fragment", previousScreen.getFragment());
+    if (previousScreen != null) {
+      if (previousScreen.getFragment() != null) {
+        map.put("fragment", previousScreen.getFragment());
+      }
+      if (previousScreen.getStore() != null) {
+        map.put("store", previousScreen.getStore());
+      }
     }
-    if (currentScreen.getTag() != null) {
-      map.put("tag", currentScreen.getTag());
-    }
-    if (previousScreen.getStore() != null) {
-      map.put("store", previousScreen.getStore());
+    if (currentScreen != null) {
+      if (currentScreen.getTag() != null) {
+        map.put("tag", currentScreen.getTag());
+      }
     }
     map.put("package_name", packageName);
     map.put("application_publisher", appPublisher);
@@ -88,14 +92,18 @@ public class AppViewAnalytics {
       ScreenTagHistory currentScreen, String packageName, String appPublisher, String badge)
       throws NullPointerException {
     Bundle bundle = new Bundle();
-    if (previousScreen.getFragment() != null) {
-      bundle.putString("fragment", previousScreen.getFragment());
+    if (previousScreen != null) {
+      if (previousScreen.getFragment() != null) {
+        bundle.putString("fragment", previousScreen.getFragment());
+      }
+      if (previousScreen.getStore() != null) {
+        bundle.putString("store", previousScreen.getStore());
+      }
     }
-    if (currentScreen.getTag() != null) {
-      bundle.putString("tag", currentScreen.getTag());
-    }
-    if (previousScreen.getStore() != null) {
-      bundle.putString("store", previousScreen.getStore());
+    if (currentScreen != null) {
+      if (currentScreen.getTag() != null) {
+        bundle.putString("tag", currentScreen.getTag());
+      }
     }
     bundle.putString("package_name", packageName);
     bundle.putString("application_publisher", appPublisher);
