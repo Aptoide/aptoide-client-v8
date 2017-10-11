@@ -178,6 +178,7 @@ public class AdsRepository {
 
   public Observable<MinimalAd> getAdsFromSecondTry(String packageName) {
     return accountManager.accountStatus()
+        .first()
         .flatMap(account -> mapToMinimalAd(
             GetAdsRequest.ofSecondTry(packageName, idsRepository.getUniqueIdentifier(),
                 googlePlayServicesAvailabilityChecker.isAvailable(context),
