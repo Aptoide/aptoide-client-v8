@@ -1,7 +1,6 @@
 package cm.aptoide.pt.view.store;
 
 import android.content.SharedPreferences;
-import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -40,7 +39,8 @@ public class StoreGridHeaderWidget extends Widget<StoreGridHeaderDisplayable> {
     title.setText(Translator.translate(wsWidget.getTitle(), getContext().getApplicationContext(),
         marketName));
 
-    more.setVisibility(moreIsVisible && displayable.isMoreVisible() ? View.VISIBLE : View.GONE);
+    StoreGridHeaderDisplayable.Model model = displayable.getModel();
+    more.setVisibility(moreIsVisible && model.isMoreVisible() ? View.VISIBLE : View.GONE);
 
     if (moreIsVisible) {
       compositeSubscription.add(RxView.clicks(more)
@@ -49,25 +49,23 @@ public class StoreGridHeaderWidget extends Widget<StoreGridHeaderDisplayable> {
             final Event event = wsWidget.getActions()
                 .get(0)
                 .getEvent();
-            final String storeTheme = displayable.getStoreTheme();
-            final String tag = displayable.getTag();
-            final StoreContext storeContext = displayable.getStoreContext();
+            final String storeTheme = model.getStoreTheme();
+            final String tag = model.getTag();
+            final StoreContext storeContext = model.getStoreContext();
             final String title = wsWidget.getTitle();
-            final Fragment fragment;
 
             if (event.getName() == Event.Name.listComments) {
               String action = event.getAction();
               String url =
                   action != null ? action.replace(V7.getHost(sharedPreferences), "") : null;
-              fragment = AptoideApplication.getFragmentProvider()
-                  .newCommentGridRecyclerFragmentUrl(CommentType.STORE, url, "View Comments",
+              displayable.getStoreTabNavigator()
+                  .navigateToCommentGridRecyclerView(CommentType.STORE, url, "View Comments",
                       storeContext);
             } else {
-              fragment = AptoideApplication.getFragmentProvider()
-                  .newStoreTabGridRecyclerFragment(event, title, storeTheme, tag, storeContext);
+              displayable.getStoreTabNavigator()
+                  .navigateToStoreTabGridRecyclerView(event, title, storeTheme, tag, storeContext,
+                      false);
             }
-
-            getFragmentNavigator().navigateTo(fragment, true);
           }));
     }
   }
