@@ -18,6 +18,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareLocalAvatarsProvider;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareLocalUser;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareEditProfilePresenter;
@@ -103,7 +104,8 @@ public class SpotAndShareEditProfileFragment extends FragmentView
 
     attachPresenter(new SpotAndShareEditProfilePresenter(this,
         ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShareUserManager(),
-        new SpotAndShareLocalAvatarsProvider(getContext().getPackageName())), savedInstanceState);
+        new SpotAndShareLocalAvatarsProvider(getContext().getPackageName()),
+        CrashReport.getInstance()), savedInstanceState);
   }
 
   private void setupAvatarsListLayoutManager() {

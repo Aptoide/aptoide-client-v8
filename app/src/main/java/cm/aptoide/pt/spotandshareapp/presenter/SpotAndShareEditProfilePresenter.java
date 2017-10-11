@@ -2,6 +2,7 @@ package cm.aptoide.pt.spotandshareapp.presenter;
 
 import android.os.Bundle;
 import android.util.Log;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareLocalAvatarsProvider;
@@ -21,13 +22,15 @@ public class SpotAndShareEditProfilePresenter implements Presenter {
   private SpotAndShareEditProfileView view;
   private final SpotAndShareLocalUserManager spotAndShareUserManager;
   private final SpotAndShareLocalAvatarsProvider avatarsProvider;
+  private final CrashReport crashReport;
 
   public SpotAndShareEditProfilePresenter(SpotAndShareEditProfileView view,
       SpotAndShareLocalUserManager spotAndShareUserManager,
-      SpotAndShareLocalAvatarsProvider spotAndShareUserAvatarsProvider) {
+      SpotAndShareLocalAvatarsProvider spotAndShareUserAvatarsProvider, CrashReport crashReport) {
     this.view = view;
     this.spotAndShareUserManager = spotAndShareUserManager;
     this.avatarsProvider = spotAndShareUserAvatarsProvider;
+    this.crashReport = crashReport;
   }
 
   @Override public void present() {
@@ -38,7 +41,7 @@ public class SpotAndShareEditProfilePresenter implements Presenter {
             created -> saveProfileChanges().compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, error -> error.printStackTrace());
+        }, error -> crashReport.log(error));
 
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
@@ -46,7 +49,7 @@ public class SpotAndShareEditProfilePresenter implements Presenter {
         .doOnNext(list -> view.setAvatarsList(list))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, error -> error.printStackTrace());
+        }, error -> crashReport.log(error));
 
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
@@ -54,7 +57,7 @@ public class SpotAndShareEditProfilePresenter implements Presenter {
         .doOnNext(avatar -> view.selectAvatar(avatar))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, error -> error.printStackTrace());
+        }, error -> crashReport.log(error));
   }
 
   @Override public void saveState(Bundle state) {
