@@ -17,6 +17,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.AppModelToAndroidAppInfoMapper;
 import cm.aptoide.pt.spotandshareapp.DrawableBitmapMapper;
@@ -102,7 +103,7 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
     attachPresenter(new SpotAndShareWaitingToSendPresenter(shouldCreateGroup, this,
         ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
         new AppModelToAndroidAppInfoMapper(new ObbsProvider()), new PermissionManager(),
-        (PermissionService) getContext()), savedInstanceState);
+        (PermissionService) getContext(), CrashReport.getInstance()), savedInstanceState);
   }
 
   private void setupSendingAppInfo() {
@@ -182,8 +183,17 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
     return selectedApp;
   }
 
-  @Override public void onCreateGroupError(
-      Throwable throwable) { //// TODO: 22-09-2017 filipe ADD strings for different error types.
+  @Override public void showTimeoutCreateGroupError() {
+    getActivity().runOnUiThread(new Runnable() {
+      @Override public void run() {
+        Toast.makeText(getContext(), R.string.spotandshare_message_timeout_creating_hotspot,
+            Toast.LENGTH_SHORT)
+            .show();
+      }
+    });
+  }
+
+  @Override public void showGeneralCreateGroupError() {
     getActivity().runOnUiThread(new Runnable() {
       @Override public void run() {
         Toast.makeText(getContext(), R.string.spotandshare_message_error_create_group,

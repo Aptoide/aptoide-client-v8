@@ -23,5 +23,7 @@ public interface SpotAndShareWaitingToSendView extends View {
 
   AppModel getSelectedApp();
 
-  void onCreateGroupError(Throwable throwable);
+  void showTimeoutCreateGroupError();
+
+  void showGeneralCreateGroupError();
 }

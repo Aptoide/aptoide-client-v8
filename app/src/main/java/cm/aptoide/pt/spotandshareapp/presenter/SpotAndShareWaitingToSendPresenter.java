@@ -4,6 +4,7 @@ import android.os.Build;
 import android.os.Bundle;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
@@ -28,17 +29,20 @@ public class SpotAndShareWaitingToSendPresenter implements Presenter {
   private final AppModelToAndroidAppInfoMapper appModelToAndroidAppInfoMapper;
   private final PermissionManager permissionManager;
   private final PermissionService permissionService;
+  private final CrashReport crashReport;
 
   public SpotAndShareWaitingToSendPresenter(boolean shouldCreateGroup,
       SpotAndShareWaitingToSendView view, SpotAndShare spotAndShare,
       AppModelToAndroidAppInfoMapper appModelToAndroidAppInfoMapper,
-      PermissionManager permissionManager, PermissionService permissionService) {
+      PermissionManager permissionManager, PermissionService permissionService,
+      CrashReport crashReport) {
     this.shouldCreateGroup = shouldCreateGroup;
     this.view = view;
     this.spotAndShare = spotAndShare;
     this.appModelToAndroidAppInfoMapper = appModelToAndroidAppInfoMapper;
     this.permissionManager = permissionManager;
     this.permissionService = permissionService;
+    this.crashReport = crashReport;
   }
 
   @Override public void present() {
@@ -67,11 +71,11 @@ public class SpotAndShareWaitingToSendPresenter implements Presenter {
           return Completable.complete()
               .toSingleDefault(2);
         })
-        .doOnError(throwable -> handleCreateGroupError(throwable))
+        .doOnError(throwable -> handleError(throwable))
         .doOnNext(__ -> startListeningToFriends())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> err.printStackTrace());
+        }, err -> crashReport.log(err));
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -79,7 +83,7 @@ public class SpotAndShareWaitingToSendPresenter implements Presenter {
         .doOnNext(click -> view.showExitWarning())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> error.printStackTrace());
+        }, error -> crashReport.log(error));
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -88,7 +92,7 @@ public class SpotAndShareWaitingToSendPresenter implements Presenter {
         .doOnNext(__ -> view.navigateBack())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> error.printStackTrace());
+        }, error -> crashReport.log(error));
   }
 
   private void startListeningToFriends() {
@@ -97,20 +101,22 @@ public class SpotAndShareWaitingToSendPresenter implements Presenter {
         .doOnNext(friendsList -> sendApp())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> error.printStackTrace());
+        }, error -> crashReport.log(error));
   }
 
-  private void handleCreateGroupError(Throwable throwable) {
+  private void handleError(Throwable throwable) {
+    spotAndShare.leaveGroup(err -> view.onLeaveGroupError());
     if (throwable instanceof TimeoutException) {
-      spotAndShare.leaveGroup(err -> view.onLeaveGroupError());
-      view.onCreateGroupError(throwable);
-      view.navigateBack();
+      view.showTimeoutCreateGroupError();
+    } else {
+      view.showGeneralCreateGroupError();
     }
+    view.navigateBack();
   }
 
   private Completable createGroup() {
     return spotAndShare.createGroup(uuid -> {
-    }, view::onCreateGroupError, null);
+    }, throwable -> handleError(throwable), null);
   }
 
   private void sendApp() {
