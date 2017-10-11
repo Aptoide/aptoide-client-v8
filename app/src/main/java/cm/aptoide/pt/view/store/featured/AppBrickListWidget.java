@@ -51,7 +51,7 @@ public class AppBrickListWidget extends Widget<AppBrickListDisplayable> {
               .newAppViewFragment(app.getId(), app.getPackageName(), app.getStore()
                   .getAppearance()
                   .getTheme(), app.getStore()
-                  .getName(), displayable.getTag(), getAdapterPosition()), true);
+                  .getName(), displayable.getTag(), String.valueOf(getAdapterPosition())), true);
         }, throwable -> CrashReport.getInstance()
             .log(throwable)));
   }

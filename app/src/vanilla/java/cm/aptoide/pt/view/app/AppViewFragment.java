@@ -225,18 +225,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     return fragment;
   }
 
-  public static AppViewFragment newInstance(long appId, String packageName, String tag,
-      String editorsBrickPosition) {
-    Bundle bundle = new Bundle();
-    bundle.putString(ORIGIN_TAG, tag);
-    bundle.putString(EDITORS_CHOICE_POSITION, editorsBrickPosition);
-    bundle.putLong(BundleKeys.APP_ID.name(), appId);
-    bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
-    AppViewFragment fragment = new AppViewFragment();
-    fragment.setArguments(bundle);
-    return fragment;
-  }
-
   public static AppViewFragment newInstance(long appId, String packageName, String storeTheme,
       String storeName) {
     Bundle bundle = new Bundle();
