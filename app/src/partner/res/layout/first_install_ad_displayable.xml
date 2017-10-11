@@ -37,6 +37,15 @@
         android:src="@mipmap/ic_launcher"
         />
 
+    <include
+        layout="@layout/ad_badge_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/app_icon"
+        android:layout_alignLeft="@+id/app_icon"
+        android:layout_alignStart="@+id/app_icon"
+        />
+
     <ImageView
         android:id="@+id/app_install_check"
         android:layout_width="wrap_content"
