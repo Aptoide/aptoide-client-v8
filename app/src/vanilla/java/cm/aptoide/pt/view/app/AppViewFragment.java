@@ -907,7 +907,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             installedRepository, downloadFactory, timelineAnalytics, appViewAnalytics,
             installAppRelay, this,
             new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
-                AppEventsLogger.newLogger(getContext().getApplicationContext()), crashReport),
+                AppEventsLogger.newLogger(getContext().getApplicationContext())),
             aptoideNavigationTracker, editorsBrickPosition);
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics, storeAnalytics));

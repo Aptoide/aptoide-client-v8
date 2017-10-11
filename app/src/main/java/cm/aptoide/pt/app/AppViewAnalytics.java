@@ -40,7 +40,7 @@ public class AppViewAnalytics {
     Map<String, String> map = new HashMap<>();
     map.put("Application Name", packageName);
     map.put("Search Position", editorsBrickPosition);
-    if (previousScreen.getFragment() != null) {
+    if (previousScreen != null && previousScreen.getFragment() != null) {
       map.put("fragment", previousScreen.getFragment());
     }
     return map;

@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import cm.aptoide.pt.analytics.events.FabricEvent;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
 import cm.aptoide.pt.analytics.events.FlurryEvent;
-import cm.aptoide.pt.crashreports.CrashReport;
 import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
 import java.util.HashMap;
@@ -25,14 +24,12 @@ public class DownloadCompleteAnalytics {
   private Analytics analytics;
   private Answers fabric;
   private AppEventsLogger facebookLogger;
-  private CrashReport crashReport;
 
   public DownloadCompleteAnalytics(Analytics analytics, Answers fabric,
-      AppEventsLogger facebookLogger, CrashReport crashReport) {
+      AppEventsLogger facebookLogger) {
     this.analytics = analytics;
     this.fabric = fabric;
     this.facebookLogger = facebookLogger;
-    this.crashReport = crashReport;
   }
 
   public void installClicked(ScreenTagHistory previousScreen, ScreenTagHistory currentScreen,
@@ -85,14 +82,18 @@ public class DownloadCompleteAnalytics {
     HashMap<String, String> downloadMap = new HashMap<>();
     downloadMap.put(PACKAGE_NAME, packageName);
     downloadMap.put(TRUSTED_BADGE, trustedValue);
-    if (previousScreen.getFragment() != null) {
-      downloadMap.put("fragment", previousScreen.getFragment());
+    if (previousScreen != null) {
+      if (previousScreen.getFragment() != null) {
+        downloadMap.put("fragment", previousScreen.getFragment());
+      }
+      if (previousScreen.getStore() != null) {
+        downloadMap.put("store", previousScreen.getStore());
+      }
     }
-    if (currentScreen.getTag() != null) {
-      downloadMap.put("tag", currentScreen.getTag());
-    }
-    if (previousScreen.getStore() != null) {
-      downloadMap.put("store", previousScreen.getStore());
+    if (currentScreen != null) {
+      if (currentScreen.getTag() != null) {
+        downloadMap.put("tag", currentScreen.getTag());
+      }
     }
 
     FacebookEvent downloadFacebookEvent =
