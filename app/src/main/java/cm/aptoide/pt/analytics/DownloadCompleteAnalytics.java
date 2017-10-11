@@ -2,10 +2,10 @@ package cm.aptoide.pt.analytics;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import cm.aptoide.pt.analytics.events.FabricEvent;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
 import cm.aptoide.pt.analytics.events.FlurryEvent;
+import cm.aptoide.pt.crashreports.CrashReport;
 import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
 import java.util.HashMap;
@@ -25,16 +25,26 @@ public class DownloadCompleteAnalytics {
   private Analytics analytics;
   private Answers fabric;
   private AppEventsLogger facebookLogger;
+  private CrashReport crashReport;
 
   public DownloadCompleteAnalytics(Analytics analytics, Answers fabric,
-      AppEventsLogger facebookLogger) {
+      AppEventsLogger facebookLogger, CrashReport crashReport) {
     this.analytics = analytics;
     this.fabric = fabric;
     this.facebookLogger = facebookLogger;
+    this.crashReport = crashReport;
   }
 
-  public void installClicked(String id, String packageName, String trustedValue) {
-    createEvents(id, packageName, trustedValue);
+  public void installClicked(ScreenTagHistory previousScreen, ScreenTagHistory currentScreen,
+      String id, String packageName, String trustedValue, String editorsBrickPosition) {
+    try {
+      createEvents(previousScreen, currentScreen, id, packageName, trustedValue,
+          editorsBrickPosition);
+    } catch (NullPointerException e) {
+      crashReport.log(this.getClass()
+              .getSimpleName(),
+          "Null pointer while trying to get current or previous screen from AptoideNavigation Tracker");
+    }
   }
 
   @NonNull private Bundle mapToBundle(Map<String, String> map) {
@@ -49,6 +59,7 @@ public class DownloadCompleteAnalytics {
 
   public void downloadCompleted(String id) {
     sendEvent(analytics.getFlurryEvent(id + PARTIAL_EVENT_NAME));
+    sendEvent(analytics.getFacebookEvent(id + PARTIAL_EVENT_NAME));
     sendEvent(analytics.getFabricEvent(id + EVENT_NAME));
     sendEvent(analytics.getFlurryEvent(id + EVENT_NAME));
     sendEvent(analytics.getFacebookEvent(id + EVENT_NAME));
@@ -60,22 +71,28 @@ public class DownloadCompleteAnalytics {
     }
   }
 
-  private void createEvents(String id, String packageName, String trustedValue) {
+  private void createEvents(ScreenTagHistory previousScreen, ScreenTagHistory currentScreen,
+      String id, String packageName, String trustedValue, String editorsChoiceBrickPosition)
+      throws NullPointerException {
 
-    String lastStep = Analytics.AppViewViewedFrom.getLastStep();
-    if (TextUtils.isEmpty(lastStep)) {
-      return;
-    } else if (lastStep.contains("editor") && lastStep.contains("choice")) {
+    if (editorsChoiceBrickPosition != null) {
       HashMap<String, String> map = new HashMap<>();
       map.put(PACKAGE_NAME, packageName);
+      map.put("fragment", previousScreen.getFragment());
+      map.put("position", editorsChoiceBrickPosition);
       FlurryEvent editorsEvent = new FlurryEvent(PARTIAL_EVENT_NAME, map);
+      FacebookEvent editorsChoiceFacebookEvent =
+          new FacebookEvent(facebookLogger, PARTIAL_EVENT_NAME, mapToBundle(map));
       analytics.save(id + PARTIAL_EVENT_NAME, editorsEvent);
+      analytics.save(id + PARTIAL_EVENT_NAME, editorsChoiceFacebookEvent);
     }
 
     HashMap<String, String> downloadMap = new HashMap<>();
-    downloadMap.put(SOURCE, lastStep);
     downloadMap.put(PACKAGE_NAME, packageName);
     downloadMap.put(TRUSTED_BADGE, trustedValue);
+    downloadMap.put("fragment", previousScreen.getFragment());
+    downloadMap.put("tag", currentScreen.getTag());
+    downloadMap.put("store", previousScreen.getStore());
 
     FacebookEvent downloadFacebookEvent =
         new FacebookEvent(facebookLogger, EVENT_NAME, mapToBundle(downloadMap));

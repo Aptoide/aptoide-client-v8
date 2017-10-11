@@ -29,6 +29,7 @@ import rx.Observable;
  */
 public class AppViewInstallDisplayable extends AppViewDisplayable {
 
+  private static String editorsBrickPosition;
   private final Observable<Void> installAppRelay;
   private int versionCode;
   @Getter @Setter private boolean shouldInstall;
@@ -44,6 +45,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   @Getter private AppViewFragment appViewFragment;
   private DownloadCompleteAnalytics analytics;
   private AptoideNavigationTracker aptoideNavigationTracker;
+  private String editorsChoiceBrickPosition;
 
   public AppViewInstallDisplayable() {
     super();
@@ -55,7 +57,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
       TimelineAnalytics timelineAnalytics, AppViewAnalytics appViewAnalytics,
       PublishRelay installAppRelay, DownloadFactory downloadFactory,
       AppViewFragment appViewFragment, DownloadCompleteAnalytics analytics,
-      AptoideNavigationTracker aptoideNavigationTracker) {
+      AptoideNavigationTracker aptoideNavigationTracker, String editorsChoiceBrickPosition) {
     super(getApp, appViewAnalytics);
     this.installManager = installManager;
     this.md5 = getApp.getNodes()
@@ -81,6 +83,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
     this.appViewFragment = appViewFragment;
     this.analytics = analytics;
     this.aptoideNavigationTracker = aptoideNavigationTracker;
+    this.editorsChoiceBrickPosition = editorsChoiceBrickPosition;
   }
 
   public static AppViewInstallDisplayable newInstance(GetApp getApp, InstallManager installManager,
@@ -88,10 +91,11 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
       DownloadFactory downloadFactory, TimelineAnalytics timelineAnalytics,
       AppViewAnalytics appViewAnalytics, PublishRelay installAppRelay,
       AppViewFragment appViewFragment, DownloadCompleteAnalytics analytics,
-      AptoideNavigationTracker aptoideNavigationTracker) {
+      AptoideNavigationTracker aptoideNavigationTracker, String editorsBrickPosition) {
     return new AppViewInstallDisplayable(installManager, getApp, searchAdResult, shouldInstall,
         installedRepository, timelineAnalytics, appViewAnalytics, installAppRelay, downloadFactory,
-        appViewFragment, analytics, aptoideNavigationTracker);
+        appViewFragment, analytics, aptoideNavigationTracker,
+        AppViewInstallDisplayable.editorsBrickPosition);
   }
 
   public void startInstallationProcess() {
@@ -137,6 +141,6 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
         app.getFile()
             .getMalware()
             .getRank()
-            .name());
+            .name(), editorsChoiceBrickPosition);
   }
 }

@@ -7,7 +7,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.util.CommentType;
@@ -69,7 +68,6 @@ public class StoreGridHeaderWidget extends Widget<StoreGridHeaderDisplayable> {
             }
 
             getFragmentNavigator().navigateTo(fragment, true);
-            Analytics.AppViewViewedFrom.addStepToList(wsWidget.getTag());
           }));
     }
   }

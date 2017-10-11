@@ -42,9 +42,6 @@ import java.util.List;
   Fragment newAppViewFragment(long appId, String packageName, AppViewFragment.OpenType openType,
       String tag);
 
-  Fragment newAppViewFragment(long appId, String packageName, String tag,
-      String editorsBrickPosition);
-
   Fragment newAppViewFragment(long appId, String packageName, String tag);
 
   Fragment newAppViewFragment(long appId, String packageName, String storeTheme, String storeName,

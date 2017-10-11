@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.ImageView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.view.recycler.widget.Widget;
@@ -39,19 +38,16 @@ public class AppBrickWidget extends Widget<AppBrickDisplayable> {
 
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(v -> {
-          Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
           getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
               .newAppViewFragment(displayable.getPojo()
                   .getId(), displayable.getPojo()
-                  .getPackageName(), displayable.getTag(), editorsBrickPosition()), true);
-          Analytics.HomePageEditorsChoice.clickOnEditorsChoiceItem(getAdapterPosition(),
-              displayable.getPojo()
-                  .getPackageName(), true);
+                  .getPackageName(), displayable.getPojo()
+                  .getStore()
+                  .getName(), displayable.getPojo()
+                  .getStore()
+                  .getAppearance()
+                  .getTheme(), displayable.getTag(), String.valueOf(getAdapterPosition())), true);
         }, throwable -> CrashReport.getInstance()
             .log(throwable)));
-  }
-
-  private String editorsBrickPosition() {
-    return "Home_" + getAdapterPosition();
   }
 }

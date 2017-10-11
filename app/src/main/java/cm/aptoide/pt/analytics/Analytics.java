@@ -794,26 +794,6 @@ public class Analytics {
     }
   }
 
-  public static class HomePageEditorsChoice {
-
-    public static final String HOME_PAGE_EDITORS_CHOICE_FLURRY = "Home_Page_Editors_Choice";
-
-
-    public static void clickOnEditorsChoiceItem(int position, String packageName, boolean isHome) {
-      HashMap<String, String> map = new HashMap<>();
-      map.put("Application Name", packageName);
-      if (isHome) {
-        map.put("Search Position", "Home_" + Integer.valueOf(position)
-            .toString());
-      } else {
-        map.put("Search Position", "More_" + Integer.valueOf(position)
-            .toString());
-      }
-      //logFacebookEvents(HOME_PAGE_EDITORS_CHOICE_FACEBOOK, map);
-      track(HOME_PAGE_EDITORS_CHOICE_FLURRY, map, FLURRY);
-    }
-  }
-
   public static class File {
 
     private static final String EVENT_NAME = "Download_99percent";

@@ -94,11 +94,6 @@ public class VanillaFragmentProvider implements FragmentProvider {
     return AppViewFragment.newInstance(appId, packageName, openType, tag);
   }
 
-  @Override public Fragment newAppViewFragment(long appId, String packageName, String tag,
-      String editorsBrickPosition) {
-    return AppViewFragment.newInstance(appId, packageName, tag, editorsBrickPosition);
-  }
-
   @Override public Fragment newAppViewFragment(long appId, String packageName, String tag) {
     return AppViewFragment.newInstance(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY, tag);
   }

@@ -920,7 +920,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             installAppRelay, this,
             new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
                 AppEventsLogger.newLogger(getContext().getApplicationContext()), crashReport),
-            aptoideNavigationTracker);
+            aptoideNavigationTracker, editorsBrickPosition);
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics, storeAnalytics));
     displayables.add(
@@ -1285,12 +1285,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       ImageLoader.with(context)
           .load(badgeResId, badge);
       badgeText.setText(badgeMessageId);
-
-      Analytics.AppViewViewedFrom.appViewOpenFrom(app.getPackageName(), app.getDeveloper()
-          .getName(), app.getFile()
-          .getMalware()
-          .getRank()
-          .name());
 
       if (editorsBrickPosition != null) {
         appViewAnalytics.sendEditorsChoiceClickEvent(aptoideNavigationTracker.getPreviousScreen(),
