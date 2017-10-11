@@ -9,12 +9,8 @@ import android.support.test.espresso.action.Swipe;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
 import cm.aptoide.pt.view.MainActivity;
 import java.io.IOException;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -56,22 +52,6 @@ public class EspressoTests {
   private static ViewAction swipeRigthOnLeftMost() {
     return new GeneralSwipeAction(Swipe.FAST, GeneralLocation.CENTER_LEFT,
         GeneralLocation.CENTER_RIGHT, Press.FINGER);
-  }
-
-  public static Matcher<View> withIndex(final Matcher<View> matcher, final int index) {
-    return new TypeSafeMatcher<View>() {
-      int currentIndex = 0;
-
-      @Override public void describeTo(Description description) {
-        description.appendText("with index: ");
-        description.appendValue(index);
-        matcher.describeTo(description);
-      }
-
-      @Override public boolean matchesSafely(View view) {
-        return matcher.matches(view) && currentIndex++ == index;
-      }
-    };
   }
 
   @Before public void setUpEmail() throws IOException {
