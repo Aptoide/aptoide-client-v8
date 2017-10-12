@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.AptoideNavigationTracker;
@@ -107,6 +108,12 @@ public class SpotAndShareMainFragment extends FragmentView
 
   @Override public void openShareAptoideFragment() {
     getFragmentNavigator().navigateTo(ShareAptoideFragment.newInstance(), true);
+  }
+
+  @Override public void showAutoEnableHotspotProblem() {
+    Toast.makeText(getContext(), R.string.spotandshare_message_hotspot_enabling_problem,
+        Toast.LENGTH_LONG)
+        .show();
   }
 
   private void setAvatar(SpotAndShareAvatar avatar) {
