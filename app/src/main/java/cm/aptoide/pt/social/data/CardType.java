@@ -42,7 +42,7 @@ public enum CardType {
   public boolean isAggregated() {
     return equals(AGGREGATED_SOCIAL_ARTICLE) || equals(AGGREGATED_SOCIAL_INSTALL) || equals(
         AGGREGATED_SOCIAL_STORE) || equals(AGGREGATED_SOCIAL_STORE) || equals(
-        AGGREGATED_SOCIAL_VIDEO);
+        AGGREGATED_SOCIAL_VIDEO) || equals(AGGREGATED_SOCIAL_APP);
   }
 
   public boolean isDummy() {
