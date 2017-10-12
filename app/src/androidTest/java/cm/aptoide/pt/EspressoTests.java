@@ -11,7 +11,6 @@ import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.UiDevice;
-import android.support.test.uiautomator.UiObjectNotFoundException;
 import android.support.test.uiautomator.UiSelector;
 import cm.aptoide.pt.view.MainActivity;
 import java.io.IOException;
@@ -40,7 +39,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 public class EspressoTests {
 
-  private static final int GRANT_BUTTON_INDEX = 1;
   private final String SIGNUPEMAILTESTBGN = "jose.messejana+";
   private final String SIGNUPEMAILTESTEND = "@aptoide.com";
   private final String LOGINEMAIL = "jose.messejana@aptoide.com";
@@ -164,7 +162,7 @@ public class EspressoTests {
     }
     Thread.sleep(LONGER_WAIT_TIME);
     closePopUp();
-    click_on_android_prompt();
+    click_on_android_prompt("ALLOW");
     closeIfIsNotLoggedInOnDownload();
     Thread.sleep(WAIT_TIME);
     onView(withId(R.id.download_progress)).check(matches(isDisplayed()));
@@ -339,13 +337,13 @@ public class EspressoTests {
     onView(withId(R.id.create_store_skip)).perform(click());
   }
 
-  private void click_on_android_prompt() {
+  private void click_on_android_prompt(String text) {
     try {
       mDevice.findObject(new UiSelector().clickable(true)
           .checkable(false)
-          .index(GRANT_BUTTON_INDEX))
+          .textContains(text))
           .click();
-    } catch (UiObjectNotFoundException e1) {
+    } catch (Exception e1) {
     }
   }
 }
