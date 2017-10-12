@@ -1,14 +1,10 @@
 package cm.aptoide.pt.social.leaderboard.view;
 
-import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.social.leaderboard.data.LeaderboardEntry;
-import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
 import java.util.List;
 import rx.subjects.PublishSubject;
 
@@ -18,76 +14,32 @@ import rx.subjects.PublishSubject;
 
 public class LeaderboardViewHolder extends RecyclerView.ViewHolder {
 
-  private final TextView globalPosition;
-  private final TextView globalName;
-  private final TextView globalScore;
+  private final TextView position;
+  private final TextView name;
+  private final TextView score;
 
-  private final TextView countryPosition;
-  private final TextView countryName;
-  private final TextView countryScore;
-
-  private final TextView friendsPosition;
-  private final TextView friendsName;
-  private final TextView friendsScore;
-
-  private final View friendsEntry;
 
   private final PublishSubject<LeaderboardEntry> leaderboardEntryPublishSubject;
 
   public LeaderboardViewHolder(View itemView,
       PublishSubject<LeaderboardEntry> leaderboardEntryPublishSubject) {
     super(itemView);
-    this.globalPosition = (TextView) itemView.findViewById(R.id.global_entry)
-        .findViewById(R.id.leaderboard_position);
-    this.globalName = (TextView) itemView.findViewById(R.id.global_entry)
-        .findViewById(R.id.leaderboard_user_name);
-    this.globalScore = (TextView) itemView.findViewById(R.id.global_entry)
-        .findViewById(R.id.leaderboard_user_score);
-
-    this.countryPosition = (TextView) itemView.findViewById(R.id.country_entry)
-        .findViewById(R.id.leaderboard_position);
-    this.countryName = (TextView) itemView.findViewById(R.id.country_entry)
-        .findViewById(R.id.leaderboard_user_name);
-    this.countryScore = (TextView) itemView.findViewById(R.id.country_entry)
-        .findViewById(R.id.leaderboard_user_score);
-
-    this.friendsPosition = (TextView) itemView.findViewById(R.id.friends_entry)
-        .findViewById(R.id.leaderboard_position);
-    this.friendsName = (TextView) itemView.findViewById(R.id.friends_entry)
-        .findViewById(R.id.leaderboard_user_name);
-    this.friendsScore = (TextView) itemView.findViewById(R.id.friends_entry)
-        .findViewById(R.id.leaderboard_user_score);
-
-    this.friendsEntry = itemView.findViewById(R.id.friends_entry);
+    this.position = (TextView) itemView.findViewById(R.id.user_position);
+    this.name = (TextView) itemView.findViewById(R.id.user_name);
+    this.score = (TextView) itemView.findViewById(R.id.user_score);
 
     this.leaderboardEntryPublishSubject = leaderboardEntryPublishSubject;
   }
 
-  public void setItem(List<LeaderboardEntry> entries) {
+  public void setItem(LeaderboardEntry entries, String currentUser) {
 
 
-    globalPosition.setText("#"+String.valueOf(entries.get(0).getPosition()));
-    globalName.setText(entries.get(0).getName());
-    if(globalName.getText().equals("paquiquinho"))
-      globalName.setTextColor(itemView.getResources().getColor(R.color.card_store_title));
-    globalScore.setText(String.valueOf(entries.get(0).getScore()));
-
-    countryPosition.setText("#"+String.valueOf(entries.get(1).getPosition()));
-    countryName.setText(entries.get(1).getName());
-    if(countryName.getText().equals("paquiquinho"))
-      countryName.setTextColor(itemView.getResources().getColor(R.color.card_store_title));
-    countryScore.setText(String.valueOf(entries.get(1).getScore()));
-
-    if(entries.get(2).getName()==null)
-      this.friendsEntry.setVisibility(View.INVISIBLE);
-    else{
-      friendsEntry.setVisibility(View.VISIBLE);
-      friendsPosition.setText("#"+String.valueOf(entries.get(2).getPosition()));
-      friendsName.setText(entries.get(2).getName());
-      if(friendsName.getText().equals("paquiquinho"))
-        friendsName.setTextColor(itemView.getResources().getColor(R.color.card_store_title));
-      friendsScore.setText(String.valueOf(entries.get(2).getScore()));
-    }
-    //globalName.setOnClickListener(click -> leaderboardEntryPublishSubject.onNext(entries.get(0)));
+    position.setText(String.valueOf(entries.getPosition()));
+    name.setText(entries.getName());
+    if(name.getText().toString().toLowerCase().equals(currentUser.toLowerCase()))
+      name.setTextColor(itemView.getResources().getColor(R.color.card_store_title));
+    else
+      name.setTextColor(itemView.getResources().getColor(R.color.black_87_alpha));
+    score.setText(String.valueOf(entries.getScore()));
   }
 }

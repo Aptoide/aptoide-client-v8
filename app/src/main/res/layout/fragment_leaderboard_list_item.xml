@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card1"
-    android:layout_width="115dp"
+    android:layout_width="match_parent"
     android:layout_height="70dp"
     android:orientation="vertical"
     android:padding="10dp"
@@ -12,48 +12,58 @@
 
   <RelativeLayout
       android:id="@+id/names_layout"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
       android:layout_toRightOf="@id/main_icon"
       android:layout_centerVertical="true"
       android:orientation="vertical"
       >
 
     <TextView
-        android:id="@+id/leaderboard_position"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/user_position"
+        android:layout_width="30dp"
+        android:layout_height="20dp"
         android:textAllCaps="true"
-        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:gravity="center"
         style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
-        android:text="#100"
+        android:text="100"
+        />
+
+    <ImageView
+        android:id="@+id/user_icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/user_position"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:src="@drawable/icon_user"
         />
 
     <TextView
-        android:id="@+id/leaderboard_user_name"
+        android:id="@+id/user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:ellipsize="end"
-        android:layout_below="@id/leaderboard_position"
+        android:layout_toRightOf="@id/user_icon"
+        android:layout_marginLeft="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="10dp"
         style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
         android:text="Teste"
         />
-    <ImageView
-        android:id="@+id/trophy_icon"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
-        android:layout_below="@id/leaderboard_user_name"
-        android:layout_marginTop="3dp"
-        android:src="@drawable/leaderboard_score"
-        />
+
 
     <TextView
-        android:id="@+id/leaderboard_user_score"
+        android:id="@+id/user_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/leaderboard_user_name"
-        android:layout_marginLeft="15dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_toRightOf="@id/user_icon"
+        android:layout_below="@id/user_name"
         style="@style/Aptoide.TextView.Regular.XS.Grey"
         android:text="100 points"
         />

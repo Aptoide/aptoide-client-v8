@@ -43,13 +43,23 @@ public class LeaderboardPresenter implements Presenter {
   @Override public void present() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__-> leaderboard.getLeaderboardEntries())
+        .flatMap(__-> leaderboard.getLeaderboardEntries("global"))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(leaderboardEntries->view.showLeaderboardEntries(leaderboardEntries))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(leaderboardEntries -> {},
             throwable -> crashReport.log(throwable));
 
+
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.spinnerChoice())
+        .flatMap(choice-> leaderboard.getLeaderboardEntries(choice))
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(leaderboardEntries->view.showLeaderboardEntries(leaderboardEntries))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(leaderboardEntries -> {},
+            throwable -> crashReport.log(throwable));
     //view.getLifecycle()
     //    .filter(event -> event.equals(View.LifecycleEvent.CREATE))
     //    .flatMap(__-> leaderboard.getCurrentUser())

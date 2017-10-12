@@ -6,4 +6,9 @@
     <item>Light</item>
   </string-array>
 
+  <string-array name="leaderboard_type">
+    <item>Global</item>
+    <item>Country</item>
+    <item>Friends</item>
+  </string-array>
 </resources>

@@ -11,39 +11,29 @@ import java.util.List;
 public class LeaderboardEntryMapper {
 
   public List<List<LeaderboardEntry>> map(GetLeaderboardEntriesResponse.Data data){
-    List<List<LeaderboardEntry>> result = new ArrayList<List<LeaderboardEntry>>();
-    LeaderboardEntry entry = new LeaderboardEntry(null,0,0);
-    int n = 0;
+    List<List<LeaderboardEntry>> result = new ArrayList<>();
+    List<LeaderboardEntry> username = new ArrayList<>();
+    List<LeaderboardEntry> top = new ArrayList<>();
+    List<LeaderboardEntry> leaderboard = new ArrayList<>();
+    LeaderboardEntry entry;
+    List<GetLeaderboardEntriesResponse.User> current = data.getLeaderboard();
 
-    for(int i=0;i<data.getGlobal().size();i++){
-      result.add(new ArrayList<LeaderboardEntry>());
-      result.get(i).add(entry);
-      result.get(i).add(entry);
-      result.get(i).add(entry);
+    entry = new LeaderboardEntry(data.getUsername().getName(), data.getUsername().getPosition(), data.getUsername().getScore());
+    username.add(entry);
 
+    for(GetLeaderboardEntriesResponse.User user : data.getTop()){
+      entry = new LeaderboardEntry(user.getName(), user.getPosition(), user.getScore());
+      top.add(entry);
     }
 
-    for(GetLeaderboardEntriesResponse.User user : data.getGlobal()){
-      entry = new LeaderboardEntry(user.getName(),user.getPosition(),user.getScore());
-      result.get(n).set(0,entry);
-      n++;
+    for(GetLeaderboardEntriesResponse.User user : current){
+      entry = new LeaderboardEntry(user.getName(), user.getPosition(), user.getScore());
+      leaderboard.add(entry);
     }
 
-    n=0;
-
-    for(GetLeaderboardEntriesResponse.User user : data.getCountry()){
-      entry = new LeaderboardEntry(user.getName(),user.getPosition(),user.getScore());
-      result.get(n).set(1,entry);
-      n++;
-    }
-
-    n=0;
-
-    for(GetLeaderboardEntriesResponse.User user : data.getFriends()){
-      entry = new LeaderboardEntry(user.getName(),user.getPosition(),user.getScore());
-      result.get(n).set(2,entry);
-      n++;
-    }
+    result.add(username);
+    result.add(top);
+    result.add(leaderboard);
 
     return result;
   }

@@ -16,7 +16,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
@@ -25,11 +27,13 @@ import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.GetLeaderboardEntriesResponse;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.social.leaderboard.data.Leaderboard;
 import cm.aptoide.pt.social.leaderboard.data.LeaderboardEntry;
 import cm.aptoide.pt.social.leaderboard.presenter.LeaderboardNavigator;
+import cm.aptoide.pt.social.leaderboard.presenter.LeaderboardOnItemSelectedListener;
 import cm.aptoide.pt.social.leaderboard.presenter.LeaderboardPresenter;
 import cm.aptoide.pt.view.BackButton;
 import cm.aptoide.pt.view.fragment.FragmentView;
@@ -51,7 +55,6 @@ public class LeaderboardFragment extends FragmentView implements LeaderboardView
   private LeaderboardAdapter adapter;
   private RecyclerView list;
   private ImageView userIcon;
-  private TextView userRank;
   private TextView userScore;
   private TextView userName;
   private TokenInvalidator tokenInvalidator;
@@ -60,7 +63,22 @@ public class LeaderboardFragment extends FragmentView implements LeaderboardView
   private BackButton backButton;
   private TabNavigator tabNavigator;
   private PublishSubject<LeaderboardEntry> leaderboardEntryPublishSubject;
+  private PublishSubject<String> spinnerPublishSubject;
   private LeaderboardPresenter presenter;
+  private Spinner leaderboardSpinner;
+
+  private ImageView firstImage;
+  private TextView firstName;
+  private TextView firstScore;
+
+  private ImageView secondImage;
+  private TextView secondName;
+  private TextView secondScore;
+
+  private ImageView thirdImage;
+  private TextView thirdName;
+  private TextView thirdScore;
+
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -88,6 +106,7 @@ public class LeaderboardFragment extends FragmentView implements LeaderboardView
     this.sharedPreferences =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     this.leaderboardEntryPublishSubject = PublishSubject.create();
+    this.spinnerPublishSubject = PublishSubject.create();
   }
 
   @Override public void onDestroy() {
@@ -104,6 +123,18 @@ public class LeaderboardFragment extends FragmentView implements LeaderboardView
   }
 
   @Override public void showLeaderboardEntries(List<List<LeaderboardEntry>> entries) {
+    userName.setText(entries.get(0).get(0).getName());
+    userScore.setText(String.valueOf(entries.get(0).get(0).getScore()));
+
+    firstName.setText(entries.get(1).get(0).getName());
+    firstScore.setText(String.valueOf(entries.get(1).get(0).getScore()));
+
+    secondName.setText(entries.get(1).get(1).getName());
+    secondScore.setText(String.valueOf(entries.get(1).get(1).getScore()));
+
+    thirdName.setText(entries.get(1).get(2).getName());
+    thirdScore.setText(String.valueOf(entries.get(1).get(2).getScore()));
+
     adapter.updateLeaderboardEntries(entries);
   }
 
@@ -121,19 +152,38 @@ public class LeaderboardFragment extends FragmentView implements LeaderboardView
     final OkHttpClient defaultClient =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     final Converter.Factory defaultConverter = WebService.getDefaultConverter();
+    final Leaderboard leaderboard =  new Leaderboard(baseBodyInterceptorV7, defaultClient, defaultConverter, tokenInvalidator, sharedPreferences);
 
-    userIcon = (ImageView) view.findViewById(R.id.user_icon);
-    userName = (TextView) view.findViewById(R.id.user_name);
+    userIcon = (ImageView) view.findViewById(R.id.current_user_icon);
+    userName = (TextView) view.findViewById(R.id.current_user_name);
+    userScore = (TextView) view.findViewById(R.id.current_user_score);
 
-    list = (RecyclerView) view.findViewById(R.id.fragment_leaderboard_global);
+    firstImage = (ImageView) view.findViewById(R.id.user_1);
+    firstName = (TextView) view.findViewById(R.id.user_1_name);
+    firstScore = (TextView) view.findViewById(R.id.user_1_score);
+
+    secondImage = (ImageView) view.findViewById(R.id.user_2);
+    secondName = (TextView) view.findViewById(R.id.user_2_name);
+    secondScore = (TextView) view.findViewById(R.id.user_2_score);
+
+    thirdImage = (ImageView) view.findViewById(R.id.user_3);
+    thirdName = (TextView) view.findViewById(R.id.user_3_name);
+    thirdScore = (TextView) view.findViewById(R.id.user_3_score);
+
+
+    list = (RecyclerView) view.findViewById(R.id.fragment_leaderboard_entries);
     list.setLayoutManager(new LinearLayoutManager(getContext()));
     list.setAdapter(adapter);
 
+    leaderboardSpinner = (Spinner) view.findViewById(R.id.leaderboard_spinner);
+    ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(view.getContext(), R.array.leaderboard_type, android.R.layout.simple_spinner_item);
+    spinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+    leaderboardSpinner.setAdapter(spinnerAdapter);
+    leaderboardSpinner.setOnItemSelectedListener(new LeaderboardOnItemSelectedListener(adapter, spinnerPublishSubject));
+
     LeaderboardNavigator leaderboardNavigator =
         new LeaderboardNavigator(getFragmentNavigator(), tabNavigator);
-    attachPresenter(new LeaderboardPresenter(this,
-        new Leaderboard(baseBodyInterceptorV7, defaultClient, defaultConverter, tokenInvalidator,
-            sharedPreferences), CrashReport.getInstance(), leaderboardNavigator,
+    attachPresenter(new LeaderboardPresenter(this, leaderboard, CrashReport.getInstance(), leaderboardNavigator,
         getFragmentNavigator()), savedInstanceState);
   }
 
@@ -169,5 +219,9 @@ public class LeaderboardFragment extends FragmentView implements LeaderboardView
 
     this.toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     setHasOptionsMenu(true);
+  }
+
+  public Observable<String> spinnerChoice(){
+    return spinnerPublishSubject;
   }
 }

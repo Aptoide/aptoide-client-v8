@@ -21,164 +21,118 @@
   </android.support.design.widget.AppBarLayout>
   <RelativeLayout
       android:layout_width="match_parent"
-      android:layout_height="60dp"
+      android:layout_height="80dp"
       >
 
     <ImageView
-        android:id="@+id/global_icon"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="47dp"
-        android:src="@drawable/leaderboard_global"
+        android:id="@+id/current_user_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
+        android:src="@drawable/icon_user"
         />
 
     <TextView
-        android:id="@+id/global_name"
+        android:id="@+id/current_user_name"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
-        android:layout_below="@id/global_icon"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="35dp"
+        android:layout_toRightOf="@id/current_user_icon"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
         style="@style/Aptoide.TextView.Medium.M"
-        android:text="Global"
-        />
-
-    <ImageView
-        android:id="@+id/country_icon"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="173dp"
-        android:src="@drawable/leaderboard_local"
+        android:textColor="@color/orange_700"
+        android:text="CurrentUser"
         />
 
     <TextView
-        android:id="@+id/country_name"
+        android:id="@+id/current_user_score"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
-        android:layout_below="@id/country_icon"
+        android:layout_below="@id/current_user_name"
         android:layout_marginTop="5dp"
-        android:layout_marginLeft="155dp"
-        style="@style/Aptoide.TextView.Medium.M"
-        android:text="Country"
-        android:layout_alignBottom="@+id/friends_name"
+        android:layout_marginLeft="77dp"
+        android:layout_marginStart="77dp"
+        style="@style/Aptoide.TextView.Regular.S.Grey"
+        android:text="320"
+        />
+
+    <TextView
+        android:id="@+id/top_box"
+        android:layout_width="140dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:gravity="center_vertical|right"
+        android:background="@color/white"
+        style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
+        android:text="Currently in top 12%"
         />
 
     <ImageView
         android:id="@+id/friends_icon"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="295dp"
-        android:src="@drawable/leaderboard_friends"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="18dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="145dp"
+        android:layout_marginEnd="145dp"
+        android:src="@drawable/leaderboard_score"
         />
 
-    <TextView
-        android:id="@+id/friends_name"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_below="@id/friends_icon"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="280dp"
-        style="@style/Aptoide.TextView.Medium.M"
-        android:text="Friends"
-        />
+    <Spinner
+        android:id="@+id/leaderboard_spinner"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/top_box"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="30dp"
+        android:layout_marginRight="30dp"
+        style="@style/Aptoide.TextView.Regular.XS.Grey"
+        ></Spinner>
 
-    <!--<TextView-->
-    <!--android:id="@+id/rank_id"-->
-    <!--android:layout_width="50dp"-->
-    <!--android:layout_height="25dp"-->
-    <!--android:layout_marginTop="35dp"-->
-    <!--android:layout_marginLeft="20dp"-->
-    <!--android:layout_toRightOf="@id/user_icon"-->
-    <!--android:gravity="center"-->
-    <!--style="@style/Aptoide.TextView.Medium.M"-->
-    <!--android:text="Rank"-->
-    <!--/>-->
-    <!--<TextView-->
-    <!--android:id="@+id/rank_value"-->
-    <!--android:layout_width="50dp"-->
-    <!--android:layout_height="20dp"-->
-    <!--android:layout_below="@id/rank_id"-->
-    <!--android:layout_toRightOf="@id/user_icon"-->
-    <!--android:layout_marginLeft="20dp"-->
-    <!--android:gravity="center"-->
-    <!--android:text="100"-->
-    <!--&lt;!&ndash;/>&ndash;&gt;-->
-    <!--<include layout="@layout/separator_vertical"-->
-    <!--android:id="@+id/separator"-->
-    <!--android:layout_width="1dp"-->
-    <!--android:layout_height="40dp"-->
-    <!--android:layout_toRightOf="@id/rank_id"-->
-    <!--android:layout_marginLeft="20dp"-->
-    <!--android:layout_marginTop="40dp"-->
-    <!--/>-->
-    <!--<TextView-->
-    <!--android:id="@+id/score_id"-->
-    <!--android:layout_width="50dp"-->
-    <!--android:layout_height="25dp"-->
-    <!--android:layout_marginTop="35dp"-->
-    <!--android:layout_marginLeft="20dp"-->
-    <!--android:layout_toRightOf="@id/separator"-->
-    <!--android:gravity="center"-->
-    <!--style="@style/Aptoide.TextView.Medium.M"-->
-    <!--android:text="Score"-->
-    <!--/>-->
 
-    <!--<TextView-->
-    <!--android:id="@+id/score_value"-->
-    <!--android:layout_width="50dp"-->
-    <!--android:layout_height="20dp"-->
-    <!--android:layout_below="@id/score_id"-->
-    <!--android:layout_toRightOf="@id/separator"-->
-    <!--android:layout_marginLeft="20dp"-->
-    <!--android:gravity="center"-->
-    <!--android:text="100"-->
-    <!--/>-->
   </RelativeLayout>
 
   <RelativeLayout
-      android:layout_width="match_parent"
+      android:layout_width="320dp"
       android:layout_height="match_parent"
+      android:layout_marginTop="10dp"
+      android:layout_gravity="center"
+      android:background="@color/grey_fog_lighter"
       >
 
+    <include layout="@layout/fragment_leaderboard_top_element"
+        android:id="@+id/top_element"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        ></include>
+
+    <View
+        android:id="@+id/card_custom_view_line_separator"
+        android:layout_width="match_parent"
+        android:layout_height="0.7dp"
+        android:layout_below="@id/top_element"
+        android:layout_marginEnd="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginStart="12dp"
+        android:background="@color/grey"
+        />
+
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/fragment_leaderboard_global"
+        android:id="@+id/fragment_leaderboard_entries"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/card_custom_view_line_separator"
+        android:layout_marginTop="10dp"
         />
-
-    <include layout="@layout/separator_vertical"
-        android:id="@+id/separator1"
-        android:layout_width="3dp"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="119dp"
-        />
-
-
-    <!--<android.support.v7.widget.RecyclerView-->
-    <!--android:id="@+id/fragment_leaderboard_country"-->
-    <!--android:layout_width="115dp"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_toRightOf="@id/fragment_leaderboard_global"-->
-    <!--android:layout_marginLeft="10dp"-->
-    <!--/>-->
-
-    <include layout="@layout/separator_vertical"
-        android:id="@+id/separator2"
-        android:layout_width="3dp"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="244dp"
-        />
-
-    <!--<android.support.v7.widget.RecyclerView-->
-    <!--android:id="@+id/fragment_leaderboard_friends"-->
-    <!--android:layout_width="115dp"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_toRightOf="@id/fragment_leaderboard_country"-->
-    <!--android:layout_marginLeft="10dp"-->
-    <!--/>-->
 
   </RelativeLayout>
 
