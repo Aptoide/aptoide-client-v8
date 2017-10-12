@@ -24,9 +24,9 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_alignParentBottom="true"
+      android:layout_gravity="top|center_horizontal"
       android:layout_marginBottom="@dimen/padding_medium_small"
       android:gravity="top|center_horizontal"
-      android:layout_gravity="top|center_horizontal"
       android:orientation="horizontal"
       android:paddingBottom="@dimen/padding_medium_small"
       android:weightSum="2"
@@ -78,6 +78,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:gravity="center"
         android:orientation="vertical"
         android:paddingTop="@dimen/padding_medium_default"
