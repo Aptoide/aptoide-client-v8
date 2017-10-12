@@ -77,7 +77,8 @@ public class FirstInstallFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override
   public void addFirstInstallDisplayables(List<Displayable> displayables, boolean finishLoading) {
-    //clearDisplayables().
-    addDisplayables(displayables, finishLoading);
+    if (this.getView() != null) {
+      addDisplayables(displayables, finishLoading);
+    }
   }
 }
