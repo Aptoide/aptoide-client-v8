@@ -46,7 +46,7 @@ public class EspressoTests {
   private final String SIGNUPEMAILTESTEND = "@aptoide.com";
   private final String LOGINEMAIL = "jose.messejana@aptoide.com";
   private final String PASS = "aptoide1234";
-  private final String APP_TO_SEARCH = "Cut the Rope";
+  private final String APP_TO_SEARCH = "Hearthstone";
   private final int WAIT_TIME = 550;
   private final int LONGER_WAIT_TIME = 2000;
   private final int NUMBER_OF_RETRIES = 3;
@@ -232,6 +232,13 @@ public class EspressoTests {
     }
   }
 
+  private boolean hasPermission() {
+    Context context = InstrumentationRegistry.getTargetContext();
+    String permission = "android.permission.WRITE_EXTERNAL_STORAGE";
+    int permissionStatus = ContextCompat.checkSelfPermission(context, permission);
+    return (permissionStatus == PackageManager.PERMISSION_GRANTED);
+  }
+
   // IfElse Actions
 
   private void closePopUp() throws InterruptedException {
@@ -327,7 +334,7 @@ public class EspressoTests {
         pressImeActionButton());
     Thread.sleep(LONGER_WAIT_TIME);
     onView(withId(R.id.all_stores_result_list)).perform(
-        RecyclerViewActions.actionOnItemAtPosition(1, click()));
+        RecyclerViewActions.actionOnItemAtPosition(0, click()));
   }
 
   private void testIc_ActionButtons() throws InterruptedException {
@@ -348,12 +355,5 @@ public class EspressoTests {
     }
     Thread.sleep(WAIT_TIME);
     onView(withId(R.id.create_store_skip)).perform(click());
-  }
-
-  private boolean hasPermission() {
-    Context context = InstrumentationRegistry.getTargetContext();
-    String permission = "android.permission.WRITE_EXTERNAL_STORAGE";
-    int permissionStatus = ContextCompat.checkSelfPermission(context, permission);
-    return (permissionStatus == PackageManager.PERMISSION_GRANTED);
   }
 }
