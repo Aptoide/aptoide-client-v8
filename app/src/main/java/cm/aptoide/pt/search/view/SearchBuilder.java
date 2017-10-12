@@ -49,12 +49,11 @@ public class SearchBuilder {
     final SearchView searchView = (SearchView) menuItem.getActionView();
     setSearchableInfo(searchView, searchManager);
 
-    SearchActionsHandler actionsHandler = getSearchActionsHandler(searchView);
+    final SearchActionsHandler actionsHandler = getSearchActionsHandler(searchView);
     searchView.setOnQueryTextListener(actionsHandler);
     searchView.setOnSuggestionListener(actionsHandler);
     searchView.setOnQueryTextFocusChangeListener(actionsHandler);
     searchView.setOnSearchClickListener(actionsHandler);
-
     searchView.setQueryRefinementEnabled(true);
   }
 
@@ -63,8 +62,7 @@ public class SearchBuilder {
         () -> ShowMessage.asToast(applicationContext, R.string.search_minimum_chars);
 
     final QueryResultRepository queryResultRepository = (int pos) -> {
-      Cursor item = (Cursor) searchView.getSuggestionsAdapter()
-          .getItem(pos);
+      Cursor item = (Cursor) searchView.getSuggestionsAdapter().getItem(pos);
       return item.getString(1);
     };
 

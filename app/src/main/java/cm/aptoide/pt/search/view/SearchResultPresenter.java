@@ -57,6 +57,7 @@ public class SearchResultPresenter implements Presenter {
     handleClickOnNoResultsImage();
     handleAllStoresListReachedBottom();
     handleFollowedStoresListReachedBottom();
+    handleTitleBarClick();
   }
 
   @Override public void saveState(Bundle state) {
@@ -65,6 +66,17 @@ public class SearchResultPresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
     // does nothing
+  }
+
+  private void handleTitleBarClick() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .observeOn(viewScheduler)
+        .flatMap(__ -> view.clickTitleBar())
+        .doOnNext(__ -> view.setFocusInSearchView())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
   }
 
   private void stopLoadingMoreOnDestroy() {

@@ -7,6 +7,8 @@ import java.util.List;
 import rx.Observable;
 
 public interface SearchView extends View {
+  Observable<Void> clickTitleBar();
+
   void showFollowedStoresResult();
 
   void showAllStoresResult();
@@ -52,6 +54,8 @@ public interface SearchView extends View {
   void hideLoadingMore();
 
   void setViewWithStoreNameAsSingleTab();
+
+  void setFocusInSearchView();
 
   interface Model {
 
