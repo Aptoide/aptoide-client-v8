@@ -38,7 +38,7 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(__ -> {
           if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
-            view.showAutoEnableHotspotProblem();
+            view.showAutoEnableHotspotSendError();
           } else {
             view.openAppSelectionFragment(true);
           }
@@ -76,7 +76,7 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
         .flatMap(created -> view.shareAptoideApk())
         .doOnNext(__ -> {
           if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
-            view.showAutoEnableHotspotProblem();
+            view.showAutoEnableHotspotInviteFriendsError();
           } else {
             view.openShareAptoideFragment();
           }

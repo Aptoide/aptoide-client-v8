@@ -30,5 +30,7 @@ public interface SpotAndShareMainFragmentView extends View {
 
   void openShareAptoideFragment();
 
-  void showAutoEnableHotspotProblem();
+  void showAutoEnableHotspotSendError();
+
+  void showAutoEnableHotspotInviteFriendsError();
 }
