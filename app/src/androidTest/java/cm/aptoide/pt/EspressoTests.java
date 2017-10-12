@@ -1,5 +1,7 @@
 package cm.aptoide.pt;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.ViewAction;
@@ -12,6 +14,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiSelector;
+import android.support.v4.content.ContextCompat;
 import cm.aptoide.pt.view.MainActivity;
 import java.io.IOException;
 import org.junit.Before;
@@ -162,7 +165,7 @@ public class EspressoTests {
     }
     Thread.sleep(LONGER_WAIT_TIME);
     closePopUp();
-    click_on_android_prompt("ALLOW");
+    allow_permission("ALLOW");
     closeIfIsNotLoggedInOnDownload();
     Thread.sleep(WAIT_TIME);
     onView(withId(R.id.download_progress)).check(matches(isDisplayed()));
@@ -235,9 +238,19 @@ public class EspressoTests {
     try {
       onView(withText("OK")).perform(click());
     } catch (NoMatchingViewException e) {
-      try {
-        onView(withId(R.id.download_progress)).check(matches(isDisplayed()));
-      } catch (NoMatchingViewException e1) {
+    }
+  }
+
+  private void allow_permission(String text) {
+    if (android.os.Build.VERSION.SDK_INT > 23) {
+      if (!hasPermission()) {
+        try {
+          mDevice.findObject(new UiSelector().clickable(true)
+              .checkable(false)
+              .textContains(text))
+              .click();
+        } catch (Exception e1) {
+        }
       }
     }
   }
@@ -337,13 +350,10 @@ public class EspressoTests {
     onView(withId(R.id.create_store_skip)).perform(click());
   }
 
-  private void click_on_android_prompt(String text) {
-    try {
-      mDevice.findObject(new UiSelector().clickable(true)
-          .checkable(false)
-          .textContains(text))
-          .click();
-    } catch (Exception e1) {
-    }
+  private boolean hasPermission() {
+    Context context = InstrumentationRegistry.getTargetContext();
+    String permission = "android.permission.WRITE_EXTERNAL_STORAGE";
+    int permissionStatus = ContextCompat.checkSelfPermission(context, permission);
+    return (permissionStatus == PackageManager.PERMISSION_GRANTED);
   }
 }
