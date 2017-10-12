@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.AptoideApplication;
@@ -39,6 +40,7 @@ import rx.Observable;
 public class SpotAndShareMainFragment extends FragmentView
     implements SpotAndShareMainFragmentView, WriteSettingsPermissionProvider {
 
+  private LinearLayout mainLayout;
   private Button receiveButton;
   private Button sendButton;
   private ImageView editProfileButton;
@@ -124,6 +126,7 @@ public class SpotAndShareMainFragment extends FragmentView
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    mainLayout = (LinearLayout) view.findViewById(R.id.spotandshare_main_fragment_layout);
     receiveButton = (Button) view.findViewById(R.id.receive_button);
     sendButton = (Button) view.findViewById(R.id.send_button);
     editProfileButton = (ImageView) view.findViewById(R.id.edit_profile_button);
@@ -147,6 +150,7 @@ public class SpotAndShareMainFragment extends FragmentView
   }
 
   @Override public void onDestroyView() {
+    mainLayout = null;
     receiveButton = null;
     sendButton = null;
     toolbar = null;
