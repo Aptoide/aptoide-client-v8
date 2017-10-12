@@ -51,17 +51,44 @@
       tools:text="TextView"
       style="@style/Aptoide.TextView.Regular.XS"
       />
-  <Button
-      android:id="@+id/action_button"
-      android:text="@string/follow"
+  <FrameLayout
+      android:id="@+id/action_button_layout"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="1.0"
       app:layout_constraintLeft_toRightOf="@+id/main_name"
       app:layout_constraintRight_toRightOf="parent"
       app:layout_constraintStart_toEndOf="@id/main_name"
       app:layout_constraintTop_toTopOf="parent"
-      style="@style/Aptoide.Button.S"
-      />
+      >
+
+    <TextView
+        android:id="@+id/edit_store_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_edit_black_9dp"
+        android:gravity="center"
+        android:minHeight="24dp"
+        android:minWidth="54dp"
+        android:paddingLeft="8dp"
+        android:paddingStart="8dp"
+        android:text="@string/myaccount_edit_store_button"
+        android:textAllCaps="true"
+        android:textSize="10sp"
+        android:visibility="gone"
+        style="text"
+        />
+
+    <Button
+        android:id="@+id/follow_store_button"
+        android:text="@string/unfollow"
+        android:visibility="gone"
+        style="@style/Aptoide.Button.S"
+        />
+
+
+  </FrameLayout>
   <ImageView
       android:id="@+id/badge_icon"
       android:layout_width="24dp"
@@ -70,10 +97,10 @@
       android:layout_marginEnd="16dp"
       android:layout_marginRight="16dp"
       android:layout_marginTop="8dp"
-      app:layout_constraintBottom_toBottomOf="@+id/action_button"
-      app:layout_constraintEnd_toStartOf="@id/action_button"
-      app:layout_constraintRight_toLeftOf="@+id/action_button"
-      app:layout_constraintTop_toTopOf="@+id/action_button"
+      app:layout_constraintBottom_toBottomOf="@+id/action_button_layout"
+      app:layout_constraintEnd_toStartOf="@id/action_button_layout"
+      app:layout_constraintRight_toLeftOf="@+id/action_button_layout"
+      app:layout_constraintTop_toTopOf="@+id/action_button_layout"
       tools:src="@drawable/icon_user"
       />
 

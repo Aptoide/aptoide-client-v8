@@ -2,6 +2,7 @@ package cm.aptoide.pt.store.view;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetHomeMeta;
 import cm.aptoide.pt.dataprovider.model.v7.store.HomeUser;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
@@ -11,6 +12,7 @@ import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 import java.util.Collections;
 import java.util.List;
+import rx.Observable;
 
 /**
  * Created by neuro on 04-08-2016.
@@ -126,8 +128,17 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
         .getFollowing();
   }
 
-  public boolean isLoggedIn(AptoideAccountManager accountManager) {
-    return accountManager.isLoggedIn();
+  public Observable<Boolean> isStoreOwner(AptoideAccountManager accountManager) {
+    return accountManager.accountStatus()
+        .first()
+        .map(account -> {
+          if (getStore() == null || account.getStore() == null) {
+            return false;
+          }
+          return account.getStore()
+              .getName()
+              .equals(getStore().getName());
+        });
   }
 
   public String getDescription() {
@@ -144,5 +155,30 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
     return StoreTheme.get(store == null || store.getAppearance() == null ? "default"
         : store.getAppearance()
             .getTheme());
+  }
+
+  public long getStoreId() {
+    return getStore().getId();
+  }
+
+  public boolean isUserOnly() {
+    return getStore() == null;
+  }
+
+  public Observable<Boolean> isFollowingStore(StoreAccessor storeAccessor) {
+    if (getStore() != null) {
+      return storeAccessor.getAll()
+          .map(stores -> {
+            for (cm.aptoide.pt.database.realm.Store store : stores) {
+              if (store.getStoreName()
+                  .equals(getStoreName())) {
+                return true;
+              }
+            }
+            return false;
+          })
+          .distinctUntilChanged();
+    }
+    return Observable.just(false);
   }
 }
