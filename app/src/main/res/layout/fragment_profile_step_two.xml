@@ -43,6 +43,7 @@
         android:layout_weight="1"
         android:text="@string/create_profile_pub_pri_make_priv"
         android:textSize="@dimen/text_size_extra_small"
+        android:theme="@style/Aptoide.Button.Ghost"
         style="@style/Aptoide.Button.Ghost"
         />
 
@@ -56,7 +57,6 @@
         android:layout_marginStart="@dimen/padding_very_small"
         android:layout_weight="1"
         android:text="@string/continue_option"
-        android:textSize="@dimen/text_size_medium_small"
         android:theme="@style/Aptoide.Button"
         style="@style/Widget.AppCompat.Button"
         />
