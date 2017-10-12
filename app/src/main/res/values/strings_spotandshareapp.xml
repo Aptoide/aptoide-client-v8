@@ -59,5 +59,6 @@
   <string name="spotandshare_message_share_aptoide_timeout_creating_hotspot">Creating hotspot is taking too long. Please try again</string>
   <string name="spotandshare_message_timeout_creating_hotspot">Creating hotspot is taking too long. Please try again</string>
   <string name="spotandshare_message_join_group_error">There was an error inside the group</string>
+  <string name="spotandshare_message_hotspot_enabling_problem">We can\'t enable the hotspot in your Android version.\nPlease ask your friend to press SEND while you press RECEIVE.</string>
 
 </resources>

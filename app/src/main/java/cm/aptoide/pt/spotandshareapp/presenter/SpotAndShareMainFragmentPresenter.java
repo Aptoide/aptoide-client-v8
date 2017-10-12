@@ -1,5 +1,6 @@
 package cm.aptoide.pt.spotandshareapp.presenter;
 
+import android.os.Build;
 import android.os.Bundle;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
@@ -35,7 +36,13 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.RESUME))
         .flatMap(created -> view.startSend())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(__ -> view.openAppSelectionFragment(true))
+        .doOnNext(__ -> {
+          if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
+            view.showAutoEnableHotspotProblem();
+          } else {
+            view.openAppSelectionFragment(true);
+          }
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -68,7 +75,11 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.shareAptoideApk())
         .doOnNext(__ -> {
-          view.openShareAptoideFragment();
+          if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
+            view.showAutoEnableHotspotProblem();
+          } else {
+            view.openShareAptoideFragment();
+          }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

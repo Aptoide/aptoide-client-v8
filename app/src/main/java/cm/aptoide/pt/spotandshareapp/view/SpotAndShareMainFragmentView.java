@@ -29,4 +29,6 @@ public interface SpotAndShareMainFragmentView extends View {
   Observable<Void> shareAptoideApk();
 
   void openShareAptoideFragment();
+
+  void showAutoEnableHotspotProblem();
 }
