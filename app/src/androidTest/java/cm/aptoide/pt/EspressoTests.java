@@ -1,5 +1,6 @@
 package cm.aptoide.pt;
 
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.action.GeneralLocation;
@@ -9,6 +10,9 @@ import android.support.test.espresso.action.Swipe;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.test.uiautomator.UiDevice;
+import android.support.test.uiautomator.UiObjectNotFoundException;
+import android.support.test.uiautomator.UiSelector;
 import cm.aptoide.pt.view.MainActivity;
 import java.io.IOException;
 import org.junit.Before;
@@ -36,6 +40,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 public class EspressoTests {
 
+  private static final int GRANT_BUTTON_INDEX = 1;
   private final String SIGNUPEMAILTESTBGN = "jose.messejana+";
   private final String SIGNUPEMAILTESTEND = "@aptoide.com";
   private final String LOGINEMAIL = "jose.messejana@aptoide.com";
@@ -48,32 +53,100 @@ public class EspressoTests {
       new ActivityTestRule<>(MainActivity.class);
   @Rule public RetryTestRule retry = new RetryTestRule(NUMBER_OF_RETRIES);
   private String SIGNUPEMAILTEST = "";
+  private UiDevice mDevice;
+  private boolean isDone = false;
 
   private static ViewAction swipeRigthOnLeftMost() {
     return new GeneralSwipeAction(Swipe.FAST, GeneralLocation.CENTER_LEFT,
         GeneralLocation.CENTER_RIGHT, Press.FINGER);
   }
 
-  @Before public void setUpEmail() throws IOException {
+  @Before public void setUp() throws IOException {
     SIGNUPEMAILTEST = SIGNUPEMAILTESTBGN + System.currentTimeMillis() + SIGNUPEMAILTESTEND;
+    if (!isDone) {
+      mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+      isDone = true;
+    }
     if (isFirstTime()) {
       skipWizard();
     }
     logOutorGoBack();
   }
 
+  @Test public void emptyEmailSignIn() throws InterruptedException {
+    goToMyAccount();
+    performLogin("", PASS);
+    onView(withText(R.string.no_email_error_message)).check(matches(isDisplayed()));
+  }
+
+  @Test public void emptyPasswordSignIn() throws InterruptedException {
+    goToMyAccount();
+    performLogin(LOGINEMAIL, "");
+    onView(withText(R.string.no_pass_error_message)).check(matches(isDisplayed()));
+  }
+
+  @Test public void emptySignIn() throws InterruptedException {
+    goToMyAccount();
+    performLogin("", "");
+    onView(withText(R.string.no_email_and_pass_error_message)).check(matches(isDisplayed()));
+  }
+
+  @Test public void wrongSignIn() throws InterruptedException {
+    goToMyAccount();
+    performLogin(LOGINEMAIL, "wrongpass");
+    onView(withText(R.string.error_invalid_grant)).check(matches(isDisplayed()));
+  }
+
+  @Test public void invalidEmailSignUp() throws InterruptedException {
+    goToMyAccount();
+    performSignUp("randomemail", PASS);
+    onView(withText(R.string.ws_error_IARG_106)).check(matches(isDisplayed()));
+  }
+
+  @Test public void invalidPasswordSignUp() throws InterruptedException {
+    goToMyAccount();
+    performSignUp("randomemail", "igjsi1");
+    onView(withText(R.string.password_validation_text)).check(matches(isDisplayed()));
+  }
+
+  @Test public void emptyEmailSignUp() throws InterruptedException {
+    goToMyAccount();
+    performSignUp("", PASS);
+    onView(withText(R.string.no_email_error_message)).check(matches(isDisplayed()));
+  }
+
+  @Test public void emptyPasswordSignUp() throws InterruptedException {
+    goToMyAccount();
+    performSignUp(LOGINEMAIL, "");
+    onView(withText(R.string.no_pass_error_message)).check(matches(isDisplayed()));
+  }
+
+  @Test public void emptySignUp() throws InterruptedException {
+    goToMyAccount();
+    performSignUp("", "");
+    onView(withText(R.string.no_email_and_pass_error_message)).check(matches(isDisplayed()));
+  }
+
+  @Test public void emailExistsSignUp() throws InterruptedException {
+    goToMyAccount();
+    performSignUp(LOGINEMAIL, PASS);
+    onView(withText(R.string.ws_error_WOP_9)).check(matches(isDisplayed()));
+  }
+
   @Test public void signUp() throws InterruptedException {
     goToMyAccount();
-    performSignUp();
+    performSignUp(SIGNUPEMAILTEST, PASS);
     while (notSignUp()) {
       Thread.sleep(LONGER_WAIT_TIME);
     }
     complete_sign_up();
   }
 
+  // Initial tests
+
   @Test public void signIn() throws InterruptedException {
     goToMyAccount();
-    performLogin();
+    performLogin(LOGINEMAIL, PASS);
     while (!hasLoggedIn()) {
       Thread.sleep(LONGER_WAIT_TIME);
     }
@@ -91,10 +164,10 @@ public class EspressoTests {
     }
     Thread.sleep(LONGER_WAIT_TIME);
     closePopUp();
+    click_on_android_prompt();
     closeIfIsNotLoggedInOnDownload();
     Thread.sleep(WAIT_TIME);
     onView(withId(R.id.download_progress)).check(matches(isDisplayed()));
-    Thread.sleep(WAIT_TIME);
     testIc_ActionButtons();
     Thread.sleep(LONGER_WAIT_TIME);
     onView(withId(R.id.action_btn)).check(matches(isDisplayed()));
@@ -206,18 +279,18 @@ public class EspressoTests {
     onView(withText(R.string.my_account_title_my_account)).perform(click());
   }
 
-  private void performLogin() throws InterruptedException {
+  private void performLogin(String email, String pass) throws InterruptedException {
     onView(withId(R.id.show_login_with_aptoide_area)).perform(click());
-    onView(withId(R.id.username)).perform(replaceText(LOGINEMAIL));
-    onView(withId(R.id.password)).perform(replaceText(PASS), closeSoftKeyboard());
+    onView(withId(R.id.username)).perform(replaceText(email));
+    onView(withId(R.id.password)).perform(replaceText(pass), closeSoftKeyboard());
     Thread.sleep(WAIT_TIME);
     onView(withId(R.id.button_login)).perform(click());
   }
 
-  private void performSignUp() throws InterruptedException {
+  private void performSignUp(String email, String pass) throws InterruptedException {
     onView(withId(R.id.show_join_aptoide_area)).perform(click());
-    onView(withId(R.id.username)).perform(replaceText(SIGNUPEMAILTEST));
-    onView(withId(R.id.password)).perform(replaceText(PASS), closeSoftKeyboard());
+    onView(withId(R.id.username)).perform(replaceText(email));
+    onView(withId(R.id.password)).perform(replaceText(pass), closeSoftKeyboard());
     Thread.sleep(WAIT_TIME);
     onView(withId(R.id.button_sign_up)).perform(click());
   }
@@ -243,7 +316,7 @@ public class EspressoTests {
         pressImeActionButton());
     Thread.sleep(LONGER_WAIT_TIME);
     onView(withId(R.id.all_stores_result_list)).perform(
-          RecyclerViewActions.actionOnItemAtPosition(1, click()));
+        RecyclerViewActions.actionOnItemAtPosition(1, click()));
   }
 
   private void testIc_ActionButtons() throws InterruptedException {
@@ -264,5 +337,15 @@ public class EspressoTests {
     }
     Thread.sleep(WAIT_TIME);
     onView(withId(R.id.create_store_skip)).perform(click());
+  }
+
+  private void click_on_android_prompt() {
+    try {
+      mDevice.findObject(new UiSelector().clickable(true)
+          .checkable(false)
+          .index(GRANT_BUTTON_INDEX))
+          .click();
+    } catch (UiObjectNotFoundException e1) {
+    }
   }
 }
