@@ -2,6 +2,9 @@ package cm.aptoide.pt.store.view;
 
 import android.os.Build;
 import android.support.annotation.ColorInt;
+import android.text.ParcelableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -31,6 +34,7 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDisplayable> {
 
+  public static final float TEXT_SIZE = 1.2f;
   private AptoideAccountManager accountManager;
   private LinearLayout socialChannelsLayout;
   private ImageView mainIcon;
@@ -45,6 +49,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
   private StoreUtilsProxy storeUtilsProxy;
   private ImageView badgeIcon;
   private View separator;
+  private SpannableFactory spannableFactory;
 
   public GridStoreMetaWidget(View itemView) {
     super(itemView);
@@ -82,18 +87,23 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
         WebService.getDefaultConverter(),
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
+    spannableFactory = new SpannableFactory();
 
     compositeSubscription.add(createHomeMeta(displayable).observeOn(AndroidSchedulers.mainThread())
         .doOnNext(homeMeta -> {
+          ParcelableSpan[] textStyle = {
+              new StyleSpan(android.graphics.Typeface.BOLD),
+              new ForegroundColorSpan(homeMeta.getThemeColor())
+          };
           showMainIcon(homeMeta.getMainIcon());
           showSecondaryIcon(homeMeta.getSecondaryIcon());
           showMainName(homeMeta.getMainName());
           showSecondaryName(homeMeta.getSecondaryName());
           setupActionButton(homeMeta.isOwner());
           showSocialChannels(homeMeta.getSocialChannels());
-          showAppsCount(homeMeta.getAppsCount(), homeMeta.getThemeColor());
-          showFollowersCount(homeMeta.getFollowersCount(), homeMeta.getThemeColor());
-          showFollowingCount(homeMeta.getFollowingCount(), homeMeta.getThemeColor());
+          showAppsCount(homeMeta.getAppsCount(), textStyle);
+          showFollowersCount(homeMeta.getFollowersCount(), textStyle);
+          showFollowingCount(homeMeta.getFollowingCount(), textStyle);
           showDescription(homeMeta.getDescription());
         })
         .subscribe());
@@ -108,22 +118,22 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     }
   }
 
-  private void showFollowingCount(long followingCount, @ColorInt int color) {
-    String count = AptoideUtils.StringU.withSuffix(followingCount);
-    String followingText = String.format(getContext().getString(R.string.following), count);
-    followingCountTv.setText(new SpannableFactory().createColorSpan(followingText, color, count));
+  private void showFollowingCount(long followingCount, ParcelableSpan[] textStyle) {
+    String countText = AptoideUtils.StringU.withSuffix(followingCount);
+    String followingText = String.format(getContext().getString(R.string.following), countText);
+    followingCountTv.setText(spannableFactory.createMultiSpan(followingText, textStyle, countText));
   }
 
-  private void showFollowersCount(long followersCount, @ColorInt int color) {
+  private void showFollowersCount(long followersCount, ParcelableSpan[] textStyle) {
     String count = AptoideUtils.StringU.withSuffix(followersCount);
     String followingText = String.format(getContext().getString(R.string.subscribers), count);
-    followersCountTv.setText(new SpannableFactory().createColorSpan(followingText, color, count));
+    followersCountTv.setText(spannableFactory.createMultiSpan(followingText, textStyle, count));
   }
 
-  private void showAppsCount(long appsCount, @ColorInt int color) {
+  private void showAppsCount(long appsCount, ParcelableSpan[] textStyle) {
     String count = AptoideUtils.StringU.withSuffix(appsCount);
     String followingText = String.format(getContext().getString(R.string.apps), count);
-    appsCountTv.setText(new SpannableFactory().createColorSpan(followingText, color, count));
+    appsCountTv.setText(spannableFactory.createMultiSpan(followingText, textStyle, count));
   }
 
   private void showSocialChannels(

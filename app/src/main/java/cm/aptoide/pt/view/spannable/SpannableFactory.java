@@ -6,6 +6,7 @@ import android.support.annotation.StyleRes;
 import android.text.ParcelableSpan;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.text.style.TextAppearanceSpan;
@@ -68,5 +69,30 @@ public class SpannableFactory {
       }
     }
     return result;
+  }
+
+  @NonNull
+  public Spannable createMultiSpan(String text, ParcelableSpan[] span, String... spanTexts) {
+    Spannable result = new SpannableString(text);
+    for (ParcelableSpan parcelableSpan : span) {
+      for (String spanText : spanTexts) {
+        int spanTextStart = text.indexOf(spanText);
+        if (spanTextStart >= 0
+            && spanTextStart < text.length()
+            && spanText.length() <= text.length()) {
+          result.setSpan(parcelableSpan, spanTextStart, (spanTextStart + spanText.length()),
+              Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+      }
+    }
+
+    return result;
+  }
+
+  public Spannable createBoldSpan(Spannable spannedText, String spanTexts) {
+    spannedText.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), spannedText.toString()
+        .indexOf(spanTexts), spannedText.toString()
+        .length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    return spannedText;
   }
 }
