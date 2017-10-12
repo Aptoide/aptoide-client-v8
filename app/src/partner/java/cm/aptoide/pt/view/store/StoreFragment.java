@@ -60,6 +60,7 @@ import cm.aptoide.pt.view.share.ShareStoreHelper;
 import com.astuetz.PagerSlidingTabStrip;
 import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
+import java.util.Iterator;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -413,6 +414,20 @@ public class StoreFragment extends BasePagerToolbarFragment {
           .replace("/getStore/", "/getStoreWidgets/");
       tab.getEvent()
           .setAction(parsedEventAction);
+    }
+
+    //removes timeline tab from partners. Required while webservice continue to return
+    // "getUserTimeline" tab in the response
+    for (Iterator<GetStoreTabs.Tab> tabIterator = storeUserAbstraction.getNodes()
+        .getTabs()
+        .getList()
+        .iterator(); tabIterator.hasNext(); ) {
+      GetStoreTabs.Tab t = tabIterator.next();
+      if (t.getEvent()
+          .getName()
+          .equals(Event.Name.getUserTimeline)) {
+        tabIterator.remove();
+      }
     }
 
     return storeUserAbstraction.getNodes()

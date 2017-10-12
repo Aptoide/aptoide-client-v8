@@ -34,7 +34,6 @@ public class StoreTabFragmentChooser {
         return fragmentProvider.newGetAdsFragment();
       case listStores:
         return fragmentProvider.newListStoresFragment();
-      case getUserTimeline:
       default:
         throw new RuntimeException("Fragment " + name + " not implemented!");
     }
