@@ -35,11 +35,10 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
 
   @Override public void bindView(CreateStoreDisplayable displayable) {
     followers.setText(String.format(itemView.getContext()
-            .getString(R.string.my_store_create_store_followers),
-        String.valueOf(displayable.getFollowers())));
+        .getString(R.string.storetab_short_followers), String.valueOf(displayable.getFollowers())));
 
     followings.setText(String.format(itemView.getContext()
-            .getString(R.string.my_store_create_store_followings),
+            .getString(R.string.storetab_short_followings),
         String.valueOf(displayable.getFollowings())));
 
     compositeSubscription.add(RxView.clicks(button)
