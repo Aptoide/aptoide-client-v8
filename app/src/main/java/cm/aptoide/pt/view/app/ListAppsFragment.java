@@ -1,5 +1,6 @@
 package cm.aptoide.pt.view.app;
 
+import android.support.v4.app.Fragment;
 import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
@@ -19,6 +20,10 @@ import rx.functions.Action1;
 
 public class ListAppsFragment extends GetStoreEndlessFragment<ListApps> {
 
+  public static Fragment newInstance() {
+    return new ListAppsFragment();
+  }
+
   @Override protected V7<ListApps, ? extends Endless> buildRequest(boolean refresh, String url) {
     return requestFactoryCdnPool.newListAppsRequest(url);
   }
@@ -37,14 +42,16 @@ public class ListAppsFragment extends GetStoreEndlessFragment<ListApps> {
             for (App app : list) {
               app.getStore()
                   .setAppearance(new Store.Appearance(storeTheme, null));
-              displayables.add(new AppBrickListDisplayable(app, tag));
+              displayables.add(
+                  new AppBrickListDisplayable(app, tag, aptoideNavigationTracker, storeContext));
             }
             break;
           default:
             for (App app : list) {
               app.getStore()
                   .setAppearance(new Store.Appearance(storeTheme, null));
-              displayables.add(new GridAppDisplayable(app, tag, storeContext == StoreContext.home));
+              displayables.add(new GridAppDisplayable(app, tag, storeContext == StoreContext.home,
+                  aptoideNavigationTracker, storeContext));
             }
             break;
         }
@@ -52,7 +59,8 @@ public class ListAppsFragment extends GetStoreEndlessFragment<ListApps> {
         for (App app : list) {
           app.getStore()
               .setAppearance(new Store.Appearance(storeTheme, null));
-          displayables.add(new GridAppDisplayable(app, tag, storeContext == StoreContext.home));
+          displayables.add(new GridAppDisplayable(app, tag, storeContext == StoreContext.home,
+              aptoideNavigationTracker, storeContext));
         }
       }
 

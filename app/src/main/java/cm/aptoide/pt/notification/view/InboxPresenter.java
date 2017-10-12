@@ -3,6 +3,7 @@ package cm.aptoide.pt.notification.view;
 import android.os.Bundle;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.notification.NotificationAnalytics;
@@ -57,7 +58,9 @@ public class InboxPresenter implements Presenter {
                 .doOnNext(link -> link.launch())
                 .doOnNext(link -> analytics.notificationShown(
                     notification.getNotificationCenterUrlTrack()))
-                .doOnNext(link -> aptoideNavigationTracker.registerView("Notification"))
+                .doOnNext(link -> aptoideNavigationTracker.registerScreen(
+                    ScreenTagHistory.Builder.build(this.getClass()
+                        .getSimpleName())))
                 .doOnNext(link -> pageViewsAnalytics.sendPageViewedEvent())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {

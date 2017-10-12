@@ -75,6 +75,7 @@
   <dimen name="padding_medium">32dp</dimen>
   <dimen name="padding_medium_large">48dp</dimen>
   <dimen name="padding_very_small">8dp</dimen>
+  <dimen name="padding_very_very_small">6dp</dimen>
   <dimen name="button_default_height">46dp</dimen>
   <dimen name="padding_large">70dp</dimen>
   <dimen name="padding_medium_small">20dp</dimen>

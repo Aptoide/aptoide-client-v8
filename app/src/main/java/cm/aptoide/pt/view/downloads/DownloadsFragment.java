@@ -17,6 +17,7 @@ import cm.aptoide.pt.Install;
 import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -29,11 +30,13 @@ import cm.aptoide.pt.presenter.DownloadsView;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
 import cm.aptoide.pt.view.fragment.FragmentView;
+import cm.aptoide.pt.view.store.StoreTabNavigator;
+import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
-public class DownloadsFragment extends FragmentView implements DownloadsView {
+public class DownloadsFragment extends NavigationTrackFragment implements DownloadsView {
 
   private DownloadsAdapter adapter;
   private View noDownloadsView;
@@ -41,6 +44,7 @@ public class DownloadsFragment extends FragmentView implements DownloadsView {
   private DownloadEventConverter downloadConverter;
   private InstallManager installManager;
   private Analytics analytics;
+  private StoreTabNavigator storeTabNavigator;
 
   public static DownloadsFragment newInstance() {
     return new DownloadsFragment();
@@ -72,6 +76,19 @@ public class DownloadsFragment extends FragmentView implements DownloadsView {
     installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
     analytics = Analytics.getInstance();
+
+    storeTabNavigator = new StoreTabNavigator(getFragmentNavigator());
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+
+    attachPresenter(new DownloadsPresenter(this, installManager), savedInstanceState);
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Nullable @Override
@@ -88,17 +105,11 @@ public class DownloadsFragment extends FragmentView implements DownloadsView {
     downloadsRecyclerView.addItemDecoration(decor);
 
     adapter = new DownloadsAdapter(installConverter, downloadConverter, installManager, analytics,
-        getContext().getResources());
+        getContext().getResources(), storeTabNavigator, aptoideNavigationTracker);
     downloadsRecyclerView.setAdapter(adapter);
     noDownloadsView = view.findViewById(R.id.no_apps_downloaded);
 
     return view;
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-
-    attachPresenter(new DownloadsPresenter(this, installManager), savedInstanceState);
   }
 
   @UiThread @Override public void showActiveDownloads(List<Install> downloads) {

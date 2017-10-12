@@ -1,17 +1,17 @@
 package cm.aptoide.pt.view.wizard;
 
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.view.custom.AptoideViewPager;
 import rx.Completable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
-public class WizardPresenter implements Presenter, ViewPager.OnPageChangeListener {
+public class WizardPresenter implements Presenter, AptoideViewPager.OnPageChangeListener {
 
   private final WizardView view;
   private final AptoideAccountManager accountManager;

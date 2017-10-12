@@ -14,6 +14,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.realm.Rollback;
@@ -96,6 +97,11 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
         ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getImageCachePath()).create(getContext(),
         InstallerFactory.ROLLBACK);
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public int getContentViewId() {

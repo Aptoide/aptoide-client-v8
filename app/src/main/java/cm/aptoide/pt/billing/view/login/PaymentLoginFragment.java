@@ -22,6 +22,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.account.view.GooglePlayServicesFragment;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
@@ -106,6 +107,11 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
         .doOnNext(__ -> facebookEmailRequiredDialogVisible = false)
         .compose(bindUntilEvent(FragmentEvent.PAUSE))
         .subscribe();
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {

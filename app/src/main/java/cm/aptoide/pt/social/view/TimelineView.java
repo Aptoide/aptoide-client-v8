@@ -99,4 +99,6 @@ public interface TimelineView extends View {
   void updateGameCardScores();
 
   void showEmptyState();
+
+  Observable<Integer> getScrollEvents();
 }

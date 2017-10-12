@@ -12,6 +12,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.view.Translator;
 import cm.aptoide.pt.view.recycler.displayable.FooterDisplayable;
+import cm.aptoide.pt.view.store.StoreTabGridRecyclerFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.functions.Action1;
 
@@ -41,10 +42,10 @@ public class FooterWidget extends Widget<FooterDisplayable> {
           .getActions()
           .get(0)
           .getEvent();
-      getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-          .newStoreTabGridRecyclerFragment(event, Translator.translate(displayable.getPojo()
-                  .getTitle(), getContext().getApplicationContext(), marketName), null,
-              displayable.getTag(), displayable.getStoreContext()), true);
+      getFragmentNavigator().navigateTo(StoreTabGridRecyclerFragment.newInstance(event,
+          Translator.translate(displayable.getPojo()
+              .getTitle(), getContext().getApplicationContext(), marketName), null,
+          displayable.getTag(), displayable.getStoreContext(), false), true);
     };
     compositeSubscription.add(RxView.clicks(button)
         .subscribe(handleButtonClick));

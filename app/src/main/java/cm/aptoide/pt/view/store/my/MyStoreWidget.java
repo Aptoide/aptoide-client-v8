@@ -110,14 +110,14 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
             TimeLineFollowersFragment.newInstanceUsingUser(storeTheme,
                 AptoideUtils.StringU.getFormattedString(
                     R.string.social_timeline_followers_fragment_title, getContext().getResources(),
-                    displayable.getFollowers())), true)));
+                    displayable.getFollowers()), displayable.getStoreContext()), true)));
 
     compositeSubscription.add(RxView.clicks(following)
         .subscribe(click -> getFragmentNavigator().navigateTo(
             TimeLineFollowingFragment.newInstanceUsingUser(storeTheme,
                 AptoideUtils.StringU.getFormattedString(
                     R.string.social_timeline_following_fragment_title, getContext().getResources(),
-                    displayable.getFollowings())), true)));
+                    displayable.getFollowings()), displayable.getStoreContext()), true)));
   }
 
   private int getColorOrDefault(StoreTheme theme, Context context) {

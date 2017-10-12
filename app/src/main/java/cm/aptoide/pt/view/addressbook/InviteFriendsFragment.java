@@ -11,6 +11,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.InviteFriendsContract;
 import cm.aptoide.pt.presenter.InviteFriendsPresenter;
@@ -42,6 +43,11 @@ public class InviteFriendsFragment extends UIComponentFragment
     extras.putString(TAG, tag);
     inviteFriendsFragment.setArguments(extras);
     return inviteFriendsFragment;
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {

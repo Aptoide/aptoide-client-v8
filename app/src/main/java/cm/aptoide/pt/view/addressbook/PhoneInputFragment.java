@@ -21,6 +21,7 @@ import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.addressbook.data.ContactsRepository;
 import cm.aptoide.pt.addressbook.utils.ContactUtils;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -56,6 +57,11 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
     extras.putString(TAG, tag);
     phoneInputFragment.setArguments(extras);
     return phoneInputFragment;
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {

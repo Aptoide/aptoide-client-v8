@@ -5,6 +5,7 @@ import cm.aptoide.pt.account.view.LoginSignUpFragment;
 import cm.aptoide.pt.account.view.MyAccountFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.notification.view.InboxFragment;
 import cm.aptoide.pt.timeline.post.PostFragment;
 import cm.aptoide.pt.timeline.view.navigation.AppsTimelineTabNavigation;
@@ -24,18 +25,21 @@ public class TimelineNavigator implements TimelineNavigation {
   private final FragmentNavigator fragmentNavigator;
   private final String likesTitle;
   private final TabNavigator tabNavigator;
+  private final StoreContext storeContext;
 
   public TimelineNavigator(FragmentNavigator fragmentNavigator, String likesTitle,
-      TabNavigator tabNavigator) {
+      TabNavigator tabNavigator, StoreContext storeContext) {
     this.fragmentNavigator = fragmentNavigator;
     this.likesTitle = likesTitle;
     this.tabNavigator = tabNavigator;
+    this.storeContext = storeContext;
   }
 
   @Override
   public void navigateToAppView(long appId, String packageName, AppViewFragment.OpenType openType) {
     fragmentNavigator.navigateTo(
-        AppViewFragment.newInstance(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY), true);
+        AppViewFragment.newInstance(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY, ""),
+        true);
   }
 
   @Override public void navigateToAppView(String packageName, AppViewFragment.OpenType openType) {
@@ -75,48 +79,50 @@ public class TimelineNavigator implements TimelineNavigation {
 
   @Override public void navigateToCommentsWithCommentDialogOpen(String cardId) {
     fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newCommentGridRecyclerFragmentWithCommentDialogOpen(CommentType.TIMELINE, cardId), true);
+        .newCommentGridRecyclerFragmentWithCommentDialogOpen(CommentType.TIMELINE, cardId,
+            storeContext), true);
   }
 
   // FIXME what should happen if storeId <= 0 ?
   @Override public void navigateToFollowersViewStore(Long storeId, String title) {
     if (storeId > 0) {
       fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-          .newTimeLineFollowersUsingStoreIdFragment(storeId, "DEFAULT", title), true);
+          .newTimeLineFollowersUsingStoreIdFragment(storeId, "DEFAULT", title, storeContext), true);
     }
   }
 
   @Override public void navigateToFollowersViewStore(String title) {
     fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newTimeLineFollowersFragment("DEFAULT", title), true);
+        .newTimeLineFollowersFragment("DEFAULT", title, storeContext), true);
   }
 
   @Override public void navigateToFollowersViewUser(Long userId, String title) {
     fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newTimeLineFollowersUsingUserIdFragment(userId, "DEFAULT", title), true);
+        .newTimeLineFollowersUsingUserIdFragment(userId, "DEFAULT", title, storeContext), true);
   }
 
   // FIXME what should happen if storeId <= 0 ?
   @Override public void navigateToFollowingViewStore(Long storeId, String title) {
     if (storeId > 0) {
       fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-          .newTimeLineFollowingFragmentUsingStoreId(storeId, "DEFAULT", title), true);
+          .newTimeLineFollowingFragmentUsingStoreId(storeId, "DEFAULT", title, storeContext), true);
     }
   }
 
   @Override public void navigateToFollowingViewUser(Long userId, String title) {
     fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newTimeLineFollowingFragmentUsingUserId(userId, "DEFAULT", title), true);
+        .newTimeLineFollowingFragmentUsingUserId(userId, "DEFAULT", title, storeContext), true);
   }
 
   @Override public void navigateToLikesView(String cardId, long numberOfLikes) {
     fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newTimeLineLikesFragment(cardId, numberOfLikes, "default", likesTitle), true);
+            .newTimeLineLikesFragment(cardId, numberOfLikes, "default", likesTitle, storeContext),
+        true);
   }
 
   @Override public void navigateToComments(String cardId) {
     fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newCommentGridRecyclerFragment(CommentType.TIMELINE, cardId), true);
+        .newCommentGridRecyclerFragment(CommentType.TIMELINE, cardId, storeContext), true);
   }
 
   @Override public Observable<String> postNavigation() {
