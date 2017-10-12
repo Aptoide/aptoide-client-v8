@@ -7,8 +7,8 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.timeline.view.displayable.FollowStoreDisplayable;
 import cm.aptoide.pt.timeline.view.displayable.FollowUserDisplayable;
-import cm.aptoide.pt.timeline.view.displayable.TimeLineStatsDisplayable;
-import cm.aptoide.pt.timeline.view.displayable.TimeLineStatsWidget;
+//import cm.aptoide.pt.timeline.view.displayable.TimeLineStatsDisplayable;
+//import cm.aptoide.pt.timeline.view.displayable.TimeLineStatsWidget;
 import cm.aptoide.pt.timeline.view.follow.FollowStoreWidget;
 import cm.aptoide.pt.timeline.view.follow.FollowUserWidget;
 import cm.aptoide.pt.timeline.view.login.TimelineLoginDisplayable;
@@ -85,7 +85,6 @@ import cm.aptoide.pt.view.search.SearchAdDisplayable;
 import cm.aptoide.pt.view.search.SearchAdWidget;
 import cm.aptoide.pt.view.search.SearchDisplayable;
 import cm.aptoide.pt.view.search.SearchWidget;
-import cm.aptoide.pt.view.store.CreateStoreWidget;
 import cm.aptoide.pt.view.store.GridDisplayDisplayable;
 import cm.aptoide.pt.view.store.GridStoreMetaDisplayable;
 import cm.aptoide.pt.view.store.GridStoreMetaWidget;
@@ -292,8 +291,8 @@ public class DisplayableWidgetMapping {
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping((OfficialAppWidget.class), OfficialAppDisplayable.class));
 
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping((TimeLineStatsWidget.class), TimeLineStatsDisplayable.class));
+    //displayableWidgetMappings.add(
+    //    new DisplayableWidgetMapping((TimeLineStatsWidget.class), TimeLineStatsDisplayable.class));
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping((FollowUserWidget.class), FollowUserDisplayable.class));
