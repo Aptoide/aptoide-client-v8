@@ -7,13 +7,15 @@ import rx.Observable;
 
 /**
  * Created by diogoloureiro on 02/10/2017.
+ *
+ * First install view
  */
 
 public interface FirstInstallView extends View {
 
   Observable<Void> installAllClick();
 
-  Observable<Void> closeClick();
-
   void addFirstInstallDisplayables(List<Displayable> displayables, boolean finishLoading);
+
+  void removeFragmentAnimation();
 }

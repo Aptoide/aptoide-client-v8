@@ -4,110 +4,112 @@
   ~ Copyright (c) 2016.
   ~ Modified on 26/07/2016.
   -->
+
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/first_install_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="@dimen/other_versions_header_height"
-    android:orientation="vertical"
+    android:background="@color/semi_transparent_black"
+    android:clickable="true"
+    android:focusable="true"
+    android:visibility="visible"
     >
-
-  <android.support.design.widget.AppBarLayout
-      android:id="@+id/app_bar_layout"
-      android:layout_width="match_parent"
-      android:layout_height="?android:actionBarSize"
-      >
-
-    <include
-        layout="@layout/toolbar"
-        android:id="@+id/toolbar"
-        />
-
-  </android.support.design.widget.AppBarLayout>
-
-  <include
-      layout="@layout/partial_view_incl_no_network"
-      android:layout_width="wrap_content"
-      android:layout_height="match_parent"
-      android:layout_below="@id/app_bar_layout"
-      android:layout_gravity="center_horizontal"
-      android:visibility="gone"
-      tools:visibility="gone"
-      />
-
-  <include
-      layout="@layout/partial_view_error"
-      android:layout_width="wrap_content"
-      android:layout_height="match_parent"
-      android:layout_below="@id/app_bar_layout"
-      android:layout_gravity="center_horizontal"
-      android:visibility="gone"
-      tools:visibility="gone"
-      />
-
-  <!-- is this necessary ?? -->
   <RelativeLayout
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_below="@id/app_bar_layout"
+      android:layout_height="385dp"
+      android:layout_alignParentBottom="true"
+      android:background="@color/white"
+      android:orientation="vertical"
       >
 
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="?android:actionBarSize"
+        >
+
+      <include
+          layout="@layout/toolbar"
+          android:id="@+id/toolbar"
+          />
+
+    </android.support.design.widget.AppBarLayout>
+
     <include
-        layout="@layout/partial_view_progress_bar"
+        layout="@layout/partial_view_incl_no_network"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_height="match_parent"
+        android:layout_below="@id/app_bar_layout"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"
+        tools:visibility="gone"
+        />
+
+    <include
+        layout="@layout/partial_view_error"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_below="@id/app_bar_layout"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"
+        tools:visibility="gone"
+        />
+
+    <!-- is this necessary ?? -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/app_bar_layout"
+        >
+
+      <include
+          layout="@layout/partial_view_progress_bar"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerInParent="true"
+          android:visibility="gone"
+          tools:visibility="visible"
+          />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/empty_data"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/app_bar_layout"
+        android:padding="@dimen/label_padding"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        android:visibility="gone"
+        tools:text="@string/no_excluded_updates_msg"
+        tools:visibility="gone"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/install_all_button"
+        android:layout_below="@id/app_bar_layout"
+        android:clipToPadding="false"
+        android:paddingEnd="@dimen/recycler_margin"
+        android:paddingLeft="@dimen/recycler_margin"
+        android:paddingRight="@dimen/recycler_margin"
+        android:paddingStart="@dimen/recycler_margin"
+        android:paddingTop="@dimen/recycler_margin"
         android:visibility="gone"
         tools:visibility="visible"
         />
+
+    <Button
+        android:id="@+id/install_all_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+
+        android:text="@string/install"
+        />
   </RelativeLayout>
-
-  <TextView
-      android:id="@+id/empty_data"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_below="@id/app_bar_layout"
-      android:padding="@dimen/label_padding"
-      android:textAlignment="center"
-      android:textSize="16sp"
-      android:visibility="gone"
-      tools:text="@string/no_excluded_updates_msg"
-      tools:visibility="gone"
-      />
-
-  <android.support.v7.widget.RecyclerView
-      android:id="@+id/recycler_view"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_above="@+id/install_all_button"
-      android:layout_below="@id/app_bar_layout"
-      android:clipToPadding="false"
-      android:paddingEnd="@dimen/recycler_margin"
-      android:paddingLeft="@dimen/recycler_margin"
-      android:paddingRight="@dimen/recycler_margin"
-      android:paddingStart="@dimen/recycler_margin"
-      android:paddingTop="@dimen/recycler_margin"
-      android:visibility="gone"
-      tools:visibility="visible"
-      />
-
-  <Button
-      android:id="@+id/install_all_button"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_alignParentBottom="true"
-      android:text="@string/install"
-      />
-
-  <ImageView
-      android:id="@+id/close_image_view"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignParentEnd="true"
-      android:layout_alignParentRight="true"
-      android:layout_alignParentTop="true"
-      android:src="@drawable/ic_close_btn"
-      />
-
 </RelativeLayout>
