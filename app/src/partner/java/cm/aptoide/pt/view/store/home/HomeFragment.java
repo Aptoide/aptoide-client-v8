@@ -158,7 +158,7 @@ public class HomeFragment extends StoreFragment {
     super.onCreate(savedInstanceState);
     drawerAnalytics = new DrawerAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
-    handleFirstInstall();
+    handleFirstInstall(savedInstanceState);
   }
 
   @Nullable @Override
@@ -398,13 +398,15 @@ public class HomeFragment extends StoreFragment {
   /**
    * show first install fragment with animation
    */
-  @SuppressLint("PrivateResource") private void handleFirstInstall() {
-    if (((PartnerApplication) getContext().getApplicationContext()).getBootConfig()
+  @SuppressLint("PrivateResource") private void handleFirstInstall(Bundle savedInstanceState) {
+    if (savedInstanceState == null
+        && ((PartnerApplication) getContext().getApplicationContext()).getBootConfig()
         .getPartner()
         .getSwitches()
         .getOptions()
         .getFirst_install()
-        .isEnable() && !PartnersSecurePreferences.isFirstInstallFinished(
+        .isEnable()
+        && !PartnersSecurePreferences.isFirstInstallFinished(
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())) {
       FragmentTransaction transaction = getFragmentManager().beginTransaction();
       transaction.setCustomAnimations(R.anim.abc_slide_in_bottom, R.anim.abc_slide_out_bottom);
