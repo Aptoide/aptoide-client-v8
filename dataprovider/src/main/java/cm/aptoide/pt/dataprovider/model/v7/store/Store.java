@@ -27,6 +27,15 @@ public class Store {
   private String status;
   private String access;
   private Urls urls;
+  private Badge badge;
+
+  public Badge getBadge() {
+    return badge;
+  }
+
+  public void setBadge(Badge badge) {
+    this.badge = badge;
+  }
 
   public Urls getUrls() {
     return urls;
@@ -118,6 +127,10 @@ public class Store {
 
   public enum SocialChannelType {
     FACEBOOK, TWITTER, YOUTUBE, TWITCH
+  }
+
+  public enum BadgeType {
+    NONE, BRONZE, SILVER, GOLD, PLATINUM
   }
 
   public static class Stats {
@@ -221,5 +234,17 @@ public class Store {
   @Data public static class Urls {
 
     private String mobile;
+  }
+
+  public static class Badge {
+    BadgeType name;
+
+    public BadgeType getName() {
+      return name;
+    }
+
+    public void setName(BadgeType name) {
+      this.name = name;
+    }
   }
 }

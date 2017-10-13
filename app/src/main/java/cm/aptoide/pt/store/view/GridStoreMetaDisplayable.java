@@ -49,18 +49,8 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
     return storeCredentialsProvider;
   }
 
-  public String getStoreUserName() {
-    return storeCredentialsProvider.get(getStoreName())
-        .getUsername();
-  }
-
   public String getStoreName() {
     return getStore().getName();
-  }
-
-  public String getStorePassword() {
-    return storeCredentialsProvider.get(getStoreName())
-        .getPasswordSha1();
   }
 
   public StoreAnalytics getStoreAnalytics() {
@@ -168,8 +158,27 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
     return getStore() == null ? 0 : getStore().getId();
   }
 
-  public boolean isUserOnly() {
-    return getStore() == null;
+  public boolean hasStore() {
+    return getStore() != null;
+  }
+
+  public GridStoreMetaWidget.HomeMeta.Badge getBadge() {
+    switch (getPojo().getData()
+        .getStore()
+        .getBadge()
+        .getName()) {
+      case BRONZE:
+        return GridStoreMetaWidget.HomeMeta.Badge.BRONZE;
+      case SILVER:
+        return GridStoreMetaWidget.HomeMeta.Badge.SILVER;
+      case GOLD:
+        return GridStoreMetaWidget.HomeMeta.Badge.GOLD;
+      case PLATINUM:
+        return GridStoreMetaWidget.HomeMeta.Badge.PLATINUM;
+      case NONE:
+      default:
+        return GridStoreMetaWidget.HomeMeta.Badge.NONE;
+    }
   }
 
   public Observable<Boolean> isFollowingStore(StoreAccessor storeAccessor) {
