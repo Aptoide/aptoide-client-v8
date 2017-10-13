@@ -68,11 +68,7 @@ public class Billing {
   }
 
   public Completable consumePurchase(String purchaseToken) {
-    return billingService.getPurchase(tokenDecoder.
-        decode(purchaseToken))
-        .flatMapCompletable(
-            purchase -> billingService.deletePurchase(tokenDecoder.decode(purchaseToken))
-                .andThen(transactionRepository.remove(purchase.getProductId())));
+    return billingService.deletePurchase(tokenDecoder.decode(purchaseToken));
   }
 
   public Single<List<PaymentService>> getPaymentServices() {
@@ -123,23 +119,27 @@ public class Billing {
             new SimplePurchase(SimplePurchase.Status.PENDING, transaction.getProductId()));
       }
 
-      if (transaction.isNew() || transaction.isFailed() || transaction.isPendingAuthorization()) {
+      if (transaction.isNew() || transaction.isPendingAuthorization()) {
         return Single.just(
             new SimplePurchase(SimplePurchase.Status.NEW, transaction.getProductId()));
       }
 
-      return billingService.getProductPurchase(transaction.getProductId());
-    })
-        .flatMap(purchase -> {
-          if (purchase.isFailed()) {
-            return transactionRepository.remove(purchase.getProductId())
-                .andThen(Observable.just(purchase));
-          }
-          return Observable.just(purchase);
-        });
+      if (transaction.isFailed()) {
+        return Single.just(
+            new SimplePurchase(SimplePurchase.Status.FAILED, transaction.getProductId()));
+      }
+
+      return billingService.getPurchase(transaction.getProductId())
+          .map(purchase -> {
+            if (purchase.isFailed()) {
+              return new SimplePurchase(SimplePurchase.Status.NEW, transaction.getProductId());
+            }
+            return purchase;
+          });
+    });
   }
 
-  public Completable selectService(long serviceId) {
+  public Completable selectService(String serviceId) {
     return getService(serviceId).flatMapCompletable(
         service -> paymentServiceSelector.selectService(service));
   }
@@ -154,9 +154,10 @@ public class Billing {
         product -> transactionRepository.getTransaction(product.getProductId()));
   }
 
-  private Single<PaymentService> getService(long serviceId) {
+  private Single<PaymentService> getService(String serviceId) {
     return getPaymentServices().flatMapObservable(payments -> Observable.from(payments)
-        .filter(payment -> payment.getId() == serviceId)
+        .filter(payment -> payment.getId()
+            .equals(serviceId))
         .switchIfEmpty(
             Observable.error(new IllegalArgumentException("Payment " + serviceId + " not found."))))
         .first()

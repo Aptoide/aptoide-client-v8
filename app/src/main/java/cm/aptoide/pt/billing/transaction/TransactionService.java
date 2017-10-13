@@ -1,11 +1,10 @@
 package cm.aptoide.pt.billing.transaction;
 
-import java.util.List;
 import rx.Single;
 
 public interface TransactionService {
 
-  Single<Transaction> getTransaction(long productId);
+  Single<Transaction> getTransaction(String productId);
 
-  Single<Transaction> createTransaction(long productId, long serviceId, String payload);
+  Single<Transaction> createTransaction(String productId, String serviceId, String payload);
 }

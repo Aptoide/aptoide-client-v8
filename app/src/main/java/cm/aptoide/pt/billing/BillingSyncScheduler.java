@@ -2,9 +2,9 @@ package cm.aptoide.pt.billing;
 
 public interface BillingSyncScheduler {
 
-  void syncAuthorization(long transactionId);
+  void syncAuthorization(String transactionId);
 
-  void syncTransaction(long productId);
+  void syncTransaction(String productId);
 
   void stopSyncs();
 }

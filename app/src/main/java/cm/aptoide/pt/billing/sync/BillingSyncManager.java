@@ -23,13 +23,13 @@ public class BillingSyncManager implements BillingSyncScheduler {
     this.currentSyncs = currentSyncs;
   }
 
-  @Override public void syncAuthorization(long transactionId) {
+  @Override public void syncAuthorization(String transactionId) {
     final Sync sync = syncFactory.createAuthorizationSync(transactionId);
     currentSyncs.add(sync.getId());
     syncScheduler.schedule(sync);
   }
 
-  @Override public void syncTransaction(long productId) {
+  @Override public void syncTransaction(String productId) {
     final Sync sync = syncFactory.createTransactionSync(productId);
     currentSyncs.add(sync.getId());
     syncScheduler.schedule(sync);

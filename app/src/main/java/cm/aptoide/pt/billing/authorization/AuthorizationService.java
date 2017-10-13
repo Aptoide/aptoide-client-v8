@@ -4,7 +4,7 @@ import rx.Single;
 
 public interface AuthorizationService {
 
-  Single<Authorization> getAuthorization(long transactionId);
+  Single<Authorization> getAuthorization(String transactionId);
 
-  Single<Authorization> updateAuthorization(long transactionId, String metadata);
+  Single<Authorization> updateAuthorization(String transactionId, String metadata);
 }

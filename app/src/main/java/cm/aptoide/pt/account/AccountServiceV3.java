@@ -39,7 +39,7 @@ import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
-public class V3AccountService implements AccountService {
+public class AccountServiceV3 implements AccountService {
 
   private final AccountFactory accountFactory;
   private final OkHttpClient httpClient;
@@ -55,7 +55,7 @@ public class V3AccountService implements AccountService {
   private final BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorWebV7;
   private final BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7;
 
-  public V3AccountService(AccountFactory accountFactory, OkHttpClient httpClient,
+  public AccountServiceV3(AccountFactory accountFactory, OkHttpClient httpClient,
       OkHttpClient longTimeoutHttpClient, Converter.Factory converterFactory,
       ObjectMapper serializer, SharedPreferences sharedPreferences, String extraId,
       TokenInvalidator refreshTokenInvalidator, AuthenticationPersistence authenticationPersistence,

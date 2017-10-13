@@ -10,8 +10,8 @@ public class WebAuthorization extends Authorization {
   private final String url;
   private final String redirectUrl;
 
-  public WebAuthorization(long id, String customerId, Status status, String url, String redirectUrl,
-      long transactionId) {
+  public WebAuthorization(String id, String customerId, Status status, String url, String redirectUrl,
+      String transactionId) {
     super(id, customerId, status, transactionId);
     this.url = url;
     this.redirectUrl = redirectUrl;

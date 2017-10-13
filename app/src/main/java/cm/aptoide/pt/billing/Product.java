@@ -7,7 +7,7 @@ package cm.aptoide.pt.billing;
 
 public interface Product {
 
-  long getProductId();
+  String getProductId();
 
   String getIcon();
 

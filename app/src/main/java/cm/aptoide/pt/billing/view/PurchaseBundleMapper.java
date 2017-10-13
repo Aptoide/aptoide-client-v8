@@ -39,7 +39,7 @@ public class PurchaseBundleMapper {
     } else if (purchase instanceof PaidAppPurchase) {
       intent.putInt(ExternalBillingBinder.RESPONSE_CODE, ExternalBillingBinder.RESULT_OK);
       intent.putString(APK_PATH, ((PaidAppPurchase) purchase).getApkPath());
-      intent.putLong(PRODUCT_ID, purchase.getProductId());
+      intent.putString(PRODUCT_ID, purchase.getProductId());
     } else {
       intent.putInt(ExternalBillingBinder.RESPONSE_CODE, throwableCodeMapper.map(
           new IllegalArgumentException(
@@ -55,7 +55,7 @@ public class PurchaseBundleMapper {
 
         if (data.containsKey(APK_PATH) && data.containsKey(PRODUCT_ID)) {
           return new PaidAppPurchase(data.getString(APK_PATH), SimplePurchase.Status.COMPLETED,
-              data.getLong(PRODUCT_ID));
+              data.getString(PRODUCT_ID));
         }
 
         throw new IllegalArgumentException("Intent does not contain paid app information");

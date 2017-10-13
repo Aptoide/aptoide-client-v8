@@ -26,14 +26,14 @@ public class BillingSyncFactory {
     this.authorizationPersistence = authorizationPersistence;
   }
 
-  public Sync createAuthorizationSync(long transactionId) {
-    return new AuthorizationSync(String.valueOf(transactionId), customer, transactionId,
+  public Sync createAuthorizationSync(String transactionId) {
+    return new AuthorizationSync("authorization" + transactionId, customer, transactionId,
         authorizationService, authorizationPersistence, true, true,
         BuildConfig.PAYMENT_AUTHORIZATION_SYNC_INTERVAL_MILLIS, 0);
   }
 
-  public Sync createTransactionSync(long productId) {
-    return new TransactionsSync(String.valueOf(productId), transactionPersistence,
+  public Sync createTransactionSync(String productId) {
+    return new TransactionsSync("transaction" + productId, transactionPersistence,
         transactionService, true, true, BuildConfig.PAYMENT_TRANSACTION_SYNC_INTERVAL_MILLIS, 0,
         productId);
   }

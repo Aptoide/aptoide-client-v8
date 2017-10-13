@@ -4,7 +4,7 @@ public class PaidAppPurchase extends SimplePurchase {
 
   private final String apkPath;
 
-  public PaidAppPurchase(String apkPath, Status status, long productId) {
+  public PaidAppPurchase(String apkPath, Status status, String productId) {
     super(status, productId);
     this.apkPath = apkPath;
   }

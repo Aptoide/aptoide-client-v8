@@ -5,19 +5,23 @@ import android.content.res.Resources;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.billing.authorization.AuthorizationFactory;
-import cm.aptoide.pt.billing.authorization.AuthorizationMapper;
+import cm.aptoide.pt.billing.authorization.AuthorizationMapperV3;
+import cm.aptoide.pt.billing.authorization.AuthorizationMapperV7;
 import cm.aptoide.pt.billing.authorization.AuthorizationPersistence;
 import cm.aptoide.pt.billing.authorization.AuthorizationRepository;
 import cm.aptoide.pt.billing.authorization.AuthorizationServiceV3;
 import cm.aptoide.pt.billing.authorization.AuthorizationServiceV7;
+import cm.aptoide.pt.billing.authorization.RealmAuthorizationMapper;
 import cm.aptoide.pt.billing.authorization.RealmAuthorizationPersistence;
 import cm.aptoide.pt.billing.external.ExternalBillingSerializer;
-import cm.aptoide.pt.billing.product.ProductFactory;
+import cm.aptoide.pt.billing.product.ProductMapperV3;
+import cm.aptoide.pt.billing.product.ProductMapperV7;
 import cm.aptoide.pt.billing.sync.BillingSyncFactory;
 import cm.aptoide.pt.billing.sync.BillingSyncManager;
 import cm.aptoide.pt.billing.transaction.InMemoryTransactionPersistence;
 import cm.aptoide.pt.billing.transaction.TransactionFactory;
-import cm.aptoide.pt.billing.transaction.TransactionMapper;
+import cm.aptoide.pt.billing.transaction.TransactionMapperV3;
+import cm.aptoide.pt.billing.transaction.TransactionMapperV7;
 import cm.aptoide.pt.billing.transaction.TransactionPersistence;
 import cm.aptoide.pt.billing.transaction.TransactionRepository;
 import cm.aptoide.pt.billing.transaction.TransactionService;
@@ -38,6 +42,7 @@ import java.util.HashSet;
 import java.util.Map;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
+import rx.schedulers.Schedulers;
 
 public class BillingPool {
 
@@ -58,29 +63,27 @@ public class BillingPool {
   private final Converter.Factory converterFactory;
   private final CrashLogger crashLogger;
 
-  private BillingSyncScheduler inAppBillingSyncManager;
+  private BillingSyncScheduler billingSyncSchedulerV7;
   private AuthorizationRepository inAppAuthorizationRepository;
   private TransactionRepository inAppTransactionRepository;
   private TransactionService transactionServiceV7;
-  private BillingService v7BillingService;
+  private BillingServiceV7 billingServiceV7;
+  private IdResolver idResolverV7;
 
-  private BillingSyncScheduler paidAppBillingSyncManager;
+  private BillingSyncScheduler billingSyncSchedulerV3;
   private AuthorizationRepository paidAppAuthorizationRepository;
   private TransactionRepository paidAppTransactionRepository;
   private TransactionService transactionServiceV3;
-  private V3BillingService v3BillingService;
+  private BillingService billingServiceV3;
+  private IdResolver idResolverV3;
 
   private PaymentServiceSelector serviceSelector;
   private AuthorizationPersistence authorizationPersistence;
   private TransactionPersistence transactionPersistence;
-  private AuthorizationMapper authorizationMapper;
-  private AccountCustomer customer;
-  private TransactionMapper transactionMapper;
+  private Customer customer;
   private TransactionFactory transactionFactory;
   private AuthorizationFactory authorizationFactory;
   private PurchaseTokenDecoder purchaseTokenDecoder;
-  private PurchaseMapper purchaseMapper;
-  private ProductFactory productFactory;
 
   public BillingPool(SharedPreferences sharedPreferences,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
@@ -114,24 +117,30 @@ public class BillingPool {
     return pool.get(merchantName);
   }
 
-  private Billing create(String merchantName) {
-
+  public IdResolver getIdResolver(String merchantName) {
     if (merchantName.equals(BuildConfig.APPLICATION_ID)) {
-      return new Billing(merchantName, getPaidAppBillingService(),
-          getPaidAppTransactionRepository(), getPaidAppAuthorizationRepository(),
-          getServiceSelector(), getCustomer(), getAuthorizationFactory(), getPurchaseTokenDecoder(),
-          getPaidAppBillingSyncManager());
+      return getIdResolverV3();
     } else {
-      return new Billing(merchantName, getInAppBillingService(), getInAppTransactionRepository(),
+      return getIdResolverV7();
+    }
+  }
+
+  private Billing create(String merchantName) {
+    if (merchantName.equals(BuildConfig.APPLICATION_ID)) {
+      return new Billing(merchantName, getBillingServiceV3(), getPaidAppTransactionRepository(),
+          getPaidAppAuthorizationRepository(), getServiceSelector(), getCustomer(),
+          getAuthorizationFactory(), getPurchaseTokenDecoder(), getBillingSyncSchedulerV3());
+    } else {
+      return new Billing(merchantName, getBillingServiceV7(), getInAppTransactionRepository(),
           getInAppAuthorizationRepository(), getServiceSelector(), getCustomer(),
-          getAuthorizationFactory(), getPurchaseTokenDecoder(), getInAppBillingSyncManager());
+          getAuthorizationFactory(), getPurchaseTokenDecoder(), getBillingSyncSchedulerV7());
     }
   }
 
   private TransactionRepository getPaidAppTransactionRepository() {
     if (paidAppAuthorizationRepository == null) {
       paidAppTransactionRepository =
-          new TransactionRepository(getTransactionPersistence(), getPaidAppBillingSyncManager(),
+          new TransactionRepository(getTransactionPersistence(), getBillingSyncSchedulerV3(),
               getCustomer(), getTransactionServiceV3());
     }
     return paidAppTransactionRepository;
@@ -140,50 +149,40 @@ public class BillingPool {
   private AuthorizationRepository getPaidAppAuthorizationRepository() {
     if (paidAppAuthorizationRepository == null) {
       paidAppAuthorizationRepository =
-          new AuthorizationRepository(getPaidAppBillingSyncManager(), getCustomer(),
+          new AuthorizationRepository(getBillingSyncSchedulerV3(), getCustomer(),
               getAuthorizationPersistence());
     }
     return paidAppAuthorizationRepository;
   }
 
-  private BillingService getPaidAppBillingService() {
-    if (v7BillingService == null) {
-      v3BillingService =
-          new V3BillingService(bodyInterceptorV3, httpClient, converterFactory, tokenInvalidator,
-              sharedPreferences, getPurchaseMapper(), getProductFactory(), resources,
-              new PaymentService(1, PaymentServiceMapper.PAYPAL, "PayPal", null, ""));
+  private BillingService getBillingServiceV3() {
+    if (billingServiceV3 == null) {
+      billingServiceV3 =
+          new BillingServiceV3(bodyInterceptorV3, httpClient, converterFactory, tokenInvalidator,
+              sharedPreferences, new PurchaseMapperV3(),
+              new ProductMapperV3(getIdResolverV3()), resources,
+              new PaymentService(getIdResolverV3().generateServiceId(1),
+                  PaymentServiceMapper.PAYPAL, "PayPal", null, ""), getIdResolverV3());
     }
-    return v3BillingService;
+    return billingServiceV3;
   }
 
-  private ProductFactory getProductFactory() {
-    if (productFactory == null) {
-      productFactory = new ProductFactory();
+  private BillingService getBillingServiceV7() {
+    if (billingServiceV7 == null) {
+      billingServiceV7 =
+          new BillingServiceV7(accountSettingsBodyInterceptorPoolV7, httpClient, converterFactory,
+              tokenInvalidator, sharedPreferences,
+              new PurchaseMapperV7(externalBillingSerializer, getIdResolverV7()),
+              new ProductMapperV7(getIdResolverV7()), packageRepository,
+              new PaymentServiceMapper(crashLogger, getIdResolverV7()), getIdResolverV7());
     }
-    return productFactory;
-  }
-
-  private PurchaseMapper getPurchaseMapper() {
-    if (purchaseMapper == null) {
-      purchaseMapper = new PurchaseMapper(externalBillingSerializer);
-    }
-    return purchaseMapper;
-  }
-
-  private BillingService getInAppBillingService() {
-    if (v7BillingService == null) {
-      v7BillingService =
-          new V7BillingService(accountSettingsBodyInterceptorPoolV7, httpClient, converterFactory,
-              tokenInvalidator, sharedPreferences, getPurchaseMapper(), getProductFactory(),
-              packageRepository, new PaymentServiceMapper(crashLogger));
-    }
-    return v7BillingService;
+    return billingServiceV7;
   }
 
   private AuthorizationRepository getInAppAuthorizationRepository() {
     if (inAppAuthorizationRepository == null) {
       inAppAuthorizationRepository =
-          new AuthorizationRepository(getInAppBillingSyncManager(), getCustomer(),
+          new AuthorizationRepository(getBillingSyncSchedulerV7(), getCustomer(),
               getAuthorizationPersistence());
     }
     return inAppAuthorizationRepository;
@@ -192,7 +191,7 @@ public class BillingPool {
   private TransactionRepository getInAppTransactionRepository() {
     if (inAppTransactionRepository == null) {
       inAppTransactionRepository =
-          new TransactionRepository(getTransactionPersistence(), getInAppBillingSyncManager(),
+          new TransactionRepository(getTransactionPersistence(), getBillingSyncSchedulerV7(),
               getCustomer(), getTransactionServiceV7());
     }
     return inAppTransactionRepository;
@@ -200,7 +199,7 @@ public class BillingPool {
 
   private PurchaseTokenDecoder getPurchaseTokenDecoder() {
     if (purchaseTokenDecoder == null) {
-      purchaseTokenDecoder = new OkioPurchaseTokenDecoder();
+      purchaseTokenDecoder = new Base64PurchaseTokenDecoder();
     }
     return purchaseTokenDecoder;
   }
@@ -214,44 +213,48 @@ public class BillingPool {
     return serviceSelector;
   }
 
-  private BillingSyncScheduler getInAppBillingSyncManager() {
-    if (inAppBillingSyncManager == null) {
-      inAppBillingSyncManager = new BillingSyncManager(
+  private BillingSyncScheduler getBillingSyncSchedulerV7() {
+    if (billingSyncSchedulerV7 == null) {
+      billingSyncSchedulerV7 = new BillingSyncManager(
           new BillingSyncFactory(getCustomer(), getTransactionServiceV7(),
-              new AuthorizationServiceV7(getAuthorizationMapper(), httpClient,
-                  WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences,
-                  bodyInterceptorPoolV7), getTransactionPersistence(),
+              new AuthorizationServiceV7(
+                  new AuthorizationMapperV7(getAuthorizationFactory(), getIdResolverV7()),
+                  httpClient, WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences,
+                  bodyInterceptorPoolV7, getIdResolverV7()), getTransactionPersistence(),
               getAuthorizationPersistence()), syncScheduler, new HashSet<>());
     }
-    return inAppBillingSyncManager;
+    return billingSyncSchedulerV7;
   }
 
-  private BillingSyncScheduler getPaidAppBillingSyncManager() {
-    if (paidAppBillingSyncManager == null) {
-      paidAppBillingSyncManager = new BillingSyncManager(
+  private BillingSyncScheduler getBillingSyncSchedulerV3() {
+    if (billingSyncSchedulerV3 == null) {
+      billingSyncSchedulerV3 = new BillingSyncManager(
           new BillingSyncFactory(getCustomer(), getTransactionServiceV3(),
-              new AuthorizationServiceV3(getAuthorizationFactory(), getAuthorizationMapper(),
-                  bodyInterceptorV3, httpClient, WebService.getDefaultConverter(), tokenInvalidator,
-                  sharedPreferences, customer, resources), getTransactionPersistence(),
+              new AuthorizationServiceV3(getAuthorizationFactory(),
+                  new AuthorizationMapperV3(getAuthorizationFactory()), bodyInterceptorV3,
+                  httpClient, WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences,
+                  customer, resources, getIdResolverV3()), getTransactionPersistence(),
               getAuthorizationPersistence()), syncScheduler, new HashSet<>());
     }
-    return paidAppBillingSyncManager;
+    return billingSyncSchedulerV3;
   }
 
   private TransactionService getTransactionServiceV7() {
     if (transactionServiceV7 == null) {
-      transactionServiceV7 = new TransactionServiceV7(getTransactionMapper(), bodyInterceptorPoolV7,
-          WebService.getDefaultConverter(), httpClient, tokenInvalidator, sharedPreferences);
+      transactionServiceV7 = new TransactionServiceV7(
+          new TransactionMapperV7(getTransactionFactory(), getIdResolverV7()),
+          bodyInterceptorPoolV7, WebService.getDefaultConverter(), httpClient, tokenInvalidator,
+          sharedPreferences, getIdResolverV7());
     }
     return transactionServiceV7;
   }
 
   private TransactionService getTransactionServiceV3() {
     if (transactionServiceV3 == null) {
-      transactionServiceV3 = new TransactionServiceV3(getTransactionMapper(), bodyInterceptorV3,
+      transactionServiceV3 = new TransactionServiceV3(
+          new TransactionMapperV3(getTransactionFactory(), getIdResolverV3()), bodyInterceptorV3,
           WebService.getDefaultConverter(), httpClient, tokenInvalidator, sharedPreferences,
-          getTransactionFactory(), getAuthorizationPersistence(), getAuthorizationMapper(),
-          getCustomer(), resources);
+          getTransactionFactory(), getCustomer(), resources, getIdResolverV3());
     }
     return transactionServiceV3;
   }
@@ -260,7 +263,7 @@ public class BillingPool {
     if (authorizationPersistence == null) {
       authorizationPersistence =
           new RealmAuthorizationPersistence(new HashMap<>(), PublishRelay.create(), database,
-              getAuthorizationMapper(), getAuthorizationFactory());
+              new RealmAuthorizationMapper(getAuthorizationFactory()), Schedulers.io());
     }
     return authorizationPersistence;
   }
@@ -268,17 +271,9 @@ public class BillingPool {
   private TransactionPersistence getTransactionPersistence() {
     if (transactionPersistence == null) {
       transactionPersistence =
-          new InMemoryTransactionPersistence(new HashMap<>(), PublishRelay.create(),
-              getTransactionFactory());
+          new InMemoryTransactionPersistence(new HashMap<>(), PublishRelay.create());
     }
     return transactionPersistence;
-  }
-
-  private AuthorizationMapper getAuthorizationMapper() {
-    if (authorizationMapper == null) {
-      authorizationMapper = new AuthorizationMapper(getAuthorizationFactory());
-    }
-    return authorizationMapper;
   }
 
   private AuthorizationFactory getAuthorizationFactory() {
@@ -295,17 +290,24 @@ public class BillingPool {
     return customer;
   }
 
-  private TransactionMapper getTransactionMapper() {
-    if (transactionMapper == null) {
-      transactionMapper = new TransactionMapper(getTransactionFactory());
-    }
-    return transactionMapper;
-  }
-
   private TransactionFactory getTransactionFactory() {
     if (transactionFactory == null) {
       transactionFactory = new TransactionFactory();
     }
     return transactionFactory;
+  }
+
+  private IdResolver getIdResolverV7() {
+    if (idResolverV7 == null) {
+      idResolverV7 = new IdResolverV7();
+    }
+    return idResolverV7;
+  }
+
+  private IdResolver getIdResolverV3() {
+    if (idResolverV3 == null) {
+      idResolverV3 = new IdResolverV3();
+    }
+    return idResolverV3;
   }
 }

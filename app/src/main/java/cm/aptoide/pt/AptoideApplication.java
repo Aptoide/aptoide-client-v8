@@ -40,8 +40,8 @@ import cm.aptoide.pt.account.FacebookLoginResult;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.account.LoginPreferences;
+import cm.aptoide.pt.account.AccountServiceV3;
 import cm.aptoide.pt.account.MatureContentPersistence;
-import cm.aptoide.pt.account.V3AccountService;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
@@ -53,6 +53,7 @@ import cm.aptoide.pt.analytics.TrackerFilter;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.BillingPool;
+import cm.aptoide.pt.billing.IdResolver;
 import cm.aptoide.pt.billing.external.ExternalBillingSerializer;
 import cm.aptoide.pt.billing.view.PaymentThrowableCodeMapper;
 import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
@@ -712,7 +713,7 @@ public abstract class AptoideApplication extends Application {
       final AccountFactory accountFactory = new AccountFactory();
 
       final AccountService accountService =
-          new V3AccountService(accountFactory, getDefaultClient(), getLongTimeoutClient(),
+          new AccountServiceV3(accountFactory, getDefaultClient(), getLongTimeoutClient(),
               WebService.getDefaultConverter(), getNonNullObjectMapper(),
               getDefaultSharedPreferences(), getExtraId(), getTokenInvalidator(),
               getAuthenticationPersistence(), getNoAuthenticationBodyInterceptorV3(),
@@ -822,6 +823,10 @@ public abstract class AptoideApplication extends Application {
   }
 
   public Billing getBilling(String merchantName) {
+    return getBillingPool().get(merchantName);
+  }
+
+  public BillingPool getBillingPool() {
     if (billingPool == null) {
       billingPool =
           new BillingPool(getDefaultSharedPreferences(), getBodyInterceptorV3(), getDefaultClient(),
@@ -830,7 +835,11 @@ public abstract class AptoideApplication extends Application {
               getBodyInterceptorPoolV7(), getAccountSettingsBodyInterceptorPoolV7(),
               new HashMap<>(), WebService.getDefaultConverter(), CrashReport.getInstance());
     }
-    return billingPool.get(merchantName);
+    return billingPool;
+  }
+
+  public IdResolver getIdResolver(String merchantName) {
+    return getBillingPool().getIdResolver(merchantName);
   }
 
   public Database getDatabase() {

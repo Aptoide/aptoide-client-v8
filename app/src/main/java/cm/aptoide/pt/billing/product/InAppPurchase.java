@@ -6,7 +6,7 @@ public class InAppPurchase extends SimplePurchase {
   private final String signatureData;
   private final String sku;
 
-  public InAppPurchase(long productId, String signature, String signatureData, Status status,
+  public InAppPurchase(String productId, String signature, String signatureData, Status status,
       String sku) {
     super(status, productId);
     this.signature = signature;

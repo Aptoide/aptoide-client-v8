@@ -27,22 +27,16 @@ public class TransactionRepository {
     this.transactionService = transactionService;
   }
 
-  public Single<Transaction> createTransaction(long productId, long serviceId, String payload) {
+  public Single<Transaction> createTransaction(String productId, String serviceId, String payload) {
     return transactionService.createTransaction(productId, serviceId, payload)
         .flatMap(transaction -> transactionPersistence.saveTransaction(transaction)
             .andThen(Single.just(transaction)));
   }
 
-  public Observable<Transaction> getTransaction(long productId) {
+  public Observable<Transaction> getTransaction(String productId) {
     return customer.getId()
         .doOnSuccess(__ -> syncScheduler.syncTransaction(productId))
         .flatMapObservable(
             customerId -> transactionPersistence.getTransaction(customerId, productId));
-  }
-
-  public Completable remove(long productId) {
-    return customer.getId()
-        .flatMapCompletable(
-            customerId -> transactionPersistence.removeTransaction(customerId, productId));
   }
 }

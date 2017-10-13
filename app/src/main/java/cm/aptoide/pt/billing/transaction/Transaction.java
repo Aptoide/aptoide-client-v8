@@ -2,13 +2,14 @@ package cm.aptoide.pt.billing.transaction;
 
 public class Transaction {
 
-  private final long id;
-  private final long productId;
+  private final String id;
+  private final String productId;
   private final String customerId;
   private final Status status;
-  private final long serviceId;
+  private final String serviceId;
 
-  public Transaction(long id, long productId, String customerId, Status status, long serviceId) {
+  public Transaction(String id, String productId, String customerId, Status status,
+      String serviceId) {
     this.productId = productId;
     this.customerId = customerId;
     this.status = status;
@@ -20,7 +21,7 @@ public class Transaction {
     return customerId;
   }
 
-  public long getProductId() {
+  public String getProductId() {
     return productId;
   }
 
@@ -44,11 +45,11 @@ public class Transaction {
     return Status.FAILED.equals(status);
   }
 
-  public long getServiceId() {
+  public String getServiceId() {
     return serviceId;
   }
 
-  public long getId() {
+  public String getId() {
     return id;
   }
 

@@ -19,9 +19,11 @@ public class PaymentServiceMapper {
   public static final String MOL_POINTS = "MOLPOINTS";
 
   private final CrashLogger crashLogger;
+  private final IdResolver idResolver;
 
-  public PaymentServiceMapper(CrashLogger crashLogger) {
+  public PaymentServiceMapper(CrashLogger crashLogger, IdResolver idResolver) {
     this.crashLogger = crashLogger;
+    this.idResolver = idResolver;
   }
 
   public List<PaymentService> map(List<GetServicesRequest.ResponseBody.Service> responseList) {
@@ -44,8 +46,8 @@ public class PaymentServiceMapper {
       case BOA_COMPRA_GOLD:
       case MOL_POINTS:
       case SANDBOX:
-        return new PaymentService(response.getId(), response.getName(), response.getLabel(),
-            response.getDescription(), response.getIcon());
+        return new PaymentService(idResolver.generateServiceId(response.getId()),
+            response.getName(), response.getLabel(), response.getDescription(), response.getIcon());
       default:
         throw new IllegalArgumentException("Payment service not supported: " + response.getName());
     }

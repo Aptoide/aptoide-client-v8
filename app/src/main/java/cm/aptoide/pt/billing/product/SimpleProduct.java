@@ -8,16 +8,16 @@ package cm.aptoide.pt.billing.product;
 import cm.aptoide.pt.billing.Price;
 import cm.aptoide.pt.billing.Product;
 
-public abstract class AbstractProduct implements Product {
+public class SimpleProduct implements Product {
 
-  private final long id;
+  private final String id;
   private final String icon;
   private final String title;
   private final String description;
   private final Price price;
   private final int packageVersionCode;
 
-  public AbstractProduct(long id, String icon, String title, String description, Price price,
+  public SimpleProduct(String id, String icon, String title, String description, Price price,
       int packageVersionCode) {
     this.id = id;
     this.icon = icon;
@@ -27,7 +27,7 @@ public abstract class AbstractProduct implements Product {
     this.packageVersionCode = packageVersionCode;
   }
 
-  @Override public long getProductId() {
+  @Override public String getProductId() {
     return id;
   }
 

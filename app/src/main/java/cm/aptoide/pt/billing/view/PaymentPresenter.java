@@ -116,18 +116,20 @@ public class PaymentPresenter implements Presenter {
   private void onViewCreatedCheckPurchase() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .doOnNext(__ -> view.showPurchaseLoading())
         .flatMap(__ -> billing.getCustomer()
             .isAuthenticated())
         .filter(authenticated -> authenticated)
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(__ -> view.showPurchaseLoading())
         .flatMap(__ -> billing.getPurchase(sku)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(purchase -> {
+
+              if (purchase.isNew()) {
+                view.hidePurchaseLoading();
+              }
+
               if (purchase.isPending()) {
                 view.showPurchaseLoading();
-              } else {
-                view.hidePurchaseLoading();
               }
 
               if (purchase.isCompleted()) {
@@ -136,8 +138,9 @@ public class PaymentPresenter implements Presenter {
               }
 
               if (purchase.isFailed()) {
-                analytics.sendPaymentErrorEvent();
+                view.hidePurchaseLoading();
                 view.showUnknownError();
+                analytics.sendPaymentErrorEvent();
               }
             }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

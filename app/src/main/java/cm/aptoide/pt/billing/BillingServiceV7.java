@@ -9,7 +9,7 @@ import android.content.SharedPreferences;
 import cm.aptoide.pt.billing.exception.MerchantNotFoundException;
 import cm.aptoide.pt.billing.exception.ProductNotFoundException;
 import cm.aptoide.pt.billing.exception.PurchaseNotFoundException;
-import cm.aptoide.pt.billing.product.ProductFactory;
+import cm.aptoide.pt.billing.product.ProductMapperV7;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -27,32 +27,34 @@ import retrofit2.Converter;
 import rx.Completable;
 import rx.Single;
 
-public class V7BillingService implements BillingService {
+public class BillingServiceV7 implements BillingService {
 
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
-  private final PurchaseMapper purchaseMapper;
-  private final ProductFactory productFactory;
+  private final PurchaseMapperV7 purchaseMapper;
+  private final ProductMapperV7 productMapperV7;
   private final PackageRepository packageRepository;
   private final PaymentServiceMapper serviceMapper;
   private final BodyInterceptor<BaseBody> bodyInterceptorV7;
+  private final IdResolver idResolver;
 
-  public V7BillingService(BodyInterceptor<BaseBody> bodyInterceptorV7, OkHttpClient httpClient,
+  public BillingServiceV7(BodyInterceptor<BaseBody> bodyInterceptorV7, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, PurchaseMapper purchaseMapper,
-      ProductFactory productFactory, PackageRepository packageRepository,
-      PaymentServiceMapper serviceMapper) {
+      SharedPreferences sharedPreferences, PurchaseMapperV7 purchaseMapper,
+      ProductMapperV7 productMapperV7, PackageRepository packageRepository,
+      PaymentServiceMapper serviceMapper, IdResolver idResolver) {
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
     this.purchaseMapper = purchaseMapper;
-    this.productFactory = productFactory;
+    this.productMapperV7 = productMapperV7;
     this.packageRepository = packageRepository;
     this.serviceMapper = serviceMapper;
     this.bodyInterceptorV7 = bodyInterceptorV7;
+    this.idResolver = idResolver;
   }
 
   @Override public Single<List<PaymentService>> getPaymentServices() {
@@ -85,9 +87,9 @@ public class V7BillingService implements BillingService {
         });
   }
 
-  @Override public Completable deletePurchase(long purchaseId) {
-    return DeletePurchaseRequest.of(purchaseId, httpClient, converterFactory, bodyInterceptorV7,
-        tokenInvalidator, sharedPreferences)
+  @Override public Completable deletePurchase(String purchaseId) {
+    return DeletePurchaseRequest.of(idResolver.resolvePurchaseId(purchaseId), httpClient,
+        converterFactory, bodyInterceptorV7, tokenInvalidator, sharedPreferences)
         .observe(true)
         .first()
         .toSingle()
@@ -113,22 +115,9 @@ public class V7BillingService implements BillingService {
         });
   }
 
-  @Override public Single<Purchase> getProductPurchase(long productId) {
-    return GetPurchasesRequest.ofProduct(productId, bodyInterceptorV7, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences)
-        .observe(true)
-        .toSingle()
-        .flatMap(response -> {
-          if (response != null && response.isOk()) {
-            return Single.just(purchaseMapper.map(response.getData()));
-          }
-          return Single.error(new PurchaseNotFoundException());
-        });
-  }
-
-  @Override public Single<Purchase> getPurchase(long purchaseId) {
-    return GetPurchasesRequest.of(purchaseId, bodyInterceptorV7, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences)
+  @Override public Single<Purchase> getPurchase(String productId) {
+    return GetPurchasesRequest.of(idResolver.resolveProductId(productId),
+        bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe(true)
         .toSingle()
         .flatMap(response -> {
@@ -174,15 +163,15 @@ public class V7BillingService implements BillingService {
       List<GetProductsRequest.ResponseBody.Product> responseList) {
     return Single.zip(packageRepository.getPackageVersionCode(merchantName),
         packageRepository.getPackageLabel(merchantName),
-        (packageVersionCode, applicationName) -> productFactory.create(merchantName, responseList,
-            packageVersionCode, applicationName));
+        (packageVersionCode, applicationName) -> productMapperV7.map(merchantName, responseList,
+            packageVersionCode));
   }
 
   private Single<Product> mapToProduct(String merchantName,
       GetProductsRequest.ResponseBody.Product response) {
     return Single.zip(packageRepository.getPackageVersionCode(merchantName),
         packageRepository.getPackageLabel(merchantName),
-        (packageVersionCode, applicationName) -> productFactory.create(merchantName,
-            packageVersionCode, applicationName, response));
+        (packageVersionCode, applicationName) -> productMapperV7.map(merchantName,
+            packageVersionCode, response));
   }
 }

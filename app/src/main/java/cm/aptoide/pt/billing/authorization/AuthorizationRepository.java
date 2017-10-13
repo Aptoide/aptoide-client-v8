@@ -29,7 +29,7 @@ public class AuthorizationRepository {
         .doOnCompleted(() -> syncScheduler.syncAuthorization(authorization.getTransactionId()));
   }
 
-  public Observable<Authorization> getAuthorization(long transactionId) {
+  public Observable<Authorization> getAuthorization(String transactionId) {
     return customer.getId()
         .doOnSuccess(__ -> syncScheduler.syncAuthorization(transactionId))
         .flatMapObservable(

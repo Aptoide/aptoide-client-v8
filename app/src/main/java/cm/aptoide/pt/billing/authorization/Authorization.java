@@ -7,19 +7,19 @@ package cm.aptoide.pt.billing.authorization;
 
 public class Authorization {
 
-  private final long id;
+  private final String id;
   private final String customerId;
   private final Status status;
-  private final long transactionId;
+  private final String transactionId;
 
-  public Authorization(long id, String customerId, Status status, long transactionId) {
+  public Authorization(String id, String customerId, Status status, String transactionId) {
     this.id = id;
     this.customerId = customerId;
     this.status = status;
     this.transactionId = transactionId;
   }
 
-  public long getId() {
+  public String getId() {
     return id;
   }
 
@@ -51,7 +51,7 @@ public class Authorization {
     return status;
   }
 
-  public long getTransactionId() {
+  public String getTransactionId() {
     return transactionId;
   }
 

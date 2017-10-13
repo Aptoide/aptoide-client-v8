@@ -7,5 +7,5 @@ public interface AuthorizationPersistence {
 
   Completable saveAuthorization(Authorization authorization);
 
-  Observable<Authorization> getAuthorization(String customerId, long transactionId);
+  Observable<Authorization> getAuthorization(String customerId, String transactionId);
 }

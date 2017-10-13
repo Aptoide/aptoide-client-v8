@@ -3,7 +3,6 @@ package cm.aptoide.pt.billing.view;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.util.LongSparseArray;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +18,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
+import cm.aptoide.pt.billing.IdResolver;
 import cm.aptoide.pt.billing.PaymentService;
 import cm.aptoide.pt.billing.Product;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
@@ -33,7 +33,9 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxRadioGroup;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -52,7 +54,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
 
   private RxAlertDialog networkErrorDialog;
   private RxAlertDialog unknownErrorDialog;
-  private LongSparseArray<PaymentService> serviceMap;
+  private Map<String, PaymentService> serviceMap;
   private SpannableFactory spannableFactory;
 
   private boolean paymentLoading;
@@ -63,6 +65,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   private BillingAnalytics billingAnalytics;
   private BillingNavigator billingNavigator;
   private ScrollView scroll;
+  private IdResolver idResolver;
 
   public static Fragment create(Bundle bundle) {
     final PaymentFragment fragment = new PaymentFragment();
@@ -77,6 +80,8 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     billingAnalytics =
         ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
     billingNavigator = ((ActivityResultNavigator) getContext()).getBillingNavigator();
+    idResolver = ((AptoideApplication) getContext().getApplicationContext()).getIdResolver(
+        getArguments().getString(PaymentActivity.EXTRA_MERCHANT_NAME));
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -97,7 +102,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     cancelButton = (Button) view.findViewById(R.id.include_payment_buttons_cancel_button);
     buyButton = (Button) view.findViewById(R.id.include_payment_buttons_buy_button);
 
-    serviceMap = new LongSparseArray<>();
+    serviceMap = new HashMap<>();
 
     networkErrorDialog =
         new RxAlertDialog.Builder(getContext()).setMessage(R.string.connection_error)
@@ -151,7 +156,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
 
   @Override public Observable<PaymentService> selectServiceEvent() {
     return RxRadioGroup.checkedChanges(serviceRadioGroup)
-        .map(paymentId -> serviceMap.get(paymentId))
+        .map(paymentId -> serviceMap.get(idResolver.generateServiceId(paymentId)))
         .filter(service -> service != null);
   }
 
@@ -168,7 +173,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   }
 
   @Override public void selectService(PaymentService payment) {
-    serviceRadioGroup.check((int) payment.getId());
+    serviceRadioGroup.check((int) idResolver.resolveServiceId(payment.getId()));
   }
 
   @Override public void showPaymentLoading() {
@@ -198,7 +203,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
 
       radioButton = (RadioButton) getActivity().getLayoutInflater()
           .inflate(R.layout.payment_item, serviceRadioGroup, false);
-      radioButton.setId((int) payment.getId());
+      radioButton.setId((int) idResolver.resolveServiceId(payment.getId()));
 
       Glide.with(this)
           .load(payment.getIcon())
@@ -214,7 +219,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
       }
       radioButton.setText(radioText);
 
-      serviceMap.append(payment.getId(), payment);
+      serviceMap.put(payment.getId(), payment);
       serviceRadioGroup.addView(radioButton);
     }
   }

@@ -13,11 +13,11 @@ public class RealmAuthorization extends RealmObject {
 
   public static final String ID = "id";
 
-  @PrimaryKey private long id;
+  @PrimaryKey private String id;
   @Required private String customerId;
   @Required private String status;
 
-  private long transactionId;
+  private String transactionId;
   private String metadata;
   private String description;
   private double amount;
@@ -28,7 +28,7 @@ public class RealmAuthorization extends RealmObject {
   public RealmAuthorization() {
   }
 
-  public RealmAuthorization(long id, String customerId, String status, long transactionId,
+  public RealmAuthorization(String id, String customerId, String status, String transactionId,
       String metadata, String description, double amount, String currency, String currencySymbol,
       String type) {
     this.id = id;
@@ -43,7 +43,7 @@ public class RealmAuthorization extends RealmObject {
     this.type = type;
   }
 
-  public long getId() {
+  public String getId() {
     return id;
   }
 
@@ -59,7 +59,7 @@ public class RealmAuthorization extends RealmObject {
     return status;
   }
 
-  public long getTransactionId() {
+  public String getTransactionId() {
     return transactionId;
   }
 

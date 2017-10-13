@@ -14,11 +14,11 @@ public class TransactionsSync extends Sync {
 
   private final TransactionPersistence transactionPersistence;
   private final TransactionService transactionService;
-  private final long productId;
+  private final String productId;
 
   public TransactionsSync(String id, TransactionPersistence transactionPersistence,
       TransactionService transactionService, boolean periodic, boolean exact, long interval,
-      long trigger, long productId) {
+      long trigger, String productId) {
     super(id, periodic, exact, trigger, interval);
     this.transactionPersistence = transactionPersistence;
     this.transactionService = transactionService;

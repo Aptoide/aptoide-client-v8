@@ -10,13 +10,11 @@ public interface BillingService {
 
   Single<Merchant> getMerchant(String merchantName);
 
-  Completable deletePurchase(long purchaseId);
+  Completable deletePurchase(String purchaseId);
 
   Single<List<Purchase>> getPurchases(String merchantName);
 
-  Single<Purchase> getProductPurchase(long productId);
-
-  Single<Purchase> getPurchase(long purchaseId);
+  Single<Purchase> getPurchase(String productId);
 
   Single<List<Product>> getProducts(String merchantName, List<String> skus);
 
