@@ -2,6 +2,8 @@ package cm.aptoide.pt.view.store.home;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -399,20 +401,26 @@ public class HomeFragment extends StoreFragment {
    * show first install fragment with animation
    */
   @SuppressLint("PrivateResource") private void handleFirstInstall(Bundle savedInstanceState) {
-    if (savedInstanceState == null
-        && ((PartnerApplication) getContext().getApplicationContext()).getBootConfig()
-        .getPartner()
-        .getSwitches()
-        .getOptions()
-        .getFirst_install()
-        .isEnable()
-        && !PartnersSecurePreferences.isFirstInstallFinished(
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())) {
-      FragmentTransaction transaction = getFragmentManager().beginTransaction();
-      transaction.setCustomAnimations(R.anim.abc_slide_in_bottom, R.anim.abc_slide_out_bottom);
-      transaction.add(R.id.fragment_placeholder, FirstInstallFragment.newInstance());
-      transaction.addToBackStack(null);
-      transaction.commit();
+    ConnectivityManager connectivityManager =
+        (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+    if (connectivityManager != null) {
+      if (savedInstanceState == null
+          && connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+          .isConnected()
+          && ((PartnerApplication) getContext().getApplicationContext()).getBootConfig()
+          .getPartner()
+          .getSwitches()
+          .getOptions()
+          .getFirst_install()
+          .isEnable()
+          && !PartnersSecurePreferences.isFirstInstallFinished(
+          ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())) {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.abc_slide_in_bottom, R.anim.abc_slide_out_bottom);
+        transaction.add(R.id.fragment_placeholder, FirstInstallFragment.newInstance());
+        transaction.addToBackStack(null);
+        transaction.commit();
+      }
     }
   }
 }
