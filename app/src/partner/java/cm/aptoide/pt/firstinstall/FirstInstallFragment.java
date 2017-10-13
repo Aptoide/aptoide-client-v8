@@ -16,6 +16,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PartnerApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.preferences.PartnersSecurePreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.view.BackButton;
 import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
@@ -140,6 +141,8 @@ public class FirstInstallFragment extends AptoideBaseFragment<BaseAdapter>
       }
 
       @Override public void onAnimationEnd(Animation animation) {
+        PartnersSecurePreferences.setFirstInstallFinished(true,
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
         getActivity().onBackPressed();
       }
 

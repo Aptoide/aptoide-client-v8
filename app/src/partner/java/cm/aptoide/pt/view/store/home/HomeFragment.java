@@ -1,9 +1,11 @@
 package cm.aptoide.pt.view.store.home;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -21,13 +23,16 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DrawerAnalytics;
+import cm.aptoide.pt.PartnerApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.firstinstall.FirstInstallFragment;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.preferences.PartnersSecurePreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.updates.UpdateRepository;
@@ -153,6 +158,7 @@ public class HomeFragment extends StoreFragment {
     super.onCreate(savedInstanceState);
     drawerAnalytics = new DrawerAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    handleFirstInstall();
   }
 
   @Nullable @Override
@@ -387,5 +393,24 @@ public class HomeFragment extends StoreFragment {
     setHasOptionsMenu(true);
 
     Analytics.AppViewViewedFrom.addStepToList("HOME");
+  }
+
+  /**
+   * show first install fragment with animation
+   */
+  @SuppressLint("PrivateResource") private void handleFirstInstall() {
+    if (((PartnerApplication) getContext().getApplicationContext()).getBootConfig()
+        .getPartner()
+        .getSwitches()
+        .getOptions()
+        .getFirst_install()
+        .isEnable() && !PartnersSecurePreferences.isFirstInstallFinished(
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())) {
+      FragmentTransaction transaction = getFragmentManager().beginTransaction();
+      transaction.setCustomAnimations(R.anim.abc_slide_in_bottom, R.anim.abc_slide_out_bottom);
+      transaction.add(R.id.fragment_placeholder, FirstInstallFragment.newInstance());
+      transaction.addToBackStack(null);
+      transaction.commit();
+    }
   }
 }
