@@ -143,9 +143,8 @@ public class FirstInstallPresenter implements Presenter {
         .subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(this::parseGetStoreWidgetsToDisplayables)
-        .doOnCompleted(() -> getAds(getNumberOfAdsToShow(appDisplayables.size())))
-        .doOnError(crashReport::log)
-        .subscribe();
+        .subscribe(done -> {
+        }, crashReport::log, () -> getAds(getNumberOfAdsToShow(appDisplayables.size())));
   }
 
   /**
@@ -204,14 +203,13 @@ public class FirstInstallPresenter implements Presenter {
         .subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(this::parseMinimalAdsToDisplayables)
-        .doOnCompleted(() -> view.addFirstInstallDisplayables(new ArrayList<Displayable>() {
+        .subscribe(done -> {
+        }, crashReport::log, () -> view.addFirstInstallDisplayables(new ArrayList<Displayable>() {
           {
             addAll(appDisplayables);
             addAll(adDisplayables);
           }
-        }, true))
-        .doOnError(crashReport::log)
-        .subscribe();
+        }, true));
   }
 
   /**
@@ -274,12 +272,10 @@ public class FirstInstallPresenter implements Presenter {
     permissionManager.requestDownloadAccess(permissionService)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnError(crashReport::log)
         .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionService))
         .map(success -> Observable.just(appDisplayablesList)
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnError(crashReport::log)
             .flatMapIterable(displayables -> displayables)
             .filter(FirstInstallAppDisplayable::isSelected)
             .map(firstInstallAppDisplayable -> appRepository.getApp(
@@ -299,14 +295,14 @@ public class FirstInstallPresenter implements Presenter {
                     .getData(), Download.ACTION_INSTALL))
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnError(crashReport::log)
                 .flatMapCompletable(download -> installManager.install(download))
-                .subscribe())
-            .subscribe())
+                .subscribe(done -> {
+                }, crashReport::log))
+            .subscribe(done -> {
+            }, crashReport::log))
         .map(success -> Observable.just(adDisplayablesList)
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnError(crashReport::log)
             .flatMapIterable(displayables -> displayables)
             .filter(FirstInstallAdDisplayable::isSelected)
             .map(firstInstallAdDisplayable -> appRepository.getApp(
@@ -324,11 +320,12 @@ public class FirstInstallPresenter implements Presenter {
                     .getData(), Download.ACTION_INSTALL))
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnError(crashReport::log)
                 .flatMapCompletable(download -> installManager.install(download))
-                .subscribe())
-            .subscribe())
-        .subscribe(ok -> {
+                .subscribe(done -> {
+                }, crashReport::log))
+            .subscribe(done -> {
+            }, crashReport::log))
+        .subscribe(done -> {
         }, crashReport::log, () -> view.removeFragmentAnimation());
   }
 

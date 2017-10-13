@@ -120,7 +120,7 @@ public class FirstInstallFragment extends AptoideBaseFragment<BaseAdapter>
       boolean finishLoading) {
     if (this.getView() != null) {
       addDisplayables(displayables, finishLoading);
-      installAllButton.setEnabled(true);
+      installAllButton.setVisibility(View.VISIBLE);
     }
   }
 
