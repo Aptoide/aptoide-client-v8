@@ -176,7 +176,7 @@ public class HomeFragment extends StoreFragment {
 
     drawerAnalytics = new DrawerAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
-    handleFirstInstall();
+    handleFirstInstall(savedInstanceState);
   }
 
   @Nullable @Override
@@ -418,8 +418,9 @@ public class HomeFragment extends StoreFragment {
   /**
    * show first install fragment with animation
    */
-  @SuppressLint("PrivateResource") private void handleFirstInstall() {
-    if (((PartnerApplication) getContext().getApplicationContext()).getBootConfig()
+  @SuppressLint("PrivateResource") private void handleFirstInstall(Bundle savedInstanceState) {
+    if (savedInstanceState == null
+        && ((PartnerApplication) getContext().getApplicationContext()).getBootConfig()
         .getPartner()
         .getSwitches()
         .getOptions()

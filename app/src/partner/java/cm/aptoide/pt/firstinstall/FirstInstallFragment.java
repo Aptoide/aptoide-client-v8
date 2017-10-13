@@ -3,6 +3,7 @@ package cm.aptoide.pt.firstinstall;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -91,6 +92,7 @@ public class FirstInstallFragment extends AptoideBaseFragment<BaseAdapter>
     super.onViewCreated(view, savedInstanceState);
     firstInstallLayout = (RelativeLayout) view.findViewById(R.id.first_install_layout);
     installAllButton = (Button) view.findViewById(R.id.install_all_button);
+    handleOnBackKeyPressed();
 
     attachPresenter(
         new FirstInstallPresenter(this, CrashReport.getInstance(), requestFactoryCdnPool,
@@ -103,6 +105,17 @@ public class FirstInstallFragment extends AptoideBaseFragment<BaseAdapter>
             (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
             RepositoryFactory.getAppRepository(getContext(),
                 ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())));
+  }
+
+  /**
+   * overwrite on back key press to avoid the user of leaving the fragment with it
+   */
+  private void handleOnBackKeyPressed() {
+    if (getView() != null) {
+      getView().setFocusableInTouchMode(true);
+      getView().requestFocus();
+      getView().setOnKeyListener((v, keyCode, event) -> keyCode == KeyEvent.KEYCODE_BACK);
+    }
   }
 
   @Override public Observable<Void> installAllClick() {
