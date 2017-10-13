@@ -83,6 +83,7 @@ public class MinimalCardViewFactory {
         .loadWithShadowCircleTransform(post.getMinimalPostPosters()
             .get(0)
             .getPrimaryAvatar(), minimalCardHeaderMainAvatar);
+    View overflowMenu = subCardView.findViewById(R.id.overflow_menu);
 
     /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
 
@@ -132,6 +133,8 @@ public class MinimalCardViewFactory {
     showSocialInformationBar(post, context);
     showLikesPreview(post, context);
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
+
+    setupOverflowMenu(overflowMenu, post, position, subCardView, originalPost);
 
     socialCommentBar.setOnClickListener(view -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(post, position, CardTouchEvent.Type.LAST_COMMENT)));
@@ -307,6 +310,29 @@ public class MinimalCardViewFactory {
     numberLikes.setText(context.getString(R.string.timeline_short_like_present_plural, likesNumber)
         .toLowerCase());
     numberLikesOneLike.setVisibility(View.INVISIBLE);
+  }
+
+  private void setupOverflowMenu(View overflowMenu, Post post, int position, View subCardView,
+      Post originalPost) {
+    overflowMenu.setOnClickListener(view -> {
+      PostPopupMenuBuilder postPopupMenuBuilder =
+          new PostPopupMenuBuilder().prepMenu(subCardView.getContext(), overflowMenu)
+              .addReportAbuse(menuItem -> {
+                cardTouchEventPublishSubject.onNext(
+                    new CardTouchEvent(post, position, CardTouchEvent.Type.REPORT_ABUSE));
+                return false;
+              });
+      if (originalPost.getType()
+          .isStore()) {
+        postPopupMenuBuilder.addUnfollow(menuItem -> {
+          cardTouchEventPublishSubject.onNext(
+              new CardTouchEvent(post, position, CardTouchEvent.Type.UNFOLLOW_STORE));
+          return false;
+        });
+      }
+      postPopupMenuBuilder.getPopupMenu()
+          .show();
+    });
   }
 
   public View getView(Post originalPost, List<Post> minimalCards, int numberOfCardsToShow,

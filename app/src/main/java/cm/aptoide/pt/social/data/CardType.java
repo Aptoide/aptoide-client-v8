@@ -12,6 +12,10 @@ public enum CardType {
         POPULAR_APP) || equals(STORE) || equals(UPDATE);
   }
 
+  public boolean isStore() {
+    return equals(STORE) || equals(SOCIAL_STORE) || equals(AGGREGATED_SOCIAL_STORE);
+  }
+
   public boolean isSocial() {
     return equals(SOCIAL_ARTICLE) || equals(SOCIAL_VIDEO) || equals(SOCIAL_STORE) || equals(
         SOCIAL_RECOMMENDATION) || equals(SOCIAL_INSTALL) || equals(SOCIAL_POST_ARTICLE) || equals(
