@@ -25,4 +25,13 @@ public class GetStoreWidgetsFragment extends GetStoreEndlessFragment<GetStoreWid
       addDisplayables(first);
     };
   }
+
+  @Override public void onResume() {
+    super.onResume();
+    //if (getUserVisibleHint() && alreadyRegistered) {
+    //  aptoideNavigationTracker.registerView(ScreenTagHistory.Builder.build(this.getClass()
+    //      .getSimpleName(), "home", storeContext));
+    //  pageViewsAnalytics.sendPageViewedEvent();
+    //}
+  }
 }

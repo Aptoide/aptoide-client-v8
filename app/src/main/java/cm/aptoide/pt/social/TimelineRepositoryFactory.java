@@ -10,6 +10,7 @@ import cm.aptoide.pt.social.data.PostsRemoteDataSource;
 import cm.aptoide.pt.social.data.TimelineCardFilter;
 import cm.aptoide.pt.social.data.TimelinePostsRepository;
 import cm.aptoide.pt.social.data.TimelineResponseCardMapper;
+import cm.aptoide.pt.updates.UpdateRepository;
 import java.util.HashSet;
 import java.util.Map;
 import okhttp3.OkHttpClient;
@@ -31,12 +32,14 @@ public class TimelineRepositoryFactory {
   private PackageRepository packageRepository;
   private Converter.Factory defaultConverter;
   private TimelineResponseCardMapper mapper;
+  private UpdateRepository updateRepository;
 
   public TimelineRepositoryFactory(Map<String, TimelinePostsRepository> repositories,
       BodyInterceptor<BaseBody> baseBodyInterceptorV7, OkHttpClient defaultClient,
       SharedPreferences defaultSharedPreferences, TokenInvalidator tokenInvalidator,
       LinksHandlerFactory linksHandlerFactory, PackageRepository packageRepository,
-      Converter.Factory defaultConverter, TimelineResponseCardMapper mapper) {
+      Converter.Factory defaultConverter, TimelineResponseCardMapper mapper,
+      UpdateRepository updateRepository) {
     this.repositories = repositories;
     this.baseBodyInterceptorV7 = baseBodyInterceptorV7;
     this.defaultClient = defaultClient;
@@ -46,6 +49,7 @@ public class TimelineRepositoryFactory {
     this.packageRepository = packageRepository;
     this.defaultConverter = defaultConverter;
     this.mapper = mapper;
+    this.updateRepository = updateRepository;
   }
 
   public TimelinePostsRepository create(String action) {
@@ -54,7 +58,7 @@ public class TimelineRepositoryFactory {
       final TimelineCardFilter.TimelineCardDuplicateFilter duplicateFilter =
           new TimelineCardFilter.TimelineCardDuplicateFilter(new HashSet<>());
       final TimelineCardFilter postFilter =
-          new TimelineCardFilter(duplicateFilter, packageRepository);
+          new TimelineCardFilter(duplicateFilter, packageRepository, updateRepository);
 
       repositories.put(action, new TimelinePostsRepository(
           new PostsRemoteDataSource(action, baseBodyInterceptorV7, defaultClient, defaultConverter,

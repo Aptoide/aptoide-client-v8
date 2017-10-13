@@ -18,6 +18,7 @@ import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
@@ -94,6 +95,11 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     navigateToHome = getArguments().getBoolean(CLEAN_BACK_STACK);
     accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
     orientationManager = ((ActivityResultNavigator) getContext()).getScreenOrientationManager();
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -337,7 +343,8 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
     presenter = new LoginSignUpCredentialsPresenter(this, accountManager, crashReport,
         dismissToNavigateToMainView, navigateToHome, accountNavigator,
-        Arrays.asList("email", "user_friends"), Arrays.asList("email"), errorMapper);
+        Arrays.asList("email", "user_friends"), Arrays.asList("email"), errorMapper,
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountAnalytics());
     attachPresenter(presenter, null);
     registerClickHandler(presenter);
   }

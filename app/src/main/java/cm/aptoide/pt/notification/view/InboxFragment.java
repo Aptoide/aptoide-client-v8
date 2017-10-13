@@ -8,13 +8,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.notification.AptoideNotification;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
+import com.facebook.appevents.AppEventsLogger;
 import java.util.Collections;
 import java.util.List;
 import rx.Observable;
@@ -42,13 +45,22 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
     return super.onOptionsItemSelected(item);
   }
 
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     attachPresenter(new InboxPresenter(this,
         ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
-        new LinksHandlerFactory(getContext()), CrashReport.getInstance(), new NotificationAnalytics(
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient(),
-        Analytics.getInstance())), savedInstanceState);
+        new LinksHandlerFactory(getContext()), CrashReport.getInstance(),
+        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker(),
+        new NotificationAnalytics(
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient(),
+            Analytics.getInstance()),
+        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance(), aptoideNavigationTracker)), savedInstanceState);
     notificationSubject = PublishSubject.create();
     adapter = new InboxAdapter(Collections.emptyList(), notificationSubject);
   }

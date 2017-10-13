@@ -67,8 +67,7 @@ public class StoreManager {
         return updateStore(storeName, storeDescription, storeImagePath, hasNewAvatar,
             storeThemeName);
       }
-      return createStore(storeName, storeDescription, storeImagePath, hasNewAvatar,
-          storeThemeName);
+      return createStore(storeName, storeDescription, storeImagePath, hasNewAvatar, storeThemeName);
     })
         .onErrorResumeNext(err -> {
           if (err instanceof StoreCreationException || err instanceof InvalidImageException) {

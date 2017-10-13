@@ -6,10 +6,12 @@
 package cm.aptoide.pt.view.store;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.NavigationTrackerPagerAdapterHelper;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreTabs;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -18,10 +20,13 @@ import java.util.EnumMap;
 import java.util.Iterator;
 import java.util.List;
 
+import static cm.aptoide.pt.view.fragment.NavigationTrackFragment.SHOULD_REGISTER_VIEW;
+
 /**
  * Created by neuro on 28-04-2016.
  */
-public class StorePagerAdapter extends FragmentStatePagerAdapter {
+public class StorePagerAdapter extends FragmentStatePagerAdapter
+    implements NavigationTrackerPagerAdapterHelper {
 
   private final List<GetStoreTabs.Tab> tabs;
   private final StoreContext storeContext;
@@ -107,6 +112,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
         // Safe to throw exception as the tab should be filtered prior to getting here.
         throw new RuntimeException("Fragment type not implemented!");
     }
+    fragment = setFragmentLogFlag(fragment);
     return fragment;
   }
 
@@ -143,7 +149,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
             .newSpotShareFragment(false);
       case myStores:
         return AptoideApplication.getFragmentProvider()
-            .newSubscribedStoresFragment(event, storeTheme, tab.getTag());
+            .newSubscribedStoresFragment(event, storeTheme, tab.getTag(), storeContext);
       default:
         // Safe to throw exception as the tab should be filtered prior to getting here.
         throw new RuntimeException("Fragment type not implemented!");
@@ -154,7 +160,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
     switch (event.getName()) {
       case getReviews:
         return AptoideApplication.getFragmentProvider()
-            .newLatestReviewsFragment(storeId);
+            .newLatestReviewsFragment(storeId, storeContext);
       default:
         // Safe to throw exception as the tab should be filtered prior to getting here.
         throw new RuntimeException("Fragment type not implemented!");
@@ -190,5 +196,29 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
   @Override public CharSequence getPageTitle(int position) {
     return tabs.get(position)
         .getLabel();
+  }
+
+  private Fragment setFragmentLogFlag(Fragment fragment) {
+    Bundle bundle = fragment.getArguments();
+    if (bundle == null) {
+      bundle = new Bundle();
+    }
+    bundle.putBoolean(SHOULD_REGISTER_VIEW, false);
+    fragment.setArguments(bundle);
+    return fragment;
+  }
+
+  @Override public String getItemName(int position) {
+    return getItem(position).getClass()
+        .getSimpleName();
+  }
+
+  @Override public String getItemTag(int position) {
+    return tabs.get(position)
+        .getLabel();
+  }
+
+  @Override public StoreContext getItemStore() {
+    return storeContext;
   }
 }

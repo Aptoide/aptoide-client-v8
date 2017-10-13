@@ -167,12 +167,14 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
         new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
             BuildConfig.APPLICATION_ID, sharedPreferences,
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
-            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
+            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
+            ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker());
     installConverter =
         new InstallEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
             BuildConfig.APPLICATION_ID, sharedPreferences,
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
-            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
+            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
+            ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker());
     analytics = Analytics.getInstance();
     downloadFactory = displayable.getDownloadFactory();
     socialRepository =
@@ -181,8 +183,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                 AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
                 httpClient, WebService.getDefaultConverter(), tokenInvalidator,
                 BuildConfig.APPLICATION_ID, sharedPreferences,
-                new NotificationAnalytics(httpClient, analytics)), tokenInvalidator,
-            sharedPreferences);
+                new NotificationAnalytics(httpClient, analytics),
+                ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker()),
+            tokenInvalidator, sharedPreferences);
 
     appViewNavigator = getAppViewNavigator();
 
@@ -573,7 +576,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
     final View.OnClickListener onSearchTrustedAppHandler = v -> {
       if (hasTrustedVersion) {
-        appViewNavigator.navigateToAppView(trustedVersion.getId(), trustedVersion.getPackageName());
+        appViewNavigator.navigateToAppView(trustedVersion.getId(), trustedVersion.getPackageName(),
+            "");
         return;
       }
       appViewNavigator.navigateToSearch(app.getName(), true);

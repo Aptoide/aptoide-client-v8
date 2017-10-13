@@ -332,8 +332,9 @@ public class DeepLinkIntentReceiver extends ActivityView {
           } else {
             startFromSearch(packageName);
           }
-        }, err -> CrashReport.getInstance()
-            .log(err));
+        }, err -> {
+          startFromSearch(packageName);
+        });
   }
 
   public void aptoidevoiceSearch(String param) {

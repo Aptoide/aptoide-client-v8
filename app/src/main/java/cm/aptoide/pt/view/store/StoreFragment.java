@@ -14,7 +14,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -27,8 +26,10 @@ import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
+import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
@@ -55,8 +56,10 @@ import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.util.SearchUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.ThemeUtils;
+import cm.aptoide.pt.view.custom.AptoideViewPager;
 import cm.aptoide.pt.view.fragment.BasePagerToolbarFragment;
 import cm.aptoide.pt.view.share.ShareStoreHelper;
+import cm.aptoide.pt.view.store.home.HomeFragment;
 import com.astuetz.PagerSlidingTabStrip;
 import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -79,6 +82,16 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private String storeName;
   private String title;
   private StoreContext storeContext;
+  AptoideViewPager.SimpleOnPageChangeListener pageChangeListener =
+      new AptoideViewPager.SimpleOnPageChangeListener() {
+        @Override public void onPageSelected(int position) {
+          if (position == 0) {
+            aptoideNavigationTracker.registerScreen(
+                ScreenTagHistory.Builder.build(HomeFragment.class.getSimpleName(), "home",
+                    storeContext));
+          }
+        }
+      };
   private String storeTheme;
   private StoreCredentialsProvider storeCredentialsProvider;
   private Event.Name defaultTab;
@@ -97,6 +110,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private String iconPath;
   private String marketName;
   private String defaultTheme;
+  private PageViewsAnalytics pageViewAnalytics;
 
   public static StoreFragment newInstance(long userId, String storeTheme, OpenType openType) {
     return newInstance(userId, storeTheme, null, openType);
@@ -139,6 +153,11 @@ public class StoreFragment extends BasePagerToolbarFragment {
     return newInstance(storeName, storeTheme, OpenType.GetStore);
   }
 
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName(), "", storeContext);
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     defaultTheme = ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
@@ -155,13 +174,16 @@ public class StoreFragment extends BasePagerToolbarFragment {
     converterFactory = WebService.getDefaultConverter();
     Analytics analytics = Analytics.getInstance();
     timelineAnalytics = new TimelineAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()), null, null, null,
-        tokenInvalidator, BuildConfig.APPLICATION_ID,
+        AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
+        httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        new NotificationAnalytics(httpClient, analytics));
+        new NotificationAnalytics(httpClient, analytics), aptoideNavigationTracker);
     storeAnalytics = new StoreAnalytics(AppEventsLogger.newLogger(getContext()), analytics);
     marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);
+    pageViewAnalytics =
+        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance(), aptoideNavigationTracker);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -256,12 +278,12 @@ public class StoreFragment extends BasePagerToolbarFragment {
     });
 
     /* Be careful maintaining this code
-     * this affects both the main ViewPager when we open app
-     * and the ViewPager inside the StoresView
+     * this affects both the main view pager when we open app
+     * and the view pager inside the StoresView
      *
      * This code was changed when FAB was migrated to a followstorewidget 23/02/2017
      */
-    viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+    viewPager.addOnPageChangeListener(new AptoideViewPager.SimpleOnPageChangeListener() {
       @Override public void onPageSelected(int position) {
         StorePagerAdapter adapter = (StorePagerAdapter) viewPager.getAdapter();
         if (Event.Name.getUserTimeline.equals(adapter.getEventName(position))) {
@@ -275,6 +297,12 @@ public class StoreFragment extends BasePagerToolbarFragment {
           storeAnalytics.sendStoreInteractEvent("Open Tab", adapter.getPageTitle(position)
               .toString(), storeName);
         }
+      }
+    });
+    viewPager.addOnPageChangeListener(pageChangeListener);
+    viewPager.post(new Runnable() {
+      @Override public void run() {
+        pageChangeListener.onPageSelected(viewPager.getCurrentItem());
       }
     });
     changeToTab(defaultTab);

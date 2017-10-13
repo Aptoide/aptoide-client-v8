@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.PartnerApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.dataprovider.model.v7.ListSearchApps;
@@ -66,10 +67,14 @@ public class SearchWidget extends Widget<SearchDisplayable> {
     ListSearchApps.SearchAppsApp searchAppsApp = displayable.getPojo();
 
     final Action0 clickCallback = displayable.getClickCallback();
-    final Action1<Void> clickToOpenStore =
-        __ -> handleClickToOpenPopupMenu(clickCallback, overflowImageView, searchAppsApp);
-    compositeSubscription.add(RxView.clicks(overflowImageView)
-        .subscribe(clickToOpenStore));
+    if (searchAppsApp.isHasVersions()) {
+      final Action1<Void> clickToOpenStore =
+          __ -> handleClickToOpenPopupMenu(clickCallback, overflowImageView, searchAppsApp);
+      compositeSubscription.add(RxView.clicks(overflowImageView)
+          .subscribe(clickToOpenStore));
+    } else {
+      overflowImageView.setVisibility(View.INVISIBLE);
+    }
 
     nameTextView.setText(searchAppsApp.getName());
     String downloadNumber = AptoideUtils.StringU.withSuffix(searchAppsApp.getStats()
@@ -163,26 +168,22 @@ public class SearchWidget extends Widget<SearchDisplayable> {
             String name = searchAppsApp.getName();
             String icon = searchAppsApp.getIcon();
             String packageName = searchAppsApp.getPackageName();
+            String storeName = searchAppsApp.getStore()
+                .getName();
 
-            getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-                .newOtherVersionsFragment(name, icon, packageName), true);
+            if (((PartnerApplication) getContext().getApplicationContext()).getBootConfig()
+                .getPartner()
+                .getStore()
+                .getName()
+                .equals(storeName)) {
+              getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
+                  .newOtherVersionsFragment(name, icon, packageName, storeName), true);
+            } else {
+              getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
+                  .newOtherVersionsFragment(name, icon, packageName), true);
+            }
           }));
     }
-
-    MenuItem menuItemGoToStore = popup.getMenu()
-        .findItem(R.id.go_to_store);
-    compositeSubscription.add(RxMenuItem.clicks(menuItemGoToStore)
-        .subscribe(__ -> {
-          if (clickCallback != null) {
-            clickCallback.call();
-          }
-          getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-              .newStoreFragment(searchAppsApp.getStore()
-                  .getName(), searchAppsApp.getStore()
-                  .getAppearance()
-                  .getTheme()), true);
-        }));
-
     popup.show();
   }
 

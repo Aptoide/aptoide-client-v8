@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.FirstLaunchAnalytics;
@@ -384,19 +383,6 @@ public class Analytics {
 
       public static void onResume(android.app.Activity activity) {
 
-        final AptoideAccountManager accountManager =
-            ((AptoideApplication) activity.getApplicationContext()).getAccountManager();
-        //This needs to be cleaned when localytics is killed
-        Bundle bundle = new Bundle();
-        if (!accountManager.isLoggedIn()) {
-          bundle.putString("Logged In", "Not Logged In");
-          AppEventsLogger.updateUserProperties(bundle,
-              response -> Logger.d("Facebook Analytics: ", response.toString()));
-        } else {
-          bundle.putString("Logged In", "Logged In");
-          AppEventsLogger.updateUserProperties(bundle,
-              response -> Logger.d("Facebook Analytics: ", response.toString()));
-        }
       }
 
       public static void onStart(android.app.Activity activity) {
@@ -437,8 +423,6 @@ public class Analytics {
   public static class Account {
 
     private static final String LOGIN_SIGN_UP_START_SCREEN = "Account_Login_Signup_Start_Screen";
-    private static final String SIGNUP_SCREEN = "Account_Signup_Screen";
-    private static final String LOGIN_SCREEN = "Account_Login_Screen";
     private static final String CREATE_USER_PROFILE = "Account_Create_A_User_Profile_Screen";
     private static final String PROFILE_SETTINGS = "Account_Profile_Settings_Screen";
     private static final String CREATE_YOUR_STORE = "Account_Create_Your_Store_Screen";
@@ -446,8 +430,6 @@ public class Analytics {
     private static final String SCREEN = "Screen";
     private static final String ENTRY = "Account_Entry";
     private static final String SOURCE = "Source";
-    private static final String STATUS = "Status";
-    private static final String STATUS_DETAIL = "Status Detail";
 
     public static void clickIn(StartupClick clickEvent, StartupClickOrigin startupClickOrigin) {
       track(LOGIN_SIGN_UP_START_SCREEN, ACTION, clickEvent.getClickEvent(), ALL);
@@ -455,21 +437,6 @@ public class Analytics {
       map.put(ACTION, clickEvent.getClickEvent());
       map.put(SCREEN, startupClickOrigin.getClickOrigin());
       logFacebookEvents(LOGIN_SIGN_UP_START_SCREEN, map);
-    }
-
-    public static void signInSuccessAptoide(SignUpLoginStatus result) {
-      track(SIGNUP_SCREEN, ALL);
-      logFacebookEvents(SIGNUP_SCREEN, STATUS, result.getStatus());
-    }
-
-    public static void loginStatus(LoginMethod loginMethod, SignUpLoginStatus status,
-        LoginStatusDetail statusDetail) {
-      track(LOGIN_SCREEN, METHOD, loginMethod.getMethod(), ALL);
-      Map<String, String> map = new HashMap<>();
-      map.put(METHOD, loginMethod.getMethod());
-      map.put(STATUS, status.getStatus());
-      map.put(STATUS_DETAIL, statusDetail.getLoginStatusDetail());
-      logFacebookEvents(LOGIN_SCREEN, map);
     }
 
     public static void createdUserProfile(boolean hasPicture) {

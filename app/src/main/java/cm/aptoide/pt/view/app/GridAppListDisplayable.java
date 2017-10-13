@@ -14,11 +14,14 @@ import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
  */
 public class GridAppListDisplayable extends DisplayablePojo<App> {
 
+  private String tag;
+
   public GridAppListDisplayable() {
   }
 
-  public GridAppListDisplayable(App pojo) {
+  public GridAppListDisplayable(App pojo, String tag) {
     super(pojo);
+    this.tag = tag;
   }
 
   @Override protected Configs getConfig() {
@@ -27,5 +30,9 @@ public class GridAppListDisplayable extends DisplayablePojo<App> {
 
   @Override public int getViewLayout() {
     return R.layout.displayable_list_app;
+  }
+
+  public String getTag() {
+    return tag;
   }
 }

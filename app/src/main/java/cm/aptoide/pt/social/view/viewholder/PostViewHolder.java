@@ -36,11 +36,11 @@ public abstract class PostViewHolder<T extends Post> extends RecyclerView.ViewHo
 
   public abstract void setPost(T card, int position);
 
-  protected void handleCommentsInformation(Post post) {
+  protected void handleCommentsInformation(Post post, int position) {
     if (post.getCommentsNumber() > 0) {
       socialCommentBar.setVisibility(View.VISIBLE);
       socialCommentBar.setOnClickListener(view -> cardTouchEventPublishSubject.onNext(
-          new CardTouchEvent(post, CardTouchEvent.Type.LAST_COMMENT)));
+          new CardTouchEvent(post, position, CardTouchEvent.Type.LAST_COMMENT)));
       ImageLoader.with(itemView.getContext())
           .loadWithShadowCircleTransform(post.getComments()
               .get(0)

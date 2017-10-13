@@ -27,6 +27,7 @@ import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.comments.CommentDialogCallbackContract;
 import cm.aptoide.pt.comments.CommentNode;
 import cm.aptoide.pt.comments.ComplexComment;
@@ -44,6 +45,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.store.StoreAnalytics;
@@ -90,6 +92,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private static final String SHOW_INPUT_DIALOG_FIRST_RUN = "show_input_dialog_first_run";
   private static final String STORE_ANALYTICS_ACTION = "store_analytics_action";
   private static final String STORE_ANALYTICS = "store_analytics";
+  private static final String STORE_CONTEXT = "store_context";
   // control setComment retry
   protected long lastTotal;
   //
@@ -122,10 +125,13 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private SharedPreferences sharedPreferences;
   private String storeAnalyticsAction;
   private StoreAnalytics storeAnalytics;
+  private StoreContext storeContext;
 
-  public static Fragment newInstance(CommentType commentType, String timelineArticleId) {
+  public static Fragment newInstance(CommentType commentType, String timelineArticleId,
+      StoreContext storeContext) {
     Bundle args = new Bundle();
     args.putString(ELEMENT_ID_AS_STRING, timelineArticleId);
+    args.putSerializable(STORE_CONTEXT, storeContext);
     args.putString(COMMENT_TYPE, commentType.name());
     args.putBoolean(SHOW_INPUT_DIALOG_FIRST_RUN, false);
 
@@ -135,9 +141,10 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   }
 
   public static Fragment newInstanceUrl(CommentType commentType, String url,
-      String storeAnalyticsAction) {
+      String storeAnalyticsAction, StoreContext storeContext) {
     Bundle args = new Bundle();
     args.putString(URL_VAL, url);
+    args.putSerializable(STORE_CONTEXT, storeContext);
     args.putString(COMMENT_TYPE, commentType.name());
     args.putBoolean(SHOW_INPUT_DIALOG_FIRST_RUN, false);
     args.putString(STORE_ANALYTICS_ACTION, storeAnalyticsAction);
@@ -146,10 +153,11 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     return fragment;
   }
 
-  public static Fragment newInstanceWithCommentDialogOpen(CommentType commentType,
-      String elementId) {
+  public static Fragment newInstanceWithCommentDialogOpen(CommentType commentType, String elementId,
+      StoreContext storeContext) {
     Bundle args = new Bundle();
     args.putString(ELEMENT_ID_AS_STRING, elementId);
+    args.putSerializable(STORE_CONTEXT, storeContext);
     args.putString(COMMENT_TYPE, commentType.name());
     args.putBoolean(SHOW_INPUT_DIALOG_FIRST_RUN, true);
     CommentListFragment fragment = new CommentListFragment();
@@ -175,7 +183,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        new NotificationAnalytics(httpClient, analytics));
+        new NotificationAnalytics(httpClient, analytics), aptoideNavigationTracker);
     super.onCreate(savedInstanceState);
   }
 
@@ -228,6 +236,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
     elementIdAsString = args.getString(ELEMENT_ID_AS_STRING);
+    storeContext = ((StoreContext) args.getSerializable(STORE_CONTEXT));
     elementIdAsLong = args.getLong(ELEMENT_ID_AS_LONG);
     url = args.getString(URL_VAL);
     commentType = CommentType.valueOf(args.getString(COMMENT_TYPE));
@@ -289,6 +298,11 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     if (create || refresh) {
       refreshData();
     }
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName(), "", storeContext);
   }
 
   void refreshData() {

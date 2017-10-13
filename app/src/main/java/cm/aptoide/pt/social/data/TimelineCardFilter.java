@@ -6,6 +6,7 @@ import cm.aptoide.pt.dataprovider.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.Recommendation;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.TimelineItem;
+import cm.aptoide.pt.updates.UpdateRepository;
 import java.util.Set;
 import rx.Observable;
 import rx.Single;
@@ -14,11 +15,13 @@ import rx.functions.Func1;
 public class TimelineCardFilter {
   private final TimelineCardDuplicateFilter duplicateFilter;
   private final PackageRepository packageRepository;
+  private final UpdateRepository updateRepository;
 
   public TimelineCardFilter(TimelineCardDuplicateFilter duplicateFilter,
-      PackageRepository packageRepository) {
+      PackageRepository packageRepository, UpdateRepository updateRepository) {
     this.duplicateFilter = duplicateFilter;
     this.packageRepository = packageRepository;
+    this.updateRepository = updateRepository;
   }
 
   public void clear() {
@@ -30,7 +33,32 @@ public class TimelineCardFilter {
         .filter(timelineItem -> timelineItem != null)
         .filter(duplicateFilter)
         .flatMap(timelineCard -> filterInstalledRecommendation(timelineCard))
-        .flatMap(timelineCard -> filterAlreadyDoneUpdates(timelineCard));
+        .flatMap(timelineCard -> filterAlreadyDoneUpdates(timelineCard))
+        .flatMap(timelineCard -> filterExcludedUpdates(timelineCard));
+  }
+
+  private Observable<TimelineItem<TimelineCard>> filterExcludedUpdates(
+      TimelineItem<TimelineCard> timelineCard) {
+    final TimelineCard card = timelineCard.getData();
+    String packageName = null;
+    if (card instanceof AppUpdate) {
+      packageName = ((AppUpdate) card).getPackageName();
+    }
+
+    if (!TextUtils.isEmpty(packageName)) {
+      return updateRepository.get(packageName)
+          .first()
+          .toSingle()
+          .onErrorResumeNext(err -> Single.just(null))
+          .flatMapObservable(update -> {
+            if (update == null || update.isExcluded()) {
+              return Observable.empty();
+            } else {
+              return Observable.just(timelineCard);
+            }
+          });
+    }
+    return Observable.just(timelineCard);
   }
 
   private Observable<TimelineItem<TimelineCard>> filterInstalledRecommendation(
@@ -64,7 +92,7 @@ public class TimelineCardFilter {
       return packageRepository.getPackageVersionCode(packageName)
           .onErrorResumeNext(err -> Single.just(null))
           .flatMapObservable(versionCode -> {
-            if (versionCode != null && versionCode == ((AppUpdate) timelineItem.getData()).getFile()
+            if (versionCode != null && versionCode >= ((AppUpdate) timelineItem.getData()).getFile()
                 .getVercode()) {
               return Observable.empty();
             }

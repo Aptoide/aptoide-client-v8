@@ -7,7 +7,6 @@ import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.FacebookSignUpException;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.account.view.AccountNavigator;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -27,12 +26,13 @@ public class NotLoggedInSharePresenter implements Presenter {
   private final Collection<String> requiredPermissions;
   private final int requestCode;
   private final ThrowableToStringMapper errorMapper;
+  private final NotLoggedInShareAnalytics analytics;
 
   public NotLoggedInSharePresenter(NotLoggedInShareView view, SharedPreferences sharedPreferences,
       CrashReport crashReport, AptoideAccountManager accountManager,
       AccountNavigator accountNavigator, Collection<String> permissions,
-      Collection<String> requiredPermissions, int requestCode,
-      ThrowableToStringMapper errorMapper) {
+      Collection<String> requiredPermissions, int requestCode, ThrowableToStringMapper errorMapper,
+      NotLoggedInShareAnalytics analytics) {
     this.view = view;
     this.sharedPreferences = sharedPreferences;
     this.crashReport = crashReport;
@@ -42,6 +42,7 @@ public class NotLoggedInSharePresenter implements Presenter {
     this.requiredPermissions = requiredPermissions;
     this.requestCode = requestCode;
     this.errorMapper = errorMapper;
+    this.analytics = analytics;
   }
 
   @Override public void present() {
@@ -54,6 +55,10 @@ public class NotLoggedInSharePresenter implements Presenter {
     handleFacebookSignInWithRequiredPermissionsEvent();
 
     handleCloseEvent();
+    handleFakeToolbarEvent();
+    handleFakeTimelineEvent();
+    handleBackEvent();
+    handleOutsideEvent();
   }
 
   @Override public void saveState(Bundle state) {
@@ -64,10 +69,52 @@ public class NotLoggedInSharePresenter implements Presenter {
 
   }
 
+  private void handleFakeToolbarEvent() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(viewCreated -> view.getFakeToolbarClick()
+            .doOnNext(click -> analytics.sendTapOnFakeToolbar()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
+  private void handleOutsideEvent() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(viewCreated -> view.getOutsideClick()
+            .doOnNext(click -> analytics.sendTapOutside()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
+  private void handleFakeTimelineEvent() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(viewCreated -> view.getFakeTimelineClick()
+            .doOnNext(click -> analytics.sendTapOnFakeTimeline()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
   private void handleCloseEvent() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.closeEvent())
+        .doOnNext(closeClicked -> analytics.sendCloseEvent())
+        .doOnNext(__ -> accountNavigator.popViewWithResult(requestCode, false))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
+  private void handleBackEvent() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(viewCreated -> view.backEvent())
+        .doOnNext(closeClicked -> analytics.sendBackButtonPressed())
         .doOnNext(__ -> accountNavigator.popViewWithResult(requestCode, false))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -81,6 +128,7 @@ public class NotLoggedInSharePresenter implements Presenter {
         .flatMap(__ -> view.googleSignUpEvent())
         .doOnNext(event -> {
           view.showLoading();
+          analytics.sendGoogleLoginButtonPressed();
         })
         .flatMapSingle(event -> accountNavigator.navigateToGoogleSignUpForResult(
             RESOLVE_GOOGLE_CREDENTIALS_REQUEST_CODE))
@@ -106,19 +154,14 @@ public class NotLoggedInSharePresenter implements Presenter {
             .flatMapCompletable(result -> accountManager.signUp(GoogleSignUpAdapter.TYPE, result)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> {
-                  Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
-                      Analytics.Account.SignUpLoginStatus.SUCCESS,
-                      Analytics.Account.LoginStatusDetail.SUCCESS);
+                  analytics.loginSuccess();
                   accountNavigator.popViewWithResult(requestCode, true);
                 })
                 .doOnTerminate(() -> view.hideLoading())
                 .doOnError(throwable -> {
                   view.showError(errorMapper.map(throwable));
                   crashReport.log(throwable);
-
-                  Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
-                      Analytics.Account.SignUpLoginStatus.FAILED,
-                      Analytics.Account.LoginStatusDetail.SDK_ERROR);
+                  analytics.sendGoogleSignUpFailEvent();
                 }))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -132,6 +175,7 @@ public class NotLoggedInSharePresenter implements Presenter {
         .flatMap(__ -> view.facebookSignUpEvent())
         .doOnNext(event -> {
           view.showLoading();
+          analytics.sendFacebookLoginButtonPressed();
           accountNavigator.navigateToFacebookSignUpForResult(permissions);
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -150,9 +194,7 @@ public class NotLoggedInSharePresenter implements Presenter {
             .flatMapCompletable(result -> accountManager.signUp(FacebookSignUpAdapter.TYPE, result)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> {
-                  Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
-                      Analytics.Account.SignUpLoginStatus.SUCCESS,
-                      Analytics.Account.LoginStatusDetail.SUCCESS);
+                  analytics.loginSuccess();
                   accountNavigator.popViewWithResult(requestCode, true);
                 })
                 .doOnTerminate(() -> view.hideLoading())
@@ -177,19 +219,13 @@ public class NotLoggedInSharePresenter implements Presenter {
     if (throwable instanceof FacebookSignUpException) {
       switch (((FacebookSignUpException) throwable).getCode()) {
         case FacebookSignUpException.MISSING_REQUIRED_PERMISSIONS:
-          Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
-              Analytics.Account.SignUpLoginStatus.FAILED,
-              Analytics.Account.LoginStatusDetail.PERMISSIONS_DENIED);
+          analytics.sendFacebookMissingPermissionsEvent();
           break;
         case FacebookSignUpException.USER_CANCELLED:
-          Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
-              Analytics.Account.SignUpLoginStatus.FAILED,
-              Analytics.Account.LoginStatusDetail.CANCEL);
+          analytics.sendFacebookUserCancelledEvent();
           break;
         case FacebookSignUpException.ERROR:
-          Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
-              Analytics.Account.SignUpLoginStatus.FAILED,
-              Analytics.Account.LoginStatusDetail.SDK_ERROR);
+          analytics.sendFacebookErrorEvent();
           break;
       }
     }

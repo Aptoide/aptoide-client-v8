@@ -10,6 +10,7 @@ import cm.aptoide.pt.abtesting.ABTest;
 import cm.aptoide.pt.abtesting.SearchTabOptions;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.ListSearchApps;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 import lombok.Getter;
 import rx.functions.Action0;
@@ -21,12 +22,14 @@ public class SearchDisplayable extends DisplayablePojo<ListSearchApps.SearchApps
 
   @Getter private Action0 clickCallback;
   private String query;
+  private StoreContext storeContext;
 
   public SearchDisplayable() {
   }
 
-  public SearchDisplayable(ListSearchApps.SearchAppsApp searchAppsApp) {
+  public SearchDisplayable(ListSearchApps.SearchAppsApp searchAppsApp, StoreContext storeContext) {
     super(searchAppsApp);
+    this.storeContext = storeContext;
   }
 
   public SearchDisplayable(ListSearchApps.SearchAppsApp searchAppsApp,
@@ -64,5 +67,9 @@ public class SearchDisplayable extends DisplayablePojo<ListSearchApps.SearchApps
 
   public String getQuery() {
     return query;
+  }
+
+  public StoreContext getStoreContext() {
+    return storeContext;
   }
 }

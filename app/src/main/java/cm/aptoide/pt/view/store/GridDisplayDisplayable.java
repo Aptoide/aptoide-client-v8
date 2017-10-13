@@ -21,12 +21,9 @@ public class GridDisplayDisplayable extends DisplayablePojo<GetStoreDisplays.Eve
   @Getter private String tag;
   @Getter private StoreContext storeContext;
   private InstalledRepository installedRepository;
+  private String storeName;
 
   public GridDisplayDisplayable() {
-  }
-
-  public GridDisplayDisplayable(GetStoreDisplays.EventImage pojo) {
-    super(pojo);
   }
 
   public GridDisplayDisplayable(GetStoreDisplays.EventImage pojo, String storeTheme, String tag,
@@ -48,5 +45,9 @@ public class GridDisplayDisplayable extends DisplayablePojo<GetStoreDisplays.Eve
 
   public InstalledRepository getInstalledRepository() {
     return installedRepository;
+  }
+
+  public String getStoreName() {
+    return storeName;
   }
 }

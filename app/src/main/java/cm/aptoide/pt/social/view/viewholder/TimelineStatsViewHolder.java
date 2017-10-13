@@ -53,12 +53,12 @@ public class TimelineStatsViewHolder extends PostViewHolder<TimelineUser> {
 
     followers.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new TimelineStatsTouchEvent(card, TimelineStatsTouchEvent.ButtonClicked.FOLLOWERS,
-            CardTouchEvent.Type.TIMELINE_STATS)));
+            CardTouchEvent.Type.TIMELINE_STATS, getPosition())));
     following.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new TimelineStatsTouchEvent(card, TimelineStatsTouchEvent.ButtonClicked.FOLLOWING,
-            CardTouchEvent.Type.TIMELINE_STATS)));
+            CardTouchEvent.Type.TIMELINE_STATS, getPosition())));
     followFriends.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new TimelineStatsTouchEvent(card, TimelineStatsTouchEvent.ButtonClicked.FOLLOWFRIENDS,
-            CardTouchEvent.Type.TIMELINE_STATS)));
+            CardTouchEvent.Type.TIMELINE_STATS, getPosition())));
   }
 }

@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -43,10 +44,8 @@ import retrofit2.Converter;
  */
 public class SearchFragment extends BasePagerToolbarFragment {
   private static final String TAG = SearchFragment.class.getSimpleName();
-
   private SharedPreferences sharedPreferences;
   private String query;
-
   transient private boolean hasSubscribedResults;
   transient private boolean hasEverywhereResults;
   transient private boolean shouldFinishLoading = false;
@@ -65,6 +64,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
   private Converter.Factory converterFactory;
   private SearchAnalytics searchAnalytics;
   private TokenInvalidator tokenInvalidator;
+  private PageViewsAnalytics pageViewAnalytics;
 
   public static SearchFragment newInstance(String query) {
     return newInstance(query, false);
@@ -111,12 +111,18 @@ public class SearchFragment extends BasePagerToolbarFragment {
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     tokenInvalidator =
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
+
     bodyInterceptor =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
+
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     searchAnalytics = new SearchAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    pageViewAnalytics =
+        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance(), aptoideNavigationTracker);
+    setRegisterFragment(false);
   }
 
   @Override public void loadExtras(Bundle args) {

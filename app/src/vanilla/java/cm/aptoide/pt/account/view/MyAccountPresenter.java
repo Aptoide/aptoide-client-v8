@@ -3,6 +3,9 @@ package cm.aptoide.pt.account.view;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.PageViewsAnalytics;
+import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.notification.NotificationAnalytics;
@@ -24,11 +27,14 @@ public class MyAccountPresenter implements Presenter {
   private final int NUMBER_OF_NOTIFICATIONS = 3;
   private final SharedPreferences sharedPreferences;
   private final NotificationAnalytics analytics;
+  private PageViewsAnalytics pageViewsAnalytics;
+  private AptoideNavigationTracker aptoideNavigationTracker;
 
   public MyAccountPresenter(MyAccountView view, AptoideAccountManager accountManager,
       CrashReport crashReport, MyAccountNavigator navigator, NotificationCenter notificationCenter,
       LinksHandlerFactory linkFactory, SharedPreferences sharedPreferences,
-      NotificationAnalytics analytics) {
+      AptoideNavigationTracker aptoideNavigationTracker, NotificationAnalytics analytics,
+      PageViewsAnalytics pageViewsAnalytics) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
@@ -36,7 +42,9 @@ public class MyAccountPresenter implements Presenter {
     this.notificationCenter = notificationCenter;
     this.linkFactory = linkFactory;
     this.sharedPreferences = sharedPreferences;
+    this.aptoideNavigationTracker = aptoideNavigationTracker;
     this.analytics = analytics;
+    this.pageViewsAnalytics = pageViewsAnalytics;
   }
 
   @Override public void present() {
@@ -152,7 +160,10 @@ public class MyAccountPresenter implements Presenter {
             linkFactory.get(LinksHandlerFactory.NOTIFICATION_LINK, notification.getUrl()))
             .doOnNext(link -> link.launch())
             .doOnNext(
-                link -> analytics.notificationShown(notification.getNotificationCenterUrlTrack())))
+                link -> analytics.notificationShown(notification.getNotificationCenterUrlTrack()))
+            .doOnNext(__ -> aptoideNavigationTracker.registerScreen(
+                ScreenTagHistory.Builder.build("Notification")))
+            .doOnNext(__ -> pageViewsAnalytics.sendPageViewedEvent()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, throwable -> crashReport.log(throwable));

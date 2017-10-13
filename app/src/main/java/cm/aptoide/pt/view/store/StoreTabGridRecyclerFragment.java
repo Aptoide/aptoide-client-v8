@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.Layout;
@@ -105,6 +106,11 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     storeRepository = RepositoryFactory.getStoreRepository(getContext().getApplicationContext());
 
     super.onCreate(savedInstanceState);
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName(), tag, storeContext);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -213,6 +219,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     public static final String STORE_THEME = "storeTheme";
     public static final String LAYOUT = "layout";
     public static final String TAG = "tag";
+    public static final String STORE_NAME = "store_name";
     public static String STORE_CONTEXT = "Store_context";
   }
 }

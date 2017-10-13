@@ -139,6 +139,8 @@
   <string name="timeline_title_sponsored">Sponsored</string>
   <string name="timeline_title_header_notifications">Notifications</string>
   <string name="timeline_title_header_add_friend">Follow Friend</string>
+  <string name="timeline_button_get_started">Get started</string>
+  <string name="timeline_message_timeline_description">Timeline makes it easy to create posts about apps, learn about your friends activity, and connect with people. All in one place.</string>
 
 
 </resources>

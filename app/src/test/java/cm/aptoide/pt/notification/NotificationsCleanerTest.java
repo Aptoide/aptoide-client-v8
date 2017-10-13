@@ -5,10 +5,12 @@ import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.realm.Notification;
 import io.realm.Sort;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import org.junit.Test;
 import rx.Completable;
 import rx.Observable;
@@ -25,7 +27,8 @@ public class NotificationsCleanerTest {
   @Test public void cleanOtherUsersNotifications() throws Exception {
 
     Map<String, Notification> list = new HashMap<>();
-    long timeStamp = System.currentTimeMillis();
+    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+    long timeStamp = calendar.getTimeInMillis();
     Notification notification = createNotification(timeStamp + 1000, timeStamp, "me");
     list.put(notification.getKey(), notification);
     timeStamp = System.currentTimeMillis();
@@ -35,7 +38,8 @@ public class NotificationsCleanerTest {
     notification = createNotification(timeStamp + 2000, timeStamp - 2, "me");
     list.put(notification.getKey(), notification);
     NotificationAccessor notificationAccessor = new NotAccessor(list);
-    NotificationsCleaner notificationsCleaner = new NotificationsCleaner(notificationAccessor);
+    NotificationsCleaner notificationsCleaner = new NotificationsCleaner(notificationAccessor,
+        Calendar.getInstance(TimeZone.getTimeZone("UTC")));
 
     TestSubscriber<Object> objectTestSubscriber = TestSubscriber.create();
     notificationsCleaner.cleanOtherUsersNotifications("you")
@@ -63,7 +67,8 @@ public class NotificationsCleanerTest {
     notification = createNotification(timeStamp + 2000, timeStamp - 2, "me");
     list.put(notification.getKey(), notification);
     NotificationAccessor notificationAccessor = new NotAccessor(list);
-    NotificationsCleaner notificationsCleaner = new NotificationsCleaner(notificationAccessor);
+    NotificationsCleaner notificationsCleaner = new NotificationsCleaner(notificationAccessor,
+        Calendar.getInstance(TimeZone.getTimeZone("UTC")));
 
     notificationsCleaner.cleanLimitExceededNotifications(2)
         .subscribe(objectTestSubscriber);
@@ -90,7 +95,8 @@ public class NotificationsCleanerTest {
     notification = createNotification(timeStamp + 2000, timeStamp - 2, "me");
     list.put(notification.getKey(), notification);
     NotificationAccessor notificationAccessor = new NotAccessor(list);
-    NotificationsCleaner notificationsCleaner = new NotificationsCleaner(notificationAccessor);
+    NotificationsCleaner notificationsCleaner = new NotificationsCleaner(notificationAccessor,
+        Calendar.getInstance(TimeZone.getTimeZone("UTC")));
 
     TestSubscriber<Object> objectTestSubscriber = TestSubscriber.create();
     List<Notification> notificationList = notificationAccessor.getAllSorted(Sort.DESCENDING)
@@ -128,7 +134,8 @@ public class NotificationsCleanerTest {
     notification = createNotification(timeStamp + 2000, timeStamp - 2, "me");
     list.put(notification.getKey(), notification);
     NotificationAccessor notificationAccessor = new NotAccessor(list);
-    NotificationsCleaner notificationsCleaner = new NotificationsCleaner(notificationAccessor);
+    NotificationsCleaner notificationsCleaner = new NotificationsCleaner(notificationAccessor,
+        Calendar.getInstance(TimeZone.getTimeZone("UTC")));
 
     List<Notification> notificationList = notificationAccessor.getAllSorted(Sort.DESCENDING)
         .toBlocking()
@@ -163,7 +170,8 @@ public class NotificationsCleanerTest {
     notification = createNotification(null, timeStamp - 2, "me");
     list.put(notification.getKey(), notification);
     NotificationAccessor notificationAccessor = new NotAccessor(list);
-    NotificationsCleaner notificationsCleaner = new NotificationsCleaner(notificationAccessor);
+    NotificationsCleaner notificationsCleaner = new NotificationsCleaner(notificationAccessor,
+        Calendar.getInstance(TimeZone.getTimeZone("UTC")));
 
     notificationsCleaner.cleanLimitExceededNotifications(3)
         .subscribe(objectTestSubscriber);

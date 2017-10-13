@@ -29,6 +29,7 @@ import cm.aptoide.pt.account.view.ImageValidator;
 import cm.aptoide.pt.account.view.PhotoFileGenerator;
 import cm.aptoide.pt.account.view.UriToPathResolver;
 import cm.aptoide.pt.account.view.exception.InvalidImageException;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.presenter.CompositePresenter;
@@ -125,6 +126,20 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     manageStoreNavigator = new ManageStoreNavigator(getFragmentNavigator(),
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore(),
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme());
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    bindViews(view);
+    setupToolbarTitle();
+    setupThemeSelector();
+    setupViewsDefaultDataUsingCurrentModel();
+    attachPresenters();
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -225,15 +240,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
       }
       goToHome = savedInstanceState.getBoolean(EXTRA_GO_TO_HOME, true);
     }
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    bindViews(view);
-    setupToolbarTitle();
-    setupThemeSelector();
-    setupViewsDefaultDataUsingCurrentModel();
-    attachPresenters();
   }
 
   @Override public void onDestroyView() {

@@ -17,19 +17,16 @@ import rx.Single;
 public class AptoideAccountManager {
 
   public static final String APTOIDE_SIGN_UP_TYPE = "APTOIDE";
-  private final AccountAnalytics accountAnalytics;
   private final CredentialsValidator credentialsValidator;
   private final PublishRelay<Account> accountRelay;
   private final SignUpAdapterRegistry adapterRegistry;
   private final AccountPersistence accountPersistence;
   private final AccountService accountService;
 
-  private AptoideAccountManager(AccountAnalytics accountAnalytics,
-      CredentialsValidator credentialsValidator, AccountPersistence accountPersistence,
-      AccountService accountService, PublishRelay<Account> accountRelay,
-      SignUpAdapterRegistry adapterRegistry) {
+  private AptoideAccountManager(CredentialsValidator credentialsValidator,
+      AccountPersistence accountPersistence, AccountService accountService,
+      PublishRelay<Account> accountRelay, SignUpAdapterRegistry adapterRegistry) {
     this.credentialsValidator = credentialsValidator;
-    this.accountAnalytics = accountAnalytics;
     this.accountPersistence = accountPersistence;
     this.accountService = accountService;
     this.accountRelay = accountRelay;
@@ -82,14 +79,12 @@ public class AptoideAccountManager {
   public Completable login(AptoideCredentials credentials) {
     return credentialsValidator.validate(credentials, false)
         .andThen(accountService.getAccount(credentials.getEmail(), credentials.getPassword()))
-        .flatMapCompletable(account -> saveAccount(account))
-        .doOnCompleted(() -> accountAnalytics.login(credentials.getEmail()));
+        .flatMapCompletable(account -> saveAccount(account));
   }
 
   public <T> Completable signUp(String type, T data) {
     return adapterRegistry.signUp(type, data)
-        .flatMapCompletable(account -> saveAccount(account).doOnCompleted(
-            () -> accountAnalytics.login(account.getEmail())));
+        .flatMapCompletable(account -> saveAccount(account));
   }
 
   public boolean isSignUpEnabled(String type) {
@@ -137,10 +132,13 @@ public class AptoideAccountManager {
     return account != null && account.isAccessConfirmed();
   }
 
+  /**
+   * Updates the server account status with the latest adult content enabled option (true or false).
+   * Does not sync the account locally since the server would return the old switch value.
+   */
   public Completable updateAccount(boolean adultContentEnabled) {
     return singleAccountStatus().flatMapCompletable(
-        account -> accountService.updateAccount(adultContentEnabled)
-            .andThen(syncAccount()));
+        account -> accountService.updateAccount(adultContentEnabled));
   }
 
   public Completable updateAccount(String username) {
@@ -183,7 +181,6 @@ public class AptoideAccountManager {
     private CredentialsValidator credentialsValidator;
     private AccountService accountService;
     private PublishRelay<Account> accountRelay;
-    private AccountAnalytics accountAnalytics;
     private AccountPersistence accountPersistence;
 
     public Builder() {
@@ -205,11 +202,6 @@ public class AptoideAccountManager {
       return this;
     }
 
-    public Builder setAccountAnalytics(AccountAnalytics accountAnalytics) {
-      this.accountAnalytics = accountAnalytics;
-      return this;
-    }
-
     public Builder setAccountPersistence(AccountPersistence accountPersistence) {
       this.accountPersistence = accountPersistence;
       return this;
@@ -221,10 +213,6 @@ public class AptoideAccountManager {
     }
 
     public AptoideAccountManager build() {
-
-      if (accountAnalytics == null) {
-        throw new IllegalArgumentException("AccountAnalytics is mandatory.");
-      }
 
       if (accountPersistence == null) {
         throw new IllegalArgumentException("AccountDataPersist is mandatory.");
@@ -246,10 +234,10 @@ public class AptoideAccountManager {
           new SignUpAdapterRegistry(adapters, accountService);
 
       adapterRegistry.register(APTOIDE_SIGN_UP_TYPE,
-          new AptoideSignUpAdapter(credentialsValidator, accountAnalytics));
+          new AptoideSignUpAdapter(credentialsValidator));
 
-      return new AptoideAccountManager(accountAnalytics, credentialsValidator, accountPersistence,
-          accountService, accountRelay, adapterRegistry);
+      return new AptoideAccountManager(credentialsValidator, accountPersistence, accountService,
+          accountRelay, adapterRegistry);
     }
   }
 }

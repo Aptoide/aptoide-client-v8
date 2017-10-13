@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.Product;
@@ -76,12 +77,6 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
     billingNavigator = ((ActivityResultNavigator) getContext()).getBillingNavigator();
   }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_braintree_credit_card, container, false);
-  }
-
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
@@ -126,6 +121,17 @@ public class BraintreeCreditCardFragment extends PermissionServiceFragment
             getArguments().getString(PaymentActivity.EXTRA_PRODUCT_ID),
             getArguments().getString(PaymentActivity.EXTRA_PAYMENT_METHOD_NAME),
             getArguments().getString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD)), savedInstanceState);
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
+  }
+
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    return inflater.inflate(R.layout.fragment_braintree_credit_card, container, false);
   }
 
   @Override public void onDestroyView() {

@@ -22,6 +22,7 @@ import android.widget.EditText;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.repository.RepositoryFactory;
@@ -56,6 +57,11 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
     bundle.putString(SCREENSHOT_PATH, screenshotFilePath);
     sendFeedbackFragment.setArguments(bundle);
     return sendFeedbackFragment;
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void setArguments(Bundle args) {

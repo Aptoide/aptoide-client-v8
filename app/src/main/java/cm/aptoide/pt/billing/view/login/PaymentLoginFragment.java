@@ -22,6 +22,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.account.view.GooglePlayServicesFragment;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
@@ -98,6 +99,19 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     crashReport = CrashReport.getInstance();
     errorMapper = new AccountErrorMapper(getContext());
     orientationManager = ((ActivityResultNavigator) getContext()).getScreenOrientationManager();
+  }
+
+  @Override public void onResume() {
+    super.onResume();
+    facebookEmailRequiredDialog.dismisses()
+        .doOnNext(__ -> facebookEmailRequiredDialogVisible = false)
+        .compose(bindUntilEvent(FragmentEvent.PAUSE))
+        .subscribe();
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -222,7 +236,9 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     attachPresenter(
         new PaymentLoginPresenter(this, requestCode, Arrays.asList("email", "user_friends"),
             accountNavigator, Arrays.asList("email"), accountManager, crashReport, errorMapper,
-            AndroidSchedulers.mainThread(), orientationManager), savedInstanceState);
+            AndroidSchedulers.mainThread(), orientationManager,
+            ((AptoideApplication) getContext().getApplicationContext()).getAccountAnalytics()),
+        savedInstanceState);
   }
 
   @Override public void onDestroyView() {
@@ -248,14 +264,6 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     passwordEditText = null;
     passwordShowHideToggle = null;
     super.onDestroyView();
-  }
-
-  @Override public void onResume() {
-    super.onResume();
-    facebookEmailRequiredDialog.dismisses()
-        .doOnNext(__ -> facebookEmailRequiredDialogVisible = false)
-        .compose(bindUntilEvent(FragmentEvent.PAUSE))
-        .subscribe();
   }
 
   @Override public Observable<Void> backButtonEvent() {
