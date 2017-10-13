@@ -117,11 +117,8 @@ public class SpotAndShareMainFragment extends FragmentView
         .show();
   }
 
-  @Override public void showAutoEnableHotspotInviteFriendsError() {
-    //// TODO: 12-10-2017 filipe convert to snackbars after receiving new string
-    Toast.makeText(getContext(),
-        R.string.spotandshare_message_hotspot_enabling_problem_invite_friends, Toast.LENGTH_LONG)
-        .show();
+  @Override public void hideShareAptoideButton() {
+    shareAptoideTextView.setVisibility(View.GONE);
   }
 
   private void setAvatar(SpotAndShareAvatar avatar) {

@@ -33,6 +33,17 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
   @Override public void present() {
 
     view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .doOnNext(__ -> {
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            view.hideShareAptoideButton();
+          }
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, error -> crashReport.log(error));
+
+    view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.RESUME))
         .flatMap(created -> view.startSend())
         .observeOn(AndroidSchedulers.mainThread())
@@ -74,13 +85,7 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.shareAptoideApk())
-        .doOnNext(__ -> {
-          if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
-            view.showAutoEnableHotspotInviteFriendsError();
-          } else {
-            view.openShareAptoideFragment();
-          }
-        })
+        .doOnNext(__ -> view.openShareAptoideFragment())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
