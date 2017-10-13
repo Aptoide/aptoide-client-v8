@@ -54,8 +54,8 @@ public class EspressoTests {
       new ActivityTestRule<>(MainActivity.class);
   @Rule public RetryTestRule retry = new RetryTestRule(NUMBER_OF_RETRIES);
   private String SIGNUPEMAILTEST = "";
+  private String STORENAME = "a";
   private UiDevice mDevice;
-  private boolean isDone = false;
 
   private static ViewAction swipeRigthOnLeftMost() {
     return new GeneralSwipeAction(Swipe.FAST, GeneralLocation.CENTER_LEFT,
@@ -64,10 +64,8 @@ public class EspressoTests {
 
   @Before public void setUp() throws IOException {
     SIGNUPEMAILTEST = SIGNUPEMAILTESTBGN + System.currentTimeMillis() + SIGNUPEMAILTESTEND;
-    if (!isDone) {
-      mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-      isDone = true;
-    }
+    STORENAME = STORENAME + System.currentTimeMillis();
+    mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
     if (isFirstTime()) {
       skipWizard();
     }
@@ -140,7 +138,61 @@ public class EspressoTests {
     while (notSignUp()) {
       Thread.sleep(LONGER_WAIT_TIME);
     }
-    complete_sign_up();
+    completeSignUp();
+  }
+
+  // Third batch of tests
+
+  @Test public void signUpPrivate() throws InterruptedException {
+    goToMyAccount();
+    performSignUp(SIGNUPEMAILTEST,PASS);
+    while (notSignUp()) {
+      Thread.sleep(LONGER_WAIT_TIME);
+    }
+    completeSignUpPrivate();
+  }
+
+  @Test public void signUpMoreInfoPublic() throws InterruptedException {
+    goToMyAccount();
+    performSignUp(SIGNUPEMAILTEST,PASS);
+    while (notSignUp()) {
+      Thread.sleep(LONGER_WAIT_TIME);
+    }
+    completeSignUpMoreInfoPublic();
+  }
+
+  @Test public void createStoreAtSignUp() throws InterruptedException {
+    goToMyAccount();
+    performSignUp(SIGNUPEMAILTEST,PASS);
+    while (notSignUp()) {
+      Thread.sleep(LONGER_WAIT_TIME);
+    }
+    completeSignUpWithStore();
+    goToMyAccount();
+    onView(withId(R.id.my_account_store_name)).check(matches(withText(STORENAME)));
+    //or
+    //go_to_store_tab();
+    //onView(withId(R.id.store_name)).check(matches(withText(STORENAME));
+  }
+
+  @Test public void createStoreAfterSignUp() throws InterruptedException {
+    goToMyAccount();
+    performSignUp(SIGNUPEMAILTEST, PASS);
+    while (notSignUp()) {
+      Thread.sleep(LONGER_WAIT_TIME);
+    }
+    completeSignUp();
+    Thread.sleep(WAIT_TIME);
+    onView(withText(R.string.stores)).perform(click());
+    Thread.sleep(WAIT_TIME);
+    onView(withId(R.id.create_store_action)).perform(click());
+    createStore();
+    onView(withText(R.string.home_title)).perform(click());
+    Thread.sleep(WAIT_TIME);
+    goToMyAccount();
+    onView(withId(R.id.my_account_store_name)).check(matches(withText(STORENAME)));
+    //or
+    //onView(withId(R.id.store_name)).check(matches(withText(STORENAME)));
   }
 
   // Initial tests
@@ -169,7 +221,7 @@ public class EspressoTests {
     closeIfIsNotLoggedInOnDownload();
     Thread.sleep(WAIT_TIME);
     onView(withId(R.id.download_progress)).check(matches(isDisplayed()));
-    testIc_ActionButtons();
+    testIcActionButtons();
     Thread.sleep(LONGER_WAIT_TIME);
     onView(withId(R.id.action_btn)).check(matches(isDisplayed()));
     onView(withId(R.id.action_btn)).check(matches(withText(R.string.appview_button_install)));
@@ -204,9 +256,14 @@ public class EspressoTests {
     }
   }
 
-  private boolean hasCreatedUser() {
+  private boolean hasCreatedUser(boolean isMoreInfo) {
     try {
-      onView(withId(R.id.logged_in_continue)).perform(click());
+      if(isMoreInfo){
+        onView(withId(R.id.logged_in_more_info_button)).perform(click());
+      }
+      else {
+        onView(withId(R.id.logged_in_continue)).perform(click());
+      }
       return true;
     } catch (NoMatchingViewException e) {
       return false;
@@ -337,17 +394,17 @@ public class EspressoTests {
         RecyclerViewActions.actionOnItemAtPosition(0, click()));
   }
 
-  private void testIc_ActionButtons() throws InterruptedException {
+  private void testIcActionButtons() throws InterruptedException {
     onView(withId(R.id.ic_action_pause)).perform(click());
     Thread.sleep(WAIT_TIME);
     onView(withId(R.id.ic_action_resume)).perform(click());
     onView(withId(R.id.ic_action_cancel)).perform(click());
   }
 
-  private void complete_sign_up() throws InterruptedException {
+  private void completeSignUp() throws InterruptedException {
     onView(withId(R.id.create_user_username_inserted)).perform(replaceText("a1"));
     onView(withId(R.id.create_user_create_profile)).perform(click());
-    while (!hasCreatedUser()) {
+    while (!hasCreatedUser(false)) {
       Thread.sleep(WAIT_TIME);
     }
     while (!hasCreatedStore()) {
@@ -355,5 +412,53 @@ public class EspressoTests {
     }
     Thread.sleep(WAIT_TIME);
     onView(withId(R.id.create_store_skip)).perform(click());
+  }
+
+  private void completeSignUpPrivate() throws InterruptedException {
+    onView(withId(R.id.create_user_username_inserted)).perform(replaceText("a1"));
+    onView(withId(R.id.create_user_create_profile)).perform(click());
+    while (!hasCreatedUser(true)) {
+      Thread.sleep(WAIT_TIME);
+    }
+    onView(withId(R.id.logged_in_private_button)).perform(click());
+    while (!hasCreatedStore()) {
+      Thread.sleep(WAIT_TIME);
+    }
+    Thread.sleep(WAIT_TIME);
+    onView(withId(R.id.create_store_skip)).perform(click());
+  }
+
+  private void completeSignUpMoreInfoPublic() throws InterruptedException {
+    onView(withId(R.id.create_user_username_inserted)).perform(replaceText("a1"));
+    onView(withId(R.id.create_user_create_profile)).perform(click());
+    while (!hasCreatedUser(true)) {
+      Thread.sleep(WAIT_TIME);
+    }
+    onView(withId(R.id.logged_in_continue)).perform(click());
+    while (!hasCreatedStore()) {
+      Thread.sleep(WAIT_TIME);
+    }
+    Thread.sleep(WAIT_TIME);
+    onView(withId(R.id.create_store_skip)).perform(click());
+  }
+
+  private void completeSignUpWithStore() throws InterruptedException {
+    onView(withId(R.id.create_user_username_inserted)).perform(replaceText("a1"));
+    onView(withId(R.id.create_user_create_profile)).perform(click());
+    while (!hasCreatedUser(false)) {
+      Thread.sleep(WAIT_TIME);
+    }
+    while (!hasCreatedStore()) {
+      Thread.sleep(WAIT_TIME);
+    }
+    Thread.sleep(WAIT_TIME);
+    createStore();
+    //maybe some check here
+  }
+
+  private void createStore() throws InterruptedException {
+    onView(withId(R.id.create_store_name)).perform(replaceText(STORENAME),closeSoftKeyboard());
+    Thread.sleep(WAIT_TIME);
+    onView(withId(R.id.create_store_action)).perform(click());
   }
 }
