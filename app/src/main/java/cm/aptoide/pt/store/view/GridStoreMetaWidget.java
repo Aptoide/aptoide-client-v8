@@ -217,7 +217,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
   private void showFollowStoreError() {
     followStoreButton.setText(R.string.follow);
     followStoreButton.setEnabled(true);
-    Snackbar.make(itemView, "An error occurred while following store",
+    Snackbar.make(itemView, R.string.storetab_short_follow_error,
         BaseTransientBottomBar.LENGTH_LONG)
         .show();
   }
