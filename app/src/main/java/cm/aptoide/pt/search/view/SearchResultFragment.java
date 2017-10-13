@@ -96,6 +96,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   private CrashReport crashReport;
   private SearchAnalytics searchAnalytics;
   private float listItemPadding;
+  private MenuItem searchMenuItem;
 
   public static SearchResultFragment newInstance(String currentQuery) {
     return newInstance(currentQuery, false);
@@ -131,6 +132,10 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     searchResultsLayout = view.findViewById(R.id.search_results_layout);
     progressBar = view.findViewById(R.id.progress_bar);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+  }
+
+  @Override public Observable<Void> clickTitleBar() {
+    return RxView.clicks(toolbar);
   }
 
   @Override public void showFollowedStoresResult() {
@@ -201,8 +206,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
 
   @Override public Observable<String> clickNoResultsSearchButton() {
     return RxView.clicks(noResultsSearchButton)
-        .map(__ -> noSearchLayoutSearchQuery.getText()
-            .toString());
+        .map(__ -> noSearchLayoutSearchQuery.getText().toString());
   }
 
   @Override public void showNoResultsView() {
@@ -265,8 +269,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
       inflater.inflate(R.menu.menu_search_item, popupMenu.getMenu());
 
       if (hasVersions) {
-        MenuItem menuItemVersions = popupMenu.getMenu()
-            .findItem(R.id.versions);
+        MenuItem menuItemVersions = popupMenu.getMenu().findItem(R.id.versions);
         menuItemVersions.setVisible(true);
       }
 
@@ -310,14 +313,17 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     allStoresButton.setVisibility(View.GONE);
   }
 
+  @Override public void setFocusInSearchView() {
+    searchMenuItem.expandActionView();
+  }
+
   private Observable<Void> recyclerViewReachedBottom(RecyclerView recyclerView) {
     return RxRecyclerView.scrollEvents(recyclerView)
         .filter(event -> event.dy() > 4)
-        .filter(event -> event.view()
-            .isAttachedToWindow())
+        .filter(event -> event.view().isAttachedToWindow())
         .filter(event -> {
-          final LinearLayoutManager layoutManager = (LinearLayoutManager) event.view()
-              .getLayoutManager();
+          final LinearLayoutManager layoutManager =
+              (LinearLayoutManager) event.view().getLayoutManager();
           final int visibleItemCount = layoutManager.getChildCount();
           final int totalItemCount = layoutManager.getItemCount();
           final int pastVisibleItems = layoutManager.findFirstVisibleItemPosition();
@@ -361,19 +367,19 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     }
 
     outState.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
-    outState.putParcelable(ALL_STORES_SEARCH_LIST_STATE, allStoresResultList.getLayoutManager()
-        .onSaveInstanceState());
+    outState.putParcelable(ALL_STORES_SEARCH_LIST_STATE,
+        allStoresResultList.getLayoutManager().onSaveInstanceState());
     outState.putParcelable(FOLLOWED_STORES_SEARCH_LIST_STATE,
-        followedStoresResultList.getLayoutManager()
-            .onSaveInstanceState());
+        followedStoresResultList.getLayoutManager().onSaveInstanceState());
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_search_results, menu);
 
-    SearchBuilder searchBuilder =
-        new SearchBuilder(menu.findItem(R.id.action_search), getContext(), getSearchNavigator(),
+    searchMenuItem = menu.findItem(R.id.action_search);
+    final SearchBuilder searchBuilder =
+        new SearchBuilder(searchMenuItem, getContext(), getSearchNavigator(),
             viewModel.getCurrentQuery());
     searchBuilder.validateAndAttachSearch();
   }
@@ -385,9 +391,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   @NonNull private SearchNavigator getSearchNavigator() {
     final SearchNavigator searchNavigator;
     final String defaultStore = getDefaultStore();
-    if (viewModel.getStoreName() != null
-        && viewModel.getStoreName()
-        .length() > 0) {
+    if (viewModel.getStoreName() != null && viewModel.getStoreName().length() > 0) {
       searchNavigator =
           new SearchNavigator(getFragmentNavigator(), viewModel.getStoreName(), defaultStore);
     } else {
@@ -467,8 +471,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName());
+    return ScreenTagHistory.Builder.build(this.getClass().getSimpleName());
   }
 
   @NonNull private DividerItemDecoration getDefaultItemDecoration() {
