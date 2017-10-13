@@ -28,6 +28,7 @@
         android:id="@+id/first_install_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        tools:background="@color/default_color"
         >
 
       <TextView
@@ -122,6 +123,7 @@
         android:layout_alignParentBottom="true"
         android:text="@string/install"
         android:visibility="gone"
+        tools:visibility="visible"
         />
   </RelativeLayout>
 </RelativeLayout>
