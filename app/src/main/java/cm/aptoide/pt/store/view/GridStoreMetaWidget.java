@@ -1,5 +1,6 @@
 package cm.aptoide.pt.store.view;
 
+import android.content.res.Resources;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.design.widget.BaseTransientBottomBar;
@@ -22,11 +23,14 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtilsProxy;
+import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -38,7 +42,6 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDisplayable> {
 
-  public static final float TEXT_SIZE = 1.2f;
   private AptoideAccountManager accountManager;
   private LinearLayout socialChannelsLayout;
   private ImageView mainIcon;
@@ -99,6 +102,9 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
     spannableFactory = new SpannableFactory();
     storeCredentialsProvider = new StoreCredentialsProviderImpl(storeAccessor);
+    followersCountTv.setOnClickListener(
+        v -> navigateToFollowersScreen(displayable, getContext().getResources(),
+            getFragmentNavigator()));
 
     compositeSubscription.add(createHomeMeta(displayable).observeOn(AndroidSchedulers.mainThread())
         .doOnNext(homeMeta -> {
@@ -115,12 +121,30 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
                   .getThemeName(), homeMeta.getMainName(), homeMeta.getDescription(),
               homeMeta.getMainIcon(), homeMeta.isFollowingStore());
           showSocialChannels(homeMeta.getSocialChannels());
-          showAppsCount(homeMeta.getAppsCount(), textStyle);
+          showAppsCount(homeMeta.getAppsCount(), textStyle, homeMeta.isShowApps());
           showFollowersCount(homeMeta.getFollowersCount(), textStyle);
           showFollowingCount(homeMeta.getFollowingCount(), textStyle);
           showDescription(homeMeta.getDescription());
         })
         .subscribe());
+  }
+
+  private void navigateToFollowersScreen(GridStoreMetaDisplayable displayable, Resources resources,
+      FragmentNavigator fragmentNavigator) {
+
+    String screenTitle =
+        AptoideUtils.StringU.getFormattedString(R.string.social_timeline_followers_fragment_title,
+            resources, displayable.getFollowersCount());
+    if (displayable.isUserOnly()) {
+      fragmentNavigator.navigateTo(
+          TimeLineFollowersFragment.newInstanceUsingUser(displayable.getUserId(), "DEFAULT",
+              screenTitle, StoreContext.meta), true);
+    } else {
+      fragmentNavigator.navigateTo(
+          TimeLineFollowersFragment.newInstanceUsingStore(displayable.getStoreId(),
+              displayable.getStoreTheme()
+                  .getThemeName(), screenTitle, StoreContext.meta), true);
+    }
   }
 
   private void showDescription(String descriptionText) {
@@ -146,11 +170,16 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     followersCountTv.setText(spannableFactory.createMultiSpan(followingText, textStyle, count));
   }
 
-  private void showAppsCount(long appsCount, ParcelableSpan[] textStyle) {
-    String count = AptoideUtils.StringU.withSuffix(appsCount);
-    String followingText =
-        String.format(getContext().getString(R.string.storehometab_short_apps), count);
-    appsCountTv.setText(spannableFactory.createMultiSpan(followingText, textStyle, count));
+  private void showAppsCount(long appsCount, ParcelableSpan[] textStyle, boolean showApps) {
+    if (showApps) {
+      appsCountTv.setVisibility(View.VISIBLE);
+      String count = AptoideUtils.StringU.withSuffix(appsCount);
+      String followingText =
+          String.format(getContext().getString(R.string.storehometab_short_apps), count);
+      appsCountTv.setText(spannableFactory.createMultiSpan(followingText, textStyle, count));
+    } else {
+      appsCountTv.setVisibility(View.GONE);
+    }
   }
 
   private void showSocialChannels(
@@ -259,7 +288,8 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
                 !displayable.isUserOnly(), isFollowing, displayable.getSocialLinks(),
                 displayable.getAppsCount(), displayable.getFollowersCount(),
                 displayable.getFollowingsCount(), displayable.getDescription(),
-                getColorOrDefault(displayable.getStoreTheme()), displayable.getStoreId())));
+                getColorOrDefault(displayable.getStoreTheme()), displayable.getStoreId(),
+                !displayable.isUserOnly())));
   }
 
   private @ColorInt int getColorOrDefault(StoreTheme theme) {
@@ -303,12 +333,13 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     private final String description;
     private final int themeColor;
     private final long storeId;
+    private final boolean showApps;
 
     public HomeMeta(String mainIcon, String secondaryIcon, String mainName, String secondaryName,
         boolean owner, boolean showButton, boolean followingStore,
         List<cm.aptoide.pt.dataprovider.model.v7.store.Store.SocialChannel> socialChannels,
         long appsCount, long followersCount, long followingCount, String description,
-        int themeColor, long storeId) {
+        int themeColor, long storeId, boolean showApps) {
       this.mainIcon = mainIcon;
       this.secondaryIcon = secondaryIcon;
       this.mainName = mainName;
@@ -323,6 +354,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
       this.description = description;
       this.themeColor = themeColor;
       this.storeId = storeId;
+      this.showApps = showApps;
     }
 
     public boolean isFollowingStore() {
@@ -379,6 +411,10 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
 
     public int getThemeColor() {
       return themeColor;
+    }
+
+    public boolean isShowApps() {
+      return showApps;
     }
   }
 }
