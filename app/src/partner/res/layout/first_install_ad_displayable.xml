@@ -54,7 +54,7 @@
         android:layout_alignEnd="@+id/app_icon"
         android:layout_alignRight="@+id/app_icon"
         android:contentDescription="@null"
-        android:src="@drawable/check"
+        android:src="@drawable/check_icon"
         />
 
     <TextView
