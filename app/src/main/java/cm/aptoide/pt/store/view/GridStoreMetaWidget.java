@@ -2,6 +2,8 @@ package cm.aptoide.pt.store.view;
 
 import android.os.Build;
 import android.support.annotation.ColorInt;
+import android.support.design.widget.BaseTransientBottomBar;
+import android.support.design.widget.Snackbar;
 import android.text.ParcelableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
@@ -132,19 +134,22 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
 
   private void showFollowingCount(long followingCount, ParcelableSpan[] textStyle) {
     String countText = AptoideUtils.StringU.withSuffix(followingCount);
-    String followingText = String.format(getContext().getString(R.string.following), countText);
+    String followingText =
+        String.format(getContext().getString(R.string.storehometab_short_following), countText);
     followingCountTv.setText(spannableFactory.createMultiSpan(followingText, textStyle, countText));
   }
 
   private void showFollowersCount(long followersCount, ParcelableSpan[] textStyle) {
     String count = AptoideUtils.StringU.withSuffix(followersCount);
-    String followingText = String.format(getContext().getString(R.string.subscribers), count);
+    String followingText =
+        String.format(getContext().getString(R.string.storehometab_short_subscribers), count);
     followersCountTv.setText(spannableFactory.createMultiSpan(followingText, textStyle, count));
   }
 
   private void showAppsCount(long appsCount, ParcelableSpan[] textStyle) {
     String count = AptoideUtils.StringU.withSuffix(appsCount);
-    String followingText = String.format(getContext().getString(R.string.apps), count);
+    String followingText =
+        String.format(getContext().getString(R.string.storehometab_short_apps), count);
     appsCountTv.setText(spannableFactory.createMultiSpan(followingText, textStyle, count));
   }
 
@@ -193,7 +198,28 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
 
   private void setupFollowButton(String storeName) {
     followStoreButton.setText(R.string.follow);
-    followStoreButton.setOnClickListener(v -> storeUtilsProxy.subscribeStore(storeName));
+    followStoreButton.setOnClickListener(v -> storeUtilsProxy.subscribeStoreObservable(storeName)
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnSubscribe(() -> {
+          followStoreButton.setText(R.string.unfollow);
+          followStoreButton.setEnabled(false);
+        })
+        .subscribe(getStoreMeta -> {
+          if (getStoreMeta.isOk()) {
+            followStoreButton.setText(R.string.unfollow);
+            followStoreButton.setEnabled(true);
+          } else {
+            showFollowStoreError();
+          }
+        }, throwable -> showFollowStoreError()));
+  }
+
+  private void showFollowStoreError() {
+    followStoreButton.setText(R.string.follow);
+    followStoreButton.setEnabled(true);
+    Snackbar.make(itemView, "An error occurred while following store",
+        BaseTransientBottomBar.LENGTH_LONG)
+        .show();
   }
 
   private void setupEditButton(long storeId, String storeThemeName, String storeName,
