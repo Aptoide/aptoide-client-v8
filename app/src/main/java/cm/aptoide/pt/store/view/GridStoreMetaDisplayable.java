@@ -41,7 +41,7 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
   }
 
   public List<Store.SocialChannel> getSocialLinks() {
-    return getStore().getSocialChannels() == null ? Collections.EMPTY_LIST
+    return getStore() == null || getStore().getSocialChannels() == null ? Collections.EMPTY_LIST
         : getStore().getSocialChannels();
   }
 
@@ -71,10 +71,14 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
     if (getStore() != null) {
       return getStore().getAvatar();
     }
-    return getSecondaryIcon();
+    return getUserIcon();
   }
 
   public String getSecondaryIcon() {
+    return getStore() == null ? null : getUserIcon();
+  }
+
+  public String getUserIcon() {
     if (getUser() != null) {
       return getUser().getAvatar();
     }
@@ -96,13 +100,16 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
     if (store != null) {
       return store.getName();
     }
-    return getSecondaryName();
+    return getUserName();
+  }
+
+  private String getUserName() {
+    return getUser() == null ? null : getUser().getName();
   }
 
   public String getSecondaryName() {
-    HomeUser user = getUser();
-    if (user != null) {
-      return user.getName();
+    if (getStore() != null) {
+      return getUserName();
     }
     return null;
   }
@@ -158,7 +165,7 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
   }
 
   public long getStoreId() {
-    return getStore().getId();
+    return getStore() == null ? 0 : getStore().getId();
   }
 
   public boolean isUserOnly() {
@@ -180,5 +187,9 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
           .distinctUntilChanged();
     }
     return Observable.just(false);
+  }
+
+  public long getUserId() {
+    return getUser().getId();
   }
 }
