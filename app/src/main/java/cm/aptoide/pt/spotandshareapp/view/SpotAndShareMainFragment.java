@@ -122,6 +122,10 @@ public class SpotAndShareMainFragment extends FragmentView
         .show();
   }
 
+  @Override public void hideShareAptoideButton() {
+    shareAptoideTextView.setVisibility(View.GONE);
+  }
+
   private void setAvatar(SpotAndShareAvatar avatar) {
     userAvatar.setSelected(true);
     ImageLoader.with(getContext())
