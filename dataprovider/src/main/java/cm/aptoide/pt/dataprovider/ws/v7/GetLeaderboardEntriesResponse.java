@@ -54,6 +54,7 @@ public class GetLeaderboardEntriesResponse extends BaseV7Response {
     private String name;
     private int position;
     private int score;
+    private String avatar;
 
     public User(){
 
@@ -67,5 +68,8 @@ public class GetLeaderboardEntriesResponse extends BaseV7Response {
 
     public int getScore() {return score;}
     public void setScore(int score) {this.score = score;}
+
+    public String getAvatar() { return avatar;}
+    public void setAvatar(String avatar) {this.avatar = avatar;}
   }
 }

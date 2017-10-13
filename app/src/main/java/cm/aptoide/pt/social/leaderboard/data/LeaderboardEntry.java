@@ -10,7 +10,7 @@ public class LeaderboardEntry {
   private int score;
   private String avatar;
 
-  public LeaderboardEntry(String name, int position, int score){
+  public LeaderboardEntry(String name, int position, int score, String avatar){
     this.name=name;
     this.position=position;
     this.score=score;

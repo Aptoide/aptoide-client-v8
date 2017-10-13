@@ -125,15 +125,37 @@ public class LeaderboardFragment extends FragmentView implements LeaderboardView
   @Override public void showLeaderboardEntries(List<List<LeaderboardEntry>> entries) {
     userName.setText(entries.get(0).get(0).getName());
     userScore.setText(String.valueOf(entries.get(0).get(0).getScore()));
+    if(entries.get(0).get(0).getAvatar()!=null)
+      ImageLoader.with(this.getContext()).load(entries.get(0).get(0).getAvatar(), userIcon);
+    else
+      userIcon.setImageResource(R.mipmap.spotandshare_avatar_02);
 
     firstName.setText(entries.get(1).get(0).getName());
     firstScore.setText(String.valueOf(entries.get(1).get(0).getScore()));
+    if(entries.get(1).get(0).getAvatar()!=null)
+      ImageLoader.with(this.getContext()).load(entries.get(1).get(0).getAvatar(), firstImage);
+    else if(entries.get(1).get(0).getName().toLowerCase().equals(entries.get(0).get(0).getName()))
+      firstImage.setImageResource(R.mipmap.spotandshare_avatar_02);
+    else
+      firstImage.setImageResource(R.mipmap.spotandshare_avatar_01);
 
     secondName.setText(entries.get(1).get(1).getName());
     secondScore.setText(String.valueOf(entries.get(1).get(1).getScore()));
+    if(entries.get(1).get(1).getAvatar()!=null)
+      ImageLoader.with(this.getContext()).load(entries.get(1).get(1).getAvatar(), secondImage);
+    else if(entries.get(1).get(1).getName().toLowerCase().equals(entries.get(0).get(0).getName()))
+      secondImage.setImageResource(R.mipmap.spotandshare_avatar_02);
+    else
+      secondImage.setImageResource(R.mipmap.spotandshare_avatar_03);
 
     thirdName.setText(entries.get(1).get(2).getName());
     thirdScore.setText(String.valueOf(entries.get(1).get(2).getScore()));
+    if(entries.get(1).get(2).getAvatar()!=null)
+      ImageLoader.with(this.getContext()).load(entries.get(1).get(2).getAvatar(), thirdImage);
+    else if(entries.get(1).get(2).getName().toLowerCase().equals(entries.get(0).get(0).getName()))
+      thirdImage.setImageResource(R.mipmap.spotandshare_avatar_02);
+    else
+      thirdImage.setImageResource(R.mipmap.spotandshare_avatar_04);
 
     adapter.updateLeaderboardEntries(entries);
   }
@@ -158,15 +180,15 @@ public class LeaderboardFragment extends FragmentView implements LeaderboardView
     userName = (TextView) view.findViewById(R.id.current_user_name);
     userScore = (TextView) view.findViewById(R.id.current_user_score);
 
-    firstImage = (ImageView) view.findViewById(R.id.user_1);
+    firstImage = (ImageView) view.findViewById(R.id.user_1_icon);
     firstName = (TextView) view.findViewById(R.id.user_1_name);
     firstScore = (TextView) view.findViewById(R.id.user_1_score);
 
-    secondImage = (ImageView) view.findViewById(R.id.user_2);
+    secondImage = (ImageView) view.findViewById(R.id.user_2_icon);
     secondName = (TextView) view.findViewById(R.id.user_2_name);
     secondScore = (TextView) view.findViewById(R.id.user_2_score);
 
-    thirdImage = (ImageView) view.findViewById(R.id.user_3);
+    thirdImage = (ImageView) view.findViewById(R.id.user_3_icon);
     thirdName = (TextView) view.findViewById(R.id.user_3_name);
     thirdScore = (TextView) view.findViewById(R.id.user_3_score);
 

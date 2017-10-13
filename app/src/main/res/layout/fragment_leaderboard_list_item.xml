@@ -2,10 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card1"
-    android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_width="300dp"
+    android:layout_height="50dp"
+    android:layout_marginLeft="10dp"
     android:orientation="vertical"
-    android:padding="10dp"
     android:layout_marginBottom="5dp"
     style="?attr/backgroundCard"
     >
@@ -14,9 +14,10 @@
       android:id="@+id/names_layout"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_toRightOf="@id/main_icon"
-      android:layout_centerVertical="true"
       android:orientation="vertical"
+      android:layout_alignParentBottom="true"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentStart="true"
       >
 
     <TextView
@@ -32,12 +33,13 @@
 
     <ImageView
         android:id="@+id/user_icon"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/user_position"
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
         android:src="@drawable/icon_user"
         />
 
@@ -48,8 +50,8 @@
         android:maxLines="1"
         android:ellipsize="end"
         android:layout_toRightOf="@id/user_icon"
-        android:layout_marginLeft="25dp"
-        android:layout_marginStart="25dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="10dp"
         style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
         android:text="Teste"
@@ -60,8 +62,8 @@
         android:id="@+id/user_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="25dp"
-        android:layout_marginStart="25dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
         android:layout_toRightOf="@id/user_icon"
         android:layout_below="@id/user_name"
         style="@style/Aptoide.TextView.Regular.XS.Grey"

@@ -4,18 +4,18 @@
     android:layout_height="match_parent">
 
   <ImageView
-      android:id="@+id/user_1"
-      android:layout_width="50dp"
-      android:layout_height="50dp"
+      android:id="@+id/user_1_icon"
+      android:layout_width="60dp"
+      android:layout_height="60dp"
       android:layout_centerHorizontal="true"
       android:layout_marginTop="25dp"
       android:src="@drawable/icon_user"
       />
 
   <ImageView
-      android:id="@+id/user_3"
-      android:layout_width="50dp"
-      android:layout_height="50dp"
+      android:id="@+id/user_3_icon"
+      android:layout_width="60dp"
+      android:layout_height="60dp"
       android:layout_alignParentEnd="true"
       android:layout_alignParentRight="true"
       android:layout_marginTop="40dp"
@@ -25,9 +25,9 @@
       />
 
   <ImageView
-      android:id="@+id/user_2"
-      android:layout_width="50dp"
-      android:layout_height="50dp"
+      android:id="@+id/user_2_icon"
+      android:layout_width="60dp"
+      android:layout_height="60dp"
       android:layout_marginTop="35dp"
       android:layout_marginLeft="30dp"
       android:layout_marginStart="30dp"
@@ -70,7 +70,7 @@
       android:layout_width="70dp"
       android:layout_height="20dp"
       android:layout_centerHorizontal="true"
-      android:layout_below="@id/user_1"
+      android:layout_below="@id/user_1_icon"
       android:layout_marginTop="5dp"
       android:gravity="center"
       android:maxLines="1"
@@ -95,7 +95,7 @@
       android:id="@+id/user_2_name"
       android:layout_width="70dp"
       android:layout_height="20dp"
-      android:layout_below="@id/user_2"
+      android:layout_below="@id/user_2_icon"
       android:layout_marginTop="5dp"
       android:layout_marginStart="25dp"
       android:layout_marginLeft="25dp"
@@ -124,7 +124,7 @@
       android:id="@+id/user_3_name"
       android:layout_width="70dp"
       android:layout_height="20dp"
-      android:layout_below="@id/user_3"
+      android:layout_below="@id/user_3_icon"
       android:layout_alignParentEnd="true"
       android:layout_alignParentRight="true"
       android:layout_marginTop="5dp"
