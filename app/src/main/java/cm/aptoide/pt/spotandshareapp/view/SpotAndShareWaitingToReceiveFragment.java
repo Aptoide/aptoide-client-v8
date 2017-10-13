@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
@@ -20,6 +19,7 @@ import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.spotandshareapp.JoinGroupView;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareWaitingToReceivePresenter;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -139,9 +139,7 @@ public class SpotAndShareWaitingToReceiveFragment extends BackButtonFragment
   }
 
   @Override public void onLeaveGroupError() {
-    Toast.makeText(getContext(), R.string.spotandshare_message_waiting_to_receive_leave_group_error,
-        Toast.LENGTH_SHORT)
-        .show();
+    ShowMessage.asSnack(this, R.string.spotandshare_message_waiting_to_receive_leave_group_error);
   }
 
   @Override public void joinGroup() {

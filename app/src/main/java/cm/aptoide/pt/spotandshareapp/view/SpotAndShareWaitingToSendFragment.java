@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
@@ -23,6 +22,7 @@ import cm.aptoide.pt.spotandshareapp.AppModelToAndroidAppInfoMapper;
 import cm.aptoide.pt.spotandshareapp.DrawableBitmapMapper;
 import cm.aptoide.pt.spotandshareapp.ObbsProvider;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareWaitingToSendPresenter;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.BackButton;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
@@ -165,9 +165,7 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
   }
 
   @Override public void onLeaveGroupError() {
-    Toast.makeText(getContext(), R.string.spotandshare_message_waiting_to_send_leave_group,
-        Toast.LENGTH_SHORT)
-        .show();
+    ShowMessage.asSnack(this, R.string.spotandshare_message_waiting_to_send_leave_group);
   }
 
   @Override public void openTransferRecord() {
@@ -186,9 +184,7 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
   @Override public void showTimeoutCreateGroupError() {
     getActivity().runOnUiThread(new Runnable() {
       @Override public void run() {
-        Toast.makeText(getContext(), R.string.spotandshare_message_timeout_creating_hotspot,
-            Toast.LENGTH_SHORT)
-            .show();
+        ShowMessage.asSnack(getActivity(), R.string.spotandshare_message_timeout_creating_hotspot);
       }
     });
   }
@@ -196,9 +192,7 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
   @Override public void showGeneralCreateGroupError() {
     getActivity().runOnUiThread(new Runnable() {
       @Override public void run() {
-        Toast.makeText(getContext(), R.string.spotandshare_message_error_create_group,
-            Toast.LENGTH_SHORT)
-            .show();
+        ShowMessage.asSnack(getActivity(), R.string.spotandshare_message_error_create_group);
       }
     });
   }

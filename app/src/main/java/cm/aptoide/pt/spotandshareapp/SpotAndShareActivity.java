@@ -3,11 +3,11 @@ package cm.aptoide.pt.spotandshareapp;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.widget.Toast;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShareSender;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareMainFragment;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.BackButtonActivity;
 import rx.functions.Action1;
 
@@ -31,7 +31,8 @@ public class SpotAndShareActivity extends BackButtonActivity implements JoinGrou
   }
 
   public void openSpotAndShareStart() {
-    getFragmentNavigator().navigateToWithoutBackSave(SpotAndShareMainFragment.newInstance(), true);
+    getFragmentNavigator().navigateToCleaningBackStack(SpotAndShareMainFragment.newInstance(),
+        true);
   }
 
   public void joinGroup() {
@@ -41,11 +42,10 @@ public class SpotAndShareActivity extends BackButtonActivity implements JoinGrou
   private void onJoinGroupError() {
     runOnUiThread(new Runnable() {
       @Override public void run() {
+        openSpotAndShareStart();
         spotAndShare.leaveGroup(err -> showLeaveGroupErrorMessage());
-        Toast.makeText(getApplicationContext(), R.string.spotandshare_message_join_group_error,
-            Toast.LENGTH_SHORT)
-            .show();
-        finish();
+        ShowMessage.asSnack(SpotAndShareActivity.this,
+            R.string.spotandshare_message_join_group_error);
       }
     });
   }
@@ -59,9 +59,7 @@ public class SpotAndShareActivity extends BackButtonActivity implements JoinGrou
   }
 
   private void showLeaveGroupErrorMessage() {
-    Toast.makeText(getApplicationContext(),
-        R.string.spotandshare_message_waiting_to_receive_leave_group_error, Toast.LENGTH_SHORT)
-        .show();
+    ShowMessage.asSnack(this, R.string.spotandshare_message_waiting_to_receive_leave_group_error);
   }
 
   @Override public void onConfigurationChanged(Configuration newConfig) {

@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
@@ -25,6 +24,7 @@ import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.spotandshareapp.ShareApkSandbox;
 import cm.aptoide.pt.spotandshareapp.presenter.ShareAptoidePresenter;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -176,20 +176,15 @@ public class ShareAptoideFragment extends BackButtonFragment implements ShareApt
   }
 
   @Override public void onLeaveGroupError() {
-    Toast.makeText(getContext(), R.string.spotandshare_message_share_aptoide_leave_group,
-        Toast.LENGTH_SHORT)
-        .show();
+    ShowMessage.asSnack(this, R.string.spotandshare_message_share_aptoide_leave_group);
   }
 
   @Override public void showHotspotCreationTimeoutError() {
-    Toast.makeText(getContext(),
-        R.string.spotandshare_message_share_aptoide_timeout_creating_hotspot, Toast.LENGTH_SHORT);
+    ShowMessage.asSnack(this, R.string.spotandshare_message_share_aptoide_timeout_creating_hotspot);
   }
 
   @Override public void showGeneralHotspotError() {
-    Toast.makeText(getContext(), R.string.spotandshare_message_error_create_group,
-        Toast.LENGTH_SHORT)
-        .show();
+    ShowMessage.asSnack(this, R.string.spotandshare_message_error_create_group);
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {

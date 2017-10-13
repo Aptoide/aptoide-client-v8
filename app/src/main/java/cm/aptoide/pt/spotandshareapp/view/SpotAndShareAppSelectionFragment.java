@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
@@ -25,6 +24,7 @@ import cm.aptoide.pt.spotandshareapp.ObbsProvider;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareAppProvider;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareAppSelectionPresenter;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndSharePickAppsPresenter;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -180,9 +180,7 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
   }
 
   @Override public void onLeaveGroupError() {
-    Toast.makeText(getContext(), R.string.spotandshare_message_app_selection_leave_group,
-        Toast.LENGTH_SHORT)
-        .show();
+    ShowMessage.asSnack(this, R.string.spotandshare_message_app_selection_leave_group);
   }
 
   @Override public Observable<AppModel> selectedApp() {

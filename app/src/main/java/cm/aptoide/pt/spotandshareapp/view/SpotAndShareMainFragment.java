@@ -111,12 +111,14 @@ public class SpotAndShareMainFragment extends FragmentView
   }
 
   @Override public void showAutoEnableHotspotSendError() {
+    //// TODO: 12-10-2017 filipe convert to snackbars after receiving new strings
     Toast.makeText(getContext(), R.string.spotandshare_message_hotspot_enabling_problem_send,
         Toast.LENGTH_LONG)
         .show();
   }
 
   @Override public void showAutoEnableHotspotInviteFriendsError() {
+    //// TODO: 12-10-2017 filipe convert to snackbars after receiving new string
     Toast.makeText(getContext(),
         R.string.spotandshare_message_hotspot_enabling_problem_invite_friends, Toast.LENGTH_LONG)
         .show();
