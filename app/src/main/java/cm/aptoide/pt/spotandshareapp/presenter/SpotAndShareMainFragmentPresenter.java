@@ -35,7 +35,7 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> {
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+          if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
             view.hideShareAptoideButton();
           }
         })
