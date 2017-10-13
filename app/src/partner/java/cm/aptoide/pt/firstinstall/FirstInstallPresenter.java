@@ -111,6 +111,7 @@ public class FirstInstallPresenter implements Presenter {
             .getApplicationContext()).getDatabase(), StoredMinimalAd.class);
 
     handleInstallAllClick();
+    handleCloseClick();
     getFirstInstallWidget();
   }
 
@@ -124,6 +125,17 @@ public class FirstInstallPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(installAllClick -> installAll(appDisplayables, adDisplayables),
             crashReport::log);
+  }
+
+  /**
+   * handle the close button click
+   */
+  private void handleCloseClick() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(resumed -> view.closeClick())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(closeClick -> view.removeFragmentAnimation(), crashReport::log);
   }
 
   /**

@@ -24,24 +24,41 @@
       android:orientation="vertical"
       >
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar_layout"
+    <RelativeLayout
+        android:id="@+id/first_install_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?android:actionBarSize"
+        android:layout_height="?attr/actionBarSize"
         >
 
-      <include
-          layout="@layout/toolbar"
-          android:id="@+id/toolbar"
+      <TextView
+          android:id="@+id/first_install_toolbar_textview"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerInParent="true"
+          android:text="@string/essential_apps"
+          android:textColor="@color/white"
+          android:textSize="@dimen/text_size_huge"
+          android:textStyle="bold"
           />
 
-    </android.support.design.widget.AppBarLayout>
+      <ImageView
+          android:id="@+id/first_install_close_button"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentEnd="true"
+          android:layout_alignParentRight="true"
+          android:layout_centerVertical="true"
+          android:src="@drawable/ic_close_btn"
+          tools:ignore="ContentDescription"
+          />
+
+    </RelativeLayout>
 
     <include
         layout="@layout/partial_view_incl_no_network"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_below="@id/app_bar_layout"
+        android:layout_below="@id/first_install_toolbar"
         android:layout_gravity="center_horizontal"
         android:visibility="gone"
         tools:visibility="gone"
@@ -51,34 +68,29 @@
         layout="@layout/partial_view_error"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_below="@id/app_bar_layout"
+        android:layout_below="@id/first_install_toolbar"
         android:layout_gravity="center_horizontal"
         android:visibility="gone"
         tools:visibility="gone"
         />
 
-    <!-- is this necessary ?? -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/app_bar_layout"
-        >
 
-      <include
-          layout="@layout/partial_view_progress_bar"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_centerInParent="true"
-          android:visibility="gone"
-          tools:visibility="visible"
-          />
-    </RelativeLayout>
+    <include
+        layout="@layout/partial_view_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/first_install_toolbar"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        tools:visibility="visible"
+        />
 
     <TextView
         android:id="@+id/empty_data"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/app_bar_layout"
+        android:layout_below="@id/first_install_toolbar"
         android:padding="@dimen/label_padding"
         android:textAlignment="center"
         android:textSize="16sp"
@@ -92,7 +104,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/install_all_button"
-        android:layout_below="@id/app_bar_layout"
+        android:layout_below="@id/first_install_toolbar"
         android:clipToPadding="false"
         android:paddingEnd="@dimen/recycler_margin"
         android:paddingLeft="@dimen/recycler_margin"
