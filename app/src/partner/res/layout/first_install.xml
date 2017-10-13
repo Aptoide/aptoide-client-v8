@@ -96,7 +96,7 @@
         android:textAlignment="center"
         android:textSize="16sp"
         android:visibility="gone"
-        tools:text="@string/no_excluded_updates_msg"
+        tools:text="@string/connection_error"
         tools:visibility="gone"
         />
 
