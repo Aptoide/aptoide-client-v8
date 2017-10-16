@@ -31,6 +31,7 @@ import cm.aptoide.accountmanager.AccountPersistence;
 import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
+import cm.aptoide.pt.account.AccountServiceV3;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
 import cm.aptoide.pt.account.AndroidAccountDataMigration;
 import cm.aptoide.pt.account.AndroidAccountManagerPersistence;
@@ -40,15 +41,14 @@ import cm.aptoide.pt.account.FacebookLoginResult;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.account.LoginPreferences;
-import cm.aptoide.pt.account.AccountServiceV3;
 import cm.aptoide.pt.account.MatureContentPersistence;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.TrackerFilter;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
@@ -726,7 +726,7 @@ public abstract class AptoideApplication extends Application {
           new SecureCoderDecoder.Builder(this, getDefaultSharedPreferences()).create(),
           SQLiteDatabaseHelper.DATABASE_VERSION,
           getDatabasePath(SQLiteDatabaseHelper.DATABASE_NAME).getPath(),
-          getAccountType(), BuildConfig.VERSION_NAME);
+          getAccountType(), BuildConfig.VERSION_NAME, Schedulers.io());
 
       final AccountPersistence accountPersistence =
           new AndroidAccountManagerPersistence(AccountManager.get(this),
