@@ -1,37 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_search_bar"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="5dp">
+    android:layout_height="60dp"
+    android:layout_margin="8dp">
+    <!--android:background="@drawable/widget_search_box"-->
 
   <RelativeLayout
       android:layout_width="match_parent"
-      android:layout_height="40dp"
+      android:layout_height="match_parent"
       android:background="@drawable/widget_search_box"
       >
-
-    <ImageView
-        android:id="@+id/icon"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="6dp"
-        android:src="@mipmap/ic_launcher"
-        />
-
-    <ImageView
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginEnd="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="5dp"
-        android:src="@drawable/ic_action_search"
-        />
-
   </RelativeLayout>
 
-</FrameLayout>
+  <ImageView
+      android:id="@+id/icon"
+      android:layout_width="35dp"
+      android:layout_height="35dp"
+      android:layout_marginStart="10dp"
+      android:layout_marginLeft="10dp"
+      android:layout_marginTop="10dp"
+      android:background="@mipmap/ic_launcher"
+      />
+
+  <ImageView
+      android:layout_width="30dp"
+      android:layout_height="30dp"
+      android:layout_alignParentEnd="true"
+      android:layout_alignParentRight="true"
+      android:layout_marginEnd="15dp"
+      android:layout_marginRight="15dp"
+      android:layout_marginTop="13dp"
+      android:background="@drawable/ic_action_search"
+      />
+</RelativeLayout>
