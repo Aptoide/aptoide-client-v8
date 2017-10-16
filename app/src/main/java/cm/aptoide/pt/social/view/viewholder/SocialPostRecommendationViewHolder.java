@@ -2,7 +2,6 @@ package cm.aptoide.pt.social.view.viewholder;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.PopupMenu;
 import android.text.Spannable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -14,13 +13,14 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.LikesCardTouchEvent;
 import cm.aptoide.pt.social.data.LikesPreviewCardTouchEvent;
-import cm.aptoide.pt.social.data.Post;
 import cm.aptoide.pt.social.data.PostPopupMenuBuilder;
 import cm.aptoide.pt.social.data.RatedRecommendation;
 import cm.aptoide.pt.social.data.SocialCardTouchEvent;
@@ -61,18 +61,16 @@ public class SocialPostRecommendationViewHolder extends SocialPostViewHolder<Rat
   private final TextView numberLikesOneLike;
   private final RelativeLayout likePreviewContainer;
   private final LayoutInflater inflater;
-  private final LinearLayout socialCommentBar;
-  private final TextView socialCommentUsername;
-  private final TextView socialCommentBody;
-  private final ImageView latestCommentMainAvatar;
   /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
 
   private final TextView postContent;
+  private final AptoideAccountManager accountManager;
   private int marginOfTheNextLikePreview = 60;
 
   public SocialPostRecommendationViewHolder(View view, DateCalculator dateCalculator,
       SpannableFactory spannableFactory,
-      PublishSubject<CardTouchEvent> cardTouchEventPublishSubject) {
+      PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
+      AptoideAccountManager accountManager) {
     super(view, cardTouchEventPublishSubject);
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
@@ -90,6 +88,7 @@ public class SocialPostRecommendationViewHolder extends SocialPostViewHolder<Rat
     this.getAppButton =
         (Button) view.findViewById(R.id.displayable_social_timeline_recommendation_get_app_button);
     this.cardHeader = (RelativeLayout) view.findViewById(R.id.social_header);
+    this.accountManager = accountManager;
     this.likeButton = (LikeButtonView) itemView.findViewById(R.id.social_like_button);
     this.like = (LinearLayout) itemView.findViewById(R.id.social_like);
     this.commentButton = (TextView) itemView.findViewById(R.id.social_comment);
@@ -101,12 +100,6 @@ public class SocialPostRecommendationViewHolder extends SocialPostViewHolder<Rat
     this.numberLikesOneLike = (TextView) itemView.findViewById(R.id.social_one_like);
     this.likePreviewContainer = (RelativeLayout) itemView.findViewById(
         R.id.displayable_social_timeline_likes_preview_container);
-    this.socialCommentBar = (LinearLayout) itemView.findViewById(R.id.social_latest_comment_bar);
-    this.socialCommentUsername =
-        (TextView) itemView.findViewById(R.id.social_latest_comment_user_name);
-    this.socialCommentBody = (TextView) itemView.findViewById(R.id.social_latest_comment_body);
-    this.latestCommentMainAvatar =
-        (ImageView) itemView.findViewById(R.id.card_last_comment_main_icon);
     this.inflater = LayoutInflater.from(itemView.getContext());
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
     this.postContent = (TextView) itemView.findViewById(R.id.post_content);
@@ -305,16 +298,32 @@ public class SocialPostRecommendationViewHolder extends SocialPostViewHolder<Rat
     numberLikesOneLike.setVisibility(View.INVISIBLE);
   }
 
-  private void setupOverflowMenu(Post post, int position) {
+  private void setupOverflowMenu(RatedRecommendation post, int position) {
     overflowMenu.setOnClickListener(view -> {
-      PopupMenu popupMenu = new PostPopupMenuBuilder().prepMenu(itemView.getContext(), overflowMenu)
+      PostPopupMenuBuilder postPopupMenuBuilder = new PostPopupMenuBuilder();
+      postPopupMenuBuilder.prepMenu(itemView.getContext(), overflowMenu)
           .addReportAbuse(menuItem -> {
             cardTouchEventPublishSubject.onNext(
                 new CardTouchEvent(post, position, CardTouchEvent.Type.REPORT_ABUSE));
             return false;
-          })
-          .getPopupMenu();
-      popupMenu.show();
+          });
+      accountManager.accountStatus()
+          .first()
+          .toSingle()
+          .subscribe(account -> {
+            if (post.getPoster()
+                .isMe(account.getNickname(), account.getStore()
+                    .getName())) {
+              postPopupMenuBuilder.addItemDelete(menuItem -> {
+                cardTouchEventPublishSubject.onNext(
+                    new CardTouchEvent(post, position, CardTouchEvent.Type.DELETE_POST));
+                return false;
+              });
+            }
+          }, throwable -> CrashReport.getInstance()
+              .log(throwable));
+      postPopupMenuBuilder.getPopupMenu()
+          .show();
     });
   }
 }

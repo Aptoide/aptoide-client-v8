@@ -99,4 +99,10 @@ public interface TimelineView extends View {
   void showEmptyState();
 
   Observable<Integer> getScrollEvents();
+
+  void showPostDeleting();
+
+  void showPostDeleted();
+
+  void showPostDeletedError();
 }

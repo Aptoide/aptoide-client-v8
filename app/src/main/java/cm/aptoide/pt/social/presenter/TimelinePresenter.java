@@ -220,11 +220,22 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
                 .equals(CardTouchEvent.Type.DELETE_POST))
-            .doOnNext(cardTouchEvent -> view.removePost(cardTouchEvent.getPosition()))
+            .doOnNext(cardTouchEvent -> view.showPostDeleting())
+            .flatMapCompletable(cardTouchEvent -> timeline.deletePost(cardTouchEvent.getCard()
+                .getCardId())
+                .observeOn(AndroidSchedulers.mainThread())
+                .andThen(Completable.fromAction(() -> {
+                  view.removePost(cardTouchEvent.getPosition());
+                  view.showPostDeleted();
+                })))
             .retry())
+        .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
-        }, throwable -> crashReport.log(throwable));
+        }, throwable -> {
+          view.showPostDeletedError();
+          crashReport.log(throwable);
+        });
   }
 
   private void handleScrollEvents() {

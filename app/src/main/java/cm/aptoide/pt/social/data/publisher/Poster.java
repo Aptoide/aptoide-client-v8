@@ -78,4 +78,11 @@ public class Poster {
   public String getSecondaryName() {
     return secondaryName;
   }
+
+  public boolean isMe(String username, String storeName) {
+    return username != null
+        && storeName != null
+        && username.equals(user.getName())
+        && storeName.equals(store.getName());
+  }
 }

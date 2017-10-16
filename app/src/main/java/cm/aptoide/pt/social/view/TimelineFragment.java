@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
@@ -259,8 +260,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     adapter = new PostAdapter(new ArrayList<>(),
         new CardViewHolderFactory(postTouchEventPublishSubject, dateCalculator, spannableFactory,
             new MinimalCardViewFactory(dateCalculator, spannableFactory,
-                postTouchEventPublishSubject), marketName, timelineAdsRepository, storeContext),
-        new ProgressCard());
+                postTouchEventPublishSubject), marketName, timelineAdsRepository, accountManager,
+            storeContext), new ProgressCard());
     list.setAdapter(adapter);
 
     final StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(
@@ -585,6 +586,21 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         .debounce(1, TimeUnit.SECONDS)
         .filter(recyclerViewScrollEvent -> recyclerViewScrollEvent.dy() != 0)
         .map(recyclerViewScrollEvent -> layoutManager.findFirstVisibleItemPosition());
+  }
+
+  @Override public void showPostDeleting() {
+    Toast.makeText(getContext(), "Deleting...", Toast.LENGTH_SHORT)
+        .show();
+  }
+
+  @Override public void showPostDeleted() {
+    Toast.makeText(getContext(), "Deleted!", Toast.LENGTH_SHORT)
+        .show();
+  }
+
+  @Override public void showPostDeletedError() {
+    Toast.makeText(getContext(), "Error deleting post", Toast.LENGTH_SHORT)
+        .show();
   }
 
   private void handleSharePreviewAnswer() {

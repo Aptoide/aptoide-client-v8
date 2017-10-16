@@ -166,5 +166,9 @@ public class Timeline {
   public Completable notificationDismissed(int notificationType) {
     return timelineUserProvider.notificationRead(notificationType);
   }
+
+  public Completable deletePost(String postId) {
+    return service.deletePost(postId);
+  }
 }
 

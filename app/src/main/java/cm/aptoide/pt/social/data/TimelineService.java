@@ -7,6 +7,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetTimelineStatsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.LikeCardRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForTimelineArticle;
+import cm.aptoide.pt.dataprovider.ws.v7.PostDeleteRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.PostReadRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ShareCardRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
@@ -117,6 +118,13 @@ public class TimelineService {
   public Completable setPostRead(String url, String cardId, String cardType) {
     return PostReadRequest.of(url, cardId, cardType, bodyInterceptor, okhttp, converterFactory,
         tokenInvalidator)
+        .observe()
+        .toCompletable();
+  }
+
+  public Completable deletePost(String postId) {
+    return PostDeleteRequest.of(postId, bodyInterceptor, okhttp, converterFactory, tokenInvalidator,
+        sharedPreferences)
         .observe()
         .toCompletable();
   }

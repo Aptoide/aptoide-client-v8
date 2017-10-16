@@ -3,7 +3,6 @@ package cm.aptoide.pt.social.view.viewholder;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.LongSparseArray;
-import android.support.v7.widget.PopupMenu;
 import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,14 +12,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.FollowStoreCardTouchEvent;
 import cm.aptoide.pt.social.data.LikesPreviewCardTouchEvent;
-import cm.aptoide.pt.social.data.Post;
 import cm.aptoide.pt.social.data.PostPopupMenuBuilder;
 import cm.aptoide.pt.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.social.data.SocialHeaderCardTouchEvent;
@@ -67,19 +67,16 @@ public class SocialStoreViewHolder extends SocialPostViewHolder<SocialStore> {
   private final TextView numberComments;
   private final TextView numberLikesOneLike;
   private final RelativeLayout likePreviewContainer;
-  private final LinearLayout socialCommentBar;
-  private final TextView socialCommentUsername;
-  private final TextView socialCommentBody;
-  private final ImageView latestCommentMainAvatar;
   private final TextView sharedBy;
-
+  private final AptoideAccountManager accountManager;
   private int marginOfTheNextLikePreview = 60;
 
   /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
   public SocialStoreViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
-      SpannableFactory spannableFactory) {
+      SpannableFactory spannableFactory, AptoideAccountManager accountManager) {
     super(view, cardTouchEventPublishSubject);
+    this.accountManager = accountManager;
     this.inflater = LayoutInflater.from(itemView.getContext());
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
@@ -110,12 +107,6 @@ public class SocialStoreViewHolder extends SocialPostViewHolder<SocialStore> {
     this.numberLikesOneLike = (TextView) itemView.findViewById(R.id.social_one_like);
     this.likePreviewContainer = (RelativeLayout) itemView.findViewById(
         R.id.displayable_social_timeline_likes_preview_container);
-    this.socialCommentBar = (LinearLayout) itemView.findViewById(R.id.social_latest_comment_bar);
-    this.socialCommentUsername =
-        (TextView) itemView.findViewById(R.id.social_latest_comment_user_name);
-    this.socialCommentBody = (TextView) itemView.findViewById(R.id.social_latest_comment_body);
-    this.latestCommentMainAvatar =
-        (ImageView) itemView.findViewById(R.id.card_last_comment_main_icon);
     this.sharedBy = (TextView) itemView.findViewById(R.id.social_shared_by);
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
   }
@@ -352,9 +343,10 @@ public class SocialStoreViewHolder extends SocialPostViewHolder<SocialStore> {
     numberLikesOneLike.setVisibility(View.INVISIBLE);
   }
 
-  private void setupOverflowMenu(Post post, int position) {
+  private void setupOverflowMenu(SocialStore post, int position) {
     overflowMenu.setOnClickListener(view -> {
-      PopupMenu popupMenu = new PostPopupMenuBuilder().prepMenu(itemView.getContext(), overflowMenu)
+      PostPopupMenuBuilder postPopupMenuBuilder = new PostPopupMenuBuilder();
+      postPopupMenuBuilder.prepMenu(itemView.getContext(), overflowMenu)
           .addReportAbuse(menuItem -> {
             cardTouchEventPublishSubject.onNext(
                 new CardTouchEvent(post, position, CardTouchEvent.Type.REPORT_ABUSE));
@@ -364,9 +356,24 @@ public class SocialStoreViewHolder extends SocialPostViewHolder<SocialStore> {
             cardTouchEventPublishSubject.onNext(
                 new CardTouchEvent(post, position, CardTouchEvent.Type.UNFOLLOW_STORE));
             return false;
-          })
-          .getPopupMenu();
-      popupMenu.show();
+          });
+      accountManager.accountStatus()
+          .first()
+          .toSingle()
+          .subscribe(account -> {
+            if (post.getPoster()
+                .isMe(account.getNickname(), account.getStore()
+                    .getName())) {
+              postPopupMenuBuilder.addItemDelete(menuItem -> {
+                cardTouchEventPublishSubject.onNext(
+                    new CardTouchEvent(post, position, CardTouchEvent.Type.DELETE_POST));
+                return false;
+              });
+            }
+          }, throwable -> CrashReport.getInstance()
+              .log(throwable));
+      postPopupMenuBuilder.getPopupMenu()
+          .show();
     });
   }
 }
