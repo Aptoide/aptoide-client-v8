@@ -81,9 +81,6 @@ import cm.aptoide.pt.view.reviews.ReviewsLanguageFilterWidget;
 import cm.aptoide.pt.view.reviews.ReviewsRatingDisplayable;
 import cm.aptoide.pt.view.reviews.ReviewsRatingWidget;
 import cm.aptoide.pt.view.reviews.RowReviewDisplayable;
-import cm.aptoide.pt.view.search.SearchAdDisplayable;
-import cm.aptoide.pt.view.search.SearchAdWidget;
-import cm.aptoide.pt.view.search.SearchDisplayable;
 import cm.aptoide.pt.view.search.SearchWidget;
 import cm.aptoide.pt.view.store.GridDisplayDisplayable;
 import cm.aptoide.pt.view.store.GridStoreMetaDisplayable;
@@ -203,11 +200,6 @@ public class DisplayableWidgetMapping {
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(RollbackWidget.class, RollbackDisplayable.class));
 
-    // Search
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(SearchWidget.class, SearchDisplayable.class));
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(SearchAdWidget.class, SearchAdDisplayable.class));
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(AdultRowWidget.class, AdultRowDisplayable.class));
 
