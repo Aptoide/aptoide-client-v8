@@ -134,13 +134,14 @@ import cm.aptoide.pt.networking.NoAuthenticationBodyInterceptorV3;
 import cm.aptoide.pt.networking.NoOpTokenInvalidator;
 import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
-import cm.aptoide.pt.notification.BackendNotificationNetwork;
 import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.notification.NotificationIdsMapper;
 import cm.aptoide.pt.notification.NotificationPolicyFactory;
 import cm.aptoide.pt.notification.NotificationProvider;
+import cm.aptoide.pt.notification.NotificationService;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.notification.NotificationsCleaner;
+import cm.aptoide.pt.notification.PnpV1NotificationService;
 import cm.aptoide.pt.notification.SystemNotificationShower;
 import cm.aptoide.pt.notification.sync.NotificationSyncFactory;
 import cm.aptoide.pt.notification.sync.NotificationSyncManager;
@@ -264,7 +265,7 @@ public abstract class AptoideApplication extends Application {
   private PurchaseBundleMapper purchaseBundleMapper;
   private PaymentThrowableCodeMapper paymentThrowableCodeMapper;
   private MultipartBodyInterceptor multipartBodyInterceptor;
-  private BackendNotificationNetwork backendNotificationNetwork;
+  private NotificationService pnpV1NotificationService;
   private NotificationCenter notificationCenter;
   private QManager qManager;
   private EntryPointChooser entryPointChooser;
@@ -525,8 +526,8 @@ public abstract class AptoideApplication extends Application {
   public NotificationSyncScheduler getNotificationSyncScheduler() {
     if (notificationSyncScheduler == null) {
       notificationSyncScheduler = new NotificationSyncManager(getSyncScheduler(), true,
-          new NotificationSyncFactory(getDefaultSharedPreferences(),
-              getBackendNotificationNetwork(), getNotificationProvider()));
+          new NotificationSyncFactory(getDefaultSharedPreferences(), getPnpV1NotificationService(),
+              getNotificationProvider()));
     }
     return notificationSyncScheduler;
   }
@@ -549,15 +550,15 @@ public abstract class AptoideApplication extends Application {
         Build.ID);
   }
 
-  public BackendNotificationNetwork getBackendNotificationNetwork() {
-    if (backendNotificationNetwork == null) {
-      backendNotificationNetwork =
-          new BackendNotificationNetwork(BuildConfig.APPLICATION_ID, getDefaultClient(),
+  public NotificationService getPnpV1NotificationService() {
+    if (pnpV1NotificationService == null) {
+      pnpV1NotificationService =
+          new PnpV1NotificationService(BuildConfig.APPLICATION_ID, getDefaultClient(),
               WebService.getDefaultConverter(), getIdsRepository(), BuildConfig.VERSION_NAME,
               getExtraId(), getDefaultSharedPreferences(), getResources(),
               getAuthenticationPersistence(), getAccountManager());
     }
-    return backendNotificationNetwork;
+    return pnpV1NotificationService;
   }
 
   public OkHttpClient getLongTimeoutClient() {
