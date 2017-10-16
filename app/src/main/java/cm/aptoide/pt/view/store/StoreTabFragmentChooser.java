@@ -1,9 +1,13 @@
 package cm.aptoide.pt.view.store;
 
 import android.support.v4.app.Fragment;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
-import cm.aptoide.pt.view.configuration.FragmentProvider;
+import cm.aptoide.pt.view.app.ListAppsFragment;
+import cm.aptoide.pt.view.reviews.ListReviewsFragment;
+import cm.aptoide.pt.view.store.ads.GetAdsFragment;
+import cm.aptoide.pt.view.store.my.MyStoresFragment;
+import cm.aptoide.pt.view.store.my.MyStoresSubscribedFragment;
+import cm.aptoide.pt.view.store.recommended.RecommendedStoresFragment;
 
 /**
  * Created by neuro on 03-01-2017.
@@ -11,29 +15,27 @@ import cm.aptoide.pt.view.configuration.FragmentProvider;
 
 public class StoreTabFragmentChooser {
 
-  private static FragmentProvider fragmentProvider = AptoideApplication.getFragmentProvider();
-
-  public static Fragment choose(Event.Name name) {
+  public static Fragment choose(Event.Name name, boolean addAdultFilter) {
     switch (name) {
       case listApps:
-        return fragmentProvider.newListAppsFragment();
+        return ListAppsFragment.newInstance();
       case getStore:
       case getUser:
-        return fragmentProvider.newGetStoreFragment();
+        return GetStoreFragment.newInstance();
       case getStoresRecommended:
-        return fragmentProvider.newRecommendedStoresFragment();
+        return RecommendedStoresFragment.newInstance();
       case getMyStoresSubscribed:
-        return fragmentProvider.newMyStoresSubscribedFragment();
+        return MyStoresSubscribedFragment.newInstance();
       case myStores:
-        return fragmentProvider.newMyStoresFragment();
+        return MyStoresFragment.newInstance();
       case getStoreWidgets:
-        return fragmentProvider.newGetStoreWidgetsFragment();
+        return GetStoreWidgetsFragment.newInstance(addAdultFilter);
       case listReviews:
-        return fragmentProvider.newListReviewsFragment();
+        return ListReviewsFragment.newInstance();
       case getAds:
-        return fragmentProvider.newGetAdsFragment();
+        return GetAdsFragment.newInstance();
       case listStores:
-        return fragmentProvider.newListStoresFragment();
+        return ListStoresFragment.newInstance();
       default:
         throw new RuntimeException("Fragment " + name + " not implemented!");
     }

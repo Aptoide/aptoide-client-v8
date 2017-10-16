@@ -27,8 +27,9 @@ import cm.aptoide.pt.install.rollback.RollbackRepository;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.root.RootAvailabilityManager;
+import cm.aptoide.pt.search.ReferrerUtils;
+import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.updates.UpdateRepository;
-import cm.aptoide.pt.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.q.QManager;
 import com.facebook.appevents.AppEventsLogger;
@@ -279,9 +280,9 @@ public class InstalledIntentService extends IntentService {
   @NonNull private Completable extractReferrer(String packageName) {
     return adsRepository.getAdsFromSecondInstall(packageName)
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, true,
-            adsRepository, httpClient, converterFactory, qManager, getApplicationContext(),
-            sharedPreferences, new MinimalAdMapper()))
+        .doOnNext(minimalAd -> ReferrerUtils.extractReferrer(new SearchAdResult(minimalAd),
+            ReferrerUtils.RETRIES, true, adsRepository, httpClient, converterFactory, qManager,
+            getApplicationContext(), sharedPreferences, new MinimalAdMapper()))
         .toCompletable();
   }
 }

@@ -2,15 +2,14 @@ package cm.aptoide.pt.view.configuration;
 
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.addressbook.data.Contact;
-import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.presenter.InviteFriendsContract;
+import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.view.app.AppViewFragment;
 import cm.aptoide.pt.view.downloads.scheduled.ScheduledDownloadsFragment;
 import cm.aptoide.pt.view.store.StoreFragment;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,8 +19,6 @@ import java.util.List;
  * navigators instantiate the proper fragment or activity.
  */
 @Deprecated public interface FragmentProvider {
-
-  @Deprecated Fragment newScreenshotsViewerFragment(ArrayList<String> uris, int currentItem);
 
   Fragment newSendFeedbackFragment(String screenshotFilePath);
 
@@ -37,18 +34,6 @@ import java.util.List;
 
   Fragment newStoreFragment(long userId, String storeTheme, StoreFragment.OpenType openType);
 
-  /**
-   * @param storeContext is needed to give context to fragment ex: store downloads vs global
-   * downloads
-   */
-  Fragment newHomeFragment(String storeName, StoreContext storeContext, String storeTheme);
-
-  Fragment newSearchFragment(String query);
-
-  Fragment newSearchFragment(String query, boolean onlyTrustedApps);
-
-  Fragment newSearchFragment(String query, String storeName);
-
   Fragment newAppViewFragment(String packageName, String storeName,
       AppViewFragment.OpenType openType);
 
@@ -62,7 +47,10 @@ import java.util.List;
   Fragment newAppViewFragment(long appId, String packageName, String storeTheme, String storeName,
       String tag);
 
-  Fragment newAppViewFragment(MinimalAd minimalAd, String tag);
+  Fragment newAppViewFragment(long appId, String packageName, String storeTheme, String storeName,
+      String tag, String editorsBrickPosition);
+
+  Fragment newAppViewFragment(SearchAdResult searchAdResult, String tag);
 
   Fragment newAppViewFragment(String packageName, AppViewFragment.OpenType openType);
 
@@ -75,16 +63,18 @@ import java.util.List;
   /**
    * @param storeContext is needed to give context to fragment ex: store downloads vs global
    * downloads
+   * @param addAdultFilter When true, adds adult switch to Fragment's bottom.
    */
   Fragment newStoreTabGridRecyclerFragment(Event event, String storeTheme, String tag,
-      StoreContext storeContext);
+      StoreContext storeContext, boolean addAdultFilter);
 
   /**
    * @param storeContext is needed to give context to fragment ex: store downloads vs global
    * downloads
+   * @param addAdultFilter When true, adds adult switch to Fragment's bottom.
    */
   Fragment newStoreTabGridRecyclerFragment(Event event, String title, String storeTheme, String tag,
-      StoreContext storeContext);
+      StoreContext storeContext, boolean addAdultFilter);
 
   Fragment newListAppsFragment();
 
@@ -94,7 +84,7 @@ import java.util.List;
 
   Fragment newMyStoresFragment();
 
-  Fragment newGetStoreWidgetsFragment();
+  Fragment newGetStoreWidgetsFragment(boolean addAdultFilter);
 
   Fragment newListReviewsFragment();
 
@@ -108,17 +98,9 @@ import java.util.List;
   Fragment newSubscribedStoresFragment(Event event, String storeTheme, String tag,
       StoreContext storeName);
 
-  Fragment newSearchPagerTabFragment(String query, boolean subscribedStores,
-      boolean hasMultipleFragments);
-
-  Fragment newSearchPagerTabFragment(String query, String storeName);
-
   Fragment newDownloadsFragment();
 
   Fragment newOtherVersionsFragment(String appName, String appImgUrl, String appPackage);
-
-  Fragment newOtherVersionsFragment(String appName, String appImgUrl, String appPackage,
-      String storeName);
 
   Fragment newRollbackFragment();
 

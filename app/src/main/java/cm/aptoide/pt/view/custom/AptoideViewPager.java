@@ -12,6 +12,11 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 /**
  * Created by neuro on 29-07-2016.
  */
+
+/**
+ * this class extends an old v4 component. avoid its usage.
+ */
+@Deprecated
 public class AptoideViewPager extends ViewPager {
 
   private boolean enabled = true;

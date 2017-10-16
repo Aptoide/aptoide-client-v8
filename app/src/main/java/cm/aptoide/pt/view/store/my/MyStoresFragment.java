@@ -2,6 +2,7 @@ package cm.aptoide.pt.view.store.my;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -111,5 +112,9 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment {
     // remote stores
     //
     super.load(false, true, null);
+  }
+
+  public static Fragment newInstance() {
+    return new MyStoresFragment();
   }
 }

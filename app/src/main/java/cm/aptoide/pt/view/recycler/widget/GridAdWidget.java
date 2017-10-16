@@ -7,10 +7,10 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.recycler.displayable.GridAdDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
@@ -46,9 +46,8 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
 
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(v -> {
-          Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
           getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-              .newAppViewFragment(pojo, displayable.getTag()), true);
+              .newAppViewFragment(new SearchAdResult(pojo), displayable.getTag()), true);
         }, throwable -> CrashReport.getInstance()
             .log(throwable)));
     downloadsNumber.setText(
