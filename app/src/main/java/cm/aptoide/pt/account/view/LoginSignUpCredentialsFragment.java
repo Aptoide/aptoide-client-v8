@@ -346,7 +346,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
         dismissToNavigateToMainView, navigateToHome, accountNavigator,
         Arrays.asList("email", "user_friends"), Arrays.asList("email"), errorMapper,
         ((AptoideApplication) getContext().getApplicationContext()).getAccountAnalytics());
-    attachPresenter(presenter, null);
+    attachPresenter(presenter);
     registerClickHandler(presenter);
   }
 

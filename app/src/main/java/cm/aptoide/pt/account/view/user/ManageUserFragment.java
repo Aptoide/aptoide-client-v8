@@ -203,7 +203,7 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
             currentModel, isEditProfile, uriToPathResolver, createStoreUserPrivacyEnabled);
 
     attachPresenter(
-        new CompositePresenter(Arrays.asList(manageUserPresenter, imagePickerPresenter)), null);
+        new CompositePresenter(Arrays.asList(manageUserPresenter, imagePickerPresenter)));
   }
 
   @Override public void onDestroyView() {

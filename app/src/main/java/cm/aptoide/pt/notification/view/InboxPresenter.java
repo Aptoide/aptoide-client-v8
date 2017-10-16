@@ -1,6 +1,5 @@
 package cm.aptoide.pt.notification.view;
 
-import android.os.Bundle;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
@@ -12,10 +11,6 @@ import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-
-/**
- * Created by pedroribeiro on 16/05/17.
- */
 
 public class InboxPresenter implements Presenter {
 
@@ -73,11 +68,5 @@ public class InboxPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, throwable -> crashReport.log(throwable));
-  }
-
-  @Override public void saveState(Bundle state) {
-  }
-
-  @Override public void restoreState(Bundle state) {
   }
 }

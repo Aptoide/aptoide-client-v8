@@ -88,7 +88,7 @@ public class WebAuthorizationFragment extends PermissionServiceFragment
 
     attachPresenter(new WebAuthorizationPresenter(this, billing, billingAnalytics, billingNavigator,
         getArguments().getString(PaymentActivity.EXTRA_SERVICE_NAME),
-        getArguments().getString(PaymentActivity.EXTRA_SKU)), savedInstanceState);
+        getArguments().getString(PaymentActivity.EXTRA_SKU)));
   }
 
   @Override public void onDestroyView() {

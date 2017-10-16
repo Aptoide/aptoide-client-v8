@@ -1,7 +1,6 @@
 package cm.aptoide.pt.share;
 
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.FacebookSignUpException;
@@ -60,14 +59,6 @@ public class NotLoggedInSharePresenter implements Presenter {
     handleFakeTimelineEvent();
     handleBackEvent();
     handleOutsideEvent();
-  }
-
-  @Override public void saveState(Bundle state) {
-
-  }
-
-  @Override public void restoreState(Bundle state) {
-
   }
 
   private void handleFakeToolbarEvent() {

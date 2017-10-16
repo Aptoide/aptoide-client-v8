@@ -110,7 +110,7 @@ public class ProfileStepOneFragment extends BaseToolbarFragment implements Profi
     final AptoideAccountManager accountManager =
         ((AptoideApplication) applicationContext).getAccountManager();
     attachPresenter(new ProfileStepOnePresenter(this, CrashReport.getInstance(), accountManager,
-        accountNavigator), null);
+        accountNavigator));
   }
 
   @Override protected void setupToolbarDetails(Toolbar toolbar) {

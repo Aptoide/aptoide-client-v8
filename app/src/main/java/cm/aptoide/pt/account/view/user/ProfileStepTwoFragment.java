@@ -111,7 +111,7 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment implements Profi
     ProfileStepTwoPresenter presenter =
         new ProfileStepTwoPresenter(this, accountManager, CrashReport.getInstance(),
             accountNavigator);
-    attachPresenter(presenter, null);
+    attachPresenter(presenter);
   }
 
   @Override protected void setupToolbarDetails(Toolbar toolbar) {

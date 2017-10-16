@@ -250,7 +250,7 @@ public class PostFragment extends FragmentView implements PostView {
         ((ActivityResultNavigator) getContext()).getAccountNavigator(), urlProvider, tabNavigator,
         analytics);
     ((BackButtonActivity) getActivity()).registerClickHandler(presenter);
-    attachPresenter(presenter, null);
+    attachPresenter(presenter);
   }
 
   private void showKeyboard() {

@@ -237,8 +237,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     attachPresenter(
         new PaymentLoginPresenter(this, requestCode, Arrays.asList("email", "user_friends"),
             accountNavigator, Arrays.asList("email"), accountManager, crashReport, errorMapper,
-            AndroidSchedulers.mainThread(), orientationManager, application.getAccountAnalytics()),
-        savedInstanceState);
+            AndroidSchedulers.mainThread(), orientationManager, application.getAccountAnalytics()));
   }
 
   @Override public void onDestroyView() {

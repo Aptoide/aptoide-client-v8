@@ -61,7 +61,7 @@ public class PayPalAuthorizationFragment extends PermissionServiceFragment imple
     attachPresenter(
         new PayPalAuthorizationPresenter(this, billing, billingAnalytics, billingNavigator,
             AndroidSchedulers.mainThread(), getArguments().getString(PaymentActivity.EXTRA_SKU),
-            getArguments().getString(PaymentActivity.EXTRA_SERVICE_NAME)), savedInstanceState);
+            getArguments().getString(PaymentActivity.EXTRA_SERVICE_NAME)));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {

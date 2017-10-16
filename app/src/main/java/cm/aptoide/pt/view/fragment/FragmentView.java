@@ -14,15 +14,15 @@ import android.view.inputmethod.InputMethodManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.navigator.ActivityNavigator;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.navigator.FragmentResultNavigator;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.util.ScreenTrackingUtils;
 import cm.aptoide.pt.view.MainActivity;
 import cm.aptoide.pt.view.leak.LeakFragment;
-import cm.aptoide.pt.navigator.ActivityNavigator;
-import cm.aptoide.pt.navigator.ActivityResultNavigator;
-import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.navigator.FragmentResultNavigator;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -32,7 +32,6 @@ public abstract class FragmentView extends LeakFragment implements View {
 
   private static final String TAG = FragmentView.class.getName();
 
-  private Presenter presenter;
   private boolean startActivityForResultCalled;
   private NavigationTracker navigationTracker;
   private ActivityResultNavigator activityResultNavigator;
@@ -98,17 +97,6 @@ public abstract class FragmentView extends LeakFragment implements View {
     super.startActivityForResult(intent, requestCode, options);
   }
 
-  @Override public void onSaveInstanceState(Bundle outState) {
-    if (presenter != null) {
-      presenter.saveState(outState);
-    } else {
-      Logger.w(this.getClass()
-          .getName(), "No presenter was attached.");
-    }
-
-    super.onSaveInstanceState(outState);
-  }
-
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
   }
@@ -143,12 +131,8 @@ public abstract class FragmentView extends LeakFragment implements View {
     return lifecycle().flatMap(event -> convertToEvent(event));
   }
 
-  @Override public void attachPresenter(Presenter presenter, Bundle savedInstanceState) {
-    if (savedInstanceState != null) {
-      presenter.restoreState(savedInstanceState);
-    }
-    this.presenter = presenter;
-    this.presenter.present();
+  @Override public void attachPresenter(Presenter presenter) {
+    presenter.present();
   }
 
   protected void hideKeyboard() {

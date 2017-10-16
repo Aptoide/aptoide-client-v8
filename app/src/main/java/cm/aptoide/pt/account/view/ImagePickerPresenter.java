@@ -3,16 +3,15 @@ package cm.aptoide.pt.account.view;
 import android.content.ContentResolver;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.account.view.exception.InvalidImageException;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.presenter.Presenter;
-import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.permission.PermissionProvider;
+import cm.aptoide.pt.presenter.Presenter;
+import cm.aptoide.pt.presenter.View;
 import java.io.File;
 import rx.Completable;
 import rx.Scheduler;
@@ -176,13 +175,5 @@ public class ImagePickerPresenter implements Presenter {
     handleCameraImageResult();
     handleGallerySelection();
     handleGalleryImageResult();
-  }
-
-  @Override public void saveState(Bundle state) {
-    // does nothing
-  }
-
-  @Override public void restoreState(Bundle state) {
-    // does nothing
   }
 }

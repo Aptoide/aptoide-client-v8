@@ -297,7 +297,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             RepositoryFactory.getStoreRepository(getContext()), storeUtilsProxy,
             storeCredentialsProvider, accountManager, timelineAnalytics, userId, storeId,
             storeContext, getContext().getResources(), getFragmentNavigator(),
-            new LinksHandlerFactory(getContext()), notificationCenter), savedInstanceState);
+            new LinksHandlerFactory(getContext()), notificationCenter));
   }
 
   @Override public void onDestroyView() {

@@ -132,9 +132,7 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             CrashReport.getInstance(), accountManager,
             ((ActivityResultNavigator) getContext()).getAccountNavigator(),
-            Arrays.asList("email", "user_friends"), Arrays.asList("email"), requestCode, errorMapper,
-            ((AptoideApplication) getContext().getApplicationContext()).getNotLoggedInShareAnalytics()),
-        null);
+            Arrays.asList("email", "user_friends"), Arrays.asList("email"), requestCode, errorMapper, ((AptoideApplication) getContext().getApplicationContext()).getNotLoggedInShareAnalytics()));
   }
 
   private Analytics.Account.StartupClickOrigin getStartupClickOrigin() {

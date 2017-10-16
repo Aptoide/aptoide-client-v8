@@ -263,7 +263,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
         new ManageStorePresenter(this, crashReport, storeManager, getResources(), uriToPathResolver,
             packageName, manageStoreNavigator, goToHome);
 
-    attachPresenter(new CompositePresenter(Arrays.asList(imagePickerPresenter, presenter)), null);
+    attachPresenter(new CompositePresenter(Arrays.asList(imagePickerPresenter, presenter)));
   }
 
   public void setupThemeSelector() {

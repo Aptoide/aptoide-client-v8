@@ -82,7 +82,7 @@ public class DownloadsFragment extends NavigationTrackFragment implements Downlo
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    attachPresenter(new DownloadsPresenter(this, installManager), savedInstanceState);
+    attachPresenter(new DownloadsPresenter(this, installManager));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {

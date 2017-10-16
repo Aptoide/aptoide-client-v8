@@ -111,7 +111,7 @@ public class MainActivity extends TabNavigatorActivity
             CrashReport.getInstance(), apkFy, autoUpdate, new ContentPuller(this),
             notificationSyncScheduler, installCompletedNotifier, sharedPreferences,
             securePreferences, fragmentNavigator, deepLinkManager,
-            application.getDefaultStoreName(), defaultTheme), savedInstanceState);
+            application.getDefaultStoreName(), defaultTheme, savedInstanceState == null));
   }
 
   @Override public void showInstallationError(int numberOfErrors) {

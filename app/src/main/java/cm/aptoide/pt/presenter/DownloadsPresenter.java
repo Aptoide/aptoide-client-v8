@@ -1,9 +1,8 @@
 package cm.aptoide.pt.presenter;
 
-import android.os.Bundle;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallManager;
-import cm.aptoide.pt.crashreports.CrashReport;
 import java.util.List;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -44,12 +43,6 @@ public class DownloadsPresenter implements Presenter {
               .log(err);
           view.showEmptyDownloadList();
         });
-  }
-
-  @Override public void saveState(Bundle state) {
-  }
-
-  @Override public void restoreState(Bundle state) {
   }
 
   private Observable<Void> setActive(List<Install> downloads) {

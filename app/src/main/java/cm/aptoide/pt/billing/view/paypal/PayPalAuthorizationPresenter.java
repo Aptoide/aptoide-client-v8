@@ -1,6 +1,5 @@
 package cm.aptoide.pt.billing.view.paypal;
 
-import android.os.Bundle;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.authorization.PayPalAuthorization;
@@ -47,14 +46,6 @@ public class PayPalAuthorizationPresenter implements Presenter {
     handlePayPalResultEvent();
 
     handleErrorDismissEvent();
-  }
-
-  @Override public void saveState(Bundle state) {
-
-  }
-
-  @Override public void restoreState(Bundle state) {
-
   }
 
   private void onViewCreatedShowAuthorization() {

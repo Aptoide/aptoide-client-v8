@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.billing.view;
 
-import android.os.Bundle;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.PaymentService;
@@ -56,14 +55,6 @@ public class PaymentPresenter implements Presenter {
     handleCancelEvent();
 
     handleBuyEvent();
-  }
-
-  @Override public void saveState(Bundle state) {
-
-  }
-
-  @Override public void restoreState(Bundle state) {
-
   }
 
   private void onViewCreatedNavigateToCustomerAuthentication() {
