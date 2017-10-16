@@ -11,6 +11,7 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
+import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.app.AppRepository;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -143,7 +144,10 @@ public class FirstInstallPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(resumed -> view.closeClick())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(closeClick -> view.removeFragmentAnimation(), crashReport::log);
+        .subscribe(closeClick -> {
+          Analytics.FirstInstall.closeWindow();
+          view.removeFragmentAnimation();
+        }, crashReport::log);
   }
 
   /**
@@ -338,7 +342,10 @@ public class FirstInstallPresenter implements Presenter {
             .subscribe(done -> {
             }, crashReport::log))
         .subscribe(done -> {
-        }, crashReport::log, () -> view.removeFragmentAnimation());
+        }, crashReport::log, () -> {
+          analyticsForDownload(adDisplayablesList, appDisplayablesList);
+          view.removeFragmentAnimation();
+        });
   }
 
   /**
@@ -356,5 +363,29 @@ public class FirstInstallPresenter implements Presenter {
     } catch (PackageManager.NameNotFoundException e) {
       return false;
     }
+  }
+
+  /**
+   * setup analytics for downloads. Only selected apps and ads will be submited to analytics
+   *
+   * @param adDisplayablesList list of ads
+   * @param appDisplayablesList list of apps
+   */
+  private void analyticsForDownload(List<FirstInstallAdDisplayable> adDisplayablesList,
+      List<FirstInstallAppDisplayable> appDisplayablesList) {
+    int numberOfSelectedAds = 0;
+    int numberOfSelectedApps = 0;
+    for (FirstInstallAdDisplayable firstInstallAdDisplayable : adDisplayablesList) {
+      if (firstInstallAdDisplayable.isSelected()) {
+        numberOfSelectedAds++;
+      }
+    }
+    for (FirstInstallAppDisplayable firstInstallAppDisplayable : appDisplayablesList) {
+      if (firstInstallAppDisplayable.isSelected()) {
+        numberOfSelectedApps++;
+      }
+    }
+    Analytics.FirstInstall.startDownload(String.valueOf(numberOfSelectedAds),
+        String.valueOf(numberOfSelectedApps));
   }
 }

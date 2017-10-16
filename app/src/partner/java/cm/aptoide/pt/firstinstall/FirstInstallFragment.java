@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PartnerApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.preferences.PartnersSecurePreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
@@ -75,6 +76,7 @@ public class FirstInstallFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    Analytics.FirstInstall.popUp();
     handleOnBackKeyPressed();
     attachPresenter(
         new FirstInstallPresenter(this, CrashReport.getInstance(), requestFactoryCdnPool,
