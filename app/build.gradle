@@ -143,6 +143,7 @@ android {
     exclude 'META-INF/NOTICE'
     exclude 'META-INF/MANIFEST.MF'
     exclude 'META-INF/LGPL2.1'
+    exclude 'META-INF/rxjava.properties'
   }
 
   testOptions {
@@ -408,12 +409,11 @@ dependencies {
 
   compile "com.github.bumptech.glide:glide:${GLIDE_VERSION}"
 
-  compile "com.braintreepayments.api:braintree:${BRAINTREE_VERSION}"
-  compile "com.braintreepayments:card-form:${BRAINTREE_CARD_FORM_VERSION}"
-
-  compile('com.mopub:mopub-sdk-native-static:4.11.0@aar') {
+  compile("com.mopub:mopub-sdk-native-static:${MOPUB_VERSION}@aar") {
     transitive = true
   }
+
+  compile "com.adyen.checkout:core:${ADYEN_VERSION}"
 
   fairyCompile "testfairy:testfairy-android-sdk:${TEST_FAIRY_VERSION}"
 
