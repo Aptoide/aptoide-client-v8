@@ -23,9 +23,6 @@ retrolambda {
 
 android {
 
-  // Websockets
-  useLibrary 'org.apache.http.legacy'
-
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
   buildToolsVersion BUILD_TOOLS_VERSION
 
