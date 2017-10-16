@@ -105,6 +105,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private static final String STORE_ID = "STORE_ID";
   private static final String STORE_CONTEXT = "STORE_CONTEXT";
   private static final String LIST_STATE_KEY = "LIST_STATE";
+  private static final String TAG = TimelineFragment.class.getSimpleName();
   /**
    * The minimum number of items to have below your current scroll position before loading more.
    */
@@ -585,8 +586,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   @NonNull public Observable<Integer> getScrollEvents() {
     return RxRecyclerView.scrollEvents(list)
         .debounce(1, TimeUnit.SECONDS)
-        .map(recyclerViewScrollEvent -> layoutManager.findFirstVisibleItemPosition())
-        .distinctUntilChanged();
+        .filter(recyclerViewScrollEvent -> recyclerViewScrollEvent.dy() != 0)
+        .map(recyclerViewScrollEvent -> layoutManager.findFirstVisibleItemPosition());
   }
 
   private void handleSharePreviewAnswer() {

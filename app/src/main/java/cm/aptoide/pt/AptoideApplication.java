@@ -45,6 +45,7 @@ import cm.aptoide.pt.account.FacebookLoginResult;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.account.LoginPreferences;
+import cm.aptoide.pt.account.MatureContentPersistence;
 import cm.aptoide.pt.account.V3AccountService;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.AdsRepository;
@@ -146,8 +147,10 @@ import cm.aptoide.pt.notification.SystemNotificationShower;
 import cm.aptoide.pt.notification.sync.NotificationSyncFactory;
 import cm.aptoide.pt.notification.sync.NotificationSyncManager;
 import cm.aptoide.pt.preferences.AdultContent;
+import cm.aptoide.pt.preferences.LocalPersistenceAdultContent;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.Preferences;
+import cm.aptoide.pt.preferences.RemotePersistenceAdultContent;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -305,6 +308,8 @@ public abstract class AptoideApplication extends Application {
   private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
   private AccountAnalytics accountAnalytics;
   private PageViewsAnalytics pageViewsAnalytics;
+  private AccountSettingsBodyInterceptorV7 accountSettingsBodyInterceptorPoolV7;
+  private AccountSettingsBodyInterceptorV7 accountSettingsBodyInterceptorWebV7;
 
   public LeakTool getLeakTool() {
     if (leakTool == null) {
@@ -648,8 +653,8 @@ public abstract class AptoideApplication extends Application {
           getCacheHelper(), new FileUtils(action -> Analytics.File.moveFile(action)),
           new DownloadAnalytics(Analytics.getInstance(),
               new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
-                  AppEventsLogger.newLogger(this))), FileDownloader.getImpl(), getCachePath(),
-          apkPath, obbPath);
+                  AppEventsLogger.newLogger(this))),
+          FileDownloader.getImpl(), getCachePath(), apkPath, obbPath);
     }
     return downloadManager;
   }
@@ -726,7 +731,8 @@ public abstract class AptoideApplication extends Application {
               accountDataMigration, getAndroidAccountProvider(), getAuthenticationPersistence(),
               Schedulers.io());
 
-      accountManager = new AptoideAccountManager.Builder().setAccountPersistence(accountPersistence)
+      accountManager = new AptoideAccountManager.Builder().setAccountPersistence(
+          new MatureContentPersistence(accountPersistence, getLocalAdultContent()))
           .setAccountService(accountService)
           .registerSignUpAdapter(GoogleSignUpAdapter.TYPE,
               new GoogleSignUpAdapter(getGoogleSignInClient(), getLoginPreferences()))
@@ -1126,19 +1132,19 @@ public abstract class AptoideApplication extends Application {
   }
 
   public BodyInterceptor<BaseBody> getAccountSettingsBodyInterceptorPoolV7() {
-    if (bodyInterceptorPoolV7 == null) {
-      bodyInterceptorPoolV7 =
-          new AccountSettingsBodyInterceptorV7(getBodyInterceptorPoolV7(), getAdultContent());
+    if (accountSettingsBodyInterceptorPoolV7 == null) {
+      accountSettingsBodyInterceptorPoolV7 =
+          new AccountSettingsBodyInterceptorV7(getBodyInterceptorPoolV7(), getLocalAdultContent());
     }
-    return bodyInterceptorPoolV7;
+    return accountSettingsBodyInterceptorPoolV7;
   }
 
   public BodyInterceptor<BaseBody> getAccountSettingsBodyInterceptorWebV7() {
-    if (bodyInterceptorWebV7 == null) {
-      bodyInterceptorWebV7 =
-          new AccountSettingsBodyInterceptorV7(getBodyInterceptorWebV7(), getAdultContent());
+    if (accountSettingsBodyInterceptorWebV7 == null) {
+      accountSettingsBodyInterceptorWebV7 =
+          new AccountSettingsBodyInterceptorV7(getBodyInterceptorWebV7(), getLocalAdultContent());
     }
-    return bodyInterceptorWebV7;
+    return accountSettingsBodyInterceptorWebV7;
   }
 
   public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getBodyInterceptorV3() {
@@ -1200,10 +1206,13 @@ public abstract class AptoideApplication extends Application {
     return BuildConfig.APPLICATION_ID;
   }
 
-  public AdultContent getAdultContent() {
+  public AdultContent getAdultContent(){
+    return new RemotePersistenceAdultContent(getLocalAdultContent(), getAccountManager());
+  }
+
+  private AdultContent getLocalAdultContent() {
     if (adultContent == null) {
-      adultContent =
-          new AdultContent(getAccountManager(), getPreferences(), getSecurePreferences());
+      adultContent = new LocalPersistenceAdultContent(getPreferences(), getSecurePreferences());
     }
     return adultContent;
   }

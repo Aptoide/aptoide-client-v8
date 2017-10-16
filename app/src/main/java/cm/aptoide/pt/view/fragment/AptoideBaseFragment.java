@@ -38,6 +38,10 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     AptoideApplication aptoideApplication =
         (AptoideApplication) getContext().getApplicationContext();
+
+    final boolean isAdultContentEnabled = aptoideApplication.getAccountManager()
+        .isAccountMature();
+
     requestFactoryCdnPool = new RequestFactory(new StoreCredentialsProviderImpl(
         AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class)), baseBodyInterceptorV7Pool,
@@ -47,14 +51,14 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
         getContext().getResources(),
         (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
         aptoideApplication.getIdsRepository()
-            .getUniqueIdentifier(), aptoideApplication.getPartnerId(),
-        aptoideApplication.getAccountManager()
-            .isAccountMature(), aptoideApplication.getQManager()
-        .getFilters(ManagerPreferences.getHWSpecsFilter(
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
+            .getUniqueIdentifier(), aptoideApplication.getPartnerId(), isAdultContentEnabled,
+        aptoideApplication.getQManager()
+            .getFilters(ManagerPreferences.getHWSpecsFilter(
+                ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
         (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
         aptoideApplication.getVersionCodeProvider(),
         AdNetworkUtils.isGooglePlayServicesAvailable(getContext()));
+
     requestFactoryCdnWeb = new RequestFactory(new StoreCredentialsProviderImpl(
         AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class)), baseBodyInterceptorV7Web,
@@ -64,14 +68,14 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
         getContext().getResources(),
         (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
         aptoideApplication.getIdsRepository()
-            .getUniqueIdentifier(), aptoideApplication.getPartnerId(),
-        aptoideApplication.getAccountManager()
-            .isAccountMature(), aptoideApplication.getQManager()
-        .getFilters(ManagerPreferences.getHWSpecsFilter(
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
+            .getUniqueIdentifier(), aptoideApplication.getPartnerId(), isAdultContentEnabled,
+        aptoideApplication.getQManager()
+            .getFilters(ManagerPreferences.getHWSpecsFilter(
+                ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
         (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
         aptoideApplication.getVersionCodeProvider(),
         AdNetworkUtils.isGooglePlayServicesAvailable(getContext()));
+
     super.onCreate(savedInstanceState);
   }
 }
