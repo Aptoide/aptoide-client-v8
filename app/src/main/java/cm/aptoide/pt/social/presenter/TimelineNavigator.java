@@ -140,4 +140,8 @@ public class TimelineNavigator implements TimelineNavigation {
   @Override public void navigateToCreatePost() {
     fragmentNavigator.navigateTo(PostFragment.newInstanceFromTimeline(), true);
   }
+
+  @Override public void navigateToFeedbackScreen() {
+    //TODO fix feedback screen and call it. AN-2047
+  }
 }

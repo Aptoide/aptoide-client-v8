@@ -178,6 +178,40 @@ public class TimelinePresenter implements Presenter {
     handleScrollEvents();
 
     clickOnDeletePost();
+
+    clickOnUnfollowStore();
+
+    clickOnReportAbuse();
+  }
+
+  private void clickOnReportAbuse() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.postClicked()
+            .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+                .equals(CardTouchEvent.Type.REPORT_ABUSE))
+            .doOnNext(cardTouchEvent -> timelineNavigation.navigateToFeedbackScreen())
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cardTouchEvent -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
+  private void clickOnUnfollowStore() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.postClicked()
+            .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+                .equals(CardTouchEvent.Type.UNFOLLOW_STORE))
+            .doOnNext(cardTouchEvent -> storeUtilsProxy.unSubscribeStore(
+                ((StoreLatestApps) cardTouchEvent.getCard()).getStoreName(),
+                storeCredentialsProvider))
+            .doOnNext(cardTouchEvent -> view.showStoreUnsubscribedMessage(
+                ((StoreLatestApps) cardTouchEvent.getCard()).getStoreName()))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cardTouchEvent -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   private void clickOnDeletePost() {
