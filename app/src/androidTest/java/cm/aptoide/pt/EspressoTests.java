@@ -1,7 +1,14 @@
 package cm.aptoide.pt;
 
+import android.app.Activity;
+import android.app.Instrumentation;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.provider.MediaStore;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.ViewAction;
@@ -10,7 +17,7 @@ import android.support.test.espresso.action.GeneralSwipeAction;
 import android.support.test.espresso.action.Press;
 import android.support.test.espresso.action.Swipe;
 import android.support.test.espresso.contrib.RecyclerViewActions;
-import android.support.test.rule.ActivityTestRule;
+import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiSelector;
@@ -30,6 +37,9 @@ import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.Intents.intending;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -47,15 +57,15 @@ public class EspressoTests {
   private final String LOGINEMAIL = "jose.messejana@aptoide.com";
   private final String PASS = "aptoide1234";
   private final String APP_TO_SEARCH = "Hearthstone";
+  private final String LIGHT_APP_TO_SEARCH = "Counter++";
   private final int WAIT_TIME = 550;
   private final int LONGER_WAIT_TIME = 2000;
   private final int NUMBER_OF_RETRIES = 3;
-  @Rule public ActivityTestRule<MainActivity> mActivityRule =
-      new ActivityTestRule<>(MainActivity.class);
-  @Rule public RetryTestRule retry = new RetryTestRule(NUMBER_OF_RETRIES);
+  @Rule public IntentsTestRule<MainActivity> mActivityRule =
+      new IntentsTestRule<>(MainActivity.class);
+  //@Rule public RetryTestRule retry = new RetryTestRule(NUMBER_OF_RETRIES);
   private String SIGNUPEMAILTEST = "";
   private String STORENAME = "a";
-  private UiDevice mDevice;
 
   private static ViewAction swipeRigthOnLeftMost() {
     return new GeneralSwipeAction(Swipe.FAST, GeneralLocation.CENTER_LEFT,
@@ -65,7 +75,6 @@ public class EspressoTests {
   @Before public void setUp() throws IOException {
     SIGNUPEMAILTEST = SIGNUPEMAILTESTBGN + System.currentTimeMillis() + SIGNUPEMAILTESTEND;
     STORENAME = STORENAME + System.currentTimeMillis();
-    mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
     if (isFirstTime()) {
       skipWizard();
     }
@@ -145,7 +154,7 @@ public class EspressoTests {
 
   @Test public void signUpPrivate() throws InterruptedException {
     goToMyAccount();
-    performSignUp(SIGNUPEMAILTEST,PASS);
+    performSignUp(SIGNUPEMAILTEST, PASS);
     while (notSignUp()) {
       Thread.sleep(LONGER_WAIT_TIME);
     }
@@ -154,7 +163,7 @@ public class EspressoTests {
 
   @Test public void signUpMoreInfoPublic() throws InterruptedException {
     goToMyAccount();
-    performSignUp(SIGNUPEMAILTEST,PASS);
+    performSignUp(SIGNUPEMAILTEST, PASS);
     while (notSignUp()) {
       Thread.sleep(LONGER_WAIT_TIME);
     }
@@ -163,16 +172,13 @@ public class EspressoTests {
 
   @Test public void createStoreAtSignUp() throws InterruptedException {
     goToMyAccount();
-    performSignUp(SIGNUPEMAILTEST,PASS);
+    performSignUp(SIGNUPEMAILTEST, PASS);
     while (notSignUp()) {
       Thread.sleep(LONGER_WAIT_TIME);
     }
     completeSignUpWithStore();
     goToMyAccount();
     onView(withId(R.id.my_account_store_name)).check(matches(withText(STORENAME)));
-    //or
-    //go_to_store_tab();
-    //onView(withId(R.id.store_name)).check(matches(withText(STORENAME));
   }
 
   @Test public void createStoreAfterSignUp() throws InterruptedException {
@@ -191,8 +197,102 @@ public class EspressoTests {
     Thread.sleep(WAIT_TIME);
     goToMyAccount();
     onView(withId(R.id.my_account_store_name)).check(matches(withText(STORENAME)));
-    //or
-    //onView(withId(R.id.store_name)).check(matches(withText(STORENAME)));
+  }
+
+  @Test public void profilePhoto() throws InterruptedException {
+    UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+    goToMyAccount();
+    performLogin(LOGINEMAIL, PASS);
+    while (!hasLoggedIn()) {
+      Thread.sleep(LONGER_WAIT_TIME);
+    }
+    goToMyAccount();
+    onView(withId(R.id.my_account_edit_user_profile)).perform(click());
+    Thread.sleep(WAIT_TIME);
+    onView(withId(R.id.create_user_image_action)).perform(click());
+    Thread.sleep(WAIT_TIME);
+    createImageandIntend();
+    onView(withId(R.id.button_camera)).perform(click());
+    allow_permission(mDevice, "CAMERA");
+    intended(hasAction(MediaStore.ACTION_IMAGE_CAPTURE));
+    Thread.sleep(LONGER_WAIT_TIME * 2);
+    onView(withId(R.id.create_user_create_profile)).perform(click());
+  }
+
+  @Test public void storePhoto() throws InterruptedException {
+    UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+    goToMyAccount();
+    performLogin(LOGINEMAIL, PASS);
+    while (!hasLoggedIn()) {
+      Thread.sleep(LONGER_WAIT_TIME);
+    }
+    goToMyAccount();
+    onView(withId(R.id.my_account_edit_user_store)).perform(click());
+    Thread.sleep(WAIT_TIME);
+    onView(withId(R.id.create_user_image_action)).perform(click());
+    Thread.sleep(WAIT_TIME);
+    createImageandIntend();
+    onView(withId(R.id.button_camera)).perform(click());
+    allow_permission(mDevice, "CAMERA");
+    intended(hasAction(MediaStore.ACTION_IMAGE_CAPTURE));
+    Thread.sleep(LONGER_WAIT_TIME * 2);
+    onView(withId(R.id.create_user_create_profile)).perform(click());
+  }
+
+  //Landscape tests
+
+  @Test public void landscapeSearch() throws InterruptedException {
+    Activity activity = mActivityRule.getActivity();
+    searchApp();
+    Thread.sleep(WAIT_TIME);
+    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    Thread.sleep(LONGER_WAIT_TIME);
+    searchApp();
+    Thread.sleep(WAIT_TIME);
+    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    Thread.sleep(LONGER_WAIT_TIME);
+    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    Thread.sleep(WAIT_TIME);
+    searchApp();
+    Thread.sleep(WAIT_TIME);
+    onView(withId(R.id.search_src_text)).perform(pressImeActionButton());
+    onView(withId(R.id.all_stores_result_list)).check(matches(isDisplayed()));
+    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    Thread.sleep(LONGER_WAIT_TIME);
+    onView(withId(R.id.all_stores_result_list)).check(matches(isDisplayed()));
+    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    Thread.sleep(LONGER_WAIT_TIME);
+    onView(withId(R.id.all_stores_result_list)).check(matches(isDisplayed()));
+    onView(withId(R.id.all_stores_result_list)).perform(
+        RecyclerViewActions.actionOnItemAtPosition(0, click()));
+  }
+
+  @Test public void landscapeAppView() throws InterruptedException {
+    UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+    Activity activity = mActivityRule.getActivity();
+    goToApp(APP_TO_SEARCH);
+    cancelIfDownloading();
+    Thread.sleep(WAIT_TIME);
+    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    Thread.sleep(LONGER_WAIT_TIME);
+    onView(withId(R.id.action_btn)).check(matches(isDisplayed()));
+    onView(withId(R.id.menu_share)).check(matches(isDisplayed()));
+    onView(withId(R.id.app_icon)).check(matches(isDisplayed()));
+    onView(withId(R.id.action_btn)).perform(click());
+    Thread.sleep(LONGER_WAIT_TIME);
+    closePopUp();
+    allow_permission(mDevice, "WRITE_EXTERNAL_STORAGE");
+    closeIfIsNotLoggedInOnDownload();
+    onView(withId(R.id.ic_action_pause)).perform(click());
+    Thread.sleep(WAIT_TIME);
+    onView(withId(R.id.ic_action_resume)).perform(click());
+    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    Thread.sleep(LONGER_WAIT_TIME);
+    onView(withId(R.id.ic_action_cancel)).perform(click());
+    onView(withId(R.id.menu_share)).check(matches(isDisplayed()));
+    onView(withId(R.id.app_icon)).check(matches(isDisplayed()));
+    Thread.sleep(LONGER_WAIT_TIME);
+    onView(withId(R.id.action_btn)).check(matches(isDisplayed()));
   }
 
   // Initial tests
@@ -210,14 +310,15 @@ public class EspressoTests {
   }
 
   @Test public void download() throws InterruptedException {
-    goToApp();
+    UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+    goToApp(APP_TO_SEARCH);
     cancelIfDownloading();
     while (!hasOpenedAppView()) {
       Thread.sleep(WAIT_TIME);
     }
     Thread.sleep(LONGER_WAIT_TIME);
     closePopUp();
-    allow_permission("ALLOW");
+    allow_permission(mDevice, "WRITE_EXTERNAL_STORAGE");
     closeIfIsNotLoggedInOnDownload();
     Thread.sleep(WAIT_TIME);
     onView(withId(R.id.download_progress)).check(matches(isDisplayed()));
@@ -225,6 +326,25 @@ public class EspressoTests {
     Thread.sleep(LONGER_WAIT_TIME);
     onView(withId(R.id.action_btn)).check(matches(isDisplayed()));
     onView(withId(R.id.action_btn)).check(matches(withText(R.string.appview_button_install)));
+  }
+
+  @Test public void download_and_install() throws InterruptedException {
+    UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+    goToApp(LIGHT_APP_TO_SEARCH);
+    cancelIfDownloading();
+    while (!hasOpenedAppView()) {
+      Thread.sleep(WAIT_TIME);
+    }
+    Thread.sleep(LONGER_WAIT_TIME);
+    closePopUp();
+    allow_permission(mDevice, "WRITE_EXTERNAL_STORAGE");
+    closeIfIsNotLoggedInOnDownload();
+    Thread.sleep(WAIT_TIME);
+    onView(withId(R.id.download_progress)).check(matches(isDisplayed()));
+    Thread.sleep(LONGER_WAIT_TIME * 5);
+    installApp(mDevice);
+    Thread.sleep(LONGER_WAIT_TIME);
+    onView(withId(R.id.action_btn)).check(matches(withText(R.string.open)));
   }
 
   //Boolean Methods
@@ -258,10 +378,9 @@ public class EspressoTests {
 
   private boolean hasCreatedUser(boolean isMoreInfo) {
     try {
-      if(isMoreInfo){
+      if (isMoreInfo) {
         onView(withId(R.id.logged_in_more_info_button)).perform(click());
-      }
-      else {
+      } else {
         onView(withId(R.id.logged_in_continue)).perform(click());
       }
       return true;
@@ -289,10 +408,10 @@ public class EspressoTests {
     }
   }
 
-  private boolean hasPermission() {
+  private boolean hasPermission(String permission) {
     Context context = InstrumentationRegistry.getTargetContext();
-    String permission = "android.permission.WRITE_EXTERNAL_STORAGE";
-    int permissionStatus = ContextCompat.checkSelfPermission(context, permission);
+    String finalpermission = "android.permission." + permission;
+    int permissionStatus = ContextCompat.checkSelfPermission(context, finalpermission);
     return (permissionStatus == PackageManager.PERMISSION_GRANTED);
   }
 
@@ -305,13 +424,13 @@ public class EspressoTests {
     }
   }
 
-  private void allow_permission(String text) {
-    if (android.os.Build.VERSION.SDK_INT > 23) {
-      if (!hasPermission()) {
+  private void allow_permission(UiDevice mDevice, String permission) {
+    if (android.os.Build.VERSION.SDK_INT >= 23) {
+      if (!hasPermission(permission)) {
         try {
           mDevice.findObject(new UiSelector().clickable(true)
               .checkable(false)
-              .textContains(text))
+              .textContains("ALLOW"))
               .click();
         } catch (Exception e1) {
         }
@@ -384,11 +503,10 @@ public class EspressoTests {
     onView(withId(R.id.skip_text)).perform(click());
   }
 
-  private void goToApp() throws InterruptedException {
+  private void goToApp(String app) throws InterruptedException {
     onView(withId(R.id.action_search)).perform(click());
     Thread.sleep(WAIT_TIME);
-    onView(withId(R.id.search_src_text)).perform(replaceText(APP_TO_SEARCH),
-        pressImeActionButton());
+    onView(withId(R.id.search_src_text)).perform(replaceText(app), pressImeActionButton());
     Thread.sleep(LONGER_WAIT_TIME);
     onView(withId(R.id.all_stores_result_list)).perform(
         RecyclerViewActions.actionOnItemAtPosition(0, click()));
@@ -453,12 +571,43 @@ public class EspressoTests {
     }
     Thread.sleep(WAIT_TIME);
     createStore();
-    //maybe some check here
   }
 
   private void createStore() throws InterruptedException {
-    onView(withId(R.id.create_store_name)).perform(replaceText(STORENAME),closeSoftKeyboard());
+    onView(withId(R.id.create_store_name)).perform(replaceText(STORENAME), closeSoftKeyboard());
     Thread.sleep(WAIT_TIME);
     onView(withId(R.id.create_store_action)).perform(click());
+  }
+
+  private void searchApp() throws InterruptedException {
+    onView(withId(R.id.action_search)).perform(click());
+    Thread.sleep(WAIT_TIME);
+    onView(withId(R.id.search_src_text)).perform(replaceText(APP_TO_SEARCH));
+  }
+
+  private void installApp(UiDevice mDevice) {
+    try {
+      mDevice.findObject(new UiSelector().clickable(true)
+          .checkable(false)
+          .textContains("INSTALL"))
+          .click();
+      Thread.sleep(LONGER_WAIT_TIME);
+      mDevice.findObject(new UiSelector().clickable(true)
+          .checkable(false)
+          .textContains("DONE"))
+          .click();
+    } catch (Exception e1) {
+    }
+  }
+
+  private void createImageandIntend() {
+    Bitmap icon = BitmapFactory.decodeResource(InstrumentationRegistry.getTargetContext()
+        .getResources(), R.mipmap.ic_launcher);
+    // Build a result to return from the Camera app
+    Intent resultData = new Intent();
+    resultData.putExtra("data", icon);
+    Instrumentation.ActivityResult result =
+        new Instrumentation.ActivityResult(Activity.RESULT_OK, resultData);
+    intending(hasAction(MediaStore.ACTION_IMAGE_CAPTURE)).respondWith(result);
   }
 }
