@@ -25,9 +25,8 @@ public class SearchNavigator {
   }
 
   public void goToOtherVersions(String name, String icon, String packageName) {
-    final Fragment newOtherVersionsFragment =
-        OtherVersionsFragment.newInstance(name, icon, packageName, defaultStore);
-    navigator.navigateTo(newOtherVersionsFragment, true);
+    navigator.navigateTo(OtherVersionsFragment.newInstance(name, icon, packageName, defaultStore),
+        true);
   }
 
   public void navigate(String query) {

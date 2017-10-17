@@ -32,6 +32,8 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PartnerApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
@@ -41,11 +43,8 @@ import cm.aptoide.pt.filemanager.FileManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.AdultContent;
-import cm.aptoide.pt.preferences.Preferences;
-import cm.aptoide.pt.preferences.SecurePreferences;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.updates.UpdateRepository;
@@ -147,6 +146,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     notificationSyncScheduler =
         ((AptoideApplication) getContext().getApplicationContext()).getNotificationSyncScheduler();
+
+    AptoideNavigationTracker aptoideNavigationTracker =
+        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker();
+    aptoideNavigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName()));
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
@@ -154,10 +158,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     SharedPreferences sharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(getActivity());
     sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-    adultContent = new AdultContent(
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager(),
-        new Preferences(sharedPreferences), new SecurePreferences(sharedPreferences,
-        new SecureCoderDecoder.Builder(getContext(), sharedPreferences).create()));
+    adultContent = ((AptoideApplication) getContext().getApplicationContext()).getAdultContent();
   }
 
   @CallSuper @Nullable @Override
@@ -208,6 +209,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
     setupClickHandlers();
   }
 
+  @Override public void onDestroyView() {
+    subscriptions.clear();
+    super.onDestroyView();
+  }
+
   /**
    * removes category from the settings
    *
@@ -217,11 +223,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
     PreferenceScreen screen = getPreferenceScreen();
     Preference preferenceCategory = findPreference(preference);
     screen.removePreference(preferenceCategory);
-  }
-
-  @Override public void onDestroyView() {
-    subscriptions.clear();
-    super.onDestroyView();
   }
 
   @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {

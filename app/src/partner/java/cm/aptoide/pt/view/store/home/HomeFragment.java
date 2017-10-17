@@ -29,9 +29,10 @@ import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.view.SearchBuilder;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.updates.UpdateRepository;
-import cm.aptoide.pt.util.SearchUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.custom.BadgeView;
 import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
@@ -227,12 +228,13 @@ public class HomeFragment extends StoreFragment {
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
-
+    final String defaultStore =
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore();
+    final SearchBuilder searchBuilder =
+        new SearchBuilder(menu.findItem(R.id.action_search), getActivity(),
+            new SearchNavigator(getFragmentNavigator(), defaultStore));
+    searchBuilder.validateAndAttachSearch();
     menu.removeItem(R.id.menu_share);
-  }
-
-  @Override protected void setupSearch(Menu menu) {
-    SearchUtils.setupGlobalSearchView(menu, getActivity(), getFragmentNavigator());
   }
 
   @Override public void setupViews() {
@@ -385,7 +387,5 @@ public class HomeFragment extends StoreFragment {
     drawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
 
     setHasOptionsMenu(true);
-
-    Analytics.AppViewViewedFrom.addStepToList("HOME");
   }
 }
