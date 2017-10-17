@@ -1,6 +1,6 @@
 package cm.aptoide.pt.social.view.viewholder;
 
-import android.support.annotation.NonNull;
+import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.LongSparseArray;
 import android.text.Spannable;
@@ -118,7 +118,8 @@ public class SocialStoreViewHolder extends SocialPostViewHolder<SocialStore> {
     ImageLoader.with(itemView.getContext())
         .loadWithShadowCircleTransform(post.getPoster()
             .getSecondaryAvatar(), this.headerSecondaryAvatar);
-    this.headerPrimaryName.setText(getStyledStoreName(post));
+    this.headerPrimaryName.setText(getStyledTitle(itemView.getContext(), post.getPoster()
+        .getPrimaryName()));
     this.headerSecondaryName.setText(post.getPoster()
         .getSecondaryName());
     this.timestamp.setText(
@@ -194,13 +195,10 @@ public class SocialStoreViewHolder extends SocialPostViewHolder<SocialStore> {
         new CardTouchEvent(post, position, CardTouchEvent.Type.COMMENT_NUMBER)));
   }
 
-  @NonNull private Spannable getStyledStoreName(SocialStore card) {
-    return spannableFactory.createColorSpan(itemView.getContext()
-            .getString(R.string.timeline_title_card_title_has_new_apps_present_singular,
-                card.getPoster()
-                    .getPrimaryName()),
-        ContextCompat.getColor(itemView.getContext(), R.color.black_87_alpha), card.getPoster()
-            .getPrimaryName());
+  public Spannable getStyledTitle(Context context, String title) {
+    return spannableFactory.createColorSpan(
+        context.getString(R.string.timeline_title_card_title_share_past_singular, title),
+        ContextCompat.getColor(context, R.color.black_87_alpha), title);
   }
 
   private void showStoreLatestApps(SocialStore card) {
