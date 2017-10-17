@@ -20,11 +20,13 @@ public class TransactionServiceV7 implements TransactionService {
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
   private final IdResolver idResolver;
+  private final TransactionFactory transactionFactory;
 
   public TransactionServiceV7(TransactionMapperV7 transactionMapper,
       BodyInterceptor<BaseBody> bodyInterceptorV7, Converter.Factory converterFactory,
       OkHttpClient httpClient, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, IdResolver idResolver) {
+      SharedPreferences sharedPreferences, IdResolver idResolver,
+      TransactionFactory transactionFactory) {
     this.transactionMapper = transactionMapper;
     this.bodyInterceptorV7 = bodyInterceptorV7;
     this.converterFactory = converterFactory;
@@ -32,6 +34,7 @@ public class TransactionServiceV7 implements TransactionService {
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
     this.idResolver = idResolver;
+    this.transactionFactory = transactionFactory;
   }
 
   @Override public Single<Transaction> getTransaction(String customerId, String productId) {
@@ -40,10 +43,22 @@ public class TransactionServiceV7 implements TransactionService {
         .observe(true)
         .toSingle()
         .flatMap(response -> {
-          if (response != null && response.isOk()) {
-            return Single.just(transactionMapper.map(response.getData()));
+          if (response.isSuccessful()) {
+            final GetTransactionRequest.ResponseBody responseBody = response.body();
+            if (responseBody != null && responseBody.isOk()) {
+              return Single.just(transactionMapper.map(responseBody.getData()));
+            }
+            return Single.error(new IllegalArgumentException(V7.getErrorMessage(responseBody)));
           }
-          return Single.error(new IllegalArgumentException(V7.getErrorMessage(response)));
+
+          if (response.code() == 404) {
+            return Single.just(transactionFactory.create(
+                idResolver.generateTransactionId(idResolver.resolveProductId(productId)),
+                customerId, idResolver.generateServiceId(-1), productId, Transaction.Status.NEW));
+          }
+
+          return Single.error(
+              new IllegalArgumentException("Could not retrieve transaction for " + productId));
         });
   }
 

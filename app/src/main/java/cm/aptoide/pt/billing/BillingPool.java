@@ -245,7 +245,7 @@ public class BillingPool {
       transactionServiceV7 = new TransactionServiceV7(
           new TransactionMapperV7(getTransactionFactory(), getIdResolverV7()),
           bodyInterceptorPoolV7, WebService.getDefaultConverter(), httpClient, tokenInvalidator,
-          sharedPreferences, getIdResolverV7());
+          sharedPreferences, getIdResolverV7(), getTransactionFactory());
     }
     return transactionServiceV7;
   }

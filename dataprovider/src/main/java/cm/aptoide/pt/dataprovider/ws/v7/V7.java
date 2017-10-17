@@ -65,10 +65,12 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.util.concurrent.TimeUnit;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
+import retrofit2.Response;
 import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.http.Body;
 import retrofit2.http.Header;
@@ -137,14 +139,31 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
 
   private Observable<U> retryOnTicket(Observable<U> observable) {
     return observable.subscribeOn(Schedulers.io())
-        .flatMap(t -> {
+        .flatMap(response -> {
           // FIXME: 01-08-2016 damn jackson parsing black magic error :/
-          if (((BaseV7Response) t).getInfo() != null && BaseV7Response.Info.Status.QUEUED.equals(
-              ((BaseV7Response) t).getInfo()
+
+          final BaseV7Response v7Response;
+          if (response instanceof Response) {
+            if (((Response) response).isSuccessful()) {
+              v7Response = (BaseV7Response) ((Response) response).body();
+            } else {
+              try {
+                v7Response = retrofit.<BaseV7Response>responseBodyConverter(BaseV7Response.class,
+                    new Annotation[0]).convert(((Response) response).errorBody());
+              } catch (IOException e) {
+                return Observable.error(e);
+              }
+            }
+          } else {
+            v7Response = ((BaseV7Response) response);
+          }
+
+          if (v7Response.getInfo() != null && BaseV7Response.Info.Status.QUEUED.equals(
+              v7Response.getInfo()
                   .getStatus())) {
             return Observable.error(new ToRetryThrowable());
           } else {
-            return Observable.just(t);
+            return Observable.just(response);
           }
         })
         .retryWhen(errObservable -> errObservable.zipWith(Observable.range(1, MAX_RETRY_COUNT),
@@ -439,7 +458,7 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("inapp/bank/transaction/getMeta")
-    Observable<GetTransactionRequest.ResponseBody> getBillingTransaction(
+    Observable<Response<GetTransactionRequest.ResponseBody>> getBillingTransaction(
         @Body GetTransactionRequest.RequestBody body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 

@@ -8,10 +8,11 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
+import retrofit2.Response;
 import rx.Observable;
 
 public class GetTransactionRequest
-    extends V7<GetTransactionRequest.ResponseBody, GetTransactionRequest.RequestBody> {
+    extends V7<Response<GetTransactionRequest.ResponseBody>, GetTransactionRequest.RequestBody> {
 
   private GetTransactionRequest(GetTransactionRequest.RequestBody body, String baseHost,
       OkHttpClient httpClient, Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
@@ -28,7 +29,7 @@ public class GetTransactionRequest
         bodyInterceptor, tokenInvalidator);
   }
 
-  @Override protected Observable<ResponseBody> loadDataFromNetwork(Interfaces interfaces,
+  @Override protected Observable<Response<ResponseBody>> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
     return interfaces.getBillingTransaction(body, bypassCache);
   }
