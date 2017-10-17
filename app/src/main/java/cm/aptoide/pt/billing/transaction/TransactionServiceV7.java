@@ -34,7 +34,7 @@ public class TransactionServiceV7 implements TransactionService {
     this.idResolver = idResolver;
   }
 
-  @Override public Single<Transaction> getTransaction(String productId) {
+  @Override public Single<Transaction> getTransaction(String customerId, String productId) {
     return GetTransactionRequest.of(bodyInterceptorV7, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences, idResolver.resolveProductId(productId))
         .observe(true)

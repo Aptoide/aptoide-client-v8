@@ -71,7 +71,8 @@ public class TransactionMapperV3 {
           Transaction.Status.COMPLETED);
     }
 
-    if ("PRODUCT-216".equals(error.code)) {
+    if ("PRODUCT-216".equals(error.code)
+        || "SYS-1".equals(error.code)) {
       transaction = transactionFactory.create(transactionId, customerId, serviceId, productId,
           Transaction.Status.PROCESSING);
     }

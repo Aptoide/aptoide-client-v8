@@ -4,7 +4,7 @@ import rx.Single;
 
 public interface TransactionService {
 
-  Single<Transaction> getTransaction(String productId);
+  Single<Transaction> getTransaction(String customerId, String productId);
 
   Single<Transaction> createTransaction(String productId, String serviceId, String payload);
 }

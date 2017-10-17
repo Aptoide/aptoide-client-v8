@@ -4,6 +4,8 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import cm.aptoide.pt.billing.Customer;
 import cm.aptoide.pt.billing.IdResolver;
+import cm.aptoide.pt.billing.transaction.TransactionMapperV3;
+import cm.aptoide.pt.billing.transaction.TransactionPersistence;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
@@ -18,6 +20,8 @@ public class AuthorizationServiceV3 implements AuthorizationService {
 
   private final AuthorizationFactory authorizationFactory;
   private final AuthorizationMapperV3 authorizationMapper;
+  private final TransactionMapperV3 transactionMapper;
+  private final TransactionPersistence transactionPersistence;
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
@@ -28,12 +32,15 @@ public class AuthorizationServiceV3 implements AuthorizationService {
   private final IdResolver idResolver;
 
   public AuthorizationServiceV3(AuthorizationFactory authorizationFactory,
-      AuthorizationMapperV3 authorizationMapper, BodyInterceptor<BaseBody> bodyInterceptorV3,
+      AuthorizationMapperV3 authorizationMapper, TransactionMapperV3 transactionMapper,
+      TransactionPersistence transactionPersistence, BodyInterceptor<BaseBody> bodyInterceptorV3,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, Customer customer,
       Resources resources, IdResolver idResolver) {
     this.authorizationFactory = authorizationFactory;
     this.authorizationMapper = authorizationMapper;
+    this.transactionMapper = transactionMapper;
+    this.transactionPersistence = transactionPersistence;
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
@@ -94,8 +101,22 @@ public class AuthorizationServiceV3 implements AuthorizationService {
                     .getName())
                 .observe(true)
                 .toSingle()
-                .map(response -> authorizationMapper.map(idResolver.generateAuthorizationId(1),
-                    customerId, transactionId, response, paidApp));
+                .flatMap(response -> {
+
+                  final Authorization authorization =
+                      authorizationMapper.map(idResolver.generateAuthorizationId(1), customerId,
+                          transactionId, response, paidApp);
+
+                  if (authorization.isActive()) {
+                    return transactionPersistence.saveTransaction(
+                        transactionMapper.map(customerId, transactionId, response,
+                            idResolver.generateProductId(
+                                idResolver.resolveTransactionId(transactionId))))
+                        .andThen(Single.just(authorization));
+                  }
+
+                  return Single.just(authorization);
+                });
           }
 
           return Single.just(

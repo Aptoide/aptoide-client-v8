@@ -84,6 +84,7 @@ public class BillingPool {
   private TransactionFactory transactionFactory;
   private AuthorizationFactory authorizationFactory;
   private PurchaseTokenDecoder purchaseTokenDecoder;
+  private TransactionMapperV3 transactionMapperV3;
 
   public BillingPool(SharedPreferences sharedPreferences,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
@@ -159,10 +160,9 @@ public class BillingPool {
     if (billingServiceV3 == null) {
       billingServiceV3 =
           new BillingServiceV3(bodyInterceptorV3, httpClient, converterFactory, tokenInvalidator,
-              sharedPreferences, new PurchaseMapperV3(),
-              new ProductMapperV3(getIdResolverV3()), resources,
-              new PaymentService(getIdResolverV3().generateServiceId(1),
-                  PaymentServiceMapper.PAYPAL, "PayPal", null, ""), getIdResolverV3());
+              sharedPreferences, new PurchaseMapperV3(), new ProductMapperV3(getIdResolverV3()),
+              resources, new PaymentService(getIdResolverV3().generateServiceId(1),
+              PaymentServiceMapper.PAYPAL, "PayPal", null, ""), getIdResolverV3());
     }
     return billingServiceV3;
   }
@@ -231,9 +231,10 @@ public class BillingPool {
       billingSyncSchedulerV3 = new BillingSyncManager(
           new BillingSyncFactory(getCustomer(), getTransactionServiceV3(),
               new AuthorizationServiceV3(getAuthorizationFactory(),
-                  new AuthorizationMapperV3(getAuthorizationFactory()), bodyInterceptorV3,
-                  httpClient, WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences,
-                  customer, resources, getIdResolverV3()), getTransactionPersistence(),
+                  new AuthorizationMapperV3(getAuthorizationFactory()), getTransactionMapperV3(),
+                  getTransactionPersistence(), bodyInterceptorV3, httpClient,
+                  WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences, customer,
+                  resources, getIdResolverV3()), getTransactionPersistence(),
               getAuthorizationPersistence()), syncScheduler, new HashSet<>());
     }
     return billingSyncSchedulerV3;
@@ -251,12 +252,18 @@ public class BillingPool {
 
   private TransactionService getTransactionServiceV3() {
     if (transactionServiceV3 == null) {
-      transactionServiceV3 = new TransactionServiceV3(
-          new TransactionMapperV3(getTransactionFactory(), getIdResolverV3()), bodyInterceptorV3,
+      transactionServiceV3 = new TransactionServiceV3(getTransactionMapperV3(), bodyInterceptorV3,
           WebService.getDefaultConverter(), httpClient, tokenInvalidator, sharedPreferences,
           getTransactionFactory(), getCustomer(), resources, getIdResolverV3());
     }
     return transactionServiceV3;
+  }
+
+  private TransactionMapperV3 getTransactionMapperV3() {
+    if (transactionMapperV3 == null) {
+      transactionMapperV3 = new TransactionMapperV3(getTransactionFactory(), getIdResolverV3());
+    }
+    return transactionMapperV3;
   }
 
   private AuthorizationPersistence getAuthorizationPersistence() {

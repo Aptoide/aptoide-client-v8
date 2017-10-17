@@ -43,13 +43,12 @@ public class TransactionServiceV3 implements TransactionService {
     this.idResolver = idResolver;
   }
 
-  @Override public Single<Transaction> getTransaction(String productId) {
-    return Single.zip(
-        GetApkInfoRequest.of(idResolver.resolveProductId(productId), bodyInterceptorV3, httpClient,
-            converterFactory, tokenInvalidator, sharedPreferences, resources)
-            .observe(false)
-            .toSingle(), customer.getId(), (response, customerId) -> {
-
+  @Override public Single<Transaction> getTransaction(String customerId, String productId) {
+    return GetApkInfoRequest.of(idResolver.resolveProductId(productId), bodyInterceptorV3,
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences, resources)
+        .observe(false)
+        .toSingle()
+        .flatMap(response -> {
           if (response.isOk()) {
             if (response.isPaid()) {
               return GetTransactionRequest.of(response.getPayment()
@@ -71,8 +70,7 @@ public class TransactionServiceV3 implements TransactionService {
           return Single.just(transactionFactory.create(
               idResolver.generateTransactionId(idResolver.resolveProductId(productId)), customerId,
               idResolver.generateServiceId(1), productId, Transaction.Status.FAILED));
-        })
-        .flatMap(single -> single);
+        });
   }
 
   @Override
