@@ -16,6 +16,8 @@
         android:name=".view.PartnersLaunchView"
         android:theme="@style/Theme.AppCompat.Translucent">
     </activity>
+
+    <activity android:name=".view.account.LoginActivityForPayment"/>
   </application>
 
 </manifest>
