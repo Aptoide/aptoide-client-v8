@@ -5,7 +5,9 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.widget.RemoteViews;
+import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.search.view.SearchActivity;
 import cm.aptoide.pt.view.MainActivity;
@@ -23,7 +25,9 @@ public class SearchWidgetProvider extends AppWidgetProvider {
     for(int i=0; i<N; i++){
       int appWidgetId = appWidgetIds[i];
 
-      Intent intent  = new Intent(context, EntryActivity.class);
+      Intent intent  = new Intent(context, DeepLinkIntentReceiver.class);
+      intent.setData(Uri.parse("aptoidesearch://fbbdfn"));
+
       PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
       RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.search_widget);
