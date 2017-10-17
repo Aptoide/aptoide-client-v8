@@ -270,6 +270,14 @@ public class DeepLinkIntentReceiver extends ActivityView {
         finish();
         return;
       }
+      if("search".equals(parse.getQueryParameter("name"))){
+        String query = "";
+        if(parse.getQueryParameterNames().contains("keyword"))
+          query=parse.getQueryParameter("keyword");
+        startFromSearch(query);
+        finish();
+        return;
+      }
       switch (sURIMatcher.match(parse)) {
         case DEEPLINK_ID:
           startGenericDeepLink(parse);

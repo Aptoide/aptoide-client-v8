@@ -345,10 +345,14 @@ public class SearchResultPresenter implements Presenter {
             .observeOn(viewScheduler)
             .doOnNext(__2 -> view.hideLoading())
             .doOnNext(data -> {
-              if (data == null || getItemCount(data) == 0) {
+              if (getItemCount(data) == 0 && data !=null) {
                 view.showNoResultsView();
                 analytics.searchNoResults(viewModel.getCurrentQuery());
-              } else {
+              }
+              else if(data == null){
+                view.showWidgetClickView();
+              }
+              else {
                 view.showResultsView();
                 if (viewModel.isAllStoresSelected()) {
                   view.showAllStoresResult();

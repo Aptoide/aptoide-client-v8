@@ -23,6 +23,8 @@ public interface SearchView extends View {
 
   void showResultsView();
 
+  void showWidgetClickView();
+
   void showLoading();
 
   void hideLoading();

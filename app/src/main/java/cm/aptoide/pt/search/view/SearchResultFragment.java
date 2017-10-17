@@ -222,6 +222,15 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     searchResultsLayout.setVisibility(View.VISIBLE);
   }
 
+  @Override public void showWidgetClickView(){
+    noSearchLayout.setVisibility(View.GONE);
+    searchResultsLayout.setVisibility(View.GONE);
+    buttonsLayout.setVisibility(View.GONE);
+    followedStoresResultList.setVisibility(View.GONE);
+    allStoresResultList.setVisibility(View.GONE);
+    setFocusInSearchView();
+  }
+
   @Override public void showLoading() {
     progressBar.setVisibility(View.VISIBLE);
     noSearchLayout.setVisibility(View.GONE);

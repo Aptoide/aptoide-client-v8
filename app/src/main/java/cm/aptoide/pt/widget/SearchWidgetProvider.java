@@ -26,7 +26,7 @@ public class SearchWidgetProvider extends AppWidgetProvider {
       int appWidgetId = appWidgetIds[i];
 
       Intent intent  = new Intent(context, DeepLinkIntentReceiver.class);
-      intent.setData(Uri.parse("aptoidesearch://fbbdfn"));
+      intent.setData(Uri.parse("aptoide://cm.aptoide.pt/deeplink?name=search"));
 
       PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
