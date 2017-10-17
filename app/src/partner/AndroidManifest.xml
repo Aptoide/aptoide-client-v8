@@ -16,6 +16,13 @@
         android:name=".view.PartnersLaunchView"
         android:theme="@style/Theme.AppCompat.Translucent">
     </activity>
+
+    <receiver android:name=".notification.PullingContentReceiver">
+      <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED"/>
+        <action android:name="android.intent.action.NOTIFICATION_PRESSED_ACTION"/>
+      </intent-filter>
+    </receiver>
   </application>
 
 </manifest>
