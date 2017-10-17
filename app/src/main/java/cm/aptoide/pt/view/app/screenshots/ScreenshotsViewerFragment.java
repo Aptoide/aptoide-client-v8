@@ -57,18 +57,12 @@ public class ScreenshotsViewerFragment extends UIComponentFragment {
   }
 
   @Override public void setupViews() {
-
+    screenshots.setTrackingEnabled(false);
     if (uris != null && uris.size() > 0) {
       screenshots.setAdapter(new ViewPagerAdapterScreenshots(uris));
       screenshots.setCurrentItem(currentItem);
     }
-
-    btnCloseViewer.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        //getActivity().finish();
-        getActivity().onBackPressed();
-      }
-    });
+    btnCloseViewer.setOnClickListener(v -> getActivity().onBackPressed());
   }
 
   @Override public void onResume() {
