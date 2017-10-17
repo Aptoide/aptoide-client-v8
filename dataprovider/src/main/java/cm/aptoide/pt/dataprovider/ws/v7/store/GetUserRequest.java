@@ -87,17 +87,17 @@ public class GetUserRequest extends V7<GetStore, GetUserRequest.Body> {
   @Override
   protected Observable<GetStore> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
     return interfaces.getUser(url, body, bypassCache)
-        .flatMap(getStore -> loadGetStoreWidgets(getStore).map(wsWidgets -> getStore));
+        .flatMap(getStore -> loadGetStoreWidgets(getStore, bypassCache).map(wsWidgets -> getStore));
   }
 
-  protected Observable<List<GetStoreWidgets.WSWidget>> loadGetStoreWidgets(
-      GetStore getStoreWidgets) {
+  protected Observable<List<GetStoreWidgets.WSWidget>> loadGetStoreWidgets(GetStore getStoreWidgets,
+      boolean bypassCache) {
     return Observable.from(getStoreWidgets.getNodes()
         .getWidgets()
         .getDataList()
         .getList())
         .observeOn(Schedulers.io())
-        .flatMap(wsWidget -> WSWidgetsUtils.loadWidgetNode(wsWidget, storeCredentials, false,
+        .flatMap(wsWidget -> WSWidgetsUtils.loadWidgetNode(wsWidget, storeCredentials, bypassCache,
             clientUniqueId, isGooglePlayServicesAvailable, partnerId, accountMature,
             ((BodyInterceptor<BaseBody>) bodyInterceptor), httpClient, converterFactory, filters,
             tokenInvalidator, sharedPreferences, resources, windowManager, connectivityManager,
