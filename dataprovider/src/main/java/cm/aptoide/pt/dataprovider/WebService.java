@@ -117,7 +117,8 @@ public abstract class WebService<T, U> {
     execute(successRequestListener, false);
   }
 
-  @Deprecated public void execute(SuccessRequestListener<U> successRequestListener, boolean bypassCache) {
+  @Deprecated
+  public void execute(SuccessRequestListener<U> successRequestListener, boolean bypassCache) {
     execute(successRequestListener, defaultErrorRequestListener(), bypassCache);
   }
 

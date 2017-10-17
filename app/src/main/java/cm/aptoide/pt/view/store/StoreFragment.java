@@ -26,7 +26,6 @@ import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
-import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
@@ -109,7 +108,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private String iconPath;
   private String marketName;
   private String defaultTheme;
-  private PageViewsAnalytics pageViewAnalytics;
+  private Runnable registerViewpagerCurrentItem;
 
   public static StoreFragment newInstance(long userId, String storeTheme, OpenType openType) {
     return newInstance(userId, storeTheme, null, openType);
@@ -180,9 +179,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
     storeAnalytics = new StoreAnalytics(AppEventsLogger.newLogger(getContext()), analytics);
     marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);
-    pageViewAnalytics =
-        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), aptoideNavigationTracker);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -245,6 +241,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
       pagerSlidingTabStrip.setOnTabReselectedListener(null);
       pagerSlidingTabStrip = null;
     }
+    viewPager.removeCallbacks(registerViewpagerCurrentItem);
     super.onDestroyView();
   }
 
@@ -299,11 +296,9 @@ public class StoreFragment extends BasePagerToolbarFragment {
       }
     });
     viewPager.addOnPageChangeListener(pageChangeListener);
-    viewPager.post(new Runnable() {
-      @Override public void run() {
-        pageChangeListener.onPageSelected(viewPager.getCurrentItem());
-      }
-    });
+    registerViewpagerCurrentItem =
+        () -> pageChangeListener.onPageSelected(viewPager.getCurrentItem());
+    viewPager.post(registerViewpagerCurrentItem);
     changeToTab(defaultTab);
     finishLoading();
   }
