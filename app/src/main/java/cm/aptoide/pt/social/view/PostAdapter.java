@@ -102,6 +102,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
   public void removePost(int postPosition) {
     posts.remove(postPosition);
     notifyItemRemoved(postPosition);
+    notifyItemRangeChanged(postPosition, getItemCount());
   }
 
   public Post getPost(int position) {

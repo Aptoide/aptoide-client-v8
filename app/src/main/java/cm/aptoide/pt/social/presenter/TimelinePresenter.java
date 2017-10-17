@@ -46,7 +46,6 @@ import cm.aptoide.pt.social.data.TimelineStatsTouchEvent;
 import cm.aptoide.pt.social.data.User;
 import cm.aptoide.pt.social.view.TimelineUser;
 import cm.aptoide.pt.social.view.TimelineView;
-import cm.aptoide.pt.social.view.viewholder.NativeAdErrorEvent;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.StoreFragment;
@@ -331,8 +330,8 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
                 .equals(CardTouchEvent.Type.ERROR))
-            .doOnNext(cardTouchEvent -> view.removePost(
-                ((NativeAdErrorEvent) cardTouchEvent).getPosition()))
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(cardTouchEvent -> view.removePost(cardTouchEvent.getPosition()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
