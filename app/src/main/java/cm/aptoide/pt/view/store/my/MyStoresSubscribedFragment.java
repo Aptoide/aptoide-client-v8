@@ -57,6 +57,10 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
   private TokenInvalidator tokenInvalidator;
   private StoreAnalytics storeAnalytics;
 
+  public static Fragment newInstance() {
+    return new MyStoresSubscribedFragment();
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     tokenInvalidator =
@@ -86,7 +90,8 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
   }
 
   @Override protected Action1<ListStores> buildAction() {
-    return listStores -> addDisplayables(getStoresDisplayable(listStores.getDataList().getList()));
+    return listStores -> addDisplayables(getStoresDisplayable(listStores.getDataList()
+        .getList()));
   }
 
   @Override protected ErrorRequestListener getErrorRequestListener() {
@@ -98,7 +103,8 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
         DisplayablesFactory.loadLocalSubscribedStores(storeRepository)
             .compose(bindUntilEvent(LifecycleEvent.DESTROY))
             .subscribe(stores -> addDisplayables(getStoresDisplayable(stores)), err -> {
-              CrashReport.getInstance().log(err);
+              CrashReport.getInstance()
+                  .log(err);
             });
       } else {
         finishLoading(throwable);
@@ -108,9 +114,13 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
 
   @NonNull private ArrayList<Displayable> getStoresDisplayable(List<Store> list) {
     ArrayList<Displayable> storesDisplayables = new ArrayList<>(list.size());
-    Collections.sort(list, (store, t1) -> store.getName().compareTo(t1.getName()));
+    Collections.sort(list, (store, t1) -> store.getName()
+        .compareTo(t1.getName()));
     for (int i = 0; i < list.size(); i++) {
-      if (i == 0 || list.get(i - 1).getId() != list.get(i).getId()) {
+      if (i == 0
+          || list.get(i - 1)
+          .getId() != list.get(i)
+          .getId()) {
         if (layout == Layout.LIST) {
           storesDisplayables.add(
               new RecommendedStoreDisplayable(list.get(i), storeRepository, accountManager,
@@ -129,9 +139,5 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
       }
     }
     return storesDisplayables;
-  }
-
-  public static Fragment newInstance() {
-    return new MyStoresSubscribedFragment();
   }
 }
