@@ -9,6 +9,7 @@ import android.widget.RemoteViews;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.search.view.SearchActivity;
 import cm.aptoide.pt.view.MainActivity;
+import cm.aptoide.pt.view.entry.EntryActivity;
 
 /**
  * Created by franciscocalado on 10/16/17.
@@ -22,7 +23,7 @@ public class SearchWidgetProvider extends AppWidgetProvider {
     for(int i=0; i<N; i++){
       int appWidgetId = appWidgetIds[i];
 
-      Intent intent  = new Intent(context, MainActivity.class);
+      Intent intent  = new Intent(context, EntryActivity.class);
       PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
       RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.search_widget);
