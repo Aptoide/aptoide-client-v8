@@ -117,11 +117,11 @@ public class StoreFragment extends BasePagerToolbarFragment {
   public static StoreFragment newInstance(long userId, String storeTheme, Event.Name defaultTab,
       OpenType openType) {
     Bundle args = new Bundle();
-    args.putLong(BundleCons.USER_ID, userId);
-    args.putSerializable(BundleCons.STORE_CONTEXT, StoreContext.meta);
-    args.putSerializable(BundleCons.OPEN_TYPE, openType);
-    args.putString(BundleCons.STORE_THEME, storeTheme);
-    args.putSerializable(BundleCons.DEFAULT_TAB_TO_OPEN, defaultTab);
+    args.putLong(BundleKeys.USER_ID.name(), userId);
+    args.putSerializable(BundleKeys.STORE_CONTEXT.name(), StoreContext.meta);
+    args.putSerializable(BundleKeys.OPEN_TYPE.name(), openType);
+    args.putString(BundleKeys.STORE_THEME.name(), storeTheme);
+    args.putSerializable(BundleKeys.DEFAULT_TAB_TO_OPEN.name(), defaultTab);
     StoreFragment fragment = new StoreFragment();
     fragment.setArguments(args);
     return fragment;
@@ -131,17 +131,17 @@ public class StoreFragment extends BasePagerToolbarFragment {
       Event.Name defaultTab, OpenType openType) {
     StoreFragment storeFragment = newInstance(storeName, storeTheme, openType);
     storeFragment.getArguments()
-        .putSerializable(BundleCons.DEFAULT_TAB_TO_OPEN, defaultTab);
+        .putSerializable(BundleKeys.DEFAULT_TAB_TO_OPEN.name(), defaultTab);
     return storeFragment;
   }
 
   public static StoreFragment newInstance(String storeName, String storeTheme,
       StoreFragment.OpenType openType) {
     Bundle args = new Bundle();
-    args.putString(BundleCons.STORE_NAME, storeName);
-    args.putSerializable(BundleCons.OPEN_TYPE, openType);
-    args.putSerializable(BundleCons.STORE_CONTEXT, StoreContext.meta);
-    args.putString(BundleCons.STORE_THEME, storeTheme);
+    args.putString(BundleKeys.STORE_NAME.name(), storeName);
+    args.putSerializable(BundleKeys.OPEN_TYPE.name(), openType);
+    args.putSerializable(BundleKeys.STORE_CONTEXT.name(), StoreContext.meta);
+    args.putString(BundleKeys.STORE_THEME.name(), storeTheme);
     StoreFragment fragment = new StoreFragment();
     fragment.setArguments(args);
     return fragment;
@@ -183,14 +183,14 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
-    storeName = args.getString(BundleCons.STORE_NAME);
-    storeContext = (StoreContext) args.get(BundleCons.STORE_CONTEXT);
-    openType = args.containsKey(BundleCons.OPEN_TYPE) ? (OpenType) args.get(BundleCons.OPEN_TYPE)
-        : OpenType.GetStore;
-    storeTheme = args.getString(BundleCons.STORE_THEME);
-    defaultTab = (Event.Name) args.get(BundleCons.DEFAULT_TAB_TO_OPEN);
-    if (args.containsKey(BundleCons.USER_ID)) {
-      userId = args.getLong(BundleCons.USER_ID);
+    storeName = args.getString(BundleKeys.STORE_NAME.name());
+    storeContext = (StoreContext) args.get(BundleKeys.STORE_CONTEXT.name());
+    openType = args.containsKey(BundleKeys.OPEN_TYPE.name()) ? (OpenType) args.get(
+        BundleKeys.OPEN_TYPE.name()) : OpenType.GetStore;
+    storeTheme = args.getString(BundleKeys.STORE_THEME.name());
+    defaultTab = (Event.Name) args.get(BundleKeys.DEFAULT_TAB_TO_OPEN.name());
+    if (args.containsKey(BundleKeys.USER_ID.name())) {
+      userId = args.getLong(BundleKeys.USER_ID.name());
     }
   }
 
@@ -526,13 +526,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     GetHome, GetStore
   }
 
-  public static class BundleCons {
-
-    public static final String STORE_NAME = "storeName";
-    public static final String STORE_CONTEXT = "storeContext";
-    public static final String STORE_THEME = "storeTheme";
-    public static final String DEFAULT_TAB_TO_OPEN = "default_tab_to_open";
-    public static final String USER_ID = "userId";
-    public static final String OPEN_TYPE = "OPEN_TYPE";
+  private enum BundleKeys {
+    STORE_NAME, STORE_CONTEXT, STORE_THEME, DEFAULT_TAB_TO_OPEN, USER_ID, OPEN_TYPE
   }
 }
