@@ -130,7 +130,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
   public static StoreFragment newInstance(String storeName, String storeTheme,
       Event.Name defaultTab, OpenType openType) {
     StoreFragment storeFragment = newInstance(storeName, storeTheme, openType);
-    storeFragment.getArguments().putSerializable(BundleKeys.DEFAULT_TAB_TO_OPEN.name(), defaultTab);
+    storeFragment.getArguments()
+        .putSerializable(BundleKeys.DEFAULT_TAB_TO_OPEN.name(), defaultTab);
     return storeFragment;
   }
 
@@ -151,7 +152,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass().getSimpleName(), "", storeContext);
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName(), "", storeContext);
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -288,8 +290,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
           storeAnalytics.sendStoreTabOpenedEvent();
         }
         if (storeContext.equals(StoreContext.meta)) {
-          storeAnalytics.sendStoreInteractEvent("Open Tab",
-              adapter.getPageTitle(position).toString(), storeName);
+          storeAnalytics.sendStoreInteractEvent("Open Tab", adapter.getPageTitle(position)
+              .toString(), storeName);
         }
       }
     });
@@ -365,12 +367,18 @@ public class StoreFragment extends BasePagerToolbarFragment {
             (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
             .observe(refresh)
             .map(getHome -> {
-              Store store = getHome.getNodes().getMeta().getData().getStore();
+              Store store = getHome.getNodes()
+                  .getMeta()
+                  .getData()
+                  .getStore();
               String storeName = store != null ? store.getName() : null;
               Long storeId = store != null ? store.getId() : null;
               String avatar = store != null ? store.getAvatar() : null;
               setupVariables(parseTabs(getHome), storeId, storeName, storeUrl, avatar);
-              HomeUser user = getHome.getNodes().getMeta().getData().getUser();
+              HomeUser user = getHome.getNodes()
+                  .getMeta()
+                  .getData()
+                  .getUser();
               return TextUtils.isEmpty(storeName) ? user.getName() : storeName;
             });
       case GetStore:
@@ -383,32 +391,56 @@ public class StoreFragment extends BasePagerToolbarFragment {
             (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
             .observe(refresh)
             .map(getStore -> {
-              setupVariables(parseTabs(getStore), getStore.getNodes().getMeta().getData().getId(),
-                  getStore.getNodes().getMeta().getData().getName(),
-                  getStore.getNodes().getMeta().getData().getUrls().getMobile(),
-                  getStore.getNodes().getMeta().getData().getAvatar());
-              return getStore.getNodes().getMeta().getData().getName();
+              setupVariables(parseTabs(getStore), getStore.getNodes()
+                  .getMeta()
+                  .getData()
+                  .getId(), getStore.getNodes()
+                  .getMeta()
+                  .getData()
+                  .getName(), getStore.getNodes()
+                  .getMeta()
+                  .getData()
+                  .getUrls()
+                  .getMobile(), getStore.getNodes()
+                  .getMeta()
+                  .getData()
+                  .getAvatar());
+              return getStore.getNodes()
+                  .getMeta()
+                  .getData()
+                  .getName();
             });
     }
   }
 
   private List<GetStoreTabs.Tab> parseTabs(StoreUserAbstraction<?> storeUserAbstraction) {
-    GetStoreTabs.Tab tab = storeUserAbstraction.getNodes().getTabs().getList().get(0);
-    if (tab.getEvent().getAction().contains("/getStore/")) {
-      tab.getEvent().setName(Event.Name.getStoreWidgets);
-      String parsedEventAction =
-          tab.getEvent().getAction().replace("/getStore/", "/getStoreWidgets/");
-      tab.getEvent().setAction(parsedEventAction);
+    GetStoreTabs.Tab tab = storeUserAbstraction.getNodes()
+        .getTabs()
+        .getList()
+        .get(0);
+    if (tab.getEvent()
+        .getAction()
+        .contains("/getStore/")) {
+      tab.getEvent()
+          .setName(Event.Name.getStoreWidgets);
+      String parsedEventAction = tab.getEvent()
+          .getAction()
+          .replace("/getStore/", "/getStoreWidgets/");
+      tab.getEvent()
+          .setAction(parsedEventAction);
     }
 
-    return storeUserAbstraction.getNodes().getTabs().getList();
+    return storeUserAbstraction.getNodes()
+        .getTabs()
+        .getList();
   }
 
   private void handleError(Throwable throwable) {
     if (throwable instanceof AptoideWsV7Exception) {
       BaseV7Response baseResponse = ((AptoideWsV7Exception) throwable).getBaseResponse();
 
-      switch (StoreUtils.getErrorType(baseResponse.getError().getCode())) {
+      switch (StoreUtils.getErrorType(baseResponse.getError()
+          .getCode())) {
         case PRIVATE_STORE_ERROR:
         case PRIVATE_STORE_WRONG_CREDENTIALS:
           DialogFragment dialogFragment =
@@ -451,20 +483,21 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   private void showStoreSuspendedPopup(String storeName) {
     GenericDialogs.createGenericOkCancelMessage(getContext(), "", R.string.store_suspended_message,
-        android.R.string.ok, R.string.unfollow).subscribe(eResponse -> {
-      switch (eResponse) {
-        case NO:
-          StoreUtils.unSubscribeStore(storeName, accountManager, storeCredentialsProvider,
-              AccessorFactory.getAccessorFor(
-                  ((AptoideApplication) getContext().getApplicationContext()
-                      .getApplicationContext()).getDatabase(),
-                  cm.aptoide.pt.database.realm.Store.class));
-        case YES:
-        case CANCEL:
-          getActivity().onBackPressed();
-          break;
-      }
-    });
+        android.R.string.ok, R.string.unfollow)
+        .subscribe(eResponse -> {
+          switch (eResponse) {
+            case NO:
+              StoreUtils.unSubscribeStore(storeName, accountManager, storeCredentialsProvider,
+                  AccessorFactory.getAccessorFor(
+                      ((AptoideApplication) getContext().getApplicationContext()
+                          .getApplicationContext()).getDatabase(),
+                      cm.aptoide.pt.database.realm.Store.class));
+            case YES:
+            case CANCEL:
+              getActivity().onBackPressed();
+              break;
+          }
+        });
   }
 
   @Override public void setupViews() {
