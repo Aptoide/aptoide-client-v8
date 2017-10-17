@@ -40,8 +40,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
   }
 
   @Override public SearchResultItemView onCreateViewHolder(ViewGroup parent, int viewType) {
-    View view = LayoutInflater.from(parent.getContext())
-        .inflate(viewType, parent, false);
+    View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
 
     switch (viewType) {
       case SearchResultViewHolder.LAYOUT: {
@@ -87,6 +86,16 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
   @Override public int getItemCount() {
     final int itemCount = searchAdResults.size() + searchResults.size();
     return isLoadingMore ? itemCount + 1 : itemCount;
+  }
+
+  @Override public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+    super.onDetachedFromRecyclerView(recyclerView);
+    for (int i = 0; i < getItemCount(); i++) {
+      try {
+        ((SearchResultItemView) getItem(i)).prepareToRecycle();
+      } catch (NullPointerException | ClassCastException e) {
+      }
+    }
   }
 
   private Object getItem(int position) {
