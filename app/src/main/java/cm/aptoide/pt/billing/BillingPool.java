@@ -85,6 +85,7 @@ public class BillingPool {
   private AuthorizationFactory authorizationFactory;
   private PurchaseTokenDecoder purchaseTokenDecoder;
   private TransactionMapperV3 transactionMapperV3;
+  private PurchaseFactory purchaseFactory;
 
   public BillingPool(SharedPreferences sharedPreferences,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
@@ -172,11 +173,19 @@ public class BillingPool {
       billingServiceV7 =
           new BillingServiceV7(accountSettingsBodyInterceptorPoolV7, httpClient, converterFactory,
               tokenInvalidator, sharedPreferences,
-              new PurchaseMapperV7(externalBillingSerializer, getIdResolverV7()),
-              new ProductMapperV7(getIdResolverV7()), packageRepository,
-              new PaymentServiceMapper(crashLogger, getIdResolverV7()), getIdResolverV7());
+              new PurchaseMapperV7(externalBillingSerializer, getIdResolverV7(),
+                  getPurchaseFactory()), new ProductMapperV7(getIdResolverV7()), packageRepository,
+              new PaymentServiceMapper(crashLogger, getIdResolverV7()), getIdResolverV7(),
+              getPurchaseFactory());
     }
     return billingServiceV7;
+  }
+
+  private PurchaseFactory getPurchaseFactory() {
+    if (purchaseFactory == null) {
+      purchaseFactory = new PurchaseFactory();
+    }
+    return purchaseFactory;
   }
 
   private AuthorizationRepository getInAppAuthorizationRepository() {

@@ -17,10 +17,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
+import retrofit2.Response;
 import rx.Observable;
 
 public class GetPurchasesRequest
-    extends V7<GetPurchasesRequest.ResponseBody, GetPurchasesRequest.RequestBody> {
+    extends V7<Response<GetPurchasesRequest.ResponseBody>, GetPurchasesRequest.RequestBody> {
 
   public GetPurchasesRequest(GetPurchasesRequest.RequestBody body, String baseHost,
       OkHttpClient httpClient, Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
@@ -47,8 +48,8 @@ public class GetPurchasesRequest
         bodyInterceptor, tokenInvalidator);
   }
 
-  @Override protected Observable<ResponseBody> loadDataFromNetwork(Interfaces interfaces,
-      boolean bypassCache) {
+  @Override protected Observable<Response<GetPurchasesRequest.ResponseBody>> loadDataFromNetwork(
+      Interfaces interfaces, boolean bypassCache) {
     if (body.getProductId() != 0) {
       return interfaces.getBillingPurchase(body, bypassCache);
     }

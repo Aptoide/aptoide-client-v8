@@ -6,10 +6,7 @@
 package cm.aptoide.pt.billing;
 
 import cm.aptoide.pt.billing.external.ExternalBillingSerializer;
-import cm.aptoide.pt.billing.product.InAppPurchase;
-import cm.aptoide.pt.billing.product.PaidAppPurchase;
 import cm.aptoide.pt.billing.product.SimplePurchase;
-import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetPurchasesRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.ArrayList;
@@ -19,10 +16,13 @@ public class PurchaseMapperV7 {
 
   private final ExternalBillingSerializer serializer;
   private final IdResolver idResolver;
+  private final PurchaseFactory purchaseFactory;
 
-  public PurchaseMapperV7(ExternalBillingSerializer serializer, IdResolver idResolver) {
+  public PurchaseMapperV7(ExternalBillingSerializer serializer, IdResolver idResolver,
+      PurchaseFactory purchaseFactory) {
     this.serializer = serializer;
     this.idResolver = idResolver;
+    this.purchaseFactory = purchaseFactory;
   }
 
   public List<Purchase> map(List<GetPurchasesRequest.ResponseBody.Purchase> responseList) {
@@ -37,11 +37,11 @@ public class PurchaseMapperV7 {
 
   public Purchase map(GetPurchasesRequest.ResponseBody.Purchase response) {
     try {
-      return new InAppPurchase(idResolver.generatePurchaseId(response.getProduct()
-          .getId()), response.getSignature(), serializer.serializePurchase(response.getData()
-          .getDeveloperPurchase()), response.getData()
-          .getDeveloperPurchase()
-          .getPurchaseState() == 0 ? SimplePurchase.Status.COMPLETED : SimplePurchase.Status.NEW,
+      return purchaseFactory.create(idResolver.generatePurchaseId(response.getProduct()
+              .getId()), response.getSignature(), serializer.serializePurchase(response.getData()
+              .getDeveloperPurchase()), response.getData()
+              .getDeveloperPurchase()
+              .getPurchaseState() == 0 ? SimplePurchase.Status.COMPLETED : SimplePurchase.Status.NEW,
           response.getProduct()
               .getSku());
     } catch (JsonProcessingException e) {

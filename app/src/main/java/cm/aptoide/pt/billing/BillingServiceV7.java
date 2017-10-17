@@ -10,6 +10,7 @@ import cm.aptoide.pt.billing.exception.MerchantNotFoundException;
 import cm.aptoide.pt.billing.exception.ProductNotFoundException;
 import cm.aptoide.pt.billing.exception.PurchaseNotFoundException;
 import cm.aptoide.pt.billing.product.ProductMapperV7;
+import cm.aptoide.pt.billing.product.SimplePurchase;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -39,12 +40,13 @@ public class BillingServiceV7 implements BillingService {
   private final PaymentServiceMapper serviceMapper;
   private final BodyInterceptor<BaseBody> bodyInterceptorV7;
   private final IdResolver idResolver;
+  private final PurchaseFactory purchaseFactory;
 
   public BillingServiceV7(BodyInterceptor<BaseBody> bodyInterceptorV7, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, PurchaseMapperV7 purchaseMapper,
       ProductMapperV7 productMapperV7, PackageRepository packageRepository,
-      PaymentServiceMapper serviceMapper, IdResolver idResolver) {
+      PaymentServiceMapper serviceMapper, IdResolver idResolver, PurchaseFactory purchaseFactory) {
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
@@ -55,6 +57,7 @@ public class BillingServiceV7 implements BillingService {
     this.serviceMapper = serviceMapper;
     this.bodyInterceptorV7 = bodyInterceptorV7;
     this.idResolver = idResolver;
+    this.purchaseFactory = purchaseFactory;
   }
 
   @Override public Single<List<PaymentService>> getPaymentServices() {
@@ -107,23 +110,34 @@ public class BillingServiceV7 implements BillingService {
         .observe(true)
         .toSingle()
         .flatMap(response -> {
-          if (response != null && response.isOk()) {
-            return Single.just(purchaseMapper.map(response.getList()));
+
+          if (response.isSuccessful()) {
+            return Single.just(purchaseMapper.map(response.body()
+                .getList()));
           }
+
           // If user not logged in return a empty purchase list.
           return Single.<List<Purchase>>just(Collections.emptyList());
         });
   }
 
   @Override public Single<Purchase> getPurchase(String productId) {
-    return GetPurchasesRequest.of(idResolver.resolveProductId(productId),
-        bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
+    return GetPurchasesRequest.of(idResolver.resolveProductId(productId), bodyInterceptorV7,
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe(true)
         .toSingle()
         .flatMap(response -> {
-          if (response != null && response.isOk()) {
-            return Single.just(purchaseMapper.map(response.getData()));
+
+          if (response.isSuccessful()) {
+            return Single.just(purchaseMapper.map(response.body()
+                .getData()));
           }
+
+          if (response.code() == 404) {
+            return Single.just(
+                purchaseFactory.create(productId, null, null, SimplePurchase.Status.NEW, null));
+          }
+
           return Single.error(new PurchaseNotFoundException());
         });
   }
