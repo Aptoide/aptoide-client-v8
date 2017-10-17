@@ -50,6 +50,7 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.TrackerFilter;
+import cm.aptoide.pt.billing.Adyen;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.BillingPool;
@@ -270,6 +271,7 @@ public abstract class AptoideApplication extends Application {
   private PageViewsAnalytics pageViewsAnalytics;
   private BodyInterceptor<BaseBody> accountSettingsBodyInterceptorPoolV7;
   private BodyInterceptor<BaseBody> accountSettingsBodyInterceptorWebV7;
+  private Adyen adyen;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -833,9 +835,17 @@ public abstract class AptoideApplication extends Application {
               getAccountManager(), getDatabase(), getResources(), getPackageRepository(),
               getTokenInvalidator(), getSyncScheduler(), getInAppBillingSerializer(),
               getBodyInterceptorPoolV7(), getAccountSettingsBodyInterceptorPoolV7(),
-              new HashMap<>(), WebService.getDefaultConverter(), CrashReport.getInstance());
+              new HashMap<>(), WebService.getDefaultConverter(), CrashReport.getInstance(),
+              getAdyen());
     }
     return billingPool;
+  }
+
+  public Adyen getAdyen() {
+    if (adyen == null) {
+      adyen = new Adyen(this, BehaviorRelay.create());
+    }
+    return adyen;
   }
 
   public IdResolver getIdResolver(String merchantName) {

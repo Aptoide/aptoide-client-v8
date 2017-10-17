@@ -76,9 +76,16 @@ public class Billing {
   }
 
   public Completable processPayment(String sku, String payload) {
-    return getSelectedService().flatMap(service -> getProduct(sku).flatMap(
-        product -> transactionRepository.createTransaction(product.getProductId(), service.getId(),
-            payload)))
+    return getSelectedService().flatMap(service -> getProduct(sku).flatMap(product -> {
+
+      if (service instanceof TokenPaymentService) {
+        return ((TokenPaymentService) service).generateToken()
+            .flatMap(token -> transactionRepository.createTransaction(product.getProductId(),
+                service.getId(), payload, token));
+      }
+      return transactionRepository.createTransaction(product.getProductId(), service.getId(),
+          payload);
+    }))
         .flatMapCompletable(transaction -> {
           if (transaction.isPendingAuthorization()) {
             return Completable.error(

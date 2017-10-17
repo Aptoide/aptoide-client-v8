@@ -76,4 +76,20 @@ public class TransactionServiceV7 implements TransactionService {
           return Single.error(new IllegalArgumentException(V7.getErrorMessage(response)));
         });
   }
+
+  @Override
+  public Single<Transaction> createTransaction(String productId, String serviceId, String payload,
+      String token) {
+    return CreateTransactionRequest.of(idResolver.resolveProductId(productId),
+        idResolver.resolveServiceId(serviceId), payload, token, bodyInterceptorV7, httpClient,
+        converterFactory, tokenInvalidator, sharedPreferences)
+        .observe(true)
+        .toSingle()
+        .flatMap(response -> {
+          if (response != null && response.isOk()) {
+            return Single.just(transactionMapper.map(response.getData()));
+          }
+          return Single.error(new IllegalArgumentException(V7.getErrorMessage(response)));
+        });
+  }
 }

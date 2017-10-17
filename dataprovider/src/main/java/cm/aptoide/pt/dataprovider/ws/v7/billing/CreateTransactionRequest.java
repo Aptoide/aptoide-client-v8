@@ -31,6 +31,21 @@ public class CreateTransactionRequest
         converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
+  public static CreateTransactionRequest of(long productId, long serviceId, String payload,
+      String token, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
+    final RequestBody body = new RequestBody();
+    body.setProductId(productId);
+    body.setServiceId(serviceId);
+    body.setPayload(payload);
+    final RequestBody.Data serviceData = new RequestBody.Data();
+    serviceData.setToken(token);
+    body.setServiceData(serviceData);
+    return new CreateTransactionRequest(body, getHost(sharedPreferences), httpClient,
+        converterFactory, bodyInterceptor, tokenInvalidator);
+  }
+
   @Override protected Observable<ResponseBody> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
     return interfaces.createBillingTransaction(body, bypassCache);
@@ -41,6 +56,15 @@ public class CreateTransactionRequest
     private long productId;
     private long serviceId;
     private String payload;
+    private Data serviceData;
+
+    public Data getServiceData() {
+      return serviceData;
+    }
+
+    public void setServiceData(Data serviceData) {
+      this.serviceData = serviceData;
+    }
 
     public long getProductId() {
       return productId;
@@ -64,6 +88,18 @@ public class CreateTransactionRequest
 
     public void setPayload(String payload) {
       this.payload = payload;
+    }
+
+    public static class Data {
+      private String token;
+
+      public void setToken(String token) {
+        this.token = token;
+      }
+
+      public String getToken() {
+        return token;
+      }
     }
   }
 

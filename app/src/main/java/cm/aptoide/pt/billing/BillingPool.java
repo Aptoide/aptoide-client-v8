@@ -62,6 +62,7 @@ public class BillingPool {
       accountSettingsBodyInterceptorPoolV7;
   private final Converter.Factory converterFactory;
   private final CrashLogger crashLogger;
+  private final Adyen adyen;
 
   private BillingSyncScheduler billingSyncSchedulerV7;
   private AuthorizationRepository inAppAuthorizationRepository;
@@ -94,7 +95,8 @@ public class BillingPool {
       SyncScheduler syncScheduler, ExternalBillingSerializer externalBillingSerializer,
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> accountSettingsBodyInterceptorPoolV7,
-      HashMap<String, Billing> poll, Converter.Factory converterFactory, CrashReport crashLogger) {
+      HashMap<String, Billing> poll, Converter.Factory converterFactory, CrashReport crashLogger,
+      Adyen adyen) {
     this.sharedPreferences = sharedPreferences;
     this.pool = poll;
     this.bodyInterceptorV3 = bodyInterceptorV3;
@@ -110,6 +112,7 @@ public class BillingPool {
     this.accountSettingsBodyInterceptorPoolV7 = accountSettingsBodyInterceptorPoolV7;
     this.converterFactory = converterFactory;
     this.crashLogger = crashLogger;
+    this.adyen = adyen;
   }
 
   public Billing get(String merchantName) {
@@ -175,7 +178,7 @@ public class BillingPool {
               tokenInvalidator, sharedPreferences,
               new PurchaseMapperV7(externalBillingSerializer, getIdResolverV7(),
                   getPurchaseFactory()), new ProductMapperV7(getIdResolverV7()), packageRepository,
-              new PaymentServiceMapper(crashLogger, getIdResolverV7()), getIdResolverV7(),
+              new PaymentServiceMapper(crashLogger, getIdResolverV7(), adyen), getIdResolverV7(),
               getPurchaseFactory());
     }
     return billingServiceV7;

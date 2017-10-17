@@ -98,4 +98,10 @@ public class TransactionServiceV3 implements TransactionService {
               idResolver.generateServiceId(1), productId, Transaction.Status.FAILED);
         });
   }
+
+  @Override
+  public Single<Transaction> createTransaction(String productId, String serviceId, String payload,
+      String token) {
+    return Single.error(new IllegalStateException("Not implemented!"));
+  }
 }

@@ -7,7 +7,6 @@ package cm.aptoide.pt.billing.transaction;
 
 import cm.aptoide.pt.billing.BillingSyncScheduler;
 import cm.aptoide.pt.billing.Customer;
-import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
@@ -38,5 +37,12 @@ public class TransactionRepository {
         .doOnSuccess(__ -> syncScheduler.syncTransaction(productId))
         .flatMapObservable(
             customerId -> transactionPersistence.getTransaction(customerId, productId));
+  }
+
+  public Single<Transaction> createTransaction(String productId, String serviceId, String payload,
+      String token) {
+    return transactionService.createTransaction(productId, serviceId, payload, token)
+        .flatMap(transaction -> transactionPersistence.saveTransaction(transaction)
+            .andThen(Single.just(transaction)));
   }
 }
