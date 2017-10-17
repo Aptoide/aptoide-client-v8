@@ -22,15 +22,26 @@
       android:layout_marginTop="10dp"
       android:background="@mipmap/ic_launcher"
       />
+  <TextView
+      android:layout_width="180dp"
+      android:layout_height="20dp"
+      android:layout_toEndOf="@id/icon"
+      android:layout_toRightOf="@id/icon"
+      android:layout_marginTop="20dp"
+      android:layout_marginStart="20dp"
+      android:layout_marginLeft="20dp"
+      android:text="Tap to search the Aptoide Market"
+      style="@style/Aptoide.TextView.Regular.XS.Grey"
+      />
 
   <ImageView
-      android:layout_width="30dp"
-      android:layout_height="30dp"
+      android:layout_width="25dp"
+      android:layout_height="25dp"
       android:layout_alignParentEnd="true"
       android:layout_alignParentRight="true"
       android:layout_marginEnd="15dp"
       android:layout_marginRight="15dp"
-      android:layout_marginTop="13dp"
+      android:layout_marginTop="16dp"
       android:background="@drawable/voice_search_icon"
       />
 </RelativeLayout>
