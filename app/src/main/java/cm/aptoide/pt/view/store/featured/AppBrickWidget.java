@@ -43,10 +43,10 @@ public class AppBrickWidget extends Widget<AppBrickDisplayable> {
                   .getId(), displayable.getPojo()
                   .getPackageName(), displayable.getPojo()
                   .getStore()
-                  .getName(), displayable.getPojo()
-                  .getStore()
                   .getAppearance()
-                  .getTheme(), displayable.getTag(), String.valueOf(getAdapterPosition())), true);
+                  .getTheme(), displayable.getPojo()
+                  .getStore()
+                  .getName(), displayable.getTag(), String.valueOf(getAdapterPosition())), true);
         }, throwable -> CrashReport.getInstance()
             .log(throwable)));
   }
