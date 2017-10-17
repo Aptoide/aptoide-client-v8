@@ -111,7 +111,6 @@ import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import cm.aptoide.pt.view.share.ShareAppHelper;
-import cm.aptoide.pt.view.store.StoreFragment;
 import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -231,7 +230,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     bundle.putLong(BundleKeys.APP_ID.name(), appId);
     bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
     bundle.putString(BundleKeys.STORE_NAME.name(), storeName);
-    bundle.putString(StoreFragment.BundleCons.STORE_THEME, storeTheme);
+    bundle.putString(BundleKeys.STORE_THEME.name(), storeTheme);
     AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     return fragment;
@@ -244,7 +243,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     bundle.putLong(BundleKeys.APP_ID.name(), appId);
     bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
     bundle.putString(BundleKeys.STORE_NAME.name(), storeName);
-    bundle.putString(StoreFragment.BundleCons.STORE_THEME, storeTheme);
+    bundle.putString(BundleKeys.STORE_THEME.name(), storeTheme);
     AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     return fragment;
@@ -258,7 +257,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     bundle.putLong(BundleKeys.APP_ID.name(), appId);
     bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
     bundle.putString(BundleKeys.STORE_NAME.name(), storeName);
-    bundle.putString(StoreFragment.BundleCons.STORE_THEME, storeTheme);
+    bundle.putString(BundleKeys.STORE_THEME.name(), storeTheme);
     AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     return fragment;
@@ -293,7 +292,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     bundle.putLong(BundleKeys.APP_ID.name(), searchAdResult.getAppId());
     bundle.putString(BundleKeys.PACKAGE_NAME.name(), searchAdResult.getPackageName());
     bundle.putParcelable(BundleKeys.MINIMAL_AD.name(), Parcels.wrap(searchAdResult));
-    bundle.putString(StoreFragment.BundleCons.STORE_THEME, storeTheme);
+    bundle.putString(BundleKeys.STORE_THEME.name(), storeTheme);
     bundle.putString(ORIGIN_TAG, tag);
 
     AppViewFragment fragment = new AppViewFragment();
@@ -428,7 +427,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     searchAdResult = Parcels.unwrap(args.getParcelable(BundleKeys.MINIMAL_AD.name()));
     storeName = args.getString(BundleKeys.STORE_NAME.name());
     sponsored = searchAdResult != null;
-    storeTheme = args.getString(StoreFragment.BundleCons.STORE_THEME);
+    storeTheme = args.getString(BundleKeys.STORE_THEME.name());
     originTag = args.getString(ORIGIN_TAG, null);
     editorsBrickPosition = args.getString(EDITORS_CHOICE_POSITION, null);
   }
@@ -1082,7 +1081,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   protected enum BundleKeys {
-    APP_ID, STORE_NAME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5, UNAME,
+    APP_ID, STORE_NAME, STORE_THEME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5, UNAME,
   }
 
   public enum OpenType {
