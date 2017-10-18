@@ -16,19 +16,16 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.presenter.CompositePresenter;
 import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.AppModelToAndroidAppInfoMapper;
 import cm.aptoide.pt.spotandshareapp.Header;
 import cm.aptoide.pt.spotandshareapp.ObbsProvider;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareAppProvider;
 import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareAppSelectionPresenter;
-import cm.aptoide.pt.spotandshareapp.presenter.SpotAndSharePickAppsPresenter;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import com.jakewharton.rxrelay.PublishRelay;
-import java.util.Arrays;
 import java.util.List;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -98,20 +95,12 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
   }
 
   private void attachPresenters() {
-    SpotAndShareAppSelectionPresenter spotAndShareAppSelectionPresenter =
-        new SpotAndShareAppSelectionPresenter(this,
-            ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
-            CrashReport.getInstance());
 
-    SpotAndSharePickAppsPresenter spotAndSharePickAppsPresenter =
-        new SpotAndSharePickAppsPresenter(this, shouldCreateGroup,
-            new SpotAndShareAppProvider(getActivity().getApplicationContext(),
-                getContext().getPackageManager()),
-            ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
-            new AppModelToAndroidAppInfoMapper(new ObbsProvider()), CrashReport.getInstance());
-
-    attachPresenter(new CompositePresenter(
-        Arrays.asList(spotAndShareAppSelectionPresenter, spotAndSharePickAppsPresenter)), null);
+    attachPresenter(new SpotAndShareAppSelectionPresenter(this,
+        ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
+        shouldCreateGroup, new SpotAndShareAppProvider(getActivity().getApplicationContext(),
+        getContext().getPackageManager()), new AppModelToAndroidAppInfoMapper(new ObbsProvider()),
+        CrashReport.getInstance()), null);
   }
 
   private void setupBackClick() {
