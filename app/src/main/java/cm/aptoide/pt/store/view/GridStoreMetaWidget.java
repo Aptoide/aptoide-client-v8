@@ -32,6 +32,7 @@ import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowingFragment;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.view.app.ListStoreAppsFragment;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
 import java.util.List;
@@ -128,7 +129,8 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
                   .getThemeName(), homeMeta.getMainName(), homeMeta.getDescription(),
               homeMeta.getMainIcon(), homeMeta.isFollowingStore());
           showSocialChannels(homeMeta.getSocialChannels());
-          showAppsCount(homeMeta.getAppsCount(), textStyle, homeMeta.isShowApps());
+          showAppsCount(homeMeta.getAppsCount(), textStyle, homeMeta.isShowApps(),
+              homeMeta.getStoreId());
           showFollowersCount(homeMeta.getFollowersCount(), textStyle);
           showFollowingCount(homeMeta.getFollowingCount(), textStyle);
           showDescription(homeMeta.getDescription());
@@ -199,16 +201,22 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     followersCountTv.setText(spannableFactory.createMultiSpan(followingText, textStyle, count));
   }
 
-  private void showAppsCount(long appsCount, ParcelableSpan[] textStyle, boolean showApps) {
+  private void showAppsCount(long appsCount, ParcelableSpan[] textStyle, boolean showApps,
+      long storeName) {
     if (showApps) {
       appsCountTv.setVisibility(View.VISIBLE);
       String count = AptoideUtils.StringU.withSuffix(appsCount);
       String followingText =
           String.format(getContext().getString(R.string.storehometab_short_apps), count);
       appsCountTv.setText(spannableFactory.createMultiSpan(followingText, textStyle, count));
+      appsCountTv.setOnClickListener(v -> navigateToAppsListScreen(storeName));
     } else {
       appsCountTv.setVisibility(View.GONE);
     }
+  }
+
+  private void navigateToAppsListScreen(long storeName) {
+    getFragmentNavigator().navigateTo(ListStoreAppsFragment.newInstance(storeName), true);
   }
 
   private void showSocialChannels(
