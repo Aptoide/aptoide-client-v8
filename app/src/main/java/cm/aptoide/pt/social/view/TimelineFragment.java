@@ -44,6 +44,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.social.AccountNotificationManagerUserProvider;
 import cm.aptoide.pt.social.StatsUserProvider;
 import cm.aptoide.pt.social.TimelineUserProvider;
@@ -254,6 +255,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     coordinatorLayout = view.findViewById(R.id.coordinator_layout);
     floatingActionButton = (FloatingActionButton) view.findViewById(R.id.floating_action_button);
+    StoreRepository storeRepository = RepositoryFactory.getStoreRepository(getContext());
 
     SpannableFactory spannableFactory = new SpannableFactory();
     TimelineAdsRepository timelineAdsRepository = new TimelineAdsRepository(BehaviorRelay.create());
@@ -262,7 +264,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         new CardViewHolderFactory(postTouchEventPublishSubject, dateCalculator, spannableFactory,
             new MinimalCardViewFactory(dateCalculator, spannableFactory,
                 postTouchEventPublishSubject), marketName, timelineAdsRepository, accountManager,
-            storeContext), new ProgressCard());
+            storeContext, storeRepository), new ProgressCard());
     list.setAdapter(adapter);
 
     final StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(
@@ -296,10 +298,9 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     attachPresenter(
         new TimelinePresenter(this, timeline, CrashReport.getInstance(), timelineNavigation,
             new PermissionManager(), (PermissionService) getContext(), installManager,
-            RepositoryFactory.getStoreRepository(getContext()), storeUtilsProxy,
-            storeCredentialsProvider, accountManager, timelineAnalytics, userId, storeId,
-            storeContext, getContext().getResources(), getFragmentNavigator(),
-            new LinksHandlerFactory(getContext()), notificationCenter));
+            storeRepository, storeUtilsProxy, storeCredentialsProvider, accountManager,
+            timelineAnalytics, userId, storeId, storeContext, getContext().getResources(),
+            getFragmentNavigator(), new LinksHandlerFactory(getContext()), notificationCenter));
   }
 
   @Override public void onDestroyView() {

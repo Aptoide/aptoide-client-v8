@@ -10,8 +10,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.social.data.AggregatedStore;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.FollowStoreCardTouchEvent;
@@ -22,10 +24,10 @@ import cm.aptoide.pt.social.data.StoreAppCardTouchEvent;
 import cm.aptoide.pt.social.data.StoreCardTouchEvent;
 import cm.aptoide.pt.social.data.publisher.Poster;
 import cm.aptoide.pt.util.DateCalculator;
-import cm.aptoide.pt.view.spannable.SpannableFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 
 /**
@@ -35,7 +37,6 @@ import rx.subjects.PublishSubject;
 public class AggregatedStoreViewHolder extends PostViewHolder<AggregatedStore> {
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final DateCalculator dateCalculator;
-  private final SpannableFactory spannableFactory;
   private final MinimalCardViewFactory minimalCardViewFactory;
   private final LayoutInflater inflater;
   private final ImageView headerAvatar1;
@@ -52,15 +53,16 @@ public class AggregatedStoreViewHolder extends PostViewHolder<AggregatedStore> {
   private final TextView morePostersLabel;
   private final FrameLayout minimalCardContainer;
   private final View overflowMenu;
+  private final StoreRepository storeRepository;
 
   public AggregatedStoreViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
-      SpannableFactory spannableFactory, MinimalCardViewFactory minimalCardViewFactory) {
+      MinimalCardViewFactory minimalCardViewFactory, StoreRepository storeRepository) {
     super(view, cardTouchEventPublishSubject);
+    this.storeRepository = storeRepository;
     this.inflater = LayoutInflater.from(itemView.getContext());
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.dateCalculator = dateCalculator;
-    this.spannableFactory = spannableFactory;
     this.minimalCardViewFactory = minimalCardViewFactory;
     this.headerAvatar1 = (ImageView) view.findViewById(R.id.card_header_avatar_1);
     this.headerAvatar2 = (ImageView) view.findViewById(R.id.card_header_avatar_2);
@@ -114,13 +116,26 @@ public class AggregatedStoreViewHolder extends PostViewHolder<AggregatedStore> {
     minimalCardContainer.addView(minimalCardViewFactory.getView(post, post.getMinimalPosts(),
         MinimalCardViewFactory.MINIMUM_NUMBER_OF_VISILIBE_MINIMAL_CARDS, inflater,
         itemView.getContext(), position));
-
+    showFollowButton(post);
     this.followStoreButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new FollowStoreCardTouchEvent(post, post.getStoreId(), post.getStoreName(),
             CardTouchEvent.Type.BODY, getPosition())));
     this.storeAvatarFollow.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new StoreCardTouchEvent(post, post.getStoreName(), post.getStoreTheme(),
             CardTouchEvent.Type.BODY, getPosition())));
+  }
+
+  private void showFollowButton(AggregatedStore post) {
+    storeRepository.isSubscribed(post.getStoreId())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(isSubscribed -> {
+          if (isSubscribed) {
+            followStoreButton.setText(R.string.followed);
+          } else {
+            followStoreButton.setText(R.string.follow);
+          }
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable));
   }
 
   public String getCardHeaderNames(AggregatedStore card) {

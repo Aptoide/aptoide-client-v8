@@ -18,6 +18,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.FollowStoreCardTouchEvent;
 import cm.aptoide.pt.social.data.LikesPreviewCardTouchEvent;
@@ -32,6 +33,7 @@ import cm.aptoide.pt.util.DateCalculator;
 import cm.aptoide.pt.view.spannable.SpannableFactory;
 import java.util.HashMap;
 import java.util.Map;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 
 /**
@@ -39,6 +41,7 @@ import rx.subjects.PublishSubject;
  */
 
 public class SocialStoreViewHolder extends SocialPostViewHolder<SocialStore> {
+  private final StoreRepository storeRepository;
   private final DateCalculator dateCalculator;
   private final SpannableFactory spannableFactory;
   private final LayoutInflater inflater;
@@ -72,10 +75,11 @@ public class SocialStoreViewHolder extends SocialPostViewHolder<SocialStore> {
   private int marginOfTheNextLikePreview = 60;
 
   /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
-  public SocialStoreViewHolder(View view,
+  public SocialStoreViewHolder(View view, StoreRepository storeRepository,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, AptoideAccountManager accountManager) {
     super(view, cardTouchEventPublishSubject);
+    this.storeRepository = storeRepository;
     this.accountManager = accountManager;
     this.inflater = LayoutInflater.from(itemView.getContext());
     this.dateCalculator = dateCalculator;
@@ -139,6 +143,7 @@ public class SocialStoreViewHolder extends SocialPostViewHolder<SocialStore> {
             .getUser()
             .getId(), CardTouchEvent.Type.HEADER, position)));
     showStoreLatestApps(post, position);
+    showFollowButton(post);
     this.followStoreButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new FollowStoreCardTouchEvent(post, post.getStoreId(), post.getStoreName(),
             CardTouchEvent.Type.BODY, position)));
@@ -188,6 +193,19 @@ public class SocialStoreViewHolder extends SocialPostViewHolder<SocialStore> {
             CardTouchEvent.Type.LIKES_PREVIEW, position)));
     this.numberComments.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(post, position, CardTouchEvent.Type.COMMENT_NUMBER)));
+  }
+
+  private void showFollowButton(SocialStore post) {
+    storeRepository.isSubscribed(post.getStoreId())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(isSubscribed -> {
+          if (isSubscribed) {
+            followStoreButton.setText(R.string.followed);
+          } else {
+            followStoreButton.setText(R.string.follow);
+          }
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable));
   }
 
   public Spannable getStyledTitle(Context context, String title) {
