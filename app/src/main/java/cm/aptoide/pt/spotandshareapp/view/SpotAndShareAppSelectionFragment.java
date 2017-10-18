@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.spotandshareapp.AppModel;
@@ -97,10 +99,11 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
   private void attachPresenters() {
 
     attachPresenter(new SpotAndShareAppSelectionPresenter(this,
-        ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
-        shouldCreateGroup, new SpotAndShareAppProvider(getActivity().getApplicationContext(),
-        getContext().getPackageManager()), new AppModelToAndroidAppInfoMapper(new ObbsProvider()),
-        CrashReport.getInstance()), null);
+            ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
+            shouldCreateGroup, new SpotAndShareAppProvider(getActivity().getApplicationContext(),
+            getContext().getPackageManager()), new AppModelToAndroidAppInfoMapper(new ObbsProvider()),
+            new PermissionManager(), (PermissionService) getContext(), CrashReport.getInstance()),
+        null);
   }
 
   private void setupBackClick() {
@@ -172,6 +175,14 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
     ShowMessage.asSnack(this, R.string.spotandshare_message_app_selection_leave_group);
   }
 
+  @Override public void showTimeoutCreateGroupError() {
+    ShowMessage.asSnack(this, R.string.spotandshare_message_timeout_creating_hotspot);
+  }
+
+  @Override public void showGeneralCreateGroupError() {
+    ShowMessage.asSnack(this, R.string.spotandshare_message_error_create_group);
+  }
+
   @Override public Observable<AppModel> selectedApp() {
     return pickAppSubject;
   }
@@ -184,7 +195,7 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
   @Override public void openWaitingToSendScreen(AppModel selectedApp) {
     getFragmentNavigator().cleanBackStack();
     getFragmentNavigator().navigateTo(
-        SpotAndShareWaitingToSendFragment.newInstance(selectedApp, shouldCreateGroup), true);
+        SpotAndShareWaitingToSendFragment.newInstance(selectedApp, false), true);
   }
 
   private void setupLayoutManager() {
