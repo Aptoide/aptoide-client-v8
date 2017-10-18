@@ -1,6 +1,7 @@
-package cm.aptoide.pt.dataprovider.ws.notifications;
+package cm.aptoide.pt.dataprovider.ws.v1;
 
 import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.model.v1.GetPullNotificationsResponse;
 import java.util.List;
 import java.util.Map;
 import retrofit2.http.GET;
@@ -12,12 +13,12 @@ import rx.Observable;
 
 public interface Service {
 
-  @GET("{id}/campaigns")
+  @GET("notifications/{id}/campaigns")
   Observable<List<GetPullNotificationsResponse>> getPullCompaignNotifications(@Path("id") String id,
       @QueryMap Map<String, String> options,
       @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-  @GET("{id}/direct") Observable<List<GetPullNotificationsResponse>> getPullSocialNotifications(
+  @GET("notifications/{id}/direct") Observable<List<GetPullNotificationsResponse>> getPullSocialNotifications(
       @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Path("id") String id,
       @Query("select") List<Integer> types, @QueryMap Map<String, String> options);
 }
