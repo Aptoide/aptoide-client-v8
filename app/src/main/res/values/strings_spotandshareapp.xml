@@ -5,7 +5,7 @@
   <string name="spotandshare_button_username" translatable="false">userwithnoname</string>
   <string name="spotandshare_button_receive">receive</string>
   <string name="spotandshare_button_send">send</string>
-  <string name="spotandshare_message_waiting_for_friends_to_send">Waiting for friends to send app</string>
+  <string name="spotandshare_message_waiting_for_friends_to_send">Waiting for friends to start sharing apps</string>
   <string name="spotandshare_message_instruction_for_friend_to_send">Your friend should go to Spot&amp;Share and press Send</string>
   <string name="spotandshare_title_share_an_app">Share an app</string>
   <string name="spotandshare_button_cancel_profile_edition">cancel</string>
@@ -17,7 +17,7 @@
   <string name="spotandshare_button_cancel_leave_group">cancel</string>
   <string name="spotandshare_button_share_another_app">Share an app</string>
   <string name="spotandshare_message_instruction_for_friend_to_receive">Your friend should go to Spot&amp;Share and press Receive</string>
-  <string name="spotandshare_message_looking_for_a_friend_to_receive_app">Looking for a friend to receive app</string>
+  <string name="spotandshare_message_looking_for_a_friend_to_receive_app">Waiting for friends to start sharing apps</string>
   <string name="spotandshare_mesage_sending_app">Sending</string>
   <string name="spotandshare_message_app_sender_info_sending">%1$s is sending</string>
   <string name="spotandshare_message_app_sender_info_sent">%1$s sent</string>
@@ -59,5 +59,5 @@
   <string name="spotandshare_message_share_aptoide_timeout_creating_hotspot">Creating hotspot is taking too long. Please try again</string>
   <string name="spotandshare_message_timeout_creating_hotspot">Creating hotspot is taking too long. Please try again</string>
   <string name="spotandshare_message_join_group_error">There was an error inside the group</string>
-  <string name="spotandshare_message_hotspot_enabling_problem_send">We can\'t start the transfer in your Android version.\nPlease ask your friends to press SEND and you should press RECEIVE.</string>
+  <string name="spotandshare_message_hotspot_enabling_problem_send">Due to your Android version, you need to press "Receive" and ask your friend to press "Send" to start sharing apps.</string>
 </resources>
