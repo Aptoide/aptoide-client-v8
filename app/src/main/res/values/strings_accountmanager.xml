@@ -114,5 +114,7 @@
   <string name="myaccount_edit_store_button">Edit</string>
   <string name="myaccount_log_out_button">Log out</string>
   <string name="myaccount_header_title">Notifications</string>
+  <string name="twitch">Twitch</string>
+  <string name="youtube">Youtube</string>
 
 </resources>

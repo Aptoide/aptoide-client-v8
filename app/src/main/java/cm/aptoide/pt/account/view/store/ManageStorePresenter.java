@@ -43,6 +43,10 @@ public class ManageStorePresenter implements Presenter {
   @Override public void present() {
     handleSaveData();
     handleCancel();
+    handleFacebookClick();
+    handleTwitchClick();
+    handleTwitterClick();
+    handleYoutubeClick();
   }
 
   @Override public void saveState(Bundle state) {
@@ -51,6 +55,46 @@ public class ManageStorePresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
     // does nothing
+  }
+
+  private void handleYoutubeClick() {
+    view.getLifecycle()
+        .filter(event -> event == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> view.youtubeClick()
+            .doOnNext(click -> view.manageYoutubeViews()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
+  private void handleTwitterClick() {
+    view.getLifecycle()
+        .filter(event -> event == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> view.twitterClick()
+            .doOnNext(click -> view.manageTwitterViews()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
+  private void handleTwitchClick() {
+    view.getLifecycle()
+        .filter(event -> event == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> view.twitchClick()
+            .doOnNext(click -> view.manageTwitchViews()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
+  private void handleFacebookClick() {
+    view.getLifecycle()
+        .filter(event -> event == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> view.facebookClick()
+            .doOnNext(click -> view.manageFacebookViews()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   private void handleCancel() {

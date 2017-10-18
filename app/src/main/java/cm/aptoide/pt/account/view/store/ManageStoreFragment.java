@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +19,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
@@ -59,8 +62,9 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
 
   private static final String EXTRA_STORE_MODEL = "store_model";
   private static final String EXTRA_GO_TO_HOME = "go_to_home";
+  private static final float STROKE_SIZE = 0.040f;
+  private static final float SPACE_BETWEEN = 0.0f;
 
-  private TextView header;
   private TextView chooseStoreNameTitle;
   private View selectStoreImageButton;
   private ImageView storeImage;
@@ -88,6 +92,20 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   private String packageName;
   private String fileProviderAuthority;
   private PhotoFileGenerator photoFileGenerator;
+  private TextInputLayout storeDescriptionWrapper;
+  private View facebookRow;
+  private TextInputLayout facebookUsernameWrapper;
+  private View twitchRow;
+  private View twitterRow;
+  private View youtubeRow;
+  private RelativeLayout facebookTextAndPlus;
+  private RelativeLayout twitchTextAndPlus;
+  private RelativeLayout twitterTextAndPlus;
+  private RelativeLayout youtubeTextAndPlus;
+  private TextInputLayout twitchUsernameWrapper;
+  private TextInputLayout twitterUsernameWrapper;
+  private TextInputLayout youtubeUsernameWrapper;
+  private LinearLayout socialChannels;
 
   public static ManageStoreFragment newInstance(ViewModel storeModel, boolean goToHome) {
     Bundle args = new Bundle();
@@ -190,8 +208,8 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
 
   @Override public void loadImageStateless(String pictureUri) {
     ImageLoader.with(getActivity())
-        .loadUsingCircleTransformAndPlaceholder(pictureUri, storeImage,
-            R.drawable.create_store_avatar);
+        .loadWithShadowCircleTransform(pictureUri, storeImage,
+            getResources().getColor(R.color.aptoide_orange), SPACE_BETWEEN, STROKE_SIZE);
     currentModel.setPictureUri(pictureUri);
   }
 
@@ -202,6 +220,22 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
 
   @Override public Observable<Void> cancelClick() {
     return RxView.clicks(cancelChangesButton);
+  }
+
+  @Override public Observable<Void> facebookClick() {
+    return RxView.clicks(facebookRow);
+  }
+
+  @Override public Observable<Void> twitchClick() {
+    return RxView.clicks(twitchRow);
+  }
+
+  @Override public Observable<Void> twitterClick() {
+    return RxView.clicks(twitterRow);
+  }
+
+  @Override public Observable<Void> youtubeClick() {
+    return RxView.clicks(youtubeRow);
   }
 
   @Override public Completable showError(@StringRes int errorMessage) {
@@ -222,6 +256,26 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     if (waitDialog != null && waitDialog.isShowing()) {
       waitDialog.dismiss();
     }
+  }
+
+  public void manageFacebookViews() {
+    facebookTextAndPlus.setVisibility(View.GONE);
+    facebookUsernameWrapper.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void manageTwitchViews() {
+    twitchTextAndPlus.setVisibility(View.GONE);
+    twitchUsernameWrapper.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void manageTwitterViews() {
+    twitterTextAndPlus.setVisibility(View.GONE);
+    twitterUsernameWrapper.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void manageYoutubeViews() {
+    youtubeTextAndPlus.setVisibility(View.GONE);
+    youtubeUsernameWrapper.setVisibility(View.VISIBLE);
   }
 
   @Nullable @Override
@@ -294,15 +348,36 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   }
 
   public void bindViews(View view) {
-    header = (TextView) view.findViewById(R.id.create_store_header);
     chooseStoreNameTitle = (TextView) view.findViewById(R.id.create_store_choose_name_title);
     selectStoreImageButton = view.findViewById(R.id.create_store_image_action);
     storeImage = (ImageView) view.findViewById(R.id.create_store_image);
     storeName = (EditText) view.findViewById(R.id.create_store_name);
+    storeDescriptionWrapper = (TextInputLayout) view.findViewById(R.id.edit_store_input_section);
     storeDescription = (EditText) view.findViewById(R.id.edit_store_description);
     cancelChangesButton = (Button) view.findViewById(R.id.create_store_skip);
     saveDataButton = (Button) view.findViewById(R.id.create_store_action);
     themeSelectorView = (RecyclerView) view.findViewById(R.id.theme_selector);
+    socialChannels = (LinearLayout) view.findViewById(R.id.edit_store_social_channels);
+    facebookRow = view.findViewById(R.id.edit_store_facebook);
+    facebookTextAndPlus =
+        (RelativeLayout) view.findViewById(R.id.edit_store_facebook_text_plus_wrapper);
+    facebookUsernameWrapper =
+        (TextInputLayout) view.findViewById(R.id.edit_store_facebook_username_wrapper);
+    twitchRow = view.findViewById(R.id.edit_store_twitch);
+    twitchTextAndPlus =
+        (RelativeLayout) view.findViewById(R.id.edit_store_twitch_text_plus_wrapper);
+    twitchUsernameWrapper =
+        (TextInputLayout) view.findViewById(R.id.edit_store_twitch_username_wrapper);
+    twitterRow = view.findViewById(R.id.edit_store_twitter);
+    twitterTextAndPlus =
+        (RelativeLayout) view.findViewById(R.id.edit_store_twitter_text_plus_wrapper);
+    twitterUsernameWrapper =
+        (TextInputLayout) view.findViewById(R.id.edit_store_twitter_username_wrapper);
+    youtubeRow = view.findViewById(R.id.edit_store_youtube);
+    youtubeTextAndPlus =
+        (RelativeLayout) view.findViewById(R.id.edit_store_youtube_text_plus_wrapper);
+    youtubeUsernameWrapper =
+        (TextInputLayout) view.findViewById(R.id.edit_store_youtube_username_wrapper);
 
     waitDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity(),
         getApplicationContext().getString(R.string.please_wait_upload));
@@ -324,19 +399,17 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
 
     if (!currentModel.storeExists()) {
       String appName = getString(R.string.app_name);
-      header.setText(
-          AptoideUtils.StringU.getFormattedString(R.string.create_store_header, getResources(),
-              appName));
       chooseStoreNameTitle.setText(
           AptoideUtils.StringU.getFormattedString(R.string.create_store_name, getResources(),
               appName));
     } else {
-      header.setText(R.string.edit_store_header);
       chooseStoreNameTitle.setText(
           AptoideUtils.StringU.getFormattedString(R.string.create_store_description_title,
               getResources()));
       storeName.setVisibility(View.GONE);
+      storeDescriptionWrapper.setVisibility(View.VISIBLE);
       storeDescription.setVisibility(View.VISIBLE);
+      socialChannels.setVisibility(View.VISIBLE);
       loadImageStateless(currentModel.getPictureUri());
 
       saveDataButton.setText(R.string.save_edit_store);

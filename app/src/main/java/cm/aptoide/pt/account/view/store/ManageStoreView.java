@@ -13,6 +13,14 @@ public interface ManageStoreView extends ImagePickerView {
 
   Observable<Void> cancelClick();
 
+  Observable<Void> facebookClick();
+
+  Observable<Void> twitchClick();
+
+  Observable<Void> twitterClick();
+
+  Observable<Void> youtubeClick();
+
   Completable showError(@StringRes int errorMessage);
 
   Completable showGenericError();
@@ -22,4 +30,12 @@ public interface ManageStoreView extends ImagePickerView {
   void dismissWaitProgressBar();
 
   void hideKeyboard();
+
+  void manageFacebookViews();
+
+  void manageTwitchViews();
+
+  void manageTwitterViews();
+
+  void manageYoutubeViews();
 }

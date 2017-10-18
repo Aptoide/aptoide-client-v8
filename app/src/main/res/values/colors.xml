@@ -17,5 +17,7 @@
   <color name="facebook_highlight">#2f477a</color>
   <color name="google">#cc4a41</color>
   <color name="google_highlight">#cc4a41</color>
+  <color name="twitch">#7243ab</color>
+  <color name="youtube">#db0000</color>
 
 </resources>
