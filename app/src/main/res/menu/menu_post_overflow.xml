@@ -13,8 +13,13 @@
       android:visible="false"
       tools:visible="true"/>
   <item
-      android:id="@+id/unfollow"
+      android:id="@+id/unfollow_store"
       android:title="@string/timeline_button_unfollow_store"
+      android:visible="false"
+      tools:visible="true"/>
+  <item
+      android:id="@+id/unfollow_user"
+      android:title="@string/timeline_button_unfollow_user"
       android:visible="false"
       tools:visible="true"/>
   <item

@@ -9,7 +9,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.publisher.Poster;
@@ -29,6 +31,7 @@ public class MinimalCardViewFactory {
   private final DateCalculator dateCalculator;
   private final SpannableFactory spannableFactory;
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
+  private final AptoideAccountManager accountManager;
   private TextView morePostersLabel;
   private LinearLayout socialInfoBar;
   private TextView numberLikes;
@@ -43,10 +46,12 @@ public class MinimalCardViewFactory {
   private int marginOfTheNextLikePreview = 60;
 
   public MinimalCardViewFactory(DateCalculator dateCalculator, SpannableFactory spannableFactory,
-      PublishSubject<CardTouchEvent> cardTouchEventPublishSubject) {
+      PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
+      AptoideAccountManager accountManager) {
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
+    this.accountManager = accountManager;
   }
 
   public View getView(Post originalPost, List<MinimalPost> minimalPosts, LayoutInflater inflater,
@@ -134,7 +139,7 @@ public class MinimalCardViewFactory {
     showLikesPreview(post, context);
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
 
-    setupOverflowMenu(overflowMenu, post, position, subCardView, originalPost);
+    setupOverflowMenu(overflowMenu, post, position, subCardView);
 
     socialCommentBar.setOnClickListener(view -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(post, position, CardTouchEvent.Type.LAST_COMMENT)));
@@ -312,8 +317,8 @@ public class MinimalCardViewFactory {
     numberLikesOneLike.setVisibility(View.INVISIBLE);
   }
 
-  private void setupOverflowMenu(View overflowMenu, Post post, int position, View subCardView,
-      Post originalPost) {
+  private void setupOverflowMenu(View overflowMenu, MinimalPost post, int position,
+      View subCardView) {
     overflowMenu.setOnClickListener(view -> {
       PostPopupMenuBuilder postPopupMenuBuilder =
           new PostPopupMenuBuilder().prepMenu(subCardView.getContext(), overflowMenu)
@@ -322,14 +327,27 @@ public class MinimalCardViewFactory {
                     new CardTouchEvent(post, position, CardTouchEvent.Type.REPORT_ABUSE));
                 return false;
               });
-      if (originalPost.getType()
-          .isStore()) {
-        postPopupMenuBuilder.addUnfollow(menuItem -> {
-          cardTouchEventPublishSubject.onNext(
-              new CardTouchEvent(post, position, CardTouchEvent.Type.UNFOLLOW_STORE));
-          return false;
-        });
-      }
+      accountManager.accountStatus()
+          .first()
+          .toSingle()
+          .subscribe(account -> {
+            if (post.getMinimalPostPosters()
+                .size() == 1) {
+              if (post.getMinimalPostPosters()
+                  .get(0)
+                  .getUser() != null && !post.getMinimalPostPosters()
+                  .get(0)
+                  .isMe(account.getNickname(), account.getStore()
+                      .getName())) {
+                postPopupMenuBuilder.addUnfollowUser(menuItem -> {
+                  cardTouchEventPublishSubject.onNext(
+                      new CardTouchEvent(post, position, CardTouchEvent.Type.UNFOLLOW_USER));
+                  return false;
+                });
+              }
+            }
+          }, throwable -> CrashReport.getInstance()
+              .log(throwable));
       postPopupMenuBuilder.getPopupMenu()
           .show();
     });

@@ -204,7 +204,7 @@ public class AggregatedStoreViewHolder extends PostViewHolder<AggregatedStore> {
                 new CardTouchEvent(post, position, CardTouchEvent.Type.REPORT_ABUSE));
             return false;
           })
-          .addUnfollow(menuItem -> {
+          .addUnfollowStore(menuItem -> {
             cardTouchEventPublishSubject.onNext(
                 new CardTouchEvent(post, position, CardTouchEvent.Type.UNFOLLOW_STORE));
             return false;

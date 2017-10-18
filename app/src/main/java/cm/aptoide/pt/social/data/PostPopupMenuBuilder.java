@@ -40,10 +40,19 @@ public class PostPopupMenuBuilder {
     return this;
   }
 
-  public PostPopupMenuBuilder addUnfollow(
+  public PostPopupMenuBuilder addUnfollowStore(
       MenuItem.OnMenuItemClickListener onMenuItemClickListener) {
     MenuItem menuItemUnfollow = popup.getMenu()
-        .findItem(R.id.unfollow);
+        .findItem(R.id.unfollow_store);
+    menuItemUnfollow.setOnMenuItemClickListener(onMenuItemClickListener);
+    menuItemUnfollow.setVisible(true);
+    return this;
+  }
+
+  public PostPopupMenuBuilder addUnfollowUser(
+      MenuItem.OnMenuItemClickListener onMenuItemClickListener) {
+    MenuItem menuItemUnfollow = popup.getMenu()
+        .findItem(R.id.unfollow_user);
     menuItemUnfollow.setOnMenuItemClickListener(onMenuItemClickListener);
     menuItemUnfollow.setVisible(true);
     return this;

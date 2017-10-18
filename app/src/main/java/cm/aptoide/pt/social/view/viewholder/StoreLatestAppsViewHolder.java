@@ -148,7 +148,7 @@ public class StoreLatestAppsViewHolder extends PostViewHolder<StoreLatestApps> {
                 new CardTouchEvent(post, position, CardTouchEvent.Type.REPORT_ABUSE));
             return false;
           })
-          .addUnfollow(menuItem -> {
+          .addUnfollowStore(menuItem -> {
             cardTouchEventPublishSubject.onNext(
                 new CardTouchEvent(post, position, CardTouchEvent.Type.UNFOLLOW_STORE));
             return false;

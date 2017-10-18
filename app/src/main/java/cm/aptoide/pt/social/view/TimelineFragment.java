@@ -263,8 +263,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     adapter = new PostAdapter(new ArrayList<>(),
         new CardViewHolderFactory(postTouchEventPublishSubject, dateCalculator, spannableFactory,
             new MinimalCardViewFactory(dateCalculator, spannableFactory,
-                postTouchEventPublishSubject), marketName, timelineAdsRepository, accountManager,
-            storeContext, storeRepository), new ProgressCard());
+                postTouchEventPublishSubject, accountManager), marketName, timelineAdsRepository,
+            accountManager, storeContext, storeRepository), new ProgressCard());
     list.setAdapter(adapter);
 
     final StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(
