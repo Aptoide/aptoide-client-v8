@@ -45,6 +45,7 @@ import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
+import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
@@ -393,11 +394,22 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     final String defaultStore = getDefaultStore();
     if (viewModel.getStoreName() != null && viewModel.getStoreName().length() > 0) {
       searchNavigator =
-          new SearchNavigator(getFragmentNavigator(), viewModel.getStoreName(), defaultStore);
+          getSearchNavigator(getFragmentNavigator(), viewModel.getStoreName(), defaultStore);
     } else {
-      searchNavigator = new SearchNavigator(getFragmentNavigator(), defaultStore);
+      searchNavigator = getSearchNavigator(getFragmentNavigator(), defaultStore);
     }
     return searchNavigator;
+  }
+
+  @NonNull
+  private SearchNavigator getSearchNavigator(FragmentNavigator fragmentNavigator, String storeName,
+      String defaultStore) {
+    return new SearchNavigator(fragmentNavigator, storeName, defaultStore);
+  }
+
+  @NonNull private SearchNavigator getSearchNavigator(FragmentNavigator fragmentNavigator,
+      String defaultStore) {
+    return new SearchNavigator(fragmentNavigator, defaultStore);
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -435,7 +447,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
             converterFactory, subscribedStoresAuthMap, subscribedStoresIds, adsRepository);
 
     mainThreadScheduler = AndroidSchedulers.mainThread();
-    searchNavigator = new SearchNavigator(getFragmentNavigator(), getDefaultStore());
+    searchNavigator = getSearchNavigator(getFragmentNavigator(), getDefaultStore());
 
     onItemViewClickRelay = PublishRelay.create();
     onOpenPopupMenuClickRelay = PublishRelay.create();
