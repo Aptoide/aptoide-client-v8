@@ -153,12 +153,7 @@ public class SocialStoreViewHolder extends SocialPostViewHolder<SocialStore> {
         likeButton.setHeartStateWithoutAnimation(true);
       }
     } else {
-      if (post.isLikeFromClick()) {
-        likeButton.setHeartState(false);
-        post.setLikedFromClick(false);
-      } else {
-        likeButton.setHeartStateWithoutAnimation(true);
-      }
+      likeButton.setHeartState(false);
     }
     if (post.getSharedByName() != null) {
       sharedBy.setText(spannableFactory.createColorSpan(itemView.getContext()
