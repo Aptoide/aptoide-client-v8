@@ -47,35 +47,44 @@ public class SpotAndShareWaitingToSendPresenter implements Presenter {
 
   @Override public void present() {
 
-    view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .observeOn(AndroidSchedulers.mainThread())
-        .flatMap(__ -> {
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return permissionManager.requestLocationAndExternalStoragePermission(permissionService)
-                .flatMap(accessToLocation -> permissionManager.requestWriteSettingsPermission(
-                    permissionService))
-                .flatMap(
-                    locationResult -> permissionManager.requestLocationEnabling(permissionService))
-                .doOnError(throwable -> view.navigateBack());
-          } else {
-            return permissionManager.requestLocationEnabling(permissionService);
-          }
-        })
-        .flatMapSingle(lifecycleEvent -> {
-          if (shouldCreateGroup) {
+    if (shouldCreateGroup) {
+      view.getLifecycle()
+          .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+          .observeOn(AndroidSchedulers.mainThread())
+          .flatMap(__ -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+              return permissionManager.requestLocationAndExternalStoragePermission(
+                  permissionService)
+                  .flatMap(accessToLocation -> permissionManager.requestWriteSettingsPermission(
+                      permissionService))
+                  .flatMap(locationResult -> permissionManager.requestLocationEnabling(
+                      permissionService))
+                  .doOnError(throwable -> view.navigateBack());
+            } else {
+              return permissionManager.requestLocationEnabling(permissionService);
+            }
+          })
+          .flatMapSingle(lifecycleEvent -> {
+
             return createGroup().timeout(15, TimeUnit.SECONDS)
                 .toSingleDefault(2);
             //// FIXME: 12-07-2017 should not pass this integer
-          }
-          return Completable.complete()
-              .toSingleDefault(2);
-        })
-        .doOnError(throwable -> handleError(throwable))
-        .doOnNext(__ -> startListeningToFriends())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> crashReport.log(err));
+
+          })
+          .doOnError(throwable -> handleError(throwable))
+          .doOnNext(__ -> startListeningToFriends())
+          .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+          .subscribe(__ -> {
+          }, err -> crashReport.log(err));
+    } else {
+
+      view.getLifecycle()
+          .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+          .doOnNext(created -> startListeningToFriends())
+          .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+          .subscribe(created -> {
+          }, error -> crashReport.log(error));
+    }
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
