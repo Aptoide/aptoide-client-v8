@@ -10,17 +10,14 @@
   <string name="login">Inicio de sesión</string>
   <string name="successful">Con éxito</string>
   <string name="login_successful">Inicio de sesión correcto</string>
-  <string name="forgot_passwd">Forgot password?</string>
+  <string name="forgot_passwd">¿Olvidaste tu contraseña?</string>
   <string name="fields_cannot_empty">Por favor, consulta tu correo electrónico y contraseña.</string>
   <string name="unknown_error">Error desconocido</string>
-  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
-        Content Policy for Developers
-    </string>
-  <string name="no_email_and_pass_error_message">Please insert an email and password to
-        register.
-    </string>
-  <string name="no_pass_error_message">Please insert a password to register.</string>
-  <string name="no_email_error_message">Please insert an email to register.</string>
+  <string name="accept_terms">Al registrarte estás aceptando los Términos de Servicio de Aptoide
+y la Política de Contenido de los Desarrolladores    </string>
+  <string name="no_email_and_pass_error_message">Por favor, introduce un email y una contraseña para registrarte.    </string>
+  <string name="no_pass_error_message">Por favor, introduce una contraseña para registrarte.</string>
+  <string name="no_email_error_message">Por favor, introduce un email para registrarte.</string>
   <string name="password_validation_text">La contraseña tiene que tener 8 caracteres como mínimo y
 al menos una letra y un número o caracteres especiales (!@#$%*)</string>
   <string name="logged_as">Has iniciado sesión como:</string>

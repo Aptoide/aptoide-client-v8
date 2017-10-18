@@ -11,8 +11,8 @@
   <!-- DateUtils -->
   <string name="WidgetProvider_timestamp_today">আজ</string>
   <string name="WidgetProvider_timestamp_yesterday">গতকাল</string>
-  <string name="WidgetProvider_timestamp_hour_ago">%s ঘন্টা পূর্বে</string>
-  <string name="WidgetProvider_timestamp_hours_ago">%s ঘন্টা পূর্বে</string>
+  <string name="WidgetProvider_timestamp_hour_ago">%s ঘণ্টা পূর্বে</string>
+  <string name="WidgetProvider_timestamp_hours_ago">%s ঘণ্টা পূর্বে</string>
   <string name="WidgetProvider_timestamp_minutes_ago">%s মিনিট পূর্বে</string>
   <string name="WidgetProvider_timestamp_just_now">এই মাত্র</string>
   <string name="WidgetProvider_timestamp_weeks_ago">%s সপ্তাহ পূর্বে</string>

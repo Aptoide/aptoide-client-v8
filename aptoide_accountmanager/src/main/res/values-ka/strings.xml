@@ -13,12 +13,11 @@
   <string name="forgot_passwd">დაგავიწყდათ პაროლი?</string>
   <string name="fields_cannot_empty">გთხოვთ, შეამოწმოთმოთ ელ.ფოსტა და პაროლი.</string>
   <string name="unknown_error">ამოუცნობი ხარვეზი</string>
-  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
-        Content Policy for Developers
+  <string name="accept_terms">რეგისტრაციით, თქვენ ეთანხმებით Aptoide-ის გამოყენების პირობებს
+        და მასალის პოლიტიკას შემმუშავებლებისთვის
     </string>
-  <string name="no_email_and_pass_error_message">Please insert an email and password to
-        register.
-    </string>
+  <string name="no_email_and_pass_error_message">შეიყვანეთ ელ-ფოსტის მისამართი და 
+        პაროლი.    </string>
   <string name="no_pass_error_message">შეიყვანეთ პაროლი.</string>
   <string name="no_email_error_message">შეიყვანეთ ელ-ფოსტის მისამართი.</string>
   <string name="password_validation_text">\"პაროლი უნდა შეიცავდეს მინიმუმ 8 სიმბოლოს

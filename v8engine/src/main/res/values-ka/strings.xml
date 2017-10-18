@@ -146,7 +146,7 @@
   <string name="followed">გამოწერილია</string>
   <string name="unfollow_yes_no">გსურთ გამოწერის გაუქმება?</string>
   <string name="unfollow">გააუქმე გამოწერა</string>
-  <string name="appview_follow_store_button_text">Follow?</string>
+  <string name="appview_follow_store_button_text">გსურთ გამოწერა?</string>
   <string name="unfollowing_store_message">უქმდება %s -ზე გამოწერა</string>
   <string name="store_followed">%s გამოწერილია</string>
   <string name="subscribers">გამომწერები</string>
@@ -269,7 +269,7 @@
   <string name="create_store_displayable_message">შექმენით საკუთარი მარკეტი და დაიწყეთ  აპლიკაციების გაზიარება!</string>
   <string name="create_store_displayable_button">მარკეტის შექმნა</string>
   <string name="my_store_created_displayable_message">თქვენი Android მარკეტი</string>
-  <string name="create_store_displayable_created_store_message">You\'ve just created your Store!</string>
+  <string name="create_store_displayable_created_store_message">თქვენ უკვე შექმენით საკუთარი მარკეტი!</string>
   <string name="create_store_displayable_explore_message">შედით და დაათვალიერეთ</string>
   <string name="create_store_displayable_explore_button">შესვლა</string>
   <!-- stores tab > my store with no apps -->
@@ -326,8 +326,8 @@
   <string name="out_of_space_dialog_title">არასაკმარისი მეხსიერება</string>
   <string name="out_of_space_dialog_message">გთხოვთ გაათავისუფლოთ ადგილი მეხსიერებაზე.</string>
   <!--new setting options-->
-  <string name="languages">Languages</string>
-  <string name="language_dialog">Select a language</string>
+  <string name="languages">ენა</string>
+  <string name="language_dialog">აირჩიეთ ენა</string>
   <string name="topAppsNotification">Top apps recommendations</string>
   <string name="topAppsNotification_dialog">Choose top apps notifications frequency</string>
 </resources>
