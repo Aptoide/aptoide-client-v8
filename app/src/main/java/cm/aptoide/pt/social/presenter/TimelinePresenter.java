@@ -189,7 +189,8 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
                 .equals(CardTouchEvent.Type.REPORT_ABUSE))
-            .doOnNext(cardTouchEvent -> timelineNavigation.navigateToFeedbackScreen())
+            .flatMapSingle(cardTouchEvent -> view.takeFeedbackScreenShot())
+            .doOnNext(screenshotPath -> timelineNavigation.navigateToFeedbackScreen(screenshotPath))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {

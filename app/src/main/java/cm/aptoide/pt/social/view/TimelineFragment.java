@@ -91,6 +91,7 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 
@@ -601,6 +602,16 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   @Override public void showPostDeletedError() {
     Toast.makeText(getContext(), "Error deleting post", Toast.LENGTH_SHORT)
         .show();
+  }
+
+  @Override public Single<String> takeFeedbackScreenShot() {
+    String downloadFolderPath = getContext().getApplicationContext()
+        .getCacheDir()
+        .getPath();
+    String screenshotFileName = getActivity().getClass()
+        .getSimpleName() + ".jpg";
+    AptoideUtils.ScreenU.takeScreenshot(getActivity(), downloadFolderPath, screenshotFileName);
+    return Single.just(downloadFolderPath + screenshotFileName);
   }
 
   private void handleSharePreviewAnswer() {

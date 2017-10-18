@@ -11,6 +11,7 @@ import cm.aptoide.pt.social.data.share.ShareEvent;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
 
 /**
  * Created by jdandrade on 31/05/2017.
@@ -105,4 +106,6 @@ public interface TimelineView extends View {
   void showPostDeleted();
 
   void showPostDeletedError();
+
+  Single<String> takeFeedbackScreenShot();
 }
