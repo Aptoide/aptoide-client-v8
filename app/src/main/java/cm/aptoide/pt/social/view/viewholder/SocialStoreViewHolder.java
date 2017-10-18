@@ -137,14 +137,14 @@ public class SocialStoreViewHolder extends SocialPostViewHolder<SocialStore> {
             .getStore()
             .getStoreTheme(), post.getPoster()
             .getUser()
-            .getId(), CardTouchEvent.Type.HEADER, getPosition())));
-    showStoreLatestApps(post);
+            .getId(), CardTouchEvent.Type.HEADER, position)));
+    showStoreLatestApps(post, position);
     this.followStoreButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new FollowStoreCardTouchEvent(post, post.getStoreId(), post.getStoreName(),
-            CardTouchEvent.Type.BODY, getPosition())));
+            CardTouchEvent.Type.BODY, position)));
     this.storeAvatarFollow.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new StoreCardTouchEvent(post, post.getStoreName(), post.getStoreTheme(),
-            CardTouchEvent.Type.BODY, getPosition())));
+            CardTouchEvent.Type.BODY, position)));
     if (post.isLiked()) {
       if (post.isLikeFromClick()) {
         likeButton.setHeartState(true);
@@ -179,7 +179,7 @@ public class SocialStoreViewHolder extends SocialPostViewHolder<SocialStore> {
         new CardTouchEvent(post, position, CardTouchEvent.Type.SHARE)));
     this.likePreviewContainer.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new LikesPreviewCardTouchEvent(post, post.getLikesNumber(),
-            CardTouchEvent.Type.LIKES_PREVIEW, getPosition())));
+            CardTouchEvent.Type.LIKES_PREVIEW, position)));
     this.numberLikes.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new LikesPreviewCardTouchEvent(post, post.getLikesNumber(),
             CardTouchEvent.Type.LIKES_PREVIEW, position)));
@@ -196,7 +196,7 @@ public class SocialStoreViewHolder extends SocialPostViewHolder<SocialStore> {
         ContextCompat.getColor(context, R.color.black_87_alpha), title);
   }
 
-  private void showStoreLatestApps(SocialStore card) {
+  private void showStoreLatestApps(SocialStore card, int position) {
     Map<View, Long> apps = new HashMap<>();
     LongSparseArray<String> appsPackages = new LongSparseArray<>();
 
@@ -216,7 +216,7 @@ public class SocialStoreViewHolder extends SocialPostViewHolder<SocialStore> {
       appsPackages.put(latestApp.getId(), latestApp.getPackageName());
     }
 
-    setStoreLatestAppsListeners(card, apps, appsPackages);
+    setStoreLatestAppsListeners(card, apps, appsPackages, position);
   }
 
   /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
@@ -250,11 +250,11 @@ public class SocialStoreViewHolder extends SocialPostViewHolder<SocialStore> {
   }
 
   private void setStoreLatestAppsListeners(SocialStore card, Map<View, Long> apps,
-      LongSparseArray<String> appsPackages) {
+      LongSparseArray<String> appsPackages, int position) {
     for (View app : apps.keySet()) {
       app.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
           new StoreAppCardTouchEvent(card, CardTouchEvent.Type.BODY,
-              appsPackages.get(apps.get(app)), getPosition())));
+              appsPackages.get(apps.get(app)), position)));
     }
   }
 
