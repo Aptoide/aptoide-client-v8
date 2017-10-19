@@ -45,26 +45,30 @@ public class StoreGridHeaderWidget extends Widget<StoreGridHeaderDisplayable> {
     more.setVisibility(moreIsVisible && model.isMoreVisible() ? View.VISIBLE : View.GONE);
 
     if (moreIsVisible) {
-      compositeSubscription.add(RxView.clicks(more).subscribe(a -> {
+      compositeSubscription.add(RxView.clicks(more)
+          .subscribe(a -> {
 
-        final Event event = wsWidget.getActions().get(0).getEvent();
-        final String storeTheme = model.getStoreTheme();
-        final String tag = model.getTag();
-        final StoreContext storeContext = model.getStoreContext();
-        final String title = wsWidget.getTitle();
+            final Event event = wsWidget.getActions()
+                .get(0)
+                .getEvent();
+            final String storeTheme = model.getStoreTheme();
+            final String tag = model.getTag();
+            final StoreContext storeContext = model.getStoreContext();
+            final String title = wsWidget.getTitle();
 
-        if (event.getName() == Event.Name.listComments) {
-          String action = event.getAction();
-          String url = action != null ? action.replace(V7.getHost(sharedPreferences), "") : null;
-          displayable.getStoreTabNavigator()
-              .navigateToCommentGridRecyclerView(CommentType.STORE, url, "View Comments",
-                  storeContext);
-        } else {
-          displayable.getStoreTabNavigator()
-              .navigateToStoreTabGridRecyclerView(event, title, storeTheme, tag, storeContext,
-                  false);
-        }
-      }));
+            if (event.getName() == Event.Name.listComments) {
+              String action = event.getAction();
+              String url =
+                  action != null ? action.replace(V7.getHost(sharedPreferences), "") : null;
+              displayable.getStoreTabNavigator()
+                  .navigateToCommentGridRecyclerView(CommentType.STORE, url, "View Comments",
+                      storeContext);
+            } else {
+              displayable.getStoreTabNavigator()
+                  .navigateToStoreTabGridRecyclerView(event, title, storeTheme, tag, storeContext,
+                      false);
+            }
+          }));
     }
   }
 }

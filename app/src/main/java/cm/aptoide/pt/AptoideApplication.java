@@ -344,7 +344,8 @@ public abstract class AptoideApplication extends Application {
     try {
       PRNGFixes.apply();
     } catch (Exception e) {
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     }
 
     //
@@ -391,11 +392,13 @@ public abstract class AptoideApplication extends Application {
         .observeOn(Schedulers.computation())
         .andThen(prepareApp(AptoideApplication.this.getAccountManager()).onErrorComplete(err -> {
           // in case we have an error preparing the app, log that error and continue
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
           return true;
         }))
         .andThen(discoverAndSaveInstalledApps())
-        .subscribe(() -> { /* do nothing */}, error -> CrashReport.getInstance().log(error));
+        .subscribe(() -> { /* do nothing */}, error -> CrashReport.getInstance()
+            .log(error));
 
     //
     // app synchronous initialization
@@ -403,8 +406,10 @@ public abstract class AptoideApplication extends Application {
 
     sendAppStartToAnalytics().doOnCompleted(() -> SecurePreferences.setFirstRun(false,
         SecurePreferencesImplementation.getInstance(getApplicationContext(),
-            getDefaultSharedPreferences()))).subscribe(() -> {
-    }, throwable -> CrashReport.getInstance().log(throwable));
+            getDefaultSharedPreferences())))
+        .subscribe(() -> {
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable));
 
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
 
@@ -462,7 +467,8 @@ public abstract class AptoideApplication extends Application {
     getPreferences().getBoolean(CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY, true)
         .first()
         .subscribe(enabled -> getNotificationSyncScheduler().setEnabled(enabled),
-            throwable -> CrashReport.getInstance().log(throwable));
+            throwable -> CrashReport.getInstance()
+                .log(throwable));
 
     getNotificationCenter().setup();
   }
@@ -809,7 +815,8 @@ public abstract class AptoideApplication extends Application {
               .requestScopes(new Scope("https://www.googleapis.com/auth/contacts.readonly"))
               .requestScopes(new Scope(Scopes.PROFILE))
               .requestServerAuthCode(BuildConfig.GMS_SERVER_ID)
-              .build()).build();
+              .build())
+          .build();
     }
     return googleSignInClient;
   }
@@ -997,7 +1004,8 @@ public abstract class AptoideApplication extends Application {
         .toSingle()
         .subscribe(cleanedSize -> Logger.d(TAG,
             "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize, false)),
-            err -> CrashReport.getInstance().log(err));
+            err -> CrashReport.getInstance()
+                .log(err));
   }
 
   public FileManager getFileManager() {
@@ -1030,7 +1038,8 @@ public abstract class AptoideApplication extends Application {
   }
 
   private void initializeFlurry(Context context, String flurryKey) {
-    new FlurryAgent.Builder().withLogEnabled(false).build(context, flurryKey);
+    new FlurryAgent.Builder().withLogEnabled(false)
+        .build(context, flurryKey);
   }
 
   private Completable sendAppStartToAnalytics() {
@@ -1070,19 +1079,22 @@ public abstract class AptoideApplication extends Application {
   }
 
   private Completable prepareApp(AptoideAccountManager accountManager) {
-    return accountManager.accountStatus().first().toSingle().flatMapCompletable(account -> {
-      if (SecurePreferences.isFirstRun(
-          SecurePreferencesImplementation.getInstance(getApplicationContext(),
-              getDefaultSharedPreferences()))) {
+    return accountManager.accountStatus()
+        .first()
+        .toSingle()
+        .flatMapCompletable(account -> {
+          if (SecurePreferences.isFirstRun(
+              SecurePreferencesImplementation.getInstance(getApplicationContext(),
+                  getDefaultSharedPreferences()))) {
 
-        PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+            PreferenceManager.setDefaultValues(this, R.xml.settings, false);
 
-        return setupFirstRun().andThen(getRootAvailabilityManager().updateRootAvailability())
-            .andThen(Completable.merge(accountManager.updateAccount(), createShortcut()));
-      }
+            return setupFirstRun().andThen(getRootAvailabilityManager().updateRootAvailability())
+                .andThen(Completable.merge(accountManager.updateAccount(), createShortcut()));
+          }
 
-      return Completable.complete();
-    });
+          return Completable.complete();
+        });
   }
 
   // todo re-factor all this code to proper Rx
@@ -1108,7 +1120,9 @@ public abstract class AptoideApplication extends Application {
           GetStoreMetaRequest.of(defaultStoreCredentials, getAccountSettingsBodyInterceptorPoolV7(),
               getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
               getDefaultSharedPreferences()), getAccountManager(), defaultStoreCredentials)
-          .andThen(refreshUpdates())).doOnError(err -> CrashReport.getInstance().log(err));
+          .andThen(refreshUpdates()))
+          .doOnError(err -> CrashReport.getInstance()
+              .log(err));
     });
   }
 
@@ -1280,7 +1294,8 @@ public abstract class AptoideApplication extends Application {
   }
 
   private Completable refreshUpdates() {
-    return RepositoryFactory.getUpdateRepository(this, getDefaultSharedPreferences()).sync(true);
+    return RepositoryFactory.getUpdateRepository(this, getDefaultSharedPreferences())
+        .sync(true);
   }
 
   private void createAppShortcut() {
@@ -1301,7 +1316,9 @@ public abstract class AptoideApplication extends Application {
         final String IS_PHONE_ROOTED = "IS_PHONE_ROOTED";
 
         @Override public Single<Boolean> isPhoneRoot() {
-          return getSecurePreferences().getBoolean(IS_PHONE_ROOTED, false).first().toSingle();
+          return getSecurePreferences().getBoolean(IS_PHONE_ROOTED, false)
+              .first()
+              .toSingle();
         }
 
         @Override public Completable save(boolean rootAvailable) {

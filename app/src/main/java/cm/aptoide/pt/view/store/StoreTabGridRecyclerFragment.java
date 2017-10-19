@@ -74,15 +74,21 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     Bundle args = new Bundle();
 
     if (event.getType() != null) {
-      args.putString(BundleCons.TYPE, event.getType().toString());
+      args.putString(BundleCons.TYPE, event.getType()
+          .toString());
     }
 
     if (event.getName() != null) {
-      args.putString(BundleCons.NAME, event.getName().toString());
+      args.putString(BundleCons.NAME, event.getName()
+          .toString());
     }
 
-    if (event.getData() != null && event.getData().getLayout() != null) {
-      args.putString(BundleCons.LAYOUT, event.getData().getLayout().toString());
+    if (event.getData() != null
+        && event.getData()
+        .getLayout() != null) {
+      args.putString(BundleCons.LAYOUT, event.getData()
+          .getLayout()
+          .toString());
     }
 
     if (storeContext != null) {
@@ -107,7 +113,8 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass().getSimpleName(), tag, storeContext);
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName(), tag, storeContext);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -150,9 +157,11 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
         DisplayableManager displayableManager = this;
         displayablesObservable.compose(bindUntilEvent(LifecycleEvent.DESTROY))
             .subscribe(displayables -> {
-              displayableManager.clearDisplayables().addDisplayables(displayables, true);
+              displayableManager.clearDisplayables()
+                  .addDisplayables(displayables, true);
             }, err -> {
-              CrashReport.getInstance().log(err);
+              CrashReport.getInstance()
+                  .log(err);
               StoreTabGridRecyclerFragment.this.finishLoading(err);
             });
       }

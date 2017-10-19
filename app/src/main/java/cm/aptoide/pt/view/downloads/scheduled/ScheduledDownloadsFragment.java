@@ -87,7 +87,8 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass().getSimpleName());
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -153,7 +154,8 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
                         .subscribe(
                             scheduledList -> downloadAndInstallScheduledList(scheduledList, true),
                             err -> {
-                              CrashReport.getInstance().log(err);
+                              CrashReport.getInstance()
+                                  .log(err);
                             });
                     break;
                   case NO:
@@ -211,7 +213,8 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
         .subscribe(scheduledDownloads -> {
           updateUi(scheduledDownloads);
         }, t -> {
-          CrashReport.getInstance().log(t);
+          CrashReport.getInstance()
+              .log(t);
           emptyData.setText(R.string.no_sch_downloads);
           emptyData.setVisibility(View.VISIBLE);
           clearDisplayables();

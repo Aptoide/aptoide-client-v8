@@ -61,7 +61,8 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass().getSimpleName());
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void setArguments(Bundle args) {
@@ -110,9 +111,11 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
   @Override public void setupViews() {
     super.setupViews();
     setHasOptionsMenu(true);
-    RxView.clicks(sendFeedbackBtn).subscribe(aVoid -> sendFeedback(), err -> {
-      CrashReport.getInstance().log(err);
-    });
+    RxView.clicks(sendFeedbackBtn)
+        .subscribe(aVoid -> sendFeedback(), err -> {
+          CrashReport.getInstance()
+              .log(err);
+        });
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
@@ -148,8 +151,10 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
             }
 
             emailIntent.putExtra(Intent.EXTRA_SUBJECT,
-                "[Feedback]-" + versionName + ": " + subgectEdit.getText().toString());
-            emailIntent.putExtra(Intent.EXTRA_TEXT, messageBodyEdit.getText().toString());
+                "[Feedback]-" + versionName + ": " + subgectEdit.getText()
+                    .toString());
+            emailIntent.putExtra(Intent.EXTRA_TEXT, messageBodyEdit.getText()
+                .toString());
             //attach screenshots and logs
             if (logsAndScreenshotsCb.isChecked()) {
               ArrayList<Uri> uris = new ArrayList<Uri>();
@@ -178,7 +183,8 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
   }
 
   public boolean isContentValid() {
-    return !TextUtils.isEmpty(subgectEdit.getText().toString());
+    return !TextUtils.isEmpty(subgectEdit.getText()
+        .toString());
   }
 
   private Uri getUriFromFile(File file) {

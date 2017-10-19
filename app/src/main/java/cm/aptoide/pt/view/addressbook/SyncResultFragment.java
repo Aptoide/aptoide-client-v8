@@ -67,7 +67,8 @@ public class SyncResultFragment extends UIComponentFragment implements SyncResul
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass().getSimpleName());
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -103,8 +104,10 @@ public class SyncResultFragment extends UIComponentFragment implements SyncResul
         getString(R.string.addressbook_success_connected_friends, Integer.toString(contacts.size()),
             marketName));
 
-    RxView.clicks(allowFind).subscribe(click -> mActionsListener.allowFindClicked());
-    RxView.clicks(done).subscribe(click -> mActionsListener.doneClicked());
+    RxView.clicks(allowFind)
+        .subscribe(click -> mActionsListener.allowFindClicked());
+    RxView.clicks(done)
+        .subscribe(click -> mActionsListener.doneClicked());
   }
 
   @Override public void finishView() {

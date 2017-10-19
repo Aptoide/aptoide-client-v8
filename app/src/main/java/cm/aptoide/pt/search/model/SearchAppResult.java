@@ -38,19 +38,33 @@ import org.parceler.Parcel;
   }
 
   public SearchAppResult(SearchApp searchApp) {
-    this(searchApp.getFile().getMalware().getRank().ordinal(), searchApp.getIcon(),
-        searchApp.getStore().getName(), searchApp.getStore().getAppearance().getTheme(),
-        searchApp.getModified().getTime(), searchApp.getStats().getRating().getAvg(),
-        searchApp.getStats().getPdownloads(), searchApp.getName(), searchApp.getPackageName(),
-        searchApp.getId(), searchApp.hasVersions(), true);
+    this(searchApp.getFile()
+            .getMalware()
+            .getRank()
+            .ordinal(), searchApp.getIcon(), searchApp.getStore()
+            .getName(), searchApp.getStore()
+            .getAppearance()
+            .getTheme(), searchApp.getModified()
+            .getTime(), searchApp.getStats()
+            .getRating()
+            .getAvg(), searchApp.getStats()
+            .getPdownloads(), searchApp.getName(), searchApp.getPackageName(), searchApp.getId(),
+        searchApp.hasVersions(), true);
   }
 
   public SearchAppResult(SearchApp searchApp, boolean goToStore) {
-    this(searchApp.getFile().getMalware().getRank().ordinal(), searchApp.getIcon(),
-        searchApp.getStore().getName(), searchApp.getStore().getAppearance().getTheme(),
-        searchApp.getModified().getTime(), searchApp.getStats().getRating().getAvg(),
-        searchApp.getStats().getPdownloads(), searchApp.getName(), searchApp.getPackageName(),
-        searchApp.getId(), searchApp.hasVersions(), goToStore);
+    this(searchApp.getFile()
+            .getMalware()
+            .getRank()
+            .ordinal(), searchApp.getIcon(), searchApp.getStore()
+            .getName(), searchApp.getStore()
+            .getAppearance()
+            .getTheme(), searchApp.getModified()
+            .getTime(), searchApp.getStats()
+            .getRating()
+            .getAvg(), searchApp.getStats()
+            .getPdownloads(), searchApp.getName(), searchApp.getPackageName(), searchApp.getId(),
+        searchApp.hasVersions(), goToStore);
   }
 
   public boolean hasGoToStore() {

@@ -77,7 +77,8 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
     } else if (itemId == R.id.menu_clear) {
       //DeprecatedDatabase.RollbackQ.deleteAll(realm);
       AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
-          .getApplicationContext()).getDatabase(), Rollback.class).removeAll();
+          .getApplicationContext()).getDatabase(), Rollback.class)
+          .removeAll();
       clearDisplayables();
       finishLoading();
       return true;
@@ -89,8 +90,8 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     analytics = Analytics.getInstance();
-    final AptoideApplication application =
-        (AptoideApplication) getContext().getApplicationContext().getApplicationContext();
+    final AptoideApplication application = (AptoideApplication) getContext().getApplicationContext()
+        .getApplicationContext();
     final ApplicationPreferences appPreferences = application.getApplicationPreferences();
     marketName = appPreferences.getMarketName();
     installManager = new InstallerFactory(new MinimalAdMapper(),
@@ -100,7 +101,8 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass().getSimpleName());
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public int getContentViewId() {

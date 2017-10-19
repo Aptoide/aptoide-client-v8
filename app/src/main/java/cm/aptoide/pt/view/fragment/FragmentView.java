@@ -68,20 +68,23 @@ public abstract class FragmentView extends LeakFragment implements View {
     super.onCreate(savedInstanceState);
     appPreferences =
         ((AptoideApplication) getContext().getApplicationContext()).getApplicationPreferences();
-    ScreenTrackingUtils.getInstance().incrementNumberOfScreens();
+    ScreenTrackingUtils.getInstance()
+        .incrementNumberOfScreens();
     navigationTracker =
         ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker();
   }
 
   @Override public void onDestroy() {
     super.onDestroy();
-    ScreenTrackingUtils.getInstance().decrementNumberOfScreens();
+    ScreenTrackingUtils.getInstance()
+        .decrementNumberOfScreens();
   }
 
   @Override public void setUserVisibleHint(boolean isVisibleToUser) {
     super.setUserVisibleHint(isVisibleToUser);
     if (isVisibleToUser) {
-      ScreenTrackingUtils.getInstance().addScreenToHistory(getClass().getSimpleName());
+      ScreenTrackingUtils.getInstance()
+          .addScreenToHistory(getClass().getSimpleName());
     }
   }
 
@@ -100,7 +103,8 @@ public abstract class FragmentView extends LeakFragment implements View {
     if (presenter != null) {
       presenter.saveState(outState);
     } else {
-      Logger.w(this.getClass().getName(), "No presenter was attached.");
+      Logger.w(this.getClass()
+          .getName(), "No presenter was attached.");
     }
 
     super.onSaveInstanceState(outState);

@@ -14,7 +14,8 @@ public class PartnerApplication extends AptoideApplication {
 
   public BootConfig getBootConfig() {
     if (bootConfig == null) {
-      bootConfig = BootConfigJSONUtils.getSavedRemoteBootConfig(getBaseContext()).getData();
+      bootConfig = BootConfigJSONUtils.getSavedRemoteBootConfig(getBaseContext())
+          .getData();
     }
     return bootConfig;
   }
@@ -26,7 +27,10 @@ public class PartnerApplication extends AptoideApplication {
   }
 
   @Override public Completable createShortcut() {
-    if (bootConfig.getPartner().getSwitches().getOptions().isShortcut()) {
+    if (bootConfig.getPartner()
+        .getSwitches()
+        .getOptions()
+        .isShortcut()) {
       return super.createShortcut();
     } else {
       return null;

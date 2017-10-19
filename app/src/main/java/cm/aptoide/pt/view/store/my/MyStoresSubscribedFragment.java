@@ -55,6 +55,10 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
   private TokenInvalidator tokenInvalidator;
   private StoreAnalytics storeAnalytics;
 
+  public static Fragment newInstance() {
+    return new MyStoresSubscribedFragment();
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     tokenInvalidator =
@@ -133,9 +137,5 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
       }
     }
     return storesDisplayables;
-  }
-
-  public static Fragment newInstance() {
-    return new MyStoresSubscribedFragment();
   }
 }

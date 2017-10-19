@@ -218,15 +218,18 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
           }
 
           @Override public void onError(FacebookException error) {
-            Logger.e(this.getClass().getName(), error.getMessage());
+            Logger.e(this.getClass()
+                .getName(), error.getMessage());
           }
         });
   }
 
   private FacebookModel createFacebookModel(LoginResult loginResult) {
     FacebookModel facebookModel = new FacebookModel();
-    facebookModel.setId(Long.valueOf(loginResult.getAccessToken().getUserId()));
-    facebookModel.setAccessToken(loginResult.getAccessToken().getToken());
+    facebookModel.setId(Long.valueOf(loginResult.getAccessToken()
+        .getUserId()));
+    facebookModel.setAccessToken(loginResult.getAccessToken()
+        .getToken());
     return facebookModel;
   }
 
@@ -235,7 +238,8 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass().getSimpleName());
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void finishView() {

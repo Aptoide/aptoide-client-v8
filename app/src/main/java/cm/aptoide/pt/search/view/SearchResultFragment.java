@@ -207,7 +207,8 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
 
   @Override public Observable<String> clickNoResultsSearchButton() {
     return RxView.clicks(noResultsSearchButton)
-        .map(__ -> noSearchLayoutSearchQuery.getText().toString());
+        .map(__ -> noSearchLayoutSearchQuery.getText()
+            .toString());
   }
 
   @Override public void showNoResultsView() {
@@ -270,7 +271,8 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
       inflater.inflate(R.menu.menu_search_item, popupMenu.getMenu());
 
       if (hasVersions) {
-        MenuItem menuItemVersions = popupMenu.getMenu().findItem(R.id.versions);
+        MenuItem menuItemVersions = popupMenu.getMenu()
+            .findItem(R.id.versions);
         menuItemVersions.setVisible(true);
       }
 
@@ -321,10 +323,11 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   private Observable<Void> recyclerViewReachedBottom(RecyclerView recyclerView) {
     return RxRecyclerView.scrollEvents(recyclerView)
         .filter(event -> event.dy() > 4)
-        .filter(event -> event.view().isAttachedToWindow())
+        .filter(event -> event.view()
+            .isAttachedToWindow())
         .filter(event -> {
-          final LinearLayoutManager layoutManager =
-              (LinearLayoutManager) event.view().getLayoutManager();
+          final LinearLayoutManager layoutManager = (LinearLayoutManager) event.view()
+              .getLayoutManager();
           final int visibleItemCount = layoutManager.getChildCount();
           final int totalItemCount = layoutManager.getItemCount();
           final int pastVisibleItems = layoutManager.findFirstVisibleItemPosition();
@@ -368,10 +371,11 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     }
 
     outState.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
-    outState.putParcelable(ALL_STORES_SEARCH_LIST_STATE,
-        allStoresResultList.getLayoutManager().onSaveInstanceState());
+    outState.putParcelable(ALL_STORES_SEARCH_LIST_STATE, allStoresResultList.getLayoutManager()
+        .onSaveInstanceState());
     outState.putParcelable(FOLLOWED_STORES_SEARCH_LIST_STATE,
-        followedStoresResultList.getLayoutManager().onSaveInstanceState());
+        followedStoresResultList.getLayoutManager()
+            .onSaveInstanceState());
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -489,7 +493,8 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass().getSimpleName());
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @NonNull private DividerItemDecoration getDefaultItemDecoration() {

@@ -106,13 +106,14 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
       updateReloadSubscription.unsubscribe();
     }
 
-    updateReloadSubscription = updateRepository.sync(true).subscribe(() -> finishLoading(), e -> {
-      if (e instanceof RepositoryItemNotFoundException) {
-        ShowMessage.asSnack(getView(), R.string.add_store);
-      }
-      crashReport.log(e);
-      finishLoading();
-    });
+    updateReloadSubscription = updateRepository.sync(true)
+        .subscribe(() -> finishLoading(), e -> {
+          if (e instanceof RepositoryItemNotFoundException) {
+            ShowMessage.asSnack(getView(), R.string.add_store);
+          }
+          crashReport.log(e);
+          finishLoading();
+        });
   }
 
   @Override public void onDestroyView() {
@@ -143,7 +144,8 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
           finishLoading();
         }, err -> {
           Logger.e(TAG, "listing updates or installed threw an exception");
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
           finishLoading();
         });
   }
@@ -154,7 +156,8 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass().getSimpleName());
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -266,15 +269,17 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
    * Filters updates returning the installed app or empty item.
    *
    * @param item App to filter.
+   *
    * @return {@link Observable} to a {@link Installed} or empty.
    */
   // TODO: 31/1/2017 instead of Observable<Installed> use Single<Installed>
   private Observable<Installed> filterUpdates(Installed item) {
-    return updateRepository.contains(item.getPackageName(), false).flatMap(isUpdate -> {
-      if (isUpdate) {
-        return Observable.empty();
-      }
-      return Observable.just(item);
-    });
+    return updateRepository.contains(item.getPackageName(), false)
+        .flatMap(isUpdate -> {
+          if (isUpdate) {
+            return Observable.empty();
+          }
+          return Observable.just(item);
+        });
   }
 }

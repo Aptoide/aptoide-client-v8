@@ -156,7 +156,8 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass().getSimpleName());
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -219,7 +220,8 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   }
 
   @Override public Observable<ViewModel> saveUserDataButtonClick() {
-    return RxView.clicks(createUserButton).map(__ -> updateModelAndGet());
+    return RxView.clicks(createUserButton)
+        .map(__ -> updateModelAndGet());
   }
 
   @Override public Observable<Void> cancelButtonClick() {
@@ -239,7 +241,8 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
     return Single.fromCallable(() -> Snackbar.make(createUserButton, error, Snackbar.LENGTH_LONG))
         .flatMapCompletable(snackbar -> {
           snackbar.show();
-          return RxSnackbar.dismisses(snackbar).toCompletable();
+          return RxSnackbar.dismisses(snackbar)
+              .toCompletable();
         });
   }
 
@@ -273,7 +276,8 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
     imagePickerErrorHandler.showIconPropertiesError(exception)
         .compose(bindUntilEvent(LifecycleEvent.PAUSE))
         .subscribe(__ -> {
-        }, err -> CrashReport.getInstance().log(err));
+        }, err -> CrashReport.getInstance()
+            .log(err));
   }
 
   @Override public Observable<Void> selectStoreImageClick() {
@@ -285,7 +289,8 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   }
 
   @Nullable public ViewModel updateModelAndGet() {
-    return ViewModel.from(currentModel, userName.getText().toString());
+    return ViewModel.from(currentModel, userName.getText()
+        .toString());
   }
 
   @Parcel protected static class ViewModel {

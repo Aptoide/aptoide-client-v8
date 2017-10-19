@@ -143,6 +143,7 @@ public class VanillaFragmentProvider implements FragmentProvider {
     return StoreTabGridRecyclerFragment.newInstance(event, title, storeTheme, tag, storeContext,
         addAdultFilter);
   }
+
   @Override public Fragment newListAppsFragment() {
     return new ListAppsFragment();
   }

@@ -62,7 +62,8 @@ public class SearchBuilder {
         () -> ShowMessage.asToast(applicationContext, R.string.search_minimum_chars);
 
     final QueryResultRepository queryResultRepository = (int pos) -> {
-      Cursor item = (Cursor) searchView.getSuggestionsAdapter().getItem(pos);
+      Cursor item = (Cursor) searchView.getSuggestionsAdapter()
+          .getItem(pos);
       return item.getString(1);
     };
 

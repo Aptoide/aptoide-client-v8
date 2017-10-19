@@ -43,7 +43,8 @@ public class AppViewScreenshotsWidget extends Widget<AppViewScreenshotsDisplayab
   }
 
   @Override public void bindView(AppViewScreenshotsDisplayable displayable) {
-    final GetAppMeta.Media media = displayable.getPojo().getMedia();
+    final GetAppMeta.Media media = displayable.getPojo()
+        .getMedia();
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     appPreferences = application.getApplicationPreferences();

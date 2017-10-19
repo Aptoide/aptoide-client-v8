@@ -47,7 +47,8 @@ public class InviteFriendsFragment extends UIComponentFragment
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass().getSimpleName());
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,9 +72,12 @@ public class InviteFriendsFragment extends UIComponentFragment
   }
 
   @Override public void setupViews() {
-    RxView.clicks(allowFind).subscribe(click -> mActionsListener.allowFindClicked());
-    RxView.clicks(done).subscribe(click -> mActionsListener.doneClicked());
-    RxView.clicks(share).subscribe(click -> mActionsListener.shareClicked(getContext()));
+    RxView.clicks(allowFind)
+        .subscribe(click -> mActionsListener.allowFindClicked());
+    RxView.clicks(done)
+        .subscribe(click -> mActionsListener.doneClicked());
+    RxView.clicks(share)
+        .subscribe(click -> mActionsListener.shareClicked(getContext()));
     setupMessage(openMode);
   }
 
@@ -90,7 +94,8 @@ public class InviteFriendsFragment extends UIComponentFragment
         message.setText(R.string.addressbook_we_werent_able_to_connect_you);
         break;
       default:
-        Logger.d(this.getClass().getSimpleName(), "Wrong openMode type.");
+        Logger.d(this.getClass()
+            .getSimpleName(), "Wrong openMode type.");
     }
   }
 

@@ -34,6 +34,10 @@ public class RecommendedStoresFragment extends GetStoreEndlessFragment<ListStore
   private StoreUtilsProxy storeUtilsProxy;
   private StoreCredentialsProvider storeCredentialsProvider;
 
+  public static Fragment newInstance() {
+    return new RecommendedStoresFragment();
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
@@ -66,9 +70,5 @@ public class RecommendedStoresFragment extends GetStoreEndlessFragment<ListStore
         .toList()
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(disp -> addDisplayables(new ArrayList<>(disp), true));
-  }
-
-  public static Fragment newInstance() {
-    return new RecommendedStoresFragment();
   }
 }

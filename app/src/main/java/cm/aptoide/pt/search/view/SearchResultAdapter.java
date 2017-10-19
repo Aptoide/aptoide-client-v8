@@ -40,7 +40,8 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
   }
 
   @Override public SearchResultItemView onCreateViewHolder(ViewGroup parent, int viewType) {
-    View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
+    View view = LayoutInflater.from(parent.getContext())
+        .inflate(viewType, parent, false);
 
     switch (viewType) {
       case SearchResultViewHolder.LAYOUT: {

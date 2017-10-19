@@ -72,23 +72,23 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
         UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(
             ((AptoideApplication) getContext().getApplicationContext()
                 .getApplicationContext()).getDatabase(), Update.class);
-        compositeSubscription.add(
-            updateAccessor.getAll(false)
-                .first()
-                .observeOn(Schedulers.io())
-                .map(updates -> {
+        compositeSubscription.add(updateAccessor.getAll(false)
+            .first()
+            .observeOn(Schedulers.io())
+            .map(updates -> {
 
-                  ArrayList<Download> downloadList = new ArrayList<>(updates.size());
-                  for (Update update : updates) {
-                    Download download = new DownloadFactory(marketName).create(update);
-                    displayable.setupDownloadEvent(download);
-                    downloadList.add(download);
-                  }
-                  return downloadList;
-                })
-                .flatMap(downloads -> displayable.getInstallManager().startInstalls(downloads))
-                .subscribe(aVoid -> Logger.i(TAG, "Update task completed"),
-                    throwable -> throwable.printStackTrace()));
+              ArrayList<Download> downloadList = new ArrayList<>(updates.size());
+              for (Update update : updates) {
+                Download download = new DownloadFactory(marketName).create(update);
+                displayable.setupDownloadEvent(download);
+                downloadList.add(download);
+              }
+              return downloadList;
+            })
+            .flatMap(downloads -> displayable.getInstallManager()
+                .startInstalls(downloads))
+            .subscribe(aVoid -> Logger.i(TAG, "Update task completed"),
+                throwable -> throwable.printStackTrace()));
       }, () -> {
       });
 

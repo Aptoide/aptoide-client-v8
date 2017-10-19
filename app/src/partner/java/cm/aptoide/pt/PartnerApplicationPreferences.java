@@ -16,26 +16,34 @@ class PartnerApplicationPreferences implements ApplicationPreferences {
   }
 
   @Override public String getCachePath() {
-    return Environment.getExternalStorageDirectory().getAbsolutePath()
-        + "/."
-        + getDefaultStore()
-        + "/";
+    return Environment.getExternalStorageDirectory()
+        .getAbsolutePath() + "/." + getDefaultStore() + "/";
   }
 
   @Override public boolean hasMultiStoreSearch() {
-    return getBootConfig().getPartner().getSwitches().getOptions().getMultistore().isSearch();
+    return getBootConfig().getPartner()
+        .getSwitches()
+        .getOptions()
+        .getMultistore()
+        .isSearch();
   }
 
   @Override public String getDefaultStore() {
-    return getBootConfig().getPartner().getStore().getName();
+    return getBootConfig().getPartner()
+        .getStore()
+        .getName();
   }
 
   @Override public String getMarketName() {
-    return getBootConfig().getPartner().getStore().getLabel();
+    return getBootConfig().getPartner()
+        .getStore()
+        .getLabel();
   }
 
   @Override public String getFeedbackEmail() {
-    return getBootConfig().getPartner().getFeedback().getEmail();
+    return getBootConfig().getPartner()
+        .getFeedback()
+        .getEmail();
   }
 
   @Override public String getImageCachePath() {
@@ -51,15 +59,19 @@ class PartnerApplicationPreferences implements ApplicationPreferences {
   }
 
   @Override public String getPartnerId() {
-    return String.valueOf(getBootConfig().getPartner().getUid());
+    return String.valueOf(getBootConfig().getPartner()
+        .getUid());
   }
 
   @Override public String getExtraId() {
-    return String.valueOf(getBootConfig().getPartner().getUid());
+    return String.valueOf(getBootConfig().getPartner()
+        .getUid());
   }
 
   @Override public String getDefaultTheme() {
-    return getBootConfig().getPartner().getAppearance().getTheme();
+    return getBootConfig().getPartner()
+        .getAppearance()
+        .getTheme();
   }
 
   @Override public boolean isCreateStoreUserPrivacyEnabled() {

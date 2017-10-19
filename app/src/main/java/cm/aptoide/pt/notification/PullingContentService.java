@@ -123,7 +123,8 @@ public class PullingContentService extends Service {
           setUpdatesNotification(updates, startId);
         }, throwable -> {
           throwable.printStackTrace();
-          CrashReport.getInstance().log(throwable);
+          CrashReport.getInstance()
+              .log(throwable);
         }));
   }
 
@@ -135,13 +136,16 @@ public class PullingContentService extends Service {
         && ManagerPreferences.allowRootInstallation(sharedPreferences))
         .flatMap(shouldAutoUpdateRun -> {
           if (shouldAutoUpdateRun) {
-            return Observable.just(updateList).observeOn(Schedulers.io()).map(updates -> {
-              ArrayList<Download> downloadList = new ArrayList<>(updates.size());
-              for (Update update : updates) {
-                downloadList.add(new DownloadFactory(marketName).create(update));
-              }
-              return downloadList;
-            }).flatMap(downloads -> installManager.startInstalls(downloads));
+            return Observable.just(updateList)
+                .observeOn(Schedulers.io())
+                .map(updates -> {
+                  ArrayList<Download> downloadList = new ArrayList<>(updates.size());
+                  for (Update update : updates) {
+                    downloadList.add(new DownloadFactory(marketName).create(update));
+                  }
+                  return downloadList;
+                })
+                .flatMap(downloads -> installManager.startInstalls(downloads));
           } else {
             return Observable.just(false);
           }
@@ -150,7 +154,8 @@ public class PullingContentService extends Service {
 
   private void setUpdatesNotification(List<Update> updates, int startId) {
     Intent resultIntent = new Intent(getApplicationContext(),
-        AptoideApplication.getActivityProvider().getMainActivityFragmentClass());
+        AptoideApplication.getActivityProvider()
+            .getMainActivityFragmentClass());
     resultIntent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES, true);
     PendingIntent resultPendingIntent =
         PendingIntent.getActivity(getApplicationContext(), 0, resultIntent,

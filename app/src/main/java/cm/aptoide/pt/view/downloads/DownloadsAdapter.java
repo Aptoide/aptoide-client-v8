@@ -43,7 +43,8 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
 
   public DownloadsAdapter(InstallEventConverter installConverter,
       DownloadEventConverter downloadConverter, InstallManager installManager, Analytics analytics,
-      Resources resources, StoreTabNavigator storeTabNavigator, AptoideNavigationTracker aptoideNavigationTracker) {
+      Resources resources, StoreTabNavigator storeTabNavigator,
+      AptoideNavigationTracker aptoideNavigationTracker) {
     this.storeTabNavigator = storeTabNavigator;
     this.aptoideNavigationTracker = aptoideNavigationTracker;
     this.activeDownloads = new ArrayList<>();
@@ -207,7 +208,8 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
     super.onViewRecycled(holder);
   }
 
-  private void bindHeader(Widget holder, int position, StoreTabNavigator storeTabNavigator, AptoideNavigationTracker aptoideNavigationTracker) {
+  private void bindHeader(Widget holder, int position, StoreTabNavigator storeTabNavigator,
+      AptoideNavigationTracker aptoideNavigationTracker) {
     // discover if it's the header for stand by or completed downloads
     position -= (activeDownloads.isEmpty() ? 0 : activeDownloads.size() + 1);
 
@@ -215,11 +217,13 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
     if (position < standByDownloads.size()) {
       // is the header from stand by downloads
       header.bindView(new StoreGridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(
-          AptoideUtils.StringU.getResString(R.string.stand_by, resources)), storeTabNavigator, aptoideNavigationTracker));
+          AptoideUtils.StringU.getResString(R.string.stand_by, resources)), storeTabNavigator,
+          aptoideNavigationTracker));
     } else {
       // is the header from completed downloads
       header.bindView(new StoreGridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(
-          AptoideUtils.StringU.getResString(R.string.completed, resources)), storeTabNavigator, aptoideNavigationTracker));
+          AptoideUtils.StringU.getResString(R.string.completed, resources)), storeTabNavigator,
+          aptoideNavigationTracker));
     }
   }
 

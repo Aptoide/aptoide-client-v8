@@ -18,6 +18,10 @@ import rx.schedulers.Schedulers;
 
 public class GetStoreFragment extends StoreTabWidgetsGridRecyclerFragment {
 
+  public static Fragment newInstance() {
+    return new GetStoreFragment();
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
   }
@@ -40,9 +44,5 @@ public class GetStoreFragment extends StoreTabWidgetsGridRecyclerFragment {
             displayables.add(new AdultRowDisplayable(GetStoreFragment.this));
           }
         });
-  }
-
-  public static Fragment newInstance() {
-    return new GetStoreFragment();
   }
 }

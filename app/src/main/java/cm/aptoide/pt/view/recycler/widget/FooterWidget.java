@@ -34,18 +34,23 @@ public class FooterWidget extends Widget<FooterDisplayable> {
         (AptoideApplication) getContext().getApplicationContext();
     final ApplicationPreferences appPreferences = application.getApplicationPreferences();
     final String marketName = appPreferences.getMarketName();
-    final String buttonText =
-        Translator.translate(displayable.getPojo().getActions().get(0).getLabel(),
-            getContext().getApplicationContext(), marketName);
+    final String buttonText = Translator.translate(displayable.getPojo()
+        .getActions()
+        .get(0)
+        .getLabel(), getContext().getApplicationContext(), marketName);
     button.setText(buttonText);
 
     final Action1<Void> handleButtonClick = __ -> {
-      Event event = displayable.getPojo().getActions().get(0).getEvent();
+      Event event = displayable.getPojo()
+          .getActions()
+          .get(0)
+          .getEvent();
       getFragmentNavigator().navigateTo(StoreTabGridRecyclerFragment.newInstance(event,
-          Translator.translate(displayable.getPojo().getTitle(),
-              getContext().getApplicationContext(), marketName), null, displayable.getTag(),
-          displayable.getStoreContext(), false), true);
+          Translator.translate(displayable.getPojo()
+              .getTitle(), getContext().getApplicationContext(), marketName), null,
+          displayable.getTag(), displayable.getStoreContext(), false), true);
     };
-    compositeSubscription.add(RxView.clicks(button).subscribe(handleButtonClick));
+    compositeSubscription.add(RxView.clicks(button)
+        .subscribe(handleButtonClick));
   }
 }

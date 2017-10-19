@@ -82,7 +82,8 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
   }
 
   private void setIconView() {
-    ImageLoader.with(iconImageView.getContext()).load(searchApp.getIcon(), iconImageView);
+    ImageLoader.with(iconImageView.getContext())
+        .load(searchApp.getIcon(), iconImageView);
   }
 
   private void setStoreName() {
@@ -95,14 +96,16 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
     Drawable background = bottomView.getBackground();
 
     if (background instanceof ShapeDrawable) {
-      ((ShapeDrawable) background).getPaint().setColor(resources.getColor(theme.getPrimaryColor()));
+      ((ShapeDrawable) background).getPaint()
+          .setColor(resources.getColor(theme.getPrimaryColor()));
     } else if (background instanceof GradientDrawable) {
       ((GradientDrawable) background).setColor(resources.getColor(theme.getPrimaryColor()));
     }
 
     background = storeTextView.getBackground();
     if (background instanceof ShapeDrawable) {
-      ((ShapeDrawable) background).getPaint().setColor(resources.getColor(theme.getPrimaryColor()));
+      ((ShapeDrawable) background).getPaint()
+          .setColor(resources.getColor(theme.getPrimaryColor()));
     } else if (background instanceof GradientDrawable) {
       ((GradientDrawable) background).setColor(resources.getColor(theme.getPrimaryColor()));
     }
@@ -132,7 +135,8 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
   private void setDownloadCount() {
     String downloadNumber =
         String.format("%s %s", AptoideUtils.StringU.withSuffix(searchApp.getTotalDownloads()),
-            bottomView.getContext().getString(R.string.downloads));
+            bottomView.getContext()
+                .getString(R.string.downloads));
     downloadsTextView.setText(downloadNumber);
   }
 
@@ -151,8 +155,9 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
     bottomView = itemView.findViewById(R.id.bottom_view);
     overflowImageView = (ImageView) itemView.findViewById(R.id.overflow);
 
-    subscriptions.add(
-        RxView.clicks(itemView).map(__ -> searchApp).subscribe(data -> onItemViewClick.call(data)));
+    subscriptions.add(RxView.clicks(itemView)
+        .map(__ -> searchApp)
+        .subscribe(data -> onItemViewClick.call(data)));
 
     subscriptions.add(RxView.clicks(overflowImageView)
         .map(__ -> new Pair<>(searchApp, (View) overflowImageView))

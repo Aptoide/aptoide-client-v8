@@ -150,8 +150,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
     notificationSyncScheduler = application.getNotificationSyncScheduler();
 
     AptoideNavigationTracker aptoideNavigationTracker = application.getAptoideNavigationTracker();
-    aptoideNavigationTracker.registerScreen(
-        ScreenTagHistory.Builder.build(this.getClass().getSimpleName()));
+    aptoideNavigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName()));
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
@@ -238,7 +238,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
           .andThen(repository.getAll(false))
           .first()
           .subscribe(updates -> Logger.d(TAG, "updates refreshed"),
-              throwable -> CrashReport.getInstance().log(throwable));
+              throwable -> CrashReport.getInstance()
+                  .log(throwable));
     }
   }
 
@@ -281,35 +282,41 @@ public class SettingsFragment extends PreferenceFragmentCompat
           .retry()
           .subscribe());
 
-      subscriptions.add(RxPreference.checks(adultContentPreferenceView).flatMap(checked -> {
-        rollbackCheck(adultContentPreferenceView);
-        if (checked) {
-          adultContentConfirmationDialog.show();
-          return Observable.empty();
-        } else {
-          adultContentPreferenceView.setEnabled(false);
-          return adultContent.disable()
-              .doOnCompleted(() -> trackLock())
-              .observeOn(AndroidSchedulers.mainThread())
-              .doOnTerminate(() -> adultContentPreferenceView.setEnabled(true))
-              .toObservable();
-        }
-      }).retry().subscribe());
+      subscriptions.add(RxPreference.checks(adultContentPreferenceView)
+          .flatMap(checked -> {
+            rollbackCheck(adultContentPreferenceView);
+            if (checked) {
+              adultContentConfirmationDialog.show();
+              return Observable.empty();
+            } else {
+              adultContentPreferenceView.setEnabled(false);
+              return adultContent.disable()
+                  .doOnCompleted(() -> trackLock())
+                  .observeOn(AndroidSchedulers.mainThread())
+                  .doOnTerminate(() -> adultContentPreferenceView.setEnabled(true))
+                  .toObservable();
+            }
+          })
+          .retry()
+          .subscribe());
 
-      subscriptions.add(RxPreference.checks(adultContentWithPinPreferenceView).flatMap(checked -> {
-        rollbackCheck(adultContentWithPinPreferenceView);
-        if (checked) {
-          enableAdultContentPinDialog.show();
-          return Observable.empty();
-        } else {
-          adultContentWithPinPreferenceView.setEnabled(false);
-          return adultContent.disable()
-              .doOnCompleted(() -> trackLock())
-              .observeOn(AndroidSchedulers.mainThread())
-              .doOnTerminate(() -> adultContentWithPinPreferenceView.setEnabled(true))
-              .toObservable();
-        }
-      }).retry().subscribe());
+      subscriptions.add(RxPreference.checks(adultContentWithPinPreferenceView)
+          .flatMap(checked -> {
+            rollbackCheck(adultContentWithPinPreferenceView);
+            if (checked) {
+              enableAdultContentPinDialog.show();
+              return Observable.empty();
+            } else {
+              adultContentWithPinPreferenceView.setEnabled(false);
+              return adultContent.disable()
+                  .doOnCompleted(() -> trackLock())
+                  .observeOn(AndroidSchedulers.mainThread())
+                  .doOnTerminate(() -> adultContentWithPinPreferenceView.setEnabled(true))
+                  .toObservable();
+            }
+          })
+          .retry()
+          .subscribe());
 
       subscriptions.add(adultContent.pinRequired()
           .observeOn(AndroidSchedulers.mainThread())
@@ -328,17 +335,22 @@ public class SettingsFragment extends PreferenceFragmentCompat
           })
           .subscribe());
 
-      subscriptions.add(RxPreference.clicks(pinPreferenceView).doOnNext(preference -> {
-        setPinDialog.show();
-      }).subscribe());
+      subscriptions.add(RxPreference.clicks(pinPreferenceView)
+          .doOnNext(preference -> {
+            setPinDialog.show();
+          })
+          .subscribe());
 
-      subscriptions.add(RxPreference.clicks(removePinPreferenceView).doOnNext(preference -> {
-        removePinDialog.show();
-      }).subscribe());
+      subscriptions.add(RxPreference.clicks(removePinPreferenceView)
+          .doOnNext(preference -> {
+            removePinDialog.show();
+          })
+          .subscribe());
 
       subscriptions.add(setPinDialog.positiveClicks()
           .filter(pin -> !TextUtils.isEmpty(pin))
-          .flatMap(pin -> adultContent.requirePin(Integer.valueOf(pin.toString())).toObservable())
+          .flatMap(pin -> adultContent.requirePin(Integer.valueOf(pin.toString()))
+              .toObservable())
           .retry()
           .subscribe());
 
@@ -475,7 +487,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
     about.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
       @Override public boolean onPreferenceClick(Preference preference) {
 
-        View view = LayoutInflater.from(context).inflate(R.layout.dialog_about, null);
+        View view = LayoutInflater.from(context)
+            .inflate(R.layout.dialog_about, null);
         String versionName = "";
         int versionCode = 0;
 
@@ -483,13 +496,15 @@ public class SettingsFragment extends PreferenceFragmentCompat
           versionName = getActivity().getPackageManager()
               .getPackageInfo(getActivity().getPackageName(), 0).versionName;
         } catch (PackageManager.NameNotFoundException e) {
-          CrashReport.getInstance().log(e);
+          CrashReport.getInstance()
+              .log(e);
         }
         try {
           versionCode = getActivity().getPackageManager()
               .getPackageInfo(getActivity().getPackageName(), 0).versionCode;
         } catch (PackageManager.NameNotFoundException e) {
-          CrashReport.getInstance().log(e);
+          CrashReport.getInstance()
+              .log(e);
         }
 
         ((TextView) view.findViewById(R.id.aptoide_version)).setText(

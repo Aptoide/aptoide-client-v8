@@ -23,6 +23,10 @@ public class ListStoresFragment extends GetStoreEndlessFragment<ListStores> {
 
   private StoreAnalytics storeAnalytics;
 
+  public static Fragment newInstance() {
+    return new ListStoresFragment();
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     storeAnalytics =
@@ -48,9 +52,5 @@ public class ListStoresFragment extends GetStoreEndlessFragment<ListStores> {
 
       addDisplayables(displayables);
     };
-  }
-
-  public static Fragment newInstance() {
-    return new ListStoresFragment();
   }
 }

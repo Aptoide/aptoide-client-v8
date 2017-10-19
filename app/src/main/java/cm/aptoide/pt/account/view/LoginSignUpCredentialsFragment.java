@@ -100,13 +100,16 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass().getSimpleName());
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
-    outState.putString(USERNAME_KEY, aptoideEmailEditText.getText().toString());
-    outState.putString(PASSWORD_KEY, aptoidePasswordEditText.getText().toString());
+    outState.putString(USERNAME_KEY, aptoideEmailEditText.getText()
+        .toString());
+    outState.putString(PASSWORD_KEY, aptoidePasswordEditText.getText()
+        .toString());
   }
 
   @Override public void hideKeyboard() {
@@ -152,7 +155,8 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   }
 
   @Override public Observable<Void> facebookSignUpWithRequiredPermissionsInEvent() {
-    return facebookEmailRequiredDialog.positiveClicks().map(dialog -> null);
+    return facebookEmailRequiredDialog.positiveClicks()
+        .map(dialog -> null);
   }
 
   @Override public Observable<Void> facebookSignUpEvent() {
@@ -200,7 +204,8 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   }
 
   @Override public void showError(String message) {
-    Snackbar.make(rootView, message, Snackbar.LENGTH_LONG).show();
+    Snackbar.make(rootView, message, Snackbar.LENGTH_LONG)
+        .show();
   }
 
   @Override public void showFacebookLogin() {
@@ -271,8 +276,9 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   }
 
   private AptoideCredentials getCredentials() {
-    return new AptoideCredentials(aptoideEmailEditText.getText().toString(),
-        aptoidePasswordEditText.getText().toString());
+    return new AptoideCredentials(aptoideEmailEditText.getText()
+        .toString(), aptoidePasswordEditText.getText()
+        .toString());
   }
 
   private Analytics.Account.StartupClickOrigin getStartupClickOrigin() {
@@ -332,8 +338,8 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     progressDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
 
     try {
-      bottomSheetBehavior =
-          BottomSheetBehavior.from(view.getRootView().findViewById(R.id.login_signup_layout));
+      bottomSheetBehavior = BottomSheetBehavior.from(view.getRootView()
+          .findViewById(R.id.login_signup_layout));
     } catch (IllegalArgumentException ex) {
       // this happens because in landscape the R.id.login_signup_layout is not
       // a child of CoordinatorLayout

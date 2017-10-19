@@ -5,7 +5,8 @@ import android.os.Environment;
 class VanillaApplicationPreferences implements ApplicationPreferences {
 
   @Override public String getCachePath() {
-    return Environment.getExternalStorageDirectory().getAbsolutePath() + "/.aptoide/";
+    return Environment.getExternalStorageDirectory()
+        .getAbsolutePath() + "/.aptoide/";
   }
 
   @Override public boolean hasMultiStoreSearch() {

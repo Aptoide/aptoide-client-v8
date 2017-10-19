@@ -111,7 +111,8 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass().getSimpleName());
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -149,7 +150,8 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
 
     final Toolbar toolbar = (Toolbar) view.findViewById(R.id.fragment_payment_login_toolbar);
     ((AppCompatActivity) getContext()).setSupportActionBar(toolbar);
-    ((AppCompatActivity) getContext()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    ((AppCompatActivity) getContext()).getSupportActionBar()
+        .setDisplayHomeAsUpEnabled(true);
 
     aptoideLoginSignUpSeparator =
         view.findViewById(R.id.fragment_payment_login_aptoide_buttons_separator_container);
@@ -296,20 +298,23 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     return Observable.merge(RxView.clicks(aptoideLoginButton),
         passwordKeyboardGoRelay.filter(__ -> loginVisible))
         .doOnNext(__ -> hideKeyboard())
-        .map(__ -> new AptoideCredentials(usernameEditText.getText().toString(),
-            passwordEditText.getText().toString()));
+        .map(__ -> new AptoideCredentials(usernameEditText.getText()
+            .toString(), passwordEditText.getText()
+            .toString()));
   }
 
   @Override public Observable<AptoideCredentials> aptoideSignUpEvent() {
     return Observable.merge(RxView.clicks(aptoideSignUpButton),
         passwordKeyboardGoRelay.filter(__ -> !loginVisible))
         .doOnNext(__ -> hideKeyboard())
-        .map(__ -> new AptoideCredentials(usernameEditText.getText().toString(),
-            passwordEditText.getText().toString()));
+        .map(__ -> new AptoideCredentials(usernameEditText.getText()
+            .toString(), passwordEditText.getText()
+            .toString()));
   }
 
   @Override public Observable<Void> grantFacebookRequiredPermissionsEvent() {
-    return facebookEmailRequiredDialog.positiveClicks().map(dialogInterface -> null);
+    return facebookEmailRequiredDialog.positiveClicks()
+        .map(dialogInterface -> null);
   }
 
   @Override public void showLoading() {
@@ -323,7 +328,8 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
   }
 
   @Override public void showError(String message) {
-    Snackbar.make(rootView, message, Snackbar.LENGTH_LONG).show();
+    Snackbar.make(rootView, message, Snackbar.LENGTH_LONG)
+        .show();
   }
 
   @Override public void showFacebookPermissionsRequiredError() {

@@ -141,7 +141,8 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass().getSimpleName());
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -178,7 +179,8 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     imagePickerErrorHandler.showIconPropertiesError(exception)
         .compose(bindUntilEvent(LifecycleEvent.PAUSE))
         .subscribe(__ -> {
-        }, err -> CrashReport.getInstance().log(err));
+        }, err -> CrashReport.getInstance()
+            .log(err));
   }
 
   @Override public Observable<Void> selectStoreImageClick() {
@@ -197,7 +199,8 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   }
 
   @Override public Observable<ViewModel> saveDataClick() {
-    return RxView.clicks(saveDataButton).map(__ -> updateAndGetStoreModel());
+    return RxView.clicks(saveDataButton)
+        .map(__ -> updateAndGetStoreModel());
   }
 
   @Override public Observable<Void> cancelClick() {
@@ -310,8 +313,9 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   }
 
   private ViewModel updateAndGetStoreModel() {
-    currentModel = ViewModel.update(currentModel, storeName.getText().toString(),
-        storeDescription.getText().toString());
+    currentModel = ViewModel.update(currentModel, storeName.getText()
+        .toString(), storeDescription.getText()
+        .toString());
     currentModel.setStoreTheme(themeSelectorAdapter.getSelectedTheme());
     return currentModel;
   }

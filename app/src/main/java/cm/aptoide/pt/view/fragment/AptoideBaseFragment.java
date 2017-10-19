@@ -39,7 +39,8 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
 
-    final boolean isAdultContentEnabled = application.getAccountManager().isAccountMature();
+    final boolean isAdultContentEnabled = application.getAccountManager()
+        .isAccountMature();
 
     final ApplicationPreferences appPreferences = application.getApplicationPreferences();
 
@@ -51,10 +52,11 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         getContext().getResources(),
         (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
-        application.getIdsRepository().getUniqueIdentifier(), appPreferences.getPartnerId(),
-        isAdultContentEnabled, application.getQManager()
-        .getFilters(ManagerPreferences.getHWSpecsFilter(
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
+        application.getIdsRepository()
+            .getUniqueIdentifier(), appPreferences.getPartnerId(), isAdultContentEnabled,
+        application.getQManager()
+            .getFilters(ManagerPreferences.getHWSpecsFilter(
+                ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
         (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
         application.getVersionCodeProvider(),
         AdNetworkUtils.isGooglePlayServicesAvailable(getContext()));
@@ -67,10 +69,11 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         getContext().getResources(),
         (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
-        application.getIdsRepository().getUniqueIdentifier(), appPreferences.getPartnerId(),
-        isAdultContentEnabled, application.getQManager()
-        .getFilters(ManagerPreferences.getHWSpecsFilter(
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
+        application.getIdsRepository()
+            .getUniqueIdentifier(), appPreferences.getPartnerId(), isAdultContentEnabled,
+        application.getQManager()
+            .getFilters(ManagerPreferences.getHWSpecsFilter(
+                ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
         (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
         application.getVersionCodeProvider(),
         AdNetworkUtils.isGooglePlayServicesAvailable(getContext()));

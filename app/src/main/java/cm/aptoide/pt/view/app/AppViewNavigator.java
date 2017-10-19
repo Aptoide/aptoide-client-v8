@@ -45,8 +45,8 @@ public class AppViewNavigator {
   }
 
   public void navigateToAppView(long appId, String packageName, String tag) {
-    Fragment fragment =
-        AptoideApplication.getFragmentProvider().newAppViewFragment(appId, packageName, tag);
+    Fragment fragment = AptoideApplication.getFragmentProvider()
+        .newAppViewFragment(appId, packageName, tag);
     fragmentNavigator.navigateTo(fragment, true);
   }
 
