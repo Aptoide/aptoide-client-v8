@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -72,12 +73,12 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
   }
 
   @Override public void bindView(FollowUserDisplayable displayable) {
-    accountManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    accountManager = application.getAccountManager();
     final BodyInterceptor<BaseBody> bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    final OkHttpClient httpClient =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+        application.getAccountSettingsBodyInterceptorPoolV7();
+    final OkHttpClient httpClient = application.getDefaultClient();
 
     if (!displayable.isLike()) {
       followLayout.setVisibility(View.GONE);
@@ -94,8 +95,8 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
       }
 
       final String storeName = displayable.getStoreName();
-      final String storeTheme =
-          ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
+      final ApplicationPreferences appPreferences = application.getApplicationPreferences();
+      final String storeTheme = appPreferences.getDefaultTheme();
 
       final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor,
           new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
@@ -103,13 +104,12 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
                   .getApplicationContext()).getDatabase(), Store.class)),
           AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
               .getApplicationContext()).getDatabase(), Store.class), httpClient,
-          WebService.getDefaultConverter(),
-          ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
-          ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
+          WebService.getDefaultConverter(), application.getTokenInvalidator(),
+          application.getDefaultSharedPreferences());
 
       Action1<Void> openStore = __ -> {
-        getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-            .newStoreFragment(storeName, storeTheme), true);
+        getFragmentNavigator().navigateTo(
+            AptoideApplication.getFragmentProvider().newStoreFragment(storeName, storeTheme), true);
       };
 
       Action1<Void> subscribeStore = __ -> {
@@ -118,8 +118,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
               AptoideUtils.StringU.getFormattedString(R.string.store_followed,
                   getContext().getResources(), storeName));
         }, err -> {
-          CrashReport.getInstance()
-              .log(err);
+          CrashReport.getInstance().log(err);
         }, accountManager);
       };
 
@@ -130,12 +129,10 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
           .subscribe(isSubscribed -> {
             if (isSubscribed) {
               follow.setText(R.string.followed);
-              compositeSubscription.add(RxView.clicks(follow)
-                  .subscribe(openStore));
+              compositeSubscription.add(RxView.clicks(follow).subscribe(openStore));
             } else {
               follow.setText(R.string.follow);
-              compositeSubscription.add(RxView.clicks(follow)
-                  .subscribe(subscribeStore));
+              compositeSubscription.add(RxView.clicks(follow).subscribe(subscribeStore));
             }
           }, (throwable) -> {
             throwable.printStackTrace();
@@ -144,19 +141,16 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
 
     final FragmentActivity context = getContext();
     if (displayable.hasStoreAndUser()) {
-      ImageLoader.with(context)
-          .loadUsingCircleTransform(displayable.getStoreAvatar(), mainIcon);
+      ImageLoader.with(context).loadUsingCircleTransform(displayable.getStoreAvatar(), mainIcon);
       ImageLoader.with(context)
           .loadUsingCircleTransform(displayable.getUserAvatar(), secondaryIcon);
       mainIcon.setVisibility(View.VISIBLE);
       secondaryIcon.setVisibility(View.VISIBLE);
     } else if (displayable.hasUser()) {
-      ImageLoader.with(context)
-          .loadUsingCircleTransform(displayable.getUserAvatar(), mainIcon);
+      ImageLoader.with(context).loadUsingCircleTransform(displayable.getUserAvatar(), mainIcon);
       secondaryIcon.setVisibility(View.GONE);
     } else if (displayable.hasStore()) {
-      ImageLoader.with(context)
-          .loadUsingCircleTransform(displayable.getStoreAvatar(), mainIcon);
+      ImageLoader.with(context).loadUsingCircleTransform(displayable.getStoreAvatar(), mainIcon);
       secondaryIcon.setVisibility(View.GONE);
     } else {
       mainIcon.setVisibility(View.GONE);
@@ -181,8 +175,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
 
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(click -> displayable.viewClicked(getFragmentNavigator()), err -> {
-          CrashReport.getInstance()
-              .log(err);
+          CrashReport.getInstance().log(err);
         }));
   }
 
@@ -203,11 +196,9 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     storeNameTv.setVisibility(View.VISIBLE);
     Drawable drawable;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      drawable = getContext().getResources()
-          .getDrawable(R.drawable.ic_store, null);
+      drawable = getContext().getResources().getDrawable(R.drawable.ic_store, null);
     } else {
-      drawable = getContext().getResources()
-          .getDrawable(R.drawable.ic_store);
+      drawable = getContext().getResources().getDrawable(R.drawable.ic_store);
     }
     drawable.setBounds(0, 0, 30, 30);
     drawable.mutate();

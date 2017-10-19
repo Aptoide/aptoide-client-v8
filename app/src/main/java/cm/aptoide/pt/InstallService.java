@@ -78,20 +78,21 @@ public class InstallService extends Service {
   @Override public void onCreate() {
     super.onCreate();
     Logger.d(TAG, "Install service is starting");
-    marketName = ((AptoideApplication) getApplicationContext()).getMarketName();
-    downloadManager = ((AptoideApplication) getApplicationContext()).getDownloadManager();
+    final AptoideApplication application = (AptoideApplication) getApplicationContext();
+    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
+    marketName = appPreferences.getMarketName();
+    downloadManager = application.getDownloadManager();
     final MinimalAdMapper adMapper = new MinimalAdMapper();
     InstallerFactory installerFactory = new InstallerFactory(adMapper,
         new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance(),
             AppEventsLogger.newLogger(getApplicationContext())),
-        ((AptoideApplication) getApplicationContext()).getImageCachePath());
+        appPreferences.getImageCachePath());
     defaultInstaller = installerFactory.create(this, InstallerFactory.DEFAULT);
     rollbackInstaller = installerFactory.create(this, InstallerFactory.ROLLBACK);
-    installManager =
-        ((AptoideApplication) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
+    installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
     subscriptions = new CompositeSubscription();
     setupNotification();
-    installerTypeMap = new HashMap();
+    installerTypeMap = new HashMap<>();
     analytics = Analytics.getInstance();
     installedRepository = RepositoryFactory.getInstalledRepository(getApplicationContext());
   }
@@ -102,8 +103,8 @@ public class InstallService extends Service {
       if (ACTION_START_INSTALL.equals(intent.getAction())) {
         installerTypeMap.put(md5,
             intent.getIntExtra(EXTRA_INSTALLER_TYPE, INSTALLER_TYPE_ROLLBACK));
-        subscriptions.add(downloadAndInstall(this, md5, intent.getExtras()
-            .getBoolean(EXTRA_FORCE_DEFAULT_INSTALL, false)).subscribe(
+        subscriptions.add(downloadAndInstall(this, md5,
+            intent.getExtras().getBoolean(EXTRA_FORCE_DEFAULT_INSTALL, false)).subscribe(
             hasNext -> treatNext(hasNext), throwable -> removeNotificationAndStop()));
       } else if (ACTION_STOP_INSTALL.equals(intent.getAction())) {
         subscriptions.add(stopDownload(md5).subscribe(hasNext -> treatNext(hasNext),
@@ -133,8 +134,7 @@ public class InstallService extends Service {
   }
 
   private Observable<Boolean> stopDownload(String md5) {
-    return downloadManager.pauseDownloadSync(md5)
-        .andThen(hasNextDownload());
+    return downloadManager.pauseDownloadSync(md5).andThen(hasNextDownload());
   }
 
   private void stopAllDownloads() {
@@ -261,32 +261,31 @@ public class InstallService extends Service {
   }
 
   private void setupNotification() {
-    subscriptions.add(installManager.getCurrentInstallation()
-        .subscribe(installation -> {
-          if (!installation.isIndeterminate()) {
+    subscriptions.add(installManager.getCurrentInstallation().subscribe(installation -> {
+      if (!installation.isIndeterminate()) {
 
-            String md5 = installation.getMd5();
-            int requestCode = md5.hashCode();
+        String md5 = installation.getMd5();
+        int requestCode = md5.hashCode();
 
-            NotificationCompat.Action downloadManagerAction =
-                getDownloadManagerAction(requestCode, md5);
-            PendingIntent appViewPendingIntent =
-                getPendingIntent(requestCode, ACTION_OPEN_APP_VIEW, md5);
-            NotificationCompat.Action pauseAction = getPauseAction(requestCode, md5);
+        NotificationCompat.Action downloadManagerAction =
+            getDownloadManagerAction(requestCode, md5);
+        PendingIntent appViewPendingIntent =
+            getPendingIntent(requestCode, ACTION_OPEN_APP_VIEW, md5);
+        NotificationCompat.Action pauseAction = getPauseAction(requestCode, md5);
 
-            if (notification == null) {
-              notification = buildNotification(installation, pauseAction, downloadManagerAction,
-                  appViewPendingIntent);
-            } else {
-              long oldWhen = notification.when;
-              notification = buildNotification(installation, pauseAction, downloadManagerAction,
-                  appViewPendingIntent);
-              notification.when = oldWhen;
-            }
+        if (notification == null) {
+          notification = buildNotification(installation, pauseAction, downloadManagerAction,
+              appViewPendingIntent);
+        } else {
+          long oldWhen = notification.when;
+          notification = buildNotification(installation, pauseAction, downloadManagerAction,
+              appViewPendingIntent);
+          notification.when = oldWhen;
+        }
 
-            startForeground(NOTIFICATION_ID, notification);
-          }
-        }, throwable -> removeNotificationAndStop()));
+        startForeground(NOTIFICATION_ID, notification);
+      }
+    }, throwable -> removeNotificationAndStop()));
   }
 
   @NonNull private NotificationCompat.Action getPauseAction(int requestCode, String md5) {
@@ -354,8 +353,8 @@ public class InstallService extends Service {
 
   @NonNull private Intent createDeeplinkingIntent() {
     Intent intent = new Intent();
-    intent.setClass(getApplicationContext(), AptoideApplication.getActivityProvider()
-        .getMainActivityFragmentClass());
+    intent.setClass(getApplicationContext(),
+        AptoideApplication.getActivityProvider().getMainActivityFragmentClass());
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
     return intent;
   }

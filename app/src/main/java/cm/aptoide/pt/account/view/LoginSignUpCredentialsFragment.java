@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.AptoideCredentials;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
@@ -62,7 +63,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   private View credentialsEditTextsArea;
   private BottomSheetBehavior<View> bottomSheetBehavior;
   private ThrowableToStringMapper errorMapper;
-  private String marketName;
   private AptoideAccountManager accountManager;
   private LoginSignUpCredentialsPresenter presenter;
   private boolean dismissToNavigateToMainView;
@@ -71,6 +71,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   private CrashReport crashReport;
   private AccountNavigator accountNavigator;
   private ScreenOrientationManager orientationManager;
+  private ApplicationPreferences appPreferences;
 
   public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,
       boolean cleanBackStack) {
@@ -86,7 +87,8 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    marketName = ((AptoideApplication) getActivity().getApplication()).getMarketName();
+
+    appPreferences = ((AptoideApplication) getApplicationContext()).getApplicationPreferences();
     errorMapper = new AccountErrorMapper(getContext());
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
@@ -98,16 +100,13 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName());
+    return ScreenTagHistory.Builder.build(this.getClass().getSimpleName());
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
-    outState.putString(USERNAME_KEY, aptoideEmailEditText.getText()
-        .toString());
-    outState.putString(PASSWORD_KEY, aptoidePasswordEditText.getText()
-        .toString());
+    outState.putString(USERNAME_KEY, aptoideEmailEditText.getText().toString());
+    outState.putString(PASSWORD_KEY, aptoidePasswordEditText.getText().toString());
   }
 
   @Override public void hideKeyboard() {
@@ -153,8 +152,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   }
 
   @Override public Observable<Void> facebookSignUpWithRequiredPermissionsInEvent() {
-    return facebookEmailRequiredDialog.positiveClicks()
-        .map(dialog -> null);
+    return facebookEmailRequiredDialog.positiveClicks().map(dialog -> null);
   }
 
   @Override public Observable<Void> facebookSignUpEvent() {
@@ -202,8 +200,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   }
 
   @Override public void showError(String message) {
-    Snackbar.make(rootView, message, Snackbar.LENGTH_LONG)
-        .show();
+    Snackbar.make(rootView, message, Snackbar.LENGTH_LONG).show();
   }
 
   @Override public void showFacebookLogin() {
@@ -274,9 +271,8 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   }
 
   private AptoideCredentials getCredentials() {
-    return new AptoideCredentials(aptoideEmailEditText.getText()
-        .toString(), aptoidePasswordEditText.getText()
-        .toString());
+    return new AptoideCredentials(aptoideEmailEditText.getText().toString(),
+        aptoidePasswordEditText.getText().toString());
   }
 
   private Analytics.Account.StartupClickOrigin getStartupClickOrigin() {
@@ -307,7 +303,8 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
     buttonLogin = (Button) view.findViewById(R.id.button_login);
     buttonSignUp = (Button) view.findViewById(R.id.button_sign_up);
-    buttonSignUp.setText(String.format(getString(R.string.join_company), marketName));
+    buttonSignUp.setText(
+        String.format(getString(R.string.join_company), appPreferences.getMarketName()));
 
     aptoideEmailEditText = (EditText) view.findViewById(R.id.username);
     aptoidePasswordEditText = (EditText) view.findViewById(R.id.password);
@@ -319,7 +316,8 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     credentialsEditTextsArea = view.findViewById(R.id.credentials_edit_texts);
     signUpSelectionButton = (Button) view.findViewById(R.id.show_join_aptoide_area);
     loginSelectionButton = (Button) view.findViewById(R.id.show_login_with_aptoide_area);
-    signUpSelectionButton.setText(String.format(getString(R.string.join_company), marketName));
+    signUpSelectionButton.setText(
+        String.format(getString(R.string.join_company), appPreferences.getMarketName()));
     loginArea = view.findViewById(R.id.login_button_area);
     signUpArea = view.findViewById(R.id.sign_up_button_area);
     termsAndConditions = (TextView) view.findViewById(R.id.terms_and_conditions);
@@ -334,8 +332,8 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     progressDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
 
     try {
-      bottomSheetBehavior = BottomSheetBehavior.from(view.getRootView()
-          .findViewById(R.id.login_signup_layout));
+      bottomSheetBehavior =
+          BottomSheetBehavior.from(view.getRootView().findViewById(R.id.login_signup_layout));
     } catch (IllegalArgumentException ex) {
       // this happens because in landscape the R.id.login_signup_layout is not
       // a child of CoordinatorLayout

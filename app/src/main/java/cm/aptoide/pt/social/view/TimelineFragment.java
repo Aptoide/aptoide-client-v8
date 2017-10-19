@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.InstallManager;
@@ -177,40 +178,37 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
+    marketName = appPreferences.getMarketName();
     userId = getArguments().containsKey(USER_ID_KEY) ? getArguments().getLong(USER_ID_KEY) : null;
     storeId = getArguments().containsKey(STORE_ID) ? getArguments().getLong(STORE_ID) : null;
     storeContext = (StoreContext) getArguments().getSerializable(STORE_CONTEXT);
-    baseBodyInterceptorV7 =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
+    baseBodyInterceptorV7 = application.getAccountSettingsBodyInterceptorPoolV7();
     defaultConverter = WebService.getDefaultConverter();
-    defaultClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+    defaultClient = application.getDefaultClient();
     accountManager =
         ((AptoideApplication) getActivity().getApplicationContext()).getAccountManager();
-    tokenInvalidator =
-        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
-    sharedPreferences =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
+    tokenInvalidator = application.getTokenInvalidator();
+    sharedPreferences = application.getDefaultSharedPreferences();
     postTouchEventPublishSubject = PublishSubject.create();
     sharePostPublishSubject = PublishSubject.create();
     commentPostResponseSubject = PublishSubject.create();
     dateCalculator = new DateCalculator(getContext().getApplicationContext(),
-        getContext().getApplicationContext()
-            .getResources());
+        getContext().getApplicationContext().getResources());
     shareDialogFactory =
         new ShareDialogFactory(getContext(), new SharePostViewSetup(dateCalculator));
-    installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
-        InstallerFactory.ROLLBACK);
+    installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
 
     timelinePostsRepository =
-        ((AptoideApplication) getContext().getApplicationContext()).getTimelineRepository(
-            getArguments().getString(ACTION_KEY), getContext());
+        application.getTimelineRepository(getArguments().getString(ACTION_KEY), getContext());
 
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), baseBodyInterceptorV7,
         defaultClient, defaultConverter, tokenInvalidator, BuildConfig.APPLICATION_ID,
         sharedPreferences, new NotificationAnalytics(defaultClient, Analytics.getInstance()),
-        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker());
+        application.getAptoideNavigationTracker());
 
     timelineService =
         new TimelineService(userId, baseBodyInterceptorV7, defaultClient, defaultConverter,
@@ -222,8 +220,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     super.onSaveInstanceState(outState);
 
     if (list != null) {
-      outState.putParcelable(LIST_STATE_KEY, list.getLayoutManager()
-          .onSaveInstanceState());
+      outState.putParcelable(LIST_STATE_KEY, list.getLayoutManager().onSaveInstanceState());
     }
   }
 
@@ -306,8 +303,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   @Override public void onDestroyView() {
     super.onDestroyView();
     progressBar = null;
-    listState = list.getLayoutManager()
-        .onSaveInstanceState();
+    listState = list.getLayoutManager().onSaveInstanceState();
     adapter.clearPosts();
     adapter = null;
     genericError = null;
@@ -324,8 +320,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   @Override public void showCards(List<Post> cards) {
     adapter.updatePosts(cards);
     if (listState != null) {
-      list.getLayoutManager()
-          .onRestoreInstanceState(listState);
+      list.getLayoutManager().onRestoreInstanceState(listState);
       listState = null;
     }
   }
@@ -370,11 +365,10 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         .filter(event -> !bottomAlreadyReached
             && helper.getItemCount() > visibleThreshold
             && helper != null
-            && event.view()
-            .isAttachedToWindow()
-            && (helper.getItemCount() - event.view()
-            .getChildCount()) <= ((helper.findFirstVisibleItemPosition() == -1 ? 0
-            : helper.findFirstVisibleItemPosition()) + visibleThreshold))
+            && event.view().isAttachedToWindow()
+            && (helper.getItemCount() - event.view().getChildCount()) <= ((
+            helper.findFirstVisibleItemPosition() == -1 ? 0 : helper.findFirstVisibleItemPosition())
+            + visibleThreshold))
         .map(event -> null)
         .doOnNext(__ -> bottomAlreadyReached = true)
         .cast(Void.class);
@@ -397,14 +391,12 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   @Override public void showLoadMoreProgressIndicator() {
-    Logger.d(this.getClass()
-        .getName(), "show indicator called");
+    Logger.d(this.getClass().getName(), "show indicator called");
     adapter.addLoadMoreProgress();
   }
 
   @Override public void hideLoadMoreProgressIndicator() {
-    Logger.d(this.getClass()
-        .getName(), "hide indicator called");
+    Logger.d(this.getClass().getName(), "hide indicator called");
     bottomAlreadyReached = false;
     if (adapter != null) {
       adapter.removeLoadMoreProgress();
@@ -432,24 +424,22 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   @Override public Observable<Direction> scrolled() {
-    return RxRecyclerView.scrollEvents(list)
-        .map(event -> new Direction(event.dx(), event.dy()));
+    return RxRecyclerView.scrollEvents(list).map(event -> new Direction(event.dx(), event.dy()));
   }
 
   @Override public void showRootAccessDialog() {
     GenericDialogs.createGenericYesNoCancelMessage(getContext(), null,
         AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog,
-            getContext().getResources()))
-        .subscribe(eResponse -> {
-          switch (eResponse) {
-            case YES:
-              installManager.rootInstallAllowed(true);
-              break;
-            case NO:
-              installManager.rootInstallAllowed(false);
-              break;
-          }
-        });
+            getContext().getResources())).subscribe(eResponse -> {
+      switch (eResponse) {
+        case YES:
+          installManager.rootInstallAllowed(true);
+          break;
+        case NO:
+          installManager.rootInstallAllowed(false);
+          break;
+      }
+    });
   }
 
   @Override public void updatePost(int cardPosition) {
@@ -463,15 +453,13 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   @Override public void showStoreSubscribedMessage(String storeName) {
     final String msg = AptoideUtils.StringU.getFormattedString(R.string.store_followed,
         getContext().getResources(), storeName);
-    Snackbar.make(getView(), msg, Snackbar.LENGTH_SHORT)
-        .show();
+    Snackbar.make(getView(), msg, Snackbar.LENGTH_SHORT).show();
   }
 
   @Override public void showStoreUnsubscribedMessage(String storeName) {
     final String msg = AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
         getContext().getResources(), storeName);
-    Snackbar.make(getView(), msg, Snackbar.LENGTH_SHORT)
-        .show();
+    Snackbar.make(getView(), msg, Snackbar.LENGTH_SHORT).show();
   }
 
   @Override public void showSharePreview(Post post, Account account) {
@@ -495,8 +483,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   @Override public void showCommentDialog(SocialCardTouchEvent touchEvent) {
     FragmentManager fm = getFragmentManager();
     CommentDialogFragment commentDialogFragment =
-        CommentDialogFragment.newInstanceTimelineArticleComment(touchEvent.getCard()
-            .getCardId());
+        CommentDialogFragment.newInstanceTimelineArticleComment(touchEvent.getCard().getCardId());
     commentDialogFragment.setCommentBeforeSubmissionCallbackContract((inputText) -> {
       PostComment postComment =
           new PostComment(touchEvent.getCard(), inputText, touchEvent.getPosition());
@@ -506,8 +493,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   @Override public void showGenericError() {
-    Snackbar.make(getView(), R.string.all_message_general_error, Snackbar.LENGTH_LONG)
-        .show();
+    Snackbar.make(getView(), R.string.all_message_general_error, Snackbar.LENGTH_LONG).show();
   }
 
   @Override public void showLoginPromptWithAction() {
@@ -523,15 +509,13 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   @Override public void showCreateStoreMessage(SocialAction socialAction) {
     Snackbar.make(getView(),
         R.string.timeline_message_error_you_need_to_create_store_with_social_action,
-        Snackbar.LENGTH_LONG)
-        .show();
+        Snackbar.LENGTH_LONG).show();
   }
 
   @Override public void showSetUserOrStorePublicMessage() {
     Snackbar.make(getView(),
         R.string.timeline_message_error_you_need_to_set_store_or_user_to_public,
-        Snackbar.LENGTH_LONG)
-        .show();
+        Snackbar.LENGTH_LONG).show();
   }
 
   @Override public void showPostProgressIndicator() {

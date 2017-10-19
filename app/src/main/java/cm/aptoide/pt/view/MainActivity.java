@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.AutoUpdate;
 import cm.aptoide.pt.InstallManager;
@@ -60,22 +61,19 @@ public class MainActivity extends TabNavigatorActivity
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(LAYOUT);
-    installManager =
-        ((AptoideApplication) getApplicationContext()).getInstallManager(InstallerFactory.DEFAULT);
-    final AptoideAccountManager accountManager =
-        ((AptoideApplication) getApplicationContext()).getAccountManager();
-    final String marketName = ((AptoideApplication) getApplicationContext()).getMarketName();
+    final AptoideApplication application = (AptoideApplication) getApplicationContext();
+    installManager = application.getInstallManager(InstallerFactory.DEFAULT);
+    final AptoideAccountManager accountManager = application.getAccountManager();
+    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
+    final String marketName = appPreferences.getMarketName();
     final AutoUpdate autoUpdate =
         new AutoUpdate(this, new DownloadFactory(marketName), new PermissionManager(),
-            installManager, getResources(),
-            ((AptoideApplication) getApplicationContext()).getAutoUpdateUrl(), R.mipmap.ic_launcher,
+            installManager, getResources(), appPreferences.getAutoUpdateUrl(), R.mipmap.ic_launcher,
             false, marketName);
-    final OkHttpClient httpClient =
-        ((AptoideApplication) getApplicationContext()).getDefaultClient();
+    final OkHttpClient httpClient = application.getDefaultClient();
 
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
-    final SharedPreferences sharedPreferences =
-        ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences();
+    final SharedPreferences sharedPreferences = application.getDefaultSharedPreferences();
     final SharedPreferences securePreferences =
         SecurePreferencesImplementation.getInstance(getApplicationContext(), sharedPreferences);
 
@@ -84,29 +82,24 @@ public class MainActivity extends TabNavigatorActivity
 
     final FragmentNavigator fragmentNavigator = getFragmentNavigator();
 
-    final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(accountManager,
-        ((AptoideApplication) getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7(),
-        new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-            ((AptoideApplication) getApplicationContext().getApplicationContext()).getDatabase(),
-            Store.class)), AccessorFactory.getAccessorFor(
-        ((AptoideApplication) getApplicationContext().getApplicationContext()).getDatabase(),
-        Store.class), httpClient, converterFactory,
-        ((AptoideApplication) getApplicationContext()).getTokenInvalidator(), sharedPreferences);
+    final StoreUtilsProxy storeUtilsProxy =
+        new StoreUtilsProxy(accountManager, application.getAccountSettingsBodyInterceptorPoolV7(),
+            new StoreCredentialsProviderImpl(
+                AccessorFactory.getAccessorFor(application.getDatabase(), Store.class)),
+            AccessorFactory.getAccessorFor(application.getDatabase(), Store.class), httpClient,
+            converterFactory, application.getTokenInvalidator(), sharedPreferences);
 
-    final String defaultTheme =
-        ((AptoideApplication) getApplicationContext().getApplicationContext()).getDefaultTheme();
+    final String defaultTheme = appPreferences.getDefaultTheme();
     final DeepLinkManager deepLinkManager =
         new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator, this, this,
-            sharedPreferences, AccessorFactory.getAccessorFor(
-            ((AptoideApplication) getApplicationContext().getApplicationContext()).getDatabase(),
-            Store.class), defaultTheme,
-            ((AptoideApplication) getApplicationContext()).getAptoideNavigationTracker(),
-            ((AptoideApplication) getApplicationContext()).getPageViewsAnalytics());
+            sharedPreferences,
+            AccessorFactory.getAccessorFor(application.getDatabase(), Store.class), defaultTheme,
+            application.getAptoideNavigationTracker(), application.getPageViewsAnalytics());
 
     final ApkFy apkFy = new ApkFy(this, getIntent(), securePreferences);
 
     final NotificationSyncScheduler notificationSyncScheduler =
-        ((AptoideApplication) getApplicationContext()).getNotificationSyncScheduler();
+        application.getNotificationSyncScheduler();
 
     InstallCompletedNotifier installCompletedNotifier =
         new InstallCompletedNotifier(PublishRelay.create(), installManager,
@@ -114,13 +107,12 @@ public class MainActivity extends TabNavigatorActivity
 
     snackBarLayout = findViewById(R.id.snackbar_layout);
     installErrorsDismissEvent = PublishRelay.create();
-    attachPresenter(new MainPresenter(this, installManager,
-            ((AptoideApplication) getApplicationContext()).getRootInstallationRetryHandler(),
+    attachPresenter(
+        new MainPresenter(this, installManager, application.getRootInstallationRetryHandler(),
             CrashReport.getInstance(), apkFy, autoUpdate, new ContentPuller(this),
-            notificationSyncScheduler, installCompletedNotifier, sharedPreferences, securePreferences,
-            fragmentNavigator, deepLinkManager,
-            ((AptoideApplication) getApplicationContext()).getDefaultStore(), defaultTheme),
-        savedInstanceState);
+            notificationSyncScheduler, installCompletedNotifier, sharedPreferences,
+            securePreferences, fragmentNavigator, deepLinkManager, appPreferences.getDefaultStore(),
+            defaultTheme), savedInstanceState);
   }
 
   @Override public void showInstallationError(int numberOfErrors) {

@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PartnerApplication;
 import cm.aptoide.pt.R;
@@ -38,13 +39,14 @@ public class PartnersLaunchView extends ActivityView {
 
   private boolean usesSplashScreen;
   private BootConfig bootConfig;
-  private String partnerId;
+  private ApplicationPreferences applicationPreferences;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    partnerId = ((PartnerApplication) getApplicationContext()).getPartnerId();
     bootConfig = ((PartnerApplication) getApplicationContext()).getBootConfig();
+    applicationPreferences =
+        ((PartnerApplication) getApplicationContext()).getApplicationPreferences();
     if (getSupportActionBar() != null) {
       getSupportActionBar().hide();
     }
@@ -79,7 +81,7 @@ public class PartnersLaunchView extends ActivityView {
    */
   @Override public View onCreateView(View parent, String name, Context context,
       AttributeSet attrs) {
-    String storeTheme = ((AptoideApplication) getApplicationContext()).getDefaultTheme();
+    String storeTheme = applicationPreferences.getDefaultTheme();
     if (storeTheme != null) {
       ThemeUtils.setStoreTheme(this, storeTheme);
       ThemeUtils.setStatusBarThemeColor(this, StoreTheme.get(storeTheme));
@@ -98,10 +100,8 @@ public class PartnersLaunchView extends ActivityView {
         .isEnable();
     if (usesSplashScreen) {
       setContentView(R.layout.partners_launch);
-      setTheme(StoreTheme.get(bootConfig.getPartner()
-          .getAppearance()
-          .getTheme())
-          .getThemeResource());
+      setTheme(
+          StoreTheme.get(bootConfig.getPartner().getAppearance().getTheme()).getThemeResource());
       String url;
       if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
         url = ((PartnerApplication) getApplicationContext()).getBootConfig()
@@ -116,8 +116,7 @@ public class PartnersLaunchView extends ActivityView {
             .getSplash()
             .getPortrait();
       }
-      ImageLoader.with(this)
-          .load(url, (ImageView) findViewById(R.id.splashscreen));
+      ImageLoader.with(this).load(url, (ImageView) findViewById(R.id.splashscreen));
     }
   }
 
@@ -135,21 +134,19 @@ public class PartnersLaunchView extends ActivityView {
 
     String versionCode = "0";
     try {
-      versionCode = String.valueOf(this.getPackageManager()
-          .getPackageInfo(getPackageName(), 0).versionCode);
+      versionCode =
+          String.valueOf(this.getPackageManager().getPackageInfo(getPackageName(), 0).versionCode);
     } catch (PackageManager.NameNotFoundException e) {
       e.printStackTrace();
     }
 
     Call<RemoteBootConfig> call = retrofit.create(BootConfigServices.class)
-        .getRemoteBootConfig(getPackageName(), bootConfig.getPartner()
-            .getType(), partnerId, versionCode);
+        .getRemoteBootConfig(getPackageName(), bootConfig.getPartner().getType(),
+            applicationPreferences.getPartnerId(), versionCode);
     call.enqueue(new Callback<RemoteBootConfig>() {
       @Override
       public void onResponse(Call<RemoteBootConfig> call, Response<RemoteBootConfig> response) {
-        if (response.body() != null
-            && response.body()
-            .getData() != null) {
+        if (response.body() != null && response.body().getData() != null) {
           ((PartnerApplication) getApplicationContext()).setRemoteBootConfig(response.body());
         }
         handleSplashScreenTimer();

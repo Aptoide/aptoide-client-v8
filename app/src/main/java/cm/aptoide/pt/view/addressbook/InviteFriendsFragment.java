@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
@@ -46,13 +47,15 @@ public class InviteFriendsFragment extends UIComponentFragment
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName());
+    return ScreenTagHistory.Builder.build(this.getClass().getSimpleName());
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
+    marketName = appPreferences.getMarketName();
     mActionsListener = new InviteFriendsPresenter(this,
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
             getString(R.string.addressbook_about),
@@ -68,12 +71,9 @@ public class InviteFriendsFragment extends UIComponentFragment
   }
 
   @Override public void setupViews() {
-    RxView.clicks(allowFind)
-        .subscribe(click -> mActionsListener.allowFindClicked());
-    RxView.clicks(done)
-        .subscribe(click -> mActionsListener.doneClicked());
-    RxView.clicks(share)
-        .subscribe(click -> mActionsListener.shareClicked(getContext()));
+    RxView.clicks(allowFind).subscribe(click -> mActionsListener.allowFindClicked());
+    RxView.clicks(done).subscribe(click -> mActionsListener.doneClicked());
+    RxView.clicks(share).subscribe(click -> mActionsListener.shareClicked(getContext()));
     setupMessage(openMode);
   }
 
@@ -90,8 +90,7 @@ public class InviteFriendsFragment extends UIComponentFragment
         message.setText(R.string.addressbook_we_werent_able_to_connect_you);
         break;
       default:
-        Logger.d(this.getClass()
-            .getSimpleName(), "Wrong openMode type.");
+        Logger.d(this.getClass().getSimpleName(), "Wrong openMode type.");
     }
   }
 

@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PartnerApplication;
 import cm.aptoide.pt.R;
@@ -110,12 +111,14 @@ public class SettingsFragment extends PreferenceFragmentCompat
         .getSwitches()
         .getMature()
         .isEnable();
-    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
+    marketName = appPreferences.getMarketName();
     trackAnalytics = true;
-    sharedPreferences =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
-    database = ((AptoideApplication) getContext().getApplicationContext()).getDatabase();
-    fileManager = ((AptoideApplication) getContext().getApplicationContext()).getFileManager();
+    sharedPreferences = application.getDefaultSharedPreferences();
+    database = application.getDatabase();
+    fileManager = application.getFileManager();
     subscriptions = new CompositeSubscription();
     if (showMatureContent) {
       adultContentConfirmationDialog =
@@ -144,13 +147,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
           .build();
     }
 
-    notificationSyncScheduler =
-        ((AptoideApplication) getContext().getApplicationContext()).getNotificationSyncScheduler();
+    notificationSyncScheduler = application.getNotificationSyncScheduler();
 
-    AptoideNavigationTracker aptoideNavigationTracker =
-        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker();
-    aptoideNavigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName()));
+    AptoideNavigationTracker aptoideNavigationTracker = application.getAptoideNavigationTracker();
+    aptoideNavigationTracker.registerScreen(
+        ScreenTagHistory.Builder.build(this.getClass().getSimpleName()));
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
@@ -164,8 +165,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
   @CallSuper @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    String storeTheme =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
+    final String storeTheme = appPreferences.getDefaultTheme();
     if (storeTheme != null) {
       ThemeUtils.setStoreTheme(getActivity(), storeTheme);
       ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(storeTheme));
@@ -235,8 +238,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
           .andThen(repository.getAll(false))
           .first()
           .subscribe(updates -> Logger.d(TAG, "updates refreshed"),
-              throwable -> CrashReport.getInstance()
-                  .log(throwable));
+              throwable -> CrashReport.getInstance().log(throwable));
     }
   }
 
@@ -279,41 +281,35 @@ public class SettingsFragment extends PreferenceFragmentCompat
           .retry()
           .subscribe());
 
-      subscriptions.add(RxPreference.checks(adultContentPreferenceView)
-          .flatMap(checked -> {
-            rollbackCheck(adultContentPreferenceView);
-            if (checked) {
-              adultContentConfirmationDialog.show();
-              return Observable.empty();
-            } else {
-              adultContentPreferenceView.setEnabled(false);
-              return adultContent.disable()
-                  .doOnCompleted(() -> trackLock())
-                  .observeOn(AndroidSchedulers.mainThread())
-                  .doOnTerminate(() -> adultContentPreferenceView.setEnabled(true))
-                  .toObservable();
-            }
-          })
-          .retry()
-          .subscribe());
+      subscriptions.add(RxPreference.checks(adultContentPreferenceView).flatMap(checked -> {
+        rollbackCheck(adultContentPreferenceView);
+        if (checked) {
+          adultContentConfirmationDialog.show();
+          return Observable.empty();
+        } else {
+          adultContentPreferenceView.setEnabled(false);
+          return adultContent.disable()
+              .doOnCompleted(() -> trackLock())
+              .observeOn(AndroidSchedulers.mainThread())
+              .doOnTerminate(() -> adultContentPreferenceView.setEnabled(true))
+              .toObservable();
+        }
+      }).retry().subscribe());
 
-      subscriptions.add(RxPreference.checks(adultContentWithPinPreferenceView)
-          .flatMap(checked -> {
-            rollbackCheck(adultContentWithPinPreferenceView);
-            if (checked) {
-              enableAdultContentPinDialog.show();
-              return Observable.empty();
-            } else {
-              adultContentWithPinPreferenceView.setEnabled(false);
-              return adultContent.disable()
-                  .doOnCompleted(() -> trackLock())
-                  .observeOn(AndroidSchedulers.mainThread())
-                  .doOnTerminate(() -> adultContentWithPinPreferenceView.setEnabled(true))
-                  .toObservable();
-            }
-          })
-          .retry()
-          .subscribe());
+      subscriptions.add(RxPreference.checks(adultContentWithPinPreferenceView).flatMap(checked -> {
+        rollbackCheck(adultContentWithPinPreferenceView);
+        if (checked) {
+          enableAdultContentPinDialog.show();
+          return Observable.empty();
+        } else {
+          adultContentWithPinPreferenceView.setEnabled(false);
+          return adultContent.disable()
+              .doOnCompleted(() -> trackLock())
+              .observeOn(AndroidSchedulers.mainThread())
+              .doOnTerminate(() -> adultContentWithPinPreferenceView.setEnabled(true))
+              .toObservable();
+        }
+      }).retry().subscribe());
 
       subscriptions.add(adultContent.pinRequired()
           .observeOn(AndroidSchedulers.mainThread())
@@ -332,22 +328,17 @@ public class SettingsFragment extends PreferenceFragmentCompat
           })
           .subscribe());
 
-      subscriptions.add(RxPreference.clicks(pinPreferenceView)
-          .doOnNext(preference -> {
-            setPinDialog.show();
-          })
-          .subscribe());
+      subscriptions.add(RxPreference.clicks(pinPreferenceView).doOnNext(preference -> {
+        setPinDialog.show();
+      }).subscribe());
 
-      subscriptions.add(RxPreference.clicks(removePinPreferenceView)
-          .doOnNext(preference -> {
-            removePinDialog.show();
-          })
-          .subscribe());
+      subscriptions.add(RxPreference.clicks(removePinPreferenceView).doOnNext(preference -> {
+        removePinDialog.show();
+      }).subscribe());
 
       subscriptions.add(setPinDialog.positiveClicks()
           .filter(pin -> !TextUtils.isEmpty(pin))
-          .flatMap(pin -> adultContent.requirePin(Integer.valueOf(pin.toString()))
-              .toObservable())
+          .flatMap(pin -> adultContent.requirePin(Integer.valueOf(pin.toString())).toObservable())
           .retry()
           .subscribe());
 
@@ -484,8 +475,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     about.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
       @Override public boolean onPreferenceClick(Preference preference) {
 
-        View view = LayoutInflater.from(context)
-            .inflate(R.layout.dialog_about, null);
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_about, null);
         String versionName = "";
         int versionCode = 0;
 
@@ -493,15 +483,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
           versionName = getActivity().getPackageManager()
               .getPackageInfo(getActivity().getPackageName(), 0).versionName;
         } catch (PackageManager.NameNotFoundException e) {
-          CrashReport.getInstance()
-              .log(e);
+          CrashReport.getInstance().log(e);
         }
         try {
           versionCode = getActivity().getPackageManager()
               .getPackageInfo(getActivity().getPackageName(), 0).versionCode;
         } catch (PackageManager.NameNotFoundException e) {
-          CrashReport.getInstance()
-              .log(e);
+          CrashReport.getInstance().log(e);
         }
 
         ((TextView) view.findViewById(R.id.aptoide_version)).setText(

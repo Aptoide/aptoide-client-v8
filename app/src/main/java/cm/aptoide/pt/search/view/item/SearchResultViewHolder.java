@@ -58,11 +58,18 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
     setStoreName();
     setIconView();
     setTrustedBadge();
+    setOverflowMenu();
   }
 
   public void prepareToRecycle() {
     if (subscriptions.hasSubscriptions() && !subscriptions.isUnsubscribed()) {
       subscriptions.unsubscribe();
+    }
+  }
+
+  private void setOverflowMenu() {
+    if (!searchApp.hasOtherVersions() && !searchApp.hasGoToStore()) {
+      overflowImageView.setVisibility(View.INVISIBLE);
     }
   }
 

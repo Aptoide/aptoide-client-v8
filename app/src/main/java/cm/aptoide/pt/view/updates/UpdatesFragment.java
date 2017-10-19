@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.telephony.TelephonyManager;
 import android.view.View;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.InstallManager;
@@ -105,14 +106,13 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
       updateReloadSubscription.unsubscribe();
     }
 
-    updateReloadSubscription = updateRepository.sync(true)
-        .subscribe(() -> finishLoading(), e -> {
-          if (e instanceof RepositoryItemNotFoundException) {
-            ShowMessage.asSnack(getView(), R.string.add_store);
-          }
-          crashReport.log(e);
-          finishLoading();
-        });
+    updateReloadSubscription = updateRepository.sync(true).subscribe(() -> finishLoading(), e -> {
+      if (e instanceof RepositoryItemNotFoundException) {
+        ShowMessage.asSnack(getView(), R.string.add_store);
+      }
+      crashReport.log(e);
+      finishLoading();
+    });
   }
 
   @Override public void onDestroyView() {
@@ -143,8 +143,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
           finishLoading();
         }, err -> {
           Logger.e(TAG, "listing updates or installed threw an exception");
-          CrashReport.getInstance()
-              .log(err);
+          CrashReport.getInstance().log(err);
           finishLoading();
         });
   }
@@ -155,41 +154,38 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName());
+    return ScreenTagHistory.Builder.build(this.getClass().getSimpleName());
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
+    marketName = appPreferences.getMarketName();
     crashReport = CrashReport.getInstance();
-    bodyInterceptorV7 =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+    bodyInterceptorV7 = application.getAccountSettingsBodyInterceptorPoolV7();
+    httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
-        InstallerFactory.ROLLBACK);
+    installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
     analytics = Analytics.getInstance();
-    tokenInvalidator =
-        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
+    tokenInvalidator = application.getTokenInvalidator();
     downloadInstallEventConverter =
         new DownloadEventConverter(bodyInterceptorV7, httpClient, converterFactory,
-            tokenInvalidator, BuildConfig.APPLICATION_ID,
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            tokenInvalidator, BuildConfig.APPLICATION_ID, application.getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-            ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker());
+            application.getAptoideNavigationTracker());
     installConverter =
         new InstallEventConverter(bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator,
-            BuildConfig.APPLICATION_ID,
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            BuildConfig.APPLICATION_ID, application.getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
             aptoideNavigationTracker);
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     updateRepository = RepositoryFactory.getUpdateRepository(getContext(),
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
+        application.getDefaultSharedPreferences());
     storeTabNavigator = new StoreTabNavigator(getFragmentNavigator());
   }
 
@@ -270,17 +266,15 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
    * Filters updates returning the installed app or empty item.
    *
    * @param item App to filter.
-   *
    * @return {@link Observable} to a {@link Installed} or empty.
    */
   // TODO: 31/1/2017 instead of Observable<Installed> use Single<Installed>
   private Observable<Installed> filterUpdates(Installed item) {
-    return updateRepository.contains(item.getPackageName(), false)
-        .flatMap(isUpdate -> {
-          if (isUpdate) {
-            return Observable.empty();
-          }
-          return Observable.just(item);
-        });
+    return updateRepository.contains(item.getPackageName(), false).flatMap(isUpdate -> {
+      if (isUpdate) {
+        return Observable.empty();
+      }
+      return Observable.just(item);
+    });
   }
 }

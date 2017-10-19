@@ -8,6 +8,7 @@ package cm.aptoide.pt.view.updates;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionService;
@@ -57,8 +58,10 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
   }
 
   @Override public void bindView(UpdatesHeaderDisplayable displayable) {
-    final String marketName =
-        ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
+    final String marketName = appPreferences.getMarketName();
     title.setText(displayable.getLabel());
     more.setText(R.string.updatetab_button_update_all);
     more.setVisibility(View.VISIBLE);
@@ -69,23 +72,23 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
         UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(
             ((AptoideApplication) getContext().getApplicationContext()
                 .getApplicationContext()).getDatabase(), Update.class);
-        compositeSubscription.add(updateAccessor.getAll(false)
-            .first()
-            .observeOn(Schedulers.io())
-            .map(updates -> {
+        compositeSubscription.add(
+            updateAccessor.getAll(false)
+                .first()
+                .observeOn(Schedulers.io())
+                .map(updates -> {
 
-              ArrayList<Download> downloadList = new ArrayList<>(updates.size());
-              for (Update update : updates) {
-                Download download = new DownloadFactory(marketName).create(update);
-                displayable.setupDownloadEvent(download);
-                downloadList.add(download);
-              }
-              return downloadList;
-            })
-            .flatMap(downloads -> displayable.getInstallManager()
-                .startInstalls(downloads))
-            .subscribe(aVoid -> Logger.i(TAG, "Update task completed"),
-                throwable -> throwable.printStackTrace()));
+                  ArrayList<Download> downloadList = new ArrayList<>(updates.size());
+                  for (Update update : updates) {
+                    Download download = new DownloadFactory(marketName).create(update);
+                    displayable.setupDownloadEvent(download);
+                    downloadList.add(download);
+                  }
+                  return downloadList;
+                })
+                .flatMap(downloads -> displayable.getInstallManager().startInstalls(downloads))
+                .subscribe(aVoid -> Logger.i(TAG, "Update task completed"),
+                    throwable -> throwable.printStackTrace()));
       }, () -> {
       });
 

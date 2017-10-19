@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
@@ -32,10 +33,11 @@ public class StoreGridHeaderWidget extends Widget<StoreGridHeaderDisplayable> {
   @Override public void bindView(StoreGridHeaderDisplayable displayable) {
     final GetStoreWidgets.WSWidget wsWidget = displayable.getWsWidget();
     final boolean moreIsVisible = wsWidget.hasActions();
-    final String marketName =
-        ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
-    final SharedPreferences sharedPreferences =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
+    final String marketName = appPreferences.getMarketName();
+    final SharedPreferences sharedPreferences = application.getDefaultSharedPreferences();
     title.setText(Translator.translate(wsWidget.getTitle(), getContext().getApplicationContext(),
         marketName));
 
@@ -43,30 +45,26 @@ public class StoreGridHeaderWidget extends Widget<StoreGridHeaderDisplayable> {
     more.setVisibility(moreIsVisible && model.isMoreVisible() ? View.VISIBLE : View.GONE);
 
     if (moreIsVisible) {
-      compositeSubscription.add(RxView.clicks(more)
-          .subscribe(a -> {
+      compositeSubscription.add(RxView.clicks(more).subscribe(a -> {
 
-            final Event event = wsWidget.getActions()
-                .get(0)
-                .getEvent();
-            final String storeTheme = model.getStoreTheme();
-            final String tag = model.getTag();
-            final StoreContext storeContext = model.getStoreContext();
-            final String title = wsWidget.getTitle();
+        final Event event = wsWidget.getActions().get(0).getEvent();
+        final String storeTheme = model.getStoreTheme();
+        final String tag = model.getTag();
+        final StoreContext storeContext = model.getStoreContext();
+        final String title = wsWidget.getTitle();
 
-            if (event.getName() == Event.Name.listComments) {
-              String action = event.getAction();
-              String url =
-                  action != null ? action.replace(V7.getHost(sharedPreferences), "") : null;
-              displayable.getStoreTabNavigator()
-                  .navigateToCommentGridRecyclerView(CommentType.STORE, url, "View Comments",
-                      storeContext);
-            } else {
-              displayable.getStoreTabNavigator()
-                  .navigateToStoreTabGridRecyclerView(event, title, storeTheme, tag, storeContext,
-                      false);
-            }
-          }));
+        if (event.getName() == Event.Name.listComments) {
+          String action = event.getAction();
+          String url = action != null ? action.replace(V7.getHost(sharedPreferences), "") : null;
+          displayable.getStoreTabNavigator()
+              .navigateToCommentGridRecyclerView(CommentType.STORE, url, "View Comments",
+                  storeContext);
+        } else {
+          displayable.getStoreTabNavigator()
+              .navigateToStoreTabGridRecyclerView(event, title, storeTheme, tag, storeContext,
+                  false);
+        }
+      }));
     }
   }
 }

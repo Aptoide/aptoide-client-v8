@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.TextView;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
@@ -87,11 +88,13 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
     storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
         ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class));
-    baseBodyBodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    baseBodyBodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();
+    httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    partnerId = ((AptoideApplication) getContext().getApplicationContext()).getPartnerId();
+    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
+    partnerId = appPreferences.getPartnerId();
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -123,8 +126,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName());
+    return ScreenTagHistory.Builder.build(this.getClass().getSimpleName());
   }
 
   @Override protected int[] getViewsToShowAfterLoadingId() {
@@ -164,27 +166,20 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
 
   private void setupAppDescription(GetApp getApp) {
     try {
-      GetAppMeta.Media media = getApp.getNodes()
-          .getMeta()
-          .getData()
-          .getMedia();
+      GetAppMeta.Media media = getApp.getNodes().getMeta().getData().getMedia();
       if (!TextUtils.isEmpty(media.getDescription())) {
         descriptionContainer.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
         return;
       }
     } catch (NullPointerException e) {
-      CrashReport.getInstance()
-          .log(e);
+      CrashReport.getInstance().log(e);
     }
     setDataUnavailable();
   }
 
   private void setupTitle(GetApp getApp) {
     try {
-      String appName = getApp.getNodes()
-          .getMeta()
-          .getData()
-          .getName();
+      String appName = getApp.getNodes().getMeta().getData().getName();
       if (!TextUtils.isEmpty(appName)) {
         if (hasToolbar()) {
           ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
@@ -193,8 +188,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
         }
       }
     } catch (NullPointerException e) {
-      CrashReport.getInstance()
-          .log(e);
+      CrashReport.getInstance().log(e);
     }
     setDataUnavailable();
   }
@@ -212,9 +206,8 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
     ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
     if (bar != null) {
       ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(storeTheme));
-      bar.setBackgroundDrawable(new ColorDrawable(getActivity().getResources()
-          .getColor(StoreTheme.get(storeTheme)
-              .getPrimaryColor())));
+      bar.setBackgroundDrawable(new ColorDrawable(
+          getActivity().getResources().getColor(StoreTheme.get(storeTheme).getPrimaryColor())));
     }
   }
 

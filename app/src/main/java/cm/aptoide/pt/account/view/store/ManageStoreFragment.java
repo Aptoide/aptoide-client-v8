@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
@@ -123,9 +124,11 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     uriToPathResolver = new UriToPathResolver(getActivity().getContentResolver());
     imagePickerNavigator = new ImagePickerNavigator(getActivityNavigator());
     imageValidator = new ImageValidator(ImageLoader.with(getActivity()), Schedulers.computation());
-    manageStoreNavigator = new ManageStoreNavigator(getFragmentNavigator(),
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore(),
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme());
+    final ApplicationPreferences appPreferences =
+        ((AptoideApplication) getContext().getApplicationContext()).getApplicationPreferences();
+    manageStoreNavigator =
+        new ManageStoreNavigator(getFragmentNavigator(), appPreferences.getDefaultStore(),
+            appPreferences.getDefaultTheme());
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -138,8 +141,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName());
+    return ScreenTagHistory.Builder.build(this.getClass().getSimpleName());
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -176,8 +178,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     imagePickerErrorHandler.showIconPropertiesError(exception)
         .compose(bindUntilEvent(LifecycleEvent.PAUSE))
         .subscribe(__ -> {
-        }, err -> CrashReport.getInstance()
-            .log(err));
+        }, err -> CrashReport.getInstance().log(err));
   }
 
   @Override public Observable<Void> selectStoreImageClick() {
@@ -196,8 +197,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   }
 
   @Override public Observable<ViewModel> saveDataClick() {
-    return RxView.clicks(saveDataButton)
-        .map(__ -> updateAndGetStoreModel());
+    return RxView.clicks(saveDataButton).map(__ -> updateAndGetStoreModel());
   }
 
   @Override public Observable<Void> cancelClick() {
@@ -310,9 +310,8 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   }
 
   private ViewModel updateAndGetStoreModel() {
-    currentModel = ViewModel.update(currentModel, storeName.getText()
-        .toString(), storeDescription.getText()
-        .toString());
+    currentModel = ViewModel.update(currentModel, storeName.getText().toString(),
+        storeDescription.getText().toString());
     currentModel.setStoreTheme(themeSelectorAdapter.getSelectedTheme());
     return currentModel;
   }

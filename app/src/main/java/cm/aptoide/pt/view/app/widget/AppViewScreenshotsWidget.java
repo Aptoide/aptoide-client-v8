@@ -8,6 +8,8 @@ package cm.aptoide.pt.view.app.widget;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import cm.aptoide.pt.ApplicationPreferences;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -23,6 +25,7 @@ import cm.aptoide.pt.view.recycler.widget.Widget;
 public class AppViewScreenshotsWidget extends Widget<AppViewScreenshotsDisplayable> {
 
   private RecyclerView mediaList;
+  private ApplicationPreferences appPreferences;
 
   public AppViewScreenshotsWidget(View itemView) {
     super(itemView);
@@ -40,8 +43,10 @@ public class AppViewScreenshotsWidget extends Widget<AppViewScreenshotsDisplayab
   }
 
   @Override public void bindView(AppViewScreenshotsDisplayable displayable) {
-    final GetAppMeta.Media media = displayable.getPojo()
-        .getMedia();
+    final GetAppMeta.Media media = displayable.getPojo().getMedia();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    appPreferences = application.getApplicationPreferences();
     mediaList.setLayoutManager(
         new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.HORIZONTAL, false));
     mediaList.setNestedScrollingEnabled(false); // because otherwise the AppBar won't be collapsed
@@ -71,6 +76,7 @@ public class AppViewScreenshotsWidget extends Widget<AppViewScreenshotsDisplayab
   }
 
   private AppViewNavigator getAppViewNavigator() {
-    return new AppViewNavigator(getFragmentNavigator(), getActivityNavigator());
+    return new AppViewNavigator(getFragmentNavigator(), getActivityNavigator(),
+        appPreferences.hasMultiStoreSearch(), appPreferences.getDefaultStore());
   }
 }

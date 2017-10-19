@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.InstallManager;
@@ -57,12 +58,12 @@ public class PullingContentService extends Service {
 
   @Override public void onCreate() {
     super.onCreate();
-    marketName = ((AptoideApplication) getApplicationContext()).getMarketName();
-    sharedPreferences =
-        ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences();
+    final AptoideApplication application = (AptoideApplication) getApplicationContext();
+    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
+    marketName = appPreferences.getMarketName();
+    sharedPreferences = application.getDefaultSharedPreferences();
     updateRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
-    installManager =
-        ((AptoideApplication) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
+    installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
 
     subscriptions = new CompositeSubscription();
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -122,8 +123,7 @@ public class PullingContentService extends Service {
           setUpdatesNotification(updates, startId);
         }, throwable -> {
           throwable.printStackTrace();
-          CrashReport.getInstance()
-              .log(throwable);
+          CrashReport.getInstance().log(throwable);
         }));
   }
 
@@ -135,16 +135,13 @@ public class PullingContentService extends Service {
         && ManagerPreferences.allowRootInstallation(sharedPreferences))
         .flatMap(shouldAutoUpdateRun -> {
           if (shouldAutoUpdateRun) {
-            return Observable.just(updateList)
-                .observeOn(Schedulers.io())
-                .map(updates -> {
-                  ArrayList<Download> downloadList = new ArrayList<>(updates.size());
-                  for (Update update : updates) {
-                    downloadList.add(new DownloadFactory(marketName).create(update));
-                  }
-                  return downloadList;
-                })
-                .flatMap(downloads -> installManager.startInstalls(downloads));
+            return Observable.just(updateList).observeOn(Schedulers.io()).map(updates -> {
+              ArrayList<Download> downloadList = new ArrayList<>(updates.size());
+              for (Update update : updates) {
+                downloadList.add(new DownloadFactory(marketName).create(update));
+              }
+              return downloadList;
+            }).flatMap(downloads -> installManager.startInstalls(downloads));
           } else {
             return Observable.just(false);
           }
@@ -153,8 +150,7 @@ public class PullingContentService extends Service {
 
   private void setUpdatesNotification(List<Update> updates, int startId) {
     Intent resultIntent = new Intent(getApplicationContext(),
-        AptoideApplication.getActivityProvider()
-            .getMainActivityFragmentClass());
+        AptoideApplication.getActivityProvider().getMainActivityFragmentClass());
     resultIntent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES, true);
     PendingIntent resultPendingIntent =
         PendingIntent.getActivity(getApplicationContext(), 0, resultIntent,

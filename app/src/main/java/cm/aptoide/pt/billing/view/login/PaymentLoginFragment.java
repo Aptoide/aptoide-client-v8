@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.AptoideCredentials;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
@@ -110,8 +111,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName());
+    return ScreenTagHistory.Builder.build(this.getClass().getSimpleName());
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -149,8 +149,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
 
     final Toolbar toolbar = (Toolbar) view.findViewById(R.id.fragment_payment_login_toolbar);
     ((AppCompatActivity) getContext()).setSupportActionBar(toolbar);
-    ((AppCompatActivity) getContext()).getSupportActionBar()
-        .setDisplayHomeAsUpEnabled(true);
+    ((AppCompatActivity) getContext()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     aptoideLoginSignUpSeparator =
         view.findViewById(R.id.fragment_payment_login_aptoide_buttons_separator_container);
@@ -162,8 +161,10 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     aptoideLoginContainer = view.findViewById(R.id.fragment_payment_login_container);
 
     aptoideJoinToggle = (Button) view.findViewById(R.id.fragment_payment_login_join_button);
-    aptoideJoinToggle.setText(getString(R.string.join_company,
-        ((AptoideApplication) getContext().getApplicationContext()).getMarketName()));
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
+    aptoideJoinToggle.setText(getString(R.string.join_company, appPreferences.getMarketName()));
     aptoideLoginToggle = (Button) view.findViewById(R.id.fragment_payment_login_small_button);
     recoverPasswordButton = view.findViewById(R.id.fragment_payment_login_recover_password_button);
     aptoideLoginButton = (Button) view.findViewById(R.id.fragment_payment_login_large_login_button);
@@ -236,8 +237,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     attachPresenter(
         new PaymentLoginPresenter(this, requestCode, Arrays.asList("email", "user_friends"),
             accountNavigator, Arrays.asList("email"), accountManager, crashReport, errorMapper,
-            AndroidSchedulers.mainThread(), orientationManager,
-            ((AptoideApplication) getContext().getApplicationContext()).getAccountAnalytics()),
+            AndroidSchedulers.mainThread(), orientationManager, application.getAccountAnalytics()),
         savedInstanceState);
   }
 
@@ -296,23 +296,20 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     return Observable.merge(RxView.clicks(aptoideLoginButton),
         passwordKeyboardGoRelay.filter(__ -> loginVisible))
         .doOnNext(__ -> hideKeyboard())
-        .map(__ -> new AptoideCredentials(usernameEditText.getText()
-            .toString(), passwordEditText.getText()
-            .toString()));
+        .map(__ -> new AptoideCredentials(usernameEditText.getText().toString(),
+            passwordEditText.getText().toString()));
   }
 
   @Override public Observable<AptoideCredentials> aptoideSignUpEvent() {
     return Observable.merge(RxView.clicks(aptoideSignUpButton),
         passwordKeyboardGoRelay.filter(__ -> !loginVisible))
         .doOnNext(__ -> hideKeyboard())
-        .map(__ -> new AptoideCredentials(usernameEditText.getText()
-            .toString(), passwordEditText.getText()
-            .toString()));
+        .map(__ -> new AptoideCredentials(usernameEditText.getText().toString(),
+            passwordEditText.getText().toString()));
   }
 
   @Override public Observable<Void> grantFacebookRequiredPermissionsEvent() {
-    return facebookEmailRequiredDialog.positiveClicks()
-        .map(dialogInterface -> null);
+    return facebookEmailRequiredDialog.positiveClicks().map(dialogInterface -> null);
   }
 
   @Override public void showLoading() {
@@ -326,8 +323,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
   }
 
   @Override public void showError(String message) {
-    Snackbar.make(rootView, message, Snackbar.LENGTH_LONG)
-        .show();
+    Snackbar.make(rootView, message, Snackbar.LENGTH_LONG).show();
   }
 
   @Override public void showFacebookPermissionsRequiredError() {

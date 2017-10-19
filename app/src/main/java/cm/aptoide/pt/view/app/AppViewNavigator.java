@@ -14,11 +14,15 @@ public class AppViewNavigator {
 
   private final FragmentNavigator fragmentNavigator;
   private final ActivityNavigator activityNavigator;
+  private final boolean hasMultiStoreSearch;
+  private final String defaultStoreName;
 
-  public AppViewNavigator(FragmentNavigator fragmentNavigator,
-      ActivityNavigator activityNavigator) {
+  public AppViewNavigator(FragmentNavigator fragmentNavigator, ActivityNavigator activityNavigator,
+      boolean hasMultiStoreSearch, String defaultStoreName) {
     this.fragmentNavigator = fragmentNavigator;
     this.activityNavigator = activityNavigator;
+    this.hasMultiStoreSearch = hasMultiStoreSearch;
+    this.defaultStoreName = defaultStoreName;
   }
 
   public void navigateToScreenshots(ArrayList<String> imagesUris, int currentPosition) {
@@ -31,14 +35,18 @@ public class AppViewNavigator {
   }
 
   public void navigateToOtherVersions(String appName, String icon, String packageName) {
-    Fragment fragment = AptoideApplication.getFragmentProvider()
-        .newOtherVersionsFragment(appName, icon, packageName);
+    final Fragment fragment;
+    if (hasMultiStoreSearch) {
+      fragment = OtherVersionsFragment.newInstance(appName, icon, packageName);
+    } else {
+      fragment = OtherVersionsFragment.newInstance(appName, icon, packageName, defaultStoreName);
+    }
     fragmentNavigator.navigateTo(fragment, true);
   }
 
   public void navigateToAppView(long appId, String packageName, String tag) {
-    Fragment fragment = AptoideApplication.getFragmentProvider()
-        .newAppViewFragment(appId, packageName, tag);
+    Fragment fragment =
+        AptoideApplication.getFragmentProvider().newAppViewFragment(appId, packageName, tag);
     fragmentNavigator.navigateTo(fragment, true);
   }
 

@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.AdsRepository;
@@ -45,7 +46,6 @@ import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
@@ -380,7 +380,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
 
     searchMenuItem = menu.findItem(R.id.action_search);
     final SearchBuilder searchBuilder =
-        new SearchBuilder(searchMenuItem, getContext(), getSearchNavigator(),
+        new SearchBuilder(searchMenuItem, getContext(), searchNavigator,
             viewModel.getCurrentQuery());
     searchBuilder.validateAndAttachSearch();
   }
@@ -389,9 +389,10 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     return super.getDefaultTheme();
   }
 
+  /*
   @NonNull private SearchNavigator getSearchNavigator() {
     final SearchNavigator searchNavigator;
-    final String defaultStore = getDefaultStore();
+
     if (viewModel.getStoreName() != null && viewModel.getStoreName().length() > 0) {
       searchNavigator =
           getSearchNavigator(getFragmentNavigator(), viewModel.getStoreName(), defaultStore);
@@ -411,6 +412,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
       String defaultStore) {
     return new SearchNavigator(fragmentNavigator, defaultStore);
   }
+  */
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -434,20 +436,24 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     searchAnalytics =
         new SearchAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(applicationContext));
 
+    final AptoideApplication application = (AptoideApplication) getActivity().getApplication();
+
     final StoreAccessor storeAccessor =
         AccessorFactory.getAccessorFor(applicationContext.getDatabase(), Store.class);
     final HashMapNotNull<String, List<String>> subscribedStoresAuthMap =
         StoreUtils.getSubscribedStoresAuthMap(storeAccessor);
     final List<Long> subscribedStoresIds = StoreUtils.getSubscribedStoresIds(storeAccessor);
-    final AdsRepository adsRepository =
-        ((AptoideApplication) getActivity().getApplication()).getAdsRepository();
+    final AdsRepository adsRepository = application.getAdsRepository();
 
     searchManager =
         new SearchManager(sharedPreferences, tokenInvalidator, bodyInterceptor, httpClient,
             converterFactory, subscribedStoresAuthMap, subscribedStoresIds, adsRepository);
 
+    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
+    final String defaultStore = appPreferences.getDefaultStore();
+
     mainThreadScheduler = AndroidSchedulers.mainThread();
-    searchNavigator = getSearchNavigator(getFragmentNavigator(), getDefaultStore());
+    searchNavigator = new SearchNavigator(getFragmentNavigator(), defaultStore);
 
     onItemViewClickRelay = PublishRelay.create();
     onOpenPopupMenuClickRelay = PublishRelay.create();

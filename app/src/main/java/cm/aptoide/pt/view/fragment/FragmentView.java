@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.logger.Logger;
@@ -34,10 +35,9 @@ public abstract class FragmentView extends LeakFragment implements View {
 
   private Presenter presenter;
   private boolean startActivityForResultCalled;
-  private String defaultStore;
-  private String defaultTheme;
   private AptoideNavigationTracker navigationTracker;
   private ActivityResultNavigator activityResultNavigator;
+  private ApplicationPreferences appPreferences;
 
   public FragmentNavigator getFragmentNavigator() {
     return activityResultNavigator.getFragmentNavigator();
@@ -66,25 +66,22 @@ public abstract class FragmentView extends LeakFragment implements View {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    defaultStore = ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore();
-    defaultTheme = ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
-    ScreenTrackingUtils.getInstance()
-        .incrementNumberOfScreens();
+    appPreferences =
+        ((AptoideApplication) getContext().getApplicationContext()).getApplicationPreferences();
+    ScreenTrackingUtils.getInstance().incrementNumberOfScreens();
     navigationTracker =
         ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker();
   }
 
   @Override public void onDestroy() {
     super.onDestroy();
-    ScreenTrackingUtils.getInstance()
-        .decrementNumberOfScreens();
+    ScreenTrackingUtils.getInstance().decrementNumberOfScreens();
   }
 
   @Override public void setUserVisibleHint(boolean isVisibleToUser) {
     super.setUserVisibleHint(isVisibleToUser);
     if (isVisibleToUser) {
-      ScreenTrackingUtils.getInstance()
-          .addScreenToHistory(getClass().getSimpleName());
+      ScreenTrackingUtils.getInstance().addScreenToHistory(getClass().getSimpleName());
     }
   }
 
@@ -103,8 +100,7 @@ public abstract class FragmentView extends LeakFragment implements View {
     if (presenter != null) {
       presenter.saveState(outState);
     } else {
-      Logger.w(this.getClass()
-          .getName(), "No presenter was attached.");
+      Logger.w(this.getClass().getName(), "No presenter was attached.");
     }
 
     super.onSaveInstanceState(outState);
@@ -191,10 +187,10 @@ public abstract class FragmentView extends LeakFragment implements View {
   }
 
   protected String getDefaultStore() {
-    return defaultStore;
+    return appPreferences.getDefaultStore();
   }
 
   protected String getDefaultTheme() {
-    return defaultTheme;
+    return appPreferences.getDefaultTheme();
   }
 }

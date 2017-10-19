@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
@@ -60,26 +61,25 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName());
+    return ScreenTagHistory.Builder.build(this.getClass().getSimpleName());
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
     final BodyInterceptor<BaseBody> baseBodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    final OkHttpClient httpClient =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+        application.getAccountSettingsBodyInterceptorPoolV7();
+    final OkHttpClient httpClient = application.getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
-    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
+    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
+    marketName = appPreferences.getMarketName();
     this.mActionsListener = new PhoneInputPresenter(this,
         new ContactsRepository(baseBodyInterceptor, httpClient, converterFactory,
-            ((AptoideApplication) getContext().getApplicationContext()).getIdsRepository(),
-            new ContactUtils(
-                (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-                getContext().getContentResolver()),
-            ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()),
+            application.getIdsRepository(), new ContactUtils(
+            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
+            getContext().getContentResolver()), application.getTokenInvalidator(),
+            application.getDefaultSharedPreferences()),
         new AddressBookAnalytics(Analytics.getInstance(),
             AppEventsLogger.newLogger(getContext().getApplicationContext())),
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
@@ -125,31 +125,23 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
     mPhoneNumber.setOnEditorActionListener((textView, actionId, keyEvent) -> {
       if ((keyEvent != null && (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId
           == EditorInfo.IME_ACTION_DONE)) {
-        String countryCode = mCountryNumber.getText()
-            .toString();
-        mActionsListener.submitClicked(countryCode.concat(mPhoneNumber.getText()
-            .toString()));
+        String countryCode = mCountryNumber.getText().toString();
+        mActionsListener.submitClicked(countryCode.concat(mPhoneNumber.getText().toString()));
       }
       return false;
     });
 
-    RxView.clicks(mNotNowV)
-        .subscribe(click -> this.mActionsListener.notNowClicked());
-    RxView.clicks(mSaveNumber)
-        .subscribe(click -> {
+    RxView.clicks(mNotNowV).subscribe(click -> this.mActionsListener.notNowClicked());
+    RxView.clicks(mSaveNumber).subscribe(click -> {
 
-          String countryCode = mCountryNumber.getText()
-              .toString();
+      String countryCode = mCountryNumber.getText().toString();
 
-          if (mCountryNumber.getText()
-              .toString()
-              .isEmpty()) {
-            countryCode = String.valueOf(mCountryNumber.getHint());
-          }
+      if (mCountryNumber.getText().toString().isEmpty()) {
+        countryCode = String.valueOf(mCountryNumber.getHint());
+      }
 
-          this.mActionsListener.submitClicked(countryCode.concat(mPhoneNumber.getText()
-              .toString()));
-        });
+      this.mActionsListener.submitClicked(countryCode.concat(mPhoneNumber.getText().toString()));
+    });
   }
 
   @Override public int getContentViewId() {
@@ -177,8 +169,7 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
   }
 
   @Override public void showSubmissionError() {
-    Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT)
-        .show();
+    Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
   }
 
   @Override public void hideVirtualKeyboard() {

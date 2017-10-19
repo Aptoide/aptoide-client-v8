@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified on 02/09/2016.
- */
-
 package cm.aptoide.pt;
 
 import android.accounts.AccountManager;
@@ -214,8 +209,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
-import lombok.Getter;
-import lombok.Setter;
 import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -235,12 +228,11 @@ public abstract class AptoideApplication extends Application {
   private static final String CACHE_FILE_NAME = "aptoide.wscache";
   private static final String TAG = AptoideApplication.class.getName();
 
-  @Getter private static FragmentProvider fragmentProvider;
-  @Getter private static ActivityProvider activityProvider;
-  @Getter private static DisplayableWidgetMapping displayableWidgetMapping;
-  @Setter @Getter private static boolean autoUpdateWasCalled = false;
-
-  @Getter @Setter private static ShareApps shareApps;
+  private static FragmentProvider fragmentProvider;
+  private static ActivityProvider activityProvider;
+  private static DisplayableWidgetMapping displayableWidgetMapping;
+  private static ShareApps shareApps;
+  private static boolean autoUpdateWasCalled = false;
   private AptoideAccountManager accountManager;
   private BodyInterceptor<BaseBody> bodyInterceptorPoolV7;
   private BodyInterceptor<BaseBody> bodyInterceptorWebV7;
@@ -311,6 +303,30 @@ public abstract class AptoideApplication extends Application {
   private AccountSettingsBodyInterceptorV7 accountSettingsBodyInterceptorPoolV7;
   private AccountSettingsBodyInterceptorV7 accountSettingsBodyInterceptorWebV7;
 
+  public static FragmentProvider getFragmentProvider() {
+    return fragmentProvider;
+  }
+
+  public static ActivityProvider getActivityProvider() {
+    return activityProvider;
+  }
+
+  public static DisplayableWidgetMapping getDisplayableWidgetMapping() {
+    return displayableWidgetMapping;
+  }
+
+  public static boolean isAutoUpdateWasCalled() {
+    return autoUpdateWasCalled;
+  }
+
+  public static void setAutoUpdateWasCalled(boolean autoUpdateWasCalled) {
+    AptoideApplication.autoUpdateWasCalled = autoUpdateWasCalled;
+  }
+
+  public static ShareApps getShareApps() {
+    return shareApps;
+  }
+
   public LeakTool getLeakTool() {
     if (leakTool == null) {
       leakTool = new LeakTool();
@@ -328,8 +344,7 @@ public abstract class AptoideApplication extends Application {
     try {
       PRNGFixes.apply();
     } catch (Exception e) {
-      CrashReport.getInstance()
-          .log(e);
+      CrashReport.getInstance().log(e);
     }
 
     //
@@ -376,13 +391,11 @@ public abstract class AptoideApplication extends Application {
         .observeOn(Schedulers.computation())
         .andThen(prepareApp(AptoideApplication.this.getAccountManager()).onErrorComplete(err -> {
           // in case we have an error preparing the app, log that error and continue
-          CrashReport.getInstance()
-              .log(err);
+          CrashReport.getInstance().log(err);
           return true;
         }))
         .andThen(discoverAndSaveInstalledApps())
-        .subscribe(() -> { /* do nothing */}, error -> CrashReport.getInstance()
-            .log(error));
+        .subscribe(() -> { /* do nothing */}, error -> CrashReport.getInstance().log(error));
 
     //
     // app synchronous initialization
@@ -390,10 +403,8 @@ public abstract class AptoideApplication extends Application {
 
     sendAppStartToAnalytics().doOnCompleted(() -> SecurePreferences.setFirstRun(false,
         SecurePreferencesImplementation.getInstance(getApplicationContext(),
-            getDefaultSharedPreferences())))
-        .subscribe(() -> {
-        }, throwable -> CrashReport.getInstance()
-            .log(throwable));
+            getDefaultSharedPreferences()))).subscribe(() -> {
+    }, throwable -> CrashReport.getInstance().log(throwable));
 
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
 
@@ -428,10 +439,12 @@ public abstract class AptoideApplication extends Application {
 
   public TokenInvalidator getTokenInvalidator() {
     if (tokenInvalidator == null) {
+      ApplicationPreferences appPreferences = getApplicationPreferences();
       tokenInvalidator =
           new RefreshTokenInvalidator(getNoAuthenticationBodyInterceptorV3(), getDefaultClient(),
-              WebService.getDefaultConverter(), getDefaultSharedPreferences(), getExtraId(),
-              new NoOpTokenInvalidator(), getAuthenticationPersistence());
+              WebService.getDefaultConverter(), getDefaultSharedPreferences(),
+              appPreferences.getExtraId(), new NoOpTokenInvalidator(),
+              getAuthenticationPersistence());
     }
     return tokenInvalidator;
   }
@@ -449,8 +462,7 @@ public abstract class AptoideApplication extends Application {
     getPreferences().getBoolean(CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY, true)
         .first()
         .subscribe(enabled -> getNotificationSyncScheduler().setEnabled(enabled),
-            throwable -> CrashReport.getInstance()
-                .log(throwable));
+            throwable -> CrashReport.getInstance().log(throwable));
 
     getNotificationCenter().setup();
   }
@@ -560,10 +572,11 @@ public abstract class AptoideApplication extends Application {
 
   public NotificationHandler getNotificationHandler() {
     if (notificationHandler == null) {
+      ApplicationPreferences appPreferences = getApplicationPreferences();
       notificationHandler = new NotificationHandler(BuildConfig.APPLICATION_ID, getDefaultClient(),
           WebService.getDefaultConverter(), getIdsRepository(), BuildConfig.VERSION_NAME,
-          getExtraId(), PublishRelay.create(), getDefaultSharedPreferences(), getResources(),
-          getAuthenticationPersistence(), getAccountManager());
+          appPreferences.getExtraId(), PublishRelay.create(), getDefaultSharedPreferences(),
+          getResources(), getAuthenticationPersistence(), getAccountManager());
     }
     return notificationHandler;
   }
@@ -610,10 +623,11 @@ public abstract class AptoideApplication extends Application {
 
   public Interceptor getUserAgentInterceptor() {
     if (userAgentInterceptor == null) {
+      final ApplicationPreferences appPreferences = getApplicationPreferences();
       userAgentInterceptor =
-          new UserAgentInterceptor(getAndroidAccountProvider(), getIdsRepository(), getPartnerId(),
-              new DisplayMetrics(), AptoideUtils.SystemU.TERMINAL_INFO,
-              AptoideUtils.Core.getDefaultVername(this));
+          new UserAgentInterceptor(getAndroidAccountProvider(), getIdsRepository(),
+              appPreferences.getPartnerId(), new DisplayMetrics(),
+              AptoideUtils.SystemU.TERMINAL_INFO, AptoideUtils.Core.getDefaultVername(this));
     }
     return userAgentInterceptor;
   }
@@ -632,9 +646,9 @@ public abstract class AptoideApplication extends Application {
 
   public AptoideDownloadManager getDownloadManager() {
     if (downloadManager == null) {
-
-      final String apkPath = getCachePath() + "apks/";
-      final String obbPath = getCachePath() + "obb/";
+      final ApplicationPreferences appPreferences = getApplicationPreferences();
+      final String apkPath = appPreferences.getCachePath() + "apks/";
+      final String obbPath = appPreferences.getCachePath() + "obb/";
       final OkHttpClient.Builder httpClientBuilder =
           new OkHttpClient.Builder().addInterceptor(getUserAgentInterceptor())
               .addInterceptor(new PaidAppsDownloadInterceptor(getAuthenticationPersistence()))
@@ -653,13 +667,11 @@ public abstract class AptoideApplication extends Application {
           getCacheHelper(), new FileUtils(action -> Analytics.File.moveFile(action)),
           new DownloadAnalytics(Analytics.getInstance(),
               new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
-                  AppEventsLogger.newLogger(this))),
-          FileDownloader.getImpl(), getCachePath(), apkPath, obbPath);
+                  AppEventsLogger.newLogger(this))), FileDownloader.getImpl(),
+          appPreferences.getCachePath(), apkPath, obbPath);
     }
     return downloadManager;
   }
-
-  public abstract String getCachePath();
 
   public InstallManager getInstallManager(int installerType) {
 
@@ -669,10 +681,11 @@ public abstract class AptoideApplication extends Application {
 
     InstallManager installManager = installManagers.get(installerType);
     if (installManager == null) {
+      ApplicationPreferences appPreferences = getApplicationPreferences();
       installManager = new InstallManager(getApplicationContext(), getDownloadManager(),
           new InstallerFactory(new MinimalAdMapper(),
               new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance(),
-                  AppEventsLogger.newLogger(this)), getImageCachePath()).create(this,
+                  AppEventsLogger.newLogger(this)), appPreferences.getImageCachePath()).create(this,
               installerType), getRootAvailabilityManager(), getDefaultSharedPreferences(),
           SecurePreferencesImplementation.getInstance(getApplicationContext(),
               getDefaultSharedPreferences()),
@@ -707,11 +720,12 @@ public abstract class AptoideApplication extends Application {
       FacebookSdk.sdkInitialize(this);
 
       final AccountFactory accountFactory = new AccountFactory();
+      ApplicationPreferences appPreferences = getApplicationPreferences();
 
       final AccountService accountService =
           new V3AccountService(accountFactory, getDefaultClient(), getLongTimeoutClient(),
               WebService.getDefaultConverter(), getNonNullObjectMapper(),
-              getDefaultSharedPreferences(), getExtraId(), getTokenInvalidator(),
+              getDefaultSharedPreferences(), appPreferences.getExtraId(), getTokenInvalidator(),
               getAuthenticationPersistence(), getNoAuthenticationBodyInterceptorV3(),
               getMultipartBodyInterceptor(), getBodyInterceptorWebV7(), getBodyInterceptorPoolV7());
 
@@ -720,8 +734,8 @@ public abstract class AptoideApplication extends Application {
           getDefaultSharedPreferences(), AccountManager.get(this),
           new SecureCoderDecoder.Builder(this, getDefaultSharedPreferences()).create(),
           SQLiteDatabaseHelper.DATABASE_VERSION,
-          getDatabasePath(SQLiteDatabaseHelper.DATABASE_NAME).getPath(), getAccountType(),
-          BuildConfig.VERSION_NAME);
+          getDatabasePath(SQLiteDatabaseHelper.DATABASE_NAME).getPath(),
+          appPreferences.getAccountType(), BuildConfig.VERSION_NAME);
 
       final AccountPersistence accountPersistence =
           new AndroidAccountManagerPersistence(AccountManager.get(this),
@@ -754,8 +768,10 @@ public abstract class AptoideApplication extends Application {
 
   public AndroidAccountProvider getAndroidAccountProvider() {
     if (androidAccountProvider == null) {
+      ApplicationPreferences appPreferences = getApplicationPreferences();
       androidAccountProvider =
-          new AndroidAccountProvider(AccountManager.get(this), getAccountType(), Schedulers.io());
+          new AndroidAccountProvider(AccountManager.get(this), appPreferences.getAccountType(),
+              Schedulers.io());
     }
     return androidAccountProvider;
   }
@@ -793,8 +809,7 @@ public abstract class AptoideApplication extends Application {
               .requestScopes(new Scope("https://www.googleapis.com/auth/contacts.readonly"))
               .requestScopes(new Scope(Scopes.PROFILE))
               .requestServerAuthCode(BuildConfig.GMS_SERVER_ID)
-              .build())
-          .build();
+              .build()).build();
     }
     return googleSignInClient;
   }
@@ -982,14 +997,14 @@ public abstract class AptoideApplication extends Application {
         .toSingle()
         .subscribe(cleanedSize -> Logger.d(TAG,
             "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize, false)),
-            err -> CrashReport.getInstance()
-                .log(err));
+            err -> CrashReport.getInstance().log(err));
   }
 
   public FileManager getFileManager() {
     if (fileManager == null) {
+      ApplicationPreferences appPreferences = getApplicationPreferences();
       fileManager = new FileManager(getCacheHelper(), new FileUtils(), new String[] {
-          getApplicationContext().getCacheDir().getPath(), getCachePath()
+          getApplicationContext().getCacheDir().getPath(), appPreferences.getCachePath()
       }, getDownloadManager(), getHttpClientCache());
     }
     return fileManager;
@@ -998,8 +1013,9 @@ public abstract class AptoideApplication extends Application {
   private CacheHelper getCacheHelper() {
     if (cacheHelper == null) {
       List<CacheHelper.FolderToManage> folders = new LinkedList<>();
+      ApplicationPreferences appPreferences = getApplicationPreferences();
 
-      final String cachePath = getCachePath();
+      final String cachePath = appPreferences.getCachePath();
 
       long month = DateUtils.DAY_IN_MILLIS;
       folders.add(new CacheHelper.FolderToManage(new File(cachePath), month));
@@ -1014,8 +1030,7 @@ public abstract class AptoideApplication extends Application {
   }
 
   private void initializeFlurry(Context context, String flurryKey) {
-    new FlurryAgent.Builder().withLogEnabled(false)
-        .build(context, flurryKey);
+    new FlurryAgent.Builder().withLogEnabled(false).build(context, flurryKey);
   }
 
   private Completable sendAppStartToAnalytics() {
@@ -1055,22 +1070,19 @@ public abstract class AptoideApplication extends Application {
   }
 
   private Completable prepareApp(AptoideAccountManager accountManager) {
-    return accountManager.accountStatus()
-        .first()
-        .toSingle()
-        .flatMapCompletable(account -> {
-          if (SecurePreferences.isFirstRun(
-              SecurePreferencesImplementation.getInstance(getApplicationContext(),
-                  getDefaultSharedPreferences()))) {
+    return accountManager.accountStatus().first().toSingle().flatMapCompletable(account -> {
+      if (SecurePreferences.isFirstRun(
+          SecurePreferencesImplementation.getInstance(getApplicationContext(),
+              getDefaultSharedPreferences()))) {
 
-            PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+        PreferenceManager.setDefaultValues(this, R.xml.settings, false);
 
-            return setupFirstRun().andThen(getRootAvailabilityManager().updateRootAvailability())
-                .andThen(Completable.merge(accountManager.updateAccount(), createShortcut()));
-          }
+        return setupFirstRun().andThen(getRootAvailabilityManager().updateRootAvailability())
+            .andThen(Completable.merge(accountManager.updateAccount(), createShortcut()));
+      }
 
-          return Completable.complete();
-        });
+      return Completable.complete();
+    });
   }
 
   // todo re-factor all this code to proper Rx
@@ -1087,23 +1099,18 @@ public abstract class AptoideApplication extends Application {
               ((AptoideApplication) this.getApplicationContext()).getDatabase(), Store.class),
               getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
               getDefaultSharedPreferences());
+      ApplicationPreferences appPreferences = getApplicationPreferences();
 
       BaseRequestWithStore.StoreCredentials defaultStoreCredentials =
-          storeCredentials.get(getDefaultStore());
+          storeCredentials.get(appPreferences.getDefaultStore());
 
       return generateAptoideUuid().andThen(proxy.addDefaultStore(
           GetStoreMetaRequest.of(defaultStoreCredentials, getAccountSettingsBodyInterceptorPoolV7(),
               getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
               getDefaultSharedPreferences()), getAccountManager(), defaultStoreCredentials)
-          .andThen(refreshUpdates()))
-          .doOnError(err -> CrashReport.getInstance()
-              .log(err));
+          .andThen(refreshUpdates())).doOnError(err -> CrashReport.getInstance().log(err));
     });
   }
-
-  public abstract String getDefaultStore();
-
-  public abstract String getMarketName();
 
   /**
    * BaseBodyInterceptor for v7 ws calls with CDN = pool configuration
@@ -1206,7 +1213,7 @@ public abstract class AptoideApplication extends Application {
     return BuildConfig.APPLICATION_ID;
   }
 
-  public AdultContent getAdultContent(){
+  public AdultContent getAdultContent() {
     return new RemotePersistenceAdultContent(getLocalAdultContent(), getAccountManager());
   }
 
@@ -1273,8 +1280,7 @@ public abstract class AptoideApplication extends Application {
   }
 
   private Completable refreshUpdates() {
-    return RepositoryFactory.getUpdateRepository(this, getDefaultSharedPreferences())
-        .sync(true);
+    return RepositoryFactory.getUpdateRepository(this, getDefaultSharedPreferences()).sync(true);
   }
 
   private void createAppShortcut() {
@@ -1295,9 +1301,7 @@ public abstract class AptoideApplication extends Application {
         final String IS_PHONE_ROOTED = "IS_PHONE_ROOTED";
 
         @Override public Single<Boolean> isPhoneRoot() {
-          return getSecurePreferences().getBoolean(IS_PHONE_ROOTED, false)
-              .first()
-              .toSingle();
+          return getSecurePreferences().getBoolean(IS_PHONE_ROOTED, false).first().toSingle();
         }
 
         @Override public Completable save(boolean rootAvailable) {
@@ -1318,31 +1322,33 @@ public abstract class AptoideApplication extends Application {
 
   public AdsRepository getAdsRepository() {
     if (adsRepository == null) {
+      ApplicationPreferences appPreferences = getApplicationPreferences();
       adsRepository = new AdsRepository(getIdsRepository(), accountManager, getDefaultClient(),
           WebService.getDefaultConverter(), qManager, getDefaultSharedPreferences(),
           getApplicationContext(),
           (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getResources(),
-          getVersionCodeProvider(),
-          (context) -> AdNetworkUtils.isGooglePlayServicesAvailable(context), () -> getPartnerId(),
-          new MinimalAdMapper());
+          getVersionCodeProvider(), AdNetworkUtils::isGooglePlayServicesAvailable,
+          appPreferences::getPartnerId, new MinimalAdMapper());
     }
     return adsRepository;
   }
 
   public SyncStorage getSyncStorage() {
     if (syncStorage == null) {
-      syncStorage = new SyncStorage(new HashMap());
+      syncStorage = new SyncStorage(new HashMap<>());
     }
     return syncStorage;
   }
 
   public TimelinePostsRepository getTimelineRepository(String action, Context context) {
     if (timelineRepositoryFactory == null) {
+      ApplicationPreferences appPreferences = getApplicationPreferences();
       timelineRepositoryFactory =
           new TimelineRepositoryFactory(new HashMap<>(), getAccountSettingsBodyInterceptorPoolV7(),
               getDefaultClient(), getDefaultSharedPreferences(), getTokenInvalidator(),
               new LinksHandlerFactory(this), getPackageRepository(),
-              WebService.getDefaultConverter(), new TimelineResponseCardMapper(getMarketName()),
+              WebService.getDefaultConverter(),
+              new TimelineResponseCardMapper(appPreferences.getMarketName()),
               RepositoryFactory.getUpdateRepository(context,
                   ((AptoideApplication) context.getApplicationContext()).getDefaultSharedPreferences()));
     }
@@ -1395,21 +1401,7 @@ public abstract class AptoideApplication extends Application {
 
   public abstract LoginPreferences getLoginPreferences();
 
-  public abstract String getFeedbackEmail();
-
-  public abstract String getImageCachePath();
-
-  public abstract String getAccountType();
-
-  public abstract String getAutoUpdateUrl();
-
-  public abstract String getPartnerId();
-
-  public abstract String getExtraId();
-
-  public abstract String getDefaultTheme();
-
-  public abstract boolean isCreateStoreUserPrivacyEnabled();
+  public abstract ApplicationPreferences getApplicationPreferences();
 
   public abstract FragmentProvider createFragmentProvider();
 
