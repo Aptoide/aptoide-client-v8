@@ -235,10 +235,9 @@ public class HomeFragment extends StoreFragment {
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     final ApplicationPreferences appPreferences = application.getApplicationPreferences();
-    final String defaultStore = appPreferences.getDefaultStore();
     final SearchBuilder searchBuilder =
         new SearchBuilder(menu.findItem(R.id.action_search), getActivity(),
-            new SearchNavigator(getFragmentNavigator(), defaultStore));
+            new SearchNavigator(getFragmentNavigator(), appPreferences));
     searchBuilder.validateAndAttachSearch();
     menu.removeItem(R.id.menu_share);
   }

@@ -98,6 +98,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   private SearchAnalytics searchAnalytics;
   private float listItemPadding;
   private MenuItem searchMenuItem;
+  private ApplicationPreferences appPreferences;
 
   public static SearchResultFragment newInstance(String currentQuery) {
     return newInstance(currentQuery, false);
@@ -449,15 +450,15 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     final List<Long> subscribedStoresIds = StoreUtils.getSubscribedStoresIds(storeAccessor);
     final AdsRepository adsRepository = application.getAdsRepository();
 
+    appPreferences = application.getApplicationPreferences();
+
     searchManager =
         new SearchManager(sharedPreferences, tokenInvalidator, bodyInterceptor, httpClient,
-            converterFactory, subscribedStoresAuthMap, subscribedStoresIds, adsRepository);
-
-    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
-    final String defaultStore = appPreferences.getDefaultStore();
+            converterFactory, subscribedStoresAuthMap, subscribedStoresIds, adsRepository,
+            appPreferences);
 
     mainThreadScheduler = AndroidSchedulers.mainThread();
-    searchNavigator = new SearchNavigator(getFragmentNavigator(), defaultStore);
+    searchNavigator = new SearchNavigator(getFragmentNavigator(), appPreferences);
 
     onItemViewClickRelay = PublishRelay.create();
     onOpenPopupMenuClickRelay = PublishRelay.create();
@@ -489,7 +490,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     attachToolbar();
     attachPresenter(new SearchResultPresenter(this, searchAnalytics, searchNavigator, crashReport,
         mainThreadScheduler, searchManager, onAdClickRelay, onItemViewClickRelay,
-        onOpenPopupMenuClickRelay), null);
+        onOpenPopupMenuClickRelay, appPreferences), null);
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {

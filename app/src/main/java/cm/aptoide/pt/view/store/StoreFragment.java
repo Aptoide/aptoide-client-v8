@@ -340,10 +340,11 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_search, menu);
-    String defaultStore = getDefaultStore();
+    final ApplicationPreferences appPreferences =
+        ((AptoideApplication) getActivity().getApplication()).getApplicationPreferences();
     SearchBuilder searchBuilder =
         new SearchBuilder(menu.findItem(R.id.action_search), getActivity(),
-            new SearchNavigator(getFragmentNavigator(), storeName, defaultStore));
+            new SearchNavigator(getFragmentNavigator(), storeName, appPreferences));
     searchBuilder.validateAndAttachSearch();
   }
 

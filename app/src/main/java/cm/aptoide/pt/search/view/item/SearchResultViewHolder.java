@@ -68,8 +68,8 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
   }
 
   private void setOverflowMenu() {
-    if (!searchApp.hasOtherVersions() && !searchApp.hasGoToStore()) {
-      overflowImageView.setVisibility(View.INVISIBLE);
+    if (searchApp.hasOtherVersions() || searchApp.hasGoToStore()) {
+      overflowImageView.setVisibility(View.VISIBLE);
     }
   }
 

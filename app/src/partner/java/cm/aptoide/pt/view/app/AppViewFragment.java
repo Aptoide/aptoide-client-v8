@@ -579,7 +579,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     final String defaultStore = appPreferences.getDefaultStore();
     SearchBuilder searchBuilder =
         new SearchBuilder(menu.findItem(R.id.action_search), getActivity(),
-            new SearchNavigator(getFragmentNavigator(), defaultStore));
+            new SearchNavigator(getFragmentNavigator(), appPreferences));
     searchBuilder.validateAndAttachSearch();
     uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
   }

@@ -1,6 +1,7 @@
 package cm.aptoide.pt.search;
 
 import android.content.SharedPreferences;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.DataList;
@@ -27,12 +28,13 @@ public class SearchManager {
   private final HashMapNotNull<String, List<String>> subscribedStoresAuthMap;
   private final List<Long> subscribedStoresIds;
   private final AdsRepository adsRepository;
+  private final ApplicationPreferences appPreferences;
 
   public SearchManager(SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory,
       HashMapNotNull<String, List<String>> subscribedStoresAuthMap, List<Long> subscribedStoresIds,
-      AdsRepository adsRepository) {
+      AdsRepository adsRepository, ApplicationPreferences appPreferences) {
     this.sharedPreferences = sharedPreferences;
     this.tokenInvalidator = tokenInvalidator;
     this.bodyInterceptor = bodyInterceptor;
@@ -41,6 +43,7 @@ public class SearchManager {
     this.subscribedStoresAuthMap = subscribedStoresAuthMap;
     this.subscribedStoresIds = subscribedStoresIds;
     this.adsRepository = adsRepository;
+    this.appPreferences = appPreferences;
   }
 
   public Observable<SearchAdResult> getAdsForQuery(String query) {
@@ -57,7 +60,7 @@ public class SearchManager {
         .map(data -> data.getDataList()
             .getList())
         .flatMapIterable(list -> list)
-        .map(SearchAppResult::new)
+        .map(searchApp -> new SearchAppResult(searchApp, appPreferences.hasMultiStoreSearch()))
         .toList();
   }
 
@@ -70,7 +73,7 @@ public class SearchManager {
         .map(data -> data.getDataList()
             .getList())
         .flatMapIterable(list -> list)
-        .map(SearchAppResult::new)
+        .map(searchApp -> new SearchAppResult(searchApp, appPreferences.hasMultiStoreSearch()))
         .toList();
   }
 
@@ -83,7 +86,7 @@ public class SearchManager {
         .map(data -> data.getDataList()
             .getList())
         .flatMapIterable(list -> list)
-        .map(SearchAppResult::new)
+        .map(searchApp -> new SearchAppResult(searchApp, appPreferences.hasMultiStoreSearch()))
         .toList();
   }
 

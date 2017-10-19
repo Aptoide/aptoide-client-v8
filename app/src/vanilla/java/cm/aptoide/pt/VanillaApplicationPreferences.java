@@ -10,7 +10,7 @@ class VanillaApplicationPreferences implements ApplicationPreferences {
   }
 
   @Override public boolean hasMultiStoreSearch() {
-    return true;
+    return false;
   }
 
   @Override public String getDefaultStore() {

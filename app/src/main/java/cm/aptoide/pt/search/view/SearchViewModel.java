@@ -5,7 +5,7 @@ import cm.aptoide.pt.search.model.SearchAppResult;
 import java.util.List;
 import org.parceler.Parcel;
 
-@Parcel class SearchViewModel implements SearchView.Model {
+@SuppressWarnings("WeakerAccess") @Parcel class SearchViewModel implements SearchView.Model {
   String currentQuery;
   String storeName;
   boolean onlyTrustedApps;

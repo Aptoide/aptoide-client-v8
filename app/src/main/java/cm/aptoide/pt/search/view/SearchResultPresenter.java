@@ -3,6 +3,7 @@ package cm.aptoide.pt.search.view;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Pair;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
@@ -28,12 +29,14 @@ public class SearchResultPresenter implements Presenter {
   private final PublishRelay<SearchAdResult> onAdClickRelay;
   private final PublishRelay<SearchAppResult> onItemViewClickRelay;
   private final PublishRelay<Pair<SearchAppResult, android.view.View>> onOpenPopupMenuClickRelay;
+  private final ApplicationPreferences appPreferences;
 
   public SearchResultPresenter(SearchView view, SearchAnalytics analytics,
       SearchNavigator navigator, CrashReport crashReport, Scheduler viewScheduler,
       SearchManager searchManager, PublishRelay<SearchAdResult> onAdClickRelay,
       PublishRelay<SearchAppResult> onItemViewClickRelay,
-      PublishRelay<Pair<SearchAppResult, android.view.View>> onOpenPopupMenuClickRelay) {
+      PublishRelay<Pair<SearchAppResult, android.view.View>> onOpenPopupMenuClickRelay,
+      ApplicationPreferences appPreferences) {
     this.view = view;
     this.analytics = analytics;
     this.navigator = navigator;
@@ -43,6 +46,7 @@ public class SearchResultPresenter implements Presenter {
     this.onAdClickRelay = onAdClickRelay;
     this.onItemViewClickRelay = onItemViewClickRelay;
     this.onOpenPopupMenuClickRelay = onOpenPopupMenuClickRelay;
+    this.appPreferences = appPreferences;
   }
 
   @Override public void present() {
@@ -76,7 +80,7 @@ public class SearchResultPresenter implements Presenter {
         .doOnNext(__ -> view.setFocusInSearchView())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> crashReport.log(err));
+        }, crashReport::log);
   }
 
   private void stopLoadingMoreOnDestroy() {
@@ -85,7 +89,7 @@ public class SearchResultPresenter implements Presenter {
         .first()
         .toSingle()
         .observeOn(viewScheduler)
-        .subscribe(__ -> view.hideLoadingMore(), err -> crashReport.log(err));
+        .subscribe(__ -> view.hideLoadingMore(), crashReport::log);
   }
 
   private void handleAllStoresListReachedBottom() {
@@ -112,7 +116,7 @@ public class SearchResultPresenter implements Presenter {
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> crashReport.log(err));
+        }, crashReport::log);
   }
 
   private int getItemCount(List<SearchAppResult> data) {
@@ -143,7 +147,7 @@ public class SearchResultPresenter implements Presenter {
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> crashReport.log(err));
+        }, crashReport::log);
   }
 
   private void firstAdsDataLoad() {
@@ -169,7 +173,7 @@ public class SearchResultPresenter implements Presenter {
             }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> crashReport.log(err));
+        }, crashReport::log);
   }
 
   private void handleClickToOpenAppViewFromItem() {
@@ -180,7 +184,7 @@ public class SearchResultPresenter implements Presenter {
         .doOnNext(data -> openAppView(data))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> crashReport.log(err));
+        }, crashReport::log);
   }
 
   private void handleClickToOpenAppViewFromAdd() {
@@ -195,7 +199,7 @@ public class SearchResultPresenter implements Presenter {
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> crashReport.log(err));
+        }, crashReport::log);
   }
 
   private void handleClickToOpenPopupMenu() {
@@ -211,22 +215,20 @@ public class SearchResultPresenter implements Presenter {
           final String packageName = data.getPackageName();
           final String storeName = data.getStoreName();
 
-          //FIXME which theme should be used?
-          // final String theme = view.getDefaultTheme()
-          final String theme = data.getStoreTheme();
+          final String themeName = appPreferences.getDefaultTheme();
 
           return view.showPopup(hasVersions, pair.second)
               .doOnNext(optionId -> {
                 if (optionId == R.id.versions) {
                   navigator.goToOtherVersions(appName, appIcon, packageName);
                 } else if (optionId == R.id.go_to_store) {
-                  navigator.goToStoreFragment(storeName, theme);
+                  navigator.goToStoreFragment(storeName, themeName);
                 }
               });
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> crashReport.log(err));
+        }, crashReport::log);
   }
 
   private void handleClickOnNoResultsImage() {
@@ -239,21 +241,17 @@ public class SearchResultPresenter implements Presenter {
             .getStoreName()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> crashReport.log(err));
+        }, crashReport::log);
   }
 
   private void openAppView(SearchAppResult searchApp) {
     final String packageName = searchApp.getPackageName();
     final long appId = searchApp.getAppId();
     final String storeName = searchApp.getStoreName();
-
-    // FIXME which theme should be used?
-    //final String storeTheme = aptoideApplication.getDefaultTheme();
-    final String storeTheme = searchApp.getStoreTheme();
-
+    final String themeName = appPreferences.getDefaultTheme();
     analytics.searchAppClick(view.getViewModel()
         .getCurrentQuery(), packageName);
-    navigator.goToAppView(appId, packageName, storeTheme, storeName);
+    navigator.goToAppView(appId, packageName, themeName, storeName);
   }
 
   private void handleClickFollowedStoresSearchButton() {
@@ -264,7 +262,7 @@ public class SearchResultPresenter implements Presenter {
         .doOnNext(__ -> view.showFollowedStoresResult())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> crashReport.log(err));
+        }, crashReport::log);
   }
 
   private void handleClickEverywhereSearchButton() {
@@ -275,13 +273,13 @@ public class SearchResultPresenter implements Presenter {
         .doOnNext(__ -> view.showAllStoresResult())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> crashReport.log(err));
+        }, crashReport::log);
   }
 
   private Observable<List<SearchAppResult>> loadData(String query, String storeName,
       boolean onlyTrustedApps, int offset) {
-    if (storeName != null && !storeName.trim()
-        .equals("")) {
+    if (!appPreferences.hasMultiStoreSearch() || (storeName != null && !storeName.trim()
+        .equals(""))) {
       return Observable.fromCallable(() -> {
         view.setViewWithStoreNameAsSingleTab();
         return null;
@@ -359,6 +357,6 @@ public class SearchResultPresenter implements Presenter {
             }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> crashReport.log(err));
+        }, crashReport::log);
   }
 }
