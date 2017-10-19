@@ -178,6 +178,7 @@ import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import java.io.File;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -843,7 +844,9 @@ public abstract class AptoideApplication extends Application {
 
   public Adyen getAdyen() {
     if (adyen == null) {
-      adyen = new Adyen(this, BehaviorRelay.create());
+      adyen =
+          new Adyen(this, BehaviorRelay.create(), BehaviorRelay.create(), BehaviorRelay.create(),
+              BehaviorRelay.create(), Charset.forName("UTF-8"));
     }
     return adyen;
   }

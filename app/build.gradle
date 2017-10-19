@@ -414,6 +414,9 @@ dependencies {
   }
 
   compile "com.adyen.checkout:core:${ADYEN_VERSION}"
+  compile "com.adyen.checkout:ui:${ADYEN_VERSION}"
+  compile "com.adyen.checkout:utils:${ADYEN_VERSION}"
+  compile "com.adyen.checkout:cardscan:${ADYEN_VERSION}"
 
   fairyCompile "testfairy:testfairy-android-sdk:${TEST_FAIRY_VERSION}"
 

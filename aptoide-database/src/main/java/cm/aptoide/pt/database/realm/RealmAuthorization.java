@@ -16,14 +16,14 @@ public class RealmAuthorization extends RealmObject {
   @PrimaryKey private String id;
   @Required private String customerId;
   @Required private String status;
+  @Required private String type;
+  @Required private String metadata;
+  @Required private String transactionId;
 
-  private String transactionId;
-  private String metadata;
   private String description;
   private double amount;
   private String currency;
   private String currencySymbol;
-  private String type;
 
   public RealmAuthorization() {
   }

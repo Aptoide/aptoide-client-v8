@@ -37,4 +37,15 @@ public class InMemoryTransactionPersistence implements TransactionPersistence {
       transactionRelay.call(new ArrayList<>(transactions.values()));
     });
   }
+
+  @Override public Completable removeTransactions(String productId) {
+    return Observable.from(transactions.values())
+        .filter(transaction -> transaction.getProductId()
+            .equals(productId))
+        .map(transaction -> transaction.getId())
+        .toList()
+        .flatMapIterable(transactionIds -> transactionIds)
+        .doOnNext(transactionIds -> transactions.remove(transactionIds))
+        .toCompletable();
+  }
 }

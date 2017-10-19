@@ -7,7 +7,6 @@ package cm.aptoide.pt.billing.authorization;
 
 import cm.aptoide.pt.billing.IdResolver;
 import cm.aptoide.pt.billing.Price;
-import cm.aptoide.pt.database.realm.RealmAuthorization;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetAuthorizationRequest;
 
 public class AuthorizationMapperV7 {
@@ -35,15 +34,17 @@ public class AuthorizationMapperV7 {
     String url = null;
     String redirectUrl = null;
     String description = null;
+    String session = null;
     if (metadata != null) {
       url = metadata.getUrl();
       redirectUrl = metadata.getRedirectUrl();
       description = metadata.getDescription();
+      session = metadata.getSession();
     }
 
     return authorizationFactory.create(idResolver.generateAuthorizationId(response.getId()),
         String.valueOf(response.getUser()
             .getId()), response.getType(), Authorization.Status.valueOf(response.getStatus()), url,
-        redirectUrl, null, price, description, transactionId);
+        redirectUrl, null, price, description, transactionId, session);
   }
 }

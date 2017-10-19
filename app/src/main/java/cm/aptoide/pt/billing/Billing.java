@@ -6,9 +6,7 @@
 package cm.aptoide.pt.billing;
 
 import cm.aptoide.pt.billing.authorization.Authorization;
-import cm.aptoide.pt.billing.authorization.AuthorizationFactory;
 import cm.aptoide.pt.billing.authorization.AuthorizationRepository;
-import cm.aptoide.pt.billing.authorization.PayPalAuthorization;
 import cm.aptoide.pt.billing.exception.PaymentFailureException;
 import cm.aptoide.pt.billing.exception.ServiceNotAuthorizedException;
 import cm.aptoide.pt.billing.product.SimplePurchase;
@@ -26,7 +24,6 @@ public class Billing {
   private final AuthorizationRepository authorizationRepository;
   private final PaymentServiceSelector paymentServiceSelector;
   private final Customer customer;
-  private final AuthorizationFactory authorizationFactory;
   private final PurchaseTokenDecoder tokenDecoder;
   private final String merchantName;
   private final BillingSyncScheduler syncScheduler;
@@ -34,14 +31,12 @@ public class Billing {
   public Billing(String merchantName, BillingService billingService,
       TransactionRepository transactionRepository, AuthorizationRepository authorizationRepository,
       PaymentServiceSelector paymentServiceSelector, Customer customer,
-      AuthorizationFactory authorizationFactory, PurchaseTokenDecoder tokenDecoder,
-      BillingSyncScheduler syncScheduler) {
+      PurchaseTokenDecoder tokenDecoder, BillingSyncScheduler syncScheduler) {
     this.transactionRepository = transactionRepository;
     this.billingService = billingService;
     this.authorizationRepository = authorizationRepository;
     this.paymentServiceSelector = paymentServiceSelector;
     this.customer = customer;
-    this.authorizationFactory = authorizationFactory;
     this.tokenDecoder = tokenDecoder;
     this.merchantName = merchantName;
     this.syncScheduler = syncScheduler;
@@ -102,14 +97,9 @@ public class Billing {
 
   public Completable authorize(String sku, String metadata) {
     return getAuthorization(sku).first()
-        .cast(PayPalAuthorization.class)
         .toSingle()
-        .flatMapCompletable(authorization -> getSelectedService().flatMapCompletable(
-            service -> authorizationRepository.updateAuthorization(
-                authorizationFactory.create(authorization.getId(), authorization.getCustomerId(),
-                    AuthorizationFactory.PAYPAL_SDK, Authorization.Status.PENDING_SYNC, null, null,
-                    metadata, authorization.getPrice(), authorization.getDescription(),
-                    authorization.getTransactionId()))));
+        .flatMapCompletable(authorization -> authorizationRepository.updateAuthorization(
+            authorization.getTransactionId(), metadata));
   }
 
   public Observable<Authorization> getAuthorization(String sku) {
@@ -120,30 +110,34 @@ public class Billing {
   }
 
   public Observable<Purchase> getPurchase(String sku) {
-    return getTransaction(sku).flatMapSingle(transaction -> {
-      if (transaction.isProcessing()) {
-        return Single.just(
-            new SimplePurchase(SimplePurchase.Status.PENDING, transaction.getProductId()));
-      }
+    return Observable.combineLatest(getTransaction(sku), getAuthorization(sku),
+        (transaction, authorization) -> {
 
-      if (transaction.isNew() || transaction.isPendingAuthorization()) {
-        return Single.just(
-            new SimplePurchase(SimplePurchase.Status.NEW, transaction.getProductId()));
-      }
+          if (transaction.isCompleted()) {
+            return billingService.getPurchase(transaction.getProductId())
+                .map(purchase -> {
+                  if (purchase.isFailed()) {
+                    return new SimplePurchase(SimplePurchase.Status.NEW,
+                        transaction.getProductId());
+                  }
+                  return purchase;
+                });
+          }
 
-      if (transaction.isFailed()) {
-        return Single.just(
-            new SimplePurchase(SimplePurchase.Status.FAILED, transaction.getProductId()));
-      }
+          if (transaction.isProcessing() || authorization.isRedeemed()) {
+            return Single.just(
+                new SimplePurchase(SimplePurchase.Status.PENDING, transaction.getProductId()));
+          }
 
-      return billingService.getPurchase(transaction.getProductId())
-          .map(purchase -> {
-            if (purchase.isFailed()) {
-              return new SimplePurchase(SimplePurchase.Status.NEW, transaction.getProductId());
-            }
-            return purchase;
-          });
-    });
+          if (transaction.isNew() || transaction.isPendingAuthorization()) {
+            return Single.just(
+                new SimplePurchase(SimplePurchase.Status.NEW, transaction.getProductId()));
+          }
+
+          return Single.just(
+              new SimplePurchase(SimplePurchase.Status.FAILED, transaction.getProductId()));
+        })
+        .flatMapSingle(single -> single);
   }
 
   public Completable selectService(String serviceId) {

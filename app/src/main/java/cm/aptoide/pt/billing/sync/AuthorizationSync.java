@@ -8,8 +8,7 @@ package cm.aptoide.pt.billing.sync;
 import cm.aptoide.pt.billing.Customer;
 import cm.aptoide.pt.billing.authorization.AuthorizationPersistence;
 import cm.aptoide.pt.billing.authorization.AuthorizationService;
-import cm.aptoide.pt.billing.authorization.PayPalAuthorization;
-import cm.aptoide.pt.spotandshare.socket.Log;
+import cm.aptoide.pt.billing.authorization.MetadataAuthorization;
 import cm.aptoide.pt.sync.Sync;
 import rx.Completable;
 
@@ -33,15 +32,15 @@ public class AuthorizationSync extends Sync {
   @Override public Completable execute() {
     return customer.getId()
         .flatMapCompletable(
-            customerId -> syncRemoteAuthorization(transactionId).andThen(
+            customerId -> syncRemoteAuthorization(customerId, transactionId).andThen(
                 syncPayPalAuthorization(customerId, transactionId)));
   }
 
   private Completable syncPayPalAuthorization(String customerId, String transactionId) {
     return authorizationPersistence.getAuthorization(customerId, transactionId)
         .first()
-        .filter(authorization -> authorization instanceof PayPalAuthorization)
-        .cast(PayPalAuthorization.class)
+        .filter(authorization -> authorization instanceof MetadataAuthorization)
+        .cast(MetadataAuthorization.class)
         .filter(authorization -> authorization.isPendingSync())
         .flatMapSingle(authorization -> authorizationService.updateAuthorization(
             authorization.getTransactionId(), authorization.getMetadata()))
@@ -50,8 +49,8 @@ public class AuthorizationSync extends Sync {
         .toCompletable();
   }
 
-  private Completable syncRemoteAuthorization(String transactionId) {
-    return authorizationService.getAuthorization(transactionId)
+  private Completable syncRemoteAuthorization(String customerId, String transactionId) {
+    return authorizationService.getAuthorization(transactionId, customerId)
         .flatMapCompletable(
             authorization -> authorizationPersistence.saveAuthorization(authorization));
   }

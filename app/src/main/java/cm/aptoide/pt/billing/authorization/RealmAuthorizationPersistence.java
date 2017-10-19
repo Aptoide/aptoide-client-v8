@@ -18,6 +18,7 @@ import lombok.Cleanup;
 import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
+import rx.Single;
 
 public class RealmAuthorizationPersistence implements AuthorizationPersistence {
 
@@ -26,22 +27,25 @@ public class RealmAuthorizationPersistence implements AuthorizationPersistence {
   private final Database database;
   private final RealmAuthorizationMapper authorizationMapper;
   private final Scheduler scheduler;
+  private final AuthorizationFactory authorizationFactory;
 
   public RealmAuthorizationPersistence(Map<String, Authorization> authorizations,
       PublishRelay<List<Authorization>> authorizationRelay, Database database,
-      RealmAuthorizationMapper authorizationMapper, Scheduler scheduler) {
+      RealmAuthorizationMapper authorizationMapper, Scheduler scheduler,
+      AuthorizationFactory authorizationFactory) {
     this.authorizations = authorizations;
     this.authorizationRelay = authorizationRelay;
     this.database = database;
     this.authorizationMapper = authorizationMapper;
     this.scheduler = scheduler;
+    this.authorizationFactory = authorizationFactory;
   }
 
   @Override public Completable saveAuthorization(Authorization authorization) {
     return Completable.fromAction(() -> {
 
       if (authorization.isPendingSync()) {
-        database.insert(authorizationMapper.map((PayPalAuthorization) authorization));
+        database.insert(authorizationMapper.map(authorization));
       } else {
         database.delete(RealmAuthorization.class, RealmAuthorization.ID, authorization.getId());
         authorizations.put(authorization.getId(), authorization);
@@ -50,6 +54,24 @@ public class RealmAuthorizationPersistence implements AuthorizationPersistence {
       authorizationRelay.call(getAuthorizations());
     })
         .subscribeOn(scheduler);
+  }
+
+  @Override
+  public Single<Authorization> updateAuthorization(String customerId, String transactionId,
+      Authorization.Status status, String metadata) {
+    return Observable.from(getAuthorizations())
+        .filter(authorization -> authorization.getCustomerId()
+            .equals(customerId) && authorization.getTransactionId()
+            .equals(transactionId))
+        .first()
+        .toSingle()
+        .flatMap(authorization -> {
+          final Authorization updatedAuthorization =
+              authorizationFactory.create(authorization.getId(), authorization.getCustomerId(),
+                  authorizationFactory.getType(authorization), status, null, null, metadata, null,
+                  null, authorization.getTransactionId(), null);
+          return saveAuthorization(updatedAuthorization).andThen(Single.just(updatedAuthorization));
+        });
   }
 
   @Override

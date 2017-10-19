@@ -7,22 +7,16 @@ package cm.aptoide.pt.billing.authorization;
 
 import cm.aptoide.pt.billing.Price;
 
-public class PayPalAuthorization extends Authorization {
+public class PayPalAuthorization extends MetadataAuthorization {
 
-  private final String metadata;
   private final Price price;
   private final String description;
 
   public PayPalAuthorization(String id, String customerId, Status status, String transactionId,
       String metadata, Price price, String description) {
-    super(id, customerId, status, transactionId);
-    this.metadata = metadata;
+    super(id, customerId, status, transactionId, metadata);
     this.price = price;
     this.description = description;
-  }
-
-  public String getMetadata() {
-    return metadata;
   }
 
   public Price getPrice() {

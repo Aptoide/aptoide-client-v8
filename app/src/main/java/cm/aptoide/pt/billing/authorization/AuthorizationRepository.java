@@ -15,18 +15,15 @@ public class AuthorizationRepository {
   private final BillingSyncScheduler syncScheduler;
   private final Customer customer;
   private final AuthorizationPersistence authorizationPersistence;
+  private final AuthorizationFactory authorizationFactory;
 
   public AuthorizationRepository(BillingSyncScheduler syncScheduler, Customer customer,
-      AuthorizationPersistence authorizationPersistence) {
+      AuthorizationPersistence authorizationPersistence,
+      AuthorizationFactory authorizationFactory) {
     this.authorizationPersistence = authorizationPersistence;
     this.syncScheduler = syncScheduler;
     this.customer = customer;
-  }
-
-  public Completable updateAuthorization(Authorization authorization) {
-    return customer.getId()
-        .flatMapCompletable(customerId -> authorizationPersistence.saveAuthorization(authorization))
-        .doOnCompleted(() -> syncScheduler.syncAuthorization(authorization.getTransactionId()));
+    this.authorizationFactory = authorizationFactory;
   }
 
   public Observable<Authorization> getAuthorization(String transactionId) {
@@ -34,5 +31,15 @@ public class AuthorizationRepository {
         .doOnSuccess(__ -> syncScheduler.syncAuthorization(transactionId))
         .flatMapObservable(
             customerId -> authorizationPersistence.getAuthorization(customerId, transactionId));
+  }
+
+  public Completable updateAuthorization(String transactionId, String metadata) {
+    return customer.getId()
+        .flatMap(
+            customerId -> authorizationPersistence.updateAuthorization(customerId, transactionId,
+                Authorization.Status.PENDING_SYNC, metadata))
+        .doOnSuccess(
+            authorization -> syncScheduler.syncAuthorization(authorization.getTransactionId()))
+        .toCompletable();
   }
 }

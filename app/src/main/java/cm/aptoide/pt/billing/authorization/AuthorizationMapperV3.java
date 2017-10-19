@@ -59,7 +59,7 @@ public class AuthorizationMapperV3 {
     }
 
     return authorizationFactory.create(authorizationId, customerId, AuthorizationFactory.PAYPAL_SDK,
-        status, null, null, null, price, description, transactionId);
+        status, null, null, null, price, description, transactionId, null);
   }
 
   private Authorization getErrorAuthorization(List<ErrorResponse> errors, String authorizationId,
@@ -67,7 +67,7 @@ public class AuthorizationMapperV3 {
 
     Authorization authorization =
         authorizationFactory.create(authorizationId, customerId, type, Authorization.Status.FAILED,
-            null, null, null, price, description, transactionId);
+            null, null, null, price, description, transactionId, null);
 
     if (errors == null || errors.isEmpty()) {
       return authorization;
@@ -79,17 +79,18 @@ public class AuthorizationMapperV3 {
         || "PRODUCT-209".equals(error.code)
         || "PRODUCT-214".equals(error.code)) {
       authorization = authorizationFactory.create(authorizationId, customerId, type,
-          Authorization.Status.PENDING, null, null, null, price, description, transactionId);
+          Authorization.Status.PENDING, null, null, null, price, description, transactionId, null);
     }
 
     if ("PRODUCT-200".equals(error.code)) {
       authorization = authorizationFactory.create(authorizationId, customerId, type,
-          Authorization.Status.ACTIVE, null, null, null, price, description, transactionId);
+          Authorization.Status.ACTIVE, null, null, null, price, description, transactionId, null);
     }
 
     if ("PRODUCT-216".equals(error.code)) {
       authorization = authorizationFactory.create(authorizationId, customerId, type,
-          Authorization.Status.PROCESSING, null, null, null, price, description, transactionId);
+          Authorization.Status.PROCESSING, null, null, null, price, description, transactionId,
+          null);
     }
 
     return authorization;

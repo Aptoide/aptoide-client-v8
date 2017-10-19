@@ -40,11 +40,15 @@ public class Authorization {
   }
 
   public boolean isFailed() {
-    return Status.FAILED.equals(status);
+    return Status.FAILED.equals(status) || Status.EXPIRED.equals(status);
   }
 
   public boolean isActive() {
     return Status.ACTIVE.equals(status) || Status.REDEEMED.equals(status);
+  }
+
+  public boolean isRedeemed() {
+    return Status.REDEEMED.equals(status);
   }
 
   public Status getStatus() {
@@ -56,6 +60,6 @@ public class Authorization {
   }
 
   public enum Status {
-    NEW, PENDING, PENDING_SYNC, PROCESSING, REDEEMED, ACTIVE, FAILED
+    NEW, PENDING, PENDING_SYNC, PROCESSING, REDEEMED, ACTIVE, FAILED, EXPIRED
   }
 }

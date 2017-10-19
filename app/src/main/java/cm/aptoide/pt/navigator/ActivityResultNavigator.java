@@ -16,9 +16,9 @@ import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.billing.view.BillingNavigator;
 import cm.aptoide.pt.billing.view.PaymentThrowableCodeMapper;
 import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
+import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import cm.aptoide.pt.view.leak.LeakActivity;
-import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import com.facebook.login.LoginManager;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -34,7 +34,6 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
   private AccountNavigator accountNavigator;
   private BillingNavigator billingNavigator;
   private ScreenOrientationManager screenOrientationManager;
-  private String marketName;
 
   public BehaviorRelay<Map<Integer, Result>> getFragmentResultRelay() {
     return fragmentResultRelay;
@@ -149,14 +148,15 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
 
   public AccountNavigator getAccountNavigator() {
     if (accountNavigator == null) {
-      final AptoideApplication application = (AptoideApplication) getApplicationContext();
-      marketName = application.getMarketName();
-      accountNavigator =
-          new AccountNavigator(getFragmentNavigator(), application.getAccountManager(),
-              getActivityNavigator(), LoginManager.getInstance(),
-              application.getFacebookCallbackManager(), application.getGoogleSignInClient(),
-              application.getFacebookLoginResultRelay(), application.getDefaultStoreName(),
-              application.getDefaultThemeName(), "http://m.aptoide.com/account/password-recovery");
+      accountNavigator = new AccountNavigator(getFragmentNavigator(),
+          ((AptoideApplication) getApplicationContext()).getAccountManager(),
+          getActivityNavigator(), LoginManager.getInstance(),
+          ((AptoideApplication) getApplicationContext()).getFacebookCallbackManager(),
+          ((AptoideApplication) getApplicationContext()).getGoogleSignInClient(),
+          ((AptoideApplication) getApplicationContext()).getFacebookLoginResultRelay(),
+          ((AptoideApplication) getApplicationContext()).getDefaultStoreName(),
+          ((AptoideApplication) getApplicationContext()).getDefaultThemeName(),
+          "http://m.aptoide.com/account/password-recovery");
     }
     return accountNavigator;
   }
@@ -165,7 +165,9 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
     if (billingNavigator == null) {
       billingNavigator =
           new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
-              getActivityNavigator(), getFragmentNavigator(), marketName);
+              getActivityNavigator(), getFragmentNavigator(),
+              ((AptoideApplication) getApplicationContext()).getMarketName(),
+              ((AptoideApplication) getApplicationContext()).getAdyen(), PublishRelay.create());
     }
     return billingNavigator;
   }

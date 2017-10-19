@@ -21,11 +21,12 @@ public class AuthorizationServiceV7 implements AuthorizationService {
   private final SharedPreferences sharedPreferences;
   private final BodyInterceptor<BaseBody> bodyInterceptorV7;
   private final IdResolver idResolver;
+  private final AuthorizationFactory authorizationFactory;
 
   public AuthorizationServiceV7(AuthorizationMapperV7 authorizationMapper, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, BodyInterceptor<BaseBody> bodyInterceptorV7,
-      IdResolver idResolver) {
+      IdResolver idResolver, AuthorizationFactory authorizationFactory) {
     this.authorizationMapper = authorizationMapper;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
@@ -33,13 +34,13 @@ public class AuthorizationServiceV7 implements AuthorizationService {
     this.sharedPreferences = sharedPreferences;
     this.bodyInterceptorV7 = bodyInterceptorV7;
     this.idResolver = idResolver;
+    this.authorizationFactory = authorizationFactory;
   }
 
   @Override
   public Single<Authorization> updateAuthorization(String transactionId, String metadata) {
-    return UpdateAuthorizationRequest.of(idResolver.resolveTransactionId(transactionId),
-        metadata, sharedPreferences, httpClient, converterFactory, bodyInterceptorV7,
-        tokenInvalidator)
+    return UpdateAuthorizationRequest.of(idResolver.resolveTransactionId(transactionId), metadata,
+        sharedPreferences, httpClient, converterFactory, bodyInterceptorV7, tokenInvalidator)
         .observe(true)
         .toSingle()
         .flatMap(response -> {
@@ -50,16 +51,31 @@ public class AuthorizationServiceV7 implements AuthorizationService {
         });
   }
 
-  @Override public Single<Authorization> getAuthorization(String transactionId) {
+  @Override public Single<Authorization> getAuthorization(String transactionId, String customerId) {
     return GetAuthorizationRequest.of(idResolver.resolveTransactionId(transactionId),
         sharedPreferences, httpClient, converterFactory, bodyInterceptorV7, tokenInvalidator)
         .observe(true)
         .toSingle()
         .flatMap(response -> {
-          if (response != null && response.isOk()) {
-            return Single.just(authorizationMapper.map(response.getData(), transactionId));
+
+          if (response.isSuccessful()) {
+            if (response.body() != null && response.body()
+                .isOk()) {
+              return Single.just(authorizationMapper.map(response.body()
+                  .getData(), transactionId));
+            }
+            return Single.error(new IllegalArgumentException(V7.getErrorMessage(response.body())));
           }
-          return Single.error(new IllegalArgumentException(V7.getErrorMessage(response)));
+
+          if (response.code() == 404) {
+            return Single.just(
+                authorizationFactory.create(idResolver.generateAuthorizationId(-1), customerId,
+                    null, Authorization.Status.NEW, null, null, null, null, null, transactionId,
+                    null));
+          }
+
+          return Single.error(new IllegalArgumentException(
+              "Could not retrieve authorization for " + transactionId));
         });
   }
 }

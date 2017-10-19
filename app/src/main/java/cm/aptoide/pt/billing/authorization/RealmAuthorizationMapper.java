@@ -11,14 +11,48 @@ public class RealmAuthorizationMapper {
     this.authorizationFactory = authorizationFactory;
   }
 
-  public RealmAuthorization map(PayPalAuthorization authorization) {
+  public RealmAuthorization map(Authorization authorization) {
+
+    String type = null;
+    String metadata = null;
+    if (authorization instanceof MetadataAuthorization) {
+      metadata = ((MetadataAuthorization) authorization).getMetadata();
+    }
+
+    if (authorization instanceof AdyenAuthorization) {
+      type = AuthorizationFactory.ADYEN_SDK;
+    }
+
+    String description = null;
+    double amount = 0;
+    String currency = null;
+    String currencySymbol = null;
+
+    if (authorization instanceof PayPalAuthorization) {
+
+      description = ((PayPalAuthorization) authorization).getDescription();
+
+      if (((PayPalAuthorization) authorization).getPrice() != null) {
+        amount = ((PayPalAuthorization) authorization).getPrice()
+            .getAmount();
+        currency = ((PayPalAuthorization) authorization).getPrice()
+            .getCurrency();
+        currencySymbol = ((PayPalAuthorization) authorization).getPrice()
+            .getCurrencySymbol();
+      }
+
+      type = AuthorizationFactory.PAYPAL_SDK;
+    }
+
+    if (type == null) {
+      throw new IllegalArgumentException(
+          "Unsupported Authorization. Can not map to RealmAuthorization");
+    }
+
     return new RealmAuthorization(authorization.getId(), authorization.getCustomerId(),
         authorization.getStatus()
-            .name(), authorization.getTransactionId(), authorization.getMetadata(),
-        authorization.getDescription(), authorization.getPrice()
-        .getAmount(), authorization.getPrice()
-        .getCurrency(), authorization.getPrice()
-        .getCurrencySymbol(), AuthorizationFactory.PAYPAL_SDK);
+            .name(), authorization.getTransactionId(), metadata, description, amount, currency,
+        currencySymbol, type);
   }
 
   public Authorization map(RealmAuthorization realmAuthorization) {
@@ -28,6 +62,6 @@ public class RealmAuthorizationMapper {
         realmAuthorization.getMetadata(),
         new Price(realmAuthorization.getAmount(), realmAuthorization.getCurrency(),
             realmAuthorization.getCurrencySymbol()), realmAuthorization.getDescription(),
-        realmAuthorization.getTransactionId());
+        realmAuthorization.getTransactionId(), null);
   }
 }

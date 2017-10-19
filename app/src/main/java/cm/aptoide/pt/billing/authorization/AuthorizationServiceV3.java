@@ -51,12 +51,12 @@ public class AuthorizationServiceV3 implements AuthorizationService {
     this.idResolver = idResolver;
   }
 
-  @Override public Single<Authorization> getAuthorization(String transactionId) {
-    return Single.zip(
-        GetApkInfoRequest.of(idResolver.resolveTransactionId(transactionId), bodyInterceptorV3,
-            httpClient, converterFactory, tokenInvalidator, sharedPreferences, resources)
-            .observe(false)
-            .toSingle(), customer.getId(), (response, customerId) -> {
+  @Override public Single<Authorization> getAuthorization(String transactionId, String customerId) {
+    return GetApkInfoRequest.of(idResolver.resolveTransactionId(transactionId), bodyInterceptorV3,
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences, resources)
+        .observe(false)
+        .toSingle()
+        .flatMap(response -> {
 
           if (response.isOk()) {
             if (response.isPaid()) {
@@ -73,15 +73,14 @@ public class AuthorizationServiceV3 implements AuthorizationService {
             return Single.just(
                 authorizationFactory.create(idResolver.generateAuthorizationId(1), customerId,
                     AuthorizationFactory.PAYPAL_SDK, Authorization.Status.REDEEMED, null, null,
-                    null, null, null, transactionId));
+                    null, null, null, transactionId, null));
           }
 
           return Single.just(
               authorizationFactory.create(idResolver.generateAuthorizationId(1), customerId,
                   AuthorizationFactory.PAYPAL_SDK, Authorization.Status.FAILED, null, null, null,
-                  null, null, transactionId));
-        })
-        .flatMap(single -> single);
+                  null, null, transactionId, null));
+        });
   }
 
   @Override
@@ -122,7 +121,7 @@ public class AuthorizationServiceV3 implements AuthorizationService {
           return Single.just(
               authorizationFactory.create(idResolver.generateAuthorizationId(1), customerId,
                   AuthorizationFactory.PAYPAL_SDK, Authorization.Status.FAILED, null, null, null,
-                  null, null, transactionId));
+                  null, null, transactionId, null));
         })
         .flatMap(single -> single);
   }

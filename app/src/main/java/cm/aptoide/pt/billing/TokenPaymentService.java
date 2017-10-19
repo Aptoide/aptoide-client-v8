@@ -13,9 +13,6 @@ public class TokenPaymentService extends PaymentService {
   }
 
   public Single<String> generateToken() {
-    adyen.generateToken();
-    return adyen.getToken()
-        .first()
-        .toSingle();
+    return adyen.getToken();
   }
 }

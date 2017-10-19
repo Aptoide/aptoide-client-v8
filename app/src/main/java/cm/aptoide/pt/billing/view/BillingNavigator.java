@@ -3,6 +3,7 @@ package cm.aptoide.pt.billing.view;
 import android.app.Activity;
 import android.os.Bundle;
 import cm.aptoide.pt.BuildConfig;
+import cm.aptoide.pt.billing.Adyen;
 import cm.aptoide.pt.billing.PaymentService;
 import cm.aptoide.pt.billing.PaymentServiceMapper;
 import cm.aptoide.pt.billing.Purchase;
@@ -12,12 +13,16 @@ import cm.aptoide.pt.billing.view.web.WebAuthorizationFragment;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.Result;
+import com.adyen.core.models.paymentdetails.CreditCardPaymentDetails;
+import com.adyen.ui.fragments.CreditCardFragmentBuilder;
+import com.jakewharton.rxrelay.PublishRelay;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalFuturePaymentActivity;
 import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
 import java.math.BigDecimal;
+import rx.Completable;
 import rx.Observable;
 
 public class BillingNavigator {
@@ -26,13 +31,18 @@ public class BillingNavigator {
   private final ActivityNavigator activityNavigator;
   private final FragmentNavigator fragmentNavigator;
   private final String marketName;
+  private final PublishRelay<CreditCardPaymentDetails> detailsRelay;
+  private final Adyen adyen;
 
   public BillingNavigator(PurchaseBundleMapper bundleMapper, ActivityNavigator activityNavigator,
-      FragmentNavigator fragmentNavigator, String marketName) {
+      FragmentNavigator fragmentNavigator, String marketName, Adyen adyen,
+      PublishRelay<CreditCardPaymentDetails> detailsRelay) {
     this.bundleMapper = bundleMapper;
     this.activityNavigator = activityNavigator;
     this.fragmentNavigator = fragmentNavigator;
     this.marketName = marketName;
+    this.detailsRelay = detailsRelay;
+    this.adyen = adyen;
   }
 
   public void navigateToCustomerAuthenticationForResult(int requestCode) {
@@ -52,6 +62,9 @@ public class BillingNavigator {
     switch (service.getType()) {
       case PaymentServiceMapper.PAYPAL:
         fragmentNavigator.navigateTo(PayPalAuthorizationFragment.create(bundle), true);
+        break;
+      case PaymentServiceMapper.ADYEN:
+        fragmentNavigator.navigateTo(AdyenAuthorizationFragment.create(bundle), true);
         break;
       case PaymentServiceMapper.MOL_POINTS:
       case PaymentServiceMapper.BOA_COMPRA:
@@ -129,6 +142,62 @@ public class BillingNavigator {
       case PayPalFuturePaymentActivity.RESULT_EXTRAS_INVALID:
       default:
         return new BillingNavigator.PayPalResult(BillingNavigator.PayPalResult.ERROR, null);
+    }
+  }
+
+  public Completable navigateToAdyenForResult(String session) {
+    return adyen.getPaymentRequest(session)
+        .map(paymentRequest -> new CreditCardFragmentBuilder().setPaymentMethod(
+            paymentRequest.getPaymentMethod())
+            .setPublicKey(paymentRequest.getPublicKey())
+            .setGenerationtime(paymentRequest.getGenerationTime())
+            .setAmount(paymentRequest.getAmount())
+            .setShopperReference(paymentRequest.getShopperReference())
+            .setCVCFieldStatus(CreditCardFragmentBuilder.CvcFieldStatus.REQUIRED)
+            .setCreditCardInfoListener(details -> detailsRelay.call(details))
+            .build())
+        .doOnSuccess(fragment -> fragmentNavigator.navigateTo(fragment, false))
+        .toCompletable();
+  }
+
+  public Observable<AdyenResult> adyenResults() {
+    return detailsRelay.doOnNext(__ -> popView())
+        .flatMap(details -> adyen.getPaymentResult(details)
+            .first()
+            .map(paymentRequestResult -> {
+              if (paymentRequestResult.isProcessed()) {
+                return new AdyenResult(AdyenResult.SUCCESS, paymentRequestResult.getPayment()
+                    .getPayload(), null);
+              }
+              return new AdyenResult(AdyenResult.ERROR, null, paymentRequestResult.getError());
+            }));
+  }
+
+  public static class AdyenResult {
+
+    public static final int SUCCESS = 0;
+    public static final int ERROR = 1;
+
+    private final int status;
+    private final String payload;
+    private final Throwable throwable;
+
+    public AdyenResult(int status, String payload, Throwable throwable) {
+      this.status = status;
+      this.payload = payload;
+      this.throwable = throwable;
+    }
+
+    public int getStatus() {
+      return status;
+    }
+
+    public String getPayload() {
+      return payload;
+    }
+
+    public Throwable getThrowable() {
+      return throwable;
     }
   }
 

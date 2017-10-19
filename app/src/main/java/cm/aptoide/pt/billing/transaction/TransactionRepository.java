@@ -28,8 +28,19 @@ public class TransactionRepository {
 
   public Single<Transaction> createTransaction(String productId, String serviceId, String payload) {
     return transactionService.createTransaction(productId, serviceId, payload)
-        .flatMap(transaction -> transactionPersistence.saveTransaction(transaction)
-            .andThen(Single.just(transaction)));
+        .flatMap(
+            transaction -> transactionPersistence.removeTransactions(transaction.getProductId())
+                .andThen(transactionPersistence.saveTransaction(transaction))
+                .andThen(Single.just(transaction)));
+  }
+
+  public Single<Transaction> createTransaction(String productId, String serviceId, String payload,
+      String token) {
+    return transactionService.createTransaction(productId, serviceId, payload, token)
+        .flatMap(
+            transaction -> transactionPersistence.removeTransactions(transaction.getProductId())
+                .andThen(transactionPersistence.saveTransaction(transaction))
+                .andThen(Single.just(transaction)));
   }
 
   public Observable<Transaction> getTransaction(String productId) {
@@ -37,12 +48,5 @@ public class TransactionRepository {
         .doOnSuccess(__ -> syncScheduler.syncTransaction(productId))
         .flatMapObservable(
             customerId -> transactionPersistence.getTransaction(customerId, productId));
-  }
-
-  public Single<Transaction> createTransaction(String productId, String serviceId, String payload,
-      String token) {
-    return transactionService.createTransaction(productId, serviceId, payload, token)
-        .flatMap(transaction -> transactionPersistence.saveTransaction(transaction)
-            .andThen(Single.just(transaction)));
   }
 }

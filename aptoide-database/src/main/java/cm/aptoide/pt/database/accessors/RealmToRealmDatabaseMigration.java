@@ -7,7 +7,6 @@ package cm.aptoide.pt.database.accessors;
 
 import android.text.TextUtils;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.logger.Logger;
 import io.realm.DynamicRealm;
 import io.realm.DynamicRealmObject;
@@ -266,8 +265,8 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
 
     if (oldVersion == 8083) {
       schema.get("Notification")
-          .addField(Notification.OWNER_ID_KEY, String.class)
-          .transform(notification -> notification.set(Notification.OWNER_ID_KEY, ""));
+          .addField("ownerId", String.class)
+          .transform(notification -> notification.set("ownerId", ""));
 
       oldVersion++;
     }
@@ -319,27 +318,23 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
 
     if (oldVersion == 8087) {
       schema.get("Notification")
-          .addField(Notification.EXPIRE_KEY, Long.class)
-          .transform(notification -> notification.set(Notification.EXPIRE_KEY, null));
+          .addField("expire", Long.class)
+          .transform(notification -> notification.set("expire", null));
 
       oldVersion++;
     }
 
     if (oldVersion == 8088) {
       schema.get("Notification")
-          .addField(Notification.NOTIFICATION_CENTER_URL_TRACK_KEY, String.class)
-          .transform(
-              notification -> notification.set(Notification.NOTIFICATION_CENTER_URL_TRACK_KEY,
-                  null));
+          .addField("notificationCenterUrlTrack", String.class)
+          .transform(notification -> notification.set("notificationCenterUrlTrack", null));
       oldVersion++;
     }
 
     if (oldVersion == 8089) {
       schema.get("Notification")
-          .addField(Notification.NOTIFICATION_CENTER_PROCESSED_KEY, boolean.class)
-          .transform(
-              notification -> notification.set(Notification.NOTIFICATION_CENTER_PROCESSED_KEY,
-                  true));
+          .addField("processed", boolean.class)
+          .transform(notification -> notification.set("processed", true));
       realm.delete("PaymentConfirmation");
       schema.get("PaymentConfirmation")
           .renameField("sellerId", "merchantName")

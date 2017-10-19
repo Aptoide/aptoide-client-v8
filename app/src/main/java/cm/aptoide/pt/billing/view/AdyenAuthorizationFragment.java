@@ -1,4 +1,4 @@
-package cm.aptoide.pt.billing.view.paypal;
+package cm.aptoide.pt.billing.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,26 +12,24 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
-import cm.aptoide.pt.billing.view.BillingNavigator;
-import cm.aptoide.pt.billing.view.PaymentActivity;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.permission.PermissionServiceFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
-public class PayPalAuthorizationFragment extends PermissionServiceFragment implements PayPalView {
+public class AdyenAuthorizationFragment extends PermissionServiceFragment
+    implements AdyenAuthorizationView {
 
+  private Billing billing;
   private ProgressBar progressBar;
   private RxAlertDialog unknownErrorDialog;
   private RxAlertDialog networkErrorDialog;
-
-  private Billing billing;
-  private BillingAnalytics billingAnalytics;
-  private BillingNavigator billingNavigator;
+  private BillingNavigator navigator;
+  private BillingAnalytics analytics;
 
   public static Fragment create(Bundle bundle) {
-    final PayPalAuthorizationFragment fragment = new PayPalAuthorizationFragment();
+    final AdyenAuthorizationFragment fragment = new AdyenAuthorizationFragment();
     fragment.setArguments(bundle);
     return fragment;
   }
@@ -40,39 +38,41 @@ public class PayPalAuthorizationFragment extends PermissionServiceFragment imple
     super.onCreate(savedInstanceState);
     billing = ((AptoideApplication) getContext().getApplicationContext()).getBilling(
         getArguments().getString(PaymentActivity.EXTRA_MERCHANT_NAME));
-    billingAnalytics =
-        ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
-    billingNavigator = ((ActivityResultNavigator) getContext()).getBillingNavigator();
+    navigator = ((ActivityResultNavigator) getActivity()).getBillingNavigator();
+    analytics = ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
+  }
+
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    return inflater.inflate(R.layout.fragment_adyen_authorization, container, false);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    progressBar = (ProgressBar) view.findViewById(R.id.fragment_paypal_progress_bar);
+
+    progressBar = (ProgressBar) view.findViewById(R.id.fragment_adyen_authorization_progress_bar);
 
     networkErrorDialog =
         new RxAlertDialog.Builder(getContext()).setMessage(R.string.connection_error)
             .setPositiveButton(R.string.ok)
             .build();
+
     unknownErrorDialog =
         new RxAlertDialog.Builder(getContext()).setMessage(R.string.all_message_general_error)
             .setPositiveButton(R.string.ok)
             .build();
 
     attachPresenter(
-        new PayPalAuthorizationPresenter(this, billing, billingAnalytics, billingNavigator,
-            AndroidSchedulers.mainThread(), getArguments().getString(PaymentActivity.EXTRA_SKU),
-            getArguments().getString(PaymentActivity.EXTRA_SERVICE_NAME)));
+        new AdyenAuthorizationPresenter(this, getArguments().getString(PaymentActivity.EXTRA_SKU),
+            billing, navigator, analytics,
+            getArguments().getString(PaymentActivity.EXTRA_SERVICE_NAME),
+            AndroidSchedulers.mainThread()));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName());
-  }
-
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_paypal_authorization, container, false);
   }
 
   @Override public void onDestroyView() {
@@ -92,6 +92,11 @@ public class PayPalAuthorizationFragment extends PermissionServiceFragment imple
     progressBar.setVisibility(View.GONE);
   }
 
+  @Override public Observable<Void> errorDismisses() {
+    return Observable.merge(networkErrorDialog.dismisses(), unknownErrorDialog.dismisses())
+        .map(dialogInterface -> null);
+  }
+
   @Override public void showNetworkError() {
     if (!networkErrorDialog.isShowing() && !unknownErrorDialog.isShowing()) {
       networkErrorDialog.show();
@@ -102,10 +107,5 @@ public class PayPalAuthorizationFragment extends PermissionServiceFragment imple
     if (!networkErrorDialog.isShowing() && !unknownErrorDialog.isShowing()) {
       unknownErrorDialog.show();
     }
-  }
-
-  @Override public Observable<Void> errorDismisses() {
-    return Observable.merge(networkErrorDialog.dismisses(), unknownErrorDialog.dismisses())
-        .map(dialogInterface -> null);
   }
 }

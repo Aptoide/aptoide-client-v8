@@ -134,11 +134,11 @@ public class BillingPool {
     if (merchantName.equals(BuildConfig.APPLICATION_ID)) {
       return new Billing(merchantName, getBillingServiceV3(), getPaidAppTransactionRepository(),
           getPaidAppAuthorizationRepository(), getServiceSelector(), getCustomer(),
-          getAuthorizationFactory(), getPurchaseTokenDecoder(), getBillingSyncSchedulerV3());
+          getPurchaseTokenDecoder(), getBillingSyncSchedulerV3());
     } else {
       return new Billing(merchantName, getBillingServiceV7(), getInAppTransactionRepository(),
           getInAppAuthorizationRepository(), getServiceSelector(), getCustomer(),
-          getAuthorizationFactory(), getPurchaseTokenDecoder(), getBillingSyncSchedulerV7());
+          getPurchaseTokenDecoder(), getBillingSyncSchedulerV7());
     }
   }
 
@@ -155,7 +155,7 @@ public class BillingPool {
     if (paidAppAuthorizationRepository == null) {
       paidAppAuthorizationRepository =
           new AuthorizationRepository(getBillingSyncSchedulerV3(), getCustomer(),
-              getAuthorizationPersistence());
+              getAuthorizationPersistence(), authorizationFactory);
     }
     return paidAppAuthorizationRepository;
   }
@@ -195,7 +195,7 @@ public class BillingPool {
     if (inAppAuthorizationRepository == null) {
       inAppAuthorizationRepository =
           new AuthorizationRepository(getBillingSyncSchedulerV7(), getCustomer(),
-              getAuthorizationPersistence());
+              getAuthorizationPersistence(), authorizationFactory);
     }
     return inAppAuthorizationRepository;
   }
@@ -232,7 +232,7 @@ public class BillingPool {
               new AuthorizationServiceV7(
                   new AuthorizationMapperV7(getAuthorizationFactory(), getIdResolverV7()),
                   httpClient, WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences,
-                  bodyInterceptorPoolV7, getIdResolverV7()), getTransactionPersistence(),
+                  bodyInterceptorPoolV7, getIdResolverV7(), getAuthorizationFactory()), getTransactionPersistence(),
               getAuthorizationPersistence()), syncScheduler, new HashSet<>());
     }
     return billingSyncSchedulerV7;
@@ -282,7 +282,8 @@ public class BillingPool {
     if (authorizationPersistence == null) {
       authorizationPersistence =
           new RealmAuthorizationPersistence(new HashMap<>(), PublishRelay.create(), database,
-              new RealmAuthorizationMapper(getAuthorizationFactory()), Schedulers.io());
+              new RealmAuthorizationMapper(getAuthorizationFactory()), Schedulers.io(),
+              getAuthorizationFactory());
     }
     return authorizationPersistence;
   }

@@ -8,10 +8,11 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
+import retrofit2.Response;
 import rx.Observable;
 
-public class GetAuthorizationRequest
-    extends V7<GetAuthorizationRequest.ResponseBody, GetAuthorizationRequest.RequestBody> {
+public class GetAuthorizationRequest extends
+    V7<Response<GetAuthorizationRequest.ResponseBody>, GetAuthorizationRequest.RequestBody> {
 
   private GetAuthorizationRequest(RequestBody body, String baseHost, OkHttpClient httpClient,
       Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
@@ -28,8 +29,9 @@ public class GetAuthorizationRequest
         converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
-  @Override protected Observable<ResponseBody> loadDataFromNetwork(Interfaces interfaces,
-      boolean bypassCache) {
+  @Override
+  protected Observable<Response<GetAuthorizationRequest.ResponseBody>> loadDataFromNetwork(
+      Interfaces interfaces, boolean bypassCache) {
     return interfaces.getBillingAuthorization(body, bypassCache);
   }
 
@@ -142,6 +144,7 @@ public class GetAuthorizationRequest
         private String url;
         private String redirectUrl;
         private String description;
+        private String session;
 
         public String getUrl() {
           return url;
@@ -165,6 +168,14 @@ public class GetAuthorizationRequest
 
         public void setDescription(String description) {
           this.description = description;
+        }
+
+        public String getSession() {
+          return session;
+        }
+
+        public void setSession(String session) {
+          this.session = session;
         }
       }
 

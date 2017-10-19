@@ -144,6 +144,7 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
 
           final BaseV7Response v7Response;
           if (response instanceof Response) {
+
             if (((Response) response).isSuccessful()) {
               v7Response = (BaseV7Response) ((Response) response).body();
             } else {
@@ -152,6 +153,12 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
                     new Annotation[0]).convert(((Response) response).errorBody());
               } catch (IOException e) {
                 return Observable.error(e);
+              }
+
+              if (((Response) response).code() == 401) {
+                AptoideWsV7Exception exception = new AptoideWsV7Exception();
+                exception.setBaseResponse(v7Response);
+                return Observable.error(exception);
               }
             }
           } else {
@@ -176,6 +183,11 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
                 if (isNoNetworkException(throwable)) {
                   throw new NoNetworkConnectionException(throwable);
                 } else {
+
+                  if (throwable instanceof AptoideWsV7Exception) {
+                    throw (AptoideWsV7Exception) throwable;
+                  }
+
                   if (throwable instanceof HttpException) {
                     try {
                       AptoideWsV7Exception exception = new AptoideWsV7Exception(throwable);
@@ -449,7 +461,8 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
     @POST("inapp/bank/services/get") Observable<GetServicesRequest.ResponseBody> getBillingServices(
         @Body BaseBody body, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("inapp/purchases/get") Observable<Response<GetPurchasesRequest.ResponseBody>> getBillingPurchases(
+    @POST("inapp/purchases/get")
+    Observable<Response<GetPurchasesRequest.ResponseBody>> getBillingPurchases(
         @Body GetPurchasesRequest.RequestBody body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
@@ -482,7 +495,7 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("inapp/bank/authorization/getMeta")
-    Observable<GetAuthorizationRequest.ResponseBody> getBillingAuthorization(
+    Observable<Response<GetAuthorizationRequest.ResponseBody>> getBillingAuthorization(
         @Body GetAuthorizationRequest.RequestBody body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
   }
