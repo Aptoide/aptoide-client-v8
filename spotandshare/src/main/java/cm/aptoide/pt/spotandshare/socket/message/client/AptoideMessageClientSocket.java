@@ -14,8 +14,6 @@ import cm.aptoide.pt.spotandshare.socket.message.interfaces.AndroidAppInfoAccept
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Collection;
-import rx.Observable;
 
 /**
  * Created by neuro on 29-01-2017.
@@ -27,38 +25,30 @@ public class AptoideMessageClientSocket extends AptoideClientSocket {
 
   private final FriendsManager friendsManager;
 
-  public Observable<Collection<Friend>> observeFriends() {
-    return friendsManager.observe();
-  }
-
-  public Observable<Integer> observeAmountOfFriends() {
-    return friendsManager.observeAmountOfFriends();
-  }
-
   public AptoideMessageClientSocket(String host, int port, String rootDir,
       StorageCapacity storageCapacity,
       TransferLifecycleProvider<AndroidAppInfo> fileLifecycleProvider, SocketBinder socketBinder,
       OnError<IOException> onError, int timeout, AndroidAppInfoAccepter androidAppInfoAccepter,
-      Friend friend) {
+      Friend friend, FriendsManager friendsManager) {
     super(host, port, timeout);
     this.aptoideMessageController =
         new AptoideMessageClientController(this, rootDir, storageCapacity, fileLifecycleProvider,
             socketBinder, onError, androidAppInfoAccepter, friend, executorService);
     this.onError = onError;
-    this.friendsManager = new FriendsManager();
+    this.friendsManager = friendsManager;
   }
 
   public AptoideMessageClientSocket(String host, String fallbackHostName, int port, String rootDir,
       StorageCapacity storageCapacity,
       TransferLifecycleProvider<AndroidAppInfo> fileLifecycleProvider, SocketBinder socketBinder,
       OnError<IOException> onError, int timeout, AndroidAppInfoAccepter androidAppInfoAccepter,
-      Friend friend) {
+      Friend friend, FriendsManager friendsManager) {
     super(host, fallbackHostName, port, timeout);
     this.aptoideMessageController =
         new AptoideMessageClientController(this, rootDir, storageCapacity, fileLifecycleProvider,
             socketBinder, onError, androidAppInfoAccepter, friend, executorService);
     this.onError = onError;
-    this.friendsManager = new FriendsManager();
+    this.friendsManager = friendsManager;
   }
 
   @Override public void shutdown() {

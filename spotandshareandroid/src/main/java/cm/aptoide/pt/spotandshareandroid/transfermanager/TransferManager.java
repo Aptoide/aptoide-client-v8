@@ -3,7 +3,6 @@ package cm.aptoide.pt.spotandshareandroid.transfermanager;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
-import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshare.socket.interfaces.HostsChangedCallback;
 import cm.aptoide.pt.spotandshare.socket.interfaces.OnError;
 import cm.aptoide.pt.spotandshare.socket.interfaces.TransferLifecycle;
@@ -12,7 +11,6 @@ import cm.aptoide.pt.spotandshare.socket.message.interfaces.AndroidAppInfoAccept
 import cm.aptoide.pt.spotandshareandroid.SpotAndShareMessageServer;
 import cm.aptoide.pt.spotandshareandroid.util.MessageServerConfiguration;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 import lombok.Getter;
 import rx.Observable;
@@ -89,14 +87,6 @@ public class TransferManager {
 
   public void shutdown() {
     spotAndShareMessageServer.exit();
-  }
-
-  public Observable<Collection<Friend>> observeFriends() {
-    return spotAndShareMessageServer.observeFriends();
-  }
-
-  public Observable<Integer> observeAmountOfFriends() {
-    return spotAndShareMessageServer.observeAmountOfFriends();
   }
 
   public void clearTransfers() {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.wifi.WifiManager;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.Friend;
+import cm.aptoide.pt.spotandshare.socket.message.FriendsManager;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.Accepter;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.AndroidAppInfoAccepter;
 import cm.aptoide.pt.spotandshareandroid.hotspotmanager.HotspotManager;
@@ -29,12 +30,14 @@ public class SpotAndShare {
   private final SpotAndShareV2 spotAndShareV2;
   private Map<AndroidAppInfo, Accepter<AndroidAppInfo>> androidAppInfoAccepterMap = new HashMap<>();
   private final ServiceProvider serviceProvider;
+  private FriendsManager friendsManager;
 
   public SpotAndShare(Context context, Friend friend) {
     serviceProvider = new ServiceProvider(context);
     hotspotManager = new HotspotManager(context, (WifiManager) context.getApplicationContext()
         .getSystemService(Context.WIFI_SERVICE), serviceProvider.getWifiManager());
-    spotAndShareV2 = new SpotAndShareV2(context, friend);
+    this.friendsManager = new FriendsManager();
+    spotAndShareV2 = new SpotAndShareV2(context, friend, this.friendsManager);
   }
 
   public Completable createGroup(Action1<SpotAndShareSender> onSuccess, OnError onError,
@@ -76,11 +79,13 @@ public class SpotAndShare {
   }
 
   public Observable<Collection<Friend>> observeFriends() {
-    return spotAndShareV2.observeFriends();
+    //return spotAndShareV2.observeFriends();
+    return friendsManager.observe();
   }
 
   public Observable<Integer> observeAmountOfFriends() {
-    return spotAndShareV2.observeAmountOfFriends();
+    //return spotAndShareV2.observeAmountOfFriends();
+    return friendsManager.observeAmountOfFriends();
   }
 
   public interface GroupCreated {

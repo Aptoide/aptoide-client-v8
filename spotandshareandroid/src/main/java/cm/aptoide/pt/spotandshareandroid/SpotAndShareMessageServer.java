@@ -6,6 +6,7 @@ import cm.aptoide.pt.spotandshare.socket.interfaces.HostsChangedCallback;
 import cm.aptoide.pt.spotandshare.socket.interfaces.OnError;
 import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import cm.aptoide.pt.spotandshare.socket.interfaces.TransferLifecycleProvider;
+import cm.aptoide.pt.spotandshare.socket.message.FriendsManager;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.AndroidAppInfoAccepter;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
@@ -13,9 +14,7 @@ import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionTo
 import cm.aptoide.pt.spotandshare.socket.message.server.AptoideMessageServerSocket;
 import cm.aptoide.pt.spotandshareandroid.util.MessageServerConfiguration;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
-import rx.Observable;
 
 /**
  * Created by neuro on 10-07-2017.
@@ -30,18 +29,12 @@ public class SpotAndShareMessageServer {
   private final Friend friend;
 
   private final int port;
+  private final FriendsManager friendsManager;
 
-  public SpotAndShareMessageServer(int port, Friend friend) {
+  public SpotAndShareMessageServer(int port, Friend friend, FriendsManager friendsManager) {
     this.friend = friend;
     this.port = port;
-  }
-
-  public Observable<Collection<Friend>> observeFriends() {
-    return aptoideMessageClientSocket.observeFriends();
-  }
-
-  public Observable<Integer> observeAmountOfFriends() {
-    return aptoideMessageClientSocket.observeAmountOfFriends();
+    this.friendsManager = friendsManager;
   }
 
   public void startServer(HostsChangedCallback hostsCallbackManager, OnError onError) {
@@ -63,8 +56,8 @@ public class SpotAndShareMessageServer {
       aptoideMessageClientSocket = new AptoideMessageClientSocket(HOTSPOT_DEFAULT_ADDRESS, port,
           messageServerConfiguration.getExternalStoragepath(),
           messageServerConfiguration.getStorageCapacity(), transferLifecycleProvider,
-          messageServerConfiguration.getSocketBinder(), onError,
-          Integer.MAX_VALUE, messageServerConfiguration.getAndroidAppInfoAccepter(), friend);
+          messageServerConfiguration.getSocketBinder(), onError, Integer.MAX_VALUE,
+          messageServerConfiguration.getAndroidAppInfoAccepter(), friend, friendsManager);
       aptoideMessageClientSocket.startAsync();
     }
   }
@@ -79,7 +72,7 @@ public class SpotAndShareMessageServer {
       aptoideMessageClientSocket =
           new AptoideMessageClientSocket(HOTSPOT_DEFAULT_ADDRESS, port, externalStoragepath,
               storageCapacity, transferLifecycleProvider, socketBinder, onError, Integer.MAX_VALUE,
-              androidAppInfoAccepter, friend);
+              androidAppInfoAccepter, friend, friendsManager);
       aptoideMessageClientSocket.startAsync();
     }
   }

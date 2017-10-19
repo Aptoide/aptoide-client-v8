@@ -6,11 +6,11 @@ import android.net.wifi.WifiManager;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.Friend;
 import cm.aptoide.pt.spotandshare.socket.interfaces.HostsChangedCallback;
+import cm.aptoide.pt.spotandshare.socket.message.FriendsManager;
 import cm.aptoide.pt.spotandshareandroid.hotspotmanager.HotspotManager;
 import cm.aptoide.pt.spotandshareandroid.transfermanager.Transfer;
 import cm.aptoide.pt.spotandshareandroid.transfermanager.TransferManager;
 import cm.aptoide.pt.spotandshareandroid.util.service.ServiceProvider;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 import rx.Completable;
@@ -37,14 +37,17 @@ class SpotAndShareV2 {
   private boolean enabled;
   private boolean isHotspot;
   private final ServiceProvider serviceProvider;
+  private final FriendsManager friendsManager;
 
-  SpotAndShareV2(Context context, Friend friend) {
+  SpotAndShareV2(Context context, Friend friend, FriendsManager friendsManager) {
     serviceProvider = new ServiceProvider(context);
     hotspotManager = new HotspotManager(context, (WifiManager) context.getApplicationContext()
         .getSystemService(Context.WIFI_SERVICE), serviceProvider.getWifiManager());
     applicationContext = context.getApplicationContext();
-    transferManager = new TransferManager(new SpotAndShareMessageServer(55555, friend));
     this.friend = friend;
+    this.friendsManager = friendsManager;
+    transferManager =
+        new TransferManager(new SpotAndShareMessageServer(55555, friend, friendsManager));
   }
 
   private SpotAndShareSender createSpotAndShareSender() {
@@ -55,14 +58,6 @@ class SpotAndShareV2 {
         throw new IllegalStateException("Spot and Share not connected!");
       }
     };
-  }
-
-  public Observable<Collection<Friend>> observeFriends() {
-    return transferManager.observeFriends();
-  }
-
-  public Observable<Integer> observeAmountOfFriends() {
-    return transferManager.observeAmountOfFriends();
   }
 
   Completable send(Action1<SpotAndShareSender> onSuccess, OnError onError) {
@@ -199,7 +194,8 @@ class SpotAndShareV2 {
     if (!isHotspot) {
       return true;
     }
-    return observeFriends().map(friends -> friends.size() > 0)
+    return friendsManager.observe()
+        .map(friends -> friends.size() > 0)
         .toBlocking()
         .first();
   }
