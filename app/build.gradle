@@ -323,6 +323,7 @@ dependencies {
   androidTestCompile "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
   androidTestCompile "com.android.support.test.espresso:espresso-core:${ESPRESSO_VERSION}"
   androidTestCompile "com.android.support.test.espresso:espresso-contrib:${ESPRESSO_VERSION}"
+  androidTestCompile "com.android.support.test.espresso:espresso-intents:${ESPRESSO_VERSION}"
   androidTestCompile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
   androidTestCompile "com.android.support.test.uiautomator:uiautomator-v18:${UIAUTOMATOR_VERSION}"
 

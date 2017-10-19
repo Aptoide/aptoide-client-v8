@@ -42,6 +42,7 @@ import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard
 import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
+import static android.support.test.espresso.action.ViewActions.swipeRight;
 import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intending;
@@ -75,7 +76,7 @@ public class EspressoTests {
   private final int NUMBER_OF_RETRIES = 3;
   @Rule public IntentsTestRule<MainActivity> mActivityRule =
       new IntentsTestRule<>(MainActivity.class);
-  @Rule public RetryTestRule retry = new RetryTestRule(NUMBER_OF_RETRIES);
+ // @Rule public RetryTestRule retry = new RetryTestRule(NUMBER_OF_RETRIES);
   private String SIGNUPEMAILTEST = "";
   private String STORENAME = "a";
 
@@ -227,6 +228,7 @@ public class EspressoTests {
     while(!hasLoggedIn()){
       Thread.sleep(WAIT_TIME);
     }
+    onView(withText(R.string.stores)).perform(swipeRight());
     onView(withText(R.string.home_title)).perform(click());
     Thread.sleep(WAIT_TIME);
     goToMyAccount();
@@ -712,7 +714,7 @@ public class EspressoTests {
     onView(withId(R.id.create_store_name)).perform(replaceText(STORENAME), closeSoftKeyboard());
     Thread.sleep(WAIT_TIME);
     onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
-    onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
+    onView(withId(R.id.theme_selector)).perform(swipeUp());
     onView(withId(R.id.create_store_action)).perform(click());
   }
 
