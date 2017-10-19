@@ -44,6 +44,7 @@ import cm.aptoide.pt.social.data.StoreLatestApps;
 import cm.aptoide.pt.social.data.Timeline;
 import cm.aptoide.pt.social.data.TimelineStatsTouchEvent;
 import cm.aptoide.pt.social.data.User;
+import cm.aptoide.pt.social.data.UserUnfollowCardTouchEvent;
 import cm.aptoide.pt.social.view.TimelineUser;
 import cm.aptoide.pt.social.view.TimelineView;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
@@ -180,6 +181,8 @@ public class TimelinePresenter implements Presenter {
 
     clickOnUnfollowStore();
 
+    clickOnUnfollowUser();
+
     clickOnReportAbuse();
   }
 
@@ -206,8 +209,25 @@ public class TimelinePresenter implements Presenter {
             .doOnNext(cardTouchEvent -> storeUtilsProxy.unSubscribeStore(
                 ((StoreLatestApps) cardTouchEvent.getCard()).getStoreName(),
                 storeCredentialsProvider))
-            .doOnNext(cardTouchEvent -> view.showStoreUnsubscribedMessage(
+            .doOnNext(cardTouchEvent -> view.showUserUnsubscribedMessage(
                 ((StoreLatestApps) cardTouchEvent.getCard()).getStoreName()))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cardTouchEvent -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
+  private void clickOnUnfollowUser() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.postClicked()
+            .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+                .equals(CardTouchEvent.Type.UNFOLLOW_USER))
+            .doOnNext(cardTouchEvent -> {
+              // TODO: 19/10/2017 unfollow user ws call
+            })
+            .doOnNext(cardTouchEvent -> view.showUserUnsubscribedMessage(
+                ((UserUnfollowCardTouchEvent) cardTouchEvent).getName()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {

@@ -333,15 +333,14 @@ public class MinimalCardViewFactory {
           .subscribe(account -> {
             if (post.getMinimalPostPosters()
                 .size() == 1) {
-              if (post.getMinimalPostPosters()
-                  .get(0)
-                  .getUser() != null && !post.getMinimalPostPosters()
-                  .get(0)
-                  .isMe(account.getNickname(), account.getStore()
-                      .getName())) {
+              Poster poster = post.getMinimalPostPosters()
+                  .get(0);
+              if (poster.getUser() != null && !poster.isMe(account.getNickname(), account.getStore()
+                  .getName())) {
                 postPopupMenuBuilder.addUnfollowUser(menuItem -> {
-                  cardTouchEventPublishSubject.onNext(
-                      new CardTouchEvent(post, position, CardTouchEvent.Type.UNFOLLOW_USER));
+                  cardTouchEventPublishSubject.onNext(new UserUnfollowCardTouchEvent(
+                      poster.getUser()
+                          .getName(), position, post));
                   return false;
                 });
               }

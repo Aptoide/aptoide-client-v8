@@ -615,6 +615,13 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     return Single.just(downloadFolderPath + screenshotFileName);
   }
 
+  @Override public void showUserUnsubscribedMessage(String userName) {
+    final String msg = AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
+        getContext().getResources(), userName);
+    Snackbar.make(getView(), msg, Snackbar.LENGTH_SHORT)
+        .show();
+  }
+
   private void handleSharePreviewAnswer() {
     shareDialog.cancels()
         .doOnNext(shareEvent -> timelineAnalytics.sendShareCompleted(false))

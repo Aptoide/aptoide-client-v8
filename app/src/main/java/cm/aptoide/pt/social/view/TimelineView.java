@@ -108,4 +108,6 @@ public interface TimelineView extends View {
   void showPostDeletedError();
 
   Single<String> takeFeedbackScreenShot();
+
+  void showUserUnsubscribedMessage(String userName);
 }
