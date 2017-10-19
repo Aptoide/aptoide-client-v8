@@ -49,7 +49,7 @@ public abstract class SearchRecentSuggestionsProviderWrapper
 
         for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
           matrixCursor.newRow()
-              .add(c.getString(c.getColumnIndex(SearchManager.SUGGEST_COLUMN_ICON_1)))
+              //.add(c.getString(c.getColumnIndex(SearchManager.SUGGEST_COLUMN_ICON_1)))
               .add(c.getString(c.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1)))
               .add(c.getString(c.getColumnIndex(SearchManager.SUGGEST_COLUMN_QUERY)))
               .add("1");

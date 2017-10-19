@@ -25,6 +25,8 @@ public interface SearchView extends View {
 
   void showWidgetClickView();
 
+  void showVoiceSearch();
+
   void showLoading();
 
   void hideLoading();

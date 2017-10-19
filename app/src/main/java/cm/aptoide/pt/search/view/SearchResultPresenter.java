@@ -346,8 +346,12 @@ public class SearchResultPresenter implements Presenter {
             .doOnNext(__2 -> view.hideLoading())
             .doOnNext(data -> {
               if (getItemCount(data) == 0 && data !=null) {
-                view.showNoResultsView();
-                analytics.searchNoResults(viewModel.getCurrentQuery());
+                if(viewModel.getCurrentQuery().equals("voicesearchrequestquery"))
+                  view.showVoiceSearch();
+                else {
+                  view.showNoResultsView();
+                  analytics.searchNoResults(viewModel.getCurrentQuery());
+                }
               }
               else if(data == null){
                 view.showWidgetClickView();

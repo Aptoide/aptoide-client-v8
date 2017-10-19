@@ -231,6 +231,14 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     setFocusInSearchView();
   }
 
+  @Override public void showVoiceSearch(){
+    noSearchLayout.setVisibility(View.GONE);
+    searchResultsLayout.setVisibility(View.GONE);
+    buttonsLayout.setVisibility(View.GONE);
+    followedStoresResultList.setVisibility(View.GONE);
+    allStoresResultList.setVisibility(View.GONE);
+  }
+
   @Override public void showLoading() {
     progressBar.setVisibility(View.VISIBLE);
     noSearchLayout.setVisibility(View.GONE);
@@ -323,7 +331,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   }
 
   @Override public void setFocusInSearchView() {
-    searchMenuItem.expandActionView();
+     searchMenuItem.expandActionView();
   }
 
   private Observable<Void> recyclerViewReachedBottom(RecyclerView recyclerView) {

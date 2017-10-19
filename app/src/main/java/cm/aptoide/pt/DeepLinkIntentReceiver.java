@@ -347,6 +347,9 @@ public class DeepLinkIntentReceiver extends ActivityView {
 
   public void aptoidevoiceSearch(String param) {
     // TODO: voiceSearch was used by a foreign app, dunno if still used.
+    
+
+
     //        Cursor c = new AptoideDatabase(Aptoide.getDb()).getSearchResults(param, StoreActivity.Sort.DOWNLOADS);
     //
     //        ArrayList<String> namelist = new ArrayList<String>();

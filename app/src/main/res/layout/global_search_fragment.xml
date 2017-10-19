@@ -23,6 +23,15 @@
       tools:visibility="gone"
       />
 
+  <include
+      layout="@layout/incl_no_search_results_layout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginTop="?attr/actionBarSize"
+      tools:visibility="gone"
+      />
+
+
   <RelativeLayout
       android:id="@+id/search_results_layout"
       android:layout_width="match_parent"

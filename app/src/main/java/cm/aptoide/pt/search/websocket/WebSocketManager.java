@@ -31,7 +31,7 @@ public abstract class WebSocketManager extends WebSocketListener implements WebS
   protected static final String TAG = "Websockets";
   public static BlockingQueue<Cursor> blockingQueue;
   protected static String[] matrix_columns = new String[] {
-      SearchManager.SUGGEST_COLUMN_ICON_1, SearchManager.SUGGEST_COLUMN_TEXT_1,
+      /*SearchManager.SUGGEST_COLUMN_ICON_1,*/ SearchManager.SUGGEST_COLUMN_TEXT_1,
       SearchManager.SUGGEST_COLUMN_QUERY, "_id"
   };
   static WebSocket webSocket;
@@ -107,7 +107,7 @@ public abstract class WebSocketManager extends WebSocketListener implements WebS
 
   protected void addRow(MatrixCursor matrixCursor, String string, int i) {
     matrixCursor.newRow()
-        .add(null)
+        //.add(null)
         .add(string)
         .add(string)
         .add(i);
