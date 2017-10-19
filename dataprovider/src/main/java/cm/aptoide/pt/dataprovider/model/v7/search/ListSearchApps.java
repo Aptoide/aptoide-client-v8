@@ -10,6 +10,5 @@ import cm.aptoide.pt.dataprovider.model.v7.BaseV7EndlessDataListResponse;
 /**
  * Created by neuro on 26-04-2016.
  */
-public class ListSearchApps
-    extends BaseV7EndlessDataListResponse<SearchApp> {
+public class ListSearchApps extends BaseV7EndlessDataListResponse<SearchApp> {
 }

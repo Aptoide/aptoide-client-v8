@@ -144,5 +144,11 @@
   <string name="timeline_button_get_started">Get started</string>
   <string name="timeline_message_timeline_description">Timeline makes it easy to create posts about apps, learn about your friends activity, and connect with people. All in one place.</string>
 
+  <!--overflow button for card-->
+  <string name="timeline_button_unfollow_user">Unfollow user</string>
+  <string name="timeline_button_unfollow_store">Unfollow store</string>
+  <string name="timeline_button_report_abuse">Report abuse</string>
+  <string name="timeline_button_delete_post">Delete post</string>
+
 
 </resources>

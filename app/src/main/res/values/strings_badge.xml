@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <string name="badgedialog_message_final">To know more about the gamification, go to the dashboard at www.aptoide.com</string>
+
+  <string name="badgedialog_title_bronze">Bronze Store</string>
+  <string name="badgedialog_message_bronze">This is bronze store. This badge is unlocked when a store has reached:</string>
+  <string name="badgedialog_message_bronze_1">50 apps</string>
+  <string name="badgedialog_message_bronze_2">750 downloads</string>
+  <string name="badgedialog_message_bronze_3">500 followers</string>
+  <string name="badgedialog_message_bronze_4">100 reviews</string>
+
+  <string name="badgedialog_title_silver">Silver Store</string>
+  <string name="badgedialog_message_silver">This is silver store. This badge is unlocked when a store has reached:</string>
+  <string name="badgedialog_message_silver_1">250 apps</string>
+  <string name="badgedialog_message_silver_2">10 000 downloads</string>
+  <string name="badgedialog_message_silver_3">2 500 followers</string>
+  <string name="badgedialog_message_silver_4">1 000 reviews</string>
+
+
+  <string name="badgedialog_title_gold">Gold Store</string>
+  <string name="badgedialog_message_gold">This is gold store. This badge is unlocked when a store has reached:</string>
+  <string name="badgedialog_message_gold_1">800 apps</string>
+  <string name="badgedialog_message_gold_2">100 000 downloads</string>
+  <string name="badgedialog_message_gold_3">10 000 followers</string>
+  <string name="badgedialog_message_gold_4">7 500 reviews</string>
+
+
+  <string name="badgedialog_title_platinum">Platinum Store</string>
+  <string name="badgedialog_message_platinum">This is platinum store. This badge is unlocked when a store has reached:</string>
+  <string name="badgedialog_message_platinum_1">2 000 apps</string>
+  <string name="badgedialog_message_platinum_2">5 000 000 downloads</string>
+  <string name="badgedialog_message_platinum_3">50 000 followers</string>
+  <string name="badgedialog_message_platinum_4">25 000 reviews</string>
+
+
+</resources>

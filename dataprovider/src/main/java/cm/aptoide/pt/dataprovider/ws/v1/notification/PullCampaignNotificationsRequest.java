@@ -3,11 +3,14 @@
  * Modified on 21/07/2016.
  */
 
-package cm.aptoide.pt.dataprovider.ws.notifications;
+package cm.aptoide.pt.dataprovider.ws.v1.notification;
 
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.text.TextUtils;
+import cm.aptoide.pt.dataprovider.model.v1.GetPullNotificationsResponse;
+import cm.aptoide.pt.dataprovider.ws.v1.PnpV1WebService;
+import cm.aptoide.pt.dataprovider.ws.v1.Service;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.HashMap;
@@ -17,19 +20,15 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 
-/**
- * Created by trinkes on 7/13/16.
- */
 public class PullCampaignNotificationsRequest
-    extends Notifications<List<GetPullNotificationsResponse>> {
+    extends PnpV1WebService<List<GetPullNotificationsResponse>> {
 
   private final Map<String, String> options;
   private final String id;
 
   protected PullCampaignNotificationsRequest(String id, Map<String, String> options,
-      OkHttpClient httpClient, Converter.Factory converterFactory,
-      SharedPreferences sharedPreferences) {
-    super(httpClient, converterFactory, sharedPreferences);
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
+    super(httpClient, converterFactory);
     this.options = options;
     this.id = id;
   }
@@ -52,7 +51,7 @@ public class PullCampaignNotificationsRequest
     }
 
     return new PullCampaignNotificationsRequest(aptoideClientUuid, options, httpClient,
-        converterFactory, sharedPreferences);
+        converterFactory);
   }
 
   @Override
