@@ -74,9 +74,9 @@ public class HomeFragment extends StoreFragment {
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
     Bundle args = new Bundle();
-    args.putString(BundleCons.STORE_NAME, storeName);
-    args.putSerializable(BundleCons.STORE_CONTEXT, storeContext);
-    args.putSerializable(BundleCons.STORE_THEME, storeTheme);
+    args.putString(BundleKeys.STORE_NAME.name(), storeName);
+    args.putSerializable(BundleKeys.STORE_CONTEXT.name(), storeContext);
+    args.putSerializable(BundleKeys.STORE_THEME.name(), storeTheme);
     HomeFragment fragment = new HomeFragment();
     fragment.setArguments(args);
     return fragment;
@@ -392,5 +392,9 @@ public class HomeFragment extends StoreFragment {
     drawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
 
     setHasOptionsMenu(true);
+  }
+
+  private enum BundleKeys {
+    STORE_NAME, STORE_CONTEXT, STORE_THEME
   }
 }

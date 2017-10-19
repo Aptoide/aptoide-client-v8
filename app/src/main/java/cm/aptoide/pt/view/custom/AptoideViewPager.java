@@ -19,6 +19,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 @Deprecated public class AptoideViewPager extends ViewPager {
 
   private boolean enabled = true;
+  private boolean trackingEnabled = true;
 
   public AptoideViewPager(Context context) {
     super(context);
@@ -33,26 +34,27 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
     addOnPageChangeListener(new SimpleOnPageChangeListener() {
       @Override public void onPageSelected(int position) {
         super.onPageSelected(position);
+        if (trackingEnabled) {
+          if (!(getAdapter() instanceof NavigationTrackerPagerAdapterHelper)) {
+            throw new RuntimeException(getAdapter().getClass()
+                .getSimpleName()
+                + " has to implement "
+                + NavigationTrackerPagerAdapterHelper.class.getSimpleName());
+          }
+          if (position != 0) {
+            final NavigationTrackerPagerAdapterHelper adapter =
+                (NavigationTrackerPagerAdapterHelper) getAdapter();
 
-        if (!(getAdapter() instanceof NavigationTrackerPagerAdapterHelper)) {
-          throw new RuntimeException(getAdapter().getClass()
-              .getSimpleName()
-              + " has to implement "
-              + NavigationTrackerPagerAdapterHelper.class.getSimpleName());
-        }
-        if (position != 0) {
-          final NavigationTrackerPagerAdapterHelper adapter =
-              (NavigationTrackerPagerAdapterHelper) getAdapter();
+            String currentView = adapter.getItemName(position);
+            String tag = adapter.getItemTag(position);
+            StoreContext storeContext = adapter.getItemStore();
 
-          String currentView = adapter.getItemName(position);
-          String tag = adapter.getItemTag(position);
-          StoreContext storeContext = adapter.getItemStore();
+            ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker()
+                .registerScreen(ScreenTagHistory.Builder.build(currentView, tag, storeContext));
 
-          ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker()
-              .registerScreen(ScreenTagHistory.Builder.build(currentView, tag, storeContext));
-
-          ((AptoideApplication) getContext().getApplicationContext()).getPageViewsAnalytics()
-              .sendPageViewedEvent();
+            ((AptoideApplication) getContext().getApplicationContext()).getPageViewsAnalytics()
+                .sendPageViewedEvent();
+          }
         }
       }
     });
@@ -76,5 +78,9 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 
   public void setPagingEnabled(boolean enabled) {
     this.enabled = enabled;
+  }
+
+  public void setTrackingEnabled(boolean trackingEnabled) {
+    this.trackingEnabled = trackingEnabled;
   }
 }

@@ -15,7 +15,6 @@ public class NotificationCenter {
 
   public static final int MAX_NUMBER_NOTIFICATIONS_SAVED = 50;
   private final CrashReport crashReport;
-  private NotificationHandler notificationHandler;
   private NotificationSyncScheduler notificationSyncScheduler;
   private SystemNotificationShower notificationShower;
   private NotificationPolicyFactory notificationPolicyFactory;
@@ -24,13 +23,11 @@ public class NotificationCenter {
   private NotificationProvider notificationProvider;
   private AptoideAccountManager accountManager;
 
-  public NotificationCenter(NotificationHandler notificationHandler,
-      NotificationProvider notificationProvider,
+  public NotificationCenter(NotificationProvider notificationProvider,
       NotificationSyncScheduler notificationSyncScheduler,
       SystemNotificationShower notificationShower, CrashReport crashReport,
       NotificationPolicyFactory notificationPolicyFactory,
       NotificationsCleaner notificationsCleaner, AptoideAccountManager accountManager) {
-    this.notificationHandler = notificationHandler;
     this.notificationSyncScheduler = notificationSyncScheduler;
     this.notificationShower = notificationShower;
     this.notificationProvider = notificationProvider;
@@ -64,7 +61,13 @@ public class NotificationCenter {
   }
 
   private Observable<AptoideNotification> getNewNotifications() {
-    return notificationHandler.getHandlerNotifications()
+    return notificationProvider.getAptoideNotifications()
+        .flatMapIterable(notifications -> notifications)
+        .filter(notification -> !notification.isProcessed())
+        .doOnNext(notification -> {
+          notification.setProcessed(true);
+          notificationProvider.save(notification);
+        })
         .flatMap(aptideNotification -> notificationPolicyFactory.getPolicy(aptideNotification)
             .shouldShow()
             .flatMapObservable(shouldShow -> {

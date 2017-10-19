@@ -47,6 +47,8 @@ import rx.functions.Action1;
 
 public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStores> {
 
+  private static final String USER_NOT_LOGGED_ERROR = "AUTH-5";
+
   private AptoideAccountManager accountManager;
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private StoreCredentialsProvider storeCredentialsProvider;
@@ -96,7 +98,7 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
     return (throwable) -> {
       getRecyclerView().clearOnScrollListeners();
       LinkedList<String> errorsList = new LinkedList<>();
-      errorsList.add(WSWidgetsUtils.USER_NOT_LOGGED_ERROR);
+      errorsList.add(USER_NOT_LOGGED_ERROR);
       if (WSWidgetsUtils.shouldAddObjectView(errorsList, throwable)) {
         DisplayablesFactory.loadLocalSubscribedStores(storeRepository)
             .compose(bindUntilEvent(LifecycleEvent.DESTROY))
