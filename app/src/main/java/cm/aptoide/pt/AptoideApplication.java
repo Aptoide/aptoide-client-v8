@@ -1112,7 +1112,7 @@ public abstract class AptoideApplication extends Application {
       ApplicationPreferences appPreferences = getApplicationPreferences();
 
       BaseRequestWithStore.StoreCredentials defaultStoreCredentials =
-          storeCredentials.get(appPreferences.getDefaultStore());
+          storeCredentials.get(appPreferences.getDefaultStoreName());
 
       return generateAptoideUuid().andThen(proxy.addDefaultStore(
           GetStoreMetaRequest.of(defaultStoreCredentials, getAccountSettingsBodyInterceptorPoolV7(),

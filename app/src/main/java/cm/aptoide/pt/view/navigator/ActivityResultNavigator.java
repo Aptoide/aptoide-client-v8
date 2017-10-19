@@ -155,8 +155,8 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
           new AccountNavigator(getFragmentNavigator(), application.getAccountManager(),
               getActivityNavigator(), LoginManager.getInstance(),
               application.getFacebookCallbackManager(), application.getGoogleSignInClient(),
-              application.getFacebookLoginResultRelay(), appPreferences.getDefaultStore(),
-              appPreferences.getDefaultTheme(), "http://m.aptoide.com/account/password-recovery");
+              application.getFacebookLoginResultRelay(), appPreferences.getDefaultStoreName(),
+              appPreferences.getDefaultThemeName(), "http://m.aptoide.com/account/password-recovery");
     }
     return accountNavigator;
   }

@@ -5,7 +5,7 @@ public interface ApplicationPreferences {
 
   boolean hasMultiStoreSearch();
 
-  String getDefaultStore();
+  String getDefaultStoreName();
 
   String getMarketName();
 
@@ -21,7 +21,7 @@ public interface ApplicationPreferences {
 
   String getExtraId();
 
-  String getDefaultTheme();
+  String getDefaultThemeName();
 
   boolean isCreateStoreUserPrivacyEnabled();
 }

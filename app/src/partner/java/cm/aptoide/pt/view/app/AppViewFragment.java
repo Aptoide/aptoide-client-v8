@@ -333,7 +333,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     appPreferences = application.getApplicationPreferences();
-    defaultTheme = appPreferences.getDefaultTheme();
+    defaultTheme = appPreferences.getDefaultThemeName();
     marketName = appPreferences.getMarketName();
     billingIdResolver = application.getBillingIdResolver();
     adMapper = new MinimalAdMapper();
@@ -575,10 +575,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onCreateOptionsMenu(menu, inflater);
     this.menu = menu;
     inflater.inflate(R.menu.menu_appview_fragment, menu);
-    final String defaultStore = appPreferences.getDefaultStore();
+    final String defaultStore = appPreferences.getDefaultStoreName();
     SearchBuilder searchBuilder =
         new SearchBuilder(menu.findItem(R.id.action_search), getActivity(),
-            new SearchNavigator(getFragmentNavigator(), appPreferences));
+            new SearchNavigator(getFragmentNavigator(), defaultStore));
     searchBuilder.validateAndAttachSearch();
     uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
   }

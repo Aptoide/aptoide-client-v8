@@ -114,8 +114,8 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
 
     final ApplicationPreferences appPreferences =
         ((AptoideApplication) getContext().getApplicationContext()).getApplicationPreferences();
-    navigator = new ManageUserNavigator(getFragmentNavigator(), appPreferences.getDefaultStore(),
-        appPreferences.getDefaultTheme());
+    navigator = new ManageUserNavigator(getFragmentNavigator(), appPreferences.getDefaultStoreName(),
+        appPreferences.getDefaultThemeName());
     fileProviderAuthority = BuildConfig.APPLICATION_ID + ".provider";
     photoFileGenerator = new PhotoFileGenerator(getActivity(),
         getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileProviderAuthority);

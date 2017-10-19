@@ -81,7 +81,7 @@ public class PartnersLaunchView extends ActivityView {
    */
   @Override public View onCreateView(View parent, String name, Context context,
       AttributeSet attrs) {
-    String storeTheme = applicationPreferences.getDefaultTheme();
+    String storeTheme = applicationPreferences.getDefaultThemeName();
     if (storeTheme != null) {
       ThemeUtils.setStoreTheme(this, storeTheme);
       ThemeUtils.setStatusBarThemeColor(this, StoreTheme.get(storeTheme));

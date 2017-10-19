@@ -54,9 +54,9 @@ public abstract class UIComponentFragment extends PermissionServiceFragment impl
       @Nullable Bundle savedInstanceState) {
     final ApplicationPreferences appPreferences =
         ((AptoideApplication) getContext().getApplicationContext()).getApplicationPreferences();
-    ThemeUtils.setStoreTheme(getActivity(), appPreferences.getDefaultTheme());
+    ThemeUtils.setStoreTheme(getActivity(), appPreferences.getDefaultThemeName());
     ThemeUtils.setStatusBarThemeColor(getActivity(),
-        StoreTheme.get(appPreferences.getDefaultTheme()));
+        StoreTheme.get(appPreferences.getDefaultThemeName()));
     super.onCreateView(inflater, container, savedInstanceState);
     return inflater.inflate(getContentViewId(), container, false);
   }

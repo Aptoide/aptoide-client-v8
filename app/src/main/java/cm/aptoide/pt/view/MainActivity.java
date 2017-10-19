@@ -89,7 +89,7 @@ public class MainActivity extends TabNavigatorActivity
             AccessorFactory.getAccessorFor(application.getDatabase(), Store.class), httpClient,
             converterFactory, application.getTokenInvalidator(), sharedPreferences);
 
-    final String defaultTheme = appPreferences.getDefaultTheme();
+    final String defaultTheme = appPreferences.getDefaultThemeName();
     final DeepLinkManager deepLinkManager =
         new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator, this, this,
             sharedPreferences,
@@ -111,7 +111,7 @@ public class MainActivity extends TabNavigatorActivity
         new MainPresenter(this, installManager, application.getRootInstallationRetryHandler(),
             CrashReport.getInstance(), apkFy, autoUpdate, new ContentPuller(this),
             notificationSyncScheduler, installCompletedNotifier, sharedPreferences,
-            securePreferences, fragmentNavigator, deepLinkManager, appPreferences.getDefaultStore(),
+            securePreferences, fragmentNavigator, deepLinkManager, appPreferences.getDefaultStoreName(),
             defaultTheme), savedInstanceState);
   }
 

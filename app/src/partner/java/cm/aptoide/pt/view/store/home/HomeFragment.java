@@ -119,7 +119,7 @@ public class HomeFragment extends StoreFragment {
         (AptoideApplication) getContext().getApplicationContext();
     final ApplicationPreferences appPreferences = application.getApplicationPreferences();
     baseHeaderView.setBackgroundColor(ContextCompat.getColor(getContext(),
-        StoreTheme.get(appPreferences.getDefaultTheme())
+        StoreTheme.get(appPreferences.getDefaultThemeName())
             .getPrimaryColor()));
 
     accountManager.accountStatus()
@@ -237,7 +237,7 @@ public class HomeFragment extends StoreFragment {
     final ApplicationPreferences appPreferences = application.getApplicationPreferences();
     final SearchBuilder searchBuilder =
         new SearchBuilder(menu.findItem(R.id.action_search), getActivity(),
-            new SearchNavigator(getFragmentNavigator(), appPreferences));
+            new SearchNavigator(getFragmentNavigator(), appPreferences.getDefaultStoreName()));
     searchBuilder.validateAndAttachSearch();
     menu.removeItem(R.id.menu_share);
   }

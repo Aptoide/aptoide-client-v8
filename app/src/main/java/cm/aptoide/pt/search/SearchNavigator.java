@@ -1,7 +1,6 @@
 package cm.aptoide.pt.search;
 
 import android.support.v4.app.Fragment;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.view.SearchResultFragment;
 import cm.aptoide.pt.view.app.AppViewFragment;
@@ -13,29 +12,23 @@ public class SearchNavigator {
 
   private final FragmentNavigator navigator;
   private final String storeName;
-  private final ApplicationPreferences applicationPreferences;
 
-  public SearchNavigator(FragmentNavigator navigator,
-      ApplicationPreferences applicationPreferences) {
-    this(navigator, "", applicationPreferences);
+  public SearchNavigator(FragmentNavigator navigator) {
+    this(navigator, "");
   }
 
-  public SearchNavigator(FragmentNavigator navigator, String storeName,
-      ApplicationPreferences applicationPreferences) {
+  public SearchNavigator(FragmentNavigator navigator, String storeName) {
     this.navigator = navigator;
     this.storeName = storeName;
-    this.applicationPreferences = applicationPreferences;
   }
 
   public void goToOtherVersions(String name, String icon, String packageName) {
-    final Fragment fragment;
-    if (applicationPreferences.hasMultiStoreSearch()) {
-      fragment = OtherVersionsFragment.newInstance(name, icon, packageName);
-    } else {
-      fragment = OtherVersionsFragment.newInstance(name, icon, packageName,
-          applicationPreferences.getDefaultStore());
-    }
-    navigator.navigateTo(fragment, true);
+    navigator.navigateTo(OtherVersionsFragment.newInstance(name, icon, packageName), true);
+  }
+
+  public void goToOtherVersions(String name, String icon, String packageName, String defaultStore) {
+    navigator.navigateTo(OtherVersionsFragment.newInstance(name, icon, packageName, defaultStore),
+        true);
   }
 
   public void navigate(String query) {

@@ -51,7 +51,7 @@ public class TimeLineLikesFragment extends TimeLineFollowFragment {
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     final ApplicationPreferences appPreferences = application.getApplicationPreferences();
-    defaultTheme = appPreferences.getDefaultTheme();
+    defaultTheme = appPreferences.getDefaultThemeName();
     baseBodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();
     httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();

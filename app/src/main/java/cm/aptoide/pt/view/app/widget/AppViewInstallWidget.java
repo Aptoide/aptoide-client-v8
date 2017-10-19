@@ -720,7 +720,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
   private AppViewNavigator getAppViewNavigator() {
     return new AppViewNavigator(getFragmentNavigator(), getActivityNavigator(),
-        appPreferences.hasMultiStoreSearch(), appPreferences.getDefaultStore());
+        appPreferences.hasMultiStoreSearch(), appPreferences.getDefaultStoreName());
   }
 
   private void findTrustedVersion(GetAppMeta.App app, ListAppVersions appVersions) {

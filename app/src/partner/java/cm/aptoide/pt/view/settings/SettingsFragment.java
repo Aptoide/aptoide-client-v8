@@ -168,7 +168,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     final ApplicationPreferences appPreferences = application.getApplicationPreferences();
-    final String storeTheme = appPreferences.getDefaultTheme();
+    final String storeTheme = appPreferences.getDefaultThemeName();
     if (storeTheme != null) {
       ThemeUtils.setStoreTheme(getActivity(), storeTheme);
       ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(storeTheme));

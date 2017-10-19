@@ -215,12 +215,17 @@ public class SearchResultPresenter implements Presenter {
           final String packageName = data.getPackageName();
           final String storeName = data.getStoreName();
 
-          final String themeName = appPreferences.getDefaultTheme();
+          final String themeName = appPreferences.getDefaultThemeName();
 
           return view.showPopup(hasVersions, pair.second)
               .doOnNext(optionId -> {
                 if (optionId == R.id.versions) {
-                  navigator.goToOtherVersions(appName, appIcon, packageName);
+                  if (appPreferences.hasMultiStoreSearch()) {
+                    navigator.goToOtherVersions(appName, appIcon, packageName);
+                  } else {
+                    navigator.goToOtherVersions(appName, appIcon, packageName,
+                        appPreferences.getDefaultStoreName());
+                  }
                 } else if (optionId == R.id.go_to_store) {
                   navigator.goToStoreFragment(storeName, themeName);
                 }
@@ -248,7 +253,7 @@ public class SearchResultPresenter implements Presenter {
     final String packageName = searchApp.getPackageName();
     final long appId = searchApp.getAppId();
     final String storeName = searchApp.getStoreName();
-    final String themeName = appPreferences.getDefaultTheme();
+    final String themeName = appPreferences.getDefaultThemeName();
     analytics.searchAppClick(view.getViewModel()
         .getCurrentQuery(), packageName);
     navigator.goToAppView(appId, packageName, themeName, storeName);
@@ -278,8 +283,9 @@ public class SearchResultPresenter implements Presenter {
 
   private Observable<List<SearchAppResult>> loadData(String query, String storeName,
       boolean onlyTrustedApps, int offset) {
-    if (!appPreferences.hasMultiStoreSearch() || (storeName != null && !storeName.trim()
-        .equals(""))) {
+
+    if (storeName != null && !storeName.trim()
+        .equals("")) {
       return Observable.fromCallable(() -> {
         view.setViewWithStoreNameAsSingleTab();
         return null;

@@ -5,7 +5,7 @@ import cm.aptoide.pt.remotebootconfig.datamodel.BootConfig;
 
 class PartnerApplicationPreferences implements ApplicationPreferences {
 
-  private final BootConfig bootConfig;
+  private BootConfig bootConfig;
 
   PartnerApplicationPreferences(BootConfig bootConfig) {
     this.bootConfig = bootConfig;
@@ -15,9 +15,13 @@ class PartnerApplicationPreferences implements ApplicationPreferences {
     return bootConfig;
   }
 
+  public void setBootConfig(BootConfig bootConfig) {
+    this.bootConfig = bootConfig;
+  }
+
   @Override public String getCachePath() {
     return Environment.getExternalStorageDirectory()
-        .getAbsolutePath() + "/." + getDefaultStore() + "/";
+        .getAbsolutePath() + "/." + getDefaultStoreName() + "/";
   }
 
   @Override public boolean hasMultiStoreSearch() {
@@ -28,7 +32,7 @@ class PartnerApplicationPreferences implements ApplicationPreferences {
         .isSearch();
   }
 
-  @Override public String getDefaultStore() {
+  @Override public String getDefaultStoreName() {
     return getBootConfig().getPartner()
         .getStore()
         .getName();
@@ -55,7 +59,7 @@ class PartnerApplicationPreferences implements ApplicationPreferences {
   }
 
   @Override public String getAutoUpdateUrl() {
-    return "http://imgs.aptoide.com/latest_version_" + getDefaultStore() + ".xml";
+    return "http://imgs.aptoide.com/latest_version_" + getDefaultStoreName() + ".xml";
   }
 
   @Override public String getPartnerId() {
@@ -68,7 +72,7 @@ class PartnerApplicationPreferences implements ApplicationPreferences {
         .getUid());
   }
 
-  @Override public String getDefaultTheme() {
+  @Override public String getDefaultThemeName() {
     return getBootConfig().getPartner()
         .getAppearance()
         .getTheme();

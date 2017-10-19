@@ -127,8 +127,8 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     final ApplicationPreferences appPreferences =
         ((AptoideApplication) getContext().getApplicationContext()).getApplicationPreferences();
     manageStoreNavigator =
-        new ManageStoreNavigator(getFragmentNavigator(), appPreferences.getDefaultStore(),
-            appPreferences.getDefaultTheme());
+        new ManageStoreNavigator(getFragmentNavigator(), appPreferences.getDefaultStoreName(),
+            appPreferences.getDefaultThemeName());
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

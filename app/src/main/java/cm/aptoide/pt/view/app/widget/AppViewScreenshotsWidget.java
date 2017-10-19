@@ -78,6 +78,6 @@ public class AppViewScreenshotsWidget extends Widget<AppViewScreenshotsDisplayab
 
   private AppViewNavigator getAppViewNavigator() {
     return new AppViewNavigator(getFragmentNavigator(), getActivityNavigator(),
-        appPreferences.hasMultiStoreSearch(), appPreferences.getDefaultStore());
+        appPreferences.hasMultiStoreSearch(), appPreferences.getDefaultStoreName());
   }
 }

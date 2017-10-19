@@ -96,7 +96,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
 
       final String storeName = displayable.getStoreName();
       final ApplicationPreferences appPreferences = application.getApplicationPreferences();
-      final String storeTheme = appPreferences.getDefaultTheme();
+      final String storeTheme = appPreferences.getDefaultThemeName();
 
       final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor,
           new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(

@@ -191,10 +191,10 @@ public abstract class FragmentView extends LeakFragment implements View {
   }
 
   protected String getDefaultStore() {
-    return appPreferences.getDefaultStore();
+    return appPreferences.getDefaultStoreName();
   }
 
   protected String getDefaultTheme() {
-    return appPreferences.getDefaultTheme();
+    return appPreferences.getDefaultThemeName();
   }
 }

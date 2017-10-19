@@ -43,8 +43,10 @@ import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
+import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.view.BackButtonFragment;
+import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
@@ -394,31 +396,6 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     return super.getDefaultTheme();
   }
 
-  /*
-  @NonNull private SearchNavigator getSearchNavigator() {
-    final SearchNavigator searchNavigator;
-
-    if (viewModel.getStoreName() != null && viewModel.getStoreName().length() > 0) {
-      searchNavigator =
-          getSearchNavigator(getFragmentNavigator(), viewModel.getStoreName(), defaultStore);
-    } else {
-      searchNavigator = getSearchNavigator(getFragmentNavigator(), defaultStore);
-    }
-    return searchNavigator;
-  }
-
-  @NonNull
-  private SearchNavigator getSearchNavigator(FragmentNavigator fragmentNavigator, String storeName,
-      String defaultStore) {
-    return new SearchNavigator(fragmentNavigator, storeName, defaultStore);
-  }
-
-  @NonNull private SearchNavigator getSearchNavigator(FragmentNavigator fragmentNavigator,
-      String defaultStore) {
-    return new SearchNavigator(fragmentNavigator, defaultStore);
-  }
-  */
-
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
@@ -458,7 +435,8 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
             appPreferences);
 
     mainThreadScheduler = AndroidSchedulers.mainThread();
-    searchNavigator = new SearchNavigator(getFragmentNavigator(), appPreferences);
+    searchNavigator =
+        new SearchNavigator(getFragmentNavigator(), appPreferences.getDefaultStoreName());
 
     onItemViewClickRelay = PublishRelay.create();
     onOpenPopupMenuClickRelay = PublishRelay.create();
@@ -488,6 +466,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     attachFollowedStoresResultListDependencies();
     attachAllStoresResultListDependencies();
     attachToolbar();
+    setupTheme();
     attachPresenter(new SearchResultPresenter(this, searchAnalytics, searchNavigator, crashReport,
         mainThreadScheduler, searchManager, onAdClickRelay, onItemViewClickRelay,
         onOpenPopupMenuClickRelay, appPreferences), null);
@@ -496,6 +475,19 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName());
+  }
+
+  private void setupTheme() {
+    final String defaultTheme = appPreferences.getDefaultThemeName();
+    if (defaultTheme != null && defaultTheme.length() > 0) {
+      ThemeUtils.setStoreTheme(getActivity(), defaultTheme);
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(defaultTheme));
+    }
+  }
+
+  @Override public void onDestroyView() {
+    setupTheme();
+    super.onDestroyView();
   }
 
   @NonNull private DividerItemDecoration getDefaultItemDecoration() {
