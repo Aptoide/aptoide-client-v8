@@ -10,7 +10,8 @@ public class LocalPersistenceAdultContent implements AdultContent {
   private final Preferences preferences;
   private final SecurePreferences securePreferences;
 
-  public LocalPersistenceAdultContent(Preferences preferences, SecurePreferences securePreferences) {
+  public LocalPersistenceAdultContent(Preferences preferences,
+      SecurePreferences securePreferences) {
     this.preferences = preferences;
     this.securePreferences = securePreferences;
   }

@@ -21,7 +21,7 @@ import org.json.JSONObject;
 public abstract class SearchRecentSuggestionsProviderWrapper
     extends SearchRecentSuggestionsProvider {
 
-  private static final String TAG = "StoreWebsockets";
+  private static final String TAG = SearchRecentSuggestionsProviderWrapper.class.getName();
 
   @Override public boolean onCreate() {
 
@@ -31,12 +31,12 @@ public abstract class SearchRecentSuggestionsProviderWrapper
 
   @Override public Cursor query(final Uri uri, String[] projection, String selection,
       final String[] selectionArgs, String sortOrder) {
-    Log.d(TAG, "search-query: " + selectionArgs[0]);
+    Log.v(TAG, String.format("Search query: %s", selectionArgs[0]));
 
     Cursor c = super.query(uri, projection, selection, selectionArgs, sortOrder);
 
     if (c != null) {
-      BlockingQueue<MatrixCursor> arrayBlockingQueue = new ArrayBlockingQueue<MatrixCursor>(1);
+      BlockingQueue<MatrixCursor> arrayBlockingQueue = new ArrayBlockingQueue<>(1);
       WebSocketManager.setBlockingQueue(arrayBlockingQueue);
 
       MatrixCursor matrixCursor = null;

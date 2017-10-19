@@ -26,7 +26,6 @@ import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
-import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
@@ -46,6 +45,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.notification.NotificationAnalytics;
+import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.view.SearchBuilder;
 import cm.aptoide.pt.social.view.TimelineFragment;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
@@ -53,7 +54,6 @@ import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
-import cm.aptoide.pt.util.SearchUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.custom.AptoideViewPager;
@@ -73,8 +73,6 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by neuro on 06-05-2016.
  */
 public class StoreFragment extends BasePagerToolbarFragment {
-
-  private static final String TAG = StoreFragment.class.getSimpleName();
 
   private final int PRIVATE_STORE_REQUEST_CODE = 20;
   protected PagerSlidingTabStrip pagerSlidingTabStrip;
@@ -110,7 +108,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private String iconPath;
   private String marketName;
   private String defaultTheme;
-  private PageViewsAnalytics pageViewAnalytics;
+  private Runnable registerViewpagerCurrentItem;
 
   public static StoreFragment newInstance(long userId, String storeTheme, OpenType openType) {
     return newInstance(userId, storeTheme, null, openType);
@@ -181,9 +179,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
     storeAnalytics = new StoreAnalytics(AppEventsLogger.newLogger(getContext()), analytics);
     marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);
-    pageViewAnalytics =
-        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), aptoideNavigationTracker);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -246,6 +241,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
       pagerSlidingTabStrip.setOnTabReselectedListener(null);
       pagerSlidingTabStrip = null;
     }
+    viewPager.removeCallbacks(registerViewpagerCurrentItem);
     super.onDestroyView();
   }
 
@@ -300,11 +296,9 @@ public class StoreFragment extends BasePagerToolbarFragment {
       }
     });
     viewPager.addOnPageChangeListener(pageChangeListener);
-    viewPager.post(new Runnable() {
-      @Override public void run() {
-        pageChangeListener.onPageSelected(viewPager.getCurrentItem());
-      }
-    });
+    registerViewpagerCurrentItem =
+        () -> pageChangeListener.onPageSelected(viewPager.getCurrentItem());
+    viewPager.post(registerViewpagerCurrentItem);
     changeToTab(defaultTab);
     finishLoading();
   }
@@ -340,8 +334,11 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_search, menu);
-
-    setupSearch(menu);
+    String defaultStore = getDefaultStore();
+    SearchBuilder searchBuilder =
+        new SearchBuilder(menu.findItem(R.id.action_search), getActivity(),
+            new SearchNavigator(getFragmentNavigator(), storeName, defaultStore));
+    searchBuilder.validateAndAttachSearch();
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -354,10 +351,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
     }
 
     return super.onOptionsItemSelected(item);
-  }
-
-  protected void setupSearch(Menu menu) {
-    SearchUtils.setupInsideStoreSearchView(menu, getActivity(), getFragmentNavigator(), storeName);
   }
 
   /**

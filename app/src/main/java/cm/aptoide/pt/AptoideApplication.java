@@ -1206,7 +1206,7 @@ public abstract class AptoideApplication extends Application {
     return BuildConfig.APPLICATION_ID;
   }
 
-  public AdultContent getAdultContent(){
+  public AdultContent getAdultContent() {
     return new RemotePersistenceAdultContent(getLocalAdultContent(), getAccountManager());
   }
 
