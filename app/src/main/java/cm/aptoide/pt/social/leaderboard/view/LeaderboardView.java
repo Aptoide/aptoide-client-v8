@@ -15,5 +15,6 @@ public interface LeaderboardView extends View {
   void showLeaderboardEntries(List<List<LeaderboardEntry>> entries);
   Observable<LeaderboardEntry> postClicked();
   Observable<String> spinnerChoice();
+  void waitForData();
 }
 

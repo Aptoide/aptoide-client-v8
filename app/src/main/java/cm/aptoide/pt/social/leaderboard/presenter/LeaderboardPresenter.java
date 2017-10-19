@@ -43,6 +43,7 @@ public class LeaderboardPresenter implements Presenter {
   @Override public void present() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .doOnNext(__ -> view.waitForData())
         .flatMap(__-> leaderboard.getLeaderboardEntries("global"))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(leaderboardEntries->view.showLeaderboardEntries(leaderboardEntries))
@@ -54,6 +55,7 @@ public class LeaderboardPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.spinnerChoice())
+        .doOnNext(choice ->view.waitForData())
         .flatMap(choice-> leaderboard.getLeaderboardEntries(choice))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(leaderboardEntries->view.showLeaderboardEntries(leaderboardEntries))

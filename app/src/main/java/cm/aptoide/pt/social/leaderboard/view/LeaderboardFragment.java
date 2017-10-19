@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
@@ -66,6 +67,10 @@ public class LeaderboardFragment extends FragmentView implements LeaderboardView
   private PublishSubject<String> spinnerPublishSubject;
   private LeaderboardPresenter presenter;
   private Spinner leaderboardSpinner;
+  private View listHeader;
+
+  private ProgressBar mainProgress;
+  private ProgressBar headerProgress;
 
   private ImageView firstImage;
   private TextView firstName;
@@ -123,6 +128,8 @@ public class LeaderboardFragment extends FragmentView implements LeaderboardView
   }
 
   @Override public void showLeaderboardEntries(List<List<LeaderboardEntry>> entries) {
+    showElements();
+
     userName.setText(entries.get(0).get(0).getName());
     userScore.setText(String.valueOf(entries.get(0).get(0).getScore()));
     if(entries.get(0).get(0).getAvatar()!=null)
@@ -192,6 +199,10 @@ public class LeaderboardFragment extends FragmentView implements LeaderboardView
     thirdName = (TextView) view.findViewById(R.id.user_3_name);
     thirdScore = (TextView) view.findViewById(R.id.user_3_score);
 
+    listHeader = (View) view.findViewById(R.id.top_element);
+
+    mainProgress = (ProgressBar) view.findViewById(R.id.main_progress);
+    headerProgress = (ProgressBar) view.findViewById(R.id.header_progress);
 
     list = (RecyclerView) view.findViewById(R.id.fragment_leaderboard_entries);
     list.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -245,5 +256,26 @@ public class LeaderboardFragment extends FragmentView implements LeaderboardView
 
   public Observable<String> spinnerChoice(){
     return spinnerPublishSubject;
+  }
+
+  public void waitForData(){
+    listHeader.setVisibility(View.GONE);
+    list.setVisibility(View.GONE);
+    userIcon.setVisibility(View.GONE);
+    userName.setVisibility(View.GONE);
+    userScore.setVisibility(View.GONE);
+    mainProgress.setVisibility(View.VISIBLE);
+    headerProgress.setVisibility(View.VISIBLE);
+  }
+
+  public void showElements(){
+    listHeader.setVisibility(View.VISIBLE);
+    list.setVisibility(View.VISIBLE);
+    userIcon.setVisibility(View.VISIBLE);
+    userName.setVisibility(View.VISIBLE);
+    userScore.setVisibility(View.VISIBLE);
+    mainProgress.setVisibility(View.GONE);
+    headerProgress.setVisibility(View.GONE);
+
   }
 }
