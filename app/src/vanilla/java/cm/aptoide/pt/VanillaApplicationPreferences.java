@@ -10,10 +10,10 @@ class VanillaApplicationPreferences implements ApplicationPreferences {
   }
 
   @Override public boolean hasMultiStoreSearch() {
-    return false;
+    return true;
   }
 
-  @Override public String getDefaultStore() {
+  @Override public String getDefaultStoreName() {
     return "apps";
   }
 
@@ -45,7 +45,7 @@ class VanillaApplicationPreferences implements ApplicationPreferences {
     return null;
   }
 
-  @Override public String getDefaultTheme() {
+  @Override public String getDefaultThemeName() {
     return "default";
   }
 

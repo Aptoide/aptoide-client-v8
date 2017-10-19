@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DrawerAnalytics;
 import cm.aptoide.pt.PageViewsAnalytics;
@@ -80,6 +81,7 @@ public class HomeFragment extends StoreFragment {
   private DrawerAnalytics drawerAnalytics;
   private ClickHandler backClickHandler;
   private PageViewsAnalytics pageViewsAnalytics;
+  private ApplicationPreferences appPreferences;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -125,9 +127,9 @@ public class HomeFragment extends StoreFragment {
     userUsername = (TextView) baseHeaderView.findViewById(R.id.profile_name_text);
     userAvatarImage = (ImageView) baseHeaderView.findViewById(R.id.profile_image);
 
-    baseHeaderView.setBackgroundColor(ContextCompat.getColor(getContext(), StoreTheme.get(
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme())
-        .getPrimaryColor()));
+    baseHeaderView.setBackgroundColor(ContextCompat.getColor(getContext(),
+        StoreTheme.get(appPreferences.getDefaultThemeName())
+            .getPrimaryColor()));
 
     accountManager.accountStatus()
         .observeOn(AndroidSchedulers.mainThread())
@@ -170,6 +172,9 @@ public class HomeFragment extends StoreFragment {
     pageViewsAnalytics =
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
             Analytics.getInstance(), aptoideNavigationTracker);
+    appPreferences =
+        ((AptoideApplication) getContext().getApplicationContext()).getApplicationPreferences();
+
     setRegisterFragment(false);
   }
 
@@ -246,11 +251,9 @@ public class HomeFragment extends StoreFragment {
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     menu.removeItem(R.id.menu_share);
-    final String defaultStore =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore();
     final SearchBuilder searchBuilder =
         new SearchBuilder(menu.findItem(R.id.action_search), getActivity(),
-            new SearchNavigator(getFragmentNavigator(), defaultStore));
+            new SearchNavigator(getFragmentNavigator()));
     searchBuilder.validateAndAttachSearch();
   }
 

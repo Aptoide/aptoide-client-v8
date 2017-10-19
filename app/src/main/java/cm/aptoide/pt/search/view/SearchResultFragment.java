@@ -435,8 +435,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
             appPreferences);
 
     mainThreadScheduler = AndroidSchedulers.mainThread();
-    searchNavigator =
-        new SearchNavigator(getFragmentNavigator(), appPreferences.getDefaultStoreName());
+    searchNavigator = new SearchNavigator(getFragmentNavigator(), viewModel.getStoreName());
 
     onItemViewClickRelay = PublishRelay.create();
     onOpenPopupMenuClickRelay = PublishRelay.create();

@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.InstallManager;
@@ -172,6 +173,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
   private CrashReport crashReport;
   private AptoideNavigationTracker aptoideNavigationTracker;
+  private ApplicationPreferences appPreferences;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -327,45 +329,38 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     appViewModel = new AppViewModel();
     handleSavedInstance(savedInstanceState);
 
-    this.appViewModel.setDefaultTheme(
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme());
-    this.appViewModel.setMarketName(
-        ((AptoideApplication) getContext().getApplicationContext()).getMarketName());
-    this.appViewModel.setBillingIdResolver(
-        ((AptoideApplication) getContext().getApplicationContext()).getBillingIdResolver());
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    appPreferences = application.getApplicationPreferences();
+    this.appViewModel.setDefaultTheme(appPreferences.getDefaultThemeName());
+    this.appViewModel.setMarketName(appPreferences.getMarketName());
+    this.appViewModel.setBillingIdResolver(application.getBillingIdResolver());
     adMapper = new MinimalAdMapper();
 
-    this.appViewModel.setqManager(
-        ((AptoideApplication) getContext().getApplicationContext()).getQManager());
-    purchaseBundleMapper =
-        ((AptoideApplication) getContext().getApplicationContext()).getPurchaseBundleMapper();
-    final AptoideAccountManager accountManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    this.appViewModel.setqManager(application.getQManager());
+    purchaseBundleMapper = application.getPurchaseBundleMapper();
+    final AptoideAccountManager accountManager = application.getAccountManager();
     accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
 
-    installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
-        InstallerFactory.ROLLBACK);
+    installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
     final BodyInterceptor<BaseBody> bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    billingAnalytics =
-        ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
-    final TokenInvalidator tokenInvalidator =
-        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
-    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+        application.getAccountSettingsBodyInterceptorPoolV7();
+    billingAnalytics = application.getBillingAnalytics();
+    final TokenInvalidator tokenInvalidator = application.getTokenInvalidator();
+    httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     Analytics analytics = Analytics.getInstance();
     timelineAnalytics = new TimelineAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        new NotificationAnalytics(httpClient, analytics), aptoideNavigationTracker);
+        application.getDefaultSharedPreferences(), new NotificationAnalytics(httpClient, analytics),
+        aptoideNavigationTracker);
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
-            timelineAnalytics, tokenInvalidator,
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
-    appRepository = RepositoryFactory.getAppRepository(getContext(),
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
-    adsRepository = ((AptoideApplication) getContext().getApplicationContext()).getAdsRepository();
+            timelineAnalytics, tokenInvalidator, application.getDefaultSharedPreferences());
+    appRepository =
+        RepositoryFactory.getAppRepository(getContext(), application.getDefaultSharedPreferences());
+    adsRepository = application.getAdsRepository();
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
@@ -384,18 +379,16 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     shareAppHelper =
         new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
             spotAndShareAnalytics, timelineAnalytics, installAppRelay,
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-            ((AptoideApplication) getContext().getApplicationContext()).isCreateStoreUserPrivacyEnabled());
+            application.getDefaultSharedPreferences(),
+            appPreferences.isCreateStoreUserPrivacyEnabled());
     downloadFactory = new DownloadFactory(getMarketName());
     appViewAnalytics = new AppViewAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
     storeAnalytics =
         new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
             analytics);
-    notLoggedInShareAnalytics =
-        ((AptoideApplication) getContext().getApplicationContext()).getNotLoggedInShareAnalytics();
-    aptoideNavigationTracker =
-        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker();
+    notLoggedInShareAnalytics = application.getNotLoggedInShareAnalytics();
+    aptoideNavigationTracker = application.getAptoideNavigationTracker();
   }
 
   private void handleSavedInstance(Bundle savedInstanceState) {
@@ -595,8 +588,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onCreateOptionsMenu(menu, inflater);
     this.menu = menu;
     inflater.inflate(R.menu.menu_appview_fragment, menu);
-    final String defaultStore =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore();
+    final String defaultStore = appPreferences.getDefaultStoreName();
     SearchBuilder searchBuilder =
         new SearchBuilder(menu.findItem(R.id.action_search), getActivity(),
             new SearchNavigator(getFragmentNavigator(), defaultStore));
