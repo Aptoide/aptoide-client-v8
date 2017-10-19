@@ -60,7 +60,7 @@ public class SearchManager {
         .map(data -> data.getDataList()
             .getList())
         .flatMapIterable(list -> list)
-        .map(searchApp -> new SearchAppResult(searchApp, appPreferences.hasMultiStoreSearch()))
+        .map(SearchAppResult::new)
         .toList();
   }
 
@@ -73,7 +73,7 @@ public class SearchManager {
         .map(data -> data.getDataList()
             .getList())
         .flatMapIterable(list -> list)
-        .map(searchApp -> new SearchAppResult(searchApp, appPreferences.hasMultiStoreSearch()))
+        .map(SearchAppResult::new)
         .toList();
   }
 
@@ -86,7 +86,7 @@ public class SearchManager {
         .map(data -> data.getDataList()
             .getList())
         .flatMapIterable(list -> list)
-        .map(searchApp -> new SearchAppResult(searchApp, appPreferences.hasMultiStoreSearch()))
+        .map(SearchAppResult::new)
         .toList();
   }
 
