@@ -51,6 +51,7 @@
         android:layout_toRightOf="@id/current_user_icon"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
         style="@style/Aptoide.TextView.Medium.M"
         android:textColor="@color/orange_700"
         android:text="CurrentUser"
