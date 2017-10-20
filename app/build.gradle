@@ -415,7 +415,7 @@ dependencies {
     transitive = true
   }
 
-  fairyCompile 'testfairy:testfairy-android-sdk:1.+@aar'
+  fairyCompile "testfairy:testfairy-android-sdk:${TEST_FAIRY_VERSION}"
 
 }
 
