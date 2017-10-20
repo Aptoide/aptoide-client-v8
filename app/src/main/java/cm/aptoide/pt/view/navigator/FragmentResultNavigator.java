@@ -131,4 +131,17 @@ public class FragmentResultNavigator implements FragmentNavigator {
   @Override public Fragment getFragment() {
     return fragmentManager.findFragmentById(containerId);
   }
+
+  @Override public void navigateToAllowingStateLoss(Fragment fragment, boolean replace) {
+    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction()
+        .setCustomAnimations(enterAnimation, exitAnimation, enterAnimation, exitAnimation);
+
+    if (replace) {
+      fragmentTransaction = fragmentTransaction.replace(containerId, fragment);
+    } else {
+      fragmentTransaction = fragmentTransaction.add(containerId, fragment);
+    }
+
+    fragmentTransaction.commitAllowingStateLoss();
+  }
 }

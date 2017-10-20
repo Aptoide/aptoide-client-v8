@@ -28,4 +28,6 @@ public interface FragmentNavigator {
   Fragment peekLast();
 
   Fragment getFragment();
+
+  void navigateToAllowingStateLoss(Fragment fragment, boolean replace);
 }
