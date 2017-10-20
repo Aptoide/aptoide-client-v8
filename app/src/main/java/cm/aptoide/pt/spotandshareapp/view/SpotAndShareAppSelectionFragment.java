@@ -162,6 +162,11 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
     getFragmentNavigator().navigateToWithoutBackSave(SpotAndShareMainFragment.newInstance(), true);
   }
 
+  @Override public void navigateBackWithStateLoss() {
+    getFragmentNavigator().navigateToAllowingStateLoss(SpotAndShareMainFragment.newInstance(),
+        true);
+  }
+
   @Override public void finish() {
     getActivity().finish();
   }

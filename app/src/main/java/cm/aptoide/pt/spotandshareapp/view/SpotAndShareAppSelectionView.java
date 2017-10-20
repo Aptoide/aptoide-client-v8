@@ -21,4 +21,6 @@ public interface SpotAndShareAppSelectionView extends SpotAndSharePickAppsView {
   void showTimeoutCreateGroupError();
 
   void showGeneralCreateGroupError();
+
+  void navigateBackWithStateLoss();
 }
