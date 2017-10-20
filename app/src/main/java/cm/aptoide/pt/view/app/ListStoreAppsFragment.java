@@ -1,6 +1,7 @@
 package cm.aptoide.pt.view.app;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
@@ -20,6 +22,8 @@ import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.BackButtonFragment;
+import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
+import com.jakewharton.rxrelay.PublishRelay;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Observable;
@@ -33,9 +37,13 @@ import rx.subjects.PublishSubject;
 public class ListStoreAppsFragment extends BackButtonFragment implements ListStoreAppsView {
 
   public static final String STORE_ID = "cm.aptoide.pt.ListStoreAppsFragment.storeId";
+  public static final int LOAD_THRESHOLD = 5;
   private ListStoreAppsAdapter adapter;
   private long storeId;
   private PublishSubject<Application> appClicks;
+  private RecyclerView recyclerView;
+  private GridLayoutManager layoutManager;
+  private ProgressBar startingLoadingLayout;
 
   public static Fragment newInstance(long storeId) {
     Bundle args = new Bundle();
@@ -49,8 +57,39 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
     super.onCreate(savedInstanceState);
     appClicks = PublishSubject.create();
     storeId = getArguments().getLong(STORE_ID);
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+    recyclerView.setVisibility(View.GONE);
+    adapter = new ListStoreAppsAdapter(new ArrayList<>(), appClicks);
+    recyclerView.setAdapter(adapter);
+    int spanSize = getSpanSize(3);
+    layoutManager = new GridLayoutManager(getContext(), spanSize);
+    layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+      @Override public int getSpanSize(int position) {
+        if (adapter.getItem(position) instanceof AppLoading) {
+          return spanSize;
+        }
+        return 1;
+      }
+    });
+    recyclerView.setLayoutManager(layoutManager);
+    startingLoadingLayout = (ProgressBar) view.findViewById(R.id.progress_bar);
+    startingLoadingLayout.setVisibility(View.VISIBLE);
+
+    recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+      @Override public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
+          RecyclerView.State state) {
+        int margin = AptoideUtils.ScreenU.getPixelsForDip(5, getResources());
+        outRect.set(margin, margin, margin, margin);
+      }
+    });
+
     AptoideApplication applicationContext =
         (AptoideApplication) getContext().getApplicationContext();
+    int limit = spanSize * 10;
     attachPresenter(new ListStoreAppsPresenter(this, storeId, AndroidSchedulers.mainThread(),
         new AppCenter(new AppService(new StoreCredentialsProviderImpl(
             AccessorFactory.getAccessorFor(
@@ -58,21 +97,20 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
                     .getApplicationContext()).getDatabase(), Store.class)),
             applicationContext.getBodyInterceptorPoolV7(), applicationContext.getDefaultClient(),
             WebService.getDefaultConverter(), applicationContext.getTokenInvalidator(),
-            applicationContext.getDefaultSharedPreferences())), CrashReport.getInstance(),
-        getFragmentNavigator()), savedInstanceState);
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-    adapter = new ListStoreAppsAdapter(new ArrayList<>(), appClicks);
-    recyclerView.setAdapter(adapter);
-    recyclerView.setLayoutManager(new GridLayoutManager(getContext(), getSpanSize(3)));
+            applicationContext.getDefaultSharedPreferences(), PublishRelay.create(), 0, limit)),
+        CrashReport.getInstance(), getFragmentNavigator()), savedInstanceState);
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName());
+  }
+
+  @Override public void onDestroyView() {
+    recyclerView = null;
+    adapter = null;
+    layoutManager = null;
+    super.onDestroyView();
   }
 
   @Nullable @Override
@@ -81,12 +119,37 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
     return inflater.inflate(R.layout.list_store_apps_fragment_layout, container, false);
   }
 
-  @Override public void setApps(List<Application> appsList) {
-    adapter.setApps(appsList);
+  @Override public void addApps(List<Application> appsList) {
+    adapter.addApps(appsList);
   }
 
   @Override public Observable<Application> getAppClick() {
     return appClicks;
+  }
+
+  @Override public Observable<Object> reachesBottom() {
+    return RxRecyclerView.scrollEvents(recyclerView)
+        .distinctUntilChanged()
+        .filter(scroll -> isEndReached())
+        .cast(Object.class);
+  }
+
+  @Override public void hideLoading() {
+    adapter.hideLoading();
+  }
+
+  @Override public void showLoading() {
+    adapter.showLoading();
+  }
+
+  @Override public void hideStartingLoading() {
+    startingLoadingLayout.setVisibility(View.GONE);
+    recyclerView.setVisibility(View.VISIBLE);
+  }
+
+  private boolean isEndReached() {
+    return layoutManager.getItemCount() - layoutManager.findLastVisibleItemPosition()
+        <= LOAD_THRESHOLD;
   }
 
   public int getSpanSize(int defaultSpan) {
