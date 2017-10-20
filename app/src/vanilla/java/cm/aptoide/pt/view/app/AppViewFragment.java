@@ -596,7 +596,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     this.menu = menu;
     inflater.inflate(R.menu.menu_appview_fragment, menu);
     if (searchBuilder != null && searchBuilder.isValid()) {
-      searchBuilder.attachSearch(getContext(), menu.findItem(R.id.action_search));
+      searchBuilder.attachSearch(getActivity(), menu.findItem(R.id.action_search));
     } else {
       menu.removeItem(R.id.action_search);
     }

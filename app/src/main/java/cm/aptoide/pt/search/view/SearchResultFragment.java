@@ -385,7 +385,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     inflater.inflate(R.menu.menu_search_results, menu);
     if (searchBuilder != null && searchBuilder.isValid()) {
       searchMenuItem = menu.findItem(R.id.action_search);
-      searchBuilder.attachSearch(getContext(), searchMenuItem);
+      searchBuilder.attachSearch(getActivity(), searchMenuItem);
     } else {
       menu.removeItem(R.id.action_search);
     }

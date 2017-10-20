@@ -263,7 +263,7 @@ public class HomeFragment extends StoreFragment {
     super.onCreateOptionsMenu(menu, inflater);
     menu.removeItem(R.id.menu_share);
     if (searchBuilder != null && searchBuilder.isValid()) {
-      searchBuilder.attachSearch(getContext(), menu.findItem(R.id.action_search));
+      searchBuilder.attachSearch(getActivity(), menu.findItem(R.id.action_search));
     } else {
       menu.removeItem(R.id.action_search);
     }
