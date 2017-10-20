@@ -197,6 +197,10 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
     });
   }
 
+  @Override public void finish() {
+    getActivity().finish();
+  }
+
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName());

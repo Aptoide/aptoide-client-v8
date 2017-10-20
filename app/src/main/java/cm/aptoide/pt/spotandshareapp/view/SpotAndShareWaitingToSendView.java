@@ -26,4 +26,6 @@ public interface SpotAndShareWaitingToSendView extends View {
   void showTimeoutCreateGroupError();
 
   void showGeneralCreateGroupError();
+
+  void finish();
 }

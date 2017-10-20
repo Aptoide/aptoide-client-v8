@@ -64,7 +64,7 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
                     permissionService))
                 .flatMap(
                     locationResult -> permissionManager.requestLocationEnabling(permissionService))
-                .doOnError(throwable -> view.navigateBack());
+                .doOnError(throwable -> view.finish());
           } else {
             return permissionManager.requestLocationEnabling(permissionService);
           }
