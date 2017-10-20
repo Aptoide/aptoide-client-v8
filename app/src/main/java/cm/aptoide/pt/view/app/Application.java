@@ -22,6 +22,15 @@ public class Application {
     this.packageName = packageName;
   }
 
+  public Application() {
+    name = null;
+    icon = null;
+    avg = -1;
+    downloads = -1;
+    appId = -1;
+    packageName = null;
+  }
+
   public long getAppId() {
     return appId;
   }

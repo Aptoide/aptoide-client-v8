@@ -9,7 +9,7 @@ public class RecyclerViewPositionHelper {
   final RecyclerView recyclerView;
   final RecyclerView.LayoutManager layoutManager;
 
-  RecyclerViewPositionHelper(RecyclerView recyclerView) {
+  public RecyclerViewPositionHelper(RecyclerView recyclerView) {
     this.recyclerView = recyclerView;
     this.layoutManager = recyclerView.getLayoutManager();
   }

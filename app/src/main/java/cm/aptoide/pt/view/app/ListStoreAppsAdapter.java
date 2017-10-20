@@ -21,20 +21,71 @@ class ListStoreAppsAdapter extends RecyclerView.Adapter<AppViewHolder> {
   }
 
   @Override public AppViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    return new AppViewHolder(LayoutInflater.from(parent.getContext())
-        .inflate(R.layout.displayable_grid_app, parent, false), appClicks);
+    if (viewType == R.layout.search_ad_loading_list_item) {
+      return new AppLoadingViewHolder(LayoutInflater.from(parent.getContext())
+          .inflate(R.layout.search_ad_loading_list_item, parent, false));
+    } else {
+      return new ApplicationViewHolder(LayoutInflater.from(parent.getContext())
+          .inflate(R.layout.displayable_grid_app, parent, false), appClicks);
+    }
   }
 
   @Override public void onBindViewHolder(AppViewHolder holder, int position) {
     holder.setApp(list.get(position));
   }
 
+  @Override public int getItemViewType(int position) {
+    Application application = list.get(position);
+    if (application instanceof AppLoading) {
+      return R.layout.search_ad_loading_list_item;
+    } else {
+      return R.layout.displayable_grid_app;
+    }
+  }
+
   @Override public int getItemCount() {
     return list.size();
   }
 
-  public void setApps(List<Application> list) {
-    this.list = list;
-    notifyDataSetChanged();
+  public void addApps(List<Application> applicationList) {
+    int loadingPosition = getLoadingPosition();
+    int firstInsertedIndex;
+    if (loadingPosition > 0) {
+      this.list.addAll(loadingPosition, applicationList);
+      firstInsertedIndex = loadingPosition;
+    } else {
+      firstInsertedIndex = this.list.size();
+      this.list.addAll(applicationList);
+    }
+    notifyItemRangeInserted(firstInsertedIndex, applicationList.size());
+  }
+
+  public void showLoading() {
+    if (getLoadingPosition() < 0) {
+      list.add(new AppLoading());
+      notifyItemInserted(list.size() - 1);
+    }
+  }
+
+  public void hideLoading() {
+    int loadingPosition = getLoadingPosition();
+    if (loadingPosition >= 0) {
+      list.remove(loadingPosition);
+      notifyItemRemoved(loadingPosition);
+    }
+  }
+
+  public int getLoadingPosition() {
+    for (int i = list.size() - 1; i >= 0; i--) {
+      Application application = list.get(i);
+      if (application instanceof AppLoading) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  public Application getItem(int position) {
+    return list.get(position);
   }
 }

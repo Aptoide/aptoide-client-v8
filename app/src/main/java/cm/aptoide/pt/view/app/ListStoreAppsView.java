@@ -10,7 +10,15 @@ import rx.Observable;
 
 public interface ListStoreAppsView extends View {
 
-  void setApps(List<Application> appsList);
+  void addApps(List<Application> appsList);
 
   Observable<Application> getAppClick();
+
+  Observable<Object> reachesBottom();
+
+  void hideLoading();
+
+  void showLoading();
+
+  void hideStartingLoading();
 }

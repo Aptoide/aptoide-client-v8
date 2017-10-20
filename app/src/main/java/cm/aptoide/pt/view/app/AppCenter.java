@@ -1,6 +1,7 @@
 package cm.aptoide.pt.view.app;
 
 import java.util.List;
+import rx.Completable;
 import rx.Observable;
 
 /**
@@ -15,7 +16,11 @@ public class AppCenter {
     this.appService = appService;
   }
 
-  public Observable<List<Application>> getStoreApps(long storeId, boolean bypassCache) {
-    return appService.getStoreApps(storeId, bypassCache);
+  public Observable<List<Application>> getStoreApps() {
+    return appService.getStoreApps();
+  }
+
+  public Completable loadNextApps(long storeId, boolean bypassCache) {
+    return appService.loadNextApps(storeId, bypassCache);
   }
 }

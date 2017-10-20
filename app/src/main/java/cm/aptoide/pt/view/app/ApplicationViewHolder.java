@@ -1,6 +1,5 @@
 package cm.aptoide.pt.view.app;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -14,7 +13,7 @@ import rx.subjects.PublishSubject;
  * Created by trinkes on 18/10/2017.
  */
 
-public class AppViewHolder extends RecyclerView.ViewHolder {
+public class ApplicationViewHolder extends AppViewHolder {
 
   private final TextView nameTextView;
   private final ImageView iconView;
@@ -22,7 +21,7 @@ public class AppViewHolder extends RecyclerView.ViewHolder {
   private final RatingBar rating;
   private final PublishSubject<Application> appClicks;
 
-  public AppViewHolder(View itemView, PublishSubject<Application> appClicks) {
+  public ApplicationViewHolder(View itemView, PublishSubject<Application> appClicks) {
     super(itemView);
     nameTextView = ((TextView) itemView.findViewById(R.id.name));
     downloadsTextView = ((TextView) itemView.findViewById(R.id.downloads));
