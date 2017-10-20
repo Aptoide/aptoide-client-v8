@@ -402,10 +402,8 @@ public class TimelineAnalytics {
     return createTimelineCardData(cardType, source, specific);
   }
 
-  public void sendLikeEvent(int position, boolean success) {
-    HashMap<String, Object> data = new HashMap<>();
-    data.put("position", position);
-    data.put("status", success ? "success" : "fail");
+  public void sendLikeEvent(CardTouchEvent event, boolean success) {
+    HashMap<String, Object> data = parseEventData(event, success);
     analytics.sendEvent(createEvent(LIKE, data));
   }
 
@@ -663,5 +661,57 @@ public class TimelineAnalytics {
         new AptoideEvent(createScrollingEventData(position), "SCROLLING", "SCROLL", "TIMELINE",
             bodyInterceptor, httpClient, converterFactory, tokenInvalidator, appId,
             sharedPreferences));
+  }
+
+  public HashMap<String, Object> parseEventData(CardTouchEvent event, boolean status){
+    final Post post = event.getCard();
+    final CardType postType = post.getType();
+    HashMap<String, Object> data = new HashMap<>();
+    HashMap<String, Object> result = new HashMap<>();
+
+    if(postType.isMedia()){
+      HashMap<String, Object> specific = new HashMap<>();
+      Media card = (Media) post;
+      data.put("position", event.getPosition());
+      data.put("card_type", card.getType());
+      data.put("source", card.getPublisherName());
+      result.put("status", status ? "success" : "fail");
+      specific.put("app", card.getRelatedApp().getPackageName());
+      specific.put("url", card.getMediaLink().getUrl());
+      data.put("specific", specific);
+      data.put("result", result);
+    }
+    else if(postType.equals(CardType.RECOMMENDATION)||postType.equals(CardType.SOCIAL_POST_RECOMMENDATION)||postType.equals(CardType.SOCIAL_RECOMMENDATION)||postType.equals(CardType.SIMILAR)){
+      HashMap<String, Object> specific = new HashMap<>();
+      Recommendation card = (Recommendation) post;
+      data.put("position", event.getPosition());
+      data.put("card_type", card.getType());
+      data.put("source", card.getPublisherName());
+      result.put("status", status ? "success" : "fail");
+      specific.put("app", card.getPackageName());
+      data.put("specific", specific);
+      data.put("result", result);
+    }
+    else if (postType.equals(CardType.UPDATE)){
+      HashMap<String, Object> specific = new HashMap<>();
+      AppUpdate card = (AppUpdate) post;
+      data.put("position", event.getPosition());
+      data.put("card_type", card.getType());
+      data.put("source", SOURCE_APTOIDE);
+      result.put("status", status ? "success" : "fail");
+      specific.put("app", card.getPackageName());
+      data.put("specific", specific);
+      data.put("result", result);
+    }
+    else if(postType.equals(CardType.STORE)||postType.equals(CardType.SOCIAL_STORE)||postType.equals(CardType.AGGREGATED_SOCIAL_STORE)){
+      HashMap<String, Object> specific = new HashMap<>();
+      StoreLatestApps card = (StoreLatestApps) post;
+      data.put("position", event.getPosition());
+      data.put("card_type", card.getType());
+      data.put("source", SOURCE_APTOIDE);
+      result.put("status", status ? "success" : "fail");
+      data.put("result", result);
+    }
+    return data;
   }
 }

@@ -672,13 +672,13 @@ public class TimelinePresenter implements Presenter {
                     final Post post = cardTouchEvent.getCard();
                     return timeline.like(post, post.getCardId())
                         .andThen(Completable.fromAction(
-                            () -> timelineAnalytics.sendLikeEvent(cardTouchEvent.getPosition(),
+                            () -> timelineAnalytics.sendLikeEvent(cardTouchEvent,
                                 true)));
                   }
                   return Completable.complete();
                 })
                 .doOnError(
-                    throwable -> timelineAnalytics.sendLikeEvent(cardTouchEvent.getPosition(),
+                    throwable -> timelineAnalytics.sendLikeEvent(cardTouchEvent,
                         false))))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
@@ -746,15 +746,15 @@ public class TimelinePresenter implements Presenter {
                     return timeline.sharePost(post)
                         .flatMapCompletable(cardId -> timeline.like(post, cardId))
                         .andThen(Completable.fromAction(
-                            () -> timelineAnalytics.sendLikeEvent(cardTouchEvent.getPosition(),
+                            () -> timelineAnalytics.sendLikeEvent(cardTouchEvent,
                                 true)));
                   } else {
-                    timelineAnalytics.sendLikeEvent(cardTouchEvent.getPosition(), false);
+                    timelineAnalytics.sendLikeEvent(cardTouchEvent, false);
                     return Completable.complete();
                   }
                 })
                 .doOnError(
-                    throwable -> timelineAnalytics.sendLikeEvent(cardTouchEvent.getPosition(),
+                    throwable -> timelineAnalytics.sendLikeEvent(cardTouchEvent,
                         true)))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
