@@ -322,9 +322,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    appViewModel = new AppViewModel();
+
     super.onCreate(savedInstanceState);
 
-    appViewModel = new AppViewModel();
     handleSavedInstance(savedInstanceState);
 
     this.appViewModel.setDefaultTheme(
