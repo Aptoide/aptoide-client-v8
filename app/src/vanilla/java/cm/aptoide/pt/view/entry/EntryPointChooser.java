@@ -1,7 +1,7 @@
 package cm.aptoide.pt.view.entry;
 
 import android.app.Activity;
-import cm.aptoide.pt.view.MainActivity;
+import cm.aptoide.pt.view.FairyMainActivity;
 import cm.aptoide.pt.view.OpenGLES20Activity;
 
 /**
@@ -20,7 +20,7 @@ public class EntryPointChooser {
     if (!supportedExtensions.isDefined()) {
       return OpenGLES20Activity.class;
     } else {
-      return MainActivity.class;
+      return FairyMainActivity.class;
     }
   }
 }
