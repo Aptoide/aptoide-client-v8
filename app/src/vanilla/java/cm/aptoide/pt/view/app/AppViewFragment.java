@@ -1,5 +1,6 @@
 package cm.aptoide.pt.view.app;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -174,6 +175,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private CrashReport crashReport;
   private AptoideNavigationTracker aptoideNavigationTracker;
   private ApplicationPreferences appPreferences;
+  private SearchBuilder searchBuilder;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -336,6 +338,17 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     this.appViewModel.setDefaultTheme(appPreferences.getDefaultThemeName());
     this.appViewModel.setMarketName(appPreferences.getMarketName());
     this.appViewModel.setBillingIdResolver(application.getBillingIdResolver());
+
+    final String defaultStore = appPreferences.getDefaultStoreName();
+
+    final SearchManager searchManager =
+        (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
+
+    final SearchNavigator searchNavigator =
+        new SearchNavigator(getFragmentNavigator(), defaultStore);
+
+    searchBuilder = new SearchBuilder(searchManager, searchNavigator);
+
     adMapper = new MinimalAdMapper();
 
     this.appViewModel.setqManager(application.getQManager());
@@ -589,11 +602,12 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onCreateOptionsMenu(menu, inflater);
     this.menu = menu;
     inflater.inflate(R.menu.menu_appview_fragment, menu);
-    final String defaultStore = appPreferences.getDefaultStoreName();
-    SearchBuilder searchBuilder =
-        new SearchBuilder(menu.findItem(R.id.action_search), getActivity(),
-            new SearchNavigator(getFragmentNavigator(), defaultStore));
-    searchBuilder.validateAndAttachSearch();
+    if (searchBuilder != null && searchBuilder.isValid()) {
+      searchBuilder.attachSearch(getContext(), menu.findItem(R.id.action_search));
+    } else {
+      menu.removeItem(R.id.action_search);
+    }
+
     uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
   }
 

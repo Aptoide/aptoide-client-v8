@@ -213,6 +213,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private String editorsBrickPosition;
   private String originTag;
   private ApplicationPreferences appPreferences;
+  private SearchNavigator searchNavigator;
+  private SearchBuilder searchBuilder;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -333,6 +335,15 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     appPreferences = application.getApplicationPreferences();
+
+    final android.app.SearchManager searchManagerService =
+        (android.app.SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
+
+    searchNavigator = new SearchNavigator(getFragmentNavigator(),
+        appPreferences.getDefaultStoreName());
+
+    searchBuilder = new SearchBuilder(searchManagerService, searchNavigator);
+
     defaultTheme = appPreferences.getDefaultThemeName();
     marketName = appPreferences.getMarketName();
     billingIdResolver = application.getBillingIdResolver();
@@ -575,11 +586,11 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onCreateOptionsMenu(menu, inflater);
     this.menu = menu;
     inflater.inflate(R.menu.menu_appview_fragment, menu);
-    final String defaultStore = appPreferences.getDefaultStoreName();
-    SearchBuilder searchBuilder =
-        new SearchBuilder(menu.findItem(R.id.action_search), getActivity(),
-            new SearchNavigator(getFragmentNavigator(), defaultStore));
-    searchBuilder.validateAndAttachSearch();
+    if (searchBuilder != null && searchBuilder.isValid()) {
+      searchBuilder.attachSearch(getContext(), menu.findItem(R.id.action_search));
+    } else {
+      menu.removeItem(R.id.action_search);
+    }
     uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
   }
 

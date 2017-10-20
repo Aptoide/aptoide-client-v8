@@ -100,6 +100,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   private SearchAnalytics searchAnalytics;
   private float listItemPadding;
   private MenuItem searchMenuItem;
+  private SearchBuilder searchBuilder;
   private ApplicationPreferences appPreferences;
 
   public static SearchResultFragment newInstance(String currentQuery) {
@@ -320,7 +321,9 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   }
 
   @Override public void setFocusInSearchView() {
-    searchMenuItem.expandActionView();
+    if (searchMenuItem != null) {
+      searchMenuItem.expandActionView();
+    }
   }
 
   private Observable<Void> recyclerViewReachedBottom(RecyclerView recyclerView) {
@@ -384,12 +387,12 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_search_results, menu);
-
-    searchMenuItem = menu.findItem(R.id.action_search);
-    final SearchBuilder searchBuilder =
-        new SearchBuilder(searchMenuItem, getContext(), searchNavigator,
-            viewModel.getCurrentQuery());
-    searchBuilder.validateAndAttachSearch();
+    if (searchBuilder != null && searchBuilder.isValid()) {
+      searchMenuItem = menu.findItem(R.id.action_search);
+      searchBuilder.attachSearch(getContext(), searchMenuItem);
+    } else {
+      menu.removeItem(R.id.action_search);
+    }
   }
 
   @Override public String getDefaultTheme() {
@@ -400,6 +403,15 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     super.onCreate(savedInstanceState);
 
     crashReport = CrashReport.getInstance();
+
+    viewModel = loadViewModel(getArguments());
+
+    final android.app.SearchManager searchManagerService =
+        (android.app.SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
+
+    searchNavigator = new SearchNavigator(getFragmentNavigator(), viewModel.getStoreName());
+
+    searchBuilder = new SearchBuilder(searchManagerService, searchNavigator);
 
     final AptoideApplication applicationContext =
         (AptoideApplication) getContext().getApplicationContext();
@@ -435,7 +447,6 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
             appPreferences);
 
     mainThreadScheduler = AndroidSchedulers.mainThread();
-    searchNavigator = new SearchNavigator(getFragmentNavigator(), viewModel.getStoreName());
 
     onItemViewClickRelay = PublishRelay.create();
     onOpenPopupMenuClickRelay = PublishRelay.create();
@@ -461,7 +472,6 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     findChildViews(view);
-    viewModel = loadViewModel(getArguments());
     attachFollowedStoresResultListDependencies();
     attachAllStoresResultListDependencies();
     attachToolbar();

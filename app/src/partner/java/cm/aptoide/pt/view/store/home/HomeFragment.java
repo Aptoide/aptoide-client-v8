@@ -1,6 +1,7 @@
 package cm.aptoide.pt.view.store.home;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -70,6 +71,7 @@ public class HomeFragment extends StoreFragment {
   private ImageView userAvatarImage;
   private DrawerAnalytics drawerAnalytics;
   private ClickHandler backClickHandler;
+  private SearchBuilder searchBuilder;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -156,6 +158,19 @@ public class HomeFragment extends StoreFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    final android.app.SearchManager searchManagerService =
+        (android.app.SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
+
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    ApplicationPreferences appPreferences = application.getApplicationPreferences();
+
+    final SearchNavigator searchNavigator =
+        new SearchNavigator(getFragmentNavigator(), appPreferences.getDefaultStoreName());
+
+    searchBuilder = new SearchBuilder(searchManagerService, searchNavigator);
+
     drawerAnalytics = new DrawerAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
   }
@@ -232,13 +247,11 @@ public class HomeFragment extends StoreFragment {
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
-    final AptoideApplication application =
-        (AptoideApplication) getContext().getApplicationContext();
-    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
-    final SearchBuilder searchBuilder =
-        new SearchBuilder(menu.findItem(R.id.action_search), getActivity(),
-            new SearchNavigator(getFragmentNavigator(), appPreferences.getDefaultStoreName()));
-    searchBuilder.validateAndAttachSearch();
+    if (searchBuilder != null && searchBuilder.isValid()) {
+      searchBuilder.attachSearch(getContext(), menu.findItem(R.id.action_search));
+    } else {
+      menu.removeItem(R.id.action_search);
+    }
     menu.removeItem(R.id.menu_share);
   }
 
