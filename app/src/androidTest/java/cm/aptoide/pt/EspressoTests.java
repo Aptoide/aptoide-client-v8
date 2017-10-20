@@ -17,8 +17,10 @@ import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.UiDevice;
+import android.support.test.uiautomator.UiObjectNotFoundException;
 import android.support.test.uiautomator.UiSelector;
 import android.support.v4.content.ContextCompat;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.view.MainActivity;
 import java.io.IOException;
 import org.junit.Before;
@@ -55,15 +57,16 @@ public class EspressoTests {
   private final String SIGNUPEMAILTESTEND = "@aptoide.com";
   private final String LOGINEMAIL = "jose.messejana@aptoide.com";
   private final String PASS = "aptoide1234";
+  private final String LIGHT_APP_TO_SEARCH = "Cut the rope";
   private final String APP_TO_SEARCH = "Hearthstone";
-  private final String MATURE_SEARCH = "kaoiproduct.roulletesexfree";
   private final String MATURE_APP = "Roullete Sex (Roleta do Sexo)";
+  private final String MATURE_SEARCH = "kaoiproduct.roulletesexfree";
   private final int WAIT_TIME = 550;
   private final int LONGER_WAIT_TIME = 2000;
   private final int NUMBER_OF_RETRIES = 3;
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
-  @Rule public RetryTestRule retry = new RetryTestRule(NUMBER_OF_RETRIES);
+ // @Rule public RetryTestRule retry = new RetryTestRule(NUMBER_OF_RETRIES);
   private String SIGNUPEMAILTEST = "";
   private String STORENAME = "a";
 
@@ -78,7 +81,7 @@ public class EspressoTests {
     if (isFirstTime()) {
       skipWizard();
     }
-    logOutorGoBack();
+   // logOutorGoBack();
   }
 
   @Test public void emptyEmailSignIn() throws InterruptedException {
@@ -375,6 +378,88 @@ public class EspressoTests {
     onView(withId(R.id.action_btn)).check(matches(withText(R.string.appview_button_install)));
   }
 
+  // SECOND BATCH TESTS
+
+  @Test public void profilePhoto() throws InterruptedException, UiObjectNotFoundException {
+    UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+    int deviceHeight = mDevice.getDisplayHeight();
+    int deviceWidth = mDevice.getDisplayWidth();
+    Logger.d("TAG123","height"+deviceHeight + "--width:"+deviceWidth);
+  /*  goToMyAccount();
+    performLogin(LOGINEMAIL, PASS);
+    while (!hasLoggedIn()) {
+      Thread.sleep(LONGER_WAIT_TIME);
+    } */
+    goToMyAccount();
+    onView(withId(R.id.my_account_edit_user_profile)).perform(click());
+    Thread.sleep(WAIT_TIME);
+    onView(withId(R.id.create_user_image_action)).perform(click());
+    Thread.sleep(WAIT_TIME);
+    onView(withId(R.id.button_gallery)).perform(click());
+    getPhotoFromStorage(mDevice,-1, deviceHeight/16, deviceWidth/8*7); //500x500
+    getPhotoFromStorage(mDevice,1, deviceHeight/16, deviceWidth/2); //1200x1200
+    getPhotoFromStorage(mDevice,0, deviceHeight/16, deviceWidth/8); //800x800
+    Thread.sleep(LONGER_WAIT_TIME * 2);
+    onView(withId(R.id.create_user_create_profile)).perform(click());
+  }
+
+  @Test public void storePhoto() throws InterruptedException {
+    UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+    goToMyAccount();
+    performLogin(LOGINEMAIL, PASS);
+    while (!hasLoggedIn()) {
+      Thread.sleep(LONGER_WAIT_TIME);
+    }
+    goToMyAccount();
+    onView(withId(R.id.my_account_edit_user_store)).perform(click());
+    Thread.sleep(WAIT_TIME);
+    onView(withId(R.id.create_store_image_action)).perform(click());
+    Thread.sleep(WAIT_TIME);
+    //DO NEW THING HERE
+    Thread.sleep(LONGER_WAIT_TIME * 2);
+    onView(withId(R.id.create_store_action)).perform(click());
+  }
+
+  @Test public void landscapewizard() throws InterruptedException {
+    Activity activity = mActivityRule.getActivity();
+    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    Thread.sleep(WAIT_TIME);
+    onView(withId(R.id.next_icon)).perform(swipeLeft());
+    Thread.sleep(WAIT_TIME);
+    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    Thread.sleep(WAIT_TIME);
+    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    Thread.sleep(WAIT_TIME);
+    onView(withId(R.id.next_icon)).perform(swipeLeft());
+    Thread.sleep(WAIT_TIME);
+    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    Thread.sleep(WAIT_TIME);
+    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    Thread.sleep(WAIT_TIME);
+    onView(withId(R.id.skip_text)).perform(click());
+    Thread.sleep(WAIT_TIME);
+    onView(withText(R.string.stores)).perform(click());
+  }
+
+  @Test public void download_and_install() throws InterruptedException {
+    UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+    goToApp(LIGHT_APP_TO_SEARCH, 1);
+    cancelIfDownloading();
+    while (!hasOpenedAppView()) {
+      Thread.sleep(WAIT_TIME);
+    }
+    Thread.sleep(LONGER_WAIT_TIME);
+    closePopUp();
+    allow_permission(mDevice, "WRITE_EXTERNAL_STORAGE");
+    closeIfIsNotLoggedInOnDownload();
+    Thread.sleep(LONGER_WAIT_TIME * 15);
+    installApp(mDevice);
+    Thread.sleep(LONGER_WAIT_TIME);
+    onView(withId(R.id.action_btn)).check(matches(withText(R.string.open)));
+  }
+
+
+
   private boolean isFirstTime() {
     try {
       onView(withId(R.id.next_icon)).check(matches(isDisplayed()));
@@ -620,5 +705,37 @@ public class EspressoTests {
         allOf(withContentDescription("Navigate up"), withParent(withId(R.id.toolbar)),
             isDisplayed()));
     appCompatImageButton2.perform(click());
+  }
+
+  //SECOND BATCH METHODS
+
+  private void getPhotoFromStorage(UiDevice mDevice, int index, int height, int width) throws UiObjectNotFoundException {
+    if (android.os.Build.VERSION.SDK_INT < 23) {
+        try {
+          mDevice.findObject(new UiSelector().clickable(true)
+              .textContains("Gallery"))
+              .click();
+        } catch (Exception e1) {
+        }
+        mDevice.click(height, width);
+      if(index != 0) {
+        onView(withText("OK")).perform(click());
+      }
+      }
+  }
+
+  private void installApp(UiDevice mDevice) {
+    try {
+      mDevice.findObject(new UiSelector().clickable(true)
+          .checkable(false)
+          .textContains("INSTALL"))
+          .click();
+      Thread.sleep(LONGER_WAIT_TIME);
+      mDevice.findObject(new UiSelector().clickable(true)
+          .checkable(false)
+          .textContains("DONE"))
+          .click();
+    } catch (Exception e1) {
+    }
   }
 }
