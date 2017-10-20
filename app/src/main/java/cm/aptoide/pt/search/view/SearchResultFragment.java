@@ -97,6 +97,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   private SearchAnalytics searchAnalytics;
   private float listItemPadding;
   private MenuItem searchMenuItem;
+  private SearchBuilder searchBuilder;
 
   public static SearchResultFragment newInstance(String currentQuery) {
     return newInstance(currentQuery, false);
@@ -206,7 +207,8 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
 
   @Override public Observable<String> clickNoResultsSearchButton() {
     return RxView.clicks(noResultsSearchButton)
-        .map(__ -> noSearchLayoutSearchQuery.getText().toString());
+        .map(__ -> noSearchLayoutSearchQuery.getText()
+            .toString());
   }
 
   @Override public void showNoResultsView() {
@@ -269,7 +271,8 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
       inflater.inflate(R.menu.menu_search_item, popupMenu.getMenu());
 
       if (hasVersions) {
-        MenuItem menuItemVersions = popupMenu.getMenu().findItem(R.id.versions);
+        MenuItem menuItemVersions = popupMenu.getMenu()
+            .findItem(R.id.versions);
         menuItemVersions.setVisible(true);
       }
 
@@ -314,16 +317,19 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   }
 
   @Override public void setFocusInSearchView() {
-    searchMenuItem.expandActionView();
+    if (searchMenuItem != null) {
+      searchMenuItem.expandActionView();
+    }
   }
 
   private Observable<Void> recyclerViewReachedBottom(RecyclerView recyclerView) {
     return RxRecyclerView.scrollEvents(recyclerView)
         .filter(event -> event.dy() > 4)
-        .filter(event -> event.view().isAttachedToWindow())
+        .filter(event -> event.view()
+            .isAttachedToWindow())
         .filter(event -> {
-          final LinearLayoutManager layoutManager =
-              (LinearLayoutManager) event.view().getLayoutManager();
+          final LinearLayoutManager layoutManager = (LinearLayoutManager) event.view()
+              .getLayoutManager();
           final int visibleItemCount = layoutManager.getChildCount();
           final int totalItemCount = layoutManager.getItemCount();
           final int pastVisibleItems = layoutManager.findFirstVisibleItemPosition();
@@ -367,21 +373,22 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     }
 
     outState.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
-    outState.putParcelable(ALL_STORES_SEARCH_LIST_STATE,
-        allStoresResultList.getLayoutManager().onSaveInstanceState());
+    outState.putParcelable(ALL_STORES_SEARCH_LIST_STATE, allStoresResultList.getLayoutManager()
+        .onSaveInstanceState());
     outState.putParcelable(FOLLOWED_STORES_SEARCH_LIST_STATE,
-        followedStoresResultList.getLayoutManager().onSaveInstanceState());
+        followedStoresResultList.getLayoutManager()
+            .onSaveInstanceState());
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_search_results, menu);
-
-    searchMenuItem = menu.findItem(R.id.action_search);
-    final SearchBuilder searchBuilder =
-        new SearchBuilder(searchMenuItem, getContext(), getSearchNavigator(),
-            viewModel.getCurrentQuery());
-    searchBuilder.validateAndAttachSearch();
+    if (searchBuilder != null && searchBuilder.isValid()) {
+      searchMenuItem = menu.findItem(R.id.action_search);
+      searchBuilder.attachSearch(getContext(), searchMenuItem);
+    } else {
+      menu.removeItem(R.id.action_search);
+    }
   }
 
   @Override public String getDefaultTheme() {
@@ -391,7 +398,9 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   @NonNull private SearchNavigator getSearchNavigator() {
     final SearchNavigator searchNavigator;
     final String defaultStore = getDefaultStore();
-    if (viewModel.getStoreName() != null && viewModel.getStoreName().length() > 0) {
+    if (viewModel.getStoreName() != null
+        && viewModel.getStoreName()
+        .length() > 0) {
       searchNavigator =
           new SearchNavigator(getFragmentNavigator(), viewModel.getStoreName(), defaultStore);
     } else {
@@ -404,6 +413,15 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     super.onCreate(savedInstanceState);
 
     crashReport = CrashReport.getInstance();
+
+    viewModel = loadViewModel(getArguments());
+
+    final android.app.SearchManager searchManagerService =
+        (android.app.SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
+
+    searchNavigator = getSearchNavigator();
+
+    searchBuilder = new SearchBuilder(searchManagerService, searchNavigator);
 
     final AptoideApplication applicationContext =
         (AptoideApplication) getContext().getApplicationContext();
@@ -435,7 +453,6 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
             converterFactory, subscribedStoresAuthMap, subscribedStoresIds, adsRepository);
 
     mainThreadScheduler = AndroidSchedulers.mainThread();
-    searchNavigator = new SearchNavigator(getFragmentNavigator(), getDefaultStore());
 
     onItemViewClickRelay = PublishRelay.create();
     onOpenPopupMenuClickRelay = PublishRelay.create();
@@ -461,7 +478,6 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     findChildViews(view);
-    viewModel = loadViewModel(getArguments());
     attachFollowedStoresResultListDependencies();
     attachAllStoresResultListDependencies();
     attachToolbar();
@@ -471,7 +487,8 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass().getSimpleName());
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @NonNull private DividerItemDecoration getDefaultItemDecoration() {

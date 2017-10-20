@@ -1,5 +1,6 @@
 package cm.aptoide.pt.view.app;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -191,6 +192,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
   private CrashReport crashReport;
   private String originTag;
+  private SearchBuilder searchBuilder;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -323,6 +325,17 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onCreate(savedInstanceState);
 
     handleSavedInstance(savedInstanceState);
+
+    final String defaultStore =
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore();
+
+    final SearchManager searchManager =
+        (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
+
+    final SearchNavigator searchNavigator =
+        new SearchNavigator(getFragmentNavigator(), defaultStore);
+
+    searchBuilder = new SearchBuilder(searchManager, searchNavigator);
 
     defaultTheme = ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
     marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
@@ -582,12 +595,12 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onCreateOptionsMenu(menu, inflater);
     this.menu = menu;
     inflater.inflate(R.menu.menu_appview_fragment, menu);
-    final String defaultStore =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore();
-    SearchBuilder searchBuilder =
-        new SearchBuilder(menu.findItem(R.id.action_search), getActivity(),
-            new SearchNavigator(getFragmentNavigator(), defaultStore));
-    searchBuilder.validateAndAttachSearch();
+    if (searchBuilder != null && searchBuilder.isValid()) {
+      searchBuilder.attachSearch(getContext(), menu.findItem(R.id.action_search));
+    } else {
+      menu.removeItem(R.id.action_search);
+    }
+
     uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
   }
 

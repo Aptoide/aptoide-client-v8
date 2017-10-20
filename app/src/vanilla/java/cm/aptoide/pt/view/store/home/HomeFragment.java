@@ -1,6 +1,8 @@
 package cm.aptoide.pt.view.store.home;
 
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -82,6 +84,7 @@ public class HomeFragment extends StoreFragment {
   private DrawerAnalytics drawerAnalytics;
   private ClickHandler backClickHandler;
   private PageViewsAnalytics pageViewsAnalytics;
+  private SearchBuilder searchBuilder;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -165,6 +168,17 @@ public class HomeFragment extends StoreFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    final String defaultStore =
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore();
+
+    final SearchManager searchManager =
+        (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
+
+    final SearchNavigator searchNavigator =
+        new SearchNavigator(getFragmentNavigator(), defaultStore);
+
+    searchBuilder = new SearchBuilder(searchManager, searchNavigator);
+
     drawerAnalytics = new DrawerAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
     installedRepository =
@@ -248,12 +262,11 @@ public class HomeFragment extends StoreFragment {
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     menu.removeItem(R.id.menu_share);
-    final String defaultStore =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore();
-    final SearchBuilder searchBuilder =
-        new SearchBuilder(menu.findItem(R.id.action_search), getActivity(),
-            new SearchNavigator(getFragmentNavigator(), defaultStore));
-    searchBuilder.validateAndAttachSearch();
+    if (searchBuilder != null && searchBuilder.isValid()) {
+      searchBuilder.attachSearch(getContext(), menu.findItem(R.id.action_search));
+    } else {
+      menu.removeItem(R.id.action_search);
+    }
   }
 
   @Override public void setupViews() {
