@@ -1,14 +1,9 @@
 package cm.aptoide.pt;
 
 import android.app.Activity;
-import android.app.Instrumentation;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.provider.MediaStore;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.AmbiguousViewMatcherException;
 import android.support.test.espresso.NoMatchingViewException;
@@ -19,18 +14,13 @@ import android.support.test.espresso.action.GeneralSwipeAction;
 import android.support.test.espresso.action.Press;
 import android.support.test.espresso.action.Swipe;
 import android.support.test.espresso.contrib.RecyclerViewActions;
-import android.support.test.espresso.intent.rule.IntentsTestRule;
+import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiSelector;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import cm.aptoide.pt.view.MainActivity;
 import java.io.IOException;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -45,8 +35,6 @@ import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.action.ViewActions.swipeRight;
 import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.intent.Intents.intending;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -68,36 +56,20 @@ public class EspressoTests {
   private final String LOGINEMAIL = "jose.messejana@aptoide.com";
   private final String PASS = "aptoide1234";
   private final String APP_TO_SEARCH = "Hearthstone";
-  private final String LIGHT_APP_TO_SEARCH = "Cut the rope";
   private final String MATURE_SEARCH = "kaoiproduct.roulletesexfree";
   private final String MATURE_APP = "Roullete Sex (Roleta do Sexo)";
   private final int WAIT_TIME = 550;
   private final int LONGER_WAIT_TIME = 2000;
   private final int NUMBER_OF_RETRIES = 3;
-  @Rule public IntentsTestRule<MainActivity> mActivityRule =
-      new IntentsTestRule<>(MainActivity.class);
- // @Rule public RetryTestRule retry = new RetryTestRule(NUMBER_OF_RETRIES);
+  @Rule public ActivityTestRule<MainActivity> mActivityRule =
+      new ActivityTestRule<>(MainActivity.class);
+  @Rule public RetryTestRule retry = new RetryTestRule(NUMBER_OF_RETRIES);
   private String SIGNUPEMAILTEST = "";
   private String STORENAME = "a";
 
   private static ViewAction swipeRigthOnLeftMost() {
     return new GeneralSwipeAction(Swipe.FAST, GeneralLocation.CENTER_LEFT,
         GeneralLocation.CENTER_RIGHT, Press.FINGER);
-  }
-
-  public static Matcher<View> withRecyclerViewSize(final int size) {
-    return new TypeSafeMatcher<View>() {
-
-      @Override public boolean matchesSafely(final View view) {
-        final int actualListSize = ((RecyclerView) view).getAdapter()
-            .getItemCount();
-        return actualListSize >= size;
-      }
-
-      @Override public void describeTo(final Description description) {
-        description.appendText("RecyclerView should have " + size + " items");
-      }
-    };
   }
 
   @Before public void setUp() throws IOException {
@@ -107,7 +79,6 @@ public class EspressoTests {
       skipWizard();
     }
     logOutorGoBack();
-
   }
 
   @Test public void emptyEmailSignIn() throws InterruptedException {
@@ -170,8 +141,6 @@ public class EspressoTests {
     onView(withText(R.string.ws_error_WOP_9)).check(matches(isDisplayed()));
   }
 
-  // Third batch of tests
-
   @Test public void signUp() throws InterruptedException {
     goToMyAccount();
     performSignUp(SIGNUPEMAILTEST, PASS);
@@ -206,7 +175,7 @@ public class EspressoTests {
       Thread.sleep(LONGER_WAIT_TIME);
     }
     completeSignUpWithStore();
-    while(!hasLoggedIn()){
+    while (!hasLoggedIn()) {
       Thread.sleep(WAIT_TIME);
     }
     goToMyAccount();
@@ -225,7 +194,7 @@ public class EspressoTests {
     Thread.sleep(LONGER_WAIT_TIME);
     onView(withId(R.id.create_store_action)).perform(click());
     createStore();
-    while(!hasLoggedIn()){
+    while (!hasLoggedIn()) {
       Thread.sleep(WAIT_TIME);
     }
     onView(withText(R.string.stores)).perform(swipeRight());
@@ -234,48 +203,6 @@ public class EspressoTests {
     goToMyAccount();
     onView(withId(R.id.my_account_store_name)).check(matches(withText(STORENAME)));
   }
-
-/*  @Test public void profilePhoto() throws InterruptedException {
-    UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-    goToMyAccount();
-    performLogin(LOGINEMAIL, PASS);
-    while (!hasLoggedIn()) {
-      Thread.sleep(LONGER_WAIT_TIME);
-    }
-    goToMyAccount();
-    onView(withId(R.id.my_account_edit_user_profile)).perform(click());
-    Thread.sleep(WAIT_TIME);
-    onView(withId(R.id.create_user_image_action)).perform(click());
-    Thread.sleep(WAIT_TIME);
-    createImageandIntend();
-    onView(withId(R.id.button_camera)).perform(click());
-    allow_permission(mDevice, "CAMERA");
-    allow_permission(mDevice, "WRITE_EXTERNAL_STORAGE");
-    intended(hasAction(MediaStore.ACTION_IMAGE_CAPTURE));
-    Thread.sleep(LONGER_WAIT_TIME * 2);
-    onView(withId(R.id.create_user_create_profile)).perform(click());
-  }
-
-  @Test public void storePhoto() throws InterruptedException {
-    UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-    goToMyAccount();
-    performLogin(LOGINEMAIL, PASS);
-    while (!hasLoggedIn()) {
-      Thread.sleep(LONGER_WAIT_TIME);
-    }
-    goToMyAccount();
-    onView(withId(R.id.my_account_edit_user_store)).perform(click());
-    Thread.sleep(WAIT_TIME);
-    onView(withId(R.id.create_store_image_action)).perform(click());
-    Thread.sleep(WAIT_TIME);
-    createImageandIntend();
-    onView(withId(R.id.button_camera)).perform(click());
-    allow_permission(mDevice, "CAMERA");
-    allow_permission(mDevice, "WRITE_EXTERNAL_STORAGE");
-    intended(hasAction(MediaStore.ACTION_IMAGE_CAPTURE));
-    Thread.sleep(LONGER_WAIT_TIME * 2);
-    onView(withId(R.id.create_store_action)).perform(click());
-  } */
 
   @Test public void matureTest() throws InterruptedException {
     goToSettings();
@@ -295,9 +222,10 @@ public class EspressoTests {
     barOnlySearchApp(MATURE_SEARCH);
     onView(withId(R.id.search_src_text)).perform(pressImeActionButton());
     Thread.sleep(LONGER_WAIT_TIME);
-    try{
-    onView(withText(MATURE_APP)).check(matches(isDisplayed()));
-    } catch(AmbiguousViewMatcherException e){ }
+    try {
+      onView(withText(MATURE_APP)).check(matches(isDisplayed()));
+    } catch (AmbiguousViewMatcherException e) {
+    }
     pressBackButton();
     goToSettings();
     onView(withId(R.id.list)).perform(RecyclerViewActions.scrollToPosition(11));
@@ -310,29 +238,9 @@ public class EspressoTests {
     Thread.sleep(LONGER_WAIT_TIME);
     try {
       onView(withText(MATURE_APP)).check(matches(not(isDisplayed())));
-    }catch(NoMatchingViewException e1){ }
+    } catch (NoMatchingViewException e1) {
+    }
   }
-
- /* @Test public void landscapewizard() throws InterruptedException {
-    Activity activity = mActivityRule.getActivity();
-    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-    Thread.sleep(WAIT_TIME);
-    onView(withId(R.id.next_icon)).perform(swipeLeft());
-    Thread.sleep(WAIT_TIME);
-    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-    Thread.sleep(WAIT_TIME);
-    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-    Thread.sleep(WAIT_TIME);
-    onView(withId(R.id.next_icon)).perform(swipeLeft());
-    Thread.sleep(WAIT_TIME);
-    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-    Thread.sleep(WAIT_TIME);
-    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-    Thread.sleep(WAIT_TIME);
-    onView(withId(R.id.skip_text)).perform(click());
-    Thread.sleep(WAIT_TIME);
-    onView(withText(R.string.stores)).perform(click());
-  } */
 
   @Test public void landscapehometab() throws InterruptedException {
     Activity activity = mActivityRule.getActivity();
@@ -401,8 +309,6 @@ public class EspressoTests {
     onView(withId(R.id.action_btn)).check(matches(isDisplayed()));
   }
 
-  // Initial tests
-
   @Test public void settingsLandscape() throws InterruptedException {
     boolean checked;
     Activity activity = mActivityRule.getActivity();
@@ -469,23 +375,6 @@ public class EspressoTests {
     onView(withId(R.id.action_btn)).check(matches(withText(R.string.appview_button_install)));
   }
 
-  /* @Test public void download_and_install() throws InterruptedException {
-    UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-    goToApp(LIGHT_APP_TO_SEARCH, 1);
-    cancelIfDownloading();
-    while (!hasOpenedAppView()) {
-      Thread.sleep(WAIT_TIME);
-    }
-    Thread.sleep(LONGER_WAIT_TIME);
-    closePopUp();
-    allow_permission(mDevice, "WRITE_EXTERNAL_STORAGE");
-    closeIfIsNotLoggedInOnDownload();
-    Thread.sleep(LONGER_WAIT_TIME * 15);
-    installApp(mDevice);
-    Thread.sleep(LONGER_WAIT_TIME);
-    onView(withId(R.id.action_btn)).check(matches(withText(R.string.open)));
-  } */
-
   private boolean isFirstTime() {
     try {
       onView(withId(R.id.next_icon)).check(matches(isDisplayed()));
@@ -545,8 +434,6 @@ public class EspressoTests {
     }
   }
 
-  // IfElse Actions
-
   private boolean hasPermission(String permission) {
     Context context = InstrumentationRegistry.getTargetContext();
     String finalpermission = "android.permission." + permission;
@@ -594,8 +481,6 @@ public class EspressoTests {
       onView(withId(R.id.toolbar)).perform(swipeLeft());
     }
   }
-
-  //Refactored Methods
 
   private void cancelIfDownloading() {
     try {
@@ -722,33 +607,6 @@ public class EspressoTests {
     onView(withId(R.id.action_search)).perform(click());
     Thread.sleep(WAIT_TIME);
     onView(withId(R.id.search_src_text)).perform(replaceText(app));
-  }
-
-  private void installApp(UiDevice mDevice) {
-    try {
-      mDevice.findObject(new UiSelector().clickable(true)
-          .checkable(false)
-          .textContains("INSTALL"))
-          .click();
-      Thread.sleep(LONGER_WAIT_TIME);
-      mDevice.findObject(new UiSelector().clickable(true)
-          .checkable(false)
-          .textContains("DONE"))
-          .click();
-    } catch (Exception e1) {
-    }
-  }
-
-  private void createImageandIntend() {
-    Bitmap icon = BitmapFactory.decodeResource(InstrumentationRegistry.getTargetContext()
-        .getResources(), R.mipmap.ic_launcher);
-
-    // Build a result to return from the Camera app
-    Intent resultData = new Intent();
-    resultData.putExtra("data", icon);
-    Instrumentation.ActivityResult result =
-        new Instrumentation.ActivityResult(Activity.RESULT_OK, resultData);
-    intending(hasAction(MediaStore.ACTION_IMAGE_CAPTURE)).respondWith(result);
   }
 
   private void goToSettings() throws InterruptedException {
