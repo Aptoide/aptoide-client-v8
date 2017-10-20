@@ -8,6 +8,7 @@ package cm.aptoide.pt.billing.sync;
 import cm.aptoide.pt.billing.Customer;
 import cm.aptoide.pt.billing.authorization.AuthorizationPersistence;
 import cm.aptoide.pt.billing.authorization.AuthorizationService;
+import cm.aptoide.pt.billing.authorization.LocalIdGenerator;
 import cm.aptoide.pt.billing.authorization.MetadataAuthorization;
 import cm.aptoide.pt.sync.Sync;
 import rx.Completable;
@@ -18,15 +19,17 @@ public class AuthorizationSync extends Sync {
   private final Customer customer;
   private final AuthorizationService authorizationService;
   private final AuthorizationPersistence authorizationPersistence;
+  private final LocalIdGenerator idGenerator;
 
   public AuthorizationSync(String id, Customer customer, String transactionId,
       AuthorizationService authorizationService, AuthorizationPersistence authorizationPersistence,
-      boolean periodic, boolean exact, long interval, long trigger) {
+      boolean periodic, boolean exact, long interval, long trigger, LocalIdGenerator idGenerator) {
     super(id, periodic, exact, trigger, interval);
     this.transactionId = transactionId;
     this.customer = customer;
     this.authorizationService = authorizationService;
     this.authorizationPersistence = authorizationPersistence;
+    this.idGenerator = idGenerator;
   }
 
   @Override public Completable execute() {
@@ -50,6 +53,11 @@ public class AuthorizationSync extends Sync {
   }
 
   private Completable syncRemoteAuthorization(String customerId, String transactionId) {
+
+    if (idGenerator.isLocal(transactionId)) {
+      return Completable.complete();
+    }
+
     return authorizationService.getAuthorization(transactionId, customerId)
         .flatMapCompletable(
             authorization -> authorizationPersistence.saveAuthorization(authorization));

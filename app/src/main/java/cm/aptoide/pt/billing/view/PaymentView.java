@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.billing.view;
 
-import cm.aptoide.pt.billing.PaymentService;
-import cm.aptoide.pt.billing.Product;
+import cm.aptoide.pt.billing.payment.PaymentService;
+import cm.aptoide.pt.billing.product.Product;
 import cm.aptoide.pt.presenter.View;
 import java.util.List;
 import rx.Observable;

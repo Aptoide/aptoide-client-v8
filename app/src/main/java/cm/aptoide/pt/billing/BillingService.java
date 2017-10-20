@@ -1,5 +1,8 @@
 package cm.aptoide.pt.billing;
 
+import cm.aptoide.pt.billing.payment.PaymentService;
+import cm.aptoide.pt.billing.product.Product;
+import cm.aptoide.pt.billing.purchase.Purchase;
 import java.util.List;
 import rx.Completable;
 import rx.Single;

@@ -50,11 +50,12 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.TrackerFilter;
-import cm.aptoide.pt.billing.Adyen;
+import cm.aptoide.pt.billing.payment.Adyen;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
+import cm.aptoide.pt.billing.BillingIdManager;
 import cm.aptoide.pt.billing.BillingPool;
-import cm.aptoide.pt.billing.IdResolver;
+import cm.aptoide.pt.billing.purchase.PurchaseFactory;
 import cm.aptoide.pt.billing.external.ExternalBillingSerializer;
 import cm.aptoide.pt.billing.view.PaymentThrowableCodeMapper;
 import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
@@ -273,6 +274,7 @@ public abstract class AptoideApplication extends Application {
   private BodyInterceptor<BaseBody> accountSettingsBodyInterceptorPoolV7;
   private BodyInterceptor<BaseBody> accountSettingsBodyInterceptorWebV7;
   private Adyen adyen;
+  private PurchaseFactory purchaseFactory;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -837,7 +839,7 @@ public abstract class AptoideApplication extends Application {
               getTokenInvalidator(), getSyncScheduler(), getInAppBillingSerializer(),
               getBodyInterceptorPoolV7(), getAccountSettingsBodyInterceptorPoolV7(),
               new HashMap<>(), WebService.getDefaultConverter(), CrashReport.getInstance(),
-              getAdyen());
+              getAdyen(), getPurchaseFactory());
     }
     return billingPool;
   }
@@ -851,7 +853,7 @@ public abstract class AptoideApplication extends Application {
     return adyen;
   }
 
-  public IdResolver getIdResolver(String merchantName) {
+  public BillingIdManager getIdResolver(String merchantName) {
     return getBillingPool().getIdResolver(merchantName);
   }
 
@@ -885,7 +887,8 @@ public abstract class AptoideApplication extends Application {
 
   public PurchaseBundleMapper getPurchaseBundleMapper() {
     if (purchaseBundleMapper == null) {
-      purchaseBundleMapper = new PurchaseBundleMapper(getPaymentThrowableCodeMapper());
+      purchaseBundleMapper =
+          new PurchaseBundleMapper(getPaymentThrowableCodeMapper(), getPurchaseFactory());
     }
     return purchaseBundleMapper;
   }
@@ -1334,6 +1337,13 @@ public abstract class AptoideApplication extends Application {
           AppEventsLogger.newLogger(this), getNavigationTracker());
     }
     return accountAnalytics;
+  }
+
+  public PurchaseFactory getPurchaseFactory() {
+    if (purchaseFactory == null) {
+      purchaseFactory = new PurchaseFactory();
+    }
+    return purchaseFactory;
   }
 }
 

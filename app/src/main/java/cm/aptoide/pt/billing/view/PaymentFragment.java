@@ -18,9 +18,9 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
-import cm.aptoide.pt.billing.IdResolver;
-import cm.aptoide.pt.billing.PaymentService;
-import cm.aptoide.pt.billing.Product;
+import cm.aptoide.pt.billing.BillingIdManager;
+import cm.aptoide.pt.billing.payment.PaymentService;
+import cm.aptoide.pt.billing.product.Product;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.PermissionServiceFragment;
@@ -34,6 +34,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxRadioGroup;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import rx.Observable;
@@ -65,7 +66,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   private BillingAnalytics billingAnalytics;
   private BillingNavigator billingNavigator;
   private ScrollView scroll;
-  private IdResolver idResolver;
+  private BillingIdManager billingIdManager;
 
   public static Fragment create(Bundle bundle) {
     final PaymentFragment fragment = new PaymentFragment();
@@ -80,7 +81,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     billingAnalytics =
         ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
     billingNavigator = ((ActivityResultNavigator) getContext()).getBillingNavigator();
-    idResolver = ((AptoideApplication) getContext().getApplicationContext()).getIdResolver(
+    billingIdManager = ((AptoideApplication) getContext().getApplicationContext()).getIdResolver(
         getArguments().getString(PaymentActivity.EXTRA_MERCHANT_NAME));
   }
 
@@ -116,7 +117,8 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     attachPresenter(new PaymentPresenter(this, billing, billingNavigator, billingAnalytics,
         getArguments().getString(PaymentActivity.EXTRA_MERCHANT_NAME),
         getArguments().getString(PaymentActivity.EXTRA_SKU),
-        getArguments().getString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD)));
+        getArguments().getString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD),
+        new HashSet<>()));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -156,7 +158,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
 
   @Override public Observable<PaymentService> selectServiceEvent() {
     return RxRadioGroup.checkedChanges(serviceRadioGroup)
-        .map(paymentId -> serviceMap.get(idResolver.generateServiceId(paymentId)))
+        .map(paymentId -> serviceMap.get(billingIdManager.generateServiceId(paymentId)))
         .filter(service -> service != null);
   }
 
@@ -173,7 +175,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   }
 
   @Override public void selectService(PaymentService payment) {
-    serviceRadioGroup.check((int) idResolver.resolveServiceId(payment.getId()));
+    serviceRadioGroup.check((int) billingIdManager.resolveServiceId(payment.getId()));
   }
 
   @Override public void showPaymentLoading() {
@@ -203,7 +205,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
 
       radioButton = (RadioButton) getActivity().getLayoutInflater()
           .inflate(R.layout.payment_item, serviceRadioGroup, false);
-      radioButton.setId((int) idResolver.resolveServiceId(payment.getId()));
+      radioButton.setId((int) billingIdManager.resolveServiceId(payment.getId()));
 
       Glide.with(this)
           .load(payment.getIcon())

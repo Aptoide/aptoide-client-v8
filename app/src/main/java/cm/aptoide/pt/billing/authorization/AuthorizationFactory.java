@@ -11,6 +11,11 @@ public class AuthorizationFactory {
   public Authorization create(String id, String customerId, String type,
       Authorization.Status status, String url, String redirectUrl, String metadata, Price price,
       String description, String transactionId, String session) {
+
+    if (type == null) {
+      return new Authorization(id, customerId, status, transactionId);
+    }
+
     switch (type) {
       case WEB:
         return new WebAuthorization(id, customerId, status, url, redirectUrl, transactionId);

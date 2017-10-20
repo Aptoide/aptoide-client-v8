@@ -7,7 +7,7 @@ package cm.aptoide.pt.billing.product;
 
 import cm.aptoide.pt.billing.Price;
 
-public class InAppProduct extends SimpleProduct {
+public class InAppProduct extends Product {
 
   private final String sku;
   private final String packageName;

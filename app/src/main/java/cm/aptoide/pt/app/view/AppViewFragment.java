@@ -49,7 +49,7 @@ import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.exception.BillingException;
-import cm.aptoide.pt.billing.product.PaidAppPurchase;
+import cm.aptoide.pt.billing.purchase.PaidAppPurchase;
 import cm.aptoide.pt.billing.view.PaymentActivity;
 import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.crashreports.CrashReport;

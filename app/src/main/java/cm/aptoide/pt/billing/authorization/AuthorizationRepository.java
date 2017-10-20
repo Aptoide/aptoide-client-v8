@@ -9,6 +9,7 @@ import cm.aptoide.pt.billing.BillingSyncScheduler;
 import cm.aptoide.pt.billing.Customer;
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
 
 public class AuthorizationRepository {
 
@@ -33,13 +34,20 @@ public class AuthorizationRepository {
             customerId -> authorizationPersistence.getAuthorization(customerId, transactionId));
   }
 
-  public Completable updateAuthorization(String transactionId, String metadata) {
+  public Completable updateAuthorization(String transactionId, String metadata,
+      Authorization.Status status) {
     return customer.getId()
         .flatMap(
             customerId -> authorizationPersistence.updateAuthorization(customerId, transactionId,
-                Authorization.Status.PENDING_SYNC, metadata))
-        .doOnSuccess(
-            authorization -> syncScheduler.syncAuthorization(authorization.getTransactionId()))
+                status, metadata))
         .toCompletable();
+  }
+
+  public Single<Authorization> createAuthorization(String transactionId,
+      Authorization.Status status) {
+    return customer.getId()
+        .flatMap(
+            customerId -> authorizationPersistence.createAuthorization(customerId, transactionId,
+                status));
   }
 }

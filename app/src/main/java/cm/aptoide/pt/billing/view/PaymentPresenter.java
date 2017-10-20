@@ -7,13 +7,14 @@ package cm.aptoide.pt.billing.view;
 
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
-import cm.aptoide.pt.billing.PaymentService;
-import cm.aptoide.pt.billing.Product;
+import cm.aptoide.pt.billing.payment.PaymentService;
 import cm.aptoide.pt.billing.exception.ServiceNotAuthorizedException;
+import cm.aptoide.pt.billing.product.Product;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import rx.Completable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -21,6 +22,7 @@ public class PaymentPresenter implements Presenter {
 
   private static final int CUSTOMER_AUTHORIZATION_REQUEST_CODE = 2001;
 
+  private final Set<String> purchaseErrorShown;
   private final PaymentView view;
   private final Billing billing;
   private final BillingNavigator navigator;
@@ -30,7 +32,8 @@ public class PaymentPresenter implements Presenter {
   private final String payload;
 
   public PaymentPresenter(PaymentView view, Billing billing, BillingNavigator navigator,
-      BillingAnalytics analytics, String merchantName, String sku, String payload) {
+      BillingAnalytics analytics, String merchantName, String sku, String payload,
+      Set<String> purchaseErrorShown) {
     this.view = view;
     this.billing = billing;
     this.navigator = navigator;
@@ -38,6 +41,7 @@ public class PaymentPresenter implements Presenter {
     this.merchantName = merchantName;
     this.sku = sku;
     this.payload = payload;
+    this.purchaseErrorShown = purchaseErrorShown;
   }
 
   @Override public void present() {
@@ -128,7 +132,9 @@ public class PaymentPresenter implements Presenter {
                 navigator.popViewWithResult(purchase);
               }
 
-              if (purchase.isFailed()) {
+              if (purchase.isFailed() && !purchaseErrorShown.contains(
+                  purchase.getTransactionId())) {
+                purchaseErrorShown.add(purchase.getTransactionId());
                 view.hidePurchaseLoading();
                 view.showUnknownError();
                 analytics.sendPaymentErrorEvent();

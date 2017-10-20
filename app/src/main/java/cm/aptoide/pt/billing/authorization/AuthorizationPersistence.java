@@ -12,4 +12,6 @@ public interface AuthorizationPersistence {
 
   Single<Authorization> updateAuthorization(String customerId, String transactionId, Authorization.Status status,
       String metadata);
+
+  Single<Authorization> createAuthorization(String customerId, String transactionId, Authorization.Status status);
 }

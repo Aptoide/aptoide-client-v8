@@ -14,8 +14,6 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.billing.view.BillingNavigator;
-import cm.aptoide.pt.billing.view.PaymentThrowableCodeMapper;
-import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import cm.aptoide.pt.view.leak.LeakActivity;
@@ -163,11 +161,11 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
 
   public BillingNavigator getBillingNavigator() {
     if (billingNavigator == null) {
-      billingNavigator =
-          new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
-              getActivityNavigator(), getFragmentNavigator(),
-              ((AptoideApplication) getApplicationContext()).getMarketName(),
-              ((AptoideApplication) getApplicationContext()).getAdyen(), PublishRelay.create());
+      billingNavigator = new BillingNavigator(
+          ((AptoideApplication) getApplicationContext()).getPurchaseBundleMapper(),
+          getActivityNavigator(), getFragmentNavigator(),
+          ((AptoideApplication) getApplicationContext()).getMarketName(),
+          ((AptoideApplication) getApplicationContext()).getAdyen(), PublishRelay.create());
     }
     return billingNavigator;
   }

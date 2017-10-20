@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.billing.external;
 
-import cm.aptoide.pt.billing.Product;
 import cm.aptoide.pt.billing.product.InAppProduct;
+import cm.aptoide.pt.billing.product.Product;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetPurchasesRequest;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
