@@ -60,4 +60,5 @@
   <string name="spotandshare_message_timeout_creating_hotspot">Creating hotspot is taking too long. Please try again</string>
   <string name="spotandshare_message_join_group_error">There was an error inside the group</string>
   <string name="spotandshare_message_hotspot_enabling_problem_send">Due to your Android version, you need to press "Receive" and ask your friend to press "Send" to start sharing apps.</string>
+  <string name="spotandshare_button_skip_app_selection">skip</string>
 </resources>
