@@ -164,6 +164,11 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
     getFragmentNavigator().navigateToWithoutBackSave(SpotAndShareMainFragment.newInstance(), true);
   }
 
+  @Override public void navigateBackWithStateLoss() {
+    getFragmentNavigator().navigateToAllowingStateLoss(SpotAndShareMainFragment.newInstance(),
+        true);
+  }
+
   @Override public void onLeaveGroupError() {
     ShowMessage.asSnack(this, R.string.spotandshare_message_waiting_to_send_leave_group);
   }

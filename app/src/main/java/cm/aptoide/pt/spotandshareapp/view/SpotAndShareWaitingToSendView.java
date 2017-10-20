@@ -28,4 +28,6 @@ public interface SpotAndShareWaitingToSendView extends View {
   void showGeneralCreateGroupError();
 
   void finish();
+
+  void navigateBackWithStateLoss();
 }
