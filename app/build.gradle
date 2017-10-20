@@ -303,6 +303,9 @@ dependencies {
   prodCompile project(path: ':dataprovider', configuration: 'prodRelease')
   prodCompile project(path: ':aptoide-account-manager', configuration: 'prodRelease')
 
+  leakCompile project(path: ':dataprovider', configuration: 'prodRelease')
+  leakCompile project(path: ':aptoide-account-manager', configuration: 'prodRelease')
+
   fairyCompile project(path: ':dataprovider', configuration: 'prodRelease')
   fairyCompile project(path: ':aptoide-account-manager', configuration: 'prodRelease')
 
