@@ -10,17 +10,15 @@
   <string name="login">تسجيل الدخول</string>
   <string name="successful">ناجح</string>
   <string name="login_successful">تسجيل الدخول بنجاح</string>
-  <string name="forgot_passwd">Forgot password?</string>
+  <string name="forgot_passwd">هل نسيت كلمة السر؟</string>
   <string name="fields_cannot_empty">يرجى التحقق من البريد الإلكتروني وكلمة المرور.</string>
   <string name="unknown_error">خطأ مجهول</string>
-  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
-        Content Policy for Developers
+  <string name="accept_terms">بتسجيلك حساباً جديد أنت توافق على شروط الخدمة في Aptoide         وعلى سياسة المحتوى للمطورين
     </string>
-  <string name="no_email_and_pass_error_message">Please insert an email and password to
-        register.
+  <string name="no_email_and_pass_error_message">الرجاء إدخال البريد الإلكتروني وكلمة السر         للتسجيل.
     </string>
-  <string name="no_pass_error_message">Please insert a password to register.</string>
-  <string name="no_email_error_message">Please insert an email to register.</string>
+  <string name="no_pass_error_message">الرجاء إدخال كلمة سر للتسجيل.</string>
+  <string name="no_email_error_message">يرجى إدخال بريد إلكتروني للتسجيل.</string>
   <string name="password_validation_text">\"كلمة المرور يجب أن تكون مؤلفة من 8 أحرف على الأقل ويجب أن تتضمن
 حرفاً واحداً على الأقل ورقماً واحداً أو أحرف صعبة (!@#$%*)
  \"</string>

@@ -126,28 +126,28 @@
   <!-- WIZARD -->
   <string name="wizard_skip"><b>تخطي</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_welcome_message"><b>Welcome!</b></string>
-  <string name="wizard_sub_title_viewpager_one">Begin a <b>secure</b> and <b>enjoyable</b> journey.</string>
-  <string name="wizard_description_part_one_viewpager_one"><b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
-  <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
+  <string name="wizard_welcome_message"><b>مرحباً!</b></string>
+  <string name="wizard_sub_title_viewpager_one">تبدأ رحلة <b>آمنة</b> و<b>ممتعة</b>.</string>
+  <string name="wizard_description_part_one_viewpager_one"><b>ابحث عن</b> تطبيقات تحمل \nشارة موثوق \nلتنزيل آمن.</string>
+  <string name="wizard_description_part_two_viewpager_one"><b>اكتشف</b> التطبيقات التي\nأردتها، لكن\nلم تجدها أبداً.</string>
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two"><b>Apps Timeline</b></string>
-  <string name="wizard_sub_title_viewpager_two">Get the <b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
+  <string name="wizard_title_viewpager_two"><b>التسلسل الزمني للتطبيقات</b></string>
+  <string name="wizard_sub_title_viewpager_two">احصل على <b>آخر التطبيقات</b>، ابحث عن <b>متاجر موضوعية</b>\nللوصول <b>إلى محتوى مخصص.</b></string>
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three"><b>Join the community</b></string>
-  <string name="wizard_description_part_one_viewpager_three"><b>Follow</b> your friends</string>
-  <string name="wizard_description_part_two_viewpager_three"><b>Review</b> and Rate apps</string>
-  <string name="wizard_description_part_three_viewpager_three"><b>Create</b> your Store</string>
-  <string name="wizard_register_now_button">Register now</string>
-  <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
-  <string name="wizard_or_login"><u>or Login</u></string>
+  <string name="wizard_title_viewpager_three"><b>انضم إلى المجتمع</b></string>
+  <string name="wizard_description_part_one_viewpager_three"><b>قم بمتابعة</b> أصدقائك</string>
+  <string name="wizard_description_part_two_viewpager_three"><b>أعط رأيك</b> وقيّم التطبيقات</string>
+  <string name="wizard_description_part_three_viewpager_three"><b>أنشئ</b> متجرك</string>
+  <string name="wizard_register_now_button">قم بالتسجيل الآن</string>
+  <string name="wizard_be_a_part_of_aptoide">كن جزءاً من Aptoide!</string>
+  <string name="wizard_or_login"><u>أو سجّل الدخول</u></string>
   <string name="you_need_to_be_logged_in">يجب عليك تسجيل الدخول</string>
   <string name="follow">متابعة</string>
   <!--need translation-->
   <string name="followed">تتابع</string>
   <string name="unfollow_yes_no">هل أنت متأكد من أنك تريد الغاء المتابعة؟</string>
   <string name="unfollow">الغاء المتابعة</string>
-  <string name="appview_follow_store_button_text">Follow?</string>
+  <string name="appview_follow_store_button_text">متابعة؟</string>
   <string name="unfollowing_store_message">الغيت متابعة %s</string>
   <string name="store_followed">تم متابعة المتجر %s</string>
   <string name="subscribers">المشتركون</string>
@@ -270,7 +270,7 @@
   <string name="create_store_displayable_message">قم بإنشاء متجرك الآن وابدأ بمشاركة تطبيقاتك!</string>
   <string name="create_store_displayable_button">إنشاء متجر</string>
   <string name="my_store_created_displayable_message">متجر تطبيقات أندرويد الخاص بك</string>
-  <string name="create_store_displayable_created_store_message">You\'ve just created your Store!</string>
+  <string name="create_store_displayable_created_store_message">لقد قمت للتّو بإنشاء متجرك!</string>
   <string name="create_store_displayable_explore_message">ادخل واستكشف كل الاحتمالات</string>
   <string name="create_store_displayable_explore_button">استكشاف</string>
   <!-- stores tab > my store with no apps -->
@@ -319,16 +319,16 @@
   <string name="private_followers_message">%d متابع ملفاتهم خاصة</string>
   <string name="private_following_message">أنت تتابع %d مستخدم/متجر خاص</string>
   <!-- Payments -->
-  <string name="item_payment_button_use">use</string>
-  <string name="item_payment_button_register">register</string>
-  <string name="item_payment_approving_text">Approving...</string>
-  <string name="activity_payment_more_payments_button">Use another payment method</string>
+  <string name="item_payment_button_use">اسنخدم</string>
+  <string name="item_payment_button_register">سجّل</string>
+  <string name="item_payment_approving_text">موافقة...</string>
+  <string name="activity_payment_more_payments_button">استخدم وسيلة دفعٍ أخرى</string>
   <string name="reviews_expand_button">%d رد</string>
   <string name="out_of_space_dialog_title">نفذت المساحة</string>
   <string name="out_of_space_dialog_message">يرجى تفريغ بعض المساحة للاستمرار.</string>
   <!--new setting options-->
-  <string name="languages">Languages</string>
-  <string name="language_dialog">Select a language</string>
-  <string name="topAppsNotification">Top apps recommendations</string>
-  <string name="topAppsNotification_dialog">Choose top apps notifications frequency</string>
+  <string name="languages">اللّغات</string>
+  <string name="language_dialog">قم باختيار لغة</string>
+  <string name="topAppsNotification">اقنراحات التطبيقات الأفضل</string>
+  <string name="topAppsNotification_dialog">قم باختيار مدى تكرار إشعارات التطبيقات الأفضل</string>
 </resources>

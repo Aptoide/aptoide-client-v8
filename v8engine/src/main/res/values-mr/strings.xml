@@ -123,28 +123,28 @@ http://aptoi.de/tv</string>
   <!-- WIZARD -->
   <string name="wizard_skip"><b>वगळा</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_welcome_message"><b>Welcome!</b></string>
-  <string name="wizard_sub_title_viewpager_one">Begin a <b>secure</b> and <b>enjoyable</b> journey.</string>
-  <string name="wizard_description_part_one_viewpager_one"><b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
-  <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
+  <string name="wizard_welcome_message"><b>स्वागत!</b></string>
+  <string name="wizard_sub_title_viewpager_one">सुरु करा <b>सुरक्षित</b> आणि <b>मजेदार</b> प्रवास.</string>
+  <string name="wizard_description_part_one_viewpager_one"><b>शोधा</b> अॅपस ह्या\nविश्र्वसनीय अॅपसोबतचा बॅज \nसुरक्षित इनस्टॉलसाठी.</string>
+  <string name="wizard_description_part_two_viewpager_one"><b>मिळतील</b> अॅपस जी\nआपल्याला हवी होती, पण\nकधीच सापडली नाहीत.</string>
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two"><b>Apps Timeline</b></string>
-  <string name="wizard_sub_title_viewpager_two">Get the <b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
+  <string name="wizard_title_viewpager_two"><b>अॅपस टाईमलाईन</b></string>
+  <string name="wizard_sub_title_viewpager_two"><b>नविनोत्तम अॅपस</b>मिळवा, शोधा <b>थिमॅटिक स्टोरस</b>\nआणि शिरा<b>खासगी सामग्रीत.</b></string>
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three"><b>Join the community</b></string>
-  <string name="wizard_description_part_one_viewpager_three"><b>Follow</b> your friends</string>
-  <string name="wizard_description_part_two_viewpager_three"><b>Review</b> and Rate apps</string>
-  <string name="wizard_description_part_three_viewpager_three"><b>Create</b> your Store</string>
-  <string name="wizard_register_now_button">Register now</string>
-  <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
-  <string name="wizard_or_login"><u>or Login</u></string>
+  <string name="wizard_title_viewpager_three"><b>समुदायात सामिल व्हा</b></string>
+  <string name="wizard_description_part_one_viewpager_three">आपल्या स्नेह्यांना <b>फॉलो करा</b></string>
+  <string name="wizard_description_part_two_viewpager_three">अॅपची <b>समीक्षा</b> द्या आणि रेट करा</string>
+  <string name="wizard_description_part_three_viewpager_three">आपल स्टोर <b>बनवा</b></string>
+  <string name="wizard_register_now_button">आत्ताच रजिस्टर करा</string>
+  <string name="wizard_be_a_part_of_aptoide">Aptoide चे हिस्सा व्हा!</string>
+  <string name="wizard_or_login"><u>किंवा लॉग इन करा</u></string>
   <string name="you_need_to_be_logged_in">आपणलॉगीन करणे जरुरी आहे</string>
   <string name="follow">फॉलो</string>
   <!--need translation-->
   <string name="followed">फॉलो करत आहेत</string>
   <string name="unfollow_yes_no">आपल्याला खात्री आहे का की आपल्याला अनफॉलो करायचे आहे?</string>
   <string name="unfollow">अनफॉलो करा</string>
-  <string name="appview_follow_store_button_text">Follow?</string>
+  <string name="appview_follow_store_button_text">फॉलो?</string>
   <string name="unfollowing_store_message">%s ला अनफॉलो करीत आहे</string>
   <string name="store_followed">%s स्टोर फॉलो केले</string>
   <string name="subscribers">सदस्य</string>
@@ -267,7 +267,7 @@ Aptoide नेहमी शिफारस करते की आपण के�
   <string name="create_store_displayable_message">आपले स्टोर बनवा आणि अॅप्स शेअर करण्यास सुरुवात करा!</string>
   <string name="create_store_displayable_button">स्टोर बनवा</string>
   <string name="my_store_created_displayable_message">आपले अॅन्ड्रॉइड अॅप स्टोर</string>
-  <string name="create_store_displayable_created_store_message">You\'ve just created your Store!</string>
+  <string name="create_store_displayable_created_store_message">आपण आताच आपले स्टोर तयार केले!</string>
   <string name="create_store_displayable_explore_message">प्रवेश करा आणि सर्व शक्यतांचा शोध घ्या</string>
   <string name="create_store_displayable_explore_button">शोध घ्या</string>
   <!-- stores tab > my store with no apps -->
@@ -316,16 +316,16 @@ Aptoide नेहमी शिफारस करते की आपण के�
   <string name="private_followers_message">%d फॉलोअर्स वैयक्तिक आहेत</string>
   <string name="private_following_message">आपण %d खाजगी वापरकर्ते/स्टोर्स फॉलो करत आहात</string>
   <!-- Payments -->
-  <string name="item_payment_button_use">use</string>
-  <string name="item_payment_button_register">register</string>
-  <string name="item_payment_approving_text">Approving...</string>
-  <string name="activity_payment_more_payments_button">Use another payment method</string>
+  <string name="item_payment_button_use">वापरा</string>
+  <string name="item_payment_button_register">रजिस्टर</string>
+  <string name="item_payment_approving_text">मान्य करीत आहोत...</string>
+  <string name="activity_payment_more_payments_button">दुसरी कोणती पेमेंट पद्धत वापरा</string>
   <string name="reviews_expand_button">%d उत्तरे</string>
   <string name="out_of_space_dialog_title">जागा उरली नाही</string>
   <string name="out_of_space_dialog_message">पुढे जाण्यासाठी कृपया जागा रिकामी करा.</string>
   <!--new setting options-->
-  <string name="languages">Languages</string>
-  <string name="language_dialog">Select a language</string>
-  <string name="topAppsNotification">Top apps recommendations</string>
-  <string name="topAppsNotification_dialog">Choose top apps notifications frequency</string>
+  <string name="languages">भाषा</string>
+  <string name="language_dialog">भाषा निवडा</string>
+  <string name="topAppsNotification">उच्च श्रेणीच्या अॅपसच्या शिफारशी</string>
+  <string name="topAppsNotification_dialog">उच्च श्रेणीच्या अॅपच्या सूचनांची फ्रिक्वेन्सी निवडा</string>
 </resources>

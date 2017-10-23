@@ -158,11 +158,11 @@
   <string name="updates_tab">التحديثات</string>
   <string name="feedback_send_button">إرسال الملاحظات</string>
   <!-- NavDrawer List items -->
-  <string name="my_account">My Account</string>
-  <string name="setting_schdwntitle">Scheduled Downloads</string>
-  <string name="settings">Settings</string>
-  <string name="facebook">Facebook</string>
-  <string name="twitter">Twitter</string>
+  <string name="my_account">حسابي</string>
+  <string name="setting_schdwntitle">تنزيلات مجدولة</string>
+  <string name="settings">الإعدادات</string>
+  <string name="facebook">فيسبوك</string>
+  <string name="twitter">تويتر</string>
   <string name="backup_apps">Backup Apps</string>
   <string name="menu_context_reparse">إعادة تحميل</string>
   <string name="menu_context_remove">مسح</string>
@@ -292,8 +292,8 @@
   <string name="setting_hwspecssum">معلومات عن مواصفات جهازك</string>
   <string name="setting_appfiltersum">لا تظهر التطبيقات غير المتوافقة مع هذا الجهاز</string>
   <string name="setting_appfiltertitle">تصفية التطبيقات</string>
-  <string name="setting_category_autoupdate">%s Auto update</string>
-  <string name="setting_category_autoupdate_title">Enable %s auto update</string>
+  <string name="setting_category_autoupdate">تحديث %s تلقائياً</string>
+  <string name="setting_category_autoupdate_title">تمكين التحديث التلقائي لـ%s</string>
   <string name="setting_dont_show_mature_content">عرض محتوى الكبار</string>
   <string name="setting_mature_filtering">محتوى للبالغين</string>
   <string name="setting_updates">التحديثات</string>
