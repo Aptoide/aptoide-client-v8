@@ -153,6 +153,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
 
   @Override public void showFollowedStoresResult() {
     if (followedStoresResultList.getVisibility() == View.VISIBLE) {
+      setFollowedStoresButtonSelected();
       return;
     }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -182,6 +183,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
 
   @Override public void showAllStoresResult() {
     if (allStoresResultList.getVisibility() == View.VISIBLE) {
+      setAllStoresButtonSelected();
       return;
     }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
