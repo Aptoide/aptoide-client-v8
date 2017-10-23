@@ -27,9 +27,11 @@ import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.SparseArray;
 import android.view.WindowManager;
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountPersistence;
 import cm.aptoide.accountmanager.AccountService;
+import cm.aptoide.accountmanager.AptoideAccount;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
@@ -185,6 +187,8 @@ import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import java.io.File;
+import java.io.IOError;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -755,11 +759,6 @@ public abstract class AptoideApplication extends Application {
       accountManager = new AptoideAccountManager.Builder().setAccountPersistence(
           new MatureContentPersistence(accountPersistence, getLocalAdultContent()))
           .setAccountService(accountService)
-          .registerSignUpAdapter(GoogleSignUpAdapter.TYPE,
-              new GoogleSignUpAdapter(getGoogleSignInClient(), getLoginPreferences()))
-          .registerSignUpAdapter(FacebookSignUpAdapter.TYPE,
-              new FacebookSignUpAdapter(Arrays.asList("email"), LoginManager.getInstance(),
-                  getLoginPreferences()))
           .build();
     }
     return accountManager;

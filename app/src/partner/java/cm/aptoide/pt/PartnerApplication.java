@@ -2,6 +2,9 @@ package cm.aptoide.pt;
 
 import android.os.Environment;
 import cm.aptoide.pt.account.LoginPreferences;
+import cm.aptoide.pt.notification.NotificationSyncScheduler;
+import cm.aptoide.pt.notification.PushNotificationSyncManager;
+import cm.aptoide.pt.notification.sync.NotificationSyncFactory;
 import cm.aptoide.pt.remotebootconfig.BootConfigJSONUtils;
 import cm.aptoide.pt.remotebootconfig.datamodel.BootConfig;
 import cm.aptoide.pt.remotebootconfig.datamodel.RemoteBootConfig;
@@ -18,6 +21,7 @@ public class PartnerApplication extends AptoideApplication {
 
   private BootConfig bootConfig;
   private ObjectMapper objectMapper;
+  private NotificationSyncScheduler notificationSyncScheduler;
 
   public void setRemoteBootConfig(RemoteBootConfig remoteBootConfig) {
     BootConfigJSONUtils.saveRemoteBootConfig(getBaseContext(), remoteBootConfig,
@@ -133,5 +137,15 @@ public class PartnerApplication extends AptoideApplication {
   @Override public FragmentProvider createFragmentProvider() {
     return new PartnerFragmentProvider(getDefaultThemeName(), getDefaultStoreName(),
         hasMultiStoreSearch());
+  }
+
+
+  @Override public NotificationSyncScheduler getNotificationSyncScheduler() {
+    if (notificationSyncScheduler == null) {
+      notificationSyncScheduler = new PushNotificationSyncManager(getSyncScheduler(), true,
+          new NotificationSyncFactory(getDefaultSharedPreferences(), getPnpV1NotificationService(),
+              getNotificationProvider()));
+    }
+    return notificationSyncScheduler;
   }
 }
