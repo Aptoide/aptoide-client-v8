@@ -33,7 +33,7 @@ public class PostDeleteRequest extends V7<BaseV7Response, PostDeleteRequest.Body
     return interfaces.deletePost(body, bypassCache);
   }
 
-  static class Body extends BaseBody {
+  public static class Body extends BaseBody {
     @JsonProperty("card_uid") private String postId;
 
     public Body(String postId) {

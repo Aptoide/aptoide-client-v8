@@ -24,6 +24,7 @@ import cm.aptoide.pt.social.data.PostPopupMenuBuilder;
 import cm.aptoide.pt.social.data.RatedRecommendation;
 import cm.aptoide.pt.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.social.data.SocialHeaderCardTouchEvent;
+import cm.aptoide.pt.social.data.UserUnfollowCardTouchEvent;
 import cm.aptoide.pt.timeline.view.LikeButtonView;
 import cm.aptoide.pt.util.DateCalculator;
 import cm.aptoide.pt.view.spannable.SpannableFactory;
@@ -324,6 +325,22 @@ public class SocialRecommendationViewHolder extends SocialPostViewHolder<RatedRe
                     new CardTouchEvent(post, position, CardTouchEvent.Type.DELETE_POST));
                 return false;
               });
+            }
+            if (post.getPoster() != null) {
+              if (post.getPoster()
+                  .getUser() != null && !post.getPoster()
+                  .isMe(account.getNickname(), account.getStore()
+                      .getName())) {
+                postPopupMenuBuilder.addUnfollowUser(menuItem -> {
+                  cardTouchEventPublishSubject.onNext(new UserUnfollowCardTouchEvent(
+                      post.getPoster()
+                          .getUser()
+                          .getId(), post.getPoster()
+                      .getUser()
+                      .getName(), position, post));
+                  return false;
+                });
+              }
             }
           }, throwable -> CrashReport.getInstance()
               .log(throwable));

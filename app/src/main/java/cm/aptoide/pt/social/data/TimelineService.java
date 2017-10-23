@@ -10,6 +10,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForTimelineArticle;
 import cm.aptoide.pt.dataprovider.ws.v7.PostDeleteRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.PostReadRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ShareCardRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.UnfollowUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.repository.exception.RepositoryIllegalArgumentException;
 import okhttp3.OkHttpClient;
@@ -125,6 +126,13 @@ public class TimelineService {
   public Completable deletePost(String postId) {
     return PostDeleteRequest.of(postId, bodyInterceptor, okhttp, converterFactory, tokenInvalidator,
         sharedPreferences)
+        .observe()
+        .toCompletable();
+  }
+
+  public Completable unfollowUser(Long userId) {
+    return UnfollowUserRequest.of(userId, bodyInterceptor, okhttp, converterFactory,
+        tokenInvalidator, sharedPreferences)
         .observe()
         .toCompletable();
   }

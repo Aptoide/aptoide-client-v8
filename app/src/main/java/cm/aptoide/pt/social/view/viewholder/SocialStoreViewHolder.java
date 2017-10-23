@@ -28,6 +28,7 @@ import cm.aptoide.pt.social.data.SocialHeaderCardTouchEvent;
 import cm.aptoide.pt.social.data.SocialStore;
 import cm.aptoide.pt.social.data.StoreAppCardTouchEvent;
 import cm.aptoide.pt.social.data.StoreCardTouchEvent;
+import cm.aptoide.pt.social.data.UserUnfollowCardTouchEvent;
 import cm.aptoide.pt.timeline.view.LikeButtonView;
 import cm.aptoide.pt.util.DateCalculator;
 import cm.aptoide.pt.view.spannable.SpannableFactory;
@@ -380,6 +381,22 @@ public class SocialStoreViewHolder extends SocialPostViewHolder<SocialStore> {
                     new CardTouchEvent(post, position, CardTouchEvent.Type.DELETE_POST));
                 return false;
               });
+            }
+            if (post.getPoster() != null) {
+              if (post.getPoster()
+                  .getUser() != null && !post.getPoster()
+                  .isMe(account.getNickname(), account.getStore()
+                      .getName())) {
+                postPopupMenuBuilder.addUnfollowUser(menuItem -> {
+                  cardTouchEventPublishSubject.onNext(new UserUnfollowCardTouchEvent(
+                      post.getPoster()
+                          .getUser()
+                          .getId(), post.getPoster()
+                      .getUser()
+                      .getName(), position, post));
+                  return false;
+                });
+              }
             }
           }, throwable -> CrashReport.getInstance()
               .log(throwable));

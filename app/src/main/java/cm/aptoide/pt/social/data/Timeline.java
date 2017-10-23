@@ -170,5 +170,9 @@ public class Timeline {
   public Completable deletePost(String postId) {
     return service.deletePost(postId);
   }
+
+  public Completable unfollowUser(Long userId) {
+    return service.unfollowUser(userId);
+  }
 }
 

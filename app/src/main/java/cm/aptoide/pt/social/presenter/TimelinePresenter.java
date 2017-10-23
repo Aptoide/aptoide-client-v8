@@ -223,8 +223,12 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
                 .equals(CardTouchEvent.Type.UNFOLLOW_USER))
-            .doOnNext(cardTouchEvent -> {
-              // TODO: 19/10/2017 unfollow user ws call
+            .flatMapCompletable(cardTouchEvent -> {
+              if (cardTouchEvent instanceof UserUnfollowCardTouchEvent) {
+                return timeline.unfollowUser(((UserUnfollowCardTouchEvent) cardTouchEvent).getId());
+              }
+              return Completable.error(new IllegalStateException(
+                  "Trying to unfollow user without without using the UserUnfollowCardTouchEvent "));
             })
             .doOnNext(cardTouchEvent -> view.showUserUnsubscribedMessage(
                 ((UserUnfollowCardTouchEvent) cardTouchEvent).getName()))
