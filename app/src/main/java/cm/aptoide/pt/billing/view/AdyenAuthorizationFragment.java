@@ -16,6 +16,7 @@ import cm.aptoide.pt.billing.payment.Adyen;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.permission.PermissionServiceFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
+import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -29,6 +30,8 @@ public class AdyenAuthorizationFragment extends PermissionServiceFragment
   private BillingNavigator navigator;
   private BillingAnalytics analytics;
   private Adyen adyen;
+  private PublishRelay<Void> backButton;
+  private ClickHandler clickHandler;
 
   public static Fragment create(Bundle bundle) {
     final AdyenAuthorizationFragment fragment = new AdyenAuthorizationFragment();
@@ -43,6 +46,7 @@ public class AdyenAuthorizationFragment extends PermissionServiceFragment
     navigator = ((ActivityResultNavigator) getActivity()).getBillingNavigator();
     analytics = ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
     adyen = ((AptoideApplication) getContext().getApplicationContext()).getAdyen();
+    backButton = PublishRelay.create();
   }
 
   @Nullable @Override
@@ -66,6 +70,14 @@ public class AdyenAuthorizationFragment extends PermissionServiceFragment
             .setPositiveButton(R.string.ok)
             .build();
 
+    clickHandler = new ClickHandler() {
+      @Override public boolean handle() {
+        backButton.call(null);
+        return true;
+      }
+    };
+    registerClickHandler(clickHandler);
+
     attachPresenter(
         new AdyenAuthorizationPresenter(this, getArguments().getString(PaymentActivity.EXTRA_SKU),
             billing, navigator, analytics,
@@ -79,6 +91,7 @@ public class AdyenAuthorizationFragment extends PermissionServiceFragment
   }
 
   @Override public void onDestroyView() {
+    unregisterClickHandler(clickHandler);
     progressBar = null;
     networkErrorDialog.dismiss();
     networkErrorDialog = null;
@@ -110,5 +123,9 @@ public class AdyenAuthorizationFragment extends PermissionServiceFragment
     if (!networkErrorDialog.isShowing() && !unknownErrorDialog.isShowing()) {
       unknownErrorDialog.show();
     }
+  }
+
+  @Override public Observable<Void> backButtonEvent() {
+    return backButton;
   }
 }

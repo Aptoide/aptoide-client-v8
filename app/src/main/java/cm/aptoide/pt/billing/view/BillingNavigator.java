@@ -155,6 +155,10 @@ public class BillingNavigator {
             new OnSubscribeCreditCardFragment(fragmentNavigator, request, false)));
   }
 
+  public void popToPaymentView() {
+    fragmentNavigator.cleanBackStack();
+  }
+
   public static class PayPalResult {
 
     public static final int SUCCESS = 0;

@@ -50,6 +50,21 @@ public class AdyenAuthorizationPresenter implements Presenter {
     handleErrorDismissEvent();
 
     handleAdyenPaymentResult();
+
+    handleBackEvent();
+  }
+
+  private void handleBackEvent() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.backButtonEvent())
+        .observeOn(viewScheduler)
+        .doOnNext(__ -> {
+          navigator.popToPaymentView();
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> showError(throwable));
   }
 
   private void onViewCreatedCheckAuthorizationActive() {
@@ -61,7 +76,7 @@ public class AdyenAuthorizationPresenter implements Presenter {
         .doOnNext(authorization -> analytics.sendAuthorizationSuccessEvent(serviceName))
         .observeOn(viewScheduler)
         .doOnNext(__ -> {
-          navigator.popView();
+          navigator.popToPaymentView();
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -145,7 +160,7 @@ public class AdyenAuthorizationPresenter implements Presenter {
         .flatMap(created -> view.errorDismisses())
         .doOnNext(product -> {
           analytics.sendAuthorizationErrorEvent(serviceName);
-          navigator.popView();
+          navigator.popToPaymentView();
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

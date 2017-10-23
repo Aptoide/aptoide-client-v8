@@ -8,22 +8,24 @@ import com.adyen.core.models.paymentdetails.CreditCardPaymentDetails;
 import java.nio.charset.Charset;
 import rx.Completable;
 import rx.Observable;
+import rx.Scheduler;
 import rx.Single;
-import rx.schedulers.Schedulers;
 
 public class Adyen {
 
   private final Context context;
   private final Charset dataCharset;
+  private final Scheduler scheduler;
 
   private Observable<AdyenPaymentStatus> paymentRequestStatus;
   private PaymentRequest paymentRequest;
   private OnSubscribePaymentRequest.PaymentDetails paymentDetails;
   private OnSubscribePaymentRequest.PaymentData paymentData;
 
-  public Adyen(Context context, Charset dataCharset) {
+  public Adyen(Context context, Charset dataCharset, Scheduler scheduler) {
     this.context = context;
     this.dataCharset = dataCharset;
+    this.scheduler = scheduler;
   }
 
   public Single<String> createPaymentRequest() {
@@ -50,7 +52,7 @@ public class Adyen {
     paymentRequestStatus = Observable.create(
         new OnSubscribePaymentRequest(paymentData, paymentDetails, paymentRequest))
         .publish(status -> status)
-        .subscribeOn(Schedulers.io());
+        .subscribeOn(scheduler);
     paymentRequest.start();
   }
 
@@ -94,7 +96,8 @@ public class Adyen {
       if (status.getServices() != null) {
         return Observable.from(status.getServices())
             .filter(service -> PaymentMethod.Type.CARD.equals(service.getType()))
-            .switchIfEmpty(Observable.error(new IllegalStateException("No credit card payment provided by Adyen")))
+            .switchIfEmpty(Observable.error(
+                new IllegalStateException("No credit card payment provided by Adyen")))
             .flatMap(service -> {
               status.getServiceCallback()
                   .completionWithPaymentMethod(service);

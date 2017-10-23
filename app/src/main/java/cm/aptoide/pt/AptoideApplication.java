@@ -846,7 +846,7 @@ public abstract class AptoideApplication extends Application {
 
   public Adyen getAdyen() {
     if (adyen == null) {
-      adyen = new Adyen(this, Charset.forName("UTF-8"));
+      adyen = new Adyen(this, Charset.forName("UTF-8"), Schedulers.io());
     }
     return adyen;
   }
