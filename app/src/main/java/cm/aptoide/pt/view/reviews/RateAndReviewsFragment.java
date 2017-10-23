@@ -160,7 +160,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     super.bindViews(view);
     final FloatingActionButton floatingActionButton =
         (FloatingActionButton) view.findViewById(R.id.fab);
-    setHasOptionsMenu(true);
 
     RxView.clicks(floatingActionButton)
         .flatMap(__ -> dialogUtils.showRateDialog(getActivity(), appName, packageName, storeName))
@@ -283,6 +282,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
+    setHasOptionsMenu(true);
   }
 
   @NonNull @Override

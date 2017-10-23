@@ -193,6 +193,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     storeAnalytics = new StoreAnalytics(AppEventsLogger.newLogger(getContext()), analytics);
     marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);
+    setHasOptionsMenu(true);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -522,11 +523,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
               break;
           }
         });
-  }
-
-  @Override public void setupViews() {
-    super.setupViews();
-    setHasOptionsMenu(true);
   }
 
   @CallSuper @Override public void setupToolbar() {

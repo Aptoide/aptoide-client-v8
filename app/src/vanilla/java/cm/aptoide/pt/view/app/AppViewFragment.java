@@ -400,6 +400,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             analytics);
     notLoggedInShareAnalytics =
         ((AptoideApplication) getContext().getApplicationContext()).getNotLoggedInShareAnalytics();
+    setHasOptionsMenu(true);
   }
 
   private void handleSavedInstance(Bundle savedInstanceState) {
@@ -434,7 +435,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   @Override public void bindViews(View view) {
     super.bindViews(view);
     header = new AppViewHeader(view);
-    setHasOptionsMenu(true);
   }
 
   @Override public void onDestroyView() {

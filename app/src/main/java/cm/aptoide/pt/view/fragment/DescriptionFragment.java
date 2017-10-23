@@ -92,6 +92,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     partnerId = ((AptoideApplication) getContext().getApplicationContext()).getPartnerId();
+    setHasOptionsMenu(true);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -222,7 +223,6 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
     super.bindViews(view);
     emptyData = (TextView) view.findViewById(R.id.empty_data);
     descriptionContainer = (TextView) view.findViewById(R.id.data_container);
-    setHasOptionsMenu(true);
   }
 
   @Override public int getContentViewId() {

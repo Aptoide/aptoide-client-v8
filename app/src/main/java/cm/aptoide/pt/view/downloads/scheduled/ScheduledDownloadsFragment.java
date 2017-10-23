@@ -117,6 +117,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
             aptoideNavigationTracker);
     analytics = Analytics.getInstance();
+    setHasOptionsMenu(true);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -134,7 +135,6 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
     scheduledDownloadRepository =
         RepositoryFactory.getScheduledDownloadRepository(getContext().getApplicationContext());
     //		compositeSubscription = new CompositeSubscription();
-    setHasOptionsMenu(true);
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {

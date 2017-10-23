@@ -485,6 +485,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     allStoresResultAdapter =
         new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, onOpenPopupMenuClickRelay,
             searchResultAllStores, searchResultAdsAllStores, crashReport);
+    setHasOptionsMenu(true);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -518,7 +519,6 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    setHasOptionsMenu(true);
     return inflater.inflate(LAYOUT, container, false);
   }
 
