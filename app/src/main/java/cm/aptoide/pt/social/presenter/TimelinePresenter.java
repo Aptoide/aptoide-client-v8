@@ -212,7 +212,7 @@ public class TimelinePresenter implements Presenter {
             .flatMapCompletable(cardTouchEvent -> timeline.ignoreUpdate(
                 ((AppUpdate) cardTouchEvent.getCard()).getPackageName())
                 .observeOn(AndroidSchedulers.mainThread())
-                .andThen(Completable.fromAction(() -> view.updateExcludedSucess())))
+                .andThen(Completable.fromAction(() -> view.updateExcludedSuccess())))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {

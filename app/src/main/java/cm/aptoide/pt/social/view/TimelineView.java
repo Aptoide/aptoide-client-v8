@@ -111,5 +111,5 @@ public interface TimelineView extends View {
 
   void showUserUnsubscribedMessage(String userName);
 
-  void updateExcludedSucess();
+  void updateExcludedSuccess();
 }

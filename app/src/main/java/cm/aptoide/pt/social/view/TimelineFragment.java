@@ -626,7 +626,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         .show();
   }
 
-  @Override public void updateExcludedSucess() {
+  @Override public void updateExcludedSuccess() {
     Toast.makeText(getContext(), "Update ignored", Toast.LENGTH_SHORT)
         .show();
   }
