@@ -287,7 +287,7 @@ public class SearchResultPresenter implements Presenter {
     if (storeName != null && !storeName.trim()
         .equals("")) {
       return Observable.fromCallable(() -> {
-        view.setViewWithStoreNameAsSingleTab();
+        view.setViewWithStoreNameAsSingleTab(storeName);
         return null;
       })
           .flatMap(__ -> loadDataForSpecificStore(query, storeName, offset));
