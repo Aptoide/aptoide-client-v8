@@ -6,8 +6,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,6 +71,7 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
     recyclerView.setVisibility(View.GONE);
     swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
     swipeRefreshLayout.setOnRefreshListener(() -> refreshEvent.onNext(null));
+    setupToolbar(view);
     adapter = new ListStoreAppsAdapter(new ArrayList<>(), appClicks);
     recyclerView.setAdapter(adapter);
     int spanSize = getSpanSize(3);
@@ -102,8 +106,8 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
                     .getApplicationContext()).getDatabase(), Store.class)),
             applicationContext.getBodyInterceptorPoolV7(), applicationContext.getDefaultClient(),
             WebService.getDefaultConverter(), applicationContext.getTokenInvalidator(),
-            applicationContext.getDefaultSharedPreferences(), 0, limit)),
-        CrashReport.getInstance(), getFragmentNavigator()), savedInstanceState);
+            applicationContext.getDefaultSharedPreferences(), 0, limit)), CrashReport.getInstance(),
+        getFragmentNavigator()), savedInstanceState);
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -121,6 +125,7 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
+    setHasOptionsMenu(true);
     return inflater.inflate(R.layout.list_store_apps_fragment_layout, container, false);
   }
 
@@ -173,5 +178,14 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
     return (int) (AptoideUtils.ScreenU.getScreenWidthInDip(
         (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
         getContext().getResources()) / AptoideUtils.ScreenU.REFERENCE_WIDTH_DPI * defaultSpan);
+  }
+
+  public void setupToolbar(View view) {
+    Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    actionBar.setDisplayHomeAsUpEnabled(true);
+    toolbar.setTitle(R.string.list_store_apps_fragment_title);
+    actionBar.setTitle(toolbar.getTitle());
   }
 }
