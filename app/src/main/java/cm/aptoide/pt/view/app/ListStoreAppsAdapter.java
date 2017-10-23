@@ -50,7 +50,7 @@ class ListStoreAppsAdapter extends RecyclerView.Adapter<AppViewHolder> {
   public void addApps(List<Application> applicationList) {
     int loadingPosition = getLoadingPosition();
     int firstInsertedIndex;
-    if (loadingPosition > 0) {
+    if (loadingPosition >= 0) {
       this.list.addAll(loadingPosition, applicationList);
       firstInsertedIndex = loadingPosition;
     } else {
@@ -87,5 +87,10 @@ class ListStoreAppsAdapter extends RecyclerView.Adapter<AppViewHolder> {
 
   public Application getItem(int position) {
     return list.get(position);
+  }
+
+  public void setApps(List<Application> apps) {
+    this.list = apps;
+    notifyDataSetChanged();
   }
 }

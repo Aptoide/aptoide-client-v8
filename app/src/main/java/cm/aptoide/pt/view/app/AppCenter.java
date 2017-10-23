@@ -1,8 +1,7 @@
 package cm.aptoide.pt.view.app;
 
 import java.util.List;
-import rx.Completable;
-import rx.Observable;
+import rx.Single;
 
 /**
  * Created by trinkes on 17/10/2017.
@@ -16,11 +15,11 @@ public class AppCenter {
     this.appService = appService;
   }
 
-  public Observable<List<Application>> getStoreApps() {
-    return appService.getStoreApps();
+  public Single<List<Application>> loadNextApps(long storeId) {
+    return appService.loadNextApps(storeId);
   }
 
-  public Completable loadNextApps(long storeId, boolean bypassCache) {
-    return appService.loadNextApps(storeId, bypassCache);
+  public Single<List<Application>> loadFreshApps(long storeId) {
+    return appService.loadFreshApps(storeId);
   }
 }

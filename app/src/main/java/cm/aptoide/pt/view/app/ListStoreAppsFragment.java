@@ -24,7 +24,6 @@ import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.BackButtonFragment;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
-import com.jakewharton.rxrelay.PublishRelay;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Observable;
@@ -42,6 +41,7 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
   private ListStoreAppsAdapter adapter;
   private long storeId;
   private PublishSubject<Application> appClicks;
+  private PublishSubject<Void> refreshEvent;
   private RecyclerView recyclerView;
   private GridLayoutManager layoutManager;
   private ProgressBar startingLoadingLayout;
@@ -59,13 +59,15 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
     super.onCreate(savedInstanceState);
     appClicks = PublishSubject.create();
     storeId = getArguments().getLong(STORE_ID);
+    refreshEvent = PublishSubject.create();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
     recyclerView.setVisibility(View.GONE);
-    swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
+    swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+    swipeRefreshLayout.setOnRefreshListener(() -> refreshEvent.onNext(null));
     adapter = new ListStoreAppsAdapter(new ArrayList<>(), appClicks);
     recyclerView.setAdapter(adapter);
     int spanSize = getSpanSize(3);
@@ -100,7 +102,7 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
                     .getApplicationContext()).getDatabase(), Store.class)),
             applicationContext.getBodyInterceptorPoolV7(), applicationContext.getDefaultClient(),
             WebService.getDefaultConverter(), applicationContext.getTokenInvalidator(),
-            applicationContext.getDefaultSharedPreferences(), PublishRelay.create(), 0, limit)),
+            applicationContext.getDefaultSharedPreferences(), 0, limit)),
         CrashReport.getInstance(), getFragmentNavigator()), savedInstanceState);
   }
 
@@ -148,6 +150,18 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
   @Override public void hideStartingLoading() {
     startingLoadingLayout.setVisibility(View.GONE);
     recyclerView.setVisibility(View.VISIBLE);
+  }
+
+  @Override public PublishSubject<Void> getRefreshEvent() {
+    return refreshEvent;
+  }
+
+  @Override public void hideRefreshLoading() {
+    swipeRefreshLayout.setRefreshing(false);
+  }
+
+  @Override public void setApps(List<Application> applications) {
+    adapter.setApps(applications);
   }
 
   private boolean isEndReached() {
