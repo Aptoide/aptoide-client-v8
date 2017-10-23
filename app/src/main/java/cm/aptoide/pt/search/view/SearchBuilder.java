@@ -9,6 +9,7 @@ import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.SearchView;
 import android.view.MenuItem;
@@ -27,18 +28,19 @@ public class SearchBuilder {
   private final SearchManager searchManager;
   private final String lastQuery;
 
-  public SearchBuilder(SearchManager searchManager, SearchNavigator searchNavigator) {
+  public SearchBuilder(@NonNull SearchManager searchManager,
+      @NonNull SearchNavigator searchNavigator) {
     this(searchManager, searchNavigator, null);
   }
 
-  public SearchBuilder(SearchManager searchManager, SearchNavigator searchNavigator,
-      @Nullable String lastQuery) {
+  public SearchBuilder(@NonNull SearchManager searchManager,
+      @NonNull SearchNavigator searchNavigator, @Nullable String lastQuery) {
     this.searchManager = searchManager;
     this.searchNavigator = searchNavigator;
     this.lastQuery = lastQuery;
   }
 
-  public void attachSearch(Context context, MenuItem menuItem) {
+  public void attachSearch(@NonNull Context context, @NonNull MenuItem menuItem) {
     final Context applicationContext = context.getApplicationContext();
     final SearchView searchView = (SearchView) menuItem.getActionView();
     ComponentName componentName = new ComponentName(applicationContext, SearchActivity.class);

@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -263,10 +264,20 @@ public class HomeFragment extends StoreFragment {
     super.onCreateOptionsMenu(menu, inflater);
     menu.removeItem(R.id.menu_share);
     if (searchBuilder != null && searchBuilder.isValid()) {
-      searchBuilder.attachSearch(getActivity(), menu.findItem(R.id.action_search));
-    } else {
-      menu.removeItem(R.id.action_search);
+      final FragmentActivity activity = getActivity();
+      if (activity != null) {
+        searchBuilder.attachSearch(activity, menu.findItem(R.id.action_search));
+        return;
+      }
+      // from getActivity() "May return null if the fragment is associated with a Context instead."
+      final Context context = getContext();
+      if (context != null) {
+        searchBuilder.attachSearch(context, menu.findItem(R.id.action_search));
+        return;
+      }
     }
+
+    menu.removeItem(R.id.action_search);
   }
 
   @Override public void setupViews() {

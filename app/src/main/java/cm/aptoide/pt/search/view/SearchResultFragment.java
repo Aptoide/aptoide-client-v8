@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -384,11 +385,22 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_search_results, menu);
     if (searchBuilder != null && searchBuilder.isValid()) {
-      searchMenuItem = menu.findItem(R.id.action_search);
-      searchBuilder.attachSearch(getActivity(), searchMenuItem);
-    } else {
-      menu.removeItem(R.id.action_search);
+      final FragmentActivity activity = getActivity();
+      if (activity != null) {
+        searchMenuItem = menu.findItem(R.id.action_search);
+        searchBuilder.attachSearch(activity, searchMenuItem);
+        return;
+      }
+      // from getActivity() "May return null if the fragment is associated with a Context instead."
+      final Context context = getContext();
+      if (context != null) {
+        searchMenuItem = menu.findItem(R.id.action_search);
+        searchBuilder.attachSearch(context, searchMenuItem);
+        return;
+      }
     }
+
+    menu.removeItem(R.id.action_search);
   }
 
   @Override public String getDefaultTheme() {
