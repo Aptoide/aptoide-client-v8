@@ -70,6 +70,7 @@ import cm.aptoide.pt.social.presenter.TimelinePresenter;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
+import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.util.DateCalculator;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -282,10 +283,13 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     } else {
       timelineUserProvider = new StatsUserProvider(accountManager, timelineService);
     }
+    UpdateRepository updateRepository = RepositoryFactory.getUpdateRepository(getContext(),
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
     Timeline timeline =
         new Timeline(timelineService, installManager, new DownloadFactory(marketName),
-            timelineAnalytics, timelinePostsRepository, marketName, timelineUserProvider);
+            timelineAnalytics, timelinePostsRepository, marketName, timelineUserProvider,
+            updateRepository);
 
     TimelineNavigator timelineNavigation = new TimelineNavigator(getFragmentNavigator(),
         getContext().getString(R.string.timeline_title_likes), tabNavigator, storeContext);
@@ -619,6 +623,11 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     final String msg = AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
         getContext().getResources(), userName);
     Snackbar.make(getView(), msg, Snackbar.LENGTH_SHORT)
+        .show();
+  }
+
+  @Override public void updateExcludedSucess() {
+    Toast.makeText(getContext(), "Update ignored", Toast.LENGTH_SHORT)
         .show();
   }
 

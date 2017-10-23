@@ -185,6 +185,8 @@ public class TimelinePresenter implements Presenter {
     clickOnUnfollowUser();
 
     clickOnReportAbuse();
+
+    clickOnIgnoreUpdate();
   }
 
   private void clickOnReportAbuse() {
@@ -201,6 +203,22 @@ public class TimelinePresenter implements Presenter {
         }, throwable -> crashReport.log(throwable));
   }
 
+  private void clickOnIgnoreUpdate() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.postClicked()
+            .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+                .equals(CardTouchEvent.Type.IGNORE_UPDATE))
+            .flatMapCompletable(cardTouchEvent -> timeline.ignoreUpdate(
+                ((AppUpdate) cardTouchEvent.getCard()).getPackageName())
+                .observeOn(AndroidSchedulers.mainThread())
+                .andThen(Completable.fromAction(() -> view.updateExcludedSucess())))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cardTouchEvent -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
   private void clickOnUnfollowStore() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -210,6 +228,7 @@ public class TimelinePresenter implements Presenter {
             .doOnNext(cardTouchEvent -> storeUtilsProxy.unSubscribeStore(
                 ((StoreLatestApps) cardTouchEvent.getCard()).getStoreName(),
                 storeCredentialsProvider))
+            .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(cardTouchEvent -> view.showUserUnsubscribedMessage(
                 ((StoreLatestApps) cardTouchEvent.getCard()).getStoreName()))
             .retry())
@@ -226,13 +245,14 @@ public class TimelinePresenter implements Presenter {
                 .equals(CardTouchEvent.Type.UNFOLLOW_USER))
             .flatMapCompletable(cardTouchEvent -> {
               if (cardTouchEvent instanceof UserUnfollowCardTouchEvent) {
-                return timeline.unfollowUser(((UserUnfollowCardTouchEvent) cardTouchEvent).getId());
+                return timeline.unfollowUser(((UserUnfollowCardTouchEvent) cardTouchEvent).getId())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .andThen(Completable.fromAction(() -> view.showUserUnsubscribedMessage(
+                        ((UserUnfollowCardTouchEvent) cardTouchEvent).getName())));
               }
               return Completable.error(new IllegalStateException(
-                  "Trying to unfollow user without without using the UserUnfollowCardTouchEvent "));
+                  "Trying to unfollow user without using the UserUnfollowCardTouchEvent "));
             })
-            .doOnNext(cardTouchEvent -> view.showUserUnsubscribedMessage(
-                ((UserUnfollowCardTouchEvent) cardTouchEvent).getName()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
