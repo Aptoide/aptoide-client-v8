@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -44,6 +45,7 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
   private RecyclerView recyclerView;
   private GridLayoutManager layoutManager;
   private ProgressBar startingLoadingLayout;
+  private SwipeRefreshLayout swipeRefreshLayout;
 
   public static Fragment newInstance(long storeId) {
     Bundle args = new Bundle();
@@ -63,13 +65,14 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
     super.onViewCreated(view, savedInstanceState);
     recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
     recyclerView.setVisibility(View.GONE);
+    swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
     adapter = new ListStoreAppsAdapter(new ArrayList<>(), appClicks);
     recyclerView.setAdapter(adapter);
     int spanSize = getSpanSize(3);
     layoutManager = new GridLayoutManager(getContext(), spanSize);
     layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
       @Override public int getSpanSize(int position) {
-        if (adapter.getItem(position) instanceof AppLoading) {
+        if (adapter != null && adapter.getItem(position) instanceof AppLoading) {
           return spanSize;
         }
         return 1;

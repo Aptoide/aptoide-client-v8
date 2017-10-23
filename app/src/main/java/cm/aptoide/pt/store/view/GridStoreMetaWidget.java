@@ -24,7 +24,6 @@ import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
@@ -140,7 +139,23 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
   }
 
   private void showBadge(HomeMeta.Badge badge) {
-    Logger.d(TAG, "showBadge: " + badge.name());
+    switch (badge) {
+      case NONE:
+        badgeIcon.setImageResource(R.drawable.tin);
+        break;
+      case BRONZE:
+        badgeIcon.setImageResource(R.drawable.bronze);
+        break;
+      case SILVER:
+        badgeIcon.setImageResource(R.drawable.silver);
+        break;
+      case GOLD:
+        badgeIcon.setImageResource(R.drawable.gold);
+        break;
+      case PLATINUM:
+        badgeIcon.setImageResource(R.drawable.platinum);
+        break;
+    }
   }
 
   private void navigateToFollowingScreen(GridStoreMetaDisplayable displayable,
