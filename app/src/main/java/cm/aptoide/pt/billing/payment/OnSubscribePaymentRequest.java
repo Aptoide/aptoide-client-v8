@@ -12,6 +12,7 @@ import com.adyen.core.models.PaymentMethod;
 import com.adyen.core.models.PaymentRequestResult;
 import com.adyen.core.models.paymentdetails.InputDetail;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import rx.Observer;
 import rx.observables.SyncOnSubscribe;
@@ -41,7 +42,8 @@ public class OnSubscribePaymentRequest extends SyncOnSubscribe<PaymentRequest, A
     }
 
     observer.onNext(new AdyenPaymentStatus(paymentData.getToken(), paymentData.getDataCallback(),
-        paymentData.getResult(), paymentDetails.getServiceCallback(), paymentDetails.getServices(),
+        paymentData.getResult(), paymentDetails.getServiceCallback(),
+        paymentDetails.getRecurringServices(), paymentDetails.getServices(),
         paymentDetails.getDetailsCallback(), paymentDetails.getPaymentRequest()));
 
     return paymentRequest;
@@ -81,15 +83,22 @@ public class OnSubscribePaymentRequest extends SyncOnSubscribe<PaymentRequest, A
 
     private PaymentMethodCallback serviceCallback;
     private List<PaymentMethod> services;
+    private List<PaymentMethod> recurringServices;
     private PaymentDetailsCallback detailsCallback;
     private PaymentRequest paymentRequest;
+
+    public PaymentDetails(List<PaymentMethod> services, List<PaymentMethod> recurringServices) {
+      this.services = services;
+      this.recurringServices = recurringServices;
+    }
 
     @Override public void onPaymentMethodSelectionRequired(@NonNull PaymentRequest paymentRequest,
         @NonNull List<PaymentMethod> recurringServices, @NonNull List<PaymentMethod> otherServices,
         @NonNull PaymentMethodCallback paymentMethodCallback) {
       this.serviceCallback = paymentMethodCallback;
-      recurringServices.addAll(otherServices);
-      this.services = recurringServices;
+      this.recurringServices =
+          recurringServices != null ? recurringServices : Collections.emptyList();
+      this.services = otherServices != null ? otherServices : Collections.emptyList();
     }
 
     @Override
@@ -101,8 +110,8 @@ public class OnSubscribePaymentRequest extends SyncOnSubscribe<PaymentRequest, A
     @Override public void onPaymentDetailsRequired(@NonNull PaymentRequest paymentRequest,
         @NonNull Collection<InputDetail> inputDetails,
         @NonNull PaymentDetailsCallback paymentDetailsCallback) {
-      this.paymentRequest = paymentRequest;
       this.detailsCallback = paymentDetailsCallback;
+      this.paymentRequest = paymentRequest;
     }
 
     public PaymentMethodCallback getServiceCallback() {
@@ -119,6 +128,10 @@ public class OnSubscribePaymentRequest extends SyncOnSubscribe<PaymentRequest, A
 
     public PaymentRequest getPaymentRequest() {
       return paymentRequest;
+    }
+
+    public List<PaymentMethod> getRecurringServices() {
+      return recurringServices;
     }
   }
 }

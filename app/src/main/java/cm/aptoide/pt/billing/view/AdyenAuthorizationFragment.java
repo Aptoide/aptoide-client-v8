@@ -16,6 +16,8 @@ import cm.aptoide.pt.billing.payment.Adyen;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.permission.PermissionServiceFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
+import com.adyen.core.PaymentRequest;
+import com.adyen.ui.views.CVCDialog;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -32,6 +34,7 @@ public class AdyenAuthorizationFragment extends PermissionServiceFragment
   private Adyen adyen;
   private PublishRelay<Void> backButton;
   private ClickHandler clickHandler;
+  private CVCDialog cvcDialog;
 
   public static Fragment create(Bundle bundle) {
     final AdyenAuthorizationFragment fragment = new AdyenAuthorizationFragment();
@@ -92,6 +95,10 @@ public class AdyenAuthorizationFragment extends PermissionServiceFragment
 
   @Override public void onDestroyView() {
     unregisterClickHandler(clickHandler);
+    if (cvcDialog != null) {
+      cvcDialog.dismiss();
+    }
+    cvcDialog = null;
     progressBar = null;
     networkErrorDialog.dismiss();
     networkErrorDialog = null;
@@ -123,6 +130,15 @@ public class AdyenAuthorizationFragment extends PermissionServiceFragment
     if (!networkErrorDialog.isShowing() && !unknownErrorDialog.isShowing()) {
       unknownErrorDialog.show();
     }
+  }
+
+  @Override public void showCvvView(PaymentRequest request) {
+    if (cvcDialog != null && cvcDialog.isShowing()) {
+      cvcDialog.dismiss();
+    }
+    cvcDialog = new CVCDialog(getActivity(), request.getAmount(), request.getPaymentMethod(),
+        () -> backButton.call(null));
+    cvcDialog.show();
   }
 
   @Override public Observable<Void> backButtonEvent() {

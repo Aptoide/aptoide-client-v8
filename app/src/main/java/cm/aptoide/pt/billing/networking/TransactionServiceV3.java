@@ -2,8 +2,8 @@ package cm.aptoide.pt.billing.networking;
 
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import cm.aptoide.pt.billing.Customer;
 import cm.aptoide.pt.billing.BillingIdManager;
+import cm.aptoide.pt.billing.Customer;
 import cm.aptoide.pt.billing.transaction.Transaction;
 import cm.aptoide.pt.billing.transaction.TransactionFactory;
 import cm.aptoide.pt.billing.transaction.TransactionService;
@@ -61,50 +61,49 @@ public class TransactionServiceV3 implements TransactionService {
                   .observe(true)
                   .toSingle()
                   .map(transactionResponse -> transactionMapper.map(customerId,
-                      billingIdManager.generateTransactionId(billingIdManager.resolveProductId(productId)),
-                      transactionResponse, productId));
+                      billingIdManager.generateTransactionId(
+                          billingIdManager.resolveProductId(productId)), transactionResponse,
+                      productId));
             }
-            return Single.just(transactionFactory.create(
-                billingIdManager.generateTransactionId(billingIdManager.resolveProductId(productId)),
-                customerId, billingIdManager.generateServiceId(1), productId,
-                Transaction.Status.COMPLETED));
+            return Single.just(transactionFactory.create(billingIdManager.generateTransactionId(
+                billingIdManager.resolveProductId(productId)), customerId,
+                billingIdManager.generateServiceId(1), productId, Transaction.Status.COMPLETED));
           }
 
           return Single.just(transactionFactory.create(
-              billingIdManager.generateTransactionId(billingIdManager.resolveProductId(productId)), customerId,
-              billingIdManager.generateServiceId(1), productId, Transaction.Status.FAILED));
+              billingIdManager.generateTransactionId(billingIdManager.resolveProductId(productId)),
+              customerId, billingIdManager.generateServiceId(1), productId,
+              Transaction.Status.FAILED));
         });
   }
 
-  @Override
-  public Single<Transaction> createTransaction(String productId, String serviceId, String payload) {
-    return Single.zip(
-        GetApkInfoRequest.of(billingIdManager.resolveProductId(productId), bodyInterceptorV3, httpClient,
-            converterFactory, tokenInvalidator, sharedPreferences, resources)
-            .observe(true)
-            .toSingle(), customer.getId(), (response, customerId) -> {
+  @Override public Single<Transaction> createTransaction(String customerId, String productId,
+      String serviceId, String payload) {
+    return GetApkInfoRequest.of(billingIdManager.resolveProductId(productId), bodyInterceptorV3,
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences, resources)
+        .observe(true)
+        .toSingle()
+        .map(response -> {
 
           if (response.isOk()) {
             if (response.isPaid()) {
-              return transactionFactory.create(
-                  billingIdManager.generateTransactionId(billingIdManager.resolveProductId(productId)),
-                  customerId, serviceId, productId,
+              return transactionFactory.create(billingIdManager.generateTransactionId(
+                  billingIdManager.resolveProductId(productId)), customerId, serviceId, productId,
                   Transaction.Status.PENDING_SERVICE_AUTHORIZATION);
             }
-            return transactionFactory.create(
-                billingIdManager.generateTransactionId(billingIdManager.resolveProductId(productId)),
-                customerId, billingIdManager.generateServiceId(1), productId,
-                Transaction.Status.COMPLETED);
+            return transactionFactory.create(billingIdManager.generateTransactionId(
+                billingIdManager.resolveProductId(productId)), customerId,
+                billingIdManager.generateServiceId(1), productId, Transaction.Status.COMPLETED);
           }
           return transactionFactory.create(
-              billingIdManager.generateTransactionId(billingIdManager.resolveProductId(productId)), customerId,
-              billingIdManager.generateServiceId(1), productId, Transaction.Status.FAILED);
+              billingIdManager.generateTransactionId(billingIdManager.resolveProductId(productId)),
+              customerId, billingIdManager.generateServiceId(1), productId,
+              Transaction.Status.FAILED);
         });
   }
 
-  @Override
-  public Single<Transaction> createTransaction(String productId, String serviceId, String payload,
-      String token) {
+  @Override public Single<Transaction> createTransaction(String customerId, String productId,
+      String serviceId, String payload, String token) {
     return Single.error(new IllegalStateException("Not implemented!"));
   }
 }

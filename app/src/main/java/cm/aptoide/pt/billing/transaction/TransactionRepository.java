@@ -27,7 +27,10 @@ public class TransactionRepository {
   }
 
   public Single<Transaction> createTransaction(String productId, String serviceId, String payload) {
-    return transactionService.createTransaction(productId, serviceId, payload)
+    return customer.getId()
+        .flatMap(
+            customerId -> transactionService.createTransaction(customerId, productId, serviceId,
+                payload))
         .flatMap(
             transaction -> transactionPersistence.removeTransactions(transaction.getProductId())
                 .andThen(transactionPersistence.saveTransaction(transaction))
@@ -36,7 +39,10 @@ public class TransactionRepository {
 
   public Single<Transaction> createTransaction(String productId, String serviceId, String payload,
       String token) {
-    return transactionService.createTransaction(productId, serviceId, payload, token)
+    return customer.getId()
+        .flatMap(
+            customerId -> transactionService.createTransaction(customerId, productId, serviceId,
+                payload, token))
         .flatMap(
             transaction -> transactionPersistence.removeTransactions(transaction.getProductId())
                 .andThen(transactionPersistence.saveTransaction(transaction))

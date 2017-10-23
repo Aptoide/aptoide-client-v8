@@ -75,7 +75,7 @@ public class BillingServiceV7 implements BillingService {
           if (response != null && response.isOk()) {
             return Single.just(serviceMapper.map(response.getList()));
           } else {
-            return Single.error(new IllegalArgumentException(V7.getErrorMessage(response)));
+            return Single.error(new IllegalStateException(V7.getErrorMessage(response)));
           }
         });
   }
@@ -145,8 +145,9 @@ public class BillingServiceV7 implements BillingService {
                     null));
           }
 
-          return Single.error(
-              new IllegalStateException("Could not retrieve purchase: " + response.message()));
+          return Single.just(
+              purchaseFactory.create(productId, null, null, Purchase.Status.FAILED, null, null,
+                  null, null));
         });
   }
 
@@ -161,7 +162,7 @@ public class BillingServiceV7 implements BillingService {
             return mapToProducts(merchantName, response.getList());
           } else {
             return Single.<List<Product>>error(
-                new IllegalArgumentException(V7.getErrorMessage(response)));
+                new IllegalStateException(V7.getErrorMessage(response)));
           }
         });
   }

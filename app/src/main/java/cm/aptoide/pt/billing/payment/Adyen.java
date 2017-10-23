@@ -6,6 +6,8 @@ import com.adyen.core.models.PaymentMethod;
 import com.adyen.core.models.PaymentRequestResult;
 import com.adyen.core.models.paymentdetails.CreditCardPaymentDetails;
 import java.nio.charset.Charset;
+import java.util.Collections;
+import java.util.List;
 import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
@@ -47,7 +49,8 @@ public class Adyen {
     }
 
     paymentData = new OnSubscribePaymentRequest.PaymentData();
-    paymentDetails = new OnSubscribePaymentRequest.PaymentDetails();
+    paymentDetails = new OnSubscribePaymentRequest.PaymentDetails(Collections.emptyList(),
+        Collections.emptyList());
     paymentRequest = new PaymentRequest(context, paymentData, paymentDetails);
     paymentRequestStatus = Observable.create(
         new OnSubscribePaymentRequest(paymentData, paymentDetails, paymentRequest))
@@ -93,21 +96,34 @@ public class Adyen {
         return Observable.just(status.getPaymentRequest());
       }
 
-      if (status.getServices() != null) {
-        return Observable.from(status.getServices())
-            .filter(service -> PaymentMethod.Type.CARD.equals(service.getType()))
-            .switchIfEmpty(Observable.error(
-                new IllegalStateException("No credit card payment provided by Adyen")))
-            .flatMap(service -> {
-              status.getServiceCallback()
-                  .completionWithPaymentMethod(service);
-              return Observable.empty();
-            });
-      }
-
-      return Observable.empty();
+      return completeWithRecurringPayment(status, status.getRecurringServices()).switchIfEmpty(
+          completeWithPaymentType(status, status.getServices(), PaymentMethod.Type.CARD))
+          .ignoreElements();
     })
         .first()
         .toSingle();
+  }
+
+  private Observable<PaymentRequest> completeWithPaymentType(AdyenPaymentStatus status,
+      List<PaymentMethod> services, String paymentType) {
+    return Observable.from(services)
+        .filter(service -> paymentType.equals(service.getType()))
+        .take(1)
+        .flatMap(service -> {
+          status.getServiceCallback()
+              .completionWithPaymentMethod(service);
+          return Observable.just(null);
+        });
+  }
+
+  private Observable<PaymentRequest> completeWithRecurringPayment(AdyenPaymentStatus status,
+      List<PaymentMethod> services) {
+    return Observable.from(services)
+        .take(1)
+        .flatMap(service -> {
+          status.getServiceCallback()
+              .completionWithPaymentMethod(service);
+          return Observable.just(null);
+        });
   }
 }

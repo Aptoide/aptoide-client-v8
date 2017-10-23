@@ -6,6 +6,7 @@ import cm.aptoide.pt.billing.authorization.AdyenAuthorization;
 import cm.aptoide.pt.billing.payment.Adyen;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import com.adyen.core.models.PaymentMethod;
 import java.io.IOException;
 import rx.Completable;
 import rx.Scheduler;
@@ -37,7 +38,9 @@ public class AdyenAuthorizationPresenter implements Presenter {
 
   @Override public void present() {
 
-    onViewCreatedShowAuthorization();
+    onViewCreatedCreateAdyenCreditCardPayment();
+
+    onViewCreatedShowCreditCardView();
 
     onViewCreatedCheckAuthorizationActive();
 
@@ -136,7 +139,27 @@ public class AdyenAuthorizationPresenter implements Presenter {
         }, throwable -> showError(throwable));
   }
 
-  private void onViewCreatedShowAuthorization() {
+  private void onViewCreatedShowCreditCardView() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMapSingle(__ -> adyen.getCreditCardPayment())
+        .observeOn(viewScheduler)
+        .doOnNext(result -> {
+          if (result.getPaymentMethod()
+              .getType()
+              .equals(PaymentMethod.Type.CARD)) {
+            navigator.navigateToAdyenCreditCardView(result);
+          } else {
+            view.showCvvView(result);
+          }
+        })
+        .observeOn(viewScheduler)
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> showError(throwable));
+  }
+
+  private void onViewCreatedCreateAdyenCreditCardPayment() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.showLoading())
@@ -145,9 +168,7 @@ public class AdyenAuthorizationPresenter implements Presenter {
         .first(authorization -> authorization.isPending())
         .cast(AdyenAuthorization.class)
         .flatMapCompletable(
-            authorization -> navigator.navigateToAdyenForResult(authorization.getSession())
-                .observeOn(viewScheduler)
-                .doOnCompleted(() -> view.hideLoading()))
+            authorization -> adyen.createCreditCardPayment(authorization.getSession()))
         .observeOn(viewScheduler)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

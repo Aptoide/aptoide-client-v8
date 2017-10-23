@@ -6,5 +6,6 @@ public interface AuthorizationService {
 
   Single<Authorization> getAuthorization(String transactionId, String customerId);
 
-  Single<Authorization> updateAuthorization(String transactionId, String metadata);
+  Single<Authorization> updateAuthorization(String customerId, String transactionId,
+      String metadata);
 }

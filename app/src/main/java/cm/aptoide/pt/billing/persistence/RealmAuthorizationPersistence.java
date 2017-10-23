@@ -53,7 +53,6 @@ public class RealmAuthorizationPersistence implements AuthorizationPersistence {
       if (authorization.isPendingSync()) {
         database.insert(authorizationMapper.map(authorization));
       } else {
-        database.delete(RealmAuthorization.class, RealmAuthorization.ID, authorization.getId());
         authorizations.put(authorization.getId(), authorization);
       }
 
@@ -104,7 +103,7 @@ public class RealmAuthorizationPersistence implements AuthorizationPersistence {
     final Map<String, Authorization> resolvedAuthorizations = new HashMap<>(authorizations);
     for (Authorization localAuthorization : getLocalAuthorization()) {
       resolvedAuthorizations.put(localAuthorization.getId(),
-          resolveAuthorization(localAuthorization, authorizations.get(localAuthorization.getId())));
+          resolveAuthorization(authorizations.get(localAuthorization.getId()), localAuthorization));
     }
     return new ArrayList<>(resolvedAuthorizations.values());
   }
@@ -112,7 +111,14 @@ public class RealmAuthorizationPersistence implements AuthorizationPersistence {
   private Authorization resolveAuthorization(Authorization authorization,
       Authorization localAuthorization) {
 
-    if (localAuthorization == null || authorization.isProcessing() || authorization.isActive()) {
+    if (authorization == null) {
+      return localAuthorization;
+    }
+
+    if (localAuthorization == null
+        || authorization.isProcessing()
+        || authorization.isActive()
+        || authorization.isFailed()) {
       return authorization;
     }
 

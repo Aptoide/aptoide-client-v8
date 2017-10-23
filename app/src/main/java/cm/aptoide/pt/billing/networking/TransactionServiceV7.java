@@ -60,13 +60,14 @@ public class TransactionServiceV7 implements TransactionService {
                     billingIdManager.generateServiceId(), productId, Transaction.Status.NEW));
           }
 
-          return Single.error(
-              new IllegalArgumentException("Could not retrieve transaction for " + productId));
+          return Single.just(
+              transactionFactory.create(billingIdManager.generateTransactionId(), customerId,
+                  billingIdManager.generateServiceId(), productId, Transaction.Status.FAILED));
         });
   }
 
-  @Override
-  public Single<Transaction> createTransaction(String productId, String serviceId, String payload) {
+  @Override public Single<Transaction> createTransaction(String customerId, String productId,
+      String serviceId, String payload) {
     return CreateTransactionRequest.of(billingIdManager.resolveProductId(productId),
         billingIdManager.resolveServiceId(serviceId), payload, bodyInterceptorV7, httpClient,
         converterFactory, tokenInvalidator, sharedPreferences)
@@ -76,13 +77,14 @@ public class TransactionServiceV7 implements TransactionService {
           if (response != null && response.isOk()) {
             return Single.just(transactionMapper.map(response.getData()));
           }
-          return Single.error(new IllegalArgumentException(V7.getErrorMessage(response)));
+          return Single.just(
+              transactionFactory.create(billingIdManager.generateTransactionId(), customerId,
+                  billingIdManager.generateServiceId(), productId, Transaction.Status.FAILED));
         });
   }
 
-  @Override
-  public Single<Transaction> createTransaction(String productId, String serviceId, String payload,
-      String token) {
+  @Override public Single<Transaction> createTransaction(String customerId, String productId,
+      String serviceId, String payload, String token) {
     return CreateTransactionRequest.of(billingIdManager.resolveProductId(productId),
         billingIdManager.resolveServiceId(serviceId), payload, token, bodyInterceptorV7, httpClient,
         converterFactory, tokenInvalidator, sharedPreferences)
@@ -92,7 +94,9 @@ public class TransactionServiceV7 implements TransactionService {
           if (response != null && response.isOk()) {
             return Single.just(transactionMapper.map(response.getData()));
           }
-          return Single.error(new IllegalArgumentException(V7.getErrorMessage(response)));
+          return Single.just(
+              transactionFactory.create(billingIdManager.generateTransactionId(), customerId,
+                  billingIdManager.generateServiceId(), productId, Transaction.Status.FAILED));
         });
   }
 }

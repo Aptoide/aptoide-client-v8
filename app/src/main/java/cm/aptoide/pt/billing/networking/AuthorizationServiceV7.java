@@ -41,16 +41,21 @@ public class AuthorizationServiceV7 implements AuthorizationService {
   }
 
   @Override
-  public Single<Authorization> updateAuthorization(String transactionId, String metadata) {
-    return UpdateAuthorizationRequest.of(billingIdManager.resolveTransactionId(transactionId), metadata,
-        sharedPreferences, httpClient, converterFactory, bodyInterceptorV7, tokenInvalidator)
+  public Single<Authorization> updateAuthorization(String customerId, String transactionId,
+      String metadata) {
+    return UpdateAuthorizationRequest.of(billingIdManager.resolveTransactionId(transactionId),
+        metadata, sharedPreferences, httpClient, converterFactory, bodyInterceptorV7,
+        tokenInvalidator)
         .observe(true)
         .toSingle()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
             return Single.just(authorizationMapper.map(response.getData(), transactionId));
           }
-          return Single.error(new IllegalArgumentException(V7.getErrorMessage(response)));
+          return Single.just(
+              authorizationFactory.create(billingIdManager.generateAuthorizationId(), customerId,
+                  null, Authorization.Status.FAILED, null, null, null, null, null, transactionId,
+                  null));
         });
   }
 
@@ -67,7 +72,7 @@ public class AuthorizationServiceV7 implements AuthorizationService {
               return Single.just(authorizationMapper.map(response.body()
                   .getData(), transactionId));
             }
-            return Single.error(new IllegalArgumentException(V7.getErrorMessage(response.body())));
+            return Single.error(new IllegalStateException(V7.getErrorMessage(response.body())));
           }
 
           if (response.code() == 404) {
@@ -77,8 +82,10 @@ public class AuthorizationServiceV7 implements AuthorizationService {
                     null));
           }
 
-          return Single.error(new IllegalArgumentException(
-              "Could not retrieve authorization for " + transactionId));
+          return Single.just(
+              authorizationFactory.create(billingIdManager.generateAuthorizationId(), customerId,
+                  null, Authorization.Status.FAILED, null, null, null, null, null, transactionId,
+                  null));
         });
   }
 }

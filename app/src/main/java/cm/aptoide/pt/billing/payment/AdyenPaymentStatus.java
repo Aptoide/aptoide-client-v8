@@ -14,18 +14,20 @@ public class AdyenPaymentStatus {
   private final PaymentDataCallback dataCallback;
   private final PaymentRequestResult result;
   private final PaymentMethodCallback serviceCallback;
+  private final List<PaymentMethod> recurringServices;
   private final List<PaymentMethod> services;
   private final PaymentDetailsCallback detailsCallback;
   private final PaymentRequest paymentRequest;
 
   public AdyenPaymentStatus(String token, PaymentDataCallback dataCallback,
       PaymentRequestResult result, PaymentMethodCallback serviceCallback,
-      List<PaymentMethod> services, PaymentDetailsCallback detailsCallback,
-      PaymentRequest paymentRequest) {
+      List<PaymentMethod> recurringServices, List<PaymentMethod> services,
+      PaymentDetailsCallback detailsCallback, PaymentRequest paymentRequest) {
     this.token = token;
     this.dataCallback = dataCallback;
     this.result = result;
     this.serviceCallback = serviceCallback;
+    this.recurringServices = recurringServices;
     this.services = services;
     this.detailsCallback = detailsCallback;
     this.paymentRequest = paymentRequest;
@@ -57,5 +59,9 @@ public class AdyenPaymentStatus {
 
   public PaymentRequest getPaymentRequest() {
     return paymentRequest;
+  }
+
+  public List<PaymentMethod> getRecurringServices() {
+    return recurringServices;
   }
 }

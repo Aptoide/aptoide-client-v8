@@ -2,8 +2,8 @@ package cm.aptoide.pt.billing.networking;
 
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import cm.aptoide.pt.billing.Customer;
 import cm.aptoide.pt.billing.BillingIdManager;
+import cm.aptoide.pt.billing.Customer;
 import cm.aptoide.pt.billing.authorization.Authorization;
 import cm.aptoide.pt.billing.authorization.AuthorizationFactory;
 import cm.aptoide.pt.billing.authorization.AuthorizationService;
@@ -54,8 +54,9 @@ public class AuthorizationServiceV3 implements AuthorizationService {
   }
 
   @Override public Single<Authorization> getAuthorization(String transactionId, String customerId) {
-    return GetApkInfoRequest.of(billingIdManager.resolveTransactionId(transactionId), bodyInterceptorV3,
-        httpClient, converterFactory, tokenInvalidator, sharedPreferences, resources)
+    return GetApkInfoRequest.of(billingIdManager.resolveTransactionId(transactionId),
+        bodyInterceptorV3, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
+        resources)
         .observe(false)
         .toSingle()
         .flatMap(response -> {
@@ -86,12 +87,14 @@ public class AuthorizationServiceV3 implements AuthorizationService {
   }
 
   @Override
-  public Single<Authorization> updateAuthorization(String transactionId, String metadata) {
-    return Single.zip(
-        GetApkInfoRequest.of(billingIdManager.resolveTransactionId(transactionId), bodyInterceptorV3,
-            httpClient, converterFactory, tokenInvalidator, sharedPreferences, resources)
-            .observe(true)
-            .toSingle(), customer.getId(), (paidApp, customerId) -> {
+  public Single<Authorization> updateAuthorization(String customerId, String transactionId,
+      String metadata) {
+    return GetApkInfoRequest.of(billingIdManager.resolveTransactionId(transactionId),
+        bodyInterceptorV3, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
+        resources)
+        .observe(true)
+        .toSingle()
+        .flatMap(paidApp -> {
 
           if (paidApp.isOk()) {
             return CreateTransactionRequest.of(paidApp.getPayment()
@@ -105,8 +108,8 @@ public class AuthorizationServiceV3 implements AuthorizationService {
                 .flatMap(response -> {
 
                   final Authorization authorization =
-                      authorizationMapper.map(billingIdManager.generateAuthorizationId(1), customerId,
-                          transactionId, response, paidApp);
+                      authorizationMapper.map(billingIdManager.generateAuthorizationId(1),
+                          customerId, transactionId, response, paidApp);
 
                   if (authorization.isActive()) {
                     return transactionPersistence.saveTransaction(
@@ -124,7 +127,6 @@ public class AuthorizationServiceV3 implements AuthorizationService {
               authorizationFactory.create(billingIdManager.generateAuthorizationId(1), customerId,
                   AuthorizationFactory.PAYPAL_SDK, Authorization.Status.FAILED, null, null, null,
                   null, null, transactionId, null));
-        })
-        .flatMap(single -> single);
+        });
   }
 }

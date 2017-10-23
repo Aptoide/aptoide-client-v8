@@ -45,7 +45,7 @@ public class AuthorizationSync extends Sync {
         .filter(authorization -> authorization instanceof MetadataAuthorization)
         .cast(MetadataAuthorization.class)
         .filter(authorization -> authorization.isPendingSync())
-        .flatMapSingle(authorization -> authorizationService.updateAuthorization(
+        .flatMapSingle(authorization -> authorizationService.updateAuthorization(customerId,
             authorization.getTransactionId(), authorization.getMetadata()))
         .flatMapCompletable(
             authorization -> authorizationPersistence.saveAuthorization(authorization))

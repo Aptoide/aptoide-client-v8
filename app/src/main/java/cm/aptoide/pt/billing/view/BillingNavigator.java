@@ -5,7 +5,6 @@ import android.os.Bundle;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.billing.networking.PaymentServiceMapper;
 import cm.aptoide.pt.billing.payment.Adyen;
-import cm.aptoide.pt.billing.payment.OnSubscribeCreditCardFragment;
 import cm.aptoide.pt.billing.payment.PaymentService;
 import cm.aptoide.pt.billing.purchase.Purchase;
 import cm.aptoide.pt.billing.view.login.PaymentLoginFragment;
@@ -14,7 +13,9 @@ import cm.aptoide.pt.billing.view.web.WebAuthorizationFragment;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.Result;
+import com.adyen.core.PaymentRequest;
 import com.adyen.core.models.paymentdetails.CreditCardPaymentDetails;
+import com.adyen.ui.fragments.CreditCardFragmentBuilder;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalFuturePaymentActivity;
@@ -22,7 +23,6 @@ import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
 import java.math.BigDecimal;
-import rx.Completable;
 import rx.Observable;
 
 public class BillingNavigator {
@@ -145,14 +145,20 @@ public class BillingNavigator {
     }
   }
 
-  public Completable navigateToAdyenForResult(String session) {
-    return adyen.createCreditCardPayment(session);
+  public void navigateToAdyenCreditCardView(PaymentRequest paymentRequest) {
+    fragmentNavigator.navigateTo(
+        new CreditCardFragmentBuilder().setPaymentMethod(paymentRequest.getPaymentMethod())
+            .setPublicKey(paymentRequest.getPublicKey())
+            .setGenerationtime(paymentRequest.getGenerationTime())
+            .setAmount(paymentRequest.getAmount())
+            .setShopperReference(paymentRequest.getShopperReference())
+            .setCVCFieldStatus(CreditCardFragmentBuilder.CvcFieldStatus.REQUIRED)
+            .setCreditCardInfoListener(details -> detailsRelay.call(details))
+            .build(), false);
   }
 
   public Observable<CreditCardPaymentDetails> adyenResults() {
-    return adyen.getCreditCardPayment()
-        .flatMapObservable(request -> Observable.create(
-            new OnSubscribeCreditCardFragment(fragmentNavigator, request, false)));
+    return detailsRelay;
   }
 
   public void popToPaymentView() {
