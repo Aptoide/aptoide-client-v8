@@ -2,6 +2,7 @@ package cm.aptoide.pt.social.presenter;
 
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.Store;
@@ -1165,7 +1166,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void navigateToStoreTimeline(SocialHeaderCardTouchEvent socialHeaderCardTouchEvent) {
-    if (socialHeaderCardTouchEvent.getStoreName() != null) {
+    if (!TextUtils.isEmpty(socialHeaderCardTouchEvent.getStoreName())) {
       timelineNavigation.navigateToStoreTimeline(socialHeaderCardTouchEvent.getStoreName(),
           socialHeaderCardTouchEvent.getStoreTheme());
     } else {

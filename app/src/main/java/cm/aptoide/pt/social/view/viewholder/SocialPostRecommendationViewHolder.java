@@ -129,17 +129,16 @@ public class SocialPostRecommendationViewHolder extends SocialPostViewHolder<Rat
         new CardTouchEvent(post, position, CardTouchEvent.Type.BODY)));
     this.appIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(post, position, CardTouchEvent.Type.BODY)));
-    if (post.getPoster()
-        .getStore() != null) {
-      this.cardHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-          new SocialHeaderCardTouchEvent(post, post.getPoster()
-              .getStore()
-              .getName(), post.getPoster()
-              .getStore()
-              .getStoreTheme(), post.getPoster()
-              .getUser()
-              .getId(), CardTouchEvent.Type.HEADER, getPosition())));
-    }
+    this.cardHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        new SocialHeaderCardTouchEvent(post, post.getPoster()
+            .getStore() != null ? post.getPoster()
+            .getStore()
+            .getName() : "", post.getPoster()
+            .getStore() != null ? post.getPoster()
+            .getStore()
+            .getStoreTheme() : "default", post.getPoster()
+            .getUser()
+            .getId(), CardTouchEvent.Type.HEADER, position)));
     if (post.isLiked()) {
       if (post.isLikeFromClick()) {
         likeButton.setHeartState(true);
