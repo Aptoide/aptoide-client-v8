@@ -82,7 +82,7 @@ public class Billing {
     return getSelectedService().flatMap(service -> getProduct(sku).flatMap(product -> {
 
       if (service instanceof TokenPaymentService) {
-        return ((TokenPaymentService) service).generateToken()
+        return ((TokenPaymentService) service).getToken()
             .flatMap(token -> transactionRepository.createTransaction(product.getProductId(),
                 service.getId(), payload, token));
       }

@@ -50,13 +50,13 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.TrackerFilter;
-import cm.aptoide.pt.billing.payment.Adyen;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.BillingIdManager;
 import cm.aptoide.pt.billing.BillingPool;
-import cm.aptoide.pt.billing.purchase.PurchaseFactory;
 import cm.aptoide.pt.billing.external.ExternalBillingSerializer;
+import cm.aptoide.pt.billing.payment.Adyen;
+import cm.aptoide.pt.billing.purchase.PurchaseFactory;
 import cm.aptoide.pt.billing.view.PaymentThrowableCodeMapper;
 import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.crashreports.ConsoleLogger;
@@ -846,9 +846,7 @@ public abstract class AptoideApplication extends Application {
 
   public Adyen getAdyen() {
     if (adyen == null) {
-      adyen =
-          new Adyen(this, BehaviorRelay.create(), BehaviorRelay.create(), BehaviorRelay.create(),
-              BehaviorRelay.create(), Charset.forName("UTF-8"));
+      adyen = new Adyen(this, Charset.forName("UTF-8"));
     }
     return adyen;
   }

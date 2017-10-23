@@ -3,9 +3,10 @@ package cm.aptoide.pt.billing.view;
 import android.app.Activity;
 import android.os.Bundle;
 import cm.aptoide.pt.BuildConfig;
-import cm.aptoide.pt.billing.payment.Adyen;
-import cm.aptoide.pt.billing.payment.PaymentService;
 import cm.aptoide.pt.billing.networking.PaymentServiceMapper;
+import cm.aptoide.pt.billing.payment.Adyen;
+import cm.aptoide.pt.billing.payment.OnSubscribeCreditCardFragment;
+import cm.aptoide.pt.billing.payment.PaymentService;
 import cm.aptoide.pt.billing.purchase.Purchase;
 import cm.aptoide.pt.billing.view.login.PaymentLoginFragment;
 import cm.aptoide.pt.billing.view.paypal.PayPalAuthorizationFragment;
@@ -14,7 +15,6 @@ import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.Result;
 import com.adyen.core.models.paymentdetails.CreditCardPaymentDetails;
-import com.adyen.ui.fragments.CreditCardFragmentBuilder;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalFuturePaymentActivity;
@@ -146,59 +146,13 @@ public class BillingNavigator {
   }
 
   public Completable navigateToAdyenForResult(String session) {
-    return adyen.getPaymentRequest(session)
-        .map(paymentRequest -> new CreditCardFragmentBuilder().setPaymentMethod(
-            paymentRequest.getPaymentMethod())
-            .setPublicKey(paymentRequest.getPublicKey())
-            .setGenerationtime(paymentRequest.getGenerationTime())
-            .setAmount(paymentRequest.getAmount())
-            .setShopperReference(paymentRequest.getShopperReference())
-            .setCVCFieldStatus(CreditCardFragmentBuilder.CvcFieldStatus.REQUIRED)
-            .setCreditCardInfoListener(details -> detailsRelay.call(details))
-            .build())
-        .doOnSuccess(fragment -> fragmentNavigator.navigateTo(fragment, false))
-        .toCompletable();
+    return adyen.createCreditCardPayment(session);
   }
 
-  public Observable<AdyenResult> adyenResults() {
-    return detailsRelay.doOnNext(__ -> popView())
-        .flatMap(details -> adyen.getPaymentResult(details)
-            .first()
-            .map(paymentRequestResult -> {
-              if (paymentRequestResult.isProcessed()) {
-                return new AdyenResult(AdyenResult.SUCCESS, paymentRequestResult.getPayment()
-                    .getPayload(), null);
-              }
-              return new AdyenResult(AdyenResult.ERROR, null, paymentRequestResult.getError());
-            }));
-  }
-
-  public static class AdyenResult {
-
-    public static final int SUCCESS = 0;
-    public static final int ERROR = 1;
-
-    private final int status;
-    private final String payload;
-    private final Throwable throwable;
-
-    public AdyenResult(int status, String payload, Throwable throwable) {
-      this.status = status;
-      this.payload = payload;
-      this.throwable = throwable;
-    }
-
-    public int getStatus() {
-      return status;
-    }
-
-    public String getPayload() {
-      return payload;
-    }
-
-    public Throwable getThrowable() {
-      return throwable;
-    }
+  public Observable<CreditCardPaymentDetails> adyenResults() {
+    return adyen.getCreditCardPayment()
+        .flatMapObservable(request -> Observable.create(
+            new OnSubscribeCreditCardFragment(fragmentNavigator, request, false)));
   }
 
   public static class PayPalResult {

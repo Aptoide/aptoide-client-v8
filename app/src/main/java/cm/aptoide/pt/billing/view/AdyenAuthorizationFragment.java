@@ -12,6 +12,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
+import cm.aptoide.pt.billing.payment.Adyen;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.permission.PermissionServiceFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
@@ -27,6 +28,7 @@ public class AdyenAuthorizationFragment extends PermissionServiceFragment
   private RxAlertDialog networkErrorDialog;
   private BillingNavigator navigator;
   private BillingAnalytics analytics;
+  private Adyen adyen;
 
   public static Fragment create(Bundle bundle) {
     final AdyenAuthorizationFragment fragment = new AdyenAuthorizationFragment();
@@ -40,6 +42,7 @@ public class AdyenAuthorizationFragment extends PermissionServiceFragment
         getArguments().getString(PaymentActivity.EXTRA_MERCHANT_NAME));
     navigator = ((ActivityResultNavigator) getActivity()).getBillingNavigator();
     analytics = ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
+    adyen = ((AptoideApplication) getContext().getApplicationContext()).getAdyen();
   }
 
   @Nullable @Override
@@ -66,7 +69,7 @@ public class AdyenAuthorizationFragment extends PermissionServiceFragment
     attachPresenter(
         new AdyenAuthorizationPresenter(this, getArguments().getString(PaymentActivity.EXTRA_SKU),
             billing, navigator, analytics,
-            getArguments().getString(PaymentActivity.EXTRA_SERVICE_NAME),
+            getArguments().getString(PaymentActivity.EXTRA_SERVICE_NAME), adyen,
             AndroidSchedulers.mainThread()));
   }
 

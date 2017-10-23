@@ -12,7 +12,7 @@ public class TokenPaymentService extends PaymentService {
     this.adyen = adyen;
   }
 
-  public Single<String> generateToken() {
-    return adyen.getToken();
+  public Single<String> getToken() {
+    return adyen.createPaymentRequest();
   }
 }
