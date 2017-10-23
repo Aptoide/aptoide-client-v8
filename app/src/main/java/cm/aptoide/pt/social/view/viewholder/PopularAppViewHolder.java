@@ -73,7 +73,7 @@ public class PopularAppViewHolder extends PostViewHolder<PopularApp> {
         .load(post.getAppIcon(), appIcon);
     this.appName.setText(post.getAppName());
     this.appRating.setRating(post.getAppAverageRating());
-    showFriendsAvatars(post, itemView.getContext());
+    showFriendsAvatars(post, itemView.getContext(), position);
     this.appIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(post, position, CardTouchEvent.Type.BODY)));
     this.getAppButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
@@ -101,7 +101,7 @@ public class PopularAppViewHolder extends PostViewHolder<PopularApp> {
         new CardTouchEvent(post, position, CardTouchEvent.Type.SHARE)));
   }
 
-  private void showFriendsAvatars(PopularApp card, Context context) {
+  private void showFriendsAvatars(PopularApp card, Context context, int position) {
     headerUsersContainer.removeAllViews();
     View friendView;
     ImageView friendAvatar;
@@ -113,7 +113,7 @@ public class PopularAppViewHolder extends PostViewHolder<PopularApp> {
 
       friendView.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
           new PopularAppTouchEvent(card, friend.getId(), "DEFAULT", CardTouchEvent.Type.HEADER,
-              getPosition())));
+              position)));
 
       headerUsersContainer.addView(friendView);
     }

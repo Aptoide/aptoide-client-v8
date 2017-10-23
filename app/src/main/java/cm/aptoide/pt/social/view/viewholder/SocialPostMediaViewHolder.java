@@ -19,7 +19,6 @@ import cm.aptoide.pt.dataprovider.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.CardType;
-import cm.aptoide.pt.social.data.LikesCardTouchEvent;
 import cm.aptoide.pt.social.data.LikesPreviewCardTouchEvent;
 import cm.aptoide.pt.social.data.PostPopupMenuBuilder;
 import cm.aptoide.pt.social.data.SocialCardTouchEvent;
@@ -187,10 +186,8 @@ public class SocialPostMediaViewHolder extends SocialPostViewHolder<SocialMedia>
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(post, position, CardTouchEvent.Type.SHARE)));
     this.likePreviewContainer.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new LikesCardTouchEvent(post, post.getLikesNumber(), CardTouchEvent.Type.LIKES_PREVIEW,
-            getPosition())));
-    new LikesPreviewCardTouchEvent(post, post.getLikesNumber(), CardTouchEvent.Type.LIKES_PREVIEW,
-        position);
+        new LikesPreviewCardTouchEvent(post, post.getLikesNumber(),
+            CardTouchEvent.Type.LIKES_PREVIEW, position)));
     this.numberLikes.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new LikesPreviewCardTouchEvent(post, post.getLikesNumber(),
             CardTouchEvent.Type.LIKES_PREVIEW, position)));

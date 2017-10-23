@@ -119,10 +119,10 @@ public class AggregatedStoreViewHolder extends PostViewHolder<AggregatedStore> {
     showFollowButton(post);
     this.followStoreButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new FollowStoreCardTouchEvent(post, post.getStoreId(), post.getStoreName(),
-            CardTouchEvent.Type.BODY, getPosition())));
+            CardTouchEvent.Type.BODY, position)));
     this.storeAvatarFollow.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new StoreCardTouchEvent(post, post.getStoreName(), post.getStoreTheme(),
-            CardTouchEvent.Type.BODY, getPosition())));
+            CardTouchEvent.Type.BODY, position)));
   }
 
   private void showFollowButton(AggregatedStore post) {
