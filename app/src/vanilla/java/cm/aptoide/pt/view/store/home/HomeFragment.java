@@ -32,9 +32,11 @@ import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.crashreports.IssuesAnalytics;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.install.InstalledRepository;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.search.SearchNavigator;
@@ -51,6 +53,7 @@ import cm.aptoide.pt.view.navigator.TabNavigation;
 import cm.aptoide.pt.view.navigator.TabNavigator;
 import cm.aptoide.pt.view.store.StoreFragment;
 import cm.aptoide.pt.view.store.StorePagerAdapter;
+import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.text.NumberFormat;
@@ -69,7 +72,7 @@ public class HomeFragment extends StoreFragment {
   public static final String APTOIDE_TWITTER_URL = "http://www.twitter.com/aptoide";
 
   //private static final int SPOT_SHARE_PERMISSION_REQUEST_CODE = 6531;
-
+  private static final String TAG = HomeFragment.class.getName();
   private DrawerLayout drawerLayout;
   private NavigationView navigationView;
   private BadgeView updatesBadge;
@@ -86,6 +89,7 @@ public class HomeFragment extends StoreFragment {
   private ClickHandler backClickHandler;
   private PageViewsAnalytics pageViewsAnalytics;
   private SearchBuilder searchBuilder;
+  private IssuesAnalytics issuesAnalytics;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -178,15 +182,18 @@ public class HomeFragment extends StoreFragment {
     final SearchNavigator searchNavigator =
         new SearchNavigator(getFragmentNavigator(), defaultStore);
 
+    final Analytics analytics = Analytics.getInstance();
+    issuesAnalytics = new IssuesAnalytics(analytics, Answers.getInstance());
+
     searchBuilder = new SearchBuilder(searchManager, searchNavigator);
 
-    drawerAnalytics = new DrawerAnalytics(Analytics.getInstance(),
+    drawerAnalytics = new DrawerAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     pageViewsAnalytics =
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), aptoideNavigationTracker);
+            analytics, aptoideNavigationTracker);
     setRegisterFragment(false);
   }
 
@@ -265,16 +272,25 @@ public class HomeFragment extends StoreFragment {
     menu.removeItem(R.id.menu_share);
     if (searchBuilder != null && searchBuilder.isValid()) {
       final FragmentActivity activity = getActivity();
-      if (activity != null) {
-        searchBuilder.attachSearch(activity, menu.findItem(R.id.action_search));
-        return;
-      }
       // from getActivity() "May return null if the fragment is associated with a Context instead."
       final Context context = getContext();
-      if (context != null) {
-        searchBuilder.attachSearch(context, menu.findItem(R.id.action_search));
+      if (activity != null) {
+        searchBuilder.attachSearch(activity, menu.findItem(R.id.action_search));
+        issuesAnalytics.attachSearchSuccess(false);
         return;
+      } else if (context != null) {
+        searchBuilder.attachSearch(context, menu.findItem(R.id.action_search));
+        issuesAnalytics.attachSearchSuccess(true);
+        return;
+      } else {
+        issuesAnalytics.attachSearchFailed(true);
+        Logger.e(TAG, new IllegalStateException(
+            "Unable to attach search to this fragment due to null parent"));
       }
+    } else {
+      issuesAnalytics.attachSearchFailed(false);
+      Logger.e(TAG, new IllegalStateException(
+          "Unable to attach search to this fragment due to invalid search builder"));
     }
 
     menu.removeItem(R.id.action_search);

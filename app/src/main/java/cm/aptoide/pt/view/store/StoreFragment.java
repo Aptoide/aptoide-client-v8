@@ -31,6 +31,7 @@ import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.crashreports.IssuesAnalytics;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
@@ -46,6 +47,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.view.SearchBuilder;
@@ -63,6 +65,7 @@ import cm.aptoide.pt.view.fragment.BasePagerToolbarFragment;
 import cm.aptoide.pt.view.share.ShareStoreHelper;
 import cm.aptoide.pt.view.store.home.HomeFragment;
 import com.astuetz.PagerSlidingTabStrip;
+import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.List;
@@ -75,6 +78,8 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by neuro on 06-05-2016.
  */
 public class StoreFragment extends BasePagerToolbarFragment {
+
+  private static final String TAG = StoreFragment.class.getName();
 
   private final int PRIVATE_STORE_REQUEST_CODE = 20;
   protected PagerSlidingTabStrip pagerSlidingTabStrip;
@@ -112,6 +117,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private String defaultTheme;
   private Runnable registerViewpagerCurrentItem;
   private SearchBuilder searchBuilder;
+  private IssuesAnalytics issuesAnalytics;
 
   public static StoreFragment newInstance(long userId, String storeTheme, OpenType openType) {
     return newInstance(userId, storeTheme, null, openType);
@@ -185,6 +191,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     Analytics analytics = Analytics.getInstance();
+    issuesAnalytics = new IssuesAnalytics(analytics, Answers.getInstance());
     timelineAnalytics = new TimelineAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
@@ -350,16 +357,25 @@ public class StoreFragment extends BasePagerToolbarFragment {
     inflater.inflate(R.menu.menu_search, menu);
     if (searchBuilder != null && searchBuilder.isValid()) {
       final FragmentActivity activity = getActivity();
-      if (activity != null) {
-        searchBuilder.attachSearch(activity, menu.findItem(R.id.action_search));
-        return;
-      }
       // from getActivity() "May return null if the fragment is associated with a Context instead."
       final Context context = getContext();
-      if (context != null) {
-        searchBuilder.attachSearch(context, menu.findItem(R.id.action_search));
+      if (activity != null) {
+        searchBuilder.attachSearch(activity, menu.findItem(R.id.action_search));
+        issuesAnalytics.attachSearchSuccess(false);
         return;
+      } else if (context != null) {
+        searchBuilder.attachSearch(context, menu.findItem(R.id.action_search));
+        issuesAnalytics.attachSearchSuccess(true);
+        return;
+      } else {
+        issuesAnalytics.attachSearchFailed(true);
+        Logger.e(TAG, new IllegalStateException(
+            "Unable to attach search to this fragment due to null parent"));
       }
+    } else {
+      issuesAnalytics.attachSearchFailed(false);
+      Logger.e(TAG, new IllegalStateException(
+          "Unable to attach search to this fragment due to invalid search builder"));
     }
 
     menu.removeItem(R.id.action_search);
