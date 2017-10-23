@@ -73,8 +73,10 @@ public class SpotAndShareWaitingToReceiveFragment extends BackButtonFragment
         .setNegativeButton(R.string.spotandshare_button_cancel_leave_group)
         .build();
 
-    joinGroupView.registerJoinGroupSuccessCallback(
-        onSuccess -> openSpotandShareTransferRecordFragment());
+    joinGroupView.registerJoinGroupSuccessCallback(onSuccess -> {
+      openSpotandShareTransferRecordFragment();
+      joinGroupView.unregisterJoinGroupSuccessCallback();
+    });
 
     attachPresenter(new SpotAndShareWaitingToReceivePresenter(this,
             ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),

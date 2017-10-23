@@ -85,12 +85,13 @@ public class SpotAndShareMainFragment extends FragmentView
   }
 
   @Override public void openWaitingToReceiveFragment() {
-    getFragmentNavigator().navigateToCleaningBackStack(
-        SpotAndShareWaitingToReceiveFragment.newInstance(), true);
+    getFragmentNavigator().cleanBackStack();
+    getFragmentNavigator().navigateTo(SpotAndShareWaitingToReceiveFragment.newInstance(), true);
   }
 
   @Override public void openAppSelectionFragment(boolean shouldCreateGroup) {
-    getFragmentNavigator().navigateToCleaningBackStack(
+    getFragmentNavigator().cleanBackStack();
+    getFragmentNavigator().navigateTo(
         SpotAndShareAppSelectionFragment.newInstance(shouldCreateGroup), true);
   }
 
