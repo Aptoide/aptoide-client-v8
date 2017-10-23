@@ -44,7 +44,7 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
         }, error -> crashReport.log(error));
 
     view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.RESUME))
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.startSend())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(__ -> {
@@ -59,7 +59,7 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
         }, err -> crashReport.log(err));
 
     view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.RESUME))
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.startReceive())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(selection -> {
@@ -70,7 +70,7 @@ public class SpotAndShareMainFragmentPresenter implements Presenter {
         }, err -> crashReport.log(err));
 
     view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.RESUME))
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.editProfile())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(selection -> {
