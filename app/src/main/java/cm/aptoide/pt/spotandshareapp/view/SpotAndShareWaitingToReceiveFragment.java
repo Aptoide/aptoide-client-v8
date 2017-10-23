@@ -148,6 +148,11 @@ public class SpotAndShareWaitingToReceiveFragment extends BackButtonFragment
     joinGroupView.joinGroup();
   }
 
+  @Override public void navigateBackAllowingStateLoss() {
+    getFragmentNavigator().navigateToAllowingStateLoss(SpotAndShareMainFragment.newInstance(),
+        true);
+  }
+
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId() == android.R.id.home) {
       backRelay.call(null);

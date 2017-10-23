@@ -44,7 +44,7 @@ public class SpotAndShareWaitingToReceivePresenter implements Presenter {
                 .flatMap(accessToLocation -> permissionManager.requestWriteSettingsPermission(
                     permissionService))
                 .flatMap(__1 -> permissionManager.requestLocationEnabling(permissionService))
-                .doOnError(throwable -> view.navigateBack());
+                .doOnError(throwable -> view.navigateBackAllowingStateLoss());
           } else {
             return permissionManager.requestLocationEnabling(permissionService);
           }

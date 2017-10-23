@@ -24,4 +24,6 @@ public interface SpotAndShareWaitingToReceiveView extends View {
   void onLeaveGroupError();
 
   void joinGroup();
+
+  void navigateBackAllowingStateLoss();
 }
