@@ -53,6 +53,7 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
   private AppModel selectedApp;
   private boolean shouldCreateGroup;
   private boolean noAppSelected;
+  private TextView sendingTitle;
 
   public static Fragment newInstance(AppModel appModel, boolean shouldCreateGroup) {
     Bundle args = new Bundle();
@@ -107,7 +108,9 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
     toolbar = (Toolbar) view.findViewById(R.id.spotandshare_toolbar);
     appIcon = (ImageView) view.findViewById(R.id.sending_app_avatar);
     appName = (TextView) view.findViewById(R.id.sending_app_name);
+    sendingTitle = (TextView) view.findViewById(R.id.sending_app_introduction);
     if (noAppSelected) {
+      sendingTitle.setVisibility(View.GONE);
       appIcon.setVisibility(View.GONE);
       appName.setVisibility(View.GONE);
     } else {
