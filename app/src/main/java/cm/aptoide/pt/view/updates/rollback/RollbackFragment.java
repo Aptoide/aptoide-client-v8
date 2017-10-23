@@ -97,6 +97,7 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
         ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getImageCachePath()).create(getContext(),
         InstallerFactory.ROLLBACK);
+    setHasOptionsMenu(true);
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -111,7 +112,6 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
   @Override public void bindViews(View view) {
     super.bindViews(view);
     emptyData = (TextView) view.findViewById(R.id.empty_data);
-    setHasOptionsMenu(true);
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {

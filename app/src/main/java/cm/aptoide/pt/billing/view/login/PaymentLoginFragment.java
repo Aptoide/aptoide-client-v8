@@ -99,6 +99,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     crashReport = CrashReport.getInstance();
     errorMapper = new AccountErrorMapper(getContext());
     orientationManager = ((ActivityResultNavigator) getContext()).getScreenOrientationManager();
+    setHasOptionsMenu(true);
   }
 
   @Override public void onResume() {
@@ -143,7 +144,6 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    setHasOptionsMenu(true);
 
     rootView = getActivity().findViewById(android.R.id.content);
 
