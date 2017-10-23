@@ -10,6 +10,7 @@ import org.parceler.Parcel;
   String storeName;
   boolean onlyTrustedApps;
   boolean allStoresSelected;
+  String defaultStoreName;
   int allStoresOffset = 0;
   int followedStoresOffset = 0;
   boolean reachedBottomAllStores = false;
@@ -26,23 +27,25 @@ import org.parceler.Parcel;
   }
 
   SearchViewModel(String currentQuery, String storeName, boolean onlyTrustedApps,
-      boolean allStoresSelected) {
+      boolean allStoresSelected, String defaultStoreName) {
     this.currentQuery = currentQuery;
     this.storeName = storeName;
     this.onlyTrustedApps = onlyTrustedApps;
     this.allStoresSelected = allStoresSelected;
+    this.defaultStoreName = defaultStoreName;
   }
 
-  SearchViewModel(String currentQuery, String storeName, boolean onlyTrustedApps) {
-    this(currentQuery, storeName, onlyTrustedApps, true);
+  SearchViewModel(String currentQuery, String storeName, boolean onlyTrustedApps,
+      String defaultStoreName) {
+    this(currentQuery, storeName, onlyTrustedApps, true, defaultStoreName);
   }
 
-  SearchViewModel(String currentQuery, boolean onlyTrustedApps) {
-    this(currentQuery, null, onlyTrustedApps, true);
+  SearchViewModel(String currentQuery, boolean onlyTrustedApps, String defaultStoreName) {
+    this(currentQuery, null, onlyTrustedApps, true, defaultStoreName);
   }
 
-  SearchViewModel(String currentQuery, String storeName) {
-    this(currentQuery, storeName, true, true);
+  SearchViewModel(String currentQuery, String storeName, String defaultStoreName) {
+    this(currentQuery, storeName, true, true, defaultStoreName);
   }
 
   public List<SearchAppResult> getAllStoresSearchAppResults() {
@@ -134,5 +137,9 @@ import org.parceler.Parcel;
 
   @Override public void setHasLoadedAds() {
     loadedAds = true;
+  }
+
+  public String getDefaultStoreName() {
+    return defaultStoreName;
   }
 }

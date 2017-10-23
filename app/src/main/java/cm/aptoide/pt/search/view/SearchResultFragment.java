@@ -103,12 +103,14 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   private SearchBuilder searchBuilder;
   private ApplicationPreferences appPreferences;
 
-  public static SearchResultFragment newInstance(String currentQuery) {
-    return newInstance(currentQuery, false);
+  public static SearchResultFragment newInstance(String currentQuery, String defaultStoreName) {
+    return newInstance(currentQuery, false, defaultStoreName);
   }
 
-  public static SearchResultFragment newInstance(String currentQuery, boolean onlyTrustedApps) {
-    SearchViewModel viewModel = new SearchViewModel(currentQuery, onlyTrustedApps);
+  public static SearchResultFragment newInstance(String currentQuery, boolean onlyTrustedApps,
+      String defaultStoreName) {
+    SearchViewModel viewModel =
+        new SearchViewModel(currentQuery, onlyTrustedApps, defaultStoreName);
     Bundle args = new Bundle();
     args.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
     SearchResultFragment fragment = new SearchResultFragment();
@@ -116,8 +118,9 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     return fragment;
   }
 
-  public static SearchResultFragment newInstance(String currentQuery, String storeName) {
-    SearchViewModel viewModel = new SearchViewModel(currentQuery, storeName);
+  public static SearchResultFragment newInstance(String currentQuery, String storeName,
+      String defaultStoreName) {
+    SearchViewModel viewModel = new SearchViewModel(currentQuery, storeName, defaultStoreName);
     Bundle args = new Bundle();
     args.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
     SearchResultFragment fragment = new SearchResultFragment();
@@ -409,7 +412,8 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     final android.app.SearchManager searchManagerService =
         (android.app.SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
 
-    searchNavigator = new SearchNavigator(getFragmentNavigator(), viewModel.getStoreName());
+    searchNavigator = new SearchNavigator(getFragmentNavigator(), viewModel.getStoreName(),
+        viewModel.getDefaultStoreName());
 
     searchBuilder = new SearchBuilder(searchManagerService, searchNavigator);
 

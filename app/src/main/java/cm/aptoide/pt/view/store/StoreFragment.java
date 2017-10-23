@@ -162,14 +162,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    final SearchManager searchManager =
-        (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
-
-    final SearchNavigator searchNavigator =
-        new SearchNavigator(getFragmentNavigator(), storeName);
-
-    searchBuilder = new SearchBuilder(searchManager, searchNavigator);
-
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     final ApplicationPreferences appPreferences = application.getApplicationPreferences();
@@ -191,6 +183,14 @@ public class StoreFragment extends BasePagerToolbarFragment {
     storeAnalytics = new StoreAnalytics(AppEventsLogger.newLogger(getContext()), analytics);
     marketName = appPreferences.getMarketName();
     shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);
+
+    final SearchManager searchManager =
+        (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
+
+    final SearchNavigator searchNavigator = new SearchNavigator(getFragmentNavigator(), storeName,
+        appPreferences.getDefaultStoreName());
+
+    searchBuilder = new SearchBuilder(searchManager, searchNavigator);
   }
 
   @Override public void loadExtras(Bundle args) {

@@ -339,13 +339,11 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     this.appViewModel.setMarketName(appPreferences.getMarketName());
     this.appViewModel.setBillingIdResolver(application.getBillingIdResolver());
 
-    final String defaultStore = appPreferences.getDefaultStoreName();
-
     final SearchManager searchManager =
         (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
 
     final SearchNavigator searchNavigator =
-        new SearchNavigator(getFragmentNavigator(), defaultStore);
+        new SearchNavigator(getFragmentNavigator(), appPreferences.getDefaultStoreName());
 
     searchBuilder = new SearchBuilder(searchManager, searchNavigator);
 
