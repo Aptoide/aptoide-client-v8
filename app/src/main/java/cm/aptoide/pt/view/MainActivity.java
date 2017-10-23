@@ -94,7 +94,8 @@ public class MainActivity extends TabNavigatorActivity
         new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator, this, this,
             sharedPreferences,
             AccessorFactory.getAccessorFor(application.getDatabase(), Store.class), defaultTheme,
-            application.getAptoideNavigationTracker(), application.getPageViewsAnalytics());
+            appPreferences.getDefaultStoreName(), application.getAptoideNavigationTracker(),
+            application.getPageViewsAnalytics());
 
     final ApkFy apkFy = new ApkFy(this, getIntent(), securePreferences);
 
@@ -111,8 +112,8 @@ public class MainActivity extends TabNavigatorActivity
         new MainPresenter(this, installManager, application.getRootInstallationRetryHandler(),
             CrashReport.getInstance(), apkFy, autoUpdate, new ContentPuller(this),
             notificationSyncScheduler, installCompletedNotifier, sharedPreferences,
-            securePreferences, fragmentNavigator, deepLinkManager, appPreferences.getDefaultStoreName(),
-            defaultTheme), savedInstanceState);
+            securePreferences, fragmentNavigator, deepLinkManager,
+            appPreferences.getDefaultStoreName(), defaultTheme), savedInstanceState);
   }
 
   @Override public void showInstallationError(int numberOfErrors) {

@@ -51,7 +51,8 @@ public class AppViewNavigator {
   }
 
   public void navigateToSearch(String appName, boolean onlyShowTrustedApps) {
-    Fragment fragment = SearchResultFragment.newInstance(appName, onlyShowTrustedApps);
+    Fragment fragment =
+        SearchResultFragment.newInstance(appName, onlyShowTrustedApps, defaultStoreName);
     fragmentNavigator.navigateTo(fragment, true);
   }
 
