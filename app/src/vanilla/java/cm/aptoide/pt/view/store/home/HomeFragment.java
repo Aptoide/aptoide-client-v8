@@ -195,6 +195,7 @@ public class HomeFragment extends StoreFragment {
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
             analytics, aptoideNavigationTracker);
     setRegisterFragment(false);
+    setHasOptionsMenu(true);
   }
 
   @Nullable @Override
@@ -296,14 +297,6 @@ public class HomeFragment extends StoreFragment {
     menu.removeItem(R.id.action_search);
   }
 
-  @Override public void setupViews() {
-    super.setupViews();
-    accountManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-    accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
-    setupNavigationView();
-  }
-
   protected boolean displayHomeUpAsEnabled() {
     return false;
   }
@@ -317,6 +310,14 @@ public class HomeFragment extends StoreFragment {
       aptoideNavigationTracker.registerScreen(ScreenTagHistory.Builder.build("Drawer"));
       pageViewsAnalytics.sendPageViewedEvent();
     });
+  }
+
+  @Override public void setupViews() {
+    super.setupViews();
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
+    setupNavigationView();
   }
 
   private View getTabLayout(StorePagerAdapter adapter, Event.Name tab) {
@@ -535,8 +536,6 @@ public class HomeFragment extends StoreFragment {
 
     navigationView = (NavigationView) view.findViewById(R.id.nav_view);
     drawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
-
-    setHasOptionsMenu(true);
 
     Analytics.AppViewViewedFrom.addStepToList("HOME");
   }
