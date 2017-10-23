@@ -293,7 +293,7 @@ public class SearchResultPresenter implements Presenter {
           .flatMap(__ -> loadDataForSpecificStore(query, storeName, offset));
     }
 
-    if (defaultStoreName != null && !defaultStoreName.trim()
+    if (!appPreferences.hasMultiStoreSearch() && defaultStoreName != null && !defaultStoreName.trim()
         .equals("")) {
       return Observable.fromCallable(() -> {
         view.setViewWithStoreNameAsSingleTab(defaultStoreName);
