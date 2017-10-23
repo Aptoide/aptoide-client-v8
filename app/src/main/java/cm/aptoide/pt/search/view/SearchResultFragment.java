@@ -323,8 +323,8 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     followedStoresResultAdapter.setIsLoadingMore(false);
   }
 
-  @Override public void setViewWithStoreNameAsSingleTab() {
-    followedStoresButton.setText(viewModel.getStoreName());
+  @Override public void setViewWithStoreNameAsSingleTab(String storeName) {
+    followedStoresButton.setText(storeName);
     allStoresButton.setVisibility(View.GONE);
   }
 
