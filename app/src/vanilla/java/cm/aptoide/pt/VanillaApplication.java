@@ -7,6 +7,8 @@ package cm.aptoide.pt;
 
 import android.os.Environment;
 import cm.aptoide.pt.account.LoginPreferences;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.notification.NotificationService;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.notification.sync.NotificationSyncFactory;
 import cm.aptoide.pt.notification.sync.NotificationSyncManager;
@@ -84,7 +86,11 @@ public class VanillaApplication extends AptoideApplication {
   @Override public NotificationSyncScheduler getNotificationSyncScheduler() {
     if (notificationSyncScheduler == null) {
       notificationSyncScheduler = new NotificationSyncManager(getSyncScheduler(), true,
-          new NotificationSyncFactory(getDefaultSharedPreferences(), getPnpV1NotificationService(),
+          new NotificationSyncFactory(getDefaultSharedPreferences(),
+              new NotificationService(BuildConfig.APPLICATION_ID, getDefaultClient(),
+                  WebService.getDefaultConverter(), getIdsRepository(), BuildConfig.VERSION_NAME,
+                  getExtraId(), getDefaultSharedPreferences(), getResources(),
+                  getAuthenticationPersistence(), getAccountManager()),
               getNotificationProvider()));
     }
     return notificationSyncScheduler;

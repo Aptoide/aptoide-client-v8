@@ -3,10 +3,6 @@ package cm.aptoide.pt.notification;
 import cm.aptoide.pt.sync.Sync;
 import rx.Completable;
 
-/**
- * Created by danielchen on 20/10/2017.
- */
-
 public class PushNotificationSync extends Sync {
 
   private final NotificationService networkService;

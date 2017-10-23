@@ -117,10 +117,9 @@ import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.notification.NotificationIdsMapper;
 import cm.aptoide.pt.notification.NotificationPolicyFactory;
 import cm.aptoide.pt.notification.NotificationProvider;
-import cm.aptoide.pt.notification.NotificationService;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.notification.NotificationsCleaner;
-import cm.aptoide.pt.notification.PnpV1NotificationService;
+import cm.aptoide.pt.notification.NotificationService;
 import cm.aptoide.pt.notification.SystemNotificationShower;
 import cm.aptoide.pt.preferences.AdultContent;
 import cm.aptoide.pt.preferences.LocalPersistenceAdultContent;
@@ -240,7 +239,6 @@ public abstract class AptoideApplication extends Application {
   private PurchaseBundleMapper purchaseBundleMapper;
   private PaymentThrowableCodeMapper paymentThrowableCodeMapper;
   private MultipartBodyInterceptor multipartBodyInterceptor;
-  private NotificationService pnpV1NotificationService;
   private NotificationCenter notificationCenter;
   private QManager qManager;
   private EntryPointChooser entryPointChooser;
@@ -564,17 +562,6 @@ public abstract class AptoideApplication extends Application {
   public GroupNameProvider getGroupNameProvider() {
     return new AccountGroupNameProvider(getAccountManager(), Build.MANUFACTURER, Build.MODEL,
         Build.ID);
-  }
-
-  public NotificationService getPnpV1NotificationService() {
-    if (pnpV1NotificationService == null) {
-      pnpV1NotificationService =
-          new PnpV1NotificationService(BuildConfig.APPLICATION_ID, getDefaultClient(),
-              WebService.getDefaultConverter(), getIdsRepository(), BuildConfig.VERSION_NAME,
-              getExtraId(), getDefaultSharedPreferences(), getResources(),
-              getAuthenticationPersistence(), getAccountManager());
-    }
-    return pnpV1NotificationService;
   }
 
   public OkHttpClient getLongTimeoutClient() {

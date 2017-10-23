@@ -2,6 +2,7 @@ package cm.aptoide.pt;
 
 import android.os.Environment;
 import cm.aptoide.pt.account.LoginPreferences;
+import cm.aptoide.pt.notification.NotificationService;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.notification.PushNotificationSyncManager;
 import cm.aptoide.pt.notification.sync.NotificationSyncFactory;
@@ -143,7 +144,7 @@ public class PartnerApplication extends AptoideApplication {
   @Override public NotificationSyncScheduler getNotificationSyncScheduler() {
     if (notificationSyncScheduler == null) {
       notificationSyncScheduler = new PushNotificationSyncManager(getSyncScheduler(), true,
-          new NotificationSyncFactory(getPnpV1NotificationService(),
+          new NotificationSyncFactory(new NotificationService(),
               getNotificationProvider()));
     }
     return notificationSyncScheduler;
