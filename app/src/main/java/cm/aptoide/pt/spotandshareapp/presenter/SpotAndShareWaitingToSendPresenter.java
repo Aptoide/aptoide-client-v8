@@ -24,6 +24,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class SpotAndShareWaitingToSendPresenter implements Presenter {
   private boolean shouldCreateGroup;
+  private final boolean noAppSelected;
   private SpotAndShareWaitingToSendView view;
   private SpotAndShare spotAndShare;
   private final AppModelToAndroidAppInfoMapper appModelToAndroidAppInfoMapper;
@@ -31,12 +32,13 @@ public class SpotAndShareWaitingToSendPresenter implements Presenter {
   private final PermissionService permissionService;
   private final CrashReport crashReport;
 
-  public SpotAndShareWaitingToSendPresenter(boolean shouldCreateGroup,
+  public SpotAndShareWaitingToSendPresenter(boolean shouldCreateGroup, boolean noAppSelected,
       SpotAndShareWaitingToSendView view, SpotAndShare spotAndShare,
       AppModelToAndroidAppInfoMapper appModelToAndroidAppInfoMapper,
       PermissionManager permissionManager, PermissionService permissionService,
       CrashReport crashReport) {
     this.shouldCreateGroup = shouldCreateGroup;
+    this.noAppSelected = noAppSelected;
     this.view = view;
     this.spotAndShare = spotAndShare;
     this.appModelToAndroidAppInfoMapper = appModelToAndroidAppInfoMapper;
@@ -129,11 +131,12 @@ public class SpotAndShareWaitingToSendPresenter implements Presenter {
   }
 
   private void sendApp() {
-    AndroidAppInfo androidAppInfo =
-        appModelToAndroidAppInfoMapper.convertAppModelToAndroidAppInfo(view.getSelectedApp());
-    AptoideUtils.ThreadU.runOnIoThread(
-        () -> spotAndShare.sendApps(Collections.singletonList(androidAppInfo)));
-
+    if (!noAppSelected) {
+      AndroidAppInfo androidAppInfo =
+          appModelToAndroidAppInfoMapper.convertAppModelToAndroidAppInfo(view.getSelectedApp());
+      AptoideUtils.ThreadU.runOnIoThread(
+          () -> spotAndShare.sendApps(Collections.singletonList(androidAppInfo)));
+    }
     view.openTransferRecord();
   }
 

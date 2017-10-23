@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -42,6 +43,7 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
   private final static String OBBS_FILEPATH = "obbsFilePath";
   private final static String APP_ICON = "appIcon";
   private final static String SHOULD_CREATE_GROUP = "shouldCreateGroup";
+  private final static String NO_APP_SELECTED = "noAppSelected";
   private Toolbar toolbar;
   private PublishRelay<Void> backRelay;
   private BackButton.ClickHandler clickHandler;
@@ -50,6 +52,7 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
   private TextView appName;
   private AppModel selectedApp;
   private boolean shouldCreateGroup;
+  private boolean noAppSelected;
 
   public static Fragment newInstance(AppModel appModel, boolean shouldCreateGroup) {
     Bundle args = new Bundle();
@@ -59,6 +62,20 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
     args.putString(OBBS_FILEPATH, appModel.getObbsFilePath());
     args.putByteArray(APP_ICON, appModel.getAppIconAsByteArray());
     args.putBoolean(SHOULD_CREATE_GROUP, shouldCreateGroup);
+    args.putBoolean(NO_APP_SELECTED, false);
+    Fragment fragment = new SpotAndShareWaitingToSendFragment();
+    Bundle arguments = fragment.getArguments();
+    if (arguments != null) {
+      args.putAll(arguments);
+    }
+    fragment.setArguments(args);
+    return fragment;
+  }
+
+  public static Fragment newInstance(boolean shouldCreateGroup) {
+    Bundle args = new Bundle();
+    args.putBoolean(SHOULD_CREATE_GROUP, shouldCreateGroup);
+    args.putBoolean(NO_APP_SELECTED, true);
     Fragment fragment = new SpotAndShareWaitingToSendFragment();
     Bundle arguments = fragment.getArguments();
     if (arguments != null) {
@@ -76,9 +93,12 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
     String obbsFilePath = getArguments().getString(OBBS_FILEPATH);
     byte[] appIcon = getArguments().getByteArray(APP_ICON);
     shouldCreateGroup = getArguments().getBoolean(SHOULD_CREATE_GROUP);
+    noAppSelected = getArguments().getBoolean(NO_APP_SELECTED);
 
-    selectedApp = new AppModel(appName, packageName, filePath, obbsFilePath, appIcon,
-        new DrawableBitmapMapper(getActivity().getApplicationContext()));
+    if (!noAppSelected) {
+      selectedApp = new AppModel(appName, packageName, filePath, obbsFilePath, appIcon,
+          new DrawableBitmapMapper(getActivity().getApplicationContext()));
+    }
     backRelay = PublishRelay.create();
   }
 
@@ -87,7 +107,12 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
     toolbar = (Toolbar) view.findViewById(R.id.spotandshare_toolbar);
     appIcon = (ImageView) view.findViewById(R.id.sending_app_avatar);
     appName = (TextView) view.findViewById(R.id.sending_app_name);
-    setupSendingAppInfo();
+    if (noAppSelected) {
+      appIcon.setVisibility(View.GONE);
+      appName.setVisibility(View.GONE);
+    } else {
+      setupSendingAppInfo();
+    }
     setupToolbar();
     backDialog = new RxAlertDialog.Builder(getContext()).setMessage(
         R.string.spotandshare_message_leave_group_warning)
@@ -100,7 +125,7 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
     };
     registerClickHandler(clickHandler);
 
-    attachPresenter(new SpotAndShareWaitingToSendPresenter(shouldCreateGroup, this,
+    attachPresenter(new SpotAndShareWaitingToSendPresenter(shouldCreateGroup, noAppSelected, this,
         ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
         new AppModelToAndroidAppInfoMapper(new ObbsProvider()), new PermissionManager(),
         (PermissionService) getContext(), CrashReport.getInstance()), savedInstanceState);
@@ -121,6 +146,8 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
 
   @Override public void onDestroyView() {
     toolbar = null;
+    appIcon = null;
+    appName = null;
     unregisterClickHandler(clickHandler);
     clickHandler = null;
     backDialog = null;
@@ -129,6 +156,7 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
 
   @Override public void onDestroy() {
     backRelay = null;
+    selectedApp = null;
     super.onDestroy();
   }
 
