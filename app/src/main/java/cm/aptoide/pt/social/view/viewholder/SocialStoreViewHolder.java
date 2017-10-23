@@ -135,14 +135,17 @@ public class SocialStoreViewHolder extends SocialPostViewHolder<SocialStore> {
     this.storeNameFollow.setText(post.getStoreName());
     this.storeNumberFollowers.setText(String.valueOf(post.getSubscribers()));
     this.storeNumberApps.setText(String.valueOf(post.getAppsNumber()));
-    this.cardHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new SocialHeaderCardTouchEvent(post, post.getPoster()
-            .getStore()
-            .getName(), post.getPoster()
-            .getStore()
-            .getStoreTheme(), post.getPoster()
-            .getUser()
-            .getId(), CardTouchEvent.Type.HEADER, position)));
+    if (post.getPoster()
+        .getStore() != null) {
+      this.cardHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+          new SocialHeaderCardTouchEvent(post, post.getPoster()
+              .getStore()
+              .getName(), post.getPoster()
+              .getStore()
+              .getStoreTheme(), post.getPoster()
+              .getUser()
+              .getId(), CardTouchEvent.Type.HEADER, position)));
+    }
     showStoreLatestApps(post, position);
     showFollowButton(post);
     this.followStoreButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
