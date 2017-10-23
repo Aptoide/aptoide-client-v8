@@ -2,10 +2,14 @@ package cm.aptoide.pt.search.view;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,6 +27,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
@@ -78,7 +83,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   private EditText noSearchLayoutSearchQuery;
   private ImageView noResultsSearchButton;
   private View searchResultsLayout;
-  private View progressBar;
+  private ProgressBar progressBar;
   private LinearLayout buttonsLayout;
   private Button followedStoresButton;
   private Button allStoresButton;
@@ -135,7 +140,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     noSearchLayoutSearchQuery = (EditText) view.findViewById(R.id.search_text);
     noResultsSearchButton = (ImageView) view.findViewById(R.id.ic_search_button);
     searchResultsLayout = view.findViewById(R.id.search_results_layout);
-    progressBar = view.findViewById(R.id.progress_bar);
+    progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
   }
 
@@ -349,6 +354,12 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     allStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
     allStoresButton.setBackgroundResource(0);
     viewModel.setAllStoresSelected(false);
+    final String defaultTheme = appPreferences.getDefaultThemeName();
+    if (defaultTheme != null && defaultTheme.length() > 0) {
+      followedStoresButton.getBackground()
+          .setColorFilter(getResources().getColor(StoreTheme.get(defaultTheme)
+              .getPrimaryColor()), PorterDuff.Mode.SRC_ATOP);
+    }
   }
 
   private void setAllStoresButtonSelected() {
@@ -357,6 +368,12 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     allStoresButton.setTextColor(getResources().getColor(R.color.white));
     allStoresButton.setBackgroundResource(R.drawable.search_button_background);
     viewModel.setAllStoresSelected(true);
+    final String defaultTheme = appPreferences.getDefaultThemeName();
+    if (defaultTheme != null && defaultTheme.length() > 0) {
+      allStoresButton.getBackground()
+          .setColorFilter(getResources().getColor(StoreTheme.get(defaultTheme)
+              .getPrimaryColor()), PorterDuff.Mode.SRC_ATOP);
+    }
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -491,6 +508,19 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     if (defaultTheme != null && defaultTheme.length() > 0) {
       ThemeUtils.setStoreTheme(getActivity(), defaultTheme);
       ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(defaultTheme));
+      toolbar.setBackgroundColor(getResources().getColor(StoreTheme.get(defaultTheme)
+          .getPrimaryColor()));
+      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        Drawable wrapDrawable = DrawableCompat.wrap(progressBar.getIndeterminateDrawable());
+        DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getContext(),
+            StoreTheme.get(defaultTheme)
+                .getPrimaryColor()));
+        progressBar.setIndeterminateDrawable(DrawableCompat.unwrap(wrapDrawable));
+      } else {
+        progressBar.getIndeterminateDrawable()
+            .setColorFilter(ContextCompat.getColor(getContext(), StoreTheme.get(defaultTheme)
+                .getPrimaryColor()), PorterDuff.Mode.SRC_IN);
+      }
     }
   }
 
