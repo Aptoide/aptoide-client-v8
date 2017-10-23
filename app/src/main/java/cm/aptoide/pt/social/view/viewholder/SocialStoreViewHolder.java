@@ -392,8 +392,7 @@ public class SocialStoreViewHolder extends SocialPostViewHolder<SocialStore> {
                       post.getPoster()
                           .getUser()
                           .getId(), post.getPoster()
-                      .getUser()
-                      .getName(), position, post));
+                      .getPrimaryName(), position, post));
                   return false;
                 });
               }

@@ -340,8 +340,7 @@ public class MinimalCardViewFactory {
                 postPopupMenuBuilder.addUnfollowUser(menuItem -> {
                   cardTouchEventPublishSubject.onNext(new UserUnfollowCardTouchEvent(
                       poster.getUser()
-                          .getId(), poster.getUser()
-                      .getName(), position, post));
+                          .getId(), poster.getPrimaryName(), position, post));
                   return false;
                 });
               }

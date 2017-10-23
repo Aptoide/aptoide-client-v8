@@ -341,8 +341,7 @@ public class SocialMediaViewHolder extends SocialPostViewHolder<SocialMedia> {
                       post.getPoster()
                           .getUser()
                           .getId(), post.getPoster()
-                      .getUser()
-                      .getName(), position, post));
+                      .getPrimaryName(), position, post));
                   return false;
                 });
               }

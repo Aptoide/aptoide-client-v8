@@ -336,8 +336,7 @@ public class SocialRecommendationViewHolder extends SocialPostViewHolder<RatedRe
                       post.getPoster()
                           .getUser()
                           .getId(), post.getPoster()
-                      .getUser()
-                      .getName(), position, post));
+                      .getPrimaryName(), position, post));
                   return false;
                 });
               }
