@@ -52,6 +52,7 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
   private SpotAndSharePickAppsAdapter pickAppsAdapter;
   private PublishSubject<AppModel> pickAppSubject;
   private View progressBarContainer;
+  public PublishRelay<Void> skipButtonClick;
 
   public static Fragment newInstance(boolean shouldCreateGroup) {
     Bundle args = new Bundle();
@@ -71,6 +72,7 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
 
     shouldCreateGroup = getArguments().getBoolean(CREATE_GROUP_KEY);
     pickAppSubject = PublishSubject.create();
+    skipButtonClick = PublishRelay.create();
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -143,6 +145,7 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
     pickAppsAdapter = null;
     pickAppsRecyclerView = null;
     progressBarContainer = null;
+    skipButtonClick = null;
     super.onDestroyView();
   }
 
@@ -172,6 +175,10 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
   @Override public void navigateBackWithStateLoss() {
     getFragmentNavigator().navigateToAllowingStateLoss(SpotAndShareMainFragment.newInstance(),
         true);
+  }
+
+  @Override public Observable<Void> skipButtonClick() {
+    return skipButtonClick;
   }
 
   @Override public void finish() {
@@ -210,6 +217,11 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
         SpotAndShareWaitingToSendFragment.newInstance(selectedApp, false), true);
   }
 
+  @Override public void openWaitingToSendScreen() {
+    getFragmentNavigator().cleanBackStack();
+    getFragmentNavigator().navigateTo(SpotAndShareWaitingToSendFragment.newInstance(false), true);
+  }
+
   private void setupLayoutManager() {
     GridLayoutManager gridLayoutManager = new GridLayoutManager(this.getContext(), 3);
     gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -235,6 +247,7 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
     if (item.getItemId() == android.R.id.home) {
       backRelay.call(null);
     } else if (item.getItemId() == R.id.skip_button) {
+      skipButtonClick.call(null);
     }
     return false;
   }

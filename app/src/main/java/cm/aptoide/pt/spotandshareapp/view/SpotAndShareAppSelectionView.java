@@ -23,4 +23,9 @@ public interface SpotAndShareAppSelectionView extends SpotAndSharePickAppsView {
   void showGeneralCreateGroupError();
 
   void navigateBackWithStateLoss();
+
+  Observable<Void> skipButtonClick();
+
+  void openWaitingToSendScreen();
+
 }
