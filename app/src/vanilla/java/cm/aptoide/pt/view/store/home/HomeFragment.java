@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -32,9 +33,11 @@ import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.crashreports.IssuesAnalytics;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.install.InstalledRepository;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.search.SearchNavigator;
@@ -51,6 +54,7 @@ import cm.aptoide.pt.view.navigator.TabNavigation;
 import cm.aptoide.pt.view.navigator.TabNavigator;
 import cm.aptoide.pt.view.store.StoreFragment;
 import cm.aptoide.pt.view.store.StorePagerAdapter;
+import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.text.NumberFormat;
@@ -68,6 +72,8 @@ public class HomeFragment extends StoreFragment {
   public static final String TWITTER_PACKAGE_NAME = "com.twitter.android";
   public static final String APTOIDE_TWITTER_URL = "http://www.twitter.com/aptoide";
 
+  //private static final int SPOT_SHARE_PERMISSION_REQUEST_CODE = 6531;
+  private static final String TAG = HomeFragment.class.getName();
   private DrawerLayout drawerLayout;
   private NavigationView navigationView;
   private BadgeView updatesBadge;
@@ -85,6 +91,7 @@ public class HomeFragment extends StoreFragment {
   private PageViewsAnalytics pageViewsAnalytics;
   private SearchBuilder searchBuilder;
   private ApplicationPreferences appPreferences;
+  private IssuesAnalytics issuesAnalytics;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -178,17 +185,20 @@ public class HomeFragment extends StoreFragment {
     final SearchNavigator searchNavigator =
         new SearchNavigator(getFragmentNavigator(), appPreferences.getDefaultStoreName());
 
+    final Analytics analytics = Analytics.getInstance();
+    issuesAnalytics = new IssuesAnalytics(analytics, Answers.getInstance());
+
     searchBuilder = new SearchBuilder(searchManager, searchNavigator);
 
-    drawerAnalytics = new DrawerAnalytics(Analytics.getInstance(),
+    drawerAnalytics = new DrawerAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     pageViewsAnalytics =
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), aptoideNavigationTracker);
-
+            analytics, aptoideNavigationTracker);
     setRegisterFragment(false);
+    setHasOptionsMenu(true);
   }
 
   @Nullable @Override
@@ -265,18 +275,29 @@ public class HomeFragment extends StoreFragment {
     super.onCreateOptionsMenu(menu, inflater);
     menu.removeItem(R.id.menu_share);
     if (searchBuilder != null && searchBuilder.isValid()) {
-      searchBuilder.attachSearch(getContext(), menu.findItem(R.id.action_search));
+      final FragmentActivity activity = getActivity();
+      // from getActivity() "May return null if the fragment is associated with a Context instead."
+      final Context context = getContext();
+      if (activity != null) {
+        searchBuilder.attachSearch(activity, menu.findItem(R.id.action_search));
+        issuesAnalytics.attachSearchSuccess(false);
+        return;
+      } else if (context != null) {
+        searchBuilder.attachSearch(context, menu.findItem(R.id.action_search));
+        issuesAnalytics.attachSearchSuccess(true);
+        return;
+      } else {
+        issuesAnalytics.attachSearchFailed(true);
+        Logger.e(TAG, new IllegalStateException(
+            "Unable to attach search to this fragment due to null parent"));
+      }
     } else {
-      menu.removeItem(R.id.action_search);
+      issuesAnalytics.attachSearchFailed(false);
+      Logger.e(TAG, new IllegalStateException(
+          "Unable to attach search to this fragment due to invalid search builder"));
     }
-  }
 
-  @Override public void setupViews() {
-    super.setupViews();
-    accountManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-    accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
-    setupNavigationView();
+    menu.removeItem(R.id.action_search);
   }
 
   protected boolean displayHomeUpAsEnabled() {
@@ -292,6 +313,14 @@ public class HomeFragment extends StoreFragment {
       aptoideNavigationTracker.registerScreen(ScreenTagHistory.Builder.build("Drawer"));
       pageViewsAnalytics.sendPageViewedEvent();
     });
+  }
+
+  @Override public void setupViews() {
+    super.setupViews();
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
+    setupNavigationView();
   }
 
   private View getTabLayout(StorePagerAdapter adapter, Event.Name tab) {

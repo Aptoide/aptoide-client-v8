@@ -92,6 +92,7 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
     super.onCreate(savedInstanceState);
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
+    setHasOptionsMenu(true);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -110,7 +111,6 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
 
   @Override public void setupViews() {
     super.setupViews();
-    setHasOptionsMenu(true);
     RxView.clicks(sendFeedbackBtn)
         .subscribe(aVoid -> sendFeedback(), err -> {
           CrashReport.getInstance()

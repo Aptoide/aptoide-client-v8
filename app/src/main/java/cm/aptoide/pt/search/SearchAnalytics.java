@@ -17,8 +17,8 @@ public class SearchAnalytics {
   private static final String SEARCH = "Search";
   private static final String NO_RESULTS = "Search_No_Results";
   private static final String APP_CLICK = "Search_Results_App_View_Click";
-  private Analytics analytics;
-  private AppEventsLogger facebook;
+  private final Analytics analytics;
+  private final AppEventsLogger facebook;
 
   public SearchAnalytics(Analytics analytics, AppEventsLogger facebook) {
     this.analytics = analytics;
