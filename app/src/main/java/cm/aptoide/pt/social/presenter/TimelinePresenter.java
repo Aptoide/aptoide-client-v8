@@ -215,7 +215,8 @@ public class TimelinePresenter implements Presenter {
             .flatMapCompletable(cardTouchEvent -> timeline.ignoreUpdate(
                 ((AppUpdate) cardTouchEvent.getCard()).getPackageName())
                 .observeOn(AndroidSchedulers.mainThread())
-                .andThen(Completable.fromAction(() -> view.updateExcludedSuccess())))
+                .andThen(
+                    Completable.fromAction(() -> view.removePost(cardTouchEvent.getPosition()))))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
@@ -268,20 +269,18 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
                 .equals(CardTouchEvent.Type.DELETE_POST))
-            .doOnNext(cardTouchEvent -> view.showPostDeleting())
             .flatMapCompletable(cardTouchEvent -> timeline.deletePost(cardTouchEvent.getCard()
                 .getCardId())
                 .observeOn(AndroidSchedulers.mainThread())
                 .andThen(Completable.fromAction(() -> {
                   view.removePost(cardTouchEvent.getPosition());
-                  view.showPostDeleted();
                 })))
             .retry())
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
         }, throwable -> {
-          view.showPostDeletedError();
+          view.showGenericError();
           crashReport.log(throwable);
         });
   }

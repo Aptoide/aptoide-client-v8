@@ -101,15 +101,7 @@ public interface TimelineView extends View {
 
   Observable<Integer> getScrollEvents();
 
-  void showPostDeleting();
-
-  void showPostDeleted();
-
-  void showPostDeletedError();
-
   Single<String> takeFeedbackScreenShot();
 
   void showUserUnsubscribedMessage(String userName);
-
-  void updateExcludedSuccess();
 }

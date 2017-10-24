@@ -18,7 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
@@ -595,21 +594,6 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         .map(recyclerViewScrollEvent -> layoutManager.findFirstVisibleItemPosition());
   }
 
-  @Override public void showPostDeleting() {
-    Toast.makeText(getContext(), "Deleting...", Toast.LENGTH_SHORT)
-        .show();
-  }
-
-  @Override public void showPostDeleted() {
-    Toast.makeText(getContext(), "Deleted!", Toast.LENGTH_SHORT)
-        .show();
-  }
-
-  @Override public void showPostDeletedError() {
-    Toast.makeText(getContext(), "Error deleting post", Toast.LENGTH_SHORT)
-        .show();
-  }
-
   @Override public Single<String> takeFeedbackScreenShot() {
     String downloadFolderPath = getContext().getApplicationContext()
         .getCacheDir()
@@ -621,14 +605,10 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   @Override public void showUserUnsubscribedMessage(String userName) {
-    final String msg = AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
-        getContext().getResources(), userName);
+    final String msg =
+        AptoideUtils.StringU.getFormattedString(R.string.timeline_short_unfollow_user,
+            getContext().getResources(), userName);
     Snackbar.make(getView(), msg, Snackbar.LENGTH_SHORT)
-        .show();
-  }
-
-  @Override public void updateExcludedSuccess() {
-    Toast.makeText(getContext(), "Update ignored", Toast.LENGTH_SHORT)
         .show();
   }
 
