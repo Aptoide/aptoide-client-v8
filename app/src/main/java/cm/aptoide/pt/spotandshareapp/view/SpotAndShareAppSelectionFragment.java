@@ -181,10 +181,6 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
     return skipButtonClick;
   }
 
-  @Override public void finish() {
-    getActivity().finish();
-  }
-
   @Override public void buildInstalledAppsList(List<AppModel> installedApps) {
     pickAppsAdapter.setInstalledAppsList(installedApps);
     hideLoading();
@@ -235,7 +231,7 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
     pickAppsRecyclerView.setLayoutManager(gridLayoutManager);
   }
 
-  @Override public void hideLoading() {
+  private void hideLoading() {
     progressBarContainer.setVisibility(View.GONE);
   }
 
