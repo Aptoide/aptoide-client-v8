@@ -653,7 +653,6 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive){
       if(actionState==ItemTouchHelper.ACTION_STATE_SWIPE){
-        Logger.d(dX, String.valueOf(dX));
         if(dX > 0){
           viewHolder.itemView.findViewById(R.id.stamp_left).setVisibility(View.VISIBLE);
           if(dX<72) {
