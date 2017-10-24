@@ -24,6 +24,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.BackButtonFragment;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
+import com.jakewharton.rxbinding.view.RxView;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Observable;
@@ -48,6 +49,10 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
   private ProgressBar startingLoadingLayout;
   private SwipeRefreshLayout swipeRefreshLayout;
   private Parcelable listState;
+  private View noNetworkErrorLayout;
+  private View genericErrorLayout;
+  private View retryButton;
+  private View noNetworkRetryButton;
 
   public static Fragment newInstance(long storeId) {
     Bundle args = new Bundle();
@@ -75,6 +80,10 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
     recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
     recyclerView.setVisibility(View.GONE);
     swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+    genericErrorLayout = view.findViewById(R.id.generic_error);
+    noNetworkErrorLayout = view.findViewById(R.id.no_network_connection);
+    retryButton = genericErrorLayout.findViewById(R.id.retry);
+    noNetworkRetryButton = noNetworkErrorLayout.findViewById(R.id.retry);
     swipeRefreshLayout.setOnRefreshListener(() -> refreshEvent.onNext(null));
     setupToolbar(view);
     adapter = new ListStoreAppsAdapter(new ArrayList<>(), appClicks);
@@ -96,8 +105,10 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
     recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
       @Override public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
           RecyclerView.State state) {
-        int margin = AptoideUtils.ScreenU.getPixelsForDip(5, getResources());
-        outRect.set(margin, margin, margin, margin);
+        if (getHost() != null) {
+          int margin = AptoideUtils.ScreenU.getPixelsForDip(5, getResources());
+          outRect.set(margin, margin, margin, margin);
+        }
       }
     });
 
@@ -143,6 +154,7 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
 
   @Override public void addApps(List<Application> appsList) {
     adapter.addApps(appsList);
+    showApps();
   }
 
   @Override public Observable<Application> getAppClick() {
@@ -164,11 +176,6 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
     adapter.showLoading();
   }
 
-  @Override public void hideStartingLoading() {
-    startingLoadingLayout.setVisibility(View.GONE);
-    recyclerView.setVisibility(View.VISIBLE);
-  }
-
   @Override public PublishSubject<Void> getRefreshEvent() {
     return refreshEvent;
   }
@@ -183,6 +190,39 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
       layoutManager.onRestoreInstanceState(listState);
       listState = null;
     }
+    showApps();
+  }
+
+  @Override public void showNetworkError() {
+    noNetworkErrorLayout.setVisibility(View.VISIBLE);
+    startingLoadingLayout.setVisibility(View.GONE);
+    recyclerView.setVisibility(View.GONE);
+    genericErrorLayout.setVisibility(View.GONE);
+  }
+
+  @Override public void showGenericError() {
+    genericErrorLayout.setVisibility(View.VISIBLE);
+    startingLoadingLayout.setVisibility(View.GONE);
+    recyclerView.setVisibility(View.GONE);
+    noNetworkErrorLayout.setVisibility(View.GONE);
+  }
+
+  @Override public Observable<Void> getRetryEvent() {
+    return Observable.merge(RxView.clicks(retryButton), RxView.clicks(noNetworkRetryButton));
+  }
+
+  @Override public void showStartingLoading() {
+    startingLoadingLayout.setVisibility(View.VISIBLE);
+    recyclerView.setVisibility(View.GONE);
+    genericErrorLayout.setVisibility(View.GONE);
+    noNetworkErrorLayout.setVisibility(View.GONE);
+  }
+
+  private void showApps() {
+    recyclerView.setVisibility(View.VISIBLE);
+    startingLoadingLayout.setVisibility(View.GONE);
+    genericErrorLayout.setVisibility(View.GONE);
+    noNetworkErrorLayout.setVisibility(View.GONE);
   }
 
   private boolean isEndReached() {

@@ -21,11 +21,17 @@ public interface ListStoreAppsView extends View {
 
   void showLoading();
 
-  void hideStartingLoading();
-
   PublishSubject<Void> getRefreshEvent();
 
   void hideRefreshLoading();
 
   void setApps(List<Application> applications);
+
+  void showNetworkError();
+
+  void showGenericError();
+
+  Observable<Void> getRetryEvent();
+
+  void showStartingLoading();
 }

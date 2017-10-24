@@ -1,6 +1,5 @@
 package cm.aptoide.pt.view.app;
 
-import android.support.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,24 +19,33 @@ public class AppCenterRepository {
     this.storeApplications = storeApplications;
   }
 
-  public Single<List<Application>> loadNextApps(long storeId) {
+  public Single<AppsList> loadNextApps(long storeId) {
     return appService.loadNextApps(storeId)
         .doOnSuccess(applications -> updateCache(storeId, applications, false))
-        .map(applications -> cloneList(applications));
+        .map(appsList -> cloneList(appsList));
   }
 
-  public Single<List<Application>> loadFreshApps(long storeId) {
+  public Single<AppsList> loadFreshApps(long storeId) {
     return appService.loadFreshApps(storeId)
         .doOnSuccess(applications -> updateCache(storeId, applications, true))
-        .map(applications -> cloneList(applications));
+        .map(appsList -> cloneList(appsList));
   }
 
-  private void updateCache(long storeId, List<Application> applications, boolean isFresh) {
-    List<Application> cache = storeApplications.get(storeId);
-    if (cache == null || isFresh) {
-      storeApplications.put(storeId, applications);
-    } else {
-      cache.addAll(applications);
+  private AppsList cloneList(AppsList appsList) {
+    if (appsList.hasErrors() || appsList.isLoading()) {
+      return appsList;
+    }
+    return new AppsList(new ArrayList<>(appsList.getList()), appsList.isLoading());
+  }
+
+  private void updateCache(long storeId, AppsList applications, boolean isFresh) {
+    if (!applications.hasErrors()) {
+      List<Application> cache = storeApplications.get(storeId);
+      if (cache == null || isFresh) {
+        storeApplications.put(storeId, applications.getList());
+      } else {
+        cache.addAll(applications.getList());
+      }
     }
   }
 
@@ -45,15 +53,11 @@ public class AppCenterRepository {
     appService.setLimit(limit);
   }
 
-  public Single<List<Application>> getApplications(long storeId) {
+  public Single<AppsList> getApplications(long storeId) {
     List<Application> applications = storeApplications.get(storeId);
-    if (applications == null) {
+    if (applications == null || applications.isEmpty()) {
       return loadNextApps(storeId);
     }
-    return Single.just(cloneList(applications));
-  }
-
-  @NonNull private ArrayList<Application> cloneList(List<Application> applications) {
-    return new ArrayList<>(applications);
+    return Single.just(new AppsList(new ArrayList<>(applications), false));
   }
 }
