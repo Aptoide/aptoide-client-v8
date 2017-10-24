@@ -34,7 +34,8 @@ import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.repository.request.RequestFactory;
-import cm.aptoide.pt.util.referrer.ReferrerUtils;
+import cm.aptoide.pt.search.ReferrerUtils;
+import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
@@ -254,11 +255,12 @@ public class FirstInstallPresenter implements Presenter {
    * @param minimalAd minimal ad to store and extract referrer
    */
   private void handleAdsLogic(MinimalAd minimalAd) {
-    storedMinimalAdAccessor.insert(adMapper.map(minimalAd, null));
-    AdNetworkUtils.knockCpc(adMapper.map(minimalAd));
+    SearchAdResult searchAdResult = new SearchAdResult(minimalAd);
+    storedMinimalAdAccessor.insert(adMapper.map(searchAdResult, null));
+    AdNetworkUtils.knockCpc(adMapper.map(searchAdResult));
     AptoideUtils.ThreadU.runOnUiThread(
-        () -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, false, adsRepository,
-            httpClient, converterFactory, qManager, context.getApplicationContext(),
+        () -> ReferrerUtils.extractReferrer(searchAdResult, ReferrerUtils.RETRIES, false,
+            adsRepository, httpClient, converterFactory, qManager, context.getApplicationContext(),
             ((AptoideApplication) context.getApplicationContext()).getDefaultSharedPreferences(),
             new MinimalAdMapper()));
   }

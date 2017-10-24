@@ -339,8 +339,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     final android.app.SearchManager searchManagerService =
         (android.app.SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
 
-    searchNavigator = new SearchNavigator(getFragmentNavigator(),
-        appPreferences.getDefaultStoreName());
+    searchNavigator =
+        new SearchNavigator(getFragmentNavigator(), appPreferences.getDefaultStoreName());
 
     searchBuilder = new SearchBuilder(searchManagerService, searchNavigator);
 
