@@ -1,10 +1,11 @@
 package cm.aptoide.pt.view.app;
 
 import android.os.Bundle;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import rx.Observable;
 import rx.Scheduler;
 
@@ -41,14 +42,6 @@ public class ListStoreAppsPresenter implements Presenter {
     onCreateHandleRefresh();
   }
 
-  @Override public void saveState(Bundle state) {
-
-  }
-
-  @Override public void restoreState(Bundle state) {
-
-  }
-
   private void onCreateHandleRefresh() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -68,7 +61,7 @@ public class ListStoreAppsPresenter implements Presenter {
   private void onCreateLoadApps() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMapSingle(lifecycleEvent -> appCenter.loadNextApps(storeId)
+        .flatMapSingle(lifecycleEvent -> appCenter.getApps(storeId)
             .observeOn(viewScheduler)
             .doOnSuccess(applications -> {
               view.setApps(applications);
