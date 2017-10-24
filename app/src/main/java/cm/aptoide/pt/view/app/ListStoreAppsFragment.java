@@ -3,6 +3,7 @@ package cm.aptoide.pt.view.app;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -20,10 +21,6 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.dataprovider.WebService;
-import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.BackButtonFragment;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
@@ -41,6 +38,7 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
 
   public static final String STORE_ID = "cm.aptoide.pt.ListStoreAppsFragment.storeId";
   public static final int LOAD_THRESHOLD = 5;
+  private static final String LIST_STATE_KEY = "cm.atpoide.pt.ListStoreAppsFragment.ListState";
   private ListStoreAppsAdapter adapter;
   private long storeId;
   private PublishSubject<Application> appClicks;
@@ -49,6 +47,7 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
   private GridLayoutManager layoutManager;
   private ProgressBar startingLoadingLayout;
   private SwipeRefreshLayout swipeRefreshLayout;
+  private Parcelable listState;
 
   public static Fragment newInstance(long storeId) {
     Bundle args = new Bundle();
@@ -60,13 +59,19 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    appClicks = PublishSubject.create();
     storeId = getArguments().getLong(STORE_ID);
-    refreshEvent = PublishSubject.create();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    if (savedInstanceState != null) {
+      if (savedInstanceState.containsKey(LIST_STATE_KEY)) {
+        listState = savedInstanceState.getParcelable(LIST_STATE_KEY);
+        savedInstanceState.putParcelable(LIST_STATE_KEY, null);
+      }
+    }
+    appClicks = PublishSubject.create();
+    refreshEvent = PublishSubject.create();
     recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
     recyclerView.setVisibility(View.GONE);
     swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
@@ -100,14 +105,8 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
         (AptoideApplication) getContext().getApplicationContext();
     int limit = spanSize * 10;
     attachPresenter(new ListStoreAppsPresenter(this, storeId, AndroidSchedulers.mainThread(),
-        new AppCenter(new AppService(new StoreCredentialsProviderImpl(
-            AccessorFactory.getAccessorFor(
-                ((AptoideApplication) getContext().getApplicationContext()
-                    .getApplicationContext()).getDatabase(), Store.class)),
-            applicationContext.getBodyInterceptorPoolV7(), applicationContext.getDefaultClient(),
-            WebService.getDefaultConverter(), applicationContext.getTokenInvalidator(),
-            applicationContext.getDefaultSharedPreferences(), 0, limit)), CrashReport.getInstance(),
-        getFragmentNavigator()), savedInstanceState);
+        ((AptoideApplication) getContext().getApplicationContext()).getAppCenter(applicationContext,
+            limit), CrashReport.getInstance(), getFragmentNavigator()));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -116,9 +115,15 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
   }
 
   @Override public void onDestroyView() {
+    listState = layoutManager.onSaveInstanceState();
     recyclerView = null;
     adapter = null;
+    layoutManager.setSpanSizeLookup(new GridLayoutManager.DefaultSpanSizeLookup());
     layoutManager = null;
+    startingLoadingLayout = null;
+    swipeRefreshLayout = null;
+    appClicks = null;
+    refreshEvent = null;
     super.onDestroyView();
   }
 
@@ -127,6 +132,13 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
       @Nullable Bundle savedInstanceState) {
     setHasOptionsMenu(true);
     return inflater.inflate(R.layout.list_store_apps_fragment_layout, container, false);
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    if (adapter != null) {
+      outState.putParcelable(LIST_STATE_KEY, layoutManager.onSaveInstanceState());
+    }
   }
 
   @Override public void addApps(List<Application> appsList) {
@@ -167,6 +179,10 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
 
   @Override public void setApps(List<Application> applications) {
     adapter.setApps(applications);
+    if (listState != null) {
+      layoutManager.onRestoreInstanceState(listState);
+      listState = null;
+    }
   }
 
   private boolean isEndReached() {

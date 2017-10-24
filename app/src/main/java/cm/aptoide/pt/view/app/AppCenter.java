@@ -8,11 +8,11 @@ import rx.Single;
  */
 
 public class AppCenter {
-  private final AppService appService;
+  private final AppCenterRepository appService;
 
-  public AppCenter(AppService appService) {
+  public AppCenter(AppCenterRepository appRepository) {
 
-    this.appService = appService;
+    this.appService = appRepository;
   }
 
   public Single<List<Application>> loadNextApps(long storeId) {
@@ -21,5 +21,13 @@ public class AppCenter {
 
   public Single<List<Application>> loadFreshApps(long storeId) {
     return appService.loadFreshApps(storeId);
+  }
+
+  public void setLimit(int limit) {
+    appService.setLimit(limit);
+  }
+
+  public Single<List<Application>> getApps(long storeId) {
+    return appService.getApplications(storeId);
   }
 }

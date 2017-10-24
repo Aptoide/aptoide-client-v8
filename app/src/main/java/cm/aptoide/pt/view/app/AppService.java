@@ -26,8 +26,8 @@ public class AppService {
   private final Converter.Factory converterFactory;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
-  private final int limit;
   private final int initialOffset;
+  private int limit;
   private boolean loading;
   private int offset;
 
@@ -86,5 +86,9 @@ public class AppService {
 
   public Single<List<Application>> loadNextApps(long storeId) {
     return loadNextApps(storeId, false);
+  }
+
+  public void setLimit(int limit) {
+    this.limit = limit;
   }
 }
