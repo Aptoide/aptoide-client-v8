@@ -2,7 +2,6 @@ package cm.aptoide.pt.view.store.my;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.View;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -38,10 +37,6 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment {
     MyStoresFragment fragment = new MyStoresFragment();
     fragment.setArguments(args);
     return fragment;
-  }
-
-  public static Fragment newInstance() {
-    return new MyStoresFragment();
   }
 
   @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {

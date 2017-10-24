@@ -6,7 +6,6 @@
 package cm.aptoide.pt.view.store;
 
 import android.app.Activity;
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,7 +24,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
@@ -111,7 +109,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private String marketName;
   private String defaultTheme;
   private Runnable registerViewpagerCurrentItem;
-  private SearchBuilder searchBuilder;
 
   public static StoreFragment newInstance(long userId, String storeTheme, OpenType openType) {
     return newInstance(userId, storeTheme, null, openType);
@@ -120,11 +117,11 @@ public class StoreFragment extends BasePagerToolbarFragment {
   public static StoreFragment newInstance(long userId, String storeTheme, Event.Name defaultTab,
       OpenType openType) {
     Bundle args = new Bundle();
-    args.putLong(BundleKeys.USER_ID.name(), userId);
-    args.putSerializable(BundleKeys.STORE_CONTEXT.name(), StoreContext.meta);
-    args.putSerializable(BundleKeys.OPEN_TYPE.name(), openType);
-    args.putString(BundleKeys.STORE_THEME.name(), storeTheme);
-    args.putSerializable(BundleKeys.DEFAULT_TAB_TO_OPEN.name(), defaultTab);
+    args.putLong(BundleCons.USER_ID, userId);
+    args.putSerializable(BundleCons.STORE_CONTEXT, StoreContext.meta);
+    args.putSerializable(BundleCons.OPEN_TYPE, openType);
+    args.putString(BundleCons.STORE_THEME, storeTheme);
+    args.putSerializable(BundleCons.DEFAULT_TAB_TO_OPEN, defaultTab);
     StoreFragment fragment = new StoreFragment();
     fragment.setArguments(args);
     return fragment;
@@ -134,17 +131,17 @@ public class StoreFragment extends BasePagerToolbarFragment {
       Event.Name defaultTab, OpenType openType) {
     StoreFragment storeFragment = newInstance(storeName, storeTheme, openType);
     storeFragment.getArguments()
-        .putSerializable(BundleKeys.DEFAULT_TAB_TO_OPEN.name(), defaultTab);
+        .putSerializable(BundleCons.DEFAULT_TAB_TO_OPEN, defaultTab);
     return storeFragment;
   }
 
   public static StoreFragment newInstance(String storeName, String storeTheme,
       StoreFragment.OpenType openType) {
     Bundle args = new Bundle();
-    args.putString(BundleKeys.STORE_NAME.name(), storeName);
-    args.putSerializable(BundleKeys.OPEN_TYPE.name(), openType);
-    args.putSerializable(BundleKeys.STORE_CONTEXT.name(), StoreContext.meta);
-    args.putString(BundleKeys.STORE_THEME.name(), storeTheme);
+    args.putString(BundleCons.STORE_NAME, storeName);
+    args.putSerializable(BundleCons.OPEN_TYPE, openType);
+    args.putSerializable(BundleCons.STORE_CONTEXT, StoreContext.meta);
+    args.putString(BundleCons.STORE_THEME, storeTheme);
     StoreFragment fragment = new StoreFragment();
     fragment.setArguments(args);
     return fragment;
@@ -161,48 +158,39 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
-    final AptoideApplication application =
-        (AptoideApplication) getContext().getApplicationContext();
-    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
-    defaultTheme = appPreferences.getDefaultThemeName();
-    tokenInvalidator = application.getTokenInvalidator();
-    storeCredentialsProvider = new StoreCredentialsProviderImpl(
-        AccessorFactory.getAccessorFor(application.getDatabase(),
-            cm.aptoide.pt.database.realm.Store.class));
-    accountManager = application.getAccountManager();
-    bodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();
-    httpClient = application.getDefaultClient();
+    defaultTheme = ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
+    tokenInvalidator =
+        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
+    storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
+        ((AptoideApplication) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), cm.aptoide.pt.database.realm.Store.class));
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    bodyInterceptor =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
+    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     Analytics analytics = Analytics.getInstance();
     timelineAnalytics = new TimelineAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        application.getDefaultSharedPreferences(), new NotificationAnalytics(httpClient, analytics),
-        aptoideNavigationTracker);
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+        new NotificationAnalytics(httpClient, analytics), aptoideNavigationTracker);
     storeAnalytics = new StoreAnalytics(AppEventsLogger.newLogger(getContext()), analytics);
-    marketName = appPreferences.getMarketName();
+    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);
-
-    final SearchManager searchManager =
-        (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
-
-    final SearchNavigator searchNavigator = new SearchNavigator(getFragmentNavigator(), storeName,
-        appPreferences.getDefaultStoreName());
-
-    searchBuilder = new SearchBuilder(searchManager, searchNavigator);
   }
 
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
-    storeName = args.getString(BundleKeys.STORE_NAME.name());
-    storeContext = (StoreContext) args.get(BundleKeys.STORE_CONTEXT.name());
-    openType = args.containsKey(BundleKeys.OPEN_TYPE.name()) ? (OpenType) args.get(
-        BundleKeys.OPEN_TYPE.name()) : OpenType.GetStore;
-    storeTheme = args.getString(BundleKeys.STORE_THEME.name());
-    defaultTab = (Event.Name) args.get(BundleKeys.DEFAULT_TAB_TO_OPEN.name());
-    if (args.containsKey(BundleKeys.USER_ID.name())) {
-      userId = args.getLong(BundleKeys.USER_ID.name());
+    storeName = args.getString(BundleCons.STORE_NAME);
+    storeContext = (StoreContext) args.get(BundleCons.STORE_CONTEXT);
+    openType = args.containsKey(BundleCons.OPEN_TYPE) ? (OpenType) args.get(BundleCons.OPEN_TYPE)
+        : OpenType.GetStore;
+    storeTheme = args.getString(BundleCons.STORE_THEME);
+    defaultTab = (Event.Name) args.get(BundleCons.DEFAULT_TAB_TO_OPEN);
+    if (args.containsKey(BundleCons.USER_ID)) {
+      userId = args.getLong(BundleCons.USER_ID);
     }
   }
 
@@ -346,11 +334,11 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_search, menu);
-    if (searchBuilder != null && searchBuilder.isValid()) {
-      searchBuilder.attachSearch(getContext(), menu.findItem(R.id.action_search));
-    } else {
-      menu.removeItem(R.id.action_search);
-    }
+    String defaultStore = getDefaultStore();
+    SearchBuilder searchBuilder =
+        new SearchBuilder(menu.findItem(R.id.action_search), getActivity(),
+            new SearchNavigator(getFragmentNavigator(), storeName, defaultStore));
+    searchBuilder.validateAndAttachSearch();
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -538,7 +526,13 @@ public class StoreFragment extends BasePagerToolbarFragment {
     GetHome, GetStore
   }
 
-  private enum BundleKeys {
-    STORE_NAME, STORE_CONTEXT, STORE_THEME, DEFAULT_TAB_TO_OPEN, USER_ID, OPEN_TYPE
+  public static class BundleCons {
+
+    public static final String STORE_NAME = "storeName";
+    public static final String STORE_CONTEXT = "storeContext";
+    public static final String STORE_THEME = "storeTheme";
+    public static final String DEFAULT_TAB_TO_OPEN = "default_tab_to_open";
+    public static final String USER_ID = "userId";
+    public static final String OPEN_TYPE = "OPEN_TYPE";
   }
 }

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     >
 
   <android.support.design.widget.AppBarLayout
@@ -19,117 +20,113 @@
 
   </android.support.design.widget.AppBarLayout>
 
-  <LinearLayout
-      android:id="@+id/bottom_buttons"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_alignParentBottom="true"
-      android:layout_gravity="top|center_horizontal"
-      android:layout_marginBottom="@dimen/padding_medium_small"
-      android:gravity="top|center_horizontal"
-      android:orientation="horizontal"
-      android:paddingBottom="@dimen/padding_medium_small"
-      android:weightSum="2"
-      >
-
-    <Button
-        android:id="@+id/logged_in_private_button"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/button_height"
-        android:layout_marginEnd="@dimen/padding_very_small"
-        android:layout_marginLeft="@dimen/padding_small"
-        android:layout_marginRight="@dimen/padding_very_small"
-        android:layout_marginStart="@dimen/padding_small"
-        android:layout_weight="1"
-        android:text="@string/create_profile_pub_pri_make_priv"
-        android:textSize="@dimen/text_size_extra_small"
-        android:theme="@style/Aptoide.Button.Ghost"
-        style="@style/Aptoide.Button.Ghost"
-        />
-
-    <Button
-        android:id="@+id/logged_in_continue"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/button_height"
-        android:layout_marginEnd="@dimen/padding_small"
-        android:layout_marginLeft="@dimen/padding_very_small"
-        android:layout_marginRight="@dimen/padding_small"
-        android:layout_marginStart="@dimen/padding_very_small"
-        android:layout_weight="1"
-        android:text="@string/continue_option"
-        android:theme="@style/Aptoide.Button"
-        style="@style/Widget.AppCompat.Button"
-        />
-
-  </LinearLayout>
-
-  <ScrollView
-      android:id="@+id/scroll_view"
+  <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_above="@id/bottom_buttons"
-      android:layout_marginTop="?android:actionBarSize"
-      android:paddingEnd="@dimen/padding_very_small"
-      android:paddingLeft="@dimen/padding_very_small"
-      android:paddingRight="@dimen/padding_very_small"
-      android:paddingStart="@dimen/padding_very_small"
       >
 
     <LinearLayout
+        android:id="@+id/bottom_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/padding_medium_small"
         android:gravity="center"
-        android:orientation="vertical"
-        android:paddingTop="@dimen/padding_medium_default"
+        android:orientation="horizontal"
+        android:paddingEnd="@dimen/padding_small"
+        android:paddingLeft="@dimen/padding_small"
+        android:paddingRight="@dimen/padding_small"
+        android:paddingStart="@dimen/padding_small"
         >
 
-      <ImageView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center_horizontal"
-          android:src="@drawable/icon_timeline"
+      <Button
+          android:id="@+id/logged_in_private_button"
+          android:layout_width="0dp"
+          android:layout_marginEnd="11dp"
+          android:layout_marginRight="11dp"
+          android:layout_weight="1"
+          android:text="@string/create_profile_pub_pri_make_priv"
+          android:textSize="8sp"
+          style="@style/Aptoide.Button.Ghost"
           />
 
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="@dimen/padding_medium_small"
-          android:gravity="center_horizontal"
-          android:text="@string/create_profile_pub_pri"
-          android:textColor="@color/default_color"
-          style="@style/Aptoide.TextView.Medium.L"
-          />
-
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="@dimen/padding_smaller"
-          android:gravity="center_horizontal"
-          android:text="@string/create_profile_pub_pri_sub_text_1"
-          style="@style/Aptoide.TextView.Regular.S"
-          />
-
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="@dimen/padding_smaller"
-          android:gravity="center_horizontal"
-          android:text="@string/create_profile_pub_pri_sub_text_2"
-          style="@style/Aptoide.TextView.Regular.S"
-          />
-
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="@dimen/padding_smaller"
-          android:gravity="center_horizontal"
-          android:text="@string/create_profile_pub_pri_sub_text_3"
-          style="@style/Aptoide.TextView.Regular.S"
+      <Button
+          android:id="@+id/logged_in_continue"
+          android:layout_width="0dp"
+          android:layout_height="@dimen/button_height"
+          android:layout_marginLeft="11dp"
+          android:layout_marginStart="11dp"
+          android:layout_weight="1"
+          android:text="@string/continue_option"
+          android:theme="@style/Aptoide.Button"
+          style="@style/Widget.AppCompat.Button"
           />
 
     </LinearLayout>
 
-  </ScrollView>
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_buttons"
+        android:padding="@dimen/padding_very_small"
+        >
 
-</RelativeLayout>
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center"
+          android:orientation="vertical"
+          >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/icon_timeline"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_medium_small"
+            android:gravity="center_horizontal"
+            android:text="@string/create_profile_pub_pri"
+            android:textColor="@color/default_color"
+            style="@style/Aptoide.TextView.Medium.L"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_smaller"
+            android:gravity="center_horizontal"
+            android:text="@string/create_profile_pub_pri_sub_text_1"
+            style="@style/Aptoide.TextView.Regular.S"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_smaller"
+            android:gravity="center_horizontal"
+            android:text="@string/create_profile_pub_pri_sub_text_2"
+            style="@style/Aptoide.TextView.Regular.S"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_smaller"
+            android:gravity="center_horizontal"
+            android:text="@string/create_profile_pub_pri_sub_text_3"
+            style="@style/Aptoide.TextView.Regular.S"
+            />
+
+      </LinearLayout>
+
+    </ScrollView>
+
+  </RelativeLayout>
+
+</LinearLayout>

@@ -45,8 +45,6 @@
           android:minWidth="2dp"
           android:padding="8dp"
           android:src="@drawable/ic_action_overflow"
-          android:visibility="invisible"
-          tools:visibility="visible"
           style="@style/focusableRowBackground"
           />
 

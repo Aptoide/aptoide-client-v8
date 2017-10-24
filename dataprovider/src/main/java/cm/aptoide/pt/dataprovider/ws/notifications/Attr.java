@@ -1,4 +1,4 @@
-package cm.aptoide.pt.dataprovider.model.v1;
+package cm.aptoide.pt.dataprovider.ws.notifications;
 
 public class Attr {
   private String appName;

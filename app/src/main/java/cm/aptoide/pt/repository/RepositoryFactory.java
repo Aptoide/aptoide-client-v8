@@ -8,7 +8,6 @@ package cm.aptoide.pt.repository;
 import android.content.Context;
 import android.content.SharedPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.app.AppRepository;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -87,13 +86,12 @@ public final class RepositoryFactory {
 
   public static AppRepository getAppRepository(Context context,
       SharedPreferences sharedPreferences) {
-    final AptoideApplication application = (AptoideApplication) context.getApplicationContext();
-    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
     return new AppRepository(getBaseBodyInterceptorV7(context), getBaseBodyInterceptorV3(context),
-        new StoreCredentialsProviderImpl(
-            AccessorFactory.getAccessorFor(application.getDatabase(), Store.class)),
+        new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
+            ((AptoideApplication) context.getApplicationContext()).getDatabase(), Store.class)),
         getHttpClient(context), WebService.getDefaultConverter(), getTokenInvalidator(context),
-        sharedPreferences, context.getResources(), appPreferences.getPartnerId());
+        sharedPreferences, context.getResources(),
+        ((AptoideApplication) context.getApplicationContext()).getPartnerId());
   }
 
   private static BodyInterceptor<BaseBody> getBaseBodyInterceptorV7(Context context) {

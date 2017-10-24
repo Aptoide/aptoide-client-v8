@@ -78,21 +78,20 @@ public class InstallService extends Service {
   @Override public void onCreate() {
     super.onCreate();
     Logger.d(TAG, "Install service is starting");
-    final AptoideApplication application = (AptoideApplication) getApplicationContext();
-    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
-    marketName = appPreferences.getMarketName();
-    downloadManager = application.getDownloadManager();
+    marketName = ((AptoideApplication) getApplicationContext()).getMarketName();
+    downloadManager = ((AptoideApplication) getApplicationContext()).getDownloadManager();
     final MinimalAdMapper adMapper = new MinimalAdMapper();
     InstallerFactory installerFactory = new InstallerFactory(adMapper,
         new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance(),
             AppEventsLogger.newLogger(getApplicationContext())),
-        appPreferences.getImageCachePath());
+        ((AptoideApplication) getApplicationContext()).getImageCachePath());
     defaultInstaller = installerFactory.create(this, InstallerFactory.DEFAULT);
     rollbackInstaller = installerFactory.create(this, InstallerFactory.ROLLBACK);
-    installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
+    installManager =
+        ((AptoideApplication) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
     subscriptions = new CompositeSubscription();
     setupNotification();
-    installerTypeMap = new HashMap<>();
+    installerTypeMap = new HashMap();
     analytics = Analytics.getInstance();
     installedRepository = RepositoryFactory.getInstalledRepository(getApplicationContext());
   }

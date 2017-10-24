@@ -3,8 +3,11 @@ package cm.aptoide.pt.notification;
 import java.util.List;
 import rx.Single;
 
-public interface NotificationService {
+/**
+ * Created by trinkes on 09/05/2017.
+ */
 
+public interface NotificationNetworkService {
   Single<List<AptoideNotification>> getSocialNotifications();
 
   Single<List<AptoideNotification>> getCampaignNotifications();

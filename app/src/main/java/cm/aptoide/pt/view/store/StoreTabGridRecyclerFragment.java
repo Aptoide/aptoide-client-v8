@@ -16,7 +16,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
@@ -52,14 +51,14 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   private String marketName;
 
   public static Fragment newInstance(Event event, String storeTheme, String tag,
-      StoreContext storeContext, boolean addAdultFilter) {
-    return newInstance(event, null, storeTheme, tag, storeContext, addAdultFilter);
+      StoreContext storeContext) {
+    return newInstance(event, null, storeTheme, tag, storeContext);
   }
 
   public static Fragment newInstance(Event event, String title, String storeTheme, String tag,
-      StoreContext storeContext, boolean addAdultFilter) {
+      StoreContext storeContext) {
     Bundle args = buildBundle(event, title, storeTheme, tag, storeContext);
-    Fragment fragment = StoreTabFragmentChooser.choose(event.getName(), addAdultFilter);
+    Fragment fragment = StoreTabFragmentChooser.choose(event.getName());
     Bundle arguments = fragment.getArguments();
     if (arguments != null) {
       args.putAll(arguments);
@@ -103,10 +102,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    final AptoideApplication application =
-        (AptoideApplication) getContext().getApplicationContext();
-    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
-    marketName = appPreferences.getMarketName();
+    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     storeRepository = RepositoryFactory.getStoreRepository(getContext().getApplicationContext());
 
     super.onCreate(savedInstanceState);

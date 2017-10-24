@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
@@ -67,20 +66,20 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    final AptoideApplication application =
-        (AptoideApplication) getContext().getApplicationContext();
     final BodyInterceptor<BaseBody> baseBodyInterceptor =
-        application.getAccountSettingsBodyInterceptorPoolV7();
-    final OkHttpClient httpClient = application.getDefaultClient();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
+    final OkHttpClient httpClient =
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
-    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
-    marketName = appPreferences.getMarketName();
+    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     this.mActionsListener = new PhoneInputPresenter(this,
         new ContactsRepository(baseBodyInterceptor, httpClient, converterFactory,
-            application.getIdsRepository(), new ContactUtils(
-            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-            getContext().getContentResolver()), application.getTokenInvalidator(),
-            application.getDefaultSharedPreferences()),
+            ((AptoideApplication) getContext().getApplicationContext()).getIdsRepository(),
+            new ContactUtils(
+                (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
+                getContext().getContentResolver()),
+            ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()),
         new AddressBookAnalytics(Analytics.getInstance(),
             AppEventsLogger.newLogger(getContext().getApplicationContext())),
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,

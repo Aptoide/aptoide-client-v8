@@ -10,7 +10,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.MinimalAdMapper;
@@ -90,14 +89,14 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     analytics = Analytics.getInstance();
-    final AptoideApplication application = (AptoideApplication) getContext().getApplicationContext()
-        .getApplicationContext();
-    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
-    marketName = appPreferences.getMarketName();
+    marketName = ((AptoideApplication) getContext().getApplicationContext()
+        .getApplicationContext()).getMarketName();
     installManager = new InstallerFactory(new MinimalAdMapper(),
         new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance(),
             AppEventsLogger.newLogger(getContext().getApplicationContext())),
-        appPreferences.getImageCachePath()).create(getContext(), InstallerFactory.ROLLBACK);
+        ((AptoideApplication) getContext().getApplicationContext()
+            .getApplicationContext()).getImageCachePath()).create(getContext(),
+        InstallerFactory.ROLLBACK);
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {

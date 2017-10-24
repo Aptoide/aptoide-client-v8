@@ -1,4 +1,4 @@
-package cm.aptoide.pt.dataprovider.model.v1;
+package cm.aptoide.pt.dataprovider.ws.notifications;
 
 /**
  * Created by trinkes on 7/13/16.

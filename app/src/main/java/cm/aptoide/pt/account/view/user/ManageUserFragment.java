@@ -21,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
@@ -112,10 +111,9 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
     Bundle args = getArguments();
     isEditProfile = args != null && args.getBoolean(EXTRA_IS_EDIT, false);
 
-    final ApplicationPreferences appPreferences =
-        ((AptoideApplication) getContext().getApplicationContext()).getApplicationPreferences();
-    navigator = new ManageUserNavigator(getFragmentNavigator(), appPreferences.getDefaultStoreName(),
-        appPreferences.getDefaultThemeName());
+    navigator = new ManageUserNavigator(getFragmentNavigator(),
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore(),
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme());
     fileProviderAuthority = BuildConfig.APPLICATION_ID + ".provider";
     photoFileGenerator = new PhotoFileGenerator(getActivity(),
         getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileProviderAuthority);
@@ -124,7 +122,8 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
     accountPermissionProvider = new AccountPermissionProvider(((PermissionProvider) getActivity()));
     imageValidator = new ImageValidator(ImageLoader.with(context), Schedulers.computation());
     imagePickerNavigator = new ImagePickerNavigator(getActivityNavigator());
-    createStoreUserPrivacyEnabled = appPreferences.isCreateStoreUserPrivacyEnabled();
+    createStoreUserPrivacyEnabled =
+        ((AptoideApplication) getActivity().getApplication()).isCreateStoreUserPrivacyEnabled();
     accountManager = ((AptoideApplication) getActivity().getApplication()).getAccountManager();
     errorMapper =
         new CreateUserErrorMapper(context, new AccountErrorMapper(context), getResources());

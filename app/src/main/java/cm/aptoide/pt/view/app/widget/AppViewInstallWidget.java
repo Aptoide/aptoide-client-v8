@@ -22,7 +22,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.Install;
@@ -108,11 +107,12 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
   private DownloadFactory downloadFactory;
   private PermissionService permissionService;
   private PermissionManager permissionManager;
+  private String marketName;
+  private boolean createStoreUserPrivacyEnabled;
   private SharedPreferences sharedPreferences;
   private AccountNavigator accountNavigator;
   private AppViewNavigator appViewNavigator;
   private CrashReport crashReport;
-  private ApplicationPreferences appPreferences;
 
   public AppViewInstallWidget(View itemView) {
     super(itemView);
@@ -147,29 +147,34 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     this.displayable.setInstallButton(actionButton);
     crashReport = CrashReport.getInstance();
     accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
-    final AptoideApplication application =
-        (AptoideApplication) getContext().getApplicationContext();
-    appPreferences = application.getApplicationPreferences();
-    sharedPreferences = application.getDefaultSharedPreferences();
-    final OkHttpClient httpClient = application.getDefaultClient();
+    createStoreUserPrivacyEnabled =
+        ((AptoideApplication) getContext().getApplicationContext()).isCreateStoreUserPrivacyEnabled();
+    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
+    sharedPreferences =
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
+    final OkHttpClient httpClient =
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
-    accountManager = application.getAccountManager();
-    installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
+        InstallerFactory.ROLLBACK);
     BodyInterceptor<BaseBody> bodyInterceptor =
-        application.getAccountSettingsBodyInterceptorPoolV7();
-    final TokenInvalidator tokenInvalidator = application.getTokenInvalidator();
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
+    final TokenInvalidator tokenInvalidator =
+        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     downloadInstallEventConverter =
         new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
             BuildConfig.APPLICATION_ID, sharedPreferences,
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-            application.getAptoideNavigationTracker());
+            ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker());
     installConverter =
         new InstallEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
             BuildConfig.APPLICATION_ID, sharedPreferences,
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-            application.getAptoideNavigationTracker());
+            ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker());
     analytics = Analytics.getInstance();
     downloadFactory = displayable.getDownloadFactory();
     socialRepository =
@@ -179,7 +184,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                 httpClient, WebService.getDefaultConverter(), tokenInvalidator,
                 BuildConfig.APPLICATION_ID, sharedPreferences,
                 new NotificationAnalytics(httpClient, analytics),
-                application.getAptoideNavigationTracker()), tokenInvalidator, sharedPreferences);
+                ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker()),
+            tokenInvalidator, sharedPreferences);
 
     appViewNavigator = getAppViewNavigator();
 
@@ -430,7 +436,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
                   ShowMessage.asSnack(view, R.string.downgrading_msg);
 
-                  DownloadFactory factory = new DownloadFactory(appPreferences.getMarketName());
+                  DownloadFactory factory = new DownloadFactory(marketName);
                   Download appDownload = factory.create(app, Download.ACTION_DOWNGRADE);
                   showRootInstallWarningPopup(context);
                   compositeSubscription.add(
@@ -512,11 +518,10 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
       showRootInstallWarningPopup(context);
       compositeSubscription.add(permissionManager.requestDownloadAccess(permissionService)
           .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionService))
-          .map(success -> new DownloadFactory(appPreferences.getMarketName()).create(
-              displayable.getPojo()
-                  .getNodes()
-                  .getMeta()
-                  .getData(), downloadAction))
+          .map(success -> new DownloadFactory(marketName).create(displayable.getPojo()
+              .getNodes()
+              .getMeta()
+              .getData(), downloadAction))
           .flatMapCompletable(download -> {
             if (!displayable.getAppViewFragment()
                 .isSuggestedShowing()) {
@@ -528,7 +533,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> {
                   if (accountManager.isLoggedIn() && ManagerPreferences.isShowPreviewDialog(
-                      sharedPreferences) && appPreferences.isCreateStoreUserPrivacyEnabled()) {
+                      sharedPreferences) && createStoreUserPrivacyEnabled) {
                     SharePreviewDialog sharePreviewDialog =
                         new SharePreviewDialog(displayable, accountManager, true,
                             SharePreviewDialog.SharePreviewOpenMode.SHARE,
@@ -588,7 +593,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
             .inflate(R.layout.dialog_install_warning, null);
         builder.setView(alertView);
         new InstallWarningDialog(rank, hasTrustedVersion, context, installHandler,
-            onSearchTrustedAppHandler, appPreferences.getMarketName()).getDialog()
+            onSearchTrustedAppHandler, marketName).getDialog()
             .show();
       } else {
         installHandler.onClick(v);
@@ -719,8 +724,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
   }
 
   private AppViewNavigator getAppViewNavigator() {
-    return new AppViewNavigator(getFragmentNavigator(), getActivityNavigator(),
-        appPreferences.hasMultiStoreSearch(), appPreferences.getDefaultStoreName());
+    return new AppViewNavigator(getFragmentNavigator(), getActivityNavigator());
   }
 
   private void findTrustedVersion(GetAppMeta.App app, ListAppVersions appVersions) {

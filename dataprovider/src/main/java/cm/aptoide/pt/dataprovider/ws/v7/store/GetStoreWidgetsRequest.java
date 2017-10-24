@@ -83,11 +83,11 @@ public class GetStoreWidgetsRequest
     final Body body =
         new Body(storeCredentials, WidgetsArgs.createDefault(resources, windowManager));
 
-    return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets").get(), body,
-        bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
-        storeCredentials, clientUniqueId, isGooglePlayServicesAvailable, partnerId, accountMature,
-        httpClient, filters, tokenInvalidator, sharedPreferences, resources, windowManager,
-        connectivityManager, versionCodeProvider);
+    return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets")
+        .get(), body, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+        sharedPreferences, storeCredentials, clientUniqueId, isGooglePlayServicesAvailable,
+        partnerId, accountMature, httpClient, filters, tokenInvalidator, sharedPreferences,
+        resources, windowManager, connectivityManager, versionCodeProvider);
   }
 
   public String getUrl() {
@@ -97,21 +97,23 @@ public class GetStoreWidgetsRequest
   @Override protected Observable<GetStoreWidgets> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
     return interfaces.getStoreWidgets(url, body, bypassCache)
-        .flatMap(getStoreWidgets -> loadGetStoreWidgets(getStoreWidgets, bypassCache).map(
+        .flatMap(getStoreWidgets -> loadGetStoreWidgets(getStoreWidgets).map(
             wsWidgets -> getStoreWidgets));
   }
 
-  private Observable<List<GetStoreWidgets.WSWidget>> loadGetStoreWidgets(
-      GetStoreWidgets getStoreWidgets, boolean bypassCache) {
-    return Observable.from(getStoreWidgets.getDataList().getList())
+  protected Observable<List<GetStoreWidgets.WSWidget>> loadGetStoreWidgets(
+      GetStoreWidgets getStoreWidgets) {
+    return Observable.from(getStoreWidgets.getDataList()
+        .getList())
         .observeOn(Schedulers.io())
-        .flatMap(wsWidget -> WSWidgetsUtils.loadWidgetNode(wsWidget, storeCredentials, bypassCache,
+        .flatMap(wsWidget -> WSWidgetsUtils.loadWidgetNode(wsWidget, storeCredentials, false,
             clientUniqueId, isGooglePlayServicesAvailable, partnerId, accountMature,
             ((BodyInterceptor<BaseBody>) bodyInterceptor), httpClient, converterFactory, filters,
             tokenInvalidator, sharedPreferences, resources, windowManager, connectivityManager,
             versionCodeProvider))
         .toList()
-        .flatMapIterable(wsWidgets -> getStoreWidgets.getDataList().getList())
+        .flatMapIterable(wsWidgets -> getStoreWidgets.getDataList()
+            .getList())
         .toList()
         .first();
   }
@@ -123,6 +125,7 @@ public class GetStoreWidgetsRequest
     private String storeName;
     private Integer limit;
     private int offset;
+    private Long groupId;
 
     public Body(StoreCredentials storeCredentials, WidgetsArgs widgetsArgs) {
       super(storeCredentials);
@@ -138,7 +141,7 @@ public class GetStoreWidgetsRequest
       this.storeName = storeName;
     }
 
-    @SuppressWarnings("unused") public WidgetsArgs getWidgetsArgs() {
+    public WidgetsArgs getWidgetsArgs() {
       return widgetsArgs;
     }
 

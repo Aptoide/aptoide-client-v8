@@ -93,13 +93,15 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
           storeAnalytics.sendStoreOpenEvent("View Own Store", store.getName());
         }));
 
-    String followersText = String.format(getContext().getString(R.string.storetab_short_followers),
-        String.valueOf(displayable.getFollowers()));
+    String followersText =
+        String.format(getContext().getString(R.string.my_store_create_store_followers),
+            String.valueOf(displayable.getFollowers()));
     followers.setText(new SpannableFactory().createColorSpan(followersText, color,
         String.valueOf(displayable.getFollowers())));
 
-    String followingText = String.format(getContext().getString(R.string.storetab_short_followings),
-        String.valueOf(displayable.getFollowings()));
+    String followingText =
+        String.format(getContext().getString(R.string.my_store_create_store_followings),
+            String.valueOf(displayable.getFollowings()));
     following.setText(new SpannableFactory().createColorSpan(followingText, color,
         String.valueOf(displayable.getFollowings())));
 

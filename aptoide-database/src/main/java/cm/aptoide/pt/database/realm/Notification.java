@@ -11,7 +11,6 @@ public class Notification extends RealmObject {
   public final static String OWNER_ID_KEY = "ownerId";
   public final static String EXPIRE_KEY = "expire";
   public final static String NOTIFICATION_CENTER_URL_TRACK_KEY = "notificationCenterUrlTrack";
-  public final static String NOTIFICATION_CENTER_PROCESSED_KEY = "processed";
   public final static String KEY = "key";
   public static final int NOT_DISMISSED = -1;
 
@@ -32,12 +31,10 @@ public class Notification extends RealmObject {
   private String appName;
   private String graphic;
   private String ownerId;
-  private boolean processed;
 
   public Notification(Long expire, String abTestingGroup, String body, int campaignId, String img,
       String lang, String title, String url, String urlTrack, String notificationCenterUrlTrack,
-      long timeStamp, int type, long dismissed, String appName, String graphic, String ownerId,
-      boolean processed) {
+      long timeStamp, int type, long dismissed, String appName, String graphic, String ownerId) {
     this.expire = expire;
     this.body = body;
     this.img = img;
@@ -54,7 +51,6 @@ public class Notification extends RealmObject {
     this.appName = appName;
     this.graphic = graphic;
     this.ownerId = ownerId;
-    this.processed = processed;
     key = String.valueOf(timeStamp + type);
   }
 
@@ -136,9 +132,5 @@ public class Notification extends RealmObject {
 
   public String getNotificationCenterUrlTrack() {
     return notificationCenterUrlTrack;
-  }
-
-  public boolean isProcessed() {
-    return processed;
   }
 }

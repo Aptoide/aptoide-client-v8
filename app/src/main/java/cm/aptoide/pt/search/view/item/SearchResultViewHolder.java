@@ -19,7 +19,6 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Date;
-import rx.subscriptions.CompositeSubscription;
 
 public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult> {
 
@@ -37,12 +36,10 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
   private ImageView overflowImageView;
   private View bottomView;
   private SearchAppResult searchApp;
-  private CompositeSubscription subscriptions;
 
   public SearchResultViewHolder(View itemView, PublishRelay<SearchAppResult> onItemViewClick,
       PublishRelay<Pair<SearchAppResult, android.view.View>> onOpenPopupMenuClick) {
     super(itemView);
-    subscriptions = new CompositeSubscription();
     this.onItemViewClick = onItemViewClick;
     this.onOpenPopupMenuClick = onOpenPopupMenuClick;
     bindViews(itemView);
@@ -58,21 +55,6 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
     setStoreName();
     setIconView();
     setTrustedBadge();
-    setOverflowMenu();
-  }
-
-  public void prepareToRecycle() {
-    if (subscriptions.hasSubscriptions() && !subscriptions.isUnsubscribed()) {
-      subscriptions.unsubscribe();
-    }
-  }
-
-  private void setOverflowMenu() {
-    if (searchApp.hasOtherVersions()) {
-      overflowImageView.setVisibility(View.VISIBLE);
-    } else {
-      overflowImageView.setVisibility(View.INVISIBLE);
-    }
   }
 
   private void setTrustedBadge() {
@@ -114,13 +96,15 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
   }
 
   private void setDateModified() {
-    final Date modified = new Date(searchApp.getModifiedDate());
-    final Resources resources = itemView.getResources();
-    final Context context = itemView.getContext();
-    String timeSinceUpdate = AptoideUtils.DateTimeU.getInstance(context)
-        .getTimeDiffAll(context, modified.getTime(), resources);
-    if (timeSinceUpdate != null && !timeSinceUpdate.equals("")) {
-      timeTextView.setText(timeSinceUpdate);
+    Date modified = new Date(searchApp.getModifiedDate());
+    if (modified != null) {
+      final Resources resources = itemView.getResources();
+      final Context context = itemView.getContext();
+      String timeSinceUpdate = AptoideUtils.DateTimeU.getInstance(context)
+          .getTimeDiffAll(context, modified.getTime(), resources);
+      if (timeSinceUpdate != null && !timeSinceUpdate.equals("")) {
+        timeTextView.setText(timeSinceUpdate);
+      }
     }
   }
 
@@ -135,10 +119,10 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
   }
 
   private void setDownloadCount() {
-    String downloadNumber =
-        String.format("%s %s", AptoideUtils.StringU.withSuffix(searchApp.getTotalDownloads()),
-            bottomView.getContext()
-                .getString(R.string.downloads));
+    String downloadNumber = AptoideUtils.StringU.withSuffix(searchApp.getTotalDownloads())
+        + " "
+        + bottomView.getContext()
+        .getString(R.string.downloads);
     downloadsTextView.setText(downloadNumber);
   }
 
@@ -157,12 +141,12 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
     bottomView = itemView.findViewById(R.id.bottom_view);
     overflowImageView = (ImageView) itemView.findViewById(R.id.overflow);
 
-    subscriptions.add(RxView.clicks(itemView)
+    RxView.clicks(itemView)
         .map(__ -> searchApp)
-        .subscribe(data -> onItemViewClick.call(data)));
+        .subscribe(data -> onItemViewClick.call(data));
 
-    subscriptions.add(RxView.clicks(overflowImageView)
+    RxView.clicks(overflowImageView)
         .map(__ -> new Pair<>(searchApp, (View) overflowImageView))
-        .subscribe(data -> onOpenPopupMenuClick.call(data)));
+        .subscribe(data -> onOpenPopupMenuClick.call(data));
   }
 }
