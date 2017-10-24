@@ -11,8 +11,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -26,20 +27,17 @@ import cm.aptoide.pt.view.navigator.FragmentResultNavigator;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.android.FragmentEvent;
-import lombok.Getter;
 import rx.Observable;
 
 public abstract class FragmentView extends LeakFragment implements View {
 
   private static final String TAG = FragmentView.class.getName();
 
-  @Getter private boolean startActivityForResultCalled;
-
   private Presenter presenter;
-  private String defaultStore;
-  private String defaultTheme;
-  private NavigationTracker navigationTracker;
+  private boolean startActivityForResultCalled;
+  private AptoideNavigationTracker navigationTracker;
   private ActivityResultNavigator activityResultNavigator;
+  private ApplicationPreferences appPreferences;
 
   public FragmentNavigator getFragmentNavigator() {
     return activityResultNavigator.getFragmentNavigator();
@@ -68,8 +66,8 @@ public abstract class FragmentView extends LeakFragment implements View {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    defaultStore = ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore();
-    defaultTheme = ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
+    appPreferences =
+        ((AptoideApplication) getContext().getApplicationContext()).getApplicationPreferences();
     ScreenTrackingUtils.getInstance()
         .incrementNumberOfScreens();
     navigationTracker =
@@ -186,5 +184,13 @@ public abstract class FragmentView extends LeakFragment implements View {
       default:
         throw new IllegalStateException("Unrecognized event: " + event.name());
     }
+  }
+
+  public boolean isStartActivityForResultCalled() {
+    return startActivityForResultCalled;
+  }
+
+  protected String getDefaultTheme() {
+    return appPreferences.getDefaultThemeName();
   }
 }

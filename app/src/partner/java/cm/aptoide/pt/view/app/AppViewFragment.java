@@ -14,7 +14,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +26,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.InstallManager;
@@ -37,7 +37,9 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.app.AppBoughtReceiver;
 import cm.aptoide.pt.app.AppRepository;
 import cm.aptoide.pt.app.AppViewAnalytics;
@@ -54,7 +56,6 @@ import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
-import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
@@ -70,6 +71,7 @@ import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.AppAction;
 import cm.aptoide.pt.install.InstalledRepository;
@@ -79,6 +81,10 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.search.ReferrerUtils;
+import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.model.SearchAdResult;
+import cm.aptoide.pt.search.view.SearchBuilder;
 import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
@@ -86,8 +92,6 @@ import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
-import cm.aptoide.pt.util.SearchUtils;
-import cm.aptoide.pt.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
@@ -107,7 +111,6 @@ import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.share.ShareAppHelper;
-import cm.aptoide.pt.view.store.StoreFragment;
 import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -118,6 +121,7 @@ import java.util.LinkedList;
 import java.util.List;
 import lombok.Getter;
 import okhttp3.OkHttpClient;
+import org.parceler.Parcels;
 import retrofit2.Converter;
 import rx.Observable;
 import rx.Subscription;
@@ -136,8 +140,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   // constants
   //
   private static final String TAG = AppViewFragment.class.getSimpleName();
+  private static final String EDITORS_CHOICE_POSITION = "editorsBrickPosition";
   private static final String BAR_EXPANDED = "BAR_EXPANDED";
   private static final int PAY_APP_REQUEST_CODE = 12;
+  private static final String ORIGIN_TAG = "TAG";
   private final String key_appId = "appId";
   private final String key_packageName = "packageName";
   private final String key_uname = "uname";
@@ -155,7 +161,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   //
   // static fragment default new instance method
   //
-  private MinimalAd minimalAd;
   // Stored to postpone ads logic
   private InstallManager installManager;
   private Action0 unInstallAction;
@@ -203,6 +208,13 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private String marketName;
   private String defaultTheme;
   private long storeId;
+  private SearchAdResult searchAdResult;
+  private AptoideNavigationTracker aptoideNavigationTracker;
+  private String editorsBrickPosition;
+  private String originTag;
+  private ApplicationPreferences appPreferences;
+  private SearchNavigator searchNavigator;
+  private SearchBuilder searchBuilder;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -222,8 +234,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     return fragment;
   }
 
-  public static AppViewFragment newInstance(long appId, String packageName, OpenType openType) {
+  public static AppViewFragment newInstance(long appId, String packageName, OpenType openType,
+      String tag) {
     Bundle bundle = new Bundle();
+    bundle.putString(ORIGIN_TAG, tag);
     bundle.putLong(BundleKeys.APP_ID.name(), appId);
     bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
     bundle.putSerializable(BundleKeys.SHOULD_INSTALL.name(), openType);
@@ -239,17 +253,17 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     bundle.putLong(BundleKeys.APP_ID.name(), appId);
     bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
     bundle.putString(BundleKeys.STORE_NAME.name(), storeName);
-    bundle.putString(StoreFragment.BundleCons.STORE_THEME, storeTheme);
+    bundle.putString(BundleKeys.STORE_THEME.name(), storeTheme);
     AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     return fragment;
   }
 
-  public static AppViewFragment newInstance(MinimalAd minimalAd) {
+  public static AppViewFragment newInstance(SearchAdResult searchAdResult) {
     Bundle bundle = new Bundle();
-    bundle.putLong(BundleKeys.APP_ID.name(), minimalAd.getAppId());
-    bundle.putString(BundleKeys.PACKAGE_NAME.name(), minimalAd.getPackageName());
-    bundle.putParcelable(BundleKeys.MINIMAL_AD.name(), minimalAd);
+    bundle.putLong(BundleKeys.APP_ID.name(), searchAdResult.getAppId());
+    bundle.putString(BundleKeys.PACKAGE_NAME.name(), searchAdResult.getPackageName());
+    bundle.putParcelable(BundleKeys.MINIMAL_AD.name(), Parcels.wrap(searchAdResult));
 
     AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
@@ -257,20 +271,19 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     return fragment;
   }
 
-  public static AppViewFragment newInstance(MinimalAd minimalAd, String storeTheme) {
+  public static AppViewFragment newInstance(SearchAdResult searchAdResult, String tag) {
     Bundle bundle = new Bundle();
-    bundle.putLong(BundleKeys.APP_ID.name(), minimalAd.getAppId());
-    bundle.putString(BundleKeys.PACKAGE_NAME.name(), minimalAd.getPackageName());
-    bundle.putParcelable(BundleKeys.MINIMAL_AD.name(), minimalAd);
-    bundle.putString(StoreFragment.BundleCons.STORE_THEME, storeTheme);
-
+    bundle.putLong(BundleKeys.APP_ID.name(), searchAdResult.getAppId());
+    bundle.putString(BundleKeys.PACKAGE_NAME.name(), searchAdResult.getPackageName());
+    bundle.putParcelable(BundleKeys.MINIMAL_AD.name(), Parcels.wrap(searchAdResult));
+    bundle.putString(ORIGIN_TAG, tag);
     AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
 
     return fragment;
   }
 
-  public static Fragment newInstance(String packageName, OpenType openType) {
+  public static AppViewFragment newInstance(String packageName, OpenType openType) {
     return newInstance(packageName, null, openType);
   }
 
@@ -287,46 +300,77 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     return fragment;
   }
 
+  public static AppViewFragment newInstance(long appId, String packageName, String storeTheme,
+      String storeName, String tag) {
+    Bundle bundle = new Bundle();
+    bundle.putString(ORIGIN_TAG, tag);
+    bundle.putLong(BundleKeys.APP_ID.name(), appId);
+    bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
+    bundle.putString(BundleKeys.STORE_NAME.name(), storeName);
+    bundle.putString(BundleKeys.STORE_THEME.name(), storeTheme);
+    AppViewFragment fragment = new AppViewFragment();
+    fragment.setArguments(bundle);
+    return fragment;
+  }
+
+  public static AppViewFragment newInstance(long appId, String packageName, String storeTheme,
+      String storeName, String tag, String editorsPosition) {
+    Bundle bundle = new Bundle();
+    bundle.putString(ORIGIN_TAG, tag);
+    bundle.putString(EDITORS_CHOICE_POSITION, editorsPosition);
+    bundle.putLong(BundleKeys.APP_ID.name(), appId);
+    bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
+    bundle.putString(BundleKeys.STORE_NAME.name(), storeName);
+    bundle.putString(BundleKeys.STORE_THEME.name(), storeTheme);
+    AppViewFragment fragment = new AppViewFragment();
+    fragment.setArguments(bundle);
+    return fragment;
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     handleSavedInstance(savedInstanceState);
 
-    defaultTheme = ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
-    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
-    billingIdResolver =
-        ((AptoideApplication) getContext().getApplicationContext()).getBillingIdResolver();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    appPreferences = application.getApplicationPreferences();
+
+    final android.app.SearchManager searchManagerService =
+        (android.app.SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
+
+    searchNavigator = new SearchNavigator(getFragmentNavigator(),
+        appPreferences.getDefaultStoreName());
+
+    searchBuilder = new SearchBuilder(searchManagerService, searchNavigator);
+
+    defaultTheme = appPreferences.getDefaultThemeName();
+    marketName = appPreferences.getMarketName();
+    billingIdResolver = application.getBillingIdResolver();
     adMapper = new MinimalAdMapper();
-    qManager = ((AptoideApplication) getContext().getApplicationContext()).getQManager();
-    purchaseBundleMapper =
-        ((AptoideApplication) getContext().getApplicationContext()).getPurchaseBundleMapper();
-    accountManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    qManager = application.getQManager();
+    purchaseBundleMapper = application.getPurchaseBundleMapper();
+    accountManager = application.getAccountManager();
     accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
     permissionManager = new PermissionManager();
-    installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
-        InstallerFactory.ROLLBACK);
-    bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    billingAnalytics =
-        ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
-    final TokenInvalidator tokenInvalidator =
-        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
-    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+    installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
+    bodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();
+    billingAnalytics = application.getBillingAnalytics();
+    final TokenInvalidator tokenInvalidator = application.getTokenInvalidator();
+    httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     Analytics analytics = Analytics.getInstance();
     timelineAnalytics = new TimelineAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        new NotificationAnalytics(httpClient, analytics), navigationTracker);
+        application.getDefaultSharedPreferences(), new NotificationAnalytics(httpClient, analytics),
+        aptoideNavigationTracker);
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
-            timelineAnalytics, tokenInvalidator,
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
-    appRepository = RepositoryFactory.getAppRepository(getContext(),
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
-    adsRepository = ((AptoideApplication) getContext().getApplicationContext()).getAdsRepository();
+            timelineAnalytics, tokenInvalidator, application.getDefaultSharedPreferences());
+    appRepository =
+        RepositoryFactory.getAppRepository(getContext(), application.getDefaultSharedPreferences());
+    adsRepository = application.getAdsRepository();
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
@@ -345,14 +389,15 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     shareAppHelper =
         new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
             spotAndShareAnalytics, timelineAnalytics, installAppRelay,
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-            ((AptoideApplication) getContext().getApplicationContext()).isCreateStoreUserPrivacyEnabled());
+            application.getDefaultSharedPreferences(),
+            appPreferences.isCreateStoreUserPrivacyEnabled());
     downloadFactory = new DownloadFactory(marketName);
     appViewAnalytics = new AppViewAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
     storeAnalytics =
         new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
             analytics);
+    aptoideNavigationTracker = application.getAptoideNavigationTracker();
   }
 
   private void handleSavedInstance(Bundle savedInstanceState) {
@@ -373,10 +418,12 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     } else {
       args.remove(BundleKeys.SHOULD_INSTALL.name());
     }
-    minimalAd = args.getParcelable(BundleKeys.MINIMAL_AD.name());
     storeName = args.getString(BundleKeys.STORE_NAME.name());
-    sponsored = minimalAd != null;
-    storeTheme = args.getString(StoreFragment.BundleCons.STORE_THEME);
+    sponsored = searchAdResult != null;
+    originTag = args.getString(ORIGIN_TAG, null);
+    searchAdResult = Parcels.unwrap(args.getParcelable(BundleKeys.MINIMAL_AD.name()));
+    storeTheme = args.getString(BundleKeys.STORE_THEME.name());
+    editorsBrickPosition = args.getString(EDITORS_CHOICE_POSITION, null);
   }
 
   @Override public int getContentViewId() {
@@ -494,6 +541,11 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     outState.putBoolean(Keys.SUGGESTED_SHOWING, suggestedShowing);
   }
 
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName(), originTag, null);
+  }
+
   private boolean hasDescription(GetAppMeta.Media media) {
     return !TextUtils.isEmpty(media.getDescription());
   }
@@ -534,7 +586,11 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onCreateOptionsMenu(menu, inflater);
     this.menu = menu;
     inflater.inflate(R.menu.menu_appview_fragment, menu);
-    SearchUtils.setupGlobalSearchView(menu, getActivity(), getFragmentNavigator());
+    if (searchBuilder != null && searchBuilder.isValid()) {
+      searchBuilder.attachSearch(getContext(), menu.findItem(R.id.action_search));
+    } else {
+      menu.removeItem(R.id.action_search);
+    }
     uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
   }
 
@@ -613,22 +669,23 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         .getStore()
         .getName();
 
-    if (minimalAd == null) {
+    if (searchAdResult == null) {
       return adsRepository.getAdsFromAppView(packageName, storeName)
+          .map(SearchAdResult::new)
           .doOnNext(ad -> {
-            minimalAd = ad;
-            handleAdsLogic(minimalAd);
+            searchAdResult = ad;
+            handleAdsLogic(searchAdResult);
           })
           .map(ad -> getApp)
           .onErrorReturn(throwable -> getApp);
     } else {
-      handleAdsLogic(minimalAd);
+      handleAdsLogic(searchAdResult);
       return Observable.just(getApp);
     }
   }
 
-  private void storeMinimalAdd(MinimalAd minimalAd) {
-    storedMinimalAdAccessor.insert(adMapper.map(minimalAd, null));
+  private void storeMinimalAdd(SearchAdResult searchAdResult) {
+    storedMinimalAdAccessor.insert(adMapper.map(searchAdResult, null));
   }
 
   @NonNull private Observable<GetApp> setKeywords(GetApp getApp) {
@@ -721,12 +778,13 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     finishLoading();
   }
 
-  private void handleAdsLogic(MinimalAd minimalAd) {
-    storeMinimalAdd(minimalAd);
-    AdNetworkUtils.knockCpc(adMapper.map(minimalAd));
+  private void handleAdsLogic(SearchAdResult searchAdResult) {
+    storeMinimalAdd(searchAdResult);
+    AdNetworkUtils.knockCpc(adMapper.map(searchAdResult));
     AptoideUtils.ThreadU.runOnUiThread(
-        () -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, false, adsRepository,
-            httpClient, converterFactory, qManager, getContext().getApplicationContext(),
+        () -> ReferrerUtils.extractReferrer(searchAdResult, ReferrerUtils.RETRIES, false,
+            adsRepository, httpClient, converterFactory, qManager,
+            getContext().getApplicationContext(),
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             new MinimalAdMapper()));
   }
@@ -796,11 +854,12 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       openType = null;
     }
     installDisplayable =
-        AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd, shouldInstall,
+        AppViewInstallDisplayable.newInstance(getApp, installManager, searchAdResult, shouldInstall,
             installedRepository, downloadFactory, timelineAnalytics, appViewAnalytics,
             installAppRelay, this,
             new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
-                AppEventsLogger.newLogger(getContext().getApplicationContext())));
+                AppEventsLogger.newLogger(getContext().getApplicationContext())),
+            aptoideNavigationTracker, editorsBrickPosition);
     displayables.add(installDisplayable);
     displayables.add(
         new AppViewRateAndCommentsDisplayable(getApp, storeCredentialsProvider, appViewAnalytics,
@@ -903,6 +962,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     return false;
   }
 
+  //
+  // micro widget for header
+  //
+
   @Override protected boolean displayHomeUpAsEnabled() {
     return true;
   }
@@ -910,10 +973,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   @Override protected void setupToolbarDetails(Toolbar toolbar) {
     toolbar.setTitle("");
   }
-
-  //
-  // micro widget for header
-  //
 
   @Override public void scroll(Position position) {
     RecyclerView rView = getRecyclerView();
@@ -950,7 +1009,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         .zipWith(requestFactoryCdnWeb.newGetRecommendedRequest(6, packageName)
             .observe(), (minimalAds, listApps) -> new AppViewSuggestedAppsDisplayable(minimalAds,
             removeCurrentAppFromSuggested(listApps.getDataList()
-                .getList()), appViewSimilarAppAnalytics))
+                .getList()), appViewSimilarAppAnalytics, aptoideNavigationTracker,
+            StoreContext.home))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(appViewSuggestedAppsDisplayable -> {
@@ -971,7 +1031,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   protected enum BundleKeys {
-    APP_ID, STORE_NAME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5, UNAME,
+    APP_ID, STORE_NAME, STORE_THEME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5, UNAME,
   }
 
   public enum OpenType {
@@ -1138,11 +1198,16 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           .load(badgeResId, badge);
       badgeText.setText(badgeMessageId);
 
-      Analytics.AppViewViewedFrom.appViewOpenFrom(app.getPackageName(), app.getDeveloper()
-          .getName(), app.getFile()
-          .getMalware()
-          .getRank()
-          .name());
+      if (editorsBrickPosition != null) {
+        appViewAnalytics.sendEditorsChoiceClickEvent(aptoideNavigationTracker.getPreviousScreen(),
+            packageName, editorsBrickPosition);
+      }
+      appViewAnalytics.sendAppViewOpenedFromEvent(aptoideNavigationTracker.getPreviousScreen(),
+          aptoideNavigationTracker.getCurrentScreen(), packageName, app.getDeveloper()
+              .getName(), app.getFile()
+              .getMalware()
+              .getRank()
+              .name());
 
       final Malware malware = app.getFile()
           .getMalware();

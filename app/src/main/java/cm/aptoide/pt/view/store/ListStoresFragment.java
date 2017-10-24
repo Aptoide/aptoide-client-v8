@@ -2,6 +2,7 @@ package cm.aptoide.pt.view.store;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.dataprovider.model.v7.store.ListStores;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
@@ -21,6 +22,10 @@ import rx.functions.Action1;
 public class ListStoresFragment extends GetStoreEndlessFragment<ListStores> {
 
   private StoreAnalytics storeAnalytics;
+
+  public static Fragment newInstance() {
+    return new ListStoresFragment();
+  }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

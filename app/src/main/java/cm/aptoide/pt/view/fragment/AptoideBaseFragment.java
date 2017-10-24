@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.WindowManager;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
@@ -36,8 +37,13 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
     final OkHttpClient httpClient =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
-    AptoideApplication aptoideApplication =
-        (AptoideApplication) getContext().getApplicationContext();
+    AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
+
+    final boolean isAdultContentEnabled = application.getAccountManager()
+        .isAccountMature();
+
+    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
+
     requestFactoryCdnPool = new RequestFactory(new StoreCredentialsProviderImpl(
         AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class)), baseBodyInterceptorV7Pool,
@@ -46,15 +52,15 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         getContext().getResources(),
         (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
-        aptoideApplication.getIdsRepository()
-            .getUniqueIdentifier(), aptoideApplication.getPartnerId(),
-        aptoideApplication.getAccountManager()
-            .isAccountMature(), aptoideApplication.getQManager()
-        .getFilters(ManagerPreferences.getHWSpecsFilter(
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
+        application.getIdsRepository()
+            .getUniqueIdentifier(), appPreferences.getPartnerId(), isAdultContentEnabled,
+        application.getQManager()
+            .getFilters(ManagerPreferences.getHWSpecsFilter(
+                ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
         (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
-        aptoideApplication.getVersionCodeProvider(),
+        application.getVersionCodeProvider(),
         AdNetworkUtils.isGooglePlayServicesAvailable(getContext()));
+
     requestFactoryCdnWeb = new RequestFactory(new StoreCredentialsProviderImpl(
         AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class)), baseBodyInterceptorV7Web,
@@ -63,15 +69,15 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         getContext().getResources(),
         (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
-        aptoideApplication.getIdsRepository()
-            .getUniqueIdentifier(), aptoideApplication.getPartnerId(),
-        aptoideApplication.getAccountManager()
-            .isAccountMature(), aptoideApplication.getQManager()
-        .getFilters(ManagerPreferences.getHWSpecsFilter(
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
+        application.getIdsRepository()
+            .getUniqueIdentifier(), appPreferences.getPartnerId(), isAdultContentEnabled,
+        application.getQManager()
+            .getFilters(ManagerPreferences.getHWSpecsFilter(
+                ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
         (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
-        aptoideApplication.getVersionCodeProvider(),
+        application.getVersionCodeProvider(),
         AdNetworkUtils.isGooglePlayServicesAvailable(getContext()));
+
     super.onCreate(savedInstanceState);
   }
 }

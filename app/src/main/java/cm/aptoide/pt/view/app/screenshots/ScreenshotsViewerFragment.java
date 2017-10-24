@@ -6,9 +6,10 @@
 package cm.aptoide.pt.view.app.screenshots;
 
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.view.custom.AptoideViewPager;
 import cm.aptoide.pt.view.fragment.UIComponentFragment;
 import java.util.ArrayList;
 
@@ -23,7 +24,7 @@ public class ScreenshotsViewerFragment extends UIComponentFragment {
   private ArrayList<String> uris;
   private int currentItem;
   // views
-  private ViewPager screenshots;
+  private AptoideViewPager screenshots;
   private View btnCloseViewer;
 
   // static builder
@@ -56,23 +57,22 @@ public class ScreenshotsViewerFragment extends UIComponentFragment {
   }
 
   @Override public void setupViews() {
-
+    screenshots.setTrackingEnabled(false);
     if (uris != null && uris.size() > 0) {
       screenshots.setAdapter(new ViewPagerAdapterScreenshots(uris));
       screenshots.setCurrentItem(currentItem);
     }
-
-    btnCloseViewer.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        //getActivity().finish();
-        getActivity().onBackPressed();
-      }
-    });
+    btnCloseViewer.setOnClickListener(v -> getActivity().onBackPressed());
   }
 
   @Override public void onResume() {
     super.onResume();
     hideSystemUI();
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onPause() {
@@ -111,7 +111,7 @@ public class ScreenshotsViewerFragment extends UIComponentFragment {
     //V8Engine.getThemePicker().setAptoideTheme(this);
     //super.onCreate(savedInstanceState);
 
-    screenshots = (ViewPager) view.findViewById(R.id.screen_shots_pager);
+    screenshots = (AptoideViewPager) view.findViewById(R.id.screen_shots_pager);
     btnCloseViewer = view.findViewById(R.id.btn_close_screenshots_window);
   }
 

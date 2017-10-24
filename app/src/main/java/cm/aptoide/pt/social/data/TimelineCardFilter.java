@@ -51,7 +51,7 @@ public class TimelineCardFilter {
           .toSingle()
           .onErrorResumeNext(err -> Single.just(null))
           .flatMapObservable(update -> {
-            if (update.isExcluded()) {
+            if (update == null || update.isExcluded()) {
               return Observable.empty();
             } else {
               return Observable.just(timelineCard);

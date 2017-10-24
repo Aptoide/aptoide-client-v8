@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
@@ -32,6 +33,7 @@ import cm.aptoide.pt.account.view.ImageValidator;
 import cm.aptoide.pt.account.view.PhotoFileGenerator;
 import cm.aptoide.pt.account.view.UriToPathResolver;
 import cm.aptoide.pt.account.view.exception.InvalidImageException;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.presenter.CompositePresenter;
@@ -56,7 +58,6 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   private static final String EXTRA_USER_MODEL = "user_model";
   private static final String EXTRA_IS_EDIT = "is_edit";
   @DrawableRes private static final int DEFAULT_IMAGE_PLACEHOLDER = R.drawable.create_user_avatar;
-
   private ImageView userPicture;
   private RelativeLayout userPictureLayout;
   private EditText userName;
@@ -111,9 +112,10 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
     Bundle args = getArguments();
     isEditProfile = args != null && args.getBoolean(EXTRA_IS_EDIT, false);
 
-    navigator = new ManageUserNavigator(getFragmentNavigator(),
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore(),
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme());
+    final ApplicationPreferences appPreferences =
+        ((AptoideApplication) getContext().getApplicationContext()).getApplicationPreferences();
+    navigator = new ManageUserNavigator(getFragmentNavigator(), appPreferences.getDefaultStoreName(),
+        appPreferences.getDefaultThemeName());
     fileProviderAuthority = BuildConfig.APPLICATION_ID + ".provider";
     photoFileGenerator = new PhotoFileGenerator(getActivity(),
         getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileProviderAuthority);
@@ -122,8 +124,7 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
     accountPermissionProvider = new AccountPermissionProvider(((PermissionProvider) getActivity()));
     imageValidator = new ImageValidator(ImageLoader.with(context), Schedulers.computation());
     imagePickerNavigator = new ImagePickerNavigator(getActivityNavigator());
-    createStoreUserPrivacyEnabled =
-        ((AptoideApplication) getActivity().getApplication()).isCreateStoreUserPrivacyEnabled();
+    createStoreUserPrivacyEnabled = appPreferences.isCreateStoreUserPrivacyEnabled();
     accountManager = ((AptoideApplication) getActivity().getApplication()).getAccountManager();
     errorMapper =
         new CreateUserErrorMapper(context, new AccountErrorMapper(context), getResources());
@@ -140,6 +141,23 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
 
     uploadWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(context,
         context.getString(R.string.please_wait_upload));
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    bindViews(view);
+    setupToolbar();
+    if (isEditProfile) {
+      createUserButton.setText(getString(R.string.edit_profile_save_button));
+      cancelUserProfile.setVisibility(View.VISIBLE);
+      header.setText(getString(R.string.edit_profile_header_message));
+    }
+    attachPresenters();
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -187,18 +205,6 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
 
     attachPresenter(
         new CompositePresenter(Arrays.asList(manageUserPresenter, imagePickerPresenter)), null);
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    bindViews(view);
-    setupToolbar();
-    if (isEditProfile) {
-      createUserButton.setText(getString(R.string.edit_profile_save_button));
-      cancelUserProfile.setVisibility(View.VISIBLE);
-      header.setText(getString(R.string.edit_profile_header_message));
-    }
-    attachPresenters();
   }
 
   @Override public void onDestroyView() {

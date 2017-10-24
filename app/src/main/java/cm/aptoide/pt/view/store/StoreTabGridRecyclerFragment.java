@@ -16,8 +16,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.Layout;
@@ -50,14 +52,14 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   private String marketName;
 
   public static Fragment newInstance(Event event, String storeTheme, String tag,
-      StoreContext storeContext) {
-    return newInstance(event, null, storeTheme, tag, storeContext);
+      StoreContext storeContext, boolean addAdultFilter) {
+    return newInstance(event, null, storeTheme, tag, storeContext, addAdultFilter);
   }
 
   public static Fragment newInstance(Event event, String title, String storeTheme, String tag,
-      StoreContext storeContext) {
+      StoreContext storeContext, boolean addAdultFilter) {
     Bundle args = buildBundle(event, title, storeTheme, tag, storeContext);
-    Fragment fragment = StoreTabFragmentChooser.choose(event.getName());
+    Fragment fragment = StoreTabFragmentChooser.choose(event.getName(), addAdultFilter);
     Bundle arguments = fragment.getArguments();
     if (arguments != null) {
       args.putAll(arguments);
@@ -101,10 +103,18 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
+    marketName = appPreferences.getMarketName();
     storeRepository = RepositoryFactory.getStoreRepository(getContext().getApplicationContext());
 
     super.onCreate(savedInstanceState);
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName(), tag, storeContext);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -213,6 +223,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     public static final String STORE_THEME = "storeTheme";
     public static final String LAYOUT = "layout";
     public static final String TAG = "tag";
+    public static final String STORE_NAME = "store_name";
     public static String STORE_CONTEXT = "Store_context";
   }
 }

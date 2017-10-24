@@ -146,7 +146,8 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
         .doOnNext(v -> {
           updatesAnalytics.updates("Open App View");
           final Fragment fragment = AptoideApplication.getFragmentProvider()
-              .newAppViewFragment(updateDisplayable.getAppId(), updateDisplayable.getPackageName());
+              .newAppViewFragment(updateDisplayable.getAppId(), updateDisplayable.getPackageName(),
+                  "");
           getFragmentNavigator().navigateTo(fragment, true);
         });
   }

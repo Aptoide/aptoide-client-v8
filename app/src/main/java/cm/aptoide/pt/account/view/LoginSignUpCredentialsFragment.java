@@ -15,9 +15,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.AptoideCredentials;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
@@ -61,7 +63,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   private View credentialsEditTextsArea;
   private BottomSheetBehavior<View> bottomSheetBehavior;
   private ThrowableToStringMapper errorMapper;
-  private String marketName;
   private AptoideAccountManager accountManager;
   private LoginSignUpCredentialsPresenter presenter;
   private boolean dismissToNavigateToMainView;
@@ -70,6 +71,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   private CrashReport crashReport;
   private AccountNavigator accountNavigator;
   private ScreenOrientationManager orientationManager;
+  private ApplicationPreferences appPreferences;
 
   public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,
       boolean cleanBackStack) {
@@ -85,7 +87,8 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    marketName = ((AptoideApplication) getActivity().getApplication()).getMarketName();
+
+    appPreferences = ((AptoideApplication) getApplicationContext()).getApplicationPreferences();
     errorMapper = new AccountErrorMapper(getContext());
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
@@ -94,6 +97,11 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     navigateToHome = getArguments().getBoolean(CLEAN_BACK_STACK);
     accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
     orientationManager = ((ActivityResultNavigator) getContext()).getScreenOrientationManager();
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -301,7 +309,8 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
     buttonLogin = (Button) view.findViewById(R.id.button_login);
     buttonSignUp = (Button) view.findViewById(R.id.button_sign_up);
-    buttonSignUp.setText(String.format(getString(R.string.join_company), marketName));
+    buttonSignUp.setText(
+        String.format(getString(R.string.join_company), appPreferences.getMarketName()));
 
     aptoideEmailEditText = (EditText) view.findViewById(R.id.username);
     aptoidePasswordEditText = (EditText) view.findViewById(R.id.password);
@@ -313,7 +322,8 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     credentialsEditTextsArea = view.findViewById(R.id.credentials_edit_texts);
     signUpSelectionButton = (Button) view.findViewById(R.id.show_join_aptoide_area);
     loginSelectionButton = (Button) view.findViewById(R.id.show_login_with_aptoide_area);
-    signUpSelectionButton.setText(String.format(getString(R.string.join_company), marketName));
+    signUpSelectionButton.setText(
+        String.format(getString(R.string.join_company), appPreferences.getMarketName()));
     loginArea = view.findViewById(R.id.login_button_area);
     signUpArea = view.findViewById(R.id.sign_up_button_area);
     termsAndConditions = (TextView) view.findViewById(R.id.terms_and_conditions);

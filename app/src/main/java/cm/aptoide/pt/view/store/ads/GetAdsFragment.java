@@ -3,6 +3,7 @@ package cm.aptoide.pt.view.store.ads;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
@@ -28,6 +29,10 @@ public class GetAdsFragment extends StoreTabGridRecyclerFragment {
 
   private AdsRepository adsRepository;
 
+  public static Fragment newInstance() {
+    return new GetAdsFragment();
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     final AptoideAccountManager accountManager =
@@ -43,7 +48,7 @@ public class GetAdsFragment extends StoreTabGridRecyclerFragment {
         .map(minimalAds -> {
           List<Displayable> displayables = new LinkedList<>();
           for (MinimalAd minimalAd : minimalAds) {
-            displayables.add(new GridAdDisplayable(minimalAd, tag));
+            displayables.add(new GridAdDisplayable(minimalAd, tag, aptoideNavigationTracker));
           }
 
           return Collections.singletonList(new DisplayableGroup(displayables,

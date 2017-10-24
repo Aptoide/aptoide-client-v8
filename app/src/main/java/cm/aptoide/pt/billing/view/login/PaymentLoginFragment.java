@@ -17,11 +17,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.AptoideCredentials;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.account.view.GooglePlayServicesFragment;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.navigator.FragmentNavigator;
@@ -108,6 +110,11 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
         .subscribe();
   }
 
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
+  }
+
   @Override public void onSaveInstanceState(Bundle outState) {
     outState.putBoolean(EXTRA_USERNAME_PASSWORD_CONTAINER_VISIBLE,
         usernamePasswordContainerVisible);
@@ -156,8 +163,10 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     aptoideLoginContainer = view.findViewById(R.id.fragment_payment_login_container);
 
     aptoideJoinToggle = (Button) view.findViewById(R.id.fragment_payment_login_join_button);
-    aptoideJoinToggle.setText(getString(R.string.join_company,
-        ((AptoideApplication) getContext().getApplicationContext()).getMarketName()));
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
+    aptoideJoinToggle.setText(getString(R.string.join_company, appPreferences.getMarketName()));
     aptoideLoginToggle = (Button) view.findViewById(R.id.fragment_payment_login_small_button);
     recoverPasswordButton = view.findViewById(R.id.fragment_payment_login_recover_password_button);
     aptoideLoginButton = (Button) view.findViewById(R.id.fragment_payment_login_large_login_button);
@@ -230,8 +239,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     attachPresenter(
         new PaymentLoginPresenter(this, requestCode, Arrays.asList("email", "user_friends"),
             accountNavigator, Arrays.asList("email"), accountManager, crashReport, errorMapper,
-            AndroidSchedulers.mainThread(), orientationManager,
-            ((AptoideApplication) getContext().getApplicationContext()).getAccountAnalytics()),
+            AndroidSchedulers.mainThread(), orientationManager, application.getAccountAnalytics()),
         savedInstanceState);
   }
 

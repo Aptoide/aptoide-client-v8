@@ -74,6 +74,8 @@
 
     <activity android:name=".view.MainActivity"/>
 
+    <activity android:name=".view.FairyMainActivity"/>
+
     <meta-data
         android:name="io.fabric.ApiKey"
         android:value="${fabricApiKey}"/>
@@ -143,7 +145,7 @@
       </intent-filter>
     </activity>
 
-    <activity android:name=".view.search.SearchActivity">
+    <activity android:name=".search.view.SearchActivity">
       <intent-filter>
         <action android:name="android.intent.action.SEARCH"/>
       </intent-filter>
@@ -152,7 +154,7 @@
           android:resource="@xml/searchable"/>
     </activity>
 
-    <activity android:name=".view.search.StoreSearchActivity">
+    <activity android:name=".search.view.StoreSearchActivity">
       <intent-filter>
         <action android:name="android.intent.action.SEARCH"/>
       </intent-filter>
