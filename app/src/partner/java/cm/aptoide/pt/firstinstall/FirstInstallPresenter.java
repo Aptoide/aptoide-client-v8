@@ -246,12 +246,12 @@ public class FirstInstallPresenter implements Presenter {
    * @param minimalAd minimal ad to store and extract referrer
    */
   private void handleAdsLogic(MinimalAd minimalAd) {
-    storedMinimalAdAccessor.insert(adMapper.map(new SearchAdResult(minimalAd), null));
-    AdNetworkUtils.knockCpc(adMapper.map(new SearchAdResult(minimalAd)));
+    SearchAdResult searchAdResult = new SearchAdResult(minimalAd);
+    storedMinimalAdAccessor.insert(adMapper.map(searchAdResult, null));
+    AdNetworkUtils.knockCpc(adMapper.map(searchAdResult));
     AptoideUtils.ThreadU.runOnUiThread(
-        () -> ReferrerUtils.extractReferrer(new SearchAdResult(minimalAd), ReferrerUtils.RETRIES,
-            false, adsRepository,
-            httpClient, converterFactory, qManager, context.getApplicationContext(),
+        () -> ReferrerUtils.extractReferrer(searchAdResult, ReferrerUtils.RETRIES, false,
+            adsRepository, httpClient, converterFactory, qManager, context.getApplicationContext(),
             ((AptoideApplication) context.getApplicationContext()).getDefaultSharedPreferences(),
             new MinimalAdMapper()));
   }
