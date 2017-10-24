@@ -338,6 +338,18 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
 
       realm.delete("PaymentConfirmation");
 
+      schema.create("RealmAuthorization")
+          .addField("id", String.class, FieldAttribute.PRIMARY_KEY, FieldAttribute.REQUIRED)
+          .addField("customerId", String.class, FieldAttribute.REQUIRED)
+          .addField("status", String.class, FieldAttribute.REQUIRED)
+          .addField("type", String.class, FieldAttribute.REQUIRED)
+          .addField("metadata", String.class, FieldAttribute.REQUIRED)
+          .addField("transactionId", String.class, FieldAttribute.REQUIRED)
+          .addField("description", String.class)
+          .addField("amount", double.class)
+          .addField("currency", String.class)
+          .addField("currencySymbol", String.class);
+
       oldVersion++;
     }
   }
