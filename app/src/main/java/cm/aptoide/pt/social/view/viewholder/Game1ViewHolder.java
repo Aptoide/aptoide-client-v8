@@ -31,8 +31,8 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
   private final TextView score;
   private final TextView leaderboard;
   private final View statsHeader;
-  private final ImageView questionIcon;
-  private final TextView question;
+  private ImageView questionIcon;
+  private TextView question;
   private final TextView leftAnswer;
   private final TextView rightAnswer;
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
@@ -41,9 +41,7 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
   private final ImageView headerIcon;
   private final TextView headerTitle;
   private final TextView headerSubTitle;
-  //private final ImageView leftArrow;
-  //private final ImageView rightArrow;
-
+  private View wrapper;
   //private final ProgressBar scoreProgress;
   private final ProgressBar leaderboardProgress;
 
@@ -67,8 +65,6 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
 
     this.score = (TextView) itemView.findViewById(R.id.stats_header).findViewById(R.id.displayable_social_timeline_game_card_score);
     leaderboard = (TextView) itemView.findViewById(R.id.stats_header).findViewById(R.id.displayable_social_timeline_game_card_leaderboard);
-    questionIcon = (ImageView) itemView.findViewById(R.id.game_card_question1_icon);
-    question = (TextView) itemView.findViewById(R.id.game_card_question1_question);
     leftAnswer = (TextView) itemView.findViewById(R.id.left_answer);
     rightAnswer = (TextView) itemView.findViewById(R.id.right_answer);
 
@@ -105,7 +101,20 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
 
     this.score.setText(String.valueOf(card.getScore()));
     this.leaderboard.setText(String.valueOf(card.getgRanking()));
-    ImageLoader.with(itemView.getContext()).load(card.getApp().getIcon(), questionIcon);
+    if(card.getQuestionIcon()==null){
+      itemView.findViewById(R.id.icon_question).setVisibility(View.GONE);
+      wrapper = itemView.findViewById(R.id.question);
+      wrapper.setVisibility(View.VISIBLE);
+      question = (TextView) wrapper.findViewById(R.id.game_card_question);
+    }
+    else{
+      itemView.findViewById(R.id.question).setVisibility(View.GONE);
+      wrapper = itemView.findViewById(R.id.icon_question);
+      wrapper.setVisibility(View.VISIBLE);
+      questionIcon = (ImageView) wrapper.findViewById(R.id.game_card_questionIcon);
+      question = (TextView) wrapper.findViewById(R.id.game_card_question);
+      ImageLoader.with(itemView.getContext()).load(card.getQuestionIcon(), questionIcon);
+    }
     this.question.setText(card.getQuestion());
 
     ImageLoader.with(itemView.getContext()).load("http://pool.img.aptoide.com/dfl/783ac07187647799c87c4e1d5cde6b8b_icon.png", this.headerIcon);

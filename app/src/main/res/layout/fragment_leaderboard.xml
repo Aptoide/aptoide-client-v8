@@ -98,13 +98,13 @@
 
     <Spinner
         android:id="@+id/leaderboard_spinner"
-        android:layout_width="90dp"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/top_box"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginEnd="90dp"
-        android:layout_marginRight="90dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginRight="30dp"
         style="@style/Aptoide.TextView.Regular.XS.Grey"
         ></Spinner>
 

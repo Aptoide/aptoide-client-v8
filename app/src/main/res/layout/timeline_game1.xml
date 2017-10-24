@@ -165,72 +165,32 @@
           android:visibility="visible"
           >
 
-        <ImageView
-            android:id="@+id/game_card_question1_icon"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            tools:src="@mipmap/ic_launcher"
-            />
+        <include layout="@layout/timeline_icon_question_body"
+            android:id="@+id/icon_question"
+            android:visibility="gone"/>
 
-        <TextView
-            android:id="@+id/game_card_question1_question"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/game_card_question1_icon"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
-            android:text="Insert question here!"
-            android:textAlignment="center"
-            style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
-            />
+        <include layout="@layout/timeline_question_body"
+            android:id="@+id/question"
+            android:visibility="visible"/>
 
         <TextView
             android:id="@+id/right_answer"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_below="@id/game_card_question1_question"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="155dp"
             android:gravity="center"
             android:padding="5dp"
             android:text="Right: Answer1"
             style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
             />
 
-        <!--<ImageView-->
-        <!--android:id="@id/left_arrow"-->
-        <!--android:layout_width="30dp"-->
-        <!--android:layout_height="30dp"-->
-        <!--android:layout_alignParentLeft="true"-->
-        <!--android:layout_marginLeft="5dp"-->
-        <!--android:layout_marginTop="155dp"-->
-        <!--android:src="@drawable/game_arrow_left"-->
-        <!--android:visibility="gone"-->
-        <!--/>-->
-
-        <!--<ImageView-->
-        <!--android:id="@+id/right_arrow"-->
-        <!--android:layout_width="30dp"-->
-        <!--android:layout_height="30dp"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_marginRight="5dp"-->
-        <!--android:layout_marginTop="155dp"-->
-        <!--android:rotation="180"-->
-        <!--android:src="@drawable/game_arrow_left"-->
-        <!--android:visibility="gone"-->
-        <!--/>-->
-
         <TextView
             android:id="@+id/left_answer"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/game_card_question1_question"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="155dp"
             android:gravity="center"
             android:padding="5dp"
             android:text="Left: Answer2"
@@ -263,14 +223,6 @@
             android:text="Clash Royal"
             android:visibility="invisible"
             />
-
-        <!--<ImageView-->
-        <!--android:layout_width="50dp"-->
-        <!--android:layout_height="50dp"-->
-        <!--android:layout_below="@id/game_card_question1_question"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:src="@drawable/appstimeline_game_swipe_icon"-->
-        <!--/>-->
 
       </RelativeLayout>
 
