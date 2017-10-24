@@ -559,6 +559,7 @@ public class TimelineAnalytics {
             ((StoreAppCardTouchEvent) cardTouchEvent).getPackageName(),
             Analytics.AppsTimeline.BLANK, ((StoreLatestApps) post).getStoreName(),
             Analytics.AppsTimeline.OPEN_APP_VIEW);
+        sendOpenAppEvent(postType.name(), TimelineAnalytics.SOURCE_APTOIDE, ((StoreAppCardTouchEvent)cardTouchEvent).getPackageName());
       } else if (cardTouchEvent instanceof StoreCardTouchEvent) {
         if (post instanceof StoreLatestApps) {
           Analytics.AppsTimeline.clickOnCard(postType.name(), Analytics.AppsTimeline.BLANK,
@@ -625,17 +626,13 @@ public class TimelineAnalytics {
     return eventMap;
   }
 
-  public void sendCommentEvent(int position, boolean success) {
-    HashMap<String, Object> data = new HashMap<>();
-    data.put("position", position);
-    data.put("status", success ? "success" : "fail");
+  public void sendCommentEvent(CardTouchEvent event, boolean success) {
+    HashMap<String, Object> data = parseEventData(event,success);
     analytics.sendEvent(createEvent(COMMENT, data));
   }
 
-  public void sendShareEvent(int position, boolean success) {
-    HashMap<String, Object> data = new HashMap<>();
-    data.put("position", position);
-    data.put("status", success ? "success" : "fail");
+  public void sendShareEvent(CardTouchEvent event, boolean success) {
+    HashMap<String, Object> data = parseEventData(event, success);
     analytics.sendEvent(createEvent(SHARE, data));
   }
 
@@ -653,6 +650,11 @@ public class TimelineAnalytics {
 
   public void sendFabClicked() {
     HashMap<String, Object> data = new HashMap<>();
+    final String previousContext = navigationTracker.getPreviousViewName();
+    final String store = navigationTracker.getPreviousScreen().getStore();
+    data.put("previous_context", previousContext);
+    data.put("store", store);
+
     analytics.sendEvent(createEvent(FAB, data));
   }
 
@@ -668,6 +670,8 @@ public class TimelineAnalytics {
     final CardType postType = post.getType();
     HashMap<String, Object> data = new HashMap<>();
     HashMap<String, Object> result = new HashMap<>();
+    final String previousContext = navigationTracker.getPreviousScreen().getFragment();
+    final String store = navigationTracker.getPreviousScreen().getStore();
 
     if(postType.isMedia()){
       HashMap<String, Object> specific = new HashMap<>();
@@ -675,30 +679,75 @@ public class TimelineAnalytics {
       data.put("position", event.getPosition());
       data.put("card_type", card.getType());
       data.put("source", card.getPublisherName());
+      data.put("previous_context", previousContext);
+      data.put("store", store);
       result.put("status", status ? "success" : "fail");
+      if(result.get("status").equals("fail")){
+        HashMap<String,Object> error = new HashMap<>();
+        error.put("message", "");
+        error.put("type", "");
+        result.put("error", error);
+      }
       specific.put("app", card.getRelatedApp().getPackageName());
       specific.put("url", card.getMediaLink().getUrl());
       data.put("specific", specific);
       data.put("result", result);
     }
-    else if(postType.equals(CardType.RECOMMENDATION)||postType.equals(CardType.SOCIAL_POST_RECOMMENDATION)||postType.equals(CardType.SOCIAL_RECOMMENDATION)||postType.equals(CardType.SIMILAR)){
+    else if(postType.equals(CardType.RECOMMENDATION)||postType.equals(CardType.SOCIAL_POST_RECOMMENDATION)||postType.equals(CardType.SOCIAL_RECOMMENDATION)||postType.equals(CardType.SIMILAR)||
+        postType.equals(CardType.SOCIAL_INSTALL)||postType.equals(CardType.AGGREGATED_SOCIAL_INSTALL)){
       HashMap<String, Object> specific = new HashMap<>();
+      if(post instanceof RatedRecommendation){
+        RatedRecommendation card = (RatedRecommendation) post;
+        data.put("position", event.getPosition());
+        data.put("card_type", card.getType());
+        data.put("source", card.getPoster().getStore().getName());
+        data.put("previous_context", previousContext);
+        data.put("store", store);
+        result.put("status", status ? "success" : "fail");
+        if(result.get("status").equals("fail")){
+          HashMap<String,Object> error = new HashMap<>();
+          error.put("message", "");
+          error.put("type", "");
+          result.put("error", error);
+        }
+        specific.put("app", card.getPackageName());
+        data.put("specific", specific);
+        data.put("result", result);
+      }
+      else{
       Recommendation card = (Recommendation) post;
       data.put("position", event.getPosition());
       data.put("card_type", card.getType());
       data.put("source", card.getPublisherName());
+      data.put("previous_context", previousContext);
+      data.put("store", store);
       result.put("status", status ? "success" : "fail");
+      if(result.get("status").equals("fail")){
+        HashMap<String,Object> error = new HashMap<>();
+        error.put("message", "");
+        error.put("type", "");
+        result.put("error", error);
+      }
       specific.put("app", card.getPackageName());
       data.put("specific", specific);
       data.put("result", result);
+      }
     }
     else if (postType.equals(CardType.UPDATE)){
       HashMap<String, Object> specific = new HashMap<>();
       AppUpdate card = (AppUpdate) post;
       data.put("position", event.getPosition());
       data.put("card_type", card.getType());
+      data.put("previous_context", previousContext);
       data.put("source", SOURCE_APTOIDE);
+      data.put("store", store);
       result.put("status", status ? "success" : "fail");
+      if(result.get("status").equals("fail")){
+        HashMap<String,Object> error = new HashMap<>();
+        error.put("message", "");
+        error.put("type", "");
+        result.put("error", error);
+      }
       specific.put("app", card.getPackageName());
       data.put("specific", specific);
       data.put("result", result);
@@ -709,7 +758,15 @@ public class TimelineAnalytics {
       data.put("position", event.getPosition());
       data.put("card_type", card.getType());
       data.put("source", SOURCE_APTOIDE);
+      data.put("previous_context", previousContext);
+      data.put("store", store);
       result.put("status", status ? "success" : "fail");
+      if(result.get("status").equals("fail")){
+        HashMap<String,Object> error = new HashMap<>();
+        error.put("message", "");
+        error.put("type", "");
+        result.put("error", error);
+      }
       data.put("result", result);
     }
     return data;
