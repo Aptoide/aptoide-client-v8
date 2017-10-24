@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PartnerApplication;
 import cm.aptoide.pt.R;
@@ -39,14 +38,16 @@ public class PartnersLaunchView extends ActivityView {
 
   private boolean usesSplashScreen;
   private BootConfig bootConfig;
-  private ApplicationPreferences applicationPreferences;
+  private String defaultThemeName;
+  private String partnerId;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    bootConfig = ((PartnerApplication) getApplicationContext()).getBootConfig();
-    applicationPreferences =
-        ((PartnerApplication) getApplicationContext()).getApplicationPreferences();
+    final PartnerApplication application = (PartnerApplication) getApplicationContext();
+    bootConfig = application.getBootConfig();
+    defaultThemeName = application.getDefaultThemeName();
+    partnerId = application.getPartnerId();
     if (getSupportActionBar() != null) {
       getSupportActionBar().hide();
     }
@@ -81,10 +82,10 @@ public class PartnersLaunchView extends ActivityView {
    */
   @Override public View onCreateView(View parent, String name, Context context,
       AttributeSet attrs) {
-    String storeTheme = applicationPreferences.getDefaultThemeName();
-    if (storeTheme != null) {
-      ThemeUtils.setStoreTheme(this, storeTheme);
-      ThemeUtils.setStatusBarThemeColor(this, StoreTheme.get(storeTheme));
+
+    if (defaultThemeName != null) {
+      ThemeUtils.setStoreTheme(this, defaultThemeName);
+      ThemeUtils.setStatusBarThemeColor(this, StoreTheme.get(defaultThemeName));
     }
     return super.onCreateView(parent, name, context, attrs);
   }
@@ -145,7 +146,7 @@ public class PartnersLaunchView extends ActivityView {
 
     Call<RemoteBootConfig> call = retrofit.create(BootConfigServices.class)
         .getRemoteBootConfig(getPackageName(), bootConfig.getPartner()
-            .getType(), applicationPreferences.getPartnerId(), versionCode);
+            .getType(), partnerId, versionCode);
     call.enqueue(new Callback<RemoteBootConfig>() {
       @Override
       public void onResponse(Call<RemoteBootConfig> call, Response<RemoteBootConfig> response) {

@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
@@ -35,8 +34,7 @@ public class StoreGridHeaderWidget extends Widget<StoreGridHeaderDisplayable> {
     final boolean moreIsVisible = wsWidget.hasActions();
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
-    final String marketName = appPreferences.getMarketName();
+    final String marketName = application.getMarketName();
     final SharedPreferences sharedPreferences = application.getDefaultSharedPreferences();
     title.setText(Translator.translate(wsWidget.getTitle(), getContext().getApplicationContext(),
         marketName));

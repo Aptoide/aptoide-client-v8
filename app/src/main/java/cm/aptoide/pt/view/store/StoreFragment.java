@@ -25,7 +25,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
@@ -164,8 +163,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
-    defaultTheme = appPreferences.getDefaultThemeName();
+    defaultTheme = application.getDefaultThemeName();
     tokenInvalidator = application.getTokenInvalidator();
     storeCredentialsProvider = new StoreCredentialsProviderImpl(
         AccessorFactory.getAccessorFor(application.getDatabase(),
@@ -181,14 +179,14 @@ public class StoreFragment extends BasePagerToolbarFragment {
         application.getDefaultSharedPreferences(), new NotificationAnalytics(httpClient, analytics),
         aptoideNavigationTracker);
     storeAnalytics = new StoreAnalytics(AppEventsLogger.newLogger(getContext()), analytics);
-    marketName = appPreferences.getMarketName();
+    marketName = application.getMarketName();
     shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);
 
     final SearchManager searchManager =
         (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
 
-    final SearchNavigator searchNavigator = new SearchNavigator(getFragmentNavigator(), storeName,
-        appPreferences.getDefaultStoreName());
+    final SearchNavigator searchNavigator =
+        new SearchNavigator(getFragmentNavigator(), storeName, application.getDefaultStoreName());
 
     searchBuilder = new SearchBuilder(searchManager, searchNavigator);
   }

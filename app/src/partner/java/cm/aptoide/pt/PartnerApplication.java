@@ -1,5 +1,6 @@
 package cm.aptoide.pt;
 
+import android.os.Environment;
 import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.remotebootconfig.BootConfigJSONUtils;
 import cm.aptoide.pt.remotebootconfig.datamodel.BootConfig;
@@ -11,19 +12,91 @@ import rx.Single;
 
 public class PartnerApplication extends AptoideApplication {
 
-  public BootConfig getBootConfig() {
-    return getApplicationPreferences().getBootConfig();
-  }
+  private BootConfig bootConfig;
 
   public void setRemoteBootConfig(RemoteBootConfig remoteBootConfig) {
     BootConfigJSONUtils.saveRemoteBootConfig(getBaseContext(), remoteBootConfig,
         "support@aptoide.com");
-    getApplicationPreferences().setBootConfig(remoteBootConfig.getData());
+    setBootConfig(remoteBootConfig.getData());
+  }
+
+  public BootConfig getBootConfig() {
+    if (bootConfig == null) {
+      bootConfig = BootConfigJSONUtils.getSavedRemoteBootConfig(getBaseContext())
+          .getData();
+    }
+    return bootConfig;
+  }
+
+  public void setBootConfig(BootConfig bootConfig) {
+    this.bootConfig = bootConfig;
+  }
+
+  @Override public String getCachePath() {
+    return Environment.getExternalStorageDirectory()
+        .getAbsolutePath() + "/." + getDefaultStoreName() + "/";
+  }
+
+  @Override public boolean hasMultiStoreSearch() {
+    return getBootConfig().getPartner()
+        .getSwitches()
+        .getOptions()
+        .getMultistore()
+        .isSearch();
+  }
+
+  @Override public String getDefaultStoreName() {
+    return getBootConfig().getPartner()
+        .getStore()
+        .getName();
+  }
+
+  @Override public String getMarketName() {
+    return getBootConfig().getPartner()
+        .getStore()
+        .getLabel();
+  }
+
+  @Override public String getFeedbackEmail() {
+    return getBootConfig().getPartner()
+        .getFeedback()
+        .getEmail();
+  }
+
+  @Override public String getImageCachePath() {
+    return getCachePath() + "/" + "icons/";
+  }
+
+  @Override public String getAccountType() {
+    return BuildConfig.APPLICATION_ID;
+  }
+
+  @Override public String getAutoUpdateUrl() {
+    return "http://imgs.aptoide.com/latest_version_" + getDefaultStoreName() + ".xml";
+  }
+
+  @Override public String getPartnerId() {
+    return String.valueOf(getBootConfig().getPartner()
+        .getUid());
+  }
+
+  @Override public String getExtraId() {
+    return String.valueOf(getBootConfig().getPartner()
+        .getUid());
+  }
+
+  @Override public String getDefaultThemeName() {
+    return getBootConfig().getPartner()
+        .getAppearance()
+        .getTheme();
+  }
+
+  @Override public boolean isCreateStoreUserPrivacyEnabled() {
+    return false;
   }
 
   @Override public Completable createShortcut() {
-    return Single.just(getApplicationPreferences())
-        .map(PartnerApplicationPreferences::getBootConfig)
+    return Single.just(getBootConfig())
         .flatMapCompletable(bootConfig -> {
           if (bootConfig.getPartner()
               .getSwitches()
@@ -40,15 +113,8 @@ public class PartnerApplication extends AptoideApplication {
     return new LoginPreferences(getBootConfig());
   }
 
-  @Override public PartnerApplicationPreferences getApplicationPreferences() {
-    final BootConfig bootConfig = BootConfigJSONUtils.getSavedRemoteBootConfig(getBaseContext())
-        .getData();
-    return new PartnerApplicationPreferences(bootConfig);
-  }
-
   @Override public FragmentProvider createFragmentProvider() {
-    final ApplicationPreferences appPreferences = getApplicationPreferences();
-    return new PartnerFragmentProvider(appPreferences.getDefaultThemeName(),
-        appPreferences.getDefaultStoreName(), appPreferences.hasMultiStoreSearch());
+    return new PartnerFragmentProvider(getDefaultThemeName(), getDefaultStoreName(),
+        hasMultiStoreSearch());
   }
 }

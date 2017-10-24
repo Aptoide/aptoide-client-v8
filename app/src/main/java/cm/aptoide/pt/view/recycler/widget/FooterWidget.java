@@ -7,7 +7,6 @@ package cm.aptoide.pt.view.recycler.widget;
 
 import android.view.View;
 import android.widget.Button;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
@@ -32,8 +31,7 @@ public class FooterWidget extends Widget<FooterDisplayable> {
   @Override public void bindView(FooterDisplayable displayable) {
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
-    final String marketName = appPreferences.getMarketName();
+    final String marketName = application.getMarketName();
     final String buttonText = Translator.translate(displayable.getPojo()
         .getActions()
         .get(0)
