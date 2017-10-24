@@ -121,7 +121,7 @@ public class ManageStorePresenter implements Presenter {
         .subscribe();
   }
 
-  private Completable handleSaveClick(ManageStoreFragment.ViewModel storeModel) {
+  private Completable handleSaveClick(ManageStoreViewModel storeModel) {
     return Completable.fromAction(() -> {
       view.hideKeyboard();
       view.showWaitProgressBar();
@@ -135,7 +135,7 @@ public class ManageStorePresenter implements Presenter {
             .andThen(handleStoreCreationErrors(err)));
   }
 
-  private Completable saveData(ManageStoreFragment.ViewModel storeModel) {
+  private Completable saveData(ManageStoreViewModel storeModel) {
     return Single.fromCallable(() -> {
       if (storeModel.hasNewAvatar()) {
         return uriToPathResolver.getMediaStoragePath(Uri.parse(storeModel.getPictureUri()));
@@ -146,7 +146,7 @@ public class ManageStorePresenter implements Presenter {
             mediaStoragePath -> storeManager.createOrUpdate(storeModel.getStoreName(),
                 storeModel.getStoreDescription(), mediaStoragePath, storeModel.hasNewAvatar(),
                 storeModel.getStoreTheme()
-                    .getThemeName(), storeModel.storeExists()));
+                    .getThemeName(), storeModel.storeExists(), storeModel.getStoreLinks()));
   }
 
   private void navigate() {
