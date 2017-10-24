@@ -171,16 +171,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
         .getSimpleName());
   }
 
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    outState.putParcelable(EXTRA_STORE_MODEL, Parcels.wrap(currentModel));
-    outState.putBoolean(EXTRA_GO_TO_HOME, goToHome);
-  }
-
-  @Override public void hideKeyboard() {
-    super.hideKeyboard();
-  }
-
   /**
    * @param pictureUri Load image to UI and save image in model to handle configuration changes.
    */
@@ -317,12 +307,26 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
 
   @Override public void onDestroyView() {
     dismissWaitProgressBar();
-    hideKeyboard();
     if (dialogFragment != null) {
       dialogFragment.dismiss();
       dialogFragment = null;
     }
     super.onDestroyView();
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    hideKeyboard();
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putParcelable(EXTRA_STORE_MODEL, Parcels.wrap(currentModel));
+    outState.putBoolean(EXTRA_GO_TO_HOME, goToHome);
+  }
+
+  @Override public void hideKeyboard() {
+    super.hideKeyboard();
   }
 
   private void attachPresenters() {
@@ -493,8 +497,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
           AptoideUtils.StringU.getFormattedString(R.string.create_store_name, getResources(),
               appName));
     } else {
-      chooseStoreNameTitle.setText(
-          AptoideUtils.StringU.getFormattedString(R.string.create_store_description_title,
+      chooseStoreNameTitle.setText(AptoideUtils.StringU.getFormattedString(R.string.description,
               getResources()));
       storeName.setVisibility(View.GONE);
       storeDescriptionWrapper.setVisibility(View.VISIBLE);
@@ -517,7 +520,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
             .equals(Store.SocialChannelType.FACEBOOK)) {
           facebookTextAndPlus.setVisibility(View.GONE);
           facebookUsernameWrapper.setVisibility(View.VISIBLE);
-          facebookUser.setText(storeLinks.getUrl());
+          facebookUser.setText(removeBaseUrl(storeLinks.getUrl()));
           if (!storeLinks.getUrl()
               .isEmpty()) {
             facebookUsernameWrapper.setHelperTextVisibility(false);
@@ -527,7 +530,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
             .equals(Store.SocialChannelType.TWITCH)) {
           twitchTextAndPlus.setVisibility(View.GONE);
           twitchUsernameWrapper.setVisibility(View.VISIBLE);
-          twitchUser.setText(storeLinks.getUrl());
+          twitchUser.setText(removeBaseUrl(storeLinks.getUrl()));
           if (!storeLinks.getUrl()
               .isEmpty()) {
             twitchUsernameWrapper.setHelperTextVisibility(false);
@@ -537,7 +540,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
             .equals(Store.SocialChannelType.TWITTER)) {
           twitterTextAndPlus.setVisibility(View.GONE);
           twitterUsernameWrapper.setVisibility(View.VISIBLE);
-          twitterUser.setText(storeLinks.getUrl());
+          twitterUser.setText(removeBaseUrl(storeLinks.getUrl()));
           if (!storeLinks.getUrl()
               .isEmpty()) {
             twitterUsernameWrapper.setHelperTextVisibility(false);
@@ -547,7 +550,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
             .equals(Store.SocialChannelType.YOUTUBE)) {
           youtubeTextAndPlus.setVisibility(View.GONE);
           youtubeUsernameWrapper.setVisibility(View.VISIBLE);
-          youtubeUser.setText(storeLinks.getUrl());
+          youtubeUser.setText(removeBaseUrl(storeLinks.getUrl()));
           if (!storeLinks.getUrl()
               .isEmpty()) {
             youtubeUsernameWrapper.setHelperTextVisibility(false);
@@ -556,6 +559,11 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
         }
       }
     }
+  }
+
+  private String removeBaseUrl(String url) {
+    String[] splitUrl = url.split("/");
+    return splitUrl[splitUrl.length - 1];
   }
 
   private String getViewTitle(ManageStoreViewModel storeModel) {
