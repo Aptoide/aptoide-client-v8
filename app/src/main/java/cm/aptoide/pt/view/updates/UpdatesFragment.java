@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.telephony.TelephonyManager;
 import android.view.View;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.InstallManager;
@@ -164,8 +163,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     super.onCreate(savedInstanceState);
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
-    marketName = appPreferences.getMarketName();
+    marketName = application.getMarketName();
     crashReport = CrashReport.getInstance();
     bodyInterceptorV7 = application.getAccountSettingsBodyInterceptorPoolV7();
     httpClient = application.getDefaultClient();

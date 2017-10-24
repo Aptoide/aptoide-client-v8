@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.InstallManager;
@@ -180,8 +179,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     super.onCreate(savedInstanceState);
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
-    marketName = appPreferences.getMarketName();
+    marketName = application.getMarketName();
     userId = getArguments().containsKey(USER_ID_KEY) ? getArguments().getLong(USER_ID_KEY) : null;
     storeId = getArguments().containsKey(STORE_ID) ? getArguments().getLong(STORE_ID) : null;
     storeContext = (StoreContext) getArguments().getSerializable(STORE_CONTEXT);

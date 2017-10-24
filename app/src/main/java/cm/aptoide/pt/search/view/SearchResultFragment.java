@@ -28,7 +28,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.AdsRepository;
@@ -106,7 +105,9 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   private float listItemPadding;
   private MenuItem searchMenuItem;
   private SearchBuilder searchBuilder;
-  private ApplicationPreferences appPreferences;
+  private String defaultThemeName;
+  private boolean isMultiStoreSearch;
+  private String defaultStoreName;
 
   public static SearchResultFragment newInstance(String currentQuery, String defaultStoreName) {
     return newInstance(currentQuery, false, defaultStoreName);
@@ -359,10 +360,9 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     allStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
     allStoresButton.setBackgroundResource(0);
     viewModel.setAllStoresSelected(false);
-    final String defaultTheme = appPreferences.getDefaultThemeName();
-    if (defaultTheme != null && defaultTheme.length() > 0) {
+    if (defaultThemeName != null && defaultThemeName.length() > 0) {
       followedStoresButton.getBackground()
-          .setColorFilter(getResources().getColor(StoreTheme.get(defaultTheme)
+          .setColorFilter(getResources().getColor(StoreTheme.get(defaultThemeName)
               .getPrimaryColor()), PorterDuff.Mode.SRC_ATOP);
     }
   }
@@ -373,10 +373,9 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     allStoresButton.setTextColor(getResources().getColor(R.color.white));
     allStoresButton.setBackgroundResource(R.drawable.search_button_background);
     viewModel.setAllStoresSelected(true);
-    final String defaultTheme = appPreferences.getDefaultThemeName();
-    if (defaultTheme != null && defaultTheme.length() > 0) {
+    if (defaultThemeName != null && defaultThemeName.length() > 0) {
       allStoresButton.getBackground()
-          .setColorFilter(getResources().getColor(StoreTheme.get(defaultTheme)
+          .setColorFilter(getResources().getColor(StoreTheme.get(defaultThemeName)
               .getPrimaryColor()), PorterDuff.Mode.SRC_ATOP);
     }
   }
@@ -462,12 +461,13 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     final List<Long> subscribedStoresIds = StoreUtils.getSubscribedStoresIds(storeAccessor);
     final AdsRepository adsRepository = application.getAdsRepository();
 
-    appPreferences = application.getApplicationPreferences();
+    defaultThemeName = application.getDefaultThemeName();
+    defaultStoreName = application.getDefaultStoreName();
+    isMultiStoreSearch = application.hasMultiStoreSearch();
 
     searchManager =
         new SearchManager(sharedPreferences, tokenInvalidator, bodyInterceptor, httpClient,
-            converterFactory, subscribedStoresAuthMap, subscribedStoresIds, adsRepository,
-            appPreferences);
+            converterFactory, subscribedStoresAuthMap, subscribedStoresIds, adsRepository);
 
     mainThreadScheduler = AndroidSchedulers.mainThread();
 
@@ -501,7 +501,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     setupTheme();
     attachPresenter(new SearchResultPresenter(this, searchAnalytics, searchNavigator, crashReport,
         mainThreadScheduler, searchManager, onAdClickRelay, onItemViewClickRelay,
-        onOpenPopupMenuClickRelay, appPreferences), null);
+        onOpenPopupMenuClickRelay, defaultStoreName, defaultThemeName, isMultiStoreSearch), null);
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -510,21 +510,20 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   }
 
   private void setupTheme() {
-    final String defaultTheme = appPreferences.getDefaultThemeName();
-    if (defaultTheme != null && defaultTheme.length() > 0) {
-      ThemeUtils.setStoreTheme(getActivity(), defaultTheme);
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(defaultTheme));
-      toolbar.setBackgroundColor(getResources().getColor(StoreTheme.get(defaultTheme)
+    if (defaultThemeName != null && defaultThemeName.length() > 0) {
+      ThemeUtils.setStoreTheme(getActivity(), defaultThemeName);
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(defaultThemeName));
+      toolbar.setBackgroundColor(getResources().getColor(StoreTheme.get(defaultThemeName)
           .getPrimaryColor()));
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
         Drawable wrapDrawable = DrawableCompat.wrap(progressBar.getIndeterminateDrawable());
         DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getContext(),
-            StoreTheme.get(defaultTheme)
+            StoreTheme.get(defaultThemeName)
                 .getPrimaryColor()));
         progressBar.setIndeterminateDrawable(DrawableCompat.unwrap(wrapDrawable));
       } else {
         progressBar.getIndeterminateDrawable()
-            .setColorFilter(ContextCompat.getColor(getContext(), StoreTheme.get(defaultTheme)
+            .setColorFilter(ContextCompat.getColor(getContext(), StoreTheme.get(defaultThemeName)
                 .getPrimaryColor()), PorterDuff.Mode.SRC_IN);
       }
     }

@@ -19,7 +19,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
@@ -137,10 +136,10 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
 
       final AptoideApplication application =
           (AptoideApplication) getContext().getApplicationContext();
-      final ApplicationPreferences appPreferences = application.getApplicationPreferences();
       emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {
-          appPreferences.getFeedbackEmail()
+          application.getFeedbackEmail()
       });
+      final String cachePath = application.getCachePath();
       unManagedSubscription = installedRepository.getInstalled(getContext().getPackageName())
           .first()
           .observeOn(AndroidSchedulers.mainThread())
@@ -162,8 +161,8 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
                 File ss = new File(screenShotPath);
                 uris.add(getUriFromFile(ss));
               }
-              File logs =
-                  AptoideUtils.SystemU.readLogs(appPreferences.getCachePath(), LOGS_FILE_NAME);
+
+              File logs = AptoideUtils.SystemU.readLogs(cachePath, LOGS_FILE_NAME);
               if (logs != null) {
                 uris.add(getUriFromFile(logs));
               }

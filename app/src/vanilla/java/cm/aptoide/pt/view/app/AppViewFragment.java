@@ -25,7 +25,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.InstallManager;
@@ -174,7 +173,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
   private CrashReport crashReport;
   private AptoideNavigationTracker aptoideNavigationTracker;
-  private ApplicationPreferences appPreferences;
   private SearchBuilder searchBuilder;
 
   public static AppViewFragment newInstanceUname(String uname) {
@@ -334,16 +332,15 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    appPreferences = application.getApplicationPreferences();
-    this.appViewModel.setDefaultTheme(appPreferences.getDefaultThemeName());
-    this.appViewModel.setMarketName(appPreferences.getMarketName());
+    this.appViewModel.setDefaultTheme(application.getDefaultThemeName());
+    this.appViewModel.setMarketName(application.getMarketName());
     this.appViewModel.setBillingIdResolver(application.getBillingIdResolver());
 
     final SearchManager searchManager =
         (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
 
     final SearchNavigator searchNavigator =
-        new SearchNavigator(getFragmentNavigator(), appPreferences.getDefaultStoreName());
+        new SearchNavigator(getFragmentNavigator(), application.getDefaultStoreName());
 
     searchBuilder = new SearchBuilder(searchManager, searchNavigator);
 
@@ -392,7 +389,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
             spotAndShareAnalytics, timelineAnalytics, installAppRelay,
             application.getDefaultSharedPreferences(),
-            appPreferences.isCreateStoreUserPrivacyEnabled());
+            application.isCreateStoreUserPrivacyEnabled());
     downloadFactory = new DownloadFactory(getMarketName());
     appViewAnalytics = new AppViewAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));

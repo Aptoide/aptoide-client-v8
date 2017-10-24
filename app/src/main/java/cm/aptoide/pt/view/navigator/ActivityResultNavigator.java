@@ -10,7 +10,6 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.WindowManager;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
@@ -35,6 +34,7 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
   private AccountNavigator accountNavigator;
   private BillingNavigator billingNavigator;
   private ScreenOrientationManager screenOrientationManager;
+  private String marketName;
 
   public BehaviorRelay<Map<Integer, Result>> getFragmentResultRelay() {
     return fragmentResultRelay;
@@ -150,24 +150,22 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
   public AccountNavigator getAccountNavigator() {
     if (accountNavigator == null) {
       final AptoideApplication application = (AptoideApplication) getApplicationContext();
-      final ApplicationPreferences appPreferences = application.getApplicationPreferences();
+      marketName = application.getMarketName();
       accountNavigator =
           new AccountNavigator(getFragmentNavigator(), application.getAccountManager(),
               getActivityNavigator(), LoginManager.getInstance(),
               application.getFacebookCallbackManager(), application.getGoogleSignInClient(),
-              application.getFacebookLoginResultRelay(), appPreferences.getDefaultStoreName(),
-              appPreferences.getDefaultThemeName(), "http://m.aptoide.com/account/password-recovery");
+              application.getFacebookLoginResultRelay(), application.getDefaultStoreName(),
+              application.getDefaultThemeName(), "http://m.aptoide.com/account/password-recovery");
     }
     return accountNavigator;
   }
 
   public BillingNavigator getBillingNavigator() {
     if (billingNavigator == null) {
-      final ApplicationPreferences appPreferences =
-          ((AptoideApplication) getApplicationContext()).getApplicationPreferences();
       billingNavigator =
           new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
-              getActivityNavigator(), getFragmentNavigator(), appPreferences.getMarketName());
+              getActivityNavigator(), getFragmentNavigator(), marketName);
     }
     return billingNavigator;
   }

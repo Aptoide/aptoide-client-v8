@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
@@ -68,7 +67,6 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
     final Installed pojo = displayable.getPojo();
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
     accountManager = application.getAccountManager();
     httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
@@ -86,7 +84,7 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
         accountManager, accountNavigator, getContext(),
         new SpotAndShareAnalytics(Analytics.getInstance()), displayable.getTimelineAnalytics(),
         PublishRelay.create(), application.getDefaultSharedPreferences(),
-        appPreferences.isCreateStoreUserPrivacyEnabled());
+        application.isCreateStoreUserPrivacyEnabled());
     appName = pojo.getName();
     packageName = pojo.getPackageName();
 

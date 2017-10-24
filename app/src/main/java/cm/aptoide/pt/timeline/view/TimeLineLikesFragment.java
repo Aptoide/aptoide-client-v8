@@ -2,7 +2,6 @@ package cm.aptoide.pt.timeline.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -50,8 +49,7 @@ public class TimeLineLikesFragment extends TimeLineFollowFragment {
     super.onCreate(savedInstanceState);
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
-    defaultTheme = appPreferences.getDefaultThemeName();
+    defaultTheme = application.getDefaultThemeName();
     baseBodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();
     httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();

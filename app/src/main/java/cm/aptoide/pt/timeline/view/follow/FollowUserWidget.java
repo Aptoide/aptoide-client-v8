@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -95,8 +94,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
       }
 
       final String storeName = displayable.getStoreName();
-      final ApplicationPreferences appPreferences = application.getApplicationPreferences();
-      final String storeTheme = appPreferences.getDefaultThemeName();
+      final String storeTheme = application.getDefaultThemeName();
 
       final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor,
           new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
