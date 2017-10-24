@@ -22,6 +22,7 @@ import android.widget.EditText;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.InstalledRepository;
@@ -42,6 +43,7 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
 
   public static final String SCREENSHOT_PATH = "SCREENSHOT_PATH";
   public static final String LOGS_FILE_NAME = "logs.txt";
+  private static final String CARD_ID = "card_id";
   private final String KEY_SCREENSHOT_PATH = "screenShotPath";
   private Button sendFeedbackBtn;
   private CheckBox logsAndScreenshotsCb;
@@ -50,11 +52,22 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
   private EditText subgectEdit;
   private Subscription unManagedSubscription;
   private InstalledRepository installedRepository;
+  private String cardId;
+  private NavigationTracker aptoideNavigationTracker;
 
   public static SendFeedbackFragment newInstance(String screenshotFilePath) {
     SendFeedbackFragment sendFeedbackFragment = new SendFeedbackFragment();
     Bundle bundle = new Bundle();
     bundle.putString(SCREENSHOT_PATH, screenshotFilePath);
+    sendFeedbackFragment.setArguments(bundle);
+    return sendFeedbackFragment;
+  }
+
+  public static SendFeedbackFragment newInstance(String screenShotPath, String cardId) {
+    SendFeedbackFragment sendFeedbackFragment = new SendFeedbackFragment();
+    Bundle bundle = new Bundle();
+    bundle.putString(SCREENSHOT_PATH, screenShotPath);
+    bundle.putString(CARD_ID, cardId);
     sendFeedbackFragment.setArguments(bundle);
     return sendFeedbackFragment;
   }
@@ -67,15 +80,16 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
   @Override public void setArguments(Bundle args) {
     super.setArguments(args);
     screenShotPath = args.getString(SCREENSHOT_PATH);
-  }
-
-  @Override public void onAttach(Activity activity) {
-    super.onAttach(activity);
+    cardId = args.getString(CARD_ID);
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     outState.putString(KEY_SCREENSHOT_PATH, screenShotPath);
+  }
+
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -91,6 +105,8 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
     super.onCreate(savedInstanceState);
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
+    aptoideNavigationTracker =
+        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
     setHasOptionsMenu(true);
   }
 
@@ -161,11 +177,18 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
                 File ss = new File(screenShotPath);
                 uris.add(getUriFromFile(ss));
               }
+              File logs;
+              if (cardId != null) {
+                logs = AptoideUtils.SystemU.readLogs(cachePath, LOGS_FILE_NAME, cardId);
+              } else {
+                logs = AptoideUtils.SystemU.readLogs(cachePath, LOGS_FILE_NAME,
+                    aptoideNavigationTracker.getPrettyScreenHistory());
+              }
 
-              File logs = AptoideUtils.SystemU.readLogs(cachePath, LOGS_FILE_NAME);
               if (logs != null) {
                 uris.add(getUriFromFile(logs));
               }
+
               emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
             }
             try {

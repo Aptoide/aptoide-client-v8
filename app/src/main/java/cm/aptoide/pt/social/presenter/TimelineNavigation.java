@@ -46,5 +46,5 @@ public interface TimelineNavigation {
 
   void navigateToCreatePost();
 
-  void navigateToFeedbackScreen(String path);
+  void navigateToFeedbackScreen(String path, String cardId);
 }

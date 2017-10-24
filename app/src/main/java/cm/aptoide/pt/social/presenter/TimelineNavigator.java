@@ -141,8 +141,8 @@ public class TimelineNavigator implements TimelineNavigation {
     fragmentNavigator.navigateTo(PostFragment.newInstanceFromTimeline(), true);
   }
 
-  @Override public void navigateToFeedbackScreen(String path) {
+  @Override public void navigateToFeedbackScreen(String path, String postId) {
     fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newSendFeedbackFragment(path), true);
+        .newSendFeedbackFragment(path, postId), true);
   }
 }
