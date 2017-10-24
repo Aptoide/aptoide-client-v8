@@ -16,6 +16,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.store.ManageStoreFragment;
+import cm.aptoide.pt.account.view.store.ManageStoreViewModel;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -181,7 +182,8 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
               editStoreButton.setVisibility(View.VISIBLE);
               compositeSubscription.add(RxView.clicks(editStoreButton)
                   .subscribe(click -> editStore(store.getId(), store.getAppearance()
-                      .getTheme(), storeDescription, store.getName(), store.getAvatar())));
+                          .getTheme(), storeDescription, store.getName(), store.getAvatar(),
+                      store.getSocialChannels())));
             } else {
               editStoreButton.setVisibility(View.GONE);
             }
@@ -305,10 +307,11 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
   }
 
   private void editStore(long storeId, String storeThemeName, String storeDescription,
-      String storeName, String storeImagePath) {
-    ManageStoreFragment.ViewModel viewModel =
-        new ManageStoreFragment.ViewModel(storeId, StoreTheme.fromName(storeThemeName), storeName,
-            storeDescription, storeImagePath);
+      String storeName, String storeImagePath,
+      List<cm.aptoide.pt.dataprovider.model.v7.store.Store.SocialChannel> storeSocialChannels) {
+    ManageStoreViewModel viewModel =
+        new ManageStoreViewModel(storeId, StoreTheme.fromName(storeThemeName), storeName,
+            storeDescription, storeImagePath, storeSocialChannels);
     getFragmentNavigator().navigateTo(ManageStoreFragment.newInstance(viewModel, false), true);
   }
 

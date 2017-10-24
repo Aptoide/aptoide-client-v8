@@ -1,6 +1,7 @@
 package cm.aptoide.pt.account.view.store;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,6 +17,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -34,6 +36,8 @@ import cm.aptoide.pt.account.view.UriToPathResolver;
 import cm.aptoide.pt.account.view.exception.InvalidImageException;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
+import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.presenter.CompositePresenter;
 import cm.aptoide.pt.store.StoreTheme;
@@ -41,6 +45,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.BackButtonFragment;
+import cm.aptoide.pt.view.CustomTextInputLayout;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
 import cm.aptoide.pt.view.dialog.ImagePickerDialog;
 import cm.aptoide.pt.view.permission.AccountPermissionProvider;
@@ -48,8 +53,10 @@ import cm.aptoide.pt.view.permission.PermissionProvider;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
+import java.util.ArrayList;
 import java.util.Arrays;
-import org.parceler.Parcel;
+import java.util.Collections;
+import java.util.List;
 import org.parceler.Parcels;
 import rx.Completable;
 import rx.Observable;
@@ -77,7 +84,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   private RecyclerView themeSelectorView;
   private ThemeSelectorViewAdapter themeSelectorAdapter;
 
-  private ViewModel currentModel;
+  private ManageStoreViewModel currentModel;
   private boolean goToHome;
   private Toolbar toolbar;
   private ImagePickerDialog dialogFragment;
@@ -94,7 +101,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   private PhotoFileGenerator photoFileGenerator;
   private TextInputLayout storeDescriptionWrapper;
   private View facebookRow;
-  private TextInputLayout facebookUsernameWrapper;
+  private CustomTextInputLayout facebookUsernameWrapper;
   private View twitchRow;
   private View twitterRow;
   private View youtubeRow;
@@ -102,12 +109,16 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   private RelativeLayout twitchTextAndPlus;
   private RelativeLayout twitterTextAndPlus;
   private RelativeLayout youtubeTextAndPlus;
-  private TextInputLayout twitchUsernameWrapper;
-  private TextInputLayout twitterUsernameWrapper;
-  private TextInputLayout youtubeUsernameWrapper;
+  private CustomTextInputLayout twitchUsernameWrapper;
+  private CustomTextInputLayout twitterUsernameWrapper;
+  private CustomTextInputLayout youtubeUsernameWrapper;
   private LinearLayout socialChannels;
+  private EditText facebookUser;
+  private EditText twitchUser;
+  private EditText twitterUser;
+  private EditText youtubeUser;
 
-  public static ManageStoreFragment newInstance(ViewModel storeModel, boolean goToHome) {
+  public static ManageStoreFragment newInstance(ManageStoreViewModel storeModel, boolean goToHome) {
     Bundle args = new Bundle();
     args.putParcelable(EXTRA_STORE_MODEL, Parcels.wrap(storeModel));
     args.putBoolean(EXTRA_GO_TO_HOME, goToHome);
@@ -213,7 +224,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     currentModel.setPictureUri(pictureUri);
   }
 
-  @Override public Observable<ViewModel> saveDataClick() {
+  @Override public Observable<ManageStoreViewModel> saveDataClick() {
     return RxView.clicks(saveDataButton)
         .map(__ -> updateAndGetStoreModel());
   }
@@ -261,21 +272,29 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   public void manageFacebookViews() {
     facebookTextAndPlus.setVisibility(View.GONE);
     facebookUsernameWrapper.setVisibility(View.VISIBLE);
+    facebookUser.requestFocus();
+    showKeyboard(facebookUser);
   }
 
   @Override public void manageTwitchViews() {
     twitchTextAndPlus.setVisibility(View.GONE);
     twitchUsernameWrapper.setVisibility(View.VISIBLE);
+    twitchUser.requestFocus();
+    showKeyboard(twitchUser);
   }
 
   @Override public void manageTwitterViews() {
     twitterTextAndPlus.setVisibility(View.GONE);
     twitterUsernameWrapper.setVisibility(View.VISIBLE);
+    twitchUser.requestFocus();
+    showKeyboard(twitterUser);
   }
 
   @Override public void manageYoutubeViews() {
     youtubeTextAndPlus.setVisibility(View.GONE);
     youtubeUsernameWrapper.setVisibility(View.VISIBLE);
+    facebookUser.requestFocus();
+    showKeyboard(youtubeUser);
   }
 
   @Nullable @Override
@@ -290,7 +309,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
       try {
         currentModel = Parcels.unwrap(savedInstanceState.getParcelable(EXTRA_STORE_MODEL));
       } catch (NullPointerException ex) {
-        currentModel = new ViewModel();
+        currentModel = new ManageStoreViewModel();
       }
       goToHome = savedInstanceState.getBoolean(EXTRA_GO_TO_HOME, true);
     }
@@ -298,6 +317,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
 
   @Override public void onDestroyView() {
     dismissWaitProgressBar();
+    hideKeyboard();
     if (dialogFragment != null) {
       dialogFragment.dismiss();
       dialogFragment = null;
@@ -362,40 +382,110 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     facebookTextAndPlus =
         (RelativeLayout) view.findViewById(R.id.edit_store_facebook_text_plus_wrapper);
     facebookUsernameWrapper =
-        (TextInputLayout) view.findViewById(R.id.edit_store_facebook_username_wrapper);
+        (CustomTextInputLayout) view.findViewById(R.id.edit_store_facebook_username_wrapper);
+    facebookUser = (EditText) view.findViewById(R.id.edit_store_facebook_username);
     twitchRow = view.findViewById(R.id.edit_store_twitch);
     twitchTextAndPlus =
         (RelativeLayout) view.findViewById(R.id.edit_store_twitch_text_plus_wrapper);
     twitchUsernameWrapper =
-        (TextInputLayout) view.findViewById(R.id.edit_store_twitch_username_wrapper);
+        (CustomTextInputLayout) view.findViewById(R.id.edit_store_twitch_username_wrapper);
+    twitchUser = (EditText) view.findViewById(R.id.edit_store_twitch_username);
     twitterRow = view.findViewById(R.id.edit_store_twitter);
     twitterTextAndPlus =
         (RelativeLayout) view.findViewById(R.id.edit_store_twitter_text_plus_wrapper);
     twitterUsernameWrapper =
-        (TextInputLayout) view.findViewById(R.id.edit_store_twitter_username_wrapper);
+        (CustomTextInputLayout) view.findViewById(R.id.edit_store_twitter_username_wrapper);
+    twitterUser = (EditText) view.findViewById(R.id.edit_store_twitter_username);
     youtubeRow = view.findViewById(R.id.edit_store_youtube);
     youtubeTextAndPlus =
         (RelativeLayout) view.findViewById(R.id.edit_store_youtube_text_plus_wrapper);
     youtubeUsernameWrapper =
-        (TextInputLayout) view.findViewById(R.id.edit_store_youtube_username_wrapper);
+        (CustomTextInputLayout) view.findViewById(R.id.edit_store_youtube_username_wrapper);
+    youtubeUser = (EditText) view.findViewById(R.id.edit_store_youtube_username);
 
     waitDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity(),
         getApplicationContext().getString(R.string.please_wait_upload));
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
   }
 
-  private ViewModel updateAndGetStoreModel() {
-    currentModel = ViewModel.update(currentModel, storeName.getText()
+  private ManageStoreViewModel updateAndGetStoreModel() {
+    currentModel = ManageStoreViewModel.update(currentModel, storeName.getText()
         .toString(), storeDescription.getText()
         .toString());
     currentModel.setStoreTheme(themeSelectorAdapter.getSelectedTheme());
+    currentModel.setStoreLinks(getStoreLinks());
     return currentModel;
+  }
+
+  /**
+   * This method will add a object to the returned list for each social channel already defined by
+   * the user.
+   *
+   * @return
+   */
+  private List<SimpleSetStoreRequest.StoreLinks> getStoreLinks() {
+    List<SimpleSetStoreRequest.StoreLinks> storeLinksList = new ArrayList<>();
+    if (!TextUtils.isEmpty(facebookUser.getText()
+        .toString())) {
+      storeLinksList.add(new SimpleSetStoreRequest.StoreLinks(Store.SocialChannelType.FACEBOOK,
+          setFacebookUrl(facebookUser.getText()
+              .toString())));
+    }
+    if (!TextUtils.isEmpty(twitchUser.getText()
+        .toString())) {
+      storeLinksList.add(new SimpleSetStoreRequest.StoreLinks(Store.SocialChannelType.TWITCH,
+          setTwitchUrl(twitchUser.getText()
+              .toString())));
+    }
+    if (!TextUtils.isEmpty(twitterUser.getText()
+        .toString())) {
+      storeLinksList.add(new SimpleSetStoreRequest.StoreLinks(Store.SocialChannelType.TWITTER,
+          setTwitterUrl(twitterUser.getText()
+              .toString())));
+    }
+    if (!TextUtils.isEmpty(youtubeUser.getText()
+        .toString())) {
+      storeLinksList.add(new SimpleSetStoreRequest.StoreLinks(Store.SocialChannelType.YOUTUBE,
+          setYoutubeUrl(youtubeUser.getText()
+              .toString())));
+    }
+    if (storeLinksList.isEmpty()) {
+      return Collections.emptyList();
+    }
+    return storeLinksList;
+  }
+
+  private String setYoutubeUrl(String youtubeUsername) {
+    if (youtubeUsername.contains("http")) {
+      return youtubeUsername;
+    }
+    return ManageStoreViewModel.YOUTUBE_BASE_URL + youtubeUsername;
+  }
+
+  private String setTwitterUrl(String twitterUsername) {
+    if (twitterUsername.contains("http")) {
+      return twitterUsername;
+    }
+    return ManageStoreViewModel.TWITTER_BASE_URL + twitterUsername;
+  }
+
+  private String setTwitchUrl(String twitchUsername) {
+    if (twitchUsername.contains("http")) {
+      return twitchUsername;
+    }
+    return ManageStoreViewModel.TWITCH_BASE_URL + twitchUsername;
+  }
+
+  private String setFacebookUrl(String facebookUsername) {
+    if (facebookUsername.contains("http")) {
+      return facebookUsername;
+    }
+    return ManageStoreViewModel.FACEBOOK_BASE_URL + facebookUsername;
   }
 
   private void setupViewsDefaultDataUsingCurrentModel() {
 
     storeName.setText(currentModel.getStoreName());
-    storeDescription.setText(currentModel.getStoreDescription());
 
     if (!currentModel.storeExists()) {
       String appName = getString(R.string.app_name);
@@ -409,7 +499,9 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
       storeName.setVisibility(View.GONE);
       storeDescriptionWrapper.setVisibility(View.VISIBLE);
       storeDescription.setVisibility(View.VISIBLE);
+      storeDescription.setText(currentModel.getStoreDescription());
       socialChannels.setVisibility(View.VISIBLE);
+      setSocialChannelsUsernames();
       loadImageStateless(currentModel.getPictureUri());
 
       saveDataButton.setText(R.string.save_edit_store);
@@ -417,7 +509,56 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     }
   }
 
-  private String getViewTitle(ViewModel storeModel) {
+  private void setSocialChannelsUsernames() {
+    List<SimpleSetStoreRequest.StoreLinks> storeLinksList = currentModel.getStoreLinks();
+    if (!storeLinksList.isEmpty()) {
+      for (SimpleSetStoreRequest.StoreLinks storeLinks : storeLinksList) {
+        if (storeLinks.getType()
+            .equals(Store.SocialChannelType.FACEBOOK)) {
+          facebookTextAndPlus.setVisibility(View.GONE);
+          facebookUsernameWrapper.setVisibility(View.VISIBLE);
+          facebookUser.setText(storeLinks.getUrl());
+          if (!storeLinks.getUrl()
+              .isEmpty()) {
+            facebookUsernameWrapper.setHelperTextVisibility(false);
+          }
+          facebookUser.setVisibility(View.VISIBLE);
+        } else if (storeLinks.getType()
+            .equals(Store.SocialChannelType.TWITCH)) {
+          twitchTextAndPlus.setVisibility(View.GONE);
+          twitchUsernameWrapper.setVisibility(View.VISIBLE);
+          twitchUser.setText(storeLinks.getUrl());
+          if (!storeLinks.getUrl()
+              .isEmpty()) {
+            twitchUsernameWrapper.setHelperTextVisibility(false);
+          }
+          twitchUser.setVisibility(View.VISIBLE);
+        } else if (storeLinks.getType()
+            .equals(Store.SocialChannelType.TWITTER)) {
+          twitterTextAndPlus.setVisibility(View.GONE);
+          twitterUsernameWrapper.setVisibility(View.VISIBLE);
+          twitterUser.setText(storeLinks.getUrl());
+          if (!storeLinks.getUrl()
+              .isEmpty()) {
+            twitterUsernameWrapper.setHelperTextVisibility(false);
+          }
+          twitterUser.setVisibility(View.VISIBLE);
+        } else if (storeLinks.getType()
+            .equals(Store.SocialChannelType.YOUTUBE)) {
+          youtubeTextAndPlus.setVisibility(View.GONE);
+          youtubeUsernameWrapper.setVisibility(View.VISIBLE);
+          youtubeUser.setText(storeLinks.getUrl());
+          if (!storeLinks.getUrl()
+              .isEmpty()) {
+            youtubeUsernameWrapper.setHelperTextVisibility(false);
+          }
+          youtubeUser.setVisibility(View.VISIBLE);
+        }
+      }
+    }
+  }
+
+  private String getViewTitle(ManageStoreViewModel storeModel) {
     if (!storeModel.storeExists()) {
       return getString(R.string.create_store_title);
     } else {
@@ -425,98 +566,9 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     }
   }
 
-  @Parcel public static class ViewModel {
-    long storeId;
-    String storeName;
-    String storeDescription;
-    String pictureUri;
-    StoreTheme storeTheme;
-    boolean newAvatar;
-
-    public ViewModel() {
-      this.storeId = -1;
-      this.storeName = "";
-      this.storeDescription = "";
-      this.pictureUri = "";
-      this.storeTheme = StoreTheme.DEFAULT;
-      this.newAvatar = false;
-    }
-
-    public ViewModel(long storeId, StoreTheme storeTheme, String storeName, String storeDescription,
-        String pictureUri) {
-      this.storeId = storeId;
-      this.storeName = storeName;
-      this.storeDescription = storeDescription;
-      this.pictureUri = pictureUri;
-      this.storeTheme = storeTheme;
-      this.newAvatar = false;
-    }
-
-    public static ViewModel update(ViewModel model, String storeName, String storeDescription) {
-
-      // if current store name is empty we use the old one
-      if (!TextUtils.isEmpty(storeName)) {
-        model.setStoreName(storeName);
-      }
-
-      // if current store description is empty we use the old one
-      if (!TextUtils.isEmpty(storeDescription)) {
-        model.setStoreDescription(storeDescription);
-      }
-
-      return model;
-    }
-
-    public void setNewAvatar(boolean newAvatar) {
-      this.newAvatar = newAvatar;
-    }
-
-    public String getStoreName() {
-      return storeName;
-    }
-
-    public void setStoreName(String storeName) {
-      this.storeName = storeName;
-    }
-
-    public String getStoreDescription() {
-      return storeDescription;
-    }
-
-    public void setStoreDescription(String storeDescription) {
-      this.storeDescription = storeDescription;
-    }
-
-    public String getPictureUri() {
-      return pictureUri;
-    }
-
-    public void setPictureUri(String pictureUri) {
-      this.pictureUri = pictureUri;
-    }
-
-    public boolean hasNewAvatar() {
-      return newAvatar;
-    }
-
-    public long getStoreId() {
-      return storeId;
-    }
-
-    public void setStoreId(long storeId) {
-      this.storeId = storeId;
-    }
-
-    public StoreTheme getStoreTheme() {
-      return storeTheme;
-    }
-
-    public void setStoreTheme(StoreTheme storeTheme) {
-      this.storeTheme = storeTheme;
-    }
-
-    public boolean storeExists() {
-      return storeId >= 0L;
-    }
+  private void showKeyboard(EditText editText) {
+    InputMethodManager imm =
+        (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+    imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
   }
 }

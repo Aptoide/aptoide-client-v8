@@ -1,6 +1,7 @@
 package cm.aptoide.pt.account.view;
 
 import cm.aptoide.pt.account.view.store.ManageStoreFragment;
+import cm.aptoide.pt.account.view.store.ManageStoreViewModel;
 import cm.aptoide.pt.account.view.user.ManageUserFragment;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.notification.view.InboxFragment;
@@ -25,10 +26,10 @@ public class MyAccountNavigator {
   }
 
   public void navigateToEditStoreView(Store store) {
-    ManageStoreFragment.ViewModel viewModel = new ManageStoreFragment.ViewModel(store.getId(),
+    ManageStoreViewModel viewModel = new ManageStoreViewModel(store.getId(),
         StoreTheme.fromName(store.getAppearance()
             .getTheme()), store.getName(), store.getAppearance()
-        .getDescription(), store.getAvatar());
+        .getDescription(), store.getAvatar(), store.getSocialChannels());
     fragmentNavigator.navigateTo(ManageStoreFragment.newInstance(viewModel, false), true);
   }
 

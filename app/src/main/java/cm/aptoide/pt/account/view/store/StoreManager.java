@@ -61,13 +61,15 @@ public class StoreManager {
   }
 
   public Completable createOrUpdate(String storeName, String storeDescription,
-      String storeImagePath, boolean hasNewAvatar, String storeThemeName, boolean storeExists) {
+      String storeImagePath, boolean hasNewAvatar, String storeThemeName, boolean storeExists,
+      List<SimpleSetStoreRequest.StoreLinks> storeLinksList) {
     return Completable.defer(() -> {
       if (storeExists) {
         return updateStore(storeName, storeDescription, storeImagePath, hasNewAvatar,
-            storeThemeName);
+            storeThemeName, storeLinksList);
       }
-      return createStore(storeName, storeDescription, storeImagePath, hasNewAvatar, storeThemeName);
+      return createStore(storeName, storeDescription, storeImagePath, hasNewAvatar, storeThemeName,
+          storeLinksList);
     })
         .onErrorResumeNext(err -> {
           if (err instanceof StoreCreationException || err instanceof InvalidImageException) {
@@ -94,7 +96,8 @@ public class StoreManager {
   }
 
   private Completable createStore(String storeName, String storeDescription, String storeImage,
-      boolean hasNewAvatar, String storeThemeName) {
+      boolean hasNewAvatar, String storeThemeName,
+      List<SimpleSetStoreRequest.StoreLinks> storeLinksList) {
 
     if (TextUtils.isEmpty(storeName)) {
       return Completable.error(new StoreValidationException(StoreValidationException.EMPTY_NAME));
@@ -130,7 +133,7 @@ public class StoreManager {
           final Completable syncAccount = accountManager.updateAccount();
           if (needToUploadMoreStoreData(storeDescription, storeImage, hasNewAvatar)) {
             return updateStore(storeName, storeDescription, storeImage, hasNewAvatar,
-                storeThemeName).andThen(syncAccount);
+                storeThemeName, storeLinksList).andThen(syncAccount);
           }
           return syncAccount;
         });
@@ -142,7 +145,8 @@ public class StoreManager {
   }
 
   private Completable updateStore(String storeName, String storeDescription, String storeImage,
-      boolean hasNewAvatar, String storeThemeName) {
+      boolean hasNewAvatar, String storeThemeName,
+      List<SimpleSetStoreRequest.StoreLinks> storeLinksList) {
 
     if (TextUtils.isEmpty(storeName)) {
       return Completable.error(new StoreValidationException(StoreValidationException.EMPTY_NAME));
@@ -155,28 +159,30 @@ public class StoreManager {
      * a store image, or a SetStore without image.
      */
     if (hasNewAvatar) {
-      return updateStoreWithAvatar(storeName, storeDescription, storeThemeName, storeImage);
+      return updateStoreWithAvatar(storeName, storeDescription, storeThemeName, storeImage,
+          storeLinksList);
     }
 
-    return updateStoreWithoutAvatar(storeName, storeDescription, storeThemeName);
+    return updateStoreWithoutAvatar(storeName, storeDescription, storeThemeName, storeLinksList);
   }
 
   private Completable updateStoreWithoutAvatar(String storeName, String storeDescription,
-      String storeThemeName) {
+      String storeThemeName, List<SimpleSetStoreRequest.StoreLinks> storeLinksList) {
     return SimpleSetStoreRequest.of(storeName, storeThemeName, storeDescription, bodyInterceptorV7,
-        httpClient, converterFactory, tokenInvalidator, sharedPreferences)
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences, storeLinksList)
         .observe()
         .toCompletable();
   }
 
   private Completable updateStoreWithAvatar(String storeName, String storeDescription,
-      String storeThemeName, String storeImagePath) {
+      String storeThemeName, String storeImagePath,
+      List<SimpleSetStoreRequest.StoreLinks> storeLinksList) {
     return accountManager.accountStatus()
         .first()
         .toSingle()
         .flatMap(account -> SetStoreImageRequest.of(storeName, storeThemeName, storeDescription,
             storeImagePath, multipartBodyInterceptor, httpClient, converterFactory,
-            requestBodyFactory, objectMapper, sharedPreferences, tokenInvalidator)
+            requestBodyFactory, objectMapper, sharedPreferences, tokenInvalidator, storeLinksList)
             .observe()
             .toSingle())
         .toCompletable();
