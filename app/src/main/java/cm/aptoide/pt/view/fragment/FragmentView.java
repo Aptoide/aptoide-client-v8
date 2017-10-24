@@ -11,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.logger.Logger;
@@ -37,7 +36,7 @@ public abstract class FragmentView extends LeakFragment implements View {
   private boolean startActivityForResultCalled;
   private AptoideNavigationTracker navigationTracker;
   private ActivityResultNavigator activityResultNavigator;
-  private ApplicationPreferences appPreferences;
+  private String defaultThemeName;
 
   public FragmentNavigator getFragmentNavigator() {
     return activityResultNavigator.getFragmentNavigator();
@@ -66,8 +65,8 @@ public abstract class FragmentView extends LeakFragment implements View {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    appPreferences =
-        ((AptoideApplication) getContext().getApplicationContext()).getApplicationPreferences();
+    defaultThemeName =
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultThemeName();
     ScreenTrackingUtils.getInstance()
         .incrementNumberOfScreens();
     navigationTracker =
@@ -191,6 +190,6 @@ public abstract class FragmentView extends LeakFragment implements View {
   }
 
   protected String getDefaultTheme() {
-    return appPreferences.getDefaultThemeName();
+    return defaultThemeName;
   }
 }

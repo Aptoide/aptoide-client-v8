@@ -24,7 +24,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DrawerAnalytics;
 import cm.aptoide.pt.PageViewsAnalytics;
@@ -90,7 +89,7 @@ public class HomeFragment extends StoreFragment {
   private ClickHandler backClickHandler;
   private PageViewsAnalytics pageViewsAnalytics;
   private SearchBuilder searchBuilder;
-  private ApplicationPreferences appPreferences;
+  private String defaultThemeName;
   private IssuesAnalytics issuesAnalytics;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
@@ -138,7 +137,7 @@ public class HomeFragment extends StoreFragment {
     userAvatarImage = (ImageView) baseHeaderView.findViewById(R.id.profile_image);
 
     baseHeaderView.setBackgroundColor(ContextCompat.getColor(getContext(),
-        StoreTheme.get(appPreferences.getDefaultThemeName())
+        StoreTheme.get(defaultThemeName)
             .getPrimaryColor()));
 
     accountManager.accountStatus()
@@ -176,14 +175,15 @@ public class HomeFragment extends StoreFragment {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    appPreferences =
-        ((AptoideApplication) getContext().getApplicationContext()).getApplicationPreferences();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
 
+    defaultThemeName = application.getDefaultThemeName();
     final SearchManager searchManager =
         (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
 
     final SearchNavigator searchNavigator =
-        new SearchNavigator(getFragmentNavigator(), appPreferences.getDefaultStoreName());
+        new SearchNavigator(getFragmentNavigator(), application.getDefaultStoreName());
 
     final Analytics analytics = Analytics.getInstance();
     issuesAnalytics = new IssuesAnalytics(analytics, Answers.getInstance());

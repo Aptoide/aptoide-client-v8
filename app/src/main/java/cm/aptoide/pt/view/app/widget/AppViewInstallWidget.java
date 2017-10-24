@@ -22,7 +22,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.Install;
@@ -112,7 +111,10 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
   private AccountNavigator accountNavigator;
   private AppViewNavigator appViewNavigator;
   private CrashReport crashReport;
-  private ApplicationPreferences appPreferences;
+  private String marketName;
+  private boolean isCreateStoreUserPrivacyEnabled;
+  private boolean isMultiStoreSearch;
+  private String defaultStoreName;
 
   public AppViewInstallWidget(View itemView) {
     super(itemView);
@@ -149,8 +151,11 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    appPreferences = application.getApplicationPreferences();
+    isCreateStoreUserPrivacyEnabled = application.isCreateStoreUserPrivacyEnabled();
+    marketName = application.getMarketName();
     sharedPreferences = application.getDefaultSharedPreferences();
+    isMultiStoreSearch = application.hasMultiStoreSearch();
+    defaultStoreName = application.getDefaultStoreName();
     final OkHttpClient httpClient = application.getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     accountManager = application.getAccountManager();
@@ -430,7 +435,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
                   ShowMessage.asSnack(view, R.string.downgrading_msg);
 
-                  DownloadFactory factory = new DownloadFactory(appPreferences.getMarketName());
+                  DownloadFactory factory = new DownloadFactory(marketName);
                   Download appDownload = factory.create(app, Download.ACTION_DOWNGRADE);
                   showRootInstallWarningPopup(context);
                   compositeSubscription.add(
@@ -512,11 +517,10 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
       showRootInstallWarningPopup(context);
       compositeSubscription.add(permissionManager.requestDownloadAccess(permissionService)
           .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionService))
-          .map(success -> new DownloadFactory(appPreferences.getMarketName()).create(
-              displayable.getPojo()
-                  .getNodes()
-                  .getMeta()
-                  .getData(), downloadAction))
+          .map(success -> new DownloadFactory(marketName).create(displayable.getPojo()
+              .getNodes()
+              .getMeta()
+              .getData(), downloadAction))
           .flatMapCompletable(download -> {
             if (!displayable.getAppViewFragment()
                 .isSuggestedShowing()) {
@@ -528,7 +532,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> {
                   if (accountManager.isLoggedIn() && ManagerPreferences.isShowPreviewDialog(
-                      sharedPreferences) && appPreferences.isCreateStoreUserPrivacyEnabled()) {
+                      sharedPreferences) && isCreateStoreUserPrivacyEnabled) {
                     SharePreviewDialog sharePreviewDialog =
                         new SharePreviewDialog(displayable, accountManager, true,
                             SharePreviewDialog.SharePreviewOpenMode.SHARE,
@@ -588,7 +592,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
             .inflate(R.layout.dialog_install_warning, null);
         builder.setView(alertView);
         new InstallWarningDialog(rank, hasTrustedVersion, context, installHandler,
-            onSearchTrustedAppHandler, appPreferences.getMarketName()).getDialog()
+            onSearchTrustedAppHandler, marketName).getDialog()
             .show();
       } else {
         installHandler.onClick(v);
@@ -719,8 +723,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
   }
 
   private AppViewNavigator getAppViewNavigator() {
-    return new AppViewNavigator(getFragmentNavigator(), getActivityNavigator(),
-        appPreferences.hasMultiStoreSearch(), appPreferences.getDefaultStoreName());
+    return new AppViewNavigator(getFragmentNavigator(), getActivityNavigator(), isMultiStoreSearch,
+        defaultStoreName);
   }
 
   private void findTrustedVersion(GetAppMeta.App app, ListAppVersions appVersions) {

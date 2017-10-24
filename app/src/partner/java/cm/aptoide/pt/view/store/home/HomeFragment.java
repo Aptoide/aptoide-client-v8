@@ -20,7 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DrawerAnalytics;
 import cm.aptoide.pt.R;
@@ -72,6 +71,7 @@ public class HomeFragment extends StoreFragment {
   private DrawerAnalytics drawerAnalytics;
   private ClickHandler backClickHandler;
   private SearchBuilder searchBuilder;
+  private String defaultThemeName;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -117,11 +117,8 @@ public class HomeFragment extends StoreFragment {
     userUsername = (TextView) baseHeaderView.findViewById(R.id.profile_name_text);
     userAvatarImage = (ImageView) baseHeaderView.findViewById(R.id.profile_image);
 
-    final AptoideApplication application =
-        (AptoideApplication) getContext().getApplicationContext();
-    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
     baseHeaderView.setBackgroundColor(ContextCompat.getColor(getContext(),
-        StoreTheme.get(appPreferences.getDefaultThemeName())
+        StoreTheme.get(defaultThemeName)
             .getPrimaryColor()));
 
     accountManager.accountStatus()
@@ -164,11 +161,11 @@ public class HomeFragment extends StoreFragment {
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    ApplicationPreferences appPreferences = application.getApplicationPreferences();
 
     final SearchNavigator searchNavigator =
-        new SearchNavigator(getFragmentNavigator(), appPreferences.getDefaultStoreName());
+        new SearchNavigator(getFragmentNavigator(), application.getDefaultStoreName());
 
+    defaultThemeName = application.getDefaultThemeName();
     searchBuilder = new SearchBuilder(searchManagerService, searchNavigator);
 
     drawerAnalytics = new DrawerAnalytics(Analytics.getInstance(),
