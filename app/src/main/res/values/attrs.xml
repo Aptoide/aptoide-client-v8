@@ -99,4 +99,13 @@
     <attr format="color" name="tailColor"/>
     <attr format="boolean" name="enableAnimation"/>
   </declare-styleable>
+
+  <declare-styleable name="CustomTextInputLayout">
+    <attr format="string" name="helperText"/>
+    <attr format="color|reference" name="helperTextColor"/>
+  </declare-styleable>
+
+  <style name="HelperTextAppearance" parent="TextAppearance.Design.Error">
+    <item name="android:textColor">@color/grey_fog_light</item>
+  </style>
 </resources>

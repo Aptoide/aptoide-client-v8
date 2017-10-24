@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -100,8 +101,7 @@
                 android:id="@+id/create_store_name"
                 android:layout_width="match_parent"
                 android:hint="@string/create_store_name_inserted"
-                android:textColorHint="@color/grey_fog_dark"
-                style="@style/Aptoide.TextView.Regular.S"
+                style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
                 />
 
           </android.support.design.widget.TextInputLayout>
@@ -110,7 +110,6 @@
               android:id="@+id/edit_store_input_section"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:hint="@string/create_store_description_title"
               android:visibility="gone"
               tools:visibility="gone"
               >
@@ -119,8 +118,7 @@
                 android:id="@+id/edit_store_description"
                 android:layout_width="match_parent"
                 android:hint="@string/description"
-                android:textColorHint="@color/grey_fog_dark"
-                style="@style/Aptoide.TextView.Regular.S"
+                style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
                 />
 
           </android.support.design.widget.TextInputLayout>
@@ -131,27 +129,29 @@
               android:layout_height="wrap_content"
               android:layout_marginTop="24dp"
               android:orientation="vertical"
+              android:visibility="gone"
               >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/edit_store_title_social_channels"
-                style="Aptoide.TextView.Regular.M"
+                style="@style/Aptoide.TextView.Regular.M.Grey700"
                 />
 
             <RelativeLayout
                 android:id="@+id/edit_store_facebook"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="21dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="20dp"
                 android:orientation="horizontal"
                 >
 
               <ImageView
                   android:id="@+id/edit_store_facebook_icon"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
+                  android:layout_width="16dp"
+                  android:layout_height="16dp"
                   android:layout_centerVertical="true"
                   android:src="@drawable/logo_facebook"
                   />
@@ -188,7 +188,7 @@
                     />
               </RelativeLayout>
 
-              <android.support.design.widget.TextInputLayout
+              <cm.aptoide.pt.view.CustomTextInputLayout
                   android:id="@+id/edit_store_facebook_username_wrapper"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
@@ -198,16 +198,17 @@
                   android:layout_toEndOf="@+id/edit_store_facebook_icon"
                   android:layout_toRightOf="@+id/edit_store_facebook_icon"
                   android:visibility="gone"
+                  app:helperText="Enter Username"
                   >
 
                 <EditText
                     android:id="@+id/edit_store_facebook_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/facebook"
+                    style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
                     />
 
-              </android.support.design.widget.TextInputLayout>
+              </cm.aptoide.pt.view.CustomTextInputLayout>
 
             </RelativeLayout>
 
@@ -215,14 +216,15 @@
                 android:id="@+id/edit_store_twitch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="21dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal"
                 >
 
               <ImageView
                   android:id="@+id/edit_store_twitch_icon"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
+                  android:layout_width="16dp"
+                  android:layout_height="16dp"
                   android:layout_centerVertical="true"
                   android:src="@drawable/logo_twitch"
                   />
@@ -261,7 +263,7 @@
               </RelativeLayout>
 
 
-              <android.support.design.widget.TextInputLayout
+              <cm.aptoide.pt.view.CustomTextInputLayout
                   android:id="@+id/edit_store_twitch_username_wrapper"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
@@ -271,16 +273,17 @@
                   android:layout_toEndOf="@+id/edit_store_twitch_icon"
                   android:layout_toRightOf="@+id/edit_store_twitch_icon"
                   android:visibility="gone"
+                  app:helperText="Enter Username"
                   >
 
                 <EditText
                     android:id="@+id/edit_store_twitch_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/twitch"
+                    style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
                     />
 
-              </android.support.design.widget.TextInputLayout>
+              </cm.aptoide.pt.view.CustomTextInputLayout>
 
             </RelativeLayout>
 
@@ -288,14 +291,15 @@
                 android:id="@+id/edit_store_twitter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="21dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal"
                 >
 
               <ImageView
                   android:id="@+id/edit_store_twitter_icon"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
+                  android:layout_width="16dp"
+                  android:layout_height="16dp"
                   android:layout_centerVertical="true"
                   android:src="@drawable/logo_twitter"
                   />
@@ -333,7 +337,7 @@
               </RelativeLayout>
 
 
-              <android.support.design.widget.TextInputLayout
+              <cm.aptoide.pt.view.CustomTextInputLayout
                   android:id="@+id/edit_store_twitter_username_wrapper"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
@@ -343,16 +347,17 @@
                   android:layout_toEndOf="@+id/edit_store_twitter_icon"
                   android:layout_toRightOf="@+id/edit_store_twitter_icon"
                   android:visibility="gone"
+                  app:helperText="Enter Username"
                   >
 
                 <EditText
                     android:id="@+id/edit_store_twitter_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/twitter"
+                    style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
                     />
 
-              </android.support.design.widget.TextInputLayout>
+              </cm.aptoide.pt.view.CustomTextInputLayout>
 
             </RelativeLayout>
 
@@ -360,14 +365,15 @@
                 android:id="@+id/edit_store_youtube"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="21dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal"
                 >
 
               <ImageView
                   android:id="@+id/edit_store_youtube_icon"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
+                  android:layout_width="16dp"
+                  android:layout_height="16dp"
                   android:layout_centerVertical="true"
                   android:src="@drawable/logo_youtube"
                   />
@@ -406,7 +412,7 @@
               </RelativeLayout>
 
 
-              <android.support.design.widget.TextInputLayout
+              <cm.aptoide.pt.view.CustomTextInputLayout
                   android:id="@+id/edit_store_youtube_username_wrapper"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
@@ -416,16 +422,17 @@
                   android:layout_toEndOf="@+id/edit_store_youtube_icon"
                   android:layout_toRightOf="@+id/edit_store_youtube_icon"
                   android:visibility="gone"
+                  app:helperText="Enter Username"
                   >
 
                 <EditText
                     android:id="@+id/edit_store_youtube_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/youtube"
+                    style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
                     />
 
-              </android.support.design.widget.TextInputLayout>
+              </cm.aptoide.pt.view.CustomTextInputLayout>
 
             </RelativeLayout>
 
