@@ -72,7 +72,8 @@ public class DisplayablesFactory {
       StoreRepository storeRepository, StoreContext storeContext, Context context,
       AptoideAccountManager accountManager, StoreUtilsProxy storeUtilsProxy,
       WindowManager windowManager, Resources resources, InstalledRepository installedRepository,
-      StoreAnalytics storeAnalytics, StoreTabNavigator storeTabNavigator, AptoideNavigationTracker aptoideNavigationTracker) {
+      StoreAnalytics storeAnalytics, StoreTabNavigator storeTabNavigator,
+      AptoideNavigationTracker aptoideNavigationTracker) {
 
     LinkedList<Displayable> displayables = new LinkedList<>();
 
@@ -128,7 +129,8 @@ public class DisplayablesFactory {
 
         case REVIEWS_GROUP:
           return Observable.from(
-              createReviewsGroupDisplayables(widget, windowManager, resources, storeTabNavigator, aptoideNavigationTracker));
+              createReviewsGroupDisplayables(widget, windowManager, resources, storeTabNavigator,
+                  aptoideNavigationTracker));
 
         case MY_STORE_META:
           return Observable.from(
@@ -137,10 +139,12 @@ public class DisplayablesFactory {
         case STORES_RECOMMENDED:
           return Observable.just(
               createRecommendedStores(widget, storeTheme, storeRepository, storeContext, context,
-                  accountManager, storeUtilsProxy, windowManager, resources, storeTabNavigator, aptoideNavigationTracker));
+                  accountManager, storeUtilsProxy, windowManager, resources, storeTabNavigator,
+                  aptoideNavigationTracker));
 
         case COMMENTS_GROUP:
-          return Observable.from(createCommentsGroup(widget, storeTabNavigator, aptoideNavigationTracker));
+          return Observable.from(
+              createCommentsGroup(widget, storeTabNavigator, aptoideNavigationTracker));
 
         case APP_META:
           GetStoreWidgets.WSWidget.Data dataObj = widget.getData();
@@ -204,7 +208,8 @@ public class DisplayablesFactory {
     } else if (Layout.LIST.equals(wsWidget.getData()
         .getLayout())) {
       if (apps.size() > 0) {
-        displayables.add(new StoreGridHeaderDisplayable(wsWidget, storeTabNavigator, aptoideNavigationTracker));
+        displayables.add(
+            new StoreGridHeaderDisplayable(wsWidget, storeTabNavigator, aptoideNavigationTracker));
       }
 
       for (App app : apps) {
@@ -230,7 +235,8 @@ public class DisplayablesFactory {
   private static Observable<Displayable> getMyStores(GetStoreWidgets.WSWidget wsWidget,
       StoreRepository storeRepository, String storeTheme, StoreContext storeContext,
       WindowManager windowManager, Resources resources, Context context,
-      StoreAnalytics storeAnalytics, StoreTabNavigator storeTabNavigator, AptoideNavigationTracker aptoideNavigationTracker) {
+      StoreAnalytics storeAnalytics, StoreTabNavigator storeTabNavigator,
+      AptoideNavigationTracker aptoideNavigationTracker) {
     return loadLocalSubscribedStores(storeRepository).map(stores -> {
       List<Displayable> tmp = new ArrayList<>(stores.size());
       int maxStoresToShow = stores.size();
@@ -270,7 +276,8 @@ public class DisplayablesFactory {
 
   private static Displayable getStores(GetStoreWidgets.WSWidget wsWidget, String storeTheme,
       StoreContext storeContext, WindowManager windowManager, Resources resources, Context context,
-      StoreAnalytics storeAnalytics, StoreTabNavigator storeTabNavigator, AptoideNavigationTracker aptoideNavigationTracker) {
+      StoreAnalytics storeAnalytics, StoreTabNavigator storeTabNavigator,
+      AptoideNavigationTracker aptoideNavigationTracker) {
     Object viewObject = wsWidget.getViewObject();
     ListStores listStores = (ListStores) viewObject;
     if (listStores == null) {
@@ -339,7 +346,8 @@ public class DisplayablesFactory {
   }
 
   private static List<Displayable> createReviewsGroupDisplayables(GetStoreWidgets.WSWidget wsWidget,
-      WindowManager windowManager, Resources resources, StoreTabNavigator storeTabNavigator, AptoideNavigationTracker aptoideNavigationTracker) {
+      WindowManager windowManager, Resources resources, StoreTabNavigator storeTabNavigator,
+      AptoideNavigationTracker aptoideNavigationTracker) {
     List<Displayable> displayables = new LinkedList<>();
 
     ListFullReviews reviewsList = (ListFullReviews) wsWidget.getViewObject();
@@ -348,7 +356,8 @@ public class DisplayablesFactory {
         && reviewsList.getDataList()
         .getList()
         .size() > 0) {
-      displayables.add(new StoreGridHeaderDisplayable(wsWidget, storeTabNavigator, aptoideNavigationTracker));
+      displayables.add(
+          new StoreGridHeaderDisplayable(wsWidget, storeTabNavigator, aptoideNavigationTracker));
       displayables.add(createReviewsDisplayables(reviewsList, windowManager, resources));
     }
 
@@ -375,7 +384,8 @@ public class DisplayablesFactory {
   private static Displayable createRecommendedStores(GetStoreWidgets.WSWidget wsWidget,
       String storeTheme, StoreRepository storeRepository, StoreContext storeContext,
       Context context, AptoideAccountManager accountManager, StoreUtilsProxy storeUtilsProxy,
-      WindowManager windowManager, Resources resources, StoreTabNavigator storeTabNavigator, AptoideNavigationTracker aptoideNavigationTracker) {
+      WindowManager windowManager, Resources resources, StoreTabNavigator storeTabNavigator,
+      AptoideNavigationTracker aptoideNavigationTracker) {
     ListStores listStores = (ListStores) wsWidget.getViewObject();
     if (listStores == null) {
       return new EmptyDisplayable();
@@ -410,7 +420,8 @@ public class DisplayablesFactory {
     Pair<ListComments, BaseRequestWithStore.StoreCredentials> data =
         (Pair<ListComments, BaseRequestWithStore.StoreCredentials>) wsWidget.getViewObject();
     ListComments comments = data.first;
-    displayables.add(new StoreGridHeaderDisplayable(wsWidget, storeTabNavigator, aptoideNavigationTracker));
+    displayables.add(
+        new StoreGridHeaderDisplayable(wsWidget, storeTabNavigator, aptoideNavigationTracker));
     if (comments != null
         && comments.getDataList() != null
         && comments.getDataList()

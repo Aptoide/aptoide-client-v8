@@ -29,6 +29,10 @@ public class GetAdsFragment extends StoreTabGridRecyclerFragment {
 
   private AdsRepository adsRepository;
 
+  public static Fragment newInstance() {
+    return new GetAdsFragment();
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     final AptoideAccountManager accountManager =
@@ -51,9 +55,5 @@ public class GetAdsFragment extends StoreTabGridRecyclerFragment {
               (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
               getContext().getResources()));
         });
-  }
-
-  public static Fragment newInstance() {
-    return new GetAdsFragment();
   }
 }

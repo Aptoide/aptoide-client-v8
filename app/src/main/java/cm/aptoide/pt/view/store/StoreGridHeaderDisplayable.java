@@ -10,8 +10,8 @@ public class StoreGridHeaderDisplayable extends Displayable {
 
   private final GetStoreWidgets.WSWidget wsWidget;
   private final StoreTabNavigator storeTabNavigator;
-  private AptoideNavigationTracker aptoideNavigationTracker;
   private final Model model;
+  private AptoideNavigationTracker aptoideNavigationTracker;
 
   // this constructor is necessary due to reflection code that generates displayables. that code
   // needs to go as this.
@@ -20,7 +20,8 @@ public class StoreGridHeaderDisplayable extends Displayable {
   }
 
   public StoreGridHeaderDisplayable(GetStoreWidgets.WSWidget wsWidget, String storeTheme,
-      String tag, StoreContext storeContext, StoreTabNavigator storeTabNavigator, AptoideNavigationTracker aptoideNavigationTracker) {
+      String tag, StoreContext storeContext, StoreTabNavigator storeTabNavigator,
+      AptoideNavigationTracker aptoideNavigationTracker) {
     this.model = new Model(storeTheme, tag, storeContext);
     this.wsWidget = wsWidget;
     this.storeTabNavigator = storeTabNavigator;
@@ -50,6 +51,10 @@ public class StoreGridHeaderDisplayable extends Displayable {
 
   public Model getModel() {
     return model;
+  }
+
+  public AptoideNavigationTracker getAptoideNavigationTracker() {
+    return aptoideNavigationTracker;
   }
 
   public static class Model {
@@ -85,9 +90,5 @@ public class StoreGridHeaderDisplayable extends Displayable {
     public void setMoreVisible(boolean moreVisible) {
       this.moreVisible = moreVisible;
     }
-  }
-
-  public AptoideNavigationTracker getAptoideNavigationTracker() {
-    return aptoideNavigationTracker;
   }
 }

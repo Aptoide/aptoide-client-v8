@@ -75,7 +75,8 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
         .concatMapEager(wsWidget -> DisplayablesFactory.parse(wsWidget, storeTheme, storeRepository,
             storeContext, getContext(), accountManager, storeUtilsProxy,
             (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
-            getContext().getResources(), installedRepository, storeAnalytics, storeTabNavigator, aptoideNavigationTracker))
+            getContext().getResources(), installedRepository, storeAnalytics, storeTabNavigator,
+            aptoideNavigationTracker))
         .toList()
         .first();
   }

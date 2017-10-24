@@ -6,6 +6,7 @@
 package cm.aptoide.pt.view.store;
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
@@ -109,6 +111,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private String marketName;
   private String defaultTheme;
   private Runnable registerViewpagerCurrentItem;
+  private SearchBuilder searchBuilder;
 
   public static StoreFragment newInstance(long userId, String storeTheme, OpenType openType) {
     return newInstance(userId, storeTheme, null, openType);
@@ -158,27 +161,36 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    defaultTheme = ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
-    tokenInvalidator =
-        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
-    storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-        ((AptoideApplication) getContext().getApplicationContext()
-            .getApplicationContext()).getDatabase(), cm.aptoide.pt.database.realm.Store.class));
-    accountManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-    bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
+    defaultTheme = appPreferences.getDefaultThemeName();
+    tokenInvalidator = application.getTokenInvalidator();
+    storeCredentialsProvider = new StoreCredentialsProviderImpl(
+        AccessorFactory.getAccessorFor(application.getDatabase(),
+            cm.aptoide.pt.database.realm.Store.class));
+    accountManager = application.getAccountManager();
+    bodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();
+    httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     Analytics analytics = Analytics.getInstance();
     timelineAnalytics = new TimelineAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        new NotificationAnalytics(httpClient, analytics), aptoideNavigationTracker);
+        application.getDefaultSharedPreferences(), new NotificationAnalytics(httpClient, analytics),
+        aptoideNavigationTracker);
     storeAnalytics = new StoreAnalytics(AppEventsLogger.newLogger(getContext()), analytics);
-    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
+    marketName = appPreferences.getMarketName();
     shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);
+
+    final SearchManager searchManager =
+        (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
+
+    final SearchNavigator searchNavigator = new SearchNavigator(getFragmentNavigator(), storeName,
+        appPreferences.getDefaultStoreName());
+
+    searchBuilder = new SearchBuilder(searchManager, searchNavigator);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -334,11 +346,11 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_search, menu);
-    String defaultStore = getDefaultStore();
-    SearchBuilder searchBuilder =
-        new SearchBuilder(menu.findItem(R.id.action_search), getActivity(),
-            new SearchNavigator(getFragmentNavigator(), storeName, defaultStore));
-    searchBuilder.validateAndAttachSearch();
+    if (searchBuilder != null && searchBuilder.isValid()) {
+      searchBuilder.attachSearch(getContext(), menu.findItem(R.id.action_search));
+    } else {
+      menu.removeItem(R.id.action_search);
+    }
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {

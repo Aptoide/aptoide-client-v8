@@ -40,6 +40,10 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment {
     return fragment;
   }
 
+  public static Fragment newInstance() {
+    return new MyStoresFragment();
+  }
+
   @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {
     return requestFactoryCdnPool.newStoreWidgets(url)
         .observe(refresh)
@@ -112,9 +116,5 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment {
     // remote stores
     //
     super.load(false, true, null);
-  }
-
-  public static Fragment newInstance() {
-    return new MyStoresFragment();
   }
 }
