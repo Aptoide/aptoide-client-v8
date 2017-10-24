@@ -177,13 +177,8 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
                 File ss = new File(screenShotPath);
                 uris.add(getUriFromFile(ss));
               }
-              File logs;
-              if (cardId != null) {
-                logs = AptoideUtils.SystemU.readLogs(cachePath, LOGS_FILE_NAME, cardId);
-              } else {
-                logs = AptoideUtils.SystemU.readLogs(cachePath, LOGS_FILE_NAME,
-                    aptoideNavigationTracker.getPrettyScreenHistory());
-              }
+              File logs = AptoideUtils.SystemU.readLogs(cachePath, LOGS_FILE_NAME,
+                  cardId != null ? cardId : aptoideNavigationTracker.getPrettyScreenHistory());
 
               if (logs != null) {
                 uris.add(getUriFromFile(logs));
