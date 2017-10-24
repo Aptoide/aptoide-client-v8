@@ -335,12 +335,8 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
       schema.get("Notification")
           .addField("processed", boolean.class)
           .transform(notification -> notification.set("processed", true));
+
       realm.delete("PaymentConfirmation");
-      schema.get("PaymentConfirmation")
-          .renameField("sellerId", "merchantName")
-          .renameField("payerId", "customerId")
-          .removeField("productId")
-          .addField("productId", long.class);
 
       oldVersion++;
     }

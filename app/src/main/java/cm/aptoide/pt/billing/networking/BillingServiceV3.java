@@ -37,12 +37,14 @@ public class BillingServiceV3 implements BillingService {
   private final Resources resources;
   private final PaymentService paymentService;
   private final BillingIdManager billingIdManager;
+  private final int currentAPILevel;
+  private final int serviceMinimumAPILevel;
 
   public BillingServiceV3(BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, PurchaseMapperV3 purchaseMapper,
       ProductMapperV3 productMapper, Resources resources, PaymentService paymentService,
-      BillingIdManager billingIdManager) {
+      BillingIdManager billingIdManager, int currentAPILevel, int serviceMinimumAPILevel) {
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
@@ -53,10 +55,15 @@ public class BillingServiceV3 implements BillingService {
     this.resources = resources;
     this.paymentService = paymentService;
     this.billingIdManager = billingIdManager;
+    this.currentAPILevel = currentAPILevel;
+    this.serviceMinimumAPILevel = serviceMinimumAPILevel;
   }
 
   @Override public Single<List<PaymentService>> getPaymentServices() {
-    return Single.just(Collections.singletonList(paymentService));
+    if (currentAPILevel >= serviceMinimumAPILevel) {
+      return Single.just(Collections.singletonList(paymentService));
+    }
+    return Single.just(Collections.emptyList());
   }
 
   @Override public Single<Merchant> getMerchant(String merchantName) {

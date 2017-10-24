@@ -77,6 +77,7 @@ public class NotificationsCleaner {
     return Observable.from(notifications)
         .map(notification -> notification.getKey())
         .toList()
+        .filter(list -> !list.isEmpty())
         .flatMapCompletable(
             keys -> notificationAccessor.delete(keys.toArray(new String[keys.size()])))
         .toCompletable();

@@ -11,7 +11,7 @@ import cm.aptoide.pt.billing.exception.PaymentFailureException;
 import cm.aptoide.pt.billing.exception.ServiceNotAuthorizedException;
 import cm.aptoide.pt.billing.payment.PaymentService;
 import cm.aptoide.pt.billing.payment.PaymentServiceSelector;
-import cm.aptoide.pt.billing.payment.TokenPaymentService;
+import cm.aptoide.pt.billing.payment.AdyenPaymentService;
 import cm.aptoide.pt.billing.product.Product;
 import cm.aptoide.pt.billing.purchase.Purchase;
 import cm.aptoide.pt.billing.purchase.PurchaseFactory;
@@ -81,8 +81,8 @@ public class Billing {
   public Completable processPayment(String sku, String payload) {
     return getSelectedService().flatMap(service -> getProduct(sku).flatMap(product -> {
 
-      if (service instanceof TokenPaymentService) {
-        return ((TokenPaymentService) service).getToken()
+      if (service instanceof AdyenPaymentService) {
+        return ((AdyenPaymentService) service).getToken()
             .flatMap(token -> transactionRepository.createTransaction(product.getProductId(),
                 service.getId(), payload, token));
       }

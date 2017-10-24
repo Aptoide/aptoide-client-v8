@@ -839,7 +839,8 @@ public abstract class AptoideApplication extends Application {
               getTokenInvalidator(), getSyncScheduler(), getInAppBillingSerializer(),
               getBodyInterceptorPoolV7(), getAccountSettingsBodyInterceptorPoolV7(),
               new HashMap<>(), WebService.getDefaultConverter(), CrashReport.getInstance(),
-              getAdyen(), getPurchaseFactory());
+              getAdyen(), getPurchaseFactory(), Build.VERSION_CODES.JELLY_BEAN,
+              Build.VERSION_CODES.JELLY_BEAN);
     }
     return billingPool;
   }

@@ -7,8 +7,8 @@ package cm.aptoide.pt.billing.networking;
 
 import cm.aptoide.pt.billing.BillingIdManager;
 import cm.aptoide.pt.billing.payment.Adyen;
+import cm.aptoide.pt.billing.payment.AdyenPaymentService;
 import cm.aptoide.pt.billing.payment.PaymentService;
-import cm.aptoide.pt.billing.payment.TokenPaymentService;
 import cm.aptoide.pt.crashreports.CrashLogger;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetServicesRequest;
 import java.util.ArrayList;
@@ -26,11 +26,18 @@ public class PaymentServiceMapper {
   private final CrashLogger crashLogger;
   private final BillingIdManager billingIdManager;
   private final Adyen adyen;
+  private final int currentAPILevel;
+  private final int minimumAPILevelAdyen;
+  private final int minimumAPILevelPayPal;
 
-  public PaymentServiceMapper(CrashLogger crashLogger, BillingIdManager billingIdManager, Adyen adyen) {
+  public PaymentServiceMapper(CrashLogger crashLogger, BillingIdManager billingIdManager,
+      Adyen adyen, int currentAPILevel, int minimumAPILevelAdyen, int minimumAPILevelPayPal) {
     this.crashLogger = crashLogger;
     this.billingIdManager = billingIdManager;
     this.adyen = adyen;
+    this.currentAPILevel = currentAPILevel;
+    this.minimumAPILevelAdyen = minimumAPILevelAdyen;
+    this.minimumAPILevelPayPal = minimumAPILevelPayPal;
   }
 
   public List<PaymentService> map(List<GetServicesRequest.ResponseBody.Service> responseList) {
@@ -49,6 +56,13 @@ public class PaymentServiceMapper {
   private PaymentService map(GetServicesRequest.ResponseBody.Service response) {
     switch (response.getName()) {
       case PAYPAL:
+        if (currentAPILevel >= minimumAPILevelPayPal) {
+          return new PaymentService(billingIdManager.generateServiceId(response.getId()),
+              response.getName(), response.getLabel(), response.getDescription(),
+              response.getIcon());
+        }
+        throw new IllegalArgumentException(
+            "PayPal not supported in Android API lower than " + minimumAPILevelPayPal);
       case BOA_COMPRA:
       case BOA_COMPRA_GOLD:
       case MOL_POINTS:
@@ -56,9 +70,13 @@ public class PaymentServiceMapper {
         return new PaymentService(billingIdManager.generateServiceId(response.getId()),
             response.getName(), response.getLabel(), response.getDescription(), response.getIcon());
       case ADYEN:
-        return new TokenPaymentService(billingIdManager.generateServiceId(response.getId()),
-            response.getName(), response.getLabel(), response.getDescription(), response.getIcon(),
-            adyen);
+        if (currentAPILevel >= minimumAPILevelAdyen) {
+          return new AdyenPaymentService(billingIdManager.generateServiceId(response.getId()),
+              response.getName(), response.getLabel(), response.getDescription(),
+              response.getIcon(), adyen);
+        }
+        throw new IllegalArgumentException(
+            "Adyen not supported in Android API lower than " + minimumAPILevelAdyen);
       default:
         throw new IllegalArgumentException("Payment service not supported: " + response.getName());
     }

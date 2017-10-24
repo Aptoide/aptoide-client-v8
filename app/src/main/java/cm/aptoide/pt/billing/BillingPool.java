@@ -2,46 +2,47 @@ package cm.aptoide.pt.billing;
 
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.os.Build;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.billing.authorization.AuthorizationFactory;
-import cm.aptoide.pt.billing.networking.AuthorizationMapperV3;
-import cm.aptoide.pt.billing.networking.AuthorizationMapperV7;
 import cm.aptoide.pt.billing.authorization.AuthorizationPersistence;
 import cm.aptoide.pt.billing.authorization.AuthorizationRepository;
-import cm.aptoide.pt.billing.networking.AuthorizationServiceV3;
-import cm.aptoide.pt.billing.networking.AuthorizationServiceV7;
 import cm.aptoide.pt.billing.authorization.LocalIdGenerator;
-import cm.aptoide.pt.billing.persistence.RealmAuthorizationMapper;
-import cm.aptoide.pt.billing.persistence.RealmAuthorizationPersistence;
 import cm.aptoide.pt.billing.customer.AccountCustomer;
 import cm.aptoide.pt.billing.external.ExternalBillingSerializer;
+import cm.aptoide.pt.billing.networking.AuthorizationMapperV3;
+import cm.aptoide.pt.billing.networking.AuthorizationMapperV7;
+import cm.aptoide.pt.billing.networking.AuthorizationServiceV3;
+import cm.aptoide.pt.billing.networking.AuthorizationServiceV7;
 import cm.aptoide.pt.billing.networking.BillingIdManagerV3;
 import cm.aptoide.pt.billing.networking.BillingIdManagerV7;
 import cm.aptoide.pt.billing.networking.BillingServiceV3;
 import cm.aptoide.pt.billing.networking.BillingServiceV7;
-import cm.aptoide.pt.billing.payment.Adyen;
-import cm.aptoide.pt.billing.payment.PaymentService;
 import cm.aptoide.pt.billing.networking.PaymentServiceMapper;
-import cm.aptoide.pt.billing.payment.PaymentServiceSelector;
-import cm.aptoide.pt.billing.payment.SharedPreferencesPaymentServiceSelector;
 import cm.aptoide.pt.billing.networking.ProductMapperV3;
 import cm.aptoide.pt.billing.networking.ProductMapperV7;
-import cm.aptoide.pt.billing.purchase.Base64PurchaseTokenDecoder;
-import cm.aptoide.pt.billing.purchase.PurchaseFactory;
 import cm.aptoide.pt.billing.networking.PurchaseMapperV3;
 import cm.aptoide.pt.billing.networking.PurchaseMapperV7;
-import cm.aptoide.pt.billing.sync.BillingSyncFactory;
-import cm.aptoide.pt.billing.sync.BillingSyncManager;
-import cm.aptoide.pt.billing.persistence.InMemoryTransactionPersistence;
-import cm.aptoide.pt.billing.transaction.TransactionFactory;
 import cm.aptoide.pt.billing.networking.TransactionMapperV3;
 import cm.aptoide.pt.billing.networking.TransactionMapperV7;
+import cm.aptoide.pt.billing.networking.TransactionServiceV3;
+import cm.aptoide.pt.billing.networking.TransactionServiceV7;
+import cm.aptoide.pt.billing.payment.Adyen;
+import cm.aptoide.pt.billing.payment.PaymentService;
+import cm.aptoide.pt.billing.payment.PaymentServiceSelector;
+import cm.aptoide.pt.billing.payment.SharedPreferencesPaymentServiceSelector;
+import cm.aptoide.pt.billing.persistence.InMemoryTransactionPersistence;
+import cm.aptoide.pt.billing.persistence.RealmAuthorizationMapper;
+import cm.aptoide.pt.billing.persistence.RealmAuthorizationPersistence;
+import cm.aptoide.pt.billing.purchase.Base64PurchaseTokenDecoder;
+import cm.aptoide.pt.billing.purchase.PurchaseFactory;
+import cm.aptoide.pt.billing.sync.BillingSyncFactory;
+import cm.aptoide.pt.billing.sync.BillingSyncManager;
+import cm.aptoide.pt.billing.transaction.TransactionFactory;
 import cm.aptoide.pt.billing.transaction.TransactionPersistence;
 import cm.aptoide.pt.billing.transaction.TransactionRepository;
 import cm.aptoide.pt.billing.transaction.TransactionService;
-import cm.aptoide.pt.billing.networking.TransactionServiceV3;
-import cm.aptoide.pt.billing.networking.TransactionServiceV7;
 import cm.aptoide.pt.crashreports.CrashLogger;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.Database;
@@ -79,6 +80,8 @@ public class BillingPool {
   private final CrashLogger crashLogger;
   private final Adyen adyen;
   private final PurchaseFactory purchaseFactory;
+  private final int minimumAPILevelPayPal;
+  private final int minimumAPILevelAdyen;
 
   private BillingSyncScheduler billingSyncSchedulerV7;
   private AuthorizationRepository inAppAuthorizationRepository;
@@ -112,7 +115,8 @@ public class BillingPool {
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> accountSettingsBodyInterceptorPoolV7,
       HashMap<String, Billing> poll, Converter.Factory converterFactory, CrashReport crashLogger,
-      Adyen adyen, PurchaseFactory purchaseFactory) {
+      Adyen adyen, PurchaseFactory purchaseFactory, int minimumAPILevelPayPal,
+      int minimumAPILevelAdyen) {
     this.sharedPreferences = sharedPreferences;
     this.pool = poll;
     this.bodyInterceptorV3 = bodyInterceptorV3;
@@ -130,6 +134,8 @@ public class BillingPool {
     this.crashLogger = crashLogger;
     this.adyen = adyen;
     this.purchaseFactory = purchaseFactory;
+    this.minimumAPILevelPayPal = minimumAPILevelPayPal;
+    this.minimumAPILevelAdyen = minimumAPILevelAdyen;
   }
 
   public Billing get(String merchantName) {
@@ -184,7 +190,8 @@ public class BillingPool {
               sharedPreferences, new PurchaseMapperV3(purchaseFactory),
               new ProductMapperV3(getBillingIdManagerV3()), resources,
               new PaymentService(getBillingIdManagerV3().generateServiceId(1),
-                  PaymentServiceMapper.PAYPAL, "PayPal", null, ""), getBillingIdManagerV3());
+                  PaymentServiceMapper.PAYPAL, "PayPal", null, ""), getBillingIdManagerV3(),
+              Build.VERSION.SDK_INT, minimumAPILevelPayPal);
     }
     return billingServiceV3;
   }
@@ -196,7 +203,8 @@ public class BillingPool {
               tokenInvalidator, sharedPreferences,
               new PurchaseMapperV7(externalBillingSerializer, getBillingIdManagerV7(),
                   purchaseFactory), new ProductMapperV7(getBillingIdManagerV7()), packageRepository,
-              new PaymentServiceMapper(crashLogger, getBillingIdManagerV7(), adyen),
+              new PaymentServiceMapper(crashLogger, getBillingIdManagerV7(), adyen,
+                  Build.VERSION.SDK_INT, minimumAPILevelAdyen, minimumAPILevelPayPal),
               getBillingIdManagerV7(), purchaseFactory);
     }
     return billingServiceV7;
