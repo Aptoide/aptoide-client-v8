@@ -187,6 +187,11 @@ public class ShareAptoideFragment extends BackButtonFragment implements ShareApt
     ShowMessage.asSnack(this, R.string.spotandshare_message_error_create_group);
   }
 
+  @Override public void navigateBackWithStateLoss() {
+    getFragmentNavigator().navigateToAllowingStateLoss(SpotAndShareMainFragment.newInstance(),
+        true);
+  }
+
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName());

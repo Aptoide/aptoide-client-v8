@@ -22,4 +22,6 @@ public interface ShareAptoideView extends View {
   void showHotspotCreationTimeoutError();
 
   void showGeneralHotspotError();
+
+  void navigateBackWithStateLoss();
 }

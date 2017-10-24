@@ -43,13 +43,14 @@ public class ShareAptoidePresenter implements Presenter {
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .delay(1, TimeUnit.SECONDS)
         .flatMap(__ -> {
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return permissionManager.requestLocationAndExternalStoragePermission(permissionService)
                 .flatMap(accessToLocation -> permissionManager.requestWriteSettingsPermission(
                     permissionService))
                 .flatMap(__1 -> permissionManager.requestLocationEnabling(permissionService))
-                .doOnError(throwable -> view.navigateBack());
+                .doOnError(throwable -> view.navigateBackWithStateLoss());
           } else {
             return permissionManager.requestLocationEnabling(permissionService);
           }
