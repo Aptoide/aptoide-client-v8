@@ -52,6 +52,7 @@ public class SpotAndShareWaitingToSendPresenter implements Presenter {
     if (shouldCreateGroup) {
       view.getLifecycle()
           .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+          .delay(1, TimeUnit.SECONDS)
           .observeOn(AndroidSchedulers.mainThread())
           .flatMap(__ -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

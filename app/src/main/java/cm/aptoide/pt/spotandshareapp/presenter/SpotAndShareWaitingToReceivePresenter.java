@@ -9,6 +9,7 @@ import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareWaitingToReceiveView;
+import java.util.concurrent.TimeUnit;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -37,6 +38,24 @@ public class SpotAndShareWaitingToReceivePresenter implements Presenter {
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.backButtonEvent())
+        .doOnNext(click -> view.showExitWarning())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> crashReport.log(error));
+
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.exitEvent())
+        .doOnNext(clicked -> leaveGroup())
+        .doOnNext(__ -> view.navigateBack())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> crashReport.log(error));
+
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .delay(1, TimeUnit.SECONDS)
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(__ -> {
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -53,23 +72,6 @@ public class SpotAndShareWaitingToReceivePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
-
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.backButtonEvent())
-        .doOnNext(click -> view.showExitWarning())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> crashReport.log(error));
-
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.exitEvent())
-        .doOnNext(clicked -> leaveGroup())
-        .doOnNext(__ -> view.navigateBack())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> crashReport.log(error));
   }
 
   private void leaveGroup() {
