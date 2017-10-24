@@ -61,7 +61,7 @@ public class EspressoTests {
   private final String LOGINEMAIL = "jose.messejana@aptoide.com";
   private final String PASS = "aptoide1234";
   private final String LIGHT_APP_TO_SEARCH = "Cut the rope";
-  private final String APP_TO_SEARCH = "Hearthstone";
+  private final String APP_TO_SEARCH = "Facebook";
   private final String MATURE_APP = "Roullete Sex (Roleta do Sexo)";
   private final String MATURE_SEARCH = "kaoiproduct.roulletesexfree";
   private final int WAIT_TIME = 550;
@@ -69,7 +69,7 @@ public class EspressoTests {
   private final int NUMBER_OF_RETRIES = 3;
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
-//  @Rule public RetryTestRule retry = new RetryTestRule(NUMBER_OF_RETRIES);
+  @Rule public RetryTestRule retry = new RetryTestRule(NUMBER_OF_RETRIES);
   private String SIGNUPEMAILTEST = "";
   private String STORENAME = "a";
   private int nonerrormessagesphotos = 0;
@@ -290,7 +290,7 @@ public class EspressoTests {
   @Test public void landscapeAppView() throws InterruptedException {
     UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
     Activity activity = mActivityRule.getActivity();
-    goToApp(APP_TO_SEARCH, 0);
+    goToApp(APP_TO_SEARCH, 1);
     cancelIfDownloading();
     Thread.sleep(WAIT_TIME);
     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -365,7 +365,7 @@ public class EspressoTests {
 
   @Test public void download() throws InterruptedException {
     UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-    goToApp(APP_TO_SEARCH, 0);
+    goToApp(APP_TO_SEARCH, 1);
     cancelIfDownloading();
     while (!hasOpenedAppView()) {
       Thread.sleep(WAIT_TIME);
@@ -432,6 +432,8 @@ public class EspressoTests {
     if(nonerrormessagesphotos != 1){
       throw new IllegalStateException("Unexpected number of error messages displayed"); //if it has different than 1 means that one of the photos didn't display the error or the accepted photo displayed an error
     }
+    onView(withId(R.id.theme_selector)).perform(swipeUp());
+    onView(withId(R.id.theme_selector)).perform(swipeUp());
     onView(withId(R.id.create_store_action)).perform(click());
   }
 
