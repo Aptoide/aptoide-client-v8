@@ -1,6 +1,5 @@
 package cm.aptoide.pt.view.app;
 
-import java.util.List;
 import rx.Single;
 
 /**
@@ -15,11 +14,11 @@ public class AppCenter {
     this.appService = appRepository;
   }
 
-  public Single<List<Application>> loadNextApps(long storeId) {
+  public Single<AppsList> loadNextApps(long storeId) {
     return appService.loadNextApps(storeId);
   }
 
-  public Single<List<Application>> loadFreshApps(long storeId) {
+  public Single<AppsList> loadFreshApps(long storeId) {
     return appService.loadFreshApps(storeId);
   }
 
@@ -27,7 +26,7 @@ public class AppCenter {
     appService.setLimit(limit);
   }
 
-  public Single<List<Application>> getApps(long storeId) {
+  public Single<AppsList> getApps(long storeId) {
     return appService.getApplications(storeId);
   }
 }

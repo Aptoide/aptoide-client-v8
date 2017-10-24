@@ -1,13 +1,13 @@
 package cm.aptoide.pt.view.app;
 
-import android.os.Bundle;
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
-import rx.Observable;
 import rx.Scheduler;
+import rx.Single;
 
 /**
  * Created by trinkes on 17/10/2017.
@@ -40,6 +40,36 @@ public class ListStoreAppsPresenter implements Presenter {
     onCreateHandleBottomReached();
 
     onCreateHandleRefresh();
+
+    onCreateHandleRetry();
+  }
+
+  private void onCreateHandleRetry() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(viewCreated -> view.getRetryEvent()
+            .observeOn(viewScheduler)
+            .doOnNext(bottom -> view.showStartingLoading())
+            .flatMapSingle(reachesBottom -> loadShowNextApps())
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(notificationUrl -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
+  @NonNull private Single<AppsList> loadShowNextApps() {
+    return appCenter.loadNextApps(storeId)
+        .observeOn(viewScheduler)
+        .doOnSuccess(applications -> {
+          if (applications.hasErrors()) {
+            handleError(applications.getError());
+          } else {
+            if (!applications.isLoading()) {
+              view.addApps(applications.getList());
+              view.hideLoading();
+            }
+          }
+        });
   }
 
   private void onCreateHandleRefresh() {
@@ -49,8 +79,10 @@ public class ListStoreAppsPresenter implements Presenter {
             .flatMapSingle(refresh -> appCenter.loadFreshApps(storeId)
                 .observeOn(viewScheduler)
                 .doOnSuccess(applications -> {
-                  view.setApps(applications);
-                  view.hideRefreshLoading();
+                  if (!applications.isLoading()) {
+                    view.setApps(applications.getList());
+                    view.hideRefreshLoading();
+                  }
                 })
                 .retry()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -64,8 +96,9 @@ public class ListStoreAppsPresenter implements Presenter {
         .flatMapSingle(lifecycleEvent -> appCenter.getApps(storeId)
             .observeOn(viewScheduler)
             .doOnSuccess(applications -> {
-              view.setApps(applications);
-              view.hideStartingLoading();
+              if (!applications.isLoading()) {
+                view.setApps(applications.getList());
+              }
             }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
@@ -78,26 +111,22 @@ public class ListStoreAppsPresenter implements Presenter {
         .flatMap(viewCreated -> view.reachesBottom()
             .observeOn(viewScheduler)
             .doOnNext(bottom -> view.showLoading())
-            .flatMapSingle(reachesBottom -> appCenter.loadNextApps(storeId)
-                .observeOn(viewScheduler)
-                .doOnSuccess(applications -> {
-                  view.addApps(applications);
-                  view.hideLoading();
-                })
-                .retryWhen(observable -> shouldRetry(observable))))
+            .flatMapSingle(reachesBottom -> loadShowNextApps())
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, throwable -> crashReport.log(throwable));
   }
 
-  private Observable<Object> shouldRetry(Observable<? extends Throwable> observable) {
-    return observable.flatMap(throwable -> {
-      if (throwable instanceof AlreadyLoadingException) {
-        return Observable.just(null);
-      } else {
-        return Observable.error(throwable);
-      }
-    });
+  private void handleError(AppsList.Error error) {
+    switch (error) {
+      case NETWORK:
+        view.showNetworkError();
+        break;
+      case GENERIC:
+        view.showGenericError();
+        break;
+    }
   }
 
   private void onCreateHandleAppClicks() {

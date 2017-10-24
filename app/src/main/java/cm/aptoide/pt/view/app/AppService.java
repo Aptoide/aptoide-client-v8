@@ -1,6 +1,8 @@
 package cm.aptoide.pt.view.app;
 
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
+import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
@@ -45,9 +47,9 @@ public class AppService {
     this.limit = limit;
   }
 
-  public Single<List<Application>> loadNextApps(long storeId, boolean bypassCache) {
+  public Single<AppsList> loadNextApps(long storeId, boolean bypassCache) {
     if (loading) {
-      return Single.error(new AlreadyLoadingException());
+      return Single.just(new AppsList(true));
     }
     ListAppsRequest.Body body =
         new ListAppsRequest.Body(storeCredentialsProvider.get(storeId), limit, sharedPreferences);
@@ -56,9 +58,12 @@ public class AppService {
     return new ListAppsRequest(body, bodyInterceptor, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences).observe(bypassCache)
         .doOnSubscribe(() -> loading = true)
-        .doOnNext(listApps -> loading = false)
+        .doOnUnsubscribe(() -> loading = false)
+        .doOnTerminate(() -> loading = false)
         .flatMap(listApps -> mapListApps(listApps))
-        .toSingle();
+        .toSingle()
+        .map(applications -> new AppsList(applications, false))
+        .onErrorReturn(throwable -> createErrorAppsList(throwable));
   }
 
   private Observable<List<Application>> mapListApps(ListApps listApps) {
@@ -79,16 +84,26 @@ public class AppService {
     }
   }
 
-  public Single<List<Application>> loadFreshApps(long storeId) {
+  public Single<AppsList> loadFreshApps(long storeId) {
     offset = initialOffset;
     return loadNextApps(storeId, true);
   }
 
-  public Single<List<Application>> loadNextApps(long storeId) {
+  public Single<AppsList> loadNextApps(long storeId) {
     return loadNextApps(storeId, false);
   }
 
   public void setLimit(int limit) {
     this.limit = limit;
+  }
+
+  @NonNull private AppsList createErrorAppsList(Throwable throwable) {
+    if (throwable instanceof AlreadyLoadingException) {
+      return new AppsList(true);
+    } else if (throwable instanceof NoNetworkConnectionException) {
+      return new AppsList(AppsList.Error.NETWORK);
+    } else {
+      return new AppsList(AppsList.Error.GENERIC);
+    }
   }
 }
