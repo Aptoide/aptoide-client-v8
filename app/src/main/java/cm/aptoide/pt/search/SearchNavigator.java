@@ -12,25 +12,22 @@ public class SearchNavigator {
 
   private final FragmentNavigator navigator;
   private final String storeName;
-  private final String defaultStoreName;
+  private String defaultStore;
 
-  public SearchNavigator(FragmentNavigator navigator, String defaultStoreName) {
-    this(navigator, "", defaultStoreName);
+  public SearchNavigator(FragmentNavigator navigator, String defaultStore) {
+    this(navigator, "", defaultStore);
   }
 
-  public SearchNavigator(FragmentNavigator navigator, String storeName, String defaultStoreName) {
+  public SearchNavigator(FragmentNavigator navigator, String storeName, String defaultStore) {
     this.navigator = navigator;
     this.storeName = storeName;
-    this.defaultStoreName = defaultStoreName;
+    this.defaultStore = defaultStore;
   }
 
   public void goToOtherVersions(String name, String icon, String packageName) {
-    navigator.navigateTo(OtherVersionsFragment.newInstance(name, icon, packageName), true);
-  }
-
-  public void goToOtherVersions(String name, String icon, String packageName, String defaultStore) {
-    navigator.navigateTo(OtherVersionsFragment.newInstance(name, icon, packageName, defaultStore),
-        true);
+    final Fragment newOtherVersionsFragment =
+        OtherVersionsFragment.newInstance(name, icon, packageName, defaultStore);
+    navigator.navigateTo(newOtherVersionsFragment, true);
   }
 
   public void navigate(String query) {
@@ -39,9 +36,9 @@ public class SearchNavigator {
 
   private Fragment resolveFragment(String query) {
     if (storeName != null && storeName.length() > 0) {
-      return SearchResultFragment.newInstance(query, storeName, defaultStoreName);
+      return SearchResultFragment.newInstance(query, storeName);
     }
-    return SearchResultFragment.newInstance(query, defaultStoreName);
+    return SearchResultFragment.newInstance(query);
   }
 
   public void goToAppView(long appId, String packageName, String storeTheme, String storeName) {

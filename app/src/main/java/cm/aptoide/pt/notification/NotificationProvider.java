@@ -33,8 +33,7 @@ public class NotificationProvider {
         aptoideNotification.getUrlTrack(), aptoideNotification.getNotificationCenterUrlTrack(),
         aptoideNotification.getTimeStamp(), aptoideNotification.getType(),
         aptoideNotification.getDismissed(), aptoideNotification.getAppName(),
-        aptoideNotification.getGraphic(), aptoideNotification.getOwnerId(),
-        aptoideNotification.isProcessed());
+        aptoideNotification.getGraphic(), aptoideNotification.getOwnerId());
   }
 
   public Single<List<AptoideNotification>> getDismissedNotifications(
@@ -54,8 +53,7 @@ public class NotificationProvider {
         notification.getTitle(), notification.getUrl(), notification.getUrlTrack(),
         notification.getTimeStamp(), notification.getType(), notification.getDismissed(),
         notification.getAppName(), notification.getGraphic(), notification.getOwnerId(),
-        notification.getExpire(), notification.getNotificationCenterUrlTrack(),
-        notification.isProcessed());
+        notification.getExpire(), notification.getNotificationCenterUrlTrack());
   }
 
   public Completable save(List<AptoideNotification> aptideNotifications) {
@@ -78,13 +76,6 @@ public class NotificationProvider {
     return notificationAccessor.getAll();
   }
 
-  public Observable<List<AptoideNotification>> getAptoideNotifications() {
-    return notificationAccessor.getAll()
-        .flatMap(notifications -> Observable.from(notifications)
-            .map(notification -> convertToAptoideNotification(notification))
-            .toList());
-  }
-
   public Single<Notification> getLastShowed(Integer[] notificationType) {
     return notificationAccessor.getLastShowed(notificationType);
   }
@@ -101,9 +92,5 @@ public class NotificationProvider {
         .flatMap(notifications -> Observable.from(notifications)
             .map(notification -> convertToAptoideNotification(notification))
             .toList());
-  }
-
-  public void save(AptoideNotification notification) {
-    save(convertToNotification(notification));
   }
 }

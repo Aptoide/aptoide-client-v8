@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.InstallManager;
@@ -178,20 +177,20 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    final AptoideApplication application =
-        (AptoideApplication) getContext().getApplicationContext();
-    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
-    marketName = appPreferences.getMarketName();
+    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
     userId = getArguments().containsKey(USER_ID_KEY) ? getArguments().getLong(USER_ID_KEY) : null;
     storeId = getArguments().containsKey(STORE_ID) ? getArguments().getLong(STORE_ID) : null;
     storeContext = (StoreContext) getArguments().getSerializable(STORE_CONTEXT);
-    baseBodyInterceptorV7 = application.getAccountSettingsBodyInterceptorPoolV7();
+    baseBodyInterceptorV7 =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     defaultConverter = WebService.getDefaultConverter();
-    defaultClient = application.getDefaultClient();
+    defaultClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     accountManager =
         ((AptoideApplication) getActivity().getApplicationContext()).getAccountManager();
-    tokenInvalidator = application.getTokenInvalidator();
-    sharedPreferences = application.getDefaultSharedPreferences();
+    tokenInvalidator =
+        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
+    sharedPreferences =
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     postTouchEventPublishSubject = PublishSubject.create();
     sharePostPublishSubject = PublishSubject.create();
     commentPostResponseSubject = PublishSubject.create();
@@ -200,16 +199,18 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             .getResources());
     shareDialogFactory =
         new ShareDialogFactory(getContext(), new SharePostViewSetup(dateCalculator));
-    installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
+    installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
+        InstallerFactory.ROLLBACK);
 
     timelinePostsRepository =
-        application.getTimelineRepository(getArguments().getString(ACTION_KEY), getContext());
+        ((AptoideApplication) getContext().getApplicationContext()).getTimelineRepository(
+            getArguments().getString(ACTION_KEY), getContext());
 
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), baseBodyInterceptorV7,
         defaultClient, defaultConverter, tokenInvalidator, BuildConfig.APPLICATION_ID,
         sharedPreferences, new NotificationAnalytics(defaultClient, Analytics.getInstance()),
-        application.getAptoideNavigationTracker());
+        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker());
 
     timelineService =
         new TimelineService(userId, baseBodyInterceptorV7, defaultClient, defaultConverter,

@@ -29,13 +29,13 @@ public class NotificationsCleanerTest {
     Map<String, Notification> list = new HashMap<>();
     Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
     long timeStamp = calendar.getTimeInMillis();
-    Notification notification = createNotification(timeStamp + 1000, timeStamp, "me", true);
+    Notification notification = createNotification(timeStamp + 1000, timeStamp, "me");
     list.put(notification.getKey(), notification);
     timeStamp = System.currentTimeMillis();
-    notification = createNotification(timeStamp + 1000, timeStamp - 1, "me", true);
+    notification = createNotification(timeStamp + 1000, timeStamp - 1, "me");
     list.put(notification.getKey(), notification);
     timeStamp = System.currentTimeMillis();
-    notification = createNotification(timeStamp + 2000, timeStamp - 2, "me", true);
+    notification = createNotification(timeStamp + 2000, timeStamp - 2, "me");
     list.put(notification.getKey(), notification);
     NotificationAccessor notificationAccessor = new NotAccessor(list);
     NotificationsCleaner notificationsCleaner = new NotificationsCleaner(notificationAccessor,
@@ -58,13 +58,13 @@ public class NotificationsCleanerTest {
 
     Map<String, Notification> list = new HashMap<>();
     long timeStamp = System.currentTimeMillis();
-    Notification notification = createNotification(0L, timeStamp, "me", true);
+    Notification notification = createNotification(0L, timeStamp, "me");
     list.put(notification.getKey(), notification);
     timeStamp = System.currentTimeMillis();
-    notification = createNotification(timeStamp + 1000, timeStamp - 1, "me", true);
+    notification = createNotification(timeStamp + 1000, timeStamp - 1, "me");
     list.put(notification.getKey(), notification);
     timeStamp = System.currentTimeMillis();
-    notification = createNotification(timeStamp + 2000, timeStamp - 2, "me", true);
+    notification = createNotification(timeStamp + 2000, timeStamp - 2, "me");
     list.put(notification.getKey(), notification);
     NotificationAccessor notificationAccessor = new NotAccessor(list);
     NotificationsCleaner notificationsCleaner = new NotificationsCleaner(notificationAccessor,
@@ -86,13 +86,13 @@ public class NotificationsCleanerTest {
 
     Map<String, Notification> list = new HashMap<>();
     long timeStamp = System.currentTimeMillis();
-    Notification notification = createNotification(0L, timeStamp, "me", true);
+    Notification notification = createNotification(0L, timeStamp, "me");
     list.put(notification.getKey(), notification);
     timeStamp = System.currentTimeMillis();
-    notification = createNotification(timeStamp + 2000, timeStamp - 1, "me", true);
+    notification = createNotification(timeStamp + 2000, timeStamp - 1, "me");
     list.put(notification.getKey(), notification);
     timeStamp = System.currentTimeMillis();
-    notification = createNotification(timeStamp + 2000, timeStamp - 2, "me", true);
+    notification = createNotification(timeStamp + 2000, timeStamp - 2, "me");
     list.put(notification.getKey(), notification);
     NotificationAccessor notificationAccessor = new NotAccessor(list);
     NotificationsCleaner notificationsCleaner = new NotificationsCleaner(notificationAccessor,
@@ -125,13 +125,13 @@ public class NotificationsCleanerTest {
 
     Map<String, Notification> list = new HashMap<>();
     long timeStamp = System.currentTimeMillis();
-    Notification notification = createNotification(timeStamp + 2000, timeStamp, "me", true);
+    Notification notification = createNotification(timeStamp + 2000, timeStamp, "me");
     list.put(notification.getKey(), notification);
     timeStamp = System.currentTimeMillis();
-    notification = createNotification(timeStamp + 2000, timeStamp - 1, "me", true);
+    notification = createNotification(timeStamp + 2000, timeStamp - 1, "me");
     list.put(notification.getKey(), notification);
     timeStamp = System.currentTimeMillis();
-    notification = createNotification(timeStamp + 2000, timeStamp - 2, "me", true);
+    notification = createNotification(timeStamp + 2000, timeStamp - 2, "me");
     list.put(notification.getKey(), notification);
     NotificationAccessor notificationAccessor = new NotAccessor(list);
     NotificationsCleaner notificationsCleaner = new NotificationsCleaner(notificationAccessor,
@@ -163,11 +163,11 @@ public class NotificationsCleanerTest {
 
     Map<String, Notification> list = new HashMap<>();
     long timeStamp = System.currentTimeMillis();
-    Notification notification = createNotification(null, timeStamp, "me", true);
+    Notification notification = createNotification(null, timeStamp, "me");
     list.put(notification.getKey(), notification);
-    notification = createNotification(null, timeStamp - 1, "me", true);
+    notification = createNotification(null, timeStamp - 1, "me");
     list.put(notification.getKey(), notification);
-    notification = createNotification(null, timeStamp - 2, "me", true);
+    notification = createNotification(null, timeStamp - 2, "me");
     list.put(notification.getKey(), notification);
     NotificationAccessor notificationAccessor = new NotAccessor(list);
     NotificationsCleaner notificationsCleaner = new NotificationsCleaner(notificationAccessor,
@@ -184,10 +184,9 @@ public class NotificationsCleanerTest {
         .size(), 3);
   }
 
-  @NonNull private Notification createNotification(Long expire, long timeStamp, String ownerId,
-      boolean processed) {
+  @NonNull private Notification createNotification(Long expire, long timeStamp, String ownerId) {
     return new Notification(expire, null, null, 0, null, null, null, null, null, null, timeStamp, 0,
-        0, null, null, ownerId, processed);
+        0, null, null, ownerId);
   }
 
   private class NotAccessor extends NotificationAccessor {

@@ -12,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.AutoUpdate;
 import cm.aptoide.pt.InstallManager;
@@ -61,19 +60,22 @@ public class MainActivity extends TabNavigatorActivity
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(LAYOUT);
-    final AptoideApplication application = (AptoideApplication) getApplicationContext();
-    installManager = application.getInstallManager(InstallerFactory.DEFAULT);
-    final AptoideAccountManager accountManager = application.getAccountManager();
-    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
-    final String marketName = appPreferences.getMarketName();
+    installManager =
+        ((AptoideApplication) getApplicationContext()).getInstallManager(InstallerFactory.DEFAULT);
+    final AptoideAccountManager accountManager =
+        ((AptoideApplication) getApplicationContext()).getAccountManager();
+    final String marketName = ((AptoideApplication) getApplicationContext()).getMarketName();
     final AutoUpdate autoUpdate =
         new AutoUpdate(this, new DownloadFactory(marketName), new PermissionManager(),
-            installManager, getResources(), appPreferences.getAutoUpdateUrl(), R.mipmap.ic_launcher,
+            installManager, getResources(),
+            ((AptoideApplication) getApplicationContext()).getAutoUpdateUrl(), R.mipmap.ic_launcher,
             false, marketName);
-    final OkHttpClient httpClient = application.getDefaultClient();
+    final OkHttpClient httpClient =
+        ((AptoideApplication) getApplicationContext()).getDefaultClient();
 
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
-    final SharedPreferences sharedPreferences = application.getDefaultSharedPreferences();
+    final SharedPreferences sharedPreferences =
+        ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences();
     final SharedPreferences securePreferences =
         SecurePreferencesImplementation.getInstance(getApplicationContext(), sharedPreferences);
 
@@ -82,25 +84,29 @@ public class MainActivity extends TabNavigatorActivity
 
     final FragmentNavigator fragmentNavigator = getFragmentNavigator();
 
-    final StoreUtilsProxy storeUtilsProxy =
-        new StoreUtilsProxy(accountManager, application.getAccountSettingsBodyInterceptorPoolV7(),
-            new StoreCredentialsProviderImpl(
-                AccessorFactory.getAccessorFor(application.getDatabase(), Store.class)),
-            AccessorFactory.getAccessorFor(application.getDatabase(), Store.class), httpClient,
-            converterFactory, application.getTokenInvalidator(), sharedPreferences);
+    final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(accountManager,
+        ((AptoideApplication) getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7(),
+        new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
+            ((AptoideApplication) getApplicationContext().getApplicationContext()).getDatabase(),
+            Store.class)), AccessorFactory.getAccessorFor(
+        ((AptoideApplication) getApplicationContext().getApplicationContext()).getDatabase(),
+        Store.class), httpClient, converterFactory,
+        ((AptoideApplication) getApplicationContext()).getTokenInvalidator(), sharedPreferences);
 
-    final String defaultTheme = appPreferences.getDefaultThemeName();
+    final String defaultTheme =
+        ((AptoideApplication) getApplicationContext().getApplicationContext()).getDefaultTheme();
     final DeepLinkManager deepLinkManager =
         new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator, this, this,
-            sharedPreferences,
-            AccessorFactory.getAccessorFor(application.getDatabase(), Store.class), defaultTheme,
-            appPreferences.getDefaultStoreName(), application.getAptoideNavigationTracker(),
-            application.getPageViewsAnalytics());
+            sharedPreferences, AccessorFactory.getAccessorFor(
+            ((AptoideApplication) getApplicationContext().getApplicationContext()).getDatabase(),
+            Store.class), defaultTheme,
+            ((AptoideApplication) getApplicationContext()).getAptoideNavigationTracker(),
+            ((AptoideApplication) getApplicationContext()).getPageViewsAnalytics());
 
     final ApkFy apkFy = new ApkFy(this, getIntent(), securePreferences);
 
     final NotificationSyncScheduler notificationSyncScheduler =
-        application.getNotificationSyncScheduler();
+        ((AptoideApplication) getApplicationContext()).getNotificationSyncScheduler();
 
     InstallCompletedNotifier installCompletedNotifier =
         new InstallCompletedNotifier(PublishRelay.create(), installManager,
@@ -108,12 +114,13 @@ public class MainActivity extends TabNavigatorActivity
 
     snackBarLayout = findViewById(R.id.snackbar_layout);
     installErrorsDismissEvent = PublishRelay.create();
-    attachPresenter(
-        new MainPresenter(this, installManager, application.getRootInstallationRetryHandler(),
+    attachPresenter(new MainPresenter(this, installManager,
+            ((AptoideApplication) getApplicationContext()).getRootInstallationRetryHandler(),
             CrashReport.getInstance(), apkFy, autoUpdate, new ContentPuller(this),
-            notificationSyncScheduler, installCompletedNotifier, sharedPreferences,
-            securePreferences, fragmentNavigator, deepLinkManager,
-            appPreferences.getDefaultStoreName(), defaultTheme), savedInstanceState);
+            notificationSyncScheduler, installCompletedNotifier, sharedPreferences, securePreferences,
+            fragmentNavigator, deepLinkManager,
+            ((AptoideApplication) getApplicationContext()).getDefaultStore(), defaultTheme),
+        savedInstanceState);
   }
 
   @Override public void showInstallationError(int numberOfErrors) {

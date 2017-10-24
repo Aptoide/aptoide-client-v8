@@ -65,8 +65,7 @@ public class RequestFactory {
             versionCodeProvider);
     getUserRequestFactory =
         new GetUserRequestFactory(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            sharedPreferences, resources, windowManager, storeCredentialsProvider, clientUniqueId,
-            partnerId, accountMature, filters, connectivityManager, versionCodeProvider);
+            sharedPreferences, resources, windowManager);
 
     getStoreRecommendedRequestFactory =
         new GetStoreRecommendedRequestFactory(bodyInterceptor, httpClient, converterFactory,
@@ -107,7 +106,7 @@ public class RequestFactory {
   }
 
   public GetUserRequest newGetUser(String url) {
-    return this.getUserRequestFactory.newGetUser(url, googlePlayServicesAvailable);
+    return this.getUserRequestFactory.newGetUser(url);
   }
 
   public GetRecommendedStoresRequest newGetRecommendedStores(String url) {

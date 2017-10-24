@@ -1,6 +1,7 @@
 package cm.aptoide.pt.view.configuration.implementation;
 
 import android.support.v4.app.Fragment;
+import cm.aptoide.pt.PartnerApplication;
 import cm.aptoide.pt.addressbook.data.Contact;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
@@ -48,15 +49,10 @@ import java.util.List;
 
 public class PartnerFragmentProvider implements FragmentProvider {
 
-  private final boolean isMultiStoreSearch;
-  private final String defaultTheme;
-  private final String defaultStore;
+  private final PartnerApplication aptoideApplication;
 
-  public PartnerFragmentProvider(String defaultTheme, String defaultStore,
-      boolean isMultiStoreSearch) {
-    this.defaultTheme = defaultTheme;
-    this.defaultStore = defaultStore;
-    this.isMultiStoreSearch = isMultiStoreSearch;
+  public PartnerFragmentProvider(PartnerApplication aptoideApplication) {
+    this.aptoideApplication = aptoideApplication;
   }
 
   @Override public Fragment newSendFeedbackFragment(String screenshotFilePath) {
@@ -64,28 +60,30 @@ public class PartnerFragmentProvider implements FragmentProvider {
   }
 
   @Override public Fragment newStoreFragment(String storeName, String storeTheme) {
-    return StoreFragment.newInstance(storeName, defaultTheme);
+    return StoreFragment.newInstance(storeName, aptoideApplication.getDefaultTheme());
   }
 
   @Override public Fragment newStoreFragment(String storeName, String storeTheme,
       StoreFragment.OpenType openType) {
-    return StoreFragment.newInstance(storeName, defaultTheme, openType);
+    return StoreFragment.newInstance(storeName, aptoideApplication.getDefaultTheme(), openType);
   }
 
   @Override
   public Fragment newStoreFragment(String storeName, String storeTheme, Event.Name defaultTab,
       StoreFragment.OpenType openType) {
-    return StoreFragment.newInstance(storeName, defaultTheme, defaultTab, openType);
+    return StoreFragment.newInstance(storeName, aptoideApplication.getDefaultTheme(), defaultTab,
+        openType);
   }
 
   @Override public Fragment newStoreFragment(long userId, String storeTheme, Event.Name defaultTab,
       StoreFragment.OpenType openType) {
-    return StoreFragment.newInstance(userId, defaultTheme, defaultTab, openType);
+    return StoreFragment.newInstance(userId, aptoideApplication.getDefaultTheme(), defaultTab,
+        openType);
   }
 
   @Override public Fragment newStoreFragment(long userId, String storeTheme,
       StoreFragment.OpenType openType) {
-    return StoreFragment.newInstance(userId, defaultTheme, openType);
+    return StoreFragment.newInstance(userId, aptoideApplication.getDefaultTheme(), openType);
   }
 
   @Override public Fragment newAppViewFragment(String packageName, String storeName,
@@ -98,27 +96,23 @@ public class PartnerFragmentProvider implements FragmentProvider {
   }
 
   @Override public Fragment newAppViewFragment(long appId, String packageName,
-      AppViewFragment.OpenType openType, String tag) {
-    return AppViewFragment.newInstance(appId, packageName, openType, tag);
+      AppViewFragment.OpenType openType) {
+    return AppViewFragment.newInstance(appId, packageName, openType);
   }
 
-  @Override public Fragment newAppViewFragment(long appId, String packageName, String tag) {
-    return AppViewFragment.newInstance(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY, tag);
-  }
-
-  @Override public Fragment newAppViewFragment(long appId, String packageName, String storeTheme,
-      String storeName, String tag) {
-    return AppViewFragment.newInstance(appId, packageName, storeTheme, storeName, tag);
+  @Override public Fragment newAppViewFragment(long appId, String packageName) {
+    return AppViewFragment.newInstance(appId, packageName, aptoideApplication.getDefaultTheme(),
+        aptoideApplication.getDefaultStore());
   }
 
   @Override public Fragment newAppViewFragment(long appId, String packageName, String storeTheme,
-      String storeName, String tag, String editorsBrickPosition) {
-    return AppViewFragment.newInstance(appId, packageName, defaultTheme, storeName, tag,
-        editorsBrickPosition);
+      String storeName) {
+    return AppViewFragment.newInstance(appId, packageName, aptoideApplication.getDefaultTheme(),
+        storeName);
   }
 
-  @Override public Fragment newAppViewFragment(SearchAdResult searchAdResult, String tag) {
-    return AppViewFragment.newInstance(searchAdResult, tag);
+  @Override public Fragment newAppViewFragment(SearchAdResult adResult) {
+    return AppViewFragment.newInstance(adResult, aptoideApplication.getDefaultTheme());
   }
 
   @Override
@@ -134,22 +128,22 @@ public class PartnerFragmentProvider implements FragmentProvider {
     return UpdatesFragment.newInstance();
   }
 
-  @Override public Fragment newLatestReviewsFragment(long storeId, StoreContext storeContext) {
-    return LatestReviewsFragment.newInstance(storeId, storeContext);
+  @Override public Fragment newLatestReviewsFragment(long storeId) {
+    return LatestReviewsFragment.newInstance(storeId);
   }
 
   @Override
   public Fragment newStoreTabGridRecyclerFragment(Event event, String storeTheme, String tag,
-      StoreContext storeContext, boolean addAdultFilter) {
-    return StoreTabGridRecyclerFragment.newInstance(event, defaultTheme, tag, storeContext,
-        addAdultFilter);
+      StoreContext storeContext) {
+    return StoreTabGridRecyclerFragment.newInstance(event, aptoideApplication.getDefaultTheme(),
+        tag, storeContext);
   }
 
   @Override
   public Fragment newStoreTabGridRecyclerFragment(Event event, String title, String storeTheme,
-      String tag, StoreContext storeContext, boolean addAdultFilter) {
-    return StoreTabGridRecyclerFragment.newInstance(event, title, defaultTheme, tag, storeContext,
-        addAdultFilter);
+      String tag, StoreContext storeContext) {
+    return StoreTabGridRecyclerFragment.newInstance(event, title,
+        aptoideApplication.getDefaultTheme(), tag, storeContext);
   }
 
   @Override public Fragment newListAppsFragment() {
@@ -168,8 +162,8 @@ public class PartnerFragmentProvider implements FragmentProvider {
     return new MyStoresFragment();
   }
 
-  @Override public Fragment newGetStoreWidgetsFragment(boolean addAdultFilter) {
-    return GetStoreWidgetsFragment.newInstance(addAdultFilter);
+  @Override public Fragment newGetStoreWidgetsFragment() {
+    return new GetStoreWidgetsFragment();
   }
 
   @Override public Fragment newListReviewsFragment() {
@@ -189,9 +183,9 @@ public class PartnerFragmentProvider implements FragmentProvider {
     return TimelineFragment.newInstance(action, userId, storeId, storeContext);
   }
 
-  @Override public Fragment newSubscribedStoresFragment(Event event, String storeTheme, String tag,
-      StoreContext storeName) {
-    return MyStoresFragment.newInstance(event, defaultTheme, tag, storeName);
+  @Override
+  public Fragment newSubscribedStoresFragment(Event event, String storeTheme, String tag) {
+    return MyStoresFragment.newInstance(event, aptoideApplication.getDefaultTheme(), tag);
   }
 
   @Override public Fragment newDownloadsFragment() {
@@ -200,10 +194,16 @@ public class PartnerFragmentProvider implements FragmentProvider {
 
   @Override
   public Fragment newOtherVersionsFragment(String appName, String appImgUrl, String appPackage) {
-    if (isMultiStoreSearch) {
+    if (aptoideApplication.getBootConfig()
+        .getPartner()
+        .getSwitches()
+        .getOptions()
+        .getMultistore()
+        .isSearch()) {
       return OtherVersionsFragment.newInstance(appName, appImgUrl, appPackage);
     } else {
-      return OtherVersionsFragment.newInstance(appName, appImgUrl, appPackage, defaultStore);
+      return OtherVersionsFragment.newInstance(appName, appImgUrl, appPackage,
+          aptoideApplication.getDefaultStore());
     }
   }
 
@@ -226,7 +226,8 @@ public class PartnerFragmentProvider implements FragmentProvider {
 
   @Override public Fragment newRateAndReviewsFragment(long appId, String appName, String storeName,
       String packageName, String storeTheme) {
-    return RateAndReviewsFragment.newInstance(appId, appName, storeName, packageName, defaultTheme);
+    return RateAndReviewsFragment.newInstance(appId, appName, storeName, packageName,
+        aptoideApplication.getDefaultTheme());
   }
 
   @Override public Fragment newRateAndReviewsFragment(long appId, String appName, String storeName,
@@ -236,7 +237,8 @@ public class PartnerFragmentProvider implements FragmentProvider {
 
   @Override
   public Fragment newDescriptionFragment(String appName, String description, String storeTheme) {
-    return DescriptionFragment.newInstance(appName, description, defaultTheme);
+    return DescriptionFragment.newInstance(appName, description,
+        aptoideApplication.getDefaultTheme());
   }
 
   @Override public Fragment newSocialFragment(String socialUrl, String pageTitle) {
@@ -247,53 +249,52 @@ public class PartnerFragmentProvider implements FragmentProvider {
     return SettingsFragment.newInstance();
   }
 
-  @Override
-  public Fragment newTimeLineFollowersUsingUserIdFragment(Long id, String storeTheme, String title,
-      StoreContext storeName) {
-    return TimeLineFollowersFragment.newInstanceUsingUser(id, defaultTheme, title, storeName);
+  @Override public Fragment newTimeLineFollowersUsingUserIdFragment(Long userId, String storeTheme,
+      String title) {
+    return TimeLineFollowersFragment.newInstanceUsingUser(userId,
+        aptoideApplication.getDefaultTheme(), title);
+  }
+
+  @Override public Fragment newTimeLineFollowingFragmentUsingUserId(Long id, String storeTheme,
+      String title) {
+    return TimeLineFollowingFragment.newInstanceUsingUserId(id,
+        aptoideApplication.getDefaultTheme(), title);
   }
 
   @Override
-  public Fragment newTimeLineFollowingFragmentUsingUserId(Long id, String storeTheme, String title,
-      StoreContext storeContext) {
-    return TimeLineFollowingFragment.newInstanceUsingUserId(id, storeTheme, title, storeContext);
+  public Fragment newTimeLineFollowersUsingStoreIdFragment(Long storeId, String storeTheme,
+      String title) {
+    return TimeLineFollowersFragment.newInstanceUsingStore(storeId,
+        aptoideApplication.getDefaultTheme(), title);
   }
 
-  @Override
-  public Fragment newTimeLineFollowersUsingStoreIdFragment(Long id, String storeTheme, String title,
-      StoreContext storeContext) {
-    return TimeLineFollowersFragment.newInstanceUsingStore(id, storeTheme, title, storeContext);
-  }
-
-  @Override
-  public Fragment newTimeLineFollowingFragmentUsingStoreId(Long id, String storeTheme, String title,
-      StoreContext storeName) {
-    return TimeLineFollowingFragment.newInstanceUsingStoreId(id, storeTheme, title, storeName);
+  @Override public Fragment newTimeLineFollowingFragmentUsingStoreId(Long id, String storeTheme,
+      String title) {
+    return TimeLineFollowingFragment.newInstanceUsingStoreId(id,
+        aptoideApplication.getDefaultTheme(), title);
   }
 
   @Override
   public Fragment newTimeLineLikesFragment(String cardUid, long numberOfLikes, String storeTheme,
-      String title, StoreContext storeContext) {
-    return TimeLineLikesFragment.newInstance(storeTheme, cardUid, numberOfLikes, title,
-        storeContext);
+      String title) {
+    return TimeLineLikesFragment.newInstance(aptoideApplication.getDefaultTheme(), cardUid,
+        numberOfLikes, title);
   }
 
   @Override
-  public Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId,
-      StoreContext storeContext) {
-    return CommentListFragment.newInstance(commentType, elementId, storeContext);
+  public Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId) {
+    return CommentListFragment.newInstance(commentType, elementId);
   }
 
   @Override public Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url,
-      String storeAnalyticsAction, StoreContext storeContext) {
-    return CommentListFragment.newInstanceUrl(commentType, url, storeAnalyticsAction, storeContext);
+      String storeAnalyticsAction) {
+    return CommentListFragment.newInstanceUrl(commentType, url, storeAnalyticsAction);
   }
 
   @Override
   public Fragment newCommentGridRecyclerFragmentWithCommentDialogOpen(CommentType commentType,
-      String elementId, StoreContext storeContext) {
-    return CommentListFragment.newInstanceWithCommentDialogOpen(commentType, elementId,
-        storeContext);
+      String elementId) {
+    return CommentListFragment.newInstanceWithCommentDialogOpen(commentType, elementId);
   }
 
   @Override public Fragment newAddressBookFragment() {
@@ -321,9 +322,9 @@ public class PartnerFragmentProvider implements FragmentProvider {
     return ThankYouConnectingFragment.newInstance(tag);
   }
 
-  @Override public Fragment newTimeLineFollowersFragment(String storeTheme, String title,
-      StoreContext storeContext) {
-    return TimeLineFollowersFragment.newInstanceUsingUser(defaultTheme, title, storeContext);
+  @Override public Fragment newTimeLineFollowersFragment(String storeTheme, String title) {
+    return TimeLineFollowersFragment.newInstanceUsingUser(aptoideApplication.getDefaultTheme(),
+        title);
   }
 
   @Override public Fragment newRecommendedStoresFragment() {

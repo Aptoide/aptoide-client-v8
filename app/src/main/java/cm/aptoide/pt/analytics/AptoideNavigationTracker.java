@@ -28,13 +28,6 @@ public class AptoideNavigationTracker {
     }
   }
 
-  public @Nullable ScreenTagHistory getCurrentScreen() {
-    if (historyList.isEmpty()) {
-      return null;
-    }
-    return historyList.get(historyList.size() - 1);
-  }
-
   public @Nullable ScreenTagHistory getPreviousScreen() {
     if (historyList.size() < 2) {
       return null;
@@ -73,5 +66,9 @@ public class AptoideNavigationTracker {
       return false;
     }
     return true;
+  }
+
+  public ScreenTagHistory getCurrentScreen() {
+    return historyList.get(historyList.size() - 1);
   }
 }

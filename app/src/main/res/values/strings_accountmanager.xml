@@ -80,8 +80,6 @@
   <string name="create_store_description_hint">Your store description</string>
   <string name="edit_store_title">Edit your store</string>
   <string name="save_edit_store">Save</string>
-  <string name="edit_store_title_social_channels">Social Accounts</string>
-  <string name="edit_store_short_enter_username">Enter username</string>
 
 
   <string name="upload_dialog_title">Upload photo</string>

@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
@@ -65,28 +64,31 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
   }
 
   @Override public void bindView(InstalledAppDisplayable displayable) {
-    final Installed pojo = displayable.getPojo();
-    final AptoideApplication application =
-        (AptoideApplication) getContext().getApplicationContext();
-    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
-    accountManager = application.getAccountManager();
-    httpClient = application.getDefaultClient();
+    Installed pojo = displayable.getPojo();
+
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
 
-    this.bodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();
+    this.bodyInterceptor =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
 
     final AccountNavigator accountNavigator =
         ((ActivityResultNavigator) getContext()).getAccountNavigator();
     this.accountNavigator = accountNavigator;
     dialogUtils = new DialogUtils(accountManager, accountNavigator, bodyInterceptor, httpClient,
-        converterFactory, displayable.getInstalledRepository(), application.getTokenInvalidator(),
-        application.getDefaultSharedPreferences(), getContext().getResources());
+        converterFactory, displayable.getInstalledRepository(),
+        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+        getContext().getResources());
     shareAppHelper = new ShareAppHelper(
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext()),
         accountManager, accountNavigator, getContext(),
         new SpotAndShareAnalytics(Analytics.getInstance()), displayable.getTimelineAnalytics(),
-        PublishRelay.create(), application.getDefaultSharedPreferences(),
-        appPreferences.isCreateStoreUserPrivacyEnabled());
+        PublishRelay.create(),
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+        ((AptoideApplication) getContext().getApplicationContext()).isCreateStoreUserPrivacyEnabled());
     appName = pojo.getName();
     packageName = pojo.getPackageName();
 

@@ -13,6 +13,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -75,6 +76,7 @@ public class GridAppWidget<T extends GridAppDisplayable> extends Widget<T> {
   @NonNull protected Action1<Void> newOnClickListener(T displayable, App pojo, long appId) {
     return v -> {
       // FIXME
+      Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
       getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
           .newAppViewFragment(appId, pojo.getPackageName(), pojo.getStore()
               .getAppearance()

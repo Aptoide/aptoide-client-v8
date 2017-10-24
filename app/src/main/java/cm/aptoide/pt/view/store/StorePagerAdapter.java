@@ -97,7 +97,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter
     Fragment fragment;
     switch (event.getType()) {
       case API: {
-        fragment = caseAPI(tab, isHomeFragment(position));
+        fragment = caseAPI(tab);
         break;
       }
       case CLIENT: {
@@ -116,11 +116,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter
     return fragment;
   }
 
-  private boolean isHomeFragment(int position) {
-    return position == 0;
-  }
-
-  private Fragment caseAPI(GetStoreTabs.Tab tab, boolean addAdultFilter) {
+  private Fragment caseAPI(GetStoreTabs.Tab tab) {
     Event event = tab.getEvent();
     switch (event.getName()) {
       case getUserTimeline:
@@ -136,8 +132,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter
             .newAppsTimelineFragment(event.getAction(), userId, storeId, storeContext);
       default:
         return AptoideApplication.getFragmentProvider()
-            .newStoreTabGridRecyclerFragment(event, storeTheme, tab.getTag(), storeContext,
-                addAdultFilter);
+            .newStoreTabGridRecyclerFragment(event, storeTheme, tab.getTag(), storeContext);
     }
   }
 

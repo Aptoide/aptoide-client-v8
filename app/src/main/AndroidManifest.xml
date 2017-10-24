@@ -74,8 +74,6 @@
 
     <activity android:name=".view.MainActivity"/>
 
-    <activity android:name=".view.FairyMainActivity"/>
-
     <meta-data
         android:name="io.fabric.ApiKey"
         android:value="${fabricApiKey}"/>

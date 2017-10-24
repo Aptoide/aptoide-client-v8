@@ -5,7 +5,6 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.WindowManager;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
@@ -37,12 +36,11 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
     final OkHttpClient httpClient =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
-    AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
+    AptoideApplication aptoideApplication =
+        (AptoideApplication) getContext().getApplicationContext();
 
-    final boolean isAdultContentEnabled = application.getAccountManager()
+    final boolean isAdultContentEnabled = aptoideApplication.getAccountManager()
         .isAccountMature();
-
-    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
 
     requestFactoryCdnPool = new RequestFactory(new StoreCredentialsProviderImpl(
         AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
@@ -52,13 +50,13 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         getContext().getResources(),
         (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
-        application.getIdsRepository()
-            .getUniqueIdentifier(), appPreferences.getPartnerId(), isAdultContentEnabled,
-        application.getQManager()
+        aptoideApplication.getIdsRepository()
+            .getUniqueIdentifier(), aptoideApplication.getPartnerId(), isAdultContentEnabled,
+        aptoideApplication.getQManager()
             .getFilters(ManagerPreferences.getHWSpecsFilter(
                 ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
         (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
-        application.getVersionCodeProvider(),
+        aptoideApplication.getVersionCodeProvider(),
         AdNetworkUtils.isGooglePlayServicesAvailable(getContext()));
 
     requestFactoryCdnWeb = new RequestFactory(new StoreCredentialsProviderImpl(
@@ -69,13 +67,13 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         getContext().getResources(),
         (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
-        application.getIdsRepository()
-            .getUniqueIdentifier(), appPreferences.getPartnerId(), isAdultContentEnabled,
-        application.getQManager()
+        aptoideApplication.getIdsRepository()
+            .getUniqueIdentifier(), aptoideApplication.getPartnerId(), isAdultContentEnabled,
+        aptoideApplication.getQManager()
             .getFilters(ManagerPreferences.getHWSpecsFilter(
                 ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
         (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
-        application.getVersionCodeProvider(),
+        aptoideApplication.getVersionCodeProvider(),
         AdNetworkUtils.isGooglePlayServicesAvailable(getContext()));
 
     super.onCreate(savedInstanceState);

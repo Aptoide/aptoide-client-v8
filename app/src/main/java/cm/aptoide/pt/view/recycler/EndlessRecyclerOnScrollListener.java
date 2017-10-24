@@ -12,8 +12,6 @@ import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.view.recycler.displayable.ProgressBarDisplayable;
-import java.util.LinkedList;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import rx.Subscription;
@@ -47,7 +45,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
   private int visibleItemCount;
   private RecyclerViewPositionHelper mRecyclerViewHelper;
   private Subscription subscription;
-  private List<OnEndlessFinish> onEndlessFinishList;
+  @Setter private OnEndlessFinish onEndlessFinish;
 
   public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter,
       V7<T, ? extends Endless> v7request, Action1<T> successRequestListener,
@@ -82,13 +80,6 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
   public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(
       BaseAdapter baseAdapter) {
     this(baseAdapter, null, null, null, 0, false, null, null);
-  }
-
-  public void addOnEndlessFinishListener(OnEndlessFinish onEndlessFinish) {
-    if (onEndlessFinishList == null) {
-      onEndlessFinishList = new LinkedList<>();
-    }
-    onEndlessFinishList.add(onEndlessFinish);
   }
 
   @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -158,11 +149,9 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
               totalItemCount = mRecyclerViewHelper.getItemCount();
             }
 
-            if (!hasMoreElements() && onEndlessFinishList != null) {
-              for (OnEndlessFinish onEndlessFinish : onEndlessFinishList) {
-                if (onEndlessFinish != null) {
-                  onEndlessFinish.onEndlessFinish(this);
-                }
+            if (!hasMoreElements()) {
+              if (onEndlessFinish != null) {
+                onEndlessFinish.onEndlessFinish(this);
               }
             }
 

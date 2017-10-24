@@ -333,14 +333,5 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
                   null));
       oldVersion++;
     }
-
-    if (oldVersion == 8089) {
-      schema.get("Notification")
-          .addField(Notification.NOTIFICATION_CENTER_PROCESSED_KEY, boolean.class)
-          .transform(
-              notification -> notification.set(Notification.NOTIFICATION_CENTER_PROCESSED_KEY,
-                  true));
-      oldVersion++;
-    }
   }
 }

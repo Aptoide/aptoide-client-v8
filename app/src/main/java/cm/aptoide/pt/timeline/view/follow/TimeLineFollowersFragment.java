@@ -3,7 +3,6 @@ package cm.aptoide.pt.timeline.view.follow;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -73,14 +72,13 @@ public class TimeLineFollowersFragment extends TimeLineFollowFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    final AptoideApplication application =
-        (AptoideApplication) getContext().getApplicationContext();
-    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
-    defaultTheme = appPreferences.getDefaultThemeName();
-    baseBodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();
-    httpClient = application.getDefaultClient();
+    defaultTheme = ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
+    baseBodyInterceptor =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
+    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    tokenInvalidator = application.getTokenInvalidator();
+    tokenInvalidator =
+        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
   }
 
   @Override public void loadExtras(Bundle args) {
