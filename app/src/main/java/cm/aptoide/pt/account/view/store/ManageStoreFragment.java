@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
@@ -123,9 +124,11 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     uriToPathResolver = new UriToPathResolver(getActivity().getContentResolver());
     imagePickerNavigator = new ImagePickerNavigator(getActivityNavigator());
     imageValidator = new ImageValidator(ImageLoader.with(getActivity()), Schedulers.computation());
-    manageStoreNavigator = new ManageStoreNavigator(getFragmentNavigator(),
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore(),
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme());
+    final ApplicationPreferences appPreferences =
+        ((AptoideApplication) getContext().getApplicationContext()).getApplicationPreferences();
+    manageStoreNavigator =
+        new ManageStoreNavigator(getFragmentNavigator(), appPreferences.getDefaultStoreName(),
+            appPreferences.getDefaultThemeName());
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
@@ -46,6 +47,8 @@ import rx.functions.Action1;
 
 public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStores> {
 
+  private static final String USER_NOT_LOGGED_ERROR = "AUTH-5";
+
   private AptoideAccountManager accountManager;
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private StoreCredentialsProvider storeCredentialsProvider;
@@ -53,6 +56,10 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
   private StoreAnalytics storeAnalytics;
+
+  public static Fragment newInstance() {
+    return new MyStoresSubscribedFragment();
+  }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -91,7 +98,7 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
     return (throwable) -> {
       getRecyclerView().clearOnScrollListeners();
       LinkedList<String> errorsList = new LinkedList<>();
-      errorsList.add(WSWidgetsUtils.USER_NOT_LOGGED_ERROR);
+      errorsList.add(USER_NOT_LOGGED_ERROR);
       if (WSWidgetsUtils.shouldAddObjectView(errorsList, throwable)) {
         DisplayablesFactory.loadLocalSubscribedStores(storeRepository)
             .compose(bindUntilEvent(LifecycleEvent.DESTROY))

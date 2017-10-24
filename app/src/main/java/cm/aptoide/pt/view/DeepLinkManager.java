@@ -53,13 +53,14 @@ public class DeepLinkManager {
   private final SharedPreferences sharedPreferences;
   private final StoreAccessor storeAccessor;
   private final String defaultTheme;
+  private final String defaultStoreName;
   private AptoideNavigationTracker aptoideNavigationTracker;
   private PageViewsAnalytics pageViewsAnalytics;
 
   public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, StoreRepository storeRepository,
       FragmentNavigator fragmentNavigator, TabNavigator tabNavigator,
       DeepLinkMessages deepLinkMessages, SharedPreferences sharedPreferences,
-      StoreAccessor storeAccessor, String defaultTheme,
+      StoreAccessor storeAccessor, String defaultTheme, String defaultStoreName,
       AptoideNavigationTracker aptoideNavigationTracker, PageViewsAnalytics pageViewsAnalytics) {
     this.storeUtilsProxy = storeUtilsProxy;
     this.storeRepository = storeRepository;
@@ -69,6 +70,7 @@ public class DeepLinkManager {
     this.sharedPreferences = sharedPreferences;
     this.storeAccessor = storeAccessor;
     this.defaultTheme = defaultTheme;
+    this.defaultStoreName = defaultStoreName;
     this.aptoideNavigationTracker = aptoideNavigationTracker;
     this.pageViewsAnalytics = pageViewsAnalytics;
   }
@@ -141,7 +143,7 @@ public class DeepLinkManager {
   }
 
   private void searchDeepLink(String query) {
-    final Fragment fragment = SearchResultFragment.newInstance(query);
+    final Fragment fragment = SearchResultFragment.newInstance(query, defaultStoreName);
     fragmentNavigator.navigateTo(fragment, true);
   }
 
@@ -231,7 +233,7 @@ public class DeepLinkManager {
             .newStoreTabGridRecyclerFragment(event,
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.TITLE),
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.STORE_THEME),
-                defaultTheme, StoreContext.home), true);
+                defaultTheme, StoreContext.home, true), true);
       } catch (UnsupportedEncodingException | IllegalArgumentException e) {
         e.printStackTrace();
       }

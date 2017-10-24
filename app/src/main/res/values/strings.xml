@@ -172,7 +172,6 @@
   <string name="unfollow">Unfollow</string>
   <string name="unfollowing_store_message">Unfollowing %s</string>
   <string name="store_followed">Store %s followed</string>
-  <string name="subscribers">Followers</string>
   <string name="apps">Apps</string>
 
   <!--Rate-->
@@ -683,7 +682,13 @@
   <string name="fragment_payment_login_description">To complete your purchase please log in</string>
   <string name="fragment_payment_login_separator_description">Or using your email</string>
 
-  <string name="my_store_create_store_followings">Following\n%s</string>
-  <string name="my_store_create_store_followers">Followers\n%s</string>
+
+  <!--store tab and home of store x: store widget and my store widget-->
+  <string name="storehometab_short_subscribers">Followers\n%s</string>
+  <string name="storehometab_short_apps">Apps\n%s</string>
+  <string name="storehometab_short_following">Following\n%s</string>
+  <string name="storetab_short_followings">Following\n%s</string>
+  <string name="storetab_short_followers">Followers\n%s</string>
+  <string name="storetab_short_follow_error">An error occurred while following store</string>
 </resources>
 

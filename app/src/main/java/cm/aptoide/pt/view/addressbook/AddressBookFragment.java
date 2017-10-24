@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
@@ -85,26 +86,26 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
+    marketName = appPreferences.getMarketName();
     analytics = new AddressBookAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
     final BodyInterceptor<BaseBody> baseBodyBodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    final OkHttpClient httpClient =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+        application.getAccountSettingsBodyInterceptorPoolV7();
+    final OkHttpClient httpClient = application.getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     mActionsListener = new AddressBookPresenter(this,
         new ContactsRepository(baseBodyBodyInterceptor, httpClient, converterFactory,
-            ((AptoideApplication) getContext().getApplicationContext()).getIdsRepository(),
-            new ContactUtils(
-                (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-                getContext().getContentResolver()),
-            ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()),
-        analytics, new AddressBookNavigationManager(getFragmentNavigator(), getTag(),
-        getString(R.string.addressbook_about),
-        getString(R.string.addressbook_data_about, marketName)),
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
+            application.getIdsRepository(), new ContactUtils(
+            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
+            getContext().getContentResolver()), application.getTokenInvalidator(),
+            application.getDefaultSharedPreferences()), analytics,
+        new AddressBookNavigationManager(getFragmentNavigator(), getTag(),
+            getString(R.string.addressbook_about),
+            getString(R.string.addressbook_data_about, marketName)),
+        application.getDefaultSharedPreferences());
     callbackManager = CallbackManager.Factory.create();
     registerFacebookCallback();
     mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());

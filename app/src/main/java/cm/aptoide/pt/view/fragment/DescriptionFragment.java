@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.TextView;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
@@ -87,11 +88,13 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
     storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
         ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class));
-    baseBodyBodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    baseBodyBodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();
+    httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    partnerId = ((AptoideApplication) getContext().getApplicationContext()).getPartnerId();
+    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
+    partnerId = appPreferences.getPartnerId();
   }
 
   @Override public void loadExtras(Bundle args) {

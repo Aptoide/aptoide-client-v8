@@ -3,6 +3,7 @@ package cm.aptoide.pt.view.reviews;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.WindowManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -27,6 +28,10 @@ import rx.functions.Action1;
 public class ListReviewsFragment extends GetStoreEndlessFragment<ListFullReviews> {
 
   private StoreCredentialsProvider storeCredentialsProvider;
+
+  public static Fragment newInstance() {
+    return new ListReviewsFragment();
+  }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

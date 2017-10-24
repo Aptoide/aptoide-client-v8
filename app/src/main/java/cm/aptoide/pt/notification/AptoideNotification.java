@@ -32,10 +32,11 @@ import lombok.ToString;
   private @NotificationType int type;
   private long timeStamp;
   private String notificationCenterUrlTrack;
+  private boolean processed;
 
   public AptoideNotification(String body, String img, String title, String url, int type,
       long timeStamp, String appName, String graphic, long dismissed, String ownerId,
-      Long expireSecsUtc, String urlTrack, String notificationCenterUrlTrack) {
+      Long expireSecsUtc, String urlTrack, String notificationCenterUrlTrack, boolean processed) {
     this.body = body;
     this.img = img;
     this.title = title;
@@ -49,32 +50,41 @@ import lombok.ToString;
     this.expire = expireSecsUtc;
     this.urlTrack = urlTrack;
     this.notificationCenterUrlTrack = notificationCenterUrlTrack;
+    this.processed = processed;
   }
 
   public AptoideNotification(String body, String img, String title, String url, int type,
       String appName, String graphic, long dismissed, String ownerId, Long expireSecsUtc,
-      String urlTrack, String notificationCenterUrlTrack) {
+      String urlTrack, String notificationCenterUrlTrack, boolean processed) {
     this(body, img, title, url, type, System.currentTimeMillis(), appName, graphic, dismissed,
-        ownerId, expireSecsUtc * 1000, urlTrack, notificationCenterUrlTrack);
+        ownerId, expireSecsUtc * 1000, urlTrack, notificationCenterUrlTrack, processed);
   }
 
   public AptoideNotification(String abTestingGroup, String body, int campaignId, String img,
       String lang, String title, String url, String urlTrack, String appName, String graphic,
-      String ownerId, Long expireSecsUtc, String notificationCenterUrlTrack) {
+      String ownerId, Long expireSecsUtc, String notificationCenterUrlTrack, boolean processed) {
     this(abTestingGroup, body, campaignId, img, lang, title, url, urlTrack,
         System.currentTimeMillis(), CAMPAIGN, NOT_DISMISSED, appName, graphic, ownerId,
-        expireSecsUtc, notificationCenterUrlTrack);
+        expireSecsUtc, notificationCenterUrlTrack, processed);
   }
 
   public AptoideNotification(String abTestingGroup, String body, int campaignId, String img,
       String lang, String title, String url, String urlTrack, long timeStamp, int type,
       long dismissed, String appName, String graphic, String ownerId, Long expireSecsUtc,
-      String notificationCenterUrlTrack) {
+      String notificationCenterUrlTrack, boolean processed) {
     this(body, img, title, url, type, timeStamp, appName, graphic, dismissed, ownerId,
-        expireSecsUtc, urlTrack, notificationCenterUrlTrack);
+        expireSecsUtc, urlTrack, notificationCenterUrlTrack, processed);
     this.abTestingGroup = abTestingGroup;
     this.campaignId = campaignId;
     this.lang = lang;
+  }
+
+  public boolean isProcessed() {
+    return processed;
+  }
+
+  public void setProcessed(boolean processed) {
+    this.processed = processed;
   }
 
   public long getDismissed() {

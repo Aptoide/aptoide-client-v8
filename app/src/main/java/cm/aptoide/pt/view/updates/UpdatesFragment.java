@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.telephony.TelephonyManager;
 import android.view.View;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.InstallManager;
@@ -38,6 +39,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.store.StoreGridHeaderDisplayable;
+import cm.aptoide.pt.view.store.StoreTabNavigator;
 import cm.aptoide.pt.view.updates.installed.InstalledAppDisplayable;
 import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -78,6 +80,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   private Converter.Factory converterFactory;
   private CrashReport crashReport;
   private String marketName;
+  private StoreTabNavigator storeTabNavigator;
 
   @NonNull public static UpdatesFragment newInstance() {
     return new UpdatesFragment();
@@ -159,35 +162,34 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
+    marketName = appPreferences.getMarketName();
     crashReport = CrashReport.getInstance();
-    bodyInterceptorV7 =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+    bodyInterceptorV7 = application.getAccountSettingsBodyInterceptorPoolV7();
+    httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
-        InstallerFactory.ROLLBACK);
+    installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
     analytics = Analytics.getInstance();
-    tokenInvalidator =
-        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
+    tokenInvalidator = application.getTokenInvalidator();
     downloadInstallEventConverter =
         new DownloadEventConverter(bodyInterceptorV7, httpClient, converterFactory,
-            tokenInvalidator, BuildConfig.APPLICATION_ID,
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            tokenInvalidator, BuildConfig.APPLICATION_ID, application.getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-            ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker());
+            application.getAptoideNavigationTracker());
     installConverter =
         new InstallEventConverter(bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator,
-            BuildConfig.APPLICATION_ID,
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            BuildConfig.APPLICATION_ID, application.getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
             aptoideNavigationTracker);
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     updateRepository = RepositoryFactory.getUpdateRepository(getContext(),
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
+        application.getDefaultSharedPreferences());
+    storeTabNavigator = new StoreTabNavigator(getFragmentNavigator());
   }
 
   private void setUpdates(List<Update> updateList) {
@@ -248,7 +250,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     installedDisplayablesList.add(new StoreGridHeaderDisplayable(
         new GetStoreWidgets.WSWidget().setTitle(
             AptoideUtils.StringU.getResString(R.string.updatetab_title_installed,
-                getContext().getResources())), aptoideNavigationTracker));
+                getContext().getResources())), storeTabNavigator, aptoideNavigationTracker));
 
     for (Installed installedApp : installedApps) {
       installedDisplayablesList.add(new InstalledAppDisplayable(installedApp,

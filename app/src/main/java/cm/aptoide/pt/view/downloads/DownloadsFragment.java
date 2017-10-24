@@ -30,6 +30,7 @@ import cm.aptoide.pt.presenter.DownloadsView;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
+import cm.aptoide.pt.view.store.StoreTabNavigator;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -42,6 +43,7 @@ public class DownloadsFragment extends NavigationTrackFragment implements Downlo
   private DownloadEventConverter downloadConverter;
   private InstallManager installManager;
   private Analytics analytics;
+  private StoreTabNavigator storeTabNavigator;
 
   public static DownloadsFragment newInstance() {
     return new DownloadsFragment();
@@ -73,6 +75,8 @@ public class DownloadsFragment extends NavigationTrackFragment implements Downlo
     installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
     analytics = Analytics.getInstance();
+
+    storeTabNavigator = new StoreTabNavigator(getFragmentNavigator());
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -100,7 +104,7 @@ public class DownloadsFragment extends NavigationTrackFragment implements Downlo
     downloadsRecyclerView.addItemDecoration(decor);
 
     adapter = new DownloadsAdapter(installConverter, downloadConverter, installManager, analytics,
-        getContext().getResources(), aptoideNavigationTracker);
+        getContext().getResources(), storeTabNavigator, aptoideNavigationTracker);
     downloadsRecyclerView.setAdapter(adapter);
     noDownloadsView = view.findViewById(R.id.no_apps_downloaded);
 

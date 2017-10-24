@@ -41,6 +41,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
   protected StoreUtilsProxy storeUtilsProxy;
   protected InstalledRepository installedRepository;
   protected StoreAnalytics storeAnalytics;
+  private StoreTabNavigator storeTabNavigator;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -65,6 +66,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
     storeAnalytics =
         new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
             Analytics.getInstance());
+    storeTabNavigator = new StoreTabNavigator(getFragmentNavigator());
   }
 
   protected Observable<List<Displayable>> parseDisplayables(GetStoreWidgets getStoreWidgets) {
@@ -73,7 +75,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
         .concatMapEager(wsWidget -> DisplayablesFactory.parse(wsWidget, storeTheme, storeRepository,
             storeContext, getContext(), accountManager, storeUtilsProxy,
             (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
-            getContext().getResources(), installedRepository, storeAnalytics,
+            getContext().getResources(), installedRepository, storeAnalytics, storeTabNavigator,
             aptoideNavigationTracker))
         .toList()
         .first();

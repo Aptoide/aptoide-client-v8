@@ -10,15 +10,13 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PartnerApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.preferences.AdultContent;
-import cm.aptoide.pt.preferences.Preferences;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.remotebootconfig.BootConfigServices;
@@ -41,13 +39,14 @@ public class PartnersLaunchView extends ActivityView {
 
   private boolean usesSplashScreen;
   private BootConfig bootConfig;
-  private String partnerId;
+  private ApplicationPreferences applicationPreferences;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    partnerId = ((PartnerApplication) getApplicationContext()).getPartnerId();
     bootConfig = ((PartnerApplication) getApplicationContext()).getBootConfig();
+    applicationPreferences =
+        ((PartnerApplication) getApplicationContext()).getApplicationPreferences();
     if (getSupportActionBar() != null) {
       getSupportActionBar().hide();
     }
@@ -82,7 +81,7 @@ public class PartnersLaunchView extends ActivityView {
    */
   @Override public View onCreateView(View parent, String name, Context context,
       AttributeSet attrs) {
-    String storeTheme = ((AptoideApplication) getApplicationContext()).getDefaultTheme();
+    String storeTheme = applicationPreferences.getDefaultThemeName();
     if (storeTheme != null) {
       ThemeUtils.setStoreTheme(this, storeTheme);
       ThemeUtils.setStatusBarThemeColor(this, StoreTheme.get(storeTheme));
@@ -146,7 +145,7 @@ public class PartnersLaunchView extends ActivityView {
 
     Call<RemoteBootConfig> call = retrofit.create(BootConfigServices.class)
         .getRemoteBootConfig(getPackageName(), bootConfig.getPartner()
-            .getType(), partnerId, versionCode);
+            .getType(), applicationPreferences.getPartnerId(), versionCode);
     call.enqueue(new Callback<RemoteBootConfig>() {
       @Override
       public void onResponse(Call<RemoteBootConfig> call, Response<RemoteBootConfig> response) {
@@ -198,22 +197,19 @@ public class PartnersLaunchView extends ActivityView {
         .getSwitches()
         .getMature()
         .isEnable() || SecurePreferences.isFirstRun(sharedPreferences)) {
-      AdultContent adultContent =
-          new AdultContent(((AptoideApplication) this.getApplicationContext()).getAccountManager(),
-              new Preferences(sharedPreferences),
-              new cm.aptoide.pt.preferences.SecurePreferences(sharedPreferences,
-                  new SecureCoderDecoder.Builder(this, sharedPreferences).create()));
-      if (((PartnerApplication) getApplicationContext()).getBootConfig()
-          .getPartner()
-          .getSwitches()
-          .getMature()
-          .isValue()) {
-        adultContent.enable()
-            .subscribe();
-      } else {
-        adultContent.disable()
-            .subscribe();
-      }
+      //AdultContent adultContent =
+      //    ((AptoideApplication) getContext().getApplicationContext()).getAdultContent();
+      //if (((PartnerApplication) getApplicationContext()).getBootConfig()
+      //    .getPartner()
+      //    .getSwitches()
+      //    .getMature()
+      //    .isValue()) {
+      //  adultContent.enable()
+      //      .subscribe();
+      //} else {
+      //  adultContent.disable()
+      //      .subscribe();
+      //}
     }
   }
 

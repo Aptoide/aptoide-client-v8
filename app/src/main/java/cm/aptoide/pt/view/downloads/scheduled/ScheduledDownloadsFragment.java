@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.Install;
@@ -92,27 +93,24 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
-    final OkHttpClient httpClient =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
+    marketName = appPreferences.getMarketName();
+    final OkHttpClient httpClient = application.getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
-    bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
-        InstallerFactory.ROLLBACK);
-    final TokenInvalidator tokenInvalidator =
-        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
+    bodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();
+    installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
+    final TokenInvalidator tokenInvalidator = application.getTokenInvalidator();
     downloadConverter =
         new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            BuildConfig.APPLICATION_ID,
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            BuildConfig.APPLICATION_ID, application.getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-            ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker());
+            application.getAptoideNavigationTracker());
     installConverter =
         new InstallEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            BuildConfig.APPLICATION_ID,
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            BuildConfig.APPLICATION_ID, application.getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
             aptoideNavigationTracker);
@@ -175,7 +173,9 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
   private boolean downloadAndInstallScheduledList(List<Scheduled> installing,
       boolean isStartedAutomatic) {
 
-    if (installing == null || installing.isEmpty()) return false;
+    if (installing == null || installing.isEmpty()) {
+      return false;
+    }
 
     Context context = getContext();
     PermissionManager permissionManager = new PermissionManager();

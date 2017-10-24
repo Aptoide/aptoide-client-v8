@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -72,12 +73,12 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
   }
 
   @Override public void bindView(FollowUserDisplayable displayable) {
-    accountManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    accountManager = application.getAccountManager();
     final BodyInterceptor<BaseBody> bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    final OkHttpClient httpClient =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+        application.getAccountSettingsBodyInterceptorPoolV7();
+    final OkHttpClient httpClient = application.getDefaultClient();
 
     if (!displayable.isLike()) {
       followLayout.setVisibility(View.GONE);
@@ -94,8 +95,8 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
       }
 
       final String storeName = displayable.getStoreName();
-      final String storeTheme =
-          ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
+      final ApplicationPreferences appPreferences = application.getApplicationPreferences();
+      final String storeTheme = appPreferences.getDefaultThemeName();
 
       final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor,
           new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
@@ -103,9 +104,8 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
                   .getApplicationContext()).getDatabase(), Store.class)),
           AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
               .getApplicationContext()).getDatabase(), Store.class), httpClient,
-          WebService.getDefaultConverter(),
-          ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
-          ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
+          WebService.getDefaultConverter(), application.getTokenInvalidator(),
+          application.getDefaultSharedPreferences());
 
       Action1<Void> openStore = __ -> {
         getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()

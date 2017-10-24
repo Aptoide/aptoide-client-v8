@@ -5,7 +5,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.FirstLaunchAnalytics;
@@ -26,9 +25,6 @@ import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.ZipFile;
@@ -795,103 +791,6 @@ public class Analytics {
       data.putString(UTM_CONTENT, UNKNOWN);
       data.putString(ENTRY_POINT, UNKNOWN);
       setUserPropertiesWithBundle(data);
-    }
-  }
-
-  public static class AppViewViewedFrom {
-
-    public static final String APP_VIEWED_OPEN_FROM_EVENT_NAME_KEY = "App_Viewed_Open_From";
-    public static final int NUMBER_OF_STEPS_TO_RECORD = 5;
-    public static final String HOME_SCREEN_STEP = "home";
-    private static ArrayList<String> STEPS = new ArrayList<>();
-    private static String lastStep;
-
-    public static void appViewOpenFrom(String packageName, String developerName,
-        String trustedBadge) {
-
-      Collections.reverse(STEPS);
-      if (STEPS.contains(HOME_SCREEN_STEP)) {
-        String stringForSourceEvent = formatStepsToSingleEvent(STEPS);
-        HashMap<String, String> map = new HashMap<>();
-        map.put("Package Name", packageName);
-        map.put("Source", stringForSourceEvent);
-        map.put("Trusted Badge", trustedBadge);
-        map.put("Application Publisher", developerName);
-        int index = STEPS.indexOf(HOME_SCREEN_STEP);
-        if (index > 0) {
-          String source = STEPS.get(index - 1);
-          if (source.equals("apps-group-editors-choice")) {
-            map.put("editors package name", packageName);
-          } else {
-            map.put("bundle package name", source + "_" + packageName);
-            map.put("bundle category", source);
-          }
-        }
-        Logger.d(TAG, "appViewOpenFrom: " + map);
-
-        if (map.containsKey("Source") && !containsUnwantedValues(map.get("Source"))) {
-          track(APP_VIEWED_OPEN_FROM_EVENT_NAME_KEY, map, FLURRY);
-        }
-
-        Bundle parameters = new Bundle();
-        parameters.putString("Package Name", packageName);
-        parameters.putString("Source", stringForSourceEvent);
-        parameters.putString("Trusted Badge", trustedBadge);
-        parameters.putString("Application Publisher", developerName);
-        logFacebookEvents(APP_VIEWED_OPEN_FROM_EVENT_NAME_KEY, parameters);
-      }
-      STEPS.clear();
-    }
-
-    private static String formatStepsToSingleEvent(ArrayList<String> listOfSteps) {
-      return TextUtils.join("_", listOfSteps.subList(0, listOfSteps.indexOf(HOME_SCREEN_STEP)));
-    }
-
-    protected static boolean containsUnwantedValues(String source) {
-      String[] sourceArray = source.split("_");
-      for (String step : sourceArray) {
-        if (Arrays.asList(unwantedValuesList)
-            .contains(step)) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    public static void addStepToList(String step) {
-      if (!TextUtils.isEmpty(step)) {
-        STEPS.add(step.replace(" ", "-")
-            .toLowerCase());
-        Logger.d(TAG, "addStepToList() called with: step = [" + step + "]");
-        if (STEPS.size() > NUMBER_OF_STEPS_TO_RECORD) {
-          STEPS.remove(0);
-        }
-        lastStep = step;
-      }
-    }
-
-    static String getLastStep() {
-      return lastStep;
-    }
-  }
-
-  public static class HomePageEditorsChoice {
-
-    public static final String HOME_PAGE_EDITORS_CHOICE_FLURRY = "Home_Page_Editors_Choice";
-    public static final String HOME_PAGE_EDITORS_CHOICE_FACEBOOK = "Editors_Choice_Clicks";
-
-    public static void clickOnEditorsChoiceItem(int position, String packageName, boolean isHome) {
-      HashMap<String, String> map = new HashMap<>();
-      map.put("Application Name", packageName);
-      if (isHome) {
-        map.put("Search Position", "Home_" + Integer.valueOf(position)
-            .toString());
-      } else {
-        map.put("Search Position", "More_" + Integer.valueOf(position)
-            .toString());
-      }
-      logFacebookEvents(HOME_PAGE_EDITORS_CHOICE_FACEBOOK, map);
-      track(HOME_PAGE_EDITORS_CHOICE_FLURRY, map, FLURRY);
     }
   }
 

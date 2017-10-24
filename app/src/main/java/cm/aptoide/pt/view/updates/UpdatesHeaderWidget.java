@@ -8,6 +8,7 @@ package cm.aptoide.pt.view.updates;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionService;
@@ -57,8 +58,10 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
   }
 
   @Override public void bindView(UpdatesHeaderDisplayable displayable) {
-    final String marketName =
-        ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
+    final String marketName = appPreferences.getMarketName();
     title.setText(displayable.getLabel());
     more.setText(R.string.updatetab_button_update_all);
     more.setVisibility(View.VISIBLE);
