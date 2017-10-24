@@ -9,6 +9,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -133,6 +134,12 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
       wrapper = itemView.findViewById(R.id.question);
       wrapper.setVisibility(View.VISIBLE);
       question = (TextView) wrapper.findViewById(R.id.game_card_question);
+      RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)stampLeft.getLayoutParams();
+      params.setMargins(25,10,0,0);
+      stampLeft.setLayoutParams(params);
+      params = (RelativeLayout.LayoutParams)stampRight.getLayoutParams();
+      params.setMargins(0,10,25,0);
+      stampRight.setLayoutParams(params);
 
     }
     else{

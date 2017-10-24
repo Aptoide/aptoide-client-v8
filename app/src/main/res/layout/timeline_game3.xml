@@ -174,7 +174,7 @@
         <TextView
             android:id="@+id/game_card_question3_answer_left"
             style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
-            android:layout_width="wrap_content"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/game_card_question3_icon_left"
             android:gravity="center"
@@ -218,7 +218,7 @@
         <TextView
             android:id="@+id/game_card_question3_answer_right"
             style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
-            android:layout_width="wrap_content"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/game_card_question3_icon_right"
             android:gravity="center"
