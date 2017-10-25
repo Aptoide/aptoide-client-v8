@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.social.view.viewholder.AggregatedMediaViewHolder;
 import cm.aptoide.pt.social.view.viewholder.AggregatedRecommendationViewHolder;
 import cm.aptoide.pt.social.view.viewholder.AggregatedStoreViewHolder;
@@ -42,12 +43,14 @@ public class CardViewHolderFactory {
   private final MinimalCardViewFactory minimalCardViewFactory;
   private final String marketName;
   private final TimelineAdsRepository adsRepository;
+  private final StoreRepository storeRepository;
   private StoreContext storeContext;
 
   public CardViewHolderFactory(PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
       DateCalculator dateCalculator, SpannableFactory spannableFactory,
       MinimalCardViewFactory minimalCardViewFactory, String marketName,
-      TimelineAdsRepository adsRepository, StoreContext storeContext) {
+      TimelineAdsRepository adsRepository, StoreContext storeContext,
+      StoreRepository storeRepository) {
     this.minimalCardViewFactory = minimalCardViewFactory;
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.dateCalculator = dateCalculator;
@@ -55,6 +58,7 @@ public class CardViewHolderFactory {
     this.marketName = marketName;
     this.adsRepository = adsRepository;
     this.storeContext = storeContext;
+    this.storeRepository = storeRepository;
   }
 
   public PostViewHolder createViewHolder(int cardViewType, ViewGroup parent) {
@@ -100,7 +104,7 @@ public class CardViewHolderFactory {
             cardTouchEventPublishSubject, dateCalculator, spannableFactory);
       case SOCIAL_STORE:
         return new SocialStoreViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.timeline_social_store_item, parent, false),
+            .inflate(R.layout.timeline_social_store_item, parent, false), storeRepository,
             cardTouchEventPublishSubject, dateCalculator, spannableFactory);
       case AGGREGATED_SOCIAL_ARTICLE:
       case AGGREGATED_SOCIAL_VIDEO:
@@ -115,7 +119,7 @@ public class CardViewHolderFactory {
       case AGGREGATED_SOCIAL_STORE:
         return new AggregatedStoreViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_aggregated_store_item, parent, false),
-            cardTouchEventPublishSubject, dateCalculator, spannableFactory, minimalCardViewFactory);
+            cardTouchEventPublishSubject, dateCalculator, minimalCardViewFactory, storeRepository);
       case SOCIAL_POST_ARTICLE:
       case SOCIAL_POST_VIDEO:
         return new SocialPostMediaViewHolder(LayoutInflater.from(parent.getContext())
