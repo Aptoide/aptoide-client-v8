@@ -60,12 +60,14 @@ public class EspressoTests {
   private final String MATURE_APP = "Roullete Sex (Roleta do Sexo)";
   private final int WAIT_TIME = 550;
   private final int LONGER_WAIT_TIME = 2000;
-  private final int NUMBER_OF_RETRIES = 3;
+  private final int MAX_NUMBER_WHILEITERARTIONS = 45;
+  private final int NUMBER_OF_RETRIES = 2;
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
   @Rule public RetryTestRule retry = new RetryTestRule(NUMBER_OF_RETRIES);
   private String SIGNUPEMAILTEST = "";
   private String STORENAME = "a";
+  private int whileiterations = 0;
 
   private static ViewAction swipeRigthOnLeftMost() {
     return new GeneralSwipeAction(Swipe.FAST, GeneralLocation.CENTER_LEFT,
@@ -73,6 +75,7 @@ public class EspressoTests {
   }
 
   @Before public void setUp() throws IOException {
+    whileiterations = 0;
     SIGNUPEMAILTEST = SIGNUPEMAILTESTBGN + System.currentTimeMillis() + SIGNUPEMAILTESTEND;
     STORENAME = STORENAME + System.currentTimeMillis();
     if (isFirstTime()) {
@@ -81,61 +84,61 @@ public class EspressoTests {
     logOutorGoBack();
   }
 
-  @Test public void emptyEmailSignIn() throws InterruptedException {
+  @Test public void signInEmptyEmail() throws InterruptedException {
     goToMyAccount();
     performLogin("", PASS);
     onView(withText(R.string.no_email_error_message)).check(matches(isDisplayed()));
   }
 
-  @Test public void emptyPasswordSignIn() throws InterruptedException {
+  @Test public void signInEmptyPassword() throws InterruptedException {
     goToMyAccount();
     performLogin(LOGINEMAIL, "");
     onView(withText(R.string.no_pass_error_message)).check(matches(isDisplayed()));
   }
 
-  @Test public void emptySignIn() throws InterruptedException {
+  @Test public void signInEmpty() throws InterruptedException {
     goToMyAccount();
     performLogin("", "");
     onView(withText(R.string.no_email_and_pass_error_message)).check(matches(isDisplayed()));
   }
 
-  @Test public void wrongSignIn() throws InterruptedException {
+  @Test public void signInWrong() throws InterruptedException {
     goToMyAccount();
     performLogin(LOGINEMAIL, "wrongpass");
     onView(withText(R.string.error_invalid_grant)).check(matches(isDisplayed()));
   }
 
-  @Test public void invalidEmailSignUp() throws InterruptedException {
+  @Test public void signUpInvalidEmail() throws InterruptedException {
     goToMyAccount();
     performSignUp("randomemail", PASS);
     onView(withText(R.string.ws_error_IARG_106)).check(matches(isDisplayed()));
   }
 
-  @Test public void invalidPasswordSignUp() throws InterruptedException {
+  @Test public void signUpInvalidPassword() throws InterruptedException {
     goToMyAccount();
     performSignUp("randomemail", "igjsi1");
     onView(withText(R.string.password_validation_text)).check(matches(isDisplayed()));
   }
 
-  @Test public void emptyEmailSignUp() throws InterruptedException {
+  @Test public void signUpEmptyEmail() throws InterruptedException {
     goToMyAccount();
     performSignUp("", PASS);
     onView(withText(R.string.no_email_error_message)).check(matches(isDisplayed()));
   }
 
-  @Test public void emptyPasswordSignUp() throws InterruptedException {
+  @Test public void signUpEmptyPassword() throws InterruptedException {
     goToMyAccount();
     performSignUp(LOGINEMAIL, "");
     onView(withText(R.string.no_pass_error_message)).check(matches(isDisplayed()));
   }
 
-  @Test public void emptySignUp() throws InterruptedException {
+  @Test public void signUpEmptySignUp() throws InterruptedException {
     goToMyAccount();
     performSignUp("", "");
     onView(withText(R.string.no_email_and_pass_error_message)).check(matches(isDisplayed()));
   }
 
-  @Test public void emailExistsSignUp() throws InterruptedException {
+  @Test public void signUpEmailExists() throws InterruptedException {
     goToMyAccount();
     performSignUp(LOGINEMAIL, PASS);
     onView(withText(R.string.ws_error_WOP_9)).check(matches(isDisplayed()));
@@ -144,7 +147,8 @@ public class EspressoTests {
   @Test public void signUp() throws InterruptedException {
     goToMyAccount();
     performSignUp(SIGNUPEMAILTEST, PASS);
-    while (notSignUp()) {
+    while (notSignUp() && whileiterations < MAX_NUMBER_WHILEITERARTIONS) {
+      whileiterations++;
       Thread.sleep(LONGER_WAIT_TIME);
     }
     completeSignUp();
@@ -153,7 +157,8 @@ public class EspressoTests {
   @Test public void signUpPrivate() throws InterruptedException {
     goToMyAccount();
     performSignUp(SIGNUPEMAILTEST, PASS);
-    while (notSignUp()) {
+    while (notSignUp() && whileiterations < MAX_NUMBER_WHILEITERARTIONS) {
+      whileiterations++;
       Thread.sleep(LONGER_WAIT_TIME);
     }
     completeSignUpPrivate();
@@ -162,7 +167,8 @@ public class EspressoTests {
   @Test public void signUpMoreInfoPublic() throws InterruptedException {
     goToMyAccount();
     performSignUp(SIGNUPEMAILTEST, PASS);
-    while (notSignUp()) {
+    while (notSignUp() && whileiterations < MAX_NUMBER_WHILEITERARTIONS) {
+      whileiterations++;
       Thread.sleep(LONGER_WAIT_TIME);
     }
     completeSignUpMoreInfoPublic();
@@ -171,11 +177,13 @@ public class EspressoTests {
   @Test public void createStoreAtSignUp() throws InterruptedException {
     goToMyAccount();
     performSignUp(SIGNUPEMAILTEST, PASS);
-    while (notSignUp()) {
+    while (notSignUp() && whileiterations < MAX_NUMBER_WHILEITERARTIONS) {
+      whileiterations++;
       Thread.sleep(LONGER_WAIT_TIME);
     }
     completeSignUpWithStore();
-    while (!hasLoggedIn()) {
+    while (!hasLoggedIn() && whileiterations < MAX_NUMBER_WHILEITERARTIONS * 4) {
+      whileiterations++;
       Thread.sleep(WAIT_TIME);
     }
     goToMyAccount();
@@ -185,7 +193,8 @@ public class EspressoTests {
   @Test public void createStoreAfterSignUp() throws InterruptedException {
     goToMyAccount();
     performSignUp(SIGNUPEMAILTEST, PASS);
-    while (notSignUp()) {
+    while (notSignUp() && whileiterations < MAX_NUMBER_WHILEITERARTIONS) {
+      whileiterations++;
       Thread.sleep(LONGER_WAIT_TIME);
     }
     completeSignUp();
@@ -194,7 +203,8 @@ public class EspressoTests {
     Thread.sleep(LONGER_WAIT_TIME);
     onView(withId(R.id.create_store_action)).perform(click());
     createStore();
-    while (!hasLoggedIn()) {
+    while (!hasLoggedIn() && whileiterations < MAX_NUMBER_WHILEITERARTIONS * 4) {
+      whileiterations++;
       Thread.sleep(WAIT_TIME);
     }
     onView(withText(R.string.stores)).perform(swipeRight());
@@ -242,7 +252,7 @@ public class EspressoTests {
     }
   }
 
-  @Test public void landscapehometab() throws InterruptedException {
+  @Test public void landscapeHometab() throws InterruptedException {
     Activity activity = mActivityRule.getActivity();
     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     Thread.sleep(WAIT_TIME);
@@ -309,7 +319,7 @@ public class EspressoTests {
     onView(withId(R.id.action_btn)).check(matches(isDisplayed()));
   }
 
-  @Test public void settingsLandscape() throws InterruptedException {
+  @Test public void landscapeSettings() throws InterruptedException {
     boolean checked;
     Activity activity = mActivityRule.getActivity();
     goToSettings();
@@ -347,7 +357,8 @@ public class EspressoTests {
   @Test public void signIn() throws InterruptedException {
     goToMyAccount();
     performLogin(LOGINEMAIL, PASS);
-    while (!hasLoggedIn()) {
+    while (!hasLoggedIn() && whileiterations < MAX_NUMBER_WHILEITERARTIONS) {
+      whileiterations++;
       Thread.sleep(LONGER_WAIT_TIME);
     }
     checkIfLoggedIn();
@@ -360,7 +371,8 @@ public class EspressoTests {
     UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
     goToApp(APP_TO_SEARCH, 0);
     cancelIfDownloading();
-    while (!hasOpenedAppView()) {
+    while (!hasOpenedAppView() && whileiterations < MAX_NUMBER_WHILEITERARTIONS) {
+      whileiterations++;
       Thread.sleep(WAIT_TIME);
     }
     Thread.sleep(LONGER_WAIT_TIME);
@@ -544,10 +556,12 @@ public class EspressoTests {
   private void completeSignUp() throws InterruptedException {
     onView(withId(R.id.create_user_username_inserted)).perform(replaceText("a1"));
     onView(withId(R.id.create_user_create_profile)).perform(click());
-    while (!hasCreatedUser(false)) {
+    while (!hasCreatedUser(false) && whileiterations < MAX_NUMBER_WHILEITERARTIONS * 2) {
+      whileiterations++;
       Thread.sleep(WAIT_TIME);
     }
-    while (!hasCreatedStore()) {
+    while (!hasCreatedStore() && whileiterations < MAX_NUMBER_WHILEITERARTIONS *3) {
+      whileiterations++;
       Thread.sleep(WAIT_TIME);
     }
     Thread.sleep(WAIT_TIME);
@@ -557,11 +571,13 @@ public class EspressoTests {
   private void completeSignUpPrivate() throws InterruptedException {
     onView(withId(R.id.create_user_username_inserted)).perform(replaceText("a1"));
     onView(withId(R.id.create_user_create_profile)).perform(click());
-    while (!hasCreatedUser(true)) {
+    while (!hasCreatedUser(true) && whileiterations < MAX_NUMBER_WHILEITERARTIONS * 2) {
+      whileiterations++;
       Thread.sleep(WAIT_TIME);
     }
     onView(withId(R.id.logged_in_private_button)).perform(click());
-    while (!hasCreatedStore()) {
+    while (!hasCreatedStore() && whileiterations < MAX_NUMBER_WHILEITERARTIONS * 3) {
+      whileiterations++;
       Thread.sleep(WAIT_TIME);
     }
     Thread.sleep(WAIT_TIME);
@@ -571,11 +587,13 @@ public class EspressoTests {
   private void completeSignUpMoreInfoPublic() throws InterruptedException {
     onView(withId(R.id.create_user_username_inserted)).perform(replaceText("a1"));
     onView(withId(R.id.create_user_create_profile)).perform(click());
-    while (!hasCreatedUser(true)) {
+    while (!hasCreatedUser(true) && whileiterations < MAX_NUMBER_WHILEITERARTIONS * 2) {
+      whileiterations++;
       Thread.sleep(WAIT_TIME);
     }
     onView(withId(R.id.logged_in_continue)).perform(click());
-    while (!hasCreatedStore()) {
+    while (!hasCreatedStore()&& whileiterations < MAX_NUMBER_WHILEITERARTIONS * 3) {
+      whileiterations++;
       Thread.sleep(WAIT_TIME);
     }
     Thread.sleep(WAIT_TIME);
@@ -585,10 +603,12 @@ public class EspressoTests {
   private void completeSignUpWithStore() throws InterruptedException {
     onView(withId(R.id.create_user_username_inserted)).perform(replaceText("a1"));
     onView(withId(R.id.create_user_create_profile)).perform(click());
-    while (!hasCreatedUser(false)) {
+    while (!hasCreatedUser(false)&& whileiterations < MAX_NUMBER_WHILEITERARTIONS * 2) {
+      whileiterations++;
       Thread.sleep(WAIT_TIME);
     }
-    while (!hasCreatedStore()) {
+    while (!hasCreatedStore()&& whileiterations < MAX_NUMBER_WHILEITERARTIONS * 3) {
+      whileiterations++;
       Thread.sleep(WAIT_TIME);
     }
     Thread.sleep(WAIT_TIME);
