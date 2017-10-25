@@ -9,7 +9,6 @@ import cm.aptoide.accountmanager.Store;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialCard;
@@ -68,7 +67,7 @@ public class TimelinePresenter implements Presenter {
   private final TimelineView view;
   private final Timeline timeline;
   private final CrashReport crashReport;
-  private final TimelineNavigation timelineNavigation;
+  private final TimelineNavigator timelineNavigation;
   private final PermissionManager permissionManager;
   private final PermissionService permissionRequest;
   private final InstallManager installManager;
@@ -86,7 +85,7 @@ public class TimelinePresenter implements Presenter {
   private final NotificationCenter notificationCenter;
 
   public TimelinePresenter(@NonNull TimelineView cardsView, @NonNull Timeline timeline,
-      CrashReport crashReport, TimelineNavigation timelineNavigation,
+      CrashReport crashReport, TimelineNavigator timelineNavigation,
       PermissionManager permissionManager, PermissionService permissionRequest,
       InstallManager installManager, StoreRepository storeRepository,
       StoreUtilsProxy storeUtilsProxy, StoreCredentialsProviderImpl storeCredentialsProvider,
@@ -659,8 +658,7 @@ public class TimelinePresenter implements Presenter {
               } else {
                 if (type.equals(CardType.RECOMMENDATION) || type.equals(CardType.SIMILAR)) {
                   Recommendation card = (Recommendation) post;
-                  timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
-                      AppViewFragment.OpenType.OPEN_ONLY);
+                  timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName());
                 } else if (type.equals(CardType.STORE)) {
                   StoreAppCardTouchEvent storeAppCardTouchEvent =
                       (StoreAppCardTouchEvent) cardTouchEvent;
@@ -703,22 +701,19 @@ public class TimelinePresenter implements Presenter {
                             .getName(), "error"));
                   } else {
                     timelineNavigation.navigateToAppView(card.getAppUpdateId(),
-                        card.getPackageName(), AppViewFragment.OpenType.OPEN_ONLY);
+                        card.getPackageName());
                   }
                 } else if (type.equals(CardType.POPULAR_APP)) {
                   PopularApp card = (PopularApp) post;
-                  timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
-                      AppViewFragment.OpenType.OPEN_ONLY);
+                  timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName());
                 } else if (type.equals(CardType.SOCIAL_RECOMMENDATION) || type.equals(
                     CardType.SOCIAL_INSTALL) || type.equals(CardType.SOCIAL_POST_RECOMMENDATION)) {
                   RatedRecommendation card = (RatedRecommendation) post;
-                  timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
-                      AppViewFragment.OpenType.OPEN_ONLY);
+                  timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName());
                 } else if (type.equals(CardType.AGGREGATED_SOCIAL_INSTALL) || type.equals(
                     CardType.AGGREGATED_SOCIAL_APP)) {
                   AggregatedRecommendation card = (AggregatedRecommendation) post;
-                  timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
-                      AppViewFragment.OpenType.OPEN_ONLY);
+                  timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName());
                 }
               }
             })
@@ -1200,8 +1195,7 @@ public class TimelinePresenter implements Presenter {
   private void navigateToAppView(StoreAppCardTouchEvent cardTouchEvent) {
     timelineAnalytics.sendOpenAppEvent(cardTouchEvent.getActionType()
         .name(), TimelineAnalytics.SOURCE_APTOIDE, cardTouchEvent.getPackageName());
-    timelineNavigation.navigateToAppView(cardTouchEvent.getPackageName(),
-        AppViewFragment.OpenType.OPEN_ONLY);
+    timelineNavigation.navigateToAppView(cardTouchEvent.getPackageName());
   }
 
   private void followStore(long storeId, String storeName) {
