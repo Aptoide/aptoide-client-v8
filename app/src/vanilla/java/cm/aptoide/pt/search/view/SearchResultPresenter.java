@@ -37,7 +37,7 @@ public class SearchResultPresenter implements Presenter {
       SearchManager searchManager, PublishRelay<SearchAdResult> onAdClickRelay,
       PublishRelay<SearchAppResult> onItemViewClickRelay,
       PublishRelay<Pair<SearchAppResult, android.view.View>> onOpenPopupMenuClickRelay,
-      String defaultStoreName, String defaultThemeName, boolean isMultiStoreSearch) {
+      boolean isMultiStoreSearch, String defaultStoreName, String defaultThemeName) {
     this.view = view;
     this.analytics = analytics;
     this.navigator = navigator;
@@ -47,9 +47,9 @@ public class SearchResultPresenter implements Presenter {
     this.onAdClickRelay = onAdClickRelay;
     this.onItemViewClickRelay = onItemViewClickRelay;
     this.onOpenPopupMenuClickRelay = onOpenPopupMenuClickRelay;
+    this.isMultiStoreSearch = isMultiStoreSearch;
     this.defaultStoreName = defaultStoreName;
     this.defaultThemeName = defaultThemeName;
-    this.isMultiStoreSearch = isMultiStoreSearch;
   }
 
   @Override public void present() {
