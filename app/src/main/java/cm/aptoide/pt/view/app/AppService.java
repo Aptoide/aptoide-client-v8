@@ -28,26 +28,23 @@ public class AppService {
   private final Converter.Factory converterFactory;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
-  private final int initialOffset;
   private int limit;
   private boolean loading;
-  private int offset;
 
   public AppService(StoreCredentialsProvider storeCredentialsProvider,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, int initialOffset, int limit) {
+      SharedPreferences sharedPreferences, int limit) {
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
-    this.initialOffset = initialOffset;
     this.limit = limit;
   }
 
-  public Single<AppsList> loadNextApps(long storeId, boolean bypassCache) {
+  public Single<AppsList> loadApps(long storeId, boolean bypassCache, int offset) {
     if (loading) {
       return Single.just(new AppsList(true));
     }
@@ -62,15 +59,12 @@ public class AppService {
         .doOnTerminate(() -> loading = false)
         .flatMap(listApps -> mapListApps(listApps))
         .toSingle()
-        .map(applications -> new AppsList(applications, false))
         .onErrorReturn(throwable -> createErrorAppsList(throwable));
   }
 
-  private Observable<List<Application>> mapListApps(ListApps listApps) {
+  private Observable<AppsList> mapListApps(ListApps listApps) {
     if (listApps.isOk()) {
       List<Application> list = new ArrayList<>();
-      offset = listApps.getDataList()
-          .getNext();
       for (App app : listApps.getDataList()
           .getList()) {
         list.add(new Application(app.getName(), app.getIcon(), app.getStats()
@@ -78,19 +72,19 @@ public class AppService {
             .getAvg(), app.getStats()
             .getDownloads(), app.getPackageName(), app.getId()));
       }
-      return Observable.just(list);
+      return Observable.just(new AppsList(list, false, listApps.getDataList()
+          .getNext()));
     } else {
       return Observable.error(new IllegalStateException("Could not obtain timeline from server."));
     }
   }
 
   public Single<AppsList> loadFreshApps(long storeId) {
-    offset = initialOffset;
-    return loadNextApps(storeId, true);
+    return loadApps(storeId, true, 0);
   }
 
-  public Single<AppsList> loadNextApps(long storeId) {
-    return loadNextApps(storeId, false);
+  public Single<AppsList> loadApps(long storeId, int offset) {
+    return loadApps(storeId, false, offset);
   }
 
   public void setLimit(int limit) {

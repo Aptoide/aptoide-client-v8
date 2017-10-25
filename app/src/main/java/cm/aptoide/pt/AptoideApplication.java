@@ -1348,7 +1348,7 @@ public abstract class AptoideApplication extends Application {
               AccessorFactory.getAccessorFor(getDatabase(), Store.class)),
           applicationContext.getBodyInterceptorPoolV7(), applicationContext.getDefaultClient(),
           WebService.getDefaultConverter(), applicationContext.getTokenInvalidator(),
-          applicationContext.getDefaultSharedPreferences(), 0, limit), new HashMap<>()));
+          applicationContext.getDefaultSharedPreferences(), limit), new HashMap<>()));
     }
     appCenter.setLimit(limit);
     return appCenter;
