@@ -31,7 +31,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
@@ -105,7 +104,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private AptoideNavigationTracker aptoideNavigationTracker;
   private UpdateRepository repository;
   private PageViewsAnalytics pageViewsAnalytics;
-  private ApplicationPreferences appPreferences;
+  private String defaultThemeName;
 
   public static Fragment newInstance() {
     return new SettingsFragment();
@@ -115,9 +114,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
     super.onCreate(savedInstanceState);
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    appPreferences = application.getApplicationPreferences();
-
-    marketName = appPreferences.getMarketName();
+    defaultThemeName = application.getDefaultThemeName();
+    marketName = application.getMarketName();
     trackAnalytics = true;
     database = ((AptoideApplication) getContext().getApplicationContext()).getDatabase();
     adultContent = ((AptoideApplication) getContext().getApplicationContext()).getAdultContent();
@@ -173,10 +171,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
   @CallSuper @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    String storeTheme = appPreferences.getDefaultThemeName();
-    if (storeTheme != null) {
-      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(storeTheme));
+    if (defaultThemeName != null) {
+      ThemeUtils.setStoreTheme(getActivity(), defaultThemeName);
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(defaultThemeName));
     }
 
     return super.onCreateView(inflater, container, savedInstanceState);

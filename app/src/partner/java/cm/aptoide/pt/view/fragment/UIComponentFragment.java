@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.view.ThemeUtils;
@@ -52,11 +51,11 @@ public abstract class UIComponentFragment extends PermissionServiceFragment impl
   @CallSuper @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    final ApplicationPreferences appPreferences =
-        ((AptoideApplication) getContext().getApplicationContext()).getApplicationPreferences();
-    ThemeUtils.setStoreTheme(getActivity(), appPreferences.getDefaultThemeName());
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    ThemeUtils.setStoreTheme(getActivity(), application.getDefaultThemeName());
     ThemeUtils.setStatusBarThemeColor(getActivity(),
-        StoreTheme.get(appPreferences.getDefaultThemeName()));
+        StoreTheme.get(application.getDefaultThemeName()));
     super.onCreateView(inflater, container, savedInstanceState);
     return inflater.inflate(getContentViewId(), container, false);
   }

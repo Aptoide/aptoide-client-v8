@@ -11,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.TextView;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
@@ -93,8 +92,8 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
     baseBodyBodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();
     httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
-    partnerId = appPreferences.getPartnerId();
+    partnerId = application.getPartnerId();
+    setHasOptionsMenu(true);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -225,7 +224,6 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
     super.bindViews(view);
     emptyData = (TextView) view.findViewById(R.id.empty_data);
     descriptionContainer = (TextView) view.findViewById(R.id.data_container);
-    setHasOptionsMenu(true);
   }
 
   @Override public int getContentViewId() {

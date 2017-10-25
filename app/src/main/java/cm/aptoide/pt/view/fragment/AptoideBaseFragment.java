@@ -5,7 +5,6 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.WindowManager;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
@@ -42,8 +41,6 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
     final boolean isAdultContentEnabled = application.getAccountManager()
         .isAccountMature();
 
-    final ApplicationPreferences appPreferences = application.getApplicationPreferences();
-
     requestFactoryCdnPool = new RequestFactory(new StoreCredentialsProviderImpl(
         AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class)), baseBodyInterceptorV7Pool,
@@ -53,7 +50,7 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
         getContext().getResources(),
         (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
         application.getIdsRepository()
-            .getUniqueIdentifier(), appPreferences.getPartnerId(), isAdultContentEnabled,
+            .getUniqueIdentifier(), application.getPartnerId(), isAdultContentEnabled,
         application.getQManager()
             .getFilters(ManagerPreferences.getHWSpecsFilter(
                 ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
@@ -70,7 +67,7 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
         getContext().getResources(),
         (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
         application.getIdsRepository()
-            .getUniqueIdentifier(), appPreferences.getPartnerId(), isAdultContentEnabled,
+            .getUniqueIdentifier(), application.getPartnerId(), isAdultContentEnabled,
         application.getQManager()
             .getFilters(ManagerPreferences.getHWSpecsFilter(
                 ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),

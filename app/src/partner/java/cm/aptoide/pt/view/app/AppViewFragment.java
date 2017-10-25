@@ -26,7 +26,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.InstallManager;
@@ -212,7 +211,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private AptoideNavigationTracker aptoideNavigationTracker;
   private String editorsBrickPosition;
   private String originTag;
-  private ApplicationPreferences appPreferences;
   private SearchNavigator searchNavigator;
   private SearchBuilder searchBuilder;
 
@@ -334,18 +332,17 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    appPreferences = application.getApplicationPreferences();
 
     final android.app.SearchManager searchManagerService =
         (android.app.SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
 
     searchNavigator =
-        new SearchNavigator(getFragmentNavigator(), appPreferences.getDefaultStoreName());
+        new SearchNavigator(getFragmentNavigator(), application.getDefaultStoreName());
 
     searchBuilder = new SearchBuilder(searchManagerService, searchNavigator);
 
-    defaultTheme = appPreferences.getDefaultThemeName();
-    marketName = appPreferences.getMarketName();
+    defaultTheme = application.getDefaultThemeName();
+    marketName = application.getMarketName();
     billingIdResolver = application.getBillingIdResolver();
     adMapper = new MinimalAdMapper();
     qManager = application.getQManager();
@@ -390,7 +387,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
             spotAndShareAnalytics, timelineAnalytics, installAppRelay,
             application.getDefaultSharedPreferences(),
-            appPreferences.isCreateStoreUserPrivacyEnabled());
+            application.isCreateStoreUserPrivacyEnabled());
     downloadFactory = new DownloadFactory(marketName);
     appViewAnalytics = new AppViewAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));

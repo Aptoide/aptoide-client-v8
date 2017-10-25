@@ -3,7 +3,6 @@ package cm.aptoide.pt.search.view;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Pair;
-import cm.aptoide.pt.ApplicationPreferences;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
@@ -29,14 +28,16 @@ public class SearchResultPresenter implements Presenter {
   private final PublishRelay<SearchAdResult> onAdClickRelay;
   private final PublishRelay<SearchAppResult> onItemViewClickRelay;
   private final PublishRelay<Pair<SearchAppResult, android.view.View>> onOpenPopupMenuClickRelay;
-  private final ApplicationPreferences appPreferences;
+  private final String defaultStoreName;
+  private final String defaultThemeName;
+  private final boolean isMultiStoreSearch;
 
   public SearchResultPresenter(SearchView view, SearchAnalytics analytics,
       SearchNavigator navigator, CrashReport crashReport, Scheduler viewScheduler,
       SearchManager searchManager, PublishRelay<SearchAdResult> onAdClickRelay,
       PublishRelay<SearchAppResult> onItemViewClickRelay,
       PublishRelay<Pair<SearchAppResult, android.view.View>> onOpenPopupMenuClickRelay,
-      ApplicationPreferences appPreferences) {
+      boolean isMultiStoreSearch, String defaultStoreName, String defaultThemeName) {
     this.view = view;
     this.analytics = analytics;
     this.navigator = navigator;
@@ -46,7 +47,9 @@ public class SearchResultPresenter implements Presenter {
     this.onAdClickRelay = onAdClickRelay;
     this.onItemViewClickRelay = onItemViewClickRelay;
     this.onOpenPopupMenuClickRelay = onOpenPopupMenuClickRelay;
-    this.appPreferences = appPreferences;
+    this.isMultiStoreSearch = isMultiStoreSearch;
+    this.defaultStoreName = defaultStoreName;
+    this.defaultThemeName = defaultThemeName;
   }
 
   @Override public void present() {
@@ -215,19 +218,16 @@ public class SearchResultPresenter implements Presenter {
           final String packageName = data.getPackageName();
           final String storeName = data.getStoreName();
 
-          final String themeName = appPreferences.getDefaultThemeName();
-
           return view.showPopup(hasVersions, pair.second)
               .doOnNext(optionId -> {
                 if (optionId == R.id.versions) {
-                  if (appPreferences.hasMultiStoreSearch()) {
+                  if (isMultiStoreSearch) {
                     navigator.goToOtherVersions(appName, appIcon, packageName);
                   } else {
-                    navigator.goToOtherVersions(appName, appIcon, packageName,
-                        appPreferences.getDefaultStoreName());
+                    navigator.goToOtherVersions(appName, appIcon, packageName, defaultStoreName);
                   }
                 } else if (optionId == R.id.go_to_store) {
-                  navigator.goToStoreFragment(storeName, themeName);
+                  navigator.goToStoreFragment(storeName, defaultThemeName);
                 }
               });
         })
@@ -253,10 +253,9 @@ public class SearchResultPresenter implements Presenter {
     final String packageName = searchApp.getPackageName();
     final long appId = searchApp.getAppId();
     final String storeName = searchApp.getStoreName();
-    final String themeName = appPreferences.getDefaultThemeName();
     analytics.searchAppClick(view.getViewModel()
         .getCurrentQuery(), packageName);
-    navigator.goToAppView(appId, packageName, themeName, storeName);
+    navigator.goToAppView(appId, packageName, defaultThemeName, storeName);
   }
 
   private void handleClickFollowedStoresSearchButton() {

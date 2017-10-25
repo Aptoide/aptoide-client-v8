@@ -63,6 +63,7 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
             Analytics.getInstance(), aptoideNavigationTracker)), savedInstanceState);
     notificationSubject = PublishSubject.create();
     adapter = new InboxAdapter(Collections.emptyList(), notificationSubject);
+    setHasOptionsMenu(true);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -91,10 +92,5 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
   @Override protected void setupToolbarDetails(Toolbar toolbar) {
     super.setupToolbarDetails(toolbar);
     toolbar.setTitle(getString(R.string.myaccount_header_title));
-  }
-
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
-    setHasOptionsMenu(true);
   }
 }
