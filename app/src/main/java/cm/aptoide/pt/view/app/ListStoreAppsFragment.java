@@ -112,12 +112,10 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
       }
     });
 
-    AptoideApplication applicationContext =
-        (AptoideApplication) getContext().getApplicationContext();
     int limit = spanSize * 10;
     attachPresenter(new ListStoreAppsPresenter(this, storeId, AndroidSchedulers.mainThread(),
-        ((AptoideApplication) getContext().getApplicationContext()).getAppCenter(applicationContext,
-            limit), CrashReport.getInstance(), getFragmentNavigator()));
+        ((AptoideApplication) getContext().getApplicationContext()).getAppCenter(),
+        CrashReport.getInstance(), getFragmentNavigator(), limit));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {

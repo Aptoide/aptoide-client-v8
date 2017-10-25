@@ -14,22 +14,24 @@ import rx.Single;
  */
 
 public class ListStoreAppsPresenter implements Presenter {
-  private static final String TAG = ListStoreAppsPresenter.class.getSimpleName();
   private final ListStoreAppsView view;
   private final long storeId;
   private final Scheduler viewScheduler;
   private final AppCenter appCenter;
   private final CrashReport crashReport;
   private final FragmentNavigator fragmentNavigator;
+  private final int limit;
 
   public ListStoreAppsPresenter(ListStoreAppsView view, long storeId, Scheduler viewScheduler,
-      AppCenter appCenter, CrashReport crashReport, FragmentNavigator fragmentNavigator) {
+      AppCenter appCenter, CrashReport crashReport, FragmentNavigator fragmentNavigator,
+      int limit) {
     this.view = view;
     this.storeId = storeId;
     this.viewScheduler = viewScheduler;
     this.appCenter = appCenter;
     this.crashReport = crashReport;
     this.fragmentNavigator = fragmentNavigator;
+    this.limit = limit;
   }
 
   @Override public void present() {
@@ -58,7 +60,7 @@ public class ListStoreAppsPresenter implements Presenter {
   }
 
   @NonNull private Single<AppsList> loadShowNextApps() {
-    return appCenter.loadNextApps(storeId)
+    return appCenter.loadNextApps(storeId, limit)
         .observeOn(viewScheduler)
         .doOnSuccess(applications -> {
           if (applications.hasErrors()) {
@@ -76,7 +78,7 @@ public class ListStoreAppsPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(lifecycleEvent -> view.getRefreshEvent()
-            .flatMapSingle(refresh -> appCenter.loadFreshApps(storeId)
+            .flatMapSingle(refresh -> appCenter.loadFreshApps(storeId, limit)
                 .observeOn(viewScheduler)
                 .doOnSuccess(applications -> {
                   if (!applications.isLoading()) {
@@ -93,7 +95,7 @@ public class ListStoreAppsPresenter implements Presenter {
   private void onCreateLoadApps() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMapSingle(lifecycleEvent -> appCenter.getApps(storeId)
+        .flatMapSingle(lifecycleEvent -> appCenter.getApps(storeId, limit)
             .observeOn(viewScheduler)
             .doOnSuccess(applications -> {
               if (!applications.isLoading()) {
