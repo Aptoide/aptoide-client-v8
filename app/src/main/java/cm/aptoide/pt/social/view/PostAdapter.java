@@ -99,12 +99,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
     notifyDataSetChanged();
   }
 
-  public void removePost(int postPosition) {
-    posts.remove(postPosition);
-    notifyItemRemoved(postPosition);
-    notifyItemRangeChanged(postPosition, getItemCount());
-  }
-
   public Post getPost(int position) {
     return posts.get(position);
   }
@@ -129,5 +123,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
   private boolean hasUser() {
     return !posts.isEmpty() && (posts.get(0) instanceof TimelineUser || posts.get(
         0) instanceof ProgressCard);
+  }
+
+  public void removePost(Post post) {
+    if (posts.remove(post)) notifyDataSetChanged();
   }
 }

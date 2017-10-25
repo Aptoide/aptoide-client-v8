@@ -551,8 +551,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     hideProgressIndicator();
   }
 
-  @Override public void removePost(int postPosition) {
-    adapter.removePost(postPosition);
+  @Override public void removePost(Post post) {
+    adapter.removePost(post);
   }
 
   @Override public Observable<Post> getVisibleItems() {
