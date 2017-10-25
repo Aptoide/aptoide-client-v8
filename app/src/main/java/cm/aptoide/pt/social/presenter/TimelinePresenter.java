@@ -17,7 +17,6 @@ import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.repository.StoreRepository;
@@ -82,7 +81,6 @@ public class TimelinePresenter implements Presenter {
   private final Resources resources;
   private final FragmentNavigator fragmentNavigator;
   private final LinksHandlerFactory linksNavigator;
-  private final NotificationCenter notificationCenter;
 
   public TimelinePresenter(@NonNull TimelineView cardsView, @NonNull Timeline timeline,
       CrashReport crashReport, TimelineNavigator timelineNavigation,
@@ -91,8 +89,7 @@ public class TimelinePresenter implements Presenter {
       StoreUtilsProxy storeUtilsProxy, StoreCredentialsProviderImpl storeCredentialsProvider,
       AptoideAccountManager accountManager, TimelineAnalytics timelineAnalytics, Long userId,
       Long storeId, StoreContext storeContext, Resources resources,
-      FragmentNavigator fragmentNavigator, LinksHandlerFactory linksNavigator,
-      NotificationCenter notificationCenter) {
+      FragmentNavigator fragmentNavigator, LinksHandlerFactory linksNavigator) {
     this.view = cardsView;
     this.timeline = timeline;
     this.crashReport = crashReport;
@@ -111,7 +108,6 @@ public class TimelinePresenter implements Presenter {
     this.resources = resources;
     this.fragmentNavigator = fragmentNavigator;
     this.linksNavigator = linksNavigator;
-    this.notificationCenter = notificationCenter;
   }
 
   @Override public void present() {
