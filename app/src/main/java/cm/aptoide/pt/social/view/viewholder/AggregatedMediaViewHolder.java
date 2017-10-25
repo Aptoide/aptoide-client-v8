@@ -14,7 +14,7 @@ import cm.aptoide.pt.social.data.CardType;
 import cm.aptoide.pt.social.data.MinimalCardViewFactory;
 import cm.aptoide.pt.social.data.publisher.Poster;
 import cm.aptoide.pt.util.DateCalculator;
-import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.view.spannable.SpannableFactory;
 import java.util.List;
 import rx.subjects.PublishSubject;
 

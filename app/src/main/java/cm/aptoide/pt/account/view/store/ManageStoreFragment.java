@@ -40,8 +40,8 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
 import cm.aptoide.pt.view.dialog.ImagePickerDialog;
-import cm.aptoide.pt.view.permission.AccountPermissionProvider;
-import cm.aptoide.pt.view.permission.PermissionProvider;
+import cm.aptoide.pt.permission.AccountPermissionProvider;
+import cm.aptoide.pt.permission.PermissionProvider;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -263,7 +263,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
         new ManageStorePresenter(this, crashReport, storeManager, getResources(), uriToPathResolver,
             packageName, manageStoreNavigator, goToHome);
 
-    attachPresenter(new CompositePresenter(Arrays.asList(imagePickerPresenter, presenter)), null);
+    attachPresenter(new CompositePresenter(Arrays.asList(imagePickerPresenter, presenter)));
   }
 
   public void setupThemeSelector() {

@@ -17,7 +17,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
-import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Completable;
 import rx.Observable;
@@ -111,7 +111,7 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment implements Profi
     ProfileStepTwoPresenter presenter =
         new ProfileStepTwoPresenter(this, accountManager, CrashReport.getInstance(),
             accountNavigator);
-    attachPresenter(presenter, null);
+    attachPresenter(presenter);
   }
 
   @Override protected void setupToolbarDetails(Toolbar toolbar) {

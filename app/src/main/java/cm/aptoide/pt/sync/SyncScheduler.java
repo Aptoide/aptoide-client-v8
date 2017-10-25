@@ -44,6 +44,13 @@ public class SyncScheduler {
     syncStorage.remove(syncId);
   }
 
+  public void reschedule(Sync sync) {
+    if (isSyncScheduled(sync.getId())) {
+      cancel(sync.getId());
+      schedule(sync);
+    }
+  }
+
   private void scheduleOneOffSync(Sync sync) {
     if (sync.isExact()) {
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
@@ -64,22 +71,31 @@ public class SyncScheduler {
 
   private void schedulePeriodicSync(Sync sync) {
 
+    if (sync.isExact()) {
+      scheduleExactPeriodicSync(sync);
+    } else {
+      scheduleInexactPeriodicSync(sync);
+    }
+  }
+
+  private void scheduleInexactPeriodicSync(Sync sync) {
     if (isSyncScheduled(sync.getId())) {
       return;
     }
 
-    if (sync.isExact()) {
-      scheduleExactPeriodicSync(sync);
-    } else {
-      alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,
-          getElapsedRealtimeTrigger(sync.getTrigger()), sync.getInterval(),
-          getPendingIntent(buildIntent(sync.getId(), false)));
-      syncStorage.save(sync);
-    }
+    alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,
+        getElapsedRealtimeTrigger(sync.getTrigger()), sync.getInterval(),
+        getPendingIntent(buildIntent(sync.getId(), false)));
+    syncStorage.save(sync);
   }
 
   private void scheduleExactPeriodicSync(Sync sync) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+
+      if (isSyncScheduled(sync.getId())) {
+        return;
+      }
+
       alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME,
           getElapsedRealtimeTrigger(sync.getTrigger()), sync.getInterval(),
           getPendingIntent(buildIntent(sync.getId(), false)));

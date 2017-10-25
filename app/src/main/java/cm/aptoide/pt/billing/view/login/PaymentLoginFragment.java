@@ -24,9 +24,9 @@ import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.account.view.GooglePlayServicesFragment;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
-import cm.aptoide.pt.view.orientation.ScreenOrientationManager;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxTextView;
@@ -237,8 +237,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     attachPresenter(
         new PaymentLoginPresenter(this, requestCode, Arrays.asList("email", "user_friends"),
             accountNavigator, Arrays.asList("email"), accountManager, crashReport, errorMapper,
-            AndroidSchedulers.mainThread(), orientationManager, application.getAccountAnalytics()),
-        savedInstanceState);
+            AndroidSchedulers.mainThread(), orientationManager, application.getAccountAnalytics()));
   }
 
   @Override public void onDestroyView() {

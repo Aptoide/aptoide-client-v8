@@ -2,7 +2,7 @@ package cm.aptoide.pt.social.data;
 
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import cm.aptoide.pt.Install;
+import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;

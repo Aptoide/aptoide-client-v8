@@ -7,51 +7,59 @@ package cm.aptoide.pt.billing.authorization;
 
 public class Authorization {
 
-  private final int paymentId;
-  private final String payerId;
+  private final String id;
+  private final String customerId;
   private final Status status;
+  private final String transactionId;
 
-  public Authorization(int paymentId, String payerId, Status status) {
-    this.paymentId = paymentId;
-    this.payerId = payerId;
+  public Authorization(String id, String customerId, Status status, String transactionId) {
+    this.id = id;
+    this.customerId = customerId;
     this.status = status;
+    this.transactionId = transactionId;
   }
 
-  public String getPayerId() {
-    return payerId;
+  public String getId() {
+    return id;
   }
 
-  public int getPaymentId() {
-    return paymentId;
-  }
-
-  public boolean isAuthorized() {
-    return Status.ACTIVE.equals(status) || Status.NONE.equals(status);
+  public String getCustomerId() {
+    return customerId;
   }
 
   public boolean isPending() {
-    return Status.PENDING.equals(status) || isInitialized();
+    return Status.PENDING.equals(status);
   }
 
-  public boolean isInactive() {
-    return Status.INACTIVE.equals(status)
-        || Status.EXPIRED.equals(status)
-        || Status.SESSION_EXPIRED.equals(status);
+  public boolean isProcessing() {
+    return Status.PENDING_SYNC.equals(status) || Status.PROCESSING.equals(status);
   }
 
-  public boolean isInitialized() {
-    return Status.INITIATED.equals(status);
+  public boolean isPendingSync() {
+    return Status.PENDING_SYNC.equals(status);
   }
 
   public boolean isFailed() {
-    return Status.CANCELLED.equals(status) || Status.UNKNOWN_ERROR.equals(status);
+    return Status.FAILED.equals(status) || Status.EXPIRED.equals(status);
+  }
+
+  public boolean isActive() {
+    return Status.ACTIVE.equals(status) || Status.REDEEMED.equals(status);
+  }
+
+  public boolean isRedeemed() {
+    return Status.REDEEMED.equals(status);
   }
 
   public Status getStatus() {
     return status;
   }
 
+  public String getTransactionId() {
+    return transactionId;
+  }
+
   public enum Status {
-    UNKNOWN, NONE, INACTIVE, ACTIVE, INITIATED, PENDING, CANCELLED, EXPIRED, SESSION_EXPIRED, UNKNOWN_ERROR
+    NEW, PENDING, PENDING_SYNC, PROCESSING, REDEEMED, ACTIVE, FAILED, EXPIRED
   }
 }

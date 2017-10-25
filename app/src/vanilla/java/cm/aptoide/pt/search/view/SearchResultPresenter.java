@@ -1,6 +1,5 @@
 package cm.aptoide.pt.search.view;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Pair;
 import cm.aptoide.pt.R;
@@ -65,14 +64,6 @@ public class SearchResultPresenter implements Presenter {
     handleAllStoresListReachedBottom();
     handleFollowedStoresListReachedBottom();
     handleTitleBarClick();
-  }
-
-  @Override public void saveState(Bundle state) {
-    // does nothing
-  }
-
-  @Override public void restoreState(Bundle state) {
-    // does nothing
   }
 
   private void handleTitleBarClick() {

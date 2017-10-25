@@ -27,7 +27,7 @@ import cm.aptoide.pt.social.view.viewholder.TimelineLoginPostViewHolder;
 import cm.aptoide.pt.social.view.viewholder.TimelineNoNotificationHeaderViewHolder;
 import cm.aptoide.pt.social.view.viewholder.TimelineStatsViewHolder;
 import cm.aptoide.pt.util.DateCalculator;
-import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.view.spannable.SpannableFactory;
 import rx.subjects.PublishSubject;
 
 /**

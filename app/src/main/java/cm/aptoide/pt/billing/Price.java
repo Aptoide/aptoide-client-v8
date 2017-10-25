@@ -5,21 +5,16 @@
 
 package cm.aptoide.pt.billing;
 
-/**
- * Created by marcelobenites on 8/18/16.
- */
 public class Price {
 
   private final double amount;
   private final String currency;
   private final String currencySymbol;
-  private final double taxRate;
 
-  public Price(double amount, String currency, String currencySymbol, double taxRate) {
+  public Price(double amount, String currency, String currencySymbol) {
     this.amount = amount;
     this.currency = currency;
     this.currencySymbol = currencySymbol;
-    this.taxRate = taxRate;
   }
 
   public String getCurrencySymbol() {
@@ -34,7 +29,4 @@ public class Price {
     return currency;
   }
 
-  public double getTaxRate() {
-    return taxRate;
-  }
 }

@@ -13,8 +13,8 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.AutoUpdate;
-import cm.aptoide.pt.InstallManager;
+import cm.aptoide.pt.install.AutoUpdate;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -36,8 +36,8 @@ import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
-import cm.aptoide.pt.view.navigator.TabNavigatorActivity;
+import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.navigator.TabNavigatorActivity;
 import com.jakewharton.rxrelay.PublishRelay;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -92,7 +92,7 @@ public class MainActivity extends TabNavigatorActivity
         new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator, this, this,
             sharedPreferences,
             AccessorFactory.getAccessorFor(application.getDatabase(), Store.class), defaultTheme,
-            application.getDefaultStoreName(), application.getAptoideNavigationTracker(),
+            application.getDefaultStoreName(), application.getNavigationTracker(),
             application.getPageViewsAnalytics());
 
     final ApkFy apkFy = new ApkFy(this, getIntent(), securePreferences);
@@ -111,7 +111,7 @@ public class MainActivity extends TabNavigatorActivity
             CrashReport.getInstance(), apkFy, autoUpdate, new ContentPuller(this),
             notificationSyncScheduler, installCompletedNotifier, sharedPreferences,
             securePreferences, fragmentNavigator, deepLinkManager,
-            application.getDefaultStoreName(), defaultTheme), savedInstanceState);
+            application.getDefaultStoreName(), defaultTheme, savedInstanceState == null));
   }
 
   @Override public void showInstallationError(int numberOfErrors) {

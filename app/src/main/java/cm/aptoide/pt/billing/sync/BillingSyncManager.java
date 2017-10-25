@@ -6,7 +6,6 @@
 package cm.aptoide.pt.billing.sync;
 
 import cm.aptoide.pt.billing.BillingSyncScheduler;
-import cm.aptoide.pt.billing.Product;
 import cm.aptoide.pt.sync.Sync;
 import cm.aptoide.pt.sync.SyncScheduler;
 import java.util.Set;
@@ -24,19 +23,19 @@ public class BillingSyncManager implements BillingSyncScheduler {
     this.currentSyncs = currentSyncs;
   }
 
-  @Override public void syncAuthorization(int paymentId) {
-    final Sync sync = syncFactory.createAuthorizationSync(paymentId);
+  @Override public void syncAuthorization(String transactionId) {
+    final Sync sync = syncFactory.createAuthorizationSync(transactionId);
     currentSyncs.add(sync.getId());
     syncScheduler.schedule(sync);
   }
 
-  @Override public void syncTransaction(String sellerId, Product product) {
-    final Sync sync = syncFactory.createTransactionSync(sellerId, product);
+  @Override public void syncTransaction(String productId) {
+    final Sync sync = syncFactory.createTransactionSync(productId);
     currentSyncs.add(sync.getId());
     syncScheduler.schedule(sync);
   }
 
-  public void cancelAll() {
+  @Override public void stopSyncs() {
     for (String syncId : currentSyncs) {
       syncScheduler.cancel(syncId);
     }

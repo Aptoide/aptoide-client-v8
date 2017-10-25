@@ -14,7 +14,7 @@ import cm.aptoide.pt.social.data.Media;
 import cm.aptoide.pt.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.timeline.view.LikeButtonView;
 import cm.aptoide.pt.util.DateCalculator;
-import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.view.spannable.SpannableFactory;
 import rx.subjects.PublishSubject;
 
 /**
