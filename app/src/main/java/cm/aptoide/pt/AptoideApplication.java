@@ -722,7 +722,7 @@ public abstract class AptoideApplication extends Application {
               WebService.getDefaultConverter(), getNonNullObjectMapper(),
               getDefaultSharedPreferences(), getExtraId(), getTokenInvalidator(),
               getAuthenticationPersistence(), getNoAuthenticationBodyInterceptorV3(),
-              getMultipartBodyInterceptor(), getBodyInterceptorPoolV7(),
+              getMultipartBodyInterceptor(), getBodyInterceptorWebV7(),
               getBodyInterceptorPoolV7());
 
       final AndroidAccountDataMigration accountDataMigration = new AndroidAccountDataMigration(

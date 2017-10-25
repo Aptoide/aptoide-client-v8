@@ -75,7 +75,6 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
     this.serializer = serializer;
     this.errorCodeFactory = errorCodeFactory;
     this.packageManager = packageManager;
-    this.billing = billing;
     this.crashReport = crashReport;
     this.supportedApiVersion = apiVersion;
     this.analytics = analytics;

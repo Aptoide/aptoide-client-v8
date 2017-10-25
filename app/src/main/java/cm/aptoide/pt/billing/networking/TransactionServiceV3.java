@@ -3,7 +3,6 @@ package cm.aptoide.pt.billing.networking;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import cm.aptoide.pt.billing.BillingIdManager;
-import cm.aptoide.pt.billing.Customer;
 import cm.aptoide.pt.billing.transaction.Transaction;
 import cm.aptoide.pt.billing.transaction.TransactionFactory;
 import cm.aptoide.pt.billing.transaction.TransactionService;
@@ -25,14 +24,13 @@ public class TransactionServiceV3 implements TransactionService {
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
   private final TransactionFactory transactionFactory;
-  private final Customer customer;
   private final Resources resources;
   private final BillingIdManager billingIdManager;
 
   public TransactionServiceV3(TransactionMapperV3 transactionMapper,
       BodyInterceptor<BaseBody> bodyInterceptorV3, Converter.Factory converterFactory,
       OkHttpClient httpClient, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, TransactionFactory transactionFactory, Customer customer,
+      SharedPreferences sharedPreferences, TransactionFactory transactionFactory,
       Resources resources, BillingIdManager billingIdManager) {
     this.transactionMapper = transactionMapper;
     this.bodyInterceptorV3 = bodyInterceptorV3;
@@ -41,7 +39,6 @@ public class TransactionServiceV3 implements TransactionService {
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
     this.transactionFactory = transactionFactory;
-    this.customer = customer;
     this.resources = resources;
     this.billingIdManager = billingIdManager;
   }

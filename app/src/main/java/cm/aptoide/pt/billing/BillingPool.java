@@ -239,7 +239,7 @@ public class BillingPool {
     if (serviceSelector == null) {
       serviceSelector =
           new SharedPreferencesPaymentServiceSelector(BuildConfig.DEFAULT_PAYMENT_SERVICE_TYPE,
-              sharedPreferences);
+              sharedPreferences, Schedulers.io());
     }
     return serviceSelector;
   }
@@ -287,7 +287,7 @@ public class BillingPool {
     if (transactionServiceV3 == null) {
       transactionServiceV3 = new TransactionServiceV3(getTransactionMapperV3(), bodyInterceptorV3,
           WebService.getDefaultConverter(), httpClient, tokenInvalidator, sharedPreferences,
-          getTransactionFactory(), getCustomer(), resources, getBillingIdManagerV3());
+          getTransactionFactory(), resources, getBillingIdManagerV3());
     }
     return transactionServiceV3;
   }
