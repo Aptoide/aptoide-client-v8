@@ -4,6 +4,9 @@ buildscript {
 
   repositories {
     maven { url 'https://maven.fabric.io/public' }
+    maven {
+      url "https://maven.google.com"
+    }
   }
 
   dependencies {
@@ -23,6 +26,9 @@ retrolambda {
 
 android {
 
+  configurations.all {
+    resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
+  }
   // Websockets
   useLibrary 'org.apache.http.legacy'
 
@@ -326,6 +332,12 @@ dependencies {
     exclude group: "com.android.support", module: "support-annotations"
   }
   androidTestCompile "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
+  androidTestCompile "com.android.support.test.espresso:espresso-core:${ESPRESSO_VERSION}"
+  androidTestCompile "com.android.support.test.espresso:espresso-contrib:${ESPRESSO_VERSION}"
+  androidTestCompile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
+  androidTestCompile "com.android.support.test.uiautomator:uiautomator-v18:${UIAUTOMATOR_VERSION}"
+
+
 
   compile "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
 
