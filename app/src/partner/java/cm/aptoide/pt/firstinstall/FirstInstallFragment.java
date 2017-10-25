@@ -17,6 +17,7 @@ import cm.aptoide.pt.PartnerApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.app.FirstInstallAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.preferences.PartnersSecurePreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
@@ -25,6 +26,7 @@ import cm.aptoide.pt.view.BackButton;
 import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
+import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.List;
 import rx.Observable;
@@ -77,8 +79,12 @@ public class FirstInstallFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    Analytics.FirstInstall.popUp();
     handleOnBackKeyPressed();
+
+    FirstInstallAnalytics firstInstallAnalytics = new FirstInstallAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    firstInstallAnalytics.sendPopupEvent();
+
     attachPresenter(
         new FirstInstallPresenter(this, CrashReport.getInstance(), requestFactoryCdnPool,
             getContext(), ((PartnerApplication) getApplicationContext()).getBootConfig()
@@ -89,7 +95,8 @@ public class FirstInstallFragment extends AptoideBaseFragment<BaseAdapter>
             getContext().getResources(),
             (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
             RepositoryFactory.getAppRepository(getContext(),
-                ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())));
+                ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()),
+            firstInstallAnalytics));
   }
 
   /**
