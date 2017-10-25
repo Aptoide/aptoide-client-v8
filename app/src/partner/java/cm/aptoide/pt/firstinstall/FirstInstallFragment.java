@@ -66,10 +66,9 @@ public class FirstInstallFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void setupViews() {
     super.setupViews();
-    titleToolbar.setBackgroundColor(ContextCompat.getColor(getActivity(), StoreTheme.get(
-        ((AptoideApplication) getActivity().getApplication()).getApplicationPreferences()
-            .getDefaultThemeName())
-        .getPrimaryColor()));
+    titleToolbar.setBackgroundColor(ContextCompat.getColor(getActivity(),
+        StoreTheme.get(((AptoideApplication) getActivity().getApplication()).getDefaultThemeName())
+            .getPrimaryColor()));
   }
 
   @Override public int getContentViewId() {
