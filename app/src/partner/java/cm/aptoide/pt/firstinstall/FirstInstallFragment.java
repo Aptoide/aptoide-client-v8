@@ -67,7 +67,7 @@ public class FirstInstallFragment extends AptoideBaseFragment<BaseAdapter>
   @Override public void setupViews() {
     super.setupViews();
     titleToolbar.setBackgroundColor(ContextCompat.getColor(getActivity(),
-        StoreTheme.get(((AptoideApplication) getApplicationContext()).getDefaultThemeName())
+        StoreTheme.get(((AptoideApplication) getActivity().getApplication()).getDefaultThemeName())
             .getPrimaryColor()));
   }
 
