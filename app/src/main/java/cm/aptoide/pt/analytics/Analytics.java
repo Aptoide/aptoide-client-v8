@@ -832,32 +832,4 @@ public class Analytics {
       logFabricEvent(IS_INSTALLATION_TYPE_EVENT_NAME, map, FABRIC);
     }
   }
-
-  public static class FirstInstall {
-    public static final String FIRST_INSTALL_POP_UP = "First_Install_Pop_up";
-    public static final String FIRST_INSTALL_CLOSE_WINDOW = "First_Install_Close_Window";
-    public static final String FIRST_INSTALL_START_DOWNLOAD = "First_Install_Start_Download";
-    public static final String FIRST_INSTALL_SPONSORED_APPS_SELECTED = "sponsored_apps_selected";
-    public static final String FIRST_INSTALL_NORMAL_APPS_SELECTED = "normal_apps_selected";
-
-    public static void popUp() {
-      HashMap<String, String> map = new HashMap<>();
-      logFacebookEvents(FIRST_INSTALL_POP_UP, map);
-      track(FIRST_INSTALL_POP_UP, FLURRY);
-    }
-
-    public static void closeWindow() {
-      HashMap<String, String> map = new HashMap<>();
-      logFacebookEvents(FIRST_INSTALL_CLOSE_WINDOW, map);
-      track(FIRST_INSTALL_CLOSE_WINDOW, FLURRY);
-    }
-
-    public static void startDownload(String sponsored, String normal) {
-      HashMap<String, String> map = new HashMap<>();
-      map.put(FIRST_INSTALL_SPONSORED_APPS_SELECTED, sponsored);
-      map.put(FIRST_INSTALL_NORMAL_APPS_SELECTED, normal);
-      logFacebookEvents(FIRST_INSTALL_START_DOWNLOAD, map);
-      track(FIRST_INSTALL_START_DOWNLOAD, map, FLURRY);
-    }
-  }
 }

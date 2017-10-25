@@ -11,8 +11,8 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.app.AppRepository;
+import cm.aptoide.pt.app.FirstInstallAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
@@ -79,11 +79,12 @@ public class FirstInstallPresenter implements Presenter {
   private Converter.Factory converterFactory;
   private QManager qManager;
   private StoredMinimalAdAccessor storedMinimalAdAccessor;
+  private FirstInstallAnalytics firstInstallAnalytics;
 
   FirstInstallPresenter(FirstInstallView view, CrashReport crashReport,
       RequestFactory requestFactoryCdnPool, Context context, String storeName, String url,
       AdsRepository adsRepository, Resources resources, WindowManager windowManager,
-      AppRepository appRepository) {
+      AppRepository appRepository, FirstInstallAnalytics firstInstallAnalytics) {
     this.view = view;
     this.crashReport = crashReport;
     this.requestFactoryCdnPool = requestFactoryCdnPool;
@@ -94,6 +95,7 @@ public class FirstInstallPresenter implements Presenter {
     this.resources = resources;
     this.windowManager = windowManager;
     this.appRepository = appRepository;
+    this.firstInstallAnalytics = firstInstallAnalytics;
   }
 
   @Override public void present() {
@@ -146,7 +148,7 @@ public class FirstInstallPresenter implements Presenter {
         .flatMap(resumed -> view.closeClick())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(closeClick -> {
-          Analytics.FirstInstall.closeWindow();
+          firstInstallAnalytics.sendCloseWindowsEvent();
           view.removeFragmentAnimation();
         }, crashReport::log);
   }
@@ -387,7 +389,7 @@ public class FirstInstallPresenter implements Presenter {
         numberOfSelectedApps++;
       }
     }
-    Analytics.FirstInstall.startDownload(String.valueOf(numberOfSelectedAds),
+    firstInstallAnalytics.sendStartDownloadEvent(String.valueOf(numberOfSelectedAds),
         String.valueOf(numberOfSelectedApps));
   }
 }
