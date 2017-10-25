@@ -51,7 +51,10 @@ public class SpotAndShareTransferRecordAdapter
   }
 
   @Override public int getItemCount() {
-    return appsTransfered.size();
+    if (appsTransfered != null && !appsTransfered.isEmpty()) {
+      return appsTransfered.size();
+    }
+    return 0;
   }
 
   @Override public int getItemViewType(int position) {
