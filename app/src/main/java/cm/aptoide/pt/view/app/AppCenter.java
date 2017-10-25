@@ -14,19 +14,15 @@ public class AppCenter {
     this.appService = appRepository;
   }
 
-  public Single<AppsList> loadNextApps(long storeId) {
-    return appService.loadNextApps(storeId);
+  public Single<AppsList> loadNextApps(long storeId, int limit) {
+    return appService.loadNextApps(storeId, limit);
   }
 
-  public Single<AppsList> loadFreshApps(long storeId) {
-    return appService.loadFreshApps(storeId);
+  public Single<AppsList> loadFreshApps(long storeId, int limit) {
+    return appService.loadFreshApps(storeId, limit);
   }
 
-  public void setLimit(int limit) {
-    appService.setLimit(limit);
-  }
-
-  public Single<AppsList> getApps(long storeId) {
-    return appService.getApplications(storeId);
+  public Single<AppsList> getApps(long storeId, int limit) {
+    return appService.getApplications(storeId, limit);
   }
 }

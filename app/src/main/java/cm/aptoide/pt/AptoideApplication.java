@@ -1341,16 +1341,14 @@ public abstract class AptoideApplication extends Application {
     return accountAnalytics;
   }
 
-  @NonNull public AppCenter getAppCenter(AptoideApplication applicationContext, int limit) {
+  @NonNull public AppCenter getAppCenter() {
     if (appCenter == null) {
       appCenter = new AppCenter(new AppCenterRepository(new AppService(
           new StoreCredentialsProviderImpl(
               AccessorFactory.getAccessorFor(getDatabase(), Store.class)),
-          applicationContext.getBodyInterceptorPoolV7(), applicationContext.getDefaultClient(),
-          WebService.getDefaultConverter(), applicationContext.getTokenInvalidator(),
-          applicationContext.getDefaultSharedPreferences(), limit), new HashMap<>()));
+          getBodyInterceptorPoolV7(), getDefaultClient(), WebService.getDefaultConverter(),
+          getTokenInvalidator(), getDefaultSharedPreferences()), new HashMap<>()));
     }
-    appCenter.setLimit(limit);
     return appCenter;
   }
 

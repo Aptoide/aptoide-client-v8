@@ -28,23 +28,21 @@ public class AppService {
   private final Converter.Factory converterFactory;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
-  private int limit;
   private boolean loading;
 
   public AppService(StoreCredentialsProvider storeCredentialsProvider,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, int limit) {
+      SharedPreferences sharedPreferences) {
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
-    this.limit = limit;
   }
 
-  public Single<AppsList> loadApps(long storeId, boolean bypassCache, int offset) {
+  public Single<AppsList> loadApps(long storeId, boolean bypassCache, int offset, int limit) {
     if (loading) {
       return Single.just(new AppsList(true));
     }
@@ -79,16 +77,12 @@ public class AppService {
     }
   }
 
-  public Single<AppsList> loadFreshApps(long storeId) {
-    return loadApps(storeId, true, 0);
+  public Single<AppsList> loadFreshApps(long storeId, int limit) {
+    return loadApps(storeId, true, 0, limit);
   }
 
-  public Single<AppsList> loadApps(long storeId, int offset) {
-    return loadApps(storeId, false, offset);
-  }
-
-  public void setLimit(int limit) {
-    this.limit = limit;
+  public Single<AppsList> loadApps(long storeId, int offset, int limit) {
+    return loadApps(storeId, false, offset, limit);
   }
 
   @NonNull private AppsList createErrorAppsList(Throwable throwable) {

@@ -20,19 +20,19 @@ public class AppCenterRepository {
     this.storeApplications = storeApplications;
   }
 
-  public Single<AppsList> loadNextApps(long storeId) {
+  public Single<AppsList> loadNextApps(long storeId, int limit) {
     Pair<Integer, List<Application>> longListPair = storeApplications.get(storeId);
     int offset = 0;
     if (longListPair != null) {
       offset = longListPair.first;
     }
-    return appService.loadApps(storeId, offset)
+    return appService.loadApps(storeId, offset, limit)
         .doOnSuccess(applications -> updateCache(storeId, applications, false))
         .map(appsList -> cloneList(appsList));
   }
 
-  public Single<AppsList> loadFreshApps(long storeId) {
-    return appService.loadFreshApps(storeId)
+  public Single<AppsList> loadFreshApps(long storeId, int limit) {
+    return appService.loadFreshApps(storeId, limit)
         .doOnSuccess(applications -> updateCache(storeId, applications, true))
         .map(appsList -> cloneList(appsList));
   }
@@ -59,15 +59,27 @@ public class AppCenterRepository {
     }
   }
 
-  public void setLimit(int limit) {
-    appService.setLimit(limit);
-  }
-
-  public Single<AppsList> getApplications(long storeId) {
+  /**
+   * @param limit parameter represents the number of apps returned;
+   * if there cached apps, a multiple of limit apps will be returned
+   * else limit apps will be requested to server
+   * <p>example:&#09;limit=2</p>
+   * <p>No cached apps:</p>
+   * <p>&#09;return list's size = 2</p>
+   * <p>3 Cached apps</p>
+   * <p>&#09;return list's size = 4</p>
+   */
+  public Single<AppsList> getApplications(long storeId, int limit) {
     Pair<Integer, List<Application>> pair = storeApplications.get(storeId);
     if (pair == null || pair.second.isEmpty()) {
-      return loadNextApps(storeId);
+      return loadNextApps(storeId, limit);
     }
-    return Single.just(new AppsList(new ArrayList<>(pair.second), false, pair.first));
+    int appsLeft = limit - pair.second.size() % limit;
+    if (appsLeft == 0) {
+      return Single.just(new AppsList(new ArrayList<>(pair.second), false, pair.first));
+    } else {
+      return loadNextApps(storeId, appsLeft).map(
+          appsList -> new AppsList(new ArrayList<>(pair.second), false, pair.first));
+    }
   }
 }
