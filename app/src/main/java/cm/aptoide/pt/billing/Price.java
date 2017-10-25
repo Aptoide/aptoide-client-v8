@@ -28,5 +28,4 @@ public class Price {
   public String getCurrency() {
     return currency;
   }
-
 }

@@ -18,10 +18,9 @@ import rx.Observable;
 public class GetMerchantRequest
     extends V7<GetMerchantRequest.ResponseBody, GetMerchantRequest.RequestBody> {
 
-  private GetMerchantRequest(RequestBody baseBody,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
+  private GetMerchantRequest(RequestBody baseBody, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     super(baseBody, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
         tokenInvalidator);
   }
@@ -36,7 +35,8 @@ public class GetMerchantRequest
         tokenInvalidator, sharedPreferences);
   }
 
-  @Override protected Observable<GetMerchantRequest.ResponseBody> loadDataFromNetwork(Interfaces interfaces,
+  @Override
+  protected Observable<GetMerchantRequest.ResponseBody> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
     return interfaces.getBillingMerchant(body, bypassCache);
   }

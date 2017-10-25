@@ -72,14 +72,14 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
     super.onDestroy();
   }
 
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    outState.putInt(PAGE_INDEX, viewPager.getCurrentItem());
-  }
-
   @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
     super.onViewStateRestored(savedInstanceState);
     loadExtras(savedInstanceState);
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putInt(PAGE_INDEX, viewPager.getCurrentItem());
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {

@@ -8,8 +8,8 @@ import java.util.List;
 public class NavigationTracker {
 
   private static final String TAG = NavigationTracker.class.getSimpleName();
-  private List<ScreenTagHistory> historyList;
   private final TrackerFilter trackerFilter;
+  private List<ScreenTagHistory> historyList;
 
   public NavigationTracker(List<ScreenTagHistory> historyList, TrackerFilter trackerFilter) {
     this.historyList = historyList;

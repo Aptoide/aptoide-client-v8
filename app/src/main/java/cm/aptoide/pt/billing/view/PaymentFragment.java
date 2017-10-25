@@ -117,8 +117,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     attachPresenter(new PaymentPresenter(this, billing, billingNavigator, billingAnalytics,
         getArguments().getString(PaymentActivity.EXTRA_MERCHANT_NAME),
         getArguments().getString(PaymentActivity.EXTRA_SKU),
-        getArguments().getString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD),
-        new HashSet<>()));
+        getArguments().getString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD), new HashSet<>()));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {

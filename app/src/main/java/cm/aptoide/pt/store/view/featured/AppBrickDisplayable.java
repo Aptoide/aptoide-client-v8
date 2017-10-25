@@ -23,8 +23,7 @@ public class AppBrickDisplayable extends DisplayablePojo<App> {
   public AppBrickDisplayable() {
   }
 
-  public AppBrickDisplayable(App pojo, String tag,
-      NavigationTracker navigationTracker) {
+  public AppBrickDisplayable(App pojo, String tag, NavigationTracker navigationTracker) {
     super(pojo);
     this.tag = tag;
     this.navigationTracker = navigationTracker;

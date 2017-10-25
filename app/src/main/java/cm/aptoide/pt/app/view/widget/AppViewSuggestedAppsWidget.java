@@ -40,8 +40,7 @@ public class AppViewSuggestedAppsWidget extends Widget<AppViewSuggestedAppsDispl
     List<Displayable> displayables = new LinkedList<>();
     for (MinimalAd minimalAd : minimalAds) {
       // TODO: 01-08-2017 neuro fill ad tag
-      displayables.add(
-          new AppViewAdDisplayable(minimalAd, displayable.getNavigationTracker()));
+      displayables.add(new AppViewAdDisplayable(minimalAd, displayable.getNavigationTracker()));
     }
 
     for (App app : appsList) {

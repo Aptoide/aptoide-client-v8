@@ -80,7 +80,8 @@ public class AndroidAccountDataMigration {
             .andThen(cleanShareDialogShowPref())
             .doOnCompleted(() -> markMigrated());
       }
-    }).subscribeOn(scheduler);
+    })
+        .subscribeOn(scheduler);
   }
 
   /**

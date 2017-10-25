@@ -569,8 +569,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   public void buyApp(GetAppMeta.App app) {
     billingAnalytics.sendPaymentViewShowEvent();
-    startActivityForResult(PaymentActivity.getIntent(getActivity(),
-        app.getId(), BuildConfig.APPLICATION_ID), PAY_APP_REQUEST_CODE);
+    startActivityForResult(
+        PaymentActivity.getIntent(getActivity(), app.getId(), BuildConfig.APPLICATION_ID),
+        PAY_APP_REQUEST_CODE);
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -931,8 +932,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             shouldInstall, installedRepository, downloadFactory, timelineAnalytics,
             appViewAnalytics, installAppRelay, this,
             new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
-                AppEventsLogger.newLogger(getContext().getApplicationContext())),
-            navigationTracker, getEditorsBrickPosition());
+                AppEventsLogger.newLogger(getContext().getApplicationContext())), navigationTracker,
+            getEditorsBrickPosition());
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics, storeAnalytics));
     displayables.add(
@@ -1084,8 +1085,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             .observe(), (minimalAds, listApps) -> new AppViewSuggestedAppsDisplayable(minimalAds,
             removeCurrentAppFromSuggested(listApps.getDataList()
                 // TODO: 04/10/2017 trinkes make some default thing for StoreContext.home
-                .getList()), appViewSimilarAppAnalytics, navigationTracker,
-            StoreContext.home))
+                .getList()), appViewSimilarAppAnalytics, navigationTracker, StoreContext.home))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(appViewSuggestedAppsDisplayable -> {

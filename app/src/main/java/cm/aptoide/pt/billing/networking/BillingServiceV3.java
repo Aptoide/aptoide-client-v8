@@ -70,16 +70,6 @@ public class BillingServiceV3 implements BillingService {
     return Single.error(new IllegalStateException("Not implemented!"));
   }
 
-  @Override public Single<Purchase> getPurchase(String productId) {
-    return getServerPaidApp(true, billingIdManager.resolveProductId(productId)).map(
-        app -> purchaseMapper.map(app, productId));
-  }
-
-  @Override public Single<Product> getProduct(String sku, String merchantName) {
-    return getServerPaidApp(false, billingIdManager.resolveProductId(sku)).map(
-        paidApp -> productMapper.map(paidApp));
-  }
-
   @Override public Completable deletePurchase(String purchaseId) {
     return Completable.error(new IllegalStateException("Not implemented!"));
   }
@@ -88,8 +78,18 @@ public class BillingServiceV3 implements BillingService {
     return Single.error(new IllegalStateException("Not implemented!"));
   }
 
+  @Override public Single<Purchase> getPurchase(String productId) {
+    return getServerPaidApp(true, billingIdManager.resolveProductId(productId)).map(
+        app -> purchaseMapper.map(app, productId));
+  }
+
   @Override public Single<List<Product>> getProducts(String merchantName, List<String> productIds) {
     return Single.error(new IllegalStateException("Not implemented!"));
+  }
+
+  @Override public Single<Product> getProduct(String sku, String merchantName) {
+    return getServerPaidApp(false, billingIdManager.resolveProductId(sku)).map(
+        paidApp -> productMapper.map(paidApp));
   }
 
   private Single<PaidApp> getServerPaidApp(boolean bypassCache, long appId) {

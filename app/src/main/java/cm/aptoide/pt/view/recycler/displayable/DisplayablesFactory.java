@@ -101,8 +101,7 @@ public class DisplayablesFactory {
                   installedRepository));
 
         case ADS:
-          List<Displayable> adsList =
-              getAds(widget, new MinimalAdMapper(), navigationTracker);
+          List<Displayable> adsList = getAds(widget, new MinimalAdMapper(), navigationTracker);
           if (adsList.size() > 0) {
             DisplayableGroup ads = new DisplayableGroup(adsList, windowManager, resources);
             // Header hammered
@@ -143,8 +142,7 @@ public class DisplayablesFactory {
                   navigationTracker));
 
         case COMMENTS_GROUP:
-          return Observable.from(
-              createCommentsGroup(widget, storeTabNavigator, navigationTracker));
+          return Observable.from(createCommentsGroup(widget, storeTabNavigator, navigationTracker));
 
         case APP_META:
           GetStoreWidgets.WSWidget.Data dataObj = widget.getData();
