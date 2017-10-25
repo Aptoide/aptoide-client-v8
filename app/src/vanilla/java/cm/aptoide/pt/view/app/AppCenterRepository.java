@@ -1,5 +1,6 @@
 package cm.aptoide.pt.view.app;
 
+import android.util.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -11,16 +12,21 @@ import rx.Single;
 
 public class AppCenterRepository {
   private final AppService appService;
-  private final Map<Long, List<Application>> storeApplications;
+  private final Map<Long, Pair<Integer, List<Application>>> storeApplications;
 
   public AppCenterRepository(AppService appService,
-      Map<Long, List<Application>> storeApplications) {
+      Map<Long, Pair<Integer, List<Application>>> storeApplications) {
     this.appService = appService;
     this.storeApplications = storeApplications;
   }
 
   public Single<AppsList> loadNextApps(long storeId) {
-    return appService.loadNextApps(storeId)
+    Pair<Integer, List<Application>> longListPair = storeApplications.get(storeId);
+    int offset = 0;
+    if (longListPair != null) {
+      offset = longListPair.first;
+    }
+    return appService.loadApps(storeId, offset)
         .doOnSuccess(applications -> updateCache(storeId, applications, false))
         .map(appsList -> cloneList(appsList));
   }
@@ -35,16 +41,20 @@ public class AppCenterRepository {
     if (appsList.hasErrors() || appsList.isLoading()) {
       return appsList;
     }
-    return new AppsList(new ArrayList<>(appsList.getList()), appsList.isLoading());
+    return new AppsList(new ArrayList<>(appsList.getList()), appsList.isLoading(),
+        appsList.getOffset());
   }
 
   private void updateCache(long storeId, AppsList applications, boolean isFresh) {
-    if (!applications.hasErrors()) {
-      List<Application> cache = storeApplications.get(storeId);
+    if (!applications.hasErrors() && !applications.isLoading()) {
+      Pair<Integer, List<Application>> cache = storeApplications.get(storeId);
       if (cache == null || isFresh) {
-        storeApplications.put(storeId, applications.getList());
+        storeApplications.put(storeId,
+            new Pair<>(applications.getOffset(), applications.getList()));
       } else {
-        cache.addAll(applications.getList());
+        List<Application> list = cache.second;
+        list.addAll(applications.getList());
+        storeApplications.put(storeId, new Pair<>(applications.getOffset(), list));
       }
     }
   }
@@ -54,10 +64,10 @@ public class AppCenterRepository {
   }
 
   public Single<AppsList> getApplications(long storeId) {
-    List<Application> applications = storeApplications.get(storeId);
-    if (applications == null || applications.isEmpty()) {
+    Pair<Integer, List<Application>> pair = storeApplications.get(storeId);
+    if (pair == null || pair.second.isEmpty()) {
       return loadNextApps(storeId);
     }
-    return Single.just(new AppsList(new ArrayList<>(applications), false));
+    return Single.just(new AppsList(new ArrayList<>(pair.second), false, pair.first));
   }
 }

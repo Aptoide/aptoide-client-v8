@@ -10,16 +10,19 @@ public class AppsList {
   private final List<Application> list;
   private final boolean loading;
   private final Error error;
+  private final int offset;
 
   public AppsList(Error error) {
     this.error = error;
     this.loading = false;
     list = Collections.emptyList();
+    offset = -1;
   }
 
-  public AppsList(List<Application> list, boolean loading) {
+  public AppsList(List<Application> list, boolean loading, int offset) {
     this.list = list;
     this.loading = loading;
+    this.offset = offset;
     error = null;
   }
 
@@ -27,6 +30,11 @@ public class AppsList {
     this.loading = loading;
     list = Collections.emptyList();
     error = null;
+    offset = -1;
+  }
+
+  public int getOffset() {
+    return offset;
   }
 
   public List<Application> getList() {
