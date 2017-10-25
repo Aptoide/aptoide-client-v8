@@ -18,9 +18,11 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.CardType;
 import cm.aptoide.pt.social.data.LikesPreviewCardTouchEvent;
+import cm.aptoide.pt.social.data.PostPopupMenuBuilder;
 import cm.aptoide.pt.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.social.data.SocialHeaderCardTouchEvent;
 import cm.aptoide.pt.social.data.SocialMedia;
+import cm.aptoide.pt.social.data.UserUnfollowCardTouchEvent;
 import cm.aptoide.pt.timeline.view.LikeButtonView;
 import cm.aptoide.pt.util.DateCalculator;
 import cm.aptoide.pt.view.spannable.SpannableFactory;
@@ -48,19 +50,15 @@ public class SocialMediaViewHolder extends SocialPostViewHolder<SocialMedia> {
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final TextView commentButton;
   private final TextView shareButton;
+  private final View overflowMenu;
   /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
   private final LinearLayout socialInfoBar;
   private final TextView numberLikes;
   private final TextView numberLikesOneLike;
   private final RelativeLayout likePreviewContainer;
   private final LayoutInflater inflater;
-  private final LinearLayout socialCommentBar;
-  private final TextView socialCommentUsername;
-  private final TextView socialCommentBody;
-  private final ImageView latestCommentMainAvatar;
   private final TextView sharedBy;
   private final TextView numberComments;
-
   private int marginOfTheNextLikePreview = 60;
 
   /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
@@ -86,6 +84,7 @@ public class SocialMediaViewHolder extends SocialPostViewHolder<SocialMedia> {
     this.like = (LinearLayout) itemView.findViewById(R.id.social_like);
     this.commentButton = (TextView) itemView.findViewById(R.id.social_comment);
     this.shareButton = (TextView) itemView.findViewById(R.id.social_share);
+    this.overflowMenu = itemView.findViewById(R.id.overflow_menu);
     /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
     this.socialInfoBar = (LinearLayout) itemView.findViewById(R.id.social_info_bar);
     this.numberLikes = (TextView) itemView.findViewById(R.id.social_number_of_likes);
@@ -93,58 +92,54 @@ public class SocialMediaViewHolder extends SocialPostViewHolder<SocialMedia> {
     this.likePreviewContainer = (RelativeLayout) itemView.findViewById(
         R.id.displayable_social_timeline_likes_preview_container);
     this.numberComments = (TextView) itemView.findViewById(R.id.social_number_of_comments);
-    this.socialCommentBar = (LinearLayout) itemView.findViewById(R.id.social_latest_comment_bar);
-    this.socialCommentUsername =
-        (TextView) itemView.findViewById(R.id.social_latest_comment_user_name);
-    this.socialCommentBody = (TextView) itemView.findViewById(R.id.social_latest_comment_body);
-    this.latestCommentMainAvatar =
-        (ImageView) itemView.findViewById(R.id.card_last_comment_main_icon);
     this.sharedBy = (TextView) itemView.findViewById(R.id.social_shared_by);
     this.inflater = LayoutInflater.from(itemView.getContext());
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
   }
 
-  @Override public void setPost(SocialMedia card, int position) {
-    if (card.getType()
+  @Override public void setPost(SocialMedia post, int position) {
+    if (post.getType()
         .equals(CardType.SOCIAL_ARTICLE)) {
       this.playIcon.setVisibility(View.GONE);
-    } else if (card.getType()
+    } else if (post.getType()
         .equals(CardType.SOCIAL_VIDEO)) {
       this.playIcon.setVisibility(View.VISIBLE);
     }
     ImageLoader.with(itemView.getContext())
-        .loadWithShadowCircleTransform(card.getPoster()
+        .loadWithShadowCircleTransform(post.getPoster()
             .getPrimaryAvatar(), headerPrimaryAvatar);
     ImageLoader.with(itemView.getContext())
-        .loadWithShadowCircleTransform(card.getPoster()
+        .loadWithShadowCircleTransform(post.getPoster()
             .getSecondaryAvatar(), headerSecondaryAvatar);
-    this.headerPrimaryName.setText(getStyledTitle(itemView.getContext(), card.getPoster()
+    this.headerPrimaryName.setText(getStyledTitle(itemView.getContext(), post.getPoster()
         .getPrimaryName()));
-    showHeaderSecondaryName(card);
-    this.timestamp.setText(dateCalculator.getTimeSinceDate(itemView.getContext(), card.getDate()));
-    this.mediaTitle.setText(card.getMediaTitle());
+    showHeaderSecondaryName(post);
+    this.timestamp.setText(dateCalculator.getTimeSinceDate(itemView.getContext(), post.getDate()));
+    this.mediaTitle.setText(post.getMediaTitle());
     ImageLoader.with(itemView.getContext())
-        .loadWithCenterCrop(card.getMediaThumbnailUrl(), mediaThumbnail);
+        .loadWithCenterCrop(post.getMediaThumbnailUrl(), mediaThumbnail);
     this.relatedTo.setText(spannableFactory.createStyleSpan(itemView.getContext()
-        .getString(R.string.displayable_social_timeline_article_related_to, card.getRelatedApp()
-            .getName()), Typeface.BOLD, card.getRelatedApp()
+        .getString(R.string.displayable_social_timeline_article_related_to, post.getRelatedApp()
+            .getName()), Typeface.BOLD, post.getRelatedApp()
         .getName()));
     this.mediaThumbnail.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, position, CardTouchEvent.Type.BODY)));
+        new CardTouchEvent(post, position, CardTouchEvent.Type.BODY)));
     this.mediaTitle.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, position, CardTouchEvent.Type.BODY)));
+        new CardTouchEvent(post, position, CardTouchEvent.Type.BODY)));
     this.cardHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new SocialHeaderCardTouchEvent(card, card.getPoster()
+        new SocialHeaderCardTouchEvent(post, post.getPoster()
+            .getStore() != null ? post.getPoster()
             .getStore()
-            .getName(), card.getPoster()
+            .getName() : "", post.getPoster()
+            .getStore() != null ? post.getPoster()
             .getStore()
-            .getStoreTheme(), card.getPoster()
+            .getStoreTheme() : "default", post.getPoster()
             .getUser()
-            .getId(), CardTouchEvent.Type.HEADER, getPosition())));
-    if (card.isLiked()) {
-      if (card.isLikeFromClick()) {
+            .getId(), CardTouchEvent.Type.HEADER, position)));
+    if (post.isLiked()) {
+      if (post.isLikeFromClick()) {
         likeButton.setHeartState(true);
-        card.setLikedFromClick(false);
+        post.setLikedFromClick(false);
       } else {
         likeButton.setHeartStateWithoutAnimation(true);
       }
@@ -152,36 +147,38 @@ public class SocialMediaViewHolder extends SocialPostViewHolder<SocialMedia> {
       likeButton.setHeartState(false);
     }
 
-    if (card.getSharedByName() != null) {
+    if (post.getSharedByName() != null) {
       sharedBy.setText(spannableFactory.createColorSpan(itemView.getContext()
-              .getString(R.string.social_timeline_shared_by, card.getSharedByName()),
-          ContextCompat.getColor(itemView.getContext(), R.color.black), card.getSharedByName()));
+              .getString(R.string.social_timeline_shared_by, post.getSharedByName()),
+          ContextCompat.getColor(itemView.getContext(), R.color.black), post.getSharedByName()));
       sharedBy.setVisibility(View.VISIBLE);
     } else {
       sharedBy.setVisibility(View.GONE);
     }
 
+    setupOverflowMenu(post, position);
+
     /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
-    showSocialInformationBar(card, position);
-    showLikesPreview(card);
+    showSocialInformationBar(post, position);
+    showLikesPreview(post);
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
     this.like.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new SocialCardTouchEvent(card, CardTouchEvent.Type.LIKE, position)));
+        new SocialCardTouchEvent(post, CardTouchEvent.Type.LIKE, position)));
     this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new SocialCardTouchEvent(card, CardTouchEvent.Type.COMMENT, position)));
+        new SocialCardTouchEvent(post, CardTouchEvent.Type.COMMENT, position)));
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, position, CardTouchEvent.Type.SHARE)));
+        new CardTouchEvent(post, position, CardTouchEvent.Type.SHARE)));
     this.likePreviewContainer.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new LikesPreviewCardTouchEvent(card, card.getLikesNumber(),
+        new LikesPreviewCardTouchEvent(post, post.getLikesNumber(),
             CardTouchEvent.Type.LIKES_PREVIEW, position)));
     this.numberComments.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, position, CardTouchEvent.Type.COMMENT_NUMBER)));
-    new CardTouchEvent(card, position, CardTouchEvent.Type.COMMENT_NUMBER);
+        new CardTouchEvent(post, position, CardTouchEvent.Type.COMMENT_NUMBER)));
+    new CardTouchEvent(post, position, CardTouchEvent.Type.COMMENT_NUMBER);
     this.numberLikes.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new LikesPreviewCardTouchEvent(card, card.getLikesNumber(),
+        new LikesPreviewCardTouchEvent(post, post.getLikesNumber(),
             CardTouchEvent.Type.LIKES_PREVIEW, position)));
     this.numberLikesOneLike.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new LikesPreviewCardTouchEvent(card, card.getLikesNumber(),
+        new LikesPreviewCardTouchEvent(post, post.getLikesNumber(),
             CardTouchEvent.Type.LIKES_PREVIEW, position)));
   }
 
@@ -308,5 +305,40 @@ public class SocialMediaViewHolder extends SocialPostViewHolder<SocialMedia> {
         .getString(R.string.timeline_short_like_present_plural, likesNumber)
         .toLowerCase());
     numberLikesOneLike.setVisibility(View.INVISIBLE);
+  }
+
+  private void setupOverflowMenu(SocialMedia post, int position) {
+    overflowMenu.setOnClickListener(view -> {
+      PostPopupMenuBuilder postPopupMenuBuilder = new PostPopupMenuBuilder();
+      postPopupMenuBuilder.prepMenu(itemView.getContext(), overflowMenu)
+          .addReportAbuse(menuItem -> {
+            cardTouchEventPublishSubject.onNext(
+                new CardTouchEvent(post, position, CardTouchEvent.Type.REPORT_ABUSE));
+            return false;
+          });
+      if (post.getPoster()
+          .isMe()) {
+        postPopupMenuBuilder.addItemDelete(menuItem -> {
+          cardTouchEventPublishSubject.onNext(
+              new CardTouchEvent(post, position, CardTouchEvent.Type.DELETE_POST));
+          return false;
+        });
+      }
+      if (post.getPoster() != null) {
+        if (post.getPoster()
+            .getUser() != null && !post.getPoster()
+            .isMe()) {
+          postPopupMenuBuilder.addUnfollowUser(menuItem -> {
+            cardTouchEventPublishSubject.onNext(new UserUnfollowCardTouchEvent(post.getPoster()
+                .getUser()
+                .getId(), post.getPoster()
+                .getPrimaryName(), position, post));
+            return false;
+          });
+        }
+      }
+      postPopupMenuBuilder.getPopupMenu()
+          .show();
+    });
   }
 }
