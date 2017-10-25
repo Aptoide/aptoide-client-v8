@@ -49,13 +49,6 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
   private Subscription subscription;
   private List<OnEndlessFinish> onEndlessFinishList;
 
-  public void addOnEndlessFinishListener(OnEndlessFinish onEndlessFinish) {
-    if (onEndlessFinishList == null) {
-      onEndlessFinishList = new LinkedList<>();
-    }
-    onEndlessFinishList.add(onEndlessFinish);
-  }
-
   public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter,
       V7<T, ? extends Endless> v7request, Action1<T> successRequestListener,
       ErrorRequestListener errorRequestListener) {
@@ -89,6 +82,13 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
   public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(
       BaseAdapter baseAdapter) {
     this(baseAdapter, null, null, null, 0, false, null, null);
+  }
+
+  public void addOnEndlessFinishListener(OnEndlessFinish onEndlessFinish) {
+    if (onEndlessFinishList == null) {
+      onEndlessFinishList = new LinkedList<>();
+    }
+    onEndlessFinishList.add(onEndlessFinish);
   }
 
   @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {

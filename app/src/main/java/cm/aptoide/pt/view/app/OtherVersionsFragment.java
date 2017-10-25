@@ -108,6 +108,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
         ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
+    setHasOptionsMenu(true);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -136,7 +137,6 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     header = new ViewHeader(view, sharedPreferences);
     collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
-    setHasOptionsMenu(true);
     super.onViewCreated(view, savedInstanceState);
   }
 

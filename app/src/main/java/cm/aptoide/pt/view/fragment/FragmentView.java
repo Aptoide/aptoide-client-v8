@@ -34,10 +34,9 @@ public abstract class FragmentView extends LeakFragment implements View {
 
   private Presenter presenter;
   private boolean startActivityForResultCalled;
-  private String defaultStore;
-  private String defaultTheme;
   private AptoideNavigationTracker navigationTracker;
   private ActivityResultNavigator activityResultNavigator;
+  private String defaultThemeName;
 
   public FragmentNavigator getFragmentNavigator() {
     return activityResultNavigator.getFragmentNavigator();
@@ -66,8 +65,8 @@ public abstract class FragmentView extends LeakFragment implements View {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    defaultStore = ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore();
-    defaultTheme = ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
+    defaultThemeName =
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultThemeName();
     ScreenTrackingUtils.getInstance()
         .incrementNumberOfScreens();
     navigationTracker =
@@ -190,11 +189,7 @@ public abstract class FragmentView extends LeakFragment implements View {
     return startActivityForResultCalled;
   }
 
-  protected String getDefaultStore() {
-    return defaultStore;
-  }
-
   protected String getDefaultTheme() {
-    return defaultTheme;
+    return defaultThemeName;
   }
 }

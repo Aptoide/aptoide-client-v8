@@ -32,10 +32,10 @@ public class StoreGridHeaderWidget extends Widget<StoreGridHeaderDisplayable> {
   @Override public void bindView(StoreGridHeaderDisplayable displayable) {
     final GetStoreWidgets.WSWidget wsWidget = displayable.getWsWidget();
     final boolean moreIsVisible = wsWidget.hasActions();
-    final String marketName =
-        ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
-    final SharedPreferences sharedPreferences =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    final String marketName = application.getMarketName();
+    final SharedPreferences sharedPreferences = application.getDefaultSharedPreferences();
     title.setText(Translator.translate(wsWidget.getTitle(), getContext().getApplicationContext(),
         marketName));
 

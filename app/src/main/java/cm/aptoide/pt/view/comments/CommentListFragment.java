@@ -185,6 +185,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         new NotificationAnalytics(httpClient, analytics), aptoideNavigationTracker);
     super.onCreate(savedInstanceState);
+    setHasOptionsMenu(true);
   }
 
   @Nullable @Override
@@ -490,7 +491,6 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   @Override public void setupViews() {
     super.setupViews();
     setupToolbar();
-    setHasOptionsMenu(true);
 
     RxView.clicks(floatingActionButton)
         .flatMap(a -> {

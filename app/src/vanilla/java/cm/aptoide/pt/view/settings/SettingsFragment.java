@@ -104,6 +104,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private AptoideNavigationTracker aptoideNavigationTracker;
   private UpdateRepository repository;
   private PageViewsAnalytics pageViewsAnalytics;
+  private String defaultThemeName;
 
   public static Fragment newInstance() {
     return new SettingsFragment();
@@ -111,7 +112,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    defaultThemeName = application.getDefaultThemeName();
+    marketName = application.getMarketName();
     trackAnalytics = true;
     database = ((AptoideApplication) getContext().getApplicationContext()).getDatabase();
     adultContent = ((AptoideApplication) getContext().getApplicationContext()).getAdultContent();
@@ -167,11 +171,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
   @CallSuper @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    String storeTheme =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
-    if (storeTheme != null) {
-      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(storeTheme));
+    if (defaultThemeName != null) {
+      ThemeUtils.setStoreTheme(getActivity(), defaultThemeName);
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(defaultThemeName));
     }
 
     return super.onCreateView(inflater, container, savedInstanceState);

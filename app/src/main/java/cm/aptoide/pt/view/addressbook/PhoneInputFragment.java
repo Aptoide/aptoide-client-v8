@@ -66,20 +66,19 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
     final BodyInterceptor<BaseBody> baseBodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    final OkHttpClient httpClient =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+        application.getAccountSettingsBodyInterceptorPoolV7();
+    final OkHttpClient httpClient = application.getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
-    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
+    marketName = application.getMarketName();
     this.mActionsListener = new PhoneInputPresenter(this,
         new ContactsRepository(baseBodyInterceptor, httpClient, converterFactory,
-            ((AptoideApplication) getContext().getApplicationContext()).getIdsRepository(),
-            new ContactUtils(
-                (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-                getContext().getContentResolver()),
-            ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()),
+            application.getIdsRepository(), new ContactUtils(
+            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
+            getContext().getContentResolver()), application.getTokenInvalidator(),
+            application.getDefaultSharedPreferences()),
         new AddressBookAnalytics(Analytics.getInstance(),
             AppEventsLogger.newLogger(getContext().getApplicationContext())),
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,

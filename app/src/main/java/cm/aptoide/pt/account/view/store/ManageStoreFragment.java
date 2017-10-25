@@ -123,9 +123,11 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     uriToPathResolver = new UriToPathResolver(getActivity().getContentResolver());
     imagePickerNavigator = new ImagePickerNavigator(getActivityNavigator());
     imageValidator = new ImageValidator(ImageLoader.with(getActivity()), Schedulers.computation());
-    manageStoreNavigator = new ManageStoreNavigator(getFragmentNavigator(),
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore(),
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme());
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    manageStoreNavigator =
+        new ManageStoreNavigator(getFragmentNavigator(), application.getDefaultStoreName(),
+            application.getDefaultThemeName());
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

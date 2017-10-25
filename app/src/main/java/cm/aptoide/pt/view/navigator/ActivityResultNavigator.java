@@ -34,6 +34,7 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
   private AccountNavigator accountNavigator;
   private BillingNavigator billingNavigator;
   private ScreenOrientationManager screenOrientationManager;
+  private String marketName;
 
   public BehaviorRelay<Map<Integer, Result>> getFragmentResultRelay() {
     return fragmentResultRelay;
@@ -148,15 +149,14 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
 
   public AccountNavigator getAccountNavigator() {
     if (accountNavigator == null) {
-      accountNavigator = new AccountNavigator(getFragmentNavigator(),
-          ((AptoideApplication) getApplicationContext()).getAccountManager(),
-          getActivityNavigator(), LoginManager.getInstance(),
-          ((AptoideApplication) getApplicationContext()).getFacebookCallbackManager(),
-          ((AptoideApplication) getApplicationContext()).getGoogleSignInClient(),
-          ((AptoideApplication) getApplicationContext()).getFacebookLoginResultRelay(),
-          ((AptoideApplication) getApplicationContext()).getDefaultStore(),
-          ((AptoideApplication) getApplicationContext()).getDefaultTheme(),
-          "http://m.aptoide.com/account/password-recovery");
+      final AptoideApplication application = (AptoideApplication) getApplicationContext();
+      marketName = application.getMarketName();
+      accountNavigator =
+          new AccountNavigator(getFragmentNavigator(), application.getAccountManager(),
+              getActivityNavigator(), LoginManager.getInstance(),
+              application.getFacebookCallbackManager(), application.getGoogleSignInClient(),
+              application.getFacebookLoginResultRelay(), application.getDefaultStoreName(),
+              application.getDefaultThemeName(), "http://m.aptoide.com/account/password-recovery");
     }
     return accountNavigator;
   }
@@ -165,8 +165,7 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
     if (billingNavigator == null) {
       billingNavigator =
           new BillingNavigator(new PurchaseBundleMapper(new PaymentThrowableCodeMapper()),
-              getActivityNavigator(), getFragmentNavigator(),
-              ((AptoideApplication) getApplicationContext()).getMarketName());
+              getActivityNavigator(), getFragmentNavigator(), marketName);
     }
     return billingNavigator;
   }

@@ -29,8 +29,9 @@ public class FooterWidget extends Widget<FooterDisplayable> {
   }
 
   @Override public void bindView(FooterDisplayable displayable) {
-    final String marketName =
-        ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    final String marketName = application.getMarketName();
     final String buttonText = Translator.translate(displayable.getPojo()
         .getActions()
         .get(0)

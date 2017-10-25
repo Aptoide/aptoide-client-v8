@@ -47,13 +47,13 @@ public class TimeLineLikesFragment extends TimeLineFollowFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    defaultTheme = ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
-    baseBodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    defaultTheme = application.getDefaultThemeName();
+    baseBodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();
+    httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    tokenInvalidator =
-        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
+    tokenInvalidator = application.getTokenInvalidator();
   }
 
   @Override public void loadExtras(Bundle args) {

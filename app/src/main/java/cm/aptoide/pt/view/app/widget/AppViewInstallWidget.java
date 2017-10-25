@@ -107,12 +107,14 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
   private DownloadFactory downloadFactory;
   private PermissionService permissionService;
   private PermissionManager permissionManager;
-  private String marketName;
-  private boolean createStoreUserPrivacyEnabled;
   private SharedPreferences sharedPreferences;
   private AccountNavigator accountNavigator;
   private AppViewNavigator appViewNavigator;
   private CrashReport crashReport;
+  private String marketName;
+  private boolean isCreateStoreUserPrivacyEnabled;
+  private boolean isMultiStoreSearch;
+  private String defaultStoreName;
 
   public AppViewInstallWidget(View itemView) {
     super(itemView);
@@ -147,34 +149,32 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     this.displayable.setInstallButton(actionButton);
     crashReport = CrashReport.getInstance();
     accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
-    createStoreUserPrivacyEnabled =
-        ((AptoideApplication) getContext().getApplicationContext()).isCreateStoreUserPrivacyEnabled();
-    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
-    sharedPreferences =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
-    final OkHttpClient httpClient =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    isCreateStoreUserPrivacyEnabled = application.isCreateStoreUserPrivacyEnabled();
+    marketName = application.getMarketName();
+    sharedPreferences = application.getDefaultSharedPreferences();
+    isMultiStoreSearch = application.hasMultiStoreSearch();
+    defaultStoreName = application.getDefaultStoreName();
+    final OkHttpClient httpClient = application.getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
-    accountManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-    installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
-        InstallerFactory.ROLLBACK);
+    accountManager = application.getAccountManager();
+    installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
     BodyInterceptor<BaseBody> bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    final TokenInvalidator tokenInvalidator =
-        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
+        application.getAccountSettingsBodyInterceptorPoolV7();
+    final TokenInvalidator tokenInvalidator = application.getTokenInvalidator();
     downloadInstallEventConverter =
         new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
             BuildConfig.APPLICATION_ID, sharedPreferences,
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-            ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker());
+            application.getAptoideNavigationTracker());
     installConverter =
         new InstallEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
             BuildConfig.APPLICATION_ID, sharedPreferences,
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-            ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker());
+            application.getAptoideNavigationTracker());
     analytics = Analytics.getInstance();
     downloadFactory = displayable.getDownloadFactory();
     socialRepository =
@@ -184,8 +184,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                 httpClient, WebService.getDefaultConverter(), tokenInvalidator,
                 BuildConfig.APPLICATION_ID, sharedPreferences,
                 new NotificationAnalytics(httpClient, analytics),
-                ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker()),
-            tokenInvalidator, sharedPreferences);
+                application.getAptoideNavigationTracker()), tokenInvalidator, sharedPreferences);
 
     appViewNavigator = getAppViewNavigator();
 
@@ -533,7 +532,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> {
                   if (accountManager.isLoggedIn() && ManagerPreferences.isShowPreviewDialog(
-                      sharedPreferences) && createStoreUserPrivacyEnabled) {
+                      sharedPreferences) && isCreateStoreUserPrivacyEnabled) {
                     SharePreviewDialog sharePreviewDialog =
                         new SharePreviewDialog(displayable, accountManager, true,
                             SharePreviewDialog.SharePreviewOpenMode.SHARE,
@@ -724,7 +723,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
   }
 
   private AppViewNavigator getAppViewNavigator() {
-    return new AppViewNavigator(getFragmentNavigator(), getActivityNavigator());
+    return new AppViewNavigator(getFragmentNavigator(), getActivityNavigator(), isMultiStoreSearch,
+        defaultStoreName);
   }
 
   private void findTrustedVersion(GetAppMeta.App app, ListAppVersions appVersions) {

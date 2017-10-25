@@ -91,6 +91,7 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
     super.onCreate(savedInstanceState);
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
+    setHasOptionsMenu(true);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -109,7 +110,6 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
 
   @Override public void setupViews() {
     super.setupViews();
-    setHasOptionsMenu(true);
     RxView.clicks(sendFeedbackBtn)
         .subscribe(aVoid -> sendFeedback(), err -> {
           CrashReport.getInstance()
@@ -134,46 +134,12 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
       Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
       emailIntent.setType("message/rfc822");
 
+      final AptoideApplication application =
+          (AptoideApplication) getContext().getApplicationContext();
       emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {
-          ((AptoideApplication) getContext().getApplicationContext()).getFeedbackEmail()
+          application.getFeedbackEmail()
       });
-
-      //String versionName = "";
-      //Installed installed = DeprecatedDatabase.InstalledQ.get(getContext().getPackageName(), realm);
-      //if (installed != null) {
-      //  versionName = installed.getVersionName();
-      //}
-      //
-      //emailIntent.putExtra(Intent.EXTRA_SUBJECT,
-      //    "[Feedback]-" + versionName + ": " + subgectEdit.getText().toString());
-      //emailIntent.putExtra(Intent.EXTRA_TEXT, messageBodyEdit.getText().toString());
-      ////attach screenshots and logs
-      //if (logsAndScreenshotsCb.isChecked()) {
-      //  ArrayList<Uri> uris = new ArrayList<Uri>();
-      //  File ss = new File(screenShotPath);
-      //  if (ss != null) {
-      //    Uri urifile = Uri.fromFile(ss);
-      //    uris.add(urifile);
-      //  }
-      //
-      //  File logs = AptoideUtils.SystemU.readLogs(Application.getConfiguration().getCachePath(),
-      //      LOGS_FILE_NAME);
-      //  if (logs != null) {
-      //    Uri urifile = Uri.fromFile(logs);
-      //    uris.add(urifile);
-      //  }
-      //  emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
-      //}
-      //try {
-      //  startActivity(emailIntent);
-      //  getActivity().onBackPressed();
-      //  //				Analytics.SendFeedback.sendFeedback();
-      //} catch (android.content.ActivityNotFoundException ex) {
-      //  ShowMessage.asSnack(getView(), R.string.feedback_no_email);
-      //}
-
-      //attach screenshots and logs
-      //				Analytics.SendFeedback.sendFeedback();
+      final String cachePath = application.getCachePath();
       unManagedSubscription = installedRepository.getInstalled(getContext().getPackageName())
           .first()
           .observeOn(AndroidSchedulers.mainThread())
@@ -195,9 +161,8 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
                 File ss = new File(screenShotPath);
                 uris.add(getUriFromFile(ss));
               }
-              File logs = AptoideUtils.SystemU.readLogs(
-                  ((AptoideApplication) getContext().getApplicationContext()).getCachePath(),
-                  LOGS_FILE_NAME);
+
+              File logs = AptoideUtils.SystemU.readLogs(cachePath, LOGS_FILE_NAME);
               if (logs != null) {
                 uris.add(getUriFromFile(logs));
               }

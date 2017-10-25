@@ -28,11 +28,6 @@ public class GetStoreWidgetsFragment extends GetStoreEndlessFragment<GetStoreWid
     return fragment;
   }
 
-  @Override
-  protected V7<GetStoreWidgets, ? extends Endless> buildRequest(boolean refresh, String url) {
-    return requestFactoryCdnPool.newStoreWidgets(url);
-  }
-
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
 
@@ -40,6 +35,11 @@ public class GetStoreWidgetsFragment extends GetStoreEndlessFragment<GetStoreWid
       endlessRecyclerOnScrollListener.addOnEndlessFinishListener(
           __ -> addDisplayable(new AdultRowDisplayable(GetStoreWidgetsFragment.this)));
     }
+  }
+
+  @Override
+  protected V7<GetStoreWidgets, ? extends Endless> buildRequest(boolean refresh, String url) {
+    return requestFactoryCdnPool.newStoreWidgets(url);
   }
 
   @Override protected Action1<GetStoreWidgets> buildAction() {
@@ -62,5 +62,4 @@ public class GetStoreWidgetsFragment extends GetStoreEndlessFragment<GetStoreWid
   private static class BundleKeys {
     private static final String ADD_ADULT_FILTER = "addAdultFilter";
   }
-
 }

@@ -1,6 +1,7 @@
 package cm.aptoide.pt.view.updates.excluded;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -44,13 +45,17 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter> {
   @Override public void bindViews(View view) {
     super.bindViews(view);
     emptyData = (TextView) view.findViewById(R.id.empty_data);
-    setHasOptionsMenu(true);
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
     Logger.d(TAG, "refresh excluded updates? " + (create ? "yes" : "no"));
     fetchExcludedUpdates();
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setHasOptionsMenu(true);
   }
 
   private void fetchExcludedUpdates() {

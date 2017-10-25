@@ -62,7 +62,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   private View credentialsEditTextsArea;
   private BottomSheetBehavior<View> bottomSheetBehavior;
   private ThrowableToStringMapper errorMapper;
-  private String marketName;
   private AptoideAccountManager accountManager;
   private LoginSignUpCredentialsPresenter presenter;
   private boolean dismissToNavigateToMainView;
@@ -71,6 +70,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   private CrashReport crashReport;
   private AccountNavigator accountNavigator;
   private ScreenOrientationManager orientationManager;
+  private String marketName;
 
   public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,
       boolean cleanBackStack) {
@@ -86,7 +86,8 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    marketName = ((AptoideApplication) getActivity().getApplication()).getMarketName();
+
+    marketName = ((AptoideApplication) getApplicationContext()).getMarketName();
     errorMapper = new AccountErrorMapper(getContext());
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();

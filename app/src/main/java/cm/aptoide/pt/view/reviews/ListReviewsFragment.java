@@ -29,6 +29,10 @@ public class ListReviewsFragment extends GetStoreEndlessFragment<ListFullReviews
 
   private StoreCredentialsProvider storeCredentialsProvider;
 
+  public static Fragment newInstance() {
+    return new ListReviewsFragment();
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
@@ -59,9 +63,5 @@ public class ListReviewsFragment extends GetStoreEndlessFragment<ListFullReviews
             getContext().getResources()));
       }
     };
-  }
-
-  public static Fragment newInstance() {
-    return new ListReviewsFragment();
   }
 }

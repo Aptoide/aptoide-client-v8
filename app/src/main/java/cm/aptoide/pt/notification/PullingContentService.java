@@ -57,12 +57,11 @@ public class PullingContentService extends Service {
 
   @Override public void onCreate() {
     super.onCreate();
-    marketName = ((AptoideApplication) getApplicationContext()).getMarketName();
-    sharedPreferences =
-        ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences();
+    final AptoideApplication application = (AptoideApplication) getApplicationContext();
+    marketName = application.getMarketName();
+    sharedPreferences = application.getDefaultSharedPreferences();
     updateRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
-    installManager =
-        ((AptoideApplication) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
+    installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
 
     subscriptions = new CompositeSubscription();
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);

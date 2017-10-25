@@ -111,9 +111,10 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
     Bundle args = getArguments();
     isEditProfile = args != null && args.getBoolean(EXTRA_IS_EDIT, false);
 
-    navigator = new ManageUserNavigator(getFragmentNavigator(),
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore(),
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme());
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    navigator = new ManageUserNavigator(getFragmentNavigator(), application.getDefaultStoreName(),
+        application.getDefaultThemeName());
     fileProviderAuthority = BuildConfig.APPLICATION_ID + ".provider";
     photoFileGenerator = new PhotoFileGenerator(getActivity(),
         getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileProviderAuthority);
@@ -122,8 +123,7 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
     accountPermissionProvider = new AccountPermissionProvider(((PermissionProvider) getActivity()));
     imageValidator = new ImageValidator(ImageLoader.with(context), Schedulers.computation());
     imagePickerNavigator = new ImagePickerNavigator(getActivityNavigator());
-    createStoreUserPrivacyEnabled =
-        ((AptoideApplication) getActivity().getApplication()).isCreateStoreUserPrivacyEnabled();
+    createStoreUserPrivacyEnabled = application.isCreateStoreUserPrivacyEnabled();
     accountManager = ((AptoideApplication) getActivity().getApplication()).getAccountManager();
     errorMapper =
         new CreateUserErrorMapper(context, new AccountErrorMapper(context), getResources());

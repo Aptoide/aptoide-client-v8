@@ -89,14 +89,14 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     analytics = Analytics.getInstance();
-    marketName = ((AptoideApplication) getContext().getApplicationContext()
-        .getApplicationContext()).getMarketName();
+    final AptoideApplication application = (AptoideApplication) getContext().getApplicationContext()
+        .getApplicationContext();
+    marketName = application.getMarketName();
     installManager = new InstallerFactory(new MinimalAdMapper(),
         new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance(),
             AppEventsLogger.newLogger(getContext().getApplicationContext())),
-        ((AptoideApplication) getContext().getApplicationContext()
-            .getApplicationContext()).getImageCachePath()).create(getContext(),
-        InstallerFactory.ROLLBACK);
+        application.getImageCachePath()).create(getContext(), InstallerFactory.ROLLBACK);
+    setHasOptionsMenu(true);
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -111,7 +111,6 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
   @Override public void bindViews(View view) {
     super.bindViews(view);
     emptyData = (TextView) view.findViewById(R.id.empty_data);
-    setHasOptionsMenu(true);
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {

@@ -102,10 +102,13 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    marketName = application.getMarketName();
     storeRepository = RepositoryFactory.getStoreRepository(getContext().getApplicationContext());
 
     super.onCreate(savedInstanceState);
+    setHasOptionsMenu(true);
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -207,7 +210,6 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   @Override public void setupViews() {
     super.setupViews();
     setupToolbar();
-    setHasOptionsMenu(true);
   }
 
   private static class BundleCons {

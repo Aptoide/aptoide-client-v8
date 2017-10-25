@@ -1,5 +1,6 @@
 package cm.aptoide.pt.view.app;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -48,6 +49,7 @@ import cm.aptoide.pt.billing.product.PaidAppPurchase;
 import cm.aptoide.pt.billing.view.PaymentActivity;
 import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.crashreports.IssuesAnalytics;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
@@ -172,6 +174,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
   private CrashReport crashReport;
   private AptoideNavigationTracker aptoideNavigationTracker;
+  private SearchBuilder searchBuilder;
+  private IssuesAnalytics issuesAnalytics;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -328,45 +332,47 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
     handleSavedInstance(savedInstanceState);
 
-    this.appViewModel.setDefaultTheme(
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme());
-    this.appViewModel.setMarketName(
-        ((AptoideApplication) getContext().getApplicationContext()).getMarketName());
-    this.appViewModel.setBillingIdResolver(
-        ((AptoideApplication) getContext().getApplicationContext()).getBillingIdResolver());
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    this.appViewModel.setDefaultTheme(application.getDefaultThemeName());
+    this.appViewModel.setMarketName(application.getMarketName());
+    this.appViewModel.setBillingIdResolver(application.getBillingIdResolver());
+
+    final SearchManager searchManager =
+        (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
+
+    final SearchNavigator searchNavigator =
+        new SearchNavigator(getFragmentNavigator(), application.getDefaultStoreName());
+
+    searchBuilder = new SearchBuilder(searchManager, searchNavigator);
+
     adMapper = new MinimalAdMapper();
 
-    this.appViewModel.setqManager(
-        ((AptoideApplication) getContext().getApplicationContext()).getQManager());
-    purchaseBundleMapper =
-        ((AptoideApplication) getContext().getApplicationContext()).getPurchaseBundleMapper();
-    final AptoideAccountManager accountManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    this.appViewModel.setqManager(application.getQManager());
+    purchaseBundleMapper = application.getPurchaseBundleMapper();
+    final AptoideAccountManager accountManager = application.getAccountManager();
     accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
 
-    installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
-        InstallerFactory.ROLLBACK);
+    installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
     final BodyInterceptor<BaseBody> bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    billingAnalytics =
-        ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
-    final TokenInvalidator tokenInvalidator =
-        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
-    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+        application.getAccountSettingsBodyInterceptorPoolV7();
+    billingAnalytics = application.getBillingAnalytics();
+    final TokenInvalidator tokenInvalidator = application.getTokenInvalidator();
+    httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     Analytics analytics = Analytics.getInstance();
+    issuesAnalytics = new IssuesAnalytics(analytics, Answers.getInstance());
     timelineAnalytics = new TimelineAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        new NotificationAnalytics(httpClient, analytics), aptoideNavigationTracker);
+        application.getDefaultSharedPreferences(), new NotificationAnalytics(httpClient, analytics),
+        aptoideNavigationTracker);
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
-            timelineAnalytics, tokenInvalidator,
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
-    appRepository = RepositoryFactory.getAppRepository(getContext(),
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
-    adsRepository = ((AptoideApplication) getContext().getApplicationContext()).getAdsRepository();
+            timelineAnalytics, tokenInvalidator, application.getDefaultSharedPreferences());
+    appRepository =
+        RepositoryFactory.getAppRepository(getContext(), application.getDefaultSharedPreferences());
+    adsRepository = application.getAdsRepository();
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
@@ -385,18 +391,17 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     shareAppHelper =
         new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
             spotAndShareAnalytics, timelineAnalytics, installAppRelay,
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-            ((AptoideApplication) getContext().getApplicationContext()).isCreateStoreUserPrivacyEnabled());
+            application.getDefaultSharedPreferences(),
+            application.isCreateStoreUserPrivacyEnabled());
     downloadFactory = new DownloadFactory(getMarketName());
     appViewAnalytics = new AppViewAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
     storeAnalytics =
         new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
             analytics);
-    notLoggedInShareAnalytics =
-        ((AptoideApplication) getContext().getApplicationContext()).getNotLoggedInShareAnalytics();
-    aptoideNavigationTracker =
-        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker();
+    notLoggedInShareAnalytics = application.getNotLoggedInShareAnalytics();
+    aptoideNavigationTracker = application.getAptoideNavigationTracker();
+    setHasOptionsMenu(true);
   }
 
   private void handleSavedInstance(Bundle savedInstanceState) {
@@ -432,7 +437,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   @Override public void bindViews(View view) {
     super.bindViews(view);
     header = new AppViewHeader(view);
-    setHasOptionsMenu(true);
   }
 
   @Override public void onDestroyView() {
@@ -596,12 +600,31 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onCreateOptionsMenu(menu, inflater);
     this.menu = menu;
     inflater.inflate(R.menu.menu_appview_fragment, menu);
-    final String defaultStore =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore();
-    SearchBuilder searchBuilder =
-        new SearchBuilder(menu.findItem(R.id.action_search), getActivity(),
-            new SearchNavigator(getFragmentNavigator(), defaultStore));
-    searchBuilder.validateAndAttachSearch();
+    if (searchBuilder != null && searchBuilder.isValid()) {
+      final FragmentActivity activity = getActivity();
+      // from getActivity() "May return null if the fragment is associated with a Context instead."
+      final Context context = getContext();
+      if (activity != null) {
+        searchBuilder.attachSearch(activity, menu.findItem(R.id.action_search));
+        issuesAnalytics.attachSearchSuccess(false);
+        return;
+      } else if (context != null) {
+        searchBuilder.attachSearch(context, menu.findItem(R.id.action_search));
+        issuesAnalytics.attachSearchSuccess(true);
+        return;
+      } else {
+        issuesAnalytics.attachSearchFailed(true);
+        Logger.e(TAG, new IllegalStateException(
+            "Unable to attach search to this fragment due to null parent"));
+      }
+    } else {
+      issuesAnalytics.attachSearchFailed(false);
+      Logger.e(TAG, new IllegalStateException(
+          "Unable to attach search to this fragment due to invalid search builder"));
+    }
+
+    menu.removeItem(R.id.action_search);
+
     uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
   }
 

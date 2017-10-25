@@ -6,6 +6,7 @@
 package cm.aptoide.pt.view.store;
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -29,6 +31,7 @@ import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.crashreports.IssuesAnalytics;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
@@ -44,6 +47,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.view.SearchBuilder;
@@ -61,6 +65,7 @@ import cm.aptoide.pt.view.fragment.BasePagerToolbarFragment;
 import cm.aptoide.pt.view.share.ShareStoreHelper;
 import cm.aptoide.pt.view.store.home.HomeFragment;
 import com.astuetz.PagerSlidingTabStrip;
+import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.List;
@@ -73,6 +78,8 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by neuro on 06-05-2016.
  */
 public class StoreFragment extends BasePagerToolbarFragment {
+
+  private static final String TAG = StoreFragment.class.getName();
 
   private final int PRIVATE_STORE_REQUEST_CODE = 20;
   protected PagerSlidingTabStrip pagerSlidingTabStrip;
@@ -109,6 +116,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private String marketName;
   private String defaultTheme;
   private Runnable registerViewpagerCurrentItem;
+  private SearchBuilder searchBuilder;
+  private IssuesAnalytics issuesAnalytics;
 
   public static StoreFragment newInstance(long userId, String storeTheme, OpenType openType) {
     return newInstance(userId, storeTheme, null, openType);
@@ -158,27 +167,37 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    defaultTheme = ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
-    tokenInvalidator =
-        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
-    storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-        ((AptoideApplication) getContext().getApplicationContext()
-            .getApplicationContext()).getDatabase(), cm.aptoide.pt.database.realm.Store.class));
-    accountManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-    bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    defaultTheme = application.getDefaultThemeName();
+    tokenInvalidator = application.getTokenInvalidator();
+    storeCredentialsProvider = new StoreCredentialsProviderImpl(
+        AccessorFactory.getAccessorFor(application.getDatabase(),
+            cm.aptoide.pt.database.realm.Store.class));
+    accountManager = application.getAccountManager();
+    bodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();
+    httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     Analytics analytics = Analytics.getInstance();
+    issuesAnalytics = new IssuesAnalytics(analytics, Answers.getInstance());
     timelineAnalytics = new TimelineAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        new NotificationAnalytics(httpClient, analytics), aptoideNavigationTracker);
+        application.getDefaultSharedPreferences(), new NotificationAnalytics(httpClient, analytics),
+        aptoideNavigationTracker);
     storeAnalytics = new StoreAnalytics(AppEventsLogger.newLogger(getContext()), analytics);
-    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
+    marketName = application.getMarketName();
     shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);
+
+    final SearchManager searchManager =
+        (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
+
+    final SearchNavigator searchNavigator =
+        new SearchNavigator(getFragmentNavigator(), storeName, application.getDefaultStoreName());
+
+    searchBuilder = new SearchBuilder(searchManager, searchNavigator);
+    setHasOptionsMenu(true);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -334,11 +353,30 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_search, menu);
-    String defaultStore = getDefaultStore();
-    SearchBuilder searchBuilder =
-        new SearchBuilder(menu.findItem(R.id.action_search), getActivity(),
-            new SearchNavigator(getFragmentNavigator(), storeName, defaultStore));
-    searchBuilder.validateAndAttachSearch();
+    if (searchBuilder != null && searchBuilder.isValid()) {
+      final FragmentActivity activity = getActivity();
+      // from getActivity() "May return null if the fragment is associated with a Context instead."
+      final Context context = getContext();
+      if (activity != null) {
+        searchBuilder.attachSearch(activity, menu.findItem(R.id.action_search));
+        issuesAnalytics.attachSearchSuccess(false);
+        return;
+      } else if (context != null) {
+        searchBuilder.attachSearch(context, menu.findItem(R.id.action_search));
+        issuesAnalytics.attachSearchSuccess(true);
+        return;
+      } else {
+        issuesAnalytics.attachSearchFailed(true);
+        Logger.e(TAG, new IllegalStateException(
+            "Unable to attach search to this fragment due to null parent"));
+      }
+    } else {
+      issuesAnalytics.attachSearchFailed(false);
+      Logger.e(TAG, new IllegalStateException(
+          "Unable to attach search to this fragment due to invalid search builder"));
+    }
+
+    menu.removeItem(R.id.action_search);
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -498,11 +536,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
               break;
           }
         });
-  }
-
-  @Override public void setupViews() {
-    super.setupViews();
-    setHasOptionsMenu(true);
   }
 
   @CallSuper @Override public void setupToolbar() {

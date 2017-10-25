@@ -133,6 +133,7 @@ public class PostFragment extends FragmentView implements PostView {
         okHttpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
         sharedPreferences);
     handleAnalytics();
+    setHasOptionsMenu(true);
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -261,7 +262,6 @@ public class PostFragment extends FragmentView implements PostView {
   private void setUpToolbar() {
     if (toolbar != null && getActivity() instanceof AppCompatActivity) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-      setHasOptionsMenu(true);
       toolbar.setEnabled(true);
       ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
       actionBar.setDisplayHomeAsUpEnabled(true);

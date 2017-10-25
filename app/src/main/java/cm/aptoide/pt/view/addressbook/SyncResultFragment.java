@@ -72,7 +72,9 @@ public class SyncResultFragment extends UIComponentFragment implements SyncResul
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    marketName = application.getMarketName();
     mActionsListener = new SyncResultPresenter(this,
         new AddressBookAnalytics(Analytics.getInstance(),
             AppEventsLogger.newLogger(getContext().getApplicationContext())),

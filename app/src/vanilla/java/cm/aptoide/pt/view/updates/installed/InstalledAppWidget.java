@@ -64,31 +64,27 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
   }
 
   @Override public void bindView(InstalledAppDisplayable displayable) {
-    Installed pojo = displayable.getPojo();
-
-    accountManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+    final Installed pojo = displayable.getPojo();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    accountManager = application.getAccountManager();
+    httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
 
-    this.bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
+    this.bodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();
 
     final AccountNavigator accountNavigator =
         ((ActivityResultNavigator) getContext()).getAccountNavigator();
     this.accountNavigator = accountNavigator;
     dialogUtils = new DialogUtils(accountManager, accountNavigator, bodyInterceptor, httpClient,
-        converterFactory, displayable.getInstalledRepository(),
-        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        getContext().getResources());
+        converterFactory, displayable.getInstalledRepository(), application.getTokenInvalidator(),
+        application.getDefaultSharedPreferences(), getContext().getResources());
     shareAppHelper = new ShareAppHelper(
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext()),
         accountManager, accountNavigator, getContext(),
         new SpotAndShareAnalytics(Analytics.getInstance()), displayable.getTimelineAnalytics(),
-        PublishRelay.create(),
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        ((AptoideApplication) getContext().getApplicationContext()).isCreateStoreUserPrivacyEnabled());
+        PublishRelay.create(), application.getDefaultSharedPreferences(),
+        application.isCreateStoreUserPrivacyEnabled());
     appName = pojo.getName();
     packageName = pojo.getPackageName();
 

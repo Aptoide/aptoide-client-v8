@@ -13,21 +13,29 @@ import com.google.android.gms.common.GoogleApiAvailability;
 
 public class VanillaApplication extends AptoideApplication {
 
+  @Override public LoginPreferences getLoginPreferences() {
+    return new LoginPreferences(this, GoogleApiAvailability.getInstance());
+  }
+
+  @Override public FragmentProvider createFragmentProvider() {
+    return new VanillaFragmentProvider();
+  }
+
   @Override public String getCachePath() {
     return Environment.getExternalStorageDirectory()
         .getAbsolutePath() + "/.aptoide/";
   }
 
-  @Override public String getDefaultStore() {
+  @Override public boolean hasMultiStoreSearch() {
+    return true;
+  }
+
+  @Override public String getDefaultStoreName() {
     return "apps";
   }
 
   @Override public String getMarketName() {
     return "Aptoide";
-  }
-
-  @Override public LoginPreferences getLoginPreferences() {
-    return new LoginPreferences(this, GoogleApiAvailability.getInstance());
   }
 
   @Override public String getFeedbackEmail() {
@@ -54,15 +62,11 @@ public class VanillaApplication extends AptoideApplication {
     return null;
   }
 
-  @Override public String getDefaultTheme() {
+  @Override public String getDefaultThemeName() {
     return "default";
   }
 
   @Override public boolean isCreateStoreUserPrivacyEnabled() {
     return true;
-  }
-
-  @Override public FragmentProvider createFragmentProvider() {
-    return new VanillaFragmentProvider();
   }
 }

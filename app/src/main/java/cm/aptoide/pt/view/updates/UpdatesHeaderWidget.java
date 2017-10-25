@@ -57,8 +57,9 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
   }
 
   @Override public void bindView(UpdatesHeaderDisplayable displayable) {
-    final String marketName =
-        ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    final String marketName = application.getMarketName();
     title.setText(displayable.getLabel());
     more.setText(R.string.updatetab_button_update_all);
     more.setVisibility(View.VISIBLE);

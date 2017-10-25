@@ -1,6 +1,7 @@
 package cm.aptoide.pt.view.store.home;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -29,9 +30,10 @@ import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.view.SearchBuilder;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.updates.UpdateRepository;
-import cm.aptoide.pt.util.SearchUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.custom.BadgeView;
 import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
@@ -68,13 +70,15 @@ public class HomeFragment extends StoreFragment {
   private ImageView userAvatarImage;
   private DrawerAnalytics drawerAnalytics;
   private ClickHandler backClickHandler;
+  private SearchBuilder searchBuilder;
+  private String defaultThemeName;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
     Bundle args = new Bundle();
-    args.putString(BundleCons.STORE_NAME, storeName);
-    args.putSerializable(BundleCons.STORE_CONTEXT, storeContext);
-    args.putSerializable(BundleCons.STORE_THEME, storeTheme);
+    args.putString(BundleKeys.STORE_NAME.name(), storeName);
+    args.putSerializable(BundleKeys.STORE_CONTEXT.name(), storeContext);
+    args.putSerializable(BundleKeys.STORE_THEME.name(), storeTheme);
     HomeFragment fragment = new HomeFragment();
     fragment.setArguments(args);
     return fragment;
@@ -113,9 +117,9 @@ public class HomeFragment extends StoreFragment {
     userUsername = (TextView) baseHeaderView.findViewById(R.id.profile_name_text);
     userAvatarImage = (ImageView) baseHeaderView.findViewById(R.id.profile_image);
 
-    baseHeaderView.setBackgroundColor(ContextCompat.getColor(getContext(), StoreTheme.get(
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme())
-        .getPrimaryColor()));
+    baseHeaderView.setBackgroundColor(ContextCompat.getColor(getContext(),
+        StoreTheme.get(defaultThemeName)
+            .getPrimaryColor()));
 
     accountManager.accountStatus()
         .observeOn(AndroidSchedulers.mainThread())
@@ -151,6 +155,19 @@ public class HomeFragment extends StoreFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    final android.app.SearchManager searchManagerService =
+        (android.app.SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
+
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+
+    final SearchNavigator searchNavigator =
+        new SearchNavigator(getFragmentNavigator(), application.getDefaultStoreName());
+
+    defaultThemeName = application.getDefaultThemeName();
+    searchBuilder = new SearchBuilder(searchManagerService, searchNavigator);
+
     drawerAnalytics = new DrawerAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
   }
@@ -227,12 +244,12 @@ public class HomeFragment extends StoreFragment {
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
-
+    if (searchBuilder != null && searchBuilder.isValid()) {
+      searchBuilder.attachSearch(getContext(), menu.findItem(R.id.action_search));
+    } else {
+      menu.removeItem(R.id.action_search);
+    }
     menu.removeItem(R.id.menu_share);
-  }
-
-  @Override protected void setupSearch(Menu menu) {
-    SearchUtils.setupGlobalSearchView(menu, getActivity(), getFragmentNavigator());
   }
 
   @Override public void setupViews() {
@@ -385,7 +402,9 @@ public class HomeFragment extends StoreFragment {
     drawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
 
     setHasOptionsMenu(true);
+  }
 
-    Analytics.AppViewViewedFrom.addStepToList("HOME");
+  private enum BundleKeys {
+    STORE_NAME, STORE_CONTEXT, STORE_THEME
   }
 }
