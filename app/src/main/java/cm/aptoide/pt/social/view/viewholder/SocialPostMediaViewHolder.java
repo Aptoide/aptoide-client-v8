@@ -12,9 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.CardTouchEvent;
@@ -65,13 +63,11 @@ public class SocialPostMediaViewHolder extends SocialPostViewHolder<SocialMedia>
   private final TextView publisher;
   private final RelativeLayout postBodyThumbnailLayout;
   private final TextView postUrlWhenNoThumbnail;
-  private final AptoideAccountManager accountManager;
   private int marginOfTheNextLikePreview = 60;
 
   public SocialPostMediaViewHolder(View view, DateCalculator dateCalculator,
       SpannableFactory spannableFactory,
-      PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
-      AptoideAccountManager accountManager) {
+      PublishSubject<CardTouchEvent> cardTouchEventPublishSubject) {
     super(view, cardTouchEventPublishSubject);
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
@@ -81,7 +77,6 @@ public class SocialPostMediaViewHolder extends SocialPostViewHolder<SocialMedia>
     this.headerPrimaryName = (TextView) view.findViewById(R.id.card_title);
     this.headerSecondaryName = (TextView) view.findViewById(R.id.card_subtitle);
     this.timestamp = (TextView) view.findViewById(R.id.card_date);
-    this.accountManager = accountManager;
     this.mediaTitle =
         (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_title);
     this.mediaThumbnail = (ImageView) itemView.findViewById(R.id.featured_graphic);
@@ -332,36 +327,27 @@ public class SocialPostMediaViewHolder extends SocialPostViewHolder<SocialMedia>
                 new CardTouchEvent(post, position, CardTouchEvent.Type.REPORT_ABUSE));
             return false;
           });
-      accountManager.accountStatus()
-          .first()
-          .toSingle()
-          .subscribe(account -> {
-            if (post.getPoster()
-                .isMe(account.getNickname(), account.getStore()
-                    .getName())) {
-              postPopupMenuBuilder.addItemDelete(menuItem -> {
-                cardTouchEventPublishSubject.onNext(
-                    new CardTouchEvent(post, position, CardTouchEvent.Type.DELETE_POST));
-                return false;
-              });
-            }
-            if (post.getPoster() != null) {
-              if (post.getPoster()
-                  .getUser() != null && !post.getPoster()
-                  .isMe(account.getNickname(), account.getStore()
-                      .getName())) {
-                postPopupMenuBuilder.addUnfollowUser(menuItem -> {
-                  cardTouchEventPublishSubject.onNext(new UserUnfollowCardTouchEvent(
-                      post.getPoster()
-                          .getUser()
-                          .getId(), post.getPoster()
-                      .getPrimaryName(), position, post));
-                  return false;
-                });
-              }
-            }
-          }, throwable -> CrashReport.getInstance()
-              .log(throwable));
+      if (post.getPoster()
+          .isMe()) {
+        postPopupMenuBuilder.addItemDelete(menuItem -> {
+          cardTouchEventPublishSubject.onNext(
+              new CardTouchEvent(post, position, CardTouchEvent.Type.DELETE_POST));
+          return false;
+        });
+      }
+      if (post.getPoster() != null) {
+        if (post.getPoster()
+            .getUser() != null && !post.getPoster()
+            .isMe()) {
+          postPopupMenuBuilder.addUnfollowUser(menuItem -> {
+            cardTouchEventPublishSubject.onNext(new UserUnfollowCardTouchEvent(post.getPoster()
+                .getUser()
+                .getId(), post.getPoster()
+                .getPrimaryName(), position, post));
+            return false;
+          });
+        }
+      }
       postPopupMenuBuilder.getPopupMenu()
           .show();
     });

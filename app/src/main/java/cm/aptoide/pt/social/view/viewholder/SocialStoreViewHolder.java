@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
@@ -72,16 +71,14 @@ public class SocialStoreViewHolder extends SocialPostViewHolder<SocialStore> {
   private final TextView numberLikesOneLike;
   private final RelativeLayout likePreviewContainer;
   private final TextView sharedBy;
-  private final AptoideAccountManager accountManager;
   private int marginOfTheNextLikePreview = 60;
 
   /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
   public SocialStoreViewHolder(View view, StoreRepository storeRepository,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
-      SpannableFactory spannableFactory, AptoideAccountManager accountManager) {
+      SpannableFactory spannableFactory) {
     super(view, cardTouchEventPublishSubject);
     this.storeRepository = storeRepository;
-    this.accountManager = accountManager;
     this.inflater = LayoutInflater.from(itemView.getContext());
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
@@ -371,36 +368,27 @@ public class SocialStoreViewHolder extends SocialPostViewHolder<SocialStore> {
                 new CardTouchEvent(post, position, CardTouchEvent.Type.UNFOLLOW_STORE));
             return false;
           });
-      accountManager.accountStatus()
-          .first()
-          .toSingle()
-          .subscribe(account -> {
-            if (post.getPoster()
-                .isMe(account.getNickname(), account.getStore()
-                    .getName())) {
-              postPopupMenuBuilder.addItemDelete(menuItem -> {
-                cardTouchEventPublishSubject.onNext(
-                    new CardTouchEvent(post, position, CardTouchEvent.Type.DELETE_POST));
-                return false;
-              });
-            }
-            if (post.getPoster() != null) {
-              if (post.getPoster()
-                  .getUser() != null && !post.getPoster()
-                  .isMe(account.getNickname(), account.getStore()
-                      .getName())) {
-                postPopupMenuBuilder.addUnfollowUser(menuItem -> {
-                  cardTouchEventPublishSubject.onNext(new UserUnfollowCardTouchEvent(
-                      post.getPoster()
-                          .getUser()
-                          .getId(), post.getPoster()
-                      .getPrimaryName(), position, post));
-                  return false;
-                });
-              }
-            }
-          }, throwable -> CrashReport.getInstance()
-              .log(throwable));
+      if (post.getPoster()
+          .isMe()) {
+        postPopupMenuBuilder.addItemDelete(menuItem -> {
+          cardTouchEventPublishSubject.onNext(
+              new CardTouchEvent(post, position, CardTouchEvent.Type.DELETE_POST));
+          return false;
+        });
+      }
+      if (post.getPoster() != null) {
+        if (post.getPoster()
+            .getUser() != null && !post.getPoster()
+            .isMe()) {
+          postPopupMenuBuilder.addUnfollowUser(menuItem -> {
+            cardTouchEventPublishSubject.onNext(new UserUnfollowCardTouchEvent(post.getPoster()
+                .getUser()
+                .getId(), post.getPoster()
+                .getPrimaryName(), position, post));
+            return false;
+          });
+        }
+      }
       postPopupMenuBuilder.getPopupMenu()
           .show();
     });

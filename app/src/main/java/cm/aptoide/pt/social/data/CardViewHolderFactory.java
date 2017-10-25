@@ -2,7 +2,6 @@ package cm.aptoide.pt.social.data;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -44,22 +43,20 @@ public class CardViewHolderFactory {
   private final MinimalCardViewFactory minimalCardViewFactory;
   private final String marketName;
   private final TimelineAdsRepository adsRepository;
-  private final AptoideAccountManager accountManager;
   private final StoreRepository storeRepository;
   private StoreContext storeContext;
 
   public CardViewHolderFactory(PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
       DateCalculator dateCalculator, SpannableFactory spannableFactory,
       MinimalCardViewFactory minimalCardViewFactory, String marketName,
-      TimelineAdsRepository adsRepository, AptoideAccountManager accountManager,
-      StoreContext storeContext, StoreRepository storeRepository) {
+      TimelineAdsRepository adsRepository, StoreContext storeContext,
+      StoreRepository storeRepository) {
     this.minimalCardViewFactory = minimalCardViewFactory;
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
     this.marketName = marketName;
     this.adsRepository = adsRepository;
-    this.accountManager = accountManager;
     this.storeContext = storeContext;
     this.storeRepository = storeRepository;
   }
@@ -99,16 +96,16 @@ public class CardViewHolderFactory {
             cardType.equals(CardType.SOCIAL_RECOMMENDATION)
                 ? R.string.timeline_title_card_title_recommend_present_singular
                 : R.string.timeline_title_card_title_install_past_singular,
-            cardTouchEventPublishSubject, dateCalculator, spannableFactory, accountManager);
+            cardTouchEventPublishSubject, dateCalculator, spannableFactory);
       case SOCIAL_ARTICLE:
       case SOCIAL_VIDEO:
         return new SocialMediaViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_social_media_item, parent, false),
-            cardTouchEventPublishSubject, dateCalculator, spannableFactory, accountManager);
+            cardTouchEventPublishSubject, dateCalculator, spannableFactory);
       case SOCIAL_STORE:
         return new SocialStoreViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_social_store_item, parent, false), storeRepository,
-            cardTouchEventPublishSubject, dateCalculator, spannableFactory, accountManager);
+            cardTouchEventPublishSubject, dateCalculator, spannableFactory);
       case AGGREGATED_SOCIAL_ARTICLE:
       case AGGREGATED_SOCIAL_VIDEO:
         return new AggregatedMediaViewHolder(LayoutInflater.from(parent.getContext())
@@ -127,11 +124,11 @@ public class CardViewHolderFactory {
       case SOCIAL_POST_VIDEO:
         return new SocialPostMediaViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_social_post_media_item, parent, false), dateCalculator,
-            spannableFactory, cardTouchEventPublishSubject, accountManager);
+            spannableFactory, cardTouchEventPublishSubject);
       case SOCIAL_POST_RECOMMENDATION:
         return new SocialPostRecommendationViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_social_post_recommendation_item, parent, false),
-            dateCalculator, spannableFactory, cardTouchEventPublishSubject, accountManager);
+            dateCalculator, spannableFactory, cardTouchEventPublishSubject);
       case PROGRESS:
         return new ProgressViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_progress_item, parent, false));

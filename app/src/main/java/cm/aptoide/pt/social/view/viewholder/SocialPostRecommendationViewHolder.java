@@ -13,9 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.CardTouchEvent;
@@ -64,13 +62,11 @@ public class SocialPostRecommendationViewHolder extends SocialPostViewHolder<Rat
   /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
 
   private final TextView postContent;
-  private final AptoideAccountManager accountManager;
   private int marginOfTheNextLikePreview = 60;
 
   public SocialPostRecommendationViewHolder(View view, DateCalculator dateCalculator,
       SpannableFactory spannableFactory,
-      PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
-      AptoideAccountManager accountManager) {
+      PublishSubject<CardTouchEvent> cardTouchEventPublishSubject) {
     super(view, cardTouchEventPublishSubject);
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
@@ -88,7 +84,6 @@ public class SocialPostRecommendationViewHolder extends SocialPostViewHolder<Rat
     this.getAppButton =
         (Button) view.findViewById(R.id.displayable_social_timeline_recommendation_get_app_button);
     this.cardHeader = (RelativeLayout) view.findViewById(R.id.social_header);
-    this.accountManager = accountManager;
     this.likeButton = (LikeButtonView) itemView.findViewById(R.id.social_like_button);
     this.like = (LinearLayout) itemView.findViewById(R.id.social_like);
     this.commentButton = (TextView) itemView.findViewById(R.id.social_comment);
@@ -307,36 +302,27 @@ public class SocialPostRecommendationViewHolder extends SocialPostViewHolder<Rat
                 new CardTouchEvent(post, position, CardTouchEvent.Type.REPORT_ABUSE));
             return false;
           });
-      accountManager.accountStatus()
-          .first()
-          .toSingle()
-          .subscribe(account -> {
-            if (post.getPoster()
-                .isMe(account.getNickname(), account.getStore()
-                    .getName())) {
-              postPopupMenuBuilder.addItemDelete(menuItem -> {
-                cardTouchEventPublishSubject.onNext(
-                    new CardTouchEvent(post, position, CardTouchEvent.Type.DELETE_POST));
-                return false;
-              });
-            }
-            if (post.getPoster() != null) {
-              if (post.getPoster()
-                  .getUser() != null && !post.getPoster()
-                  .isMe(account.getNickname(), account.getStore()
-                      .getName())) {
-                postPopupMenuBuilder.addUnfollowUser(menuItem -> {
-                  cardTouchEventPublishSubject.onNext(new UserUnfollowCardTouchEvent(
-                      post.getPoster()
-                          .getUser()
-                          .getId(), post.getPoster()
-                      .getPrimaryName(), position, post));
-                  return false;
-                });
-              }
-            }
-          }, throwable -> CrashReport.getInstance()
-              .log(throwable));
+      if (post.getPoster()
+          .isMe()) {
+        postPopupMenuBuilder.addItemDelete(menuItem -> {
+          cardTouchEventPublishSubject.onNext(
+              new CardTouchEvent(post, position, CardTouchEvent.Type.DELETE_POST));
+          return false;
+        });
+      }
+      if (post.getPoster() != null) {
+        if (post.getPoster()
+            .getUser() != null && !post.getPoster()
+            .isMe()) {
+          postPopupMenuBuilder.addUnfollowUser(menuItem -> {
+            cardTouchEventPublishSubject.onNext(new UserUnfollowCardTouchEvent(post.getPoster()
+                .getUser()
+                .getId(), post.getPoster()
+                .getPrimaryName(), position, post));
+            return false;
+          });
+        }
+      }
       postPopupMenuBuilder.getPopupMenu()
           .show();
     });

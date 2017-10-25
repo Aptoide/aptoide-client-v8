@@ -13,9 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.CardTouchEvent;
@@ -48,7 +46,6 @@ public class SocialRecommendationViewHolder extends SocialPostViewHolder<RatedRe
   private final SpannableFactory spannableFactory;
   private final int titleStringResourceId;
   private final RelativeLayout cardHeader;
-  private final AptoideAccountManager accountManager;
   private final LinearLayout like;
   private final LikeButtonView likeButton;
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
@@ -70,13 +67,12 @@ public class SocialRecommendationViewHolder extends SocialPostViewHolder<RatedRe
 
   public SocialRecommendationViewHolder(View view, int titleStringResourceId,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
-      SpannableFactory spannableFactory, AptoideAccountManager accountManager) {
+      SpannableFactory spannableFactory) {
     super(view, cardTouchEventPublishSubject);
     this.titleStringResourceId = titleStringResourceId;
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
-    this.accountManager = accountManager;
     this.headerPrimaryAvatar = (ImageView) view.findViewById(R.id.card_image);
     this.headerSecondaryAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
     this.headerPrimaryName = (TextView) view.findViewById(R.id.card_title);
@@ -315,36 +311,27 @@ public class SocialRecommendationViewHolder extends SocialPostViewHolder<RatedRe
                 new CardTouchEvent(post, position, CardTouchEvent.Type.REPORT_ABUSE));
             return false;
           });
-      accountManager.accountStatus()
-          .first()
-          .toSingle()
-          .subscribe(account -> {
-            if (post.getPoster()
-                .isMe(account.getNickname(), account.getStore()
-                    .getName())) {
-              postPopupMenuBuilder.addItemDelete(menuItem -> {
-                cardTouchEventPublishSubject.onNext(
-                    new CardTouchEvent(post, position, CardTouchEvent.Type.DELETE_POST));
-                return false;
-              });
-            }
-            if (post.getPoster() != null) {
-              if (post.getPoster()
-                  .getUser() != null && !post.getPoster()
-                  .isMe(account.getNickname(), account.getStore()
-                      .getName())) {
-                postPopupMenuBuilder.addUnfollowUser(menuItem -> {
-                  cardTouchEventPublishSubject.onNext(new UserUnfollowCardTouchEvent(
-                      post.getPoster()
-                          .getUser()
-                          .getId(), post.getPoster()
-                      .getPrimaryName(), position, post));
-                  return false;
-                });
-              }
-            }
-          }, throwable -> CrashReport.getInstance()
-              .log(throwable));
+      if (post.getPoster()
+          .isMe()) {
+        postPopupMenuBuilder.addItemDelete(menuItem -> {
+          cardTouchEventPublishSubject.onNext(
+              new CardTouchEvent(post, position, CardTouchEvent.Type.DELETE_POST));
+          return false;
+        });
+      }
+      if (post.getPoster() != null) {
+        if (post.getPoster()
+            .getUser() != null && !post.getPoster()
+            .isMe()) {
+          postPopupMenuBuilder.addUnfollowUser(menuItem -> {
+            cardTouchEventPublishSubject.onNext(new UserUnfollowCardTouchEvent(post.getPoster()
+                .getUser()
+                .getId(), post.getPoster()
+                .getPrimaryName(), position, post));
+            return false;
+          });
+        }
+      }
       postPopupMenuBuilder.getPopupMenu()
           .show();
     });

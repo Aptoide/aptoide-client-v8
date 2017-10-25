@@ -722,16 +722,15 @@ public abstract class AptoideApplication extends Application {
               WebService.getDefaultConverter(), getNonNullObjectMapper(),
               getDefaultSharedPreferences(), getExtraId(), getTokenInvalidator(),
               getAuthenticationPersistence(), getNoAuthenticationBodyInterceptorV3(),
-              getMultipartBodyInterceptor(), getBodyInterceptorWebV7(),
-              getBodyInterceptorPoolV7());
+              getMultipartBodyInterceptor(), getBodyInterceptorWebV7(), getBodyInterceptorPoolV7());
 
       final AndroidAccountDataMigration accountDataMigration = new AndroidAccountDataMigration(
           SecurePreferencesImplementation.getInstance(this, getDefaultSharedPreferences()),
           getDefaultSharedPreferences(), AccountManager.get(this),
           new SecureCoderDecoder.Builder(this, getDefaultSharedPreferences()).create(),
           SQLiteDatabaseHelper.DATABASE_VERSION,
-          getDatabasePath(SQLiteDatabaseHelper.DATABASE_NAME).getPath(),
-          getAccountType(), BuildConfig.VERSION_NAME, Schedulers.io());
+          getDatabasePath(SQLiteDatabaseHelper.DATABASE_NAME).getPath(), getAccountType(),
+          BuildConfig.VERSION_NAME, Schedulers.io());
 
       final AccountPersistence accountPersistence =
           new AndroidAccountManagerPersistence(AccountManager.get(this),
@@ -765,8 +764,7 @@ public abstract class AptoideApplication extends Application {
   public AndroidAccountProvider getAndroidAccountProvider() {
     if (androidAccountProvider == null) {
       androidAccountProvider =
-          new AndroidAccountProvider(AccountManager.get(this), getAccountType(),
-              Schedulers.io());
+          new AndroidAccountProvider(AccountManager.get(this), getAccountType(), Schedulers.io());
     }
     return androidAccountProvider;
   }
@@ -1262,7 +1260,7 @@ public abstract class AptoideApplication extends Application {
               getDefaultClient(), getDefaultSharedPreferences(), getTokenInvalidator(),
               new LinksHandlerFactory(this), getPackageRepository(),
               WebService.getDefaultConverter(),
-              new TimelineResponseCardMapper(getMarketName()),
+              new TimelineResponseCardMapper(accountManager, getMarketName()),
               RepositoryFactory.getUpdateRepository(context,
                   ((AptoideApplication) context.getApplicationContext()).getDefaultSharedPreferences()));
     }

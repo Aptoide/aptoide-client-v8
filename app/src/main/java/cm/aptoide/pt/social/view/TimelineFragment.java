@@ -22,11 +22,11 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
-import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.comments.view.CommentDialogFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -37,9 +37,11 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.download.DownloadFactory;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.repository.RepositoryFactory;
@@ -74,9 +76,7 @@ import cm.aptoide.pt.util.DateCalculator;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.comments.view.CommentDialogFragment;
 import cm.aptoide.pt.view.fragment.FragmentView;
-import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.view.recycler.RecyclerViewPositionHelper;
 import cm.aptoide.pt.view.spannable.SpannableFactory;
 import com.facebook.appevents.AppEventsLogger;
@@ -214,8 +214,15 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
     timelineService =
         new TimelineService(userId, baseBodyInterceptorV7, defaultClient, defaultConverter,
-            new TimelineResponseCardMapper(marketName), tokenInvalidator, sharedPreferences);
+            new TimelineResponseCardMapper(accountManager, marketName), tokenInvalidator,
+            sharedPreferences);
     crashReport = CrashReport.getInstance();
+  }
+
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    return inflater.inflate(R.layout.fragment_timeline, container, false);
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -225,12 +232,6 @@ public class TimelineFragment extends FragmentView implements TimelineView {
       outState.putParcelable(LIST_STATE_KEY, list.getLayoutManager()
           .onSaveInstanceState());
     }
-  }
-
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_timeline, container, false);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -263,8 +264,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     adapter = new PostAdapter(new ArrayList<>(),
         new CardViewHolderFactory(postTouchEventPublishSubject, dateCalculator, spannableFactory,
             new MinimalCardViewFactory(dateCalculator, spannableFactory,
-                postTouchEventPublishSubject, accountManager), marketName, timelineAdsRepository,
-            accountManager, storeContext, storeRepository), new ProgressCard());
+                postTouchEventPublishSubject), marketName, timelineAdsRepository, storeContext,
+            storeRepository), new ProgressCard());
     list.setAdapter(adapter);
 
     final StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(

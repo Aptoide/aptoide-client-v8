@@ -9,9 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.publisher.Poster;
@@ -31,7 +29,6 @@ public class MinimalCardViewFactory {
   private final DateCalculator dateCalculator;
   private final SpannableFactory spannableFactory;
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
-  private final AptoideAccountManager accountManager;
   private TextView morePostersLabel;
   private LinearLayout socialInfoBar;
   private TextView numberLikes;
@@ -46,12 +43,10 @@ public class MinimalCardViewFactory {
   private int marginOfTheNextLikePreview = 60;
 
   public MinimalCardViewFactory(DateCalculator dateCalculator, SpannableFactory spannableFactory,
-      PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
-      AptoideAccountManager accountManager) {
+      PublishSubject<CardTouchEvent> cardTouchEventPublishSubject) {
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
-    this.accountManager = accountManager;
   }
 
   public View getView(Post originalPost, List<MinimalPost> minimalPosts, LayoutInflater inflater,
@@ -327,26 +322,18 @@ public class MinimalCardViewFactory {
                     new CardTouchEvent(post, position, CardTouchEvent.Type.REPORT_ABUSE));
                 return false;
               });
-      accountManager.accountStatus()
-          .first()
-          .toSingle()
-          .subscribe(account -> {
-            if (post.getMinimalPostPosters()
-                .size() == 1) {
-              Poster poster = post.getMinimalPostPosters()
-                  .get(0);
-              if (poster.getUser() != null && !poster.isMe(account.getNickname(), account.getStore()
-                  .getName())) {
-                postPopupMenuBuilder.addUnfollowUser(menuItem -> {
-                  cardTouchEventPublishSubject.onNext(new UserUnfollowCardTouchEvent(
-                      poster.getUser()
-                          .getId(), poster.getPrimaryName(), position, post));
-                  return false;
-                });
-              }
-            }
-          }, throwable -> CrashReport.getInstance()
-              .log(throwable));
+      if (post.getMinimalPostPosters()
+          .size() == 1) {
+        Poster poster = post.getMinimalPostPosters()
+            .get(0);
+        if (poster.getUser() != null && !poster.isMe()) {
+          postPopupMenuBuilder.addUnfollowUser(menuItem -> {
+            cardTouchEventPublishSubject.onNext(new UserUnfollowCardTouchEvent(poster.getUser()
+                .getId(), poster.getPrimaryName(), position, post));
+            return false;
+          });
+        }
+      }
       postPopupMenuBuilder.getPopupMenu()
           .show();
     });

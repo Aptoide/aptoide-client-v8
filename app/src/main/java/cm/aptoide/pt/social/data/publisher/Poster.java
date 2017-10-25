@@ -14,10 +14,15 @@ public class Poster {
   private final String secondaryName;
   private final UserSharerTimeline.User user;
   private final UserSharerTimeline.Store store;
+  private final String myUserName;
+  private final String myStoreName;
 
-  public Poster(UserSharerTimeline.User user, UserSharerTimeline.Store store) {
+  public Poster(UserSharerTimeline.User user, UserSharerTimeline.Store store, String myUserName,
+      String myStoreName) {
     this.user = user;
     this.store = store;
+    this.myUserName = myUserName;
+    this.myStoreName = myStoreName;
     if (doesUserHasStore()) {
       this.primaryName = store.getName();
       this.primaryAvatar = store.getAvatar();
@@ -79,10 +84,8 @@ public class Poster {
     return secondaryName;
   }
 
-  public boolean isMe(String username, String storeName) {
-    return username != null
-        && storeName != null
-        && username.equals(user.getName())
-        && storeName.equals(store.getName());
+  public boolean isMe() {
+    return this.myUserName != null && this.myStoreName != null && this.myUserName.equals(
+        user.getName()) && this.myStoreName.equals(store.getName());
   }
 }
