@@ -99,7 +99,7 @@ ext {
   POWER_MOCK_CORE_VERSION = '1.6.2'
 
   // Lombok plugin
-  LOMBOK_VERSION = '1.16.8'
+  LOMBOK_VERSION = '1.16.18'
 
   JACKSON_VERSION = '2.8.5'
 
