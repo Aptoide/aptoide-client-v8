@@ -88,7 +88,7 @@ public class LoginSignUpFragment extends BaseToolbarFragment implements LoginSig
     super.setupViews();
     presenter = new LoginSignUpPresenter(this, getFragmentChildNavigator(R.id.login_signup_layout),
         dismissToNavigateToMainView, navigateToHome);
-    attachPresenter(presenter, null);
+    attachPresenter(presenter);
     registerClickHandler(presenter);
     bottomSheetBehavior.setBottomSheetCallback(presenter);
   }

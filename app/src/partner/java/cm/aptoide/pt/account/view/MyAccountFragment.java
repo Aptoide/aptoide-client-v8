@@ -37,12 +37,12 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.link.LinksHandlerFactory;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.AptoideNotification;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.view.InboxAdapter;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
-import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Collections;
@@ -148,11 +148,11 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
             ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
             new LinksHandlerFactory(getContext()),
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-            ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker(),
+            ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker(),
             new NotificationAnalytics(httpClient, Analytics.getInstance()),
             new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
                 Analytics.getInstance(),
-                ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker())),
+                ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker())),
         savedInstanceState);
   }
 

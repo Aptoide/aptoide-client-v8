@@ -112,7 +112,7 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     WizardPresenter presenter =
         new WizardPresenter(this, accountManager, CrashReport.getInstance());
-    attachPresenter(presenter, null);
+    attachPresenter(presenter);
     viewPager.addOnPageChangeListener(presenter);
   }
 

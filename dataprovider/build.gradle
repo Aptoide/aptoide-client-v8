@@ -62,9 +62,6 @@ android {
     targetCompatibility JavaVersion.VERSION_1_8
   }
 
-  // Websockets
-  useLibrary 'org.apache.http.legacy'
-
   packagingOptions {
     exclude 'META-INF/services/javax.annotation.processing.Processor'
     exclude 'META-INF/DEPENDENCIES.txt'

@@ -1,6 +1,6 @@
 package cm.aptoide.pt.presenter;
 
-import cm.aptoide.pt.Install;
+import cm.aptoide.pt.install.Install;
 import java.util.List;
 
 public interface DownloadsView extends View {

@@ -1,21 +1,22 @@
 package cm.aptoide.pt.social.presenter;
 
 import android.content.res.Resources;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.Store;
-import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialCard;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -48,11 +49,9 @@ import cm.aptoide.pt.social.view.TimelineView;
 import cm.aptoide.pt.social.view.viewholder.NativeAdErrorEvent;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
+import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.view.app.AppViewFragment;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
-import cm.aptoide.pt.view.store.StoreFragment;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.Completable;
@@ -177,13 +176,6 @@ public class TimelinePresenter implements Presenter {
     clickOnEmptyStateAction();
 
     handleScrollEvents();
-  }
-
-  @Override public void saveState(Bundle state) {
-  }
-
-  @Override public void restoreState(Bundle state) {
-
   }
 
   private void handleScrollEvents() {

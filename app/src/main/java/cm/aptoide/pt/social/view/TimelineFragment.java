@@ -22,7 +22,7 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
-import cm.aptoide.pt.InstallManager;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
@@ -72,11 +72,11 @@ import cm.aptoide.pt.util.DateCalculator;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.view.comments.CommentDialogFragment;
+import cm.aptoide.pt.comments.view.CommentDialogFragment;
 import cm.aptoide.pt.view.fragment.FragmentView;
-import cm.aptoide.pt.view.navigator.TabNavigator;
+import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.view.recycler.RecyclerViewPositionHelper;
-import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.view.spannable.SpannableFactory;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
@@ -207,7 +207,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         AppEventsLogger.newLogger(getContext().getApplicationContext()), baseBodyInterceptorV7,
         defaultClient, defaultConverter, tokenInvalidator, BuildConfig.APPLICATION_ID,
         sharedPreferences, new NotificationAnalytics(defaultClient, Analytics.getInstance()),
-        application.getAptoideNavigationTracker());
+        application.getNavigationTracker());
 
     timelineService =
         new TimelineService(userId, baseBodyInterceptorV7, defaultClient, defaultConverter,
@@ -297,7 +297,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             RepositoryFactory.getStoreRepository(getContext()), storeUtilsProxy,
             storeCredentialsProvider, accountManager, timelineAnalytics, userId, storeId,
             storeContext, getContext().getResources(), getFragmentNavigator(),
-            new LinksHandlerFactory(getContext()), notificationCenter), savedInstanceState);
+            new LinksHandlerFactory(getContext()), notificationCenter));
   }
 
   @Override public void onDestroyView() {
