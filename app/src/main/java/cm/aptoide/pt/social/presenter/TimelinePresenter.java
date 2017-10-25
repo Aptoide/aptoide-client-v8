@@ -10,13 +10,11 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialCard;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.repository.StoreRepository;
@@ -48,7 +46,6 @@ import cm.aptoide.pt.social.view.TimelineUser;
 import cm.aptoide.pt.social.view.TimelineView;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
-import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.List;
@@ -79,7 +76,6 @@ public class TimelinePresenter implements Presenter {
   private final Long storeId;
   private final StoreContext storeContext;
   private final Resources resources;
-  private final FragmentNavigator fragmentNavigator;
   private final LinksHandlerFactory linksNavigator;
 
   public TimelinePresenter(@NonNull TimelineView cardsView, @NonNull Timeline timeline,
@@ -89,7 +85,7 @@ public class TimelinePresenter implements Presenter {
       StoreUtilsProxy storeUtilsProxy, StoreCredentialsProviderImpl storeCredentialsProvider,
       AptoideAccountManager accountManager, TimelineAnalytics timelineAnalytics, Long userId,
       Long storeId, StoreContext storeContext, Resources resources,
-      FragmentNavigator fragmentNavigator, LinksHandlerFactory linksNavigator) {
+      LinksHandlerFactory linksNavigator) {
     this.view = cardsView;
     this.timeline = timeline;
     this.crashReport = crashReport;
@@ -106,7 +102,6 @@ public class TimelinePresenter implements Presenter {
     this.storeId = storeId;
     this.storeContext = storeContext;
     this.resources = resources;
-    this.fragmentNavigator = fragmentNavigator;
     this.linksNavigator = linksNavigator;
   }
 
@@ -387,14 +382,13 @@ public class TimelinePresenter implements Presenter {
         .flatMap(viewCreated -> view.postClicked()
             .filter(cardClicked -> cardClicked.getActionType()
                 .equals(CardTouchEvent.Type.LAST_COMMENT))
-            .doOnNext(cardTouchEvent -> fragmentNavigator.navigateTo(StoreFragment.newInstance(
+            .doOnNext(cardTouchEvent -> timelineNavigation.navigateToUserHome(
                 cardTouchEvent.getCard()
                     .getComments()
                     .get(cardTouchEvent.getCard()
                         .getComments()
                         .size() - 1)
-                    .getUserId(), "DEFAULT", Event.Name.getUserTimeline,
-                StoreFragment.OpenType.GetHome), true)))
+                    .getUserId())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
         }, throwable -> view.showGenericError());

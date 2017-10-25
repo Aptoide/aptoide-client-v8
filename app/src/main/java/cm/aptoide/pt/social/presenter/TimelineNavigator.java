@@ -1,9 +1,10 @@
 package cm.aptoide.pt.social.presenter;
 
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.account.view.LoginSignUpFragment;
 import cm.aptoide.pt.account.view.MyAccountFragment;
+import cm.aptoide.pt.addressbook.view.AddressBookFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
+import cm.aptoide.pt.comments.view.CommentListFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -13,7 +14,11 @@ import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.notification.view.InboxFragment;
 import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.timeline.post.PostFragment;
+import cm.aptoide.pt.timeline.view.TimeLineLikesFragment;
+import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
+import cm.aptoide.pt.timeline.view.follow.TimeLineFollowingFragment;
 import cm.aptoide.pt.timeline.view.navigation.AppsTimelineTabNavigation;
+import cm.aptoide.pt.view.feedback.SendFeedbackFragment;
 import rx.Observable;
 
 /**
@@ -47,25 +52,23 @@ public class TimelineNavigator {
   }
 
   public void navigateToStoreHome(String storeName, String storeTheme) {
-    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newStoreFragment(storeName, storeTheme), true);
+    fragmentNavigator.navigateTo(StoreFragment.newInstance(storeName, storeTheme), true);
   }
 
   public void navigateToStoreTimeline(long userId, String storeTheme) {
-    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newStoreFragment(userId, storeTheme, Event.Name.getUserTimeline,
+    fragmentNavigator.navigateTo(
+        StoreFragment.newInstance(userId, storeTheme, Event.Name.getUserTimeline,
             StoreFragment.OpenType.GetHome), true);
   }
 
   public void navigateToStoreTimeline(String storeName, String storeTheme) {
-    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newStoreFragment(storeName, storeTheme, Event.Name.getUserTimeline,
+    fragmentNavigator.navigateTo(
+        StoreFragment.newInstance(storeName, storeTheme, Event.Name.getUserTimeline,
             StoreFragment.OpenType.GetHome), true);
   }
 
   public void navigateToAddressBook() {
-    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newAddressBookFragment(), true);
+    fragmentNavigator.navigateTo(AddressBookFragment.newInstance(), true);
   }
 
   public void navigateToLoginView() {
@@ -77,51 +80,55 @@ public class TimelineNavigator {
   }
 
   public void navigateToCommentsWithCommentDialogOpen(String cardId) {
-    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newCommentGridRecyclerFragmentWithCommentDialogOpen(CommentType.TIMELINE, cardId,
+    fragmentNavigator.navigateTo(
+        CommentListFragment.newInstanceWithCommentDialogOpen(CommentType.TIMELINE, cardId,
             storeContext), true);
   }
 
   // FIXME what should happen if storeId <= 0 ?
   public void navigateToFollowersViewStore(Long storeId, String title) {
     if (storeId > 0) {
-      fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-          .newTimeLineFollowersUsingStoreIdFragment(storeId, "DEFAULT", title, storeContext), true);
+      fragmentNavigator.navigateTo(
+          TimeLineFollowersFragment.newInstanceUsingStore(storeId, "DEFAULT", title, storeContext),
+          true);
     }
   }
 
   public void navigateToFollowersViewStore(String title) {
-    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newTimeLineFollowersFragment("DEFAULT", title, storeContext), true);
+    fragmentNavigator.navigateTo(
+        TimeLineFollowersFragment.newInstanceUsingUser("DEFAULT", title, storeContext), true);
   }
 
   public void navigateToFollowersViewUser(Long userId, String title) {
-    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newTimeLineFollowersUsingUserIdFragment(userId, "DEFAULT", title, storeContext), true);
+    fragmentNavigator.navigateTo(
+        TimeLineFollowersFragment.newInstanceUsingUser(userId, "DEFAULT", title, storeContext),
+        true);
   }
 
   // FIXME what should happen if storeId <= 0 ?
   public void navigateToFollowingViewStore(Long storeId, String title) {
     if (storeId > 0) {
-      fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-          .newTimeLineFollowingFragmentUsingStoreId(storeId, "DEFAULT", title, storeContext), true);
+      fragmentNavigator.navigateTo(
+          TimeLineFollowingFragment.newInstanceUsingStoreId(storeId, "DEFAULT", title,
+              storeContext), true);
     }
   }
 
   public void navigateToFollowingViewUser(Long userId, String title) {
-    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newTimeLineFollowingFragmentUsingUserId(userId, "DEFAULT", title, storeContext), true);
-  }
-
-  public void navigateToLikesView(String cardId, long numberOfLikes) {
-    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-            .newTimeLineLikesFragment(cardId, numberOfLikes, "default", likesTitle, storeContext),
+    fragmentNavigator.navigateTo(
+        TimeLineFollowingFragment.newInstanceUsingUserId(userId, "DEFAULT", title, storeContext),
         true);
   }
 
+  public void navigateToLikesView(String cardId, long numberOfLikes) {
+    fragmentNavigator.navigateTo(
+        TimeLineLikesFragment.newInstance("default", cardId, numberOfLikes, likesTitle,
+            storeContext), true);
+  }
+
   public void navigateToComments(String cardId) {
-    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newCommentGridRecyclerFragment(CommentType.TIMELINE, cardId, storeContext), true);
+    fragmentNavigator.navigateTo(
+        CommentListFragment.newInstance(CommentType.TIMELINE, cardId, storeContext), true);
   }
 
   public Observable<String> postNavigation() {
@@ -141,7 +148,12 @@ public class TimelineNavigator {
   }
 
   public void navigateToFeedbackScreen(String path, String postId) {
-    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newSendFeedbackFragment(path, postId), true);
+    fragmentNavigator.navigateTo(SendFeedbackFragment.newInstance(path, postId), true);
+  }
+
+  public void navigateToUserHome(long userId) {
+    fragmentNavigator.navigateTo(
+        StoreFragment.newInstance(userId, "DEFAULT", Event.Name.getUserTimeline,
+            StoreFragment.OpenType.GetHome), true);
   }
 }
