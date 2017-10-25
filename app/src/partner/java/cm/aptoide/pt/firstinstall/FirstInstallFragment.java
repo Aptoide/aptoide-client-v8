@@ -96,7 +96,7 @@ public class FirstInstallFragment extends AptoideBaseFragment<BaseAdapter>
             (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
             RepositoryFactory.getAppRepository(getContext(),
                 ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()),
-            firstInstallAnalytics), savedInstanceState);
+            firstInstallAnalytics));
   }
 
   /**

@@ -3,10 +3,8 @@ package cm.aptoide.pt.firstinstall;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.os.Bundle;
 import android.view.WindowManager;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.AdsRepository;
@@ -30,6 +28,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.firstinstall.displayable.FirstInstallAdDisplayable;
 import cm.aptoide.pt.firstinstall.displayable.FirstInstallAppDisplayable;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -117,14 +116,6 @@ public class FirstInstallPresenter implements Presenter {
     handleInstallAllClick();
     handleCloseClick();
     getFirstInstallWidget();
-  }
-
-  @Override public void saveState(Bundle state) {
-    //does nothing
-  }
-
-  @Override public void restoreState(Bundle state) {
-    //does nothing
   }
 
   /**
