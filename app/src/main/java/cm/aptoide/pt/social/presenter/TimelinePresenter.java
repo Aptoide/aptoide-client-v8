@@ -678,8 +678,8 @@ public class TimelinePresenter implements Presenter {
                   return Completable.complete();
                 })
                 .doOnError(
-                    throwable -> timelineAnalytics.sendLikeEvent(cardTouchEvent,
-                        false))))
+                    throwable -> timelineAnalytics.sendErrorLikeEvent(cardTouchEvent,
+                        false, 0))))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
             .getAbUrl()), throwable -> crashReport.log(throwable));
@@ -749,7 +749,7 @@ public class TimelinePresenter implements Presenter {
                             () -> timelineAnalytics.sendLikeEvent(cardTouchEvent,
                                 true)));
                   } else {
-                    timelineAnalytics.sendLikeEvent(cardTouchEvent, false);
+                    timelineAnalytics.sendErrorLikeEvent(cardTouchEvent, false, 0);
                     return Completable.complete();
                   }
                 })
@@ -781,10 +781,10 @@ public class TimelinePresenter implements Presenter {
                 if (showCreateStore(account)) {
                   return Completable.fromAction(
                       () -> view.showCreateStoreMessage(SocialAction.LIKE))
-                      .andThen(sendCommentEvent(cardTouchEvent, false));
+                      .andThen(sendErrorCommentEvent(cardTouchEvent, false, 1));
                 } else if (showSetUserOrStoreToPublic(account)) {
                   return Completable.fromAction(() -> view.showSetUserOrStorePublicMessage())
-                      .andThen(sendCommentEvent(cardTouchEvent, false));
+                      .andThen(sendErrorCommentEvent(cardTouchEvent, false, 2));
                 }
                 return Completable.fromAction(
                     () -> timelineNavigation.navigateToCommentsWithCommentDialogOpen(
@@ -793,7 +793,7 @@ public class TimelinePresenter implements Presenter {
                     .andThen(sendCommentEvent(cardTouchEvent, true));
               }
               return Completable.fromAction(() -> view.showLoginPromptWithAction())
-                  .andThen(sendCommentEvent(cardTouchEvent, false));
+                  .andThen(sendErrorCommentEvent(cardTouchEvent, false, 0));
             })
             .doOnError(throwable -> timelineAnalytics.sendCommentEvent(cardTouchEvent,
                 false)))
@@ -819,17 +819,17 @@ public class TimelinePresenter implements Presenter {
                 if (showCreateStore(account)) {
                   return Completable.fromAction(
                       () -> view.showCreateStoreMessage(SocialAction.LIKE))
-                      .andThen(sendCommentEvent(cardTouchEvent, false));
+                      .andThen(sendErrorCommentEvent(cardTouchEvent, false, 1));
                 } else if (showSetUserOrStoreToPublic(account)) {
                   return Completable.fromAction(() -> view.showSetUserOrStorePublicMessage())
-                      .andThen(sendCommentEvent(cardTouchEvent, false));
+                      .andThen(sendErrorCommentEvent(cardTouchEvent, false, 2));
                 }
                 return Completable.fromAction(
                     () -> view.showCommentDialog((SocialCardTouchEvent) cardTouchEvent))
                     .andThen(sendCommentEvent(cardTouchEvent, true));
               }
               return Completable.fromAction(() -> view.showLoginPromptWithAction())
-                  .andThen(sendCommentEvent(cardTouchEvent, false));
+                  .andThen(sendErrorCommentEvent(cardTouchEvent, false, 0));
             })
             .doOnError(throwable -> timelineAnalytics.sendCommentEvent(cardTouchEvent,
                 false)))
@@ -841,6 +841,10 @@ public class TimelinePresenter implements Presenter {
 
   @NonNull private Completable sendCommentEvent(CardTouchEvent event, boolean success) {
     return Completable.fromAction(() -> timelineAnalytics.sendCommentEvent(event, success));
+  }
+
+  @NonNull private Completable sendErrorCommentEvent(CardTouchEvent event, boolean success, int error){
+    return Completable.fromAction(() -> timelineAnalytics.sendErrorCommentEvent(event, success, error));
   }
 
   private void clickOnCommentsNumberLabel() {
@@ -884,10 +888,10 @@ public class TimelinePresenter implements Presenter {
                 if (showCreateStore(account)) {
                   return Completable.fromAction(
                       () -> view.showCreateStoreMessage(SocialAction.LIKE))
-                      .andThen(sendShareEvent(cardTouchEvent, false));
+                      .andThen(sendErrorShareEvent(cardTouchEvent, false, 1));
                 } else if (showSetUserOrStoreToPublic(account)) {
                   return Completable.fromAction(() -> view.showSetUserOrStorePublicMessage())
-                      .andThen(sendShareEvent(cardTouchEvent, false));
+                      .andThen(sendErrorShareEvent(cardTouchEvent, false, 2));
                 }
                 if (cardTouchEvent instanceof MinimalPostTouchEvent) {
                   return Completable.fromAction(() -> view.showSharePreview(
@@ -900,7 +904,7 @@ public class TimelinePresenter implements Presenter {
                     .andThen(sendShareEvent(cardTouchEvent, true));
               }
               return Completable.fromAction(() -> view.showLoginPromptWithAction())
-                  .andThen(sendShareEvent(cardTouchEvent, false));
+                  .andThen(sendErrorShareEvent(cardTouchEvent, false, 0));
             })
             .doOnError(
                 throwable -> timelineAnalytics.sendShareEvent(cardTouchEvent, false)))
@@ -914,6 +918,11 @@ public class TimelinePresenter implements Presenter {
 
   private Completable sendShareEvent(CardTouchEvent event, boolean success) {
     return Completable.fromAction(() -> timelineAnalytics.sendShareEvent(event, success));
+  }
+
+  private Completable sendErrorShareEvent(CardTouchEvent event, boolean success, int error){
+    return Completable.fromAction(() -> timelineAnalytics.sendErrorShareEvent(event, success, error));
+
   }
 
   private void commentPostResponse() {
@@ -1099,7 +1108,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void navigateToAppView(StoreAppCardTouchEvent cardTouchEvent) {
-    timelineAnalytics.sendOpenAppEvent(cardTouchEvent.getActionType()
+    timelineAnalytics.sendOpenAppEvent(cardTouchEvent.getCard().getType()
         .name(), TimelineAnalytics.SOURCE_APTOIDE, cardTouchEvent.getPackageName());
     timelineNavigation.navigateToAppView(cardTouchEvent.getPackageName(),
         AppViewFragment.OpenType.OPEN_ONLY);

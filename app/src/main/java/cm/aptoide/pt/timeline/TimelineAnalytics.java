@@ -27,6 +27,7 @@ import cm.aptoide.pt.social.data.SocialHeaderCardTouchEvent;
 import cm.aptoide.pt.social.data.StoreAppCardTouchEvent;
 import cm.aptoide.pt.social.data.StoreCardTouchEvent;
 import cm.aptoide.pt.social.data.StoreLatestApps;
+import cm.aptoide.pt.social.data.share.ShareEvent;
 import com.facebook.appevents.AppEventsLogger;
 import java.util.HashMap;
 import java.util.Map;
@@ -403,7 +404,12 @@ public class TimelineAnalytics {
   }
 
   public void sendLikeEvent(CardTouchEvent event, boolean success) {
-    HashMap<String, Object> data = parseEventData(event, success);
+    HashMap<String, Object> data = parseEventData(event, success, -1);
+    analytics.sendEvent(createEvent(LIKE, data));
+  }
+
+  public void sendErrorLikeEvent(CardTouchEvent event, boolean success, int error){
+    HashMap<String, Object> data = parseEventData(event, success, error);
     analytics.sendEvent(createEvent(LIKE, data));
   }
 
@@ -627,18 +633,34 @@ public class TimelineAnalytics {
   }
 
   public void sendCommentEvent(CardTouchEvent event, boolean success) {
-    HashMap<String, Object> data = parseEventData(event,success);
+    HashMap<String, Object> data = parseEventData(event,success, -1);
     analytics.sendEvent(createEvent(COMMENT, data));
   }
 
+  public void sendErrorCommentEvent(CardTouchEvent event, boolean success, int error){
+    HashMap<String, Object> data = parseEventData(event,success, error);
+    analytics.sendEvent(createEvent(COMMENT, data));
+
+  }
+
   public void sendShareEvent(CardTouchEvent event, boolean success) {
-    HashMap<String, Object> data = parseEventData(event, success);
+    HashMap<String, Object> data = parseEventData(event, success, -1);
     analytics.sendEvent(createEvent(SHARE, data));
   }
 
-  public void sendShareCompleted(boolean success) {
-    HashMap<String, Object> data = new HashMap<>();
-    data.put("status", success ? "success" : "fail");
+  public void sendErrorShareEvent(CardTouchEvent event, boolean success, int error){
+    HashMap<String, Object> data = parseEventData(event, success, error);
+    analytics.sendEvent(createEvent(SHARE, data));
+
+  }
+
+  public void sendShareCompleted(ShareEvent event, boolean success) {
+    HashMap<String, Object> data = parseShareCompletedEventData(event, success, -1);
+    analytics.sendEvent(createEvent(SHARE_SEND, data));
+  }
+
+  public void sendErrorShareCompleted(ShareEvent event, boolean success, int error) {
+    HashMap<String, Object> data = parseShareCompletedEventData(event, success, error);
     analytics.sendEvent(createEvent(SHARE_SEND, data));
   }
 
@@ -665,13 +687,32 @@ public class TimelineAnalytics {
             sharedPreferences));
   }
 
-  public HashMap<String, Object> parseEventData(CardTouchEvent event, boolean status){
+  public HashMap<String, Object> parseEventData(CardTouchEvent event, boolean status, int errorCode){
     final Post post = event.getCard();
     final CardType postType = post.getType();
     HashMap<String, Object> data = new HashMap<>();
     HashMap<String, Object> result = new HashMap<>();
+    HashMap<String, Object> error = new HashMap<>();
     final String previousContext = navigationTracker.getPreviousScreen().getFragment();
     final String store = navigationTracker.getPreviousScreen().getStore();
+
+    result.put("status", status ? "success" : "fail");
+    if(result.get("status").equals("fail")) {
+      switch (errorCode) {
+        case 0:
+          error.put("message", "User not logged in");
+          error.put("type", "LOGIN");
+          break;
+        case 1:
+          error.put("message", "Unknown Case 1");
+          error.put("type", "UNK1");
+          break;
+        case 2:
+          error.put("message", "Unknown Case 2");
+          error.put("type", "UNK2");
+          break;
+      }
+    }
 
     if(postType.isMedia()){
       HashMap<String, Object> specific = new HashMap<>();
@@ -681,13 +722,8 @@ public class TimelineAnalytics {
       data.put("source", card.getPublisherName());
       data.put("previous_context", previousContext);
       data.put("store", store);
-      result.put("status", status ? "success" : "fail");
-      if(result.get("status").equals("fail")){
-        HashMap<String,Object> error = new HashMap<>();
-        error.put("message", "");
-        error.put("type", "");
+      if(result.get("status").equals("fail"))
         result.put("error", error);
-      }
       specific.put("app", card.getRelatedApp().getPackageName());
       specific.put("url", card.getMediaLink().getUrl());
       data.put("specific", specific);
@@ -700,16 +736,14 @@ public class TimelineAnalytics {
         RatedRecommendation card = (RatedRecommendation) post;
         data.put("position", event.getPosition());
         data.put("card_type", card.getType());
-        data.put("source", card.getPoster().getStore().getName());
+        if(card.getPoster().getStore() != null)
+          data.put("source", card.getPoster().getStore().getName());
+        else
+          data.put("source", card.getPoster().getPrimaryName());
         data.put("previous_context", previousContext);
         data.put("store", store);
-        result.put("status", status ? "success" : "fail");
-        if(result.get("status").equals("fail")){
-          HashMap<String,Object> error = new HashMap<>();
-          error.put("message", "");
-          error.put("type", "");
+        if(result.get("status").equals("fail"))
           result.put("error", error);
-        }
         specific.put("app", card.getPackageName());
         data.put("specific", specific);
         data.put("result", result);
@@ -721,13 +755,8 @@ public class TimelineAnalytics {
       data.put("source", card.getPublisherName());
       data.put("previous_context", previousContext);
       data.put("store", store);
-      result.put("status", status ? "success" : "fail");
-      if(result.get("status").equals("fail")){
-        HashMap<String,Object> error = new HashMap<>();
-        error.put("message", "");
-        error.put("type", "");
+      if(result.get("status").equals("fail"))
         result.put("error", error);
-      }
       specific.put("app", card.getPackageName());
       data.put("specific", specific);
       data.put("result", result);
@@ -741,13 +770,8 @@ public class TimelineAnalytics {
       data.put("previous_context", previousContext);
       data.put("source", SOURCE_APTOIDE);
       data.put("store", store);
-      result.put("status", status ? "success" : "fail");
-      if(result.get("status").equals("fail")){
-        HashMap<String,Object> error = new HashMap<>();
-        error.put("message", "");
-        error.put("type", "");
+      if(result.get("status").equals("fail"))
         result.put("error", error);
-      }
       specific.put("app", card.getPackageName());
       data.put("specific", specific);
       data.put("result", result);
@@ -760,13 +784,103 @@ public class TimelineAnalytics {
       data.put("source", SOURCE_APTOIDE);
       data.put("previous_context", previousContext);
       data.put("store", store);
-      result.put("status", status ? "success" : "fail");
-      if(result.get("status").equals("fail")){
-        HashMap<String,Object> error = new HashMap<>();
-        error.put("message", "");
-        error.put("type", "");
+      if(result.get("status").equals("fail"))
         result.put("error", error);
+      data.put("result", result);
+    }
+    return data;
+  }
+
+  public HashMap<String, Object> parseShareCompletedEventData(ShareEvent event, boolean status, int errorCode){
+    final Post post = event.getPost();
+    final CardType postType = post.getType();
+    HashMap<String, Object> data = new HashMap<>();
+    HashMap<String, Object> result = new HashMap<>();
+    HashMap<String, Object> error = new HashMap<>();
+    final String previousContext = navigationTracker.getPreviousScreen().getFragment();
+    final String store = navigationTracker.getPreviousScreen().getStore();
+
+    result.put("status", status ? "success" : "fail");
+    if(result.get("status").equals("fail")) {
+      switch (errorCode) {
+        case 0:
+          error.put("message", "Share Action Cancelled");
+          error.put("type", "CANCELLED");
+          break;
+        case 1:
+          error.put("message", "Unknown Case 1");
+          error.put("type", "UNK1");
+          break;
       }
+    }
+
+    if(postType.isMedia()){
+      HashMap<String, Object> specific = new HashMap<>();
+      Media card = (Media) post;
+      data.put("card_type", card.getType());
+      data.put("source", card.getPublisherName());
+      data.put("previous_context", previousContext);
+      data.put("store", store);
+      if(result.get("status").equals("fail"))
+        result.put("error", error);
+      specific.put("app", card.getRelatedApp().getPackageName());
+      specific.put("url", card.getMediaLink().getUrl());
+      data.put("specific", specific);
+      data.put("result", result);
+    }
+    else if(postType.equals(CardType.RECOMMENDATION)||postType.equals(CardType.SOCIAL_POST_RECOMMENDATION)||postType.equals(CardType.SOCIAL_RECOMMENDATION)||postType.equals(CardType.SIMILAR)||
+        postType.equals(CardType.SOCIAL_INSTALL)||postType.equals(CardType.AGGREGATED_SOCIAL_INSTALL)){
+      HashMap<String, Object> specific = new HashMap<>();
+      if(post instanceof RatedRecommendation){
+        RatedRecommendation card = (RatedRecommendation) post;
+        data.put("card_type", card.getType());
+        if(card.getPoster().getStore() != null)
+          data.put("source", card.getPoster().getStore().getName());
+        else
+          data.put("source", card.getPoster().getPrimaryName());
+        data.put("previous_context", previousContext);
+        data.put("store", store);
+        if(result.get("status").equals("fail"))
+          result.put("error", error);
+        specific.put("app", card.getPackageName());
+        data.put("specific", specific);
+        data.put("result", result);
+      }
+      else{
+        Recommendation card = (Recommendation) post;
+        data.put("card_type", card.getType());
+        data.put("source", card.getPublisherName());
+        data.put("previous_context", previousContext);
+        data.put("store", store);
+        if(result.get("status").equals("fail"))
+          result.put("error", error);
+        specific.put("app", card.getPackageName());
+        data.put("specific", specific);
+        data.put("result", result);
+      }
+    }
+    else if (postType.equals(CardType.UPDATE)){
+      HashMap<String, Object> specific = new HashMap<>();
+      AppUpdate card = (AppUpdate) post;
+      data.put("card_type", card.getType());
+      data.put("previous_context", previousContext);
+      data.put("source", SOURCE_APTOIDE);
+      data.put("store", store);
+      if(result.get("status").equals("fail"))
+        result.put("error", error);
+      specific.put("app", card.getPackageName());
+      data.put("specific", specific);
+      data.put("result", result);
+    }
+    else if(postType.equals(CardType.STORE)||postType.equals(CardType.SOCIAL_STORE)||postType.equals(CardType.AGGREGATED_SOCIAL_STORE)){
+      HashMap<String, Object> specific = new HashMap<>();
+      StoreLatestApps card = (StoreLatestApps) post;
+      data.put("card_type", card.getType());
+      data.put("source", SOURCE_APTOIDE);
+      data.put("previous_context", previousContext);
+      data.put("store", store);
+      if(result.get("status").equals("fail"))
+        result.put("error", error);
       data.put("result", result);
     }
     return data;

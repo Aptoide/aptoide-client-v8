@@ -588,19 +588,22 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   private void handleSharePreviewAnswer() {
+
+    final ShareEvent[] share = new ShareEvent[1];
     shareDialog.cancels()
-        .doOnNext(shareEvent -> timelineAnalytics.sendShareCompleted(false))
+        .doOnNext(shareEvent -> timelineAnalytics.sendErrorShareCompleted(shareEvent, false, 0))
         .compose(bindUntilEvent(LifecycleEvent.PAUSE))
         .subscribe();
 
     shareDialog.shares()
         .doOnNext(event -> sharePostPublishSubject.onNext(event))
-        .doOnNext(shareEvent -> timelineAnalytics.sendShareCompleted(true))
+        .doOnNext(shareEvent -> timelineAnalytics.sendShareCompleted(shareEvent, true))
         .compose(bindUntilEvent(LifecycleEvent.PAUSE))
         .subscribe(shareEvent -> {
+          share[0] =shareEvent;
         }, throwable -> {
           crashReport.log(throwable);
-          timelineAnalytics.sendShareCompleted(false);
+          timelineAnalytics.sendErrorShareCompleted(share[0], false, 1);
         });
     shareDialog.show();
   }
