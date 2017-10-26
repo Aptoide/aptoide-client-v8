@@ -101,11 +101,14 @@ public class GetStoreWidgetsRequest
     return Observable.from(getStoreWidgets.getDataList()
         .getList())
         .observeOn(Schedulers.io())
-        .flatMap(wsWidget -> WSWidgetsUtils.loadWidgetNode(wsWidget, storeCredentials, bypassCache,
-            clientUniqueId, isGooglePlayServicesAvailable, partnerId, accountMature,
-            ((BodyInterceptor<BaseBody>) bodyInterceptor), getHttpClient(), converterFactory, filters,
-            getTokenInvalidator(), sharedPreferences, resources, windowManager, connectivityManager,
-            versionCodeProvider))
+        .flatMap(wsWidget -> {
+          WSWidgetsUtils widgetsUtils = new WSWidgetsUtils();
+          return widgetsUtils.loadWidgetNode(wsWidget, storeCredentials, bypassCache,
+              clientUniqueId, isGooglePlayServicesAvailable, partnerId, accountMature,
+              ((BodyInterceptor<BaseBody>) bodyInterceptor), getHttpClient(), converterFactory,
+              filters, getTokenInvalidator(), sharedPreferences, resources, windowManager,
+              connectivityManager, versionCodeProvider);
+        })
         .toList()
         .flatMapIterable(wsWidgets -> getStoreWidgets.getDataList()
             .getList())
