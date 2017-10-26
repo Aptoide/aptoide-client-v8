@@ -1,7 +1,7 @@
 package cm.aptoide.pt.notification.sync;
 
-import cm.aptoide.pt.notification.NotificationService;
 import cm.aptoide.pt.notification.NotificationProvider;
+import cm.aptoide.pt.notification.NotificationService;
 import cm.aptoide.pt.sync.Sync;
 import rx.Completable;
 

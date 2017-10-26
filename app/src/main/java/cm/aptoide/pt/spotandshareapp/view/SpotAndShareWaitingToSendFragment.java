@@ -131,7 +131,7 @@ public class SpotAndShareWaitingToSendFragment extends BackButtonFragment
     attachPresenter(new SpotAndShareWaitingToSendPresenter(shouldCreateGroup, noAppSelected, this,
         ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
         new AppModelToAndroidAppInfoMapper(new ObbsProvider()), new PermissionManager(),
-        (PermissionService) getContext(), CrashReport.getInstance()), savedInstanceState);
+        (PermissionService) getContext(), CrashReport.getInstance()));
   }
 
   private void setupSendingAppInfo() {

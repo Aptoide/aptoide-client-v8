@@ -20,7 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -48,7 +48,7 @@ public class SpotAndShareMainFragment extends FragmentView
   private TextView shareAptoideTextView;
   private SpotAndShareMainFragmentPresenter presenter;
   private PublishRelay<Integer> writeSettingsPermissionRelay;
-  private AptoideNavigationTracker aptoideNavigationTracker;
+  private NavigationTracker navigationTracker;
 
   public static Fragment newInstance() {
     Fragment fragment = new SpotAndShareMainFragment();
@@ -58,13 +58,13 @@ public class SpotAndShareMainFragment extends FragmentView
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     writeSettingsPermissionRelay = PublishRelay.create();
-    aptoideNavigationTracker =
-        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker();
+    navigationTracker =
+        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
   }
 
   @Override public void onResume() {
     super.onResume();
-    aptoideNavigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
+    navigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName()));
   }
 
@@ -143,7 +143,7 @@ public class SpotAndShareMainFragment extends FragmentView
     presenter = new SpotAndShareMainFragmentPresenter(this,
         ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShareUserManager(),
         CrashReport.getInstance());
-    attachPresenter(presenter, savedInstanceState);
+    attachPresenter(presenter);
   }
 
   private void setupToolbar() {

@@ -220,8 +220,7 @@ public class SpotAndShareTransferRecordFragment extends BackButtonFragment
             new AppModelToAndroidAppInfoMapper(new ObbsProvider()), CrashReport.getInstance());
 
     attachPresenter(
-        new CompositePresenter(Arrays.asList(transferRecordPresenter, appSelectionPresenter)),
-        null);
+        new CompositePresenter(Arrays.asList(transferRecordPresenter, appSelectionPresenter)));
   }
 
   private void setupBackClick() {

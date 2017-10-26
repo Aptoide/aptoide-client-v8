@@ -7,8 +7,8 @@ package cm.aptoide.pt.billing.view;
 
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
-import cm.aptoide.pt.billing.payment.PaymentService;
 import cm.aptoide.pt.billing.exception.ServiceNotAuthorizedException;
+import cm.aptoide.pt.billing.payment.PaymentService;
 import cm.aptoide.pt.billing.product.Product;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;

@@ -214,7 +214,6 @@ public abstract class AptoideApplication extends Application {
   private static FragmentProvider fragmentProvider;
   private static ActivityProvider activityProvider;
   private static DisplayableWidgetMapping displayableWidgetMapping;
-  private static ShareApps shareApps;
   private static boolean autoUpdateWasCalled = false;
   private AptoideAccountManager accountManager;
   private BodyInterceptor<BaseBody> bodyInterceptorPoolV7;
@@ -298,10 +297,6 @@ public abstract class AptoideApplication extends Application {
 
   public static void setAutoUpdateWasCalled(boolean autoUpdateWasCalled) {
     AptoideApplication.autoUpdateWasCalled = autoUpdateWasCalled;
-  }
-
-  public static ShareApps getShareApps() {
-    return shareApps;
   }
 
   public LeakTool getLeakTool() {

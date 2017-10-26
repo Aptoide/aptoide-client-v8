@@ -1,6 +1,5 @@
 package cm.aptoide.pt.spotandshareapp.presenter;
 
-import android.os.Bundle;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -164,13 +163,5 @@ public class SpotAndShareTransferRecordPresenter implements Presenter {
     System.out.println("install : " + transferAppModel.getAppName());
     spotAndShareInstallManager.installAppAsync(transferAppModel.getFilePath(),
         transferAppModel.getPackageName());
-  }
-
-  @Override public void saveState(Bundle state) {
-
-  }
-
-  @Override public void restoreState(Bundle state) {
-
   }
 }

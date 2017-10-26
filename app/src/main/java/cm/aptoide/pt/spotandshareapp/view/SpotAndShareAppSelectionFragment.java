@@ -113,7 +113,7 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
         shouldCreateGroup, new SpotAndShareAppProvider(getActivity().getApplicationContext(),
         getContext().getPackageManager()), new AppModelToAndroidAppInfoMapper(new ObbsProvider()),
         new PermissionManager(), (PermissionService) getContext(), CrashReport.getInstance(),
-        BehaviorRelay.create(false)), null);
+        BehaviorRelay.create(false)));
   }
 
   private void setupBackClick() {

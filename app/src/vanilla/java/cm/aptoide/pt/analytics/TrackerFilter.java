@@ -11,10 +11,8 @@ public class TrackerFilter {
       return false;
     } else if (viewName.equals(LoginSignUpCredentialsFragment.class.getSimpleName())) {
       return false;
-    } else if (viewName.equals(StoreFragment.class.getSimpleName())) {
-      return false;
     } else {
-      return true;
+      return !viewName.equals(StoreFragment.class.getSimpleName());
     }
   }
 }

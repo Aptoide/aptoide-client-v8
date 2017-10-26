@@ -16,7 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareLocalAvatarsProvider;
@@ -41,7 +41,7 @@ public class SpotAndShareEditProfileFragment extends FragmentView
   private RecyclerView avatarsRecyclerView;
   private SpotAndShareEditProfileAdapter pickAvatarAdapter;
   private PublishSubject<SpotAndShareAvatar> pickAvatarSubject;
-  private AptoideNavigationTracker aptoideNavigationTracker;
+  private NavigationTracker navigationTracker;
 
   public static Fragment newInstance() {
     Fragment fragment = new SpotAndShareEditProfileFragment();
@@ -51,13 +51,13 @@ public class SpotAndShareEditProfileFragment extends FragmentView
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     pickAvatarSubject = PublishSubject.create();
-    aptoideNavigationTracker =
-        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker();
+    navigationTracker =
+        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
   }
 
   @Override public void onResume() {
     super.onResume();
-    aptoideNavigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
+    navigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName()));
   }
 
@@ -105,7 +105,7 @@ public class SpotAndShareEditProfileFragment extends FragmentView
     attachPresenter(new SpotAndShareEditProfilePresenter(this,
         ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShareUserManager(),
         new SpotAndShareLocalAvatarsProvider(getContext().getPackageName()),
-        CrashReport.getInstance()), savedInstanceState);
+        CrashReport.getInstance()));
   }
 
   private void setupAvatarsListLayoutManager() {

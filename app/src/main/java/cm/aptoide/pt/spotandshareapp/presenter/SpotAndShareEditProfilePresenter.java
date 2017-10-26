@@ -1,6 +1,5 @@
 package cm.aptoide.pt.spotandshareapp.presenter;
 
-import android.os.Bundle;
 import android.util.Log;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
@@ -58,14 +57,6 @@ public class SpotAndShareEditProfilePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, error -> crashReport.log(error));
-  }
-
-  @Override public void saveState(Bundle state) {
-
-  }
-
-  @Override public void restoreState(Bundle state) {
-
   }
 
   private Subscription createLifeCycleSubscription(Observable<Void> voidObservable) {

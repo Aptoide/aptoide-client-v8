@@ -2,13 +2,13 @@ package cm.aptoide.pt.view;
 
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.addressbook.data.Contact;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.download.view.scheduled.ScheduledDownloadsFragment;
 import cm.aptoide.pt.presenter.InviteFriendsContract;
 import cm.aptoide.pt.search.model.SearchAdResult;
-import cm.aptoide.pt.app.view.AppViewFragment;
-import cm.aptoide.pt.download.view.scheduled.ScheduledDownloadsFragment;
 import cm.aptoide.pt.store.view.StoreFragment;
 import java.util.List;
 
@@ -161,7 +161,7 @@ public interface FragmentProvider {
   @Deprecated Fragment newInviteFriendsFragment(InviteFriendsContract.View.OpenMode openMode,
       String tag);
 
-  @Deprecated Fragment newSpotShareFragment(boolean showToolbar);
+  @Deprecated Fragment newSpotShareFragment();
 
   @Deprecated Fragment newThankYouConnectingFragment(String tag);
 

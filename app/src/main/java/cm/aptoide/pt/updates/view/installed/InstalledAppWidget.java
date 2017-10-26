@@ -14,13 +14,13 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.share.ShareAppHelper;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareAppProvider;
 import cm.aptoide.pt.view.dialog.DialogUtils;
-import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.recycler.widget.Widget;
-import cm.aptoide.pt.share.ShareAppHelper;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Locale;
@@ -81,12 +81,11 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
     shareAppHelper = new ShareAppHelper(
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext()),
         accountManager, accountNavigator, getContext(), displayable.getTimelineAnalytics(),
-        PublishRelay.create(),
-        application.getDefaultSharedPreferences(),
-        application.isCreateStoreUserPrivacyEnabled(),
-        getFragmentNavigator(), new SpotAndShareAppProvider(getContext().getApplicationContext(),
-        getContext().getApplicationContext()
-            .getPackageManager()));
+        PublishRelay.create(), application.getDefaultSharedPreferences(),
+        application.isCreateStoreUserPrivacyEnabled(), getFragmentNavigator(),
+        new SpotAndShareAppProvider(getContext().getApplicationContext(),
+            getContext().getApplicationContext()
+                .getPackageManager()));
     appName = pojo.getName();
     packageName = pojo.getPackageName();
 

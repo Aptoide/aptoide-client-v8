@@ -161,8 +161,7 @@ public class BillingServiceV7 implements BillingService {
           if (response != null && response.isOk()) {
             return mapToProducts(merchantName, response.getList());
           } else {
-            return Single.<List<Product>>error(
-                new IllegalStateException(V7.getErrorMessage(response)));
+            return Single.error(new IllegalStateException(V7.getErrorMessage(response)));
           }
         });
   }

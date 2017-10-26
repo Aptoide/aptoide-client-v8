@@ -1,7 +1,6 @@
 package cm.aptoide.pt.spotandshareapp.presenter;
 
 import android.os.Build;
-import android.os.Bundle;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -106,13 +105,5 @@ public class ShareAptoidePresenter implements Presenter {
     } else {
       view.showGeneralHotspotError();
     }
-  }
-
-  @Override public void saveState(Bundle state) {
-
-  }
-
-  @Override public void restoreState(Bundle state) {
-
   }
 }

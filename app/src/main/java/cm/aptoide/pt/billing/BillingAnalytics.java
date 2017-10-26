@@ -4,8 +4,8 @@ import android.os.Bundle;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.Event;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
-import cm.aptoide.pt.billing.product.Product;
 import cm.aptoide.pt.billing.product.InAppProduct;
+import cm.aptoide.pt.billing.product.Product;
 import com.facebook.appevents.AppEventsLogger;
 
 public class BillingAnalytics {
@@ -98,7 +98,7 @@ public class BillingAnalytics {
     bundle.putString("purchase_currency", product.getPrice()
         .getCurrency());
     bundle.putString("package_name_seller", packageName);
-    bundle.putInt("package_version_code_seller", ((Product) product).getPackageVersionCode());
+    bundle.putInt("package_version_code_seller", product.getPackageVersionCode());
     return bundle;
   }
 }

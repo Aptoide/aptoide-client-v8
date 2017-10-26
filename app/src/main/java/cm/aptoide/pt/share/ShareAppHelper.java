@@ -15,6 +15,7 @@ import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.InstalledRepository;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.spotandshareapp.AppModel;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareAppProvider;
@@ -23,7 +24,6 @@ import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.dialog.SharePreviewDialog;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
 

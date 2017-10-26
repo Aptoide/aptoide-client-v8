@@ -75,10 +75,9 @@ public class ShareAptoideFragment extends BackButtonFragment implements ShareApt
     setupBackClick();
 
     attachPresenter(new ShareAptoidePresenter(this,
-            ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
-            new ShareApkSandbox(getActivity().getApplicationContext(), getActivity().getAssets()),
-            new PermissionManager(), (PermissionService) getContext(), CrashReport.getInstance()),
-        savedInstanceState);
+        ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
+        new ShareApkSandbox(getActivity().getApplicationContext(), getActivity().getAssets()),
+        new PermissionManager(), (PermissionService) getContext(), CrashReport.getInstance()));
   }
 
   private void setupBackClick() {

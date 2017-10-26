@@ -6,19 +6,19 @@
 package cm.aptoide.pt.app.view.displayable;
 
 import android.widget.Button;
-import cm.aptoide.pt.analytics.NavigationTracker;
-import cm.aptoide.pt.install.Install;
-import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.app.AppViewAnalytics;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.download.DownloadFactory;
+import cm.aptoide.pt.install.Install;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
-import cm.aptoide.pt.app.view.AppViewFragment;
 import com.jakewharton.rxrelay.PublishRelay;
 import lombok.Getter;
 import lombok.Setter;

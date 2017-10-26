@@ -79,9 +79,8 @@ public class SpotAndShareWaitingToReceiveFragment extends BackButtonFragment
     });
 
     attachPresenter(new SpotAndShareWaitingToReceivePresenter(this,
-            ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
-            new PermissionManager(), (PermissionService) getContext(), CrashReport.getInstance()),
-        savedInstanceState);
+        ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
+        new PermissionManager(), (PermissionService) getContext(), CrashReport.getInstance()));
   }
 
   @Override public void onDestroyView() {
