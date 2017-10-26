@@ -11,7 +11,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -27,13 +27,13 @@ import cm.aptoide.pt.search.view.SearchResultFragment;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.timeline.view.navigation.AppsTimelineTabNavigation;
-import cm.aptoide.pt.view.app.AppViewFragment;
-import cm.aptoide.pt.view.downloads.scheduled.ScheduledDownloadsFragment;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
-import cm.aptoide.pt.view.navigator.SimpleTabNavigation;
-import cm.aptoide.pt.view.navigator.TabNavigation;
-import cm.aptoide.pt.view.navigator.TabNavigator;
-import cm.aptoide.pt.view.store.StoreTabFragmentChooser;
+import cm.aptoide.pt.app.view.AppViewFragment;
+import cm.aptoide.pt.download.view.scheduled.ScheduledDownloadsFragment;
+import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.navigator.SimpleTabNavigation;
+import cm.aptoide.pt.navigator.TabNavigation;
+import cm.aptoide.pt.navigator.TabNavigator;
+import cm.aptoide.pt.store.view.StoreTabFragmentChooser;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -53,14 +53,15 @@ public class DeepLinkManager {
   private final SharedPreferences sharedPreferences;
   private final StoreAccessor storeAccessor;
   private final String defaultTheme;
-  private AptoideNavigationTracker aptoideNavigationTracker;
+  private final String defaultStoreName;
+  private NavigationTracker navigationTracker;
   private PageViewsAnalytics pageViewsAnalytics;
 
   public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, StoreRepository storeRepository,
       FragmentNavigator fragmentNavigator, TabNavigator tabNavigator,
       DeepLinkMessages deepLinkMessages, SharedPreferences sharedPreferences,
-      StoreAccessor storeAccessor, String defaultTheme,
-      AptoideNavigationTracker aptoideNavigationTracker, PageViewsAnalytics pageViewsAnalytics) {
+      StoreAccessor storeAccessor, String defaultTheme, String defaultStoreName,
+      NavigationTracker navigationTracker, PageViewsAnalytics pageViewsAnalytics) {
     this.storeUtilsProxy = storeUtilsProxy;
     this.storeRepository = storeRepository;
     this.fragmentNavigator = fragmentNavigator;
@@ -69,7 +70,8 @@ public class DeepLinkManager {
     this.sharedPreferences = sharedPreferences;
     this.storeAccessor = storeAccessor;
     this.defaultTheme = defaultTheme;
-    this.aptoideNavigationTracker = aptoideNavigationTracker;
+    this.defaultStoreName = defaultStoreName;
+    this.navigationTracker = navigationTracker;
     this.pageViewsAnalytics = pageViewsAnalytics;
   }
 
@@ -113,7 +115,7 @@ public class DeepLinkManager {
       Analytics.ApplicationLaunch.launcher();
       return false;
     }
-    aptoideNavigationTracker.registerScreen(ScreenTagHistory.Builder.build(deeplinkOrNotification));
+    navigationTracker.registerScreen(ScreenTagHistory.Builder.build(deeplinkOrNotification));
     pageViewsAnalytics.sendPageViewedEvent();
     return true;
   }
@@ -141,7 +143,7 @@ public class DeepLinkManager {
   }
 
   private void searchDeepLink(String query) {
-    final Fragment fragment = SearchResultFragment.newInstance(query);
+    final Fragment fragment = SearchResultFragment.newInstance(query, defaultStoreName);
     fragmentNavigator.navigateTo(fragment, true);
   }
 

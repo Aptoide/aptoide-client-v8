@@ -3,6 +3,7 @@ package cm.aptoide.pt.social.view.viewholder;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.LongSparseArray;
+import android.support.v7.widget.PopupMenu;
 import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +14,14 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.CardTouchEvent;
+import cm.aptoide.pt.social.data.Post;
+import cm.aptoide.pt.social.data.PostPopupMenuBuilder;
 import cm.aptoide.pt.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.social.data.StoreAppCardTouchEvent;
 import cm.aptoide.pt.social.data.StoreLatestApps;
 import cm.aptoide.pt.timeline.view.LikeButtonView;
 import cm.aptoide.pt.util.DateCalculator;
-import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.view.spannable.SpannableFactory;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,6 +44,7 @@ public class StoreLatestAppsViewHolder extends PostViewHolder<StoreLatestApps> {
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final TextView commentButton;
   private final TextView shareButton;
+  private final View overflowMenu;
 
   public StoreLatestAppsViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
@@ -62,19 +66,20 @@ public class StoreLatestAppsViewHolder extends PostViewHolder<StoreLatestApps> {
     this.like = (LinearLayout) itemView.findViewById(R.id.social_like);
     this.commentButton = (TextView) view.findViewById(R.id.social_comment);
     this.shareButton = (TextView) view.findViewById(R.id.social_share);
+    this.overflowMenu = itemView.findViewById(R.id.overflow_menu);
   }
 
-  @Override public void setPost(StoreLatestApps card, int position) {
+  @Override public void setPost(StoreLatestApps post, int position) {
     ImageLoader.with(itemView.getContext())
-        .loadWithShadowCircleTransform(card.getStoreAvatar(), headerIcon);
+        .loadWithShadowCircleTransform(post.getStoreAvatar(), headerIcon);
 
-    headerTitle.setText(getStyledTitle(itemView.getContext(), card.getStoreName()));
-    headerSubtitle.setText(getTimeSinceLastUpdate(itemView.getContext(), card.getLatestUpdate()));
-    showStoreLatestApps(card, position);
-    if (card.isLiked()) {
-      if (card.isLikeFromClick()) {
+    headerTitle.setText(getStyledTitle(itemView.getContext(), post.getStoreName()));
+    headerSubtitle.setText(getTimeSinceLastUpdate(itemView.getContext(), post.getLatestUpdate()));
+    showStoreLatestApps(post, position);
+    if (post.isLiked()) {
+      if (post.isLikeFromClick()) {
         likeButton.setHeartState(true);
-        card.setLikedFromClick(false);
+        post.setLikedFromClick(false);
       } else {
         likeButton.setHeartStateWithoutAnimation(true);
       }
@@ -82,14 +87,15 @@ public class StoreLatestAppsViewHolder extends PostViewHolder<StoreLatestApps> {
       likeButton.setHeartState(false);
     }
 
-    handleCommentsInformation(card, position);
+    setupOverflowMenu(post, position);
+    handleCommentsInformation(post, position);
 
     this.like.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new SocialCardTouchEvent(card, CardTouchEvent.Type.LIKE, position)));
+        new SocialCardTouchEvent(post, CardTouchEvent.Type.LIKE, position)));
     this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new SocialCardTouchEvent(card, CardTouchEvent.Type.COMMENT, position)));
+        new SocialCardTouchEvent(post, CardTouchEvent.Type.COMMENT, position)));
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, position, CardTouchEvent.Type.SHARE)));
+        new CardTouchEvent(post, position, CardTouchEvent.Type.SHARE)));
   }
 
   public Spannable getStyledTitle(Context context, String storeName) {
@@ -132,5 +138,23 @@ public class StoreLatestAppsViewHolder extends PostViewHolder<StoreLatestApps> {
           new StoreAppCardTouchEvent(card, CardTouchEvent.Type.BODY,
               appsPackages.get(apps.get(app)), position)));
     }
+  }
+
+  private void setupOverflowMenu(Post post, int position) {
+    overflowMenu.setOnClickListener(view -> {
+      PopupMenu popupMenu = new PostPopupMenuBuilder().prepMenu(itemView.getContext(), overflowMenu)
+          .addReportAbuse(menuItem -> {
+            cardTouchEventPublishSubject.onNext(
+                new CardTouchEvent(post, position, CardTouchEvent.Type.REPORT_ABUSE));
+            return false;
+          })
+          .addUnfollowStore(menuItem -> {
+            cardTouchEventPublishSubject.onNext(
+                new CardTouchEvent(post, position, CardTouchEvent.Type.UNFOLLOW_STORE));
+            return false;
+          })
+          .getPopupMenu();
+      popupMenu.show();
+    });
   }
 }

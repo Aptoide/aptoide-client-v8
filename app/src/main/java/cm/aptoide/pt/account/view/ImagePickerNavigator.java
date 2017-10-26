@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
-import cm.aptoide.pt.view.navigator.ActivityNavigator;
+import cm.aptoide.pt.navigator.ActivityNavigator;
 import rx.Observable;
 
 public class ImagePickerNavigator {

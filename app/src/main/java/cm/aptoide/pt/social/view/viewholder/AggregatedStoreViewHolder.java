@@ -1,6 +1,7 @@
 package cm.aptoide.pt.social.view.viewholder;
 
 import android.support.v4.util.LongSparseArray;
+import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -9,20 +10,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.social.data.AggregatedStore;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.FollowStoreCardTouchEvent;
 import cm.aptoide.pt.social.data.MinimalCardViewFactory;
+import cm.aptoide.pt.social.data.Post;
+import cm.aptoide.pt.social.data.PostPopupMenuBuilder;
 import cm.aptoide.pt.social.data.StoreAppCardTouchEvent;
 import cm.aptoide.pt.social.data.StoreCardTouchEvent;
 import cm.aptoide.pt.social.data.publisher.Poster;
 import cm.aptoide.pt.util.DateCalculator;
-import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 
 /**
@@ -32,7 +37,6 @@ import rx.subjects.PublishSubject;
 public class AggregatedStoreViewHolder extends PostViewHolder<AggregatedStore> {
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final DateCalculator dateCalculator;
-  private final SpannableFactory spannableFactory;
   private final MinimalCardViewFactory minimalCardViewFactory;
   private final LayoutInflater inflater;
   private final ImageView headerAvatar1;
@@ -48,15 +52,17 @@ public class AggregatedStoreViewHolder extends PostViewHolder<AggregatedStore> {
   private final Button followStoreButton;
   private final TextView morePostersLabel;
   private final FrameLayout minimalCardContainer;
+  private final View overflowMenu;
+  private final StoreRepository storeRepository;
 
   public AggregatedStoreViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
-      SpannableFactory spannableFactory, MinimalCardViewFactory minimalCardViewFactory) {
+      MinimalCardViewFactory minimalCardViewFactory, StoreRepository storeRepository) {
     super(view, cardTouchEventPublishSubject);
+    this.storeRepository = storeRepository;
     this.inflater = LayoutInflater.from(itemView.getContext());
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.dateCalculator = dateCalculator;
-    this.spannableFactory = spannableFactory;
     this.minimalCardViewFactory = minimalCardViewFactory;
     this.headerAvatar1 = (ImageView) view.findViewById(R.id.card_header_avatar_1);
     this.headerAvatar2 = (ImageView) view.findViewById(R.id.card_header_avatar_2);
@@ -74,47 +80,62 @@ public class AggregatedStoreViewHolder extends PostViewHolder<AggregatedStore> {
         (TextView) itemView.findViewById(R.id.timeline_header_aditional_number_of_shares_circular);
     this.minimalCardContainer =
         (FrameLayout) itemView.findViewById(R.id.timeline_sub_minimal_card_container);
+    this.overflowMenu = itemView.findViewById(R.id.overflow_menu);
   }
 
-  @Override public void setPost(AggregatedStore card, int position) {
-    if (card.getPosters() != null) {
-      if (card.getPosters()
+  @Override public void setPost(AggregatedStore post, int position) {
+    if (post.getPosters() != null) {
+      if (post.getPosters()
           .size() > 0) {
         ImageLoader.with(itemView.getContext())
-            .loadWithShadowCircleTransform(card.getPosters()
+            .loadWithShadowCircleTransform(post.getPosters()
                 .get(0)
                 .getPrimaryAvatar(), this.headerAvatar1);
       }
-      if (card.getPosters()
+      if (post.getPosters()
           .size() > 1) {
         ImageLoader.with(itemView.getContext())
-            .loadWithShadowCircleTransform(card.getPosters()
+            .loadWithShadowCircleTransform(post.getPosters()
                 .get(1)
                 .getPrimaryAvatar(), this.headerAvatar2);
       }
     }
-    this.headerNames.setText(getCardHeaderNames(card));
+    this.headerNames.setText(getCardHeaderNames(post));
     this.headerTimestamp.setText(
-        dateCalculator.getTimeSinceDate(itemView.getContext(), card.getLatestUpdate()));
-    this.storeNameBodyHeader.setText(card.getStoreName());
+        dateCalculator.getTimeSinceDate(itemView.getContext(), post.getLatestUpdate()));
+    this.storeNameBodyHeader.setText(post.getStoreName());
     ImageLoader.with(itemView.getContext())
-        .load(card.getStoreAvatar(), storeAvatarFollow);
-    this.storeNameFollow.setText(card.getStoreName());
-    this.storeNumberFollowers.setText(String.valueOf(card.getSubscribers()));
-    this.storeNumberApps.setText(String.valueOf(card.getAppsNumber()));
-    showStoreLatestApps(card);
-    showMorePostersLabel(card);
+        .load(post.getStoreAvatar(), storeAvatarFollow);
+    this.storeNameFollow.setText(post.getStoreName());
+    this.storeNumberFollowers.setText(String.valueOf(post.getSubscribers()));
+    this.storeNumberApps.setText(String.valueOf(post.getAppsNumber()));
+    setupOverflowMenu(post, position);
+    showStoreLatestApps(post);
+    showMorePostersLabel(post);
     minimalCardContainer.removeAllViews();
-    minimalCardContainer.addView(minimalCardViewFactory.getView(card, card.getMinimalPosts(),
+    minimalCardContainer.addView(minimalCardViewFactory.getView(post, post.getMinimalPosts(),
         MinimalCardViewFactory.MINIMUM_NUMBER_OF_VISILIBE_MINIMAL_CARDS, inflater,
         itemView.getContext(), position));
-
+    showFollowButton(post);
     this.followStoreButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new FollowStoreCardTouchEvent(card, card.getStoreId(), card.getStoreName(),
-            CardTouchEvent.Type.BODY, getPosition())));
+        new FollowStoreCardTouchEvent(post, post.getStoreId(), post.getStoreName(),
+            CardTouchEvent.Type.BODY, position)));
     this.storeAvatarFollow.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new StoreCardTouchEvent(card, card.getStoreName(), card.getStoreTheme(),
-            CardTouchEvent.Type.BODY, getPosition())));
+        new StoreCardTouchEvent(post, post.getStoreName(), post.getStoreTheme(),
+            CardTouchEvent.Type.BODY, position)));
+  }
+
+  private void showFollowButton(AggregatedStore post) {
+    storeRepository.isSubscribed(post.getStoreId())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(isSubscribed -> {
+          if (isSubscribed) {
+            followStoreButton.setText(R.string.followed);
+          } else {
+            followStoreButton.setText(R.string.follow);
+          }
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable));
   }
 
   public String getCardHeaderNames(AggregatedStore card) {
@@ -173,5 +194,23 @@ public class AggregatedStoreViewHolder extends PostViewHolder<AggregatedStore> {
           new StoreAppCardTouchEvent(card, CardTouchEvent.Type.BODY,
               appsPackages.get(apps.get(app)), getPosition())));
     }
+  }
+
+  private void setupOverflowMenu(Post post, int position) {
+    overflowMenu.setOnClickListener(view -> {
+      PopupMenu popupMenu = new PostPopupMenuBuilder().prepMenu(itemView.getContext(), overflowMenu)
+          .addReportAbuse(menuItem -> {
+            cardTouchEventPublishSubject.onNext(
+                new CardTouchEvent(post, position, CardTouchEvent.Type.REPORT_ABUSE));
+            return false;
+          })
+          .addUnfollowStore(menuItem -> {
+            cardTouchEventPublishSubject.onNext(
+                new CardTouchEvent(post, position, CardTouchEvent.Type.UNFOLLOW_STORE));
+            return false;
+          })
+          .getPopupMenu();
+      popupMenu.show();
+    });
   }
 }

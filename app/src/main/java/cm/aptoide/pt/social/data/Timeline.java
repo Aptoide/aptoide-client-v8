@@ -1,14 +1,15 @@
 package cm.aptoide.pt.social.data;
 
 import cm.aptoide.pt.BuildConfig;
-import cm.aptoide.pt.Install;
-import cm.aptoide.pt.InstallManager;
+import cm.aptoide.pt.install.Install;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.social.TimelineUserProvider;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.timeline.TimelineSocialActionData;
+import cm.aptoide.pt.updates.UpdateRepository;
 import java.io.IOException;
 import java.util.List;
 import okhttp3.Call;
@@ -33,11 +34,12 @@ public class Timeline {
   private final TimelinePostsRepository timelinePostsRepository;
   private final String marketName;
   private final TimelineUserProvider timelineUserProvider;
+  private final UpdateRepository updateRepository;
 
   public Timeline(TimelineService service, InstallManager installManager,
       DownloadFactory downloadFactory, TimelineAnalytics timelineAnalytics,
       TimelinePostsRepository timelinePostsRepository, String marketName,
-      TimelineUserProvider timelineUserProvider) {
+      TimelineUserProvider timelineUserProvider, UpdateRepository updateRepository) {
     this.service = service;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -45,6 +47,7 @@ public class Timeline {
     this.timelinePostsRepository = timelinePostsRepository;
     this.marketName = marketName;
     this.timelineUserProvider = timelineUserProvider;
+    this.updateRepository = updateRepository;
   }
 
   public Single<List<Post>> getCards() {
@@ -165,6 +168,19 @@ public class Timeline {
 
   public Completable notificationDismissed(int notificationType) {
     return timelineUserProvider.notificationRead(notificationType);
+  }
+
+  public Completable deletePost(String postId) {
+    return service.deletePost(postId);
+  }
+
+  public Completable unfollowUser(Long userId) {
+    return service.unfollowUser(userId);
+  }
+
+  public Completable ignoreUpdate(String updatePackageName) {
+    return updateRepository.setExcluded(updatePackageName, true)
+        .toCompletable();
   }
 }
 

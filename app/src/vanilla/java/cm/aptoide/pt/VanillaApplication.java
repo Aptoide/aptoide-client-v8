@@ -7,7 +7,9 @@ package cm.aptoide.pt;
 
 import android.os.Environment;
 import cm.aptoide.pt.account.LoginPreferences;
-import cm.aptoide.pt.view.configuration.FragmentProvider;
+import cm.aptoide.pt.view.ActivityProvider;
+import cm.aptoide.pt.view.FragmentProvider;
+import cm.aptoide.pt.view.configuration.implementation.VanillaActivityProvider;
 import cm.aptoide.pt.view.configuration.implementation.VanillaFragmentProvider;
 import com.google.android.gms.common.GoogleApiAvailability;
 
@@ -18,16 +20,16 @@ public class VanillaApplication extends AptoideApplication {
         .getAbsolutePath() + "/.aptoide/";
   }
 
-  @Override public String getDefaultStore() {
+  @Override public boolean hasMultiStoreSearch() {
+    return true;
+  }
+
+  @Override public String getDefaultStoreName() {
     return "apps";
   }
 
   @Override public String getMarketName() {
     return "Aptoide";
-  }
-
-  @Override public LoginPreferences getLoginPreferences() {
-    return new LoginPreferences(this, GoogleApiAvailability.getInstance());
   }
 
   @Override public String getFeedbackEmail() {
@@ -54,7 +56,7 @@ public class VanillaApplication extends AptoideApplication {
     return null;
   }
 
-  @Override public String getDefaultTheme() {
+  @Override public String getDefaultThemeName() {
     return "default";
   }
 
@@ -62,7 +64,15 @@ public class VanillaApplication extends AptoideApplication {
     return true;
   }
 
+  @Override public LoginPreferences getLoginPreferences() {
+    return new LoginPreferences(this, GoogleApiAvailability.getInstance());
+  }
+
   @Override public FragmentProvider createFragmentProvider() {
     return new VanillaFragmentProvider();
+  }
+
+  @Override public ActivityProvider createActivityProvider() {
+    return new VanillaActivityProvider();
   }
 }

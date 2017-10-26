@@ -1,7 +1,7 @@
 package cm.aptoide.pt.timeline.view.navigation;
 
 import android.os.Bundle;
-import cm.aptoide.pt.view.navigator.TabNavigation;
+import cm.aptoide.pt.navigator.TabNavigation;
 
 /**
  * Created by jdandrade on 02/05/2017.
