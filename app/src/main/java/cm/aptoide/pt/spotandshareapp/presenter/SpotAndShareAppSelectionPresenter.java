@@ -14,10 +14,11 @@ import cm.aptoide.pt.spotandshareapp.AppModelToAndroidAppInfoMapper;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareAppProvider;
 import cm.aptoide.pt.spotandshareapp.view.SpotAndShareAppSelectionView;
 import cm.aptoide.pt.utils.AptoideUtils;
+import com.jakewharton.rxrelay.BehaviorRelay;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import rx.Completable;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -35,13 +36,14 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
   private final PermissionManager permissionManager;
   private final PermissionService permissionService;
   private final CrashReport crashReport;
+  private final BehaviorRelay<Boolean> isGroupCreatedBehaviour;
 
   public SpotAndShareAppSelectionPresenter(SpotAndShareAppSelectionView view,
       SpotAndShare spotAndShare, boolean shouldCreateGroup,
       SpotAndShareAppProvider spotandShareAppProvider,
       AppModelToAndroidAppInfoMapper appModelToAndroidAppInfoMapper,
       PermissionManager permissionManager, PermissionService permissionService,
-      CrashReport crashReport) {
+      CrashReport crashReport, BehaviorRelay<Boolean> isGroupCreatedBehaviour) {
     this.view = view;
     this.spotAndShare = spotAndShare;
     this.shouldCreateGroup = shouldCreateGroup;
@@ -50,12 +52,75 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
     this.permissionManager = permissionManager;
     this.permissionService = permissionService;
     this.crashReport = crashReport;
+    this.isGroupCreatedBehaviour = isGroupCreatedBehaviour;
   }
 
   @Override public void present() {
+    createGroup();
 
+    buildInstalledAppsList();
+
+    handleBackButtonClick();
+
+    handleExitEvent();
+
+    handleSkipClick();
+  }
+
+  private void handleExitEvent() {
     view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.exitEvent())
+        .doOnNext(clicked -> leaveGroup())
+        .doOnNext(__ -> view.navigateBack())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> crashReport.log(error));
+  }
+
+  private void handleBackButtonClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.backButtonEvent())
+        .doOnNext(click -> view.showExitWarning())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> crashReport.log(error));
+  }
+
+  private void buildInstalledAppsList() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .doOnNext(lifecycleEvent -> view.showLoading())
+        .observeOn(Schedulers.io())
+        .map(lifecycleEvent -> spotandShareAppProvider.getInstalledApps())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(installedApps -> view.buildInstalledAppsList(installedApps))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> crashReport.log(error));
+  }
+
+  private void handleSkipClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.skipButtonClick())
+        .flatMap(__ -> isGroupCreated())
+        .filter(isGroupCreated -> isGroupCreated)
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(__ -> view.openWaitingToSendScreen())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> crashReport.log(error));
+  }
+
+  private Observable<Boolean> isGroupCreated() {
+    return isGroupCreatedBehaviour;
+  }
+
+  private void createGroup() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .delay(1, TimeUnit.SECONDS)
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(__ -> {
@@ -71,54 +136,25 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
           }
         })
         .doOnNext(__ -> listenToSelectedApp())
-        .flatMapSingle(lifecycleEvent -> {
-          return createGroup().timeout(15, TimeUnit.SECONDS)
-              .toSingleDefault(2);
-          //// FIXME: 12-07-2017 should not pass this integer
-
+        .flatMapCompletable(lifecycleEvent -> spotAndShare.createGroup(uuid -> {
+        }, throwable -> handleError(throwable), null)
+            .doOnCompleted(() -> isGroupCreatedBehaviour.call(true))
+            .timeout(15, TimeUnit.SECONDS))
+        .doOnError(throwable -> {
+          handleError(throwable);
+          isGroupCreatedBehaviour.call(false);
         })
-        .doOnError(throwable -> handleError(throwable))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> crashReport.log(err));
-
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .doOnNext(lifecycleEvent -> view.showLoading())
-        .observeOn(Schedulers.io())
-        .map(lifecycleEvent -> spotandShareAppProvider.getInstalledApps())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(installedApps -> view.buildInstalledAppsList(installedApps))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));
+  }
 
-    //listenToSelectedApp();
+  @Override public void saveState(Bundle state) {
 
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.backButtonEvent())
-        .doOnNext(click -> view.showExitWarning())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> crashReport.log(error));
+  }
 
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.exitEvent())
-        .doOnNext(clicked -> leaveGroup())
-        .doOnNext(__ -> view.navigateBack())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> crashReport.log(error));
+  @Override public void restoreState(Bundle state) {
 
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.skipButtonClick())
-        .doOnNext(__ -> view.openWaitingToSendScreen())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> crashReport.log(error));
   }
 
   private void listenToSelectedApp() {
@@ -131,14 +167,6 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
 
   private void leaveGroup() {
     spotAndShare.leaveGroup(err -> view.onLeaveGroupError());
-  }
-
-  @Override public void saveState(Bundle state) {
-
-  }
-
-  @Override public void restoreState(Bundle state) {
-
   }
 
   private void selectedApp(AppModel appModel) {
@@ -171,10 +199,5 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
       view.showGeneralCreateGroupError();
     }
     view.navigateBack();
-  }
-
-  private Completable createGroup() {
-    return spotAndShare.createGroup(uuid -> {
-    }, throwable -> handleError(throwable), null);
   }
 }

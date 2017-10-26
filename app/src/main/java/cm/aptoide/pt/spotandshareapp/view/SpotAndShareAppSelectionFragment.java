@@ -29,6 +29,7 @@ import cm.aptoide.pt.spotandshareapp.presenter.SpotAndShareAppSelectionPresenter
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
+import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.List;
 import rx.Observable;
@@ -108,11 +109,11 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
   private void attachPresenters() {
 
     attachPresenter(new SpotAndShareAppSelectionPresenter(this,
-            ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
-            shouldCreateGroup, new SpotAndShareAppProvider(getActivity().getApplicationContext(),
-            getContext().getPackageManager()), new AppModelToAndroidAppInfoMapper(new ObbsProvider()),
-            new PermissionManager(), (PermissionService) getContext(), CrashReport.getInstance()),
-        null);
+        ((AptoideApplication) getActivity().getApplicationContext()).getSpotAndShare(),
+        shouldCreateGroup, new SpotAndShareAppProvider(getActivity().getApplicationContext(),
+        getContext().getPackageManager()), new AppModelToAndroidAppInfoMapper(new ObbsProvider()),
+        new PermissionManager(), (PermissionService) getContext(), CrashReport.getInstance(),
+        BehaviorRelay.create(false)), null);
   }
 
   private void setupBackClick() {
