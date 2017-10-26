@@ -29,6 +29,10 @@ import lombok.Data;
     return info != null && info.getStatus() == Info.Status.OK;
   }
 
+  public enum Type {
+    FACEBOOK_1, FACEBOOK_2, TWITCH_1, TWITCH_2, TWITTER_1, TWITTER_2, YOUTUBE_1, YOUTUBE_2
+  }
+
   @Data public static class Info {
 
     private Status status;
@@ -66,7 +70,7 @@ import lombok.Data;
   }
 
   @Data public static class StoreLinks {
-    private String type;
+    private Type type;
     private String url;
     private String error;
   }
