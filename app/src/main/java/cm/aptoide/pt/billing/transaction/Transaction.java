@@ -1,37 +1,28 @@
 package cm.aptoide.pt.billing.transaction;
 
 public class Transaction {
+
+  private final String id;
   private final String productId;
-  private final String payerId;
+  private final String customerId;
   private final Status status;
-  private final int paymentMethodId;
-  private final String payload;
-  private final String sellerId;
+  private final String serviceId;
 
-  public Transaction(String productId, String payerId, Status status, int paymentMethodId,
-      String payload, String sellerId) {
+  public Transaction(String id, String productId, String customerId, Status status,
+      String serviceId) {
     this.productId = productId;
-    this.payerId = payerId;
+    this.customerId = customerId;
     this.status = status;
-    this.paymentMethodId = paymentMethodId;
-    this.payload = payload;
-    this.sellerId = sellerId;
+    this.serviceId = serviceId;
+    this.id = id;
   }
 
-  public String getPayload() {
-    return payload;
-  }
-
-  public String getPayerId() {
-    return payerId;
+  public String getCustomerId() {
+    return customerId;
   }
 
   public String getProductId() {
     return productId;
-  }
-
-  public Status getStatus() {
-    return status;
   }
 
   public boolean isNew() {
@@ -43,32 +34,26 @@ public class Transaction {
   }
 
   public boolean isPendingAuthorization() {
-    return Status.PENDING_USER_AUTHORIZATION.equals(status);
+    return Status.PENDING_SERVICE_AUTHORIZATION.equals(status);
   }
 
-  public boolean isPending() {
-    return Status.CREATED.equals(status)
-        || Status.PROCESSING.equals(status)
-        || Status.PENDING.equals(status);
+  public boolean isProcessing() {
+    return Status.PROCESSING.equals(status) || Status.LOCAL_PROCESSING.equals(status);
   }
 
   public boolean isFailed() {
-    return Status.CANCELED.equals(status) || Status.FAILED.equals(status);
+    return Status.FAILED.equals(status);
   }
 
-  public int getPaymentMethodId() {
-    return paymentMethodId;
+  public String getServiceId() {
+    return serviceId;
   }
 
-  public boolean isUnknown() {
-    return Status.UNKNOWN.equals(status);
-  }
-
-  public String getSellerId() {
-    return sellerId;
+  public String getId() {
+    return id;
   }
 
   public enum Status {
-    UNKNOWN, NEW, CREATED, PENDING_USER_AUTHORIZATION, PROCESSING, PENDING, COMPLETED, FAILED, CANCELED
+    NEW, PENDING_SERVICE_AUTHORIZATION, PROCESSING, COMPLETED, FAILED, LOCAL_PROCESSING
   }
 }

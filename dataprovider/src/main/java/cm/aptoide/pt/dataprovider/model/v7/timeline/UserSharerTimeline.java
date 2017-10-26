@@ -17,9 +17,10 @@ public class UserSharerTimeline {
   public UserSharerTimeline(Comment.User user,
       cm.aptoide.pt.dataprovider.model.v7.store.Store store) {
     this.user = new User(user.getId(), user.getName(), user.getAvatar());
-    if(store!=null)
-     this.store = new Store(store.getName(), store.getAvatar(), store.getAppearance()
-        .getTheme());
+    if (store != null) {
+      this.store = new Store(store.getName(), store.getAvatar(), store.getAppearance()
+          .getTheme());
+    }
   }
 
   public User getUser() {

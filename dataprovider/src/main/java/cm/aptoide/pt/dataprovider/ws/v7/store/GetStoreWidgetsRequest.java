@@ -83,11 +83,11 @@ public class GetStoreWidgetsRequest
     final Body body =
         new Body(storeCredentials, WidgetsArgs.createDefault(resources, windowManager));
 
-    return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets").get(), body,
-        bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
-        storeCredentials, clientUniqueId, isGooglePlayServicesAvailable, partnerId, accountMature,
-        httpClient, filters, tokenInvalidator, sharedPreferences, resources, windowManager,
-        connectivityManager, versionCodeProvider);
+    return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets")
+        .get(), body, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+        sharedPreferences, storeCredentials, clientUniqueId, isGooglePlayServicesAvailable,
+        partnerId, accountMature, httpClient, filters, tokenInvalidator, sharedPreferences,
+        resources, windowManager, connectivityManager, versionCodeProvider);
   }
 
   public String getUrl() {
@@ -103,7 +103,8 @@ public class GetStoreWidgetsRequest
 
   private Observable<List<GetStoreWidgets.WSWidget>> loadGetStoreWidgets(
       GetStoreWidgets getStoreWidgets, boolean bypassCache) {
-    return Observable.from(getStoreWidgets.getDataList().getList())
+    return Observable.from(getStoreWidgets.getDataList()
+        .getList())
         .observeOn(Schedulers.io())
         .flatMap(wsWidget -> WSWidgetsUtils.loadWidgetNode(wsWidget, storeCredentials, bypassCache,
             clientUniqueId, isGooglePlayServicesAvailable, partnerId, accountMature,
@@ -111,7 +112,8 @@ public class GetStoreWidgetsRequest
             tokenInvalidator, sharedPreferences, resources, windowManager, connectivityManager,
             versionCodeProvider))
         .toList()
-        .flatMapIterable(wsWidgets -> getStoreWidgets.getDataList().getList())
+        .flatMapIterable(wsWidgets -> getStoreWidgets.getDataList()
+            .getList())
         .toList()
         .first();
   }

@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.presenter;
 
-import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
@@ -68,14 +67,6 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
     handleAccountStatusChangeWhileShowingView();
     handleForgotPasswordClick();
     handleTogglePasswordVisibility();
-  }
-
-  @Override public void saveState(Bundle state) {
-    // does nothing
-  }
-
-  @Override public void restoreState(Bundle state) {
-    // does nothing
   }
 
   private void handleTogglePasswordVisibility() {

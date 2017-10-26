@@ -3,7 +3,7 @@ package cm.aptoide.pt.download;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.telephony.TelephonyManager;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -22,12 +22,12 @@ public class DownloadEventConverter extends DownloadInstallEventConverter<Downlo
   private final Converter.Factory converterFactory;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
-  private final AptoideNavigationTracker navigationTracker;
+  private final NavigationTracker navigationTracker;
 
   public DownloadEventConverter(BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator, String appId,
       SharedPreferences sharedPreferences, ConnectivityManager connectivityManager,
-      TelephonyManager telephonyManager, AptoideNavigationTracker navigationTracker) {
+      TelephonyManager telephonyManager, NavigationTracker navigationTracker) {
     super(appId, connectivityManager, telephonyManager);
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;

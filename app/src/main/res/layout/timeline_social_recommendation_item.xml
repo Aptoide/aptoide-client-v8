@@ -104,6 +104,7 @@
           android:layout_marginRight="15.1dp"
           android:layout_marginStart="8.3dp"
           android:layout_toEndOf="@id/displayable_social_timeline_recommendation_icon"
+          android:layout_toRightOf="@+id/displayable_social_timeline_recommendation_icon"
           android:text="@string/review_get_app"
           android:textAllCaps="true"
           android:textSize="10sp"

@@ -1,24 +1,25 @@
 package cm.aptoide.pt.billing;
 
+import cm.aptoide.pt.billing.payment.PaymentService;
+import cm.aptoide.pt.billing.product.Product;
+import cm.aptoide.pt.billing.purchase.Purchase;
 import java.util.List;
 import rx.Completable;
 import rx.Single;
 
 public interface BillingService {
 
-  Single<List<PaymentMethod>> getPaymentMethods(Product product);
+  Single<List<PaymentService>> getPaymentServices();
 
-  Completable getBilling(String sellerId, String type);
+  Single<Merchant> getMerchant(String merchantName);
 
-  Completable deletePurchase(String sellerId, String purchaseToken);
+  Completable deletePurchase(String purchaseId);
 
-  Single<List<Purchase>> getPurchases(String sellerId);
+  Single<List<Purchase>> getPurchases(String merchantName);
 
-  Single<Purchase> getPurchase(String sellerId, String purchaseToken);
+  Single<Purchase> getPurchase(String productId);
 
-  Single<List<Product>> getProducts(String sellerId, List<String> productIds);
+  Single<List<Product>> getProducts(String merchantName, List<String> skus);
 
-  Single<Purchase> getPurchase(Product product);
-
-  Single<Product> getProduct(String sellerId, String productId);
+  Single<Product> getProduct(String sku, String merchantName);
 }

@@ -10,9 +10,9 @@ import android.widget.Button;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
+import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.view.Translator;
 import cm.aptoide.pt.view.recycler.displayable.FooterDisplayable;
-import cm.aptoide.pt.view.store.StoreTabGridRecyclerFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.functions.Action1;
 

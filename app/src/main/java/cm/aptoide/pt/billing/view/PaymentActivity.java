@@ -11,28 +11,34 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.billing.sync.BillingSyncManager;
-import cm.aptoide.pt.billing.view.braintree.BraintreeActivity;
+import cm.aptoide.pt.billing.Billing;
+import cm.aptoide.pt.view.BackButtonActivity;
 
-public class PaymentActivity extends BraintreeActivity {
+public class PaymentActivity extends BackButtonActivity {
 
   public static final String EXTRA_DEVELOPER_PAYLOAD =
       "cm.aptoide.pt.view.payment.intent.extra.DEVELOPER_PAYLOAD";
-  public static final String EXTRA_PRODUCT_ID =
-      "cm.aptoide.pt.view.payment.intent.extra.PRODUCT_ID";
-  public static final String EXTRA_APPLICATION_ID =
-      "cm.aptoide.pt.view.payment.intent.extra.APPLICATION_ID";
-  public static final String EXTRA_PAYMENT_METHOD_NAME =
-      "cm.aptoide.pt.view.payment.intent.extra.PAYMENT_METHOD_NAME";
+  public static final String EXTRA_SKU = "cm.aptoide.pt.view.payment.intent.extra.SKU";
+  public static final String EXTRA_MERCHANT_NAME =
+      "cm.aptoide.pt.view.payment.intent.extra.MERCHANT_NAME";
+  public static final String EXTRA_SERVICE_NAME =
+      "cm.aptoide.pt.view.payment.intent.extra.SERVICE_NAME";
 
-  private BillingSyncManager syncManager;
+  private Billing billing;
 
-  public static Intent getIntent(Context context, String productId, String sellerId,
+  public static Intent getIntent(Context context, String sku, String merchantName,
       String developerPayload) {
     final Intent intent = new Intent(context, PaymentActivity.class);
-    intent.putExtra(EXTRA_PRODUCT_ID, productId);
-    intent.putExtra(EXTRA_APPLICATION_ID, sellerId);
+    intent.putExtra(EXTRA_SKU, sku);
+    intent.putExtra(EXTRA_MERCHANT_NAME, merchantName);
     intent.putExtra(EXTRA_DEVELOPER_PAYLOAD, developerPayload);
+    return intent;
+  }
+
+  public static Intent getIntent(Context context, long appId, String merchantName) {
+    final Intent intent = new Intent(context, PaymentActivity.class);
+    intent.putExtra(EXTRA_SKU, String.valueOf(appId));
+    intent.putExtra(EXTRA_MERCHANT_NAME, merchantName);
     return intent;
   }
 
@@ -45,11 +51,12 @@ public class PaymentActivity extends BraintreeActivity {
           PaymentFragment.create(getIntent().getExtras()), true);
     }
 
-    syncManager = ((AptoideApplication) getApplication()).getBillingSyncManager();
+    billing = ((AptoideApplication) getApplication()).getBilling(
+        getIntent().getStringExtra(EXTRA_MERCHANT_NAME));
   }
 
   @Override protected void onDestroy() {
-    syncManager.cancelAll();
+    billing.stopSync();
     super.onDestroy();
   }
 }

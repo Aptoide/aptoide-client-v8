@@ -9,6 +9,7 @@ import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import rx.Completable;
+import rx.Scheduler;
 
 /**
  * This can be deleted in future releases, when version 8.1.2.1 is no longer supported /
@@ -38,13 +39,14 @@ public class AndroidAccountDataMigration {
   private final String accountType;
   private final String databasePath;
   private final String applicationVersionName;
+  private final Scheduler scheduler;
 
   private int oldVersion;
 
   public AndroidAccountDataMigration(SharedPreferences secureSharedPreferences,
       SharedPreferences defaultSharedPreferences, AccountManager accountManager,
       SecureCoderDecoder secureCoderDecoder, int currentVersion, String databasePath,
-      String accountType, String applicationVersionName) {
+      String accountType, String applicationVersionName, Scheduler scheduler) {
     this.secureSharedPreferences = secureSharedPreferences;
     this.defaultSharedPreferences = defaultSharedPreferences;
     this.accountManager = accountManager;
@@ -54,6 +56,7 @@ public class AndroidAccountDataMigration {
     this.accountType = accountType;
     this.oldVersion = -1;
     this.applicationVersionName = applicationVersionName;
+    this.scheduler = scheduler;
   }
 
   public Completable migrate() {
@@ -77,15 +80,14 @@ public class AndroidAccountDataMigration {
             .andThen(cleanShareDialogShowPref())
             .doOnCompleted(() -> markMigrated());
       }
-    });
+    })
+        .subscribeOn(scheduler);
   }
 
   /**
    * This method is responsible for cleaning a preference that allowing
    * the share dialog on app install to show. This preference should be cleaned every time
    * we upgrade to a new major version (X.X.0.0)
-   *
-   * @return
    */
   private Completable cleanShareDialogShowPref() {
     String oldVersionName =

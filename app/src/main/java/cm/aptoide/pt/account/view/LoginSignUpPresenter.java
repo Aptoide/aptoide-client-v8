@@ -1,14 +1,13 @@
 package cm.aptoide.pt.account.view;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.presenter.LoginSignUpView;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.view.BackButton;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
 
 public class LoginSignUpPresenter extends BottomSheetBehavior.BottomSheetCallback
     implements Presenter, BackButton.ClickHandler {
@@ -47,14 +46,6 @@ public class LoginSignUpPresenter extends BottomSheetBehavior.BottomSheetCallbac
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
-  }
-
-  @Override public void saveState(Bundle state) {
-    // does nothing
-  }
-
-  @Override public void restoreState(Bundle state) {
-    // does nothing
   }
 
   @Override public void onStateChanged(@NonNull android.view.View bottomSheet, int newState) {

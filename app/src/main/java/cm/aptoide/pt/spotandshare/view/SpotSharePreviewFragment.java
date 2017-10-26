@@ -16,7 +16,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.presenter.SpotSharePreviewPresenter;
 import cm.aptoide.pt.presenter.SpotSharePreviewView;
@@ -36,7 +36,7 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
   private Toolbar toolbar;
   private boolean showToolbar;
   private SpotAndShareAnalytics spotAndShareAnalytics;
-  private AptoideNavigationTracker aptoideNavigationTracker;
+  private NavigationTracker navigationTracker;
   private PageViewsAnalytics pageViewsAnalytics;
 
   public static Fragment newInstance(boolean showToolbar) {
@@ -56,12 +56,12 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
     super.onCreate(savedInstanceState);
     showToolbar = getArguments().getBoolean(SHOW_TOOLBAR_KEY);
     spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
-    aptoideNavigationTracker =
-        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker();
+    navigationTracker =
+        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
     pageViewsAnalytics =
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), aptoideNavigationTracker);
-    aptoideNavigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
+            Analytics.getInstance(), navigationTracker);
+    navigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName()));
     pageViewsAnalytics.sendPageViewedEvent();
     setHasOptionsMenu(true);
@@ -77,7 +77,7 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
     startButton = (Button) view.findViewById(R.id.fragment_spot_share_preview_start_button);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     attachPresenter(new SpotSharePreviewPresenter(this, showToolbar, getString(R.string.spot_share),
-        spotAndShareAnalytics), savedInstanceState);
+        spotAndShareAnalytics));
   }
 
   @Override public void onDestroyView() {
