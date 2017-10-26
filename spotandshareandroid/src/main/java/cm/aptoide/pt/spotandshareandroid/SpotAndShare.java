@@ -80,12 +80,10 @@ public class SpotAndShare {
   }
 
   public Observable<Collection<Friend>> observeFriends() {
-    //return spotAndShareV2.observeFriends();
     return friendsManager.observe();
   }
 
   public Observable<Integer> observeAmountOfFriends() {
-    //return spotAndShareV2.observeAmountOfFriends();
     return friendsManager.observeAmountOfFriends();
   }
 
