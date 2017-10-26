@@ -1,5 +1,6 @@
 package cm.aptoide.pt.search.view;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -40,7 +41,8 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
   }
 
   @Override public SearchResultItemView onCreateViewHolder(ViewGroup parent, int viewType) {
-    View view = LayoutInflater.from(parent.getContext())
+    final Context context = parent.getContext();
+    View view = LayoutInflater.from(context)
         .inflate(viewType, parent, false);
 
     switch (viewType) {
@@ -87,6 +89,16 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
   @Override public int getItemCount() {
     final int itemCount = searchAdResults.size() + searchResults.size();
     return isLoadingMore ? itemCount + 1 : itemCount;
+  }
+
+  @Override public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+    super.onDetachedFromRecyclerView(recyclerView);
+    for (int i = 0; i < getItemCount(); i++) {
+      try {
+        ((SearchResultItemView) getItem(i)).prepareToRecycle();
+      } catch (NullPointerException | ClassCastException e) {
+      }
+    }
   }
 
   private Object getItem(int position) {

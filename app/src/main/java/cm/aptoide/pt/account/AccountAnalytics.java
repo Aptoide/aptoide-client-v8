@@ -4,7 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.analytics.events.AptoideEvent;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
@@ -42,7 +42,7 @@ public class AccountAnalytics {
   private final String appId;
   private final SharedPreferences sharedPreferences;
   private final AppEventsLogger facebook;
-  private final AptoideNavigationTracker navigationTracker;
+  private final NavigationTracker navigationTracker;
   private AptoideEvent aptoideSuccessLoginEvent;
   private FacebookEvent facebookSuccessLoginEvent;
   private FlurryEvent flurrySuccessLoginEvent;
@@ -52,7 +52,7 @@ public class AccountAnalytics {
   public AccountAnalytics(Analytics analytics, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, String appId, SharedPreferences sharedPreferences,
-      AppEventsLogger facebook, AptoideNavigationTracker navigationTracker) {
+      AppEventsLogger facebook, NavigationTracker navigationTracker) {
     this.analytics = analytics;
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;

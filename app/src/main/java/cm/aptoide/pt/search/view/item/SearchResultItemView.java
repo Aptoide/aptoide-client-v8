@@ -5,10 +5,13 @@ import android.view.View;
 
 public abstract class SearchResultItemView<T> extends RecyclerView.ViewHolder {
 
-  public SearchResultItemView(View itemView) {
+  SearchResultItemView(View itemView) {
     super(itemView);
   }
 
   public void setup(T item) {
+  }
+
+  public void prepareToRecycle() {
   }
 }

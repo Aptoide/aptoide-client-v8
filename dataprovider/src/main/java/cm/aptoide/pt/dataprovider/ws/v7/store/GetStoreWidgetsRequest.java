@@ -97,16 +97,16 @@ public class GetStoreWidgetsRequest
   @Override protected Observable<GetStoreWidgets> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
     return interfaces.getStoreWidgets(url, body, bypassCache)
-        .flatMap(getStoreWidgets -> loadGetStoreWidgets(getStoreWidgets).map(
+        .flatMap(getStoreWidgets -> loadGetStoreWidgets(getStoreWidgets, bypassCache).map(
             wsWidgets -> getStoreWidgets));
   }
 
-  protected Observable<List<GetStoreWidgets.WSWidget>> loadGetStoreWidgets(
-      GetStoreWidgets getStoreWidgets) {
+  private Observable<List<GetStoreWidgets.WSWidget>> loadGetStoreWidgets(
+      GetStoreWidgets getStoreWidgets, boolean bypassCache) {
     return Observable.from(getStoreWidgets.getDataList()
         .getList())
         .observeOn(Schedulers.io())
-        .flatMap(wsWidget -> WSWidgetsUtils.loadWidgetNode(wsWidget, storeCredentials, false,
+        .flatMap(wsWidget -> WSWidgetsUtils.loadWidgetNode(wsWidget, storeCredentials, bypassCache,
             clientUniqueId, isGooglePlayServicesAvailable, partnerId, accountMature,
             ((BodyInterceptor<BaseBody>) bodyInterceptor), httpClient, converterFactory, filters,
             tokenInvalidator, sharedPreferences, resources, windowManager, connectivityManager,
@@ -125,7 +125,6 @@ public class GetStoreWidgetsRequest
     private String storeName;
     private Integer limit;
     private int offset;
-    private Long groupId;
 
     public Body(StoreCredentials storeCredentials, WidgetsArgs widgetsArgs) {
       super(storeCredentials);
@@ -141,7 +140,7 @@ public class GetStoreWidgetsRequest
       this.storeName = storeName;
     }
 
-    public WidgetsArgs getWidgetsArgs() {
+    @SuppressWarnings("unused") public WidgetsArgs getWidgetsArgs() {
       return widgetsArgs;
     }
 

@@ -1,6 +1,6 @@
 package cm.aptoide.pt.social.data;
 
-import cm.aptoide.pt.Install;
+import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.File;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialCard;

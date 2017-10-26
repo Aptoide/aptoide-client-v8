@@ -81,7 +81,7 @@
         android:layout_marginStart="8dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:gravity="center"
-        android:text="@string/my_store_create_store_followers"
+        android:text="@string/storetab_short_followings"
         />
     <TextView
         android:id="@+id/followers"
@@ -94,7 +94,7 @@
         android:layout_toRightOf="@id/following"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:gravity="center"
-        android:text="@string/my_store_create_store_followers"
+        android:text="@string/storetab_short_followers"
         />
 
   </RelativeLayout>

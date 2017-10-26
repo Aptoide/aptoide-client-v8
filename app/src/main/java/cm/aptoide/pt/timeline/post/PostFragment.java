@@ -48,8 +48,8 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.BackButtonActivity;
 import cm.aptoide.pt.view.custom.SimpleDividerItemDecoration;
 import cm.aptoide.pt.view.fragment.FragmentView;
-import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
-import cm.aptoide.pt.view.navigator.TabNavigator;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.navigator.TabNavigator;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -133,6 +133,7 @@ public class PostFragment extends FragmentView implements PostView {
         okHttpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
         sharedPreferences);
     handleAnalytics();
+    setHasOptionsMenu(true);
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -249,7 +250,7 @@ public class PostFragment extends FragmentView implements PostView {
         ((ActivityResultNavigator) getContext()).getAccountNavigator(), urlProvider, tabNavigator,
         analytics);
     ((BackButtonActivity) getActivity()).registerClickHandler(presenter);
-    attachPresenter(presenter, null);
+    attachPresenter(presenter);
   }
 
   private void showKeyboard() {
@@ -261,7 +262,6 @@ public class PostFragment extends FragmentView implements PostView {
   private void setUpToolbar() {
     if (toolbar != null && getActivity() instanceof AppCompatActivity) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-      setHasOptionsMenu(true);
       toolbar.setEnabled(true);
       ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
       actionBar.setDisplayHomeAsUpEnabled(true);

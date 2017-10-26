@@ -46,7 +46,7 @@ public abstract class WebService<T, U> {
   private final String baseHost;
   private final OkHttpClient httpClient;
 
-  private Retrofit retrofit;
+  protected Retrofit retrofit;
 
   protected WebService(Class<T> clazz, OkHttpClient httpClient, Converter.Factory converterFactory,
       String baseHost) {
@@ -113,22 +113,22 @@ public abstract class WebService<T, U> {
     return retrofit;
   }
 
-  public void execute(SuccessRequestListener<U> successRequestListener) {
+  @Deprecated public void execute(SuccessRequestListener<U> successRequestListener) {
     execute(successRequestListener, false);
   }
 
+  @Deprecated
   public void execute(SuccessRequestListener<U> successRequestListener, boolean bypassCache) {
     execute(successRequestListener, defaultErrorRequestListener(), bypassCache);
   }
 
-  public void execute(SuccessRequestListener<U> successRequestListener,
+  @Deprecated public void execute(SuccessRequestListener<U> successRequestListener,
       ErrorRequestListener errorRequestListener, boolean bypassCache) {
     observe(bypassCache).observeOn(AndroidSchedulers.mainThread())
         .subscribe(successRequestListener, err -> errorRequestListener.onError(err));
   }
 
   private ErrorRequestListener defaultErrorRequestListener() {
-
     return (Throwable e) -> {
       // TODO: Implementar
       Logger.e(ErrorRequestListener.class.getName(), "Erro por implementar");
@@ -136,7 +136,7 @@ public abstract class WebService<T, U> {
     };
   }
 
-  public void execute(SuccessRequestListener<U> successRequestListener,
+  @Deprecated public void execute(SuccessRequestListener<U> successRequestListener,
       ErrorRequestListener errorRequestListener) {
     execute(successRequestListener, errorRequestListener, false);
   }

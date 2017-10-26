@@ -45,7 +45,7 @@
 
   <uses-sdk
       android:minSdkVersion="15"
-      tools:overrideLibrary="com.paypal.android.sdk.onetouch.core, com.paypal.android.sdk.payments, com.braintreepayments.api.core, com.braintreepayments.api, com.braintreepayments.cardform"
+      tools:overrideLibrary="com.paypal.android.sdk.onetouch.core, com.paypal.android.sdk.payments, com.adyen.core, com.adyen.ui, com.adyen.adyencse, com.adyen.cardscan, com.adyen.utils"
       />
 
   <application
@@ -55,7 +55,7 @@
       android:networkSecurityConfig="@xml/network_security_config"
       android:supportsRtl="true"
       android:theme="@style/AptoideThemeDefault"
-      tools:replace="theme"
+      tools:replace="theme, allowBackup"
       >
 
     <activity
@@ -73,6 +73,8 @@
     </activity>
 
     <activity android:name=".view.MainActivity"/>
+
+    <activity android:name=".view.FairyMainActivity"/>
 
     <meta-data
         android:name="io.fabric.ApiKey"
@@ -345,7 +347,7 @@
     </receiver>
     <receiver android:name=".install.RootInstallNotificationEventReceiver"/>
 
-    <service android:name=".InstallService"/>
+    <service android:name=".install.InstallService"/>
 
     <service android:name=".install.InstalledIntentService"/>
 

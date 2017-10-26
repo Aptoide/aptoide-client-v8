@@ -15,7 +15,7 @@ import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareActivity;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.LoadInterface;
-import cm.aptoide.pt.view.navigator.ActivityNavigator;
+import cm.aptoide.pt.navigator.ActivityNavigator;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Observable;

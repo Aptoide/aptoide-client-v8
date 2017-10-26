@@ -2,11 +2,14 @@ package cm.aptoide.pt.repository.request;
 
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.net.ConnectivityManager;
 import android.view.WindowManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetUserRequest;
+import cm.aptoide.pt.store.StoreCredentialsProvider;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
@@ -23,10 +26,20 @@ public class GetUserRequestFactory {
   private final SharedPreferences sharedPreferences;
   private final Resources resources;
   private final WindowManager windowManager;
+  private final StoreCredentialsProvider storeCredentialsProvider;
+  private final String clientUniqueId;
+  private final String partnerId;
+  private final boolean accountMature;
+  private final String filters;
+  private final ConnectivityManager systemService;
+  private final AdsApplicationVersionCodeProvider versionCodeProvider;
 
   public GetUserRequestFactory(BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager) {
+      SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
+      StoreCredentialsProvider storeCredentialsProvider, String clientUniqueId, String partnerId,
+      boolean accountMature, String filters, ConnectivityManager systemService,
+      AdsApplicationVersionCodeProvider versionCodeProvider) {
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
@@ -34,10 +47,19 @@ public class GetUserRequestFactory {
     this.sharedPreferences = sharedPreferences;
     this.resources = resources;
     this.windowManager = windowManager;
+    this.storeCredentialsProvider = storeCredentialsProvider;
+    this.clientUniqueId = clientUniqueId;
+    this.partnerId = partnerId;
+    this.accountMature = accountMature;
+    this.filters = filters;
+    this.systemService = systemService;
+    this.versionCodeProvider = versionCodeProvider;
   }
 
-  public GetUserRequest newGetUser(String url) {
-    return GetUserRequest.of(url, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-        sharedPreferences, resources, windowManager);
+  public GetUserRequest newGetUser(String url, boolean googlePlayServicesAvailable) {
+    return GetUserRequest.of(url, storeCredentialsProvider.fromUrl(url), bodyInterceptor,
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager,
+        clientUniqueId, googlePlayServicesAvailable, partnerId, accountMature, filters,
+        systemService, versionCodeProvider);
   }
 }
