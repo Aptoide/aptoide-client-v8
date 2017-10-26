@@ -12,6 +12,7 @@ import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.preferences.LocalPersistenceAdultContent;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.request.RequestFactory;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
@@ -35,8 +36,9 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
 
-    final boolean isAdultContentEnabled = application.getAccountManager()
-        .isAccountMature();
+    LocalPersistenceAdultContent adultContent =
+        new LocalPersistenceAdultContent(application.getPreferences(),
+            application.getSecurePreferences());
 
     requestFactoryCdnPool = new RequestFactory(new StoreCredentialsProviderImpl(
         AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
@@ -47,7 +49,7 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
         getContext().getResources(),
         (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
         application.getIdsRepository()
-            .getUniqueIdentifier(), application.getPartnerId(), isAdultContentEnabled,
+            .getUniqueIdentifier(), application.getPartnerId(), adultContent,
         application.getQManager()
             .getFilters(ManagerPreferences.getHWSpecsFilter(
                 ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),

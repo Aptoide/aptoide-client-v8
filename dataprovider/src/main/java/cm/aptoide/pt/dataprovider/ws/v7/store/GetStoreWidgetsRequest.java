@@ -43,6 +43,7 @@ public class GetStoreWidgetsRequest
   private final ConnectivityManager connectivityManager;
   private final AdsApplicationVersionCodeProvider versionCodeProvider;
   private final SharedPreferences sharedPreferences;
+  private final WSWidgetsUtils widgetsUtils;
 
   private GetStoreWidgetsRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
@@ -51,7 +52,7 @@ public class GetStoreWidgetsRequest
       boolean isGooglePlayServicesAvailable, String partnerId, boolean accountMature,
       String filters, Resources resources, WindowManager windowManager,
       ConnectivityManager connectivityManager,
-      AdsApplicationVersionCodeProvider versionCodeProvider) {
+      AdsApplicationVersionCodeProvider versionCodeProvider, WSWidgetsUtils widgetsUtils) {
     super(body, httpClient, converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences);
     this.url = url;
     this.storeCredentials = storeCredentials;
@@ -65,6 +66,7 @@ public class GetStoreWidgetsRequest
     this.connectivityManager = connectivityManager;
     this.versionCodeProvider = versionCodeProvider;
     this.sharedPreferences = sharedPreferences;
+    this.widgetsUtils = widgetsUtils;
   }
 
   public static GetStoreWidgetsRequest ofAction(String url, StoreCredentials storeCredentials,
@@ -82,7 +84,7 @@ public class GetStoreWidgetsRequest
         .get(), body, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
         sharedPreferences, storeCredentials, clientUniqueId, isGooglePlayServicesAvailable,
         partnerId, accountMature, filters, resources, windowManager, connectivityManager,
-        versionCodeProvider);
+        versionCodeProvider, new WSWidgetsUtils());
   }
 
   public String getUrl() {
@@ -101,14 +103,11 @@ public class GetStoreWidgetsRequest
     return Observable.from(getStoreWidgets.getDataList()
         .getList())
         .observeOn(Schedulers.io())
-        .flatMap(wsWidget -> {
-          WSWidgetsUtils widgetsUtils = new WSWidgetsUtils();
-          return widgetsUtils.loadWidgetNode(wsWidget, storeCredentials, bypassCache,
-              clientUniqueId, isGooglePlayServicesAvailable, partnerId, accountMature,
-              ((BodyInterceptor<BaseBody>) bodyInterceptor), getHttpClient(), converterFactory,
-              filters, getTokenInvalidator(), sharedPreferences, resources, windowManager,
-              connectivityManager, versionCodeProvider);
-        })
+        .flatMap(wsWidget -> widgetsUtils.loadWidgetNode(wsWidget, storeCredentials, bypassCache,
+            clientUniqueId, isGooglePlayServicesAvailable, partnerId, accountMature,
+            ((BodyInterceptor<BaseBody>) bodyInterceptor), getHttpClient(), converterFactory,
+            filters, getTokenInvalidator(), sharedPreferences, resources, windowManager,
+            connectivityManager, versionCodeProvider))
         .toList()
         .flatMapIterable(wsWidgets -> getStoreWidgets.getDataList()
             .getList())

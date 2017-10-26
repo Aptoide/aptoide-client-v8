@@ -56,6 +56,7 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
   private StoreAnalytics storeAnalytics;
+  private WSWidgetsUtils widgetsUtils;
 
   public static Fragment newInstance() {
     return new MyStoresSubscribedFragment();
@@ -76,6 +77,7 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
     converterFactory = WebService.getDefaultConverter();
     storeAnalytics =
         new StoreAnalytics(AppEventsLogger.newLogger(getContext()), Analytics.getInstance());
+    widgetsUtils = new WSWidgetsUtils();
   }
 
   @Override protected V7<ListStores, ? extends Endless> buildRequest(boolean refresh, String url) {
@@ -99,7 +101,7 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
       getRecyclerView().clearOnScrollListeners();
       LinkedList<String> errorsList = new LinkedList<>();
       errorsList.add(USER_NOT_LOGGED_ERROR);
-      if (WSWidgetsUtils.shouldAddObjectView(errorsList, throwable)) {
+      if (widgetsUtils.shouldAddObjectView(errorsList, throwable)) {
         DisplayablesFactory.loadLocalSubscribedStores(storeRepository)
             .compose(bindUntilEvent(LifecycleEvent.DESTROY))
             .subscribe(stores -> addDisplayables(getStoresDisplayable(stores)), err -> {

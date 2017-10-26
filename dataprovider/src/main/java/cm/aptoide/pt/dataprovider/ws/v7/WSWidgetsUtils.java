@@ -15,7 +15,6 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.model.v7.ListComments;
-import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetHomeMeta;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
@@ -49,7 +48,7 @@ import rx.schedulers.Schedulers;
       ConnectivityManager connectivityManager,
       AdsApplicationVersionCodeProvider versionCodeProvider) {
 
-    if (isKnownType(wsWidget.getType())) {
+    if (wsWidget.getType() != null) {
 
       String url = null;
       // Can be null in legacy ws :/
@@ -192,10 +191,6 @@ import rx.schedulers.Schedulers;
       // Case we don't have the enum defined we still need to countDown the latch
       return Observable.empty();
     }
-  }
-
-  @Deprecated private boolean isKnownType(Type type) {
-    return type != null;
   }
 
   @Deprecated public boolean shouldAddObjectView(List<String> list, Throwable throwable) {

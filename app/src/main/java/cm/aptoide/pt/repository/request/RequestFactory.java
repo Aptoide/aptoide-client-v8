@@ -16,6 +16,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
+import cm.aptoide.pt.preferences.AdultContent;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -43,7 +44,7 @@ import retrofit2.Converter;
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
-      String clientUniqueId, String partnerId, boolean accountMature, String filters,
+      String clientUniqueId, String partnerId, AdultContent adultContent, String filters,
       ConnectivityManager connectivityManager,
       AdsApplicationVersionCodeProvider versionCodeProvider, boolean googlePlayServicesAvailable) {
     this.storeCredentialsProvider = storeCredentialsProvider;
@@ -63,12 +64,12 @@ import retrofit2.Converter;
     getStoreWidgetsRequestFactory =
         new GetStoreWidgetsRequestFactory(storeCredentialsProvider, bodyInterceptor, httpClient,
             converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager,
-            clientUniqueId, partnerId, accountMature, filters, connectivityManager,
+            clientUniqueId, partnerId, adultContent, filters, connectivityManager,
             versionCodeProvider);
     getUserRequestFactory =
         new GetUserRequestFactory(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
             sharedPreferences, resources, windowManager, storeCredentialsProvider, clientUniqueId,
-            partnerId, accountMature, filters, connectivityManager, versionCodeProvider);
+            partnerId, adultContent, filters, connectivityManager, versionCodeProvider);
 
     getStoreRecommendedRequestFactory =
         new GetStoreRecommendedRequestFactory(bodyInterceptor, httpClient, converterFactory,
