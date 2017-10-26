@@ -1,6 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="download_completed">Завантаження завершено</string>
-    <string name="download_paused">Завантаження припинено</string>
-    <string name="download_progress">Завантаження триває</string>
-    <string name="download_queue">В черзі</string>
-</resources>

@@ -1,6 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="download_completed">Atsisiuntimas baigtas</string>
-    <string name="download_paused">Atsisiuntimas sustabdytas</string>
-    <string name="download_progress">Vyksta atsisiuntimas</string>
-    <string name="download_queue">Eilėje</string>
-</resources>

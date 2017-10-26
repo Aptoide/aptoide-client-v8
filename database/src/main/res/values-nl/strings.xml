@@ -1,7 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="download_completed">Download voltooid</string>
-  <string name="download_paused">Download gepauzeerd</string>
-  <string name="download_progress">Download in uitvoering</string>
-  <string name="download_queue">In wachtrij</string>
-<string name="out_of_space_error">Onvoldoende ruimte</string>
-</resources>

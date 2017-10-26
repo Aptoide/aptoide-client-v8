@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.repository;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
@@ -45,7 +46,16 @@ public class AdsRepository {
   }
 
   public Observable<MinimalAd> getAdsFromAppView(String packageName, String storeName) {
-    return mapToMinimalAd(GetAdsRequest.ofAppviewOrganic(packageName, storeName,
+    return mapToMinimalAd(GetAdsRequest.ofAppviewOrganic(AptoideAccountManager.getAccessToken(),
+            packageName, storeName,
+        aptoideClientUUID.getUniqueIdentifier(),
+        googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
+        partnerIdProvider.getPartnerId(), adultSwitchStatus.isAdultSwitchActive()).observe());
+  }
+
+  public Observable<MinimalAd> getAdsFromFirstInstall(String packageName, String storeName) {
+    return mapToMinimalAd(GetAdsRequest.ofFirstInstallOrganic(AptoideAccountManager.getAccessToken(),
+            packageName, storeName,
         aptoideClientUUID.getUniqueIdentifier(),
         googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
         partnerIdProvider.getPartnerId(), adultSwitchStatus.isAdultSwitchActive()).observe());
@@ -53,11 +63,11 @@ public class AdsRepository {
 
   private Observable<MinimalAd> mapToMinimalAd(
       Observable<GetAdsResponse> getAdsResponseObservable) {
-    return getAdsResponseObservable.map(GetAdsResponse::getAds).flatMap(ads -> {
-      if (!validAds(ads)) {
+    return getAdsResponseObservable.map(GetAdsResponse::getDataList).flatMap(ads -> {
+      if (!validAds(ads.getList())) {
         return Observable.error(new IllegalStateException("Invalid ads returned from server"));
       }
-      return Observable.just(ads.get(0));
+      return Observable.just(ads.getList().get(0));
     }).map(MinimalAd::from);
   }
 
@@ -65,12 +75,12 @@ public class AdsRepository {
     return ads != null
         && !ads.isEmpty()
         && ads.get(0) != null
-        && ads.get(0).getPartner() != null
-        && ads.get(0).getPartner().getData() != null;
+            && ads.get(0).getNetwork() != null;
   }
 
   public Observable<List<MinimalAd>> getAdsFromHomepageMore() {
-    return mapToMinimalAds(GetAdsRequest.ofHomepageMore(aptoideClientUUID.getUniqueIdentifier(),
+    return mapToMinimalAds(GetAdsRequest.ofHomepageMore(AptoideAccountManager.getAccessToken(),
+            aptoideClientUUID.getUniqueIdentifier(),
         googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
         partnerIdProvider.getPartnerId(), adultSwitchStatus.isAdultSwitchActive()).observe());
   }
@@ -82,9 +92,9 @@ public class AdsRepository {
         return Observable.error(new IllegalStateException("Invalid ads returned from server"));
       }
       return Observable.just(ads);
-    }).map(GetAdsResponse::getAds).map(ads -> {
+    }).map(GetAdsResponse::getDataList).map(ads -> {
       List<MinimalAd> minimalAds = new LinkedList<>();
-      for (GetAdsResponse.Ad ad : ads) {
+      for (GetAdsResponse.Ad ad : ads.getList()) {
         minimalAds.add(MinimalAd.from(ad));
       }
       return minimalAds;
@@ -92,33 +102,37 @@ public class AdsRepository {
   }
 
   public static boolean validAds(GetAdsResponse getAdsResponse) {
-    return getAdsResponse != null && validAds(getAdsResponse.getAds());
+    return getAdsResponse != null && validAds(getAdsResponse.getDataList().getList());
   }
 
   public Observable<List<MinimalAd>> getAdsFromAppviewSuggested(String packageName,
       List<String> keywords) {
     return mapToMinimalAds(
-        GetAdsRequest.ofAppviewSuggested(keywords, aptoideClientUUID.getUniqueIdentifier(),
+        GetAdsRequest.ofAppviewSuggested(AptoideAccountManager.getAccessToken(),
+                keywords, aptoideClientUUID.getUniqueIdentifier(),
             googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()), packageName,
             partnerIdProvider.getPartnerId(), adultSwitchStatus.isAdultSwitchActive()).observe());
   }
 
   public Observable<MinimalAd> getAdsFromSearch(String query) {
-    return mapToMinimalAd(GetAdsRequest.ofSearch(query, aptoideClientUUID.getUniqueIdentifier(),
+    return mapToMinimalAd(GetAdsRequest.ofSearch(AptoideAccountManager.getAccessToken(),
+            query, aptoideClientUUID.getUniqueIdentifier(),
         googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
         partnerIdProvider.getPartnerId(), adultSwitchStatus.isAdultSwitchActive()).observe());
   }
 
   public Observable<MinimalAd> getAdsFromSecondInstall(String packageName) {
     return mapToMinimalAd(
-        GetAdsRequest.ofSecondInstall(packageName, aptoideClientUUID.getUniqueIdentifier(),
+        GetAdsRequest.ofSecondInstall(AptoideAccountManager.getAccessToken(),
+                packageName, aptoideClientUUID.getUniqueIdentifier(),
             googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
             partnerIdProvider.getPartnerId(), adultSwitchStatus.isAdultSwitchActive()).observe());
   }
 
   public Observable<MinimalAd> getAdsFromSecondTry(String packageName) {
     return mapToMinimalAd(
-        GetAdsRequest.ofSecondTry(packageName, aptoideClientUUID.getUniqueIdentifier(),
+        GetAdsRequest.ofSecondTry(AptoideAccountManager.getAccessToken(),
+                packageName, aptoideClientUUID.getUniqueIdentifier(),
             googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
             partnerIdProvider.getPartnerId(), adultSwitchStatus.isAdultSwitchActive()).observe());
   }

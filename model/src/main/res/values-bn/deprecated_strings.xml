@@ -1,289 +1,90 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="error_MARG_1">" ষ্টোর পাওয়া যাচ্ছে না "</string>
-    <string name="error_MARG_2">"অ্যাপের তথ্য পাওয়া যাচ্ছে না "</string>
-    <string name="error_MARG_3">"অ্যাপের ভার্সন পাওয়া যাচ্ছে না "</string>
-    <string name="error_MARG_4">"লগইন পাওয়া যাচ্ছে না "</string>
-    <string name="error_MARG_5">"অ্যাপ পাওয়া যাচ্ছে না "</string>
-    <string name="error_MARG_6">"এমডি৫ ডাটা পাওয়া যাচ্ছে না  "</string>
-    <string name="error_MARG_7">"প্যাকেজ প্যারামিটার পাওয়া যাচ্ছে না  "</string>
-    <string name="error_MARG_8">"এইচম্যাক প্যারামিটার পাওয়া যাচ্ছে না   "</string>
-    <string name="error_MARG_9">"লিমিট প্যারামিটার পাওয়া যাচ্ছে না  "</string>
-    <string name="error_MARG_10">"অফসেট প্যারামিটার পাওয়া যাচ্ছে না  "</string>
-    <string name="error_MARG_11">"ল্যাং প্যারামিটার পাওয়া যাচ্ছে না  "</string>
-    <string name="error_MARG_100">"অ্যাপের নাম পাওয়া যাচ্ছে না    "</string>
-    <string name="error_MARG_101">"বর্ণনা পাওয়া যাচ্ছে না  "</string>
-    <string name="error_MARG_102">"ক্যাটাগরি পাওয়া যাচ্ছে না  "</string>
-    <string name="error_MARG_103">"রেটিং পাওয়া যাচ্ছে না   "</string>
-    <string name="error_MARG_104">"ফ্ল্যাগ পাওয়া যাচ্ছে না   "</string>
-    <string name="error_MARG_105">"মন্তব্য পাওয়া যাচ্ছে না   "</string>
-    <string name="error_MARG_106">"ভোট পাওয়া যাচ্ছে না  "</string>
-    <string name="error_MARG_107">"লেখা পাওয়া যাচ্ছে না  "</string>
-    <string name="error_MARG_108">"পছন্দ প্যারামিটার পাওয়া যাচ্ছে না  "</string>
-    <string name="error_MARG_109">"ই-মেইল প্যারামিটার পাওয়া যাচ্ছে না  "</string>
-    <string name="error_MARG_110">পাসহ্যাশ প্যারামিটার পাওয়া যাচ্ছে না</string>
-    <string name="error_MARG_111">নাম প্যারামিটার পাওয়া যাচ্ছে না</string>
-    <string name="error_MARG_112">ইউজার- এজেন্ট প্যারামিটার পাওয়া যাচ্ছে না</string>
-    <string name="error_MARG_113">হ্যাশ প্যারামিটার পাওয়া যাচ্ছে না</string>
-    <string name="error_MARG_200">প্রমাণীকরণ ত্রুটি</string>
-    <string name="error_MARG_201">অবৈধ ব্যবহারকারীর নাম / পাসওয়ার্ড সমন্বয়</string>
-    <string name="error_MARG_202">অবৈধ টোকেন অথবা ব্যবহারকারী / পাস</string>
-
-    <string name="error_IARG_1">"অবৈধ ষ্টোর "</string>
-    <string name="error_IARG_2">অবৈধ লগইন</string>
-    <string name="error_IARG_3">"অবৈধ চিহ্নিতকারক "</string>
-    <string name="error_IARG_4">"অবৈধ এমডি৫ ডাটা "</string>
-    <string name="error_IARG_5">"অবৈধ এইচম্যাক ফরম্যাট "</string>
-    <string name="error_IARG_6">"অবৈধ ল্যাং "</string>
-    <string name="error_IARG_100">একটি মন্তব্যে সর্বনিম্ন ১০ টি ক্যারেক্টার থাকতে হয়</string>
-    <string name="error_IARG_101">"একটি মন্তব্যের উত্তরে সর্বনিম্ন ১০ টি ক্যারেক্টার থাকতে হয় "</string>
-    <string name="error_IARG_102">"অবৈধ আর্গুমেন্ট "</string>
-    <string name="error_IARG_103">অযাচাইকৃত ক্যাটাগরি</string>
-    <string name="error_IARG_104">"অবৈধ রেটিং "</string>
-    <string name="error_IARG_105">"ওয়েবসাইটটি একটি বৈধ ইউআরএল নয় "</string>
-    <string name="error_IARG_106">"এই ই-মেইম ঠিকানাটি  বৈধ নয় "</string>
-    <string name="error_IARG_107">"অবৈধ ফ্ল্যাগ "</string>
-    <string name="error_IARG_108">"অবৈধ মন্তব্য "</string>
-    <string name="error_IARG_109">"অবৈধ ভোট "</string>
-    <string name="error_IARG_110">" অবৈধ উত্তর "</string>
-    <string name="error_IARG_200">"অবৈধ লগইন টোকেন "</string>
-    <string name="error_IARG_201">"অবৈধ লগইন মোড "</string>
-    <string name="error_IARG_300">"অবৈধ কাস্টম ক্যাটাগরি "</string>
-    <string name="error_IARG_301">"অবৈধ ক্যাটাগরি "</string>
-    <string name="error_IARG_302">"অ্যাপ্লিকেশনটি ইতিমধ্যে  এই  ক্যাতাগরিতে রয়েছে "</string>
-
-    <string name="error_AUTH_1">অযাচাইকৃত লগইন ক্রেডেনশিয়াল!</string>
-    <string name="error_AUTH_2">অযাচাইকৃত ক্রেডেনশিয়ালস!</string>
-    <string name="error_AUTH_3">আপনার অ্যাকাউন্ট বাতিল করা হয়েছে। কোন ধরনের প্রশ্নের জন্য, অ্যাপটোয়িড সাপোর্ট টিমের সাথে যোগাযোগ করুন।</string>
-    <string name="error_AUTH_4">"এইচম্যাক প্রমাণীকরণ ব্যর্থতা "</string>
-    <string name="error_AUTH_100">গুগল দিয়ে লগইন করা যাচ্ছে না। অনুগ্রহ করে আপনার গুগল অ্যাকাউন্ট চেক করুন ( আপনার ইমেইল ঠিকানা যাচাই করার প্রয়োজন হতে পারে)।</string>
-    <string name="error_AUTH_101">গুগল দিয়ে লগইন করা যাচ্ছে না। অনুগ্রহ করে আবার চেষ্টা করুন।</string>
-    <string name="error_AUTH_102">ফেসবুক দিয়ে লগইন করা যাচ্ছে না। অনুগ্রহ করে আপনার ফেসবুক অ্যাকাউন্ট চেক করুন ( আপনার ইমেইল ঠিকানা যাচাই করার প্রয়োজন হতে পারে)।</string>
-    <string name="error_AUTH_103">ফেসবুক দিয়ে লগইন করা যাচ্ছে না। অনুগ্রহ করে আবার চেষ্টা করুন।</string>
-
-    <string name="error_WOP_6">মন্তব্য করার জন্য আপনাকে আপনার নাম প্রবেশ করাতে হবে (এটা দেখা যাবে)</string>
-    <string name="error_WOP_7">"মন্তব্য ত্রুটি "</string>
-    <string name="error_WOP_8">"মন্তব্য ভোট ত্রুটি "</string>
-    <string name="error_WOP_9">" ই-মেইলটি  ইতিমধ্যে সিস্টেমে বিদ্যমান  "</string>
-    <string name="error_WOP_10">"প্রদত্ত ই-মেইলটি এখনো সিস্টেমের মধ্যে বিদ্যমান নয় "</string>
-    <string name="error_WOP_11">ষ্টোর তৈরি করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।</string>
-
-    <string name="error_REPO_1">ষ্টোরটি বিদ্যমানই নেয়।</string>
-    <string name="error_REPO_2">ষ্টোর বাতিল করা হয়েছে।</string>
-    <string name="error_REPO_3">ষ্টোর এই ব্যবহারকারীর মালিকানাধীন নয়।</string>
-    <string name="error_APK_1">"প্রদত্ত তথ্য এবং ভার্সনের সাথে এই অ্যাপ্লিকেশন খোলা যাচ্ছে না "</string>
-    <string name="error_APK_4">এই অ্যাপ খোলা যাচ্ছে না</string>
-    <string name="error_SYS_1">"একটি অজানা ত্রুটি দেখা দিয়েছে, অনুগ্রহ করে আবার চেষ্টা করুন  "</string>
-    <string name="error_SYS_2">"কোন তথ্য নেই, অনুগ্রহ করে পরে আবার চেষ্টা করুন। "</string>
-    <string name="error_SYS_3">সিস্টেম রক্ষণাবেক্ষণ চলছে, অনুগ্রহ করে পরে আবার চেষ্টা করুন</string>
-    <string name="error_SYS_4">"এই কলটি বর্তমান এপিআই সংস্করণ দ্বারা সমর্থিত নয় "</string>
-    <string name="please_wait">অনুগ্রহপূর্বক অপেক্ষা করুন…</string>
-    <string name="feedback_subject">"বিষয় "</string>
-    <string name="feedback_include_logs">স্ক্রিনশট এবং লগ অন্তর্ভুক্ত করুন</string>
-    <string name="feedback_no_email">কোন ইমেইল ক্লায়েন্ট ইনস্টল করা হয়নি!</string>
-    <string name="store_already_added">স্টোর ইতিমধ্যে যোগ করা হয়েছে!</string>
-    <string name="no_permissions_required">এই অ্যাপের জন্য অনুমতির দরকার নেই।</string>
-    <string name="restore">ইনস্টল করুন</string>
-
-    <string name="ip_blacklisted">"ব্ল্যাকলিস্টে থাকা আইপি "</string>
-    <string name="apk_not_found">"এপিকে পাওয়া জায়নি "</string>
-    <string name="invalid_apk">"অবৈধ এপিকে "</string>
-    <string name="remote_in_nospace">আপনার ডিভাইসে যথেষ্ট জায়গা নেই।</string>
-    <string name="server_error">সার্ভারের ত্রুটি</string>
-    <string name="paidapp_not_found">অ্যাপ ডাউনলোডে সমস্যা হচ্ছে। আবার চেষ্টা করুন বা সাপোর্টে যোগাযোগ করুন।</string>
-    <string name="sd_error">এসডি কার্ডে লেখা যায়নি।</string>
-    <string name="sd_error_jolla">সঠিকভাবে ডাউনলোড করা যায়নি</string>
-    <string name="starting_download">"ডাউনলোড শুরু হচ্ছে "</string>
-    <string name="finished_install">%s ইন্সটল হয়েছে।</string>
-    <string name="aptoide_downloading">%s ডাউনলোড হচ্ছে</string>
-    <string name="remaining_time">অবশিষ্ট</string>
-    <string name="download_retry">"পুনরায় চেষ্টা করুন "</string>
-    <string name="error503">উফ্‌... এটা কি শুধু আমি নাকি সবাই একই সাথে অ্যাপ ইন্সটল করছে?</string>
-    <string name="having_some_trouble">কিছু সমস্যা হয়েছে। আপনি কি কিছুক্ষণ পর আবার চেষ্টা করবেন?</string>
-
-    <string name="reply">ভোট
-উত্তর</string>
-    <string name="vote_down">"ভোট ডাউন "</string>
-    <string name="vote_up">"ভোট আপ "</string>
-    <string name="votes">%s ভোট</string>
-
-    <string name="adult_pin_wrong">প্রাপ্তবয়স্ক
-ভুল পিন, আবার চেষ্টা করুন।</string>
-    <string name="request_adult_pin">আনলক করতে পিনটি দিন</string>
-    <string name="are_you_adult">আপনার বয়স কি অন্তত ২১ বছর?</string>
-    <string name="facebook_logout_and_login">"লগআউট করুন এবং ফেসবুক দিয়ে লগইন করুন "</string>
-
-    <string name="schDown_nodownloadselect">"কোন ডাউনলোড বাছাই করা হয়নি "</string>
-    <string name="schDown_installselected">ইনস্টল নির্বাচিত</string>
-    <string name="schDown_removeselected">"বাছাইকৃতটি অপসারণ করুন "</string>
-    <string name="schDown_invertselection">"বাছাই পরিবর্তন করুন "</string>
-
-    <string name="schDwnBtn">"ডাউনলোডের সময় নির্ধারণ করে দিন "</string>
-    <string name="schDown_install">আপনি কি নির্ধারিত ডাউনলোডসমূহ ইন্সটল করতে চান?</string>
-    <string name="installed_tab">ট্যাব নামসমূহ
-ইনস্টলকৃত</string>
-    <string name="updates_tab">আপডেটসমূহ</string>
-
-    <string name="menu_context_reparse">পুনরায় লোড করুন</string>
-    <string name="menu_context_remove">অপসারণ</string>
-
-    <string name="see_top_stores">"জনপ্রিয় ষ্টোর দেখুন "</string>
-    <string name="store_name">"ষ্টোরের নাম "</string>
-    <string name="insert_store_name">ষ্টোরের নাম প্রবেশ করান:</string>
-    <string name="no_excluded_updates">"কোন বাদ দেওয়া আপডেট নেই "</string>
-    <string name="no_excluded_updates_selected">"কোন বাদ দেওয়া আপডেট বাছাই করা হয়নি "</string>
-    <string name="exclude_update">আপডেট অগ্রাহ্য করুন</string>
-    <string name="cancel">মূল্যপরিশোধ 
-বাতিল</string>
-    <string name="no_payments_available">কোন পেমেন্ট পাওয়া যায়নি।</string>
-    <string name="failed_auth_code">অ্যাকাউন্ট অথোরাইজ করতে ব্যর্থ। আবার চেষ্টা করুন।</string>
-    <string name="error_occured_paying">একটি ত্রুটি দেখা দিয়েছে। পেমেন্ট সম্পন্ন হয়েছিল না।</string>
-    <string name="account">অ্যাকাউন্ট</string>
-    <string name="buy">"কিনুন "</string>
-    <string name="change_payment">পিছনে</string>
-    <string name="rollback_installed">"ইনস্টল করা হয়েছে "</string>
-    <string name="rollback_uninstalled">"আনইনস্টল করা হয়েছে "</string>
-    <string name="rollback_updated">আপডেট করা হয়েছে</string>
-    <string name="rollback_downgraded">"ডাউনগ্রেড করা হয়ছে "</string>
-    <string name="install">ইনস্টল</string>
-    <string name="cannot_uninstall_self">ইনস্টলার আনইনস্টল করা যাবে না।</string>
-    <string name="at_time">অতে %s</string>
-    <string name="root_access_dialog">আপনার রুট আছে বলে মনে হয়। আপনি কি ডাউনলোডের পরে অ্যাপ্লিকেশন স্বয়ংক্রিয়ভাবে ইনস্টল করার অনুমতি দিতে চান?</string>
-    <string name="downgrade_requires_uninstall">ডাউনগ্রেডের জন্য অ্যাপ্লিকেশন আনইন্সটল করতে হবে</string>
-
-    <string name="order_popup_title3">প্রাপ্তবয়স্ক বিষয়বস্তু</string>
-    <string name="invite_friends">বন্ধুদের আমন্ত্রণ জানান</string>
-    <string name="facebook_timeline_friends_invited">বন্ধুরা আমন্ত্রিত!</string>
-    <string name="select_friends_to_invite">আপনার বন্ধুদের আমন্ত্রণ জানাতে তাদের বাছাই করুন!</string>
-    <string name="facebook_friends_list_using_timeline">"আপনি কি অ্যাপ্টয়িড সোশ্যাল টাইমলাইন ব্যবহার করছেন?  "</string>
-    <string name="and">এবং</string>
-    <string name="more_friends">"আরও "</string>
-    <string name="facebook_friends_list_using_timeline_empty">সোশ্যাল টাইমলাইনের মাধ্যমে আপনি সুযোগ পাবেন অ্যাপ্লিকেশনটিকে আপনার ফেসবুক বন্ধুদের সাথে শেয়ার করার। আপনি কি নেটওয়ার্কটিতে যোগ দিতে চান?</string>
-    <string name="X_download_number">%s সম্পন্ন।</string>
-    <string name="timeline_not_compatible">উহ্‌... এই ফিচারটি আপনার অ্যান্ড্রয়েড ভার্সনের সাথে সামঞ্জস্যপূর্ণ নয়</string>
-    <string name="sponsored">স্পন্সর প্রাপ্ত</string>
-    <string name="friends_installs">"আপনার বন্ধুরা যেসব ইনস্টল করেছেন "</string>
-    <string name="recommended_for_you">আপনার জন্য সুপারিশকৃত</string>
-    <string name="highlighted_apps">"হাইলাইট করা "</string>
-    <string name="button_more">"আরও "</string>
-    <string name="unhide_post">"লুকানো নয় "</string>
-    <string name="hide_post">"লুকানো "</string>
-    <string name="like">লাইক</string>
-    <string name="comment">মন্তব্য</string>
-    <string name="hide_post_info">"আপনার বন্ধুরা এই পোস্ট দেখবেন না "</string>
-    <string name="timeline_like">"পছন্দ "</string>
-    <string name="likes">"পছন্দ "</string>
-    <string name="unlike">"অপছন্দ "</string>
-    <string name="timeline_empty_no_friends_send_email">মনে হচ্ছে আপনার বন্ধুরা ফেসবুক দিয়ে অ্যাপটোইডে লগইন করেননি। ফেসবুক অ্যাকাউন্ট দিয়ে লগইন করানোর জন্য তাদের একটি ই-মেইল পাঠান</string>
-    <string name="timeline_empty_send_email_to_friends">"বন্ধুদের ই-মেইল করুন "</string>
-    <string name="aptoide_timeline">"অ্যাপ্টয়িড টাইমলাইন "</string>
-    <string name="timeline_email_invitation">আপনাকে অ্যাপটোইড সোশ্যাল টাইমলাইনে যোগ দেওয়ার আমন্ত্রণ জানিয়েছেন। সংযুক্ত থাকুন!</string>
-    <string name="timeline_email_how_to_join">আপনি কিভাবে সোশ্যাল টাইমলাইনে যোগ দিতে পারবেন?</string>
-    <string name="timeline_email_step1">১- অ্যাপটোইডের সর্বশেষ সংস্করন ডাউনলোড করুন:</string>
-    <string name="timeline_email_step2">"২- \"সোশ্যাল টাইমলাইন\" ট্যাবে যান এবং নেটওয়ার্কে যোগ দিন   "</string>
-    <string name="facebook_start_timeline">" সোশ্যাল টাইমলাইনে যোগ দিন "</string>
-    <string name="facebook_join_friends">আপনি কি তাদের সাথে সোশ্যাল টাইমলাইনে যোগ দিতে চান?</string>
-    <string name="timeline_is_empty_no_friends">আপনার টাইমলাইন খালি। এর কারণ সম্ভবত আপনার অ্যাপটোইডে কোন বন্ধু নেই অথবা তারা কোন পোস্ট করেনি।</string>
-    <string name="review_good">ভাল</string>
-    <string name="size">আকার</string>
-    <string name="store_username">"ব্যবহারকারীর নাম "</string>
-    <string name="store_password">পাসওয়ার্ড</string>
-    <string name="asksetadultpinmessage">সেটিংস
-আপনি কি প্রাপ্তবয়স্ক বিষয়বস্তু আনলক করার জন্য একটি পিন সেট করতে চান?</string>
-    <string name="setpin">"পিন সেট করুন "</string>
-    <string name="remove_mature_pin_title">"প্রাপ্তবয়স্ক বিষয়বস্তু  পিন অপসারণ করুন  "</string>
-    <string name="remove_mature_pin_summary">"প্রাপ্তবয়স্ক বিষয়বস্তু আনলক করার পিন অপসারণ করুন "</string>
-    <string name="set_mature_pin_title">"প্রাপ্তবয়স্ক বিষয়বস্তু পিন সেট করুন "</string>
-    <string name="set_mature_pin_summary">"প্রাপ্তবয়স্ক বিষয়বস্তু আনলক করতে একটি পিন সেট করুন "</string>
-    <string name="settings_title_bar">"সেটিংস "</string>
-    <string name="settings_dwn_network_rules">"মোবাইল নেটওয়ার্ক অপশন "</string>
-    <string name="setting_icon_download_rules">"আইকন ডাউনলোড করার নিয়ম "</string>
-    <string name="setting_3g">৩জি</string>
-    <string name="setting_4g">৪জি</string>
-    <string name="setting_ethernet">ইথারনেট</string>
-    <string name="setting_general_download_rules">সাধারণ ডাউনলোড বিধি</string>
-    <string name="setting_hwspecstitle">"হার্ডওয়্যার বিবরণ "</string>
-    <string name="setting_hwspecssum">"আপনার ফোনের হার্ডওয়্যার সংক্রান্ত তথ্য "</string>
-    <string name="setting_appfiltersum">এই ডিভাইসের সাথে সামঞ্জস্যপূর্ণ নয় এমন অ্যাপ্লিকেশন দেখাবেন না</string>
-    <string name="setting_appfiltertitle">" অ্যাপ্লিকেশন ফিল্টার করুন "</string>
-    <string name="setting_mature_filtering">"প্রাপ্তবয়স্ক বিষয়বস্তু "</string>
-    <string name="setting_updates">আপডেট</string>
-    <string name="update_all">"সব আপডেট করুন "</string>
-    <string name="setting_updates_notification_sum">নতুন আপডেট নোটিফিকেশন দেখান</string>
-    <string name="setting_updates_notification_title">"আপডেট নোটিফিকেশন "</string>
-    <string name="setting_auto_update_sum">"অ্যাপ্লিকেশনের স্বয়ংক্রিয় আপডেট সক্রিয় করুন "</string>
-    <string name="setting_auto_update_title">স্বয়ংক্রিয় আপডেট সক্রিয় করুন</string>
-    <string name="show_all_updates">বিভিন্ন সিগনেচারের অ্যাপ্লিকেশনের জন্য আপডেট দেখাবেন না</string>
-    <string name="setting_allUpdates_filtering">" আপডেট ফিল্টার করুন "</string>
-    <string name="setting_schdwninstalltitle">স্বয়ংক্রিয় ইনস্টল</string>
-    <string name="setting_clear_memory">স্টোরেজ</string>
-    <string name="clearcontent_title">"তথ্য ও কনফিগারেশন অপসারণ করুন "</string>
-    <string name="settings_maxFileCache_sum">"আপনার এপিকে ফাইল রাখাআর একটি সর্বোচ্চ আকার নির্ধারণ করুন  "</string>
-    <string name="settings_maxFileCache_title">ডাউনলোড ফাইল ক্যাশে (মেগাবাইট)</string>
-    <string name="change_theme">"থিম বদলান "</string>
-    <string name="theme">"থিম "</string>
-    <string name="root">"রুট "</string>
-    <string name="allow_root">"রুট ইনস্টলেশনের  অনুমতি দিন "</string>
-    <string name="disable_social_timeline">"সোশ্যাল টাইমলাইন নিষ্ক্রিয় করুন "</string>
-    <string name="social_timeline_notifications">" টাইমলাইন নোটিফিকেশন "</string>
-    <string name="about_us">"আমাদের সম্পর্কে "</string>
-    <string name="restart_aptoide">"থিম বদলানর জন্য অনুগ্রহ করে অ্যাপ্লিকেশনটি পুনরায় আরম্ভ করুন "</string>
-    <string name="setting_sdk_version">"এসডিকে এর ভার্সন "</string>
-    <string name="setting_screen_size">"স্ক্রিনের আকার "</string>
-    <string name="setting_esgl_version">"ইএসজিএল ভার্সন "</string>
-    <string name="screenCode">স্ক্রিন কোড</string>
-    <string name="cpuAbi">"সিপিইউ "</string>
-    <string name="about_site">ওয়েবসাইট:</string>
-    <string name="about_mail">যোগাযোগ:</string>
-    <string name="clear_cache_sucess">"বিষয়বস্তু সফলভাবে মুছে ফেলা হয়েছে "</string>
-    <string name="clearcontent_sum">এসডি কার্ড থেকে তথ্য মুছে ফেলা।</string>
-    <string name="cache_using_X_mb">%s মেগাবাইট ব্যবহৃত হচ্ছে</string>
-    <string name="clearcache_sum">এসডি কার্ড থেকে ক্যাচে (আইকন, স্ক্রিনশট) মুছে ফেলে।</string>
-    <string name="clearcontent_sum_jolla">তথ্য মুছে ফেলে</string>
-    <string name="clearcache_sum_jolla">"ক্যাশে মুছে ফেলে (আইকন, স্ক্রিনশট) "</string>
-    <string name="flag_this_app_good">"ভাল "</string>
-    <string name="flag_this_app_button_text">"এই অ্যাপ্লিকেশন ফ্ল্যাগ করুন "</string>
-    <string name="appview_rating_card_text">"রেটিং "</string>
-    <string name="flag_this_app_fake">"নকল "</string>
-    <string name="flag_this_app_freeze">"স্থবির "</string>
-    <string name="flag_this_app_virus">ভাইরাস</string>
-    <string name="appview_recommended_for_you_title">"আপনার জন্য সুপারিশকৃত "</string>
-    <string name="appview_comment_reply_button_text">" উত্তর "</string>
-    <string name="appview_header_trusted_text">"বিশ্বস্ত "</string>
-    <string name="appview_rate_this_app_text">"এই অ্যাপটি রেট করুন "</string>
-    <string name="ignoreUpdateText">"আপডেট অগ্রাহ্য করুন "</string>
-    <string name="active">সক্রিয়</string>
-    <string name="completed">সম্পন্ন</string>
-    <string name="comments">"মন্তব্য "</string>
-    <string name="write_your_comment">"আপনার মন্তব্য লিখুন "</string>
-    <string name="abTest1_label_2">ইনস্টল</string>
-    <string name="abTest1_label_3">ইনস্টল</string>
-
-
-    <string name="updates_tab_adapter_uninstalled">আনইনস্টলকৃত</string>
-    <string name="updatesTabAdapterUninstall">আনইনস্টল</string>
-    <string name="flag_good">ভাল</string>
-    <string name="flag_fake">নকল</string>
-    <string name="flag_freeze">স্থবির</string>
-    <string name="flag_virus">ভাইরাস</string>
-    <string name="flag_this_app">অ্যাপ্লিকেশনটি ফ্ল্যাগ করুন</string>
-    <string name="warning">সতর্কবার্তা</string>
-  <string name="no_pass_error_message">অনুগ্রহপূর্বক রেজিষ্টার করতে পাসওয়ার্ড অনুপ্রবেশ করুন।</string>
-  <string name="no_email_error_message">অনুগ্রহপূর্বক রেজিষ্টার করতে একটি ইমেইল অনুপ্রবেশ করুন।</string>
-  <string name="unsubscribe">আনসাবস্ক্রাইব</string>
-  <string name="all_stores">সকল স্টোরসমূহ</string>
-  <string name="followed_stores">অনুসরণকৃত স্টোরসমূহ</string>
+<?xml version="1.0" encoding="utf-8"?>
+<!--Generated by crowdin.com-->
+<resources>
+  <!-- Error Messages -->
+  <string name="error_MARG_1">যায়গা নেই</string>
+  <string name="error_MARG_2">অ্যাপ তথ্য নেই</string>
+  <string name="error_MARG_3">অ্যাপ সংস্করণ নেই</string>
+  <string name="error_MARG_4">লগইন নেই</string>
+  <string name="error_MARG_5">অ্যাপ নেই</string>
+  <string name="error_MARG_6">এমডি৫ ডাটা নেই</string>
+  <string name="error_MARG_7">প্যাকেজ প্যারামিটার নেই</string>
+  <string name="error_MARG_8">এইচম্যাক প্যারামিটার নেই</string>
+  <string name="error_MARG_9">সীমা প্যারামিটার নেই</string>
+  <string name="error_MARG_10">অফসেট প্যারামিটার নেই</string>
+  <string name="error_MARG_11">লাাং প্যারামিটার নেই</string>
+  <string name="error_MARG_100">অ্যাপ নাম নেই</string>
+  <string name="error_MARG_101">বর্ণনা নেই</string>
+  <string name="error_MARG_102">ক্যাটাগরি নেই</string>
+  <string name="error_MARG_103">মূল্যায়ন নেই</string>
+  <string name="error_MARG_104">ফ্ল্যাগ নেই</string>
+  <string name="error_MARG_105">মন্তব্য নেই</string>
+  <string name="error_MARG_106">ভোট নেই</string>
+  <string name="error_MARG_107">লেখা নেই</string>
+  <string name="error_MARG_108">পছন্দ প্যারামিটার পাওয়া যাচ্ছে না</string>
+  <string name="error_MARG_109">ইমেইল প্যারামিটার নেই</string>
+  <string name="error_MARG_110">পাসহাস প্যারামিটার নেই</string>
+  <string name="error_MARG_111">নামের প্যারামিটার নেই</string>
+  <string name="error_MARG_112">ব্যবহারকারী-এজেন্ট প্যারামিটার নেই</string>
+  <string name="error_MARG_113">হ্যাস প্যারামিটার নেই</string>
+  <string name="error_MARG_200">যাচাইকরন ত্রুটি</string>
+  <string name="error_MARG_201">ভুল ব্যবহারকারী নাম এবং পাসওয়ার্ডের মিশ্রণ</string>
+  <string name="error_MARG_202">অকার্যকর টোকেন বা ব্যবহারকারী/পাস</string>
+  <string name="error_IARG_1">অকার্যকর স্টোর</string>
+  <string name="error_IARG_2">অকার্যকর লগইন</string>
+  <string name="error_IARG_3">অকার্যকর আইডেন্টিফায়ার</string>
+  <string name="error_IARG_4">অকার্যকর এমডি৫ ডাটা</string>
+  <string name="error_IARG_5">অকার্যকর এইচম্যাক ফরমেট</string>
+  <string name="error_IARG_6">অকার্যকর ভাষা</string>
+  <string name="error_IARG_100">একটি মন্তব্যে সর্বনিম্ন যে পরিমান অক্ষর অনুমোদিত তা হলো ১০ টি</string>
+  <string name="error_IARG_101">একটি প্রতিক্রিয়ার মন্তব্যে সর্বনিম্ন যে পরিমান অক্ষর অনুমোদিত তা হলো ১০ টি</string>
+  <string name="error_IARG_102">অকার্যকর যুক্তি</string>
+  <string name="error_IARG_103">অকার্যকর ক্যাটাগরি</string>
+  <string name="error_IARG_104">অকার্যকর মূল্যায়ন</string>
+  <string name="error_IARG_105">ওয়েবসাইটি কোন কার্যকর ইউআরএল নয়</string>
+  <string name="error_IARG_106">ই-মেইল ঠিকানাটি কার্যকর কিছু নয়</string>
+  <string name="error_IARG_107">অকার্যকর ফ্ল্যাগ</string>
+  <string name="error_IARG_108">অকার্যকর মন্তব্য</string>
+  <string name="error_IARG_109">অকার্যকর ভোট</string>
+  <string name="error_IARG_110">অকার্যকর প্রতিক্রিয়া মন্তব্য</string>
+  <string name="error_IARG_200">অকার্যকর লগইন টোকেন</string>
+  <string name="error_IARG_201">অকার্যকর লগইন মুড</string>
+  <string name="error_IARG_300">অকার্যকর কাস্টম ক্যাটাগরি</string>
+  <string name="error_IARG_301">অকার্যকর ক্যাটাগরি</string>
+  <string name="error_IARG_302">অত্র ক্যাটাগরিতে অ্যাপ্লিকেশন প্রোভাইডার ইতিমধ্যে রয়েছে</string>
+  <string name="error_AUTH_1">অকার্যকর লগইন প্রমানাদি!</string>
+  <string name="error_AUTH_2">অকার্যকর প্রমানপত্র!</string>
+  <string name="error_AUTH_3">আপনার একাউন্টটি বাতিল করা হয়েছে। যেকোন প্রশ্নের জন্য, অ্যাপটোইড সহায়তা দলের সাথে যোগাযোগ করুন।</string>
+  <string name="error_AUTH_4">এইচম্যাক যাচাইকরন ব্যর্থতা</string>
+  <string name="error_AUTH_100">গুগল দিয়ে লগইন করা যায়নি। অনুগ্রহপূর্বক আপনার গুগল একাউন্ট পরীক্ষা করুন (আপনাকে হয়তো আপনার ইমেইল যাচাইকরন করতে হবে)।</string>
+  <string name="error_AUTH_101">গুগল দিয়ে লগইন করা যায়নি। অনুগ্রহপূর্বক পুনরায় চেষ্টা করুন।</string>
+  <string name="error_AUTH_102">ফেসবুক দিয়ে লগইন করা যায়নি। অনুগ্রহপূর্বক আপনার ফেসবুক একাউন্ট পরীক্ষা করুন (আপনাকে হয়তো আপনার ইমেইল যাচাইকরন করতে হবে)।</string>
+  <string name="error_AUTH_103">ফেসবুক দিয়ে লগইন করা যায়নি। অনুগ্রহপূর্বক পুনরায় চেষ্টা করুন।</string>
+  <string name="error_WOP_6">একটি মন্তব্য যোগ করতে আপনাকে আপনার নাম অনুপ্রবেশ করাতে হবে (এটি প্রদর্শন করা হবে)</string>
+  <string name="error_WOP_7">মন্তব্য ত্রুটি</string>
+  <string name="error_WOP_8">মন্তব্য ভোট ত্রুটি</string>
+  <string name="error_WOP_9">যে ইমেইলটি দেয়া হয়েছে তা ইতিমধ্য সিস্টেমে বিদ্যমান</string>
+  <string name="error_WOP_10">যে ইমেইলটি প্রদান করা হয়েছে তা অদ্যবধি সিস্টেমে বিদ্যমান নেই</string>
+  <string name="error_WOP_11">স্টোরটি তৈরী করা যাচ্ছে না। অনুগ্রহপূর্বক পুনরায় চেষ্টা করুন।</string>
+  <string name="error_REPO_1">স্টোরটি বিদ্যমান নেই।</string>
+  <string name="error_REPO_2">স্টোরটি বাতিল করা হয়েছে।</string>
+  <string name="error_REPO_3">স্টোরটি এই ব্যবহারকারীর সম্পত্তি নয়।</string>
   <string name="error_REPO_4_no_store">আপনার একাউন্টে কোন স্টোর তৈরী করা নেই। পর্যলোচনার জন্য আপনাকে একটি তৈরী করতে হবে।</string>
   <string name="error_REPO_7">এই ব্যবহারকারীর ইতিমধ্যে একটি সঠিক স্টোর আছে।</string>
-
-  <string name="error_APK_Description">বর্ণনা নেই</string>
-
+  <string name="error_APK_1">প্রদানকৃত তথ্য ও সংস্করন দিয়ে অ্যাপটি চালু হচ্ছে না</string>
+  <string name="error_APK_4">অ্যাপটি চালু হচ্ছেনা</string>
+  <string name="error_APK_Description">বিস্তারিত পাওয়া যায়নি</string>
+  <string name="error_SYS_1">একটি অজানা ত্রুটি হয়েছে। অনুগ্রহপূর্বক পুনরায় চেষ্টা করুন</string>
+  <string name="error_SYS_2">কোন তথ্য নেই। অনুগ্রহপূর্বক পরে পুনরায় চেষ্টা করুন</string>
+  <string name="error_SYS_3">সিস্টেম সংস্কারের কাজ চলছে, অনুগ্রহপূর্বক পরে পুনরায় চেষ্টা করুন</string>
+  <string name="error_SYS_4">এই কলটি বর্তমান এপিআই সংস্করন কর্তৃক সমর্থিত নয়</string>
   <string name="error_SYS_Billing">এই ডিভাইসে ইন-অ্যাপ বিলিং সাপোর্টযোগ্য নয়।</string>
-
   <string name="error_410">দু:খিত, এই সার্ভারে অনুরোধকৃত অ্যাপ পাওয়া যায়নি।</string>
-
+  <string name="please_wait">অনুগ্রহপূর্বক অপেক্ষা করুন…</string>
   <string name="simple_error_occured">একটি ত্রুটি সংঘটিত হয়েছে। </string>
   <string name="yes">হ্যাঁ</string>
   <string name="no">না</string>
+  <string name="feedback_subject">বিষয় </string>
   <string name="feedback_to_write2">আপনার প্রতিক্রিয়ার জন্য এখানে লিখুন...
 
 
@@ -292,57 +93,159 @@
 যে ধাপসমূহ আপনার সম্পন্ন
 
 ত্রুটিসমূহ যা আপনি দেখছেন</string>
+  <string name="feedback_include_logs">স্ক্রিনশট এবং লগ অন্তর্ভুক্ত করুন</string>
+  <string name="feedback_no_email">কোন ইমেইল গ্রাহক ইনস্টল করেনি!</string>
+  <string name="store_already_added">স্টোর ইতিমধ্যে যোগ করা হয়েছে!</string>
   <string name="subscribe_store">স্টোর সাবস্ক্রাইব</string>
-
+  <!-- App permission -->
   <string name="permissions">অ্যাপ অনুমতি
 অনুমতি সমূহ দেখুন</string>
   <string name="permissions_na">অনুমতি সমূহ: প্র/ন</string>
   <string name="additional_permissions">অতিরিক্ত অনুমোদনসমূহ</string>
-  <string name="timeout">ডাউনলোডম্যানেজার
-নেটওয়ার্ক সংযোগ টাইমআউট</string>
-  <string name="connection_error">নেটওয়ার্ক সংযোগ বিহীণ</string>
+  <string name="no_permissions_required">এই অ্যাপের জন্য অনুমতির দরকার নেই।</string>
+  <string name="restore">ইনস্টল</string>
+  <!-- DownloadManager -->
+  <string name="timeout">নেটওয়ার্ক সংযোগের সময়সীমা শেষ</string>
+  <string name="ip_blacklisted">ব্ল্যাকলিস্টে থাকা আইপি </string>
+  <string name="connection_error">নেটওয়ার্ক সংযোগ বিচ্ছিন্ন</string>
+  <string name="apk_not_found">এপিকে পাওয়া জায়নি </string>
+  <string name="invalid_apk">অবৈধ এপিকে </string>
+  <string name="remote_in_nospace">আপনার ডিভাইসে যথেষ্ট জায়গা নেই।</string>
+  <string name="server_error">সার্ভারের ত্রুটি</string>
+  <string name="paidapp_not_found">অ্যাপ ডাউনলোডে সমস্যা হচ্ছে। আবার চেষ্টা করুন বা সাপোর্টে যোগাযোগ করুন।</string>
+  <string name="sd_error">এসডি কার্ডে লেখা যায়নি।</string>
+  <string name="sd_error_jolla">সঠিকভাবে ডাউনলোড করা যায়নি</string>
+  <string name="starting_download">ডাউনলোড শুরু হচ্ছে </string>
   <string name="installing">%s ইনস্টলরত…</string>
+  <string name="finished_install">%s ইন্সটল হয়েছে।</string>
+  <string name="aptoide_downloading">%s ডাউনলোড হচ্ছে</string>
+  <string name="remaining_time">অবশিষ্ট</string>
   <string name="data_usage_constraint">সেটিংসে ডাউনলোড অনুমোদনযোগ্য নয় &gt; সাধারন ডাউনলোড নিয়মাবলী</string>
   <string name="download_pending">অপেক্ষারত</string>
-
-  <string name="casting_vote">ভোট দিচ্ছে…</string>
-  <string name="vote_submitted">আপনার ভোট সফলভাবে প্রদানকৃত</string>
+  <!-- layouts -->
+  <string name="download_retry">পুনচেষ্টা</string>
+  <string name="error503">উফ্‌... এটা কি শুধু আমি নাকি সবাই একই সাথে অ্যাপ ইন্সটল করছে?</string>
+  <string name="having_some_trouble">কিছু সমস্যা দেখা দিয়েছে। কিছুক্ষণ পর কি আবার চেষ্টা করে দেখবেন?</string>
+  <!-- Vote -->
+  <string name="reply">প্রত্যুত্তর</string>
+  <string name="vote_down">ভোট নিম্ন</string>
+  <string name="vote_up">ভোট দেয়া</string>
+  <string name="casting_vote">ভোট দিচ্ছি…</string>
+  <string name="vote_submitted">আপনার ভোট সফলভাবে দাখিল করা হয়েছে</string>
+  <string name="votes">%s  ভোট</string>
   <string name="reviewed_by">পর্যালোচনাকৃত - %s</string>
   <string name="installed_this">%s ইনস্টলকৃত।</string>
-
+  <!-- adult -->
+  <string name="adult_pin_wrong">প্রাপ্তবয়স্ক
+ভুল পিন, আবার চেষ্টা করুন।</string>
+  <string name="request_adult_pin">আনলক করতে পিনটি দিন</string>
+  <string name="are_you_adult">আপনার বয়স কি অন্তত ২১ বছর?</string>
+  <string name="facebook_logout_and_login">লগআউট করুন এবং ফেসবুক দিয়ে লগইন করুন </string>
+  <string name="schDown_nodownloadselect">কোন ডাউনলোড বাছাই করা হয়নি </string>
   <string name="no_sch_downloads">মোবাইল ডাটা দিয়ে অ্যাপস ব্রাউজ করতে এবং যখন আপনি ওয়াই-ফাই সংযোগে থাকবেন তথন ডাউনলোপ করতে ইচ্ছুক? তফসিলভূক্ত ডাউনলোডসমূহ এবং আপনার পছন্দের সেটিংস পরিবর্তণ করুন -&gt; সাধারন ডাউনলোড নিয়মাবলী- ওয়াইফাই এ।</string>
+  <string name="schDown_installselected">নির্বাচিত ইনস্টল করুন</string>
+  <string name="schDown_removeselected">বাছাইকৃতটি অপসারণ করুন </string>
+  <string name="schDown_invertselection">বাছাই পরিবর্তন করুন </string>
+  <string name="schDwnBtn">ডাউনলোডের সময় নির্ধারণ করে দিন </string>
+  <string name="schDown_install">আপনি কি সময়সূচিযুক্ত ডাউনলোড ইন্সটল করতে চান?</string>
   <string name="hidden_adult">কিছু অ্যাপস লুকানো রেয়েছে কারন এডাল্ট বিষয়বস্তুর ফিল্টার সচল রয়েছে। আপনি কি অ্যাপসমূহের এই তালিকা চান?</string>
   <string name="dont_show_again">এই ডায়ালগ আর প্রদর্শন করবেন না</string>
-
+  <!-- App View -->
   <string name="rollback_empty">দ্রুত সময়ে যেকোন অ্যাপকে তার পূর্বের সংস্করনে নামিয়ে দেয় এবং অসামঞ্জস্য বিষয়াবলী। সকল ইনস্টলকৃ অপসমূহ (অ্যপটোইডের মাধ্যমে) এর হিসাব রাখে যার ভেতর সংস্করণ ও ইনস্টল তারিখো অন্তর্গত।</string>
-
   <string name="see_more">আরও দেখুন</string>
   <string name="see_less">কম দেখুন</string>
   <string name="get_latest">সর্বশেষ সংস্করণটি নিন</string>
-
-  <string name="feedback_send_button">প্রতিক্রিয়া দিন</string>
-
+  <!-- Tab names -->
+  <string name="installed_tab">ইনস্টল করা হয়েছে </string>
+  <string name="updates_tab">হালনাগাদ</string>
+  <string name="feedback_send_button">প্রতিক্রিয়া বিষয়সমূহ
+প্রতিক্রিয়া প্রেরণ করুন</string>
+  <!-- NavDrawer List items -->
+  <string name="my_account">আমার অ্যাকাউন্ট</string>
+  <string name="setting_schdwntitle">সময়সূচিযুক্ত ডাউনলোড</string>
+  <string name="settings">সেটিংস</string>
+  <string name="facebook">ফেসবুক</string>
+  <string name="twitter">টুইটার</string>
+  <string name="backup_apps">ব্যাকআপ অ্যাপ</string>
+  <string name="menu_context_reparse">পুনরায় লোড করুন</string>
+  <string name="menu_context_remove">অপসারণ</string>
+  <!-- Stores -->
   <string name="search_other_stores">স্টোরসমূহ
 বা অন্যকিছুর জন্য খুঁজুন…</string>
+  <string name="see_top_stores">জনপ্রিয় ষ্টোর দেখুন </string>
+  <string name="unsubscribe">আনসাবস্ক্রাইব</string>
+  <string name="store_name">ষ্টোরের নাম </string>
+  <string name="insert_store_name">ষ্টোরের নাম প্রবেশ করান:</string>
   <string name="subscribe_pvt_store">ব্যক্তিগত স্টোর সাবস্ক্রাইব করুন</string>
-
-  <string name="install_update">আপডেট ইনস্টল করুন</string>
-
+  <!-- Network -->
+  <string name="no_excluded_updates">কোন বাদ দেওয়া আপডেট নেই</string>
+  <string name="no_excluded_updates_selected">কোন বাদ দেওয়া হালনাগাদ নির্বাচন করা হয়নি</string>
+  <string name="exclude_update">আপডেট অগ্রাহ্য করুন</string>
+  <string name="install_update">হালনাগাদ ইনস্টল করুন</string>
+  <!-- Payments -->
+  <string name="cancel">বাতিল</string>
+  <string name="no_payments_available">কোন পেমেন্ট পাওয়া যায়নি।</string>
+  <string name="failed_auth_code">অ্যাকাউন্ট অথোরাইজ করতে ব্যর্থ। আবার চেষ্টা করুন।</string>
+  <string name="error_occured_paying">একটি ত্রুটি দেখা দিয়েছে। পেমেন্ট সম্পন্ন হয়েছিল না।</string>
   <string name="error_occured_retry_later">একটি ত্রুটি সম্পাদিত হয়েছে। অ্যাপটোইড পরবর্তীতে সয়ংক্রিয়ভাবে পুন:চেষ্টা চালাবে।</string>
-  <string name="confirm_carrier_payment">"আপনি কি {value} দিয়ে \'{title}\' এ আগ্রহী? আপনাকে কর্তন করা হবে
+  <string name="account">অ্যাকাউন্ট</string>
+  <string name="confirm_carrier_payment">\"আপনি কি {value} দিয়ে \'{title}\' এ আগ্রহী? আপনাকে কর্তন করা হবে
 আপনার বাহন থেকে
- "</string>
-  <string name="billing_result">"লেনদেনের রেজাল্ট হলো: "</string>
-
-  <string name="rollback_updated_at">%1$s তে আপডেটকৃত</string>
+ \"</string>
+  <string name="buy">কিনুন </string>
+  <string name="billing_result">লেনদেনের রেজাল্ট হলো: </string>
+  <string name="change_payment">পিছনে</string>
+  <string name="rollback_installed">ইনস্টল করা হয়েছে </string>
+  <string name="rollback_uninstalled">আনইনস্টলকৃত</string>
+  <string name="rollback_updated">হালনাগাদকৃত</string>
+  <string name="rollback_updated_at">%1$s-এ হালনাগাদকৃত</string>
+  <string name="rollback_downgraded">ডাউনগ্রেড করা হয়ছে </string>
+  <string name="install">ইনস্টল</string>
+  <string name="cannot_uninstall_self">ইনস্টলার আনইনস্টল করা যাবে না।</string>
+  <string name="at_time">অতে %s</string>
+  <string name="root_access_dialog">আপনার রুট আছে বলে মনে হয়। আপনি কি ডাউনলোডের পরে অ্যাপ্লিকেশন স্বয়ংক্রিয়ভাবে ইনস্টল করার অনুমতি দিতে চান?</string>
+  <string name="downgrade_requires_uninstall">ডাউনগ্রেডের জন্য অ্যাপ্লিকেশন আনইন্সটল করতে হবে</string>
+  <string name="order_popup_title3">প্রাপ্তবয়স্ক বিষয়বস্তু</string>
   <string name="friends_to_invite">অ্যাপটোইডের অন্য সকল ফেসবুক বন্ধুরা</string>
+  <string name="invite_friends">বন্ধুদের আমন্ত্রণ জানান</string>
   <string name="timeline_is_empty_send_email">আপনি যাদের নির্বাচন করেছেন তাদের আমরা ইমেইল প্রেরণ করব</string>
-  <string name="more_reviews">পর্যালোচনা</string>
+  <string name="facebook_timeline_friends_invited">বন্ধুরা আমন্ত্রিত!</string>
+  <string name="select_friends_to_invite">আপনার বন্ধুদের আমন্ত্রণ জানাতে তাদের বাছাই করুন!</string>
+  <string name="facebook_friends_list_using_timeline">ইতিমধ্যে Aptoide সময়রেখা ব্যবহার করছেন</string>
+  <string name="and">এবং</string>
+  <string name="more_friends">আরও</string>
+  <string name="more_reviews">পর্যালোচনাসমূহ</string>
   <string name="more_editors_choice">আরো সম্পাদকীয় পছন্দ</string>
   <string name="more_versions">আরো সংস্করণ</string>
+  <string name="facebook_friends_list_using_timeline_empty">সামাজিক সময়রেখা আপনার ফেসবুক বন্ধুদের সঙ্গে অ্যাপ শেয়ার করতে দেয়। আপনার কি নেটওয়ার্কে যুক্ত হতে চান?</string>
+  <string name="X_download_number">%s সম্পন্ন।</string>
+  <string name="timeline_not_compatible">উহ্‌... এই বৈশিষ্ট্যটি আপনার অ্যান্ড্রয়েড সংস্করণের সাথে সামঞ্জস্যপূর্ণ নয়</string>
+  <string name="sponsored">স্পন্সর প্রাপ্ত</string>
+  <string name="friends_installs">আপনার বন্ধুরা যেসব ইনস্টল করেছেন </string>
+  <string name="recommended_for_you">আপনার জন্য সুপারিশকৃত </string>
+  <string name="highlighted_apps">উল্লেখযোগ্য</string>
+  <string name="button_more">আরও </string>
+  <string name="unhide_post">লুকানো নয় </string>
+  <string name="hide_post">লুকানো </string>
+  <string name="like">পছন্দ </string>
+  <string name="comment">মন্তব্য</string>
+  <string name="hide_post_info">আপনার বন্ধুরা এই পোস্ট দেখবেন না </string>
+  <string name="timeline_like">পছন্দ </string>
+  <string name="likes">পছন্দ </string>
+  <string name="unlike">অপছন্দ </string>
+  <string name="timeline_empty_no_friends_send_email">মনে হচ্ছে আপনার বন্ধুরা ফেসবুক দিয়ে অ্যাপটোইডে লগইন করেননি। ফেসবুক অ্যাকাউন্ট দিয়ে লগইন করানোর জন্য তাদের একটি ই-মেইল পাঠান</string>
+  <string name="timeline_empty_send_email_to_friends">বন্ধুদের ই-মেইল করুন </string>
+  <string name="aptoide_timeline">Aptoide সময়রেখা</string>
+  <string name="timeline_email_invitation">আপনাকে অ্যাপটোইড সময়রেখায় যোগ দেওয়ার আমন্ত্রণ জানিয়েছেন। সংযুক্ত থাকুন!</string>
+  <string name="timeline_email_how_to_join">আপনি কিভাবে সময়রেখায় যোগ দিতে পারবেন?</string>
+  <string name="timeline_email_step1">১- অ্যাপটোইডের সর্বশেষ সংস্করন ডাউনলোড করুন:</string>
+  <string name="timeline_email_step2">২- \"সামাজিক সময়রেখা\" ট্যাবে যান এবং নেটওয়ার্কে যোগ দিন</string>
   <string name="timeline_ad">ফেসবুক কর্তৃক সুপারিশকৃত অ্যাপ</string>
+  <string name="facebook_start_timeline">সামাজিক সময়রেখায় যোগ দিন</string>
+  <string name="facebook_join_friends">আপনি কি তাদের সাথে সামাজিক সময়রেখায় যোগ দিতে চান?</string>
+  <string name="timeline_is_empty_no_friends">আপনার সময়রেখা খালি। এর কারণ সম্ভবত আপনার বন্ধুরা অ্যাপটোইডে নেই অথবা তারা কোন পোস্ট করেনি।</string>
   <string name="timeline_is_empty_start_invite">কিছু বন্ধুদের আমন্ত্রনের মাধ্যমে শুরু করা যাক:</string>
-
+  <!-- Review Activity-->
   <string name="review_get_app">পর্যালোচনা কার্যক্রম</string>
   <string name="review_final_verdict">সর্বশেষ সিদ্ধান্ত</string>
   <string name="review_speed">গতি</string>
@@ -351,127 +254,205 @@
   <string name="review_stability">স্থিরতা</string>
   <string name="review_by">পর্যালোচনাকৃত
 %s</string>
-  <string name="review_title">পর্যালোচনা</string>
+  <string name="review_title">পর্যালোচনাসমূহ</string>
+  <string name="review_good">ভাল </string>
   <string name="review_bad">খারাপ</string>
   <string name="review_finish">সমাপ্ত</string>
   <string name="review_final_score">স্কোর</string>
   <string name="make_review_title">পর্যালোচনা তৈরী করুন</string>
+  <string name="size">আকার</string>
   <string name="set_sliders">স্লাইডারসমূহ নির্ধারন করুন</string>
   <string name="write_one_pro">অন্ততপক্ষে একটি প্র্রো লিখুন</string>
   <string name="write_one_con">অন্ততপক্ষে একটি কন লিখুন</string>
   <string name="write_your_final_verdict">আপনার চুড়ান্ত সিদ্ধান্ত লিখুন</string>
   <string name="review_success">সফলভাবে পর্যালোচনা দাখিল হয়েছে!</string>
-  <string name="store_privacy">স্টোর প্রাইভেসি</string>
+  <string name="store_privacy">স্টোর গোপণীয়তা</string>
   <string name="public_key">পাবলিক</string>
-  <string name="private_key">প্রাইভেট</string>
+  <string name="private_key">ব্যক্তিগত</string>
+  <string name="store_username">ব্যবহারকারী নাম</string>
+  <string name="store_password">পাসওয়ার্ড</string>
   <string name="upload_app_backup_apps_installed">প্রথমে আপনাকে এই অ্যাপটিকে আপনার স্টোরে আপলোড করতে হবে। আপনি অ্যাপটোইড ব্যাকআপ অ্যাপসমূহ ব্যবহার করতে পারেন।</string>
   <string name="upload_app_backup_apps_not_installed">প্রথমে আপনাকে এই অ্যাপটিকে আপনার স্টোরে আপলোড করতে হবে। অনুগ্রহপূর্বক অ্যাপটোইড ব্যকাআপ অ্যাপসমূহ ইনস্টল ও ব্যবহার করুন।</string>
   <string name="upload_app">অ্যাপ আডলোড</string>
   <string name="create_review">পর্যালোচনা লিখন</string>
-
+  <!-- Settings-->
+  <string name="asksetadultpinmessage">সেটিংস
+আপনি কি প্রাপ্তবয়স্ক বিষয়বস্তু আনলক করার জন্য একটি পিন সেট করতে চান?</string>
+  <string name="setpin">পিন সেট করুন </string>
+  <string name="remove_mature_pin_title">প্রাপ্তবয়স্ক বিষয়বস্তু  পিন অপসারণ করুন  </string>
+  <string name="remove_mature_pin_summary">প্রাপ্তবয়স্ক বিষয়বস্তু আনলক করার পিন অপসারণ করুন </string>
+  <string name="set_mature_pin_title">প্রাপ্তবয়স্ক বিষয়বস্তু পিন সেট করুন </string>
+  <string name="set_mature_pin_summary">প্রাপ্তবয়স্ক বিষয়বস্তু আনলক করতে একটি পিন সেট করুন </string>
+  <string name="settings_title_bar">সেটিংস</string>
+  <string name="settings_dwn_network_rules">মোবাইল নেটওয়ার্ক অপশন </string>
   <string name="setting_sum_icon_download_rules">মোবাইল ডাটা সংযোগের মাধ্যমে আইকনসমূহ ডাউনলোড সুযোগ প্রদান</string>
+  <string name="setting_icon_download_rules">আইকন ডাউনলোড করার নিয়ম </string>
   <string name="setting_wifi">ওয়াইফাই</string>
   <string name="setting_mobile">মোবাইল ৩জি/৪জি</string>
+  <string name="setting_3g">৩জি</string>
+  <string name="setting_4g">৪জি</string>
+  <string name="setting_ethernet">ইথারনেট</string>
   <string name="setting_sum_general_download_rules">অ্যাপস ডাউনলোড,সম্পাদকের পছন্দ, শীর্ষ অ্যাপসমূহ এবং স্টোরসমূহ যেগুলো মোবাইল ডাটা সংযোগের মাধ্যমে প্রবেশাধিকারপ্রাপ্ত</string>
+  <string name="setting_general_download_rules">সাধারণ ডাউনলোড বিধি</string>
+  <string name="setting_hwspecstitle">হার্ডওয়্যারের বিবরণী</string>
+  <string name="setting_hwspecssum">আপনার ফোনের হার্ডওয়্যার সংক্রান্ত তথ্য </string>
+  <string name="setting_appfiltersum">এই ডিভাইসে চলার অযোগ্য অ্যাপ্লিকেশন সমূহকে অনুগ্রহপূর্বক প্রদর্শন করবেন না</string>
+  <string name="setting_appfiltertitle">অ্যাপ্লিকেশন সমূহ ফিল্টারকরণ</string>
+  <string name="setting_category_autoupdate">%s স্বয়ংক্রিয় হালনাগাদ</string>
+  <string name="setting_category_autoupdate_title">%s স্বয়ংক্রিয় হালনাগাদ সক্রিয় করুন</string>
   <string name="setting_dont_show_mature_content">প্রাপ্তবয়স্কদের বিষয়সমূহ দেখান</string>
+  <string name="setting_mature_filtering">প্রাপ্তবয়স্ক বিষয়বস্তু</string>
+  <string name="setting_updates">হালনাগাদ</string>
+  <string name="update_all">সবগুলি হালনাগাদ করুন</string>
   <string name="whats_new">নতুন কি আছে?</string>
-  <string name="setting_schdwninstallsum">তফসিলভূক্ত ডাউনলোডসমূহ ইনস্টল করুন যখন ওয়াইফাই সংযোগ পাওয়া যাবে</string>
+  <string name="setting_updates_notification_sum">নতুন হালনাগাদের বিজ্ঞপ্তি দেখান</string>
+  <string name="setting_updates_notification_title">হালনাগাদের বিজ্ঞপ্তি</string>
+  <string name="setting_auto_update_sum">অ্যাপ্লিকেশনের স্বয়ংক্রিয় হালনাগাদ সক্রিয় করুন</string>
+  <string name="setting_auto_update_title">স্বয়ংক্রিয় হালনাগাদ সক্রিয় করুন</string>
+  <string name="show_all_updates">ভিন্ন স্বাক্ষরযুক্ত অ্যাপ্লিকেশনের জন্য হালনাগাদগুলি প্রদর্শন করবেন না</string>
+  <string name="setting_allUpdates_filtering">ফিল্টারের হালনাগাদ</string>
+  <string name="setting_schdwninstallsum">সময়সূচিযুক্ত ডাউনলোড ইনস্টল করুন যখন ওয়াইফাই সংযোগ পাওয়া যাবে</string>
+  <string name="setting_schdwninstalltitle">স্বয়ংক্রিয় ইনস্টল</string>
+  <string name="setting_clear_memory">সংগ্রহস্থল</string>
+  <string name="clearcontent_title">ডাটা মুছে ফেলা ও কনফিগারেশন সমূহ</string>
+  <string name="settings_maxFileCache_sum">আপনার এপিকে ফাইলসমূহ রাখার জন্য সর্বোচ্চ যায়গা নির্ধারণ করুন</string>
+  <string name="settings_maxFileCache_title">ফাইল ক্যাশে (এমবি) ডাউনলোড করুন</string>
+  <string name="change_theme">থিম পরিবর্তন</string>
   <string name="change_theme_soon">শীঘ্রই আসছে</string>
-  <string name="social_timeline_notifications_sum2">অ্যাপটোইড সামাজিক টাইমলাইন নোটিফিকেশন সচল করুন। আপনি নোটিফিকেশন বারে সর্বশেষ খবর সমূহ দেখতে পারবেন।</string>
+  <string name="theme">থিমস্</string>
+  <string name="root">রুট </string>
+  <string name="allow_root">রুট ইনস্টলেশনের  অনুমতি দিন </string>
+  <string name="disable_social_timeline">সামাজিক সময়রেখা নিষ্ক্রিয় করুন</string>
+  <string name="social_timeline_notifications_sum2">Aptoide সামাজিক সময়রেখার বিজ্ঞপ্তি সচল করুন। আপনি বিজ্ঞপ্তি দন্ডে সর্বশেষ খবরসমূহ দেখতে পারবেন।</string>
+  <string name="social_timeline_notifications">সময়রেখা বিজ্ঞপ্তি</string>
+  <string name="about_us">আমাদের সম্পর্কে</string>
+  <string name="restart_aptoide">থিম বদলানর জন্য অনুগ্রহ করে অ্যাপ্লিকেশনটি পুনরায় আরম্ভ করুন </string>
+  <string name="setting_sdk_version">এসডিকে সংস্করণ</string>
+  <string name="setting_screen_size">স্ক্রিন আকার</string>
+  <string name="setting_esgl_version">ইএসজিএল সংস্করণ</string>
+  <string name="screenCode">স্ক্রিন কোড</string>
+  <string name="cpuAbi">সিপিইউ</string>
+  <string name="about_site">ওয়েবসাইট:</string>
+  <string name="about_mail">যোগাযোগ:</string>
+  <string name="clear_cache_sucess">বিষয়বস্তু সফলভাবে অপসারিত হয়েছে</string>
+  <string name="clearcontent_sum">এসডি কার্ড থেকে তথ্য মুছে ফেলা।</string>
+  <string name="cache_using_X_mb">ব্যবহার হচ্ছে %s এমবি</string>
+  <string name="clearcache_sum">এসডি কার্ড থেকে ক্যাশে (আইকন, স্ক্রিনশর্টসমূহ) অপসারণ করে।</string>
+  <string name="clearcontent_sum_jolla">তথ্য মুছে ফেলে</string>
+  <string name="clearcache_sum_jolla">ক্যাশে মুছে ফেলে (আইকন, স্ক্রিনশট) </string>
   <string name="drawer_social_media_title">সংযুক্ত থাকুন</string>
   <string name="read_more">আরও পড়ুন</string>
-  <string name="read_less">কম দেখুন</string>
+  <string name="read_less">অল্প দেখুন</string>
+  <string name="flag_this_app_good">ভাল </string>
+  <string name="flag_this_app_button_text">এটি প্রতিবেদন করুন</string>
+  <string name="appview_rating_card_text">মূল্যায়ন</string>
   <string name="flag_this_app_need_licence">লাইসেন্স প্রয়োজন</string>
+  <string name="flag_this_app_fake">নকল</string>
+  <string name="flag_this_app_freeze">আটক</string>
+  <string name="flag_this_app_virus">ভাইরাস</string>
+  <string name="appview_recommended_for_you_title">আপনার জন্য সুপারিশকৃত </string>
   <string name="appview_additional_information_title">অতিরিক্ত তথ্য</string>
+  <string name="appview_comment_reply_button_text">প্রত্যুত্তর</string>
+  <string name="appview_header_trusted_text">বিশ্বস্ত</string>
   <string name="appview_subscribe_store_button_text">সাবস্ক্রাইব?</string>
   <string name="appview_subscribed_store_button_text">সাবস্ক্রাইবকৃত</string>
+  <string name="appview_rate_this_app_text">এই অ্যাপটি মূল্যায়ন করুন</string>
   <string name="appview_other_versions_in_others_stores">অন্যান্য স্টোরের অন্যান্য সংস্করণ</string>
-  <string name="appview_rate_Success">অ্যাপ রেটিংকৃত</string>
+  <string name="appview_rate_Success">অ্যাপ মূল্যায়ন করা হয়েছে</string>
+  <string name="ignoreUpdateText">হালনাগাদ অগ্রাহ্য করুন</string>
   <string name="ignored">অগ্রাহ্যকৃত</string>
-  <string name="noIgnoreUpdateText">একটি অ্যাপ এর নতুন সংস্করন আপনার ডিভাইসে কাজ করছে না বা এর কিছু অংশ পাওয়া যাচ্ছেনা? অ্যাপটিকে অবরুদ্ধ করুন আপডেট হওয়া থেকে। আপডেট ট্যাবে গমন করুন এবং অ্যাপটিকে দীর্ঘক্ষন চেপে রাখুন যেটাকে আপনি আপডেট হওয়া থেকে বিরত রাখতে চান।</string>
+  <string name="noIgnoreUpdateText">একটি অ্যাপের নতুন সংস্করণ আপনার ডিভাইসে কাজ করছে না বা এর কিছু অংশ পাওয়া যাচ্ছেনা? অ্যাপটিকে অবরুদ্ধ করুন হালনাগাদ হওয়া থেকে। হালনাগাদ ট্যাবে যান এবং অ্যাপটিকে দীর্ঘক্ষন চেপে রাখুন যেটিকে আপনি হালনাগাদ হওয়া থেকে বিরত রাখতে চান।</string>
   <string name="createReviewButtonText">তৈরী করুন
 পর্যালোচনা</string>
   <string name="navigation_drawer_signup_login">সাইন আপ বা লগইন</string>
+  <string name="active">সক্রিয়</string>
+  <string name="completed">সম্পন্ন</string>
+  <string name="stand_by">অপেক্ষমান</string>
   <string name="_downloads"> ডাউনলোড সমূহ</string>
   <string name="no_description">বিনা বর্ণনা</string>
   <string name="description">বর্ণনা</string>
   <string name="version">সংস্করণ</string>
-  <string name="version_placeholder">সংস্করণ: %s</string>
-
+  <string name="version_placeholder">সংস্করণ:%s</string>
+  <!-- Headers -->
   <string name="results_subscribed">শীর্ষসমূহ
 সাবস্ক্রাইবকৃত স্টোরসমূহ</string>
   <string name="results_in_store">%s স্টোরে ফলাফল খুঁজুন</string>
   <string name="other_stores">অসাবস্ক্রাইবকৃত স্টোরসমূহ</string>
-  <string name="reviews">পর্যালোচনা</string>
+  <string name="comments">মন্তব্যসমূহ</string>
+  <string name="reviews">পর্যালোচনাসমূহ</string>
   <string name="store">স্টোর</string>
   <string name="title_caps">শিরোনাম</string>
-
   <string name="unsubscribe_yes_no">আপনি কি নিশ্চিত যে আপনি অানসাবস্ক্রাইব হবেন?</string>
   <string name="unsubscribed_">"আনসাবস্ক্রাইবকৃত "</string>
   <string name="error_occured_uploading">আপনাকে প্রথমে এই অ্যাপটি আপলোড করতে হবে।</string>
-
-  <string name="update_self_title">অটো আপডেট
-আপডেট আছে</string>
-  <string name="update_self_msg">"এখানে %s এর নতুন একটি  সংস্করণ রয়েছে
-আপনি কি আপডেট করতে ইচ্ছুক?"</string>
-  <string name="retrieving_update">আপডেটে ফিরছে…</string>
-
+  <!-- Auto Update -->
+  <string name="update_self_title">হালনাগাদ উপলব্ধ আছে</string>
+  <string name="update_self_msg">%s-এর একটি নতুন সংস্করণ উপলব্ধ আছে,\nআপনি কি হালনাগাদ করতে ইচ্ছুক?</string>
+  <string name="retrieving_update">হালনাগাদ সংগ্রহ হচ্ছে…</string>
   <string name="menu_search_item_go_to_store">স্টোরে যাচ্ছে</string>
-  <string name="srch_hint">অ্যাপে খুঁজুন…</string>
-
+  <string name="srch_hint">অ্যাপসমূহের জন্য সার্চরত…</string>
+  <!-- Badges -->
   <string name="app_trusted">ব্যাজসমূহ
 %s হলো বিশ্বস্ত</string>
   <string name="app_warning">সতর্কবার্তা: %s</string>
-  <string name="scanned_with_av">এন্টি-ভাইরাস দিয়ে স্ক্যানকৃত:</string>
+  <string name="scanned_with_av">অ্যান্ট-ভাইরাস দিয়ে স্ক্যাণকৃত</string>
   <string name="compared_with_another_marketplace">অন্য অ্যান্ড্রয়েড মার্কেটপ্লেসের সাথে তুলনাকৃত:</string>
   <string name="application_signature_analysis">অ্যাপ্লিকেশন স্বাক্ষর ডেভেলপারের স্বাক্ষরের সাথে তুলনাকৃত:</string>
-  <string name="application_signature_matched">অ্যাপ্লিকেশন স্বাক্ষর অ্যাপ্লিকেশন ডেভেলপারের সাথে সম্পর্কিত স্বাক্ষরের সহিত মিলে গিয়েছে।</string>
-  <string name="application_signature_not_matched">অ্যাপ্লিকেশন স্বাক্ষর অ্যাপ্লিকেশন ডেভেলপার সংশ্লিষ্ট স্বক্ষরের সহিত মিলছে না। অ্যাপ্লিকেশনটি হয়তো নকল করা হয়েছে।</string>
+  <string name="application_signature_matched">অ্যাপ্লিকেশন ডেভেলপারের সাথে সম্পর্কযুক্ত স্বাক্ষরসমূহ অ্যাপ্লিকেশন স্বাক্ষরের সাথে মিলে গেছে।</string>
+  <string name="application_signature_not_matched">অ্যাপ্লিকেশন ডেভেলপারের স্বাক্ষরের সাথে অ্যাপ্লিকেশন স্বাক্ষর মিলছে না। হয়তো এটি নকল করা হয়েছে।</string>
   <string name="application_signature_blacklisted">অ্রাপ্লিকেশন স্বাক্ষরটি অ্যাপটোউড এন্টি-ম্যালওয়ার প্লাটফর্ম অনুযায়ী বিশ্বস্ত স্বাক্ষর নয় কারন এটি অন্য একটি অ্যাপ্লিকেশনের স্বাক্ষর হিসাবে ব্যবহৃত হয়েছে যা বৈধ ডেভেলপারের স্বাক্ষরের সাথে মিলছে না।</string>
   <string name="scanned_manually_by_aptoide_team">অ্যাপটোইড দল কর্তৃক ম্যানুয়ালী স্ক্যানকৃত:</string>
   <string name="scanned_verified_by_tester">অ্যাপ্লিকেশনটি অ্যাপটোইড দলের একজন পরীক্ষক কর্তৃক ম্যানুয়ালী পর্যালোচনাকৃত হয়েছে যা অ্যাপ্লিকেশনটির নিরাপত্তাকে নিশ্চিত করে।</string>
+  <string name="warning">সতর্কতা</string>
   <string name="trusted_app">বিশ্বস্ত অ্যাপ</string>
   <string name="unknown">অজানা</string>
   <string name="critical">জটিল</string>
-
+  <!-- New Badges V7 -->
   <string name="reason_third_party">আমরা অ্যাপটির স্বাক্ষর পরীক্ষা করেছি এবং এটি গুগল প্লেস্টোরের সাথে মিলেছে, তাই নিশ্চিত হন এবং উপভোগ করুন অ্যাপটি।</string>
-  <string name="reason_scanned">অ্যাপটোইড-গার্ড এবং আরো ২ টি ভিন্ন ভিন্ন এন্টি-ভাইরাস কর্তৃক স্ক্যানকৃত (জোনার ১.৮ এবং সোপোস ৩.০)।</string>
+  <string name="reason_scanned">অ্যাপটোইড গার্ডের মাধ্যমে স্ক্যানের সাথে ২ টি আলাদা এন্টি-ভাইরাস (জোনার ১.৮ ও সোপোস ৩.০)।</string>
   <string name="reason_signature">ক্রিপটোগ্রাফিক স্বাক্ষর নিশ্চিত করে যে ফাইলটি ইনস্টল করার জন্য নিরাপদ এবং কোনভাবেই এটি ভেজালযুক্ত হয়নি।</string>
   <string name="reason_manual">অ্যাপটি অ্যাপটোইডের দক্ষ দল কর্তৃক পর্যালোচনাকৃত, এবং ভালো হিসাবে নির্দেশিত।</string>
-
   <string name="reason_failed">প্রস্তুতকারকে স্বাক্ষরের সহিত অ্যাপ্লিকেশনের স্বাক্ষর মিলেনি। অ্যাপটি হয়তো ভেজাল যুক্ত।</string>
   <string name="reason_unknown">অ্যাপটো্‌ইড এন্টি-ম্যালওয়ার প্লাটফর্মে এই অ্যাপটি সম্পর্কে যথেষ্ট তথ্য নেই।</string>
-
-
-  <string name="reply_to">মন্তব্য %s</string>
-  <string name="comment_submitted">আপনার মন্তব্য সফলভাবে দাখিল করা হয়েছিল</string>
+  <!-- Comments -->
+  <string name="reply_to">%s-এ প্রত্যুত্তর দিন</string>
+  <string name="comment_submitted">আপনার মন্তব্য সফলভাবে দাখিল করা হয়েছে</string>
+  <string name="write_your_comment">আপনার মন্তব্য লিখুন</string>
   <string name="write_a_comment">একটি মন্তব্য লিখুন</string>
-  <string name="no_comment_be_the_first">অদ্যবধি মন্তব্য বিহীন। প্রথম হয়ে যান!</string>
-
+  <string name="no_comment_be_the_first">কোন মন্তব্য নেই। প্রথম হিসেবে মন্তব্য লিখুন!</string>
+  <!-- Dialogs -->
   <string name="installapp_alrt">বক্তব্যসমূহ
 আপনি কি ইনস্টল করতে আগ্রহী
 
  %s?</string>
-
   <string name="suggested_app">সুপারিশকৃত অ্যাপ</string>
-
+  <!-- ABTesting -->
   <string name="abTest1_label_1">এবিপরীক্ষা
 অ্যাপ নিন</string>
-  <string name="notification_timeline_new_likes">আপনি %s টি নতুন লাইক পেয়েছেন। সামাজিক টাইমলাইনে দেখুন!</string>
-  <string name="notification_timeline_new_comments">আপনি %s টি নতুন মন্তব্য পেয়েছেন। সামাজিক টাইমলাইনে দেখুন!</string>
-  <string name="notification_timeline_activity">আপনার %1$s টি নতুন মন্তব্য এবং %2$s নতুন লাইক পেয়েছেন। সামাজিক টাইমলাইনে দেখুন!</string>
-  <string name="notification_social_timeline">অ্যাপটোইড সামাজিক টাইমলাইন। এখনি দেখুন!</string>
+  <string name="abTest1_label_2">ইনস্টল</string>
+  <string name="abTest1_label_3">ইনস্টল</string>
+  <!-- push notifications-->
+  <string name="notification_timeline_new_likes">আপনি %sটি নতুন পছন্দ পেয়েছেন। সামাজিক সময়রেখায় দেখুন!</string>
+  <string name="notification_timeline_new_comments">আপনি %sটি নতুন মন্তব্য পেয়েছেন। সামাজিক সময়রেখায় দেখুন!</string>
+  <string name="notification_timeline_activity">আপনার %1$sটি নতুন মন্তব্য এবং %2$sটি পছন্দ পেয়েছেন। সামাজিক সময়রেখায় দেখুন!</string>
+  <string name="notification_social_timeline">অ্যাপটোইড সামাজিক সময়রেখা। এখনি দেখুন!</string>
   <string name="notification_timeline_posts">আপনার বন্ধুরা নতুন অ্যাপস ইনস্টল করেছে!</string>
-
-  <string name="no_updates_available_retoric">আপডেটসমূহ
-সবকিছু একদম হালনাগাদকৃত!</string>
-  <string name="no_new_updates_available">কোন নতুন আপডেট নেই!</string>
-  <string name="has_updates">%s নতুন আপডেট আছে!</string>
-  <string name="new_updates">এখানে %s নতুন আপডেট আছে!</string>
-  <string name="one_new_update">এখানে %s টি নতুন আপডেট আছে!</string>
-  <string name="flag_license">লাইসেন্স দরকার</string>
+  <!-- Updates -->
+  <string name="no_updates_available_retoric">সবকিছু একদম হালনাগাদকৃত!</string>
+  <string name="no_new_updates_available">কোন নতুন হালনাগাদ নেই!</string>
+  <string name="has_updates">%s-এর নতুন হালনাগাদ উপলব্ধ আছে!</string>
+  <string name="new_updates">%sটি হালনাগাদ উপলব্ধ আছে!</string>
+  <string name="one_new_update">%sটি হালনাগাদ উপলব্ধ আছে!</string>
+  <string name="updates_tab_adapter_uninstalled">আনইনস্টলকৃত</string>
+  <string name="updatesTabAdapterUninstall">আনইনস্টল</string>
+  <string name="flag_good">ভাল </string>
+  <string name="flag_license">লাইসেন্স প্রয়োজন</string>
+  <string name="flag_fake">নকল</string>
+  <string name="flag_freeze">আটক</string>
+  <string name="flag_virus">ভাইরাস</string>
+  <string name="flag_this_app">এটি প্রতিবেদন করুন</string>
   <string name="flag_added">পতাকা সংযুক্তকৃত</string>
-  <string name="skip">স্কিপ</string>
+  <string name="skip">এড়িয়ে যান</string>
   <string name="wizard_title_01">অ্যাপটোইডে স্বাগতম</string>
   <string name="wizard_description_01">একটি বিনামূল্যের একাউন্ট তৈরী করুন এবং আপনার নিজস্ব স্বাতন্ত্র্য অ্যাপ স্টোর তৈরীর জন্য রেজিষ্টার করুন
 থিম স্টোর অনুযায়ী ব্রাউজ করুন এবং উৎঘাটন করুন নতুন এবং উত্তেজন অ্যাপ্লিকেশন।</string>
@@ -484,40 +465,42 @@
   <string name="wizard_description_03_1">পুরাতন ডিভাইস ও ধীর ইন্টারনেট সংযোগ</string>
   <string name="wizard_subtitle_03_2">অ্যাপটোইড টিভি</string>
   <string name="wizard_description_03_2">সেট টপ বক্স ও স্মাট টিভির জন্য সর্বোত্তম অ্যাপ স্টোর</string>
-  <string name="wizard_reviews_title">পর্যালোচনা</string>
+  <string name="wizard_reviews_title">পর্যালোচনাসমূহ</string>
   <string name="wizard_reviews">আপনি এখন অ্যাপটোইডে আপনার নিজস্ব অ্যাপের পর্যালোচনা তৈরী করতে পারবেন!</string>
   <string name="wizard_new_and_improved">উন্নত ফলাফল!</string>
   <string name="wizard_new_and_improved_bullet_1">ব্যাটারির খরচ বাঁচান</string>
   <string name="wizard_new_and_improved_bullet_2">সিপিইউ ও ব্যান্ডউডখ্ এর ব্যবহার কমান</string>
   <string name="wizard_new_and_improved_bullet_3">তুলনামূলক কম সম্পদ লোডকরণ</string>
-  <string name="wizard_new_and_improved_bullet_4">পরিষ্কার ইউজার ইন্টারফেস</string>
-  <string name="wizard_new_homepage">নতুন হোমপেজ লেআউট</string>
+  <string name="wizard_new_and_improved_bullet_4">ব্যবহারকারী ইন্টারফেস পরিষ্কার করুন</string>
+  <string name="wizard_new_homepage">নতুন মূল পাতার বিন্যাস</string>
   <string name="wizard_new_top">নতুন শীর্ষ ট্যাব</string>
   <string name="subscribe_apps_official_store">অ্যাপটোইড অফিসিয়াল অ্যাপ স্টোর \'অ্যাপ\' সাবস্ক্রাইব</string>
-  <string name="wizard_next">পরবর্তি</string>
+  <string name="wizard_next">পরবর্তীতে</string>
   <string name="wizard_prev">পূর্ববর্তী</string>
   <string name="share">শেয়ার</string>
-  <string name="share_on_timeline">টাইমলাইনে শেয়ারকরন</string>
-
-  <string name="search_for_apps">অ্যাপসমূহের জন্য সার্চরত…</string>
-  <string name="empty_search">ফলাফলবিহীন সার্চ। একটি অ্যাপ্লিকেশন নাম লিখুন</string>
+  <string name="share_on_timeline">সময়রেখায় শেয়ার করুন</string>
+  <!-- Search Widget-->
+  <string name="search_for_apps">অ্যাপের জন্য অনুসন্ধান করুন…</string>
+  <string name="empty_search">খালি অনুসন্ধান, অ্যাপ্লিকেশনের নাম লিখুন</string>
   <string name="manually_reviewed">নিশ্চিত ভালো অ্যাপ: এই অ্যাপ্লিকেশন ভাইরাস, ম্যালওয়ার এবং অন্যান্য ক্ষতিকর আক্রমন সংক্রান্ত নিরাপত্তা পরীক্ষায় উত্তীর্ণ হয়েছে এবং যে কোন ধরনের হুমকি বিহীণ</string>
-
   <string name="no_apps_found">বর্তমান ফিল্টার দিয়ে কোন অ্যাপ পাওয়া যায়নি</string>
-  <string name="no_search_results_message">আপনার সার্চ অনুযায়ী কোন ফলাফল নেই।
-অনুগ্রহপূর্বক, অন্য কীওয়ার্ড চেষ্টা করুন।</string>
-
+  <string name="no_search_results_message">আপনার অনুসন্ধান অনুযায়ী কোন ফলাফল নেই।\n অন্য শব্দ লিখে চেষ্টা করুন।</string>
+  <!-- AppView developer area-->
   <string name="developer">অ্যাপভিউ ডেভেলপার অঞ্চল</string>
   <string name="website">ওয়েবসাইট: %s</string>
   <string name="email">ইমেইল: %s</string>
-  <string name="privacy_policy">গোপনীয়তা নীতি: %s</string>
+  <string name="privacy_policy">গোপনীয়তার নীতি: %s</string>
   <string name="dialog_version_size">সংস্করণ:%1$s | আকার: %2$s</string>
   <string name="na">প্র/ন</string>
   <string name="no_email_and_pass_error_message">অনুগ্রহপূর্বক রেজিষ্টার করতে একটি ইমেইল এবং পাসওয়ার্ড ব্যবহার করুন।</string>
+  <string name="no_pass_error_message">অনুগ্রহপূর্বক রেজিষ্টার করতে পাসওয়ার্ড অনুপ্রবেশ করুন।</string>
+  <string name="no_email_error_message">অনুগ্রহপূর্বক রেজিষ্টার করতে একটি ইমেইল অনুপ্রবেশ করুন।</string>
   <string name="website_copied">ক্লিপবোর্ডে ওয়েবসাইট কপিকৃত</string>
   <string name="email_copied">ক্লিপবোর্ডে ইমেইল কপিকৃত</string>
   <string name="privacy_copied">ক্লিকবোর্ডে প্রাইভেসি লিংক কপিকৃত</string>
   <string name="unsubscribing_store_message">আনসাবস্ক্রাইবিং %s</string>
-
-  <string name="search_minimum_chars">সার্চের বিষয়বস্তু নিদেনপক্ষে ২ টি চিহ্ন বিশিষ্ট্য হতে হবে।</string>
+  <!-- Search Fragment -->
+  <string name="all_stores">সকল স্টোরসমূহ</string>
+  <string name="followed_stores">অনুসরণকৃত স্টোরসমূহ</string>
+  <string name="search_minimum_chars">অনুসন্ধানে অন্তত ২টি অক্ষর থাকতে হবে।</string>
 </resources>

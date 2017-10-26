@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -53,6 +54,8 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
   @Partners @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Analytics.Lifecycle.Activity.onCreate(this);
+    Analytics.Dimensions.setGmsPresent(
+        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(this));
     new ApkFy().run(this);
 
     if (savedInstanceState == null) {

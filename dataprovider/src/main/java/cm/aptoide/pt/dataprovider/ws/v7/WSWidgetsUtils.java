@@ -17,6 +17,7 @@ import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.model.v7.Type;
+import cm.aptoide.pt.preferences.Application;
 import java.util.LinkedList;
 import java.util.List;
 import rx.Observable;
@@ -68,8 +69,9 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case ADS:
-          return GetAdsRequest.ofHomepage(aptoideClientUuid, googlePlayServicesAvailable, oemid,
-              mature)
+          return GetAdsRequest.ofHomepage(accessToken, aptoideClientUuid,
+                  googlePlayServicesAvailable, oemid, mature,
+                  Application.getConfiguration().numberOfAdsRowOnHomepage())
               .observe()
               .observeOn(Schedulers.io())
               .doOnNext(wsWidget::setViewObject)

@@ -1,9 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="aptoide_downloading">ກຳລັງດາວໂຫລດ %s</string>
-    <string name="pause_download">ໂຈະ</string>
-    <string name="resume_download">ສືບຕໍ່</string>
-<string name="general_downloads_dialog_only_mobile_message">"ທ່ານເລືອກທີ່ຈະດາວໂຫຼດຜ່ານ 3G/4G ເທົ່ານັ້ນ. ທ່ານຕ້ອງການປ່ຽນ
-        ການຕັ້ງຄ່າຫຼືບໍ່?"</string>
-  <string name="general_downloads_dialog_only_wifi_message">ທ່ານເລືອກທີ່ຈະດາວໂຫຼດຜ່ານ WiFi ເທົ່ານັ້ນ. ທ່ານຕ້ອງການປ່ຽນການຕັ້ງຄ່າຫຼືບໍ່?</string>
-  <string name="general_downloads_dialog_no_download_rule_message">ບໍ່ມີການຕັ້ງຄ່າກົດການດາວໂຫຼດ. ທ່ານຕ້ອງການປ່ຽນການຕັ້ງຄ່າຫຼືບໍ່?</string>
-</resources>

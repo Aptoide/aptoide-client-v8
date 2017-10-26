@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="aptoide_downloading">%s se preuzima</string>
-    <string name="pause_download">Pauziraj</string>
-  <string name="resume_download">Pokreni</string>
-  <string name="general_downloads_dialog_only_mobile_message">Izabrali se preuzimanje samo preko 3G/4G mreže. Želite li promjeniti postavke?</string>
-  <string name="general_downloads_dialog_only_wifi_message">Izabrali se preuzimanje samo preko WiFi. Želite li promjeniti postavke?</string>
-  <string name="general_downloads_dialog_no_download_rule_message">Nije postavljeno pravilo za preuzimanje. Želite li promjeniti postavke?</string>
-</resources>

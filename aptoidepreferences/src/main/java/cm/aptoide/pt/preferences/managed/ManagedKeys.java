@@ -35,4 +35,5 @@ public class ManagedKeys {
   public static final String ACCESS = "access";
   public static final String ACCESS_CONFIRMED = "access_confirmed";
   public static final String FIRST_RUN_V7 = "firstrun";
+  public static final String LANGUAGE = "language";
 }

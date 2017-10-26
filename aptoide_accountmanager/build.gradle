@@ -15,10 +15,10 @@ android {
   buildToolsVersion BUILD_TOOLS_VERSION
 
   defaultConfig {
-    minSdkVersion 15
+    minSdkVersion MIN_SDK_VERSION
 
     buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID + "\""
-    resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID + "\""
+    resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_PARTNERS_APP_ID + "\""
 
     buildConfigField "String", "BACKUP_SIGNATURE", "\"" + project.BACKUP_SIGNATURE + "\""
     buildConfigField "String", "UPLOADER_SIGNATURE", "\"" + project.UPLOADER_SIGNATURE + "\""

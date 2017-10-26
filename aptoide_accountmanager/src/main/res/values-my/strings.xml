@@ -1,76 +1,78 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="one_account_allowed">အေကာင့္တစ္ခုသာ ခြင့္ျပဳသည္</string>
-    <string name="username">အီးေမးလ္</string>
-    <string name="password">စကားဝွက္</string>
-    <string name="link_device_webinstall">အေကာင့္အား Webinstall ျဖင့္ ခ်ိတ္ဆက္မည္</string>
-    <string name="register">စာရင္းသြင္းရန္</string>
-    <string name="forgot_passwd">စကားဝွက္ေမ့ေနပါသလား?</string>
-    <string name="fields_cannot_empty">Email ႏွင့္စကားဝွက္ကို စစ္ေဆးပါ.</string>
-    <string name="unknown_error">အမည်မသိအမှား</string>
-    <string name="no_email_and_pass_error_message">"စာရင်းသွင်းရန်အတွက်ကျေးဇူးပြု၍ အီးမေးလ်နှင့် လျှို့ဝှက်စကားလုံးကို ထည့်သွင်းပါ.
- "</string>
-    <string name="no_pass_error_message">စာရင္းသြင္းရန္ စကားဝွက္တစ္ခုထည့္ေပးပါ.</string>
-    <string name="no_email_error_message">စာရင္းသြင္းရန္ အီးေမးလ္တစ္ခုထည့္ေပးပါ.</string>
-    <string name="password_validation_text">"လွ်ို႕ဝွက္စကားလံုးသည္ အနည္းဆံုး စာလံုး ၈ လံုး ပါဝင္ရမည္ျဖစ္ၿပီး အနည္းဆံုး အကၡရာတစ္လံုးႏွင့္ နံပါတ္တစ္လံုး သို႕မဟုတ္ အထူးစာလံုး (!@#$%*) တစ္လံုး ပါဝင္သင့္ပါသည္
- "</string>
-    <string name="logged_as">: အေနျဖင့္ အေကာင့္ဝင္ထားသည္</string>
-    <string name="sign_out">အေကာင့္ထြက္မည္</string>
-    <string name="error_occured">မွားယြင္းမႈရွိေနပါသျဖင့္ ျပန္လည္ၾကိဳးစားေပးပါ</string>
-    <string name="ws_error_AUTH_2">သတ္မွတ္ခ်က္မ်ား မျပည့္စံုပါ!</string>
-    <string name="ws_error_AUTH_101">Google ျဖင့္ ၀င္၍မရသျဖင့္ ေနာက္တၾကိမ္ ထပ္ၾကိဳးစားပါ.</string>
-    <string name="ws_error_AUTH_103">Facebook ျဖင့္ အေကာင့္၀င္၍ မရသျဖင့္ ျပန္လည္ ၾကိဳးစားေပးပါ.</string>
-    <string name="ws_error_MARG_12">Hmac parameter ေပ်ာက္ဆုံးေနသည္</string>
-    <string name="ws_error_MARG_109">Email parameterေပ်ာက္ဆုံးေနသည္</string>
-    <string name="ws_error_MARG_110">Passhash parameter ေပ်ာက္ဆုံးေနသည္</string>
-    <string name="ws_error_MARG_111">Parameter အမည္ေပ်ာက္ဆုံးေနသည္</string>
-    <string name="ws_error_MARG_112">User-agent parameter ေပ်ာက္ဆုံးေနသည္</string>
-    <string name="ws_error_IARG_5">hmac format မွားေနသည္</string>
-    <string name="ws_error_IARG_106">Email လိပ္စာ မွားေနသည္</string>
-    <string name="ws_error_REPO_7">ယခုအသံုးျပဳသူတြင္ မွန္ကန္သည့္ စတိုးတစ္ခု ရွိၿပီးျဖစ္ပါသည္.</string>
-    <string name="ws_error_WOP_11">စတိုး ျပဳလုပ္မႈမေအာင္ျမင္ပါ၊ ျပန္လည္ႀကိဳးစားပါ.</string>
-    <string name="or">သို႔မဟုတ္</string>
-    <string name="accept_terms">"အေကာင့္ဖြင့္ျခင္းျဖင့္ သင္သည္ Aptoide ဝန္ေဆာင္မႈ အခ်က္အလက္မ်ားႏွင့္ ထုတ္လုပ္သူမ်ားအတြက္ ပါဝင္မႈ မူဝါဒကို သေဘာတူသည္
- "</string>
-    <string name="default_account_type">cm.aptoide.pt</string>
-
-    <string name="facebook_email_permission_regected_message">"အေကာင့္တစ္ခု ျပဳလုပ္ရန္အတြက္ Aptoide သည္ သင့္အီးေမးလ္အား လိုအပ္ပါသည္
- "</string>
-    <string name="error_invalid_grant">အသံုးျပဳသူအမည္ႏွင့္ လွ်ိဳ႕ဝွက္စကားလံုး တဲြဖက္မႈ မွားယြင္းေနပါသည္</string>
-    <string name="ws_error_MARG_200">\@စာကြောင်း/အမှား_ဖြစ်ပေါ်ခဲ့သည်</string>
-    <string name="ws_error_MARG_203">\@စာေၾကာင္း/အမွား_ျဖစ္ေပၚခဲ့သည္</string>
-    <string name="ws_error_MARG_204">\@စာေၾကာင္း/အမွား_ျဖစ္ေပၚခဲ့သည္</string>
-    <string name="ws_error_IARG_200">\@စာေၾကာင္း/အမွား_ျဖစ္ေပၚခဲ့သည္</string>
-    <string name="ws_error_AUTH_7">\@စာေၾကာင္း/အမွား_ျဖစ္ေပၚခဲ့သည္</string>
-    <string name="ws_error_AUTH_100">Google ျဖင့္ အေကာင့္ဝင္၍ မရပါ. ေက်းဇူးျပဳ၍ သင့္ Google အေကာင့္အား စစ္ေဆးပါ (သင့္အီးေမးလ္လိပ္စာအား အတည္ျပဳရန္ လိုအပ္ႏိုင္ပါသည္)</string>
-    <string name="ws_error_AUTH_102">Facebook ျဖင့္ အေကာင့္ဝင္၍ မရပါ. ေက်းဇူးျပဳ၍ သင့္ Facebook အေကာင့္အား စစ္ေဆးပါ (သင့္အီးေမးလ္လိပ္စာအား အတည္ျပဳရန္ လိုအပ္ႏိုင္ပါသည္)</string>
-    <string name="ws_error_invalid_grant">အသံုးျပဳသူအမည္ႏွင့္ လွ်ိဳ႕ဝွက္စကားလံုး တြဲဖက္မႈ မွားယြင္းေနပါသည္</string>
-    <string name="ws_error_IARG_111">passhash ပံုစံ မွားယြင္းေနပါသည္</string>
-    <string name="ws_error_REPO_4">စတိုးအမည္ မွားယြင္းေနပါသည္၊ သင္သည္ စာလံုးမ်ား၊ ဂဏန္းမ်ားႏွင့္ ဒက္႐ွ္မ်ားကိုသာ အသံုးျပဳႏိုင္ပါသည္.</string>
-    <string name="ws_error_REPO_5">စတိုးအမည္သည္ အနည္းဆံုး စာလံုး ၃ လံုး ႐ွိရပါမည္.</string>
-    <string name="ws_error_REPO_6">ထိုစတိုးအမည္သည္ ႐ွိႏွင့္ၿပီးျဖစ္ပါသည္၊ သင္သည္ အျခားတစ္ခုအား ေရြးခ်ယ္ရန္ လိုအပ္ပါသည္.</string>
-    <string name="ws_error_WOP_9">ေပးထားေသာအီးေမးလ္သည္ ႐ွိႏွင့္ၿပီး ျဖစ္ပါသည္</string>
-    <string name="ws_error_WOP_10">ေပးထားေသာအီးေမးလ္ျဖင့္ မွတ္ပံုမတင္ရေသးပါ</string>
-    <string name="ws_error_QUOTA_2">ယေန႔အတြက္ ဖန္တီးထားေသာအသံုးျပဳသူမ်ား ေန႔စဥ္ကန္႔သတ္ခ်က္သို႔ ေရာက္႐ွိပါၿပီ. အကယ္၍ ဤကန္႔သတ္ခ်က္အား တိုးျမႇင့္ရန္ လိုအပ္ပါက အကူအညီရယူရန္ ဆက္သြယ္ပါ သို႔မဟုတ္ မနက္ျဖန္တြင္ အသံုးျပဳသူမ်ားအား ပို၍ဖန္တီးပါ</string>
-    <string name="ws_error_AUTH_1">အီးေမးလ္သို႔မဟုတ္ လ်ိဳ႕ဝွက္စကားလံုးသည္ အေကာင့္ဝင္ရန္ မွားယြင္းေနပါသည္ (အမည္အဆင့္ျမႇင့္တင္မႈအေပၚ)</string>
-    <string name="login_successful">အကောင့်၀င်ခြင်း အောင်မြင်ပါသည်</string>
-    <string name="user_created">အသုံးပြုသူ ဖန်တီးပြီးပါပြီ</string>
-    <string name="wizard_skip"><b>ကျော်ပါ</b></string>
-
-<string name="login">အေကာင့္ဝင္ပါ</string>
+<?xml version="1.0" encoding="utf-8"?>
+<!--Generated by crowdin.com-->
+<resources>
+  <string name="one_account_allowed">အကောင့်တစ်ခုသာ ခွင့်ပြုပါသည်</string>
+  <string name="or">သို့မဟုတ်</string>
+  <string name="username">အီးမေးလ်</string>
+  <string name="password">လျှို့ဝှက်စကားလုံး</string>
+  <string name="link_device_webinstall">အကောင့်အား Webinstall ဖြင့် ချိတ်ဆက်ပါ</string>
+  <string name="register">အကောင့်အသစ်လျှောက်ပါ</string>
+  <string name="login">အကောင့်၀င်ပါ</string>
   <string name="successful">ေအာင္ျမင္ပါသည္</string>
+  <string name="login_successful">အကောင့်၀င်ခြင်း အောင်မြင်ပါသည်</string>
+  <string name="forgot_passwd">Forgot password?</string>
+  <string name="fields_cannot_empty">သင်၏ အီးမေးလ်နှင့် လျှို့ဝှက်စကားလုံးကို ကျေးဇူးပြု၍ ပြန်စစ်ပါ.</string>
+  <string name="unknown_error">အမည်မသိအမှား</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Please insert a password to register.</string>
+  <string name="no_email_error_message">Please insert an email to register.</string>
+  <string name="password_validation_text">\"လွ်ို႕ဝွက္စကားလံုးသည္ အနည္းဆံုး စာလံုး ၈ လံုး ပါဝင္ရမည္ျဖစ္ၿပီး အနည္းဆံုး အကၡရာတစ္လံုးႏွင့္ နံပါတ္တစ္လံုး သို႕မဟုတ္ အထူးစာလံုး (!@#$%*) တစ္လံုး ပါဝင္သင့္ပါသည္
+ \"</string>
+  <string name="logged_as">သင်အကောင့်၀င်ထားသည့် အမည်မှာ:</string>
+  <string name="sign_out">အကောင့်ထွက်ပါ</string>
+  <string name="default_account_type">cm.aptoide.pt</string>
   <string name="facebook_grant_permission_button">ခြင့္ျပဳခ်က္ေပးပါ</string>
+  <string name="facebook_email_permission_regected_message">\"အေကာင့္တစ္ခု ျပဳလုပ္ရန္အတြက္ Aptoide သည္ သင့္အီးေမးလ္အား လိုအပ္ပါသည္
+ \"</string>
   <string name="user_cancelled">အသံုးျပဴသူမွ ပယ္ဖ်က္ပါသည္</string>
-
+  <!--errors-->
+  <string name="error_occured">အမှားတစ်ခု ဖြစ်ပေါ်ခဲ့သည်. ကျေးဇူးပြု၍ ပြန်ကြိုးစားပါ</string>
+  <string name="error_invalid_grant">အသံုးျပဳသူအမည္ႏွင့္ လွ်ိဳ႕ဝွက္စကားလံုး တြဲဖက္မႈ မွားယြင္းေနပါသည္</string>
+  <string name="ws_error_MARG_200">\@စာေၾကာင္း/အမွား_ျဖစ္ေပၚခဲ့သည္</string>
+  <string name="ws_error_MARG_203">\@စာေၾကာင္း/အမွား_ျဖစ္ေပၚခဲ့သည္</string>
+  <string name="ws_error_MARG_204">\@စာေၾကာင္း/အမွား_ျဖစ္ေပၚခဲ့သည္</string>
+  <string name="ws_error_IARG_200">\@စာေၾကာင္း/အမွား_ျဖစ္ေပၚခဲ့သည္</string>
+  <string name="ws_error_AUTH_2">အထောက်အထားများ မှားယွင်းနေပါသည်!</string>
+  <string name="ws_error_AUTH_7">\@စာေၾကာင္း/အမွား_ျဖစ္ေပၚခဲ့သည္</string>
+  <string name="ws_error_AUTH_100">Google ျဖင့္ အေကာင့္ဝင္၍ မရပါ. ေက်းဇူးျပဳ၍ သင့္ Google အေကာင့္အား စစ္ေဆးပါ (သင့္အီးေမးလ္လိပ္စာအား အတည္ျပဳရန္ လိုအပ္ႏိုင္ပါသည္)</string>
+  <string name="ws_error_AUTH_101">Google ဖြင့် အကောင့်၀င်၍ မရပါ. ကျေးဇူးပြု၍ ပြန်ကြိုးစားပါ.</string>
+  <string name="ws_error_AUTH_102">Facebook ျဖင့္ အေကာင့္ဝင္၍ မရပါ. ေက်းဇူးျပဳ၍ သင့္ Facebook အေကာင့္အား စစ္ေဆးပါ (သင့္အီးေမးလ္လိပ္စာအား အတည္ျပဳရန္ လိုအပ္ႏိုင္ပါသည္)</string>
+  <string name="ws_error_AUTH_103">Facebook ဖြင့်အကောင့်၀င်၍ မရပါ. ကျေးဇူးပြု၍ ပြန်ကြိုးစားပါ.</string>
+  <string name="ws_error_invalid_grant">အသံုးျပဳသူအမည္ႏွင့္ စကား၀ွက္ တြဲဖက္မႈ မွားယြင္းေနပါသည္</string>
+  <string name="ws_error_MARG_12">ပျောက်ဆုံးနေသော hmac parameter</string>
+  <string name="ws_error_MARG_109">ပျောက်ဆုံးနေသော အီးမေးလ် parameter</string>
+  <string name="ws_error_MARG_110">ပျောက်ဆုံးနေသော passhash parameter</string>
+  <string name="ws_error_MARG_111">ပျောက်ဆုံးနေသော အမည် parameter</string>
+  <string name="ws_error_MARG_112">ပျောက်ဆုံးနေသော အသုံးပြုသူ-အေးဂျင့် parameter</string>
+  <string name="ws_error_IARG_5">hmace format မှားယွင်းနေသည်</string>
+  <string name="ws_error_IARG_106">အီးမေးလ်လိပ်စာ မှားယွင်းနေပါသည်</string>
+  <string name="ws_error_IARG_111">passhash ပံုစံ မွားယြင္းေနပါသည္</string>
+  <string name="ws_error_REPO_4">စတိုးအမည္ မွားယြင္းေနပါသည္၊ သင္သည္ စာလံုးမ်ား၊ ဂဏန္းမ်ားႏွင့္ ဒက္႐ွ္မ်ားကိုသာ အသံုးျပဳႏိုင္ပါသည္.</string>
+  <string name="ws_error_REPO_7">ဤအသံုးျပဳသူတြင္ မွန္ကန္ေသာ စတုိးတစ္ခု ရွိႏွင့္ၿပီး ျဖစ္ပါသည္.</string>
+  <string name="ws_error_REPO_5">ထိုစတိုး၏အမည္သည္ အနည္းဆံုးအကၡရာ သံုးလံုးစာ ႐ွည္ရမည္ျဖစ္ပါသည္.</string>
+  <string name="ws_error_REPO_6">ထိုစတိုးအမည္သည္ ႐ွိႏွင့္ၿပီးျဖစ္ပါသည္၊ သင္သည္ အျခားတစ္ခုအား ေရြးခ်ယ္ရန္ လိုအပ္ပါသည္.</string>
   <string name="ws_eror_WOP_">သင့္စတိုးအတြက္ ေပးထားေသာအမည္ မမွန္ပါ. စတိုး၏အမည္တြင္ အကၡရာဂဏန္းစာလံုးမ်ား (A to Z and 0 to 9) သို႕မဟုတ္ ဟိုင္ဖန္မ်ား (-)သာ ပါဝင္ႏိုင္ၿပီး ဟိုင္ဖန္ျဖင့္ စ၍ သို႕မဟုတ္ ဆံုး၍ မရႏိုင္ပါ.</string>
   <string name="ws_eror_WOP_1">သင့္အေကာင့္တြင္ စတိုးတစ္ခု ရွိၿပီးျဖစ္ပါသည္. ယင္းအေကာင့္တြင္ ေနာက္ထပ္စတိုးတစ္ခု ျပဳလုပ္၍ မရႏိုင္ပါ</string>
   <string name="ws_error_WOP_2">သင့္စတိုးအတြက္ ေပးထားေသာအမည္ မွားေနပါသည္. စတုိး၏အမည္တြင္ အကၡရာဂဏန္းမ်ားသာ ပါဝင္ႏိုင္ၿပီး ဟိုင္ဖန္ျဖင့္ စ၍ သို႕မဟုတ္ ဆံုး၍ မရႏိုင္ပါ.</string>
   <string name="ws_error_WOP_3">တူညီေသာ အမည္ျဖင့္ စတိုးတစ္ခု ရွိႏွင့္ၿပီးျဖစ္ပါသည္. သင့္စတုိးအတြက္ အျခားအမည္တစ္ခုကို ေပးလိုက္ပါ.</string>
+  <string name="ws_error_WOP_9">ေပးထားေသာအီးေမးလ္သည္ ႐ွိႏွင့္ၿပီး ျဖစ္ပါသည္</string>
+  <string name="ws_error_WOP_10">ေပးထားေသာအီးေမးလ္ျဖင့္ မွတ္ပံုမတင္ရေသးပါ</string>
+  <string name="ws_error_WOP_11">စတိုးပြုလုပ်ခြင်း မအောင်မြင်ပါ. ကျေးဇူးပြု၍ ပြန်ကြိုးစားပါ.</string>
   <string name="ws_error_API_1">ပံုသည္ မမွန္ကန္ပါ.</string>
-    <string name="user_upload_photo_failed">လက္ရွိတြင္ ပ႐ိုဖိုင္တစ္ခု ဖန္တီးရန္ မျဖစ္ႏိုင္ပါ.</string>
+  <string name="ws_error_QUOTA_2">ယေန႔အတြက္ ဖန္တီးထားေသာအသံုးျပဳသူမ်ား ေန႔စဥ္ကန္႔သတ္ခ်က္သို႔ ေရာက္႐ွိပါၿပီ. အကယ္၍ ဤကန္႔သတ္ခ်က္အား တိုးျမႇင့္ရန္ လိုအပ္ပါက အကူအညီရယူရန္ ဆက္သြယ္ပါ သို႔မဟုတ္ မနက္ျဖန္တြင္ အသံုးျပဳသူမ်ားအား ပို၍ဖန္တီးပါ</string>
+  <string name="ws_error_AUTH_1">အီးေမးလ္သို႔မဟုတ္ လ်ိဳ႕ဝွက္စကားလံုးသည္ အေကာင့္ဝင္ရန္ မွားယြင္းေနပါသည္ (အမည္အဆင့္ျမႇင့္တင္မႈအေပၚ)</string>
+  <string name="user_upload_photo_failed">လက္ရွိတြင္ ပ႐ိုဖိုင္တစ္ခု ဖန္တီးရန္ မျဖစ္ႏိုင္ပါ.</string>
   <string name="store_upload_photo_failed">လက္ရွိတြင္ ဓာတ္ပံုအားတင္ရန္ မျဖစ္ႏိုင္ေသာ္လည္း သင့္စတိုးအား ဖန္တီးခဲ့ပါသည္.</string>
+  <string name="user_created">အသုံးပြုသူ ဖန်တီးပြီးပါပြီ</string>
+  <!-- WIZARD -->
+  <string name="wizard_skip"><b>ကျော်ပါ</b></string>
   <string name="please_wait_upload">တင္ေနလွ်င္ ခဏေစာင့္ေပးပါ၊ အနည္းငယ္ၾကာႏိုင္ပါသည္…</string>
-
-
+  <!--Create user fragment-->
   <string name="create_user_title">အသံုးျပဳသူ ပ႐ိုဖိုင္တစ္ခု ဖန္တီးပါ</string>
   <string name="create_user_header">Apps မ်ားအား အကဲျဖတ္ရန္၊ မွတ္ခ်က္ေပးရန္ႏွင့္ သူငယ္ခ်င္းမ်ားႏွင့္မွ်ေဝႏိုင္ရန္ <b>သင့္အသံုးျပဳသူ ပ႐ိုဖိုင္အား ဖန္တီးပါ</b></string>
   <string name="create_user_take_picture">သင့္ပ႐ိုဖိုင္အတြက္ ပံုတစ္ပံုအား ရယူပါ</string>
@@ -81,19 +83,19 @@
   <string name="create_user_create_button">ပ႐ိုဖိုင္ ဖန္တီးပါ</string>
   <string name="create_user_dialog_camera">ဓာတ္ပံု႐ိုက္ပါ</string>
   <string name="create_user_dialog_gallery">ဂယ္လာရီမွ ေရြးခ်ယ္ပါ</string>
-  <string name="create_user_dialog_cancel">ပယ္ဖ်က္ပါ</string>
+  <string name="create_user_dialog_cancel">ပယ်ဖျက်မည်</string>
   <string name="nothing_inserted_store">သင့္စတိုးအား ဖန္တီးရန္ စတိုးအမည္တစ္ခုအား ထည့္သြင္းေပးပါ</string>
   <string name="nothing_inserted_user">သင့္ပ႐ိုဖိုင္အား ဖန္တီးရန္ အသံုးျပဳသူအမည္တစ္္္ခုႏွင့္ ဓာတ္ပံုတစ္ပံု (ထည့္လိုလွ်င္) အား ထည့္သြင္းေပးပါ</string>
   <string name="create_user_bad_photo">အနည္းဆံုး 300x300 အရည္အေသြးရွိေသာ ပံုတစ္ပံုအား ေရြးခ်ယ္ေပးပါ</string>
   <string name="no_username_inserted">သင့္ပ႐ိုဖိုင္အား ဖန္တီးရန္ အသံုးျပဳသူအမည္တစ္ခုအား ထည့္သြင္းေပးပါ</string>
   <string name="no_photo_inserted">သင့္ပ႐ိုဖိုင္အား ဖန္တီးရန္ ဓာတ္ပံုတစ္ပံုအား ေရြးခ်ယ္ေပးပါ</string>
-
+  <!--User interests fragment -->
   <string name="user_interests_title">သင့္စိတ္ဝင္စားမႈမ်ား</string>
   <string name="user_interests_header"><b>သင့္စိတ္ဝင္စားမႈမ်ားအား ျပဳ၍</b> သင့္အတြက္ အေကာင္းဆံုး Apps မ်ားအား ရွာေဖြရန္ ကူညီပါ</string>
   <string name="user_interests_adult_gambling">အရြယ္ေရာက္ၿပီးသူႏွင့္ ေလာင္းကစား</string>
   <string name="user_interests_photography_video">ဓာတ္ပံုပညာႏွင့္ ဗြီဒီယို</string>
-  <string name="next">ေနာက္ထပ္</string>
-
+  <string name="next">ေရွ႕သို႕</string>
+  <!--Create Store fragment-->
   <string name="create_store_title">သင့္စတုိးအား ဖန္တီးပါ</string>
   <string name="create_store_header"><b>သင့္စတုိးအား ဖန္တီးၿပီး</b> သင့္စိတ္ႀကိဳက္ Apps မ်ားကို %s လူ႕အဖြဲ႕အစည္းအား မွ်ေဝပါ. <b>စမ္းၾကည့္လိုက္ပါ</b></string>
   <string name="edit_store_header">လွပေသာပံုတစ္ပံုႏွင့္ ႏွစ္လိုဖြယ္ရာ ေဖာ္ျပခ်က္တုိ႕ျဖင့္ သင့္စတိုးအား ျပင္ဆင္ပါ</string>
@@ -101,18 +103,17 @@
   <string name="create_store_name_inserted">သင့္စတိုး၏အမည္</string>
   <string name="create_store_theme">စတိုးအသြင္အျပင္</string>
   <string name="create_store_create">စတိုးအား ဖန္တီးပါ</string>
-  <string name="create_store_skip">ေက်ာ္ပါ</string>
+  <string name="create_store_skip">ကျော်ပါ</string>
   <string name="create_store_choose_image">သင့္စတိုးအတြက္ ပံုတစ္ပံုအား ေရြးခ်ယ္ပါ</string>
   <string name="create_store_description_title">သင့္စတိုး၏ ေဖာ္ျပခ်က္</string>
   <string name="create_store_description_hint">သင့္စတိုးေဖာ္ျပခ်က္</string>
   <string name="edit_store_title">သင့္စတိုးအား ျပင္ဆင္ပါ</string>
-  <string name="save_edit_store">သိမ္းပါ</string>
-
+  <string name="save_edit_store">သိမ်းဆည်းပါ</string>
   <string name="upload_dialog_title">ဓာတ္ပံုတင္ပါ</string>
   <string name="upload_dialog_photo">ဓာတ္ပံုအသစ္႐ိုက္ပါ</string>
   <string name="upload_dialog_gallery">ဂယ္လာရီမွ ေရြးခ်ယ္ပါ</string>
   <string name="create_store_store_created">စတိုးအား ဖန္တီးၿပီးပါၿပီ</string>
-
+  <!--Public/Private-->
   <string name="create_profile_pub_pri_suc_login">သင္ေအာင္ျမင္စြာ အေကာင့္ဝင္ၿပီးပါၿပီ</string>
   <string name="create_profile_pub_pri_suc_login_sub_text">ယခုအခါ သင့္သူငယ္ခ်င္းမ်ားမွ သင့္အား follow လုပ္ႏိုင္ၿပီး Apps Timeline ေပၚတြင္ သင့္မွ်ေဝမ်ားအား ျမင္ႏိုင္ပါၿပီ!</string>
   <string name="create_profile_pub_pri">Aptoide ၏ Apps Timeline</string>
@@ -133,6 +134,5 @@
 </string>
   <string name="image_requirements_error_max_file_size">- အမ်ားဆံုး အရြယ္အစားမွာ 5 MB ထက္ မ်ားေနပါသည္
 </string>
-  <string name="image_requirements_error_popup_title">ပံု</string>
-
+  <string name="image_requirements_error_popup_title">ပုံ</string>
 </resources>

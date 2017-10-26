@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.Constants;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -25,7 +24,6 @@ import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
-import com.localytics.android.Localytics;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -33,7 +31,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.zip.ZipFile;
 import lombok.Getter;
 
@@ -49,10 +46,11 @@ public class Analytics {
   public static final String ACTION = "Action";
   private static final String TAG = Analytics.class.getSimpleName();
   private static final boolean ACTIVATE_FLURRY = true;
+  private static final boolean ACTIVATE_FACEBOOK = true;
   private static final int ALL = Integer.MAX_VALUE;
-  private static final int LOCALYTICS = 1 << 0;
   private static final int FLURRY = 1 << 1;
   private static final int FABRIC = 1 << 2;
+  private static final int FACEBOOK = 1 << 3;
   private static final String[] unwantedValuesList = {
       "ads-highlighted", "apps-group-trending", "apps-group-local-top-apps",
       "timeline-your-friends-installs", "apps-group-latest-applications",
@@ -63,7 +61,6 @@ public class Analytics {
   };
   private static final AptoideClientUUID aptoideClientUuid;
   static @Getter Analytics instance = new Analytics(new AnalyticsDataSaver());
-  private static boolean ACTIVATE_LOCALYTICS = true;
   private static boolean isFirstSession;
 
   static {
@@ -84,7 +81,9 @@ public class Analytics {
   private static void track(String event, String key, String attr, int flags) {
 
     try {
-      if (!ACTIVATE_LOCALYTICS && !ACTIVATE_FLURRY) return;
+      if (!ACTIVATE_FACEBOOK && !ACTIVATE_FLURRY) {
+        return;
+      }
 
       HashMap stringObjectHashMap = new HashMap<>();
 
@@ -100,12 +99,12 @@ public class Analytics {
 
   private static void track(String event, HashMap map, int flags) {
     try {
-      if (!ACTIVATE_LOCALYTICS && !ACTIVATE_FLURRY) {
+      if (!ACTIVATE_FACEBOOK && !ACTIVATE_FLURRY) {
         return;
       }
-      if (checkAcceptability(flags, LOCALYTICS)) {
-        Localytics.tagEvent(event, map);
-        Logger.d(TAG, "Localytics Event: " + event + ", Map: " + map);
+      if (checkAcceptability(flags, FACEBOOK)) {
+        logFacebookEvents(event, map);
+        Logger.d(TAG, "Facebook Event: " + event + ", Map: " + map);
       }
 
       if (checkAcceptability(flags, FLURRY)) {
@@ -125,10 +124,11 @@ public class Analytics {
    * @return true caso as flags fornecidas constem em accepted.
    */
   private static boolean checkAcceptability(int flag, int accepted) {
-    if (accepted == LOCALYTICS && !ACTIVATE_LOCALYTICS) {
-      Logger.d(TAG, "Localytics Disabled ");
+    if (accepted == FACEBOOK && !ACTIVATE_FACEBOOK) {
+      Logger.d(TAG, "Facebook Disabled");
       return false;
-    } else if (accepted == FLURRY && !ACTIVATE_FLURRY) {
+    }
+    if (accepted == FLURRY && !ACTIVATE_FLURRY) {
       Logger.d(TAG, "Flurry Disabled");
       return false;
     } else {
@@ -169,11 +169,16 @@ public class Analytics {
   private static void track(String event, int flags) {
 
     try {
-      if (!ACTIVATE_LOCALYTICS && !ACTIVATE_FLURRY) return;
+      if (!ACTIVATE_FACEBOOK && !ACTIVATE_FLURRY) {
+        return;
+      }
 
-      if (checkAcceptability(flags, LOCALYTICS)) Localytics.tagEvent(event);
-
-      if (checkAcceptability(flags, FLURRY)) FlurryAgent.logEvent(event);
+      if (checkAcceptability(flags, FACEBOOK)) {
+        facebookLogger.logEvent(event);
+      }
+      if (checkAcceptability(flags, FLURRY)) {
+        FlurryAgent.logEvent(event);
+      }
 
       Logger.d(TAG, "Event: " + event);
     } catch (Exception e) {
@@ -203,6 +208,7 @@ public class Analytics {
     public static class Application {
 
       static AppEventsLogger facebookLogger;
+      public static final String IS_LOCALYTICS_FIRST_SESSION = "IS_LOCALYTICS_FIRST_SESSION";
 
       public static void onCreate(android.app.Application application) {
 
@@ -212,26 +218,18 @@ public class Analytics {
         facebookLogger = AppEventsLogger.newLogger(application);
         SharedPreferences sPref =
             PreferenceManager.getDefaultSharedPreferences(application.getBaseContext());
-        ACTIVATE_LOCALYTICS =
-            ACTIVATE_LOCALYTICS && (sPref.getBoolean(Constants.IS_LOCALYTICS_ENABLE_KEY, false));
-        isFirstSession = sPref.getBoolean(Constants.IS_LOCALYTICS_FIRST_SESSION, false);
-        if (ACTIVATE_LOCALYTICS || isFirstSession) {
-          // Integrate Localytics
-          Localytics.autoIntegrate(application);
-          setupDimensions();
-          Logger.d(TAG, "Localytics session configured");
-        }
+        isFirstSession = sPref.getBoolean(IS_LOCALYTICS_FIRST_SESSION, true);
+        setupDimensions(sPref);
       }
 
-      private static void setupDimensions() {
-        if (!checkForUTMFileInMetaINF()) {
-          Dimensions.setUTMDimensionsToUnknown();
-        }
-
-        if (isFirstSession && !ACTIVATE_LOCALYTICS) {
-          Dimensions.setSamplingTypeDimension("90% sampling");
-        } else {
-          Dimensions.setSamplingTypeDimension("Full-tracking");
+      private static void setupDimensions(SharedPreferences sharedPreferences) {
+        if (isFirstSession) {
+          if (!checkForUTMFileInMetaINF()) {
+            Dimensions.setUTMDimensionsToUnknown();
+          }
+          SharedPreferences.Editor edit = sharedPreferences.edit();
+          edit.putBoolean(IS_LOCALYTICS_FIRST_SESSION, false);
+          edit.apply();
         }
       }
 
@@ -254,25 +252,8 @@ public class Analytics {
           String utmContent = utmFileParser.valueExtracter(UTMFileParser.UTM_CONTENT);
           String entryPoint = utmFileParser.valueExtracter(UTMFileParser.ENTRY_POINT);
 
-          if (!utmSource.isEmpty()) {
-            Analytics.Dimensions.setUTMSource(utmSource);
-          }
-
-          if (!utmMedium.isEmpty()) {
-            Analytics.Dimensions.setUTMMedium(utmMedium);
-          }
-
-          if (!utmCampaign.isEmpty()) {
-            Analytics.Dimensions.setUTMCampaign(utmCampaign);
-          }
-
-          if (!utmContent.isEmpty()) {
-            Analytics.Dimensions.setUTMContent(utmContent);
-          }
-
-          if (!entryPoint.isEmpty()) {
-            Analytics.Dimensions.setEntryPointDimension(entryPoint);
-          }
+          Analytics.Dimensions.createUserPropertiesBundle(utmSource, utmMedium, utmCampaign,
+              utmContent, entryPoint);
 
           utmInputStream.close();
         } catch (IOException e) {
@@ -300,54 +281,29 @@ public class Analytics {
     public static class Activity {
 
       public static void onCreate(android.app.Activity activity) {
-
-        if (!ACTIVATE_LOCALYTICS) return;
-        Localytics.registerPush(BuildConfig.GOOGLE_SENDER_ID);
+        if (ACTIVATE_FACEBOOK) {
+          AppEventsLogger.setUserID(BuildConfig.GOOGLE_SENDER_ID);
+        }
       }
 
       public static void onDestroy(android.app.Activity activity) {
-
-        if (!ACTIVATE_LOCALYTICS) return;
       }
 
       public static void onResume(android.app.Activity activity) {
-
-        if (!ACTIVATE_LOCALYTICS) return;
-
-        Localytics.onActivityResume(activity);
-
-        if (isFirstSession) {
-          if (!AptoideAccountManager.isLoggedIn()) {
-            Localytics.setCustomDimension(0, "Not Logged In");
-          } else {
-            Localytics.setCustomDimension(0, "Logged In");
-          }
+        Bundle bundle = new Bundle();
+        Dimensions.setupPartnerDimensions(bundle);
+        if (!AptoideAccountManager.isLoggedIn()) {
+          bundle.putString("Logged In", "Not Logged In");
+          AppEventsLogger.updateUserProperties(bundle,
+              response -> Logger.d("Facebook Analytics: ", response.toString()));
+        } else {
+          bundle.putString("Logged In", "Logged In");
+          AppEventsLogger.updateUserProperties(bundle,
+              response -> Logger.d("Facebook Analytics: ", response.toString()));
         }
-
-        String cpuid = aptoideClientUuid.getUniqueIdentifier();
-
-        Localytics.setCustomerId(cpuid);
-
-        //                String cpuid = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext())
-        //                        .getString(EnumPreferences.aptoideClientUuid.name(), "NoInfo");
-
-        //                Localytics.setCustomerId(cpuid);
-        //
-        //                if (screenName != null) {
-        //                    Localytics.tagScreen(screenName);
-        //                }
-        //
-        Localytics.handleTestMode(activity.getIntent());
-        //
-        //                Logger.d("Analytics", "Event: CPU_ID: " + cpuid);
-        //                Logger.d("Analytics", "Screen: " + screenName);
-
       }
 
       public static void onPause(android.app.Activity activity) {
-        if (!ACTIVATE_LOCALYTICS && !isFirstSession) return;
-
-        Localytics.onActivityPaused(activity);
       }
 
       public static void onStart(android.app.Activity activity) {
@@ -367,10 +323,7 @@ public class Analytics {
       }
 
       public static void onNewIntent(android.app.Activity activity, Intent intent) {
-        if (!ACTIVATE_LOCALYTICS && !isFirstSession) {
-          return;
-        }
-        Localytics.onNewIntent(activity, intent);
+        // TODO: 19/07/2017
       }
     }
   }
@@ -379,12 +332,6 @@ public class Analytics {
 
     public static void tagScreen(String screenName) {
 
-      if (!ACTIVATE_LOCALYTICS) return;
-
-      Logger.d(TAG, "Localytics: Screens: " + screenName);
-
-      Localytics.tagScreen(screenName);
-      Localytics.upload();
     }
   }
 
@@ -593,8 +540,7 @@ public class Analytics {
 
         map.put(ACTION, "Enter");
         map.put(STORE_NAME, storeName);
-
-        track(EVENT_NAME, map, LOCALYTICS);
+        track(EVENT_NAME, map, FACEBOOK);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -606,8 +552,7 @@ public class Analytics {
 
         map.put(ACTION, "Subscribe");
         map.put(STORE_NAME, storeName);
-
-        track(EVENT_NAME, map, LOCALYTICS);
+        track(EVENT_NAME, map, FACEBOOK);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -622,15 +567,15 @@ public class Analytics {
     public static final String CLICKED_ON_UPDATE_ALL = "Update All";
 
     public static void update() {
-      track(EVENT_NAME, ACTION, CLICKED_ON_UPDATE, LOCALYTICS);
+      track(EVENT_NAME, ACTION, CLICKED_ON_UPDATE, FACEBOOK);
     }
 
     public static void updateAll() {
-      track(EVENT_NAME, ACTION, CLICKED_ON_UPDATE_ALL, LOCALYTICS);
+      track(EVENT_NAME, ACTION, CLICKED_ON_UPDATE_ALL, FACEBOOK);
     }
 
     public static void createReview() {
-      track(EVENT_NAME, ACTION, CLICKED_ON_CREATE_REVIEW, LOCALYTICS);
+      track(EVENT_NAME, ACTION, CLICKED_ON_CREATE_REVIEW, FACEBOOK);
     }
   }
 
@@ -660,7 +605,7 @@ public class Analytics {
     public static final String QUERY = "Query";
 
     public static void searchTerm(String query) {
-      track(EVENT_NAME_SEARCH_TERM, QUERY, query, LOCALYTICS);
+      track(EVENT_NAME_SEARCH_TERM, QUERY, query, FACEBOOK);
     }
 
     public static void noSearchResults(String query) {
@@ -726,7 +671,7 @@ public class Analytics {
     public static final String URI = "Uri";
 
     public static void launcher() {
-      track(EVENT_NAME, SOURCE, LAUNCHER, LOCALYTICS);
+      track(EVENT_NAME, SOURCE, LAUNCHER, FACEBOOK);
     }
 
     public static void website(String uri) {
@@ -858,13 +803,13 @@ public class Analytics {
       map.put(TITLE, title);
       map.put(PUBLISHER, publisher);
 
-      localyticsTrack(map, cardType);
+      facebookTrack(map, cardType);
       flurryTrack(map, cardType);
     }
 
-    private static void localyticsTrack(HashMap<String, String> map, String cardType) {
+    private static void facebookTrack(HashMap<String, String> map, String cardType) {
       map.put(CARD_TYPE, cardType);
-      track(EVENT_NAME, map, LOCALYTICS);
+      track(EVENT_NAME, map, FACEBOOK);
     }
 
     private static void flurryTrack(HashMap<String, String> map, String cardType) {
@@ -903,7 +848,7 @@ public class Analytics {
         map.put(TRUSTED_BADGE, trustedBadge);
         //TODO MISSING POP_UP AB TESTING
 
-        track(EVENT_NAME, map, LOCALYTICS);
+        track(EVENT_NAME, map, FACEBOOK);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -911,68 +856,68 @@ public class Analytics {
   }
 
   public static class Dimensions {
-    public static final String VERTICAL = V8Engine.getConfiguration().getVerticalDimension();
-    public static final String PARTNER = V8Engine.getConfiguration().getPartnerDimension();
+    public static final String VERTICAL = "vertical";
+    public static final String PARTNER = "partner";
     public static final String UNKNOWN = "unknown";
     public static final String APKFY = "Apkfy";
     public static final String WEBSITE = "Website";
     public static final String INSTALLER = "Installer";
+    public static final String GMS = "GMS";
+    public static final String HAS_HGMS = "Has GMS";
+    public static final String NO_GMS = "No GMS";
+    public static final String UTM_SOURCE = "UTM Source";
+    public static final String UTM_MEDIUM = "UTM Medium";
+    public static final String UTM_CONTENT = "UTM Content";
+    public static final String UTM_CAMPAIGN = "UTM Campaign";
+    public static final String ENTRY_POINT = "Entry Point";
 
-    public static void setPartnerDimension(String partner) {
-      setDimension(1, partner);
+    private static void setUserProperties(String key, String value) {
+      Bundle parameters = new Bundle();
+      parameters.putString(key, value);
+      setupPartnerDimensions(parameters);
+      AppEventsLogger.updateUserProperties(parameters,
+          response -> Logger.d("Facebook Analytics: ", response.toString()));
     }
 
-    private static void setDimension(int i, String s) {
-      if (!ACTIVATE_LOCALYTICS && !isFirstSession) {
-        return;
-      }
-
-      Logger.d(TAG, "Dimension: " + i + ", Value: " + s);
-
-      Localytics.setCustomDimension(i, s);
-    }
-
-    public static void setVerticalDimension(String verticalName) {
-      setDimension(2, verticalName);
-    }
-
-    public static void setGmsPresent(boolean b) {
-      if (b) {
-        setDimension(3, "GMS Present");
+    public static void setGmsPresent(boolean isPlayServicesAvailable) {
+      if (isPlayServicesAvailable) {
+        setUserProperties(GMS, HAS_HGMS);
       } else {
-        setDimension(3, "GMS Not Present");
+        setUserProperties(GMS, NO_GMS);
       }
     }
 
-    public static void setUTMSource(String utmSource) {
-      setDimension(4, utmSource);
-    }
-
-    public static void setUTMMedium(String utmMedium) {
-      setDimension(5, utmMedium);
-    }
-
-    public static void setUTMCampaign(String utmCampaign) {
-      setDimension(6, utmCampaign);
-    }
-
-    public static void setUTMContent(String utmContent) {
-      setDimension(7, utmContent);
+    public static Bundle createUserPropertiesBundle(String utmSource, String utmMedium,
+        String utmCampaign, String utmContent, String entryPoint) {
+      Bundle data = new Bundle();
+      data.putString(UTM_SOURCE, utmSource);
+      data.putString(UTM_MEDIUM, utmMedium);
+      data.putString(UTM_CAMPAIGN, utmCampaign);
+      data.putString(UTM_CONTENT, utmContent);
+      data.putString(ENTRY_POINT, entryPoint);
+      setupPartnerDimensions(data);
+      return data;
     }
 
     public static void setUTMDimensionsToUnknown() {
-      setDimension(4, UNKNOWN);
-      setDimension(5, UNKNOWN);
-      setDimension(6, UNKNOWN);
-      setDimension(7, UNKNOWN);
+      Bundle data = new Bundle();
+      data.putString(UTM_SOURCE, UNKNOWN);
+      data.putString(UTM_MEDIUM, UNKNOWN);
+      data.putString(UTM_CAMPAIGN, UNKNOWN);
+      data.putString(UTM_CONTENT, UNKNOWN);
+      data.putString(ENTRY_POINT, UNKNOWN);
+      setUserPropertiesWithBundle(data);
     }
 
-    public static void setSamplingTypeDimension(String samplingType) {
-      setDimension(8, samplingType);
+    private static void setupPartnerDimensions(Bundle data) {
+      data.putString(VERTICAL, V8Engine.getConfiguration().getVerticalDimension());
+      data.putString(PARTNER, V8Engine.getConfiguration().getPartnerDimension());
     }
 
-    public static void setEntryPointDimension(String entryPoint) {
-      setDimension(9, entryPoint);
+    private static void setUserPropertiesWithBundle(Bundle data) {
+      setupPartnerDimensions(data);
+      AppEventsLogger.updateUserProperties(data,
+          response -> Logger.d("Facebook Analytics: ", response.toString()));
     }
   }
 
@@ -1061,7 +1006,7 @@ public class Analytics {
     //        }
 
     private static void ltv(String eventName, String packageName) {
-      if (!ACTIVATE_LOCALYTICS) {
+      if (!ACTIVATE_FACEBOOK) {
         return;
       }
 
@@ -1075,7 +1020,7 @@ public class Analytics {
 
         Logger.d(TAG, "LTV: " + eventName + ": " + packageName);
 
-        Localytics.tagEvent(eventName, map);
+        track(eventName, map, FACEBOOK);
       } catch (NumberFormatException e) {
         e.printStackTrace();
       }
@@ -1096,26 +1041,6 @@ public class Analytics {
       }
 
       track(HOME_PAGE_EDITORS_CHOICE, map, FLURRY);
-    }
-  }
-
-  public static class LocalyticsSessionControl {
-    public static void firstSession(SharedPreferences sPref) {
-      SharedPreferences.Editor edit = sPref.edit();
-      edit.putBoolean(Constants.IS_LOCALYTICS_FIRST_SESSION, false);
-      Logger.d(TAG, "contains" + sPref.contains(Constants.IS_LOCALYTICS_ENABLE_KEY));
-      if (!sPref.contains(Constants.IS_LOCALYTICS_ENABLE_KEY)) {
-        Random random = new Random();
-        int i = random.nextInt(10);
-        Logger.d(TAG, "firstSession: " + i);
-        edit.putBoolean(Constants.IS_LOCALYTICS_FIRST_SESSION, true);
-        edit.putBoolean(Constants.IS_LOCALYTICS_ENABLE_KEY, i == 0);
-      }
-      edit.apply();
-      Logger.d(TAG, "firstSession: IS_LOCALYTICS_FIRST_SESSION: " + sPref.getBoolean(
-          Constants.IS_LOCALYTICS_FIRST_SESSION, false));
-      Logger.d(TAG, "firstSession: IS_LOCALYTICS_ENABLE_KEY: " + sPref.getBoolean(
-          Constants.IS_LOCALYTICS_ENABLE_KEY, false));
     }
   }
 
@@ -1165,11 +1090,154 @@ public class Analytics {
     public static final String USER_REGISTERED = "User Registered";
 
     public static void login(String action) {
-      track(LOGGED_IN_EVENT, ACTION, action, LOCALYTICS);
+      track(LOGGED_IN_EVENT, ACTION, action, FACEBOOK);
     }
 
     public static void signUp() {
-      track(USER_REGISTERED, LOCALYTICS);
+      track(USER_REGISTERED, FACEBOOK);
+    }
+  }
+
+  public static class FirstInstall {
+    public static final String FIRST_INSTALL_POP_UP = "First_Install_Pop_up";
+    public static final String FIRST_INSTALL_CLOSE_WINDOW = "First_Install_Close_Window";
+    public static final String FIRST_INSTALL_START_DOWNLOAD = "First_Install_Start_Download";
+    public static final String FIRST_INSTALL_SPONSORED_APPS_SELECTED = "sponsored_apps_selected";
+    public static final String FIRST_INSTALL_NORMAL_APPS_SELECTED = "normal_apps_selected";
+
+    public static void popUp() {
+      HashMap<String, String> map = new HashMap<>();
+      logFacebookEvents(FIRST_INSTALL_POP_UP, map);
+      track(FIRST_INSTALL_POP_UP, FLURRY);
+    }
+
+    public static void closeWindow() {
+      HashMap<String, String> map = new HashMap<>();
+      logFacebookEvents(FIRST_INSTALL_CLOSE_WINDOW, map);
+      track(FIRST_INSTALL_CLOSE_WINDOW, FLURRY);
+    }
+
+    public static void startDownload(String sponsored, String normal) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(FIRST_INSTALL_SPONSORED_APPS_SELECTED, sponsored);
+      map.put(FIRST_INSTALL_NORMAL_APPS_SELECTED, normal);
+      logFacebookEvents(FIRST_INSTALL_START_DOWNLOAD, map);
+      track(FIRST_INSTALL_START_DOWNLOAD, map, FLURRY);
+    }
+  }
+
+  public static class TopAppsNotifications {
+    static final String SHOW_ADS_NOTIFICATION = "SHOW_TOP_APP_NOTIFICATION";
+    static final String CLICK_ADS_NOTIFICATION = "CLICK_TOP_APP_NOTIFICATION";
+    static final String NO_ADS_DISPLAY_NOTIFICATION = "NO_ADS_DISPLAY_NOTIFICATION";
+    static final String TYPE_NOTIFICATION = "type";
+    public static final String WEEKLY_TOP_APP = "weekly top app";
+    public static final String DAILY_TOP_APP = "daily top app";
+
+    public static void showAdsNotification(String type) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(TYPE_NOTIFICATION, type);
+      logFacebookEvents(SHOW_ADS_NOTIFICATION, map);
+      track(SHOW_ADS_NOTIFICATION, FLURRY);
+    }
+
+    public static void clickAdsNotification(String type) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(TYPE_NOTIFICATION, type);
+      logFacebookEvents(CLICK_ADS_NOTIFICATION, map);
+      track(CLICK_ADS_NOTIFICATION, FLURRY);
+    }
+
+    public static void noAdsDisplayNotification(String type) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(TYPE_NOTIFICATION, type);
+      logFacebookEvents(NO_ADS_DISPLAY_NOTIFICATION, map);
+      track(NO_ADS_DISPLAY_NOTIFICATION, FLURRY);
+    }
+  }
+
+  public static class VideoAdSDK {
+    static final String ON_VIDEO_AD_END = "ON_VIDEO_AD_END";
+    static final String ON_VIDEO_AD_START = "ON_VIDEO_AD_START";
+    static final String ON_VIDEO_AD_UNAVAILABLE = "ON_VIDEO_AD_UNAVAILABLE";
+    static final String ON_VIDEO_AD_PLAYABLE_CHANGED = "ON_VIDEO_AD_PLAYABLE_CHANGED";
+    static final String ON_VIDEO_AD_FAILED = "ON_VIDEO_AD_FAILED";
+    static final String ON_VIDEO_AD_LOADED = "ON_VIDEO_AD_LOADED";
+    static final String ON_VIDEO_AD_CLOSED = "ON_VIDEO_AD_CLOSED";
+    static final String SDKNAME = "sdkName";
+    static final String SDKVERSION = "sdkVersion";
+    static final String WASSUCCESSFULVIEW = "wasSuccessfulView";
+    static final String WASCALLTOACTIONCLICKED = "wasCallToActionClicked";
+    static final String REASON = "reason";
+    static final String ISADPLAYABLE = "isAdPlayable";
+
+    public static void onVideoAdEnd(String sdkName, String sdkVersion, boolean wasSuccessfulView,
+        boolean wasCallToActionClicked) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(SDKNAME, sdkName);
+      map.put(SDKVERSION, sdkVersion);
+      map.put(WASSUCCESSFULVIEW, String.valueOf(wasSuccessfulView));
+      map.put(WASCALLTOACTIONCLICKED, String.valueOf(wasCallToActionClicked));
+      logFacebookEvents(ON_VIDEO_AD_END, map);
+      track(ON_VIDEO_AD_END, map, FLURRY);
+    }
+
+    public static void onVideoAdStart(String sdkName, String sdkVersion) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(SDKNAME, sdkName);
+      map.put(SDKVERSION, sdkVersion);
+      logFacebookEvents(ON_VIDEO_AD_START, map);
+      track(ON_VIDEO_AD_START, map, FLURRY);
+    }
+
+    public static void onVideoAdUnavailable(String sdkName, String sdkVersion, String reason) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(SDKNAME, sdkName);
+      map.put(SDKVERSION, sdkVersion);
+      map.put(REASON, reason);
+      logFacebookEvents(ON_VIDEO_AD_UNAVAILABLE, map);
+      track(ON_VIDEO_AD_UNAVAILABLE, map, FLURRY);
+    }
+
+    public static void onVideoAdPlayableChanged(String sdkName, String sdkVersion,
+        boolean isAdPlayable) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(SDKNAME, sdkName);
+      map.put(SDKVERSION, sdkVersion);
+      map.put(ISADPLAYABLE, String.valueOf(isAdPlayable));
+      logFacebookEvents(ON_VIDEO_AD_PLAYABLE_CHANGED, map);
+      track(ON_VIDEO_AD_PLAYABLE_CHANGED, map, FLURRY);
+    }
+
+    public static void onVideoAdFailed(String sdkName, String sdkVersion) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(SDKNAME, sdkName);
+      map.put(SDKVERSION, sdkVersion);
+      logFacebookEvents(ON_VIDEO_AD_FAILED, map);
+      track(ON_VIDEO_AD_FAILED, map, FLURRY);
+    }
+
+    public static void onVideoAdLoaded(String sdkName, String sdkVersion) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(SDKNAME, sdkName);
+      map.put(SDKVERSION, sdkVersion);
+      logFacebookEvents(ON_VIDEO_AD_LOADED, map);
+      track(ON_VIDEO_AD_LOADED, map, FLURRY);
+    }
+
+    public static void onVideoAdClosed(String sdkName, String sdkVersion) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(SDKNAME, sdkName);
+      map.put(SDKVERSION, sdkVersion);
+      logFacebookEvents(ON_VIDEO_AD_CLOSED, map);
+      track(ON_VIDEO_AD_CLOSED, map, FLURRY);
+    }
+  }
+
+  public static class SessionControl {
+
+    public static void firstSession(SharedPreferences sPref) {
+
     }
   }
 }

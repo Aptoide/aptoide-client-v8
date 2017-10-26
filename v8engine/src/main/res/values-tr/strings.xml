@@ -1,174 +1,99 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="developer_website">Ağ sitesi: %s</string>
-    <string name="not_available">Mevcut değil</string>
-    <string name="developer_email">E-posta: %s</string>
-    <string name="developer_privacy_policy">Gizlilik Politikası: %s</string>
-
-
-    <string name="open">Aç</string>
-    <string name="button_header_more">dahası</string>
-    <string name="search">Ara</string>
-
-    <string name="update">Güncelle</string>
-    <string name="uninstall">Kaldır</string>
-    <string name="downgrade">Eski sürüme dönüş</string>
-    <string name="menu_select_all">Tümünü seç</string>
-    <string name="menu_select_none">Hiçbirini Seçme</string>
-    <string name="clear">Temizle</string>
-
-    <string name="excluded_updates">Dışlanan güncellemeler</string>
-    <string name="no_excluded_updates_msg">Herhangi bir uygulamanın yeni sürümü cihazınızda çalışmıyor ya da işlev eksikliği mi 
-var? Uygulamaların güncellemesini engelleyin. Güncellemeler sekmesine gidin ve güncellemesini engellemek istediğiniz uygulamaya uzun 
-dokunun.</string>
-
-    <string name="restore_updates">Güncellemeleri geri yükle</string>
-    <string name="rollback">Geri al</string>
-    <string name="menu_card_timeline_clear">Temizle</string>
-    <string name="fragment_social_timeline_no_connection">Hiçbir ağ bağlantısı yok</string>
-    <string name="fragment_social_timeline_general_error">Sorun yaşanmakta. Daha sonra deneyebilir misin?</string>
-
-    <string name="displayable_social_timeline_app_update">Güncelle</string>
-    <string name="appview_rate_this_app">Bu uygulamayı değerlendir</string>
-    <string name="needs_license">Lisans Lazım</string>
-    <string name="virus">Virüs</string>
-    <string name="additional_information">Ek bilgi</string>
-    <string name="displayable_social_timeline_app_update_updated">Güncellenmiş</string>
-    <string name="displayable_social_timeline_recommendation_similar_and">ve</string>
-    <string name="social_facebook_screen_title">Facebook</string>
-    <string name="social_twitter_screen_title">Twitter</string>
-    <string name="title">BAŞLIK</string>
-    <string name="feedback_not_valid">Lütfen geçerli bir Mevzu giriniz!</string>
-    <string name="ignore_update">Güncellemeyi Görmezden Gel</string>
-    <string name="added_to_scheduled">Menü &gt; Planlanan İndirmelere eklendi</string>
-    <string name="updates_filter_setting_title">Bana sadece kararlı uygulama sürümlerinin güncellemelerini göster</string>
-  <string name="updates_filter_summary">Burayı işaretlerseniz, beta sürümlerinden haberdar olmazsınız.</string>
-  <string name="latest_reviews">Son Gözden Geçirmeler</string>
-  <string name="latest_comments">Son Yorumlar</string>
-  <string name="action">Aksiyon</string>
-  <string name="adventure">Macera</string>
-  <string name="all">Tümü</string>
-  <string name="applications">Uygulamalar</string>
-  <string name="arcade">Arcade</string>
-  <string name="arcade_action">Arcade ve Aksiyon</string>
-  <string name="books_reference">Kitap ve Referans</string>
-  <string name="brain_puzzle">Akıl ve Yapboz</string>
-  <string name="business">İş</string>
-  <string name="card">Kart</string>
-  <string name="cards_casino">Kart ve Kumar</string>
-  <string name="casino">Kumarhane</string>
-  <string name="comics">Çizgi Roman</string>
-  <string name="communication">İletişim</string>
-  <string name="demo">Demo</string>
-  <string name="education">Eğitim</string>
-  <string name="educational">Eğitici</string>
-  <string name="entertainment">Eğlence</string>
-  <string name="family">Aile</string>
-  <string name="finance">Finans</string>
-  <string name="games">Oyunlar</string>
-  <string name="health">Sağlık</string>
-  <string name="health_fitness">Sağlık ve Form</string>
-  <string name="highlighted">Vurgulanan</string>
-  <string name="local_top_apps">En İyi Yerel Uygulamalar</string>
-  <string name="lifestyle">Yaşam tarzı</string>
-  <string name="media_video">Ortam ve Video</string>
-  <string name="medical">Tıbbi</string>
-  <string name="multimedia">Çoklu ortam</string>
-  <string name="music">Müzik</string>
-  <string name="music_audio">Müzik ve Ses</string>
-  <string name="news_magazines">Haberler ve Magazinler</string>
-  <string name="news_weather">Haberler ve Hava durumu</string>
-  <string name="personalization">Kişiselleştirme</string>
-  <string name="photography">Fotoğrafçılık</string>
-  <string name="productivity">Üretkenlik</string>
-  <string name="puzzle">Yap boz</string>
-  <string name="racing">Yarış</string>
-  <string name="reference">Referans</string>
-  <string name="role_playing">Rol Yapma</string>
-  <string name="simulation">Simülasyon</string>
-  <string name="social">Sosyal</string>
-  <string name="software_libraries">Yazılım Kütüphaneleri</string>
-  <string name="sports">Spor</string>
-  <string name="sports_games">Spor Oyunları</string>
-  <string name="strategy">Strateji</string>
-  <string name="themes">Temalar</string>
-  <string name="tools">Araçlar</string>
-  <string name="top_apps">En İyi Uygulamalar</string>
-  <string name="top_games">En İyi Oyunlar</string>
-  <string name="transport">Taşıma</string>
-  <string name="travel">Seyahat</string>
-  <string name="travel_local">Seyahat ve Yerel</string>
-  <string name="trending">Akım</string>
-  <string name="libraries_demo">Kütüphaneler ve Demo</string>
-  <string name="shopping">Alışveriş</string>
-  <string name="weather">Hava Durumu</string>
-  <string name="top_apps_in_store">Bu Mağazadaki En İyi Uygulamalar</string>
-  <string name="apps_for_kids">Çocuklar için Uygulamalar</string>
-  <string name="music_video">Müzik ve Video</string>
-  <string name="essential_apps">Önemli Uygulamalar</string>
-  <string name="summer_apps">Yaz Uygulamaları</string>
-  <string name="play_it">Oyna bunu!</string>
-
-  <string name="unsubscribe">Aboneliği kaldır</string>
-  <string name="dialog_install_warning_proceed_button">Devam et</string>
-  <string name="dialog_install_warning_search_for_trusted_app_button">Şunu ara</string>
-  <string name="dialog_install_warning_trusted_app_button">Güvenli Uygulama</string>
-  <string name="dialog_install_warning_careful_text">Bu uygulamayı kurmak istiyorsanız dikkatli olun. Virüs veya kötücül yazılım bulundurabilir ya da değiştirilmiş olabilir.</string>
-    <string name="dialog_install_warning_trusted_version_button">Güvenilir Sürüm</string>
-  <string name="dialog_install_warning_get_trusted_version_button">Edin</string>
-  <string name="board">Masa Oyunu</string>
-  <string name="casual">Ciddi Olmayan</string>
-  <string name="transportation">Taşımalar</string>
-  <string name="wizard_skip"><b>ATLA</b></string>
-  <string name="all_stores">Tüm Mağazalar</string>
-  <string name="followed_stores">Takip Edilen Mağazalar</string>
+<?xml version="1.0" encoding="utf-8"?>
+<!--Generated by crowdin.com-->
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 17/08/2016.
+  -->
+<resources>
   <string name="dark">Karanlık</string>
-  <string name="light">Aydınlık</string>
-
+  <string name="light">Işık</string>
+  <string name="updates_filter_summary">Burayı işaretlerseniz, beta sürümlerinden haberdar olmazsınız.</string>
+  <string name="updates_filter_setting_title">Bana sadece kararlı uygulama sürümlerinin güncellemelerini göster</string>
   <string name="include_system_apps_title">Sistem uygulamalarını dahil et</string>
   <string name="include_system_apps_summary">Bunu işaretleyerek sistem uygulamaları (aygıtın üreticisi tarafından yüklenmiş uygulamalar) güncelleştirmelerinden haberdar edileceksiniz</string>
   <string name="aptoide_email">aptoide@aptoide.com</string>
   <string name="aptoide_url">http://www.aptoide.com/</string>
-
+  <!-- Permission pop-ups messages -->
   <string name="access_to_get_accounts_rationale">Hesapları almak için izin vermeniz gerekir</string>
+  <string name="unsubscribe">Aboneliği kaldır</string>
+  <string name="developer_website">Ağ sitesi: %s</string>
+  <string name="not_available">Mevcut değil</string>
+  <string name="developer_email">E-posta: %s</string>
+  <string name="developer_privacy_policy">Gizlilik Politikası: %s</string>
+  <string name="open">Aç</string>
+  <string name="button_header_more">dahası</string>
+  <string name="search">Arama</string>
+  <string name="update">Güncelleme</string>
+  <string name="uninstall">Kaldır</string>
+  <string name="downgrade">Eski sürüme dönüş</string>
   <string name="appview_followers_count_text">%1$s Takipçi</string>
   <string name="other_versions_downloads_count_text">%1$s indirme</string>
-
+  <!-- Common (menu) -->
+  <string name="menu_select_all">Tümünü seç</string>
+  <string name="menu_select_none">Hiçbirini Seçme</string>
+  <string name="clear">Temizle</string>
+  <!-- Excluded Updates Fragment -->
+  <string name="excluded_updates">Dışlanan güncellemeler</string>
+  <string name="no_excluded_updates_msg">Herhangi bir uygulamanın yeni sürümü cihazınızda çalışmıyor ya da işlev eksikliği mi 
+var? Uygulamaların güncellemesini engelleyin. Güncellemeler sekmesine gidin ve güncellemesini engellemek istediğiniz uygulamaya uzun 
+dokunun.</string>
+  <!-- Excluded Updates Fragment (menu) -->
+  <string name="restore_updates">Güncellemeleri geri yükle</string>
   <string name="open_apps_manager">Uygulama Yöneticisini Aç</string>
-
+  <!-- Rollback Fragment -->
+  <string name="rollback">Geri al</string>
   <string name="no_rollbacks_msg">Herhangi bir uygulamanın önceki bir sürüme hızlı bir şekilde geçiş yapın ve uyumsuzluk sorunlarını çözün. Sürüm ve kurulum tarihi dahil olmak üzere 
 tüm yüklü uygulamaların (%s üzerinden) bir günlüğünü tutun.</string>
-
+  <!-- Timeline Fragment -->
+  <string name="menu_card_timeline_clear">Temizle</string>
   <string name="fragment_social_timeline_aptoide_team">Aptoide Ekibi</string>
+  <string name="fragment_social_timeline_no_connection">Hiçbir ağ bağlantısı yok</string>
+  <string name="fragment_social_timeline_general_error">Sorun yaşanmakta. Daha sonra deneyebilir misin?</string>
   <string name="displayable_social_timeline_store_latest_apps_headline">Bu mağazada yeni uygulamalar var</string>
   <string name="displayable_social_timeline_app_update_name">Uygulama %1$s</string>
   <string name="displayable_social_timeline_app_has_update">%1$s var</string>
   <string name="displayable_social_timeline_article_get_app_button">%1$s uygulama al</string>
+  <string name="displayable_social_timeline_app_update">Güncelle</string>
   <string name="displayable_social_timeline_app_update_version">Sürüm %1$s</string>
   <string name="displayable_social_timeline_app_update_button">Güncelleme %1$s</string>
   <string name="appview_other_versions"><u>Diğer Sürümler</u></string>
   <string name="appview_latest_version_text">En son sürüm</string>
-  <string name="appview_read_all">tümünü oku &gt;</string>
+  <string name="appview_rate_this_app">Bu uygulamayı değerlendir</string>
+  <string name="appview_read_all">tümünü oku <![CDATA[>]]></string>
   <string name="zero">0</string>
   <string name="working_well">İyi Çalışıyor</string>
+  <string name="needs_license">Lisans Gerekiyor</string>
   <string name="fake_app">Sahte Uygulama</string>
+  <string name="virus">Virüs</string>
+  <string name="additional_information">Ek bilgi</string>
+  <string name="displayable_social_timeline_app_update_updated">Güncellenmiş</string>
   <string name="displayable_social_timeline_app_update_updating">Güncelleniyor</string>
   <string name="displayable_social_timeline_app_update_error">Güncelleme Hatası</string>
-
+  <!-- need translation -->
   <string name="appview_good_app_guaranteed">İyi Uygulama Garantili!</string>
-    <string name="appview_good_app_description">Bu uygulamalar virüs, malware ve diğer kötü niyetli saldırılara karşı güvenlik testinden geçti ve herhangi 
+  <string name="appview_good_app_description">Bu uygulamalar virüs, malware ve diğer kötü niyetli saldırılara karşı güvenlik testinden geçti ve herhangi 
 bir tehdit içermez!</string>
+  <!-- -->
+  <!-- Preferences -->
+  <!-- "Other <app name> versions on different Stores" -->
   <string name="other_versions_partial_title_1">Diğer</string>
   <string name="other_versions_partial_title_2">Farklı Mağazalarda sürümler</string>
   <string name="displayable_social_timeline_recommendation_similar_to">%1$s üzerinden</string>
+  <string name="displayable_social_timeline_recommendation_similar_and">ve</string>
   <string name="displayable_social_timeline_recommendation_atptoide_team_recommends">%s önerir</string>
+  <string name="social_facebook_screen_title">Facebook</string>
+  <string name="social_twitter_screen_title">Twitter</string>
   <string name="top_comments">En İyi Yorumlar</string>
-  <string name="rate">Oylama</string>
-  <string name="rate_app">%s oyla</string>
+  <string name="rate">Değerlendirme</string>
+  <string name="rate_app">Değerlendirme %s</string>
+  <string name="title">Başlık</string>
   <string name="tap_a_star">Oy vermek için bir yıldıza dokunun</string>
-
+  <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
   <string name="other_versions_on_different_stores">Farklı mağazalarda diğer sürümler</string>
-  <string name="review_optional">Gözden Geçir (isteğe bağlı)</string>
+  <string name="review_optional">İnceleme (isteğe bağlı)</string>
+  <string name="feedback_not_valid">Lütfen geçerli bir Mevzu giriniz!</string>
   <string name="thank_you_for_your_opinion">Görüşünüz için teşekkür ederiz!</string>
+  <string name="ignore_update">Güncellemeyi Görmezden Gel</string>
   <string name="five_numeric">5</string>
   <string name="four_numeric">4</string>
   <string name="three_numeric">3</string>
@@ -179,99 +104,185 @@ bir tehdit içermez!</string>
   <string name="updating_msg">Güncelleniyor</string>
   <string name="installing_msg">Kuruluyor</string>
   <string name="needs_permission_to_fs">Harici Dosya Sistemini kullanmak için izin gerekir</string>
-
+  <string name="added_to_scheduled">Menü &gt; Planlanan İndirmelere eklendi</string>
   <string name="pause_all_downloads">İndirmeleri Durdur</string>
+  <string name="all_stores">Tüm Mağazalar</string>
+  <string name="followed_stores">Takip Edilen Mağazalar</string>
   <string name="storage_access_permission_request_message">Telefonunuzun depolama alanına erişime izin verin ve böylece bu uygulamayı indirebilir ve kurabiliriz.</string>
-
-    <string name="remote_install_menu_title">Televizyon üzerinde kur</string>
-    <string name="remote_install_title">Hedef aygıtı seçin</string>
-    <string name="remote_install_success">Uygulama şu an yükleniyor</string>
-    <string name="remote_install_fail">Uzaktan kurulum başarısız oldu</string>
-    <string name="remote_install_nodevices">Hiçbir aygıt bulunamadı</string>
-    <string name="remote_install_notinstallated">Aptoide TV Android TV\'nizde yüklü mü? 
+  <string name="remote_install_menu_title">Televizyon üzerinde kur</string>
+  <string name="install_on_tv_mobile_error">Bu özelliği kullanmak için cihazınızın Wi-Fi ağına bağlı olduğundan emin olun.</string>
+  <string name="remote_install_title">Hedef aygıtı seçin</string>
+  <string name="remote_install_success">Uygulama şu an yükleniyor</string>
+  <string name="remote_install_fail">Uzaktan kurulum başarısız oldu</string>
+  <string name="remote_install_nodevices">Hiçbir aygıt bulunamadı</string>
+  <string name="remote_install_notinstallated">Aptoide TV Android TV\'nizde yüklü mü? 
  http://aptoi.de/TV</string>
-    <string name="remote_install_nowifi">Wi-Fi bağlantısı yok</string>
-    <string name="remote_install_nowifi_tip">Lütfen etkinleştirin ve bir Wi-Fi ağına bağlanın</string>
-    <string name="remote_install_empty_list">Aranıyor…</string>
-    <string name="remote_install_tip">Lütfen bir AndroidTV\'nin ağa bağlı olduğundan emin olun</string>
-    <string name="remote_install_retry">Yeniden Dene</string>
-    <string name="remote_install_help">Yardım</string>
-    <string name="remote_install_help_url">http://blog.aptoide.com/remote-tv-install</string>
-
-    <string name="wizard_sub_title_viewpager_one"><b>Güvenli</b> ve <b>keyifli</b> bir yolculuğa başlayın.</string>
-  <string name="wizard_title_viewpager_two"><b>Uygulama Zaman Tüneli</b></string>
-  <string name="wizard_sub_title_viewpager_two"><b>En son uygulamaları</b> alın, <b>tematik mağazaları</b> 
-bulun ve <b>kişiselleştirilmiş içeriğe</b> ulaşın.</string>
-
-  <string name="wizard_title_viewpager_three"><b>Topluluğa katılın</b></string>
+  <string name="remote_install_nowifi">Wi-Fi bağlantısı yok</string>
+  <string name="remote_install_nowifi_tip">Lütfen etkinleştirin ve bir Wi-Fi ağına bağlanın</string>
+  <string name="remote_install_empty_list">Aranıyor…</string>
+  <string name="remote_install_tip">Lütfen bir AndroidTV\'nin ağa bağlı olduğundan emin olun</string>
+  <string name="remote_install_retry">Yeniden Dene</string>
+  <string name="remote_install_help">Yardım</string>
+  <!-- WIZARD -->
+  <string name="wizard_skip"><b>ATLA</b></string>
+  <!-- WIZARD PAGE 1 -->
+  <string name="wizard_welcome_message"><b>Welcome!</b></string>
+  <string name="wizard_sub_title_viewpager_one">Begin a <b>secure</b> and <b>enjoyable</b> journey.</string>
+  <string name="wizard_description_part_one_viewpager_one"><b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
+  <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
+  <!-- WIZARD PAGE 2 -->
+  <string name="wizard_title_viewpager_two"><b>Apps Timeline</b></string>
+  <string name="wizard_sub_title_viewpager_two">Get the <b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
+  <!-- WIZARD PAGE 3 -->
+  <string name="wizard_title_viewpager_three"><b>Join the community</b></string>
+  <string name="wizard_description_part_one_viewpager_three"><b>Follow</b> your friends</string>
+  <string name="wizard_description_part_two_viewpager_three"><b>Review</b> and Rate apps</string>
+  <string name="wizard_description_part_three_viewpager_three"><b>Create</b> your Store</string>
+  <string name="wizard_register_now_button">Register now</string>
+  <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
+  <string name="wizard_or_login"><u>or Login</u></string>
   <string name="you_need_to_be_logged_in">Oturum açmış olmanız gerekir</string>
   <string name="follow">Takip Et</string>
+  <!--need translation-->
   <string name="followed">Takip Ediliyor</string>
   <string name="unfollow_yes_no">Takipten çıkarmak istediğinizden emin misiniz?</string>
   <string name="unfollow">Takipten Çıkar</string>
-  <string name="appview_follow_store_button_text">Takip Edilsin Mi?</string>
+  <string name="appview_follow_store_button_text">Follow?</string>
   <string name="unfollowing_store_message">Takip Edilmiyor %s</string>
   <string name="store_followed">Mağaza %s takip edildi</string>
   <string name="subscribers">Aboneler</string>
   <string name="apps">Uygulamalar</string>
-
+  <!---->
   <string name="be_the_first_to_rate_this_app">Bu uygulamayı oylayan ilk siz olun</string>
-  <string name="rate_this_app">Bu uygulamayı oylayın</string>
-
+  <string name="rate_this_app">Bu uygulamayı oyla</string>
+  <string name="dialog_install_warning_proceed_button">İlerle</string>
+  <string name="dialog_install_warning_search_for_trusted_app_button">Şunu ara</string>
+  <string name="dialog_install_warning_trusted_app_button">Güvenli Uygulama</string>
+  <string name="dialog_install_warning_careful_text">Bu uygulamayı kurmak istiyorsanız dikkatli olun. Virüs veya kötücül yazılım bulundurabilir ya da değiştirilmiş olabilir.</string>
   <string name="dialog_install_warning_credibility_text">Devam etmeden önce mağazanın güvenilirliğini ve diğer kullanıcı yorumlarını kontrol edin. Aptoide her zaman, yalnızca %1$s güvenilen uygulamaları yüklemenizi önerir.</string>
+  <string name="dialog_install_warning_trusted_version_button">Güvenilir Sürüm</string>
+  <string name="dialog_install_warning_get_trusted_version_button">Edin</string>
   <string name="flag_results">Bayrak sonuçları</string>
   <string name="helpful">Yararlı</string>
   <string name="not_helpful">Yararlı değil</string>
   <string name="description_not_available">Bu uygulama için mevcut açıklama yok</string>
-  <string name="top_stores_fragment_title">En İyi Mağazalar</string>
-
+  <string name="top_stores_fragment_title">En iyi Mağazalar</string>
+  <!--server translations hammered-->
   <string name="home_title">Ana Sayfa</string>
   <string name="community">Topluluk</string>
   <string name="stores">Mağazalar</string>
   <string name="updates">Güncellemeler</string>
-  <string name="social_timeline">Sosyal Zaman Tüneli</string>
-  <string name="downloads">İndirmeler</string>
+  <string name="social_timeline">Sosyal Zaman Çizelgesi</string>
+  <string name="downloads">İndirilenler</string>
   <string name="apps_timeline"><b>Uygulama Zaman Tüneli</b></string>
-  <string name="trivia">Diğer bilgiler</string>
+  <string name="latest_reviews">En Son İncelemeler</string>
+  <string name="latest_comments">Son Yorumlar</string>
+  <string name="action">Aksiyon</string>
+  <string name="adventure">Macera</string>
+  <string name="all">Tümü</string>
+  <string name="applications">Uygulamalar</string>
+  <string name="arcade">Arcade</string>
+  <string name="arcade_action">Arcade ve Aksiyon</string>
+  <string name="board">Masa Oyunları</string>
+  <string name="books_reference">Kitaplar ve Referans</string>
+  <string name="brain_puzzle">Beyin ve Bulmaca</string>
+  <string name="business">İş</string>
+  <string name="card">Kart</string>
+  <string name="cards_casino">Kart ve Kumar</string>
+  <string name="casino">Gazino</string>
+  <string name="casual">Rastgele</string>
+  <string name="comics">Çizgi Romanlar</string>
+  <string name="communication">İletişim</string>
+  <string name="demo">Demo</string>
+  <string name="education">Eğitim</string>
+  <string name="educational">Eğitimsel</string>
+  <string name="entertainment">Eğlence</string>
+  <string name="family">Aile</string>
+  <string name="finance">Finans</string>
+  <string name="games">Oyunlar</string>
+  <string name="health">Sağlık</string>
+  <string name="health_fitness">Sağlık ve Fitness</string>
+  <string name="highlighted">Öne Çıkanlar</string>
+  <string name="local_top_apps">En İyi Yerel Uygulamalar</string>
+  <string name="lifestyle">Yaşam tarzı</string>
+  <string name="media_video">Medya ve Video</string>
+  <string name="medical">Medikal</string>
+  <string name="multimedia">Çoklu Ortam</string>
+  <string name="music">Müzik</string>
+  <string name="music_audio">Müzik ve Ses</string>
+  <string name="news_magazines">Haberler ve Dergiler</string>
+  <string name="news_weather">Haberler ve hava durumu</string>
+  <string name="personalization">Kişiselleştirme</string>
+  <string name="photography">Fotoğrafçılık</string>
+  <string name="productivity">Verimlilik</string>
+  <string name="puzzle">Bulmaca</string>
+  <string name="racing">Yarış</string>
+  <string name="reference">Referans</string>
+  <string name="role_playing">Rol Yapma</string>
+  <string name="simulation">Simülasyon</string>
+  <string name="social">Sosyal</string>
+  <string name="software_libraries">Yazılım Kütüphaneleri</string>
+  <string name="sports">Spor</string>
+  <string name="sports_games">Spor oyunları</string>
+  <string name="strategy">Strateji</string>
+  <string name="themes">Temalar</string>
+  <string name="tools">Araçlar</string>
+  <string name="top_apps">En İyi Uygulamalar</string>
+  <string name="top_games">En İyi Oyunlar</string>
+  <string name="transport">Ulaşım</string>
+  <string name="transportation">Taşımalar</string>
+  <string name="travel">Seyahat</string>
+  <string name="travel_local">Seyahat ve Yerel</string>
+  <string name="trending">Akım</string>
+  <string name="trivia">Diğer</string>
   <string name="word">Kelime</string>
-  <string name="latest_applications">Son Uygulamalar</string>
+  <string name="libraries_demo">Kütüphaneler Ve Demo</string>
+  <string name="shopping">Alışveriş</string>
+  <string name="weather">Hava durumu</string>
+  <string name="latest_applications">En Son Uygulamalar</string>
+  <string name="top_apps_in_store">Bu Mağazadaki En İyi Uygulamalar</string>
+  <string name="apps_for_kids">Çocuklar için Uygulamalar</string>
   <string name="aptoide_publishers">%s Yayıncılar</string>
+  <string name="music_video">Müzik ve Video</string>
+  <string name="essential_apps">Önemli Uygulamalar</string>
+  <string name="summer_apps">Yaz Uygulamaları</string>
+  <string name="play_it">Oyna bunu!</string>
+  <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">%1$s ile ilgili</string>
   <string name="appstimeline_update_app">uygulama</string>
+  <!--custom tabs-->
   <string name="customtabs_open_native_app">Uygulamada açık</string>
-
-
+  <!--Download fragment-->
   <string name="fragment_download_no_connection">Hiçbir uygulama indirilmedi</string>
   <string name="fragment_download_no_connection_subtitle">Uygulamaları indirmeye başlar başlamaz yeni uygulamalar burada görünür!</string>
   <string name="newer_version_available">Daha yeni sürüm mevcut</string>
-
   <string name="add_store">Mağazaya ekle</string>
-  <string name="downgrade_warning_dialog">"İndirgeme yaparak  uygulama ile ilgili veri kaybedebilirsiniz ve uygulama hesabından çıkış yapabilirsiniz."</string>
-
+  <string name="downgrade_warning_dialog">İndirgeme yaparak  uygulama ile ilgili veri kaybedebilirsiniz ve uygulama hesabından çıkış yapabilirsiniz.</string>
   <string name="displayable_social_timeline_similar_to">%1$s benzer</string>
   <string name="freed_space">%s boşaltıldı</string>
   <string name="storage_dialog_title">Aptoide Depolamayı Temizle</string>
   <string name="clear_cache_dialog_message">Tüm simgeleri, resimleri, indirilen apk, obb, webservice verilerini silmek istediğiniz emin misiniz..?</string>
   <string name="clear_cache_summary">Simgeler, resimler, indirilen apk, obb, webservice verileri siler…</string>
   <string name="clearcache_title">Depolamayı Temizle</string>
-
+  <!-- Stores tab -->
   <string name="recommended_stores">Tavsiye Edilen Mağazalar</string>
   <string name="create_store_displayable_message">Mağazanızı şimdi oluşturun ve uygulamalarınızı paylaşmaya başlayın!</string>
-  <string name="create_store_displayable_button">MAĞAZA OLUŞTUR</string>
+  <string name="create_store_displayable_button">MAĞAZA OLUŞTURUN</string>
   <string name="my_store_created_displayable_message">Android Uygulama Mağazanız</string>
+  <string name="create_store_displayable_created_store_message">You\'ve just created your Store!</string>
   <string name="create_store_displayable_explore_message">Tüm olasılıkları araştır ve gir</string>
   <string name="create_store_displayable_explore_button">Araştır</string>
-
+  <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">Mağaza uygulamalarınız henüz yok.</string>
   <string name="install_app_outter_pt2">ve uygulamaları dünya ile paylaşmak için yükle!</string>
-  <string name="install_app_inner">" Yükle %1$s "</string>
-  <string name="open_app_inner">" Aç %1$s "</string>
+  <string name="install_app_inner"> Yükle %1$s </string>
+  <string name="open_app_inner"> Aç %1$s </string>
   <string name="downloads_count">İndirilenler: %1$s</string>
   <string name="version_number">Sürüm: %1$s</string>
   <string name="app_size">Boyut: %1$s</string>
   <string name="comment_on_store">Yorum %1$s mağaza</string>
   <string name="word_this">bu</string>
-
+  <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">Hangi takipçileri göreceksiniz:</string>
   <string name="social_timeline_share_title">Kart önizlemesini paylaş</string>
   <string name="social_timeline_share_title_checkbox">Kullanıcı profilimi Uygulama Zaman Tünelinde özel hale getir. Sadece mağazamın bilgisini paylaş</string>
@@ -282,100 +293,41 @@ bulun ve <b>kişiselleştirilmiş içeriğe</b> ulaşın.</string>
   <string name="social_timeline_share_dialog_opt_out_text_1">Profilinizi gizli yaparsanız arkadaşlarınızı Uygulama Zaman Tünelinde bulmanız ve takip etmeniz mümkün olmayacaktır.</string>
   <string name="social_timeline_share_dialog_opt_out_text_2"><b>www.aptoide.com</b> erişin, hesabınıza giriş yapın ve gizlilik tanımlarını değiştirmek için <b>Ayarlar</b>\'a gidiniz.</string>
   <string name="social_timeline_share_dialog_installed_and_recommended">Kuruldu ve Tavsiye Edildi</string>
-  <string name="social_timeline_share_bar_login">Arkadaşlarınız ne yüklüyor?</string>
+  <string name="social_timeline_share_bar_login">Arkadaşlarınız neler yüklüyor?</string>
   <string name="social_timeline_share_bar_following">Daha fazla Mağaza takip edin ve arkadaşlarınızla bağlantı kurun.</string>
   <string name="social_timeline_share_bar_followers">Daha fazla takipçiniz olması için mağazanızı geliştirin.</string>
-
-
-  <string name="comment_store">Mağazaya Yorum Yap</string>
-  <string name="be_the_first_to_send_feedback_about_this_store">Bu mağaza hakkında geri bildirim gönderen ilk siz olun</string>
-  <string name="timeline_followers">Takipçiler %d</string>
-  <string name="timeline_followed">Takip Ediliyor %d</string>
-
-<string name="install_on_tv_mobile_error">Bu özelliği kullanmak için cihazınızın Wi-Fi ağına bağlı olduğundan emin olun.</string>
   <string name="social_timeline_followers_fragment_title">%d takipçi(ler)</string>
   <string name="social_timeline_following_fragment_title">%d kişi(ler) takip ediliyor</string>
   <string name="social_timeline_share_soon">Paylaşım yakında yayınlanacak</string>
   <string name="social_timeline_recommends">Önerilenler</string>
   <string name="private_profile_create_store">Özel bir profile sahip olmak için bir mağaza oluşturun</string>
   <string name="social_timeline_shared_by">%1$s tarafından paylaşıldı</string>
-
+  <string name="social_timeline_who_liked">Kim beğendi</string>
+  <string name="social_timeline_users_private">%d özel</string>
+  <!-- Store Meta widget -->
   <string name="edit_store">Düzenle</string>
-
+  <!-- Comments on store -->
+  <string name="comment_store">Mağazaya Yorum Yap</string>
   <string name="comment_store_title">Bu mağazadaki Yorumlar</string>
+  <string name="be_the_first_to_send_feedback_about_this_store">Bu mağaza hakkında geri bildirim gönderen ilk siz olun</string>
+  <!-- Followers and following -->
+  <string name="timeline_followers">Takipçiler %d</string>
+  <string name="timeline_followed">Takip Ediliyor %d</string>
   <string name="timeline_stats_followers">Takipçiler</string>
   <string name="timeline_login_message">Arkadaşlarınız neler yüklüyor?</string>
   <string name="private_followers_message">%d takipçileri özeldir</string>
   <string name="private_following_message">%d özel kullanıcılar/mağazaları takip ediyorsunuz</string>
-
-  <string name="my_account">Hesabım</string>
-  <string name="spot_share">Bul ve Paylaş</string>
-  <string name="setting_schdwntitle">Zamanlanmış İndirmeler</string>
-  <string name="settings">Ayarlar</string>
-  <string name="facebook">Facebook</string>
-  <string name="twitter">Twitter</string>
-  <string name="backup_apps">Yedekleme Uygulamaları</string>
-
-  <string name="timeline"><b>Zaman çizelgesi</b></string>
-  <string name="create_store_displayable_created_store_short_term_message">Mağazanızı az önce oluşturdunuz!</string>
-  <string name="social_timeline_who_liked">Kim beğendi</string>
-  <string name="social_timeline_users_private">%d özel</string>
-
+  <!-- Payments -->
+  <string name="item_payment_button_use">use</string>
+  <string name="item_payment_button_register">register</string>
+  <string name="item_payment_approving_text">Approving...</string>
+  <string name="activity_payment_more_payments_button">Use another payment method</string>
   <string name="reviews_expand_button">%d Yanıtlar</string>
   <string name="out_of_space_dialog_title">Yer Yok</string>
   <string name="out_of_space_dialog_message">Devam etmek için lütfen boş alan yaratın.</string>
-  <string name="setting_category_autoupdate">%s Güncelleştirmeler</string>
-  <string name="setting_category_autoupdate_title">%sGüncelleme bildirimleri al</string>
-  <string name="setting_category_autoupdate_message">%s yeni sürümleri için düzenli olarak kontrol et</string>
-  <string name="store_added_long_time_suggestion_message">uzun vadeli göster</string>
-  <string name="store_added_short_time_suggestion_message">yeni oluşturulanları göster</string>
-  <string name="create_store_displayable_created_store_long_term_message">uzun vadeli</string>
-  <string name="create_store_displayable_explore_long_term_button">Mağazayı Görüntüle</string>
-  <string name="create_store_displayable_empty_description_message">Mağazanız için bir açıklama ekleyin. İyi bir açıklama daha fazla takipçi ve etkileşim almanıza yardımcı olur.</string>
-
-  <string name="addressbook_increase_network_message">Ağınız artırın.</string>
-  <string name="addressbook_connect_with_friends_message">Arkadaşlarınızla bağlantı kurun.</string>
-  <string name="addressbook_sync">Adres Defteri\'ni Eşitle</string>
-  <string name="not_now">Şimdi değil</string>
-  <string name="follow_friends">Arkadaşlarınızı Takip Edin</string>
-  <string name="addressbook_data_about"><b>%1$s verilerinizi nasıl kullanırsınız</b> 
-
-
-%1$s App Store kullanan arkadaşlarınız ve aile üyeleriniz için rehberinizde arama yapar. Bu bilgiyi sadece sizin içeriğiniz ile ilintili uygulamaları paylaşabilecek daha fazla insanla bağlantı kurmak üzere %1$s deneyiminizi geliştirmek kullanıyoruz.
-
-
-
-Gizliliğinizi korumak için tüm verileri %1$s sunucuları göndermeden önce kodlanacaktır.
- </string>
-  <string name="addressbook_success">Başarılı!</string>
-  <string name="addressbook_allow_friends_find">Arkadaşlarınızın sizi bulmasına izin verin</string>
-  <string name="google">Google</string>
-  <string name="done">Tamam</string>
-  <string name="addressbook_share_phone">Telefon numaranızı paylaşın, böylece arkadaşlarınız %s üzerinde kolayca bulabilirler</string>
-  <string name="addressbook_phone_number">Telefon numarası</string>
-  <string name="addressbook_insuccess_connection">Rehberiniz ile bağlantı kuramadık!</string>
-  <string name="addressbook_invite_friends">Size katılmaları için arkadaşlarınızı davet edin!</string>
-  <string name="addressbook_thanks_for_connecting">Bağlantı kurduğunuz için teşekkürler</string>
-  <string name="addressbook_success_connected_friends">Sizi başarıyla %2$s kullanan %1$s arkadaşınızla başarı ile bağlantı kurmanızı sağladık</string>
-  <string name="addressbook_2nd_msg">%1$s App Store kullanan arkadaşlarınız ve aile üyeleriniz
-için rehberinize bir göz atacaktır. Gizliliğinizi korumak için %1$s
-sunucularına hiçbir özel veri gönderilmeyecektir</string>
-  <string name="addressbook_3rd_msg">DAHA FAZLA BİLGİ EDİNİN</string>
-
-  <string name="join_company">%s katıl</string>
-  <string name="login">Oturum Aç</string>
-  <string name="login_company">%s oturum aç</string>
-  <string name="connect_with_facebook">Facebook ile Bağlan</string>
-  <string name="connect_with_google">Google ile Bağlan</string>
-  <string name="accept_terms_signup">Aptoide katılarak Aptoide\'nın Geliştiriciler için Şart ve Koşullar ile İçerik politikasını kabul etmiş olursunuz</string>
-  <string name="recover_password">Şifrenizi kurtarın</string>
-  <string name="email">E-posta</string>
-  <string name="password">Parola</string>
-  <string name="create_password">Parola Oluştur</string>
-  <string name="store_suspended_message">Mağaza askıya alındı</string>
-
-  <string name="add_store_dialog_title">Farklı mağazalarda sadece sizin için özel olarak hazırlanmış içeriği bulabilirsiniz</string>
-  <string name="add_store_dialog_top_stores">EN İYİ MAĞAZALARI KEŞFET</string>
-  <string name="add_store_dialog_top_stores_small_text">ve özel içerik bulun!</string>
-
+  <!--new setting options-->
+  <string name="languages">Languages</string>
+  <string name="language_dialog">Select a language</string>
+  <string name="topAppsNotification">Top apps recommendations</string>
+  <string name="topAppsNotification_dialog">Choose top apps notifications frequency</string>
 </resources>

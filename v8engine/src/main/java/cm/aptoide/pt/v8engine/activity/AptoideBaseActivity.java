@@ -8,6 +8,8 @@ package cm.aptoide.pt.v8engine.activity;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -16,6 +18,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
@@ -25,6 +28,7 @@ import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.utils.LanguageUtils;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -58,17 +62,31 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
     navManager = NavigationManagerV4.Builder.buildWith(this);
 
     super.onCreate(savedInstanceState);
+
+    //If the user had previously chosen a language, the app is displayed in that language, if not, it starts with the device's language as default
+    String lang = ManagerPreferences.getLanguage();
+    Resources res = getResources();
+    DisplayMetrics dm = res.getDisplayMetrics();
+    Configuration conf = res.getConfiguration();
+    conf.locale = LanguageUtils.getLocaleFromString(lang);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+      conf.setLayoutDirection(LanguageUtils.getLocaleFromString(lang));
+    }
+    res.updateConfiguration(conf, dm);
+
     // https://fabric.io/downloads/gradle/ndk
     // Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
 
-    if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
       ((CrashlyticsCrashLogger) CrashReport.getInstance()
           .getLogger(CrashlyticsCrashLogger.class)).setLanguage(
           getResources().getConfiguration().locale.getLanguage());
     } else {
       ((CrashlyticsCrashLogger) CrashReport.getInstance()
-          .getLogger(CrashlyticsCrashLogger.class)).setLanguage(
-          getResources().getConfiguration().getLocales().get(0).getLanguage());
+          .getLogger(CrashlyticsCrashLogger.class)).setLanguage(getResources().getConfiguration()
+          .getLocales()
+          .get(0)
+          .getLanguage());
     }
 
     setUpAnalytics();
@@ -77,14 +95,13 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
       loadExtras(getIntent().getExtras());
     }
     setContentView(getContentViewId());
-    bindViews(getWindow().getDecorView().getRootView());
+    bindViews(getWindow().getDecorView()
+        .getRootView());
     setupToolbar();
     setupViews();
   }
 
   private void setUpAnalytics() {
-    Analytics.Dimensions.setPartnerDimension(Analytics.Dimensions.PARTNER);
-    Analytics.Dimensions.setVerticalDimension(Analytics.Dimensions.VERTICAL);
     Analytics.Dimensions.setGmsPresent(
         DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(this));
   }
@@ -295,22 +312,23 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
       @Nullable Action0 toRunWhenAccessIsDenied) {
     int message = R.string.general_downloads_dialog_no_download_rule_message;
 
-    if ((AptoideUtils.SystemU.getConnectionType().equals("mobile")
-        && !ManagerPreferences.getGeneralDownloadsMobile())
-        || (AptoideUtils.SystemU.getConnectionType().equals("wifi")
-        && !ManagerPreferences.getGeneralDownloadsWifi())) {
+    if ((AptoideUtils.SystemU.getConnectionType()
+        .equals("mobile") && !ManagerPreferences.getGeneralDownloadsMobile())
+        || (AptoideUtils.SystemU.getConnectionType()
+        .equals("wifi") && !ManagerPreferences.getGeneralDownloadsWifi())) {
       this.toRunWhenDownloadAccessIsGranted = toRunWhenAccessIsGranted;
       this.toRunWhenDownloadAccessIsDenied = toRunWhenAccessIsDenied;
-      if ((AptoideUtils.SystemU.getConnectionType().equals("wifi")
-          || AptoideUtils.SystemU.getConnectionType().equals("mobile"))
+      if ((AptoideUtils.SystemU.getConnectionType()
+          .equals("wifi") || AptoideUtils.SystemU.getConnectionType()
+          .equals("mobile"))
           && !ManagerPreferences.getGeneralDownloadsWifi()
           && !ManagerPreferences.getGeneralDownloadsMobile()) {
         message = R.string.general_downloads_dialog_no_download_rule_message;
-      } else if (AptoideUtils.SystemU.getConnectionType().equals("wifi")
-          && !ManagerPreferences.getGeneralDownloadsWifi()) {
+      } else if (AptoideUtils.SystemU.getConnectionType()
+          .equals("wifi") && !ManagerPreferences.getGeneralDownloadsWifi()) {
         message = R.string.general_downloads_dialog_only_mobile_message;
-      } else if (AptoideUtils.SystemU.getConnectionType().equals("mobile")
-          && !ManagerPreferences.getGeneralDownloadsMobile()) {
+      } else if (AptoideUtils.SystemU.getConnectionType()
+          .equals("mobile") && !ManagerPreferences.getGeneralDownloadsMobile()) {
         message = R.string.general_downloads_dialog_only_wifi_message;
       }
 
@@ -321,7 +339,8 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
           if (eResponse == GenericDialogs.EResponse.YES) {
             if (AptoideBaseActivity.this instanceof FragmentShower) {
               ((FragmentShower) AptoideBaseActivity.this).pushFragmentV4(
-                  V8Engine.getFragmentProvider().newSettingsFragment());
+                  V8Engine.getFragmentProvider()
+                      .newSettingsFragment());
             } else {
               Logger.e(AptoideBaseActivity.class.getSimpleName(), new IllegalArgumentException(
                   "The Fragment should be an instance of the " + "Activity Context"));
@@ -342,6 +361,7 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
 
   private void showMessageOKCancel(String message,
       SimpleSubscriber<GenericDialogs.EResponse> subscriber) {
-    GenericDialogs.createGenericOkCancelMessage(this, "", message).subscribe(subscriber);
+    GenericDialogs.createGenericOkCancelMessage(this, "", message)
+        .subscribe(subscriber);
   }
 }

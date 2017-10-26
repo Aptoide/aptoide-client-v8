@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.FutureTarget;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.NotificationTarget;
 import com.bumptech.glide.request.target.Target;
 import java.lang.ref.WeakReference;
@@ -324,6 +325,21 @@ public class ImageLoader {
       return Glide.with(context).load(url).transform(new CircleTransform(context)).into(imageView);
     } else {
       Log.e(TAG, "::loadUsingCircleTransform() Context is null");
+    }
+    return null;
+  }
+
+  public Target<GlideDrawable> loadWithCache(String uri, RequestListener<String, GlideDrawable> listener, boolean cache, ImageView imageView){
+    Context context = weakContext.get();
+    if(context != null){
+      return Glide.with(context)
+              .load(uri)
+              .listener(listener)
+              .diskCacheStrategy(DiskCacheStrategy.RESULT)
+              .skipMemoryCache(!cache)
+              .into(imageView);
+    }else{
+      Log.e(TAG, "::loadWithCache() Context is null");
     }
     return null;
   }

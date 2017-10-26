@@ -89,13 +89,13 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
       view.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
           RelativeLayout.LayoutParams.MATCH_PARENT));
 
-      AptoideUtils.ThreadU.runOnIoThread(() -> {
+      //AptoideUtils.ThreadU.runOnIoThread(() -> {
         internalClickUrl[0] = DataproviderUtils.AdNetworksUtils.parseMacros(clickUrl,
             new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                 DataProvider.getContext()));
         clickUrlFuture.set(internalClickUrl[0]);
         Logger.d("ExtractReferrer", "Parsed clickUrl: " + internalClickUrl[0]);
-      });
+      //});
       clickUrlFuture.get();
       WebView wv = new WebView(context);
       wv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
