@@ -22,9 +22,11 @@ import retrofit2.Converter;
 
 /**
  * Created by neuro on 26-12-2016.
+ *
+ * Deprecated since some injected variables such as accountMature are susceptible to change between
+ * calls and
  */
-
-public class RequestFactory {
+@Deprecated public class RequestFactory {
 
   private final ListStoresRequestFactory listStoresRequestFactory;
   private final ListAppsRequestFactory listAppsRequestFactory;
@@ -76,45 +78,40 @@ public class RequestFactory {
             tokenInvalidator, sharedPreferences);
   }
 
-  public ListStoresRequest newListStoresRequest(int offset, int limit) {
+  @Deprecated public ListStoresRequest newListStoresRequest(int offset, int limit) {
     return this.listStoresRequestFactory.newListStoresRequest(offset, limit);
   }
 
-  public ListStoresRequest newListStoresRequest(String url) {
+  @Deprecated public ListStoresRequest newListStoresRequest(String url) {
     return this.listStoresRequestFactory.newListStoresRequest(url);
   }
 
-  public ListAppsRequest newListAppsRequest(String url) {
+  @Deprecated public ListAppsRequest newListAppsRequest(String url) {
     return this.listAppsRequestFactory.newListAppsRequest(url);
   }
 
-  public ListAppsRequest newListAppsRequest(int storeId, Long groupId, int limit,
-      ListAppsRequest.Sort sort) {
-    return this.listAppsRequestFactory.newListAppsRequest(storeId, groupId, limit, sort);
-  }
-
-  public ListFullReviewsRequest newListFullReviews(String url, boolean refresh) {
+  @Deprecated public ListFullReviewsRequest newListFullReviews(String url, boolean refresh) {
     return this.listFullReviewsRequestFactory.newListFullReviews(url, refresh,
         storeCredentialsProvider.fromUrl(url));
   }
 
-  public GetStoreRequest newStore(String url) {
+  @Deprecated public GetStoreRequest newStore(String url) {
     return this.getStoreRequestFactory.newStore(url);
   }
 
-  public GetStoreWidgetsRequest newStoreWidgets(String url) {
+  @Deprecated public GetStoreWidgetsRequest newStoreWidgets(String url) {
     return this.getStoreWidgetsRequestFactory.newStoreWidgets(url, googlePlayServicesAvailable);
   }
 
-  public GetUserRequest newGetUser(String url) {
+  @Deprecated public GetUserRequest newGetUser(String url) {
     return this.getUserRequestFactory.newGetUser(url, googlePlayServicesAvailable);
   }
 
-  public GetRecommendedStoresRequest newGetRecommendedStores(String url) {
+  @Deprecated public GetRecommendedStoresRequest newGetRecommendedStores(String url) {
     return this.getStoreRecommendedRequestFactory.newRecommendedStore(url);
   }
 
-  public GetRecommendedRequest newGetRecommendedRequest(int limit, String packageName) {
+  @Deprecated public GetRecommendedRequest newGetRecommendedRequest(int limit, String packageName) {
     return this.getRecommendedRequestFactory.newGetRecommendedRequest(limit, packageName);
   }
 }

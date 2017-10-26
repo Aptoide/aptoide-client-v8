@@ -32,8 +32,6 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
-import cm.aptoide.pt.analytics.NavigationTracker;
-import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
@@ -42,11 +40,20 @@ import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.app.AppBoughtReceiver;
 import cm.aptoide.pt.app.AppRepository;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
+import cm.aptoide.pt.app.view.displayable.AppViewDescriptionDisplayable;
+import cm.aptoide.pt.app.view.displayable.AppViewDeveloperDisplayable;
+import cm.aptoide.pt.app.view.displayable.AppViewFlagThisDisplayable;
+import cm.aptoide.pt.app.view.displayable.AppViewInstallDisplayable;
+import cm.aptoide.pt.app.view.displayable.AppViewRateAndCommentsDisplayable;
+import cm.aptoide.pt.app.view.displayable.AppViewScreenshotsDisplayable;
+import cm.aptoide.pt.app.view.displayable.AppViewStoreDisplayable;
+import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAppsDisplayable;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.exception.BillingException;
 import cm.aptoide.pt.billing.purchase.PaidAppPurchase;
@@ -69,25 +76,32 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.Group;
+import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.GetRecommendedRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.AppAction;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.InstallerFactory;
+import cm.aptoide.pt.install.view.remote.RemoteInstallDialog;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.repository.request.RequestFactory;
 import cm.aptoide.pt.search.ReferrerUtils;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.view.SearchBuilder;
+import cm.aptoide.pt.share.ShareAppHelper;
 import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
@@ -100,22 +114,11 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.ThemeUtils;
-import cm.aptoide.pt.app.view.displayable.AppViewDescriptionDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewDeveloperDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewFlagThisDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewInstallDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewRateAndCommentsDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewScreenshotsDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewStoreDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAppsDisplayable;
 import cm.aptoide.pt.view.dialog.DialogBadgeV7;
 import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
-import cm.aptoide.pt.install.view.remote.RemoteInstallDialog;
-import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
-import cm.aptoide.pt.share.ShareAppHelper;
 import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -180,6 +183,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private NavigationTracker navigationTracker;
   private SearchBuilder searchBuilder;
   private IssuesAnalytics issuesAnalytics;
+  private RequestFactory requestFactoryCdnWeb;
+  private GetRecommendedRequest getRecommendedRequest;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -334,10 +339,11 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
     super.onCreate(savedInstanceState);
 
-    handleSavedInstance(savedInstanceState);
-
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
+
+    handleSavedInstance(savedInstanceState);
+
     this.appViewModel.setDefaultTheme(application.getDefaultThemeName());
     this.appViewModel.setMarketName(application.getMarketName());
 
@@ -404,7 +410,17 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             analytics);
     notLoggedInShareAnalytics = application.getNotLoggedInShareAnalytics();
     navigationTracker = application.getNavigationTracker();
+
     setHasOptionsMenu(true);
+
+    final BodyInterceptor<BaseBody> baseBodyInterceptorV7Web =
+        application.getAccountSettingsBodyInterceptorWebV7();
+
+    GetRecommendedRequest.Body body = new GetRecommendedRequest.Body(6, getPackageName());
+
+    getRecommendedRequest =
+        new GetRecommendedRequest(body, baseBodyInterceptorV7Web, httpClient, converterFactory,
+            application.getTokenInvalidator(), application.getDefaultSharedPreferences());
   }
 
   private void handleSavedInstance(Bundle savedInstanceState) {
@@ -569,8 +585,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   public void buyApp(GetAppMeta.App app) {
     billingAnalytics.sendPaymentViewShowEvent();
-    startActivityForResult(PaymentActivity.getIntent(getActivity(),
-        app.getId(), BuildConfig.APPLICATION_ID), PAY_APP_REQUEST_CODE);
+    startActivityForResult(
+        PaymentActivity.getIntent(getActivity(), app.getId(), BuildConfig.APPLICATION_ID),
+        PAY_APP_REQUEST_CODE);
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -931,8 +948,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             shouldInstall, installedRepository, downloadFactory, timelineAnalytics,
             appViewAnalytics, installAppRelay, this,
             new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
-                AppEventsLogger.newLogger(getContext().getApplicationContext())),
-            navigationTracker, getEditorsBrickPosition());
+                AppEventsLogger.newLogger(getContext().getApplicationContext())), navigationTracker,
+            getEditorsBrickPosition());
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics, storeAnalytics));
     displayables.add(
@@ -1078,14 +1095,15 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     appViewSimilarAppAnalytics.similarAppsIsShown();
     setSuggestedShowing(true);
 
+    final Observable<ListApps> listAppsObservable = getRecommendedRequest.observe();
+
     adsRepository.getAdsFromAppviewSuggested(getPackageName(), appViewModel.getKeywords())
         .onErrorReturn(throwable -> Collections.emptyList())
-        .zipWith(requestFactoryCdnWeb.newGetRecommendedRequest(6, getPackageName())
-            .observe(), (minimalAds, listApps) -> new AppViewSuggestedAppsDisplayable(minimalAds,
-            removeCurrentAppFromSuggested(listApps.getDataList()
-                // TODO: 04/10/2017 trinkes make some default thing for StoreContext.home
-                .getList()), appViewSimilarAppAnalytics, navigationTracker,
-            StoreContext.home))
+        .zipWith(listAppsObservable,
+            (minimalAds, listApps) -> new AppViewSuggestedAppsDisplayable(minimalAds,
+                removeCurrentAppFromSuggested(listApps.getDataList()
+                    // TODO: 04/10/2017 trinkes make some default thing for StoreContext.home
+                    .getList()), appViewSimilarAppAnalytics, navigationTracker, StoreContext.home))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(appViewSuggestedAppsDisplayable -> {

@@ -37,22 +37,19 @@ public class GetStoreWidgetsRequest
   private final boolean isGooglePlayServicesAvailable;
   private final String partnerId;
   private final boolean accountMature;
-  private final OkHttpClient httpClient;
   private final String filters;
-  private final TokenInvalidator tokenInvalidator;
-  private final SharedPreferences sharedPreferences;
   private final Resources resources;
   private final WindowManager windowManager;
   private final ConnectivityManager connectivityManager;
   private final AdsApplicationVersionCodeProvider versionCodeProvider;
+  private final SharedPreferences sharedPreferences;
 
   private GetStoreWidgetsRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
       StoreCredentials storeCredentials, String clientUniqueId,
       boolean isGooglePlayServicesAvailable, String partnerId, boolean accountMature,
-      OkHttpClient httpClient1, String filters, TokenInvalidator tokenInvalidator1,
-      SharedPreferences sharedPreferences1, Resources resources, WindowManager windowManager,
+      String filters, Resources resources, WindowManager windowManager,
       ConnectivityManager connectivityManager,
       AdsApplicationVersionCodeProvider versionCodeProvider) {
     super(body, httpClient, converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences);
@@ -62,14 +59,12 @@ public class GetStoreWidgetsRequest
     this.isGooglePlayServicesAvailable = isGooglePlayServicesAvailable;
     this.partnerId = partnerId;
     this.accountMature = accountMature;
-    this.httpClient = httpClient1;
     this.filters = filters;
-    this.tokenInvalidator = tokenInvalidator1;
-    this.sharedPreferences = sharedPreferences1;
     this.resources = resources;
     this.windowManager = windowManager;
     this.connectivityManager = connectivityManager;
     this.versionCodeProvider = versionCodeProvider;
+    this.sharedPreferences = sharedPreferences;
   }
 
   public static GetStoreWidgetsRequest ofAction(String url, StoreCredentials storeCredentials,
@@ -83,11 +78,11 @@ public class GetStoreWidgetsRequest
     final Body body =
         new Body(storeCredentials, WidgetsArgs.createDefault(resources, windowManager));
 
-    return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets").get(), body,
-        bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
-        storeCredentials, clientUniqueId, isGooglePlayServicesAvailable, partnerId, accountMature,
-        httpClient, filters, tokenInvalidator, sharedPreferences, resources, windowManager,
-        connectivityManager, versionCodeProvider);
+    return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets")
+        .get(), body, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+        sharedPreferences, storeCredentials, clientUniqueId, isGooglePlayServicesAvailable,
+        partnerId, accountMature, filters, resources, windowManager, connectivityManager,
+        versionCodeProvider);
   }
 
   public String getUrl() {
@@ -103,15 +98,17 @@ public class GetStoreWidgetsRequest
 
   private Observable<List<GetStoreWidgets.WSWidget>> loadGetStoreWidgets(
       GetStoreWidgets getStoreWidgets, boolean bypassCache) {
-    return Observable.from(getStoreWidgets.getDataList().getList())
+    return Observable.from(getStoreWidgets.getDataList()
+        .getList())
         .observeOn(Schedulers.io())
         .flatMap(wsWidget -> WSWidgetsUtils.loadWidgetNode(wsWidget, storeCredentials, bypassCache,
             clientUniqueId, isGooglePlayServicesAvailable, partnerId, accountMature,
-            ((BodyInterceptor<BaseBody>) bodyInterceptor), httpClient, converterFactory, filters,
-            tokenInvalidator, sharedPreferences, resources, windowManager, connectivityManager,
+            ((BodyInterceptor<BaseBody>) bodyInterceptor), getHttpClient(), converterFactory, filters,
+            getTokenInvalidator(), sharedPreferences, resources, windowManager, connectivityManager,
             versionCodeProvider))
         .toList()
-        .flatMapIterable(wsWidgets -> getStoreWidgets.getDataList().getList())
+        .flatMapIterable(wsWidgets -> getStoreWidgets.getDataList()
+            .getList())
         .toList()
         .first();
   }

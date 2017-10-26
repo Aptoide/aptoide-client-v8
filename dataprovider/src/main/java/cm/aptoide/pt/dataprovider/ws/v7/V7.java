@@ -127,6 +127,10 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
     return builder.toString();
   }
 
+  protected TokenInvalidator getTokenInvalidator() {
+    return tokenInvalidator;
+  }
+
   public B getBody() {
     return body;
   }
