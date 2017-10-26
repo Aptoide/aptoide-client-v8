@@ -4,7 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.events.AptoideEvent;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -43,12 +43,12 @@ public class PostAnalytics {
   private final TokenInvalidator tokenInvalidator;
   private final String appId;
   private final SharedPreferences sharedPreferences;
-  private final AptoideNavigationTracker navigationTracker;
+  private final NavigationTracker navigationTracker;
 
   public PostAnalytics(Analytics analytics, AppEventsLogger facebook,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator, String appId,
-      SharedPreferences sharedPreferences, AptoideNavigationTracker navigationTracker) {
+      SharedPreferences sharedPreferences, NavigationTracker navigationTracker) {
     this.analytics = analytics;
     this.facebook = facebook;
     this.bodyInterceptor = bodyInterceptor;
