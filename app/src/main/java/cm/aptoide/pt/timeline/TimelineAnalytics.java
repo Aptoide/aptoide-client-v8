@@ -56,6 +56,7 @@ public class TimelineAnalytics {
   private static final String OPEN_VIDEO = "OPEN_VIDEO";
   private static final String OPEN_CHANNEL = "OPEN_CHANNEL";
   private static final String OPEN_STORE = "OPEN_STORE";
+  private static final String OPEN_STORE_PROFILE = "OPEN_STORE_PROFILE";
   private static final String OPEN_APP = "OPEN_APP";
   private static final String UPDATE_APP = "UPDATE_APP";
   private static final String FOLLOW_FRIENDS = "Apps_Timeline_Follow_Friends";
@@ -448,6 +449,11 @@ public class TimelineAnalytics {
         createEvent(OPEN_STORE, createStoreAppData(cardType, source, packageName, store)));
   }
 
+  public void sendOpenStoreProfileEvent(CardTouchEvent touchEvent){
+    HashMap<String, Object> data = parseEventData(touchEvent, true, -1);
+    analytics.sendEvent(createEvent(OPEN_STORE_PROFILE, data));
+  }
+
   public void sendClickOnPostHeaderEvent(CardTouchEvent cardTouchEvent) {
     final Post post = cardTouchEvent.getCard();
     final CardType postType = post.getType();
@@ -459,9 +465,10 @@ public class TimelineAnalytics {
               .getType()
               .name(), Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.BLANK,
           socialHeaderCardTouchEvent.getStoreName(), Analytics.AppsTimeline.OPEN_STORE);
+      sendOpenStoreProfileEvent(socialHeaderCardTouchEvent);
     } else if (postType.equals(CardType.ARTICLE)) {
       Media card = (Media) post;
-      sendOpenBlogEvent(postType.name(), card.getMediaTitle(), card.getPublisherLink()
+      sendOpenBlogEvent(postType.name(), card.getPublisherName(), card.getPublisherLink()
           .getUrl(), card.getRelatedApp()
           .getPackageName());
       sendMediaCardClickEvent(postType.name(), card.getMediaTitle(), card.getPublisherName(),
@@ -471,7 +478,7 @@ public class TimelineAnalytics {
           Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);
     } else if (postType.equals(CardType.VIDEO)) {
       Media card = (Media) post;
-      sendOpenChannelEvent(postType.name(), card.getMediaTitle(), card.getPublisherLink()
+      sendOpenChannelEvent(postType.name(), card.getPublisherName(), card.getPublisherLink()
           .getUrl(), card.getRelatedApp()
           .getPackageName());
       sendMediaCardClickEvent(postType.name(), card.getMediaTitle(), card.getPublisherName(),
@@ -516,7 +523,7 @@ public class TimelineAnalytics {
                 .name(), Analytics.AppsTimeline.BLANK, media.getMediaTitle(), media.getPublisherName(),
             Analytics.AppsTimeline.OPEN_ARTICLE);
         sendOpenArticleEvent(media.getType()
-            .name(), media.getMediaTitle(), media.getMediaLink()
+            .name(), media.getPublisherName(), media.getMediaLink()
             .getUrl(), media.getRelatedApp()
             .getPackageName());
         sendMediaCardClickEvent(media.getType()
@@ -528,7 +535,7 @@ public class TimelineAnalytics {
                 .name(), Analytics.AppsTimeline.BLANK, media.getMediaTitle(), media.getPublisherName(),
             Analytics.AppsTimeline.OPEN_VIDEO);
         sendOpenVideoEvent(media.getType()
-            .name(), media.getMediaTitle(), media.getMediaLink()
+            .name(), media.getPublisherName(), media.getMediaLink()
             .getUrl(), media.getRelatedApp()
             .getPackageName());
         sendMediaCardClickEvent(media.getType()

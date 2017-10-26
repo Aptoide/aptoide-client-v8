@@ -91,6 +91,20 @@ public class PostAnalytics {
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, appId, sharedPreferences);
   }
 
+  @NonNull
+  private AptoideEvent createAptoideCompletedEvent (String eventName, String packageName, boolean success, boolean isExternal){
+    HashMap<String, Object> data = new HashMap<>();
+    HashMap<String, Object>  specific = new HashMap<>();
+    specific.put("app", packageName);
+    data.put("specific", specific);
+    data.put("status", success ? "success" : "fail");
+    data.put("previous_context", navigationTracker.getPreviousScreen().getFragment());
+    data.put("store", navigationTracker.getPreviousScreen().getStore());
+    return new AptoideEvent(data, eventName, "CLICK", isExternal ? "EXTERNAL" : "TIMELINE",
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator, appId, sharedPreferences);
+
+  }
+
   private Bundle createPostCompleteNoTextEventBundle(boolean relatedAppsAvailable,
       boolean hasSelectedApp, String packageName, boolean hasComment, boolean hasUrl, String url,
       boolean hasUrlPreview) {
