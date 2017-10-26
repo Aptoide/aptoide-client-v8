@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
 
   @Data public static class Notification {
 
-    private Number id;
+    private int id;
 
     private String title;
 

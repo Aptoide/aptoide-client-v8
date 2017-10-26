@@ -1,14 +1,11 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.utils.AptoideUtils;
 import rx.Observable;
 
 /**
@@ -22,15 +19,15 @@ public class PushNotificationsRequest extends V3<GetPushNotificationsResponse> {
     super(BASE_HOST, baseBody, bodyInterceptor, tokenInvalidator);
   }
 
-  public static PushNotificationsRequest of(SharedPreferences sharedPreferences,
-      Resources resources, Context context, String oemId, BodyInterceptor<BaseBody> bodyInterceptor,
-      TokenInvalidator tokenInvalidator) {
+  public static PushNotificationsRequest of(SharedPreferences sharedPreferences, String oemId,
+      BodyInterceptor<BaseBody> bodyInterceptor, TokenInvalidator tokenInvalidator,
+      int applicationVersionCode, int lastPushNotificationId, String countryCode) {
     BaseBody args = new BaseBody();
 
     args.put("oem_id", oemId);
     args.put("mode", "json");
     args.put("limit", "1");
-    args.put("lang", AptoideUtils.SystemU.getCountryCode(resources));
+    args.put("lang", countryCode);
 
     if (BuildConfig.DEBUG || ManagerPreferences.isDebug(sharedPreferences)) {
       String notificationType = ManagerPreferences.getNotificationType(sharedPreferences);
@@ -39,8 +36,8 @@ public class PushNotificationsRequest extends V3<GetPushNotificationsResponse> {
     } else {
       args.put("notification_type", "aptoide_vanilla");
     }
-    args.put("id", String.valueOf(ManagerPreferences.getLastPushNotificationId(sharedPreferences)));
-    args.put("aptoide_vercode", Integer.toString(AptoideUtils.Core.getVerCode(context)));
+    args.put("id", String.valueOf(lastPushNotificationId));
+    args.put("aptoide_vercode", Integer.toString(applicationVersionCode));
     return new PushNotificationsRequest(args, bodyInterceptor, tokenInvalidator);
   }
 

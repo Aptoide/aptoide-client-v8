@@ -81,9 +81,10 @@ public class NotificationService {
 
       aptoideNotifications.add(
           new AptoideNotification(notification.getBody(), notification.getImg(),
-              notification.getTitle(), notification.getUrl(), notification.getType(), appName,
-              graphic, AptoideNotification.NOT_DISMISSED, id, notification.getExpire(),
-              notification.getUrlTrack(), notification.getUrlTrackNc(), false));
+              notification.getTitle(), notification.getUrl(), notification.getType(),
+              System.currentTimeMillis(), appName, graphic, AptoideNotification.NOT_DISMISSED, id,
+              notification.getUrlTrack(), notification.getUrlTrackNc(), false,
+              notification.getExpire() * 1000));
     }
     return aptoideNotifications;
   }
@@ -102,10 +103,12 @@ public class NotificationService {
       }
 
       aptoideNotifications.add(
-          new AptoideNotification(notification.getAbTestingGroup(), notification.getBody(),
-              notification.getCampaignId(), notification.getImg(), notification.getLang(),
-              notification.getTitle(), notification.getUrl(), notification.getUrlTrack(), appName,
-              graphic, id, notification.getExpire(), notification.getUrlTrackNc(), false));
+          new AptoideNotification(notification.getBody(), notification.getImg(),
+              notification.getTitle(), notification.getUrl(), AptoideNotification.CAMPAIGN, appName,
+              graphic, AptoideNotification.NOT_DISMISSED, id, notification.getUrlTrack(),
+              notification.getUrlTrackNc(), false, System.currentTimeMillis(),
+              notification.getExpire(), notification.getAbTestingGroup(),
+              notification.getCampaignId(), notification.getLang()));
     }
     return aptoideNotifications;
   }
