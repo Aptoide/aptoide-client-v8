@@ -445,14 +445,6 @@
               style="@style/Aptoide.TextView.Medium.S"
               />
 
-          <View
-              android:layout_width="match_parent"
-              android:layout_height="1dp"
-              android:layout_marginTop="8dp"
-              android:background="@color/grey_fog_dark"
-              >
-          </View>
-
           <android.support.v7.widget.RecyclerView
               android:id="@+id/theme_selector"
               android:layout_width="match_parent"
@@ -460,13 +452,6 @@
               android:layout_marginBottom="@dimen/padding_very_small"
               android:layout_marginTop="@dimen/padding_very_small"
               />
-
-          <View
-              android:layout_width="match_parent"
-              android:layout_height="1dp"
-              android:background="@color/grey_fog_dark"
-              >
-          </View>
 
         </LinearLayout>
 
