@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.model.v7;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.Data;
 
@@ -56,5 +57,17 @@ import lombok.Data;
 
     private String code;
     private String description;
+    private Details details;
+  }
+
+  @Data public static class Details {
+    //Is only necessary for store/set requests and only appears with a STORE-9 error
+    @JsonProperty("store_links") private List<StoreLinks> storeLinks;
+  }
+
+  @Data public static class StoreLinks {
+    private String type;
+    private String url;
+    private String error;
   }
 }
