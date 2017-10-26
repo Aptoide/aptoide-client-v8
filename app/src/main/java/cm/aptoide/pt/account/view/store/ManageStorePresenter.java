@@ -7,6 +7,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.UriToPathResolver;
 import cm.aptoide.pt.account.view.exception.InvalidImageException;
+import cm.aptoide.pt.account.view.exception.SocialLinkException;
 import cm.aptoide.pt.account.view.exception.StoreCreationException;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
@@ -47,6 +48,7 @@ public class ManageStorePresenter implements Presenter {
     handleTwitchClick();
     handleTwitterClick();
     handleYoutubeClick();
+    handleFacebookEditTextFocus();
   }
 
   @Override public void saveState(Bundle state) {
@@ -55,6 +57,16 @@ public class ManageStorePresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
     // does nothing
+  }
+
+  private void handleFacebookEditTextFocus() {
+    view.getLifecycle()
+        .filter(event -> event == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> view.facebookUserFocusChanged()
+            .doOnNext(focusChanged -> view.changeFacebookUI()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   private void handleYoutubeClick() {
@@ -185,6 +197,8 @@ public class ManageStorePresenter implements Presenter {
       if (ex.getErrorCode() == StoreValidationException.EMPTY_AVATAR) {
         return view.showError(R.string.ws_error_API_1);
       }
+    } else if (err instanceof SocialLinkException) {
+      view.setViewLinkErrors(((SocialLinkException) err).getStoreLinks());
     }
 
     crashReport.log(err);

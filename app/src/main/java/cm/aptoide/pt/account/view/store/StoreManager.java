@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.view.exception.InvalidImageException;
+import cm.aptoide.pt.account.view.exception.SocialLinkException;
 import cm.aptoide.pt.account.view.exception.StoreCreationException;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -29,6 +30,7 @@ public class StoreManager {
   private static final String ERROR_CODE_2 = "WOP-2";
   private static final String ERROR_CODE_3 = "WOP-3";
   private static final String ERROR_API_1 = "API-1";
+  private static final String ERROR_STORE_9 = "STORE-9";
 
   private final AptoideAccountManager accountManager;
   private final OkHttpClient httpClient;
@@ -81,11 +83,20 @@ public class StoreManager {
                 .get(0)
                 .getCode()
                 .equals(ERROR_API_1)) {
-              return Completable.error(new InvalidImageException(
-                  Collections.singletonList(InvalidImageException.ImageError.API_ERROR)));
+              return Completable.error(new InvalidImageException(Collections.singletonList(InvalidImageException.ImageError.API_ERROR)));
+            } else if (((AptoideWsV7Exception) err).getBaseResponse()
+                .getErrors()
+                .get(0)
+                .getCode()
+                .equals(ERROR_STORE_9)) {
+              return Completable.error(new SocialLinkException(
+                  ((AptoideWsV7Exception) err).getBaseResponse()
+                      .getErrors()
+                      .get(0)
+                      .getDetails()
+                      .getStoreLinks()));
             } else {
-              return Completable.error(new InvalidImageException(
-                  Collections.singletonList(InvalidImageException.ImageError.API_ERROR),
+              return Completable.error(new InvalidImageException(Collections.singletonList(InvalidImageException.ImageError.API_ERROR),
                   err.getMessage()));
             }
           }

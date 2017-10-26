@@ -36,6 +36,7 @@ import cm.aptoide.pt.account.view.UriToPathResolver;
 import cm.aptoide.pt.account.view.exception.InvalidImageException;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -117,6 +118,14 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   private EditText twitchUser;
   private EditText twitterUser;
   private EditText youtubeUser;
+  private TextView facebookText;
+  private TextView twitchText;
+  private TextView twitterText;
+  private TextView youtubeText;
+  private ImageView facebookEndRowIcon;
+  private ImageView twitchEndRowIcon;
+  private ImageView twitterEndRowIcon;
+  private ImageView youtubeEndRowIcon;
 
   public static ManageStoreFragment newInstance(ManageStoreViewModel storeModel, boolean goToHome) {
     Bundle args = new Bundle();
@@ -287,6 +296,60 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     showKeyboard(youtubeUser);
   }
 
+  @Override public void setViewLinkErrors(List<BaseV7Response.StoreLinks> storeLinks) {
+    for (BaseV7Response.StoreLinks storeLink : storeLinks) {
+      setViewError(storeLink.getType()
+          .toString());
+    }
+  }
+
+  @Override public Observable<Boolean> facebookUserFocusChanged() {
+    return RxView.focusChanges(facebookUser);
+  }
+
+  @Override public void changeFacebookUI() {
+    if (!facebookUser.hasFocus()) {
+      //facebookUsernameWrapper.clearFocus();
+      if (!facebookUser.getText()
+          .toString()
+          .isEmpty()) {
+        facebookText.setText(facebookUser.getText()
+            .toString());
+      }
+      facebookTextAndPlus.setVisibility(View.VISIBLE);
+      facebookUsernameWrapper.setVisibility(View.GONE);
+    }
+  }
+
+  private void setViewError(String error) {
+    if (error.equals(StoreValidationException.FACEBOOK_1)) {
+      facebookUsernameWrapper.setErrorEnabled(true);
+      facebookUsernameWrapper.setError(getString(R.string.edit_store_social_link_invalid_url_text));
+    } else if (error.equals(StoreValidationException.FACEBOOK_2)) {
+      facebookUsernameWrapper.setErrorEnabled(true);
+      facebookUsernameWrapper.setError(
+          getString(R.string.edit_store_page_doesnt_exist_error_short));
+    } else if (error.equals(StoreValidationException.TWITCH_1)) {
+      twitchUsernameWrapper.setErrorEnabled(true);
+      twitchUsernameWrapper.setError(getString(R.string.edit_store_social_link_invalid_url_text));
+    } else if (error.equals(StoreValidationException.TWITCH_2)) {
+      twitchUsernameWrapper.setErrorEnabled(true);
+      twitchUsernameWrapper.setError(getString(R.string.edit_store_social_link_channel_error));
+    } else if (error.equals(StoreValidationException.TWITTER_1)) {
+      twitterUsernameWrapper.setErrorEnabled(true);
+      twitterUsernameWrapper.setError(getString(R.string.edit_store_social_link_invalid_url_text));
+    } else if (error.equals(StoreValidationException.TWITTER_2)) {
+      twitterUsernameWrapper.setErrorEnabled(true);
+      twitterUsernameWrapper.setError(getString(R.string.edit_store_page_doesnt_exist_error_short));
+    } else if (error.equals(StoreValidationException.YOUTUBE_1)) {
+      youtubeUsernameWrapper.setErrorEnabled(true);
+      youtubeUsernameWrapper.setError(getString(R.string.edit_store_social_link_invalid_url_text));
+    } else if (error.equals(StoreValidationException.YOUTUBE_2)) {
+      youtubeUsernameWrapper.setErrorEnabled(true);
+      youtubeUsernameWrapper.setError(getString(R.string.edit_store_social_link_channel_error));
+    }
+  }
+
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
@@ -388,24 +451,32 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     facebookUsernameWrapper =
         (CustomTextInputLayout) view.findViewById(R.id.edit_store_facebook_username_wrapper);
     facebookUser = (EditText) view.findViewById(R.id.edit_store_facebook_username);
-    twitchRow = view.findViewById(R.id.edit_store_twitch);
+    facebookText = (TextView) view.findViewById(R.id.edit_store_facebook_title);
+    facebookEndRowIcon = (ImageView) view.findViewById(R.id.edit_store_facebook_plus);
+    twitchEndRowIcon = (ImageView) view.findViewById(R.id.edit_store_twitch_plus);
     twitchTextAndPlus =
         (RelativeLayout) view.findViewById(R.id.edit_store_twitch_text_plus_wrapper);
     twitchUsernameWrapper =
         (CustomTextInputLayout) view.findViewById(R.id.edit_store_twitch_username_wrapper);
     twitchUser = (EditText) view.findViewById(R.id.edit_store_twitch_username);
+    twitchText = (TextView) view.findViewById(R.id.edit_store_twitch_title);
+    twitchRow = view.findViewById(R.id.edit_store_twitch);
     twitterRow = view.findViewById(R.id.edit_store_twitter);
     twitterTextAndPlus =
         (RelativeLayout) view.findViewById(R.id.edit_store_twitter_text_plus_wrapper);
     twitterUsernameWrapper =
         (CustomTextInputLayout) view.findViewById(R.id.edit_store_twitter_username_wrapper);
     twitterUser = (EditText) view.findViewById(R.id.edit_store_twitter_username);
+    twitterText = (TextView) view.findViewById(R.id.edit_store_twitter_title);
+    twitterEndRowIcon = (ImageView) view.findViewById(R.id.edit_store_twitter_plus);
     youtubeRow = view.findViewById(R.id.edit_store_youtube);
     youtubeTextAndPlus =
         (RelativeLayout) view.findViewById(R.id.edit_store_youtube_text_plus_wrapper);
     youtubeUsernameWrapper =
         (CustomTextInputLayout) view.findViewById(R.id.edit_store_youtube_username_wrapper);
     youtubeUser = (EditText) view.findViewById(R.id.edit_store_youtube_username);
+    youtubeText = (TextView) view.findViewById(R.id.edit_store_youtube_title);
+    youtubeEndRowIcon = (ImageView) view.findViewById(R.id.edit_store_youtube_plus);
 
     waitDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity(),
         getApplicationContext().getString(R.string.please_wait_upload));
@@ -497,8 +568,8 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
           AptoideUtils.StringU.getFormattedString(R.string.create_store_name, getResources(),
               appName));
     } else {
-      chooseStoreNameTitle.setText(AptoideUtils.StringU.getFormattedString(R.string.description,
-              getResources()));
+      chooseStoreNameTitle.setText(
+          AptoideUtils.StringU.getFormattedString(R.string.description, getResources()));
       storeName.setVisibility(View.GONE);
       storeDescriptionWrapper.setVisibility(View.VISIBLE);
       storeDescription.setVisibility(View.VISIBLE);
@@ -518,44 +589,56 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
       for (SimpleSetStoreRequest.StoreLinks storeLinks : storeLinksList) {
         if (storeLinks.getType()
             .equals(Store.SocialChannelType.FACEBOOK)) {
-          facebookTextAndPlus.setVisibility(View.GONE);
-          facebookUsernameWrapper.setVisibility(View.VISIBLE);
-          facebookUser.setText(removeBaseUrl(storeLinks.getUrl()));
-          if (!storeLinks.getUrl()
-              .isEmpty()) {
-            facebookUsernameWrapper.setHelperTextVisibility(false);
-          }
-          facebookUser.setVisibility(View.VISIBLE);
+          //facebookTextAndPlus.setVisibility(View.GONE);
+          //facebookUsernameWrapper.setVisibility(View.VISIBLE);
+          //facebookUser.setText(removeBaseUrl(storeLinks.getUrl()));
+          //if (!storeLinks.getUrl()
+          //    .isEmpty()) {
+          //  facebookUsernameWrapper.setHelperTextVisibility(false);
+          //}
+          //facebookUser.setVisibility(View.VISIBLE);
+          facebookText.setText(removeBaseUrl(storeLinks.getUrl()));
+          facebookEndRowIcon.setImageDrawable(
+              getResources().getDrawable(R.drawable.edit_store_link_check));
         } else if (storeLinks.getType()
             .equals(Store.SocialChannelType.TWITCH)) {
-          twitchTextAndPlus.setVisibility(View.GONE);
-          twitchUsernameWrapper.setVisibility(View.VISIBLE);
-          twitchUser.setText(removeBaseUrl(storeLinks.getUrl()));
-          if (!storeLinks.getUrl()
-              .isEmpty()) {
-            twitchUsernameWrapper.setHelperTextVisibility(false);
-          }
-          twitchUser.setVisibility(View.VISIBLE);
+          //twitchTextAndPlus.setVisibility(View.GONE);
+          //twitchUsernameWrapper.setVisibility(View.VISIBLE);
+          //twitchUser.setText(removeBaseUrl(storeLinks.getUrl()));
+          //if (!storeLinks.getUrl()
+          //    .isEmpty()) {
+          //  twitchUsernameWrapper.setHelperTextVisibility(false);
+          //}
+          //twitchUser.setVisibility(View.VISIBLE);
+          twitchText.setText(removeBaseUrl(storeLinks.getUrl()));
+          twitchEndRowIcon.setImageDrawable(
+              getResources().getDrawable(R.drawable.edit_store_link_check));
         } else if (storeLinks.getType()
             .equals(Store.SocialChannelType.TWITTER)) {
-          twitterTextAndPlus.setVisibility(View.GONE);
-          twitterUsernameWrapper.setVisibility(View.VISIBLE);
-          twitterUser.setText(removeBaseUrl(storeLinks.getUrl()));
-          if (!storeLinks.getUrl()
-              .isEmpty()) {
-            twitterUsernameWrapper.setHelperTextVisibility(false);
-          }
-          twitterUser.setVisibility(View.VISIBLE);
+          //twitterTextAndPlus.setVisibility(View.GONE);
+          //twitterUsernameWrapper.setVisibility(View.VISIBLE);
+          //twitterUser.setText(removeBaseUrl(storeLinks.getUrl()));
+          //if (!storeLinks.getUrl()
+          //    .isEmpty()) {
+          //  twitterUsernameWrapper.setHelperTextVisibility(false);
+          //}
+          //twitterUser.setVisibility(View.VISIBLE);
+          twitterText.setText(removeBaseUrl(storeLinks.getUrl()));
+          twitterEndRowIcon.setImageDrawable(
+              getResources().getDrawable(R.drawable.edit_store_link_check));
         } else if (storeLinks.getType()
             .equals(Store.SocialChannelType.YOUTUBE)) {
-          youtubeTextAndPlus.setVisibility(View.GONE);
-          youtubeUsernameWrapper.setVisibility(View.VISIBLE);
-          youtubeUser.setText(removeBaseUrl(storeLinks.getUrl()));
-          if (!storeLinks.getUrl()
-              .isEmpty()) {
-            youtubeUsernameWrapper.setHelperTextVisibility(false);
-          }
-          youtubeUser.setVisibility(View.VISIBLE);
+          //youtubeTextAndPlus.setVisibility(View.GONE);
+          //youtubeUsernameWrapper.setVisibility(View.VISIBLE);
+          //youtubeUser.setText(removeBaseUrl(storeLinks.getUrl()));
+          //if (!storeLinks.getUrl()
+          //    .isEmpty()) {
+          //  youtubeUsernameWrapper.setHelperTextVisibility(false);
+          //}
+          //youtubeUser.setVisibility(View.VISIBLE);
+          youtubeText.setText(removeBaseUrl(storeLinks.getUrl()));
+          youtubeEndRowIcon.setImageDrawable(
+              getResources().getDrawable(R.drawable.edit_store_link_check));
         }
       }
     }

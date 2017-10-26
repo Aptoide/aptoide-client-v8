@@ -2,6 +2,8 @@ package cm.aptoide.pt.account.view.store;
 
 import android.support.annotation.StringRes;
 import cm.aptoide.pt.account.view.ImagePickerView;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
+import java.util.List;
 import rx.Completable;
 import rx.Observable;
 
@@ -38,4 +40,10 @@ public interface ManageStoreView extends ImagePickerView {
   void manageTwitterViews();
 
   void manageYoutubeViews();
+
+  void setViewLinkErrors(List<BaseV7Response.StoreLinks> storeLinks);
+
+  Observable<Boolean> facebookUserFocusChanged();
+
+  void changeFacebookUI();
 }
