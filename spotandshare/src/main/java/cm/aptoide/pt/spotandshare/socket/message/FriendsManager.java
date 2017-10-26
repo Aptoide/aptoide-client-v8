@@ -63,4 +63,10 @@ public class FriendsManager {
   public Observable<Set<Entry<Host, Friend>>> observeFriendsEntrySet() {
     return entrySetRelay;
   }
+
+  public void clearFriends() {
+    if (map != null) {
+      map.clear();
+    }
+  }
 }

@@ -62,6 +62,7 @@ public class SpotAndShare {
   }
 
   public void leaveGroup(Action1<? super Throwable> onError) {
+    friendsManager.clearFriends();
     spotAndShareV2.exit(onError);
   }
 
