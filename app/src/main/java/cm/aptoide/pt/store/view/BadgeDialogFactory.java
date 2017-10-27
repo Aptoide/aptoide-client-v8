@@ -163,32 +163,53 @@ public class BadgeDialogFactory {
         break;
     }
 
+    int badgeRank = badge.ordinal();
+
     Drawable drawable = tinMedal.getDrawable();
-    setDrawableColor(resources, color, drawable);
+    if (badgeRank >= 0) {
+      setDrawableColor(resources, color, drawable);
+    } else {
+      setDrawableColor(resources, R.color.grey_fog_light, drawable);
+    }
     tinMedal.setImageDrawable(drawable);
     setBackground(tinMedal, resources.getColor(R.color.white));
 
     drawable = bronzeMedal.getDrawable();
-    setDrawableColor(resources, color, drawable);
+    if (badgeRank >= 1) {
+      setDrawableColor(resources, color, drawable);
+    } else {
+      setDrawableColor(resources, R.color.grey_fog_light, drawable);
+    }
     bronzeMedal.setImageDrawable(drawable);
     setBackground(bronzeMedal, resources.getColor(R.color.white));
 
     drawable = silverMedal.getDrawable();
-    setDrawableColor(resources, color, drawable);
+    if (badgeRank >= 2) {
+      setDrawableColor(resources, color, drawable);
+    } else {
+      setDrawableColor(resources, R.color.grey_fog_light, drawable);
+    }
     silverMedal.setImageDrawable(drawable);
     setBackground(silverMedal, resources.getColor(R.color.white));
 
     drawable = goldMedal.getDrawable();
-    setDrawableColor(resources, color, drawable);
+    if (badgeRank >= 3) {
+      setDrawableColor(resources, color, drawable);
+    } else {
+      setDrawableColor(resources, R.color.grey_fog_light, drawable);
+    }
     goldMedal.setImageDrawable(drawable);
     setBackground(goldMedal, resources.getColor(R.color.white));
 
     drawable = platinumMedal.getDrawable();
-    setDrawableColor(resources, color, drawable);
+    if (badgeRank >= 4) {
+      setDrawableColor(resources, color, drawable);
+    } else {
+      setDrawableColor(resources, R.color.grey_fog_light, drawable);
+    }
     platinumMedal.setImageDrawable(drawable);
     setBackground(platinumMedal, resources.getColor(R.color.white));
 
-    int badgeRank = badge.ordinal();
     if (badgeRank >= 1) {
       progress1.setBackgroundColor(resources.getColor(color));
     }
