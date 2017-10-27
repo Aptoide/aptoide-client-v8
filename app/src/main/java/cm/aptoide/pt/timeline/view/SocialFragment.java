@@ -1,6 +1,7 @@
 package cm.aptoide.pt.timeline.view;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -48,11 +49,6 @@ public class SocialFragment extends BaseLoaderToolbarFragment {
     socialWebview.loadUrl(socialUrl);
   }
 
-  @Override public void loadExtras(Bundle args) {
-    socialUrl = args.getString(SOCIAL_URL);
-    pageTitle = args.getString(PAGE_TITLE);
-  }
-
   @Override public void setupViews() {
     super.setupViews();
     socialWebview.setWebChromeClient(new WebChromeClient() {
@@ -62,7 +58,6 @@ public class SocialFragment extends BaseLoaderToolbarFragment {
         finishLoading();
       }
     });
-    setHasOptionsMenu(true);
     socialWebview.getSettings()
         .setJavaScriptEnabled(true);
   }
@@ -78,6 +73,16 @@ public class SocialFragment extends BaseLoaderToolbarFragment {
   @Override public void bindViews(View view) {
     super.bindViews(view);
     socialWebview = (WebView) view.findViewById(R.id.social_fragment_layout);
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setHasOptionsMenu(true);
+  }
+
+  @Override public void loadExtras(Bundle args) {
+    socialUrl = args.getString(SOCIAL_URL);
+    pageTitle = args.getString(PAGE_TITLE);
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {

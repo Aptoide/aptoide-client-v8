@@ -19,6 +19,10 @@ public class AptoideWsV7Exception extends BaseException {
     super(cause);
   }
 
+  public AptoideWsV7Exception() {
+    super();
+  }
+
   public BaseV7Response getBaseResponse() {
     return baseResponse;
   }

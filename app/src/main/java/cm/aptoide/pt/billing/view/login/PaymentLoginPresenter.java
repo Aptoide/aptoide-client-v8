@@ -1,6 +1,5 @@
 package cm.aptoide.pt.billing.view.login;
 
-import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
@@ -8,10 +7,10 @@ import cm.aptoide.pt.account.FacebookSignUpException;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
-import cm.aptoide.pt.view.orientation.ScreenOrientationManager;
 import java.util.Collection;
 import rx.Observable;
 import rx.Scheduler;
@@ -70,14 +69,6 @@ public class PaymentLoginPresenter implements Presenter {
     handleAptoideLoginEvent();
 
     handleAptoideSignUpEvent();
-  }
-
-  @Override public void saveState(Bundle state) {
-
-  }
-
-  @Override public void restoreState(Bundle state) {
-
   }
 
   private void handleGrantFacebookRequiredPermissionsEvent() {

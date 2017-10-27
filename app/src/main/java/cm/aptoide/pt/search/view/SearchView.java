@@ -57,7 +57,7 @@ public interface SearchView extends View {
 
   void hideLoadingMore();
 
-  void setViewWithStoreNameAsSingleTab();
+  void setViewWithStoreNameAsSingleTab(String storeName);
 
   void setFocusInSearchView();
 
@@ -66,6 +66,8 @@ public interface SearchView extends View {
     String getCurrentQuery();
 
     String getStoreName();
+
+    String getDefaultStoreName();
 
     boolean isOnlyTrustedApps();
 

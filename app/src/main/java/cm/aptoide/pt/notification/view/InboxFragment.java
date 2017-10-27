@@ -55,14 +55,15 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
     attachPresenter(new InboxPresenter(this,
         ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
         new LinksHandlerFactory(getContext()), CrashReport.getInstance(),
-        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker(),
+        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker(),
         new NotificationAnalytics(
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient(),
             Analytics.getInstance()),
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), aptoideNavigationTracker)), savedInstanceState);
+            Analytics.getInstance(), navigationTracker)));
     notificationSubject = PublishSubject.create();
     adapter = new InboxAdapter(Collections.emptyList(), notificationSubject);
+    setHasOptionsMenu(true);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -91,10 +92,5 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
   @Override protected void setupToolbarDetails(Toolbar toolbar) {
     super.setupToolbarDetails(toolbar);
     toolbar.setTitle(getString(R.string.myaccount_header_title));
-  }
-
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
-    setHasOptionsMenu(true);
   }
 }

@@ -4,7 +4,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.PageViewsAnalytics;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.notification.NotificationAnalytics;
@@ -26,13 +27,13 @@ public class MyAccountPresenter implements Presenter {
   private final int NUMBER_OF_NOTIFICATIONS = 3;
   private final SharedPreferences sharedPreferences;
   private final NotificationAnalytics analytics;
-  private PageViewsAnalytics pageViewsAnalytics;
-  private AptoideNavigationTracker aptoideNavigationTracker;
+  private final PageViewsAnalytics pageViewsAnalytics;
+  private final NavigationTracker navigationTracker;
 
   public MyAccountPresenter(MyAccountView view, AptoideAccountManager accountManager,
       CrashReport crashReport, MyAccountNavigator navigator, NotificationCenter notificationCenter,
       LinksHandlerFactory linkFactory, SharedPreferences sharedPreferences,
-      AptoideNavigationTracker aptoideNavigationTracker, NotificationAnalytics analytics,
+      NavigationTracker navigationTracker, NotificationAnalytics analytics,
       PageViewsAnalytics pageViewsAnalytics) {
     this.view = view;
     this.accountManager = accountManager;
@@ -41,7 +42,7 @@ public class MyAccountPresenter implements Presenter {
     this.notificationCenter = notificationCenter;
     this.linkFactory = linkFactory;
     this.sharedPreferences = sharedPreferences;
-    this.aptoideNavigationTracker = aptoideNavigationTracker;
+    this.navigationTracker = navigationTracker;
     this.analytics = analytics;
     this.pageViewsAnalytics = pageViewsAnalytics;
   }
@@ -143,7 +144,8 @@ public class MyAccountPresenter implements Presenter {
             .doOnNext(link -> link.launch())
             .doOnNext(
                 link -> analytics.notificationShown(notification.getNotificationCenterUrlTrack()))
-            .doOnNext(__ -> aptoideNavigationTracker.registerView("Notification"))
+            .doOnNext(__ -> navigationTracker.registerScreen(
+                ScreenTagHistory.Builder.build("Notification")))
             .doOnNext(__ -> pageViewsAnalytics.sendPageViewedEvent()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {

@@ -23,9 +23,6 @@ retrolambda {
 
 android {
 
-  // Websockets
-  useLibrary 'org.apache.http.legacy'
-
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
   buildToolsVersion BUILD_TOOLS_VERSION
 
@@ -35,7 +32,7 @@ android {
     targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
     multiDexEnabled true
     versionCode project.PROD_VERSION_CODE.toInteger()
-    versionName "8.5.1.1"
+    versionName "8.5.2.0"
     testProguardFile 'proguard-rules-test.pro'
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
@@ -86,6 +83,13 @@ android {
 
     leak {
       dimension "mode"
+    }
+
+    fairy {
+      dimension "mode"
+      applicationIdSuffix "testfairy"
+      versionName "8.5.1." + getDate()
+      versionCode project.DEV_VERSION_CODE.toInteger()
     }
   }
 
@@ -139,6 +143,7 @@ android {
     exclude 'META-INF/NOTICE'
     exclude 'META-INF/MANIFEST.MF'
     exclude 'META-INF/LGPL2.1'
+    exclude 'META-INF/rxjava.properties'
   }
 
   testOptions {
@@ -193,7 +198,8 @@ android {
         "\"" + project.APTOIDE_WEB_SERVICES_SIXPACK_HOST + "\""
     variant.buildConfigField "String", "GOOGLE_SENDER_ID", "\"" + project.GOOGLE_SENDER_ID + "\""
     variant.buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID + "\""
-    variant.buildConfigField "int", "DEFAULT_PAYMENT_ID", project.DEFAULT_PAYMENT_ID
+    variant.buildConfigField "String", "DEFAULT_PAYMENT_SERVICE_TYPE",
+        "\"" + project.DEFAULT_PAYMENT_SERVICE_TYPE + "\""
     variant.buildConfigField "String", "APTOIDE_WEBSOCKETS_SCHEME",
         "\"" + project.APTOIDE_WEBSOCKETS_SCHEME + "\""
     variant.buildConfigField "String", "APTOIDE_WEBSOCKETS_HOST",
@@ -227,6 +233,7 @@ android {
       variant.buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_PRODUCTION_KEY + "\""
       variant.buildConfigField "String", "TWITTER_KEY", "\"" + project.TWITTER_KEY + "\""
       variant.buildConfigField "String", "TWITTER_SECRET", "\"" + project.TWITTER_SECRET + "\""
+      resValue "string", "TEST_FAIRY_TOKEN", "\"" + project.TEST_FAIRY_TOKEN + "\""
     }
 
     variant.outputs.each { output ->
@@ -297,6 +304,9 @@ dependencies {
 
   leakCompile project(path: ':dataprovider', configuration: 'prodRelease')
   leakCompile project(path: ':aptoide-account-manager', configuration: 'prodRelease')
+
+  fairyCompile project(path: ':dataprovider', configuration: 'prodRelease')
+  fairyCompile project(path: ':aptoide-account-manager', configuration: 'prodRelease')
 
 
   compile project(path: ':utils', configuration: 'release')
@@ -400,12 +410,16 @@ dependencies {
 
   compile "com.github.bumptech.glide:glide:${GLIDE_VERSION}"
 
-  compile "com.braintreepayments.api:braintree:${BRAINTREE_VERSION}"
-  compile "com.braintreepayments:card-form:${BRAINTREE_CARD_FORM_VERSION}"
-
-  compile('com.mopub:mopub-sdk-native-static:4.11.0@aar') {
+  compile("com.mopub:mopub-sdk-native-static:${MOPUB_VERSION}@aar") {
     transitive = true
   }
+
+  compile "com.adyen.checkout:core:${ADYEN_VERSION}"
+  compile "com.adyen.checkout:ui:${ADYEN_VERSION}"
+  compile "com.adyen.checkout:utils:${ADYEN_VERSION}"
+  compile "com.adyen.checkout:cardscan:${ADYEN_VERSION}"
+
+  fairyCompile "testfairy:testfairy-android-sdk:${TEST_FAIRY_VERSION}"
 }
 
 String getDate() {

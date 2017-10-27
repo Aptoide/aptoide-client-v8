@@ -147,6 +147,7 @@
   <string name="timeline_button_unfollow_store">Unfollow store</string>
   <string name="timeline_button_report_abuse">Report abuse</string>
   <string name="timeline_button_delete_post">Delete post</string>
+  <string name="timeline_short_unfollow_user">Unfollowing %s</string>
 
 
 </resources>

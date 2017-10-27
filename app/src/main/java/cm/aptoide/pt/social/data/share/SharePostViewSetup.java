@@ -31,6 +31,7 @@ public class SharePostViewSetup {
     LinearLayout socialInfoBar = (LinearLayout) view.findViewById(R.id.social_info_bar);
     LinearLayout socialCommentBar =
         (LinearLayout) view.findViewById(R.id.social_latest_comment_bar);
+    View overflowMenu = view.findViewById(R.id.overflow_menu);
 
     cardView.setRadius(8);
     cardView.setCardElevation(10);
@@ -40,6 +41,7 @@ public class SharePostViewSetup {
     likeButtonView.setOnTouchListener(null);
     like.setVisibility(View.VISIBLE);
     likeButtonView.setVisibility(View.VISIBLE);
+    overflowMenu.setVisibility(View.INVISIBLE);
 
     comments.setVisibility(View.VISIBLE);
     socialInfoBar.setVisibility(View.GONE);
