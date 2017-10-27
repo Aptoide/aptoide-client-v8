@@ -711,12 +711,12 @@ public class TimelineAnalytics {
           error.put("type", "LOGIN");
           break;
         case 1:
-          error.put("message", "Unknown Case 1");
-          error.put("type", "UNK1");
+          error.put("message", "User has no store");
+          error.put("type", "NO_STORE");
           break;
         case 2:
-          error.put("message", "Unknown Case 2");
-          error.put("type", "UNK2");
+          error.put("message", "User/Store set to private");
+          error.put("type", "PRIVATE_USER");
           break;
       }
     }
