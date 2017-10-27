@@ -54,7 +54,7 @@ public class BadgeDialogFactory {
     TextView followersTv = (TextView) view.findViewById(R.id.followers);
     TextView reviewsTv = (TextView) view.findViewById(R.id.reviews);
 
-    @ColorRes int color = R.color.green_700;
+    @ColorRes int color = R.color.tin_medal;
     switch (badge) {
       case NONE:
         headerBackground.setBackgroundColor(resources.getColor(color));
@@ -65,7 +65,6 @@ public class BadgeDialogFactory {
         downloadsTv.setText(R.string.badgedialog_message_bronze_2);
         followersTv.setText(R.string.badgedialog_message_bronze_3);
         reviewsTv.setText(R.string.badgedialog_message_bronze_4);
-        color = R.color.green_700;
         setDrawableColor(resources, color, uploadedAppsTv.getCompoundDrawables());
         setDrawableColor(resources, color, downloadsTv.getCompoundDrawables());
         setDrawableColor(resources, color, followersTv.getCompoundDrawables());
@@ -89,8 +88,10 @@ public class BadgeDialogFactory {
         downloadsTv.setText(R.string.badgedialog_message_bronze_2);
         followersTv.setText(R.string.badgedialog_message_bronze_3);
         reviewsTv.setText(R.string.badgedialog_message_bronze_4);
-        bronzeMedal.getLayoutParams().width = (int) (bronzeMedal.getLayoutParams().width * MEDAL_SCALE);
-        bronzeMedal.getLayoutParams().height = (int) (bronzeMedal.getLayoutParams().height * MEDAL_SCALE);
+        bronzeMedal.getLayoutParams().width =
+            (int) (bronzeMedal.getLayoutParams().width * MEDAL_SCALE);
+        bronzeMedal.getLayoutParams().height =
+            (int) (bronzeMedal.getLayoutParams().height * MEDAL_SCALE);
         bronzeMedal.setScaleType(ImageView.ScaleType.FIT_XY);
         bronzeMedal.requestLayout();
         break;
@@ -108,8 +109,10 @@ public class BadgeDialogFactory {
         setDrawableColor(resources, color, downloadsTv.getCompoundDrawables());
         setDrawableColor(resources, color, followersTv.getCompoundDrawables());
         setDrawableColor(resources, color, reviewsTv.getCompoundDrawables());
-        silverMedal.getLayoutParams().width = (int) (silverMedal.getLayoutParams().width * MEDAL_SCALE);
-        silverMedal.getLayoutParams().height = (int) (silverMedal.getLayoutParams().height * MEDAL_SCALE);
+        silverMedal.getLayoutParams().width =
+            (int) (silverMedal.getLayoutParams().width * MEDAL_SCALE);
+        silverMedal.getLayoutParams().height =
+            (int) (silverMedal.getLayoutParams().height * MEDAL_SCALE);
         silverMedal.setScaleType(ImageView.ScaleType.FIT_XY);
         silverMedal.requestLayout();
         break;
@@ -128,7 +131,8 @@ public class BadgeDialogFactory {
         setDrawableColor(resources, color, followersTv.getCompoundDrawables());
         setDrawableColor(resources, color, reviewsTv.getCompoundDrawables());
         goldMedal.getLayoutParams().width = (int) (goldMedal.getLayoutParams().width * MEDAL_SCALE);
-        goldMedal.getLayoutParams().height = (int) (goldMedal.getLayoutParams().height * MEDAL_SCALE);
+        goldMedal.getLayoutParams().height =
+            (int) (goldMedal.getLayoutParams().height * MEDAL_SCALE);
         goldMedal.setScaleType(ImageView.ScaleType.FIT_XY);
         goldMedal.requestLayout();
         break;
@@ -146,8 +150,10 @@ public class BadgeDialogFactory {
         setDrawableColor(resources, color, downloadsTv.getCompoundDrawables());
         setDrawableColor(resources, color, followersTv.getCompoundDrawables());
         setDrawableColor(resources, color, reviewsTv.getCompoundDrawables());
-        platinumMedal.getLayoutParams().width = (int) (platinumMedal.getLayoutParams().width * MEDAL_SCALE);
-        platinumMedal.getLayoutParams().height = (int) (platinumMedal.getLayoutParams().height * MEDAL_SCALE);
+        platinumMedal.getLayoutParams().width =
+            (int) (platinumMedal.getLayoutParams().width * MEDAL_SCALE);
+        platinumMedal.getLayoutParams().height =
+            (int) (platinumMedal.getLayoutParams().height * MEDAL_SCALE);
         platinumMedal.setScaleType(ImageView.ScaleType.FIT_XY);
         platinumMedal.requestLayout();
         break;
