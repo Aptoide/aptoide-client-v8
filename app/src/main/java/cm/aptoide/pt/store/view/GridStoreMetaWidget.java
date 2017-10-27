@@ -3,6 +3,8 @@ package cm.aptoide.pt.store.view;
 import android.content.res.Resources;
 import android.os.Build;
 import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
 import android.text.ParcelableSpan;
@@ -64,6 +66,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
   private View buttonsLayout;
   private StoreCredentialsProviderImpl storeCredentialsProvider;
   private StoreAccessor storeAccessor;
+  private BadgeDialogFactory badgeDialogFactory;
 
   public GridStoreMetaWidget(View itemView) {
     super(itemView);
@@ -78,7 +81,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     description = (TextView) itemView.findViewById(R.id.description);
     followStoreButton = (Button) itemView.findViewById(R.id.follow_store_button);
     editStoreButton = itemView.findViewById(R.id.edit_store_button);
-    badgeIcon = (ImageView) itemView.findViewById(R.id.badge_icon);
+    badgeIcon = (ImageView) itemView.findViewById(R.id.medal_icon);
     appsCountTv = (TextView) itemView.findViewById(R.id.apps_text_view);
     followingCountTv = (TextView) itemView.findViewById(R.id.following_text_view);
     buttonsLayout = itemView.findViewById(R.id.action_button_layout);
@@ -87,7 +90,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
   }
 
   @Override public void bindView(GridStoreMetaDisplayable displayable) {
-
+    badgeDialogFactory = displayable.getBadgeDialogFactory();
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     final BodyInterceptor<BaseBody> bodyInterceptor =
@@ -97,8 +100,8 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     storeAccessor = AccessorFactory.getAccessorFor(
         ((AptoideApplication) getContext().getApplicationContext()).getDatabase(), Store.class);
     storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor,
-        new StoreCredentialsProviderImpl(storeAccessor),
-        AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
+        new StoreCredentialsProviderImpl(storeAccessor), AccessorFactory.getAccessorFor(
+        ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class), httpClient,
         WebService.getDefaultConverter(),
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
@@ -156,6 +159,8 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
         badgeIcon.setImageResource(R.drawable.platinum);
         break;
     }
+    badgeIcon.setOnClickListener(v -> badgeDialogFactory.create(badge)
+        .show());
   }
 
   private void navigateToFollowingScreen(GridStoreMetaDisplayable displayable,

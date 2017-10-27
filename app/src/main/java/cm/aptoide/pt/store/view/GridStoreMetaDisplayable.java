@@ -21,15 +21,18 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
 
   private StoreCredentialsProvider storeCredentialsProvider;
   private StoreAnalytics storeAnalytics;
+  private BadgeDialogFactory badgeDialogFactory;
 
   public GridStoreMetaDisplayable() {
   }
 
   public GridStoreMetaDisplayable(GetHomeMeta pojo,
-      StoreCredentialsProvider storeCredentialsProvider, StoreAnalytics storeAnalytics) {
+      StoreCredentialsProvider storeCredentialsProvider, StoreAnalytics storeAnalytics,
+      BadgeDialogFactory badgeDialogFactory) {
     super(pojo);
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.storeAnalytics = storeAnalytics;
+    this.badgeDialogFactory = badgeDialogFactory;
   }
 
   @Override protected Configs getConfig() {
@@ -200,5 +203,9 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
 
   public long getUserId() {
     return getUser().getId();
+  }
+
+  public BadgeDialogFactory getBadgeDialogFactory() {
+    return badgeDialogFactory;
   }
 }

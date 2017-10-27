@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    >
+  <android.support.constraint.ConstraintLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
+    <ImageView
+        android:id="@+id/header_background"
+        android:layout_width="0dp"
+        android:layout_height="84dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/store_badge_header_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:background="@color/orange"
+        tools:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteY="0dp"
+        />
+
+    <ImageView
+        android:id="@+id/medal_icon"
+        android:layout_width="98dp"
+        android:layout_height="98dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/gold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/medal_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/medal_icon"
+        tools:text="Gold medal"
+        style="@style/Aptoide.TextView.Medium.L"
+        />
+
+    <TextView
+        android:id="@+id/congratulations_message"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center_horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/medal_title"
+        tools:text="Congratulations!\n You got the %s medal, because you reached:"
+        />
+
+
+    <!--start of progress badges-->
+    <!--tin->bronze line-->
+    <include
+        layout="@layout/badge_progress_layout"
+        />
+    <!--end of progress badges-->
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#2cd8d8d8"
+        app:layout_constraintBottom_toBottomOf="@+id/uploaded_apps"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/uploaded_apps"
+        />
+
+    <TextView
+        android:id="@+id/uploaded_apps"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginTop="34dp"
+        android:drawableLeft="@drawable/check"
+        android:drawablePadding="16dp"
+        android:drawableStart="@drawable/check"
+        android:gravity="center_vertical"
+        app:layout_constraintLeft_toRightOf="@id/tin_medal"
+        app:layout_constraintStart_toEndOf="@id/tin_medal"
+        app:layout_constraintTop_toBottomOf="@id/tin_medal"
+        tools:text="800 Apps"
+        />
+    <TextView
+        android:id="@+id/downloads"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:drawableLeft="@drawable/check"
+        android:drawablePadding="16dp"
+        android:drawableStart="@drawable/check"
+        android:gravity="center_vertical"
+        app:layout_constraintLeft_toRightOf="@id/tin_medal"
+        app:layout_constraintStart_toEndOf="@id/tin_medal"
+        app:layout_constraintTop_toBottomOf="@id/uploaded_apps"
+        tools:text="100000 Downloads"
+        style="@style/Aptoide.TextView.Medium.S"
+        />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#2cd8d8d8"
+        app:layout_constraintBottom_toBottomOf="@+id/followers"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/followers"
+        />
+
+    <TextView
+        android:id="@+id/followers"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:drawableLeft="@drawable/check"
+        android:drawablePadding="16dp"
+        android:drawableStart="@drawable/check"
+        android:gravity="center_vertical"
+        app:layout_constraintLeft_toRightOf="@id/tin_medal"
+        app:layout_constraintStart_toEndOf="@id/tin_medal"
+        app:layout_constraintTop_toBottomOf="@id/downloads"
+        tools:text="800 Apps"
+        />
+
+    <TextView
+        android:id="@+id/reviews"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:drawableLeft="@drawable/check"
+        android:drawablePadding="16dp"
+        android:drawableStart="@drawable/check"
+        android:gravity="center_vertical"
+        app:layout_constraintLeft_toRightOf="@id/tin_medal"
+        app:layout_constraintStart_toEndOf="@id/tin_medal"
+        app:layout_constraintTop_toBottomOf="@id/followers"
+        tools:text="7500 Reviews"
+        style="@style/Aptoide.TextView.Medium.S"
+        />
+    <TextView
+        android:id="@+id/edit_store_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="28dp"
+        android:gravity="center"
+        android:minHeight="24dp"
+        android:minWidth="54dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/reviews"
+        tools:text="Got it"
+        tools:textAllCaps="true"
+        style="Aptoide.TextView.Medium.S"
+        />
+  </android.support.constraint.ConstraintLayout>
+
+</ScrollView>
