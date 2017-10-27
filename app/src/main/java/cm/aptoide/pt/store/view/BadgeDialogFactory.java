@@ -21,7 +21,7 @@ import cm.aptoide.pt.R;
  */
 
 public class BadgeDialogFactory {
-  public static final float MEDAL_SCALE = 2f;
+  public static final float MEDAL_SCALE = 1.25f;
   private final Context context;
 
   public BadgeDialogFactory(Context context) {
@@ -53,6 +53,10 @@ public class BadgeDialogFactory {
     TextView downloadsTv = (TextView) view.findViewById(R.id.downloads);
     TextView followersTv = (TextView) view.findViewById(R.id.followers);
     TextView reviewsTv = (TextView) view.findViewById(R.id.reviews);
+    View progress1 = view.findViewById(R.id.progress1);
+    View progress2 = view.findViewById(R.id.progress2);
+    View progress3 = view.findViewById(R.id.progress3);
+    View progress4 = view.findViewById(R.id.progress4);
 
     @ColorRes int color = R.color.tin_medal;
     switch (badge) {
@@ -183,6 +187,20 @@ public class BadgeDialogFactory {
     setDrawableColor(resources, color, drawable);
     platinumMedal.setImageDrawable(drawable);
     setBackground(platinumMedal, resources.getColor(R.color.white));
+
+    int badgeRank = badge.ordinal();
+    if (badgeRank >= 1) {
+      progress1.setBackgroundColor(resources.getColor(color));
+    }
+    if (badgeRank >= 2) {
+      progress2.setBackgroundColor(resources.getColor(color));
+    }
+    if (badgeRank >= 3) {
+      progress3.setBackgroundColor(resources.getColor(color));
+    }
+    if (badgeRank >= 4) {
+      progress4.setBackgroundColor(resources.getColor(color));
+    }
   }
 
   private void setBackground(ImageView view, int color) {

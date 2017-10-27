@@ -5,6 +5,7 @@
     tools:showIn="@layout/store_badge_dialog"
     >
   <View
+      android:id="@+id/progress1"
       android:layout_width="0dp"
       android:layout_height="8dp"
       android:background="@color/progress_bar_color"
@@ -18,8 +19,8 @@
   <!--tin badge-->
   <ImageView
       android:id="@+id/tin_medal"
-      android:layout_width="20dp"
-      android:layout_height="20dp"
+      android:layout_width="24dp"
+      android:layout_height="24dp"
       android:layout_marginTop="44dp"
       android:src="@drawable/tin_flat_icon"
       app:layout_constraintEnd_toStartOf="@+id/bronze_medal"
@@ -43,6 +44,7 @@
 
   <!--bronze->Silver line-->
   <View
+      android:id="@+id/progress2"
       android:layout_width="0dp"
       android:layout_height="8dp"
       android:background="@color/progress_bar_color"
@@ -58,8 +60,8 @@
   <!--Bronze badge-->
   <ImageView
       android:id="@+id/bronze_medal"
-      android:layout_width="20dp"
-      android:layout_height="20dp"
+      android:layout_width="24dp"
+      android:layout_height="24dp"
       android:src="@drawable/bronze_flat_icon"
       app:layout_constraintBottom_toBottomOf="@id/tin_medal"
       app:layout_constraintEnd_toStartOf="@+id/silver_medal"
@@ -83,6 +85,7 @@
 
   <!--silver->gold line-->
   <View
+      android:id="@+id/progress3"
       android:layout_width="0dp"
       android:layout_height="8dp"
       android:background="@color/progress_bar_color"
@@ -97,8 +100,8 @@
   <!--silver badge-->
   <ImageView
       android:id="@+id/silver_medal"
-      android:layout_width="20dp"
-      android:layout_height="20dp"
+      android:layout_width="24dp"
+      android:layout_height="24dp"
       android:src="@drawable/silver_flat_icon"
       app:layout_constraintBottom_toBottomOf="@id/tin_medal"
       app:layout_constraintEnd_toStartOf="@+id/gold_medal"
@@ -122,6 +125,7 @@
 
   <!--gold -> platinum line-->
   <View
+      android:id="@+id/progress4"
       android:layout_width="0dp"
       android:layout_height="8dp"
       android:background="@color/progress_bar_color"
@@ -136,8 +140,8 @@
   <!--Gold badge-->
   <ImageView
       android:id="@+id/gold_medal"
-      android:layout_width="20dp"
-      android:layout_height="20dp"
+      android:layout_width="24dp"
+      android:layout_height="24dp"
       android:src="@drawable/gold_flat_icon"
       app:layout_constraintBottom_toBottomOf="@id/tin_medal"
       app:layout_constraintEnd_toStartOf="@+id/platinum_medal"
@@ -162,8 +166,8 @@
   <!--platinum badge-->
   <ImageView
       android:id="@+id/platinum_medal"
-      android:layout_width="20dp"
-      android:layout_height="20dp"
+      android:layout_width="24dp"
+      android:layout_height="24dp"
       android:src="@drawable/platinum_flat_icon"
       app:layout_constraintBottom_toBottomOf="@id/tin_medal"
       app:layout_constraintEnd_toEndOf="parent"
