@@ -6,6 +6,8 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.util.Pair;
+
+import cm.aptoide.pt.dataprovider.AdsOptimizer;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
@@ -18,6 +20,8 @@ import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.preferences.Application;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import rx.Observable;
@@ -40,7 +44,8 @@ public class WSWidgetsUtils {
       String url = null;
       // Can be null in legacy ws :/
       if (wsWidget.getView() != null) {
-        url = wsWidget.getView().replace(V7.BASE_HOST, "");
+        url = wsWidget.getView()
+            .replace(V7.BASE_HOST, "");
       }
       switch (wsWidget.getType()) {
         case APPS_GROUP:
@@ -69,10 +74,10 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case ADS:
-          return GetAdsRequest.ofHomepage(accessToken, aptoideClientUuid,
-                  googlePlayServicesAvailable, oemid, mature,
-                  Application.getConfiguration().numberOfAdsRowOnHomepage())
-              .observe()
+          return AdsOptimizer.optimizeHomepageAds(accessToken, true,
+              Type.ADS.getPerLineCount() * Application.getConfiguration()
+                  .numberOfAdsRowOnHomepage(), aptoideClientUuid, googlePlayServicesAvailable,
+              oemid, mature)
               .observeOn(Schedulers.io())
               .doOnNext(wsWidget::setViewObject)
               .onErrorResumeNext(throwable -> Observable.empty())
