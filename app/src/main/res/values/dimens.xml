@@ -83,6 +83,7 @@
   <dimen name="select_picture_camera_icon_size">34dp</dimen>
   <dimen name="edit_store_select_icon_size">40dp</dimen>
   <dimen name="profile_picture_large_size">120dp</dimen>
+  <dimen name="store_picture_large_size">80dp</dimen>
   <dimen name="padding_extra_large">120dp</dimen>
   <dimen name="padding_login_button">8dp</dimen>
   <dimen name="login_field_height">38dp</dimen>

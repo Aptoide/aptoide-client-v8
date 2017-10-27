@@ -127,6 +127,10 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   private ImageView twitchEndRowIcon;
   private ImageView twitterEndRowIcon;
   private ImageView youtubeEndRowIcon;
+  private String savedFacebookText = "";
+  private String savedTwitchText = "";
+  private String savedTwitterText = "";
+  private String savedYoutubeText = "";
 
   public static ManageStoreFragment newInstance(ManageStoreViewModel storeModel, boolean goToHome) {
     Bundle args = new Bundle();
@@ -273,12 +277,14 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     facebookTextAndPlus.setVisibility(View.GONE);
     facebookUsernameWrapper.setVisibility(View.VISIBLE);
     facebookUser.requestFocus();
+    facebookUser.setText(savedFacebookText);
     showKeyboard(facebookUser);
   }
 
   @Override public void manageTwitchViews() {
     twitchTextAndPlus.setVisibility(View.GONE);
     twitchUsernameWrapper.setVisibility(View.VISIBLE);
+    twitchUser.setText(savedTwitchText);
     twitchUser.requestFocus();
     showKeyboard(twitchUser);
   }
@@ -286,6 +292,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   @Override public void manageTwitterViews() {
     twitterTextAndPlus.setVisibility(View.GONE);
     twitterUsernameWrapper.setVisibility(View.VISIBLE);
+    twitterUser.setText(savedTwitterText);
     twitterUser.requestFocus();
     showKeyboard(twitterUser);
   }
@@ -293,6 +300,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   @Override public void manageYoutubeViews() {
     youtubeTextAndPlus.setVisibility(View.GONE);
     youtubeUsernameWrapper.setVisibility(View.VISIBLE);
+    youtubeUser.setText(savedYoutubeText);
     youtubeUser.requestFocus();
     showKeyboard(youtubeUser);
   }
@@ -490,7 +498,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     selectStoreImageButton = view.findViewById(R.id.create_store_image_action);
     storeImage = (ImageView) view.findViewById(R.id.create_store_image);
     storeName = (EditText) view.findViewById(R.id.create_store_name);
-    storeDescriptionWrapper = (TextInputLayout) view.findViewById(R.id.edit_store_input_section);
+    //storeDescriptionWrapper = (TextInputLayout) view.findViewById(R.id.edit_store_input_section);
     storeDescription = (EditText) view.findViewById(R.id.edit_store_description);
     cancelChangesButton = (Button) view.findViewById(R.id.create_store_skip);
     saveDataButton = (Button) view.findViewById(R.id.create_store_action);
@@ -622,7 +630,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
       chooseStoreNameTitle.setText(
           AptoideUtils.StringU.getFormattedString(R.string.description, getResources()));
       storeName.setVisibility(View.GONE);
-      storeDescriptionWrapper.setVisibility(View.VISIBLE);
+      //storeDescriptionWrapper.setVisibility(View.VISIBLE);
       storeDescription.setVisibility(View.VISIBLE);
       storeDescription.setText(currentModel.getStoreDescription());
       socialChannels.setVisibility(View.VISIBLE);
@@ -640,46 +648,50 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
       for (SimpleSetStoreRequest.StoreLinks storeLinks : storeLinksList) {
         if (storeLinks.getType()
             .equals(Store.SocialChannelType.FACEBOOK)) {
+          savedFacebookText = removeBaseUrl(storeLinks.getUrl());
           if (Build.VERSION.SDK_INT < 23) {
             facebookText.setTextAppearance(getContext(),
                 R.style.Aptoide_TextView_Regular_S_BlackAlpha);
           } else {
             facebookText.setTextAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha);
           }
-          facebookText.setText(removeBaseUrl(storeLinks.getUrl()));
+          facebookText.setText(savedFacebookText);
           facebookEndRowIcon.setImageDrawable(
               getResources().getDrawable(R.drawable.edit_store_link_check));
         } else if (storeLinks.getType()
             .equals(Store.SocialChannelType.TWITCH)) {
+          savedTwitchText = removeBaseUrl(storeLinks.getUrl());
           if (Build.VERSION.SDK_INT < 23) {
             twitchText.setTextAppearance(getContext(),
                 R.style.Aptoide_TextView_Regular_S_BlackAlpha);
           } else {
             twitchText.setTextAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha);
           }
-          twitchText.setText(removeBaseUrl(storeLinks.getUrl()));
+          twitchText.setText(savedTwitchText);
           twitchEndRowIcon.setImageDrawable(
               getResources().getDrawable(R.drawable.edit_store_link_check));
         } else if (storeLinks.getType()
             .equals(Store.SocialChannelType.TWITTER)) {
+          savedTwitterText = removeBaseUrl(storeLinks.getUrl());
           if (Build.VERSION.SDK_INT < 23) {
             twitterText.setTextAppearance(getContext(),
                 R.style.Aptoide_TextView_Regular_S_BlackAlpha);
           } else {
             twitterText.setTextAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha);
           }
-          twitterText.setText(removeBaseUrl(storeLinks.getUrl()));
+          twitterText.setText(savedTwitterText);
           twitterEndRowIcon.setImageDrawable(
               getResources().getDrawable(R.drawable.edit_store_link_check));
         } else if (storeLinks.getType()
             .equals(Store.SocialChannelType.YOUTUBE)) {
+          savedYoutubeText = removeBaseUrl(storeLinks.getUrl());
           if (Build.VERSION.SDK_INT < 23) {
             youtubeText.setTextAppearance(getContext(),
                 R.style.Aptoide_TextView_Regular_S_BlackAlpha);
           } else {
             youtubeText.setTextAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha);
           }
-          youtubeText.setText(removeBaseUrl(storeLinks.getUrl()));
+          youtubeText.setText(savedYoutubeText);
           youtubeEndRowIcon.setImageDrawable(
               getResources().getDrawable(R.drawable.edit_store_link_check));
         }

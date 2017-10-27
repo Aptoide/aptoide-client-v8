@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPropertyAnimatorListenerAdapter;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
@@ -125,6 +126,7 @@ public class CustomTextInputLayout extends TextInputLayout {
     if (this.helperTextEnabled != enabled) {
       if (enabled) {
         this.helperView = new TextView(this.getContext());
+        this.helperView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
         this.helperView.setTextAppearance(this.getContext(), this.helperTextAppearance);
         if (helperTextColor != null) {
           this.helperView.setTextColor(helperTextColor);
