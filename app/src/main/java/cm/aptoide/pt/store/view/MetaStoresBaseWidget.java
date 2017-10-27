@@ -38,7 +38,8 @@ public abstract class MetaStoresBaseWidget<T extends Displayable> extends Widget
       Store.SocialChannel socialChannel = socialChannels.get(i);
       if (socialChannel.getType() != null) {
         layoutInflater.inflate(R.layout.social_button_layout, socialChannelsLayout);
-        imageButton = ((ImageButton) socialChannelsLayout.getChildAt(i));
+        imageButton = ((ImageButton) socialChannelsLayout.getChildAt(
+            socialChannelsLayout.getChildCount() - 1));
         switch (socialChannel.getType()) {
           case FACEBOOK:
             imageButton.setImageDrawable(getDrawable(R.drawable.facebook_logo));
