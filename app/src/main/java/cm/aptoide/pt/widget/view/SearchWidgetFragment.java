@@ -13,8 +13,8 @@ import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.view.fragment.FragmentView;
-import cm.aptoide.pt.view.navigator.TabNavigator;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 

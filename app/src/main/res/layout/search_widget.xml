@@ -30,8 +30,8 @@
       android:layout_marginTop="20dp"
       android:layout_marginStart="20dp"
       android:layout_marginLeft="20dp"
-      android:text="Tap to search the Aptoide Market"
-      style="@style/Aptoide.TextView.Regular.XS.Grey"
+      android:text="Search for App"
+      style="@style/Aptoide.TextView.Regular.S.Grey700"
       />
 
   <ImageView
