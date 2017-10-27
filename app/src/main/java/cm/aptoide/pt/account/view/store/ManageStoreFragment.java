@@ -286,14 +286,14 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   @Override public void manageTwitterViews() {
     twitterTextAndPlus.setVisibility(View.GONE);
     twitterUsernameWrapper.setVisibility(View.VISIBLE);
-    twitchUser.requestFocus();
+    twitterUser.requestFocus();
     showKeyboard(twitterUser);
   }
 
   @Override public void manageYoutubeViews() {
     youtubeTextAndPlus.setVisibility(View.GONE);
     youtubeUsernameWrapper.setVisibility(View.VISIBLE);
-    facebookUser.requestFocus();
+    youtubeUser.requestFocus();
     showKeyboard(youtubeUser);
   }
 
@@ -310,7 +310,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
 
   @Override public void changeFacebookUI() {
     if (!facebookUser.hasFocus()) {
-      //facebookUsernameWrapper.clearFocus();
       if (!facebookUser.getText()
           .toString()
           .isEmpty()) {
@@ -327,15 +326,49 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   }
 
   @Override public void changeTwitchUI() {
-    if (!twitterUser.hasFocus()) {
-      if (!twitterUser.getText()
+    if (!twitchUser.hasFocus()) {
+      if (!twitchUser.getText()
           .toString()
           .isEmpty()) {
-        twitterText.setText(twitchUser.getText()
+        twitchText.setText(twitchUser.getText()
             .toString());
       }
       twitchTextAndPlus.setVisibility(View.VISIBLE);
       twitchUsernameWrapper.setVisibility(View.GONE);
+    }
+  }
+
+  @Override public Observable<Boolean> twitterUserFocusChanged() {
+    return RxView.focusChanges(twitterUser);
+  }
+
+  @Override public void changeTwitterUI() {
+    if (!twitterUser.hasFocus()) {
+      if (!twitterUser.getText()
+          .toString()
+          .isEmpty()) {
+        twitterText.setText(twitterUser.getText()
+            .toString());
+      }
+      twitterTextAndPlus.setVisibility(View.VISIBLE);
+      twitterUsernameWrapper.setVisibility(View.GONE);
+    }
+  }
+
+  @Override public Observable<Boolean> youtubeUserFocusChanged() {
+    return RxView.focusChanges(youtubeUser);
+  }
+
+  @Override public void changeYoutubeUI() {
+    if (!youtubeUser.hasFocus()) {
+      if (!youtubeUser.getText()
+          .toString()
+          .isEmpty()) {
+        youtubeText.setText(youtubeUser.getText()
+            .toString());
+      }
+      youtubeTextAndPlus.setVisibility(View.VISIBLE);
+      youtubeUsernameWrapper.setVisibility(View.GONE);
     }
   }
 
@@ -607,14 +640,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
       for (SimpleSetStoreRequest.StoreLinks storeLinks : storeLinksList) {
         if (storeLinks.getType()
             .equals(Store.SocialChannelType.FACEBOOK)) {
-          //facebookTextAndPlus.setVisibility(View.GONE);
-          //facebookUsernameWrapper.setVisibility(View.VISIBLE);
-          //facebookUser.setText(removeBaseUrl(storeLinks.getUrl()));
-          //if (!storeLinks.getUrl()
-          //    .isEmpty()) {
-          //  facebookUsernameWrapper.setHelperTextVisibility(false);
-          //}
-          //facebookUser.setVisibility(View.VISIBLE);
           if (Build.VERSION.SDK_INT < 23) {
             facebookText.setTextAppearance(getContext(),
                 R.style.Aptoide_TextView_Regular_S_BlackAlpha);
@@ -626,14 +651,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
               getResources().getDrawable(R.drawable.edit_store_link_check));
         } else if (storeLinks.getType()
             .equals(Store.SocialChannelType.TWITCH)) {
-          //twitchTextAndPlus.setVisibility(View.GONE);
-          //twitchUsernameWrapper.setVisibility(View.VISIBLE);
-          //twitchUser.setText(removeBaseUrl(storeLinks.getUrl()));
-          //if (!storeLinks.getUrl()
-          //    .isEmpty()) {
-          //  twitchUsernameWrapper.setHelperTextVisibility(false);
-          //}
-          //twitchUser.setVisibility(View.VISIBLE);
           if (Build.VERSION.SDK_INT < 23) {
             twitchText.setTextAppearance(getContext(),
                 R.style.Aptoide_TextView_Regular_S_BlackAlpha);
@@ -645,14 +662,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
               getResources().getDrawable(R.drawable.edit_store_link_check));
         } else if (storeLinks.getType()
             .equals(Store.SocialChannelType.TWITTER)) {
-          //twitterTextAndPlus.setVisibility(View.GONE);
-          //twitterUsernameWrapper.setVisibility(View.VISIBLE);
-          //twitterUser.setText(removeBaseUrl(storeLinks.getUrl()));
-          //if (!storeLinks.getUrl()
-          //    .isEmpty()) {
-          //  twitterUsernameWrapper.setHelperTextVisibility(false);
-          //}
-          //twitterUser.setVisibility(View.VISIBLE);
           if (Build.VERSION.SDK_INT < 23) {
             twitterText.setTextAppearance(getContext(),
                 R.style.Aptoide_TextView_Regular_S_BlackAlpha);
@@ -664,14 +673,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
               getResources().getDrawable(R.drawable.edit_store_link_check));
         } else if (storeLinks.getType()
             .equals(Store.SocialChannelType.YOUTUBE)) {
-          //youtubeTextAndPlus.setVisibility(View.GONE);
-          //youtubeUsernameWrapper.setVisibility(View.VISIBLE);
-          //youtubeUser.setText(removeBaseUrl(storeLinks.getUrl()));
-          //if (!storeLinks.getUrl()
-          //    .isEmpty()) {
-          //  youtubeUsernameWrapper.setHelperTextVisibility(false);
-          //}
-          //youtubeUser.setVisibility(View.VISIBLE);
           if (Build.VERSION.SDK_INT < 23) {
             youtubeText.setTextAppearance(getContext(),
                 R.style.Aptoide_TextView_Regular_S_BlackAlpha);

@@ -50,6 +50,8 @@ public class ManageStorePresenter implements Presenter {
     handleYoutubeClick();
     handleFacebookEditTextFocus();
     handleTwitchEditTextFocus();
+    handleTwitterEditTextFocus();
+    handleYoutubeEditTextFocus();
   }
 
   @Override public void saveState(Bundle state) {
@@ -58,6 +60,26 @@ public class ManageStorePresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
     // does nothing
+  }
+
+  private void handleYoutubeEditTextFocus() {
+    view.getLifecycle()
+        .filter(event -> event == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> view.youtubeUserFocusChanged()
+            .doOnNext(focusChanged -> view.changeYoutubeUI()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
+  private void handleTwitterEditTextFocus() {
+    view.getLifecycle()
+        .filter(event -> event == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> view.twitterUserFocusChanged()
+            .doOnNext(focusChanged -> view.changeTwitterUI()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   private void handleTwitchEditTextFocus() {
