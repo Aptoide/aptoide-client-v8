@@ -185,7 +185,7 @@
                   android:layout_toEndOf="@+id/edit_store_facebook_icon"
                   android:layout_toRightOf="@+id/edit_store_facebook_icon"
                   android:visibility="gone"
-                  app:helperText="Enter Facebook page"
+                  app:helperText="@string/edit_store_facebook_helper_text"
                   >
 
                 <EditText
@@ -260,7 +260,7 @@
                   android:layout_toEndOf="@+id/edit_store_twitch_icon"
                   android:layout_toRightOf="@+id/edit_store_twitch_icon"
                   android:visibility="gone"
-                  app:helperText="Enter Username"
+                  app:helperText="@string/edit_store_short_enter_username"
                   >
 
                 <EditText
@@ -334,7 +334,7 @@
                   android:layout_toEndOf="@+id/edit_store_twitter_icon"
                   android:layout_toRightOf="@+id/edit_store_twitter_icon"
                   android:visibility="gone"
-                  app:helperText="Enter Username"
+                  app:helperText="@string/edit_store_short_enter_username"
                   >
 
                 <EditText
@@ -409,7 +409,7 @@
                   android:layout_toEndOf="@+id/edit_store_youtube_icon"
                   android:layout_toRightOf="@+id/edit_store_youtube_icon"
                   android:visibility="gone"
-                  app:helperText="Enter Your User or Channel"
+                  app:helperText="@string/edit_store_youtube_helper_text"
                   >
 
                 <EditText

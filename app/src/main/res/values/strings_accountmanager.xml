@@ -116,5 +116,6 @@
   <string name="myaccount_header_title">Notifications</string>
   <string name="twitch">Twitch</string>
   <string name="youtube">Youtube</string>
+  <string name="edit_store_facebook_helper_text">Enter Facebook page</string>
 
 </resources>

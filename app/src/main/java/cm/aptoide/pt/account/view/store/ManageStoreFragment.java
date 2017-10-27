@@ -323,6 +323,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
           .isEmpty()) {
         facebookText.setText(facebookUser.getText()
             .toString());
+        setFacebookTextInputAppearance();
       }
       facebookTextAndPlus.setVisibility(View.VISIBLE);
       facebookUsernameWrapper.setVisibility(View.GONE);
@@ -340,6 +341,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
           .isEmpty()) {
         twitchText.setText(twitchUser.getText()
             .toString());
+        setTwitchTextInputAppearance();
       }
       twitchTextAndPlus.setVisibility(View.VISIBLE);
       twitchUsernameWrapper.setVisibility(View.GONE);
@@ -357,6 +359,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
           .isEmpty()) {
         twitterText.setText(twitterUser.getText()
             .toString());
+        setTwitterInputTextAppearance();
       }
       twitterTextAndPlus.setVisibility(View.VISIBLE);
       twitterUsernameWrapper.setVisibility(View.GONE);
@@ -374,9 +377,42 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
           .isEmpty()) {
         youtubeText.setText(youtubeUser.getText()
             .toString());
+        setYoutubeTextInputAppearance();
       }
       youtubeTextAndPlus.setVisibility(View.VISIBLE);
       youtubeUsernameWrapper.setVisibility(View.GONE);
+    }
+  }
+
+  private void setFacebookTextInputAppearance() {
+    if (Build.VERSION.SDK_INT < 23) {
+      facebookText.setTextAppearance(getContext(), R.style.Aptoide_TextView_Regular_S_BlackAlpha);
+    } else {
+      facebookText.setTextAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha);
+    }
+  }
+
+  private void setTwitchTextInputAppearance() {
+    if (Build.VERSION.SDK_INT < 23) {
+      twitchText.setTextAppearance(getContext(), R.style.Aptoide_TextView_Regular_S_BlackAlpha);
+    } else {
+      twitchText.setTextAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha);
+    }
+  }
+
+  private void setTwitterInputTextAppearance() {
+    if (Build.VERSION.SDK_INT < 23) {
+      twitterText.setTextAppearance(getContext(), R.style.Aptoide_TextView_Regular_S_BlackAlpha);
+    } else {
+      twitterText.setTextAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha);
+    }
+  }
+
+  private void setYoutubeTextInputAppearance() {
+    if (Build.VERSION.SDK_INT < 23) {
+      youtubeText.setTextAppearance(getContext(), R.style.Aptoide_TextView_Regular_S_BlackAlpha);
+    } else {
+      youtubeText.setTextAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha);
     }
   }
 
@@ -649,48 +685,28 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
         if (storeLinks.getType()
             .equals(Store.SocialChannelType.FACEBOOK)) {
           savedFacebookText = removeBaseUrl(storeLinks.getUrl());
-          if (Build.VERSION.SDK_INT < 23) {
-            facebookText.setTextAppearance(getContext(),
-                R.style.Aptoide_TextView_Regular_S_BlackAlpha);
-          } else {
-            facebookText.setTextAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha);
-          }
+          setFacebookTextInputAppearance();
           facebookText.setText(savedFacebookText);
           facebookEndRowIcon.setImageDrawable(
               getResources().getDrawable(R.drawable.edit_store_link_check));
         } else if (storeLinks.getType()
             .equals(Store.SocialChannelType.TWITCH)) {
           savedTwitchText = removeBaseUrl(storeLinks.getUrl());
-          if (Build.VERSION.SDK_INT < 23) {
-            twitchText.setTextAppearance(getContext(),
-                R.style.Aptoide_TextView_Regular_S_BlackAlpha);
-          } else {
-            twitchText.setTextAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha);
-          }
+          setTwitchTextInputAppearance();
           twitchText.setText(savedTwitchText);
           twitchEndRowIcon.setImageDrawable(
               getResources().getDrawable(R.drawable.edit_store_link_check));
         } else if (storeLinks.getType()
             .equals(Store.SocialChannelType.TWITTER)) {
           savedTwitterText = removeBaseUrl(storeLinks.getUrl());
-          if (Build.VERSION.SDK_INT < 23) {
-            twitterText.setTextAppearance(getContext(),
-                R.style.Aptoide_TextView_Regular_S_BlackAlpha);
-          } else {
-            twitterText.setTextAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha);
-          }
+          setTwitterInputTextAppearance();
           twitterText.setText(savedTwitterText);
           twitterEndRowIcon.setImageDrawable(
               getResources().getDrawable(R.drawable.edit_store_link_check));
         } else if (storeLinks.getType()
             .equals(Store.SocialChannelType.YOUTUBE)) {
           savedYoutubeText = removeBaseUrl(storeLinks.getUrl());
-          if (Build.VERSION.SDK_INT < 23) {
-            youtubeText.setTextAppearance(getContext(),
-                R.style.Aptoide_TextView_Regular_S_BlackAlpha);
-          } else {
-            youtubeText.setTextAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha);
-          }
+          setYoutubeTextInputAppearance();
           youtubeText.setText(savedYoutubeText);
           youtubeEndRowIcon.setImageDrawable(
               getResources().getDrawable(R.drawable.edit_store_link_check));
