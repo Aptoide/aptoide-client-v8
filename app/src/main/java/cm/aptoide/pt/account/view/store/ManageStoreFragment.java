@@ -3,6 +3,7 @@ package cm.aptoide.pt.account.view.store;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
@@ -321,6 +322,23 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     }
   }
 
+  @Override public Observable<Boolean> twitchUserFocusChanged() {
+    return RxView.focusChanges(twitchUser);
+  }
+
+  @Override public void changeTwitchUI() {
+    if (!twitterUser.hasFocus()) {
+      if (!twitterUser.getText()
+          .toString()
+          .isEmpty()) {
+        twitterText.setText(twitchUser.getText()
+            .toString());
+      }
+      twitchTextAndPlus.setVisibility(View.VISIBLE);
+      twitchUsernameWrapper.setVisibility(View.GONE);
+    }
+  }
+
   private void setViewError(String error) {
     if (error.equals(StoreValidationException.FACEBOOK_1)) {
       facebookUsernameWrapper.setErrorEnabled(true);
@@ -597,6 +615,12 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
           //  facebookUsernameWrapper.setHelperTextVisibility(false);
           //}
           //facebookUser.setVisibility(View.VISIBLE);
+          if (Build.VERSION.SDK_INT < 23) {
+            facebookText.setTextAppearance(getContext(),
+                R.style.Aptoide_TextView_Regular_S_BlackAlpha);
+          } else {
+            facebookText.setTextAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha);
+          }
           facebookText.setText(removeBaseUrl(storeLinks.getUrl()));
           facebookEndRowIcon.setImageDrawable(
               getResources().getDrawable(R.drawable.edit_store_link_check));
@@ -610,6 +634,12 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
           //  twitchUsernameWrapper.setHelperTextVisibility(false);
           //}
           //twitchUser.setVisibility(View.VISIBLE);
+          if (Build.VERSION.SDK_INT < 23) {
+            twitchText.setTextAppearance(getContext(),
+                R.style.Aptoide_TextView_Regular_S_BlackAlpha);
+          } else {
+            twitchText.setTextAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha);
+          }
           twitchText.setText(removeBaseUrl(storeLinks.getUrl()));
           twitchEndRowIcon.setImageDrawable(
               getResources().getDrawable(R.drawable.edit_store_link_check));
@@ -623,6 +653,12 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
           //  twitterUsernameWrapper.setHelperTextVisibility(false);
           //}
           //twitterUser.setVisibility(View.VISIBLE);
+          if (Build.VERSION.SDK_INT < 23) {
+            twitterText.setTextAppearance(getContext(),
+                R.style.Aptoide_TextView_Regular_S_BlackAlpha);
+          } else {
+            twitterText.setTextAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha);
+          }
           twitterText.setText(removeBaseUrl(storeLinks.getUrl()));
           twitterEndRowIcon.setImageDrawable(
               getResources().getDrawable(R.drawable.edit_store_link_check));
@@ -636,6 +672,12 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
           //  youtubeUsernameWrapper.setHelperTextVisibility(false);
           //}
           //youtubeUser.setVisibility(View.VISIBLE);
+          if (Build.VERSION.SDK_INT < 23) {
+            youtubeText.setTextAppearance(getContext(),
+                R.style.Aptoide_TextView_Regular_S_BlackAlpha);
+          } else {
+            youtubeText.setTextAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha);
+          }
           youtubeText.setText(removeBaseUrl(storeLinks.getUrl()));
           youtubeEndRowIcon.setImageDrawable(
               getResources().getDrawable(R.drawable.edit_store_link_check));

@@ -128,7 +128,8 @@
               android:id="@+id/edit_store_social_channels"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_marginTop="24dp"
+              android:layout_marginBottom="16dp"
+              android:layout_marginTop="20dp"
               android:orientation="vertical"
               android:visibility="gone"
               >
@@ -143,11 +144,11 @@
             <RelativeLayout
                 android:id="@+id/edit_store_facebook"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
                 android:layout_marginTop="20dp"
                 android:orientation="horizontal"
                 >
-              <!--android:layout_marginBottom="16dp"-->
 
               <ImageView
                   android:id="@+id/edit_store_facebook_icon"
@@ -216,11 +217,11 @@
             <RelativeLayout
                 android:id="@+id/edit_store_twitch"
                 android:layout_width="wrap_content"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal"
                 >
-              <!--android:layout_marginBottom="16dp"-->
-              <!--android:layout_marginTop="16dp"-->
 
               <ImageView
                   android:id="@+id/edit_store_twitch_icon"
@@ -291,11 +292,11 @@
             <RelativeLayout
                 android:id="@+id/edit_store_twitter"
                 android:layout_width="wrap_content"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal"
                 >
-              <!--android:layout_marginBottom="16dp"-->
-              <!--android:layout_marginTop="16dp"-->
 
               <ImageView
                   android:id="@+id/edit_store_twitter_icon"
@@ -365,11 +366,11 @@
             <RelativeLayout
                 android:id="@+id/edit_store_youtube"
                 android:layout_width="wrap_content"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal"
                 >
-              <!--android:layout_marginTop="16dp"-->
 
               <ImageView
                   android:id="@+id/edit_store_youtube_icon"

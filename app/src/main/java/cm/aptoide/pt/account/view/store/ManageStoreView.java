@@ -46,4 +46,8 @@ public interface ManageStoreView extends ImagePickerView {
   Observable<Boolean> facebookUserFocusChanged();
 
   void changeFacebookUI();
+
+  Observable<Boolean> twitchUserFocusChanged();
+
+  void changeTwitchUI();
 }
