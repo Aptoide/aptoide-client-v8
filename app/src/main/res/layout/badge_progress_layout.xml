@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="@layout/store_badge_dialog"
+    >
+  <View
+      android:layout_width="0dp"
+      android:layout_height="8dp"
+      android:background="@color/orange"
+      app:layout_constraintBottom_toBottomOf="@+id/tin_medal"
+      app:layout_constraintEnd_toStartOf="@+id/bronze_dummy_view"
+      app:layout_constraintLeft_toRightOf="@+id/tin_dummy_view"
+      app:layout_constraintRight_toLeftOf="@id/bronze_dummy_view"
+      app:layout_constraintStart_toEndOf="@id/tin_dummy_view"
+      app:layout_constraintTop_toTopOf="@+id/tin_medal"
+      />
+  <!--tin badge-->
+  <ImageView
+      android:id="@+id/tin_medal"
+      android:layout_width="20dp"
+      android:layout_height="20dp"
+      android:layout_marginTop="44dp"
+      android:background="@color/white"
+      android:src="@drawable/tin_flat_icon"
+      app:layout_constraintEnd_toStartOf="@+id/bronze_medal"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toLeftOf="@id/bronze_medal"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/congratulations_message"
+      />
+  <View
+      android:id="@+id/tin_dummy_view"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:visibility="gone"
+      app:layout_constraintEnd_toEndOf="@id/tin_medal"
+      app:layout_constraintLeft_toLeftOf="@id/tin_medal"
+      app:layout_constraintRight_toRightOf="@id/tin_medal"
+      app:layout_constraintStart_toStartOf="@id/tin_medal"
+      app:layout_constraintTop_toBottomOf="@id/tin_medal"
+      tools:background="@color/orange"
+      />
+
+  <!--bronze->Silver line-->
+  <View
+      android:layout_width="0dp"
+      android:layout_height="8dp"
+      android:background="@color/orange"
+      app:layout_constraintBottom_toBottomOf="@id/bronze_medal"
+      app:layout_constraintEnd_toStartOf="@+id/silver_dummy_view"
+      app:layout_constraintLeft_toRightOf="@+id/bronze_dummy_view"
+      app:layout_constraintRight_toLeftOf="@id/silver_dummy_view"
+      app:layout_constraintStart_toEndOf="@id/bronze_dummy_view"
+      app:layout_constraintTop_toTopOf="@id/bronze_medal"
+      />
+
+
+  <!--Bronze badge-->
+  <ImageView
+      android:id="@+id/bronze_medal"
+      android:layout_width="20dp"
+      android:layout_height="20dp"
+      android:src="@drawable/bronze_flat_icon"
+      android:background="@color/white"
+      app:layout_constraintBottom_toBottomOf="@id/tin_medal"
+      app:layout_constraintEnd_toStartOf="@+id/silver_medal"
+      app:layout_constraintLeft_toRightOf="@id/tin_medal"
+      app:layout_constraintRight_toLeftOf="@id/silver_medal"
+      app:layout_constraintStart_toEndOf="@+id/tin_medal"
+      app:layout_constraintTop_toTopOf="@id/tin_medal"
+      />
+  <View
+      android:id="@+id/bronze_dummy_view"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:visibility="gone"
+      app:layout_constraintEnd_toEndOf="@id/bronze_medal"
+      app:layout_constraintLeft_toLeftOf="@id/bronze_medal"
+      app:layout_constraintRight_toRightOf="@id/bronze_medal"
+      app:layout_constraintStart_toStartOf="@id/bronze_medal"
+      app:layout_constraintTop_toBottomOf="@id/bronze_medal"
+      tools:background="@color/orange"
+      />
+
+  <!--silver->gold line-->
+  <View
+      android:layout_width="0dp"
+      android:layout_height="8dp"
+      android:background="@color/orange"
+      app:layout_constraintBottom_toBottomOf="@id/silver_medal"
+      app:layout_constraintEnd_toStartOf="@+id/gold_dummy_view"
+      app:layout_constraintLeft_toRightOf="@+id/silver_dummy_view"
+      app:layout_constraintRight_toLeftOf="@id/gold_dummy_view"
+      app:layout_constraintStart_toEndOf="@id/silver_dummy_view"
+      app:layout_constraintTop_toTopOf="@id/silver_medal"
+      />
+
+  <!--silver badge-->
+  <ImageView
+      android:id="@+id/silver_medal"
+      android:layout_width="20dp"
+      android:layout_height="20dp"
+      android:src="@drawable/silver_flat_icon"
+      android:background="@color/white"
+      app:layout_constraintBottom_toBottomOf="@id/tin_medal"
+      app:layout_constraintEnd_toStartOf="@+id/gold_medal"
+      app:layout_constraintLeft_toRightOf="@id/bronze_medal"
+      app:layout_constraintRight_toLeftOf="@id/gold_medal"
+      app:layout_constraintStart_toEndOf="@+id/bronze_medal"
+      app:layout_constraintTop_toTopOf="@id/tin_medal"
+      />
+  <View
+      android:id="@+id/silver_dummy_view"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:visibility="gone"
+      app:layout_constraintEnd_toEndOf="@id/silver_medal"
+      app:layout_constraintLeft_toLeftOf="@id/silver_medal"
+      app:layout_constraintRight_toRightOf="@id/silver_medal"
+      app:layout_constraintStart_toStartOf="@id/silver_medal"
+      app:layout_constraintTop_toBottomOf="@id/silver_medal"
+      tools:background="@color/orange"
+      />
+
+  <!--gold -> platinum line-->
+  <View
+      android:layout_width="0dp"
+      android:layout_height="8dp"
+      android:background="@color/orange"
+      app:layout_constraintBottom_toBottomOf="@id/gold_medal"
+      app:layout_constraintEnd_toStartOf="@+id/platinum_dummy_view"
+      app:layout_constraintLeft_toRightOf="@+id/gold_dummy_view"
+      app:layout_constraintRight_toLeftOf="@id/platinum_dummy_view"
+      app:layout_constraintStart_toEndOf="@id/gold_dummy_view"
+      app:layout_constraintTop_toTopOf="@id/gold_medal"
+      />
+
+  <!--Gold badge-->
+  <ImageView
+      android:id="@+id/gold_medal"
+      android:layout_width="20dp"
+      android:layout_height="20dp"
+      android:src="@drawable/gold_flat_icon"
+      android:background="@color/white"
+      app:layout_constraintBottom_toBottomOf="@id/tin_medal"
+      app:layout_constraintEnd_toStartOf="@+id/platinum_medal"
+      app:layout_constraintLeft_toRightOf="@id/silver_medal"
+      app:layout_constraintRight_toLeftOf="@id/platinum_medal"
+      app:layout_constraintStart_toEndOf="@+id/silver_medal"
+      app:layout_constraintTop_toTopOf="@id/tin_medal"
+      />
+  <View
+      android:id="@+id/gold_dummy_view"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:visibility="gone"
+      app:layout_constraintEnd_toEndOf="@id/gold_medal"
+      app:layout_constraintLeft_toLeftOf="@id/gold_medal"
+      app:layout_constraintRight_toRightOf="@id/gold_medal"
+      app:layout_constraintStart_toStartOf="@id/gold_medal"
+      app:layout_constraintTop_toBottomOf="@id/gold_medal"
+      tools:background="@color/orange"
+      />
+
+  <!--platinum badge-->
+  <ImageView
+      android:id="@+id/platinum_medal"
+      android:layout_width="20dp"
+      android:layout_height="20dp"
+      android:src="@drawable/platinum_flat_icon"
+      app:layout_constraintBottom_toBottomOf="@id/tin_medal"
+      app:layout_constraintEnd_toEndOf="parent"
+      android:background="@color/white"
+      app:layout_constraintLeft_toRightOf="@id/gold_medal"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintStart_toEndOf="@+id/gold_medal"
+      app:layout_constraintTop_toTopOf="@id/tin_medal"
+      />
+  <View
+      android:id="@+id/platinum_dummy_view"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:visibility="gone"
+      app:layout_constraintEnd_toEndOf="@id/platinum_medal"
+      app:layout_constraintLeft_toLeftOf="@id/platinum_medal"
+      app:layout_constraintRight_toRightOf="@id/platinum_medal"
+      app:layout_constraintStart_toStartOf="@id/platinum_medal"
+      app:layout_constraintTop_toBottomOf="@id/platinum_medal"
+      tools:background="@color/orange"
+      />
+</merge>
