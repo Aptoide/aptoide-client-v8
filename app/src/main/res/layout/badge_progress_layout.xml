@@ -7,7 +7,7 @@
   <View
       android:layout_width="0dp"
       android:layout_height="8dp"
-      android:background="@color/orange"
+      android:background="@color/progress_bar_color"
       app:layout_constraintBottom_toBottomOf="@+id/tin_medal"
       app:layout_constraintEnd_toStartOf="@+id/bronze_dummy_view"
       app:layout_constraintLeft_toRightOf="@+id/tin_dummy_view"
@@ -45,7 +45,7 @@
   <View
       android:layout_width="0dp"
       android:layout_height="8dp"
-      android:background="@color/orange"
+      android:background="@color/progress_bar_color"
       app:layout_constraintBottom_toBottomOf="@id/bronze_medal"
       app:layout_constraintEnd_toStartOf="@+id/silver_dummy_view"
       app:layout_constraintLeft_toRightOf="@+id/bronze_dummy_view"
@@ -85,7 +85,7 @@
   <View
       android:layout_width="0dp"
       android:layout_height="8dp"
-      android:background="@color/orange"
+      android:background="@color/progress_bar_color"
       app:layout_constraintBottom_toBottomOf="@id/silver_medal"
       app:layout_constraintEnd_toStartOf="@+id/gold_dummy_view"
       app:layout_constraintLeft_toRightOf="@+id/silver_dummy_view"
@@ -124,7 +124,7 @@
   <View
       android:layout_width="0dp"
       android:layout_height="8dp"
-      android:background="@color/orange"
+      android:background="@color/progress_bar_color"
       app:layout_constraintBottom_toBottomOf="@id/gold_medal"
       app:layout_constraintEnd_toStartOf="@+id/platinum_dummy_view"
       app:layout_constraintLeft_toRightOf="@+id/gold_dummy_view"
