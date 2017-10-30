@@ -13,7 +13,6 @@ import android.support.annotation.ColorRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 import cm.aptoide.pt.R;
 
 /**
@@ -40,187 +39,268 @@ public class BadgeDialogFactory {
   private void fillView(View view, GridStoreMetaWidget.HomeMeta.Badge badge) {
     Resources resources = view.getContext()
         .getResources();
-    ImageView headerBackground = ((ImageView) view.findViewById(R.id.header_background));
-    ImageView medalIcon = ((ImageView) view.findViewById(R.id.medal_icon));
-    ImageView tinMedal = ((ImageView) view.findViewById(R.id.tin_medal));
-    ImageView bronzeMedal = ((ImageView) view.findViewById(R.id.bronze_medal));
-    ImageView silverMedal = ((ImageView) view.findViewById(R.id.silver_medal));
-    ImageView goldMedal = ((ImageView) view.findViewById(R.id.gold_medal));
-    ImageView platinumMedal = ((ImageView) view.findViewById(R.id.platinum_medal));
-    TextView medalText = (TextView) view.findViewById(R.id.medal_title);
-    TextView congratulationsMessage = (TextView) view.findViewById(R.id.congratulations_message);
-    TextView uploadedAppsTv = (TextView) view.findViewById(R.id.uploaded_apps);
-    TextView downloadsTv = (TextView) view.findViewById(R.id.downloads);
-    TextView followersTv = (TextView) view.findViewById(R.id.followers);
-    TextView reviewsTv = (TextView) view.findViewById(R.id.reviews);
-    View progress1 = view.findViewById(R.id.progress1);
-    View progress2 = view.findViewById(R.id.progress2);
-    View progress3 = view.findViewById(R.id.progress3);
-    View progress4 = view.findViewById(R.id.progress4);
+    StoreMedalPopupViewHolder holder = new StoreMedalPopupViewHolder(view);
 
     @ColorRes int color = R.color.tin_medal;
     switch (badge) {
       case NONE:
-        headerBackground.setBackgroundColor(resources.getColor(color));
-        medalIcon.setImageDrawable(resources.getDrawable(R.drawable.tin));
-        medalText.setText(R.string.badgedialog_title_bronze);
-        congratulationsMessage.setText(R.string.badgedialog_message_bronze);
-        uploadedAppsTv.setText(R.string.badgedialog_message_bronze_1);
-        downloadsTv.setText(R.string.badgedialog_message_bronze_2);
-        followersTv.setText(R.string.badgedialog_message_bronze_3);
-        reviewsTv.setText(R.string.badgedialog_message_bronze_4);
-        setDrawableColor(resources, color, uploadedAppsTv.getCompoundDrawables());
-        setDrawableColor(resources, color, downloadsTv.getCompoundDrawables());
-        setDrawableColor(resources, color, followersTv.getCompoundDrawables());
-        setDrawableColor(resources, color, reviewsTv.getCompoundDrawables());
-        tinMedal.getLayoutParams().width = (int) (tinMedal.getLayoutParams().width * MEDAL_SCALE);
-        tinMedal.getLayoutParams().height = (int) (tinMedal.getLayoutParams().height * MEDAL_SCALE);
-        tinMedal.setScaleType(ImageView.ScaleType.FIT_XY);
-        tinMedal.requestLayout();
+        holder.getHeaderBackground()
+            .setBackgroundColor(resources.getColor(color));
+        holder.getMedalIcon()
+            .setImageDrawable(resources.getDrawable(R.drawable.tin));
+        holder.getMedalText()
+            .setText(R.string.badgedialog_title_bronze);
+        holder.getCongratulationsMessage()
+            .setText(R.string.badgedialog_message_bronze);
+        holder.getUploadedAppsTv()
+            .setText(R.string.badgedialog_message_bronze_1);
+        holder.getDownloadsTv()
+            .setText(R.string.badgedialog_message_bronze_2);
+        holder.getFollowersTv()
+            .setText(R.string.badgedialog_message_bronze_3);
+        holder.getReviewsTv()
+            .setText(R.string.badgedialog_message_bronze_4);
+        setDrawableColor(resources, color, holder.getUploadedAppsTv()
+            .getCompoundDrawables());
+        setDrawableColor(resources, color, holder.getDownloadsTv()
+            .getCompoundDrawables());
+        setDrawableColor(resources, color, holder.getFollowersTv()
+            .getCompoundDrawables());
+        setDrawableColor(resources, color, holder.getReviewsTv()
+            .getCompoundDrawables());
+        holder.getTinMedal()
+            .getLayoutParams().width = (int) (holder.getTinMedal()
+            .getLayoutParams().width * MEDAL_SCALE);
+        holder.getTinMedal()
+            .getLayoutParams().height = (int) (holder.getTinMedal()
+            .getLayoutParams().height * MEDAL_SCALE);
+        holder.getTinMedal()
+            .setScaleType(ImageView.ScaleType.FIT_XY);
+        holder.getTinMedal()
+            .requestLayout();
         break;
       case BRONZE:
         color = R.color.bronze_medal;
-        headerBackground.setBackgroundColor(resources.getColor(color));
-        medalIcon.setImageDrawable(resources.getDrawable(R.drawable.bronze));
-        medalText.setText(R.string.badgedialog_title_bronze);
-        congratulationsMessage.setText(R.string.badgedialog_message_bronze);
-        uploadedAppsTv.setText(R.string.badgedialog_message_bronze_1);
-        setDrawableColor(resources, color, uploadedAppsTv.getCompoundDrawables());
-        setDrawableColor(resources, color, downloadsTv.getCompoundDrawables());
-        setDrawableColor(resources, color, followersTv.getCompoundDrawables());
-        setDrawableColor(resources, color, reviewsTv.getCompoundDrawables());
-        downloadsTv.setText(R.string.badgedialog_message_bronze_2);
-        followersTv.setText(R.string.badgedialog_message_bronze_3);
-        reviewsTv.setText(R.string.badgedialog_message_bronze_4);
-        bronzeMedal.getLayoutParams().width =
-            (int) (bronzeMedal.getLayoutParams().width * MEDAL_SCALE);
-        bronzeMedal.getLayoutParams().height =
-            (int) (bronzeMedal.getLayoutParams().height * MEDAL_SCALE);
-        bronzeMedal.setScaleType(ImageView.ScaleType.FIT_XY);
-        bronzeMedal.requestLayout();
+        holder.getHeaderBackground()
+            .setBackgroundColor(resources.getColor(color));
+        holder.getMedalIcon()
+            .setImageDrawable(resources.getDrawable(R.drawable.bronze));
+        holder.getMedalText()
+            .setText(R.string.badgedialog_title_bronze);
+        holder.getCongratulationsMessage()
+            .setText(R.string.badgedialog_message_bronze);
+        holder.getUploadedAppsTv()
+            .setText(R.string.badgedialog_message_bronze_1);
+        setDrawableColor(resources, color, holder.getUploadedAppsTv()
+            .getCompoundDrawables());
+        setDrawableColor(resources, color, holder.getDownloadsTv()
+            .getCompoundDrawables());
+        setDrawableColor(resources, color, holder.getFollowersTv()
+            .getCompoundDrawables());
+        setDrawableColor(resources, color, holder.getReviewsTv()
+            .getCompoundDrawables());
+        holder.getDownloadsTv()
+            .setText(R.string.badgedialog_message_bronze_2);
+        holder.getFollowersTv()
+            .setText(R.string.badgedialog_message_bronze_3);
+        holder.getReviewsTv()
+            .setText(R.string.badgedialog_message_bronze_4);
+        holder.getBronzeMedal()
+            .getLayoutParams().width = (int) (holder.getBronzeMedal()
+            .getLayoutParams().width * MEDAL_SCALE);
+        holder.getBronzeMedal()
+            .getLayoutParams().height = (int) (holder.getBronzeMedal()
+            .getLayoutParams().height * MEDAL_SCALE);
+        holder.getBronzeMedal()
+            .setScaleType(ImageView.ScaleType.FIT_XY);
+        holder.getBronzeMedal()
+            .requestLayout();
         break;
       case SILVER:
         color = R.color.silver_medal;
-        headerBackground.setBackgroundColor(resources.getColor(color));
-        medalIcon.setImageDrawable(resources.getDrawable(R.drawable.silver));
-        medalText.setText(R.string.badgedialog_title_silver);
-        congratulationsMessage.setText(R.string.badgedialog_message_silver);
-        uploadedAppsTv.setText(R.string.badgedialog_message_silver_1);
-        downloadsTv.setText(R.string.badgedialog_message_silver_2);
-        followersTv.setText(R.string.badgedialog_message_silver_3);
-        reviewsTv.setText(R.string.badgedialog_message_silver_4);
-        setDrawableColor(resources, color, uploadedAppsTv.getCompoundDrawables());
-        setDrawableColor(resources, color, downloadsTv.getCompoundDrawables());
-        setDrawableColor(resources, color, followersTv.getCompoundDrawables());
-        setDrawableColor(resources, color, reviewsTv.getCompoundDrawables());
-        silverMedal.getLayoutParams().width =
-            (int) (silverMedal.getLayoutParams().width * MEDAL_SCALE);
-        silverMedal.getLayoutParams().height =
-            (int) (silverMedal.getLayoutParams().height * MEDAL_SCALE);
-        silverMedal.setScaleType(ImageView.ScaleType.FIT_XY);
-        silverMedal.requestLayout();
+        holder.getHeaderBackground()
+            .setBackgroundColor(resources.getColor(color));
+        holder.getMedalIcon()
+            .setImageDrawable(resources.getDrawable(R.drawable.silver));
+        holder.getMedalText()
+            .setText(R.string.badgedialog_title_silver);
+        holder.getCongratulationsMessage()
+            .setText(R.string.badgedialog_message_silver);
+        holder.getUploadedAppsTv()
+            .setText(R.string.badgedialog_message_silver_1);
+        holder.getDownloadsTv()
+            .setText(R.string.badgedialog_message_silver_2);
+        holder.getFollowersTv()
+            .setText(R.string.badgedialog_message_silver_3);
+        holder.getReviewsTv()
+            .setText(R.string.badgedialog_message_silver_4);
+        setDrawableColor(resources, color, holder.getUploadedAppsTv()
+            .getCompoundDrawables());
+        setDrawableColor(resources, color, holder.getDownloadsTv()
+            .getCompoundDrawables());
+        setDrawableColor(resources, color, holder.getFollowersTv()
+            .getCompoundDrawables());
+        setDrawableColor(resources, color, holder.getReviewsTv()
+            .getCompoundDrawables());
+        holder.getSilverMedal()
+            .getLayoutParams().width = (int) (holder.getSilverMedal()
+            .getLayoutParams().width * MEDAL_SCALE);
+        holder.getSilverMedal()
+            .getLayoutParams().height = (int) (holder.getSilverMedal()
+            .getLayoutParams().height * MEDAL_SCALE);
+        holder.getSilverMedal()
+            .setScaleType(ImageView.ScaleType.FIT_XY);
+        holder.getSilverMedal()
+            .requestLayout();
         break;
       case GOLD:
         color = R.color.gold_medal;
-        headerBackground.setBackgroundColor(resources.getColor(color));
-        medalIcon.setImageDrawable(resources.getDrawable(R.drawable.gold));
-        medalText.setText(R.string.badgedialog_title_gold);
-        congratulationsMessage.setText(R.string.badgedialog_message_gold);
-        uploadedAppsTv.setText(R.string.badgedialog_message_gold_1);
-        downloadsTv.setText(R.string.badgedialog_message_gold_2);
-        followersTv.setText(R.string.badgedialog_message_gold_3);
-        reviewsTv.setText(R.string.badgedialog_message_gold_4);
-        setDrawableColor(resources, color, uploadedAppsTv.getCompoundDrawables());
-        setDrawableColor(resources, color, downloadsTv.getCompoundDrawables());
-        setDrawableColor(resources, color, followersTv.getCompoundDrawables());
-        setDrawableColor(resources, color, reviewsTv.getCompoundDrawables());
-        goldMedal.getLayoutParams().width = (int) (goldMedal.getLayoutParams().width * MEDAL_SCALE);
-        goldMedal.getLayoutParams().height =
-            (int) (goldMedal.getLayoutParams().height * MEDAL_SCALE);
-        goldMedal.setScaleType(ImageView.ScaleType.FIT_XY);
-        goldMedal.requestLayout();
+        holder.getHeaderBackground()
+            .setBackgroundColor(resources.getColor(color));
+        holder.getMedalIcon()
+            .setImageDrawable(resources.getDrawable(R.drawable.gold));
+        holder.getMedalText()
+            .setText(R.string.badgedialog_title_gold);
+        holder.getCongratulationsMessage()
+            .setText(R.string.badgedialog_message_gold);
+        holder.getUploadedAppsTv()
+            .setText(R.string.badgedialog_message_gold_1);
+        holder.getDownloadsTv()
+            .setText(R.string.badgedialog_message_gold_2);
+        holder.getFollowersTv()
+            .setText(R.string.badgedialog_message_gold_3);
+        holder.getReviewsTv()
+            .setText(R.string.badgedialog_message_gold_4);
+        setDrawableColor(resources, color, holder.getUploadedAppsTv()
+            .getCompoundDrawables());
+        setDrawableColor(resources, color, holder.getDownloadsTv()
+            .getCompoundDrawables());
+        setDrawableColor(resources, color, holder.getFollowersTv()
+            .getCompoundDrawables());
+        setDrawableColor(resources, color, holder.getReviewsTv()
+            .getCompoundDrawables());
+        holder.getGoldMedal()
+            .getLayoutParams().width = (int) (holder.getGoldMedal()
+            .getLayoutParams().width * MEDAL_SCALE);
+        holder.getGoldMedal()
+            .getLayoutParams().height = (int) (holder.getGoldMedal()
+            .getLayoutParams().height * MEDAL_SCALE);
+        holder.getGoldMedal()
+            .setScaleType(ImageView.ScaleType.FIT_XY);
+        holder.getGoldMedal()
+            .requestLayout();
         break;
       case PLATINUM:
         color = R.color.platinum_medal;
-        headerBackground.setBackgroundColor(resources.getColor(color));
-        medalIcon.setImageDrawable(resources.getDrawable(R.drawable.platinum));
-        medalText.setText(R.string.badgedialog_title_platinum);
-        congratulationsMessage.setText(R.string.badgedialog_message_platinum);
-        uploadedAppsTv.setText(R.string.badgedialog_message_platinum_1);
-        downloadsTv.setText(R.string.badgedialog_message_platinum_2);
-        followersTv.setText(R.string.badgedialog_message_platinum_3);
-        reviewsTv.setText(R.string.badgedialog_message_platinum_4);
-        setDrawableColor(resources, color, uploadedAppsTv.getCompoundDrawables());
-        setDrawableColor(resources, color, downloadsTv.getCompoundDrawables());
-        setDrawableColor(resources, color, followersTv.getCompoundDrawables());
-        setDrawableColor(resources, color, reviewsTv.getCompoundDrawables());
-        platinumMedal.getLayoutParams().width =
-            (int) (platinumMedal.getLayoutParams().width * MEDAL_SCALE);
-        platinumMedal.getLayoutParams().height =
-            (int) (platinumMedal.getLayoutParams().height * MEDAL_SCALE);
-        platinumMedal.setScaleType(ImageView.ScaleType.FIT_XY);
-        platinumMedal.requestLayout();
+        holder.getHeaderBackground()
+            .setBackgroundColor(resources.getColor(color));
+        holder.getMedalIcon()
+            .setImageDrawable(resources.getDrawable(R.drawable.platinum));
+        holder.getMedalText()
+            .setText(R.string.badgedialog_title_platinum);
+        holder.getCongratulationsMessage()
+            .setText(R.string.badgedialog_message_platinum);
+        holder.getUploadedAppsTv()
+            .setText(R.string.badgedialog_message_platinum_1);
+        holder.getDownloadsTv()
+            .setText(R.string.badgedialog_message_platinum_2);
+        holder.getFollowersTv()
+            .setText(R.string.badgedialog_message_platinum_3);
+        holder.getReviewsTv()
+            .setText(R.string.badgedialog_message_platinum_4);
+        setDrawableColor(resources, color, holder.getUploadedAppsTv()
+            .getCompoundDrawables());
+        setDrawableColor(resources, color, holder.getDownloadsTv()
+            .getCompoundDrawables());
+        setDrawableColor(resources, color, holder.getFollowersTv()
+            .getCompoundDrawables());
+        setDrawableColor(resources, color, holder.getReviewsTv()
+            .getCompoundDrawables());
+        holder.getPlatinumMedal()
+            .getLayoutParams().width = (int) (holder.getPlatinumMedal()
+            .getLayoutParams().width * MEDAL_SCALE);
+        holder.getPlatinumMedal()
+            .getLayoutParams().height = (int) (holder.getPlatinumMedal()
+            .getLayoutParams().height * MEDAL_SCALE);
+        holder.getPlatinumMedal()
+            .setScaleType(ImageView.ScaleType.FIT_XY);
+        holder.getPlatinumMedal()
+            .requestLayout();
         break;
     }
 
     int badgeRank = badge.ordinal();
 
-    Drawable drawable = tinMedal.getDrawable();
+    Drawable drawable = holder.getTinMedal()
+        .getDrawable();
     if (badgeRank >= 0) {
       setDrawableColor(resources, color, drawable);
     } else {
       setDrawableColor(resources, R.color.grey_fog_light, drawable);
     }
-    tinMedal.setImageDrawable(drawable);
-    setBackground(tinMedal, resources.getColor(R.color.white));
+    holder.getTinMedal()
+        .setImageDrawable(drawable);
+    setBackground(holder.getTinMedal(), resources.getColor(R.color.white));
 
-    drawable = bronzeMedal.getDrawable();
+    drawable = holder.getBronzeMedal()
+        .getDrawable();
     if (badgeRank >= 1) {
       setDrawableColor(resources, color, drawable);
     } else {
       setDrawableColor(resources, R.color.grey_fog_light, drawable);
     }
-    bronzeMedal.setImageDrawable(drawable);
-    setBackground(bronzeMedal, resources.getColor(R.color.white));
+    holder.getBronzeMedal()
+        .setImageDrawable(drawable);
+    setBackground(holder.getBronzeMedal(), resources.getColor(R.color.white));
 
-    drawable = silverMedal.getDrawable();
+    drawable = holder.getSilverMedal()
+        .getDrawable();
     if (badgeRank >= 2) {
       setDrawableColor(resources, color, drawable);
     } else {
       setDrawableColor(resources, R.color.grey_fog_light, drawable);
     }
-    silverMedal.setImageDrawable(drawable);
-    setBackground(silverMedal, resources.getColor(R.color.white));
+    holder.getSilverMedal()
+        .setImageDrawable(drawable);
+    setBackground(holder.getSilverMedal(), resources.getColor(R.color.white));
 
-    drawable = goldMedal.getDrawable();
+    drawable = holder.getGoldMedal()
+        .getDrawable();
     if (badgeRank >= 3) {
       setDrawableColor(resources, color, drawable);
     } else {
       setDrawableColor(resources, R.color.grey_fog_light, drawable);
     }
-    goldMedal.setImageDrawable(drawable);
-    setBackground(goldMedal, resources.getColor(R.color.white));
+    holder.getGoldMedal()
+        .setImageDrawable(drawable);
+    setBackground(holder.getGoldMedal(), resources.getColor(R.color.white));
 
-    drawable = platinumMedal.getDrawable();
+    drawable = holder.getPlatinumMedal()
+        .getDrawable();
     if (badgeRank >= 4) {
       setDrawableColor(resources, color, drawable);
     } else {
       setDrawableColor(resources, R.color.grey_fog_light, drawable);
     }
-    platinumMedal.setImageDrawable(drawable);
-    setBackground(platinumMedal, resources.getColor(R.color.white));
+    holder.getPlatinumMedal()
+        .setImageDrawable(drawable);
+    setBackground(holder.getPlatinumMedal(), resources.getColor(R.color.white));
 
     if (badgeRank >= 1) {
-      progress1.setBackgroundColor(resources.getColor(color));
+      holder.getProgress1()
+          .setBackgroundColor(resources.getColor(color));
     }
     if (badgeRank >= 2) {
-      progress2.setBackgroundColor(resources.getColor(color));
+      holder.getProgress2()
+          .setBackgroundColor(resources.getColor(color));
     }
     if (badgeRank >= 3) {
-      progress3.setBackgroundColor(resources.getColor(color));
+      holder.getProgress3()
+          .setBackgroundColor(resources.getColor(color));
     }
     if (badgeRank >= 4) {
-      progress4.setBackgroundColor(resources.getColor(color));
+      holder.getProgress4()
+          .setBackgroundColor(resources.getColor(color));
     }
   }
 

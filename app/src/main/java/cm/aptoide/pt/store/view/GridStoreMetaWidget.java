@@ -3,8 +3,6 @@ package cm.aptoide.pt.store.view;
 import android.content.res.Resources;
 import android.os.Build;
 import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
-import android.support.annotation.DrawableRes;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
 import android.text.ParcelableSpan;
@@ -480,6 +478,9 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
       return showApps;
     }
 
+    /**
+     * the order must be corrected(NONE<BRONZE<SILVER<GOLD<PLATINUM)
+     */
     enum Badge {
       NONE, BRONZE, SILVER, GOLD, PLATINUM
     }
