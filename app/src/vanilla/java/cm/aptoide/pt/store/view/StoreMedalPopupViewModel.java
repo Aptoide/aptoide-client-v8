@@ -9,8 +9,9 @@ import android.support.annotation.DrawableRes;
 
 class StoreMedalPopupViewModel {
 
+  private final GridStoreMetaWidget.HomeMeta.Badge storeBadge;
   private final int mainColor;
-  private final int storeMedal;
+  private final int storeMedalIcon;
   private final String medalText;
   private final String congratulationsMessage;
   private final String uploadedAppsMessage;
@@ -32,15 +33,17 @@ class StoreMedalPopupViewModel {
   private final @ColorRes int progress3;
   private final @ColorRes int progress4;
 
-  public StoreMedalPopupViewModel(@ColorRes int mainColor, @DrawableRes int storeMedal,
-      String medalText, String congratulationsMessage, String uploadedAppsMessage,
-      String downloadsMessage, String followersMessage, String reviewsMessage,
-      boolean tinBadgeSelected, boolean bronzeBadgeSelected, boolean silverBadgeSelected,
-      boolean goldBadgeSelected, boolean platinumBadgeSelected, int tinBadgeColor,
-      int bronzeBadgeColor, int silverBadgeColor, int goldBadgeColor, int platinumBadgeColor,
-      int progress1, int progress2, int progress3, int progress4) {
+  public StoreMedalPopupViewModel(GridStoreMetaWidget.HomeMeta.Badge storeBadge,
+      @ColorRes int mainColor, @DrawableRes int storeMedalIcon, String medalText,
+      String congratulationsMessage, String uploadedAppsMessage, String downloadsMessage,
+      String followersMessage, String reviewsMessage, boolean tinBadgeSelected,
+      boolean bronzeBadgeSelected, boolean silverBadgeSelected, boolean goldBadgeSelected,
+      boolean platinumBadgeSelected, int tinBadgeColor, int bronzeBadgeColor, int silverBadgeColor,
+      int goldBadgeColor, int platinumBadgeColor, int progress1, int progress2, int progress3,
+      int progress4) {
+    this.storeBadge = storeBadge;
     this.mainColor = mainColor;
-    this.storeMedal = storeMedal;
+    this.storeMedalIcon = storeMedalIcon;
     this.medalText = medalText;
     this.congratulationsMessage = congratulationsMessage;
     this.uploadedAppsMessage = uploadedAppsMessage;
@@ -61,6 +64,10 @@ class StoreMedalPopupViewModel {
     this.progress2 = progress2;
     this.progress3 = progress3;
     this.progress4 = progress4;
+  }
+
+  public GridStoreMetaWidget.HomeMeta.Badge getStoreBadge() {
+    return storeBadge;
   }
 
   public int getProgress1() {
@@ -147,7 +154,7 @@ class StoreMedalPopupViewModel {
     return followersMessage;
   }
 
-  public @DrawableRes int getStoreMedal() {
-    return storeMedal;
+  public @DrawableRes int getStoreMedalIcon() {
+    return storeMedalIcon;
   }
 }
