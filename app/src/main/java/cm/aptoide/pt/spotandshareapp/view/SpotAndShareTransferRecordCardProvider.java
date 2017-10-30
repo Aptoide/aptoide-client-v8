@@ -85,6 +85,7 @@ public class SpotAndShareTransferRecordCardProvider {
         installButton.setVisibility(View.GONE);
         appSize.setText(R.string.spotandshare_short_installed);
       }
+      appSize.setAllCaps(false);
       transferProgressBar.setVisibility(View.INVISIBLE);
     } else if (transferAppModel.getTransferState() == Transfer.State.SERVING) {
       acceptButton.setVisibility(View.GONE);
