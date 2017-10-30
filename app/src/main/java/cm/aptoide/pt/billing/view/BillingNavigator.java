@@ -1,7 +1,10 @@
 package cm.aptoide.pt.billing.view;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
+import android.support.customtabs.CustomTabsIntent;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.billing.networking.PaymentServiceMapper;
 import cm.aptoide.pt.billing.payment.PaymentService;
@@ -10,6 +13,7 @@ import cm.aptoide.pt.billing.view.login.PaymentLoginFragment;
 import cm.aptoide.pt.billing.view.paypal.PayPalAuthorizationFragment;
 import cm.aptoide.pt.billing.view.web.WebAuthorizationFragment;
 import cm.aptoide.pt.navigator.ActivityNavigator;
+import cm.aptoide.pt.navigator.CustomTabsNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.Result;
 import com.adyen.core.PaymentRequest;
@@ -31,15 +35,20 @@ public class BillingNavigator {
   private final FragmentNavigator fragmentNavigator;
   private final String marketName;
   private final PublishRelay<CreditCardPaymentDetails> detailsRelay;
+  private final CustomTabsNavigator customTabsNavigator;
+  private final int customTabsToolbarColor;
 
   public BillingNavigator(PurchaseBundleMapper bundleMapper, ActivityNavigator activityNavigator,
       FragmentNavigator fragmentNavigator, String marketName,
-      PublishRelay<CreditCardPaymentDetails> detailsRelay) {
+      PublishRelay<CreditCardPaymentDetails> detailsRelay, CustomTabsNavigator customTabsNavigator,
+      @ColorInt int customTabsToolbarColor) {
     this.bundleMapper = bundleMapper;
     this.activityNavigator = activityNavigator;
     this.fragmentNavigator = fragmentNavigator;
     this.marketName = marketName;
     this.detailsRelay = detailsRelay;
+    this.customTabsNavigator = customTabsNavigator;
+    this.customTabsToolbarColor = customTabsToolbarColor;
   }
 
   public void navigateToCustomerAuthenticationForResult(int requestCode) {
@@ -160,6 +169,20 @@ public class BillingNavigator {
 
   public void popToPaymentView() {
     fragmentNavigator.cleanBackStack();
+  }
+
+  public void navigateToUriForResult(String redirectUrl) {
+    customTabsNavigator.navigateToCustomTabs(
+        new CustomTabsIntent.Builder().setToolbarColor(customTabsToolbarColor)
+            .build(), Uri.parse(redirectUrl));
+  }
+
+  public Observable<Uri> uriResults() {
+    return customTabsNavigator.customTabResults();
+  }
+
+  public void popAdyenCreditCardView() {
+    fragmentNavigator.popBackStack();
   }
 
   public static class PayPalResult {

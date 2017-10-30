@@ -1,6 +1,7 @@
 package cm.aptoide.pt.billing.payment;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import com.adyen.core.PaymentRequest;
 import com.adyen.core.interfaces.PaymentDataCallback;
@@ -78,6 +79,20 @@ public class Adyen {
         });
   }
 
+  public Completable finishUri(Uri uri) {
+    return getStatus().first()
+        .toSingle()
+        .flatMapCompletable(status -> {
+          if (status.getUriCallback() == null) {
+            return Completable.error(new IllegalStateException(
+                "Not possible to select payment service no callback available."));
+          }
+          status.getUriCallback()
+              .completionWithUri(uri);
+          return Completable.complete();
+        });
+  }
+
   public Completable finishPayment(PaymentDetails details) {
     return getStatus().first()
         .toSingle()
@@ -102,6 +117,13 @@ public class Adyen {
   public Single<PaymentRequest> getPaymentData() {
     return getStatus().filter(status -> status.getPaymentRequest() != null)
         .map(status -> status.getPaymentRequest())
+        .first()
+        .toSingle();
+  }
+
+  public Single<String> getRedirectUrl() {
+    return getStatus().filter(status -> status.getRedirectUrl() != null)
+        .map(status -> status.getRedirectUrl())
         .first()
         .toSingle();
   }
@@ -132,7 +154,8 @@ public class Adyen {
             paymentStatus.getDataCallback(), paymentStatus.getResult(),
             detailsStatus.getServiceCallback(), detailsStatus.getRecurringServices(),
             detailsStatus.getServices(), detailsStatus.getDetailsCallback(),
-            detailsStatus.getPaymentRequest()))
+            detailsStatus.getPaymentRequest(), detailsStatus.getRedirectUrl(),
+            detailsStatus.getUriCallback()))
         .subscribeOn(scheduler);
   }
 
@@ -205,6 +228,8 @@ public class Adyen {
     private List<PaymentMethod> recurringServices;
     private PaymentDetailsCallback detailsCallback;
     private PaymentRequest paymentRequest;
+    private UriCallback uriCallback;
+    private String redirectUrl;
 
     public DetailsStatus(PublishRelay<AdyenPaymentStatus> status, List<PaymentMethod> services,
         List<PaymentMethod> recurringServices) {
@@ -223,10 +248,11 @@ public class Adyen {
       notifyStatus();
     }
 
-    @Override
-    public void onRedirectRequired(@NonNull PaymentRequest paymentRequest, @NonNull String s,
-        @NonNull UriCallback uriCallback) {
-
+    @Override public void onRedirectRequired(@NonNull PaymentRequest paymentRequest,
+        @NonNull String redirectUrl, @NonNull UriCallback uriCallback) {
+      this.uriCallback = uriCallback;
+      this.redirectUrl = redirectUrl;
+      notifyStatus();
     }
 
     @Override public void onPaymentDetailsRequired(@NonNull PaymentRequest paymentRequest,
@@ -255,6 +281,14 @@ public class Adyen {
 
     public List<PaymentMethod> getRecurringServices() {
       return recurringServices;
+    }
+
+    public UriCallback getUriCallback() {
+      return uriCallback;
+    }
+
+    public String getRedirectUrl() {
+      return redirectUrl;
     }
 
     public void clearStatus() {
