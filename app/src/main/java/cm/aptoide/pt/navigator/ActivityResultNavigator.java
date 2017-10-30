@@ -164,8 +164,7 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
       billingNavigator = new BillingNavigator(
           ((AptoideApplication) getApplicationContext()).getPurchaseBundleMapper(),
           getActivityNavigator(), getFragmentNavigator(),
-          ((AptoideApplication) getApplicationContext()).getMarketName(),
-          ((AptoideApplication) getApplicationContext()).getAdyen(), PublishRelay.create());
+          ((AptoideApplication) getApplicationContext()).getMarketName(), PublishRelay.create());
     }
     return billingNavigator;
   }

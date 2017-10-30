@@ -114,7 +114,8 @@ public class Adyen {
         .toSingle();
   }
 
-  private Observable<PaymentMethod> getPaymentService(List<PaymentMethod> services, String paymentType) {
+  private Observable<PaymentMethod> getPaymentService(List<PaymentMethod> services,
+      String paymentType) {
     return Observable.from(services)
         .filter(service -> paymentType.equals(service.getType()))
         .take(1);

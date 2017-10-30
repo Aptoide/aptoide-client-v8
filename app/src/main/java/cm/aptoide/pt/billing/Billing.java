@@ -193,8 +193,6 @@ public class Billing {
     return transactionRepository.getOtherTransactions(transaction.getId(),
         transaction.getProductId())
         .flatMapObservable(otherTransactions -> Observable.from(otherTransactions))
-        .doOnNext(
-            otherTransaction -> syncScheduler.cancelAuthorizationSync(otherTransaction.getId()))
         .flatMapCompletable(
             otherTransaction -> transactionRepository.removeTransaction(otherTransaction.getId())
                 .andThen(authorizationRepository.removeAuthorizations(otherTransaction.getId())))

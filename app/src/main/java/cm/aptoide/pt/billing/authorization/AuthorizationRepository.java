@@ -53,6 +53,7 @@ public class AuthorizationRepository {
 
   public Completable removeAuthorizations(String transactionId) {
     return customer.getId()
+        .doOnSuccess(__ -> syncScheduler.cancelAuthorizationSync(transactionId))
         .flatMapCompletable(
             customerId -> authorizationPersistence.removeAuthorizations(customerId, transactionId));
   }

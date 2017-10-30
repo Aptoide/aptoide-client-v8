@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.billing.networking.PaymentServiceMapper;
-import cm.aptoide.pt.billing.payment.Adyen;
 import cm.aptoide.pt.billing.payment.PaymentService;
 import cm.aptoide.pt.billing.purchase.Purchase;
 import cm.aptoide.pt.billing.view.login.PaymentLoginFragment;
@@ -32,17 +31,15 @@ public class BillingNavigator {
   private final FragmentNavigator fragmentNavigator;
   private final String marketName;
   private final PublishRelay<CreditCardPaymentDetails> detailsRelay;
-  private final Adyen adyen;
 
   public BillingNavigator(PurchaseBundleMapper bundleMapper, ActivityNavigator activityNavigator,
-      FragmentNavigator fragmentNavigator, String marketName, Adyen adyen,
+      FragmentNavigator fragmentNavigator, String marketName,
       PublishRelay<CreditCardPaymentDetails> detailsRelay) {
     this.bundleMapper = bundleMapper;
     this.activityNavigator = activityNavigator;
     this.fragmentNavigator = fragmentNavigator;
     this.marketName = marketName;
     this.detailsRelay = detailsRelay;
-    this.adyen = adyen;
   }
 
   public void navigateToCustomerAuthenticationForResult(int requestCode) {
