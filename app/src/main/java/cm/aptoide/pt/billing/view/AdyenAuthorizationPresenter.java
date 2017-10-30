@@ -63,6 +63,7 @@ public class AdyenAuthorizationPresenter implements Presenter {
         .flatMap(created -> view.backButtonEvent())
         .observeOn(viewScheduler)
         .doOnNext(__ -> {
+          analytics.sendAuthorizationCancelEvent(serviceName);
           navigator.popToPaymentView();
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

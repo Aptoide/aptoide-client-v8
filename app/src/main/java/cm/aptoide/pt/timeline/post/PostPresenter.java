@@ -334,6 +334,7 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
           break;
       }
     } else if (throwable instanceof AptoideWsV7Exception) {
+      view.showGenericError();
       String errorCodes = parseErrorCode(((AptoideWsV7Exception) throwable).getBaseResponse()
           .getErrors());
       analytics.sendPostCompletedNetworkFailedEvent(postManager.remoteRelatedAppsAvailable(),
