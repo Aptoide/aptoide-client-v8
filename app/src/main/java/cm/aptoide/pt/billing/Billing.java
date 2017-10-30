@@ -9,9 +9,9 @@ import cm.aptoide.pt.billing.authorization.Authorization;
 import cm.aptoide.pt.billing.authorization.AuthorizationRepository;
 import cm.aptoide.pt.billing.exception.PaymentFailureException;
 import cm.aptoide.pt.billing.exception.ServiceNotAuthorizedException;
+import cm.aptoide.pt.billing.payment.AdyenPaymentService;
 import cm.aptoide.pt.billing.payment.PaymentService;
 import cm.aptoide.pt.billing.payment.PaymentServiceSelector;
-import cm.aptoide.pt.billing.payment.AdyenPaymentService;
 import cm.aptoide.pt.billing.product.Product;
 import cm.aptoide.pt.billing.purchase.Purchase;
 import cm.aptoide.pt.billing.purchase.PurchaseFactory;
@@ -89,25 +89,27 @@ public class Billing {
       return transactionRepository.createTransaction(product.getProductId(), service.getId(),
           payload);
     }))
-        .flatMapCompletable(transaction -> {
-          if (transaction.isPendingAuthorization()) {
-            return Completable.error(
-                new ServiceNotAuthorizedException("Pending service authorization."));
-          }
+        .flatMapCompletable(
+            transaction -> removeOldTransactions(transaction).andThen(Completable.defer(() -> {
+              if (transaction.isPendingAuthorization()) {
+                return Completable.error(
+                    new ServiceNotAuthorizedException("Pending service authorization."));
+              }
 
-          if (transaction.isFailed()) {
-            return Completable.error(new PaymentFailureException("Payment failed."));
-          }
+              if (transaction.isFailed()) {
+                return Completable.error(new PaymentFailureException("Payment failed."));
+              }
 
-          return Completable.complete();
-        });
+              return Completable.complete();
+            })));
   }
 
   public Completable authorize(String sku, String metadata) {
     return getAuthorization(sku).first()
         .toSingle()
-        .flatMapCompletable(authorization -> authorizationRepository.updateAuthorization(
-            authorization.getTransactionId(), metadata, Authorization.Status.PENDING_SYNC));
+        .flatMapCompletable(
+            authorization -> authorizationRepository.updateAuthorization(authorization.getId(),
+                metadata, Authorization.Status.PENDING_SYNC));
   }
 
   public Observable<Authorization> getAuthorization(String sku) {
@@ -168,6 +170,10 @@ public class Billing {
         services -> paymentServiceSelector.selectedService(services));
   }
 
+  public void stopSync() {
+    syncScheduler.stopSyncs();
+  }
+
   private Observable<Transaction> getTransaction(String sku) {
     return getProduct(sku).flatMapObservable(
         product -> transactionRepository.getTransaction(product.getProductId()));
@@ -183,7 +189,15 @@ public class Billing {
         .toSingle();
   }
 
-  public void stopSync() {
-    syncScheduler.stopSyncs();
+  private Completable removeOldTransactions(Transaction transaction) {
+    return transactionRepository.getOtherTransactions(transaction.getId(),
+        transaction.getProductId())
+        .flatMapObservable(otherTransactions -> Observable.from(otherTransactions))
+        .doOnNext(
+            otherTransaction -> syncScheduler.cancelAuthorizationSync(otherTransaction.getId()))
+        .flatMapCompletable(
+            otherTransaction -> transactionRepository.removeTransaction(otherTransaction.getId())
+                .andThen(authorizationRepository.removeAuthorizations(otherTransaction.getId())))
+        .toCompletable();
   }
 }
