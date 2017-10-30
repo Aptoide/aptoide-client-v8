@@ -75,6 +75,7 @@ public class SpotAndShareTransferRecordCardProvider {
     } else if (transferAppModel.getTransferState() == Transfer.State.RECEIVING) {
       acceptButton.setVisibility(View.GONE);
       transferProgressBar.setVisibility(View.VISIBLE);
+      hideAppSizeMargin();
       transferProgressBar.setIndeterminate(true);
     } else if (transferAppModel.getTransferState() == Transfer.State.RECEIVED) {
       acceptButton.setVisibility(View.GONE);
@@ -86,13 +87,13 @@ public class SpotAndShareTransferRecordCardProvider {
         appSize.setText(R.string.spotandshare_short_installed);
       }
       appSize.setAllCaps(false);
-      transferProgressBar.setVisibility(View.INVISIBLE);
+      transferProgressBar.setVisibility(View.GONE);
     } else if (transferAppModel.getTransferState() == Transfer.State.SERVING) {
       acceptButton.setVisibility(View.GONE);
       transferProgressBar.setIndeterminate(true);
     } else {
       acceptButton.setVisibility(View.GONE);
-      transferProgressBar.setVisibility(View.INVISIBLE);
+      transferProgressBar.setVisibility(View.GONE);
       installButton.setVisibility(View.GONE);
     }
 
@@ -101,7 +102,22 @@ public class SpotAndShareTransferRecordCardProvider {
 
   private void resetState() {
     acceptButton.setVisibility(View.GONE);
-    transferProgressBar.setVisibility(View.INVISIBLE);
+    transferProgressBar.setVisibility(View.GONE);
     installButton.setVisibility(View.GONE);
+    resetAppSizeMargin();
+  }
+
+  private void hideAppSizeMargin() {
+    LinearLayout.LayoutParams parameters = (LinearLayout.LayoutParams) appSize.getLayoutParams();
+    parameters.setMargins(parameters.leftMargin, 0, parameters.rightMargin,
+        parameters.bottomMargin);
+    appSize.setLayoutParams(parameters);
+  }
+
+  private void resetAppSizeMargin() {
+    LinearLayout.LayoutParams parameters = (LinearLayout.LayoutParams) appSize.getLayoutParams();
+    parameters.setMargins(parameters.leftMargin, 7, parameters.rightMargin,
+        parameters.bottomMargin);
+    appSize.setLayoutParams(parameters);
   }
 }
