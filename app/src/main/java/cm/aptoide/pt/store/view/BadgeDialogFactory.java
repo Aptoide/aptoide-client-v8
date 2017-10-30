@@ -45,6 +45,7 @@ public class BadgeDialogFactory {
       GridStoreMetaWidget.HomeMeta.Badge selectedBadge, View view) {
 
     @ColorRes int mainColor;
+    @ColorRes int secondaryColor;
     @DrawableRes int storeMedal;
     String medalText;
     String congratulationsMessage;
@@ -57,20 +58,21 @@ public class BadgeDialogFactory {
     boolean silverBadgeSelected = false;
     boolean goldBadgeSelected = false;
     boolean platinumBadgeSelected = false;
-    @ColorRes int tinBadgeColor = R.color.progress_bar_color;
-    @ColorRes int bronzeBadgeColor = R.color.progress_bar_color;
-    @ColorRes int silverBadgeColor = R.color.progress_bar_color;
-    @ColorRes int goldBadgeColor = R.color.progress_bar_color;
-    @ColorRes int platinumBadgeColor = R.color.progress_bar_color;
-    @ColorRes int progress1 = R.color.progress_bar_color;
-    @ColorRes int progress2 = R.color.progress_bar_color;
-    @ColorRes int progress3 = R.color.progress_bar_color;
-    @ColorRes int progress4 = R.color.progress_bar_color;
+    @ColorRes int tinBadgeColor;
+    @ColorRes int bronzeBadgeColor;
+    @ColorRes int silverBadgeColor;
+    @ColorRes int goldBadgeColor;
+    @ColorRes int platinumBadgeColor;
+    @ColorRes int progress1;
+    @ColorRes int progress2;
+    @ColorRes int progress3;
+    @ColorRes int progress4;
 
     switch (selectedBadge) {
       case NONE:
       default:
         mainColor = R.color.tin_medal;
+        secondaryColor = R.color.tin_medal_secodary;
         storeMedal = R.drawable.tin;
         medalText = resources.getString(R.string.badgedialog_title_bronze);
         congratulationsMessage = resources.getString(R.string.badgedialog_message_bronze);
@@ -81,8 +83,15 @@ public class BadgeDialogFactory {
         tinBadgeSelected = true;
         break;
       case BRONZE:
-        storeMedal = R.drawable.bronze;
-        mainColor = R.color.bronze_medal;
+        if (isRankLocked(storeBadge, selectedBadge)) {
+          storeMedal = R.drawable.lock;
+          mainColor = R.color.grey_fog_dark;
+          secondaryColor = R.color.grey_fog_light;
+        } else {
+          storeMedal = R.drawable.bronze;
+          mainColor = R.color.bronze_medal;
+          secondaryColor = R.color.bronze_medal_secodary;
+        }
         medalText = resources.getString(R.string.badgedialog_title_bronze);
         congratulationsMessage = resources.getString(R.string.badgedialog_message_bronze);
         uploadedAppsMessage = resources.getString(R.string.badgedialog_message_bronze_1);
@@ -92,8 +101,15 @@ public class BadgeDialogFactory {
         bronzeBadgeSelected = true;
         break;
       case SILVER:
-        storeMedal = R.drawable.silver;
-        mainColor = R.color.silver_medal;
+        if (isRankLocked(storeBadge, selectedBadge)) {
+          storeMedal = R.drawable.lock;
+          mainColor = R.color.grey_fog_dark;
+          secondaryColor = R.color.grey_fog_light;
+        } else {
+          storeMedal = R.drawable.silver;
+          mainColor = R.color.silver_medal;
+          secondaryColor = R.color.silver_medal_secodary;
+        }
         medalText = resources.getString(R.string.badgedialog_title_silver);
         congratulationsMessage = resources.getString(R.string.badgedialog_message_silver);
         uploadedAppsMessage = resources.getString(R.string.badgedialog_message_silver_1);
@@ -103,8 +119,15 @@ public class BadgeDialogFactory {
         silverBadgeSelected = true;
         break;
       case GOLD:
-        storeMedal = R.drawable.gold;
-        mainColor = R.color.gold_medal;
+        if (isRankLocked(storeBadge, selectedBadge)) {
+          storeMedal = R.drawable.lock;
+          mainColor = R.color.grey_fog_dark;
+          secondaryColor = R.color.grey_fog_light;
+        } else {
+          storeMedal = R.drawable.gold;
+          mainColor = R.color.gold_medal;
+          secondaryColor = R.color.gold_medal_secodary;
+        }
         medalText = resources.getString(R.string.badgedialog_title_gold);
         congratulationsMessage = resources.getString(R.string.badgedialog_message_gold);
         uploadedAppsMessage = resources.getString(R.string.badgedialog_message_gold_1);
@@ -114,8 +137,15 @@ public class BadgeDialogFactory {
         goldBadgeSelected = true;
         break;
       case PLATINUM:
-        storeMedal = R.drawable.platinum;
-        mainColor = R.color.platinum_medal;
+        if (isRankLocked(storeBadge, selectedBadge)) {
+          storeMedal = R.drawable.lock;
+          mainColor = R.color.grey_fog_dark;
+          secondaryColor = R.color.grey_fog_light;
+        } else {
+          storeMedal = R.drawable.platinum;
+          mainColor = R.color.platinum_medal;
+          secondaryColor = R.color.platinum_medal_secodary;
+        }
         medalText = resources.getString(R.string.badgedialog_title_platinum);
         congratulationsMessage = resources.getString(R.string.badgedialog_message_platinum);
         uploadedAppsMessage = resources.getString(R.string.badgedialog_message_platinum_1);
@@ -126,43 +156,24 @@ public class BadgeDialogFactory {
         break;
     }
 
-    if (selectedBadge != null && selectedBadge.equals(GridStoreMetaWidget.HomeMeta.Badge.NONE)) {
-      tinBadgeSelected = true;
-    }
-    if (selectedBadge != null && selectedBadge.equals(GridStoreMetaWidget.HomeMeta.Badge.BRONZE)) {
-      bronzeBadgeSelected = true;
-    }
-    if (selectedBadge != null && selectedBadge.equals(GridStoreMetaWidget.HomeMeta.Badge.SILVER)) {
-      silverBadgeSelected = true;
-    }
-    if (selectedBadge != null && selectedBadge.equals(GridStoreMetaWidget.HomeMeta.Badge.GOLD)) {
-      goldBadgeSelected = true;
-    }
-    if (selectedBadge != null && selectedBadge.equals(
-        GridStoreMetaWidget.HomeMeta.Badge.PLATINUM)) {
-      platinumBadgeSelected = true;
-    }
+    tinBadgeColor = getProgressColor(mainColor, secondaryColor, storeBadge, selectedBadge,
+        GridStoreMetaWidget.HomeMeta.Badge.NONE);
 
-    int badgeRank = selectedBadge.ordinal();
-    if (badgeRank >= GridStoreMetaWidget.HomeMeta.Badge.NONE.ordinal()) {
-      tinBadgeColor = mainColor;
-    }
-    if (badgeRank >= GridStoreMetaWidget.HomeMeta.Badge.BRONZE.ordinal()) {
-      bronzeBadgeColor = mainColor;
-      progress1 = mainColor;
-    }
-    if (badgeRank >= GridStoreMetaWidget.HomeMeta.Badge.SILVER.ordinal()) {
-      silverBadgeColor = mainColor;
-      progress2 = mainColor;
-    }
-    if (badgeRank >= GridStoreMetaWidget.HomeMeta.Badge.GOLD.ordinal()) {
-      goldBadgeColor = mainColor;
-      progress3 = mainColor;
-    }
-    if (badgeRank >= GridStoreMetaWidget.HomeMeta.Badge.PLATINUM.ordinal()) {
-      platinumBadgeColor = mainColor;
-      progress4 = mainColor;
-    }
+    bronzeBadgeColor = getProgressColor(mainColor, secondaryColor, storeBadge, selectedBadge,
+        GridStoreMetaWidget.HomeMeta.Badge.BRONZE);
+    progress1 = bronzeBadgeColor;
+
+    silverBadgeColor = getProgressColor(mainColor, secondaryColor, storeBadge, selectedBadge,
+        GridStoreMetaWidget.HomeMeta.Badge.SILVER);
+    progress2 = silverBadgeColor;
+
+    goldBadgeColor = getProgressColor(mainColor, secondaryColor, storeBadge, selectedBadge,
+        GridStoreMetaWidget.HomeMeta.Badge.GOLD);
+    progress3 = goldBadgeColor;
+
+    platinumBadgeColor = getProgressColor(mainColor, secondaryColor, storeBadge, selectedBadge,
+        GridStoreMetaWidget.HomeMeta.Badge.PLATINUM);
+    progress4 = platinumBadgeColor;
 
     StoreMedalPopupViewModel storeMedalPopupViewModel =
         new StoreMedalPopupViewModel(storeBadge, mainColor, storeMedal, medalText,
@@ -173,6 +184,25 @@ public class BadgeDialogFactory {
             progress4);
 
     setupView(view, storeMedalPopupViewModel, resources);
+  }
+
+  private boolean isRankLocked(GridStoreMetaWidget.HomeMeta.Badge storeBadge,
+      GridStoreMetaWidget.HomeMeta.Badge selectedBadge) {
+    return storeBadge.ordinal() < selectedBadge.ordinal();
+  }
+
+  private int getProgressColor(int mainColor, int secondaryColor,
+      GridStoreMetaWidget.HomeMeta.Badge storeBadge,
+      GridStoreMetaWidget.HomeMeta.Badge selectedBadge,
+      GridStoreMetaWidget.HomeMeta.Badge currentSetup) {
+    int tinBadgeColor = R.color.progress_bar_color;
+    if (currentSetup.ordinal() <= storeBadge.ordinal()
+        && currentSetup.ordinal() <= selectedBadge.ordinal()) {
+      tinBadgeColor = mainColor;
+    } else if (currentSetup.ordinal() <= storeBadge.ordinal()) {
+      tinBadgeColor = secondaryColor;
+    }
+    return tinBadgeColor;
   }
 
   private void setupView(View view, StoreMedalPopupViewModel viewModel, Resources resources) {
