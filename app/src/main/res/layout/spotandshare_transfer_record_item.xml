@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:layout_marginBottom="8dp"
     android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
     >
 
   <ImageView
@@ -67,7 +66,7 @@
       android:layout_centerVertical="true"
       android:layout_gravity="center"
       android:layout_marginLeft="40dp"
-      android:layout_marginRight="16dp"
+      android:layout_marginRight="8dp"
       android:background="@drawable/round_circle_orange"
       android:src="@drawable/ic_download_icon"
       style="@style/Base.Widget.AppCompat.Button.Borderless"
@@ -82,7 +81,6 @@
       android:layout_alignParentRight="true"
       android:layout_gravity="center"
       android:layout_marginLeft="40dp"
-      android:layout_marginRight="16dp"
       android:background="@color/white"
       android:text="@string/spotandshare_button_install"
       android:textAllCaps="true"
