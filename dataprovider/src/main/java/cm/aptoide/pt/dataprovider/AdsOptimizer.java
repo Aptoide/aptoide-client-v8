@@ -25,6 +25,8 @@ public class AdsOptimizer {
 
   private static final String EXCLUDED_PACKAGE_KEY = "excPck";
 
+  private static int count = 0;
+
   /**
    * This method checks if the ads returned in the GetAdsResponse are valid.
    * To be valid, its required that at least more than half of them are NOT installed already
@@ -55,7 +57,13 @@ public class AdsOptimizer {
         newAdsList.add(ad);
       }
     }
+    if(count == 3){
+      count = 0;
+      adjustAdsListSize(ads, numberOfAdsToShow);
+      return true;
+    }
     if (newAdsList.size() < ads.size() / 2) {
+      count++;
       valid = false;
     } else {
       //Return only the number of ads that are supposed to be shown
@@ -81,18 +89,22 @@ public class AdsOptimizer {
 
     GetAdsRequest request =
         GetAdsRequest.ofHomepage(accessToken, aptoideClientUUID, googlePlayServicesAvailable, oemid,
-            mature, requestAds);
+            mature, requestAds, AptoideUtils.StringU.commaSeparatedValues(excludedPck));
 
     Observable<GetAdsResponse> response = request.observe(refresh);
 
     return response.flatMap(ads -> {
       if (!checkIfAdsListIsValid(ads.getDataList()
           .getList(), excludedPck, adsLimit)) {
-        return optimizeHomepageAds(accessToken, refresh, adsLimit, aptoideClientUUID,
-            googlePlayServicesAvailable, oemid, mature);
+          return optimizeHomepageAds(accessToken, refresh, adsLimit, aptoideClientUUID,
+              googlePlayServicesAvailable, oemid, mature);
       }
       return Observable.just(ads);
     });
+  }
+
+  private static void adjustAdsListSize(List<GetAdsResponse.Ad> ads, int limit){
+    ads.subList(limit, ads.size()).clear();
   }
 
   public static Observable<GetAdsResponse> optimizeNotificationAds(String accessToken,

@@ -57,14 +57,15 @@ import rx.Observable;
   }
 
   public static GetAdsRequest ofHomepage(String accessToken, String aptoideClientUUID,
-      boolean googlePlayServicesAvailable, String oemid, boolean mature, int limitAds) {
+      boolean googlePlayServicesAvailable, String oemid, boolean mature, int limitAds,
+      String excludedPackages) {
 
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     // TODO: 09-06-2016 neuro limit based on max colums
     return new GetAdsRequest(BASE_HOST, (GetAdsRequest.Body) decorator.decorate(
         new Body(googlePlayServicesAvailable, oemid, mature,
-            limitAds, Location.homepage), accessToken));
+            limitAds, Location.homepage, excludedPackages), accessToken));
   }
 
   public static GetAdsRequest ofHomepageMore(String accessToken, String aptoideClientUUID,
@@ -186,6 +187,19 @@ import rx.Observable;
       this.setMature(mature);
       this.limit = limit;
       this.location = location.toString();
+    }
+
+    public Body(boolean googlePlayServicesAvailable, String oemid, boolean mature, Integer limit,
+        Location location, String excludedPackages) {
+      super();
+      this.googlePlayServicesAvailable = googlePlayServicesAvailable;
+      this.setOem_id(oemid);
+      this.setMature(mature);
+      this.limit = limit;
+      this.location = location.toString();
+      if(!TextUtils.isEmpty(excludedPackages)){
+        this.excludedPackage = new ArrayList<>(Arrays.asList(excludedPackages.split(",")));
+      }
     }
 
     public Body(boolean googlePlayServicesAvailable, String oemid, boolean mature, Integer limit,
