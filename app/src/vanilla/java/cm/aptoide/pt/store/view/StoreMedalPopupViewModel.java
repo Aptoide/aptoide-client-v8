@@ -32,6 +32,7 @@ class StoreMedalPopupViewModel {
   private final @ColorRes int progress2;
   private final @ColorRes int progress3;
   private final @ColorRes int progress4;
+  private final boolean showChecks;
 
   public StoreMedalPopupViewModel(GridStoreMetaWidget.HomeMeta.Badge storeBadge,
       @ColorRes int mainColor, @DrawableRes int storeMedalIcon, String medalText,
@@ -40,7 +41,7 @@ class StoreMedalPopupViewModel {
       boolean bronzeBadgeSelected, boolean silverBadgeSelected, boolean goldBadgeSelected,
       boolean platinumBadgeSelected, int tinBadgeColor, int bronzeBadgeColor, int silverBadgeColor,
       int goldBadgeColor, int platinumBadgeColor, int progress1, int progress2, int progress3,
-      int progress4) {
+      int progress4, boolean showChecks) {
     this.storeBadge = storeBadge;
     this.mainColor = mainColor;
     this.storeMedalIcon = storeMedalIcon;
@@ -64,6 +65,11 @@ class StoreMedalPopupViewModel {
     this.progress2 = progress2;
     this.progress3 = progress3;
     this.progress4 = progress4;
+    this.showChecks = showChecks;
+  }
+
+  public boolean isShowChecks() {
+    return showChecks;
   }
 
   public GridStoreMetaWidget.HomeMeta.Badge getStoreBadge() {
