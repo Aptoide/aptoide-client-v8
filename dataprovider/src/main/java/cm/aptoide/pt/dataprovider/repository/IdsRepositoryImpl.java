@@ -151,17 +151,11 @@ public class IdsRepositoryImpl implements IdsRepository, AptoideClientUUID {
             googleId = adInfo.getId();
             sharedPreferences.edit().putString(GOOGLE_ADVERTISING_ID_CLIENT, googleId).apply();
             sharedPreferences.edit().putBoolean(GOOGLE_ADVERTISING_ID_CLIENT_SET, true).apply();
-
-            //if preferred UUID is null or empty use android id
-            if (TextUtils.isEmpty(googleId)) {
-              googleId = getAndroidId();
-            }
-            // if android id is null or empty use random generated UUID
-            if (TextUtils.isEmpty(googleId)) {
-              googleId = UUID.randomUUID().toString();
-            }
-            sharedPreferences.edit().putString(APTOIDE_CLIENT_UUID, googleId).apply();
+            getAlternativeId(googleId);
           }
+        }
+        else{
+          getAlternativeId(googleId);
         }
       }catch(Exception e){
         CrashReport.getInstance().log(e);
@@ -171,6 +165,18 @@ public class IdsRepositoryImpl implements IdsRepository, AptoideClientUUID {
     public String getGoogleId(){
       return googleId;
     }
+  }
+
+  private void getAlternativeId(String googleId){
+    //if preferred UUID is null or empty use android id
+    if (TextUtils.isEmpty(googleId)) {
+      googleId = getAndroidId();
+    }
+    // if android id is null or empty use random generated UUID
+    if (TextUtils.isEmpty(googleId)) {
+      googleId = UUID.randomUUID().toString();
+    }
+    sharedPreferences.edit().putString(APTOIDE_CLIENT_UUID, googleId).apply();
   }
 
 
