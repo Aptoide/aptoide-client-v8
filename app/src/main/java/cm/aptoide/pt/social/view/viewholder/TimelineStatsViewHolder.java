@@ -10,7 +10,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.TimelineStatsTouchEvent;
 import cm.aptoide.pt.social.view.TimelineUser;
-import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.view.spannable.SpannableFactory;
 import rx.subjects.PublishSubject;
 
 /**
@@ -53,12 +53,12 @@ public class TimelineStatsViewHolder extends PostViewHolder<TimelineUser> {
 
     followers.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new TimelineStatsTouchEvent(card, TimelineStatsTouchEvent.ButtonClicked.FOLLOWERS,
-            CardTouchEvent.Type.TIMELINE_STATS, getPosition())));
+            CardTouchEvent.Type.TIMELINE_STATS, position)));
     following.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new TimelineStatsTouchEvent(card, TimelineStatsTouchEvent.ButtonClicked.FOLLOWING,
-            CardTouchEvent.Type.TIMELINE_STATS, getPosition())));
+            CardTouchEvent.Type.TIMELINE_STATS, position)));
     followFriends.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new TimelineStatsTouchEvent(card, TimelineStatsTouchEvent.ButtonClicked.FOLLOWFRIENDS,
-            CardTouchEvent.Type.TIMELINE_STATS, getPosition())));
+            CardTouchEvent.Type.TIMELINE_STATS, position)));
   }
 }

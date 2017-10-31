@@ -17,6 +17,6 @@ public class PostException extends Exception {
   }
 
   public enum ErrorCode {
-    INVALID_TEXT, INVALID_PACKAGE, NO_LOGIN, NO_APP_FOUND
+    INVALID_TEXT, INVALID_PACKAGE, NO_LOGIN, NO_APP_FOUND, INVALID_URL
   }
 }

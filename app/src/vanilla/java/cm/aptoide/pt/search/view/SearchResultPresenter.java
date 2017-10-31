@@ -1,6 +1,5 @@
 package cm.aptoide.pt.search.view;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Pair;
 import cm.aptoide.pt.R;
@@ -37,7 +36,7 @@ public class SearchResultPresenter implements Presenter {
       SearchManager searchManager, PublishRelay<SearchAdResult> onAdClickRelay,
       PublishRelay<SearchAppResult> onItemViewClickRelay,
       PublishRelay<Pair<SearchAppResult, android.view.View>> onOpenPopupMenuClickRelay,
-      String defaultStoreName, String defaultThemeName, boolean isMultiStoreSearch) {
+      boolean isMultiStoreSearch, String defaultStoreName, String defaultThemeName) {
     this.view = view;
     this.analytics = analytics;
     this.navigator = navigator;
@@ -47,9 +46,9 @@ public class SearchResultPresenter implements Presenter {
     this.onAdClickRelay = onAdClickRelay;
     this.onItemViewClickRelay = onItemViewClickRelay;
     this.onOpenPopupMenuClickRelay = onOpenPopupMenuClickRelay;
+    this.isMultiStoreSearch = isMultiStoreSearch;
     this.defaultStoreName = defaultStoreName;
     this.defaultThemeName = defaultThemeName;
-    this.isMultiStoreSearch = isMultiStoreSearch;
   }
 
   @Override public void present() {
@@ -66,14 +65,6 @@ public class SearchResultPresenter implements Presenter {
     handleFollowedStoresListReachedBottom();
     handleTitleBarClick();
     restoreSelectedTab();
-  }
-
-  @Override public void saveState(Bundle state) {
-    // does nothing
-  }
-
-  @Override public void restoreState(Bundle state) {
-    // does nothing
   }
 
   private void restoreSelectedTab() {

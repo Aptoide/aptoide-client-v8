@@ -10,7 +10,7 @@ import android.view.View;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.ReloadInterface;
 import cm.aptoide.pt.view.fragment.GridRecyclerSwipeFragment;
-import cm.aptoide.pt.view.navigator.ActivityNavigator;
+import cm.aptoide.pt.navigator.ActivityNavigator;
 
 /**
  * Handler for Swipe Loader Layouts. Needs five identified views in the corresponding layout:<br>

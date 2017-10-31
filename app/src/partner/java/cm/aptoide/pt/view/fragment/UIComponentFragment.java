@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.view.ThemeUtils;
-import cm.aptoide.pt.view.permission.PermissionServiceFragment;
+import cm.aptoide.pt.permission.PermissionServiceFragment;
 
 /**
  * Created by neuro on 14-04-2016.

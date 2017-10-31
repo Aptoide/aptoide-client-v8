@@ -39,8 +39,8 @@ import cm.aptoide.pt.presenter.CompositePresenter;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.dialog.ImagePickerDialog;
-import cm.aptoide.pt.view.permission.AccountPermissionProvider;
-import cm.aptoide.pt.view.permission.PermissionProvider;
+import cm.aptoide.pt.permission.AccountPermissionProvider;
+import cm.aptoide.pt.permission.PermissionProvider;
 import com.jakewharton.rxbinding.support.design.widget.RxSnackbar;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Arrays;
@@ -159,15 +159,15 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
         .getSimpleName());
   }
 
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    outState.putParcelable(EXTRA_USER_MODEL, Parcels.wrap(currentModel));
-  }
-
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     return inflater.inflate(R.layout.fragment_manage_user, container, false);
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putParcelable(EXTRA_USER_MODEL, Parcels.wrap(currentModel));
   }
 
   private void bindViews(View view) {
@@ -203,7 +203,7 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
             currentModel, isEditProfile, uriToPathResolver, createStoreUserPrivacyEnabled);
 
     attachPresenter(
-        new CompositePresenter(Arrays.asList(manageUserPresenter, imagePickerPresenter)), null);
+        new CompositePresenter(Arrays.asList(manageUserPresenter, imagePickerPresenter)));
   }
 
   @Override public void onDestroyView() {

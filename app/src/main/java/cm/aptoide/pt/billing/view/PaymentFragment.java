@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,16 +18,25 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
-import cm.aptoide.pt.billing.PaymentMethod;
-import cm.aptoide.pt.billing.Product;
+import cm.aptoide.pt.billing.BillingIdManager;
+import cm.aptoide.pt.billing.payment.PaymentService;
+import cm.aptoide.pt.billing.product.Product;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
-import cm.aptoide.pt.view.permission.PermissionServiceFragment;
-import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.permission.PermissionServiceFragment;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
+import cm.aptoide.pt.view.spannable.SpannableFactory;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxRadioGroup;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -36,7 +44,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
 
   private View overlay;
   private View progressView;
-  private RadioGroup paymentRadioGroup;
+  private RadioGroup serviceRadioGroup;
   private ImageView productIcon;
   private TextView productName;
   private TextView productDescription;
@@ -47,7 +55,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
 
   private RxAlertDialog networkErrorDialog;
   private RxAlertDialog unknownErrorDialog;
-  private SparseArray<PaymentMethod> paymentMap;
+  private Map<String, PaymentService> serviceMap;
   private SpannableFactory spannableFactory;
 
   private boolean paymentLoading;
@@ -58,6 +66,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   private BillingAnalytics billingAnalytics;
   private BillingNavigator billingNavigator;
   private ScrollView scroll;
+  private BillingIdManager billingIdManager;
 
   public static Fragment create(Bundle bundle) {
     final PaymentFragment fragment = new PaymentFragment();
@@ -67,10 +76,13 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    billing = ((AptoideApplication) getContext().getApplicationContext()).getBilling();
+    billing = ((AptoideApplication) getContext().getApplicationContext()).getBilling(
+        getArguments().getString(PaymentActivity.EXTRA_MERCHANT_NAME));
     billingAnalytics =
         ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
     billingNavigator = ((ActivityResultNavigator) getContext()).getBillingNavigator();
+    billingIdManager = ((AptoideApplication) getContext().getApplicationContext()).getIdResolver(
+        getArguments().getString(PaymentActivity.EXTRA_MERCHANT_NAME));
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -86,12 +98,12 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     productDescription = (TextView) view.findViewById(R.id.include_payment_product_description);
 
     productPrice = (TextView) view.findViewById(R.id.include_payment_product_price);
-    paymentRadioGroup = (RadioGroup) view.findViewById(R.id.fragment_payment_list);
+    serviceRadioGroup = (RadioGroup) view.findViewById(R.id.fragment_payment_list);
 
     cancelButton = (Button) view.findViewById(R.id.include_payment_buttons_cancel_button);
     buyButton = (Button) view.findViewById(R.id.include_payment_buttons_buy_button);
 
-    paymentMap = new SparseArray<>();
+    serviceMap = new HashMap<>();
 
     networkErrorDialog =
         new RxAlertDialog.Builder(getContext()).setMessage(R.string.connection_error)
@@ -103,9 +115,9 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
             .build();
 
     attachPresenter(new PaymentPresenter(this, billing, billingNavigator, billingAnalytics,
-        getArguments().getString(PaymentActivity.EXTRA_APPLICATION_ID),
-        getArguments().getString(PaymentActivity.EXTRA_PRODUCT_ID),
-        getArguments().getString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD)), savedInstanceState);
+        getArguments().getString(PaymentActivity.EXTRA_MERCHANT_NAME),
+        getArguments().getString(PaymentActivity.EXTRA_SKU),
+        getArguments().getString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD), new HashSet<>()));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -129,10 +141,10 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     productName = null;
     productDescription = null;
     productPrice = null;
-    paymentRadioGroup = null;
+    serviceRadioGroup = null;
     cancelButton = null;
     buyButton = null;
-    paymentMap = null;
+    serviceMap = null;
     networkErrorDialog.dismiss();
     networkErrorDialog = null;
     unknownErrorDialog.dismiss();
@@ -143,10 +155,10 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     super.onDestroyView();
   }
 
-  @Override public Observable<PaymentMethod> selectPaymentEvent() {
-    return RxRadioGroup.checkedChanges(paymentRadioGroup)
-        .map(paymentId -> paymentMap.get(paymentId))
-        .filter(PaymentMethod -> PaymentMethod != null);
+  @Override public Observable<PaymentService> selectServiceEvent() {
+    return RxRadioGroup.checkedChanges(serviceRadioGroup)
+        .map(paymentId -> serviceMap.get(billingIdManager.generateServiceId(paymentId)))
+        .filter(service -> service != null);
   }
 
   @Override public Observable<Void> cancelEvent() {
@@ -161,8 +173,8 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
         .unsubscribeOn(AndroidSchedulers.mainThread());
   }
 
-  @Override public void selectPayment(PaymentMethod payment) {
-    paymentRadioGroup.check(payment.getId());
+  @Override public void selectService(PaymentService payment) {
+    serviceRadioGroup.check((int) billingIdManager.resolveServiceId(payment.getId()));
   }
 
   @Override public void showPaymentLoading() {
@@ -180,23 +192,24 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     progressView.setVisibility(View.VISIBLE);
   }
 
-  @Override public void showPayments(List<PaymentMethod> payments) {
-    paymentRadioGroup.removeAllViews();
+  @Override public void showPayments(List<PaymentService> payments) {
+    serviceRadioGroup.removeAllViews();
     noPaymentsText.setVisibility(View.GONE);
     buyButton.setVisibility(View.VISIBLE);
-    paymentMap.clear();
+    serviceMap.clear();
 
     RadioButton radioButton;
     CharSequence radioText;
-    for (PaymentMethod payment : payments) {
+    for (PaymentService payment : payments) {
 
       radioButton = (RadioButton) getActivity().getLayoutInflater()
-          .inflate(R.layout.payment_item, paymentRadioGroup, false);
-      radioButton.setId(payment.getId());
+          .inflate(R.layout.payment_item, serviceRadioGroup, false);
+      radioButton.setId((int) billingIdManager.resolveServiceId(payment.getId()));
 
-      if (payment.hasIcon()) {
-        radioButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, payment.getIcon(), 0);
-      }
+      Glide.with(this)
+          .load(payment.getIcon())
+          .into(new RadioButtonTarget(AptoideUtils.ScreenU.getPixelsForDip(16, getResources()),
+              radioButton));
 
       if (TextUtils.isEmpty(payment.getDescription())) {
         radioText = payment.getName();
@@ -207,8 +220,8 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
       }
       radioButton.setText(radioText);
 
-      paymentMap.append(payment.getId(), payment);
-      paymentRadioGroup.addView(radioButton);
+      serviceMap.put(payment.getId(), payment);
+      serviceRadioGroup.addView(radioButton);
     }
   }
 
@@ -268,6 +281,27 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   @Override public void showUnknownError() {
     if (!networkErrorDialog.isShowing() && !unknownErrorDialog.isShowing()) {
       unknownErrorDialog.show();
+    }
+  }
+
+  private static class RadioButtonTarget extends SimpleTarget<GlideDrawable> {
+
+    private RadioButton radioButton;
+
+    public RadioButtonTarget(int pixels, RadioButton radioButton) {
+      super(pixels, pixels);
+      this.radioButton = radioButton;
+    }
+
+    @Override public void onResourceReady(GlideDrawable glideDrawable,
+        GlideAnimation<? super GlideDrawable> glideAnimation) {
+      radioButton.setCompoundDrawablesWithIntrinsicBounds(null, null, glideDrawable.getCurrent(),
+          null);
+    }
+
+    @Override public void onDestroy() {
+      radioButton = null;
+      super.onDestroy();
     }
   }
 }

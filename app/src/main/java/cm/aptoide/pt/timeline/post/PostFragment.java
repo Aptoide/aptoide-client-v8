@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -42,14 +41,14 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.install.InstalledRepository;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.BackButtonActivity;
 import cm.aptoide.pt.view.custom.SimpleDividerItemDecoration;
 import cm.aptoide.pt.view.fragment.FragmentView;
-import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
-import cm.aptoide.pt.view.navigator.TabNavigator;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -77,11 +76,11 @@ public class PostFragment extends FragmentView implements PostView {
   private View previewLayout;
   private PublishRelay<Void> loginAction;
   private PublishRelay<Void> openUploaderButton;
-  private PublishRelay<Void> backButton;
   private PostPresenter presenter;
   private View inputSeparator;
   private PostAnalytics analytics;
   private TabNavigator tabNavigator;
+  private PostUrlProvider externalUrlProvider;
 
   public static Fragment newInstanceFromExternalSource() {
     return newInstance(PostAnalytics.OpenSource.EXTERNAL);
@@ -108,6 +107,12 @@ public class PostFragment extends FragmentView implements PostView {
       throw new IllegalStateException(
           "Activity must implement " + TabNavigator.class.getSimpleName());
     }
+
+    if (activity instanceof PostUrlProvider) {
+      externalUrlProvider = (PostUrlProvider) activity;
+    } else {
+      externalUrlProvider = null;
+    }
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -117,7 +122,6 @@ public class PostFragment extends FragmentView implements PostView {
     postClick = PublishRelay.create();
     loginAction = PublishRelay.create();
     openUploaderButton = PublishRelay.create();
-    backButton = PublishRelay.create();
     SharedPreferences sharedPreferences =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     TokenInvalidator tokenInvalidator =
@@ -247,10 +251,9 @@ public class PostFragment extends FragmentView implements PostView {
     presenter = new PostPresenter(this, CrashReport.getInstance(),
         new PostManager(postRemoteAccessor, postLocalAccessor, accountManager),
         getFragmentNavigator(), new UrlValidator(Patterns.WEB_URL),
-        ((ActivityResultNavigator) getContext()).getAccountNavigator(), urlProvider, tabNavigator,
-        analytics);
+        ((ActivityResultNavigator) getContext()).getAccountNavigator(), tabNavigator, analytics);
     ((BackButtonActivity) getActivity()).registerClickHandler(presenter);
-    attachPresenter(presenter, null);
+    attachPresenter(presenter);
   }
 
   private void showKeyboard() {
@@ -339,15 +342,18 @@ public class PostFragment extends FragmentView implements PostView {
   }
 
   @Override public void showGenericError() {
-    ShowMessage.asSnack(this, R.string.all_message_general_error);
+    Snackbar.make(toolbar, R.string.all_message_general_error, Snackbar.LENGTH_LONG)
+        .show();
   }
 
   @Override public void showInvalidTextError() {
-    ShowMessage.asSnack(this, R.string.timeline_message_write_something);
+    Snackbar.make(toolbar, R.string.timeline_message_write_something, Snackbar.LENGTH_LONG)
+        .show();
   }
 
   @Override public void showInvalidPackageError() {
-    ShowMessage.asSnack(this, R.string.timeline_message_pick_an_app);
+    Snackbar.make(toolbar, R.string.timeline_message_pick_an_app, Snackbar.LENGTH_LONG)
+        .show();
     scrollView.smoothScrollTo(scrollView.getLeft(), scrollView.getBottom());
   }
 
@@ -383,7 +389,7 @@ public class PostFragment extends FragmentView implements PostView {
   }
 
   @Override public void showNoLoginError() {
-    Snackbar.make(getView(), R.string.you_need_to_be_logged_in, BaseTransientBottomBar.LENGTH_LONG)
+    Snackbar.make(toolbar, R.string.you_need_to_be_logged_in, Snackbar.LENGTH_LONG)
         .setAction(R.string.login, view -> loginAction.call(null))
         .show();
   }
@@ -393,8 +399,7 @@ public class PostFragment extends FragmentView implements PostView {
   }
 
   @Override public void showAppNotFoundError() {
-    Snackbar.make(getView(), R.string.timeline_message_upload_app,
-        BaseTransientBottomBar.LENGTH_LONG)
+    Snackbar.make(toolbar, R.string.timeline_message_upload_app, Snackbar.LENGTH_LONG)
         .setAction(R.string.timeline_button_open_uploader, view -> openUploaderButton.call(null))
         .show();
   }
@@ -409,6 +414,15 @@ public class PostFragment extends FragmentView implements PostView {
 
   @Override public int getPreviewVisibility() {
     return previewImage.getVisibility();
+  }
+
+  @Override public void showInvalidUrlError() {
+    Snackbar.make(toolbar, R.string.error_IARG_105, Snackbar.LENGTH_LONG)
+        .show();
+  }
+
+  @Override public String getExternalUrlToShare() {
+    return externalUrlProvider!=null ? externalUrlProvider.getUrlToShare() : null;
   }
 
   private void handlePreviewLayout() {
@@ -426,9 +440,5 @@ public class PostFragment extends FragmentView implements PostView {
   private String getInputText() {
     return userInput.getText()
         .toString();
-  }
-
-  interface PostUrlProvider {
-    String getUrlToShare();
   }
 }

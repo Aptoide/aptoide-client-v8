@@ -24,8 +24,8 @@ import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
-import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
-import cm.aptoide.pt.view.orientation.ScreenOrientationManager;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Arrays;
@@ -103,14 +103,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
         .getSimpleName());
   }
 
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    outState.putString(USERNAME_KEY, aptoideEmailEditText.getText()
-        .toString());
-    outState.putString(PASSWORD_KEY, aptoidePasswordEditText.getText()
-        .toString());
-  }
-
   @Override public void hideKeyboard() {
     super.hideKeyboard();
   }
@@ -129,6 +121,14 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
       aptoideEmailEditText.setText(savedInstanceState.getString(USERNAME_KEY, ""));
       aptoidePasswordEditText.setText(savedInstanceState.getString(PASSWORD_KEY, ""));
     }
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putString(USERNAME_KEY, aptoideEmailEditText.getText()
+        .toString());
+    outState.putString(PASSWORD_KEY, aptoidePasswordEditText.getText()
+        .toString());
   }
 
   @Override public Observable<Void> showAptoideLoginAreaClick() {
@@ -346,7 +346,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
         dismissToNavigateToMainView, navigateToHome, accountNavigator,
         Arrays.asList("email", "user_friends"), Arrays.asList("email"), errorMapper,
         ((AptoideApplication) getContext().getApplicationContext()).getAccountAnalytics());
-    attachPresenter(presenter, null);
+    attachPresenter(presenter);
     registerClickHandler(presenter);
   }
 

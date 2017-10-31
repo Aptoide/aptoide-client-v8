@@ -5,7 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
-import cm.aptoide.pt.Install;
+import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.R;
 import java.util.List;
 

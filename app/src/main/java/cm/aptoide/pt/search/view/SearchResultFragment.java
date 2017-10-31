@@ -8,9 +8,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -387,31 +387,6 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     }
   }
 
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-
-    if (allStoresResultAdapter != null) {
-      final Pair<List<SearchAppResult>, List<SearchAdResult>> allStoresState =
-          allStoresResultAdapter.getState();
-      viewModel.setAllStoresSearchAppResults(allStoresState.first);
-      viewModel.setAllStoresSearchAdResults(allStoresState.second);
-    }
-
-    if (followedStoresResultAdapter != null) {
-      final Pair<List<SearchAppResult>, List<SearchAdResult>> followedStoresState =
-          followedStoresResultAdapter.getState();
-      viewModel.setFollowedStoresSearchAppResults(followedStoresState.first);
-      viewModel.setFollowedStoresSearchAdResults(followedStoresState.second);
-    }
-
-    outState.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
-    outState.putParcelable(ALL_STORES_SEARCH_LIST_STATE, allStoresResultList.getLayoutManager()
-        .onSaveInstanceState());
-    outState.putParcelable(FOLLOWED_STORES_SEARCH_LIST_STATE,
-        followedStoresResultList.getLayoutManager()
-            .onSaveInstanceState());
-  }
-
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_search_results, menu);
@@ -532,7 +507,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     setupTheme();
     attachPresenter(new SearchResultPresenter(this, searchAnalytics, searchNavigator, crashReport,
         mainThreadScheduler, searchManager, onAdClickRelay, onItemViewClickRelay,
-        onOpenPopupMenuClickRelay, defaultStoreName, defaultThemeName, isMultiStoreSearch), null);
+        onOpenPopupMenuClickRelay, isMultiStoreSearch, defaultThemeName, defaultStoreName));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -625,6 +600,31 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
             savedInstanceState.getParcelable(FOLLOWED_STORES_SEARCH_LIST_STATE));
       }
     }
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+
+    if (allStoresResultAdapter != null) {
+      final Pair<List<SearchAppResult>, List<SearchAdResult>> allStoresState =
+          allStoresResultAdapter.getState();
+      viewModel.setAllStoresSearchAppResults(allStoresState.first);
+      viewModel.setAllStoresSearchAdResults(allStoresState.second);
+    }
+
+    if (followedStoresResultAdapter != null) {
+      final Pair<List<SearchAppResult>, List<SearchAdResult>> followedStoresState =
+          followedStoresResultAdapter.getState();
+      viewModel.setFollowedStoresSearchAppResults(followedStoresState.first);
+      viewModel.setFollowedStoresSearchAdResults(followedStoresState.second);
+    }
+
+    outState.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
+    outState.putParcelable(ALL_STORES_SEARCH_LIST_STATE, allStoresResultList.getLayoutManager()
+        .onSaveInstanceState());
+    outState.putParcelable(FOLLOWED_STORES_SEARCH_LIST_STATE,
+        followedStoresResultList.getLayoutManager()
+            .onSaveInstanceState());
   }
 
   private void attachFollowedStoresResultListDependencies() {

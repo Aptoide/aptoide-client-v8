@@ -1,5 +1,6 @@
 package cm.aptoide.pt.social.view.viewholder;
 
+import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -12,9 +13,11 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.AggregatedRecommendation;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.MinimalCardViewFactory;
+import cm.aptoide.pt.social.data.Post;
+import cm.aptoide.pt.social.data.PostPopupMenuBuilder;
 import cm.aptoide.pt.social.data.publisher.Poster;
 import cm.aptoide.pt.util.DateCalculator;
-import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.view.spannable.SpannableFactory;
 import java.util.List;
 import rx.subjects.PublishSubject;
 
@@ -38,6 +41,7 @@ public class AggregatedRecommendationViewHolder extends PostViewHolder<Aggregate
   private final Button getAppButton;
   private final TextView morePostersLabel;
   private final FrameLayout minimalCardContainer;
+  private final View overflowMenu;
 
   public AggregatedRecommendationViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
@@ -63,39 +67,41 @@ public class AggregatedRecommendationViewHolder extends PostViewHolder<Aggregate
         (TextView) itemView.findViewById(R.id.timeline_header_aditional_number_of_shares_circular);
     this.minimalCardContainer =
         (FrameLayout) itemView.findViewById(R.id.timeline_sub_minimal_card_container);
+    this.overflowMenu = itemView.findViewById(R.id.overflow_menu);
   }
 
-  @Override public void setPost(AggregatedRecommendation card, int position) {
-    if (card.getPosters() != null) {
-      if (card.getPosters()
+  @Override public void setPost(AggregatedRecommendation post, int position) {
+    if (post.getPosters() != null) {
+      if (post.getPosters()
           .size() > 0) {
         ImageLoader.with(itemView.getContext())
-            .loadWithShadowCircleTransform(card.getPosters()
+            .loadWithShadowCircleTransform(post.getPosters()
                 .get(0)
                 .getPrimaryAvatar(), this.headerAvatar1);
       }
-      if (card.getPosters()
+      if (post.getPosters()
           .size() > 1) {
         ImageLoader.with(itemView.getContext())
-            .loadWithShadowCircleTransform(card.getPosters()
+            .loadWithShadowCircleTransform(post.getPosters()
                 .get(1)
                 .getPrimaryAvatar(), this.headerAvatar2);
       }
     }
-    this.headerNames.setText(getCardHeaderNames(card));
+    this.headerNames.setText(getCardHeaderNames(post));
     this.headerTimestamp.setText(
-        dateCalculator.getTimeSinceDate(itemView.getContext(), card.getTimestamp()));
+        dateCalculator.getTimeSinceDate(itemView.getContext(), post.getTimestamp()));
     ImageLoader.with(itemView.getContext())
-        .load(card.getAppIcon(), appIcon);
-    this.appName.setText(card.getAppName());
-    this.appRating.setRating(card.getAppAverageRating());
+        .load(post.getAppIcon(), appIcon);
+    this.appName.setText(post.getAppName());
+    this.appRating.setRating(post.getAppAverageRating());
     this.getAppButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, position, CardTouchEvent.Type.BODY)));
+        new CardTouchEvent(post, position, CardTouchEvent.Type.BODY)));
     this.appIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, position, CardTouchEvent.Type.BODY)));
-    showMorePostersLabel(card);
+        new CardTouchEvent(post, position, CardTouchEvent.Type.BODY)));
+    setupOverflowMenu(post, position);
+    showMorePostersLabel(post);
     minimalCardContainer.removeAllViews();
-    minimalCardContainer.addView(minimalCardViewFactory.getView(card, card.getMinimalPosts(),
+    minimalCardContainer.addView(minimalCardViewFactory.getView(post, post.getMinimalPosts(),
         MinimalCardViewFactory.MINIMUM_NUMBER_OF_VISILIBE_MINIMAL_CARDS, inflater,
         itemView.getContext(), position));
   }
@@ -125,5 +131,18 @@ public class AggregatedRecommendationViewHolder extends PostViewHolder<Aggregate
     } else {
       morePostersLabel.setVisibility(View.INVISIBLE);
     }
+  }
+
+  private void setupOverflowMenu(Post post, int position) {
+    overflowMenu.setOnClickListener(view -> {
+      PopupMenu popupMenu = new PostPopupMenuBuilder().prepMenu(itemView.getContext(), overflowMenu)
+          .addReportAbuse(menuItem -> {
+            cardTouchEventPublishSubject.onNext(
+                new CardTouchEvent(post, position, CardTouchEvent.Type.REPORT_ABUSE));
+            return false;
+          })
+          .getPopupMenu();
+      popupMenu.show();
+    });
   }
 }

@@ -53,7 +53,8 @@ public class WSWidgetsUtils {
       String url = null;
       // Can be null in legacy ws :/
       if (wsWidget.getView() != null) {
-        url = wsWidget.getView().replace(V7.getHost(sharedPreferences), "");
+        url = wsWidget.getView()
+            .replace(V7.getHost(sharedPreferences), "");
       }
       switch (wsWidget.getType()) {
         case APPS_GROUP:
