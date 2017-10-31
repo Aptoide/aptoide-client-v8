@@ -40,6 +40,7 @@
   <string name="badgedialog_message_platinum_2">5 000 000 downloads</string>
   <string name="badgedialog_message_platinum_3">50 000 followers</string>
   <string name="badgedialog_message_platinum_4">25 000 reviews</string>
+  <string name="got_it_button_text">Got it</string>
 
 
 </resources>
