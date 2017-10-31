@@ -27,7 +27,7 @@ public class BadgeDialogFactory {
     this.context = context;
   }
 
-  public Dialog create(GridStoreMetaWidget.HomeMeta.Badge badge) {
+  public Dialog create(GridStoreMetaWidget.HomeMeta.Badge badge, boolean storeOwner) {
     View view = LayoutInflater.from(context)
         .inflate(R.layout.store_badge_dialog, null);
     ImageView bronzeMedal = ((ImageView) view.findViewById(R.id.bronze_medal));
@@ -35,7 +35,7 @@ public class BadgeDialogFactory {
     selectedMedalSize = (int) (normalMedalSize * MEDAL_SCALE);
     Resources resources = view.getContext()
         .getResources();
-    createViewModel(badge, resources, badge, view);
+    createViewModel(badge, resources, badge, view, storeOwner);
     Dialog dialog = new AlertDialog.Builder(context).setView(view)
         .create();
     View okButton = view.findViewById(R.id.ok_button);
@@ -44,7 +44,7 @@ public class BadgeDialogFactory {
   }
 
   private void createViewModel(GridStoreMetaWidget.HomeMeta.Badge storeBadge, Resources resources,
-      GridStoreMetaWidget.HomeMeta.Badge selectedBadge, View view) {
+      GridStoreMetaWidget.HomeMeta.Badge selectedBadge, View view, boolean storeOwner) {
 
     @ColorRes int mainColor;
     @ColorRes int secondaryColor;
@@ -187,7 +187,7 @@ public class BadgeDialogFactory {
             reviewsMessage, tinBadgeSelected, bronzeBadgeSelected, silverBadgeSelected,
             goldBadgeSelected, platinumBadgeSelected, tinBadgeColor, bronzeBadgeColor,
             silverBadgeColor, goldBadgeColor, platinumBadgeColor, progress1, progress2, progress3,
-            progress4, !isRankLocked(storeBadge, selectedBadge));
+            progress4, !isRankLocked(storeBadge, selectedBadge), storeOwner);
 
     setupView(view, storeMedalPopupViewModel, resources);
   }
@@ -296,23 +296,49 @@ public class BadgeDialogFactory {
         viewModel.getPlatinumBadgeColor(), resources);
 
     tinMedalLayout.setOnClickListener(
-        v -> createViewModel(storeBadge, resources, GridStoreMetaWidget.HomeMeta.Badge.NONE, view));
+        v -> createViewModel(storeBadge, resources, GridStoreMetaWidget.HomeMeta.Badge.NONE, view,
+            viewModel.isStoreOwner()));
     bronzeMedalLayout.setOnClickListener(
-        v -> createViewModel(storeBadge, resources, GridStoreMetaWidget.HomeMeta.Badge.BRONZE,
-            view));
+        v -> createViewModel(storeBadge, resources, GridStoreMetaWidget.HomeMeta.Badge.BRONZE, view,
+            viewModel.isStoreOwner()));
     silverMedalLayout.setOnClickListener(
-        v -> createViewModel(storeBadge, resources, GridStoreMetaWidget.HomeMeta.Badge.SILVER,
-            view));
+        v -> createViewModel(storeBadge, resources, GridStoreMetaWidget.HomeMeta.Badge.SILVER, view,
+            viewModel.isStoreOwner()));
     goldMedalLayout.setOnClickListener(
-        v -> createViewModel(storeBadge, resources, GridStoreMetaWidget.HomeMeta.Badge.GOLD, view));
+        v -> createViewModel(storeBadge, resources, GridStoreMetaWidget.HomeMeta.Badge.GOLD, view,
+            viewModel.isStoreOwner()));
     platinumMedalLayout.setOnClickListener(
         v -> createViewModel(storeBadge, resources, GridStoreMetaWidget.HomeMeta.Badge.PLATINUM,
-            view));
+            view, viewModel.isStoreOwner()));
 
     progress1.setBackgroundColor(resources.getColor(viewModel.getProgress1()));
     progress2.setBackgroundColor(resources.getColor(viewModel.getProgress2()));
     progress3.setBackgroundColor(resources.getColor(viewModel.getProgress3()));
     progress4.setBackgroundColor(resources.getColor(viewModel.getProgress4()));
+
+    if (viewModel.isStoreOwner()) {
+      congratulationsMessage.setVisibility(View.VISIBLE);
+      tinMedalLayout.setVisibility(View.VISIBLE);
+      bronzeMedalLayout.setVisibility(View.VISIBLE);
+      silverMedalLayout.setVisibility(View.VISIBLE);
+      goldMedalLayout.setVisibility(View.VISIBLE);
+      platinumMedalLayout.setVisibility(View.VISIBLE);
+      progress1.setVisibility(View.VISIBLE);
+      progress2.setVisibility(View.VISIBLE);
+      progress3.setVisibility(View.VISIBLE);
+      progress4.setVisibility(View.VISIBLE);
+    } else {
+      congratulationsMessage.setVisibility(View.GONE);
+      tinMedalLayout.setVisibility(View.GONE);
+      bronzeMedalLayout.setVisibility(View.GONE);
+      silverMedalLayout.setVisibility(View.GONE);
+      goldMedalLayout.setVisibility(View.GONE);
+      platinumMedalLayout.setVisibility(View.GONE);
+      progress1.setVisibility(View.GONE);
+      progress2.setVisibility(View.GONE);
+      progress3.setVisibility(View.GONE);
+      progress4.setVisibility(View.GONE);
+    }
   }
 
   private void setBackground(ImageView view, int color) {

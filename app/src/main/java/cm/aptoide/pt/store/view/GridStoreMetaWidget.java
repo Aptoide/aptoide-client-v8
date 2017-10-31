@@ -134,12 +134,12 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
           showFollowersCount(homeMeta.getFollowersCount(), textStyle);
           showFollowingCount(homeMeta.getFollowingCount(), textStyle);
           showDescription(homeMeta.getDescription());
-          showBadge(homeMeta.getBadge());
+          showBadge(homeMeta.getBadge(), homeMeta.isOwner());
         })
         .subscribe());
   }
 
-  private void showBadge(HomeMeta.Badge badge) {
+  private void showBadge(HomeMeta.Badge badge, boolean storeOwner) {
     switch (badge) {
       case NONE:
         badgeIcon.setImageResource(R.drawable.tin);
@@ -157,7 +157,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
         badgeIcon.setImageResource(R.drawable.platinum);
         break;
     }
-    badgeIcon.setOnClickListener(v -> badgeDialogFactory.create(badge)
+    badgeIcon.setOnClickListener(v -> badgeDialogFactory.create(badge, storeOwner)
         .show());
   }
 
