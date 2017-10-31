@@ -28,6 +28,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
@@ -59,6 +61,7 @@ import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
+import com.jakewharton.rxbinding.view.RxMenuItem;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.ArrayList;
@@ -93,6 +96,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   private LinearLayout buttonsLayout;
   private Button followedStoresButton;
   private Button allStoresButton;
+  private RecyclerView trendingList;
 
   private RecyclerView followedStoresResultList;
   private RecyclerView allStoresResultList;
@@ -152,6 +156,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     noSearchLayoutSearchQuery = (EditText) view.findViewById(R.id.search_text);
     noResultsSearchButton = (ImageView) view.findViewById(R.id.ic_search_button);
     searchResultsLayout = view.findViewById(R.id.search_results_layout);
+    trendingList = (RecyclerView) view.findViewById(R.id.trending_suggestions);
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
   }
@@ -254,6 +259,13 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     followedStoresResultList.setVisibility(View.GONE);
     allStoresResultList.setVisibility(View.GONE);
     setFocusInSearchView();
+  }
+
+  @Override public Observable<Boolean> getSearchWidgetFocusState() {
+    return RxView.focusChanges(searchMenuItem.getActionView());
+  }
+
+  @Override public void showTrendingMenu(List<String> apps){
   }
 
   @Override public void showVoiceSearch(){

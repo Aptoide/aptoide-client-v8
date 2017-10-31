@@ -77,6 +77,20 @@ public class SearchResultPresenter implements Presenter {
         }, crashReport::log);
   }
 
+  private void handleWidgetTrendingRequest(){
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .observeOn(viewScheduler)
+        .flatMap(__ -> view.getSearchWidgetFocusState())
+        .filter(event -> event.equals(true))
+        .flatMap(__ -> searchManager.getTrendingApps())
+        .observeOn(viewScheduler)
+        .doOnNext(trending -> view.showTrendingMenu(trending))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, crashReport::log);
+  }
+
   private void stopLoadingMoreOnDestroy() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.DESTROY))

@@ -12,6 +12,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
+import java.util.ArrayList;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -85,6 +86,17 @@ public class SearchManager {
         .flatMapIterable(list -> list)
         .map(SearchAppResult::new)
         .toList();
+  }
+
+  public Observable<List<String>> getTrendingApps(){
+    List<String> test = new ArrayList<>();
+    test.add("Option1");
+    test.add("Option2");
+    test.add("Option3");
+    test.add("Option4");
+    test.add("Option5");
+    return Observable.just(test);
+
   }
 
   private boolean hasResults(ListSearchApps listSearchApps) {

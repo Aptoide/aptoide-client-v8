@@ -25,6 +25,10 @@ public interface SearchView extends View {
 
   void showWidgetClickView();
 
+  Observable<Boolean> getSearchWidgetFocusState();
+
+  void showTrendingMenu(List<String> apps);
+
   void showVoiceSearch();
 
   void showLoading();

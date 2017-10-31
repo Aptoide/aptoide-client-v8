@@ -39,6 +39,14 @@
       android:layout_marginTop="?attr/actionBarSize"
       >
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/trending_suggestions"
+        android:layout_width="300dp"
+        android:layout_height="320dp"
+        android:layout_centerHorizontal="true"
+        android:visibility="visible"
+        ></android.support.v7.widget.RecyclerView>
+
     <LinearLayout
         android:id="@+id/buttons_layout"
         android:layout_width="262dp"
