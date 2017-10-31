@@ -74,12 +74,12 @@ public class BadgeDialogFactory {
         mainColor = R.color.tin_medal;
         secondaryColor = R.color.tin_medal_secodary;
         storeMedal = R.drawable.tin;
-        medalText = resources.getString(R.string.badgedialog_title_bronze);
-        congratulationsMessage = resources.getString(R.string.badgedialog_message_bronze);
-        uploadedAppsMessage = resources.getString(R.string.badgedialog_message_bronze_1);
-        downloadsMessage = resources.getString(R.string.badgedialog_message_bronze_2);
-        followersMessage = resources.getString(R.string.badgedialog_message_bronze_3);
-        reviewsMessage = resources.getString(R.string.badgedialog_message_bronze_4);
+        medalText = resources.getString(R.string.badgedialog_title_tin);
+        congratulationsMessage = resources.getString(R.string.badgedialog_message_tin);
+        uploadedAppsMessage = resources.getString(R.string.badgedialog_message_tin_1);
+        downloadsMessage = "";
+        followersMessage = "";
+        reviewsMessage = "";
         tinBadgeSelected = true;
         break;
       case BRONZE:
@@ -87,13 +87,14 @@ public class BadgeDialogFactory {
           storeMedal = R.drawable.lock;
           mainColor = R.color.grey_fog_dark;
           secondaryColor = R.color.grey_fog_light;
+          congratulationsMessage = resources.getString(R.string.badgedialog_message_bronze_lock);
         } else {
           storeMedal = R.drawable.bronze;
           mainColor = R.color.bronze_medal;
           secondaryColor = R.color.bronze_medal_secodary;
+          congratulationsMessage = resources.getString(R.string.badgedialog_message_bronze);
         }
         medalText = resources.getString(R.string.badgedialog_title_bronze);
-        congratulationsMessage = resources.getString(R.string.badgedialog_message_bronze);
         uploadedAppsMessage = resources.getString(R.string.badgedialog_message_bronze_1);
         downloadsMessage = resources.getString(R.string.badgedialog_message_bronze_2);
         followersMessage = resources.getString(R.string.badgedialog_message_bronze_3);
@@ -105,13 +106,14 @@ public class BadgeDialogFactory {
           storeMedal = R.drawable.lock;
           mainColor = R.color.grey_fog_dark;
           secondaryColor = R.color.grey_fog_light;
+          congratulationsMessage = resources.getString(R.string.badgedialog_message_silver_lock);
         } else {
           storeMedal = R.drawable.silver;
           mainColor = R.color.silver_medal;
           secondaryColor = R.color.silver_medal_secodary;
+          congratulationsMessage = resources.getString(R.string.badgedialog_message_silver);
         }
         medalText = resources.getString(R.string.badgedialog_title_silver);
-        congratulationsMessage = resources.getString(R.string.badgedialog_message_silver);
         uploadedAppsMessage = resources.getString(R.string.badgedialog_message_silver_1);
         downloadsMessage = resources.getString(R.string.badgedialog_message_silver_2);
         followersMessage = resources.getString(R.string.badgedialog_message_silver_3);
@@ -123,13 +125,14 @@ public class BadgeDialogFactory {
           storeMedal = R.drawable.lock;
           mainColor = R.color.grey_fog_dark;
           secondaryColor = R.color.grey_fog_light;
+          congratulationsMessage = resources.getString(R.string.badgedialog_message_gold_lock);
         } else {
           storeMedal = R.drawable.gold;
           mainColor = R.color.gold_medal;
           secondaryColor = R.color.gold_medal_secodary;
+          congratulationsMessage = resources.getString(R.string.badgedialog_message_gold);
         }
         medalText = resources.getString(R.string.badgedialog_title_gold);
-        congratulationsMessage = resources.getString(R.string.badgedialog_message_gold);
         uploadedAppsMessage = resources.getString(R.string.badgedialog_message_gold_1);
         downloadsMessage = resources.getString(R.string.badgedialog_message_gold_2);
         followersMessage = resources.getString(R.string.badgedialog_message_gold_3);
@@ -141,13 +144,14 @@ public class BadgeDialogFactory {
           storeMedal = R.drawable.lock;
           mainColor = R.color.grey_fog_dark;
           secondaryColor = R.color.grey_fog_light;
+          congratulationsMessage = resources.getString(R.string.badgedialog_message_platinum_lock);
         } else {
           storeMedal = R.drawable.platinum;
           mainColor = R.color.platinum_medal;
           secondaryColor = R.color.platinum_medal_secodary;
+          congratulationsMessage = resources.getString(R.string.badgedialog_message_platinum);
         }
         medalText = resources.getString(R.string.badgedialog_title_platinum);
-        congratulationsMessage = resources.getString(R.string.badgedialog_message_platinum);
         uploadedAppsMessage = resources.getString(R.string.badgedialog_message_platinum_1);
         downloadsMessage = resources.getString(R.string.badgedialog_message_platinum_2);
         followersMessage = resources.getString(R.string.badgedialog_message_platinum_3);
@@ -207,6 +211,7 @@ public class BadgeDialogFactory {
 
   private void setupView(View view, StoreMedalPopupViewModel viewModel, Resources resources) {
     ImageView headerBackground = ((ImageView) view.findViewById(R.id.header_background));
+    View followersBackground = view.findViewById(R.id.followers_background);
     ImageView medalIcon = ((ImageView) view.findViewById(R.id.medal_icon));
     ImageView tinMedal = ((ImageView) view.findViewById(R.id.tin_medal));
     ImageView bronzeMedal = ((ImageView) view.findViewById(R.id.bronze_medal));
@@ -228,7 +233,6 @@ public class BadgeDialogFactory {
     medalIcon.setImageDrawable(resources.getDrawable(viewModel.getStoreMedalIcon()));
     medalText.setText(viewModel.getMedalText());
     congratulationsMessage.setText(viewModel.getCongratulationsMessage());
-    uploadedAppsTv.setText(viewModel.getUploadedAppsMessage());
 
     if (viewModel.isShowChecks()) {
       setDrawableColor(resources, viewModel.getMainColor(), uploadedAppsTv);
@@ -242,9 +246,36 @@ public class BadgeDialogFactory {
       setDrawableColor(resources, R.color.white, reviewsTv);
     }
 
-    downloadsTv.setText(viewModel.getDownloadsMessage());
-    followersTv.setText(viewModel.getFollowersMessage());
-    reviewsTv.setText(viewModel.getReviewsMessage());
+    String uploadedAppsMessage = viewModel.getUploadedAppsMessage();
+    if (uploadedAppsMessage != null && !uploadedAppsMessage.isEmpty()) {
+      uploadedAppsTv.setText(uploadedAppsMessage);
+      uploadedAppsTv.setVisibility(View.VISIBLE);
+    } else {
+      uploadedAppsTv.setVisibility(View.GONE);
+    }
+    String downloadsMessage = viewModel.getDownloadsMessage();
+    if (downloadsMessage != null && !downloadsMessage.isEmpty()) {
+      downloadsTv.setText(downloadsMessage);
+      downloadsTv.setVisibility(View.VISIBLE);
+    } else {
+      downloadsTv.setVisibility(View.GONE);
+    }
+    String followersMessage = viewModel.getFollowersMessage();
+    if (followersMessage != null && !followersMessage.isEmpty()) {
+      followersTv.setText(followersMessage);
+      followersTv.setVisibility(View.VISIBLE);
+      followersBackground.setVisibility(View.VISIBLE);
+    } else {
+      followersTv.setVisibility(View.GONE);
+      followersBackground.setVisibility(View.GONE);
+    }
+    String reviewsMessage = viewModel.getReviewsMessage();
+    if (reviewsMessage != null && !reviewsMessage.isEmpty()) {
+      reviewsTv.setText(reviewsMessage);
+      reviewsTv.setVisibility(View.VISIBLE);
+    } else {
+      reviewsTv.setVisibility(View.GONE);
+    }
 
     GridStoreMetaWidget.HomeMeta.Badge storeBadge = viewModel.getStoreBadge();
     setupMedal(tinMedal, viewModel.isTinBadgeSelected(), viewModel.getTinBadgeColor(), resources,
