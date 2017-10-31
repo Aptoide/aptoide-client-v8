@@ -2,13 +2,14 @@ package cm.aptoide.pt.analytics;
 
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.logger.Logger;
+import java.util.Collections;
 import java.util.List;
 
 public class NavigationTracker {
 
   private static final String TAG = NavigationTracker.class.getSimpleName();
-  private List<ScreenTagHistory> historyList;
   private final TrackerFilter trackerFilter;
+  private List<ScreenTagHistory> historyList;
 
   public NavigationTracker(List<ScreenTagHistory> historyList, TrackerFilter trackerFilter) {
     this.historyList = historyList;
@@ -57,5 +58,17 @@ public class NavigationTracker {
 
   private boolean filter(ScreenTagHistory screenTagHistory) {
     return trackerFilter.filter(screenTagHistory.getFragment());
+  }
+
+  public String getPrettyScreenHistory() {
+    StringBuilder sb = new StringBuilder();
+    List<ScreenTagHistory> tmp = historyList;
+    Collections.reverse(tmp);
+    for (ScreenTagHistory screen : tmp) {
+      sb.append("[")
+          .append(screen.toString())
+          .append("]");
+    }
+    return sb.toString();
   }
 }

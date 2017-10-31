@@ -12,7 +12,8 @@ public class TransactionMapperV3 {
   private final TransactionFactory transactionFactory;
   private final BillingIdManager billingIdManager;
 
-  public TransactionMapperV3(TransactionFactory transactionFactory, BillingIdManager billingIdManager) {
+  public TransactionMapperV3(TransactionFactory transactionFactory,
+      BillingIdManager billingIdManager) {
     this.transactionFactory = transactionFactory;
     this.billingIdManager = billingIdManager;
   }
@@ -73,8 +74,7 @@ public class TransactionMapperV3 {
           Transaction.Status.COMPLETED);
     }
 
-    if ("PRODUCT-216".equals(error.code)
-        || "SYS-1".equals(error.code)) {
+    if ("PRODUCT-216".equals(error.code) || "SYS-1".equals(error.code)) {
       transaction = transactionFactory.create(transactionId, customerId, serviceId, productId,
           Transaction.Status.PROCESSING);
     }

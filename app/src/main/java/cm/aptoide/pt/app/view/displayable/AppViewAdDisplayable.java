@@ -13,8 +13,7 @@ public class AppViewAdDisplayable extends GridAdDisplayable {
   public AppViewAdDisplayable() {
   }
 
-  public AppViewAdDisplayable(MinimalAd minimalAd,
-      NavigationTracker navigationTracker) {
+  public AppViewAdDisplayable(MinimalAd minimalAd, NavigationTracker navigationTracker) {
     // TODO: 01-08-2017 neuro tags
     super(minimalAd, null, navigationTracker);
   }

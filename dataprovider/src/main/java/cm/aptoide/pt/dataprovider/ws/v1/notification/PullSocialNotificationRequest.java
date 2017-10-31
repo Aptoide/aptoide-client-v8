@@ -49,6 +49,8 @@ public class PullSocialNotificationRequest
       options.put("access_token", accessToken);
       pretendedNotificationTypes.add(1);
       pretendedNotificationTypes.add(2);
+      pretendedNotificationTypes.add(5);
+      pretendedNotificationTypes.add(6);
     }
     pretendedNotificationTypes.add(3);
 

@@ -18,7 +18,8 @@ public interface Service {
       @QueryMap Map<String, String> options,
       @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-  @GET("notifications/{id}/direct") Observable<List<GetPullNotificationsResponse>> getPullSocialNotifications(
+  @GET("notifications/{id}/direct")
+  Observable<List<GetPullNotificationsResponse>> getPullSocialNotifications(
       @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Path("id") String id,
       @Query("select") List<Integer> types, @QueryMap Map<String, String> options);
 }

@@ -55,6 +55,10 @@ public class VanillaFragmentProvider implements FragmentProvider {
     return SendFeedbackFragment.newInstance(screenshotFilePath);
   }
 
+  @Override public Fragment newSendFeedbackFragment(String screenshotFilePath, String postId) {
+    return SendFeedbackFragment.newInstance(screenshotFilePath, postId);
+  }
+
   @Override public Fragment newStoreFragment(String storeName, String storeTheme) {
     return StoreFragment.newInstance(storeName, storeTheme);
   }

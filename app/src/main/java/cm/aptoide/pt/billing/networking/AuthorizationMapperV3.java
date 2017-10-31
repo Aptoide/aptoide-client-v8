@@ -25,16 +25,18 @@ public class AuthorizationMapperV3 {
   public Authorization map(String authorizationId, String customerId, String transactionId,
       TransactionResponse transactionResponse, PaidApp paidApp) {
 
-    final PaymentServiceResponse paymentServiceResponse = paidApp.getPayment()
-        .getPaymentServices()
-        .get(0);
-
     final String description = paidApp.getApp()
         .getName();
 
-    final Price price =
-        new Price(paymentServiceResponse.getPrice(), paymentServiceResponse.getCurrency(),
-            paymentServiceResponse.getSign());
+    final List<PaymentServiceResponse> paymentServiceResponses = paidApp.getPayment()
+        .getPaymentServices();
+
+    Price price = null;
+    if (paymentServiceResponses != null && !paymentServiceResponses.isEmpty()) {
+      final PaymentServiceResponse paymentServiceResponse = paymentServiceResponses.get(0);
+      price = new Price(paymentServiceResponse.getPrice(), paymentServiceResponse.getCurrency(),
+          paymentServiceResponse.getSign());
+    }
 
     if (transactionResponse.hasErrors()) {
       return getErrorAuthorization(transactionResponse.getErrors(), authorizationId, transactionId,

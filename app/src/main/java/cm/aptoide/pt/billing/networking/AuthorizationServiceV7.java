@@ -40,25 +40,6 @@ public class AuthorizationServiceV7 implements AuthorizationService {
     this.authorizationFactory = authorizationFactory;
   }
 
-  @Override
-  public Single<Authorization> updateAuthorization(String customerId, String transactionId,
-      String metadata) {
-    return UpdateAuthorizationRequest.of(billingIdManager.resolveTransactionId(transactionId),
-        metadata, sharedPreferences, httpClient, converterFactory, bodyInterceptorV7,
-        tokenInvalidator)
-        .observe(true)
-        .toSingle()
-        .flatMap(response -> {
-          if (response != null && response.isOk()) {
-            return Single.just(authorizationMapper.map(response.getData(), transactionId));
-          }
-          return Single.just(
-              authorizationFactory.create(billingIdManager.generateAuthorizationId(), customerId,
-                  null, Authorization.Status.FAILED, null, null, null, null, null, transactionId,
-                  null));
-        });
-  }
-
   @Override public Single<Authorization> getAuthorization(String transactionId, String customerId) {
     return GetAuthorizationRequest.of(billingIdManager.resolveTransactionId(transactionId),
         sharedPreferences, httpClient, converterFactory, bodyInterceptorV7, tokenInvalidator)
@@ -82,6 +63,25 @@ public class AuthorizationServiceV7 implements AuthorizationService {
                     null));
           }
 
+          return Single.just(
+              authorizationFactory.create(billingIdManager.generateAuthorizationId(), customerId,
+                  null, Authorization.Status.FAILED, null, null, null, null, null, transactionId,
+                  null));
+        });
+  }
+
+  @Override
+  public Single<Authorization> updateAuthorization(String customerId, String transactionId,
+      String metadata) {
+    return UpdateAuthorizationRequest.of(billingIdManager.resolveTransactionId(transactionId),
+        metadata, sharedPreferences, httpClient, converterFactory, bodyInterceptorV7,
+        tokenInvalidator)
+        .observe(true)
+        .toSingle()
+        .flatMap(response -> {
+          if (response != null && response.isOk()) {
+            return Single.just(authorizationMapper.map(response.getData(), transactionId));
+          }
           return Single.just(
               authorizationFactory.create(billingIdManager.generateAuthorizationId(), customerId,
                   null, Authorization.Status.FAILED, null, null, null, null, null, transactionId,

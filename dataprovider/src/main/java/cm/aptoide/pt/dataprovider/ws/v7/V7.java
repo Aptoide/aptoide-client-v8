@@ -502,6 +502,14 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
     Observable<Response<GetAuthorizationRequest.ResponseBody>> getBillingAuthorization(
         @Body GetAuthorizationRequest.RequestBody body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("user/timeline/card/del") Observable<BaseV7Response> deletePost(
+        @Body PostDeleteRequest.Body body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("user/follower/set/") Observable<BaseV7Response> unfollowUser(
+        @Body UnfollowUserRequest.Body body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
   }
 }
 

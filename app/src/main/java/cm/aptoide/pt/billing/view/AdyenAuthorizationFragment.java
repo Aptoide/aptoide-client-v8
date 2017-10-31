@@ -52,12 +52,6 @@ public class AdyenAuthorizationFragment extends PermissionServiceFragment
     backButton = PublishRelay.create();
   }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_adyen_authorization, container, false);
-  }
-
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
@@ -91,6 +85,12 @@ public class AdyenAuthorizationFragment extends PermissionServiceFragment
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName());
+  }
+
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    return inflater.inflate(R.layout.fragment_adyen_authorization, container, false);
   }
 
   @Override public void onDestroyView() {
@@ -132,6 +132,10 @@ public class AdyenAuthorizationFragment extends PermissionServiceFragment
     }
   }
 
+  @Override public Observable<Void> backButtonEvent() {
+    return backButton;
+  }
+
   @Override public void showCvvView(PaymentRequest request) {
     if (cvcDialog != null && cvcDialog.isShowing()) {
       cvcDialog.dismiss();
@@ -139,9 +143,5 @@ public class AdyenAuthorizationFragment extends PermissionServiceFragment
     cvcDialog = new CVCDialog(getActivity(), request.getAmount(), request.getPaymentMethod(),
         () -> backButton.call(null));
     cvcDialog.show();
-  }
-
-  @Override public Observable<Void> backButtonEvent() {
-    return backButton;
   }
 }

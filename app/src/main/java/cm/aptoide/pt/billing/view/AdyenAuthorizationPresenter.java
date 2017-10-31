@@ -38,9 +38,11 @@ public class AdyenAuthorizationPresenter implements Presenter {
 
   @Override public void present() {
 
-    onViewCreatedCreateAdyenCreditCardPayment();
+    onViewCreatedCreatePayment();
 
-    onViewCreatedShowCreditCardView();
+    onViewCreatedSelectCreditCardPayment();
+
+    onViewCreatedShowCreditCardInputView();
 
     onViewCreatedCheckAuthorizationActive();
 
@@ -63,6 +65,7 @@ public class AdyenAuthorizationPresenter implements Presenter {
         .flatMap(created -> view.backButtonEvent())
         .observeOn(viewScheduler)
         .doOnNext(__ -> {
+          analytics.sendAuthorizationCancelEvent(serviceName);
           navigator.popToPaymentView();
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -139,18 +142,18 @@ public class AdyenAuthorizationPresenter implements Presenter {
         }, throwable -> showError(throwable));
   }
 
-  private void onViewCreatedShowCreditCardView() {
+  private void onViewCreatedShowCreditCardInputView() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMapSingle(__ -> adyen.getCreditCardPayment())
+        .flatMapSingle(__ -> adyen.getPaymentData())
         .observeOn(viewScheduler)
-        .doOnNext(result -> {
-          if (result.getPaymentMethod()
+        .doOnNext(data -> {
+          if (data.getPaymentMethod()
               .getType()
               .equals(PaymentMethod.Type.CARD)) {
-            navigator.navigateToAdyenCreditCardView(result);
+            navigator.navigateToAdyenCreditCardView(data);
           } else {
-            view.showCvvView(result);
+            view.showCvvView(data);
           }
         })
         .observeOn(viewScheduler)
@@ -159,7 +162,18 @@ public class AdyenAuthorizationPresenter implements Presenter {
         }, throwable -> showError(throwable));
   }
 
-  private void onViewCreatedCreateAdyenCreditCardPayment() {
+  private void onViewCreatedSelectCreditCardPayment() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMapSingle(__ -> adyen.getCreditCardPaymentService())
+        .flatMapCompletable(creditCard -> adyen.selectPaymentService(creditCard))
+        .observeOn(viewScheduler)
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> showError(throwable));
+  }
+
+  private void onViewCreatedCreatePayment() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.showLoading())
@@ -167,8 +181,7 @@ public class AdyenAuthorizationPresenter implements Presenter {
         .filter(authorization -> authorization instanceof AdyenAuthorization)
         .first(authorization -> authorization.isPending())
         .cast(AdyenAuthorization.class)
-        .flatMapCompletable(
-            authorization -> adyen.createCreditCardPayment(authorization.getSession()))
+        .flatMapCompletable(authorization -> adyen.createPayment(authorization.getSession()))
         .observeOn(viewScheduler)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

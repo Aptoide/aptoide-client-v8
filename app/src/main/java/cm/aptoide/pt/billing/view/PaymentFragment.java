@@ -117,8 +117,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     attachPresenter(new PaymentPresenter(this, billing, billingNavigator, billingAnalytics,
         getArguments().getString(PaymentActivity.EXTRA_MERCHANT_NAME),
         getArguments().getString(PaymentActivity.EXTRA_SKU),
-        getArguments().getString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD),
-        new HashSet<>()));
+        getArguments().getString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD), new HashSet<>()));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -209,7 +208,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
 
       Glide.with(this)
           .load(payment.getIcon())
-          .into(new RadioButtonTarget(AptoideUtils.ScreenU.getPixelsForDip(24, getResources()),
+          .into(new RadioButtonTarget(AptoideUtils.ScreenU.getPixelsForDip(16, getResources()),
               radioButton));
 
       if (TextUtils.isEmpty(payment.getDescription())) {

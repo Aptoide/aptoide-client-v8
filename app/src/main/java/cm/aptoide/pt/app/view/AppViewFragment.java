@@ -1095,15 +1095,13 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     appViewSimilarAppAnalytics.similarAppsIsShown();
     setSuggestedShowing(true);
 
-    final Observable<ListApps> listAppsObservable = getRecommendedRequest.observe();
-
     adsRepository.getAdsFromAppviewSuggested(getPackageName(), appViewModel.getKeywords())
         .onErrorReturn(throwable -> Collections.emptyList())
-        .zipWith(listAppsObservable,
-            (minimalAds, listApps) -> new AppViewSuggestedAppsDisplayable(minimalAds,
-                removeCurrentAppFromSuggested(listApps.getDataList()
-                    // TODO: 04/10/2017 trinkes make some default thing for StoreContext.home
-                    .getList()), appViewSimilarAppAnalytics, navigationTracker, StoreContext.home))
+        .zipWith(requestFactoryCdnWeb.newGetRecommendedRequest(6, getPackageName())
+            .observe(), (minimalAds, listApps) -> new AppViewSuggestedAppsDisplayable(minimalAds,
+            removeCurrentAppFromSuggested(listApps.getDataList()
+                // TODO: 04/10/2017 trinkes make some default thing for StoreContext.home
+                .getList()), appViewSimilarAppAnalytics, navigationTracker, StoreContext.home))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(appViewSuggestedAppsDisplayable -> {

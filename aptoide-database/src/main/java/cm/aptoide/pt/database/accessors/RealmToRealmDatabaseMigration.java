@@ -336,10 +336,14 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
           .addField("processed", boolean.class)
           .transform(notification -> notification.set("processed", true));
 
+      oldVersion++;
+    }
+
+    if (oldVersion == 8090) {
       realm.delete("PaymentConfirmation");
 
       schema.create("RealmAuthorization")
-          .addField("id", String.class, FieldAttribute.PRIMARY_KEY, FieldAttribute.REQUIRED)
+          .addField("id", String.class, FieldAttribute.PRIMARY_KEY)
           .addField("customerId", String.class, FieldAttribute.REQUIRED)
           .addField("status", String.class, FieldAttribute.REQUIRED)
           .addField("type", String.class, FieldAttribute.REQUIRED)

@@ -58,12 +58,6 @@ public class WebAuthorizationFragment extends PermissionServiceFragment
     backButtonSelectionSubject = PublishRelay.create();
   }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_web_view, container, false);
-  }
-
   @Override @SuppressLint("SetJavaScriptEnabled")
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
@@ -89,6 +83,12 @@ public class WebAuthorizationFragment extends PermissionServiceFragment
     attachPresenter(new WebAuthorizationPresenter(this, billing, billingAnalytics, billingNavigator,
         getArguments().getString(PaymentActivity.EXTRA_SERVICE_NAME),
         getArguments().getString(PaymentActivity.EXTRA_SKU)));
+  }
+
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    return inflater.inflate(R.layout.fragment_web_view, container, false);
   }
 
   @Override public void onDestroyView() {

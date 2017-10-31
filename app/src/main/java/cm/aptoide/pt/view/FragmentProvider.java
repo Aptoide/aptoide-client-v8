@@ -22,6 +22,8 @@ public interface FragmentProvider {
 
   @Deprecated Fragment newSendFeedbackFragment(String screenshotFilePath);
 
+  @Deprecated Fragment newSendFeedbackFragment(String screenshotFilePath, String postId);
+
   @Deprecated Fragment newStoreFragment(String storeName, String storeTheme);
 
   @Deprecated Fragment newStoreFragment(String storeName, String storeTheme,

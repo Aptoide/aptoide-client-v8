@@ -62,6 +62,16 @@ public class RealmAuthorizationPersistence implements AuthorizationPersistence {
   }
 
   @Override
+  public Observable<Authorization> getAuthorization(String customerId, String transactionId) {
+    return authorizationRelay.startWith(getAuthorizations())
+        .flatMap(authorizations -> Observable.from(authorizations)
+            .filter(authorization -> authorization.getCustomerId()
+                .equals(customerId) && authorization.getTransactionId()
+                .equals(transactionId)))
+        .subscribeOn(scheduler);
+  }
+
+  @Override
   public Single<Authorization> updateAuthorization(String customerId, String transactionId,
       Authorization.Status status, String metadata) {
     return Observable.from(getAuthorizations())
@@ -86,16 +96,6 @@ public class RealmAuthorizationPersistence implements AuthorizationPersistence {
         authorizationFactory.create(idGenerator.generate(), customerId, null, status, null, null,
             null, null, null, transactionId, null);
     return saveAuthorization(authorization).andThen(Single.just(authorization));
-  }
-
-  @Override
-  public Observable<Authorization> getAuthorization(String customerId, String transactionId) {
-    return authorizationRelay.startWith(getAuthorizations())
-        .flatMap(authorizations -> Observable.from(authorizations)
-            .filter(authorization -> authorization.getCustomerId()
-                .equals(customerId) && authorization.getTransactionId()
-                .equals(transactionId)))
-        .subscribeOn(scheduler);
   }
 
   private List<Authorization> getAuthorizations() {

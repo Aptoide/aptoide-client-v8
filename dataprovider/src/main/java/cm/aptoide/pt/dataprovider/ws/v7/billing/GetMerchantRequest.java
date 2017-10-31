@@ -6,11 +6,13 @@
 package cm.aptoide.pt.dataprovider.ws.v7.billing;
 
 import android.content.SharedPreferences;
+import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -18,12 +20,19 @@ import rx.Observable;
 public class GetMerchantRequest
     extends V7<GetMerchantRequest.ResponseBody, GetMerchantRequest.RequestBody> {
 
-  private GetMerchantRequest(RequestBody baseBody,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
+  private GetMerchantRequest(RequestBody baseBody, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     super(baseBody, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
         tokenInvalidator);
+  }
+
+  public static String getHost(SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_READ_V7_HOST
+        + "/api/7/";
   }
 
   public static GetMerchantRequest of(String merchantName,
@@ -36,7 +45,8 @@ public class GetMerchantRequest
         tokenInvalidator, sharedPreferences);
   }
 
-  @Override protected Observable<GetMerchantRequest.ResponseBody> loadDataFromNetwork(Interfaces interfaces,
+  @Override
+  protected Observable<GetMerchantRequest.ResponseBody> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
     return interfaces.getBillingMerchant(body, bypassCache);
   }

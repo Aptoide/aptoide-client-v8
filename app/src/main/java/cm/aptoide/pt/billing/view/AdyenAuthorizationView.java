@@ -21,5 +21,4 @@ public interface AdyenAuthorizationView extends View {
   Observable<Void> backButtonEvent();
 
   void showCvvView(PaymentRequest request);
-
 }
