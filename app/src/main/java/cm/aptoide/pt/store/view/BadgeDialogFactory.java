@@ -38,6 +38,8 @@ public class BadgeDialogFactory {
     createViewModel(badge, resources, badge, view);
     Dialog dialog = new AlertDialog.Builder(context).setView(view)
         .create();
+    View okButton = view.findViewById(R.id.ok_button);
+    okButton.setOnClickListener(v -> dialog.dismiss());
     return dialog;
   }
 

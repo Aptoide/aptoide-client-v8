@@ -169,20 +169,21 @@
         style="@style/Aptoide.TextView.Medium.S"
         />
     <TextView
-        android:id="@+id/edit_store_button"
+        android:id="@+id/ok_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
+        android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
         android:layout_marginTop="28dp"
         android:gravity="center"
         android:minHeight="24dp"
         android:minWidth="54dp"
+        android:text="@string/got_it_button_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/reviews"
-        tools:text="Got it"
         tools:textAllCaps="true"
         style="Aptoide.TextView.Medium.S"
         />
