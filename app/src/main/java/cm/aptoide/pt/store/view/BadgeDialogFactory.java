@@ -220,6 +220,11 @@ public class BadgeDialogFactory {
     ImageView silverMedal = ((ImageView) view.findViewById(R.id.silver_medal));
     ImageView goldMedal = ((ImageView) view.findViewById(R.id.gold_medal));
     ImageView platinumMedal = ((ImageView) view.findViewById(R.id.platinum_medal));
+    View tinMedalLayout = view.findViewById(R.id.tin_medal_layout);
+    View bronzeMedalLayout = view.findViewById(R.id.bronze_medal_layout);
+    View silverMedalLayout = view.findViewById(R.id.silver_medal_layout);
+    View goldMedalLayout = view.findViewById(R.id.gold_medal_layout);
+    View platinumMedalLayout = view.findViewById(R.id.platinum_medal_layout);
     TextView medalText = (TextView) view.findViewById(R.id.medal_title);
     TextView congratulationsMessage = (TextView) view.findViewById(R.id.congratulations_message);
     TextView uploadedAppsTv = (TextView) view.findViewById(R.id.uploaded_apps);
@@ -280,17 +285,29 @@ public class BadgeDialogFactory {
     }
 
     GridStoreMetaWidget.HomeMeta.Badge storeBadge = viewModel.getStoreBadge();
-    setupMedal(tinMedal, viewModel.isTinBadgeSelected(), viewModel.getTinBadgeColor(), resources,
-        storeBadge, GridStoreMetaWidget.HomeMeta.Badge.NONE, view);
+    setupMedal(tinMedal, viewModel.isTinBadgeSelected(), viewModel.getTinBadgeColor(), resources);
     setupMedal(bronzeMedal, viewModel.isBronzeBadgeSelected(), viewModel.getBronzeBadgeColor(),
-        resources, storeBadge, GridStoreMetaWidget.HomeMeta.Badge.BRONZE, view);
+        resources);
     setupMedal(silverMedal, viewModel.isSilverBadgeSelected(), viewModel.getSilverBadgeColor(),
-        resources, storeBadge, GridStoreMetaWidget.HomeMeta.Badge.SILVER, view);
-    setupMedal(goldMedal, viewModel.isGoldBadgeSelected(), viewModel.getGoldBadgeColor(), resources,
-        storeBadge, GridStoreMetaWidget.HomeMeta.Badge.GOLD, view);
+        resources);
+    setupMedal(goldMedal, viewModel.isGoldBadgeSelected(), viewModel.getGoldBadgeColor(),
+        resources);
     setupMedal(platinumMedal, viewModel.isPlatinumBadgeSelected(),
-        viewModel.getPlatinumBadgeColor(), resources, storeBadge,
-        GridStoreMetaWidget.HomeMeta.Badge.PLATINUM, view);
+        viewModel.getPlatinumBadgeColor(), resources);
+
+    tinMedalLayout.setOnClickListener(
+        v -> createViewModel(storeBadge, resources, GridStoreMetaWidget.HomeMeta.Badge.NONE, view));
+    bronzeMedalLayout.setOnClickListener(
+        v -> createViewModel(storeBadge, resources, GridStoreMetaWidget.HomeMeta.Badge.BRONZE,
+            view));
+    silverMedalLayout.setOnClickListener(
+        v -> createViewModel(storeBadge, resources, GridStoreMetaWidget.HomeMeta.Badge.SILVER,
+            view));
+    goldMedalLayout.setOnClickListener(
+        v -> createViewModel(storeBadge, resources, GridStoreMetaWidget.HomeMeta.Badge.GOLD, view));
+    platinumMedalLayout.setOnClickListener(
+        v -> createViewModel(storeBadge, resources, GridStoreMetaWidget.HomeMeta.Badge.PLATINUM,
+            view));
 
     progress1.setBackgroundColor(resources.getColor(viewModel.getProgress1()));
     progress2.setBackgroundColor(resources.getColor(viewModel.getProgress2()));
@@ -310,8 +327,7 @@ public class BadgeDialogFactory {
   }
 
   private void setupMedal(ImageView badge, boolean isBadgeSelected, int badgeColor,
-      Resources resources, GridStoreMetaWidget.HomeMeta.Badge storeBadge,
-      GridStoreMetaWidget.HomeMeta.Badge settingUpBadge, View view) {
+      Resources resources) {
     if (isBadgeSelected) {
       badge.getLayoutParams().width = selectedMedalSize;
       badge.getLayoutParams().height = selectedMedalSize;
@@ -327,7 +343,6 @@ public class BadgeDialogFactory {
     setDrawableColor(resources, badgeColor, drawable);
     badge.setImageDrawable(drawable);
     setBackground(badge, resources.getColor(R.color.white));
-    badge.setOnClickListener(v -> createViewModel(storeBadge, resources, settingUpBadge, view));
   }
 
   private void setDrawableColor(Resources resources, @ColorRes int color, TextView view) {
