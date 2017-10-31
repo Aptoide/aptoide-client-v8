@@ -28,8 +28,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
@@ -60,11 +58,10 @@ import cm.aptoide.pt.view.custom.DividerItemDecoration;
 import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
-import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
-import com.jakewharton.rxbinding.view.RxMenuItem;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
@@ -120,6 +117,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   private boolean isMultiStoreSearch;
   private String defaultStoreName;
   private IssuesAnalytics issuesAnalytics;
+  private TrendingListAdapter trendingListAdapter;
 
   public static SearchResultFragment newInstance(String currentQuery, String defaultStoreName) {
     return newInstance(currentQuery, false, defaultStoreName);
@@ -252,7 +250,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     searchResultsLayout.setVisibility(View.VISIBLE);
   }
 
-  @Override public void showWidgetClickView(){
+  @Override public void showWidgetClickView() {
     noSearchLayout.setVisibility(View.GONE);
     searchResultsLayout.setVisibility(View.GONE);
     buttonsLayout.setVisibility(View.GONE);
@@ -265,10 +263,12 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     return RxView.focusChanges(searchMenuItem.getActionView());
   }
 
-  @Override public void showTrendingMenu(List<String> apps){
+  @Override public void showTrendingMenu(List<String> apps) {
+    trendingListAdapter.updateEntries(apps);
+    trendingList.setVisibility(View.VISIBLE);
   }
 
-  @Override public void showVoiceSearch(){
+  @Override public void showVoiceSearch() {
     noSearchLayout.setVisibility(View.GONE);
     searchResultsLayout.setVisibility(View.GONE);
     buttonsLayout.setVisibility(View.GONE);
@@ -526,6 +526,8 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
         new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, onOpenPopupMenuClickRelay,
             searchResultAllStores, searchResultAdsAllStores, crashReport);
     setHasOptionsMenu(true);
+
+    this.trendingListAdapter = new TrendingListAdapter(Collections.emptyList());
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -538,6 +540,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     attachPresenter(new SearchResultPresenter(this, searchAnalytics, searchNavigator, crashReport,
         mainThreadScheduler, searchManager, onAdClickRelay, onItemViewClickRelay,
         onOpenPopupMenuClickRelay, isMultiStoreSearch, defaultThemeName, defaultStoreName));
+    trendingList.setAdapter(trendingListAdapter);
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {

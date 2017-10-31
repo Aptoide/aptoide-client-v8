@@ -77,12 +77,11 @@ public class SearchResultPresenter implements Presenter {
         }, crashReport::log);
   }
 
-  private void handleWidgetTrendingRequest(){
+  private void handleWidgetTrendingRequest() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .flatMap(__ -> view.getSearchWidgetFocusState())
-        .filter(event -> event.equals(true))
         .flatMap(__ -> searchManager.getTrendingApps())
         .observeOn(viewScheduler)
         .doOnNext(trending -> view.showTrendingMenu(trending))
@@ -353,18 +352,17 @@ public class SearchResultPresenter implements Presenter {
             .observeOn(viewScheduler)
             .doOnNext(__2 -> view.hideLoading())
             .doOnNext(data -> {
-              if (getItemCount(data) == 0 && data !=null) {
-                if(viewModel.getCurrentQuery().equals("voicesearchrequestquery"))
+              if (getItemCount(data) == 0 && data != null) {
+                if (viewModel.getCurrentQuery()
+                    .equals("voicesearchrequestquery")) {
                   view.showVoiceSearch();
-                else {
+                } else {
                   view.showNoResultsView();
                   analytics.searchNoResults(viewModel.getCurrentQuery());
                 }
-              }
-              else if(data == null){
+              } else if (data == null) {
                 view.showWidgetClickView();
-              }
-              else {
+              } else {
                 view.showResultsView();
                 if (viewModel.isAllStoresSelected()) {
                   view.showAllStoresResult();
