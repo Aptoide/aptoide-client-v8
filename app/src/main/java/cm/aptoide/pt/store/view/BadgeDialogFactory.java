@@ -181,7 +181,7 @@ public class BadgeDialogFactory {
             reviewsMessage, tinBadgeSelected, bronzeBadgeSelected, silverBadgeSelected,
             goldBadgeSelected, platinumBadgeSelected, tinBadgeColor, bronzeBadgeColor,
             silverBadgeColor, goldBadgeColor, platinumBadgeColor, progress1, progress2, progress3,
-            progress4);
+            progress4, !isRankLocked(storeBadge, selectedBadge));
 
     setupView(view, storeMedalPopupViewModel, resources);
   }
@@ -229,13 +229,22 @@ public class BadgeDialogFactory {
     medalText.setText(viewModel.getMedalText());
     congratulationsMessage.setText(viewModel.getCongratulationsMessage());
     uploadedAppsTv.setText(viewModel.getUploadedAppsMessage());
-    setDrawableColor(resources, viewModel.getMainColor(), uploadedAppsTv.getCompoundDrawables());
+
+    if (viewModel.isShowChecks()) {
+      setDrawableColor(resources, viewModel.getMainColor(), uploadedAppsTv);
+      setDrawableColor(resources, viewModel.getMainColor(), downloadsTv);
+      setDrawableColor(resources, viewModel.getMainColor(), followersTv);
+      setDrawableColor(resources, viewModel.getMainColor(), reviewsTv);
+    } else {
+      setDrawableColor(resources, R.color.grey_fog_light, uploadedAppsTv);
+      setDrawableColor(resources, R.color.white, downloadsTv);
+      setDrawableColor(resources, R.color.grey_fog_light, followersTv);
+      setDrawableColor(resources, R.color.white, reviewsTv);
+    }
+
     downloadsTv.setText(viewModel.getDownloadsMessage());
-    setDrawableColor(resources, viewModel.getMainColor(), downloadsTv.getCompoundDrawables());
     followersTv.setText(viewModel.getFollowersMessage());
-    setDrawableColor(resources, viewModel.getMainColor(), followersTv.getCompoundDrawables());
     reviewsTv.setText(viewModel.getReviewsMessage());
-    setDrawableColor(resources, viewModel.getMainColor(), reviewsTv.getCompoundDrawables());
 
     GridStoreMetaWidget.HomeMeta.Badge storeBadge = viewModel.getStoreBadge();
     setupMedal(tinMedal, viewModel.isTinBadgeSelected(), viewModel.getTinBadgeColor(), resources,
@@ -286,6 +295,23 @@ public class BadgeDialogFactory {
     badge.setImageDrawable(drawable);
     setBackground(badge, resources.getColor(R.color.white));
     badge.setOnClickListener(v -> createViewModel(storeBadge, resources, settingUpBadge, view));
+  }
+
+  private void setDrawableColor(Resources resources, @ColorRes int color, TextView view) {
+
+    Drawable[] compoundDrawables = view.getCompoundDrawables();
+    for (int i = 0, compoundDrawablesLength = compoundDrawables.length; i < compoundDrawablesLength;
+        i++) {
+      Drawable drawable = compoundDrawables[i];
+      if (drawable != null) {
+        drawable.mutate();
+        drawable.setColorFilter(
+            new PorterDuffColorFilter(resources.getColor(color), PorterDuff.Mode.SRC_IN));
+        compoundDrawables[i] = drawable;
+      }
+    }
+    view.setCompoundDrawablesWithIntrinsicBounds(compoundDrawables[0], compoundDrawables[1],
+        compoundDrawables[2], compoundDrawables[3]);
   }
 
   private void setDrawableColor(Resources resources, @ColorRes int color,
