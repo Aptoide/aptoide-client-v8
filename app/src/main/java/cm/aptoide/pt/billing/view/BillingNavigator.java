@@ -11,7 +11,6 @@ import cm.aptoide.pt.billing.payment.PaymentService;
 import cm.aptoide.pt.billing.purchase.Purchase;
 import cm.aptoide.pt.billing.view.login.PaymentLoginFragment;
 import cm.aptoide.pt.billing.view.paypal.PayPalAuthorizationFragment;
-import cm.aptoide.pt.billing.view.web.WebAuthorizationFragment;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.CustomTabsNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
@@ -72,12 +71,6 @@ public class BillingNavigator {
       case PaymentServiceMapper.ADYEN:
         fragmentNavigator.navigateTo(AdyenAuthorizationFragment.create(bundle), true);
         break;
-      case PaymentServiceMapper.MOL_POINTS:
-      case PaymentServiceMapper.BOA_COMPRA:
-      case PaymentServiceMapper.BOA_COMPRA_GOLD:
-        fragmentNavigator.navigateTo(WebAuthorizationFragment.create(bundle), true);
-        break;
-      case PaymentServiceMapper.SANDBOX:
       default:
         throw new IllegalArgumentException(service.getType()
             + " does not require authorization. Can not navigate to authorization view.");
