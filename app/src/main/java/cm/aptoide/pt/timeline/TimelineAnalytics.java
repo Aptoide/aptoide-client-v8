@@ -27,6 +27,7 @@ import cm.aptoide.pt.social.data.SocialHeaderCardTouchEvent;
 import cm.aptoide.pt.social.data.StoreAppCardTouchEvent;
 import cm.aptoide.pt.social.data.StoreCardTouchEvent;
 import cm.aptoide.pt.social.data.StoreLatestApps;
+import cm.aptoide.pt.social.data.analytics.EventErrorHandler;
 import cm.aptoide.pt.social.data.share.ShareEvent;
 import com.facebook.appevents.AppEventsLogger;
 import java.util.HashMap;
@@ -404,13 +405,13 @@ public class TimelineAnalytics {
     return createTimelineCardData(cardType, source, specific);
   }
 
-  public void sendLikeEvent(CardTouchEvent event, boolean success) {
-    HashMap<String, Object> data = parseEventData(event, success, -1);
+  public void sendLikeEvent(CardTouchEvent event) {
+    HashMap<String, Object> data = parseEventData(event, true, EventErrorHandler.GenericErrorEvent.OK);
     analytics.sendEvent(createEvent(LIKE, data));
   }
 
-  public void sendErrorLikeEvent(CardTouchEvent event, boolean success, int error){
-    HashMap<String, Object> data = parseEventData(event, success, error);
+  public void sendErrorLikeEvent(CardTouchEvent event, EventErrorHandler.GenericErrorEvent error) {
+    HashMap<String, Object> data = parseEventData(event, false, error);
     analytics.sendEvent(createEvent(LIKE, data));
   }
 
@@ -449,8 +450,9 @@ public class TimelineAnalytics {
         createEvent(OPEN_STORE, createStoreAppData(cardType, source, packageName, store)));
   }
 
-  public void sendOpenStoreProfileEvent(CardTouchEvent touchEvent){
-    HashMap<String, Object> data = parseEventData(touchEvent, true, -1);
+  public void sendOpenStoreProfileEvent(CardTouchEvent touchEvent) {
+    HashMap<String, Object> data = parseEventData(touchEvent, true,
+        EventErrorHandler.GenericErrorEvent.OK);
     analytics.sendEvent(createEvent(OPEN_STORE_PROFILE, data));
   }
 
@@ -572,7 +574,8 @@ public class TimelineAnalytics {
             ((StoreAppCardTouchEvent) cardTouchEvent).getPackageName(),
             Analytics.AppsTimeline.BLANK, ((StoreLatestApps) post).getStoreName(),
             Analytics.AppsTimeline.OPEN_APP_VIEW);
-        sendOpenAppEvent(postType.name(), TimelineAnalytics.SOURCE_APTOIDE, ((StoreAppCardTouchEvent)cardTouchEvent).getPackageName());
+        sendOpenAppEvent(postType.name(), TimelineAnalytics.SOURCE_APTOIDE,
+            ((StoreAppCardTouchEvent) cardTouchEvent).getPackageName());
       } else if (cardTouchEvent instanceof StoreCardTouchEvent) {
         if (post instanceof StoreLatestApps) {
           Analytics.AppsTimeline.clickOnCard(postType.name(), Analytics.AppsTimeline.BLANK,
@@ -639,35 +642,34 @@ public class TimelineAnalytics {
     return eventMap;
   }
 
-  public void sendCommentEvent(CardTouchEvent event, boolean success) {
-    HashMap<String, Object> data = parseEventData(event,success, -1);
+  public void sendCommentEvent(CardTouchEvent event) {
+    HashMap<String, Object> data = parseEventData(event, true, EventErrorHandler.GenericErrorEvent.OK);
     analytics.sendEvent(createEvent(COMMENT, data));
   }
 
-  public void sendErrorCommentEvent(CardTouchEvent event, boolean success, int error){
-    HashMap<String, Object> data = parseEventData(event,success, error);
+  public void sendErrorCommentEvent(CardTouchEvent event, EventErrorHandler.GenericErrorEvent error) {
+    HashMap<String, Object> data = parseEventData(event, false, error);
     analytics.sendEvent(createEvent(COMMENT, data));
-
   }
 
-  public void sendShareEvent(CardTouchEvent event, boolean success) {
-    HashMap<String, Object> data = parseEventData(event, success, -1);
+  public void sendShareEvent(CardTouchEvent event) {
+    HashMap<String, Object> data = parseEventData(event, true, EventErrorHandler.GenericErrorEvent.OK);
     analytics.sendEvent(createEvent(SHARE, data));
   }
 
-  public void sendErrorShareEvent(CardTouchEvent event, boolean success, int error){
-    HashMap<String, Object> data = parseEventData(event, success, error);
+  public void sendErrorShareEvent(CardTouchEvent event, EventErrorHandler.GenericErrorEvent error) {
+    HashMap<String, Object> data = parseEventData(event, false, error);
     analytics.sendEvent(createEvent(SHARE, data));
-
   }
 
-  public void sendShareCompleted(ShareEvent event, boolean success) {
-    HashMap<String, Object> data = parseShareCompletedEventData(event, success, -1);
+  public void sendShareCompleted(ShareEvent event) {
+    HashMap<String, Object> data = parseShareCompletedEventData(event, true,
+        EventErrorHandler.ShareErrorEvent.OK);
     analytics.sendEvent(createEvent(SHARE_SEND, data));
   }
 
-  public void sendErrorShareCompleted(ShareEvent event, boolean success, int error) {
-    HashMap<String, Object> data = parseShareCompletedEventData(event, success, error);
+  public void sendErrorShareCompleted(ShareEvent event, EventErrorHandler.ShareErrorEvent error) {
+    HashMap<String, Object> data = parseShareCompletedEventData(event, false, error);
     analytics.sendEvent(createEvent(SHARE_SEND, data));
   }
 
@@ -679,8 +681,14 @@ public class TimelineAnalytics {
 
   public void sendFabClicked() {
     HashMap<String, Object> data = new HashMap<>();
-    final String previousContext = navigationTracker.getPreviousViewName();
-    final String store = navigationTracker.getPreviousScreen().getStore();
+    String previousContext = null;
+    String store = null;
+    if(navigationTracker.getPreviousScreen()!=null){
+      previousContext = navigationTracker.getPreviousScreen()
+          .getFragment();
+      store = navigationTracker.getPreviousScreen()
+          .getStore();
+    }
     data.put("previous_context", previousContext);
     data.put("store", store);
 
@@ -694,202 +702,165 @@ public class TimelineAnalytics {
             sharedPreferences));
   }
 
-  public HashMap<String, Object> parseEventData(CardTouchEvent event, boolean status, int errorCode){
+  public HashMap<String, Object> parseEventData(CardTouchEvent event, boolean status,
+      EventErrorHandler.GenericErrorEvent errorCode) {
     final Post post = event.getCard();
     final CardType postType = post.getType();
+    EventErrorHandler errorHandler = new EventErrorHandler();
     HashMap<String, Object> data = new HashMap<>();
     HashMap<String, Object> result = new HashMap<>();
     HashMap<String, Object> error = new HashMap<>();
-    final String previousContext = navigationTracker.getPreviousScreen().getFragment();
-    final String store = navigationTracker.getPreviousScreen().getStore();
+    String previousContext = null;
+    String store = null;
+    data.put("card_type", post.getType());
+    data.put("position", event.getPosition());
+    data.put("previous_context", previousContext);
+    data.put("store", store);
+
+    if(navigationTracker.getPreviousScreen()!=null){
+      previousContext = navigationTracker.getPreviousScreen()
+        .getFragment();
+      store = navigationTracker.getPreviousScreen()
+        .getStore();
+    }
 
     result.put("status", status ? "success" : "fail");
-    if(result.get("status").equals("fail")) {
-      switch (errorCode) {
-        case 0:
-          error.put("message", "User not logged in");
-          error.put("type", "LOGIN");
-          break;
-        case 1:
-          error.put("message", "User has no store");
-          error.put("type", "NO_STORE");
-          break;
-        case 2:
-          error.put("message", "User/Store set to private");
-          error.put("type", "PRIVATE_USER");
-          break;
-      }
+
+    if (result.get("status")
+        .equals("fail")) {
+      error = errorHandler.handleGenericErrorParsing(errorCode);
+      result.put("error", error);
     }
 
-    if(postType.isMedia()){
+    if (postType.isMedia()) {
       HashMap<String, Object> specific = new HashMap<>();
       Media card = (Media) post;
-      data.put("position", event.getPosition());
-      data.put("card_type", card.getType());
       data.put("source", card.getPublisherName());
-      data.put("previous_context", previousContext);
-      data.put("store", store);
-      if(result.get("status").equals("fail"))
-        result.put("error", error);
-      specific.put("app", card.getRelatedApp().getPackageName());
-      specific.put("url", card.getMediaLink().getUrl());
+      specific.put("app", card.getRelatedApp()
+          .getPackageName());
+      specific.put("url", card.getMediaLink()
+          .getUrl());
       data.put("specific", specific);
-      data.put("result", result);
-    }
-    else if(postType.equals(CardType.RECOMMENDATION)||postType.equals(CardType.SOCIAL_POST_RECOMMENDATION)||postType.equals(CardType.SOCIAL_RECOMMENDATION)||postType.equals(CardType.SIMILAR)||
-        postType.equals(CardType.SOCIAL_INSTALL)||postType.equals(CardType.AGGREGATED_SOCIAL_INSTALL)){
+    } else if (postType.equals(CardType.RECOMMENDATION)
+        || postType.equals(CardType.SOCIAL_POST_RECOMMENDATION)
+        || postType.equals(CardType.SOCIAL_RECOMMENDATION)
+        || postType.equals(CardType.SIMILAR)
+        || postType.equals(CardType.SOCIAL_INSTALL)
+        || postType.equals(CardType.AGGREGATED_SOCIAL_INSTALL)) {
       HashMap<String, Object> specific = new HashMap<>();
-      if(post instanceof RatedRecommendation){
+      if (post instanceof RatedRecommendation) {
         RatedRecommendation card = (RatedRecommendation) post;
-        data.put("position", event.getPosition());
-        data.put("card_type", card.getType());
-        if(card.getPoster().getStore() != null)
-          data.put("source", card.getPoster().getStore().getName());
-        else
-          data.put("source", card.getPoster().getPrimaryName());
-        data.put("previous_context", previousContext);
-        data.put("store", store);
-        if(result.get("status").equals("fail"))
-          result.put("error", error);
+        if (card.getPoster()
+            .getStore() != null) {
+          data.put("source", card.getPoster()
+              .getStore()
+              .getName());
+        } else {
+          data.put("source", card.getPoster()
+              .getPrimaryName());
+        }
         specific.put("app", card.getPackageName());
         data.put("specific", specific);
-        data.put("result", result);
+      } else {
+        Recommendation card = (Recommendation) post;
+        data.put("source", card.getPublisherName());
+        specific.put("app", card.getPackageName());
+        data.put("specific", specific);
       }
-      else{
-      Recommendation card = (Recommendation) post;
-      data.put("position", event.getPosition());
-      data.put("card_type", card.getType());
-      data.put("source", card.getPublisherName());
-      data.put("previous_context", previousContext);
-      data.put("store", store);
-      if(result.get("status").equals("fail"))
-        result.put("error", error);
-      specific.put("app", card.getPackageName());
-      data.put("specific", specific);
-      data.put("result", result);
-      }
-    }
-    else if (postType.equals(CardType.UPDATE)){
+    } else if (postType.equals(CardType.UPDATE)) {
       HashMap<String, Object> specific = new HashMap<>();
       AppUpdate card = (AppUpdate) post;
-      data.put("position", event.getPosition());
-      data.put("card_type", card.getType());
-      data.put("previous_context", previousContext);
       data.put("source", SOURCE_APTOIDE);
-      data.put("store", store);
-      if(result.get("status").equals("fail"))
-        result.put("error", error);
       specific.put("app", card.getPackageName());
       data.put("specific", specific);
-      data.put("result", result);
-    }
-    else if(postType.equals(CardType.STORE)||postType.equals(CardType.SOCIAL_STORE)||postType.equals(CardType.AGGREGATED_SOCIAL_STORE)){
+    } else if (postType.equals(CardType.STORE)
+        || postType.equals(CardType.SOCIAL_STORE)
+        || postType.equals(CardType.AGGREGATED_SOCIAL_STORE)) {
       HashMap<String, Object> specific = new HashMap<>();
       StoreLatestApps card = (StoreLatestApps) post;
-      data.put("position", event.getPosition());
-      data.put("card_type", card.getType());
       data.put("source", SOURCE_APTOIDE);
-      data.put("previous_context", previousContext);
-      data.put("store", store);
-      if(result.get("status").equals("fail"))
-        result.put("error", error);
-      data.put("result", result);
     }
+    data.put("result", result);
     return data;
   }
 
-  public HashMap<String, Object> parseShareCompletedEventData(ShareEvent event, boolean status, int errorCode){
+  public HashMap<String, Object> parseShareCompletedEventData(ShareEvent event, boolean status,
+      EventErrorHandler.ShareErrorEvent errorCode) {
     final Post post = event.getPost();
     final CardType postType = post.getType();
     HashMap<String, Object> data = new HashMap<>();
-    HashMap<String, Object> result = new HashMap<>();
     HashMap<String, Object> error = new HashMap<>();
-    final String previousContext = navigationTracker.getPreviousScreen().getFragment();
-    final String store = navigationTracker.getPreviousScreen().getStore();
+    HashMap<String, Object> result = new HashMap<>();
+    HashMap<String, Object> specific = new HashMap<>();
+    EventErrorHandler errorHandler = new EventErrorHandler();
+    String previousContext = null;
+    String store = null;
+    data.put("card_type", post.getType());
+    data.put("previous_context", previousContext);
+    data.put("store", store);
+
+    if(navigationTracker.getPreviousScreen()!=null){
+      previousContext = navigationTracker.getPreviousScreen()
+          .getFragment();
+      store = navigationTracker.getPreviousScreen()
+          .getStore();
+    }
 
     result.put("status", status ? "success" : "fail");
-    if(result.get("status").equals("fail")) {
-      switch (errorCode) {
-        case 0:
-          error.put("message", "Share Action Cancelled");
-          error.put("type", "CANCELLED");
-          break;
-        case 1:
-          error.put("message", "Unknown Case 1");
-          error.put("type", "UNK1");
-          break;
-      }
-    }
 
-    if(postType.isMedia()){
-      HashMap<String, Object> specific = new HashMap<>();
+    if (result.get("status")
+        .equals("fail")) {
+      error = errorHandler.handleShareErrorParsing(errorCode);
+      result.put("error", error);
+    }
+    
+    if (postType.isMedia()) {
       Media card = (Media) post;
-      data.put("card_type", card.getType());
       data.put("source", card.getPublisherName());
-      data.put("previous_context", previousContext);
-      data.put("store", store);
-      if(result.get("status").equals("fail"))
-        result.put("error", error);
-      specific.put("app", card.getRelatedApp().getPackageName());
-      specific.put("url", card.getMediaLink().getUrl());
+      specific.put("app", card.getRelatedApp()
+          .getPackageName());
+      specific.put("url", card.getMediaLink()
+          .getUrl());
       data.put("specific", specific);
-      data.put("result", result);
-    }
-    else if(postType.equals(CardType.RECOMMENDATION)||postType.equals(CardType.SOCIAL_POST_RECOMMENDATION)||postType.equals(CardType.SOCIAL_RECOMMENDATION)||postType.equals(CardType.SIMILAR)||
-        postType.equals(CardType.SOCIAL_INSTALL)||postType.equals(CardType.AGGREGATED_SOCIAL_INSTALL)){
-      HashMap<String, Object> specific = new HashMap<>();
-      if(post instanceof RatedRecommendation){
+    } else if (postType.equals(CardType.RECOMMENDATION)
+        || postType.equals(CardType.SOCIAL_POST_RECOMMENDATION)
+        || postType.equals(CardType.SOCIAL_RECOMMENDATION)
+        || postType.equals(CardType.SIMILAR)
+        || postType.equals(CardType.SOCIAL_INSTALL)
+        || postType.equals(CardType.AGGREGATED_SOCIAL_INSTALL)) {
+      if (post instanceof RatedRecommendation) {
         RatedRecommendation card = (RatedRecommendation) post;
-        data.put("card_type", card.getType());
-        if(card.getPoster().getStore() != null)
-          data.put("source", card.getPoster().getStore().getName());
-        else
-          data.put("source", card.getPoster().getPrimaryName());
-        data.put("previous_context", previousContext);
-        data.put("store", store);
-        if(result.get("status").equals("fail"))
-          result.put("error", error);
+        if (card.getPoster()
+            .getStore() != null) {
+          data.put("source", card.getPoster()
+              .getStore()
+              .getName());
+        } else {
+          data.put("source", card.getPoster()
+              .getPrimaryName());
+        }
         specific.put("app", card.getPackageName());
         data.put("specific", specific);
-        data.put("result", result);
-      }
-      else{
+      } else {
         Recommendation card = (Recommendation) post;
-        data.put("card_type", card.getType());
         data.put("source", card.getPublisherName());
-        data.put("previous_context", previousContext);
         data.put("store", store);
-        if(result.get("status").equals("fail"))
-          result.put("error", error);
         specific.put("app", card.getPackageName());
         data.put("specific", specific);
-        data.put("result", result);
       }
-    }
-    else if (postType.equals(CardType.UPDATE)){
-      HashMap<String, Object> specific = new HashMap<>();
+    } else if (postType.equals(CardType.UPDATE)) {
       AppUpdate card = (AppUpdate) post;
-      data.put("card_type", card.getType());
-      data.put("previous_context", previousContext);
       data.put("source", SOURCE_APTOIDE);
-      data.put("store", store);
-      if(result.get("status").equals("fail"))
-        result.put("error", error);
       specific.put("app", card.getPackageName());
       data.put("specific", specific);
       data.put("result", result);
-    }
-    else if(postType.equals(CardType.STORE)||postType.equals(CardType.SOCIAL_STORE)||postType.equals(CardType.AGGREGATED_SOCIAL_STORE)){
-      HashMap<String, Object> specific = new HashMap<>();
+    } else if (postType.equals(CardType.STORE)
+        || postType.equals(CardType.SOCIAL_STORE)
+        || postType.equals(CardType.AGGREGATED_SOCIAL_STORE)) {
       StoreLatestApps card = (StoreLatestApps) post;
-      data.put("card_type", card.getType());
       data.put("source", SOURCE_APTOIDE);
-      data.put("previous_context", previousContext);
-      data.put("store", store);
-      if(result.get("status").equals("fail"))
-        result.put("error", error);
-      data.put("result", result);
     }
+    data.put("result", result);
     return data;
   }
 }
