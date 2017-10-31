@@ -53,7 +53,7 @@ public abstract class GetStoreEndlessFragment<T extends BaseV7EndlessResponse>
     }
 
     endlessRecyclerOnScrollListener =
-        new EndlessRecyclerOnScrollListener(this.getAdapter(), v7request, action,
+        new EndlessRecyclerOnScrollListener(getAdapter(), v7request, action,
             getErrorRequestListener());
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);

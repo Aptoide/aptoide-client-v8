@@ -1,6 +1,7 @@
 package cm.aptoide.pt.store.view;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
@@ -26,6 +27,10 @@ public class GetStoreWidgetsFragment extends GetStoreEndlessFragment<GetStoreWid
     }
     fragment.setArguments(args);
     return fragment;
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {

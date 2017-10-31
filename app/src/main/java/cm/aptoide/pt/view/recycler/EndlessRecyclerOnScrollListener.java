@@ -21,12 +21,12 @@ import rx.functions.Action1;
 
 public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {
 
-  protected final BaseAdapter adapter;
-  private final Action1 successRequestListener;
-  private final MultiLangPatch multiLangPatch;
-  private final List<OnEndlessFinish> onEndlessFinishList;
+  protected BaseAdapter adapter;
   protected int offset;
   protected boolean loading;
+  private Action1 successRequestListener;
+  private MultiLangPatch multiLangPatch;
+  private List<OnEndlessFinish> onEndlessFinishList;
   private V7<? extends BaseV7EndlessResponse, ? extends Endless> v7request;
   private ErrorRequestListener errorRequestListener;
   private int lastTotal;
@@ -47,14 +47,24 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
   public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter,
       V7<T, ? extends Endless> v7request, Action1<T> successRequestListener,
       ErrorRequestListener errorRequestListener) {
-    this(baseAdapter, v7request, successRequestListener, errorRequestListener, 6, false, null,
-        null);
+    this.adapter = baseAdapter;
+    this.v7request = v7request;
+    this.successRequestListener = successRequestListener;
+    this.errorRequestListener = errorRequestListener;
+    this.visibleThreshold = 6;
+    this.bypassCache = false;
+    this.onFirstLoadListener = null;
+    this.onEndOfListReachedListener = null;
+    this.endCallbackCalled = false;
+    this.firstCallbackCalled = false;
   }
 
   public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter,
       V7<T, ? extends Endless> v7request, Action1<T> successRequestListener,
       ErrorRequestListener errorRequestListener, int visibleThreshold, boolean bypassCache,
       BooleanAction<T> onFirstLoadListener, Action0 onEndOfListReachedListener) {
+    this.multiLangPatch = new MultiLangPatch();
+    this.onEndlessFinishList = new LinkedList<>();
     this.adapter = baseAdapter;
     this.v7request = v7request;
     this.successRequestListener = successRequestListener;
@@ -65,19 +75,37 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
     this.onEndOfListReachedListener = onEndOfListReachedListener;
     this.endCallbackCalled = false;
     this.firstCallbackCalled = false;
-    this.multiLangPatch = new MultiLangPatch();
-    this.onEndlessFinishList = new LinkedList<>();
   }
 
   public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter,
       V7<T, ? extends Endless> v7request, Action1<T> successRequestListener,
       ErrorRequestListener errorRequestListener, boolean bypassCache) {
-    this(baseAdapter, v7request, successRequestListener, errorRequestListener, 6, bypassCache, null,
-        null);
+    this.adapter = baseAdapter;
+    this.v7request = v7request;
+    this.successRequestListener = successRequestListener;
+    this.errorRequestListener = errorRequestListener;
+    this.visibleThreshold = 6;
+    this.bypassCache = bypassCache;
+    this.onFirstLoadListener = null;
+    this.onEndOfListReachedListener = null;
+    this.endCallbackCalled = false;
+    this.firstCallbackCalled = false;
   }
 
   public EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter) {
-    this(baseAdapter, null, null, null, 0, false, null, null);
+    this.adapter = baseAdapter;
+    this.v7request = null;
+    this.successRequestListener = null;
+    this.errorRequestListener = null;
+    this.visibleThreshold = 0;
+    this.bypassCache = false;
+    this.onFirstLoadListener = null;
+    this.onEndOfListReachedListener = null;
+    this.endCallbackCalled = false;
+    this.firstCallbackCalled = false;
+  }
+
+  public EndlessRecyclerOnScrollListener() {
   }
 
   public void addOnEndlessFinishListener(OnEndlessFinish onEndlessFinish) {
@@ -213,6 +241,22 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
     multiLangPatch.updateOffset();
     offset = -1;
     total = 0;
+  }
+
+  private <T extends BaseV7EndlessResponse> void rebind(BaseAdapter adapter,
+      V7<T, ? extends Endless> v7request, Action1<T> successRequestListener,
+      ErrorRequestListener errorRequestListener, int visibleThreshold, boolean bypassCache,
+      BooleanAction<T> onFirstLoadListener, Action0 onEndOfListReachedListener) {
+    this.adapter = adapter;
+    this.v7request = v7request;
+    this.successRequestListener = successRequestListener;
+    this.errorRequestListener = errorRequestListener;
+    this.visibleThreshold = visibleThreshold;
+    this.bypassCache = bypassCache;
+    this.onFirstLoadListener = onFirstLoadListener;
+    this.onEndOfListReachedListener = onEndOfListReachedListener;
+    this.endCallbackCalled = false;
+    this.firstCallbackCalled = false;
   }
 
   public interface BooleanAction<T extends BaseV7Response> {
