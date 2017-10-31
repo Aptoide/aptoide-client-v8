@@ -65,6 +65,7 @@ public class SearchResultPresenter implements Presenter {
     handleAllStoresListReachedBottom();
     handleFollowedStoresListReachedBottom();
     handleTitleBarClick();
+    restoreSelectedTab();
   }
 
   @Override public void saveState(Bundle state) {
@@ -73,6 +74,23 @@ public class SearchResultPresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
     // does nothing
+  }
+
+  private void restoreSelectedTab() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .first()
+        .toSingle()
+        .map(__ -> view.getViewModel())
+        .subscribe(viewModel -> {
+          if (viewModel.getAllStoresOffset() > 0 && viewModel.getFollowedStoresOffset() > 0) {
+            if (viewModel.isAllStoresSelected()) {
+              view.showAllStoresResult();
+            } else {
+              view.showFollowedStoresResult();
+            }
+          }
+        }, crashReport::log);
   }
 
   private void handleTitleBarClick() {
