@@ -6,6 +6,7 @@ import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.billing.PaymentMethod;
 import cm.aptoide.pt.billing.PaymentMethodMapper;
 import cm.aptoide.pt.billing.Purchase;
+import cm.aptoide.pt.billing.view.appcoin.AppcoinFragment;
 import cm.aptoide.pt.billing.view.boacompra.BoaCompraFragment;
 import cm.aptoide.pt.billing.view.braintree.BraintreeCreditCardFragment;
 import cm.aptoide.pt.billing.view.login.PaymentLoginFragment;
@@ -66,6 +67,8 @@ public class BillingNavigator {
         fragmentNavigator.navigateTo(BraintreeCreditCardFragment.create(bundle), true);
         break;
       case PaymentMethodMapper.SANDBOX:
+      case PaymentMethodMapper.APPCOINS:
+        fragmentNavigator.navigateTo(AppcoinFragment.create(bundle),true);
       default:
         throw new IllegalArgumentException("Invalid payment method "
             + paymentMethod.getId()

@@ -12,6 +12,7 @@ import cm.aptoide.pt.billing.exception.PaymentMethodNotAuthorizedException;
 import cm.aptoide.pt.billing.product.SimplePurchase;
 import cm.aptoide.pt.billing.transaction.Transaction;
 import cm.aptoide.pt.billing.transaction.TransactionRepository;
+import cm.aptoide.pt.logger.Logger;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -97,6 +98,7 @@ public class Billing {
 
   public Completable processLocalPayment(String sellerId, String productId, String payload,
       String localMetadata) {
+    Logger.d("TAG123","here!");
     return getSelectedPaymentMethod(sellerId, productId).flatMap(
         paymentMethod -> getProduct(sellerId, productId).flatMap(
             product -> transactionRepository.createTransaction(sellerId, paymentMethod.getId(),

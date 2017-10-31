@@ -24,6 +24,8 @@ public class TransactionFactory {
       case PaymentMethodMapper.BOA_COMPRA:
       case PaymentMethodMapper.BOA_COMPRA_GOLD:
       case PaymentMethodMapper.SANDBOX:
+      case PaymentMethodMapper.APPCOINS:
+        return new LocalTransaction(productId, payerId, status, paymentMethodId, metadata, payload, sellerId);
       default:
         return new Transaction(productId, payerId, status, paymentMethodId, payload, sellerId);
     }

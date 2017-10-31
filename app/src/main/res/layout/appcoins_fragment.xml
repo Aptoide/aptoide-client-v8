@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
+
+    <Button
+        android:id="@+id/ok_appcoin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:text="Begin Transaction"
+        android:visibility="visible"
+        style="@style/WidgetButtonCustomAptoide"
+        />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        >
+      <EditText
+          android:id="@+id/receiverAddress"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:hint="Insert Receiver address"
+          android:visibility="visible"
+          android:layout_centerHorizontal="true"
+          android:layout_centerVertical="true"
+          android:layout_alignParentTop="true"
+          />
+    <!--  <EditText
+          android:id="@+id/amount"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentBottom="true"
+          android:layout_centerHorizontal="true"
+          android:hint="Amount"
+          android:visibility="visible"
+          /> -->
+    </RelativeLayout>
+  </RelativeLayout>
+
+
+</LinearLayout>

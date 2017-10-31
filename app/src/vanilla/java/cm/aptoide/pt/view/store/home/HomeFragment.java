@@ -55,6 +55,7 @@ import cm.aptoide.pt.view.store.StoreFragment;
 import cm.aptoide.pt.view.store.StorePagerAdapter;
 import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
+import com.mopub.common.util.DateAndTime;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.text.NumberFormat;
 import rx.android.schedulers.AndroidSchedulers;
@@ -83,6 +84,8 @@ public class HomeFragment extends StoreFragment {
   private TabNavigator tabNavigator;
   private TextView userEmail;
   private TextView userUsername;
+  private TextView balanceAppcoins;
+  private TextView lastUpdated;
   private ImageView userAvatarImage;
   private InstalledRepository installedRepository;
   private DrawerAnalytics drawerAnalytics;
@@ -122,7 +125,6 @@ public class HomeFragment extends StoreFragment {
 
   @Override public void onResume() {
     super.onResume();
-
     getToolbar().setTitle("");
 
     if (navigationView == null || navigationView.getVisibility() != View.VISIBLE) {
@@ -131,6 +133,8 @@ public class HomeFragment extends StoreFragment {
     }
 
     View baseHeaderView = navigationView.getHeaderView(0);
+    balanceAppcoins = (TextView) baseHeaderView.findViewById(R.id.balanceAppcoins);
+    lastUpdated = (TextView) baseHeaderView.findViewById(R.id.last_update);
     userEmail = (TextView) baseHeaderView.findViewById(R.id.profile_email_text);
     userUsername = (TextView) baseHeaderView.findViewById(R.id.profile_name_text);
     userAvatarImage = (ImageView) baseHeaderView.findViewById(R.id.profile_image);
@@ -153,8 +157,12 @@ public class HomeFragment extends StoreFragment {
   }
 
   private void setInvisibleUserImageAndName() {
+    balanceAppcoins.setText("");
+    lastUpdated.setText("");
     userEmail.setText("");
     userUsername.setText("");
+    balanceAppcoins.setVisibility(View.GONE);
+    lastUpdated.setVisibility(View.GONE);
     userEmail.setVisibility(View.GONE);
     userUsername.setVisibility(View.GONE);
     ImageLoader.with(getContext())
@@ -164,6 +172,10 @@ public class HomeFragment extends StoreFragment {
   private void setVisibleUserImageAndName(Account account) {
     userEmail.setVisibility(View.VISIBLE);
     userUsername.setVisibility(View.VISIBLE);
+    balanceAppcoins.setText("40 Appcoins"); // getBalance
+    balanceAppcoins.setVisibility(View.VISIBLE);
+    String data = DateAndTime.now().toString().substring(4,20);
+    lastUpdated.setText("LastUpdated in " + data);
     userEmail.setText(account.getEmail());
     userUsername.setText(account.getNickname());
     ImageLoader.with(getContext())
@@ -305,6 +317,13 @@ public class HomeFragment extends StoreFragment {
     toolbar.setTitle("");
     toolbar.setNavigationIcon(R.drawable.ic_drawer);
     toolbar.setNavigationOnClickListener(v -> {
+      Logger.d("TAG123","here1"); //getBalance
+      if(!lastUpdated.getText().equals("")) {
+        String data = DateAndTime.now()
+            .toString()
+            .substring(4, 20);
+        lastUpdated.setText("Last Updated in " + data);
+      }
       drawerLayout.openDrawer(GravityCompat.START);
       drawerAnalytics.drawerOpen();
       aptoideNavigationTracker.registerScreen(ScreenTagHistory.Builder.build("Drawer"));

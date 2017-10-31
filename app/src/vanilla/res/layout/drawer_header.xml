@@ -41,6 +41,29 @@
         />
 
     <TextView
+        android:id="@+id/balanceAppcoins"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your Appcoins"
+        android:textColor="@color/navdrawer_body_text_2_inverse"
+        android:textSize="@dimen/text_size_medium"
+        android:paddingTop="35dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        />
+    <TextView
+        android:id="@+id/last_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/balanceAppcoins"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:text="Last updated 55 minutes ago"
+        android:textColor="@color/navdrawer_body_text_2_inverse"
+        android:textSize="@dimen/text_size_medium"
+        />
+    <TextView
         android:id="@+id/profile_email_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

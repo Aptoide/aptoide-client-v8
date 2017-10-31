@@ -194,7 +194,7 @@ public class PaymentPresenter implements Presenter {
                       view.hideBuyLoading();
                     })
                     .onErrorResumeNext(
-                        throwable -> navigateToAuthorizationView(payment, throwable))))
+                        throwable -> billing.processLocalPayment(sellerId, productId, null, null))))
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError(throwable -> {
               view.hideBuyLoading();

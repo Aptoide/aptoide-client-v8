@@ -55,6 +55,7 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
 import cm.aptoide.pt.billing.AccountPayer;
+import cm.aptoide.pt.billing.AppCoinsBillingService;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.BillingIdResolver;
@@ -64,7 +65,6 @@ import cm.aptoide.pt.billing.PaymentMethodMapper;
 import cm.aptoide.pt.billing.PaymentMethodSelector;
 import cm.aptoide.pt.billing.PurchaseMapper;
 import cm.aptoide.pt.billing.SharedPreferencesPaymentMethodSelector;
-import cm.aptoide.pt.billing.V3BillingService;
 import cm.aptoide.pt.billing.authorization.AuthorizationFactory;
 import cm.aptoide.pt.billing.authorization.AuthorizationPersistence;
 import cm.aptoide.pt.billing.authorization.AuthorizationRepository;
@@ -75,13 +75,13 @@ import cm.aptoide.pt.billing.external.ExternalBillingSerializer;
 import cm.aptoide.pt.billing.product.ProductFactory;
 import cm.aptoide.pt.billing.sync.BillingSyncFactory;
 import cm.aptoide.pt.billing.sync.BillingSyncManager;
-import cm.aptoide.pt.billing.transaction.RealmTransactionPersistence;
+import cm.aptoide.pt.billing.transaction.AppCoinTransactionService;
+import cm.aptoide.pt.billing.transaction.AppCoinsTransactionPersistence;
 import cm.aptoide.pt.billing.transaction.TransactionFactory;
 import cm.aptoide.pt.billing.transaction.TransactionMapper;
 import cm.aptoide.pt.billing.transaction.TransactionPersistence;
 import cm.aptoide.pt.billing.transaction.TransactionRepository;
 import cm.aptoide.pt.billing.transaction.TransactionService;
-import cm.aptoide.pt.billing.transaction.V3TransactionService;
 import cm.aptoide.pt.billing.view.PaymentThrowableCodeMapper;
 import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.crashreports.ConsoleLogger;
@@ -310,6 +310,7 @@ public abstract class AptoideApplication extends Application {
   private PageViewsAnalytics pageViewsAnalytics;
   private AccountSettingsBodyInterceptorV7 accountSettingsBodyInterceptorPoolV7;
   private AccountSettingsBodyInterceptorV7 accountSettingsBodyInterceptorWebV7;
+  private AppCoinTransactionService appCoinTransactionService;
 
   public LeakTool getLeakTool() {
     if (leakTool == null) {
@@ -821,15 +822,15 @@ public abstract class AptoideApplication extends Application {
     if (billing == null) {
 
       final TransactionRepository transactionRepository =
-          new TransactionRepository(geTransactionPersistence(), getBillingSyncManager(), getPayer(),
-              getTransactionService());
+          new TransactionRepository(getAppTransactionPersistence(), getBillingSyncManager(), getPayer(),
+              getAppCoinTransactionService());
 
       final AuthorizationRepository authorizationRepository =
           new AuthorizationRepository(getBillingSyncManager(), getPayer(),
               getAuthorizationService(), getAuthorizationPersistence());
 
       final BillingService billingService =
-          new V3BillingService(getBodyInterceptorV3(), getDefaultClient(),
+          new AppCoinsBillingService(getBodyInterceptorV3(), getDefaultClient(),
               WebService.getDefaultConverter(), getTokenInvalidator(),
               getDefaultSharedPreferences(),
               new PurchaseMapper(getInAppBillingSerializer(), getBillingIdResolver()),
@@ -857,8 +858,8 @@ public abstract class AptoideApplication extends Application {
   public BillingSyncManager getBillingSyncManager() {
     if (billingSyncManager == null) {
       billingSyncManager = new BillingSyncManager(
-          new BillingSyncFactory(getPayer(), getTransactionService(), getAuthorizationService(),
-              geTransactionPersistence(), getAuthorizationPersistence()), getSyncScheduler(),
+          new BillingSyncFactory(getPayer(), getAppCoinTransactionService(), getAuthorizationService(),
+              getAppTransactionPersistence(), getAuthorizationPersistence()), getSyncScheduler(),
           new HashSet<>());
     }
     return billingSyncManager;
@@ -873,11 +874,11 @@ public abstract class AptoideApplication extends Application {
     return authorizationPersistence;
   }
 
-  public TransactionPersistence geTransactionPersistence() {
+  public TransactionPersistence getAppTransactionPersistence() {
     if (transactionPersistence == null) {
       transactionPersistence =
-          new RealmTransactionPersistence(new HashMap<>(), PublishRelay.create(), getDatabase(),
-              getTransactionMapper(), getTransactionFactory());
+          new AppCoinsTransactionPersistence(new HashMap<>(), PublishRelay.create(),
+              getAppCoinTransactionService(), getTransactionFactory());
     }
     return transactionPersistence;
   }
@@ -906,13 +907,14 @@ public abstract class AptoideApplication extends Application {
     return payer;
   }
 
-  public TransactionService getTransactionService() {
-    if (transactionService == null) {
-      transactionService = new V3TransactionService(getTransactionMapper(), getBodyInterceptorV3(),
+
+  public AppCoinTransactionService getAppCoinTransactionService(){
+    if (appCoinTransactionService == null) {
+      appCoinTransactionService = new AppCoinTransactionService(getTransactionMapper(), getBodyInterceptorV3(),
           WebService.getDefaultConverter(), getDefaultClient(), getTokenInvalidator(),
           getDefaultSharedPreferences(), getTransactionFactory(), getBillingIdResolver());
     }
-    return transactionService;
+    return appCoinTransactionService;
   }
 
   public TransactionMapper getTransactionMapper() {
