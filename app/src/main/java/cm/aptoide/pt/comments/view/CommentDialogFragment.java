@@ -156,7 +156,7 @@ public class CommentDialogFragment
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         new NotificationAnalytics(httpClient, analytics),
         ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker(),
-        ((AptoideApplication) getContext().getApplicationContext()).getTimelineAnalyticsPersistence());
+        ((AptoideApplication) getContext().getApplicationContext()).getReadPostsPersistence());
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,

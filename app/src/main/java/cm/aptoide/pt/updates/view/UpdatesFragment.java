@@ -257,7 +257,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
               BuildConfig.APPLICATION_ID,
               ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
               new NotificationAnalytics(httpClient, analytics), navigationTracker,
-              ((AptoideApplication) getContext().getApplicationContext()).getTimelineAnalyticsPersistence()),
+              ((AptoideApplication) getContext().getApplicationContext()).getReadPostsPersistence()),
           installedRepository));
     }
     addDisplayables(installedDisplayablesList, false);

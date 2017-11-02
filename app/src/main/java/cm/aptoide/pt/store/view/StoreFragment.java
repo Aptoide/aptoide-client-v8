@@ -185,7 +185,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
         application.getDefaultSharedPreferences(), new NotificationAnalytics(httpClient, analytics),
-        navigationTracker, application.getTimelineAnalyticsPersistence());
+        navigationTracker, application.getReadPostsPersistence());
     storeAnalytics = new StoreAnalytics(AppEventsLogger.newLogger(getContext()), analytics);
     marketName = application.getMarketName();
     shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);

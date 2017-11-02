@@ -27,7 +27,7 @@ public class PostReadRequest extends V7<BaseV7Response, PostReadRequest.Body> {
     this.url = url;
   }
 
-  public static PostReadRequest of(List<PostRead> postsRead,
+  public static PostReadRequest of(List<ReadPost> postsRead,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
     final Body body = new Body(postsRead);
@@ -42,9 +42,9 @@ public class PostReadRequest extends V7<BaseV7Response, PostReadRequest.Body> {
   }
 
   static class Body extends BaseBody {
-    @JsonProperty("cards") final List<PostRead> posts;
+    @JsonProperty("cards") final List<ReadPost> posts;
 
-    public Body(List<PostRead> posts) {
+    public Body(List<ReadPost> posts) {
       this.posts = posts;
     }
   }

@@ -22,12 +22,12 @@ import cm.aptoide.pt.social.data.PopularApp;
 import cm.aptoide.pt.social.data.PopularAppTouchEvent;
 import cm.aptoide.pt.social.data.Post;
 import cm.aptoide.pt.social.data.RatedRecommendation;
+import cm.aptoide.pt.social.data.ReadPostsPersistence;
 import cm.aptoide.pt.social.data.Recommendation;
 import cm.aptoide.pt.social.data.SocialHeaderCardTouchEvent;
 import cm.aptoide.pt.social.data.StoreAppCardTouchEvent;
 import cm.aptoide.pt.social.data.StoreCardTouchEvent;
 import cm.aptoide.pt.social.data.StoreLatestApps;
-import cm.aptoide.pt.social.data.TimelineAnalyticsPersistence;
 import cm.aptoide.pt.social.data.analytics.EventErrorHandler;
 import cm.aptoide.pt.social.data.share.ShareEvent;
 import com.facebook.appevents.AppEventsLogger;
@@ -83,14 +83,13 @@ public class TimelineAnalytics {
   private final SharedPreferences sharedPreferences;
   private final NotificationAnalytics notificationAnalytics;
   private final NavigationTracker navigationTracker;
-  private final TimelineAnalyticsPersistence timelineAnalyticsPersistence;
+  private final ReadPostsPersistence readPostsPersistence;
 
   public TimelineAnalytics(Analytics analytics, AppEventsLogger facebook,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator, String appId,
       SharedPreferences sharedPreferences, NotificationAnalytics notificationAnalytics,
-      NavigationTracker navigationTracker,
-      TimelineAnalyticsPersistence timelineAnalyticsPersistence) {
+      NavigationTracker navigationTracker, ReadPostsPersistence readPostsPersistence) {
     this.analytics = analytics;
     this.facebook = facebook;
     this.bodyInterceptor = bodyInterceptor;
@@ -101,7 +100,7 @@ public class TimelineAnalytics {
     this.sharedPreferences = sharedPreferences;
     this.notificationAnalytics = notificationAnalytics;
     this.navigationTracker = navigationTracker;
-    this.timelineAnalyticsPersistence = timelineAnalyticsPersistence;
+    this.readPostsPersistence = readPostsPersistence;
   }
 
   public void sendSocialCardPreviewActionEvent(String value) {
@@ -710,7 +709,7 @@ public class TimelineAnalytics {
   }
 
   public Completable setPostRead(String cardId, String name) {
-    return timelineAnalyticsPersistence.addPostRead(cardId, name);
+    return readPostsPersistence.addPost(cardId, name);
   }
 
   public HashMap<String, Object> parseEventData(CardTouchEvent event, boolean status,
