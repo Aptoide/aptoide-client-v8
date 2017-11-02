@@ -62,14 +62,14 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment implements Profi
     }
   }
 
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    outState.putBoolean(ProfileStepOneFragment.IS_EXTERNAL_LOGIN, externalLogin);
-  }
-
   @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
     super.onViewStateRestored(savedInstanceState);
     loadExtras(savedInstanceState);
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putBoolean(ProfileStepOneFragment.IS_EXTERNAL_LOGIN, externalLogin);
   }
 
   @Override public int getContentViewId() {

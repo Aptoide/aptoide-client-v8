@@ -59,8 +59,9 @@ public class ListAppsFragment extends GetStoreEndlessFragment<ListApps> {
         for (App app : list) {
           app.getStore()
               .setAppearance(new Store.Appearance(storeTheme, null));
-          displayables.add(new GridAppDisplayable(app, tag, storeContext == StoreContext.home,
-              navigationTracker, storeContext));
+          displayables.add(
+              new GridAppDisplayable(app, tag, storeContext == StoreContext.home, navigationTracker,
+                  storeContext));
         }
       }
 

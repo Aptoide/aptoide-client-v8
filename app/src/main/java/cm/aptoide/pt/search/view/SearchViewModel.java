@@ -89,6 +89,10 @@ import org.parceler.Parcel;
     return storeName;
   }
 
+  public String getDefaultStoreName() {
+    return defaultStoreName;
+  }
+
   @Override public boolean isOnlyTrustedApps() {
     return onlyTrustedApps;
   }
@@ -137,9 +141,5 @@ import org.parceler.Parcel;
 
   @Override public void setHasLoadedAds() {
     loadedAds = true;
-  }
-
-  public String getDefaultStoreName() {
-    return defaultStoreName;
   }
 }

@@ -135,8 +135,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
         .getMeta()
         .getData();
     analytics.installClicked(navigationTracker.getPreviousScreen(),
-        navigationTracker.getCurrentScreen(), app.getMd5(), app.getPackageName(),
-        app.getFile()
+        navigationTracker.getCurrentScreen(), app.getMd5(), app.getPackageName(), app.getFile()
             .getMalware()
             .getRank()
             .name(), editorsChoiceBrickPosition);

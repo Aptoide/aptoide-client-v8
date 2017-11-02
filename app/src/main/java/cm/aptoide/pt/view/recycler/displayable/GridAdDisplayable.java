@@ -21,8 +21,7 @@ public class GridAdDisplayable extends DisplayablePojo<MinimalAd> {
   public GridAdDisplayable() {
   }
 
-  public GridAdDisplayable(MinimalAd minimalAd, String tag,
-      NavigationTracker navigationTracker) {
+  public GridAdDisplayable(MinimalAd minimalAd, String tag, NavigationTracker navigationTracker) {
     super(minimalAd);
     this.tag = tag;
     this.navigationTracker = navigationTracker;

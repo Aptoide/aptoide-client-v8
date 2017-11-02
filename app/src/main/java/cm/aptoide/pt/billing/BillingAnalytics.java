@@ -98,8 +98,7 @@ public class BillingAnalytics {
     bundle.putString("purchase_currency", product.getPrice()
         .getCurrency());
     bundle.putString("package_name_seller", packageName);
-    bundle.putInt("package_version_code_seller",
-        ((Product) product).getPackageVersionCode());
+    bundle.putInt("package_version_code_seller", ((Product) product).getPackageVersionCode());
     return bundle;
   }
 }

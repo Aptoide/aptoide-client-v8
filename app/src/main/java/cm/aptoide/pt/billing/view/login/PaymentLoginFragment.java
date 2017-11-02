@@ -115,16 +115,6 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
         .getSimpleName());
   }
 
-  @Override public void onSaveInstanceState(Bundle outState) {
-    outState.putBoolean(EXTRA_USERNAME_PASSWORD_CONTAINER_VISIBLE,
-        usernamePasswordContainerVisible);
-    outState.putBoolean(EXTRA_LOGIN_VISIBLE, loginVisible);
-    outState.putBoolean(EXTRA_PASSWORD_VISIBLE, passwordVisible);
-    outState.putBoolean(EXTRA_FACEBOOK_DIALOG_VISIBLE, facebookEmailRequiredDialogVisible);
-    outState.putBoolean(EXTRA_PROGRESS_VISIBLE, progressVisible);
-    super.onSaveInstanceState(outState);
-  }
-
   @Override public boolean onOptionsItemSelected(MenuItem item) {
 
     if (item.getItemId() == android.R.id.home) {
@@ -141,9 +131,18 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     return inflater.inflate(R.layout.fragment_payment_login, container, false);
   }
 
+  @Override public void onSaveInstanceState(Bundle outState) {
+    outState.putBoolean(EXTRA_USERNAME_PASSWORD_CONTAINER_VISIBLE,
+        usernamePasswordContainerVisible);
+    outState.putBoolean(EXTRA_LOGIN_VISIBLE, loginVisible);
+    outState.putBoolean(EXTRA_PASSWORD_VISIBLE, passwordVisible);
+    outState.putBoolean(EXTRA_FACEBOOK_DIALOG_VISIBLE, facebookEmailRequiredDialogVisible);
+    outState.putBoolean(EXTRA_PROGRESS_VISIBLE, progressVisible);
+    super.onSaveInstanceState(outState);
+  }
+
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-
 
     rootView = getActivity().findViewById(android.R.id.content);
 

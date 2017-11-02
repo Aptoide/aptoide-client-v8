@@ -8,5 +8,5 @@ interface PostAccessor {
 
   Single<List<PostRemoteAccessor.RelatedApp>> getRelatedApps(String url);
 
-  Single<PostView.PostPreview> getCardPreview(String url);
+  Single<PostPreview> getCardPreview(String url);
 }

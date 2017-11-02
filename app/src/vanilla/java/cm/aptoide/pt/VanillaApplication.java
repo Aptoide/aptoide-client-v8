@@ -15,14 +15,6 @@ import com.google.android.gms.common.GoogleApiAvailability;
 
 public class VanillaApplication extends AptoideApplication {
 
-  @Override public LoginPreferences getLoginPreferences() {
-    return new LoginPreferences(this, GoogleApiAvailability.getInstance());
-  }
-
-  @Override public FragmentProvider createFragmentProvider() {
-    return new VanillaFragmentProvider();
-  }
-
   @Override public String getCachePath() {
     return Environment.getExternalStorageDirectory()
         .getAbsolutePath() + "/.aptoide/";
@@ -70,6 +62,14 @@ public class VanillaApplication extends AptoideApplication {
 
   @Override public boolean isCreateStoreUserPrivacyEnabled() {
     return true;
+  }
+
+  @Override public LoginPreferences getLoginPreferences() {
+    return new LoginPreferences(this, GoogleApiAvailability.getInstance());
+  }
+
+  @Override public FragmentProvider createFragmentProvider() {
+    return new VanillaFragmentProvider();
   }
 
   @Override public ActivityProvider createActivityProvider() {

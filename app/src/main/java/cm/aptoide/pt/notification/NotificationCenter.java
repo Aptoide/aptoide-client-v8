@@ -64,9 +64,10 @@ public class NotificationCenter {
     return notificationProvider.getAptoideNotifications()
         .flatMapIterable(notifications -> notifications)
         .filter(notification -> !notification.isProcessed())
-        .doOnNext(notification -> {
+        .flatMapSingle(notification -> {
           notification.setProcessed(true);
-          notificationProvider.save(notification);
+          return notificationProvider.save(notification)
+              .toSingleDefault(notification);
         })
         .flatMap(aptideNotification -> notificationPolicyFactory.getPolicy(aptideNotification)
             .shouldShow()

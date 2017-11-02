@@ -103,14 +103,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
         .getSimpleName());
   }
 
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    outState.putString(USERNAME_KEY, aptoideEmailEditText.getText()
-        .toString());
-    outState.putString(PASSWORD_KEY, aptoidePasswordEditText.getText()
-        .toString());
-  }
-
   @Override public void hideKeyboard() {
     super.hideKeyboard();
   }
@@ -129,6 +121,14 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
       aptoideEmailEditText.setText(savedInstanceState.getString(USERNAME_KEY, ""));
       aptoidePasswordEditText.setText(savedInstanceState.getString(PASSWORD_KEY, ""));
     }
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putString(USERNAME_KEY, aptoideEmailEditText.getText()
+        .toString());
+    outState.putString(PASSWORD_KEY, aptoidePasswordEditText.getText()
+        .toString());
   }
 
   @Override public Observable<Void> showAptoideLoginAreaClick() {

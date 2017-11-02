@@ -33,8 +33,8 @@ import lombok.Getter;
   }
 
   public AppViewSuggestedAppsDisplayable(List<MinimalAd> minimalAds, List<App> appsList,
-      AppViewSimilarAppAnalytics appViewSimilarAppAnalytics,
-      NavigationTracker navigationTracker, StoreContext storeContext) {
+      AppViewSimilarAppAnalytics appViewSimilarAppAnalytics, NavigationTracker navigationTracker,
+      StoreContext storeContext) {
     this.minimalAds = minimalAds;
     this.appsList = appsList;
     this.appViewSimilarAppAnalytics = appViewSimilarAppAnalytics;

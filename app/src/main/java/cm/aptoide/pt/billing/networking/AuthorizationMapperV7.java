@@ -16,7 +16,8 @@ public class AuthorizationMapperV7 {
   private final AuthorizationFactory authorizationFactory;
   private final BillingIdManager billingIdManager;
 
-  public AuthorizationMapperV7(AuthorizationFactory authorizationFactory, BillingIdManager billingIdManager) {
+  public AuthorizationMapperV7(AuthorizationFactory authorizationFactory,
+      BillingIdManager billingIdManager) {
     this.authorizationFactory = authorizationFactory;
     this.billingIdManager = billingIdManager;
   }

@@ -103,7 +103,7 @@ public class NotificationProvider {
             .toList());
   }
 
-  public void save(AptoideNotification notification) {
-    save(convertToNotification(notification));
+  public Completable save(AptoideNotification notification) {
+    return save(convertToNotification(notification));
   }
 }

@@ -144,12 +144,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
         .getSimpleName());
   }
 
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    outState.putParcelable(EXTRA_STORE_MODEL, Parcels.wrap(currentModel));
-    outState.putBoolean(EXTRA_GO_TO_HOME, goToHome);
-  }
-
   @Override public void hideKeyboard() {
     super.hideKeyboard();
   }
@@ -242,6 +236,12 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
       }
       goToHome = savedInstanceState.getBoolean(EXTRA_GO_TO_HOME, true);
     }
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putParcelable(EXTRA_STORE_MODEL, Parcels.wrap(currentModel));
+    outState.putBoolean(EXTRA_GO_TO_HOME, goToHome);
   }
 
   @Override public void onDestroyView() {

@@ -15,7 +15,8 @@ public class TransactionMapperV7 {
   private final TransactionFactory transactionFactory;
   private final BillingIdManager billingIdManager;
 
-  public TransactionMapperV7(TransactionFactory transactionFactory, BillingIdManager billingIdManager) {
+  public TransactionMapperV7(TransactionFactory transactionFactory,
+      BillingIdManager billingIdManager) {
     this.transactionFactory = transactionFactory;
     this.billingIdManager = billingIdManager;
   }

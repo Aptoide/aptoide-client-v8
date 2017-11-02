@@ -10,8 +10,11 @@ public interface AuthorizationPersistence {
 
   Observable<Authorization> getAuthorization(String customerId, String transactionId);
 
-  Single<Authorization> updateAuthorization(String customerId, String transactionId, Authorization.Status status,
-      String metadata);
+  Single<Authorization> updateAuthorization(String customerId, String authorizationId,
+      Authorization.Status status, String metadata);
 
-  Single<Authorization> createAuthorization(String customerId, String transactionId, Authorization.Status status);
+  Single<Authorization> createAuthorization(String customerId, String transactionId,
+      Authorization.Status status);
+
+  Completable removeAuthorizations(String customerId, String transactionId);
 }

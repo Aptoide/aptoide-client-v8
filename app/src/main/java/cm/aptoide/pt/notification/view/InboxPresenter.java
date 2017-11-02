@@ -24,9 +24,8 @@ public class InboxPresenter implements Presenter {
   private final int NUMBER_OF_NOTIFICATIONS = 50;
 
   public InboxPresenter(InboxView view, NotificationCenter notificationCenter,
-      LinksHandlerFactory linkFactory, CrashReport crashReport,
-      NavigationTracker navigationTracker, NotificationAnalytics analytics,
-      PageViewsAnalytics pageViewsAnalytics) {
+      LinksHandlerFactory linkFactory, CrashReport crashReport, NavigationTracker navigationTracker,
+      NotificationAnalytics analytics, PageViewsAnalytics pageViewsAnalytics) {
     this.view = view;
     this.notificationCenter = notificationCenter;
     this.linkFactory = linkFactory;
@@ -53,8 +52,8 @@ public class InboxPresenter implements Presenter {
                 .doOnNext(link -> link.launch())
                 .doOnNext(link -> analytics.notificationShown(
                     notification.getNotificationCenterUrlTrack()))
-                .doOnNext(link -> navigationTracker.registerScreen(
-                    ScreenTagHistory.Builder.build(this.getClass()
+                .doOnNext(link -> navigationTracker.registerScreen(ScreenTagHistory.Builder.build(
+                    this.getClass()
                         .getSimpleName())))
                 .doOnNext(link -> pageViewsAnalytics.sendPageViewedEvent())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

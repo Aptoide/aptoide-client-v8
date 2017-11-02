@@ -32,27 +32,28 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.firstinstall.FirstInstallFragment;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.navigator.TabNavigation;
+import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.preferences.PartnersSecurePreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.view.SearchBuilder;
 import cm.aptoide.pt.store.StoreTheme;
+import cm.aptoide.pt.store.view.StoreFragment;
+import cm.aptoide.pt.store.view.StorePagerAdapter;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.view.BackButton;
 import cm.aptoide.pt.view.custom.BadgeView;
-import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
-import cm.aptoide.pt.view.navigator.TabNavigation;
-import cm.aptoide.pt.view.navigator.TabNavigator;
-import cm.aptoide.pt.view.store.StoreFragment;
-import cm.aptoide.pt.view.store.StorePagerAdapter;
 import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.text.NumberFormat;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import cm.aptoide.pt.firstinstall.FirstInstallFragment;
 
 /**
  * Created by neuro on 09-05-2016.
@@ -75,7 +76,7 @@ public class HomeFragment extends StoreFragment {
   private TextView userUsername;
   private ImageView userAvatarImage;
   private DrawerAnalytics drawerAnalytics;
-  private ClickHandler backClickHandler;
+  private BackButton.ClickHandler backClickHandler;
   private SearchBuilder searchBuilder;
   private String defaultThemeName;
 
