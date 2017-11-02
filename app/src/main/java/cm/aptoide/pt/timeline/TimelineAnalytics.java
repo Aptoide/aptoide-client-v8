@@ -27,6 +27,7 @@ import cm.aptoide.pt.social.data.SocialHeaderCardTouchEvent;
 import cm.aptoide.pt.social.data.StoreAppCardTouchEvent;
 import cm.aptoide.pt.social.data.StoreCardTouchEvent;
 import cm.aptoide.pt.social.data.StoreLatestApps;
+import cm.aptoide.pt.social.data.TimelineAnalyticsPersistence;
 import cm.aptoide.pt.social.data.analytics.EventErrorHandler;
 import cm.aptoide.pt.social.data.share.ShareEvent;
 import com.facebook.appevents.AppEventsLogger;
@@ -34,6 +35,7 @@ import java.util.HashMap;
 import java.util.Map;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
+import rx.Completable;
 
 /**
  * Created by jdandrade on 27/10/2016.
@@ -81,12 +83,14 @@ public class TimelineAnalytics {
   private final SharedPreferences sharedPreferences;
   private final NotificationAnalytics notificationAnalytics;
   private final NavigationTracker navigationTracker;
+  private final TimelineAnalyticsPersistence timelineAnalyticsPersistence;
 
   public TimelineAnalytics(Analytics analytics, AppEventsLogger facebook,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator, String appId,
       SharedPreferences sharedPreferences, NotificationAnalytics notificationAnalytics,
-      NavigationTracker navigationTracker) {
+      NavigationTracker navigationTracker,
+      TimelineAnalyticsPersistence timelineAnalyticsPersistence) {
     this.analytics = analytics;
     this.facebook = facebook;
     this.bodyInterceptor = bodyInterceptor;
@@ -97,6 +101,7 @@ public class TimelineAnalytics {
     this.sharedPreferences = sharedPreferences;
     this.notificationAnalytics = notificationAnalytics;
     this.navigationTracker = navigationTracker;
+    this.timelineAnalyticsPersistence = timelineAnalyticsPersistence;
   }
 
   public void sendSocialCardPreviewActionEvent(String value) {
@@ -704,6 +709,10 @@ public class TimelineAnalytics {
             sharedPreferences));
   }
 
+  public Completable setPostRead(String cardId, String name) {
+    return timelineAnalyticsPersistence.addPostRead(cardId, name);
+  }
+
   public HashMap<String, Object> parseEventData(CardTouchEvent event, boolean status,
       EventErrorHandler.GenericErrorEvent errorCode) {
     final Post post = event.getCard();
@@ -815,7 +824,7 @@ public class TimelineAnalytics {
       error = errorHandler.handleShareErrorParsing(errorCode);
       result.put("error", error);
     }
-    
+
     if (postType.isMedia()) {
       Media card = (Media) post;
       data.put("source", card.getPublisherName());

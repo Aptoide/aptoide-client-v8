@@ -25,6 +25,7 @@ import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AccountFactory;
@@ -79,11 +80,13 @@ import cm.aptoide.pt.dataprovider.cache.L2Cache;
 import cm.aptoide.pt.dataprovider.cache.POSTCacheInterceptor;
 import cm.aptoide.pt.dataprovider.cache.POSTCacheKeyAlgorithm;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
+import cm.aptoide.pt.dataprovider.ws.v7.PostReadRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
@@ -139,6 +142,7 @@ import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootValueSaver;
 import cm.aptoide.pt.social.TimelineRepositoryFactory;
+import cm.aptoide.pt.social.data.TimelineAnalyticsPersistence;
 import cm.aptoide.pt.social.data.TimelinePostsRepository;
 import cm.aptoide.pt.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.spotandshare.AccountGroupNameProvider;
@@ -280,6 +284,7 @@ public abstract class AptoideApplication extends Application {
   private Adyen adyen;
   private PurchaseFactory purchaseFactory;
   private AppCenter appCenter;
+  private TimelineAnalyticsPersistence timelineAnalyticsPersistence;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -410,6 +415,9 @@ public abstract class AptoideApplication extends Application {
         .map(account -> account.isLoggedIn())
         .distinctUntilChanged()
         .subscribe(isLoggedIn -> aptoideApplicationAnalytics.updateDimension(isLoggedIn));
+
+    dispatchPostReadEventInterval().subscribe(o -> {
+    }, throwable -> throwable.printStackTrace());
 
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
@@ -1357,6 +1365,26 @@ public abstract class AptoideApplication extends Application {
       purchaseFactory = new PurchaseFactory();
     }
     return purchaseFactory;
+  }
+
+  public TimelineAnalyticsPersistence getTimelineAnalyticsPersistence() {
+    if (timelineAnalyticsPersistence == null) {
+      timelineAnalyticsPersistence = new TimelineAnalyticsPersistence(new ArrayList<>(), 10);
+    }
+    return timelineAnalyticsPersistence;
+  }
+
+  private Observable<BaseV7Response> dispatchPostReadEventInterval() {
+
+    return Observable.interval(5, TimeUnit.SECONDS)
+        .doOnNext(aLong -> Logger.d(this, "testestestse"))
+        .flatMap(__ -> getTimelineAnalyticsPersistence().popBatchPostReadList()
+            .doOnNext(postReads -> Log.d(TAG, "dispatchPostReadEventInterval: " + postReads.size()))
+            .filter(postReads -> !postReads.isEmpty())
+            .flatMap(postsRead -> PostReadRequest.of(postsRead, getBodyInterceptorPoolV7(),
+                getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator())
+                .observe())
+            .repeatWhen(observable -> getTimelineAnalyticsPersistence().postReadListEndReached()));
   }
 }
 
