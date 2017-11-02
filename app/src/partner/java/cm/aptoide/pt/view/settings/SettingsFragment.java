@@ -1,4 +1,4 @@
-package cm.aptoide.pt.settings;
+package cm.aptoide.pt.view.settings;
 
 import android.app.ActivityManager;
 import android.app.ProgressDialog;
@@ -32,7 +32,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PartnerApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -149,7 +149,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     notificationSyncScheduler = application.getNotificationSyncScheduler();
 
-    AptoideNavigationTracker aptoideNavigationTracker = application.getAptoideNavigationTracker();
+    NavigationTracker aptoideNavigationTracker = application.getNavigationTracker();
     aptoideNavigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName()));
   }

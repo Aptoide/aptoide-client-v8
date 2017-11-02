@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view.updates.installed;
+package cm.aptoide.pt.updates.view.installed;
 
 import android.support.v4.app.FragmentActivity;
 import android.view.View;

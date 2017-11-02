@@ -1,6 +1,6 @@
 package cm.aptoide.pt.remotebootconfig.datamodel;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Created by diogoloureiro on 18/01/2017.
@@ -8,8 +8,8 @@ import lombok.Data;
  * Partner Class
  */
 
-@SuppressWarnings("WeakerAccess") @Data public class Partner {
-  private int config_id;
+public class Partner {
+  @JsonProperty("config_id") private int configId;
   private String uid;
   private String type;
   private Feedback feedback;
@@ -18,27 +18,67 @@ import lombok.Data;
   private Switches switches;
   private Social social;
 
-  /**
-   * Partner constructor
-   *
-   * @param config_id server configuration id
-   * @param uid defines the unique identifier of the partner, aka OEM ID
-   * @param type defines the vertical type of the partner
-   * @param feedback defines the feedback configs
-   * @param store defines the store configs
-   * @param appearance defines the appearance configs
-   * @param switches defines the switchable configs
-   * @param social defines the social components configs
-   */
-  public Partner(int config_id, String uid, String type, Feedback feedback, Store store,
-      Appearance appearance, Switches switches, Social social) {
-    this.config_id = config_id;
+  public int getConfigId() {
+    return configId;
+  }
+
+  public void setConfigId(int configId) {
+    this.configId = configId;
+  }
+
+  public String getUid() {
+    return uid;
+  }
+
+  public void setUid(String uid) {
     this.uid = uid;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
     this.type = type;
+  }
+
+  public Feedback getFeedback() {
+    return feedback;
+  }
+
+  public void setFeedback(Feedback feedback) {
     this.feedback = feedback;
+  }
+
+  public Store getStore() {
+    return store;
+  }
+
+  public void setStore(Store store) {
     this.store = store;
+  }
+
+  public Appearance getAppearance() {
+    return appearance;
+  }
+
+  public void setAppearance(Appearance appearance) {
     this.appearance = appearance;
+  }
+
+  public Switches getSwitches() {
+    return switches;
+  }
+
+  public void setSwitches(Switches switches) {
     this.switches = switches;
+  }
+
+  public Social getSocial() {
+    return social;
+  }
+
+  public void setSocial(Social social) {
     this.social = social;
   }
 }
