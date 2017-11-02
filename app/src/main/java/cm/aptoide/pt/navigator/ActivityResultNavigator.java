@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.WindowManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
@@ -16,14 +17,14 @@ import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.billing.view.BillingNavigator;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.view.fragment.FragmentView;
-import cm.aptoide.pt.view.leak.LeakActivity;
 import com.facebook.login.LoginManager;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Map;
 import rx.Observable;
 
-public abstract class ActivityResultNavigator extends LeakActivity implements ActivityNavigator {
+public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigator
+    implements ActivityNavigator {
 
   private PublishRelay<Result> resultRelay;
   private FragmentNavigator fragmentNavigator;
@@ -164,8 +165,8 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
       billingNavigator = new BillingNavigator(
           ((AptoideApplication) getApplicationContext()).getPurchaseBundleMapper(),
           getActivityNavigator(), getFragmentNavigator(),
-          ((AptoideApplication) getApplicationContext()).getMarketName(),
-          ((AptoideApplication) getApplicationContext()).getAdyen(), PublishRelay.create());
+          ((AptoideApplication) getApplicationContext()).getMarketName(), PublishRelay.create(),
+          this, ContextCompat.getColor(this, R.color.aptoide_orange));
     }
     return billingNavigator;
   }

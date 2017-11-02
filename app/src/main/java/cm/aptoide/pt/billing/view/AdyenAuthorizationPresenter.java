@@ -52,6 +52,10 @@ public class AdyenAuthorizationPresenter implements Presenter {
 
     handleAdyenCreditCardResults();
 
+    handleAdyenUriRedirect();
+
+    handleAdyenUriResult();
+
     handleErrorDismissEvent();
 
     handleAdyenPaymentResult();
@@ -81,9 +85,7 @@ public class AdyenAuthorizationPresenter implements Presenter {
         .cast(AdyenAuthorization.class)
         .doOnNext(authorization -> analytics.sendAuthorizationSuccessEvent(serviceName))
         .observeOn(viewScheduler)
-        .doOnNext(__ -> {
-          navigator.popToPaymentView();
-        })
+        .doOnNext(__ -> navigator.popToPaymentView())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> showError(throwable));
@@ -119,6 +121,32 @@ public class AdyenAuthorizationPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(authorization -> navigator.adyenResults())
         .flatMapCompletable(details -> adyen.finishPayment(details))
+        .observeOn(viewScheduler)
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> showError(throwable));
+  }
+
+  private void handleAdyenUriRedirect() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMapSingle(__ -> adyen.getRedirectUrl())
+        .observeOn(viewScheduler)
+        .doOnNext(redirectUrl -> {
+          navigator.popAdyenCreditCardView();
+          view.showLoading();
+          navigator.navigateToUriForResult(redirectUrl);
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> showError(throwable));
+  }
+
+  private void handleAdyenUriResult() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> navigator.uriResults())
+        .flatMapCompletable(uri -> adyen.finishUri(uri))
         .observeOn(viewScheduler)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

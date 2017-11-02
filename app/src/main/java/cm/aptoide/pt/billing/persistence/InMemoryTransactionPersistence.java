@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
 
 public class InMemoryTransactionPersistence implements TransactionPersistence {
 
@@ -40,14 +41,17 @@ public class InMemoryTransactionPersistence implements TransactionPersistence {
     });
   }
 
-  @Override public Completable removeTransactions(String productId) {
+  @Override public Completable removeTransaction(String transactionId) {
+    return Completable.fromAction(() -> transactions.remove(transactionId));
+  }
+
+  @Override
+  public Single<List<Transaction>> getOtherTransactions(String transactionId, String productId) {
     return Observable.from(transactions.values())
         .filter(transaction -> transaction.getProductId()
-            .equals(productId))
-        .map(transaction -> transaction.getId())
+            .equals(productId) && !transaction.getId()
+            .equals(transactionId))
         .toList()
-        .flatMapIterable(transactionIds -> transactionIds)
-        .doOnNext(transactionIds -> transactions.remove(transactionIds))
-        .toCompletable();
+        .toSingle();
   }
 }
