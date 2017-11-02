@@ -325,6 +325,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     floatingActionButton = null;
     layoutManager = null;
     bottomAlreadyReached = false;
+    layoutManager = null;
     timelinePostsRepository.clearLoading();
   }
 
