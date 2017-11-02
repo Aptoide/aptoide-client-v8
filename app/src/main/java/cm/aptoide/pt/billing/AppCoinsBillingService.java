@@ -135,7 +135,16 @@ public class AppCoinsBillingService implements BillingService {
 
   @Override public Single<Purchase> getPurchase(Product product) {
     if (product instanceof InAppProduct) {
-      return Single.just(new InAppPurchase("done", "empty", "com.marceloporto.bombastic.smallpack", "NQ", SimplePurchase.Status.COMPLETED,
+      return Single.just(new InAppPurchase("bTkCYeyCT/1vwx71Ud+NRxa+nCS58mqQZ27y/ZcivGjJsTQC0/2z0YkEW+Qeou1+T3OB2CA1TVuAPBZUWYwM+ciGtqjyHWdv8tNSFd7TAtbevojivUD/XcmMZB5OhEAIHxCtavm19MjBwT6ItHtmAJUERFilOUk2RiflCFI5xQwLeN2idkWtXL0h9X5Kosql0pdj+xWOwevdvp32r4HfPeYFbzdUSd7zaBLoQCoTvAgRhoXCjeTlriIrtLrcC2/yYMoaj8OVV0XdDM0tp7s+VikEOgvYOqzU3a8jKR0PEtU3nGYWjG3nrQQnKgVyWooGBOVnWY+FeGXTfaS84Ex5RQ=="
+          , "{\n"
+          + "          \"developer_purchase\": {\n"
+          + "            \"orderId\": \"1\",\n"
+          + "            \"packageName\": \"com.marceloporto.bombastic\",\n"
+          + "            \"productId\": \"com.marceloporto.bombastic.smallpack\",\n"
+          + "            \"purchaseTime\": 1509408000,\n"
+          + "            \"purchaseToken\": \"MQ\",\n"
+          + "            \"purchaseState\": 0\n"
+          + "          }", "com.marceloporto.bombastic.smallpack", "NQ", SimplePurchase.Status.COMPLETED,
           product.getId()));
     }
     else if (product instanceof PaidAppProduct) {

@@ -912,17 +912,17 @@ public abstract class AptoideApplication extends Application {
   }
 
 
-  public Single<EthereumApi> getEthereumApi(){
+  public EthereumApi getEthereumApi(){
     if(ethereumApi == null){
       ethereumApi = EthereumApiFactory.createEthereumApi();
     }
-    return Single.just(ethereumApi);
+    return ethereumApi;
   }
 
   public EtherAccountManager getEtherAccountManager(){
     if(etherAccountManager == null){
       etherAccountManager =
-          new EtherAccountManager(getEthereumApi().toBlocking().value(), getSharedPreferences("MainPrefs", MODE_PRIVATE));
+          new EtherAccountManager(getEthereumApi(), getSharedPreferences("MainPrefs", MODE_PRIVATE));
     }
     return etherAccountManager;
   }
@@ -931,7 +931,7 @@ public abstract class AptoideApplication extends Application {
     if (appCoinTransactionService == null) {
       appCoinTransactionService = new AppCoinTransactionService(getTransactionMapper(), getBodyInterceptorV3(),
           WebService.getDefaultConverter(), getDefaultClient(), getTokenInvalidator(),
-          getDefaultSharedPreferences(), getTransactionFactory(), getBillingIdResolver(),getEthereumApi().toBlocking().value(), getEtherAccountManager());
+          getDefaultSharedPreferences(), getTransactionFactory(), getBillingIdResolver(),getEthereumApi(), getEtherAccountManager());
     }
     return appCoinTransactionService;
   }
