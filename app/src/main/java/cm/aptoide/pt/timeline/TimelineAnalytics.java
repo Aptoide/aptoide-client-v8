@@ -563,6 +563,8 @@ public class TimelineAnalytics {
                 .name(), storeAppCardTouchEvent.getPackageName(), Analytics.AppsTimeline.BLANK,
             ((StoreLatestApps) storeAppCardTouchEvent.getCard()).getStoreName(),
             Analytics.AppsTimeline.OPEN_APP_VIEW);
+        sendOpenAppEvent(postType.name(), TimelineAnalytics.SOURCE_APTOIDE,
+            ((StoreAppCardTouchEvent) cardTouchEvent).getPackageName());
       }
       sendStoreLatestAppsClickEvent(postType.name(), Analytics.AppsTimeline.OPEN_APP_VIEW,
           "(blank)", storeAppCardTouchEvent.getPackageName(),

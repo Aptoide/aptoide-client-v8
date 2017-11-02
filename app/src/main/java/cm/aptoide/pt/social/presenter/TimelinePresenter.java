@@ -1192,9 +1192,9 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void navigateToAppView(StoreAppCardTouchEvent cardTouchEvent) {
-    timelineAnalytics.sendOpenAppEvent(cardTouchEvent.getCard()
-        .getType()
-        .name(), TimelineAnalytics.SOURCE_APTOIDE, cardTouchEvent.getPackageName());
+    //timelineAnalytics.sendOpenAppEvent(cardTouchEvent.getCard()
+    //    .getType()
+    //    .name(), TimelineAnalytics.SOURCE_APTOIDE, cardTouchEvent.getPackageName());
     timelineNavigation.navigateToAppView(cardTouchEvent.getPackageName());
   }
 
