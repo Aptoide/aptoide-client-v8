@@ -64,6 +64,7 @@ public class SearchResultPresenter implements Presenter {
     handleAllStoresListReachedBottom();
     handleFollowedStoresListReachedBottom();
     handleTitleBarClick();
+    handleWidgetTrendingRequest();
   }
 
   private void handleTitleBarClick() {
@@ -82,6 +83,7 @@ public class SearchResultPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .flatMap(__ -> view.getSearchWidgetFocusState())
+        .filter(status -> status == true)
         .flatMap(__ -> searchManager.getTrendingApps())
         .observeOn(viewScheduler)
         .doOnNext(trending -> view.showTrendingMenu(trending))
