@@ -2,6 +2,7 @@ package cm.aptoide.pt.billing.transaction;
 
 import android.content.SharedPreferences;
 import cm.aptoide.pt.EthereumApi;
+import cm.aptoide.pt.EthereumApiFactory;
 import cm.aptoide.pt.billing.BillingIdResolver;
 import cm.aptoide.pt.billing.Product;
 import cm.aptoide.pt.billing.view.appcoin.EtherAccountManager;
@@ -11,17 +12,14 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.erc20.Erc20Transfer;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.ws.etherscan.TransactionResultResponse;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
-import rx.Observable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -31,13 +29,11 @@ import rx.schedulers.Schedulers;
 public class AppCoinTransactionService implements TransactionService {
 
   private final TransactionFactory transactionFactory;
-  private final EthereumApi ethereumApi;
-  private final EtherAccountManager etherAccountManager;
   private Transaction currentTransaction;
   private Map<String, Transaction> transactionList = new HashMap<>();
   private Map<String, String> appCoinTransactionList = new HashMap<>();
   private Map<String, TransactionSimulator> transactionSimList = new HashMap<>();
-  private int count = 0;
+  private SharedPreferences sharedPreferences;
   private Map<String, Product> products = new HashMap<>();
   private static final String CONTRACT_ADDRESS = "8dbf4349cbeca08a02cc6b5b0862f9dd42c585b9";
   private static final String RECEIVER_ADDR = "62a5c1680554A61334F5c6f6D7dA6044b6AFbFe8";
@@ -47,10 +43,9 @@ public class AppCoinTransactionService implements TransactionService {
       BodyInterceptor<BaseBody> bodyInterceptorV3, Converter.Factory converterFactory,
       OkHttpClient httpClient, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, TransactionFactory transactionFactory,
-      BillingIdResolver idResolver, EthereumApi ethereumApi, EtherAccountManager etherAccountManager) {
+      BillingIdResolver idResolver) {
     this.transactionFactory = transactionFactory;
-    this.ethereumApi = ethereumApi;
-    this.etherAccountManager = etherAccountManager;
+    this.sharedPreferences = sharedPreferences;
   }
 
   @Override
@@ -62,6 +57,7 @@ public class AppCoinTransactionService implements TransactionService {
         if(!appCoinTransactionList.isEmpty()){
           String txHash = appCoinTransactionList.get(concat(product.getId(),payerId));
           if(txHash != null){
+            EthereumApi ethereumApi = EthereumApiFactory.createEthereumApi();
             Boolean accepted = ethereumApi.isTransactionAccepted(txHash)
                 .toBlocking()
                 .first();
@@ -132,18 +128,12 @@ public class AppCoinTransactionService implements TransactionService {
     try {
       Logger.d("TAG123", "create_tran_meta_try" + status);
       if(REALTRANSACTION){
-        etherAccountManager.getCurrentNonce().observeOn(Schedulers.io())
-            .flatMap(new Func1<Long, Observable<TransactionResultResponse>>() {
-                public Observable<TransactionResultResponse> call(Long nonce) {
-                TransactionResultResponse call = ethereumApi.call(nonce.intValue(), CONTRACT_ADDRESS,
-                    new Erc20Transfer(RECEIVER_ADDR, 1), etherAccountManager.getECKey()).toBlocking().first();
-                addACtransaction(productId,payerId,call.result);
-                return Observable.just(call);
-              }
-            })
+        EthereumApi ethereumApi = EthereumApiFactory.createEthereumApi();
+        EtherAccountManager etherAccountManager = new EtherAccountManager(ethereumApi, sharedPreferences);
+        etherAccountManager.getCurrentNonce()
+            .flatMap(nonce -> ethereumApi.call(nonce.intValue(), CONTRACT_ADDRESS, new Erc20Transfer(RECEIVER_ADDR, 1), etherAccountManager.getECKey()))
+            .doOnNext(call -> addACtransaction(productId,payerId,call.result)).doOnError(throwable -> throwable.printStackTrace()).subscribe();
             //ethereumApi.call(nonce, CONTRACT_ADDRESS, erc20Transfer, etherAccountManager.getECKey())
-            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-            .subscribe();
       }
       else {
         TransactionSimulator transactionSimulator = new TransactionSimulator();

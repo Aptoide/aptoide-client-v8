@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import cm.aptoide.pt.PackageRepository;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.billing.exception.ProductNotFoundException;
-import cm.aptoide.pt.billing.exception.PurchaseNotFoundException;
 import cm.aptoide.pt.billing.product.InAppProduct;
 import cm.aptoide.pt.billing.product.InAppPurchase;
 import cm.aptoide.pt.billing.product.PaidAppProduct;
@@ -21,10 +20,10 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.GetApkInfoRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingAvailableRequest;
-import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingConsumeRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingPurchasesRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingSkuDetailsRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
+import cm.aptoide.pt.logger.Logger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -52,6 +51,7 @@ public class AppCoinsBillingService implements BillingService {
   private final Resources resources;
   private final BillingIdResolver idResolver;
   private final int apiVersion;
+  private InAppPurchase inAppPurchase = null;
 
   public AppCoinsBillingService(BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
@@ -75,7 +75,7 @@ public class AppCoinsBillingService implements BillingService {
 
   @Override public Single<List<PaymentMethod>> getPaymentMethods(Product product) {
     List<PaymentMethod> paymentList = new ArrayList<>();
-    paymentList.add(new PaymentMethod(12, "AppCoin", "Buy with Appcoins", R.drawable.appcoins_logo));
+    paymentList.add(new PaymentMethod(12, "", "", R.drawable.appcoins_logo));
     return Single.just(paymentList);
   }
 
@@ -99,25 +99,19 @@ public class AppCoinsBillingService implements BillingService {
   }
 
   @Override public Completable deletePurchase(String sellerId, String purchaseToken) {
-    return InAppBillingConsumeRequest.of(apiVersion, idResolver.resolvePackageName(sellerId),
-        purchaseToken, bodyInterceptorV3, httpClient, converterFactory, tokenInvalidator,
-        sharedPreferences)
-        .observe()
-        .first()
-        .toSingle()
-        .flatMapCompletable(response -> {
-          if (response != null && response.isOk()) {
-            return Completable.complete();
-          }
-          if (isDeletionItemNotFound(response.getErrors())) {
-            return Completable.error(new PurchaseNotFoundException(V3.getErrorMessage(response)));
-          }
-          return Completable.error(new IllegalArgumentException(V3.getErrorMessage(response)));
-        });
+    inAppPurchase = null;
+    return Completable.complete();
   }
 
   @Override public Single<List<Purchase>> getPurchases(String sellerId) {
-    return Single.just(Collections.emptyList());
+    if(inAppPurchase != null) {
+      List<Purchase> paymentList = new ArrayList<>();
+      paymentList.add(inAppPurchase);
+      return Single.just(paymentList);
+    }
+    else{
+      return Single.just(Collections.emptyList());
+    }
   }
 
   @Override public Single<Purchase> getPurchase(String sellerId, String purchaseToken) {
@@ -134,36 +128,28 @@ public class AppCoinsBillingService implements BillingService {
   }
 
   @Override public Single<Purchase> getPurchase(Product product) {
+    String signature = "bTkCYeyCT/1vwx71Ud+NRxa+nCS58mqQZ27y/ZcivGjJsTQC0/2z0YkEW+Qeou1+T3OB2CA1TVuAPBZUWYwM+ciGtqjyHWdv8tNSFd7TAtbevojivUD/XcmMZB5OhEAIHxCtavm19MjBwT6ItHtmAJUERFilOUk2RiflCFI5xQwLeN2idkWtXL0h9X5Kosql0pdj+xWOwevdvp32r4HfPeYFbzdUSd7zaBLoQCoTvAgRhoXCjeTlriIrtLrcC2/yYMoaj8OVV0XdDM0tp7s+VikEOgvYOqzU3a8jKR0PEtU3nGYWjG3nrQQnKgVyWooGBOVnWY+FeGXTfaS84Ex5RQ==";
+    String signatureData = "{\n"
+        + "          \"developer_purchase\": {\n"
+        + "            \"orderId\": \"1\",\n"
+        + "            \"packageName\": \"com.marceloporto.bombastic\",\n"
+        + "            \"productId\": \"com.marceloporto.bombastic.smallpack\",\n"
+        + "            \"purchaseTime\": 1509408000,\n"
+        + "            \"purchaseToken\": \"MQ\",\n"
+        + "            \"purchaseState\": 0\n"
+        + "          }";
+    String sku = "com.marceloporto.bombastic.smallpack";
+    String token = "NQ";
+    Logger.d("TAG123",product.getId());
     if (product instanceof InAppProduct) {
-      return Single.just(new InAppPurchase("bTkCYeyCT/1vwx71Ud+NRxa+nCS58mqQZ27y/ZcivGjJsTQC0/2z0YkEW+Qeou1+T3OB2CA1TVuAPBZUWYwM+ciGtqjyHWdv8tNSFd7TAtbevojivUD/XcmMZB5OhEAIHxCtavm19MjBwT6ItHtmAJUERFilOUk2RiflCFI5xQwLeN2idkWtXL0h9X5Kosql0pdj+xWOwevdvp32r4HfPeYFbzdUSd7zaBLoQCoTvAgRhoXCjeTlriIrtLrcC2/yYMoaj8OVV0XdDM0tp7s+VikEOgvYOqzU3a8jKR0PEtU3nGYWjG3nrQQnKgVyWooGBOVnWY+FeGXTfaS84Ex5RQ=="
-          , "{\n"
-          + "          \"developer_purchase\": {\n"
-          + "            \"orderId\": \"1\",\n"
-          + "            \"packageName\": \"com.marceloporto.bombastic\",\n"
-          + "            \"productId\": \"com.marceloporto.bombastic.smallpack\",\n"
-          + "            \"purchaseTime\": 1509408000,\n"
-          + "            \"purchaseToken\": \"MQ\",\n"
-          + "            \"purchaseState\": 0\n"
-          + "          }", "com.marceloporto.bombastic.smallpack", "NQ", SimplePurchase.Status.COMPLETED,
-          product.getId()));
+      inAppPurchase = new InAppPurchase(signature,signatureData,sku,token, SimplePurchase.Status.COMPLETED,
+          product.getId());
+      return Single.just(inAppPurchase);
     }
     else if (product instanceof PaidAppProduct) {
       return Single.just(new PaidAppPurchase("done", SimplePurchase.Status.COMPLETED, product.getId()));
     }
-    /*if (product instanceof InAppProduct) {
-      return getServerInAppPurchase(((InAppProduct) product).getApiVersion(),
-          ((InAppProduct) product).getPackageName(), true).map(
-          purchaseInformation -> purchaseMapper.map(purchaseInformation,
-              ((InAppProduct) product).getSku()))
-          .toSingle()
-          .subscribeOn(Schedulers.io());
-    }
 
-    if (product instanceof PaidAppProduct) {
-      return getServerPaidApp(true, ((PaidAppProduct) product).getAppId()).map(
-          app -> purchaseMapper.map(app));
-    }
-*/
     throw new IllegalArgumentException("Invalid product. Must be "
         + InAppProduct.class.getSimpleName()
         + " or "

@@ -912,9 +912,13 @@ public abstract class AptoideApplication extends Application {
   }
 
 
-  public EthereumApi getEthereumApi(){
+  /*public EthereumApi getEthereumApi(){
     if(ethereumApi == null){
-      ethereumApi = EthereumApiFactory.createEthereumApi();
+      try {
+        ethereumApi = EthereumApiFactory.createEthereumApi();
+      }catch(Exception e){
+        e.printStackTrace();
+      }
     }
     return ethereumApi;
   }
@@ -925,13 +929,13 @@ public abstract class AptoideApplication extends Application {
           new EtherAccountManager(getEthereumApi(), getSharedPreferences("MainPrefs", MODE_PRIVATE));
     }
     return etherAccountManager;
-  }
+  }*/
 
   public AppCoinTransactionService getAppCoinTransactionService(){
     if (appCoinTransactionService == null) {
       appCoinTransactionService = new AppCoinTransactionService(getTransactionMapper(), getBodyInterceptorV3(),
           WebService.getDefaultConverter(), getDefaultClient(), getTokenInvalidator(),
-          getDefaultSharedPreferences(), getTransactionFactory(), getBillingIdResolver(),getEthereumApi(), getEtherAccountManager());
+          getDefaultSharedPreferences(), getTransactionFactory(), getBillingIdResolver());
     }
     return appCoinTransactionService;
   }
