@@ -86,9 +86,7 @@ public class AppService {
   }
 
   @NonNull private AppsList createErrorAppsList(Throwable throwable) {
-    if (throwable instanceof AlreadyLoadingException) {
-      return new AppsList(true);
-    } else if (throwable instanceof NoNetworkConnectionException) {
+    if (throwable instanceof NoNetworkConnectionException) {
       return new AppsList(AppsList.Error.NETWORK);
     } else {
       return new AppsList(AppsList.Error.GENERIC);

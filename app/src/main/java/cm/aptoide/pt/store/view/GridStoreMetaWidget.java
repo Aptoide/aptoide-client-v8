@@ -44,7 +44,6 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDisplayable> {
 
-  private static final String TAG = GridStoreMetaWidget.class.getSimpleName();
   private AptoideAccountManager accountManager;
   private LinearLayout socialChannelsLayout;
   private ImageView mainIcon;
@@ -173,8 +172,9 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
                   .getThemeName(), screenTitle, StoreContext.meta), true);
     } else {
       fragmentNavigator.navigateTo(
-          TimeLineFollowingFragment.newInstanceUsingUserId(displayable.getUserId(), "DEFAULT",
-              screenTitle, StoreContext.meta), true);
+          TimeLineFollowingFragment.newInstanceUsingUserId(displayable.getUserId(),
+              displayable.getStoreTheme()
+                  .getThemeName(), screenTitle, StoreContext.meta), true);
     }
   }
 
@@ -191,8 +191,9 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
                   .getThemeName(), screenTitle, StoreContext.meta), true);
     } else {
       fragmentNavigator.navigateTo(
-          TimeLineFollowersFragment.newInstanceUsingUser(displayable.getUserId(), "DEFAULT",
-              screenTitle, StoreContext.meta), true);
+          TimeLineFollowersFragment.newInstanceUsingUser(displayable.getUserId(),
+              displayable.getStoreTheme()
+                  .getThemeName(), screenTitle, StoreContext.meta), true);
     }
   }
 

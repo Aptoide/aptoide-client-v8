@@ -37,7 +37,7 @@ public class ApplicationViewHolder extends AppViewHolder {
     downloadsTextView.setText(
         AptoideUtils.StringU.withSuffix(app.getDownloads()) + itemView.getContext()
             .getString(R.string._downloads));
-    rating.setRating(app.getAvg());
+    rating.setRating(app.getRating());
     itemView.setOnClickListener(v -> appClicks.onNext(app));
   }
 }
