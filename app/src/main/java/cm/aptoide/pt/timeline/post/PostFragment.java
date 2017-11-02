@@ -117,6 +117,8 @@ public class PostFragment extends FragmentView implements PostView {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
     installedRepository = RepositoryFactory.getInstalledRepository(getContext());
     cancelClick = PublishRelay.create();
     postClick = PublishRelay.create();
@@ -135,7 +137,7 @@ public class PostFragment extends FragmentView implements PostView {
     analytics = new PostAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         okHttpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        sharedPreferences);
+        sharedPreferences, application.getNavigationTracker());
     handleAnalytics();
     setHasOptionsMenu(true);
   }
