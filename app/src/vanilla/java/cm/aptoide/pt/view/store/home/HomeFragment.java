@@ -26,11 +26,13 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DrawerAnalytics;
+import cm.aptoide.pt.EthereumApi;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.billing.view.appcoin.EtherAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.IssuesAnalytics;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
@@ -53,13 +55,17 @@ import cm.aptoide.pt.view.navigator.TabNavigation;
 import cm.aptoide.pt.view.navigator.TabNavigator;
 import cm.aptoide.pt.view.store.StoreFragment;
 import cm.aptoide.pt.view.store.StorePagerAdapter;
+import cm.aptoide.pt.ws.etherscan.BalanceResponse;
 import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
 import com.mopub.common.util.DateAndTime;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.text.NumberFormat;
+import org.spongycastle.util.encoders.Hex;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+
+import static cm.aptoide.pt.billing.transaction.AppCoinTransactionService.CONTRACT_ADDRESS;
 
 /**
  * Created by neuro on 09-05-2016.
@@ -167,15 +173,31 @@ public class HomeFragment extends StoreFragment {
     userUsername.setVisibility(View.GONE);
     ImageLoader.with(getContext())
         .loadWithCircleTransform(R.drawable.user_account_white, userAvatarImage);
+
+    EthereumApi ethereumApi =
+        ((AptoideApplication) getActivity().getApplicationContext()).getEthereumApi();
+    EtherAccountManager etherAccountManager =
+        ((AptoideApplication) getActivity().getApplicationContext()).getEtherAccountManager();
+    etherAccountManager.getCurrentNonce()
+        .flatMap(aLong -> ethereumApi.getTokenBalance(CONTRACT_ADDRESS, Hex.toHexString(
+            etherAccountManager.getECKey()
+                .getAddress())))
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(this::setAppCoins, Throwable::printStackTrace);
+  }
+
+  private void setAppCoins(BalanceResponse balanceResponse) {
+    balanceAppcoins.setVisibility(View.VISIBLE);
+    lastUpdated.setVisibility(View.VISIBLE);
+    balanceAppcoins.setText(balanceResponse.result);
+    lastUpdated.setText(Long.toString(System.currentTimeMillis()));
   }
 
   private void setVisibleUserImageAndName(Account account) {
     userEmail.setVisibility(View.VISIBLE);
     userUsername.setVisibility(View.VISIBLE);
-    balanceAppcoins.setText("40 Appcoins"); // getBalance
-    balanceAppcoins.setVisibility(View.VISIBLE);
     String data = DateAndTime.now().toString().substring(4,20);
-    lastUpdated.setText("LastUpdated in " + data);
     userEmail.setText(account.getEmail());
     userUsername.setText(account.getNickname());
     ImageLoader.with(getContext())

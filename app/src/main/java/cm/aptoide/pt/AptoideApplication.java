@@ -911,8 +911,7 @@ public abstract class AptoideApplication extends Application {
     return payer;
   }
 
-
-  /*public EthereumApi getEthereumApi(){
+  public EthereumApi getEthereumApi() {
     if(ethereumApi == null){
       try {
         ethereumApi = EthereumApiFactory.createEthereumApi();
@@ -929,7 +928,7 @@ public abstract class AptoideApplication extends Application {
           new EtherAccountManager(getEthereumApi(), getSharedPreferences("MainPrefs", MODE_PRIVATE));
     }
     return etherAccountManager;
-  }*/
+  }
 
   public AppCoinTransactionService getAppCoinTransactionService(){
     if (appCoinTransactionService == null) {
