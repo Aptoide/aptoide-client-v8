@@ -131,14 +131,9 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
   public Observable<Boolean> isStoreOwner(AptoideAccountManager accountManager) {
     return accountManager.accountStatus()
         .first()
-        .map(account -> {
-          if (getStore() == null || account.getStore() == null) {
-            return false;
-          }
-          return account.getStore()
-              .getName()
-              .equals(getStore().getName());
-        });
+        .map(account -> getStore() != null && account.getStore() != null && account.getStore()
+            .getName()
+            .equals(getStore().getName()));
   }
 
   public String getDescription() {

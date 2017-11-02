@@ -17,11 +17,11 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.StoreAnalytics;
+import cm.aptoide.pt.store.view.MetaStoresBaseWidget;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowingFragment;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.spannable.SpannableFactory;
-import cm.aptoide.pt.store.view.MetaStoresBaseWidget;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 
@@ -31,7 +31,6 @@ import com.jakewharton.rxbinding.view.RxView;
 
 public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
 
-  private View storeLayout;
   private ImageView storeIcon;
   private TextView storeName;
   private Button exploreButton;
@@ -47,7 +46,6 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
   }
 
   @Override protected void assignViews(View itemView) {
-    storeLayout = itemView.findViewById(R.id.store_layout);
     storeIcon = (ImageView) itemView.findViewById(R.id.store_icon);
     storeName = (TextView) itemView.findViewById(R.id.store_name);
     suggestionMessage = (TextView) itemView.findViewById(R.id.create_store_text);

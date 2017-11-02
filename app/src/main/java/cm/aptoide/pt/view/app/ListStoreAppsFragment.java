@@ -39,7 +39,7 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
 
   public static final String STORE_ID = "cm.aptoide.pt.ListStoreAppsFragment.storeId";
   public static final int LOAD_THRESHOLD = 5;
-  private static final String LIST_STATE_KEY = "cm.atpoide.pt.ListStoreAppsFragment.ListState";
+  private static final String LIST_STATE_KEY = "cm.aptoide.pt.ListStoreAppsFragment.ListState";
   private ListStoreAppsAdapter adapter;
   private long storeId;
   private PublishSubject<Application> appClicks;

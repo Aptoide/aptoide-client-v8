@@ -7,16 +7,16 @@ package cm.aptoide.pt.view.app;
 public class Application {
   private final String name;
   private final String icon;
-  private final float avg;
+  private final float rating;
   private final int downloads;
   private final long appId;
   private final String packageName;
 
-  public Application(String name, String icon, float avg, int downloads, String packageName,
+  public Application(String name, String icon, float rating, int downloads, String packageName,
       long appId) {
     this.name = name;
     this.icon = icon;
-    this.avg = avg;
+    this.rating = rating;
     this.downloads = downloads;
     this.appId = appId;
     this.packageName = packageName;
@@ -25,7 +25,7 @@ public class Application {
   public Application() {
     name = null;
     icon = null;
-    avg = -1;
+    rating = -1;
     downloads = -1;
     appId = -1;
     packageName = null;
@@ -43,8 +43,8 @@ public class Application {
     return icon;
   }
 
-  public float getAvg() {
-    return avg;
+  public float getRating() {
+    return rating;
   }
 
   public int getDownloads() {
