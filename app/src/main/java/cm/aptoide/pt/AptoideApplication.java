@@ -84,6 +84,7 @@ import cm.aptoide.pt.billing.transaction.TransactionRepository;
 import cm.aptoide.pt.billing.transaction.TransactionService;
 import cm.aptoide.pt.billing.view.PaymentThrowableCodeMapper;
 import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
+import cm.aptoide.pt.billing.view.appcoin.EtherAccountManager;
 import cm.aptoide.pt.crashreports.ConsoleLogger;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
@@ -311,6 +312,8 @@ public abstract class AptoideApplication extends Application {
   private AccountSettingsBodyInterceptorV7 accountSettingsBodyInterceptorPoolV7;
   private AccountSettingsBodyInterceptorV7 accountSettingsBodyInterceptorWebV7;
   private AppCoinTransactionService appCoinTransactionService;
+  private EthereumApi ethereumApi;
+  private EtherAccountManager etherAccountManager;
 
   public LeakTool getLeakTool() {
     if (leakTool == null) {
@@ -325,7 +328,6 @@ public abstract class AptoideApplication extends Application {
         .addLogger(new CrashlyticsCrashLogger(this, BuildConfig.CRASH_REPORTS_DISABLED))
         .addLogger(new ConsoleLogger());
     Logger.setDBG(ToolboxManager.isDebug(getDefaultSharedPreferences()) || BuildConfig.DEBUG);
-
     try {
       PRNGFixes.apply();
     } catch (Exception e) {
@@ -821,6 +823,8 @@ public abstract class AptoideApplication extends Application {
 
     if (billing == null) {
 
+
+
       final TransactionRepository transactionRepository =
           new TransactionRepository(getAppTransactionPersistence(), getBillingSyncManager(), getPayer(),
               getAppCoinTransactionService());
@@ -908,11 +912,26 @@ public abstract class AptoideApplication extends Application {
   }
 
 
+  public Single<EthereumApi> getEthereumApi(){
+    if(ethereumApi == null){
+      ethereumApi = EthereumApiFactory.createEthereumApi();
+    }
+    return Single.just(ethereumApi);
+  }
+
+  public EtherAccountManager getEtherAccountManager(){
+    if(etherAccountManager == null){
+      etherAccountManager =
+          new EtherAccountManager(getEthereumApi().toBlocking().value(), getSharedPreferences("MainPrefs", MODE_PRIVATE));
+    }
+    return etherAccountManager;
+  }
+
   public AppCoinTransactionService getAppCoinTransactionService(){
     if (appCoinTransactionService == null) {
       appCoinTransactionService = new AppCoinTransactionService(getTransactionMapper(), getBodyInterceptorV3(),
           WebService.getDefaultConverter(), getDefaultClient(), getTokenInvalidator(),
-          getDefaultSharedPreferences(), getTransactionFactory(), getBillingIdResolver());
+          getDefaultSharedPreferences(), getTransactionFactory(), getBillingIdResolver(),getEthereumApi().toBlocking().value(), getEtherAccountManager());
     }
     return appCoinTransactionService;
   }

@@ -7,6 +7,7 @@ import java.util.Map;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by jose_messejana on 26-10-2017.
@@ -32,7 +33,7 @@ public class AppCoinsTransactionPersistence implements TransactionPersistence {
       String productId, Transaction.Status status, String payload, String metadata) {
     Logger.d("TAG123","create_repo");
     return appCoinTransactionService.createTransactionwithMeta(sellerId,payerId, paymentMethodId, productId, status
-        ,metadata);
+        ,metadata).observeOn(Schedulers.io());
 
   }
 

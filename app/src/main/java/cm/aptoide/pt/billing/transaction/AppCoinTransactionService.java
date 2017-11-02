@@ -1,21 +1,27 @@
 package cm.aptoide.pt.billing.transaction;
 
 import android.content.SharedPreferences;
+import cm.aptoide.pt.EthereumApi;
 import cm.aptoide.pt.billing.BillingIdResolver;
 import cm.aptoide.pt.billing.Product;
+import cm.aptoide.pt.billing.view.appcoin.EtherAccountManager;
 import cm.aptoide.pt.billing.view.appcoin.TransactionSimulator;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
+import cm.aptoide.pt.erc20.Erc20Transfer;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.ws.etherscan.TransactionResultResponse;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
+import rx.Observable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -25,19 +31,26 @@ import rx.schedulers.Schedulers;
 public class AppCoinTransactionService implements TransactionService {
 
   private final TransactionFactory transactionFactory;
+  private final EthereumApi ethereumApi;
+  private final EtherAccountManager etherAccountManager;
   private Transaction currentTransaction;
   private Map<String, Transaction> transactionList = new HashMap<>();
-  //private Map<String, AppCoinTransaction> appCoinTransactionList = new HashMap<>();
+  private Map<String, String> appCoinTransactionList = new HashMap<>();
   private Map<String, TransactionSimulator> transactionSimList = new HashMap<>();
   private int count = 0;
   private Map<String, Product> products = new HashMap<>();
+  private static final String CONTRACT_ADDRESS = "8dbf4349cbeca08a02cc6b5b0862f9dd42c585b9";
+  private static final String RECEIVER_ADDR = "62a5c1680554A61334F5c6f6D7dA6044b6AFbFe8";
+  private static final boolean REALTRANSACTION = false;
 
   public AppCoinTransactionService(TransactionMapper transactionMapper,
       BodyInterceptor<BaseBody> bodyInterceptorV3, Converter.Factory converterFactory,
       OkHttpClient httpClient, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, TransactionFactory transactionFactory,
-      BillingIdResolver idResolver) {
+      BillingIdResolver idResolver, EthereumApi ethereumApi, EtherAccountManager etherAccountManager) {
     this.transactionFactory = transactionFactory;
+    this.ethereumApi = ethereumApi;
+    this.etherAccountManager = etherAccountManager;
   }
 
   @Override
@@ -45,26 +58,40 @@ public class AppCoinTransactionService implements TransactionService {
     Transaction transaction = transactionList.get(concat(product.getId(), payerId));
     Logger.d("TAG123", "get");
     if (transaction != null) {
-      if (!transactionSimList.isEmpty()) {
-        TransactionSimulator transactionSimulator =
-            transactionSimList.get(concat(product.getId(), payerId));
-        transactionSimulator.getStatus();
-        if (transactionSimulator != null) {
-          switch (transactionSimulator.getStatus()) {
-            case COMPLETED:
-              return createTransactionStatusUpdate(sellerId, product.getId(),
-                  transaction.getPaymentMethodId(), payerId, Transaction.Status.COMPLETED);
-            case FAILED:
-              return createTransactionStatusUpdate(sellerId, product.getId(),
-                  transaction.getPaymentMethodId(), payerId, Transaction.Status.FAILED);
-            case CANCELED:
-              return createTransactionStatusUpdate(sellerId, product.getId(),
-                  transaction.getPaymentMethodId(), payerId, Transaction.Status.CANCELED);
-            case PENDING:
-              break;
-            default:
-              return createTransactionStatusUpdate(sellerId, product.getId(),
-                  transaction.getPaymentMethodId(), payerId, Transaction.Status.UNKNOWN);
+      if(REALTRANSACTION){
+        if(!appCoinTransactionList.isEmpty()){
+          String txHash = appCoinTransactionList.get(concat(product.getId(),payerId));
+          if(txHash != null){
+            Boolean accepted = ethereumApi.isTransactionAccepted(txHash)
+                .toBlocking()
+                .first();
+            if(accepted){
+              return createTransactionStatusUpdate(sellerId, product.getId(), transaction.getPaymentMethodId(), payerId, Transaction.Status.COMPLETED);
+            }
+            else{
+              return createTransactionStatusUpdate(sellerId, product.getId(), transaction.getPaymentMethodId(), payerId, Transaction.Status.PENDING);
+            }
+          }
+        }
+      }
+      else {
+        if (!transactionSimList.isEmpty()) {
+          TransactionSimulator transactionSimulator =
+              transactionSimList.get(concat(product.getId(), payerId));
+          if (transactionSimulator != null) {
+            transactionSimulator.getStatus();
+            switch (transactionSimulator.getStatus()) {
+              case COMPLETED:
+                return createTransactionStatusUpdate(sellerId, product.getId(), transaction.getPaymentMethodId(), payerId, Transaction.Status.COMPLETED);
+              case FAILED:
+                return createTransactionStatusUpdate(sellerId, product.getId(), transaction.getPaymentMethodId(), payerId, Transaction.Status.FAILED);
+              case CANCELED:
+                return createTransactionStatusUpdate(sellerId, product.getId(), transaction.getPaymentMethodId(), payerId, Transaction.Status.CANCELED);
+              case PENDING:
+                break;
+              default:
+                return createTransactionStatusUpdate(sellerId, product.getId(), transaction.getPaymentMethodId(), payerId, Transaction.Status.UNKNOWN);
+            }
           }
         }
       }
@@ -104,18 +131,31 @@ public class AppCoinTransactionService implements TransactionService {
     Transaction transaction = null;
     try {
       Logger.d("TAG123", "create_tran_meta_try" + status);
-      //AppCoin appcoin = new AppCoin("user","key", "key");
-      //AppCoinTransaction appcointransaction = appcoin.makeTransaction;
-      //appcointransactionList.add(appcoinTransaction)
-      TransactionSimulator transactionSimulator = new TransactionSimulator();
-      Single.just(true)
-          .delay(TransactionSimulator.TIME_FOR_TEST_TRANSACTION, TimeUnit.MILLISECONDS)
-          .subscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread())
-          .doOnSuccess(__ -> transactionSimulator.startThread())
-          .subscribe(__ -> {
-          }, throwable -> throwable.printStackTrace());
-      addTStransaction(productId, payerId, transactionSimulator);
+      if(REALTRANSACTION){
+        etherAccountManager.getCurrentNonce().observeOn(Schedulers.io())
+            .flatMap(new Func1<Long, Observable<TransactionResultResponse>>() {
+                public Observable<TransactionResultResponse> call(Long nonce) {
+                TransactionResultResponse call = ethereumApi.call(nonce.intValue(), CONTRACT_ADDRESS,
+                    new Erc20Transfer(RECEIVER_ADDR, 1), etherAccountManager.getECKey()).toBlocking().first();
+                addACtransaction(productId,payerId,call.result);
+                return Observable.just(call);
+              }
+            })
+            //ethereumApi.call(nonce, CONTRACT_ADDRESS, erc20Transfer, etherAccountManager.getECKey())
+            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe();
+      }
+      else {
+        TransactionSimulator transactionSimulator = new TransactionSimulator();
+        Single.just(true)
+            .delay(TransactionSimulator.TIME_FOR_TEST_TRANSACTION, TimeUnit.MILLISECONDS)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSuccess(__ -> transactionSimulator.startThread())
+            .subscribe(__ -> {
+            }, throwable -> throwable.printStackTrace());
+        addTStransaction(productId, payerId, transactionSimulator);
+      }
       transaction =
           transactionFactory.create(sellerId, payerId, paymentMethodId, productId, status, metadata,
               null, null, null, null);
@@ -123,10 +163,12 @@ public class AppCoinTransactionService implements TransactionService {
       Logger.d("TAG123", "create: " + transaction.getStatus() + transaction.getProductId());
       return Single.just(transaction);
     } catch (Exception e) {
-      Logger.d("TAG123", "create_tran_meta_catch");
+      e.printStackTrace();
+      transactionList.clear();
       transaction = transactionFactory.create(sellerId, payerId, paymentMethodId, productId,
           Transaction.Status.FAILED, metadata, null, null, null, null);
       saveTransaction(transaction);
+      e.printStackTrace();
     }
     return Single.just(transaction);
   }
@@ -171,9 +213,9 @@ public class AppCoinTransactionService implements TransactionService {
     transactionSimList.put(concat(productID, payerID), transaction);
   }
 
- /* public void addCBtransaction(String productID, String payerID, String hash){
-    coinbaseCBTransactionList.put(concat(productID,payerID),hash);
-  } */
+  public void addACtransaction(String productID, String payerID, String txHash){
+    appCoinTransactionList.put(concat(productID,payerID),txHash);
+  }
 
   public void remove(String key) {
     transactionList.remove(key);

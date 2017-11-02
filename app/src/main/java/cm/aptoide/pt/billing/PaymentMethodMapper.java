@@ -7,7 +7,6 @@ package cm.aptoide.pt.billing;
 
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v3.PaymentServiceResponse;
-import cm.aptoide.pt.logger.Logger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -50,8 +49,7 @@ public class PaymentMethodMapper {
       case BOA_COMPRA_GOLD:
       case MOL_POINTS:
       case APPCOINS:
-        Logger.d("TAG123","responseID: "+response.getId());
-        return new PaymentMethod(response.getId(), response.getName(), response.getDescription());
+        return new PaymentMethod(response.getId(), response.getName(), response.getDescription(), R.drawable.appcoins_logo);
       case SANDBOX:
         return new PaymentMethod(response.getId(), response.getName(), response.getDescription());
       default:

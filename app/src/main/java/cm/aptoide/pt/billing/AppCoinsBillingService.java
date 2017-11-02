@@ -3,6 +3,7 @@ package cm.aptoide.pt.billing;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import cm.aptoide.pt.PackageRepository;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.billing.exception.ProductNotFoundException;
 import cm.aptoide.pt.billing.exception.PurchaseNotFoundException;
 import cm.aptoide.pt.billing.product.InAppProduct;
@@ -74,7 +75,7 @@ public class AppCoinsBillingService implements BillingService {
 
   @Override public Single<List<PaymentMethod>> getPaymentMethods(Product product) {
     List<PaymentMethod> paymentList = new ArrayList<>();
-    paymentList.add(new PaymentMethod(12, "AppCoin", "Buy with Appcoins"));
+    paymentList.add(new PaymentMethod(12, "AppCoin", "Buy with Appcoins", R.drawable.appcoins_logo));
     return Single.just(paymentList);
   }
 
@@ -134,7 +135,7 @@ public class AppCoinsBillingService implements BillingService {
 
   @Override public Single<Purchase> getPurchase(Product product) {
     if (product instanceof InAppProduct) {
-      return Single.just(new InAppPurchase("done", "empty", "empty", "empty", SimplePurchase.Status.COMPLETED,
+      return Single.just(new InAppPurchase("done", "empty", "com.marceloporto.bombastic.smallpack", "NQ", SimplePurchase.Status.COMPLETED,
           product.getId()));
     }
     else if (product instanceof PaidAppProduct) {
