@@ -12,7 +12,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -26,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -63,7 +63,7 @@ public class PostFragment extends FragmentView implements PostView {
   private static final int MAX_CHARACTERS = 200;
   private ProgressBar previewLoading;
   private RecyclerView relatedApps;
-  private AppCompatEditText userInput;
+  private EditText userInput;
   private ImageView previewImage;
   private TextView previewTitle;
   private TextView urlShower;
@@ -197,8 +197,8 @@ public class PostFragment extends FragmentView implements PostView {
     return R.layout.fragment_post;
   }
 
-  private void bindViews(@Nullable View view) {
-    userInput = (AppCompatEditText) view.findViewById(R.id.input_text);
+  private void bindViews(View view) {
+    userInput = (EditText) view.findViewById(R.id.input_text);
     previewImage = (ImageView) view.findViewById(R.id.preview_image);
     previewTitle = (TextView) view.findViewById(R.id.preview_title);
     previewLoading = (ProgressBar) view.findViewById(R.id.preview_progress_bar);
@@ -424,7 +424,7 @@ public class PostFragment extends FragmentView implements PostView {
   }
 
   @Override public String getExternalUrlToShare() {
-    return externalUrlProvider!=null ? externalUrlProvider.getUrlToShare() : null;
+    return externalUrlProvider != null ? externalUrlProvider.getUrlToShare() : null;
   }
 
   private void handlePreviewLayout() {
