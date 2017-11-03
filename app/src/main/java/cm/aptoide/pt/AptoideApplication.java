@@ -414,8 +414,9 @@ public abstract class AptoideApplication extends Application {
         .distinctUntilChanged()
         .subscribe(isLoggedIn -> aptoideApplicationAnalytics.updateDimension(isLoggedIn));
 
-    dispatchPostReadEventInterval().subscribe(o -> {
-    }, throwable -> ((Throwable) throwable).printStackTrace());
+    dispatchPostReadEventInterval().subscribe(() -> {
+    }, throwable -> CrashReport.getInstance()
+        .log(throwable));
 
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
@@ -1372,7 +1373,7 @@ public abstract class AptoideApplication extends Application {
     return readPostsPersistence;
   }
 
-  private Observable dispatchPostReadEventInterval() {
+  private Completable dispatchPostReadEventInterval() {
     return Observable.interval(10, TimeUnit.SECONDS)
         .switchMap(__ -> getReadPostsPersistence().getPosts(10)
             .toObservable()
@@ -1382,7 +1383,8 @@ public abstract class AptoideApplication extends Application {
                 .observe()
                 .flatMapCompletable(___ -> getReadPostsPersistence().removePosts(postsRead)))
             .repeatWhen(completed -> completed.takeWhile(
-                ____ -> !getReadPostsPersistence().isPostsEmpty())));
+                ____ -> !getReadPostsPersistence().isPostsEmpty())))
+        .toCompletable();
   }
 }
 
