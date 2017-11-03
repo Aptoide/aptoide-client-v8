@@ -61,6 +61,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.mopub.common.util.DateAndTime;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.text.NumberFormat;
+import java.util.concurrent.TimeUnit;
 import org.spongycastle.util.encoders.Hex;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -178,6 +179,10 @@ public class HomeFragment extends StoreFragment {
   private void setAppCoins(BalanceResponse balanceResponse) {
     balanceAppcoins.setVisibility(View.VISIBLE);
     balanceAppcoins.setText(balanceResponse.result + " AppCoins");
+    String data = DateAndTime.now()
+        .toString()
+        .substring(4, 20);
+    lastUpdated.setText("Last Updated in " + data);
   }
 
   private void setVisibleUserImageAndName(Account account) {
@@ -188,7 +193,8 @@ public class HomeFragment extends StoreFragment {
     etherAccountManager.getCurrentNonce()
         .flatMap(aLong -> ethereumApi.getTokenBalance(CONTRACT_ADDRESS, Hex.toHexString(
             etherAccountManager.getECKey()
-                .getAddress())))
+                .getAddress()))
+            .repeatWhen(observable -> observable.delay(5, TimeUnit.SECONDS)))
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(this::setAppCoins, Throwable::printStackTrace);
