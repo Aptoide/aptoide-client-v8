@@ -3,7 +3,6 @@ package cm.aptoide.pt.billing.transaction;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.EthereumApi;
-import cm.aptoide.pt.EthereumApiFactory;
 import cm.aptoide.pt.billing.BillingIdResolver;
 import cm.aptoide.pt.billing.Product;
 import cm.aptoide.pt.billing.view.appcoin.EtherAccountManager;
@@ -17,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
+import org.spongycastle.util.encoders.Hex;
 import retrofit2.Converter;
 import rx.Completable;
 import rx.Single;
@@ -39,7 +39,7 @@ public class AppCoinTransactionService implements TransactionService {
   private Map<String, Product> products = new HashMap<>();
   public static final String CONTRACT_ADDRESS = "8dbf4349cbeca08a02cc6b5b0862f9dd42c585b9";
   private static final String RECEIVER_ADDR = "62a5c1680554A61334F5c6f6D7dA6044b6AFbFe8";
-  private static final boolean REALTRANSACTION = false;
+  private static final boolean REALTRANSACTION = true;
 
   public AppCoinTransactionService(TransactionMapper transactionMapper,
       BodyInterceptor<BaseBody> bodyInterceptorV3, Converter.Factory converterFactory,
@@ -61,7 +61,8 @@ public class AppCoinTransactionService implements TransactionService {
           if (!appCoinTransactionList.isEmpty()) {
             String txHash = appCoinTransactionList.get(concat(product.getId(), payerId));
             if (txHash != null) {
-              EthereumApi ethereumApi = EthereumApiFactory.createEthereumApi();
+              EthereumApi ethereumApi =
+                  aptoideApplication.getEthereumApi();
               Boolean accepted = ethereumApi.isTransactionAccepted(txHash)
                   .toBlocking()
                   .first();
@@ -133,13 +134,13 @@ public class AppCoinTransactionService implements TransactionService {
       Logger.d("TAG123", "create_tran_meta_try" + status);
       if(REALTRANSACTION){
         EthereumApi ethereumApi =
-            ((AptoideApplication) aptoideApplication).getEthereumApi();
+            aptoideApplication.getEthereumApi();
         EtherAccountManager etherAccountManager =
-            ((AptoideApplication) aptoideApplication.getApplicationContext()).getEtherAccountManager();
+           aptoideApplication.getEtherAccountManager();
         etherAccountManager.getCurrentNonce()
             .flatMap(nonce -> ethereumApi.call(nonce.intValue(), CONTRACT_ADDRESS, new Erc20Transfer(RECEIVER_ADDR, 1), etherAccountManager.getECKey()))
             .doOnNext(call -> addACtransaction(productId,payerId,call.result)).doOnError(throwable -> throwable.printStackTrace()).subscribe();
-            //ethereumApi.call(nonce, CONTRACT_ADDRESS, erc20Transfer, etherAccountManager.getECKey())
+        Logger.d("TAG123", Hex.toHexString(etherAccountManager.getECKey().getAddress()));
       }
       else {
         TransactionSimulator transactionSimulator = new TransactionSimulator();

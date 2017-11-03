@@ -218,7 +218,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     productName.setText(product.getTitle());
     productDescription.setText(product.getDescription());
     productPrice.setText(product.getPrice()
-        .getAmount()*10 + "Appcoins");
+        .getAmount()*10 + " Appcoins");
   }
 
   @Override public void hidePaymentLoading() {

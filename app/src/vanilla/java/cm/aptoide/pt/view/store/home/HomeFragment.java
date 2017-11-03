@@ -173,7 +173,14 @@ public class HomeFragment extends StoreFragment {
     userUsername.setVisibility(View.GONE);
     ImageLoader.with(getContext())
         .loadWithCircleTransform(R.drawable.user_account_white, userAvatarImage);
+  }
 
+  private void setAppCoins(BalanceResponse balanceResponse) {
+    balanceAppcoins.setVisibility(View.VISIBLE);
+    balanceAppcoins.setText(balanceResponse.result + " AppCoins");
+  }
+
+  private void setVisibleUserImageAndName(Account account) {
     EthereumApi ethereumApi =
         ((AptoideApplication) getActivity().getApplicationContext()).getEthereumApi();
     EtherAccountManager etherAccountManager =
@@ -185,19 +192,8 @@ public class HomeFragment extends StoreFragment {
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(this::setAppCoins, Throwable::printStackTrace);
-  }
-
-  private void setAppCoins(BalanceResponse balanceResponse) {
-    balanceAppcoins.setVisibility(View.VISIBLE);
-    lastUpdated.setVisibility(View.VISIBLE);
-    balanceAppcoins.setText(balanceResponse.result);
-    lastUpdated.setText(Long.toString(System.currentTimeMillis()));
-  }
-
-  private void setVisibleUserImageAndName(Account account) {
     userEmail.setVisibility(View.VISIBLE);
     userUsername.setVisibility(View.VISIBLE);
-    String data = DateAndTime.now().toString().substring(4,20);
     userEmail.setText(account.getEmail());
     userUsername.setText(account.getNickname());
     ImageLoader.with(getContext())

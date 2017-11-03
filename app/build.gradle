@@ -375,6 +375,7 @@ dependencies {
   compile files('transaction-generator.jar')
   compile group: 'com.madgag.spongycastle', name: 'core', version: '1.58.0.0'
   compile 'com.madgag.spongycastle:pg:1.54.0.0'
+  compile "org.apache.commons:commons-lang3:3.4"
 }
 
 String getDate() {
