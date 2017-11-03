@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -55,6 +56,19 @@ public class FileUtils {
     }
   }
 
+  public static void saveToFile(String filePath, String data) {
+
+    File file = new File(filePath);
+    try {
+      FileOutputStream fOut = new FileOutputStream(file);
+      OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fOut);
+      outputStreamWriter.write(data);
+      outputStreamWriter.close();
+    } catch (IOException e) {
+      Logger.e("Exception", "File write failed: " + e.toString());
+    }
+  }
+
   public static boolean saveBitmapToFile(File dir, String fileName, Bitmap bm,
       Bitmap.CompressFormat format, int quality) {
 
@@ -85,6 +99,23 @@ public class FileUtils {
 
   public static boolean fileExists(String path) {
     return !TextUtils.isEmpty(path) && new File(path).exists();
+  }
+
+  public static String loadJSON(String filePath) {
+    String json = null;
+    try {
+      File file = new File(filePath);
+      InputStream is = new FileInputStream(file);
+      int size = is.available();
+      byte[] buffer = new byte[size];
+      is.read(buffer);
+      is.close();
+      json = new String(buffer, "UTF-8");
+    } catch (IOException ex) {
+      ex.printStackTrace();
+      return null;
+    }
+    return json;
   }
 
   public long deleteDir(File dir) {
@@ -232,22 +263,5 @@ public class FileUtils {
       files[i] = new File(folders[i]);
     }
     return deleteFolder(files);
-  }
-
-  public static String loadJSON(String filePath) {
-    String json = null;
-    try {
-      File file = new File(filePath);
-      InputStream is = new FileInputStream(file);
-      int size = is.available();
-      byte[] buffer = new byte[size];
-      is.read(buffer);
-      is.close();
-      json = new String(buffer, "UTF-8");
-    } catch (IOException ex) {
-      ex.printStackTrace();
-      return null;
-    }
-    return json;
   }
 }

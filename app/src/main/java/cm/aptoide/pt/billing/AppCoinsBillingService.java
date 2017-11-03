@@ -26,11 +26,11 @@ import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingSkuDetailsRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.FileUtils;
-import com.facebook.GraphRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -47,7 +47,7 @@ import rx.Single;
 
 public class AppCoinsBillingService implements BillingService {
 
-  public static final String TAG = GraphRequest.class.getSimpleName();
+  public static final String TAG = AppCoinsBillingService.class.getSimpleName();
 
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
   private final OkHttpClient httpClient;
@@ -83,25 +83,36 @@ public class AppCoinsBillingService implements BillingService {
     this.idResolver = idResolver;
     this.apiVersion = apiVersion;
 
-    Logger.v(TAG, "file exists: " + FileUtils.fileExists(
-        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-            .getPath() + File.separator + "orders.json"));
+    //Logger.v(TAG, "file exists: " + FileUtils.fileExists(
+    //    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+    //        .getPath() + File.separator + "orders.json"));
+    //
+    //Gson gson = new GsonBuilder().create();
+    //try {
+    // //get file with all order ids
+    //  purchaseFile = gson.fromJson(FileUtils.loadJSON(
+    //      Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+    //          .getPath() + File.separator + "orders.json"), PurchaseFile.class);
+    // //get the first element of the list
+    //  Logger.v(TAG, "id: " + purchaseFile.list[0].id);
+    //
+    //  Logger.v(TAG, "length: " + purchaseFile.list.length);
+    // // after using the first element, delete it
+    //  deleteFirst();
+    //  Logger.v(TAG, "length: " + purchaseFile.list.length);
+    // //then save the file again
+    //  FileUtils.saveToFile(
+    //      Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+    //          .getPath() + File.separator + "orders.json", new Gson().toJson(purchaseFile));
+    //} catch (Exception e) {
+    //  e.printStackTrace();
+    //  Logger.e(TAG, "error: ", e);
+    //}
+  }
 
-    Gson gson = new GsonBuilder().create();
-    try {
+  private void deleteFirst() {
 
-      //Type type = new TypeToken<List<PurchaseFile.PurchaseOrderItem[]>>() {
-      //}.getType();
-
-      purchaseFile = gson.fromJson(FileUtils.loadJSON(
-          Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-              .getPath() + File.separator + "orders.json"), PurchaseFile.class);
-
-      Logger.v(TAG, "id: " + purchaseFile.list[0].id);
-    } catch (Exception e) {
-      e.printStackTrace();
-      Logger.e(TAG, "error: ", e);
-    }
+    purchaseFile.list = Arrays.copyOfRange(purchaseFile.list, 1, purchaseFile.list.length);
   }
 
   @Override public Single<List<PaymentMethod>> getPaymentMethods(Product product) {
