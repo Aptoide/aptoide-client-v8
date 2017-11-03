@@ -12,12 +12,9 @@ import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.app.AppRepository;
 import cm.aptoide.pt.app.FirstInstallAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.MinimalAd;
-import cm.aptoide.pt.database.realm.StoredMinimalAd;
-import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.model.v7.Layout;
@@ -29,7 +26,6 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.firstinstall.displayable.FirstInstallAdDisplayable;
 import cm.aptoide.pt.firstinstall.displayable.FirstInstallAppDisplayable;
 import cm.aptoide.pt.install.InstallManager;
-import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.repository.request.RequestFactory;
@@ -66,24 +62,27 @@ public class FirstInstallPresenter implements Presenter {
   private Resources resources;
   private WindowManager windowManager;
   private AppRepository appRepository;
-
-  private List<FirstInstallAppDisplayable> appDisplayables;
-  private List<FirstInstallAdDisplayable> adDisplayables;
+  private FirstInstallAnalytics firstInstallAnalytics;
   private PermissionManager permissionManager;
   private PermissionService permissionService;
   private InstallManager installManager;
-
   private MinimalAdMapper adMapper;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private QManager qManager;
   private StoredMinimalAdAccessor storedMinimalAdAccessor;
-  private FirstInstallAnalytics firstInstallAnalytics;
+
+  private List<FirstInstallAppDisplayable> appDisplayables;
+  private List<FirstInstallAdDisplayable> adDisplayables;
 
   FirstInstallPresenter(FirstInstallView view, CrashReport crashReport,
       RequestFactory requestFactoryCdnPool, Context context, String storeName, String url,
       AdsRepository adsRepository, Resources resources, WindowManager windowManager,
-      AppRepository appRepository, FirstInstallAnalytics firstInstallAnalytics) {
+      AppRepository appRepository, FirstInstallAnalytics firstInstallAnalytics,
+      PermissionManager permissionManager, PermissionService permissionService,
+      InstallManager installManager, MinimalAdMapper adMapper, OkHttpClient httpClient,
+      Converter.Factory converterFactory, QManager qManager,
+      StoredMinimalAdAccessor storedMinimalAdAccessor) {
     this.view = view;
     this.crashReport = crashReport;
     this.requestFactoryCdnPool = requestFactoryCdnPool;
@@ -95,23 +94,19 @@ public class FirstInstallPresenter implements Presenter {
     this.windowManager = windowManager;
     this.appRepository = appRepository;
     this.firstInstallAnalytics = firstInstallAnalytics;
+    this.permissionManager = permissionManager;
+    this.permissionService = permissionService;
+    this.installManager = installManager;
+    this.adMapper = adMapper;
+    this.httpClient = httpClient;
+    this.converterFactory = converterFactory;
+    this.qManager = qManager;
+    this.storedMinimalAdAccessor = storedMinimalAdAccessor;
   }
 
   @Override public void present() {
     appDisplayables = new ArrayList<>();
     adDisplayables = new ArrayList<>();
-    permissionManager = new PermissionManager();
-    permissionService = ((PermissionService) context);
-    installManager = ((AptoideApplication) context.getApplicationContext()).getInstallManager(
-        InstallerFactory.ROLLBACK);
-
-    adMapper = new MinimalAdMapper();
-    httpClient = ((AptoideApplication) context.getApplicationContext()).getDefaultClient();
-    converterFactory = WebService.getDefaultConverter();
-    qManager = ((AptoideApplication) context.getApplicationContext()).getQManager();
-    storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
-        ((AptoideApplication) context.getApplicationContext()
-            .getApplicationContext()).getDatabase(), StoredMinimalAd.class);
 
     handleInstallAllClick();
     handleCloseClick();
