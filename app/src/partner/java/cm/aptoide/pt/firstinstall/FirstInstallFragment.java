@@ -15,10 +15,16 @@ import android.widget.RelativeLayout;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PartnerApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.app.FirstInstallAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.database.AccessorFactory;
+import cm.aptoide.pt.database.realm.StoredMinimalAd;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.preferences.PartnersSecurePreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.store.StoreTheme;
@@ -96,7 +102,15 @@ public class FirstInstallFragment extends AptoideBaseFragment<BaseAdapter>
             (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
             RepositoryFactory.getAppRepository(getContext(),
                 ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()),
-            firstInstallAnalytics));
+            firstInstallAnalytics, new PermissionManager(), this,
+            ((AptoideApplication) getApplicationContext()).getInstallManager(
+                InstallerFactory.ROLLBACK), new MinimalAdMapper(),
+            ((AptoideApplication) getApplicationContext()).getDefaultClient(),
+            WebService.getDefaultConverter(),
+            ((AptoideApplication) getApplicationContext()).getQManager(),
+            AccessorFactory.getAccessorFor(
+                ((AptoideApplication) getApplicationContext().getApplicationContext()).getDatabase(),
+                StoredMinimalAd.class)));
   }
 
   /**
