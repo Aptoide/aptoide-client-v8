@@ -341,13 +341,6 @@ public class HomeFragment extends StoreFragment {
     toolbar.setTitle("");
     toolbar.setNavigationIcon(R.drawable.ic_drawer);
     toolbar.setNavigationOnClickListener(v -> {
-      Logger.d("TAG123","here1"); //getBalance
-      if(!lastUpdated.getText().equals("")) {
-        String data = DateAndTime.now()
-            .toString()
-            .substring(4, 20);
-        lastUpdated.setText("Last Updated in " + data);
-      }
       drawerLayout.openDrawer(GravityCompat.START);
       drawerAnalytics.drawerOpen();
       aptoideNavigationTracker.registerScreen(ScreenTagHistory.Builder.build("Drawer"));
