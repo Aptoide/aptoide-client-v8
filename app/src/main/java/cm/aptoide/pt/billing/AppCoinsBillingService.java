@@ -156,20 +156,20 @@ public class AppCoinsBillingService implements BillingService {
 
   @Override public Single<Purchase> getPurchase(Product product) {
     String signature =
-        "x5kSaeUpenDyI8qbE2qJ69qqDNyH9OIqjwLGJsPqgEWO3W4Oc2tySRMffUVVgU9230W7n08hJQCcoMTuMMmSmCzry9xP+hCagw/jDKnOmMg4mJeduiQzeXzFGh8uZ2W1u55Wq2qCZFEXk2Na5aY04tKTKauWcpVsvUB2aUxdQ3OWxPPNQhfsvWuGXY3eF9zNkO2ZFhDbsqJhG+fB3gwDPWVZ5ZSbx/d/UzDkcE5THuTIBzWybKUAl6fUBbcr8lcfgNbinwK5u7fhsxFv4Ha+lO08XbR5y5m03KAFrUhLJbWLA9mmnPDYXkV2lDa22LQ+xmDsnUnL+5BWWFBgU/mpEA==";
+        "O02IDIBMIkkM1YVQMM8vUWeTDq6ITLYN0xFa5YyS2B72K58dpyyQltZDBy3S+Q8nMp51jUXOXHX7mcuvaw+ZTohKJUTMUJtP31M260wUdoZNMjNq3/hev2BJMjfJLpRkxquvq3fTXYZi5PPrMCWbDPx2cOZqdwoGIxulEiJykltCdfE97j15Um2Nw0c33J5McQIi1gODs5xLXXkEeMKjDEjuB3wz4AkkyAWNwy2tBIXqGoJw3bPve5WjtXX/4BJ9PdglpEa+tJawDLdKkJ7AECAbFnf1U7Ma4CV3ngO2or38wNsQcWx0phk1ey6DHoHWqnOegiE3WxVHI2X9F92UGQ==";
     JSONObject json = new JSONObject();
     try {
-      json.put("orderId", "24"); // 21
+      json.put("orderId", "26"); // 21
       json.put("packageName", "com.marceloporto.bombastic");
       json.put("productId", "com.marceloporto.bombastic.mediumpack");
       json.put("purchaseTime", 1509408000);
-      json.put("purchaseToken", "MjQ");
+      json.put("purchaseToken", "Mjc");
       json.put("purchaseState", 0);
     } catch (JSONException e) {
       e.printStackTrace();
     }
     String sku = "com.marceloporto.bombastic.mediumpack";
-    String token = "MjQ";
+    String token = "Mjc";
 
     if (product instanceof InAppProduct) {
       inAppPurchase =
