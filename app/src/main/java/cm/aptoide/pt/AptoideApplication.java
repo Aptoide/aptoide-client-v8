@@ -21,6 +21,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.os.Build;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
@@ -63,6 +64,7 @@ import cm.aptoide.pt.billing.BillingService;
 import cm.aptoide.pt.billing.Payer;
 import cm.aptoide.pt.billing.PaymentMethodMapper;
 import cm.aptoide.pt.billing.PaymentMethodSelector;
+import cm.aptoide.pt.billing.PurchaseFile;
 import cm.aptoide.pt.billing.PurchaseMapper;
 import cm.aptoide.pt.billing.SharedPreferencesPaymentMethodSelector;
 import cm.aptoide.pt.billing.authorization.AuthorizationFactory;
@@ -197,6 +199,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.liulishuo.filedownloader.FileDownloader;
@@ -823,11 +827,9 @@ public abstract class AptoideApplication extends Application {
 
     if (billing == null) {
 
-
-
       final TransactionRepository transactionRepository =
-          new TransactionRepository(getAppTransactionPersistence(), getBillingSyncManager(), getPayer(),
-              getAppCoinTransactionService());
+          new TransactionRepository(getAppTransactionPersistence(), getBillingSyncManager(),
+              getPayer(), getAppCoinTransactionService());
 
       final AuthorizationRepository authorizationRepository =
           new AuthorizationRepository(getBillingSyncManager(), getPayer(),
@@ -862,9 +864,9 @@ public abstract class AptoideApplication extends Application {
   public BillingSyncManager getBillingSyncManager() {
     if (billingSyncManager == null) {
       billingSyncManager = new BillingSyncManager(
-          new BillingSyncFactory(getPayer(), getAppCoinTransactionService(), getAuthorizationService(),
-              getAppTransactionPersistence(), getAuthorizationPersistence()), getSyncScheduler(),
-          new HashSet<>());
+          new BillingSyncFactory(getPayer(), getAppCoinTransactionService(),
+              getAuthorizationService(), getAppTransactionPersistence(),
+              getAuthorizationPersistence()), getSyncScheduler(), new HashSet<>());
     }
     return billingSyncManager;
   }
@@ -912,29 +914,30 @@ public abstract class AptoideApplication extends Application {
   }
 
   public EthereumApi getEthereumApi() {
-    if(ethereumApi == null){
+    if (ethereumApi == null) {
       try {
         ethereumApi = EthereumApiFactory.createEthereumApi();
-      }catch(Exception e){
+      } catch (Exception e) {
         e.printStackTrace();
       }
     }
     return ethereumApi;
   }
 
-  public EtherAccountManager getEtherAccountManager(){
-    if(etherAccountManager == null){
-      etherAccountManager =
-          new EtherAccountManager(getEthereumApi(), getSharedPreferences("MainPrefs", MODE_PRIVATE));
+  public EtherAccountManager getEtherAccountManager() {
+    if (etherAccountManager == null) {
+      etherAccountManager = new EtherAccountManager(getEthereumApi(),
+          getSharedPreferences("MainPrefs", MODE_PRIVATE));
     }
     return etherAccountManager;
   }
 
-  public AppCoinTransactionService getAppCoinTransactionService(){
+  public AppCoinTransactionService getAppCoinTransactionService() {
     if (appCoinTransactionService == null) {
-      appCoinTransactionService = new AppCoinTransactionService(getTransactionMapper(), getBodyInterceptorV3(),
-          WebService.getDefaultConverter(), getDefaultClient(), getTokenInvalidator(),
-          getDefaultSharedPreferences(), getTransactionFactory(), getBillingIdResolver(), this);
+      appCoinTransactionService =
+          new AppCoinTransactionService(getTransactionMapper(), getBodyInterceptorV3(),
+              WebService.getDefaultConverter(), getDefaultClient(), getTokenInvalidator(),
+              getDefaultSharedPreferences(), getTransactionFactory(), getBillingIdResolver(), this);
     }
     return appCoinTransactionService;
   }

@@ -2,6 +2,7 @@ package cm.aptoide.pt.billing;
 
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.os.Environment;
 import cm.aptoide.pt.PackageRepository;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.billing.exception.ProductNotFoundException;
@@ -23,6 +24,12 @@ import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingAvailableRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingPurchasesRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingSkuDetailsRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.utils.FileUtils;
+import com.facebook.GraphRequest;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -40,6 +47,8 @@ import rx.Single;
 
 public class AppCoinsBillingService implements BillingService {
 
+  public static final String TAG = GraphRequest.class.getSimpleName();
+
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
@@ -53,6 +62,7 @@ public class AppCoinsBillingService implements BillingService {
   private final BillingIdResolver idResolver;
   private final int apiVersion;
   private InAppPurchase inAppPurchase = null;
+  private PurchaseFile purchaseFile;
 
   public AppCoinsBillingService(BodyInterceptor<BaseBody> bodyInterceptorV3,
       OkHttpClient httpClient, Converter.Factory converterFactory,
@@ -72,6 +82,26 @@ public class AppCoinsBillingService implements BillingService {
     this.resources = resources;
     this.idResolver = idResolver;
     this.apiVersion = apiVersion;
+
+    Logger.v(TAG, "file exists: " + FileUtils.fileExists(
+        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+            .getPath() + File.separator + "orders.json"));
+
+    Gson gson = new GsonBuilder().create();
+    try {
+
+      //Type type = new TypeToken<List<PurchaseFile.PurchaseOrderItem[]>>() {
+      //}.getType();
+
+      purchaseFile = gson.fromJson(FileUtils.loadJSON(
+          Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+              .getPath() + File.separator + "orders.json"), PurchaseFile.class);
+
+      Logger.v(TAG, "id: " + purchaseFile.list[0].id);
+    } catch (Exception e) {
+      e.printStackTrace();
+      Logger.e(TAG, "error: ", e);
+    }
   }
 
   @Override public Single<List<PaymentMethod>> getPaymentMethods(Product product) {
@@ -127,7 +157,7 @@ public class AppCoinsBillingService implements BillingService {
   @Override public Single<Purchase> getPurchase(Product product) {
     String signature =
         "x5kSaeUpenDyI8qbE2qJ69qqDNyH9OIqjwLGJsPqgEWO3W4Oc2tySRMffUVVgU9230W7n08hJQCcoMTuMMmSmCzry9xP+hCagw/jDKnOmMg4mJeduiQzeXzFGh8uZ2W1u55Wq2qCZFEXk2Na5aY04tKTKauWcpVsvUB2aUxdQ3OWxPPNQhfsvWuGXY3eF9zNkO2ZFhDbsqJhG+fB3gwDPWVZ5ZSbx/d/UzDkcE5THuTIBzWybKUAl6fUBbcr8lcfgNbinwK5u7fhsxFv4Ha+lO08XbR5y5m03KAFrUhLJbWLA9mmnPDYXkV2lDa22LQ+xmDsnUnL+5BWWFBgU/mpEA==";
-    JSONObject json  = new JSONObject();
+    JSONObject json = new JSONObject();
     try {
       json.put("orderId", "24"); // 21
       json.put("packageName", "com.marceloporto.bombastic");

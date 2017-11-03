@@ -233,4 +233,21 @@ public class FileUtils {
     }
     return deleteFolder(files);
   }
+
+  public static String loadJSON(String filePath) {
+    String json = null;
+    try {
+      File file = new File(filePath);
+      InputStream is = new FileInputStream(file);
+      int size = is.available();
+      byte[] buffer = new byte[size];
+      is.read(buffer);
+      is.close();
+      json = new String(buffer, "UTF-8");
+    } catch (IOException ex) {
+      ex.printStackTrace();
+      return null;
+    }
+    return json;
+  }
 }
