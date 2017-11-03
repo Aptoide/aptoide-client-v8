@@ -95,7 +95,6 @@ import rx.Completable;
 import rx.Observable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.subjects.PublishSubject;
 
 /**
@@ -216,8 +215,9 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
     timelineService =
         new TimelineService(userId, baseBodyInterceptorV7, defaultClient, defaultConverter,
-            new TimelineResponseCardMapper(accountManager, marketName), tokenInvalidator,
-            sharedPreferences);
+            new TimelineResponseCardMapper(accountManager,
+                application.getInstallManager(InstallerFactory.ROLLBACK), marketName),
+            tokenInvalidator, sharedPreferences);
     crashReport = CrashReport.getInstance();
   }
 
@@ -628,10 +628,12 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     shareDialog.shares()
         .doOnNext(event -> sharePostPublishSubject.onNext(event))
         .doOnNext(shareEvent -> {
-          if(shareEvent.getEvent()==ShareEvent.SHARE)
+          if (shareEvent.getEvent() == ShareEvent.SHARE) {
             timelineAnalytics.sendShareCompleted(shareEvent);
-          else
-            timelineAnalytics.sendErrorShareCompleted(shareEvent, EventErrorHandler.ShareErrorEvent.UNKNOWN_ERROR);
+          } else {
+            timelineAnalytics.sendErrorShareCompleted(shareEvent,
+                EventErrorHandler.ShareErrorEvent.UNKNOWN_ERROR);
+          }
         })
         .compose(bindUntilEvent(LifecycleEvent.PAUSE))
         .subscribe(shareEvent -> {

@@ -92,6 +92,13 @@ public class InstallManager {
         .toList());
   }
 
+  public Observable<List<Install>> getInstalledApps() {
+    return getInstallations().flatMap(installs -> Observable.from(installs)
+        .filter(install -> install.getState()
+            .equals(Install.InstallationStatus.INSTALLED))
+        .toList());
+  }
+
   public Observable<List<Install>> getInstallations() {
     return Observable.combineLatest(aptoideDownloadManager.getDownloads(),
         installedRepository.getAllInstalled(), (downloads, installeds) -> downloads)
