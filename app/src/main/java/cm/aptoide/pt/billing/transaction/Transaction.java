@@ -7,6 +7,7 @@ public class Transaction {
   private final int paymentMethodId;
   private final String payload;
   private final String sellerId;
+  private boolean consumed = false;
 
   public Transaction(String productId, String payerId, Status status, int paymentMethodId,
       String payload, String sellerId) {
@@ -70,5 +71,12 @@ public class Transaction {
 
   public enum Status {
     UNKNOWN, NEW, CREATED, PENDING_USER_AUTHORIZATION, PROCESSING, PENDING, COMPLETED, FAILED, CANCELED
+  }
+  public boolean isConsumed(){
+    return consumed;
+  }
+
+  public void setConsumed(){
+    consumed = true;
   }
 }

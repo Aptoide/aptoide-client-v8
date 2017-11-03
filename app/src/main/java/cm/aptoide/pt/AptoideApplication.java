@@ -934,7 +934,7 @@ public abstract class AptoideApplication extends Application {
     if (appCoinTransactionService == null) {
       appCoinTransactionService = new AppCoinTransactionService(getTransactionMapper(), getBodyInterceptorV3(),
           WebService.getDefaultConverter(), getDefaultClient(), getTokenInvalidator(),
-          getDefaultSharedPreferences(), getTransactionFactory(), getBillingIdResolver());
+          getDefaultSharedPreferences(), getTransactionFactory(), getBillingIdResolver(), this);
     }
     return appCoinTransactionService;
   }

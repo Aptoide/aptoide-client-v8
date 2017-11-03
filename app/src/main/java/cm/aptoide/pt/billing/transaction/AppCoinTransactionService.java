@@ -1,6 +1,7 @@
 package cm.aptoide.pt.billing.transaction;
 
 import android.content.SharedPreferences;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.EthereumApi;
 import cm.aptoide.pt.EthereumApiFactory;
 import cm.aptoide.pt.billing.BillingIdResolver;
@@ -29,6 +30,7 @@ import rx.schedulers.Schedulers;
 public class AppCoinTransactionService implements TransactionService {
 
   private final TransactionFactory transactionFactory;
+  private final AptoideApplication aptoideApplication;
   private Transaction currentTransaction;
   private Map<String, Transaction> transactionList = new HashMap<>();
   private Map<String, String> appCoinTransactionList = new HashMap<>();
@@ -43,9 +45,10 @@ public class AppCoinTransactionService implements TransactionService {
       BodyInterceptor<BaseBody> bodyInterceptorV3, Converter.Factory converterFactory,
       OkHttpClient httpClient, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, TransactionFactory transactionFactory,
-      BillingIdResolver idResolver) {
+      BillingIdResolver idResolver, AptoideApplication aptoideApplication) {
     this.transactionFactory = transactionFactory;
     this.sharedPreferences = sharedPreferences;
+    this.aptoideApplication = aptoideApplication;
   }
 
   @Override
@@ -53,45 +56,46 @@ public class AppCoinTransactionService implements TransactionService {
     Transaction transaction = transactionList.get(concat(product.getId(), payerId));
     Logger.d("TAG123", "get");
     if (transaction != null) {
-      if(REALTRANSACTION){
-        if(!appCoinTransactionList.isEmpty()){
-          String txHash = appCoinTransactionList.get(concat(product.getId(),payerId));
-          if(txHash != null){
-            EthereumApi ethereumApi = EthereumApiFactory.createEthereumApi();
-            Boolean accepted = ethereumApi.isTransactionAccepted(txHash)
-                .toBlocking()
-                .first();
-            if(accepted){
-              return createTransactionStatusUpdate(sellerId, product.getId(), transaction.getPaymentMethodId(), payerId, Transaction.Status.COMPLETED);
-            }
-            else{
-              return createTransactionStatusUpdate(sellerId, product.getId(), transaction.getPaymentMethodId(), payerId, Transaction.Status.PENDING);
-            }
-          }
-        }
-      }
-      else {
-        if (!transactionSimList.isEmpty()) {
-          TransactionSimulator transactionSimulator =
-              transactionSimList.get(concat(product.getId(), payerId));
-          if (transactionSimulator != null) {
-            transactionSimulator.getStatus();
-            switch (transactionSimulator.getStatus()) {
-              case COMPLETED:
+      if (!transaction.isConsumed()) {
+        if (REALTRANSACTION) {
+          if (!appCoinTransactionList.isEmpty()) {
+            String txHash = appCoinTransactionList.get(concat(product.getId(), payerId));
+            if (txHash != null) {
+              EthereumApi ethereumApi = EthereumApiFactory.createEthereumApi();
+              Boolean accepted = ethereumApi.isTransactionAccepted(txHash)
+                  .toBlocking()
+                  .first();
+              if (accepted) {
                 return createTransactionStatusUpdate(sellerId, product.getId(), transaction.getPaymentMethodId(), payerId, Transaction.Status.COMPLETED);
-              case FAILED:
-                return createTransactionStatusUpdate(sellerId, product.getId(), transaction.getPaymentMethodId(), payerId, Transaction.Status.FAILED);
-              case CANCELED:
-                return createTransactionStatusUpdate(sellerId, product.getId(), transaction.getPaymentMethodId(), payerId, Transaction.Status.CANCELED);
-              case PENDING:
-                break;
-              default:
-                return createTransactionStatusUpdate(sellerId, product.getId(), transaction.getPaymentMethodId(), payerId, Transaction.Status.UNKNOWN);
+              } else {
+                return createTransactionStatusUpdate(sellerId, product.getId(), transaction.getPaymentMethodId(), payerId, Transaction.Status.PENDING);
+              }
+            }
+          }
+        } else {
+          if (!transactionSimList.isEmpty()) {
+            TransactionSimulator transactionSimulator =
+                transactionSimList.get(concat(product.getId(), payerId));
+            if (transactionSimulator != null) {
+              transactionSimulator.getStatus();
+              switch (transactionSimulator.getStatus()) {
+                case COMPLETED:
+                  return createTransactionStatusUpdate(sellerId, product.getId(), transaction.getPaymentMethodId(), payerId, Transaction.Status.COMPLETED);
+                case FAILED:
+                  return createTransactionStatusUpdate(sellerId, product.getId(), transaction.getPaymentMethodId(), payerId, Transaction.Status.FAILED);
+                case CANCELED:
+                  return createTransactionStatusUpdate(sellerId, product.getId(), transaction.getPaymentMethodId(), payerId, Transaction.Status.CANCELED);
+                case PENDING:
+                  break;
+                default:
+                  return createTransactionStatusUpdate(sellerId, product.getId(), transaction.getPaymentMethodId(), payerId, Transaction.Status.UNKNOWN);
+              }
             }
           }
         }
       }
-    } else {
+    }else {
+      transactionList.clear();
       return createTransactionwithstatus(product.getId(), null, Transaction.Status.NEW, payerId,
           -1);
     }
@@ -128,8 +132,10 @@ public class AppCoinTransactionService implements TransactionService {
     try {
       Logger.d("TAG123", "create_tran_meta_try" + status);
       if(REALTRANSACTION){
-        EthereumApi ethereumApi = EthereumApiFactory.createEthereumApi();
-        EtherAccountManager etherAccountManager = new EtherAccountManager(ethereumApi, sharedPreferences);
+        EthereumApi ethereumApi =
+            ((AptoideApplication) aptoideApplication).getEthereumApi();
+        EtherAccountManager etherAccountManager =
+            ((AptoideApplication) aptoideApplication.getApplicationContext()).getEtherAccountManager();
         etherAccountManager.getCurrentNonce()
             .flatMap(nonce -> ethereumApi.call(nonce.intValue(), CONTRACT_ADDRESS, new Erc20Transfer(RECEIVER_ADDR, 1), etherAccountManager.getECKey()))
             .doOnNext(call -> addACtransaction(productId,payerId,call.result)).doOnError(throwable -> throwable.printStackTrace()).subscribe();
@@ -205,6 +211,10 @@ public class AppCoinTransactionService implements TransactionService {
 
   public void addACtransaction(String productID, String payerID, String txHash){
     appCoinTransactionList.put(concat(productID,payerID),txHash);
+  }
+
+  public void clear(){
+    transactionList.clear();
   }
 
   public void remove(String key) {

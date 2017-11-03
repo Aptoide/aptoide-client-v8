@@ -8,7 +8,7 @@ import cm.aptoide.pt.logger.Logger;
 
 public class TransactionSimulator {
   private Estado status;
-  public static final int TIME_FOR_TEST_TRANSACTION = 15000; //10s
+  public static final int TIME_FOR_TEST_TRANSACTION = 5000; //10s
 
 
   public TransactionSimulator(){
