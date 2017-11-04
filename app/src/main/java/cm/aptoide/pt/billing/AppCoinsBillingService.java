@@ -83,31 +83,22 @@ public class AppCoinsBillingService implements BillingService {
     this.idResolver = idResolver;
     this.apiVersion = apiVersion;
 
-    //Logger.v(TAG, "file exists: " + FileUtils.fileExists(
-    //    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-    //        .getPath() + File.separator + "orders.json"));
-    //
-    //Gson gson = new GsonBuilder().create();
-    //try {
-    // //get file with all order ids
-    //  purchaseFile = gson.fromJson(FileUtils.loadJSON(
-    //      Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-    //          .getPath() + File.separator + "orders.json"), PurchaseFile.class);
-    // //get the first element of the list
-    //  Logger.v(TAG, "id: " + purchaseFile.list[0].id);
-    //
-    //  Logger.v(TAG, "length: " + purchaseFile.list.length);
-    // // after using the first element, delete it
-    //  deleteFirst();
-    //  Logger.v(TAG, "length: " + purchaseFile.list.length);
-    // //then save the file again
-    //  FileUtils.saveToFile(
-    //      Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-    //          .getPath() + File.separator + "orders.json", new Gson().toJson(purchaseFile));
-    //} catch (Exception e) {
-    //  e.printStackTrace();
-    //  Logger.e(TAG, "error: ", e);
-    //}
+    String filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        .getPath() + File.separator + "orders.json";
+    Logger.v(TAG, "file exists: " + filePath + " " + FileUtils.fileExists(filePath));
+
+    Gson gson = new GsonBuilder().create();
+    try {
+      //get file with all order ids
+      purchaseFile = gson.fromJson(FileUtils.loadJSON(filePath), PurchaseFile.class);
+
+      //get the first element of the list
+      Logger.v(TAG, "length: " + purchaseFile.list.length);
+      Logger.v(TAG, "id: " + purchaseFile.list[0].id);
+    } catch (Exception e) {
+      e.printStackTrace();
+      Logger.e(TAG, "error: ", e);
+    }
   }
 
   private void deleteFirst() {
@@ -182,9 +173,34 @@ public class AppCoinsBillingService implements BillingService {
     String sku = "com.marceloporto.bombastic.mediumpack";
     String token = "Mjc";
 
+    PurchaseFile.PurchaseOrderItem purchaseOrderItem = purchaseFile.list[0];
+    signature = purchaseOrderItem.signature;
+    String signatureData = purchaseOrderItem.data.toString();
+    sku = purchaseOrderItem.product.sku;
+    token = purchaseOrderItem.data.developer_purchase.purchaseToken;
+
+    Logger.v(TAG, "signature: " + signature);
+    Logger.v(TAG, "signatureData: " + signatureData);
+    Logger.v(TAG, "sku: " + sku);
+    Logger.v(TAG, "token: " + token);
+
+    try {
+      // after using the first element, delete it
+      deleteFirst();
+      Logger.v(TAG, "after deleting one item of the array: length: " + purchaseFile.list.length);
+      //then save the file again
+      boolean res = FileUtils.saveToFile(
+          Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+              .getPath() + File.separator + "orders.json", new Gson().toJson(purchaseFile));
+      Logger.v(TAG, "save to file: " + res);
+    } catch (Exception e) {
+      e.printStackTrace();
+      Logger.e(TAG, "error: ", e);
+    }
+
     if (product instanceof InAppProduct) {
       inAppPurchase =
-          new InAppPurchase(signature, json.toString(), sku, token, SimplePurchase.Status.COMPLETED,
+          new InAppPurchase(signature, signatureData, sku, token, SimplePurchase.Status.COMPLETED,
               product.getId());
       return Single.just(inAppPurchase);
     } else if (product instanceof PaidAppProduct) {

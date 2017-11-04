@@ -1,5 +1,7 @@
 package cm.aptoide.pt.billing;
 
+import com.google.gson.Gson;
+
 /**
  * Created by analara on 03/11/2017.
  */
@@ -29,6 +31,10 @@ public class PurchaseFile {
 
   public class DataOrder {
     public DeveloperPurchase developer_purchase;
+
+    public String toString() {
+      return new Gson().toJson(developer_purchase);
+    }
   }
 
   public class DeveloperPurchase {

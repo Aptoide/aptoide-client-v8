@@ -56,7 +56,7 @@ public class FileUtils {
     }
   }
 
-  public static void saveToFile(String filePath, String data) {
+  public static boolean saveToFile(String filePath, String data) {
 
     File file = new File(filePath);
     try {
@@ -65,8 +65,10 @@ public class FileUtils {
       outputStreamWriter.write(data);
       outputStreamWriter.close();
     } catch (IOException e) {
-      Logger.e("Exception", "File write failed: " + e.toString());
+      Logger.e(TAG, "File write failed: " + e.toString());
+      return false;
     }
+    return true;
   }
 
   public static boolean saveBitmapToFile(File dir, String fileName, Bitmap bm,
@@ -114,6 +116,9 @@ public class FileUtils {
     } catch (IOException ex) {
       ex.printStackTrace();
       return null;
+    }
+    if (json != null && json.length() > 100) {
+      Logger.v("AppCoinsBillingService", json.substring(0, 100));
     }
     return json;
   }
