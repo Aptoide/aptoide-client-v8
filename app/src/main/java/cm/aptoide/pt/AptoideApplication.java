@@ -60,6 +60,8 @@ import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.BillingIdResolver;
 import cm.aptoide.pt.billing.BillingService;
+import cm.aptoide.pt.billing.LocalOrdersManager;
+import cm.aptoide.pt.billing.LocalOrdersParser;
 import cm.aptoide.pt.billing.Payer;
 import cm.aptoide.pt.billing.PaymentMethodMapper;
 import cm.aptoide.pt.billing.PaymentMethodSelector;
@@ -204,6 +206,7 @@ import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -833,6 +836,17 @@ public abstract class AptoideApplication extends Application {
           new AuthorizationRepository(getBillingSyncManager(), getPayer(),
               getAuthorizationService(), getAuthorizationPersistence());
 
+      LocalOrdersParser localOrdersParser = new LocalOrdersParser(new ObjectMapper());
+
+      List<LocalOrdersManager.Order> orderList = null;
+      try {
+        orderList = localOrdersParser.parse(getAssets().open("orders.json"));
+      } catch (IOException e) {
+        e.printStackTrace();
+        throw new RuntimeException("Can't load orders.json!");
+      }
+      LocalOrdersManager localOrdersManager = new LocalOrdersManager(orderList, 0);
+
       final BillingService billingService =
           new AppCoinsBillingService(getBodyInterceptorV3(), getDefaultClient(),
               WebService.getDefaultConverter(), getTokenInvalidator(),
@@ -840,7 +854,7 @@ public abstract class AptoideApplication extends Application {
               new PurchaseMapper(getInAppBillingSerializer(), getBillingIdResolver()),
               new ProductFactory(getBillingIdResolver()), getPackageRepository(),
               new PaymentMethodMapper(), getResources(), getBillingIdResolver(),
-              BuildConfig.IN_BILLING_SUPPORTED_API_VERSION);
+              BuildConfig.IN_BILLING_SUPPORTED_API_VERSION, localOrdersManager);
 
       final PaymentMethodSelector paymentMethodSelector =
           new SharedPreferencesPaymentMethodSelector(BuildConfig.DEFAULT_PAYMENT_ID,

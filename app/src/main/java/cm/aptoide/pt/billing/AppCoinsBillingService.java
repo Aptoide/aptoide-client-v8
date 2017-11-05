@@ -27,8 +27,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
-import org.json.JSONException;
-import org.json.JSONObject;
 import retrofit2.Converter;
 import rx.Completable;
 import rx.Observable;
@@ -52,6 +50,7 @@ public class AppCoinsBillingService implements BillingService {
   private final Resources resources;
   private final BillingIdResolver idResolver;
   private final int apiVersion;
+  private final LocalOrdersManager localOrdersManager;
   private InAppPurchase inAppPurchase = null;
 
   public AppCoinsBillingService(BodyInterceptor<BaseBody> bodyInterceptorV3,
@@ -59,7 +58,8 @@ public class AppCoinsBillingService implements BillingService {
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
       PurchaseMapper purchaseMapper, ProductFactory productFactory,
       PackageRepository packageRepository, PaymentMethodMapper paymentMethodMapper,
-      Resources resources, BillingIdResolver idResolver, int apiVersion) {
+      Resources resources, BillingIdResolver idResolver, int apiVersion,
+      LocalOrdersManager localOrdersManager) {
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
@@ -72,6 +72,7 @@ public class AppCoinsBillingService implements BillingService {
     this.resources = resources;
     this.idResolver = idResolver;
     this.apiVersion = apiVersion;
+    this.localOrdersManager = localOrdersManager;
   }
 
   @Override public Single<List<PaymentMethod>> getPaymentMethods(Product product) {
@@ -123,27 +124,17 @@ public class AppCoinsBillingService implements BillingService {
         idResolver.resolveSkus(productIds), false).flatMap(
         response -> mapToProducts(apiVersion, idResolver.resolvePackageName(sellerId), response));
   }
-
   @Override public Single<Purchase> getPurchase(Product product) {
-    String signature =
-        "x5kSaeUpenDyI8qbE2qJ69qqDNyH9OIqjwLGJsPqgEWO3W4Oc2tySRMffUVVgU9230W7n08hJQCcoMTuMMmSmCzry9xP+hCagw/jDKnOmMg4mJeduiQzeXzFGh8uZ2W1u55Wq2qCZFEXk2Na5aY04tKTKauWcpVsvUB2aUxdQ3OWxPPNQhfsvWuGXY3eF9zNkO2ZFhDbsqJhG+fB3gwDPWVZ5ZSbx/d/UzDkcE5THuTIBzWybKUAl6fUBbcr8lcfgNbinwK5u7fhsxFv4Ha+lO08XbR5y5m03KAFrUhLJbWLA9mmnPDYXkV2lDa22LQ+xmDsnUnL+5BWWFBgU/mpEA==";
-    JSONObject json  = new JSONObject();
-    try {
-      json.put("orderId", "24"); // 21
-      json.put("packageName", "com.marceloporto.bombastic");
-      json.put("productId", "com.marceloporto.bombastic.mediumpack");
-      json.put("purchaseTime", 1509408000);
-      json.put("purchaseToken", "MjQ");
-      json.put("purchaseState", 0);
-    } catch (JSONException e) {
-      e.printStackTrace();
-    }
-    String sku = "com.marceloporto.bombastic.mediumpack";
-    String token = "MjQ";
+    LocalOrdersManager.Order order = localOrdersManager.getNewOrderId();
+
+    String signature = order.getSignature();
+    String signatureData = order.getSignatureData();
+    String token = order.getPurchaseToken();
+    String sku = order.getSku();
 
     if (product instanceof InAppProduct) {
       inAppPurchase =
-          new InAppPurchase(signature, json.toString(), sku, token, SimplePurchase.Status.COMPLETED,
+          new InAppPurchase(signature, signatureData, sku, token, SimplePurchase.Status.COMPLETED,
               product.getId());
       return Single.just(inAppPurchase);
     } else if (product instanceof PaidAppProduct) {
