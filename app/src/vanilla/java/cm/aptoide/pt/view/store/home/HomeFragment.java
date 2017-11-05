@@ -190,11 +190,9 @@ public class HomeFragment extends StoreFragment {
         ((AptoideApplication) getActivity().getApplicationContext()).getEthereumApi();
     EtherAccountManager etherAccountManager =
         ((AptoideApplication) getActivity().getApplicationContext()).getEtherAccountManager();
-    etherAccountManager.getCurrentNonce()
-        .flatMap(aLong -> ethereumApi.getTokenBalance(CONTRACT_ADDRESS, Hex.toHexString(
-            etherAccountManager.getECKey()
-                .getAddress()))
-            .repeatWhen(observable -> observable.delay(5, TimeUnit.SECONDS)))
+    ethereumApi.getTokenBalance(CONTRACT_ADDRESS, Hex.toHexString(etherAccountManager.getECKey()
+        .getAddress()))
+        .repeatWhen(observable -> observable.delay(5, TimeUnit.SECONDS))
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(this::setAppCoins, Throwable::printStackTrace);
