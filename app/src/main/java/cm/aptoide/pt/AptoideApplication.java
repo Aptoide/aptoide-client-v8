@@ -845,7 +845,8 @@ public abstract class AptoideApplication extends Application {
         e.printStackTrace();
         throw new RuntimeException("Can't load orders.json!");
       }
-      LocalOrdersManager localOrdersManager = new LocalOrdersManager(orderList, 0);
+      LocalOrdersManager localOrdersManager =
+          new LocalOrdersManager(orderList, createOrdersPersister());
 
       final BillingService billingService =
           new AppCoinsBillingService(getBodyInterceptorV3(), getDefaultClient(),
@@ -864,6 +865,20 @@ public abstract class AptoideApplication extends Application {
           paymentMethodSelector, getPayer());
     }
     return billing;
+  }
+
+  private LocalOrdersManager.SingletonPersister createOrdersPersister() {
+    return new LocalOrdersManager.SingletonPersister() {
+      @Override public void persist(int integer) {
+        getDefaultSharedPreferences().edit()
+            .putInt("LocalOrdersManagerSingletonPersister", integer)
+            .apply();
+      }
+
+      @Override public int load() {
+        return getDefaultSharedPreferences().getInt("LocalOrdersManagerSingletonPersister", 0);
+      }
+    };
   }
 
   public BillingIdResolver getBillingIdResolver() {

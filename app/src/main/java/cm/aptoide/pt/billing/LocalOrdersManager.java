@@ -11,15 +11,18 @@ public class LocalOrdersManager {
 
   private final List<Order> orders;
   private final AtomicInteger atomicInteger;
-  private boolean loaded = false;
+  private final SingletonPersister singletonPersister;
 
-  public LocalOrdersManager(List<Order> orders, int startIndex) {
+  public LocalOrdersManager(List<Order> orders, SingletonPersister singletonPersister) {
     this.orders = orders;
-    this.atomicInteger = new AtomicInteger(startIndex);
+    this.atomicInteger = new AtomicInteger(singletonPersister.load());
+    this.singletonPersister = singletonPersister;
   }
 
   public Order getNewOrderId() {
-    return orders.get(atomicInteger.getAndIncrement());
+    Order order = orders.get(atomicInteger.getAndIncrement());
+    singletonPersister.persist(atomicInteger.get());
+    return order;
   }
 
   public static class Order {
@@ -54,4 +57,11 @@ public class LocalOrdersManager {
       return sku;
     }
   }
+
+  public interface SingletonPersister {
+    void persist(int integer);
+
+    int load();
+  }
+
 }
