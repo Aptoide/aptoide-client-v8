@@ -76,7 +76,6 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.Group;
-import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
@@ -183,8 +182,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private NavigationTracker navigationTracker;
   private SearchBuilder searchBuilder;
   private IssuesAnalytics issuesAnalytics;
-  private RequestFactory requestFactoryCdnWeb;
-  private GetRecommendedRequest getRecommendedRequest;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -412,15 +409,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     navigationTracker = application.getNavigationTracker();
 
     setHasOptionsMenu(true);
-
-    final BodyInterceptor<BaseBody> baseBodyInterceptorV7Web =
-        application.getAccountSettingsBodyInterceptorWebV7();
-
-    GetRecommendedRequest.Body body = new GetRecommendedRequest.Body(6, getPackageName());
-
-    getRecommendedRequest =
-        new GetRecommendedRequest(body, baseBodyInterceptorV7Web, httpClient, converterFactory,
-            application.getTokenInvalidator(), application.getDefaultSharedPreferences());
   }
 
   private void handleSavedInstance(Bundle savedInstanceState) {
