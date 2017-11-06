@@ -8,6 +8,7 @@ package cm.aptoide.pt;
 import android.os.Environment;
 import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.networking.BodyInterceptorNotifications;
 import cm.aptoide.pt.notification.NotificationService;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.notification.sync.NotificationSyncFactory;
@@ -89,8 +90,9 @@ public class VanillaApplication extends AptoideApplication {
           new NotificationSyncFactory(getDefaultSharedPreferences(),
               new NotificationService(BuildConfig.APPLICATION_ID, getDefaultClient(),
                   WebService.getDefaultConverter(), getIdsRepository(), BuildConfig.VERSION_NAME,
-                  getExtraId(), getDefaultSharedPreferences(), getResources(),
-                  getAuthenticationPersistence(), getAccountManager()),
+                  getExtraId(), getDefaultSharedPreferences(), getResources(), getAccountManager(),
+                  getTokenInvalidator(),
+                  new BodyInterceptorNotifications(getAuthenticationPersistence())),
               getNotificationProvider()));
     }
     return notificationSyncScheduler;
