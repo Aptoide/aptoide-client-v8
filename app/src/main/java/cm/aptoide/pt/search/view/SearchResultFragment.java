@@ -507,7 +507,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     setupTheme();
     attachPresenter(new SearchResultPresenter(this, searchAnalytics, searchNavigator, crashReport,
         mainThreadScheduler, searchManager, onAdClickRelay, onItemViewClickRelay,
-        onOpenPopupMenuClickRelay, isMultiStoreSearch, defaultThemeName, defaultStoreName));
+        onOpenPopupMenuClickRelay, isMultiStoreSearch, defaultStoreName, defaultThemeName));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
