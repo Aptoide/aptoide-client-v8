@@ -76,7 +76,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
             storeContext, getContext(), accountManager, storeUtilsProxy,
             (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
             getContext().getResources(), installedRepository, storeAnalytics, storeTabNavigator,
-            navigationTracker))
+            navigationTracker, new BadgeDialogFactory(getContext())))
         .toList()
         .first();
   }

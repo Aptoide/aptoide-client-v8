@@ -64,6 +64,24 @@ public class SearchResultPresenter implements Presenter {
     handleAllStoresListReachedBottom();
     handleFollowedStoresListReachedBottom();
     handleTitleBarClick();
+    restoreSelectedTab();
+  }
+
+  private void restoreSelectedTab() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .first()
+        .toSingle()
+        .map(__ -> view.getViewModel())
+        .subscribe(viewModel -> {
+          if (viewModel.getAllStoresOffset() > 0 && viewModel.getFollowedStoresOffset() > 0) {
+            if (viewModel.isAllStoresSelected()) {
+              view.showAllStoresResult();
+            } else {
+              view.showFollowedStoresResult();
+            }
+          }
+        }, crashReport::log);
   }
 
   private void handleTitleBarClick() {

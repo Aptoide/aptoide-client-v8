@@ -75,6 +75,7 @@ public class ListAppsRequest extends V7<ListApps, ListAppsRequest.Body> {
     private int offset;
     private Long groupId;
     private Sort sort;
+    private Long storeId;
 
     public Body(BaseRequestWithStore.StoreCredentials storeCredentials,
         SharedPreferences sharedPreferences) {
@@ -103,6 +104,14 @@ public class ListAppsRequest extends V7<ListApps, ListAppsRequest.Body> {
       this.limit = limit;
       this.sort = sort;
       setNotApkTags(sharedPreferences);
+    }
+
+    public Long getStoreId() {
+      return storeId;
+    }
+
+    public void setStoreId(long storeId) {
+      this.storeId = storeId;
     }
 
     public String getStoreUser() {

@@ -9,7 +9,7 @@ import lombok.Data;
  * Remote Boot Config class
  */
 
-@Data public class RemoteBootConfig {
+public class RemoteBootConfig {
   private BaseV7Response.Info info;
   private BootConfig data;
 
@@ -22,5 +22,13 @@ import lombok.Data;
   public RemoteBootConfig(BaseV7Response.Info info, BootConfig data) {
     this.info = info;
     this.data = data;
+  }
+
+  public BaseV7Response.Info getInfo() {
+    return info;
+  }
+
+  public BootConfig getData() {
+    return data;
   }
 }

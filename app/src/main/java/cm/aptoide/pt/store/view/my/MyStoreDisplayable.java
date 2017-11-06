@@ -38,10 +38,6 @@ public class MyStoreDisplayable extends Displayable {
     isLongTime = added.before(aWeekBefore.getTime());
   }
 
-  public TimelineStats getTimelineStats() {
-    return timelineStats;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(1, true);
   }
