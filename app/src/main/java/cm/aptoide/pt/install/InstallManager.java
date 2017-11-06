@@ -93,10 +93,18 @@ public class InstallManager {
   }
 
   public Observable<List<Install>> getInstalledApps() {
-    return getInstallations().flatMap(installs -> Observable.from(installs)
-        .filter(install -> install.getState()
-            .equals(Install.InstallationStatus.INSTALLED))
-        .toList());
+    return installedRepository.getAllInstalled()
+        .concatMap(downloadList -> Observable.from(downloadList)
+            .flatMap(download -> getInstall(download.getPackageName(),
+                download.getVersionCode()).first())
+            .toList());
+  }
+
+  private Observable<Install> getInstall(String packageName, int versionCode) {
+    return installedRepository.get(packageName, versionCode)
+        .map(installed -> new Install(100, Install.InstallationStatus.INSTALLED,
+            Install.InstallationType.INSTALLED, false, -1, null, installed.getPackageName(),
+            installed.getVersionCode(), installed.getName(), installed.getIcon()));
   }
 
   public Observable<List<Install>> getInstallations() {
