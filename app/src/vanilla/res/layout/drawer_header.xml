@@ -60,6 +60,7 @@
           android:text="Your Appcoins"
           android:textColor="@color/navdrawer_body_text_2_inverse"
           android:textSize="@dimen/text_size_medium"
+          android:textStyle="bold"
           />
       <ImageView
           android:layout_width="20dp"
