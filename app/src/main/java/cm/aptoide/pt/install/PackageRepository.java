@@ -130,17 +130,6 @@ public class PackageRepository {
     });
   }
 
-  public boolean isPackageNameInstalled(String packageName) {
-    try {
-      final PackageInfo packageInfo = packageManager.getPackageInfo(packageName, 0);
-      return packageInfo != null;
-    } catch (PackageManager.NameNotFoundException e) {
-      return false;
-    } catch (Exception e) {
-      return false;
-    }
-  }
-
   public Observable<String> getRandomInstalledPackages(int count) {
     return getInstalledPackages().map(packageInfos -> {
       Collections.shuffle(packageInfos);
