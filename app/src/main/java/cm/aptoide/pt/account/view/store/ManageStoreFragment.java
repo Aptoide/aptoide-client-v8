@@ -279,14 +279,12 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     facebookTextAndPlus.setVisibility(View.GONE);
     facebookUsernameWrapper.setVisibility(View.VISIBLE);
     facebookUser.requestFocus();
-    facebookUser.setText(savedFacebookText);
     showKeyboard(facebookUser);
   }
 
   @Override public void manageTwitchViews() {
     twitchTextAndPlus.setVisibility(View.GONE);
     twitchUsernameWrapper.setVisibility(View.VISIBLE);
-    twitchUser.setText(savedTwitchText);
     twitchUser.requestFocus();
     showKeyboard(twitchUser);
   }
@@ -294,7 +292,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   @Override public void manageTwitterViews() {
     twitterTextAndPlus.setVisibility(View.GONE);
     twitterUsernameWrapper.setVisibility(View.VISIBLE);
-    twitterUser.setText(savedTwitterText);
     twitterUser.requestFocus();
     showKeyboard(twitterUser);
   }
@@ -302,7 +299,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   @Override public void manageYoutubeViews() {
     youtubeTextAndPlus.setVisibility(View.GONE);
     youtubeUsernameWrapper.setVisibility(View.VISIBLE);
-    youtubeUser.setText(savedYoutubeText);
     youtubeUser.requestFocus();
     showKeyboard(youtubeUser);
   }
@@ -325,7 +321,10 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
           .isEmpty()) {
         facebookText.setText(facebookUser.getText()
             .toString());
-        setFacebookTextInputAppearance();
+        setFacebookTextInputAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha);
+      } else {
+        facebookText.setText(getString(R.string.facebook));
+        setFacebookTextInputAppearance(R.style.Aptoide_TextView_Regular_XS_Facebook);
       }
       facebookTextAndPlus.setVisibility(View.VISIBLE);
       facebookUsernameWrapper.setVisibility(View.GONE);
@@ -343,7 +342,10 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
           .isEmpty()) {
         twitchText.setText(twitchUser.getText()
             .toString());
-        setTwitchTextInputAppearance();
+        setTwitchTextInputAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha);
+      } else {
+        twitchText.setText(getString(R.string.twitch));
+        setTwitchTextInputAppearance(R.style.Aptoide_TextView_Regular_XS_Twitch);
       }
       twitchTextAndPlus.setVisibility(View.VISIBLE);
       twitchUsernameWrapper.setVisibility(View.GONE);
@@ -361,7 +363,10 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
           .isEmpty()) {
         twitterText.setText(twitterUser.getText()
             .toString());
-        setTwitterInputTextAppearance();
+        setTwitterInputTextAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha);
+      } else {
+        twitterText.setText(getString(R.string.twitter));
+        setTwitterInputTextAppearance(R.style.Aptoide_TextView_Regular_XS_Twitter);
       }
       twitterTextAndPlus.setVisibility(View.VISIBLE);
       twitterUsernameWrapper.setVisibility(View.GONE);
@@ -379,42 +384,45 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
           .isEmpty()) {
         youtubeText.setText(youtubeUser.getText()
             .toString());
-        setYoutubeTextInputAppearance();
+        setYoutubeTextInputAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha);
+      } else {
+        youtubeText.setText(getString(R.string.youtube));
+        setYoutubeTextInputAppearance(R.style.Aptoide_TextView_Regular_XS_Youtube);
       }
       youtubeTextAndPlus.setVisibility(View.VISIBLE);
       youtubeUsernameWrapper.setVisibility(View.GONE);
     }
   }
 
-  private void setFacebookTextInputAppearance() {
+  private void setFacebookTextInputAppearance(int resId) {
     if (Build.VERSION.SDK_INT < 23) {
-      facebookText.setTextAppearance(getContext(), R.style.Aptoide_TextView_Regular_S_BlackAlpha);
+      facebookText.setTextAppearance(getContext(), resId);
     } else {
-      facebookText.setTextAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha);
+      facebookText.setTextAppearance(resId);
     }
   }
 
-  private void setTwitchTextInputAppearance() {
+  private void setTwitchTextInputAppearance(int resId) {
     if (Build.VERSION.SDK_INT < 23) {
-      twitchText.setTextAppearance(getContext(), R.style.Aptoide_TextView_Regular_S_BlackAlpha);
+      twitchText.setTextAppearance(getContext(), resId);
     } else {
-      twitchText.setTextAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha);
+      twitchText.setTextAppearance(resId);
     }
   }
 
-  private void setTwitterInputTextAppearance() {
+  private void setTwitterInputTextAppearance(int resId) {
     if (Build.VERSION.SDK_INT < 23) {
-      twitterText.setTextAppearance(getContext(), R.style.Aptoide_TextView_Regular_S_BlackAlpha);
+      twitterText.setTextAppearance(getContext(), resId);
     } else {
-      twitterText.setTextAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha);
+      twitterText.setTextAppearance(resId);
     }
   }
 
-  private void setYoutubeTextInputAppearance() {
+  private void setYoutubeTextInputAppearance(int resId) {
     if (Build.VERSION.SDK_INT < 23) {
-      youtubeText.setTextAppearance(getContext(), R.style.Aptoide_TextView_Regular_S_BlackAlpha);
+      youtubeText.setTextAppearance(getContext(), resId);
     } else {
-      youtubeText.setTextAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha);
+      youtubeText.setTextAppearance(resId);
     }
   }
 
@@ -536,7 +544,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     selectStoreImageButton = view.findViewById(R.id.create_store_image_action);
     storeImage = (ImageView) view.findViewById(R.id.create_store_image);
     storeName = (EditText) view.findViewById(R.id.create_store_name);
-    //storeDescriptionWrapper = (TextInputLayout) view.findViewById(R.id.edit_store_input_section);
     storeDescription = (EditText) view.findViewById(R.id.edit_store_description);
     cancelChangesButton = (Button) view.findViewById(R.id.create_store_skip);
     saveDataButton = (Button) view.findViewById(R.id.create_store_action);
@@ -668,7 +675,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
       chooseStoreNameTitle.setText(
           AptoideUtils.StringU.getFormattedString(R.string.description, getResources()));
       storeName.setVisibility(View.GONE);
-      //storeDescriptionWrapper.setVisibility(View.VISIBLE);
       storeDescription.setVisibility(View.VISIBLE);
       storeDescription.setText(currentModel.getStoreDescription());
       socialChannels.setVisibility(View.VISIBLE);
@@ -687,28 +693,28 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
         if (storeLinks.getType()
             .equals(Store.SocialChannelType.FACEBOOK)) {
           savedFacebookText = removeBaseUrl(storeLinks.getUrl());
-          setFacebookTextInputAppearance();
+          setFacebookTextInputAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha);
           facebookText.setText(savedFacebookText);
           facebookEndRowIcon.setImageDrawable(
               getResources().getDrawable(R.drawable.edit_store_link_check));
         } else if (storeLinks.getType()
             .equals(Store.SocialChannelType.TWITCH)) {
           savedTwitchText = removeBaseUrl(storeLinks.getUrl());
-          setTwitchTextInputAppearance();
+          setTwitchTextInputAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha);
           twitchText.setText(savedTwitchText);
           twitchEndRowIcon.setImageDrawable(
               getResources().getDrawable(R.drawable.edit_store_link_check));
         } else if (storeLinks.getType()
             .equals(Store.SocialChannelType.TWITTER)) {
           savedTwitterText = removeBaseUrl(storeLinks.getUrl());
-          setTwitterInputTextAppearance();
+          setTwitterInputTextAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha);
           twitterText.setText(savedTwitterText);
           twitterEndRowIcon.setImageDrawable(
               getResources().getDrawable(R.drawable.edit_store_link_check));
         } else if (storeLinks.getType()
             .equals(Store.SocialChannelType.YOUTUBE)) {
           savedYoutubeText = removeBaseUrl(storeLinks.getUrl());
-          setYoutubeTextInputAppearance();
+          setYoutubeTextInputAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha);
           youtubeText.setText(savedYoutubeText);
           youtubeEndRowIcon.setImageDrawable(
               getResources().getDrawable(R.drawable.edit_store_link_check));
