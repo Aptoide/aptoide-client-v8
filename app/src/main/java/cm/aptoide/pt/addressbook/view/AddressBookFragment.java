@@ -46,19 +46,16 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import java.util.Arrays;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
-
-/**
- * Created by jdandrade on 07/02/2017.
- */
 
 public class AddressBookFragment extends UIComponentFragment implements AddressBookContract.View {
 
   public static final int TWITTER_REQUEST_CODE = 140;
   public static final int FACEBOOK_REQUEST_CODE = 64206;
-  private TwitterAuthClient mTwitterAuthClient;
+  @Inject TwitterAuthClient mTwitterAuthClient;
   private AddressBookContract.UserActionsListener mActionsListener;
   private Button addressBookSyncButton;
   private Button allowFriendsFindButton;
@@ -113,6 +110,7 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
   // needs the views binded or the app will crash
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    getFragmentComponent().inject(this);
     AccessToken accessToken = AccessToken.getCurrentAccessToken();
     if (accessToken != null) {
       if (!accessToken.isExpired()) {
@@ -173,7 +171,6 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
   }
 
   private void twitterLogin() {
-    mTwitterAuthClient = new TwitterAuthClient();
     mTwitterAuthClient.authorize(getActivity(), new Callback<TwitterSession>() {
       @Override public void success(Result<TwitterSession> result) {
         TwitterModel twitterModel = createTwitterModel(result);

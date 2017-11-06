@@ -13,8 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
-import cm.aptoide.pt.install.Install;
-import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
@@ -24,13 +22,14 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.download.DownloadEventConverter;
 import cm.aptoide.pt.download.InstallEventConverter;
-import cm.aptoide.pt.install.InstallerFactory;
+import cm.aptoide.pt.install.Install;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.presenter.DownloadsPresenter;
 import cm.aptoide.pt.presenter.DownloadsView;
+import cm.aptoide.pt.store.view.StoreTabNavigator;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
-import cm.aptoide.pt.store.view.StoreTabNavigator;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -72,8 +71,8 @@ public class DownloadsFragment extends NavigationTrackFragment implements Downlo
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
             ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker());
-    installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
-        InstallerFactory.ROLLBACK);
+    installManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getRollbackInstallManager();
     analytics = Analytics.getInstance();
 
     storeTabNavigator = new StoreTabNavigator(getFragmentNavigator());

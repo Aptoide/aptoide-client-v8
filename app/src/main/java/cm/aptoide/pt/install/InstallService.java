@@ -7,7 +7,6 @@ package cm.aptoide.pt.install;
 
 import android.app.Notification;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,9 +16,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BaseService;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
@@ -31,20 +30,16 @@ import cm.aptoide.pt.download.DownloadEvent;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.repository.RepositoryFactory;
-import com.crashlytics.android.answers.Answers;
-import com.facebook.appevents.AppEventsLogger;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import javax.inject.Inject;
+import javax.inject.Named;
 import rx.Completable;
 import rx.Observable;
 import rx.subscriptions.CompositeSubscription;
 
-/**
- * Created by marcelobenites on 9/29/16.
- */
-
-public class InstallService extends Service {
+public class InstallService extends BaseService {
 
   public static final String TAG = "InstallService";
 
@@ -62,31 +57,24 @@ public class InstallService extends Service {
 
   private static final int NOTIFICATION_ID = 8;
 
-  private AptoideDownloadManager downloadManager;
+  @Inject AptoideDownloadManager downloadManager;
+  @Inject @Named("rollback") Installer rollbackInstaller;
+  @Inject @Named("default") Installer defaultInstaller;
+  @Inject @Named("rollback") InstallManager installManager;
+  @Inject InstalledRepository installedRepository;
 
   private CompositeSubscription subscriptions;
   private Notification notification;
-  private Installer rollbackInstaller;
-  private Installer defaultInstaller;
-  private InstallManager installManager;
   private Map<String, Integer> installerTypeMap;
   private Analytics analytics;
-  private InstalledRepository installedRepository;
   private String marketName;
 
   @Override public void onCreate() {
     super.onCreate();
+    getApplicationComponent().inject(this);
     Logger.d(TAG, "Install service is starting");
     final AptoideApplication application = (AptoideApplication) getApplicationContext();
     marketName = application.getMarketName();
-    downloadManager = application.getDownloadManager();
-    final MinimalAdMapper adMapper = new MinimalAdMapper();
-    InstallerFactory installerFactory = new InstallerFactory(adMapper,
-        new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance(),
-            AppEventsLogger.newLogger(getApplicationContext())), application.getImageCachePath());
-    defaultInstaller = installerFactory.create(this, InstallerFactory.DEFAULT);
-    rollbackInstaller = installerFactory.create(this, InstallerFactory.ROLLBACK);
-    installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
     subscriptions = new CompositeSubscription();
     setupNotification();
     installerTypeMap = new HashMap<>();

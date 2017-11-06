@@ -1,6 +1,5 @@
 package cm.aptoide.pt.navigator;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -38,7 +37,7 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
     return fragmentResultRelay;
   }
 
-  @SuppressLint("UseSparseArrays") @Override
+  @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     fragmentResultRelay = ((AptoideApplication) getApplicationContext()).getFragmentResultRelay();
     fragmentResultMap = ((AptoideApplication) getApplicationContext()).getFragmentResulMap();

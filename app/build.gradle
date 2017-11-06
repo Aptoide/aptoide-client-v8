@@ -38,6 +38,7 @@ android {
   }
 
   lintOptions {
+    disable 'UseSparseArrays'
     abortOnError false
   }
 
@@ -418,6 +419,9 @@ dependencies {
   compile "com.adyen.checkout:ui:${ADYEN_VERSION}"
   compile "com.adyen.checkout:utils:${ADYEN_VERSION}"
   compile "com.adyen.checkout:cardscan:${ADYEN_VERSION}"
+
+  compile 'com.google.dagger:dagger:2.12'
+  annotationProcessor 'com.google.dagger:dagger-compiler:2.12'
 
   fairyCompile "testfairy:testfairy-android-sdk:${TEST_FAIRY_VERSION}"
 }
