@@ -26,18 +26,16 @@ public class TimelineService {
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final OkHttpClient okhttp;
   private final Converter.Factory converterFactory;
-  private final TimelineResponseCardMapper mapper;
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
 
   public TimelineService(Long userId, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient okhttp, Converter.Factory converterFactory, TimelineResponseCardMapper mapper,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+      OkHttpClient okhttp, Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     this.userId = userId;
     this.bodyInterceptor = bodyInterceptor;
     this.okhttp = okhttp;
     this.converterFactory = converterFactory;
-    this.mapper = mapper;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
   }
@@ -114,13 +112,6 @@ public class TimelineService {
         })
         .toCompletable();
   }
-
-  //public Completable setPostRead(String url, String cardId, String cardType) {
-  //  return PostReadRequest.of(url, cardId, cardType, bodyInterceptor, okhttp, converterFactory,
-  //      tokenInvalidator)
-  //      .observe()
-  //      .toCompletable();
-  //}
 
   public Completable deletePost(String postId) {
     return PostDeleteRequest.of(postId, bodyInterceptor, okhttp, converterFactory, tokenInvalidator,

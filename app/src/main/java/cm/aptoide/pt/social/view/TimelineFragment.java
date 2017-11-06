@@ -60,7 +60,6 @@ import cm.aptoide.pt.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.social.data.Timeline;
 import cm.aptoide.pt.social.data.TimelineAdsRepository;
 import cm.aptoide.pt.social.data.TimelinePostsRepository;
-import cm.aptoide.pt.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.social.data.TimelineService;
 import cm.aptoide.pt.social.data.analytics.EventErrorHandler;
 import cm.aptoide.pt.social.data.share.ShareDialogFactory;
@@ -95,7 +94,6 @@ import rx.Completable;
 import rx.Observable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.subjects.PublishSubject;
 
 /**
@@ -217,8 +215,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
     timelineService =
         new TimelineService(userId, baseBodyInterceptorV7, defaultClient, defaultConverter,
-            new TimelineResponseCardMapper(accountManager, marketName), tokenInvalidator,
-            sharedPreferences);
+            tokenInvalidator, sharedPreferences);
     crashReport = CrashReport.getInstance();
   }
 
@@ -629,10 +626,12 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     shareDialog.shares()
         .doOnNext(event -> sharePostPublishSubject.onNext(event))
         .doOnNext(shareEvent -> {
-          if(shareEvent.getEvent()==ShareEvent.SHARE)
+          if (shareEvent.getEvent() == ShareEvent.SHARE) {
             timelineAnalytics.sendShareCompleted(shareEvent);
-          else
-            timelineAnalytics.sendErrorShareCompleted(shareEvent, EventErrorHandler.ShareErrorEvent.UNKNOWN_ERROR);
+          } else {
+            timelineAnalytics.sendErrorShareCompleted(shareEvent,
+                EventErrorHandler.ShareErrorEvent.UNKNOWN_ERROR);
+          }
         })
         .compose(bindUntilEvent(LifecycleEvent.PAUSE))
         .subscribe(shareEvent -> {
