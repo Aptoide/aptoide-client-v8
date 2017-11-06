@@ -41,6 +41,8 @@ import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.permission.AccountPermissionProvider;
+import cm.aptoide.pt.permission.PermissionProvider;
 import cm.aptoide.pt.presenter.CompositePresenter;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -50,8 +52,6 @@ import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.CustomTextInputLayout;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
 import cm.aptoide.pt.view.dialog.ImagePickerDialog;
-import cm.aptoide.pt.permission.AccountPermissionProvider;
-import cm.aptoide.pt.permission.PermissionProvider;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -483,12 +483,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   @Override public void onDestroy() {
     super.onDestroy();
     hideKeyboard();
-  }
-
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    outState.putParcelable(EXTRA_STORE_MODEL, Parcels.wrap(currentModel));
-    outState.putBoolean(EXTRA_GO_TO_HOME, goToHome);
   }
 
   @Override public void hideKeyboard() {

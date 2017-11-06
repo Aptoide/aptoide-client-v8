@@ -117,5 +117,6 @@
   <string name="twitch">Twitch</string>
   <string name="youtube">Youtube</string>
   <string name="edit_store_facebook_helper_text">Enter Facebook page</string>
+  <string name="edit_store_youtube_helper_text">Enter Your user or Channel</string>
 
 </resources>
