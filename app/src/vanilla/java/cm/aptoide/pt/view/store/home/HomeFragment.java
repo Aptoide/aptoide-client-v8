@@ -61,6 +61,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.mopub.common.util.DateAndTime;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import org.spongycastle.util.encoders.Hex;
 import rx.android.schedulers.AndroidSchedulers;
@@ -178,7 +179,12 @@ public class HomeFragment extends StoreFragment {
 
   private void setAppCoins(BalanceResponse balanceResponse) {
     balanceAppcoins.setVisibility(View.VISIBLE);
-    balanceAppcoins.setText(balanceResponse.result + " AppCoins");
+    float balance = Float.parseFloat(balanceResponse.result) / 100l;
+    Logger.v(TAG, "balance in cent: " + balanceResponse.result);
+    Logger.v(TAG, "balance: " + balance);
+    String balanceString = NumberFormat.getCurrencyInstance(Locale.FRANCE)
+        .format(balance);
+    balanceAppcoins.setText(balanceString.substring(0, balanceString.length() - 1) + " AppCoins");
     String data = DateAndTime.now()
         .toString()
         .substring(4, 20);
