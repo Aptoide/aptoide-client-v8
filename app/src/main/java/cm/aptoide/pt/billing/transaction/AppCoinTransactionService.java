@@ -138,7 +138,8 @@ public class AppCoinTransactionService implements TransactionService {
         EtherAccountManager etherAccountManager =
            aptoideApplication.getEtherAccountManager();
         etherAccountManager.getCurrentNonce()
-            .flatMap(nonce -> ethereumApi.call(nonce.intValue(), CONTRACT_ADDRESS, new Erc20Transfer(RECEIVER_ADDR, 1), etherAccountManager.getECKey()))
+            .flatMap(nonce -> ethereumApi.call(nonce.intValue(), CONTRACT_ADDRESS,
+                new Erc20Transfer(RECEIVER_ADDR, 500), etherAccountManager.getECKey()))
             .doOnNext(call -> addACtransaction(productId,payerId,call.result)).doOnError(throwable -> throwable.printStackTrace()).subscribe();
         Logger.d("TAG123", Hex.toHexString(etherAccountManager.getECKey().getAddress()));
       }
