@@ -55,7 +55,7 @@ android {
   productFlavors {
     partner {
       dimension "product"
-      applicationId "com.aptoide.partners.apps"
+      applicationId "com.aptoide.partners.dfloureiro"
     }
 
     internal {
