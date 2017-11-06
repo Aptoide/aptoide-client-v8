@@ -13,8 +13,6 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.install.AutoUpdate;
-import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -22,8 +20,12 @@ import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.download.DownloadFactory;
+import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstallerFactory;
+import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.navigator.TabNavigatorActivity;
 import cm.aptoide.pt.notification.ContentPuller;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -36,16 +38,11 @@ import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.navigator.TabNavigatorActivity;
 import com.jakewharton.rxrelay.PublishRelay;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 
-/**
- * Created by neuro on 06-05-2016.
- */
 public class MainActivity extends TabNavigatorActivity
     implements MainView, DeepLinkManager.DeepLinkMessages {
 

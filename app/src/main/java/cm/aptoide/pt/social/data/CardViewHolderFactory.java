@@ -135,7 +135,7 @@ public class CardViewHolderFactory {
       case TIMELINE_STATS:
         return new TimelineStatsViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_stats_item, parent, false), spannableFactory,
-            cardTouchEventPublishSubject, storeContext);
+            cardTouchEventPublishSubject);
       case LOGIN:
         return new TimelineLoginPostViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_login_item, parent, false), cardTouchEventPublishSubject);
