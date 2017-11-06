@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified on 02/06/2016.
+  -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    >
+
+  <TextView
+      android:id="@+id/message"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:layout_marginBottom="20dp"
+      android:drawablePadding="4dp"
+      android:gravity="center_vertical"
+      android:visibility="gone"
+      tools:text="this is a sample message"
+      tools:visibility="visible"
+      />
+
+  <EditText
+      android:id="@+id/pininput"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:inputType="number"
+      android:maxLength="8"
+      android:textSize="@dimen/text_size_medium"
+      tools:text="1234"
+      />
+</LinearLayout>

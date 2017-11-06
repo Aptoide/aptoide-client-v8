@@ -37,8 +37,14 @@ proguard/
 #.idea/codeStyleSettings.xml
 .DS_Store
 captures/
+reports/
 
 signing.properties
 google-services.json
 **/crashlytics-build.properties
 projectFilesBackup/.idea/
+
+.idea/instapk.xml
+instapk.log*
+.hgignore
+instapk.properties

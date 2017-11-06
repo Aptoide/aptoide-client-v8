@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/timeline_login_layout"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:background="?attr/backgroundMain"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    >
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:layout_toLeftOf="@+id/login_button"
+      android:layout_toStartOf="@+id/login_button"
+      android:gravity="center"
+      android:text="@string/timeline_login_message"
+      style="?attr/defaultTextStyle"
+      />
+  <Button
+      android:id="@+id/login_button"
+      android:layout_width="90dp"
+      android:layout_height="40dp"
+      android:layout_alignParentEnd="true"
+      android:layout_alignParentRight="true"
+      android:layout_centerVertical="true"
+      android:layout_marginEnd="13dp"
+      android:layout_marginRight="13dp"
+      android:gravity="center"
+      android:text="@string/login"
+      android:textAllCaps="true"
+      android:textSize="@dimen/text_size_medium"
+      style="?attr/customButton"
+      />
+</RelativeLayout>

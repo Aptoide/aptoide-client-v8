@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified on 01/08/2016.
+  -->
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/partial_social_timeline_thumbnail"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    >
+
+  <TextView
+      android:id="@+id/partial_social_timeline_thumbnail_title"
+      android:layout_width="match_parent"
+      android:layout_alignParentTop="true"
+      android:layout_marginBottom="12dp"
+      android:layout_marginLeft="12dp"
+      android:layout_marginRight="15dp"
+      android:layout_marginTop="12dp"
+      android:maxLines="3"
+      tools:text="Best backup apps: save all your Android's innards fkgfkj fkjgfjfgkfj fgkjgfj"
+      style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+      />
+  <FrameLayout
+      android:id="@+id/partial_social_timeline_thumbnail_image"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/partial_social_timeline_thumbnail_title"
+      android:layout_centerVertical="true"
+      android:layout_marginBottom="12dp"
+      android:layout_marginEnd="12dp"
+      android:layout_marginLeft="12dp"
+      android:layout_marginRight="12dp"
+      android:layout_marginStart="12dp"
+      >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="152dp"
+        >
+
+      <ImageView
+          android:id="@+id/featured_graphic"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:contentDescription="@null"
+          />
+
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="50dp"
+          android:layout_alignParentBottom="true"
+          android:background="@drawable/gradient_black"
+          android:gravity="bottom"
+          android:orientation="horizontal"
+          android:padding="4dp"
+          >
+
+        <TextView
+            android:id="@+id/app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:paddingEnd="1.5dp"
+            android:paddingRight="1.5dp"
+            android:textColor="?attr/inverseTextColor"
+            tools:text="Little Commander worl world II"
+            />
+      </RelativeLayout>
+    </RelativeLayout>
+    <ImageView
+        android:id="@+id/play_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/btn_movie_play_normal"
+        android:visibility="visible"
+        />
+
+  </FrameLayout>
+
+  <View
+      android:id="@+id/divider"
+      android:layout_width="match_parent"
+      android:layout_height="0.7dp"
+      android:layout_below="@id/partial_social_timeline_thumbnail_image"
+      android:layout_marginEnd="12dp"
+      android:layout_marginLeft="12dp"
+      android:layout_marginRight="12dp"
+      android:layout_marginStart="12dp"
+      android:background="@color/timeline_separator"
+      android:visibility="invisible"
+      />
+
+</RelativeLayout>
+
+
+

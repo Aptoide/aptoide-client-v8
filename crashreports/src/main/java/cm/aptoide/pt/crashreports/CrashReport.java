@@ -12,11 +12,11 @@ public class CrashReport implements CrashLogger {
   //
 
   private static CrashReport singleton = new CrashReport();
-  // TODO: 12/1/2017 sithengineer should we protect this list from concurrent modifications?
+  // TODO: 12/1/2017 should we protect this list from concurrent modifications?
   private ArrayList<CrashLogger> crashLoggers;
 
   private CrashReport() {
-    // TODO: 12/1/2017 sithengineer is lazy initialization necessary here?
+    // TODO: 12/1/2017 is lazy initialization necessary here?
     crashLoggers = new ArrayList<>();
   }
 
@@ -40,12 +40,9 @@ public class CrashReport implements CrashLogger {
     }
 
     for (int i = 0; i < crashLoggers.size(); i++) {
-      crashLoggers.get(i).log(throwable);
+      crashLoggers.get(i)
+          .log(throwable);
     }
-  }
-
-  private boolean isInitialized() {
-    return crashLoggers != null && !crashLoggers.isEmpty();
   }
 
   @Override public void log(String key, String value) {
@@ -55,8 +52,13 @@ public class CrashReport implements CrashLogger {
     }
 
     for (int i = 0; i < crashLoggers.size(); i++) {
-      crashLoggers.get(i).log(key, value);
+      crashLoggers.get(i)
+          .log(key, value);
     }
+  }
+
+  private boolean isInitialized() {
+    return crashLoggers != null && !crashLoggers.isEmpty();
   }
 
   public CrashLogger getLogger(Class<? extends CrashLogger> clazz) {
@@ -66,7 +68,8 @@ public class CrashReport implements CrashLogger {
     }
 
     for (int i = 0; i < crashLoggers.size(); i++) {
-      if (clazz.isAssignableFrom(crashLoggers.get(i).getClass())) {
+      if (clazz.isAssignableFrom(crashLoggers.get(i)
+          .getClass())) {
         return crashLoggers.get(i);
       }
     }

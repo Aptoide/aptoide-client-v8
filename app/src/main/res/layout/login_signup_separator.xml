@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    >
+
+  <TextView
+      android:id="@+id/fragment_payment_login_aptoide_buttons_separator_text"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerInParent="true"
+      android:text="@string/login_separator_text"
+      android:textColor="@color/grey_fog_dark"
+      style="@style/Aptoide.TextView.Regular.XS"
+      />
+
+  <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:layout_centerVertical="true"
+      android:layout_marginEnd="15dp"
+      android:layout_marginLeft="15dp"
+      android:layout_marginRight="15dp"
+      android:layout_marginStart="15dp"
+      android:layout_toLeftOf="@id/fragment_payment_login_aptoide_buttons_separator_text"
+      android:background="@color/grey_fog_dark"
+      />
+
+  <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:layout_centerVertical="true"
+      android:layout_marginEnd="15dp"
+      android:layout_marginLeft="15dp"
+      android:layout_marginRight="15dp"
+      android:layout_marginStart="15dp"
+      android:layout_toEndOf="@id/fragment_payment_login_aptoide_buttons_separator_text"
+      android:layout_toRightOf="@id/fragment_payment_login_aptoide_buttons_separator_text"
+      android:background="@color/grey_fog_dark"
+      />
+
+</RelativeLayout>

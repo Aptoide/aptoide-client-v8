@@ -1,15 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
+ * Modified on 04/08/2016.
  */
 
 package cm.aptoide.pt.utils;
 
-import android.content.Context;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.pt.logger.Logger;
@@ -87,6 +83,10 @@ public class FileUtils {
     return false;
   }
 
+  public static boolean fileExists(String path) {
+    return !TextUtils.isEmpty(path) && new File(path).exists();
+  }
+
   public long deleteDir(File dir) {
     if (dir == null) {
       throw new RuntimeException("The file to be deleted can't be null");
@@ -154,10 +154,6 @@ public class FileUtils {
     }
   }
 
-  public static boolean fileExists(String path) {
-    return !TextUtils.isEmpty(path) && new File(path).exists();
-  }
-
   /**
    * this method clones a file, it opens the file and using a stream, the new file will be written
    *
@@ -218,7 +214,8 @@ public class FileUtils {
           long size = deleteDir(filePath);
           Logger.d(TAG, "deleting folder " + filePath.getPath() + " size: " + size);
           return size;
-        }).onErrorResumeNext(throwable -> Observable.empty()))
+        })
+            .onErrorResumeNext(throwable -> Observable.empty()))
         .toList()
         .map(deletedSizes -> {
           long size = 0;
@@ -235,29 +232,5 @@ public class FileUtils {
       files[i] = new File(folders[i]);
     }
     return deleteFolder(files);
-  }
-
-  public String getPath(Uri uri, Context context) {
-
-    String[] projection = { MediaStore.Images.Media.DATA };
-    Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
-    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-    cursor.moveToFirst();
-
-    return cursor.getString(column_index);
-  }
-
-  public String getPathAlt(Uri contentUri, Context context) {
-    {
-      try {
-        String[] proj = { MediaStore.Images.Media.DATA };
-        Cursor cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
-      } catch (Exception e) {
-        return contentUri.getPath();
-      }
-    }
   }
 }

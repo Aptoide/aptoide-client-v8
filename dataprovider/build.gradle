@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 08/07/2016.
- */
-
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
 retrolambda {
@@ -11,11 +6,11 @@ retrolambda {
 }
 
 android {
-  compileSdkVersion COMPILE_SDK_VERSION
+  compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
   buildToolsVersion BUILD_TOOLS_VERSION
 
   defaultConfig {
-    minSdkVersion 15
+    minSdkVersion project.MINIMUM_SDK_VERSION
   }
 
   lintOptions {
@@ -34,10 +29,12 @@ android {
           "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_V7_HOST + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_APTWORDS_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_APTWORDS_HOST + "\""
-      buildConfigField "String", "APTOIDE_WEB_SERVICES_APTWORDS_SCHEME",
-          "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_APTWORDS_SCHEME + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_WRITE_V7_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_WRITE_V7_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_NOTIFICATION_HOST",
+          "\"" + project.APTOIDE_WEB_SERVICES_NOTIFICATION_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_READ_V7_HOST",
+          "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_READ_V7_HOST+ "\""
     }
     prod {
       buildConfigField "String", "APTOIDE_WEB_SERVICES_SCHEME",
@@ -48,10 +45,12 @@ android {
           "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_V7_HOST + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_APTWORDS_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_APTWORDS_HOST + "\""
-      buildConfigField "String", "APTOIDE_WEB_SERVICES_APTWORDS_SCHEME",
-          "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_APTWORDS_SCHEME + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_WRITE_V7_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_WRITE_V7_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_NOTIFICATION_HOST",
+          "\"" + project.APTOIDE_WEB_SERVICES_NOTIFICATION_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_READ_V7_HOST",
+          "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_READ_V7_HOST+ "\""
     }
   }
 
@@ -67,8 +66,21 @@ android {
     targetCompatibility JavaVersion.VERSION_1_8
   }
 
-  // Websockets
-  useLibrary 'org.apache.http.legacy'
+  packagingOptions {
+    exclude 'META-INF/services/javax.annotation.processing.Processor'
+    exclude 'META-INF/DEPENDENCIES.txt'
+    exclude 'META-INF/DEPENDENCIES'
+    exclude 'META-INF/LICENSE.txt'
+    exclude 'META-INF/LICENSE'
+    exclude 'META-INF/NOTICE.txt'
+    exclude 'META-INF/NOTICE'
+    exclude 'META-INF/MANIFEST.MF'
+    exclude 'META-INF/LGPL2.1'
+  }
+
+  lintOptions {
+    abortOnError false
+  }
 }
 
 dependencies {
@@ -77,10 +89,9 @@ dependencies {
   // inter-projects dependencies
   //
 
-  compile project(path: ':model', configuration: 'release')
   compile project(path: ':aptoidepreferences', configuration: 'release')
-  compile project(path: ':networkclient', configuration: 'release')
   compile project(path: ':utils', configuration: 'release')
+  compile project(path: ':crashreports', configuration: 'release')
 
   //
   // custom libs in folders
@@ -92,16 +103,28 @@ dependencies {
   // from remote repos
   //
 
+  provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
+  // Just for lombok not to complain
+  provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
+
   testCompile "com.squareup.okhttp3:mockwebserver:${MOCK_WEB_SERVER_VERSION}"
   testCompile "junit:junit:${JUNIT_VERSION}"
   testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+  testCompile "com.android.support.test:testing-support-lib:0.1"
 
   //noinspection GradleDependency
   compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
   //noinspection GradleDependency
   compile "com.google.android.gms:play-services-base:${PLAY_SERVICES_VERSION}"
 
-  provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
-  // Just for lombok not to complain
-  provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
+  compile "io.reactivex:rxjava:${RXJAVA_VERSION}"
+  compile "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
+  // And ProGuard rules for RxJava!
+  compile "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
+  compile "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
+  compile "com.squareup.retrofit2:adapter-rxjava:${RETROFIT_VERSION}"
+  compile "com.squareup.retrofit2:converter-jackson:${RETROFIT_VERSION}"
+  compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VERSION}"
+
+  compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
 }

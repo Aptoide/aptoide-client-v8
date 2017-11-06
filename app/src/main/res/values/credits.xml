@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+
+    <string name="credits">
+    \tAptoide Team:\n\n
+    \t\t <a href="http://www.aptoide.com/page/about">http://www.aptoide.com/page/about</a> \n\n
+
+    \tSource code &amp; contributions:\n\n
+    \t\t <a href="https://github.com/aptoide">https://github.com/aptoide</a> \n\n
+
+    \tThank you to our Translators Team:\n\n
+
+     Arabic: Mona Sadek | Esraa Abdullah | Zuheir Sharafeldin | Ahmed Sami | ذوالفقار الزاملي | Yassine Nacer | Manaa Alshihe | Mohamed Gorrab | Mohamed Al-Oraibi | Mohamad Kalaaji | Omarioamriky | Ahmed Teailab | Ali | Ahmed Teailab | Mariam Jomha\n
+     Bengali: Md Rokunuzzaman\n
+     Burmese: Nyein Chan | Ko Nyi | Yaminn\n
+     Chinese (Trad): Yu-Hsuan Lin | Ivan Niu\n
+     Chinese (Simp): Ivan Niu | ChuChangMing | Junying Li | Theodore Wte | Xue Yao\n
+     Croatian: Josip Knežević | Rijad Spahic | Toni Grubisic | Roko Jurjevic\n
+     Dutch: Hans Verstraeten | Shane KloostermaXBOXn | Jehan Bont | Ismail Gürol Celiktas | Stefan de Jong | Nathan Follens\n
+     Filipino: Melvin Melchor A. Leal | Darwin del Rosario\n
+     Finnish: Sami “6sto” Kuusisto | Allu Saarinen | Lari Oesch\n
+     French: Maxime Blanc | Ldm Public | Guillaume NV | Ultrapeer | Damien Mallard | Alexis Bonvin | Dominique Baume | Ldm Public\n
+     Georgian: Sandro Kakabadze \n
+     German: Alexander Dommnich | Manuel Stroh | Marlon Bruske | Benny La | Simon Grabert | Robert Reep | Martin Nehrdich | Michael Mayer | Lionel Wyser | Kevin Pang | Mika Holste | Thomas Numberger\n
+     Hindi: Gaurav | Amar Singh | Asad Sayyed\n
+     Indonesian: Adi Juarsa | Asep Muhajir | Dwiko Lukito\n
+     Hungarian: Adam Vogl\n
+     Italian: Gabriele Dal Pino | Elisa Bruno | Rapper Skull | Arshdeep Singh | Pavo Baxter | Gabry Carne | Simili Giuseppe | Damiano Chiacchiaretta | Marta Penone | Marta Pini | Anna Russillo\n
+     Japanese: Nana Wakasugi | Naofum\n
+     Malay: Suriya Abdullah | Syaidatul Omar | Tan Say Lee | Zamimi Omar\n
+     Marathi: Rishikesh Wavdekar\n
+     Punjabi: Navdeep Singh\n
+     Polish: Anna Jędrzejewska | Michał VonFlynee | Trurl | Artur Stempkowski | Stanislaw | Tomasz Gregorczyk | Paweł Zmarzły\n
+     Portuguese (Brazil): Flavia Motta | Tobias Alencastro | Caio Fonseca | Juanito Silva | Paulo Henrique | Marchus Santos | Maurilio Filho | Edu Salgado | Vinicio Henrique | Lígia de Paula Santos | Bruno Ribeiro \n
+     Portuguese (Portugal): Tiago Gomes | Joao Redondo | Tomé Mendes Ligia de Paula Santos | Rute Correia\n
+     Romanian: Munteanu Ovidiu | Heim Bogdan | Tudor Bobei | Alina Ivanov\n
+     Russian: Anton Tkachenko | Leonid Bogolubov | Kanat Yesseyev | Ligia de Paula Santos | Sergey Kudelin | Dmitry\n
+     Serbian: Milos Vuckovic\n
+     Spanish: Ana Barrera | Ronnie Simon | jvnski | Denis Arroyabe | Francisco Villalba Segarra | Jorge Conde | Pablo Cardozo | Luis Orellana | Alejandro Mata | Guillermo Mas Coll | Carlos Garrido\n
+     Thai: Duangkarn Sihanatkathakul\n
+     Turkish: Ultrapeer | Zeynal Zeynalov | Emre Tosunkaya | Nataliia | S. Cihan C.\n
+     Vietnamese: Nguyen Minh Tri | Linh Pham\n
+
+ 	</string>
+
+</resources>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+  <ImageView
+      android:id="@+id/addressbook_graphic"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="16dp"
+      android:layout_marginRight="16dp"
+      android:layout_marginTop="56dp"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:srcCompat="@drawable/addressbook_graphic"
+      tools:ignore="ContentDescription"
+      />
+
+  <TextView
+      android:id="@+id/addressbook_thankyou"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="86dp"
+      android:layout_marginRight="86dp"
+      android:layout_marginTop="56dp"
+      android:gravity="center_horizontal"
+      android:text="@string/addressbook_thanks_for_connecting"
+      android:textSize="20sp"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/addressbook_graphic"
+      />
+
+  <ImageView
+      android:id="@+id/addressbook_ic_check"
+      android:layout_width="70dp"
+      android:layout_height="70dp"
+      android:layout_marginRight="24dp"
+      android:layout_marginTop="112dp"
+      app:layout_constraintRight_toRightOf="@+id/addressbook_graphic"
+      app:layout_constraintTop_toTopOf="@+id/addressbook_graphic"
+      app:srcCompat="@drawable/ic_check"
+      tools:ignore="ContentDescription"
+      />
+
+  <Button
+      android:id="@+id/addressbook_done"
+      android:layout_width="0dp"
+      android:layout_height="48dp"
+      android:layout_marginEnd="30dp"
+      android:layout_marginLeft="30dp"
+      android:layout_marginRight="30dp"
+      android:layout_marginStart="30dp"
+      android:layout_marginTop="35dp"
+      android:text="@string/done"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/addressbook_thankyou"
+      style="?attr/customButtonThinLine"
+      />
+</android.support.constraint.ConstraintLayout>

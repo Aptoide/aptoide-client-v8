@@ -1,14 +1,15 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/06/2016.
+ * Modified on 24/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
+import android.content.SharedPreferences;
 import android.os.Build;
-import cm.aptoide.pt.dataprovider.ws.Api;
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import lombok.Data;
+import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -16,18 +17,29 @@ import rx.Observable;
  */
 public class RegisterAdRefererRequest extends Aptwords<RegisterAdRefererRequest.DefaultResponse> {
 
+  private final String q;
   private long adId;
   private long appId;
   private String tracker;
   private String success;
 
-  private RegisterAdRefererRequest(long adId, long appId, String clickUrl, boolean success) {
-    super();
+  private RegisterAdRefererRequest(long adId, long appId, String clickUrl, boolean success,
+      OkHttpClient httpClient, Converter.Factory converterFactory, String q,
+      SharedPreferences sharedPreferences) {
+    super(httpClient, converterFactory, sharedPreferences);
+    this.q = q;
     this.adId = adId;
     this.appId = appId;
     this.success = (success ? "1" : "0");
 
     extractAndSetTracker(clickUrl);
+  }
+
+  public static RegisterAdRefererRequest of(long adId, long appId, String clickUrl, boolean success,
+      OkHttpClient httpClient, Converter.Factory converterFactory, String q,
+      SharedPreferences sharedPreferences) {
+    return new RegisterAdRefererRequest(adId, appId, clickUrl, success, httpClient,
+        converterFactory, q, sharedPreferences);
   }
 
   private void extractAndSetTracker(String clickUrl) {
@@ -36,11 +48,6 @@ public class RegisterAdRefererRequest extends Aptwords<RegisterAdRefererRequest.
     int last = clickUrl.indexOf("/", i + 2);
 
     tracker = clickUrl.substring(0, last);
-  }
-
-  public static RegisterAdRefererRequest of(long adId, long appId, String clickUrl,
-      boolean success) {
-    return new RegisterAdRefererRequest(adId, appId, clickUrl, success);
   }
 
   public void execute() {
@@ -59,15 +66,22 @@ public class RegisterAdRefererRequest extends Aptwords<RegisterAdRefererRequest.
     map.put("success", success);
     map.put("adid", Long.toString(adId));
     map.put("appid", Long.toString(appId));
-    map.put("q", Api.Q);
+    map.put("q", q);
     map.put("androidversion", Build.VERSION.RELEASE);
     map.put("tracker", tracker);
 
     return interfaces.load(map);
   }
 
-  @Data public static class DefaultResponse {
+  public static class DefaultResponse {
+    private String status;
 
-    String status;
+    public String getStatus() {
+      return status;
+    }
+
+    public void setStatus(String status) {
+      this.status = status;
+    }
   }
 }

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by Neurophobic Animal on 22/05/2016.
+  -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aptoide="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/add_store_dialog_background"
+    android:orientation="vertical"
+    >
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      >
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:maxLines="2"
+        android:text="@string/add_store_dialog_title"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/create_store_hint_color"
+        android:textStyle="bold"
+        />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        >
+
+      <android.support.v7.widget.SearchView
+          android:id="@+id/edit_store_uri"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_alignParentLeft="true"
+          android:layout_centerVertical="true"
+          android:layout_toLeftOf="@+id/button_dialog_add_store"
+          android:completionThreshold="2"
+          android:imeOptions="flagNoExtractUi|actionSearch"
+          android:maxLines="1"
+          android:queryHint="@string/store_name"
+          aptoide:iconifiedByDefault="false"
+          >
+      </android.support.v7.widget.SearchView>
+
+      <Button
+          android:id="@+id/button_dialog_add_store"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_alignParentRight="true"
+          android:layout_centerHorizontal="true"
+          android:background="@drawable/add_dialog_top_button_border_shape"
+          android:ellipsize="end"
+          android:maxLines="1"
+          android:text="@string/follow"
+          style="?android:attr/segmentedButtonStyle"
+          />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/button_top_stores"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/add_dialog_top_button_border_shape"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="vertical"
+        >
+
+      <TextView
+          android:id="@+id/top_stores_text_1"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:clickable="true"
+          android:text="@string/add_store_dialog_top_stores"
+          android:textColor="@color/white"
+          android:textSize="11sp"
+          />
+
+      <TextView
+          android:id="@+id/top_stores_text_2"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:clickable="true"
+          android:text="@string/add_store_dialog_top_stores_small_text"
+          android:textColor="@color/white"
+          android:textSize="9sp"
+          />
+
+    </LinearLayout>
+  </LinearLayout>
+
+</ScrollView>

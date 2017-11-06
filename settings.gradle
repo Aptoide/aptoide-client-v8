@@ -3,16 +3,12 @@
  * Modified by Neurophobic Animal on 24/05/2016.
  */
 
-include ':v8engine',
+include 'app',
     ':dataprovider',
-    ':model',
-    ':networkclient',
     ':aptoidepreferences',
-    ':utilsdesign',
     ':crashreports',
     ':utils',
-    ':aptoide_accountmanager',
-    ':database',
-    ':imageloader',
+    ':aptoide-account-manager',
+    ':aptoide-database',
     ':downloadmanager',
-    ':Partners-v8'
+    ':spotandshare'

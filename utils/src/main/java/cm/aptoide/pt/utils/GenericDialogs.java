@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 16/08/2016.
+ * Modified on 16/08/2016.
  */
 
 package cm.aptoide.pt.utils;
@@ -18,7 +18,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.Subscriptions;
 
 /**
- * Created by trinkes on 5/9/16. <li>{@link #createGenericYesNoCancelMessage(Context, String,
+ * Created by trinkes on 5/9/16. <li>{@link #createGenericYesNoCancelMessage(Context, String, *
  * String)}</li> <li>{@link #createGenericOkCancelMessage(Context, String, String)}</li> <li>{@link
  * #createGenericPleaseWaitDialog(Context)}</li>
  */
@@ -30,8 +30,10 @@ public class GenericDialogs {
    *
    * @param title Title to apply on AlertDialog
    * @param message Message to asSnack on AlertDialog
+   *
    * @return A Observable that shows the dialog when subscribed and return the action made by
    * user. This action is represented by EResponse
+   *
    * @see EResponse
    */
   public static Observable<EResponse> createGenericYesNoCancelMessage(@NonNull Context context,
@@ -53,9 +55,10 @@ public class GenericDialogs {
           })
           .create();
       // cleaning up
-      subscriber.add(Subscriptions.create(dialog::dismiss));
+      subscriber.add(Subscriptions.create(() -> dialog.dismiss()));
       dialog.show();
-    }).subscribeOn(AndroidSchedulers.mainThread());
+    })
+        .subscribeOn(AndroidSchedulers.mainThread());
   }
 
   /**
@@ -64,8 +67,10 @@ public class GenericDialogs {
    *
    * @param title Title to apply on AlertDialog
    * @param message Message to asSnack on AlertDialog
+   *
    * @return A Observable that shows the dialog when subscribed and return the action made by
    * user. This action is represented by EResponse
+   *
    * @see EResponse
    */
   public static Observable<EResponse> createGenericOkCancelMessage(Context context, String title,
@@ -94,8 +99,10 @@ public class GenericDialogs {
    *
    * @param title Title to apply on AlertDialog
    * @param message Message to asSnack on AlertDialog
+   *
    * @return A Observable that shows the dialog when subscribed and return the action made by
    * user. This action is represented by EResponse
+   *
    * @see EResponse
    */
   public static Observable<EResponse> createGenericOkMessage(Context context, String title,
@@ -140,7 +147,7 @@ public class GenericDialogs {
           })
           .create();
       // cleaning up
-      subscriber.add(Subscriptions.create(ad::dismiss));
+      subscriber.add(Subscriptions.create(() -> ad.dismiss()));
       ad.show();
     });
   }
@@ -164,7 +171,7 @@ public class GenericDialogs {
           })
           .create();
       // cleaning up
-      subscriber.add(Subscriptions.create(ad::dismiss));
+      subscriber.add(Subscriptions.create(() -> ad.dismiss()));
       ad.show();
     });
   }
@@ -198,35 +205,6 @@ public class GenericDialogs {
     return progressDialog;
   }
 
-  public static Observable<EResponse> createGenericShareDialog(Context context, String share) {
-    return Observable.create((Subscriber<? super EResponse> subscriber) -> {
-      final AlertDialog alertDialog = new AlertDialog.Builder(context).setTitle(share)
-          .setItems(R.array.share_options_array, (dialogInterface, i) -> {
-            switch (i) {
-              case 0:
-                subscriber.onNext(EResponse.SHARE_EXTERNAL);
-                subscriber.onCompleted();
-                break;
-              case 1:
-                subscriber.onNext(EResponse.SHARE_TIMELINE);
-                subscriber.onCompleted();
-                break;
-              case 2:
-                // TODO: 01/02/2017 SHARE APP
-                break;
-              default:
-                break;
-            }
-            subscriber.onNext(EResponse.YES);
-            subscriber.onCompleted();
-          })
-          .create();
-      // cleaning up
-      subscriber.add(Subscriptions.create(alertDialog::dismiss));
-      alertDialog.show();
-    });
-  }
-
   /**
    * Represents the action made by user on the dialog. <li>{@link #YES}</li> <li>{@link #NO}</li>
    * <li>{@link #CANCEL}</li>
@@ -236,20 +214,12 @@ public class GenericDialogs {
     /**
      * Used when yes/ok button is pressed
      */
-    YES,
-    /**
+    YES, /**
      * Used when no/cancel button is pressed
      */
-    NO,
-    /**
+    NO, /**
      * Used when user cancels the dialog by pressing back or clicking out of the dialog
      */
     CANCEL,
-
-    SHARE_APP,
-
-    SHARE_EXTERNAL,
-
-    SHARE_TIMELINE
   }
 }

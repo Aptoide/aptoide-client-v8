@@ -1,19 +1,16 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
+ * Modified on 04/08/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import android.util.Log;
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
-import cm.aptoide.pt.model.v7.GetApp;
+import android.content.SharedPreferences;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.GetApp;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.experimental.Accessors;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -21,97 +18,83 @@ import rx.Observable;
 /**
  * Created by neuro on 22-04-2016.
  */
-@EqualsAndHashCode(callSuper = true) public class GetAppRequest
-    extends V7<GetApp, GetAppRequest.Body> {
+public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 
-  private GetAppRequest(String baseHost, Body body) {
-    super(body, baseHost);
+  private GetAppRequest(String baseHost, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator) {
+    super(body, baseHost, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
   }
 
-  private GetAppRequest(OkHttpClient httpClient, Converter.Factory converterFactory,
-      String baseHost, Body body) {
-    super(body, httpClient, converterFactory, baseHost);
+  public static GetAppRequest of(String packageName, String storeName,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
+
+    boolean forceServerRefresh =
+        ManagerPreferences.getAndResetForceServerRefresh(sharedPreferences);
+
+    return new GetAppRequest(getHost(sharedPreferences),
+        new Body(packageName, storeName, forceServerRefresh, sharedPreferences), bodyInterceptor,
+        httpClient, converterFactory, tokenInvalidator);
   }
 
-  public static GetAppRequest of(String packageName, String storeName, String accessToken,
-      String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+  public static GetAppRequest of(String packageName, BodyInterceptor<BaseBody> bodyInterceptor,
+      long appId, OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    boolean forceServerRefresh =
+        ManagerPreferences.getAndResetForceServerRefresh(sharedPreferences);
 
-    boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
-
-    return new GetAppRequest(BASE_HOST,
-        (Body) decorator.decorate(new Body(packageName, storeName, forceServerRefresh),
-            accessToken));
+    return new GetAppRequest(getHost(sharedPreferences),
+        new Body(appId, forceServerRefresh, packageName, sharedPreferences), bodyInterceptor,
+        httpClient, converterFactory, tokenInvalidator);
   }
 
-  public static GetAppRequest of(long appId, String accessToken, String aptoideClientUUID,
-      String packageName) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
+  public static GetAppRequest of(String packageName, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    boolean forceServerRefresh =
+        ManagerPreferences.getAndResetForceServerRefresh(sharedPreferences);
 
-    return new GetAppRequest(BASE_HOST,
-        (Body) decorator.decorate(new Body(appId, forceServerRefresh, packageName), accessToken));
+    return new GetAppRequest(getHost(sharedPreferences),
+        new Body(packageName, forceServerRefresh, sharedPreferences), bodyInterceptor, httpClient,
+        converterFactory, tokenInvalidator);
   }
 
-  public static GetAppRequest of(long appId, String storeName, String accessToken,
-      String aptoideClientUUID, String packageName) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
+  public static GetAppRequest ofMd5(String md5, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    boolean forceServerRefresh =
+        ManagerPreferences.getAndResetForceServerRefresh(sharedPreferences);
 
-    return new GetAppRequest(BASE_HOST,
-        (Body) decorator.decorate(new Body(appId, storeName, forceServerRefresh, packageName),
-            accessToken));
+    return new GetAppRequest(getHost(sharedPreferences),
+        new Body(forceServerRefresh, md5, sharedPreferences), bodyInterceptor, httpClient,
+        converterFactory, tokenInvalidator);
   }
 
-  public static GetAppRequest of(long appId, String accessToken, String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
+  public static GetAppRequest ofUname(String uname, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
 
-    return new GetAppRequest(BASE_HOST,
-        (Body) decorator.decorate(new Body(appId, forceServerRefresh, null), accessToken));
-  }
-
-  public static GetAppRequest ofMd5(String md5, String accessToken, String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
-
-    return new GetAppRequest(BASE_HOST,
-        (Body) decorator.decorate(new Body(forceServerRefresh, md5), accessToken));
+    return new GetAppRequest(getHost(sharedPreferences), new Body(uname, sharedPreferences),
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
   }
 
   public static GetAppRequest of(long appId, String storeName,
-      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken,
-      String aptoideClientUUID, String packageName) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+      BaseRequestWithStore.StoreCredentials storeCredentials, String packageName,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
 
-    boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
+    boolean forceServerRefresh =
+        ManagerPreferences.getAndResetForceServerRefresh(sharedPreferences);
 
-    Body body = new Body(appId, storeName, forceServerRefresh, packageName);
+    Body body = new Body(appId, storeName, forceServerRefresh, packageName, sharedPreferences);
     body.setStoreUser(storeCredentials.getUsername());
     body.setStorePassSha1(storeCredentials.getPasswordSha1());
 
-    return new GetAppRequest(BASE_HOST, (Body) decorator.decorate(body, accessToken));
-  }
-
-  public static GetAppRequest ofAction(String url, String accessToken, String aptoideClientUUID) {
-    final long appId = getAppIdFromUrl(url);
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    return new GetAppRequest(BASE_HOST, (Body) decorator.decorate(new Body(appId), accessToken));
-  }
-
-  private static long getAppIdFromUrl(String url) {
-    try {
-      // find first index of "appId", split on "=" and the app id is the next index (1) of
-      // the resulting array, excluding the remaining "trash"
-      // example: http://ws75.aptoide.com/api/7/getApp/appId=15168558
-      // example: http://ws75.aptoide.com/api/7/getApp/appId=15168558/other=stuff/in=here
-      String tmp = url.substring(url.indexOf("app_id")).split("=")[1];
-      int lastIdx = tmp.lastIndexOf('/');
-      return Long.parseLong(tmp.substring(0, lastIdx > 0 ? lastIdx : tmp.length()));
-    } catch (Exception e) {
-      Log.e(GetAppRequest.class.getName(), e.getMessage());
-    }
-    return 12765245; // -> Aptoide Uploader app id
+    return new GetAppRequest(getHost(sharedPreferences), body, bodyInterceptor, httpClient,
+        converterFactory, tokenInvalidator);
   }
 
   @Override
@@ -119,65 +102,168 @@ import rx.Observable;
     return interfaces.getApp(body, bypassCache);
   }
 
-  @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithApp {
+  public static class Body extends BaseBodyWithApp {
 
-    @Getter private Long appId;
-    @Getter private String packageName;
-    @Getter private boolean refresh;
-    @Getter @JsonProperty("apk_md5sum") private String md5;
-    @Getter @JsonProperty("store_name") private String storeName;
-    @Getter private Node nodes;
+    private Long appId;
+    private String packageName;
+    private boolean refresh;
+    @JsonProperty("package_uname") private String uname;
+    @JsonProperty("apk_md5sum") private String md5;
+    @JsonProperty("store_name") private String storeName;
+    private Node nodes;
 
-    public Body(Long appId, Boolean refresh, String packageName) {
-      this.appId = appId;
+    public Body(Long appId, Boolean refresh, String packageName,
+        SharedPreferences sharedPreferences) {
+      this(appId, sharedPreferences);
       this.refresh = refresh;
-      nodes = new Node(appId, packageName);
+      this.nodes = new Node(appId, packageName);
     }
 
-    public Body(Long appId, String storeName, Boolean refresh, String packageName) {
-      this.appId = appId;
-      this.refresh = refresh;
-      this.storeName = storeName;
-      nodes = new Node(appId, packageName);
-    }
-
-    public Body(String packageName, String storeName, boolean refresh) {
-      this.packageName = packageName;
+    public Body(Long appId, String storeName, Boolean refresh, String packageName,
+        SharedPreferences sharedPreferences) {
+      this(appId, sharedPreferences);
       this.refresh = refresh;
       this.storeName = storeName;
+      this.nodes = new Node(appId, packageName);
     }
 
-    public Body(String packageName, Boolean refresh) {
+    public Body(String packageName, String storeName, boolean refresh,
+        SharedPreferences sharedPreferences) {
+      this(packageName, refresh, sharedPreferences);
+      this.storeName = storeName;
+      this.nodes = new Node(appId, packageName);
+    }
+
+    public Body(String packageName, Boolean refresh, SharedPreferences sharedPreferences) {
+      super(sharedPreferences);
       this.packageName = packageName;
       this.refresh = refresh;
+      this.nodes = new Node(packageName);
     }
 
-    public Body(Boolean refresh, String md5) {
+    public Body(Boolean refresh, String md5, SharedPreferences sharedPreferences) {
+      super(sharedPreferences);
       this.md5 = md5;
       this.refresh = refresh;
+      this.nodes = new Node();
     }
 
-    public Body(long appId) {
+    public Body(String uname, SharedPreferences sharedPreferences) {
+      super(sharedPreferences);
+      this.uname = uname;
+      this.nodes = new Node();
+    }
+
+    public Body(long appId, SharedPreferences sharedPreferences) {
       // TODO: 27/12/2016 analara
+      super(sharedPreferences);
       this.appId = appId;
+      this.nodes = new Node(appId);
     }
 
-    @Data private static class Node {
+    public Long getAppId() {
+      return appId;
+    }
+
+    public String getPackageName() {
+      return packageName;
+    }
+
+    public boolean isRefresh() {
+      return refresh;
+    }
+
+    public String getUname() {
+      return uname;
+    }
+
+    public String getMd5() {
+      return md5;
+    }
+
+    public String getStoreName() {
+      return storeName;
+    }
+
+    public Node getNodes() {
+      return nodes;
+    }
+
+    private static class Node {
 
       private Meta meta;
       private Versions versions;
+      private Groups groups;
 
-      public Node(long appId, String packageName) {
-        this.meta = new Meta().setAppId(appId);
-        this.versions = new Versions().setPackageName(packageName);
+      public Node(Long appId, String packageName) {
+        this.meta = new Meta();
+        this.meta.setAppId(appId);
+        this.versions = new Versions();
+        this.versions.setPackageName(packageName);
+        this.groups = new Groups();
       }
 
-      @Data @Accessors(chain = true) private static class Meta {
-        private long appId;
+      public Node(long appId) {
+        this(appId, null);
       }
 
-      @Data @Accessors(chain = true) private static class Versions {
+      public Node(String packageName) {
+        this(null, packageName);
+      }
+
+      public Node() {
+        this(null, null);
+      }
+
+      public Meta getMeta() {
+        return meta;
+      }
+
+      public void setMeta(Meta meta) {
+        this.meta = meta;
+      }
+
+      public Versions getVersions() {
+        return versions;
+      }
+
+      public void setVersions(Versions versions) {
+        this.versions = versions;
+      }
+
+      public Groups getGroups() {
+        return groups;
+      }
+
+      public void setGroups(Groups groups) {
+        this.groups = groups;
+      }
+
+      private static class Meta {
+        private Long appId;
+
+        public Long getAppId() {
+          return appId;
+        }
+
+        public void setAppId(Long appId) {
+          this.appId = appId;
+        }
+      }
+
+      private static class Versions {
         private String packageName;
+
+        public String getPackageName() {
+          return packageName;
+        }
+
+        public void setPackageName(String packageName) {
+          this.packageName = packageName;
+        }
+      }
+
+      private static class Groups {
       }
     }
   }

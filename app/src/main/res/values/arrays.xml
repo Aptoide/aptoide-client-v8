@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <string-array name="theme_names">
+    <item>Dark</item>
+    <item>Light</item>
+  </string-array>
+
+  <string-array name="timeline_button_cards_overflow_menu_options">
+    <item>Delete post</item>
+    <item>Report abuse</item>
+    <item>Unfollow store</item>
+  </string-array>
+
+</resources>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) 2012 tdeus.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Public License v2.0
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+-->
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/row_app_download_indicator"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
+    android:padding="5dp"
+    tools:background="@color/amber_700"
+    style="?attr/backgroundCard"
+    >
+
+  <ImageView
+      android:id="@+id/app_icon"
+      android:layout_width="72dp"
+      android:layout_height="72dp"
+      android:layout_centerVertical="true"
+      android:layout_gravity="center_vertical"
+      android:contentDescription="@null"
+      tools:background="@color/red_700"
+      />
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:layout_gravity="center_vertical"
+      android:layout_marginEnd="5dp"
+      android:layout_marginLeft="5dp"
+      android:layout_marginRight="5dp"
+      android:layout_marginStart="5dp"
+      android:layout_toEndOf="@id/app_icon"
+      android:layout_toLeftOf="@+id/view"
+      android:layout_toRightOf="@+id/app_icon"
+      android:layout_toStartOf="@id/view"
+      android:orientation="vertical"
+      >
+
+    <TextView
+        android:id="@+id/app_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        tools:text="Application Name"
+        />
+
+    <ProgressBar
+        android:id="@+id/downloading_progress"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        style="?android:attr/progressBarStyleHorizontal"
+        />
+
+    <RelativeLayout
+        android:id="@+id/download_details_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+      <TextView
+          android:id="@+id/speed"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:ellipsize="end"
+          android:maxLines="1"
+          tools:text="128kbps"
+          />
+
+      <TextView
+          android:id="@+id/eta"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="3dp"
+          android:layout_marginStart="3dp"
+          android:layout_toEndOf="@id/speed"
+          android:layout_toLeftOf="@+id/progress"
+          android:layout_toRightOf="@+id/speed"
+          android:layout_toStartOf="@id/progress"
+          android:ellipsize="end"
+          android:maxLines="1"
+          tools:text="30min"
+          />
+
+      <TextView
+          android:id="@+id/progress"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentEnd="true"
+          android:layout_alignParentRight="true"
+          android:layout_gravity="left"
+          tools:text="80%"
+          />
+    </RelativeLayout>
+
+  </LinearLayout>
+
+  <View
+      android:id="@+id/view"
+      android:layout_width="1dp"
+      android:layout_height="50dp"
+      android:layout_centerVertical="true"
+      android:layout_margin="5dp"
+      android:layout_toLeftOf="@+id/pause_cancel_button"
+      android:layout_toStartOf="@id/pause_cancel_button"
+      android:background="?attr/separatorColor"
+      />
+
+  <ImageView
+      android:id="@+id/pause_cancel_button"
+      android:layout_width="30dp"
+      android:layout_height="30dp"
+      android:layout_alignParentEnd="true"
+      android:layout_alignParentRight="true"
+      android:layout_centerVertical="true"
+      android:layout_gravity="center"
+      android:contentDescription="@null"
+      android:foreground="?attr/selectableItemBackground"
+      android:padding="5dp"
+      android:scaleType="center"
+      android:src="@drawable/media_pause"
+      />
+</RelativeLayout>

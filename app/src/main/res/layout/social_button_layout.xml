@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImageButton xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/button"
+    android:layout_width="match_parent"
+    android:layout_height="42dp"
+    android:layout_weight="1"
+    tools:src="@drawable/youtube_logo"
+    style="@style/Aptoide.Button.Ghost.GreyFogLight"
+    />

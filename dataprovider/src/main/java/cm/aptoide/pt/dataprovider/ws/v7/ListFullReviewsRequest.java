@@ -1,20 +1,18 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
+ * Modified on 04/08/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import android.content.SharedPreferences;
 import android.text.TextUtils;
-import cm.aptoide.pt.dataprovider.ws.Api;
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
-import cm.aptoide.pt.model.v7.ListFullReviews;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.ListFullReviews;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -32,61 +30,40 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
   private static final int MAX_COMMENTS = 10;
   private String url;
 
-  protected ListFullReviewsRequest(Body body, String baseHost) {
-    super(body, baseHost);
+  protected ListFullReviewsRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
   }
 
-  public ListFullReviewsRequest(String url, Body body, String baseHost) {
-    super(body, baseHost);
+  public ListFullReviewsRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    this(body, bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences);
     this.url = url;
   }
 
   public static ListFullReviewsRequest of(long storeId, int limit, int offset,
-      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken,
-      String aptoideClientUUID) {
+      BaseRequestWithStore.StoreCredentials storeCredentials,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
 
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-
-    Body body = new Body(storeId, limit, offset, ManagerPreferences.getAndResetForceServerRefresh(),
-        storeCredentials);
-    return new ListFullReviewsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
+    Body body = new Body(storeId, limit, offset,
+        ManagerPreferences.getAndResetForceServerRefresh(sharedPreferences), storeCredentials);
+    return new ListFullReviewsRequest(body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences);
   }
 
-  public static ListFullReviewsRequest ofAction(String url, boolean refresh, String accessToken,
-      String aptoideClientUUID, BaseRequestWithStore.StoreCredentials storeCredentials) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+  public static ListFullReviewsRequest ofAction(String url, boolean refresh,
+      BaseRequestWithStore.StoreCredentials storeCredentials,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     return new ListFullReviewsRequest(url.replace("listFullReviews", ""),
-        (Body) decorator.decorate(new Body(refresh, storeCredentials), accessToken), BASE_HOST);
-  }
-
-  public static ListFullReviewsRequest of(String storeName, String packageName, String accessToken,
-      String aptoideClientUUID) {
-    return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS, accessToken, aptoideClientUUID);
-  }
-
-  /**
-   * example call: http://ws75.aptoide.com/api/7/listFullReviews/store_name/apps/package_name/com.supercell.clashofclans/limit/10
-   */
-  public static ListFullReviewsRequest of(String storeName, String packageName, int maxReviews,
-      int maxComments, String accessToken, String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-
-    Body body = new Body(storeName, packageName, maxReviews, maxComments,
-        ManagerPreferences.getAndResetForceServerRefresh());
-    return new ListFullReviewsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
-  }
-
-  /**
-   * example call: http://ws75.aptoide.com/api/7/listReviews/store_name/apps/package_name/com.supercell.clashofclans/sub_limit/0/limit/3
-   */
-  public static ListFullReviewsRequest ofTopReviews(String storeName, String packageName,
-      int maxReviews, String accessToken, String aptoideClientUUID) {
-
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-
-    Body body = new Body(storeName, packageName, maxReviews, 0,
-        ManagerPreferences.getAndResetForceServerRefresh());
-    return new ListFullReviewsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
+        new Body(refresh, storeCredentials), bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<ListFullReviews> loadDataFromNetwork(Interfaces interfaces,
@@ -98,19 +75,15 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
     }
   }
 
-  @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body
-      extends BaseBodyWithStore implements Endless {
+  public static class Body extends BaseBodyWithStore implements Endless {
 
-    @Getter private Integer limit;
-    @Getter @Setter private int offset;
+    private int offset;
+    private Integer limit;
+    private boolean refresh;
     private String lang;
     private boolean mature;
-    private String q = Api.Q;
-    @Getter private boolean refresh;
-
     private Order order;
     private Sort sort;
-
     private Long storeId;
     private Long reviewId;
     private String packageName;
@@ -138,6 +111,22 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
       this.limit = limit;
       this.subLimit = subLimit;
       this.refresh = refresh;
+    }
+
+    public boolean isRefresh() {
+      return refresh;
+    }
+
+    @Override public int getOffset() {
+      return offset;
+    }
+
+    @Override public void setOffset(int offset) {
+      this.offset = offset;
+    }
+
+    @Override public Integer getLimit() {
+      return limit;
     }
 
     public enum Sort {

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/aptoide_orange"
+    android:orientation="vertical"
+    android:weightSum="9"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    >
+
+  <cm.aptoide.pt.view.custom.AptoideViewPager
+      android:id="@+id/view_pager"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      tools:background="@color/indigo"
+      />
+
+  <LinearLayout
+      android:id="@+id/skip_next_layout"
+      android:layout_width="match_parent"
+      android:layout_height="48dp"
+      android:layout_alignParentBottom="true"
+      android:background="@color/default_color"
+      android:measureWithLargestChild="false"
+      android:minHeight="82dp"
+      android:orientation="horizontal"
+      android:weightSum="4"
+      tools:background="@color/red"
+      tools:visibility="visible"
+      >
+
+    <!-- this view only uses some room to keep everything tidy -->
+    <View
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:baselineAligned="false"
+        android:clickable="true"
+        android:focusable="false"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:weightSum="10"
+        />
+
+    <RadioGroup
+        android:id="@+id/view_pager_radio_group"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:baselineAligned="false"
+        android:clickable="false"
+        android:gravity="center"
+        android:orientation="horizontal"
+        />
+
+    <!-- only one of the next 2 elements will be visible -->
+    <TextView
+        android:id="@+id/skip_text"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:padding="4dp"
+        android:text="@string/skip"
+        android:textAllCaps="true"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:weightSum="1"
+        tools:visibility="gone"
+        />
+
+    <FrameLayout
+        android:id="@+id/next_icon"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:visibility="visible"
+        android:weightSum="1"
+        tools:visibility="visible"
+        >
+      <ImageView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:src="@drawable/wizard_next_arrow"
+          />
+    </FrameLayout>
+
+  </LinearLayout>
+
+  <View
+      android:id="@+id/horizontal_separator"
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:layout_above="@id/skip_next_layout"
+      android:background="#20000000"
+      />
+
+</RelativeLayout>

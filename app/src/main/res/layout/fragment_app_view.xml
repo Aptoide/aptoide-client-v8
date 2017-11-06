@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified on 12/08/2016.
+  -->
+
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_view_fragment_coordinator_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:showIn="@layout/activity_app_view"
+    >
+
+  <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@android:color/white"
+      app:layout_behavior="@string/appbar_scrolling_view_behavior"
+      >
+
+    <include
+        layout="@layout/partial_view_incl_no_network"
+        tools:visibility="gone"
+        />
+
+    <include
+        layout="@layout/partial_view_error"
+        tools:visibility="gone"
+        />
+
+    <include
+        layout="@layout/partial_view_progress_bar"
+        tools:visibility="gone"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_gravity="center_horizontal"
+        android:clipToPadding="false"
+        style="@style/AptoideAppView"
+        />
+
+  </FrameLayout>
+
+  <include layout="@layout/partial_app_view_collapsing_toolbar"/>
+
+</android.support.design.widget.CoordinatorLayout>

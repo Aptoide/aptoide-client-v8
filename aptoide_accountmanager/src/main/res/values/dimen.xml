@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-  <integer name="min_avatar_height">600</integer>
-  <integer name="max_avatar_height">10240</integer>
-  <integer name="min_avatar_width">600</integer>
-  <integer name="max_avatar_width">10240</integer>
-  <integer name="max_avatar_Size">5242880</integer>
-</resources>

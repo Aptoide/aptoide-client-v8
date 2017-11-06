@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:clipToPadding="false"
+    android:orientation="vertical"
+    android:padding="20dp"
+    >
+  <include layout="@layout/displayable_social_timeline_social_recommendation"/>
+  <include layout="@layout/partial_timeline_dialog_post_privacy_checkbox"/>
+</LinearLayout>
+

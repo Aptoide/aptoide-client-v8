@@ -9,5 +9,5 @@ package cm.aptoide.pt.dataprovider.ws.v7.store;
  * Created by neuro on 22-04-2016.
  */
 public enum StoreContext {
-  home, store, store_extended, community, top, top_oem, first_install,
+  home, meta, store_extended, community, top, top_oem, first_install,
 }

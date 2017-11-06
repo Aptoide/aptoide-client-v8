@@ -1,0 +1,13 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by Marcelo Benites on 10/08/2016.
+ */
+
+package cm.aptoide.pt.billing.exception;
+
+public class PaymentFailureException extends BillingException {
+
+  public PaymentFailureException(String message) {
+    super(message);
+  }
+}

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/aptoide_orange"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/bottom_skip_bar_height"
+    android:paddingEnd="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingStart="10dp"
+    >
+
+  <ImageView
+      android:id="@+id/aptoide_logo"
+      android:layout_width="200dp"
+      android:layout_height="50dp"
+      android:layout_margin="20dp"
+      android:src="@drawable/logo"
+      />
+
+  <TextView
+      android:id="@+id/title"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/wizard_title_viewpager_one"
+      style="@style/OnBoarding.Title.TextView"
+      />
+
+  <TextView
+      android:id="@+id/description"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/wizard_sub_title_viewpager_one"
+      style="@style/OnBoarding.SubTitle.TextView"
+      />
+
+  <ImageView
+      android:id="@android:id/icon"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:layout_marginBottom="@dimen/padding_small"
+      android:scaleType="centerInside"
+      android:src="@drawable/wizard_one"
+      />
+
+</LinearLayout>

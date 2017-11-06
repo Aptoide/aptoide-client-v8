@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="root"
+    android:title="@string/settings_title_settings">
+
+  <PreferenceCategory
+      android:title="@string/setting_general"
+      >
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="updatesFilterAlphaBetaKey"
+        android:summary="@string/settings_updates_filter_summary"
+        android:title="@string/settings_updates_filter_setting_title"/>
+
+  </PreferenceCategory>
+  <PreferenceCategory
+      android:title="@string/setting_general_download_rules"
+      >
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="generalnetworkwifi"
+        android:title="@string/setting_wifi"
+        />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="generalnetworkmobile"
+        android:title="@string/setting_mobile"
+        />
+
+  </PreferenceCategory>
+
+
+  <PreferenceCategory android:title="@string/setting_hwspecstitle">
+    <Preference
+        android:key="hwspecs"
+        android:summary="@string/setting_hwspecssum"
+        android:title="@string/setting_hwspecstitle"/>
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="hwspecsChkBox"
+        android:summary="@string/setting_appfiltersum"
+        android:title="@string/setting_appfiltertitle"/>
+  </PreferenceCategory>
+
+  <PreferenceCategory
+      android:key="checkautoupdatecategory"
+      android:title="@string/setting_category_autoupdate">
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="checkautoupdate"
+        android:title="@string/setting_category_autoupdate_title"/>
+  </PreferenceCategory>
+
+  <PreferenceCategory
+      android:key="adultContent"
+      android:title="@string/order_popup_title3">
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="matureChkBox"
+        android:persistent="false"
+        android:summary="@string/setting_dont_show_mature_content"
+        android:title="@string/setting_mature_filtering"/>
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="matureChkBoxWithPin"
+        android:persistent="false"
+        android:summary="@string/setting_dont_show_mature_content"
+        android:title="@string/setting_mature_filtering"
+        android:visible="false"/>
+    <Preference
+        android:inputType="number"
+        android:key="Maturepin"
+        android:persistent="false"
+        android:summary="@string/set_mature_pin_summary"
+        android:title="@string/set_mature_pin_title"/>
+    <Preference
+        android:inputType="number"
+        android:key="removeMaturepin"
+        android:persistent="false"
+        android:summary="@string/remove_mature_pin_summary"
+        android:title="@string/remove_mature_pin_title"
+        android:visible="false"/>
+  </PreferenceCategory>
+
+  <PreferenceCategory android:title="@string/setting_updates">
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="updatesSystemAppsKey"
+        android:summary="@string/settings_include_system_apps_summary"
+        android:title="@string/settings_include_system_apps_title"/>
+  </PreferenceCategory>
+
+  <PreferenceCategory android:title="@string/setting_notifications">
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="notificationaptoide"
+        android:summary="@string/setting_notifications_sub_sub_section_1"
+        android:title="@string/setting_notifications_sub_section_1"/>
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="notification_campaign_and_social"
+        android:summary="@string/setting_notifications_sub_sub_section_2"
+        android:title="@string/setting_notifications_sub_section_2"/>
+  </PreferenceCategory>
+
+  <PreferenceCategory android:title="@string/setting_schdwntitle">
+    <CheckBoxPreference
+        android:key="schDwnBox"
+        android:summary="@string/setting_schdwninstallsum"
+        android:title="@string/setting_schdwninstalltitle"/>
+  </PreferenceCategory>
+  <PreferenceCategory android:title="@string/setting_clear_memory">
+    <Preference
+        android:key="clearcache"
+        android:summary="@string/settings_clear_cache_summary"
+        android:title="@string/settings_clearcache_title"/>
+
+    <EditTextPreference
+        android:inputType="number"
+        android:key="maxFileCache"
+        android:maxLength="3"
+        android:numeric="integer"
+        android:summary="@string/settings_maxFileCache_sum"
+        android:title="@string/settings_maxFileCache_title"/>
+  </PreferenceCategory>
+
+  <!--<PreferenceCategory-->
+  <!--android:key="changetheme"-->
+  <!--android:title="@string/settings_change_theme">-->
+  <!--<Preference-->
+  <!--android:key="soon"-->
+  <!--android:title="@string/settings_change_theme_soon"/>-->
+  <!--<ListPreference-->
+  <!--android:defaultValue="light"-->
+  <!--android:entries="@array/theme_names"-->
+  <!--android:entryValues="@array/theme"-->
+  <!--android:key="theme"-->
+  <!--android:title="@string/theme"/>-->
+  <!--</PreferenceCategory>-->
+
+  <PreferenceCategory
+      android:key="rootCategory"
+      android:title="@string/settings_root">
+    <CheckBoxPreference
+        android:key="allowRoot"
+        android:title="@string/settings_allow_root"/>
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="auto_update"
+        android:summary="@string/setting_auto_update_sum"
+        android:title="@string/setting_auto_update_title"/>
+  </PreferenceCategory>
+
+  <PreferenceCategory
+      android:key="about"
+      android:title="@string/settings_about_us">
+    <Preference
+        android:key="aboutDialog"
+        android:title="@string/settings_about_us"/>
+  </PreferenceCategory>
+
+
+</PreferenceScreen>

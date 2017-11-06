@@ -1,0 +1,235 @@
+/*
+ * Copyright (c) 2016.
+ * Modified on 18/08/2016.
+ */
+
+package cm.aptoide.pt.view.recycler;
+
+import android.support.v7.widget.RecyclerView;
+import cm.aptoide.pt.dataprovider.interfaces.ErrorRequestListener;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7EndlessResponse;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
+import cm.aptoide.pt.dataprovider.ws.v7.Endless;
+import cm.aptoide.pt.dataprovider.ws.v7.V7;
+import cm.aptoide.pt.view.recycler.displayable.ProgressBarDisplayable;
+import java.util.LinkedList;
+import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+
+public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {
+
+  public static String TAG = EndlessRecyclerOnScrollListener.class.getSimpleName();
+  protected final BaseAdapter adapter;
+  protected final Action1 successRequestListener;
+  private final MultiLangPatch multiLangPatch = new MultiLangPatch();
+  protected V7<? extends BaseV7EndlessResponse, ? extends Endless> v7request;
+  protected ErrorRequestListener errorRequestListener;
+  protected int lastTotal;
+  protected int total;
+  protected int offset;
+  protected boolean stableData = false;
+  @Setter protected BooleanAction onFirstLoadListener;
+  @Setter protected Action0 onEndOfListReachedListener;
+  protected boolean endCallbackCalled;
+  protected boolean firstCallbackCalled;
+  protected boolean loading;
+  private int visibleThreshold;
+  // The minimum amount of items to have below your current scroll position before load
+  private boolean bypassCache;
+  private int firstVisibleItem;
+  private int totalItemCount;
+  private int visibleItemCount;
+  private RecyclerViewPositionHelper mRecyclerViewHelper;
+  private Subscription subscription;
+  private List<OnEndlessFinish> onEndlessFinishList;
+
+  public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter,
+      V7<T, ? extends Endless> v7request, Action1<T> successRequestListener,
+      ErrorRequestListener errorRequestListener) {
+    this(baseAdapter, v7request, successRequestListener, errorRequestListener, 6, false, null,
+        null);
+  }
+
+  public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter,
+      V7<T, ? extends Endless> v7request, Action1<T> successRequestListener,
+      ErrorRequestListener errorRequestListener, int visibleThreshold, boolean bypassCache,
+      BooleanAction<T> onFirstLoadListener, Action0 onEndOfListReachedListener) {
+    this.adapter = baseAdapter;
+    this.v7request = v7request;
+    this.successRequestListener = successRequestListener;
+    this.errorRequestListener = errorRequestListener;
+    this.visibleThreshold = visibleThreshold;
+    this.bypassCache = bypassCache;
+    this.onEndOfListReachedListener = onEndOfListReachedListener;
+    this.endCallbackCalled = false;
+    this.firstCallbackCalled = false;
+    this.onFirstLoadListener = onFirstLoadListener;
+  }
+
+  public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter,
+      V7<T, ? extends Endless> v7request, Action1<T> successRequestListener,
+      ErrorRequestListener errorRequestListener, boolean bypassCache) {
+    this(baseAdapter, v7request, successRequestListener, errorRequestListener, 6, bypassCache, null,
+        null);
+  }
+
+  public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(
+      BaseAdapter baseAdapter) {
+    this(baseAdapter, null, null, null, 0, false, null, null);
+  }
+
+  public void addOnEndlessFinishListener(OnEndlessFinish onEndlessFinish) {
+    if (onEndlessFinishList == null) {
+      onEndlessFinishList = new LinkedList<>();
+    }
+    onEndlessFinishList.add(onEndlessFinish);
+  }
+
+  @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+    super.onScrolled(recyclerView, dx, dy);
+
+    if (mRecyclerViewHelper == null) {
+      mRecyclerViewHelper = RecyclerViewPositionHelper.createHelper(recyclerView);
+    }
+    visibleItemCount = recyclerView.getChildCount();
+    int firstVisibleItemPosition = mRecyclerViewHelper.findFirstVisibleItemPosition();
+    firstVisibleItem = (firstVisibleItemPosition == -1 ? 0 : firstVisibleItemPosition);
+
+    if (shouldLoadMore()) {
+      onLoadMore(bypassCache);
+    }
+  }
+
+  private boolean shouldLoadMore() {
+    return !loading
+        && mRecyclerViewHelper != null
+        && mRecyclerViewHelper.recyclerView.isAttachedToWindow()
+        && (totalItemCount - visibleItemCount) < (firstVisibleItem + visibleThreshold - 1)
+        && hasMoreElements();
+  }
+
+  public void onLoadMore(boolean bypassCache) {
+    if (!loading) {
+      loading = true;
+      adapter.addDisplayable(new ProgressBarDisplayable());
+      subscription = v7request.observe(bypassCache)
+          .observeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(response -> {
+            popProgressBarDisplayable();
+            multiLangPatch.updateTotal(response);
+            if (response.hasData()) {
+
+              stableData = response.hasStableTotal();
+              if (stableData) {
+                total = response.getTotal();
+                offset = response.getNextSize();
+              } else {
+                total += (lastTotal = response.getTotal());
+                offset += response.getNextSize();
+              }
+              v7request.getBody()
+                  .setOffset(offset);
+            }
+
+            if (onFirstLoadListener != null && !firstCallbackCalled) {
+              if (!onFirstLoadListener.call(response)) {
+                successRequestListener.call(response);
+              }
+              firstCallbackCalled = true;
+            } else {
+              // FIXME: 17/08/16 use response.getList() instead
+              successRequestListener.call(response);
+            }
+
+            if (!hasMoreElements() && onEndOfListReachedListener != null && !endCallbackCalled) {
+              onEndOfListReachedListener.call();
+              endCallbackCalled = true;
+            }
+
+            loading = false;
+            if (mRecyclerViewHelper != null) {
+              totalItemCount = mRecyclerViewHelper.getItemCount();
+            }
+
+            if (!hasMoreElements() && onEndlessFinishList != null) {
+              for (OnEndlessFinish onEndlessFinish : onEndlessFinishList) {
+                if (onEndlessFinish != null) {
+                  onEndlessFinish.onEndlessFinish(this);
+                }
+              }
+            }
+
+            if (shouldLoadMore()) {
+              onLoadMore(bypassCache);
+            }
+          }, error -> {
+            error.printStackTrace();
+            //remove spinner if webservice respond with error
+            popProgressBarDisplayable();
+            errorRequestListener.onError(error);
+            loading = false;
+          });
+    }
+  }
+
+  private void popProgressBarDisplayable() {
+    if (adapter.getItemCount() > 0 && (adapter.getDisplayable(
+        adapter.getItemCount() - 1) instanceof ProgressBarDisplayable)) {
+      adapter.popDisplayable();
+    }
+  }
+
+  protected boolean hasMoreElements() {
+    return (stableData) ? offset < total : lastTotal != 0;
+  }
+
+  public void removeListeners() {
+    onFirstLoadListener = null;
+    onEndOfListReachedListener = null;
+  }
+
+  public void stopLoading() {
+    if (subscription != null && !subscription.isUnsubscribed()) {
+      subscription.unsubscribe();
+    }
+
+    popProgressBarDisplayable();
+  }
+
+  public void reset(V7<? extends BaseV7EndlessResponse, ? extends Endless> v7request) {
+    this.v7request = v7request;
+
+    multiLangPatch.updateOffset();
+    offset = -1;
+    total = 0;
+  }
+
+  public interface BooleanAction<T extends BaseV7Response> {
+    boolean call(T response);
+  }
+
+  public interface OnEndlessFinish {
+    void onEndlessFinish(EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener);
+  }
+
+  private class MultiLangPatch {
+
+    @Getter private int total;
+    private int totalWaiting;
+
+    public void updateTotal(BaseV7EndlessResponse response) {
+      this.totalWaiting += response.getTotal();
+    }
+
+    public void updateOffset() {
+      total = totalWaiting;
+    }
+  }
+}

@@ -3,7 +3,6 @@ package cm.aptoide.pt.preferences.secure;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -42,7 +41,8 @@ public class SecureCoderDecoder {
 
   static String generateAesKeyName(Context context)
       throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
-    final char[] password = context.getPackageName().toCharArray();
+    final char[] password = context.getPackageName()
+        .toCharArray();
 
     final byte[] salt = getDeviceSerialNumber(context).getBytes();
 
@@ -68,7 +68,8 @@ public class SecureCoderDecoder {
     // We're using the Reflection API because Build.SERIAL is only available
     // since API Level 9 (Gingerbread, Android 2.3).
     try {
-      String deviceSerial = (String) Build.class.getField("SERIAL").get(null);
+      String deviceSerial = (String) Build.class.getField("SERIAL")
+          .get(null);
       if (TextUtils.isEmpty(deviceSerial)) {
         deviceSerial =
             Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -87,7 +88,9 @@ public class SecureCoderDecoder {
    * PBKDF2WithHmacSHA1
    * @param iterations - Number of PBKDF2 hardening rounds to use. Larger values increase
    * computation time (a good thing), defaults to 1000 if not set.
+   *
    * @return Derived Secretkey
+   *
    * @throws NoSuchAlgorithmException
    * @throws InvalidKeySpecException
    * @throws NoSuchProviderException
@@ -125,7 +128,12 @@ public class SecureCoderDecoder {
         generator.init(128, random);
       }
     }
-    return encode(generator.generateKey().getEncoded());
+    return encode(generator.generateKey()
+        .getEncoded());
+  }
+
+  static byte[] decode(String input) {
+    return Base64.decode(input, Base64.NO_PADDING | Base64.NO_WRAP);
   }
 
   public String decrypt(String ciphertext) {
@@ -142,10 +150,6 @@ public class SecureCoderDecoder {
       }
       return null;
     }
-  }
-
-  static byte[] decode(String input) {
-    return Base64.decode(input, Base64.NO_PADDING | Base64.NO_WRAP);
   }
 
   public String encrypt(String cleartext) {
@@ -173,22 +177,17 @@ public class SecureCoderDecoder {
       this.defaultSharedPreferences = defaultSharedPreferences;
     }
 
-    public Builder(Context context) {
-      this.context = context;
-    }
-
     public SecureCoderDecoder create() {
       SecureCoderDecoder secureCoderDecoder;
       // Initialize encryption/decryption key
       try {
         final String key = generateAesKeyName(context);
-        if (defaultSharedPreferences == null) {
-          defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        }
         String value = defaultSharedPreferences.getString(key, null);
         if (value == null) {
           value = generateAesKeyValue();
-          defaultSharedPreferences.edit().putString(key, value).commit();
+          defaultSharedPreferences.edit()
+              .putString(key, value)
+              .commit();
         }
         secureCoderDecoder = new SecureCoderDecoder(SecureCoderDecoder.decode(value));
       } catch (Exception e) {

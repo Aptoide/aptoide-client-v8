@@ -1,50 +1,75 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
-import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.model.v7.timeline.TimelineCard;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
+import android.content.SharedPreferences;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
  * Created by jdandrade on 24/11/2016.
  */
 
-public class ShareCardRequest extends V7<BaseV7Response, ShareCardRequest.Body> {
+public class ShareCardRequest extends V7<ShareCardResponse, ShareCardRequest.Body> {
 
-  //private static final String BASE_HOST = "http://54.171.127.167/shares/v1.0/";
-
-  private static String cardId;
-  private static String access_token;
-
-  protected ShareCardRequest(ShareCardRequest.Body body, String baseHost) {
-    super(body, baseHost);
+  protected ShareCardRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
   }
 
-  public static ShareCardRequest of(TimelineCard timelineCard, String accessToken,
-      String aptoideClientUUID) {
-    cardId = timelineCard.getCardId();
-    access_token = accessToken;
-    ShareCardRequest.Body body = new ShareCardRequest.Body(timelineCard.getCardId());
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    return new ShareCardRequest((ShareCardRequest.Body) decorator.decorate(body, accessToken),
-        BASE_HOST);
+  public static ShareCardRequest of(String cardId, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    final ShareCardRequest.Body body = new ShareCardRequest.Body(cardId);
+    return new ShareCardRequest(body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences);
   }
 
-  @Override protected Observable<BaseV7Response> loadDataFromNetwork(V7.Interfaces interfaces,
+  public static ShareCardRequest of(String cardId, long storeId, OkHttpClient httpClient,
+      Converter.Factory converterFactory, BodyInterceptor<BaseBody> bodyInterceptor,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    final ShareCardRequest.Body body = new ShareCardRequest.Body(cardId, storeId);
+    return new ShareCardRequest(body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences);
+  }
+
+  @Override protected Observable<ShareCardResponse> loadDataFromNetwork(V7.Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.shareCard(body, cardId, access_token);
+    return interfaces.shareCard(body, body.getAccessToken());
   }
 
-  @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body
-      extends BaseBody {
+  public static class Body extends BaseBody {
 
-    private String cardId;
+    private final String cardUid;
+    private final Long storeId;
 
     public Body(String cardId) {
-      this.cardId = cardId;
+      this.cardUid = cardId;
+      this.storeId = null;
+    }
+
+    public Body(String cardId, long storeId) {
+      this.cardUid = cardId;
+      this.storeId = storeId;
+    }
+
+    public Long getStoreId() {
+      return storeId;
+    }
+
+    public String getCardUid() {
+      return this.cardUid;
+    }
+
+    public String toString() {
+      return "ShareCardRequest(cardUid="
+          + this.getCardUid()
+          + ",storeName="
+          + this.getStoreId()
+          + ")";
     }
   }
 }

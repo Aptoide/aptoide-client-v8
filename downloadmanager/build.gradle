@@ -1,25 +1,20 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 08/07/2016.
+ * Modified on 08/07/2016.
  */
 
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
 retrolambda {
   jvmArgs '-noverify'
-  //defaultMethods true
 }
 
 android {
-  compileSdkVersion COMPILE_SDK_VERSION
+  compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
   buildToolsVersion BUILD_TOOLS_VERSION
 
   defaultConfig {
-    minSdkVersion 15
-  }
-
-  lintOptions {
-    abortOnError false
+    minSdkVersion project.MINIMUM_SDK_VERSION
   }
 
   publishNonDefault true
@@ -35,6 +30,22 @@ android {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
+
+  packagingOptions {
+    exclude 'META-INF/services/javax.annotation.processing.Processor'
+    exclude 'META-INF/DEPENDENCIES.txt'
+    exclude 'META-INF/DEPENDENCIES'
+    exclude 'META-INF/LICENSE.txt'
+    exclude 'META-INF/LICENSE'
+    exclude 'META-INF/NOTICE.txt'
+    exclude 'META-INF/NOTICE'
+    exclude 'META-INF/MANIFEST.MF'
+    exclude 'META-INF/LGPL2.1'
+  }
+
+  lintOptions {
+    abortOnError false
+  }
 }
 
 dependencies {
@@ -45,8 +56,7 @@ dependencies {
 
   compile project(path: ':utils', configuration: 'release')
   compile project(path: ':crashreports', configuration: 'release')
-  compile project(path: ':database', configuration: 'release')
-  compile project(path: ':model', configuration: 'release')
+  compile project(path: ':aptoide-database', configuration: 'release')
 
   //
   // custom libs in folders
@@ -67,6 +77,7 @@ dependencies {
   compile "cn.dreamtobe.filedownloader:filedownloader-okhttp3-connection:${FILE_DOWNLOADER_OKHTTP_IMP_VERSION}"
 
   compile "io.reactivex:rxjava:${RXJAVA_VERSION}"
+  compile "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
   // And ProGuard rules for RxJava!
   compile "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
   compile "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"

@@ -1,19 +1,18 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 20/06/2016.
+ * Modified on 20/06/2016.
  */
 
 package cm.aptoide.pt.logger;
 
 import android.util.Log;
-import lombok.Setter;
 
 /**
  * Aptoide default logger.
  */
 public class Logger {
 
-  @Setter private static boolean DBG;
+  private static boolean DBG;
 
   public static void v(String tag, String msg) {
     if (DBG && msg != null) {
@@ -28,7 +27,8 @@ public class Logger {
   }
 
   public static void d(Object object, String msg) {
-    d(object.getClass().getSimpleName(), msg);
+    d(object.getClass()
+        .getSimpleName(), msg);
   }
 
   public static void d(String tag, String msg) {
@@ -44,7 +44,8 @@ public class Logger {
   }
 
   public static void i(Object object, String msg) {
-    i(object.getClass().getSimpleName(), msg);
+    i(object.getClass()
+        .getSimpleName(), msg);
   }
 
   public static void i(String tag, String msg) {
@@ -73,7 +74,8 @@ public class Logger {
    * Instead of calling this method, consider using CrashReport.getInstance().log(Exception)
    */
   public static void e(Object object, String msg) {
-    e(object.getClass().getName(), msg);
+    e(object.getClass()
+        .getName(), msg);
   }
 
   /**
@@ -89,7 +91,8 @@ public class Logger {
    * Instead of calling this method, consider using CrashReport.getInstance().log(Exception)
    */
   public static void e(Object object, Throwable tr) {
-    e(object.getClass().getName(), tr);
+    e(object.getClass()
+        .getName(), tr);
   }
 
   /**
@@ -106,5 +109,9 @@ public class Logger {
     if (msg != null) {
       Log.e(TAG, msg, tr);
     }
+  }
+
+  public static void setDBG(boolean DBG) {
+    Logger.DBG = DBG;
   }
 }

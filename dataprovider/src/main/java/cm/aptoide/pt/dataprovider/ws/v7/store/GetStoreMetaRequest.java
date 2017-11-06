@@ -1,74 +1,39 @@
-/*
- * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/05/2016.
- */
-
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
+import android.content.SharedPreferences;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreMeta;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
-import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
-import cm.aptoide.pt.model.v7.store.GetStoreMeta;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 
 /**
- * Created by neuro on 19-04-2016.
+ * Created by trinkes on 03/03/2017.
  */
-@Data @EqualsAndHashCode(callSuper = true) public class GetStoreMetaRequest
-    extends BaseRequestWithStore<GetStoreMeta, GetStoreMetaRequest.Body> {
 
-  private String url;
+public class GetStoreMetaRequest
+    extends BaseRequestWithStore<GetStoreMeta, GetHomeMetaRequest.Body> {
 
-  private GetStoreMetaRequest(String baseHost, Body body) {
-    super(body, baseHost);
+  public GetStoreMetaRequest(GetHomeMetaRequest.Body body,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
+    super(body, httpClient, converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences);
   }
 
-  private GetStoreMetaRequest(String url, Body body, String baseHost) {
-    super(body, baseHost);
-    this.url = url;
-  }
-
-  private GetStoreMetaRequest(OkHttpClient httpClient, Converter.Factory converterFactory,
-      String baseHost, Body body) {
-    super(body, httpClient, converterFactory, baseHost);
-  }
-
-  private GetStoreMetaRequest(String url, Body body, OkHttpClient httpClient,
-      Converter.Factory converterFactory, String baseHost) {
-    super(body, httpClient, converterFactory, baseHost);
-    this.url = url;
-  }
-
-  public static GetStoreMetaRequest ofAction(String url, StoreCredentials storeCredentials,
-      String accessToken, String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-
-    return new GetStoreMetaRequest(new V7Url(url).remove("getStoreMeta").get(),
-        (Body) decorator.decorate(new Body(storeCredentials), accessToken), BASE_HOST);
-  }
-
-  public static GetStoreMetaRequest of(StoreCredentials storeCredentials, String accessToken,
-      String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-
-    return new GetStoreMetaRequest(BASE_HOST,
-        (Body) decorator.decorate(new Body(storeCredentials), accessToken));
+  public static GetStoreMetaRequest of(StoreCredentials storeCredentials,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
+    return new GetStoreMetaRequest(new GetHomeMetaRequest.Body(storeCredentials), bodyInterceptor,
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<GetStoreMeta> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getStoreMeta(url != null ? url : "", body, bypassCache);
-  }
-
-  @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithStore {
-
-    public Body(StoreCredentials storeCredentials) {
-      super(storeCredentials);
-    }
+    return interfaces.getStoreMeta(body, bypassCache);
   }
 }

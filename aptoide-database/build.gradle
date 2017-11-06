@@ -1,0 +1,79 @@
+/*
+ * Copyright (c) 2016.
+ * Modified on 08/07/2016.
+ */
+
+apply plugin: 'com.android.library'
+apply plugin: 'realm-android'
+apply plugin: 'me.tatarka.retrolambda'
+retrolambda {
+  jvmArgs '-noverify'
+  //defaultMethods true
+}
+
+android {
+  compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
+  buildToolsVersion BUILD_TOOLS_VERSION
+
+  defaultConfig {
+    minSdkVersion project.MINIMUM_SDK_VERSION
+    // This should be a property set in Java code by the user of this lib
+    buildConfigField 'boolean', 'DELETE_DB', 'false'
+  }
+
+  publishNonDefault true
+
+  buildTypes {
+    release {
+      minifyEnabled false
+      shrinkResources false
+    }
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  packagingOptions {
+    exclude 'META-INF/services/javax.annotation.processing.Processor'
+    exclude 'META-INF/DEPENDENCIES.txt'
+    exclude 'META-INF/DEPENDENCIES'
+    exclude 'META-INF/LICENSE.txt'
+    exclude 'META-INF/LICENSE'
+    exclude 'META-INF/NOTICE.txt'
+    exclude 'META-INF/NOTICE'
+    exclude 'META-INF/MANIFEST.MF'
+    exclude 'META-INF/LGPL2.1'
+  }
+
+  lintOptions {
+    abortOnError false
+  }
+}
+
+dependencies {
+
+  //
+  // inter-projects dependencies
+  //
+  compile project(path: ':crashreports', configuration: 'release')
+
+  //
+  // custom libs in folders
+  //
+
+  compile fileTree(dir: 'libs', include: ['*.jar'])
+
+  //
+  // from remote repos
+  //
+
+  testCompile "junit:junit:${JUNIT_VERSION}"
+  //noinspection GradleDependency
+  compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+
+  provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
+  // Just for lombok not to complain
+  provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
+}

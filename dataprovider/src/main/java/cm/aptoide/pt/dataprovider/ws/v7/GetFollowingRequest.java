@@ -1,7 +1,12 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
-import cm.aptoide.pt.model.v7.GetFollowers;
+import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.GetFollowers;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -10,16 +15,23 @@ import rx.Observable;
 
 public class GetFollowingRequest extends V7<GetFollowers, GetFollowersRequest.Body> {
 
-  protected GetFollowingRequest(GetFollowersRequest.Body body, String baseHost) {
-    super(body, baseHost);
+  protected GetFollowingRequest(GetFollowersRequest.Body body,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
   }
 
-  public static GetFollowingRequest of(String accessToken, String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-
-    return new GetFollowingRequest(
-        ((GetFollowersRequest.Body) decorator.decorate(new GetFollowersRequest.Body(),
-            accessToken)), BASE_HOST);
+  public static GetFollowingRequest of(BodyInterceptor<BaseBody> bodyInterceptor,
+      @Nullable Long userId, @Nullable Long storeId, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
+    GetFollowersRequest.Body body = new GetFollowersRequest.Body();
+    body.setUserId(userId);
+    body.setStoreId(storeId);
+    return new GetFollowingRequest(body, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<GetFollowers> loadDataFromNetwork(Interfaces interfaces,

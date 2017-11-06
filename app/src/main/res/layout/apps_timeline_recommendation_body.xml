@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/displayable_social_timeline_recommendation_card_content"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="15dp"
+    android:orientation="vertical"
+    tools:showIn="@layout/displayable_social_timeline_aggregated_social_install"
+    >
+
+  <ImageView
+      android:id="@+id/displayable_social_timeline_recommendation_icon"
+      android:layout_width="100dp"
+      android:layout_height="100dp"
+      android:layout_marginBottom="12dp"
+      android:layout_marginLeft="12dp"
+      android:layout_marginStart="12dp"
+      android:layout_marginTop="9.3dp"
+      android:paddingTop="3dp"
+      android:scaleType="fitCenter"
+      tools:ignore="contentDescription"
+      tools:src="@mipmap/ic_launcher"
+      />
+
+  <TextView
+      android:id="@+id/displayable_social_timeline_recommendation_similar_apps"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignTop="@id/displayable_social_timeline_recommendation_icon"
+      android:layout_marginEnd="15.1dp"
+      android:layout_marginLeft="13.3dp"
+      android:layout_marginRight="15.1dp"
+      android:layout_marginStart="13.3dp"
+      android:layout_toEndOf="@+id/displayable_social_timeline_recommendation_icon"
+      android:layout_toRightOf="@+id/displayable_social_timeline_recommendation_icon"
+      android:background="@android:color/transparent"
+      android:clickable="false"
+      android:ellipsize="end"
+      android:lines="2"
+      android:maxLines="2"
+      android:paddingTop="3dp"
+      tools:text="Clash Royale"
+      style="@style/Widget.Aptoide.Card.Title.Large.Black"
+      />
+  <android.support.v7.widget.AppCompatRatingBar
+      android:id="@+id/rating_bar"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/displayable_social_timeline_recommendation_similar_apps"
+      android:layout_marginEnd="15.1dp"
+      android:layout_marginLeft="13.3dp"
+      android:layout_marginRight="15.1dp"
+      android:layout_marginStart="13.3dp"
+      android:layout_toEndOf="@+id/displayable_social_timeline_recommendation_icon"
+      android:layout_toRightOf="@+id/displayable_social_timeline_recommendation_icon"
+      android:numStars="5"
+      android:progressDrawable="@drawable/rating_bar_small"
+      android:stepSize="1.0"
+      tools:rating="5.0"
+      style="@style/Widget.AppCompat.RatingBar.Small"
+      />
+
+  <Button
+      android:id="@+id/displayable_social_timeline_recommendation_get_app_button"
+      android:layout_width="130dp"
+      android:layout_height="33dp"
+      android:layout_alignBottom="@id/displayable_social_timeline_recommendation_icon"
+      android:layout_marginEnd="15.1dp"
+      android:layout_marginLeft="8.3dp"
+      android:layout_marginRight="15.1dp"
+      android:layout_marginStart="8.3dp"
+      android:layout_toEndOf="@id/displayable_social_timeline_recommendation_icon"
+      android:text="@string/review_get_app"
+      android:textAllCaps="true"
+      android:textSize="10sp"
+      style="@style/Aptoide.Button.Ghost.ThinBlackAlpha"
+      />
+
+</RelativeLayout>
+  

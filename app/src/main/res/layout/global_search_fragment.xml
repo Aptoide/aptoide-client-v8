@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+  <include
+      layout="@layout/partial_view_progress_bar"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      tools:visibility="gone"
+      />
+
+  <include
+      layout="@layout/incl_no_search_results_layout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginTop="?attr/actionBarSize"
+      tools:visibility="gone"
+      />
+
+  <RelativeLayout
+      android:id="@+id/search_results_layout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginTop="?attr/actionBarSize"
+      >
+
+    <LinearLayout
+        android:id="@+id/buttons_layout"
+        android:layout_width="262dp"
+        android:layout_height="29dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:background="@drawable/search_buttons_background"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        >
+
+      <Button
+          android:id="@+id/subscribed"
+          android:layout_width="128dp"
+          android:layout_height="match_parent"
+          android:background="@null"
+          android:text="@string/followed_stores"
+          android:textColor="@color/silver_dark"
+          android:textSize="12sp"
+          />
+
+      <Button
+          android:id="@+id/everywhere"
+          android:layout_width="128dp"
+          android:layout_height="match_parent"
+          android:background="@drawable/search_button_background"
+          android:text="@string/all_stores"
+          android:textColor="@color/white"
+          android:textSize="12sp"
+          />
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/followed_stores_result_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/buttons_layout"
+        android:visibility="invisible"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/all_stores_result_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/buttons_layout"
+        android:visibility="visible"
+        />
+
+  </RelativeLayout>
+
+  <android.support.design.widget.AppBarLayout
+      android:id="@+id/app_bar_layout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:elevation="4dp"
+        android:theme="?attr/toolbarTheme"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        />
+
+  </android.support.design.widget.AppBarLayout>
+</FrameLayout>

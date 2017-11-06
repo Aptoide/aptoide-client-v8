@@ -1,0 +1,148 @@
+package cm.aptoide.pt.social.view.viewholder;
+
+import android.support.v7.widget.PopupMenu;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
+import cm.aptoide.pt.R;
+import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.social.data.AggregatedRecommendation;
+import cm.aptoide.pt.social.data.CardTouchEvent;
+import cm.aptoide.pt.social.data.MinimalCardViewFactory;
+import cm.aptoide.pt.social.data.Post;
+import cm.aptoide.pt.social.data.PostPopupMenuBuilder;
+import cm.aptoide.pt.social.data.publisher.Poster;
+import cm.aptoide.pt.util.DateCalculator;
+import cm.aptoide.pt.view.spannable.SpannableFactory;
+import java.util.List;
+import rx.subjects.PublishSubject;
+
+/**
+ * Created by jdandrade on 29/06/2017.
+ */
+
+public class AggregatedRecommendationViewHolder extends PostViewHolder<AggregatedRecommendation> {
+  private final LayoutInflater inflater;
+  private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
+  private final DateCalculator dateCalculator;
+  private final SpannableFactory spannableFactory;
+  private final MinimalCardViewFactory minimalCardViewFactory;
+  private final ImageView headerAvatar1;
+  private final ImageView headerAvatar2;
+  private final TextView headerNames;
+  private final TextView headerTimestamp;
+  private final ImageView appIcon;
+  private final TextView appName;
+  private final RatingBar appRating;
+  private final Button getAppButton;
+  private final TextView morePostersLabel;
+  private final FrameLayout minimalCardContainer;
+  private final View overflowMenu;
+
+  public AggregatedRecommendationViewHolder(View view,
+      PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
+      SpannableFactory spannableFactory, MinimalCardViewFactory minimalCardViewFactory) {
+    super(view, cardTouchEventPublishSubject);
+    this.inflater = LayoutInflater.from(itemView.getContext());
+    this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
+    this.dateCalculator = dateCalculator;
+    this.spannableFactory = spannableFactory;
+    this.minimalCardViewFactory = minimalCardViewFactory;
+    this.headerAvatar1 = (ImageView) view.findViewById(R.id.card_header_avatar_1);
+    this.headerAvatar2 = (ImageView) view.findViewById(R.id.card_header_avatar_2);
+    this.headerNames = (TextView) view.findViewById(R.id.card_title);
+    this.headerTimestamp = (TextView) view.findViewById(R.id.card_date);
+    this.appIcon =
+        (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
+    this.appName =
+        (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_similar_apps);
+    this.appRating = (RatingBar) view.findViewById(R.id.rating_bar);
+    this.getAppButton =
+        (Button) view.findViewById(R.id.displayable_social_timeline_recommendation_get_app_button);
+    this.morePostersLabel =
+        (TextView) itemView.findViewById(R.id.timeline_header_aditional_number_of_shares_circular);
+    this.minimalCardContainer =
+        (FrameLayout) itemView.findViewById(R.id.timeline_sub_minimal_card_container);
+    this.overflowMenu = itemView.findViewById(R.id.overflow_menu);
+  }
+
+  @Override public void setPost(AggregatedRecommendation post, int position) {
+    if (post.getPosters() != null) {
+      if (post.getPosters()
+          .size() > 0) {
+        ImageLoader.with(itemView.getContext())
+            .loadWithShadowCircleTransform(post.getPosters()
+                .get(0)
+                .getPrimaryAvatar(), this.headerAvatar1);
+      }
+      if (post.getPosters()
+          .size() > 1) {
+        ImageLoader.with(itemView.getContext())
+            .loadWithShadowCircleTransform(post.getPosters()
+                .get(1)
+                .getPrimaryAvatar(), this.headerAvatar2);
+      }
+    }
+    this.headerNames.setText(getCardHeaderNames(post));
+    this.headerTimestamp.setText(
+        dateCalculator.getTimeSinceDate(itemView.getContext(), post.getTimestamp()));
+    ImageLoader.with(itemView.getContext())
+        .load(post.getAppIcon(), appIcon);
+    this.appName.setText(post.getAppName());
+    this.appRating.setRating(post.getAppAverageRating());
+    this.getAppButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(post, position, CardTouchEvent.Type.BODY)));
+    this.appIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        new CardTouchEvent(post, position, CardTouchEvent.Type.BODY)));
+    setupOverflowMenu(post, position);
+    showMorePostersLabel(post);
+    minimalCardContainer.removeAllViews();
+    minimalCardContainer.addView(minimalCardViewFactory.getView(post, post.getMinimalPosts(),
+        MinimalCardViewFactory.MINIMUM_NUMBER_OF_VISILIBE_MINIMAL_CARDS, inflater,
+        itemView.getContext(), position));
+  }
+
+  public String getCardHeaderNames(AggregatedRecommendation card) {
+    StringBuilder headerNamesStringBuilder = new StringBuilder();
+    if (card.getPosters()
+        .size() >= 2) {
+      List<Poster> posters = card.getPosters()
+          .subList(0, 2);
+      for (Poster poster : posters) {
+        headerNamesStringBuilder.append(poster.getPrimaryName())
+            .append(", ");
+      }
+      headerNamesStringBuilder.setLength(headerNamesStringBuilder.length() - 2);
+    }
+    return headerNamesStringBuilder.toString();
+  }
+
+  private void showMorePostersLabel(AggregatedRecommendation card) {
+    if (card.getPosters()
+        .size() > 2) {
+      morePostersLabel.setText(String.format(itemView.getContext()
+          .getString(R.string.timeline_short_plus), String.valueOf(card.getPosters()
+          .size() - 2)));
+      morePostersLabel.setVisibility(View.VISIBLE);
+    } else {
+      morePostersLabel.setVisibility(View.INVISIBLE);
+    }
+  }
+
+  private void setupOverflowMenu(Post post, int position) {
+    overflowMenu.setOnClickListener(view -> {
+      PopupMenu popupMenu = new PostPopupMenuBuilder().prepMenu(itemView.getContext(), overflowMenu)
+          .addReportAbuse(menuItem -> {
+            cardTouchEventPublishSubject.onNext(
+                new CardTouchEvent(post, position, CardTouchEvent.Type.REPORT_ABUSE));
+            return false;
+          })
+          .getPopupMenu();
+      popupMenu.show();
+    });
+  }
+}

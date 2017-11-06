@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified on 29/08/2016.
+  -->
+
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rate_and_reviews_coordinator_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    >
+
+  <LinearLayout
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/white"
+      android:orientation="vertical"
+      >
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+      <!--
+          android:theme="?attr/toolbarTheme"
+          -->
+
+      <android.support.v7.widget.Toolbar
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:app="http://schemas.android.com/apk/res-auto"
+          android:id="@+id/toolbar"
+          android:layout_width="match_parent"
+          android:layout_height="?attr/actionBarSize"
+          android:background="@color/white"
+          app:layout_collapseMode="pin"
+          app:layout_scrollFlags="scroll|enterAlways"
+          app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+          />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:indeterminate="true"
+        android:visibility="visible"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        />
+
+    <RelativeLayout
+        android:id="@+id/errors_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        >
+
+
+      <!--
+
+      error views
+
+      -->
+
+
+      <include
+          layout="@layout/partial_view_incl_no_network"
+          tools:visibility="gone"
+          />
+
+      <include
+          layout="@layout/partial_view_error"
+          tools:visibility="gone"
+          />
+
+      <!--
+
+      ordering buttons
+
+      -->
+
+      <LinearLayout
+          android:id="@+id/ordering_buttons_layout"
+          android:layout_width="match_parent"
+          android:layout_height="44dp"
+          android:layout_marginBottom="10dp"
+          android:gravity="center"
+          android:orientation="horizontal"
+          android:visibility="gone"
+          tools:visibility="gone"
+          >
+
+        <Button
+            android:id="@+id/change_ordering"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/rounded_corners_dark_gray"
+            android:drawableEnd="@drawable/ic_up_arrow"
+            android:drawablePadding="10dp"
+            android:drawableRight="@drawable/ic_up_arrow"
+            android:drawableTint="@color/dark_gray"
+            android:text="Highest ranking"
+            android:textColor="@color/dark_gray"
+            android:textSize="@dimen/text_size_medium"
+            />
+
+        <Button
+            android:id="@+id/just_reviews"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/rounded_corners_dark_gray"
+            android:text="@string/just_reviews"
+            android:textColor="@color/dark_gray"
+            android:textSize="@dimen/text_size_medium"
+            />
+
+
+      </LinearLayout>
+
+      <!--
+
+      reviews and comments
+
+      -->
+
+      <android.support.v7.widget.RecyclerView
+          android:id="@+id/recycler_view"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_below="@id/ordering_buttons_layout"
+          />
+
+    </RelativeLayout>
+
+  </LinearLayout>
+
+  <android.support.design.widget.FloatingActionButton
+      android:id="@+id/fab"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="bottom|end"
+      android:layout_margin="@dimen/fab_margin"
+      android:src="@drawable/forma_1"
+      />
+
+
+</android.support.design.widget.CoordinatorLayout>

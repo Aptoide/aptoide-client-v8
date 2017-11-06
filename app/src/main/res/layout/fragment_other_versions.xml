@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified on 02/08/2016.
+  -->
+
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/other_versions_coordinator_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+  <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginTop="@dimen/other_versions_header_height"
+      >
+
+    <include
+        layout="@layout/partial_view_incl_no_network"
+        tools:visibility="gone"
+        />
+
+    <include
+        layout="@layout/partial_view_error"
+        tools:visibility="gone"
+        />
+
+
+    <!-- is this necessary ?? -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+      <include
+          layout="@layout/partial_view_progress_bar"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerInParent="true"
+          android:visibility="gone"
+          tools:visibility="visible"
+          />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/empty_data"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="@dimen/label_padding"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        android:visibility="gone"
+        tools:text="@string/no_excluded_updates_msg"
+        tools:visibility="visible"
+        />
+  </FrameLayout>
+
+  <android.support.v7.widget.RecyclerView
+      android:id="@+id/recycler_view"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:clipToPadding="false"
+      android:visibility="visible"
+      app:layout_behavior="@string/appbar_scrolling_view_behavior"
+      tools:visibility="gone"
+      />
+
+  <android.support.design.widget.AppBarLayout
+      android:id="@+id/app_bar"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/other_versions_header_height"
+      android:fitsSystemWindows="true"
+      >
+    <android.support.design.widget.CollapsingToolbarLayout
+        android:id="@+id/collapsing_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:fitsSystemWindows="true"
+        android:textColor="@color/black"
+        android:textSize="@dimen/appview_title_text_size"
+        app:expandedTitleMarginBottom="@dimen/other_versions_title_bottom_margin"
+        app:expandedTitleMarginEnd="@dimen/other_versions_title_right_margin"
+        app:expandedTitleMarginStart="@dimen/other_versions_title_left_margin"
+        app:expandedTitleTextAppearance="@style/OtherVersionsHeaderTextAppView"
+        app:layout_scrollFlags="scroll|exitUntilCollapsed"
+        >
+
+      <!--
+      android:theme="?attr/toolbarTheme"
+      -->
+      <android.support.v7.widget.Toolbar
+          android:id="@+id/toolbar"
+          android:layout_width="match_parent"
+          android:layout_height="?attr/actionBarSize"
+          app:layout_collapseMode="pin"
+          app:layout_scrollFlags="scroll|enterAlways"
+          app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+          />
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:fitsSystemWindows="true"
+          app:layout_collapseMode="parallax"
+          >
+
+        <!--
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/app_icon"
+            android:layout_width="@dimen/other_version_header_app_image_size"
+            android:layout_height="@dimen/other_version_header_app_image_size"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="@dimen/appview_header_bottom_margin"
+            android:layout_marginEnd="@dimen/appview_header_bottom_margin"
+            android:layout_marginLeft="@dimen/appview_header_bottom_margin"
+            android:layout_marginRight="@dimen/appview_header_bottom_margin"
+            android:layout_marginStart="@dimen/appview_header_bottom_margin"
+            app:layout_anchor="@id/app_bar"
+            app:layout_anchorGravity="bottom|left|start"
+            app:riv_corner_radius="15dp"
+            tools:src="@color/red_700"
+            />
+        -->
+        <ImageView
+            android:id="@+id/app_icon"
+            android:layout_width="@dimen/other_version_header_app_image_size"
+            android:layout_height="@dimen/other_version_header_app_image_size"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="@dimen/appview_header_bottom_margin"
+            android:layout_marginEnd="@dimen/appview_header_bottom_margin"
+            android:layout_marginLeft="@dimen/appview_header_bottom_margin"
+            android:layout_marginRight="@dimen/appview_header_bottom_margin"
+            android:layout_marginStart="@dimen/appview_header_bottom_margin"
+            app:layout_anchorGravity="bottom|left|start"
+            tools:src="@color/red_700"
+            />
+
+        <TextView
+            android:id="@+id/other_versions_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="118dp"
+            android:layout_toEndOf="@id/app_icon"
+            android:layout_toRightOf="@id/app_icon"
+            android:lines="1"
+            android:text="@string/other_versions_on_different_stores"
+            android:textColor="@color/medium_gray"
+            android:textSize="@dimen/text_size_medium"
+            android:textStyle="italic"
+            />
+
+      </RelativeLayout>
+
+    </android.support.design.widget.CollapsingToolbarLayout>
+
+  </android.support.design.widget.AppBarLayout>
+
+</android.support.design.widget.CoordinatorLayout>

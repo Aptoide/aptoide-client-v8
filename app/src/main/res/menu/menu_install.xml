@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified on 03/08/2016.
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+  <item
+      android:id="@+id/menu_install"
+      android:title="@string/menu_install"
+      app:showAsAction="ifRoom"
+      tools:visible="true"
+      />
+
+</menu>
