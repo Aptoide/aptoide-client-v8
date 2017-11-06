@@ -184,7 +184,7 @@ public class HomeFragment extends StoreFragment {
     Logger.v(TAG, "balance: " + balance);
     String balanceString = NumberFormat.getCurrencyInstance(Locale.FRANCE)
         .format(balance);
-    balanceAppcoins.setText(balanceString.substring(0, balanceString.length() - 1) + " AppCoins");
+    balanceAppcoins.setText(balanceString.substring(0, balanceString.length() - 1));
     String data = DateAndTime.now()
         .toString()
         .substring(4, 20);

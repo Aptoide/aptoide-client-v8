@@ -40,25 +40,43 @@
         android:src="@drawable/user_account_white"
         />
 
-    <TextView
-        android:id="@+id/balanceAppcoins"
+    <LinearLayout
+        android:id="@+id/ll_balance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Your Appcoins"
-        android:textColor="@color/navdrawer_body_text_2_inverse"
-        android:textSize="@dimen/text_size_medium"
-        android:paddingTop="35dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingTop="35dp"
+        >
+      <TextView
+          android:id="@+id/balanceAppcoins"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="5dp"
+          android:layout_marginRight="5dp"
+          android:text="Your Appcoins"
+          android:textColor="@color/navdrawer_body_text_2_inverse"
+          android:textSize="@dimen/text_size_medium"
+          />
+      <ImageView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentEnd="true"
+          android:layout_alignParentRight="true"
+          android:layout_alignRight="@+id/balanceAppcoins"
+          android:src="@drawable/ic_icon_appcoinlogo"
+          />
+    </LinearLayout>
     <TextView
         android:id="@+id/last_update"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/balanceAppcoins"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/ll_balance"
         android:text="Last updated 55 minutes ago"
         android:textColor="@color/navdrawer_body_text_2_inverse"
         android:textSize="@dimen/text_size_medium"
