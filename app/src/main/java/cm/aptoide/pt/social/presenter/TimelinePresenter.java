@@ -18,7 +18,9 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.repository.StoreRepository;
+import cm.aptoide.pt.social.data.AggregatedMedia;
 import cm.aptoide.pt.social.data.AggregatedRecommendation;
+import cm.aptoide.pt.social.data.AggregatedStore;
 import cm.aptoide.pt.social.data.AppUpdate;
 import cm.aptoide.pt.social.data.AppUpdateCardTouchEvent;
 import cm.aptoide.pt.social.data.CardTouchEvent;
@@ -399,11 +401,30 @@ public class TimelinePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(lifecycleEvent -> view.getVisibleItems()
             .filter(post -> !post.getType()
-                .isDummy() && !post.getType()
-                .isAggregated())
-            .flatMapCompletable(
-                post -> timeline.setPostRead(post.getMarkAsReadUrl(), post.getCardId(),
-                    post.getType()))
+                .isDummy())
+            .flatMapCompletable(post -> {
+              if (!post.getType()
+                  .isAggregated()) {
+                return timeline.setPostRead(post.getMarkAsReadUrl(), post.getCardId(),
+                    post.getType());
+              } else if (post.getType()
+                  .isAggregated() && post.getType()
+                  .isMedia()) {
+                return timeline.setPostRead(((AggregatedMedia) post).getMinimalCards(),
+                    post.getType());
+              } else if (post.getType()
+                  .isAggregated() && post.getType()
+                  .isStore()) {
+                return timeline.setPostRead(((AggregatedStore) post).getMinimalPosts(),
+                    post.getType());
+              } else if (post.getType()
+                  .equals(CardType.AGGREGATED_SOCIAL_APP) || post.getType()
+                  .equals(CardType.AGGREGATED_SOCIAL_INSTALL)) {
+                return timeline.setPostRead(((AggregatedRecommendation) post).getMinimalPosts(),
+                    post.getType());
+              }
+              return Completable.complete();
+            })
             .doOnError(throwable -> Logger.e(this, throwable))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -875,7 +896,8 @@ public class TimelinePresenter implements Presenter {
                     .andThen(sendCommentEvent(cardTouchEvent));
               }
               return Completable.fromAction(() -> view.showLoginPromptWithAction())
-                  .andThen(sendErrorCommentEvent(cardTouchEvent, EventErrorHandler.GenericErrorEvent.LOGIN));
+                  .andThen(sendErrorCommentEvent(cardTouchEvent,
+                      EventErrorHandler.GenericErrorEvent.LOGIN));
             })
             .doOnError(throwable -> timelineAnalytics.sendCommentEvent(cardTouchEvent)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -912,7 +934,8 @@ public class TimelinePresenter implements Presenter {
                     .andThen(sendCommentEvent(cardTouchEvent));
               }
               return Completable.fromAction(() -> view.showLoginPromptWithAction())
-                  .andThen(sendErrorCommentEvent(cardTouchEvent, EventErrorHandler.GenericErrorEvent.LOGIN));
+                  .andThen(sendErrorCommentEvent(cardTouchEvent,
+                      EventErrorHandler.GenericErrorEvent.LOGIN));
             })
             .doOnError(throwable -> timelineAnalytics.sendCommentEvent(cardTouchEvent)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -925,8 +948,8 @@ public class TimelinePresenter implements Presenter {
     return Completable.fromAction(() -> timelineAnalytics.sendCommentEvent(event));
   }
 
-  @NonNull
-  private Completable sendErrorCommentEvent(CardTouchEvent event, EventErrorHandler.GenericErrorEvent error) {
+  @NonNull private Completable sendErrorCommentEvent(CardTouchEvent event,
+      EventErrorHandler.GenericErrorEvent error) {
     return Completable.fromAction(() -> timelineAnalytics.sendErrorCommentEvent(event, error));
   }
 
@@ -989,7 +1012,8 @@ public class TimelinePresenter implements Presenter {
                     .andThen(sendShareEvent(cardTouchEvent));
               }
               return Completable.fromAction(() -> view.showLoginPromptWithAction())
-                  .andThen(sendErrorShareEvent(cardTouchEvent, EventErrorHandler.GenericErrorEvent.LOGIN));
+                  .andThen(sendErrorShareEvent(cardTouchEvent,
+                      EventErrorHandler.GenericErrorEvent.LOGIN));
             })
             .doOnError(throwable -> timelineAnalytics.sendShareEvent(cardTouchEvent)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
