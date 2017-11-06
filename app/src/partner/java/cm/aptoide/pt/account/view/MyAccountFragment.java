@@ -144,16 +144,15 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
         .findViewById(R.id.more);
 
     attachPresenter(new MyAccountPresenter(this, accountManager, crashReport,
-            new MyAccountNavigator(getFragmentNavigator()),
-            ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
-            new LinksHandlerFactory(getContext()),
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-            ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker(),
-            new NotificationAnalytics(httpClient, Analytics.getInstance()),
-            new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-                Analytics.getInstance(),
-                ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker())),
-        savedInstanceState);
+        new MyAccountNavigator(getFragmentNavigator()),
+        ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
+        new LinksHandlerFactory(getContext()),
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker(),
+        new NotificationAnalytics(httpClient, Analytics.getInstance()),
+        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance(),
+            ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker())));
   }
 
   @Override public int getContentViewId() {

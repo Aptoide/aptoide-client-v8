@@ -253,7 +253,7 @@ public class BillingPool {
                   httpClient, WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences,
                   bodyInterceptorPoolV7, getBillingIdManagerV7(), getAuthorizationFactory()),
               getTransactionPersistence(), getAuthorizationPersistence(), getLocalIdGenerator()),
-          syncScheduler, new HashSet<>());
+          syncScheduler, new HashSet<>(), new HashMap<>());
     }
     return billingSyncSchedulerV7;
   }
@@ -268,7 +268,7 @@ public class BillingPool {
                   WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences, customer,
                   resources, getBillingIdManagerV3()), getTransactionPersistence(),
               getAuthorizationPersistence(), getLocalIdGenerator()), syncScheduler,
-          new HashSet<>());
+          new HashSet<>(), new HashMap<>());
     }
     return billingSyncSchedulerV3;
   }

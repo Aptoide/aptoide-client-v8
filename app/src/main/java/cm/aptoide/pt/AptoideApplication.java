@@ -18,6 +18,7 @@ import android.net.ConnectivityManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
 import android.support.v4.app.NotificationCompat;
@@ -153,6 +154,9 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.utils.q.QManager;
+import cm.aptoide.pt.view.app.AppCenter;
+import cm.aptoide.pt.view.app.AppCenterRepository;
+import cm.aptoide.pt.view.app.AppService;
 import cm.aptoide.pt.view.ActivityProvider;
 import cm.aptoide.pt.view.FragmentProvider;
 import cm.aptoide.pt.view.entry.EntryActivity;
@@ -275,6 +279,7 @@ public abstract class AptoideApplication extends Application {
   private BodyInterceptor<BaseBody> accountSettingsBodyInterceptorWebV7;
   private Adyen adyen;
   private PurchaseFactory purchaseFactory;
+  private AppCenter appCenter;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -845,7 +850,7 @@ public abstract class AptoideApplication extends Application {
 
   public Adyen getAdyen() {
     if (adyen == null) {
-      adyen = new Adyen(this, Charset.forName("UTF-8"), Schedulers.io());
+      adyen = new Adyen(this, Charset.forName("UTF-8"), Schedulers.io(), PublishRelay.create());
     }
     return adyen;
   }
@@ -1334,6 +1339,17 @@ public abstract class AptoideApplication extends Application {
           AppEventsLogger.newLogger(this), getNavigationTracker());
     }
     return accountAnalytics;
+  }
+
+  @NonNull public AppCenter getAppCenter() {
+    if (appCenter == null) {
+      appCenter = new AppCenter(new AppCenterRepository(new AppService(
+          new StoreCredentialsProviderImpl(
+              AccessorFactory.getAccessorFor(getDatabase(), Store.class)),
+          getBodyInterceptorPoolV7(), getDefaultClient(), WebService.getDefaultConverter(),
+          getTokenInvalidator(), getDefaultSharedPreferences()), new HashMap<>()));
+    }
+    return appCenter;
   }
 
   public PurchaseFactory getPurchaseFactory() {

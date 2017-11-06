@@ -6,11 +6,13 @@
 package cm.aptoide.pt.dataprovider.ws.v7.billing;
 
 import android.content.SharedPreferences;
+import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -24,6 +26,14 @@ public class GetProductsRequest
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     super(requestBody, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
         tokenInvalidator);
+  }
+
+  public static String getHost(SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_READ_V7_HOST
+        + "/api/7/";
   }
 
   public static GetProductsRequest of(String packageName, List<String> skuList,

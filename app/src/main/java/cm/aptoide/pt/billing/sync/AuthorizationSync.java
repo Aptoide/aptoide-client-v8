@@ -62,4 +62,8 @@ public class AuthorizationSync extends Sync {
         .flatMapCompletable(
             authorization -> authorizationPersistence.saveAuthorization(authorization));
   }
+
+  public String getTransactionId() {
+    return transactionId;
+  }
 }

@@ -12,7 +12,7 @@ import cm.aptoide.pt.view.dialog.EditableTextDialog;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import cm.aptoide.pt.view.rx.RxSwitch;
-import cm.aptoide.pt.settings.PinDialog;
+import cm.aptoide.pt.view.settings.PinDialog;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 

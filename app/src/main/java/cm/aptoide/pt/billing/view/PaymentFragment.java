@@ -208,7 +208,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
 
       Glide.with(this)
           .load(payment.getIcon())
-          .into(new RadioButtonTarget(AptoideUtils.ScreenU.getPixelsForDip(24, getResources()),
+          .into(new RadioButtonTarget(AptoideUtils.ScreenU.getPixelsForDip(16, getResources()),
               radioButton));
 
       if (TextUtils.isEmpty(payment.getDescription())) {

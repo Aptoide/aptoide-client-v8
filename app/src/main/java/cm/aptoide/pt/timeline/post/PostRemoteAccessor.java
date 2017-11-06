@@ -87,7 +87,7 @@ public class PostRemoteAccessor implements PostAccessor {
         .toSingle();
   }
 
-  @Override public Single<PostView.PostPreview> getCardPreview(String url) {
+  @Override public Single<PostPreview> getCardPreview(String url) {
     return handleProcessing(
         CardPreviewRequest.of(url, preferences, client, converter, bodyInterceptor,
             tokenInvalidator)
@@ -121,8 +121,8 @@ public class PostRemoteAccessor implements PostAccessor {
         PostManager.Origin.Remote, isSelected, remoteRelatedApp.getPackageName());
   }
 
-  private PostView.PostPreview convertToLocalCardPreview(String url, CardPreviewResponse response) {
-    return new PostView.PostPreview(response.getData()
+  private PostPreview convertToLocalCardPreview(String url, CardPreviewResponse response) {
+    return new PostPreview(response.getData()
         .getData()
         .getThumbnail(), response.getData()
         .getData()

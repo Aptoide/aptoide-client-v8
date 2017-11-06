@@ -27,7 +27,7 @@ public class PostLocalAccessor implements PostAccessor {
         .toSingle();
   }
 
-  @Override public Single<PostView.PostPreview> getCardPreview(String url) {
+  @Override public Single<PostPreview> getCardPreview(String url) {
     return Single.error(new NoSuchMethodException());
   }
 

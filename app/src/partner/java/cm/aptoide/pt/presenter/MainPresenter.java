@@ -1,7 +1,6 @@
 package cm.aptoide.pt.presenter;
 
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -21,28 +20,22 @@ import cm.aptoide.pt.view.DeepLinkManager;
 import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 
-/**
- * Created by marcelobenites on 18/01/17.
- */
 public class MainPresenter implements Presenter {
 
-  private static final String TAG = MainPresenter.class.getSimpleName();
   private final MainView view;
   private final ContentPuller contentPuller;
   private final InstallManager installManager;
   private final RootInstallationRetryHandler rootInstallationRetryHandler;
   private final CrashReport crashReport;
   private final SharedPreferences sharedPreferences;
-  private final SharedPreferences securePreferences;
   private final FragmentNavigator fragmentNavigator;
-  private final DeepLinkManager deepLinkManager;
   private final String defaultStore;
   private final String defaultTheme;
-  private NotificationSyncScheduler notificationSyncScheduler;
-  private InstallCompletedNotifier installCompletedNotifier;
-  private ApkFy apkFy;
-  private AutoUpdate autoUpdate;
-  private boolean firstCreated;
+  private final NotificationSyncScheduler notificationSyncScheduler;
+  private final InstallCompletedNotifier installCompletedNotifier;
+  private final ApkFy apkFy;
+  private final AutoUpdate autoUpdate;
+  private final boolean firstCreated;
 
   public MainPresenter(MainView view, InstallManager installManager,
       RootInstallationRetryHandler rootInstallationRetryHandler, CrashReport crashReport,
@@ -50,9 +43,9 @@ public class MainPresenter implements Presenter {
       NotificationSyncScheduler notificationSyncScheduler,
       InstallCompletedNotifier installCompletedNotifier, SharedPreferences sharedPreferences,
       SharedPreferences securePreferences, FragmentNavigator fragmentNavigator,
-      DeepLinkManager deepLinkManager, String defaultStore, String defaultTheme) {
+      DeepLinkManager deepLinkManager, String defaultStore, String defaultTheme,
+      boolean firstCreated) {
     this.view = view;
-    this.defaultStore = defaultStore;
     this.installManager = installManager;
     this.rootInstallationRetryHandler = rootInstallationRetryHandler;
     this.crashReport = crashReport;
@@ -62,10 +55,9 @@ public class MainPresenter implements Presenter {
     this.notificationSyncScheduler = notificationSyncScheduler;
     this.installCompletedNotifier = installCompletedNotifier;
     this.fragmentNavigator = fragmentNavigator;
-    this.deepLinkManager = deepLinkManager;
-    this.firstCreated = true;
+    this.firstCreated = firstCreated;
     this.sharedPreferences = sharedPreferences;
-    this.securePreferences = securePreferences;
+    this.defaultStore = defaultStore;
     this.defaultTheme = defaultTheme;
   }
 
@@ -82,13 +74,6 @@ public class MainPresenter implements Presenter {
         }, throwable -> crashReport.log(throwable));
 
     setupInstallErrorsDisplay();
-  }
-
-  @Override public void saveState(Bundle state) {
-  }
-
-  @Override public void restoreState(Bundle state) {
-    firstCreated = false;
   }
 
   private void setupInstallErrorsDisplay() {

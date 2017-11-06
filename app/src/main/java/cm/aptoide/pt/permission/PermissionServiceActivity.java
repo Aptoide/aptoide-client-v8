@@ -21,12 +21,12 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import com.facebook.FacebookSdk;
 import rx.functions.Action0;
 
