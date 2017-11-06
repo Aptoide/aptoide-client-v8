@@ -50,6 +50,7 @@ import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
+import cm.aptoide.pt.search.view.item.TrendingListViewholder;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.view.BackButtonFragment;
@@ -57,7 +58,11 @@ import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
 import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
+import com.jakewharton.rxbinding.support.v7.widget.RxActionMenuView;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
+import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
+import com.jakewharton.rxbinding.view.MenuItemActionViewEvent;
+import com.jakewharton.rxbinding.view.RxMenuItem;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.ArrayList;
@@ -260,7 +265,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   }
 
   @Override public Observable<Boolean> getSearchWidgetFocusState() {
-    return RxView.focusChanges(searchMenuItem.getActionView());
+      return RxView.focusChanges(searchMenuItem.getActionView());
   }
 
   @Override public void showTrendingMenu(List<String> apps) {
@@ -527,12 +532,20 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
             searchResultAllStores, searchResultAdsAllStores, crashReport);
     setHasOptionsMenu(true);
 
-    this.trendingListAdapter = new TrendingListAdapter(Collections.emptyList());
+    TrendingListViewholder.TrendingClickListener listener = (view, position) -> handleSearchOnClick(position);
+
+    this.trendingListAdapter = new TrendingListAdapter(listener);
+
+  }
+
+  public Observable<String> handleSearchOnClick(int position){
+    return Observable.just(trendingListAdapter.getEntry(position));
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     findChildViews(view);
+    trendingList.setLayoutManager(new LinearLayoutManager(getContext()));
     attachFollowedStoresResultListDependencies();
     attachAllStoresResultListDependencies();
     attachToolbar();

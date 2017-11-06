@@ -94,5 +94,6 @@ public interface SearchView extends View {
     boolean hasLoadedAds();
 
     void setHasLoadedAds();
+
   }
 }

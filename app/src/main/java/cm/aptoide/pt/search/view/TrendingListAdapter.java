@@ -2,6 +2,7 @@ package cm.aptoide.pt.search.view;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.search.view.item.TrendingListViewholder;
@@ -13,15 +14,15 @@ import java.util.List;
 
 public class TrendingListAdapter extends RecyclerView.Adapter<TrendingListViewholder> {
 
+  private TrendingListViewholder.TrendingClickListener clickListener;
   private List<String> entries;
 
-  public TrendingListAdapter(List<String> entries) {
-    this.entries = entries;
+  public TrendingListAdapter(TrendingListViewholder.TrendingClickListener listener) {
   }
 
   @Override public TrendingListViewholder onCreateViewHolder(ViewGroup parent, int viewType) {
     return new TrendingListViewholder(LayoutInflater.from(parent.getContext())
-        .inflate(R.layout.trending_list_item, parent, false));
+        .inflate(R.layout.trending_list_item, parent, false), clickListener);
   }
 
   @Override public void onBindViewHolder(TrendingListViewholder holder, int position) {
@@ -36,4 +37,9 @@ public class TrendingListAdapter extends RecyclerView.Adapter<TrendingListViewho
     this.entries = apps;
     notifyDataSetChanged();
   }
+
+  public String getEntry(int position){
+    return entries.get(position);
+  }
+
 }

@@ -64,7 +64,6 @@ public class SearchResultPresenter implements Presenter {
     handleAllStoresListReachedBottom();
     handleFollowedStoresListReachedBottom();
     handleTitleBarClick();
-    handleWidgetTrendingRequest();
   }
 
   private void handleTitleBarClick() {
@@ -80,14 +79,14 @@ public class SearchResultPresenter implements Presenter {
 
   private void handleWidgetTrendingRequest() {
     view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .filter(event -> event.equals(View.LifecycleEvent.RESUME))
         .observeOn(viewScheduler)
         .flatMap(__ -> view.getSearchWidgetFocusState())
-        .filter(status -> status == true)
+        .filter(status -> status==true)
         .flatMap(__ -> searchManager.getTrendingApps())
         .observeOn(viewScheduler)
         .doOnNext(trending -> view.showTrendingMenu(trending))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE))
         .subscribe(__ -> {
         }, crashReport::log);
   }
@@ -364,6 +363,7 @@ public class SearchResultPresenter implements Presenter {
                 }
               } else if (data == null) {
                 view.showWidgetClickView();
+                handleWidgetTrendingRequest();
               } else {
                 view.showResultsView();
                 if (viewModel.isAllStoresSelected()) {
