@@ -62,11 +62,8 @@
           android:textSize="@dimen/text_size_medium"
           />
       <ImageView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_alignParentEnd="true"
-          android:layout_alignParentRight="true"
-          android:layout_alignRight="@+id/balanceAppcoins"
+          android:layout_width="20dp"
+          android:layout_height="20dp"
           android:src="@drawable/ic_icon_appcoinlogo"
           />
     </LinearLayout>
