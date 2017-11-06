@@ -11,9 +11,9 @@ import cm.aptoide.pt.dataprovider.model.v7.TimelineStats;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
-import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.view.spannable.SpannableFactory;
 import lombok.Getter;
 
 /**

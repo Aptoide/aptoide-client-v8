@@ -1,22 +1,20 @@
 package cm.aptoide.pt.social.presenter;
 
 import android.content.res.Resources;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.Store;
-import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialCard;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.repository.StoreRepository;
@@ -43,16 +41,14 @@ import cm.aptoide.pt.social.data.StoreLatestApps;
 import cm.aptoide.pt.social.data.Timeline;
 import cm.aptoide.pt.social.data.TimelineStatsTouchEvent;
 import cm.aptoide.pt.social.data.User;
+import cm.aptoide.pt.social.data.UserUnfollowCardTouchEvent;
+import cm.aptoide.pt.social.data.analytics.EventErrorHandler;
 import cm.aptoide.pt.social.view.TimelineUser;
 import cm.aptoide.pt.social.view.TimelineView;
-import cm.aptoide.pt.social.view.viewholder.NativeAdErrorEvent;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.view.app.AppViewFragment;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
-import cm.aptoide.pt.view.store.StoreFragment;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.Completable;
@@ -68,7 +64,7 @@ public class TimelinePresenter implements Presenter {
   private final TimelineView view;
   private final Timeline timeline;
   private final CrashReport crashReport;
-  private final TimelineNavigation timelineNavigation;
+  private final TimelineNavigator timelineNavigation;
   private final PermissionManager permissionManager;
   private final PermissionService permissionRequest;
   private final InstallManager installManager;
@@ -81,19 +77,16 @@ public class TimelinePresenter implements Presenter {
   private final Long storeId;
   private final StoreContext storeContext;
   private final Resources resources;
-  private final FragmentNavigator fragmentNavigator;
   private final LinksHandlerFactory linksNavigator;
-  private final NotificationCenter notificationCenter;
 
   public TimelinePresenter(@NonNull TimelineView cardsView, @NonNull Timeline timeline,
-      CrashReport crashReport, TimelineNavigation timelineNavigation,
+      CrashReport crashReport, TimelineNavigator timelineNavigation,
       PermissionManager permissionManager, PermissionService permissionRequest,
       InstallManager installManager, StoreRepository storeRepository,
       StoreUtilsProxy storeUtilsProxy, StoreCredentialsProviderImpl storeCredentialsProvider,
       AptoideAccountManager accountManager, TimelineAnalytics timelineAnalytics, Long userId,
       Long storeId, StoreContext storeContext, Resources resources,
-      FragmentNavigator fragmentNavigator, LinksHandlerFactory linksNavigator,
-      NotificationCenter notificationCenter) {
+      LinksHandlerFactory linksNavigator) {
     this.view = cardsView;
     this.timeline = timeline;
     this.crashReport = crashReport;
@@ -110,9 +103,7 @@ public class TimelinePresenter implements Presenter {
     this.storeId = storeId;
     this.storeContext = storeContext;
     this.resources = resources;
-    this.fragmentNavigator = fragmentNavigator;
     this.linksNavigator = linksNavigator;
-    this.notificationCenter = notificationCenter;
   }
 
   @Override public void present() {
@@ -177,13 +168,111 @@ public class TimelinePresenter implements Presenter {
     clickOnEmptyStateAction();
 
     handleScrollEvents();
+
+    clickOnDeletePost();
+
+    clickOnUnfollowStore();
+
+    clickOnUnfollowUser();
+
+    clickOnReportAbuse();
+
+    clickOnIgnoreUpdate();
   }
 
-  @Override public void saveState(Bundle state) {
+  private void clickOnReportAbuse() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.postClicked()
+            .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+                .equals(CardTouchEvent.Type.REPORT_ABUSE))
+            .flatMapSingle(cardTouchEvent -> view.takeFeedbackScreenShot()
+                .doOnSuccess(
+                    screenShotPath -> timelineNavigation.navigateToFeedbackScreen(screenShotPath,
+                        cardTouchEvent.getCard()
+                            .getCardId())))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cardTouchEvent -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
-  @Override public void restoreState(Bundle state) {
+  private void clickOnIgnoreUpdate() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.postClicked()
+            .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+                .equals(CardTouchEvent.Type.IGNORE_UPDATE))
+            .flatMapCompletable(cardTouchEvent -> timeline.ignoreUpdate(
+                ((AppUpdate) cardTouchEvent.getCard()).getPackageName())
+                .observeOn(AndroidSchedulers.mainThread())
+                .andThen(Completable.fromAction(() -> view.removePost(cardTouchEvent.getCard()))))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cardTouchEvent -> {
+        }, throwable -> crashReport.log(throwable));
+  }
 
+  private void clickOnUnfollowStore() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.postClicked()
+            .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+                .equals(CardTouchEvent.Type.UNFOLLOW_STORE))
+            .doOnNext(cardTouchEvent -> storeUtilsProxy.unSubscribeStore(
+                ((StoreLatestApps) cardTouchEvent.getCard()).getStoreName(),
+                storeCredentialsProvider))
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(cardTouchEvent -> view.showUserUnsubscribedMessage(
+                ((StoreLatestApps) cardTouchEvent.getCard()).getStoreName()))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cardTouchEvent -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
+  private void clickOnUnfollowUser() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.postClicked()
+            .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+                .equals(CardTouchEvent.Type.UNFOLLOW_USER))
+            .flatMapCompletable(cardTouchEvent -> {
+              if (cardTouchEvent instanceof UserUnfollowCardTouchEvent) {
+                return timeline.unfollowUser(((UserUnfollowCardTouchEvent) cardTouchEvent).getId())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .andThen(Completable.fromAction(() -> view.showUserUnsubscribedMessage(
+                        ((UserUnfollowCardTouchEvent) cardTouchEvent).getName())));
+              }
+              return Completable.error(new IllegalStateException(
+                  "Trying to unfollow user without using the UserUnfollowCardTouchEvent "));
+            })
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cardTouchEvent -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
+  private void clickOnDeletePost() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.postClicked()
+            .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+                .equals(CardTouchEvent.Type.DELETE_POST))
+            .flatMapCompletable(cardTouchEvent -> timeline.deletePost(cardTouchEvent.getCard()
+                .getCardId())
+                .observeOn(AndroidSchedulers.mainThread())
+                .andThen(Completable.fromAction(() -> {
+                  view.removePost(cardTouchEvent.getCard());
+                })))
+            .retry())
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cardTouchEvent -> {
+        }, throwable -> {
+          view.showGenericError();
+          crashReport.log(throwable);
+        });
   }
 
   private void handleScrollEvents() {
@@ -279,8 +368,8 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
                 .equals(CardTouchEvent.Type.ERROR))
-            .doOnNext(cardTouchEvent -> view.removePost(
-                ((NativeAdErrorEvent) cardTouchEvent).getPosition()))
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(cardTouchEvent -> view.removePost(cardTouchEvent.getCard()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
@@ -293,14 +382,13 @@ public class TimelinePresenter implements Presenter {
         .flatMap(viewCreated -> view.postClicked()
             .filter(cardClicked -> cardClicked.getActionType()
                 .equals(CardTouchEvent.Type.LAST_COMMENT))
-            .doOnNext(cardTouchEvent -> fragmentNavigator.navigateTo(StoreFragment.newInstance(
+            .doOnNext(cardTouchEvent -> timelineNavigation.navigateToUserHome(
                 cardTouchEvent.getCard()
                     .getComments()
                     .get(cardTouchEvent.getCard()
                         .getComments()
                         .size() - 1)
-                    .getUserId(), "DEFAULT", Event.Name.getUserTimeline,
-                StoreFragment.OpenType.GetHome), true)))
+                    .getUserId())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
         }, throwable -> view.showGenericError());
@@ -560,8 +648,7 @@ public class TimelinePresenter implements Presenter {
               } else {
                 if (type.equals(CardType.RECOMMENDATION) || type.equals(CardType.SIMILAR)) {
                   Recommendation card = (Recommendation) post;
-                  timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
-                      AppViewFragment.OpenType.OPEN_ONLY);
+                  timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName());
                 } else if (type.equals(CardType.STORE)) {
                   StoreAppCardTouchEvent storeAppCardTouchEvent =
                       (StoreAppCardTouchEvent) cardTouchEvent;
@@ -604,22 +691,19 @@ public class TimelinePresenter implements Presenter {
                             .getName(), "error"));
                   } else {
                     timelineNavigation.navigateToAppView(card.getAppUpdateId(),
-                        card.getPackageName(), AppViewFragment.OpenType.OPEN_ONLY);
+                        card.getPackageName());
                   }
                 } else if (type.equals(CardType.POPULAR_APP)) {
                   PopularApp card = (PopularApp) post;
-                  timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
-                      AppViewFragment.OpenType.OPEN_ONLY);
+                  timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName());
                 } else if (type.equals(CardType.SOCIAL_RECOMMENDATION) || type.equals(
                     CardType.SOCIAL_INSTALL) || type.equals(CardType.SOCIAL_POST_RECOMMENDATION)) {
                   RatedRecommendation card = (RatedRecommendation) post;
-                  timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
-                      AppViewFragment.OpenType.OPEN_ONLY);
+                  timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName());
                 } else if (type.equals(CardType.AGGREGATED_SOCIAL_INSTALL) || type.equals(
                     CardType.AGGREGATED_SOCIAL_APP)) {
                   AggregatedRecommendation card = (AggregatedRecommendation) post;
-                  timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
-                      AppViewFragment.OpenType.OPEN_ONLY);
+                  timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName());
                 }
               }
             })
@@ -672,14 +756,12 @@ public class TimelinePresenter implements Presenter {
                     final Post post = cardTouchEvent.getCard();
                     return timeline.like(post, post.getCardId())
                         .andThen(Completable.fromAction(
-                            () -> timelineAnalytics.sendLikeEvent(cardTouchEvent.getPosition(),
-                                true)));
+                            () -> timelineAnalytics.sendLikeEvent(cardTouchEvent)));
                   }
                   return Completable.complete();
                 })
-                .doOnError(
-                    throwable -> timelineAnalytics.sendLikeEvent(cardTouchEvent.getPosition(),
-                        false))))
+                .doOnError(throwable -> timelineAnalytics.sendErrorLikeEvent(cardTouchEvent,
+                    EventErrorHandler.GenericErrorEvent.LOGIN))))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
             .getAbUrl()), throwable -> crashReport.log(throwable));
@@ -746,16 +828,14 @@ public class TimelinePresenter implements Presenter {
                     return timeline.sharePost(post)
                         .flatMapCompletable(cardId -> timeline.like(post, cardId))
                         .andThen(Completable.fromAction(
-                            () -> timelineAnalytics.sendLikeEvent(cardTouchEvent.getPosition(),
-                                true)));
+                            () -> timelineAnalytics.sendLikeEvent(cardTouchEvent)));
                   } else {
-                    timelineAnalytics.sendLikeEvent(cardTouchEvent.getPosition(), false);
+                    timelineAnalytics.sendErrorLikeEvent(cardTouchEvent,
+                        EventErrorHandler.GenericErrorEvent.LOGIN);
                     return Completable.complete();
                   }
                 })
-                .doOnError(
-                    throwable -> timelineAnalytics.sendLikeEvent(cardTouchEvent.getPosition(),
-                        true)))
+                .doOnError(throwable -> timelineAnalytics.sendLikeEvent(cardTouchEvent)))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
@@ -781,22 +861,23 @@ public class TimelinePresenter implements Presenter {
                 if (showCreateStore(account)) {
                   return Completable.fromAction(
                       () -> view.showCreateStoreMessage(SocialAction.LIKE))
-                      .andThen(sendCommentEvent(cardTouchEvent.getPosition(), false));
+                      .andThen(sendErrorCommentEvent(cardTouchEvent,
+                          EventErrorHandler.GenericErrorEvent.NO_STORE));
                 } else if (showSetUserOrStoreToPublic(account)) {
                   return Completable.fromAction(() -> view.showSetUserOrStorePublicMessage())
-                      .andThen(sendCommentEvent(cardTouchEvent.getPosition(), false));
+                      .andThen(sendErrorCommentEvent(cardTouchEvent,
+                          EventErrorHandler.GenericErrorEvent.PRIVATE_USER));
                 }
                 return Completable.fromAction(
                     () -> timelineNavigation.navigateToCommentsWithCommentDialogOpen(
                         cardTouchEvent.getCard()
                             .getCardId()))
-                    .andThen(sendCommentEvent(cardTouchEvent.getPosition(), true));
+                    .andThen(sendCommentEvent(cardTouchEvent));
               }
               return Completable.fromAction(() -> view.showLoginPromptWithAction())
-                  .andThen(sendCommentEvent(cardTouchEvent.getPosition(), false));
+                  .andThen(sendErrorCommentEvent(cardTouchEvent, EventErrorHandler.GenericErrorEvent.LOGIN));
             })
-            .doOnError(throwable -> timelineAnalytics.sendCommentEvent(cardTouchEvent.getPosition(),
-                false)))
+            .doOnError(throwable -> timelineAnalytics.sendCommentEvent(cardTouchEvent)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
             .getAbUrl()), throwable -> crashReport.log(throwable));
@@ -819,28 +900,34 @@ public class TimelinePresenter implements Presenter {
                 if (showCreateStore(account)) {
                   return Completable.fromAction(
                       () -> view.showCreateStoreMessage(SocialAction.LIKE))
-                      .andThen(sendCommentEvent(cardTouchEvent.getPosition(), false));
+                      .andThen(sendErrorCommentEvent(cardTouchEvent,
+                          EventErrorHandler.GenericErrorEvent.NO_STORE));
                 } else if (showSetUserOrStoreToPublic(account)) {
                   return Completable.fromAction(() -> view.showSetUserOrStorePublicMessage())
-                      .andThen(sendCommentEvent(cardTouchEvent.getPosition(), false));
+                      .andThen(sendErrorCommentEvent(cardTouchEvent,
+                          EventErrorHandler.GenericErrorEvent.PRIVATE_USER));
                 }
                 return Completable.fromAction(
                     () -> view.showCommentDialog((SocialCardTouchEvent) cardTouchEvent))
-                    .andThen(sendCommentEvent(cardTouchEvent.getPosition(), true));
+                    .andThen(sendCommentEvent(cardTouchEvent));
               }
               return Completable.fromAction(() -> view.showLoginPromptWithAction())
-                  .andThen(sendCommentEvent(cardTouchEvent.getPosition(), false));
+                  .andThen(sendErrorCommentEvent(cardTouchEvent, EventErrorHandler.GenericErrorEvent.LOGIN));
             })
-            .doOnError(throwable -> timelineAnalytics.sendCommentEvent(cardTouchEvent.getPosition(),
-                false)))
+            .doOnError(throwable -> timelineAnalytics.sendCommentEvent(cardTouchEvent)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
             .getAbUrl()), throwable -> {
         });
   }
 
-  @NonNull private Completable sendCommentEvent(int position, boolean success) {
-    return Completable.fromAction(() -> timelineAnalytics.sendCommentEvent(position, success));
+  @NonNull private Completable sendCommentEvent(CardTouchEvent event) {
+    return Completable.fromAction(() -> timelineAnalytics.sendCommentEvent(event));
+  }
+
+  @NonNull
+  private Completable sendErrorCommentEvent(CardTouchEvent event, EventErrorHandler.GenericErrorEvent error) {
+    return Completable.fromAction(() -> timelineAnalytics.sendErrorCommentEvent(event, error));
   }
 
   private void clickOnCommentsNumberLabel() {
@@ -884,26 +971,27 @@ public class TimelinePresenter implements Presenter {
                 if (showCreateStore(account)) {
                   return Completable.fromAction(
                       () -> view.showCreateStoreMessage(SocialAction.LIKE))
-                      .andThen(sendShareEvent(cardTouchEvent.getPosition(), false));
+                      .andThen(sendErrorShareEvent(cardTouchEvent,
+                          EventErrorHandler.GenericErrorEvent.NO_STORE));
                 } else if (showSetUserOrStoreToPublic(account)) {
                   return Completable.fromAction(() -> view.showSetUserOrStorePublicMessage())
-                      .andThen(sendShareEvent(cardTouchEvent.getPosition(), false));
+                      .andThen(sendErrorShareEvent(cardTouchEvent,
+                          EventErrorHandler.GenericErrorEvent.PRIVATE_USER));
                 }
                 if (cardTouchEvent instanceof MinimalPostTouchEvent) {
                   return Completable.fromAction(() -> view.showSharePreview(
                       ((MinimalPostTouchEvent) cardTouchEvent).getOriginalPost(),
                       (cardTouchEvent).getCard(), account))
-                      .andThen(sendShareEvent(cardTouchEvent.getPosition(), true));
+                      .andThen(sendShareEvent(cardTouchEvent));
                 }
                 return Completable.fromAction(
                     () -> view.showSharePreview(cardTouchEvent.getCard(), account))
-                    .andThen(sendShareEvent(cardTouchEvent.getPosition(), true));
+                    .andThen(sendShareEvent(cardTouchEvent));
               }
               return Completable.fromAction(() -> view.showLoginPromptWithAction())
-                  .andThen(sendShareEvent(cardTouchEvent.getPosition(), false));
+                  .andThen(sendErrorShareEvent(cardTouchEvent, EventErrorHandler.GenericErrorEvent.LOGIN));
             })
-            .doOnError(
-                throwable -> timelineAnalytics.sendShareEvent(cardTouchEvent.getPosition(), false)))
+            .doOnError(throwable -> timelineAnalytics.sendShareEvent(cardTouchEvent)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
             .getAbUrl()), throwable -> {
@@ -912,8 +1000,13 @@ public class TimelinePresenter implements Presenter {
         });
   }
 
-  private Completable sendShareEvent(int position, boolean success) {
-    return Completable.fromAction(() -> timelineAnalytics.sendShareEvent(position, success));
+  private Completable sendShareEvent(CardTouchEvent event) {
+    return Completable.fromAction(() -> timelineAnalytics.sendShareEvent(event));
+  }
+
+  private Completable sendErrorShareEvent(CardTouchEvent event,
+      EventErrorHandler.GenericErrorEvent error) {
+    return Completable.fromAction(() -> timelineAnalytics.sendErrorShareEvent(event, error));
   }
 
   private void commentPostResponse() {
@@ -1089,7 +1182,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void navigateToStoreTimeline(SocialHeaderCardTouchEvent socialHeaderCardTouchEvent) {
-    if (socialHeaderCardTouchEvent.getStoreName() != null) {
+    if (!TextUtils.isEmpty(socialHeaderCardTouchEvent.getStoreName())) {
       timelineNavigation.navigateToStoreTimeline(socialHeaderCardTouchEvent.getStoreName(),
           socialHeaderCardTouchEvent.getStoreTheme());
     } else {
@@ -1099,10 +1192,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void navigateToAppView(StoreAppCardTouchEvent cardTouchEvent) {
-    timelineAnalytics.sendOpenAppEvent(cardTouchEvent.getActionType()
-        .name(), TimelineAnalytics.SOURCE_APTOIDE, cardTouchEvent.getPackageName());
-    timelineNavigation.navigateToAppView(cardTouchEvent.getPackageName(),
-        AppViewFragment.OpenType.OPEN_ONLY);
+    timelineNavigation.navigateToAppView(cardTouchEvent.getPackageName());
   }
 
   private void followStore(long storeId, String storeName) {

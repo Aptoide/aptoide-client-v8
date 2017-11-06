@@ -33,8 +33,7 @@ public class SyncService extends Service {
         sync.execute()
             .doOnTerminate(() -> {
               if (reschedule) {
-                scheduler.cancel(syncId);
-                scheduler.schedule(sync);
+                scheduler.reschedule(sync);
               }
               stopSelf(startId);
             })

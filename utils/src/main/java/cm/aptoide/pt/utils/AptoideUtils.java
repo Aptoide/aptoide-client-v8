@@ -766,7 +766,7 @@ public class AptoideUtils {
       return telephonyManager.getNetworkOperatorName();
     }
 
-    public static File readLogs(String mPath, String fileName) {
+    public static File readLogs(String mPath, String fileName, String extraLog) {
 
       Process process = null;
       try {
@@ -785,6 +785,9 @@ public class AptoideUtils {
       log.append("Device: " + Build.DEVICE + "\n");
       log.append("Brand: " + Build.BRAND + "\n");
       log.append("CPU: " + Build.CPU_ABI + "\n");
+      if (extraLog != null) {
+        log.append("Extra: " + extraLog + "\n");
+      }
       log.append("\nLogs:\n");
       try {
         outputStream = new FileOutputStream(logsFile);

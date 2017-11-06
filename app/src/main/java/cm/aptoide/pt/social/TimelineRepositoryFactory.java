@@ -1,7 +1,7 @@
 package cm.aptoide.pt.social;
 
 import android.content.SharedPreferences;
-import cm.aptoide.pt.PackageRepository;
+import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;

@@ -1,6 +1,6 @@
 package cm.aptoide.pt.remotebootconfig.datamodel;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Created by diogoloureiro on 18/01/2017.
@@ -8,19 +8,33 @@ import lombok.Data;
  * Option Class
  */
 
-@Data public class Options {
+public class Options {
+
   private boolean shortcut;
   private Multistore multistore;
-  private FirstInstall first_install;
+  @JsonProperty("first_install") private FirstInstall firstInstall;
 
-  /**
-   * Options constructor
-   *
-   * @param multistore defines the multistore configurations
-   * @param first_install defines the first install configurations
-   */
-  public Options(Multistore multistore, FirstInstall first_install) {
+  public boolean isShortcut() {
+    return shortcut;
+  }
+
+  public void setShortcut(boolean shortcut) {
+    this.shortcut = shortcut;
+  }
+
+  public Multistore getMultistore() {
+    return multistore;
+  }
+
+  public void setMultistore(Multistore multistore) {
     this.multistore = multistore;
-    this.first_install = first_install;
+  }
+
+  public FirstInstall getFirstInstall() {
+    return firstInstall;
+  }
+
+  public void setFirstInstall(FirstInstall firstInstall) {
+    this.firstInstall = firstInstall;
   }
 }

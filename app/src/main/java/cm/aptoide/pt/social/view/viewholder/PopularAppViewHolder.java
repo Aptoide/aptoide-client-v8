@@ -1,6 +1,7 @@
 package cm.aptoide.pt.social.view.viewholder;
 
 import android.content.Context;
+import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.PopularApp;
 import cm.aptoide.pt.social.data.PopularAppTouchEvent;
+import cm.aptoide.pt.social.data.Post;
+import cm.aptoide.pt.social.data.PostPopupMenuBuilder;
 import cm.aptoide.pt.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.timeline.view.LikeButtonView;
 import cm.aptoide.pt.util.DateCalculator;
@@ -38,6 +41,7 @@ public class PopularAppViewHolder extends PostViewHolder<PopularApp> {
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final TextView commentButton;
   private final TextView shareButton;
+  private final View overflowMenu;
 
   public PopularAppViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator) {
@@ -59,24 +63,25 @@ public class PopularAppViewHolder extends PostViewHolder<PopularApp> {
     this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
     this.commentButton = (TextView) view.findViewById(R.id.social_comment);
     this.shareButton = (TextView) itemView.findViewById(R.id.social_share);
+    this.overflowMenu = itemView.findViewById(R.id.overflow_menu);
   }
 
-  @Override public void setPost(PopularApp card, int position) {
+  @Override public void setPost(PopularApp post, int position) {
     this.headerSubTitle.setText(
-        dateCalculator.getTimeSinceDate(itemView.getContext(), card.getTimestamp()));
+        dateCalculator.getTimeSinceDate(itemView.getContext(), post.getTimestamp()));
     ImageLoader.with(itemView.getContext())
-        .load(card.getAppIcon(), appIcon);
-    this.appName.setText(card.getAppName());
-    this.appRating.setRating(card.getAppAverageRating());
-    showFriendsAvatars(card, itemView.getContext());
+        .load(post.getAppIcon(), appIcon);
+    this.appName.setText(post.getAppName());
+    this.appRating.setRating(post.getAppAverageRating());
+    showFriendsAvatars(post, itemView.getContext(), position);
     this.appIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, position, CardTouchEvent.Type.BODY)));
+        new CardTouchEvent(post, position, CardTouchEvent.Type.BODY)));
     this.getAppButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, position, CardTouchEvent.Type.BODY)));
-    if (card.isLiked()) {
-      if (card.isLikeFromClick()) {
+        new CardTouchEvent(post, position, CardTouchEvent.Type.BODY)));
+    if (post.isLiked()) {
+      if (post.isLikeFromClick()) {
         likeButton.setHeartState(true);
-        card.setLikedFromClick(false);
+        post.setLikedFromClick(false);
       } else {
         likeButton.setHeartStateWithoutAnimation(true);
       }
@@ -84,18 +89,19 @@ public class PopularAppViewHolder extends PostViewHolder<PopularApp> {
       likeButton.setHeartState(false);
     }
 
-    handleCommentsInformation(card, position);
+    setupOverflowMenu(post, position);
+    handleCommentsInformation(post, position);
 
     this.like.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new SocialCardTouchEvent(card, CardTouchEvent.Type.LIKE, position)));
+        new SocialCardTouchEvent(post, CardTouchEvent.Type.LIKE, position)));
 
     this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new SocialCardTouchEvent(card, CardTouchEvent.Type.COMMENT, position)));
+        new SocialCardTouchEvent(post, CardTouchEvent.Type.COMMENT, position)));
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, position, CardTouchEvent.Type.SHARE)));
+        new CardTouchEvent(post, position, CardTouchEvent.Type.SHARE)));
   }
 
-  private void showFriendsAvatars(PopularApp card, Context context) {
+  private void showFriendsAvatars(PopularApp card, Context context, int position) {
     headerUsersContainer.removeAllViews();
     View friendView;
     ImageView friendAvatar;
@@ -107,9 +113,22 @@ public class PopularAppViewHolder extends PostViewHolder<PopularApp> {
 
       friendView.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
           new PopularAppTouchEvent(card, friend.getId(), "DEFAULT", CardTouchEvent.Type.HEADER,
-              getPosition())));
+              position)));
 
       headerUsersContainer.addView(friendView);
     }
+  }
+
+  private void setupOverflowMenu(Post post, int position) {
+    overflowMenu.setOnClickListener(view -> {
+      PopupMenu popupMenu = new PostPopupMenuBuilder().prepMenu(itemView.getContext(), overflowMenu)
+          .addReportAbuse(menuItem -> {
+            cardTouchEventPublishSubject.onNext(
+                new CardTouchEvent(post, position, CardTouchEvent.Type.REPORT_ABUSE));
+            return false;
+          })
+          .getPopupMenu();
+      popupMenu.show();
+    });
   }
 }

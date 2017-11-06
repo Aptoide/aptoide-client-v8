@@ -7,7 +7,7 @@ package cm.aptoide.pt.download;
 
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import cm.aptoide.pt.AutoUpdate;
+import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Rollback;
@@ -20,7 +20,7 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.File;
 import cm.aptoide.pt.install.AppAction;
 import cm.aptoide.pt.social.data.AppUpdate;
 import cm.aptoide.pt.utils.IdUtils;
-import cm.aptoide.pt.view.updates.UpdateDisplayable;
+import cm.aptoide.pt.updates.view.UpdateDisplayable;
 import io.realm.RealmList;
 
 /**

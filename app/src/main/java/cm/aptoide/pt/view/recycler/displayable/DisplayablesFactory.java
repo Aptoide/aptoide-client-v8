@@ -15,7 +15,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.user.CreateStoreDisplayable;
 import cm.aptoide.pt.ads.MinimalAdMapper;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
@@ -40,21 +40,22 @@ import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtilsProxy;
-import cm.aptoide.pt.view.account.user.LoginDisplayable;
-import cm.aptoide.pt.view.app.GridAppDisplayable;
-import cm.aptoide.pt.view.app.GridAppListDisplayable;
-import cm.aptoide.pt.view.app.OfficialAppDisplayable;
-import cm.aptoide.pt.view.reviews.RowReviewDisplayable;
-import cm.aptoide.pt.view.store.GridDisplayDisplayable;
-import cm.aptoide.pt.view.store.GridStoreDisplayable;
-import cm.aptoide.pt.view.store.GridStoreMetaDisplayable;
-import cm.aptoide.pt.view.store.StoreAddCommentDisplayable;
-import cm.aptoide.pt.view.store.StoreGridHeaderDisplayable;
-import cm.aptoide.pt.view.store.StoreLatestCommentsDisplayable;
-import cm.aptoide.pt.view.store.StoreTabNavigator;
-import cm.aptoide.pt.view.store.featured.AppBrickDisplayable;
-import cm.aptoide.pt.view.store.my.MyStoreDisplayable;
-import cm.aptoide.pt.view.store.recommended.RecommendedStoreDisplayable;
+import cm.aptoide.pt.account.view.LoginDisplayable;
+import cm.aptoide.pt.app.view.GridAppDisplayable;
+import cm.aptoide.pt.app.view.GridAppListDisplayable;
+import cm.aptoide.pt.app.view.OfficialAppDisplayable;
+import cm.aptoide.pt.reviews.RowReviewDisplayable;
+import cm.aptoide.pt.store.view.BadgeDialogFactory;
+import cm.aptoide.pt.store.view.GridDisplayDisplayable;
+import cm.aptoide.pt.store.view.GridStoreDisplayable;
+import cm.aptoide.pt.store.view.GridStoreMetaDisplayable;
+import cm.aptoide.pt.store.view.StoreAddCommentDisplayable;
+import cm.aptoide.pt.store.view.StoreGridHeaderDisplayable;
+import cm.aptoide.pt.store.view.StoreLatestCommentsDisplayable;
+import cm.aptoide.pt.store.view.featured.AppBrickDisplayable;
+import cm.aptoide.pt.store.view.my.MyStoreDisplayable;
+import cm.aptoide.pt.store.view.recommended.RecommendedStoreDisplayable;
+import cm.aptoide.pt.store.view.StoreTabNavigator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -72,7 +73,8 @@ public class DisplayablesFactory {
       StoreRepository storeRepository, StoreContext storeContext, Context context,
       AptoideAccountManager accountManager, StoreUtilsProxy storeUtilsProxy,
       WindowManager windowManager, Resources resources, InstalledRepository installedRepository,
-      StoreAnalytics storeAnalytics, StoreTabNavigator storeTabNavigator, AptoideNavigationTracker aptoideNavigationTracker) {
+      StoreAnalytics storeAnalytics, StoreTabNavigator storeTabNavigator,
+      NavigationTracker navigationTracker, BadgeDialogFactory badgeDialogFactory) {
 
     LinkedList<Displayable> displayables = new LinkedList<>();
 
@@ -83,16 +85,16 @@ public class DisplayablesFactory {
         case APPS_GROUP:
           return Observable.just(getApps(widget, storeTheme, storeContext,
               context.getApplicationContext()
-                  .getResources(), windowManager, storeTabNavigator, aptoideNavigationTracker));
+                  .getResources(), windowManager, storeTabNavigator, navigationTracker));
 
         case MY_STORES_SUBSCRIBED:
           return getMyStores(widget, storeRepository, storeTheme, storeContext, windowManager,
-              resources, context, storeAnalytics, storeTabNavigator, aptoideNavigationTracker);
+              resources, context, storeAnalytics, storeTabNavigator, navigationTracker);
 
         case STORES_GROUP:
           return Observable.just(
               getStores(widget, storeTheme, storeContext, windowManager, resources, context,
-                  storeAnalytics, storeTabNavigator, aptoideNavigationTracker));
+                  storeAnalytics, storeTabNavigator, navigationTracker));
 
         case DISPLAYS:
           return Observable.just(
@@ -100,8 +102,7 @@ public class DisplayablesFactory {
                   installedRepository));
 
         case ADS:
-          List<Displayable> adsList =
-              getAds(widget, new MinimalAdMapper(), aptoideNavigationTracker);
+          List<Displayable> adsList = getAds(widget, new MinimalAdMapper(), navigationTracker);
           if (adsList.size() > 0) {
             DisplayableGroup ads = new DisplayableGroup(adsList, windowManager, resources);
             // Header hammered
@@ -111,7 +112,7 @@ public class DisplayablesFactory {
             widget.setActions(actions);
             StoreGridHeaderDisplayable storeGridHeaderDisplayable =
                 new StoreGridHeaderDisplayable(widget, null, widget.getTag(), StoreContext.meta,
-                    storeTabNavigator, aptoideNavigationTracker);
+                    storeTabNavigator, navigationTracker);
             displayables.add(storeGridHeaderDisplayable);
             displayables.add(ads);
             return Observable.from(displayables);
@@ -124,11 +125,12 @@ public class DisplayablesFactory {
               new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
                   ((AptoideApplication) context.getApplicationContext()
                       .getApplicationContext()).getDatabase(),
-                  cm.aptoide.pt.database.realm.Store.class)), storeAnalytics));
+                  cm.aptoide.pt.database.realm.Store.class)), storeAnalytics, badgeDialogFactory));
 
         case REVIEWS_GROUP:
           return Observable.from(
-              createReviewsGroupDisplayables(widget, windowManager, resources, storeTabNavigator, aptoideNavigationTracker));
+              createReviewsGroupDisplayables(widget, windowManager, resources, storeTabNavigator,
+                  navigationTracker));
 
         case MY_STORE_META:
           return Observable.from(
@@ -137,10 +139,11 @@ public class DisplayablesFactory {
         case STORES_RECOMMENDED:
           return Observable.just(
               createRecommendedStores(widget, storeTheme, storeRepository, storeContext, context,
-                  accountManager, storeUtilsProxy, windowManager, resources, storeTabNavigator, aptoideNavigationTracker));
+                  accountManager, storeUtilsProxy, windowManager, resources, storeTabNavigator,
+                  navigationTracker));
 
         case COMMENTS_GROUP:
-          return Observable.from(createCommentsGroup(widget, storeTabNavigator, aptoideNavigationTracker));
+          return Observable.from(createCommentsGroup(widget, storeTabNavigator, navigationTracker));
 
         case APP_META:
           GetStoreWidgets.WSWidget.Data dataObj = widget.getData();
@@ -154,7 +157,7 @@ public class DisplayablesFactory {
 
   private static Displayable getApps(GetStoreWidgets.WSWidget wsWidget, String storeTheme,
       StoreContext storeContext, Resources resources, WindowManager windowManager,
-      StoreTabNavigator storeTabNavigator, AptoideNavigationTracker aptoideNavigationTracker) {
+      StoreTabNavigator storeTabNavigator, NavigationTracker navigationTracker) {
     ListApps listApps = (ListApps) wsWidget.getViewObject();
     if (listApps == null) {
       return new EmptyDisplayable();
@@ -187,7 +190,7 @@ public class DisplayablesFactory {
 
         if (useBigBrick) {
           displayables.add(new AppBrickDisplayable(apps.get(0), wsWidget.getTag(),
-              aptoideNavigationTracker).setFullRow());
+              navigationTracker).setFullRow());
 
           nrAppBricks++;
         }
@@ -195,7 +198,7 @@ public class DisplayablesFactory {
         if (apps.size() > 1) {
           for (int i = (useBigBrick ? 1 : 0); i < nrAppBricks; i++) {
             Displayable appDisplayablePojo =
-                new AppBrickDisplayable(apps.get(i), wsWidget.getTag(), aptoideNavigationTracker);
+                new AppBrickDisplayable(apps.get(i), wsWidget.getTag(), navigationTracker);
             displayables.add(appDisplayablePojo);
           }
         }
@@ -204,7 +207,8 @@ public class DisplayablesFactory {
     } else if (Layout.LIST.equals(wsWidget.getData()
         .getLayout())) {
       if (apps.size() > 0) {
-        displayables.add(new StoreGridHeaderDisplayable(wsWidget, storeTabNavigator, aptoideNavigationTracker));
+        displayables.add(
+            new StoreGridHeaderDisplayable(wsWidget, storeTabNavigator, navigationTracker));
       }
 
       for (App app : apps) {
@@ -214,13 +218,13 @@ public class DisplayablesFactory {
       if (apps.size() > 0) {
         displayables.add(
             new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag(), storeContext,
-                storeTabNavigator, aptoideNavigationTracker));
+                storeTabNavigator, navigationTracker));
       }
 
       for (App app : apps) {
         DisplayablePojo<App> diplayable =
             new GridAppDisplayable(app, wsWidget.getTag(), storeContext == StoreContext.home,
-                aptoideNavigationTracker, storeContext);
+                navigationTracker, storeContext);
         displayables.add(diplayable);
       }
     }
@@ -230,7 +234,8 @@ public class DisplayablesFactory {
   private static Observable<Displayable> getMyStores(GetStoreWidgets.WSWidget wsWidget,
       StoreRepository storeRepository, String storeTheme, StoreContext storeContext,
       WindowManager windowManager, Resources resources, Context context,
-      StoreAnalytics storeAnalytics, StoreTabNavigator storeTabNavigator, AptoideNavigationTracker aptoideNavigationTracker) {
+      StoreAnalytics storeAnalytics, StoreTabNavigator storeTabNavigator,
+      NavigationTracker navigationTracker) {
     return loadLocalSubscribedStores(storeRepository).map(stores -> {
       List<Displayable> tmp = new ArrayList<>(stores.size());
       int maxStoresToShow = stores.size();
@@ -257,7 +262,7 @@ public class DisplayablesFactory {
       if (tmp.size() > 0) {
         StoreGridHeaderDisplayable header =
             new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag(), storeContext,
-                storeTabNavigator, aptoideNavigationTracker);
+                storeTabNavigator, navigationTracker);
         if (stores.size() <= maxStoresToShow) {
           header.getModel()
               .setMoreVisible(false);
@@ -270,7 +275,8 @@ public class DisplayablesFactory {
 
   private static Displayable getStores(GetStoreWidgets.WSWidget wsWidget, String storeTheme,
       StoreContext storeContext, WindowManager windowManager, Resources resources, Context context,
-      StoreAnalytics storeAnalytics, StoreTabNavigator storeTabNavigator, AptoideNavigationTracker aptoideNavigationTracker) {
+      StoreAnalytics storeAnalytics, StoreTabNavigator storeTabNavigator,
+      NavigationTracker navigationTracker) {
     Object viewObject = wsWidget.getViewObject();
     ListStores listStores = (ListStores) viewObject;
     if (listStores == null) {
@@ -280,7 +286,7 @@ public class DisplayablesFactory {
         .getList();
     List<Displayable> tmp = new ArrayList<>(stores.size());
     tmp.add(new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag(), storeContext,
-        storeTabNavigator, aptoideNavigationTracker));
+        storeTabNavigator, navigationTracker));
     for (Store store : stores) {
 
       GridStoreDisplayable diplayable = new GridStoreDisplayable(store, "Home", storeAnalytics);
@@ -318,7 +324,7 @@ public class DisplayablesFactory {
   }
 
   private static @NonNull List<Displayable> getAds(GetStoreWidgets.WSWidget wsWidget,
-      MinimalAdMapper adMapper, AptoideNavigationTracker aptoideNavigationTracker) {
+      MinimalAdMapper adMapper, NavigationTracker navigationTracker) {
     GetAdsResponse getAdsResponse = (GetAdsResponse) wsWidget.getViewObject();
     if (getAdsResponse != null
         && getAdsResponse.getAds() != null
@@ -329,7 +335,7 @@ public class DisplayablesFactory {
       for (GetAdsResponse.Ad ad : ads) {
 
         GridAdDisplayable diplayable =
-            new GridAdDisplayable(adMapper.map(ad), wsWidget.getTag(), aptoideNavigationTracker);
+            new GridAdDisplayable(adMapper.map(ad), wsWidget.getTag(), navigationTracker);
         tmp.add(diplayable);
       }
       return tmp;
@@ -339,7 +345,8 @@ public class DisplayablesFactory {
   }
 
   private static List<Displayable> createReviewsGroupDisplayables(GetStoreWidgets.WSWidget wsWidget,
-      WindowManager windowManager, Resources resources, StoreTabNavigator storeTabNavigator, AptoideNavigationTracker aptoideNavigationTracker) {
+      WindowManager windowManager, Resources resources, StoreTabNavigator storeTabNavigator,
+      NavigationTracker navigationTracker) {
     List<Displayable> displayables = new LinkedList<>();
 
     ListFullReviews reviewsList = (ListFullReviews) wsWidget.getViewObject();
@@ -348,7 +355,8 @@ public class DisplayablesFactory {
         && reviewsList.getDataList()
         .getList()
         .size() > 0) {
-      displayables.add(new StoreGridHeaderDisplayable(wsWidget, storeTabNavigator, aptoideNavigationTracker));
+      displayables.add(
+          new StoreGridHeaderDisplayable(wsWidget, storeTabNavigator, navigationTracker));
       displayables.add(createReviewsDisplayables(reviewsList, windowManager, resources));
     }
 
@@ -375,7 +383,8 @@ public class DisplayablesFactory {
   private static Displayable createRecommendedStores(GetStoreWidgets.WSWidget wsWidget,
       String storeTheme, StoreRepository storeRepository, StoreContext storeContext,
       Context context, AptoideAccountManager accountManager, StoreUtilsProxy storeUtilsProxy,
-      WindowManager windowManager, Resources resources, StoreTabNavigator storeTabNavigator, AptoideNavigationTracker aptoideNavigationTracker) {
+      WindowManager windowManager, Resources resources, StoreTabNavigator storeTabNavigator,
+      NavigationTracker navigationTracker) {
     ListStores listStores = (ListStores) wsWidget.getViewObject();
     if (listStores == null) {
       return new EmptyDisplayable();
@@ -385,7 +394,7 @@ public class DisplayablesFactory {
     List<Displayable> displayables = new LinkedList<>();
     displayables.add(
         new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag(), storeContext,
-            storeTabNavigator, aptoideNavigationTracker));
+            storeTabNavigator, navigationTracker));
     for (Store store : stores) {
       if (wsWidget.getData()
           .getLayout() == Layout.LIST) {
@@ -404,13 +413,14 @@ public class DisplayablesFactory {
   }
 
   private static List<Displayable> createCommentsGroup(GetStoreWidgets.WSWidget wsWidget,
-      StoreTabNavigator storeTabNavigator, AptoideNavigationTracker aptoideNavigationTracker) {
+      StoreTabNavigator storeTabNavigator, NavigationTracker navigationTracker) {
     List<Displayable> displayables = new LinkedList<>();
 
     Pair<ListComments, BaseRequestWithStore.StoreCredentials> data =
         (Pair<ListComments, BaseRequestWithStore.StoreCredentials>) wsWidget.getViewObject();
     ListComments comments = data.first;
-    displayables.add(new StoreGridHeaderDisplayable(wsWidget, storeTabNavigator, aptoideNavigationTracker));
+    displayables.add(
+        new StoreGridHeaderDisplayable(wsWidget, storeTabNavigator, navigationTracker));
     if (comments != null
         && comments.getDataList() != null
         && comments.getDataList()

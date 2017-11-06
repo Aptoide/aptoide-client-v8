@@ -2,7 +2,6 @@ package cm.aptoide.pt.account.view.store;
 
 import android.content.res.Resources;
 import android.net.Uri;
-import android.os.Bundle;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.UriToPathResolver;
@@ -52,14 +51,6 @@ public class ManageStorePresenter implements Presenter {
     handleTwitchEditTextFocus();
     handleTwitterEditTextFocus();
     handleYoutubeEditTextFocus();
-  }
-
-  @Override public void saveState(Bundle state) {
-    // does nothing
-  }
-
-  @Override public void restoreState(Bundle state) {
-    // does nothing
   }
 
   private void handleYoutubeEditTextFocus() {

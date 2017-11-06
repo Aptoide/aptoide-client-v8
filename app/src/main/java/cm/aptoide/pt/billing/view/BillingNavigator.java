@@ -1,19 +1,24 @@
 package cm.aptoide.pt.billing.view;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
+import android.support.customtabs.CustomTabsIntent;
 import cm.aptoide.pt.BuildConfig;
-import cm.aptoide.pt.billing.PaymentMethod;
-import cm.aptoide.pt.billing.PaymentMethodMapper;
-import cm.aptoide.pt.billing.Purchase;
-import cm.aptoide.pt.billing.view.boacompra.BoaCompraFragment;
-import cm.aptoide.pt.billing.view.braintree.BraintreeCreditCardFragment;
+import cm.aptoide.pt.billing.networking.PaymentServiceMapper;
+import cm.aptoide.pt.billing.payment.PaymentService;
+import cm.aptoide.pt.billing.purchase.Purchase;
 import cm.aptoide.pt.billing.view.login.PaymentLoginFragment;
-import cm.aptoide.pt.billing.view.mol.MolFragment;
-import cm.aptoide.pt.billing.view.paypal.PayPalFragment;
-import cm.aptoide.pt.view.navigator.ActivityNavigator;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
-import cm.aptoide.pt.view.navigator.Result;
+import cm.aptoide.pt.billing.view.paypal.PayPalAuthorizationFragment;
+import cm.aptoide.pt.navigator.ActivityNavigator;
+import cm.aptoide.pt.navigator.CustomTabsNavigator;
+import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.navigator.Result;
+import com.adyen.core.PaymentRequest;
+import com.adyen.core.models.paymentdetails.CreditCardPaymentDetails;
+import com.adyen.ui.fragments.CreditCardFragmentBuilder;
+import com.jakewharton.rxrelay.PublishRelay;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalFuturePaymentActivity;
 import com.paypal.android.sdk.payments.PayPalPayment;
@@ -28,47 +33,46 @@ public class BillingNavigator {
   private final ActivityNavigator activityNavigator;
   private final FragmentNavigator fragmentNavigator;
   private final String marketName;
+  private final PublishRelay<CreditCardPaymentDetails> detailsRelay;
+  private final CustomTabsNavigator customTabsNavigator;
+  private final int customTabsToolbarColor;
 
   public BillingNavigator(PurchaseBundleMapper bundleMapper, ActivityNavigator activityNavigator,
-      FragmentNavigator fragmentNavigator, String marketName) {
+      FragmentNavigator fragmentNavigator, String marketName,
+      PublishRelay<CreditCardPaymentDetails> detailsRelay, CustomTabsNavigator customTabsNavigator,
+      @ColorInt int customTabsToolbarColor) {
     this.bundleMapper = bundleMapper;
     this.activityNavigator = activityNavigator;
     this.fragmentNavigator = fragmentNavigator;
     this.marketName = marketName;
+    this.detailsRelay = detailsRelay;
+    this.customTabsNavigator = customTabsNavigator;
+    this.customTabsToolbarColor = customTabsToolbarColor;
   }
 
-  public void navigateToPayerAuthenticationForResult(int requestCode) {
+  public void navigateToCustomerAuthenticationForResult(int requestCode) {
     fragmentNavigator.navigateForResult(PaymentLoginFragment.newInstance(), requestCode, true);
   }
 
-  public Observable<Boolean> payerAuthenticationResults(int requestCode) {
+  public Observable<Boolean> customerAuthenticationResults(int requestCode) {
     return fragmentNavigator.results(requestCode)
         .map(result -> result.getResultCode() == Activity.RESULT_OK);
   }
 
-  public void navigateToTransactionAuthorizationView(String sellerId, String productId,
-      String developerPayload, PaymentMethod paymentMethod) {
+  public void navigateToTransactionAuthorizationView(String merchantName, PaymentService service,
+      String sku) {
 
-    final Bundle bundle =
-        getProductBundle(sellerId, productId, developerPayload, paymentMethod.getName());
-    switch (paymentMethod.getId()) {
-      case PaymentMethodMapper.PAYPAL:
-        fragmentNavigator.navigateTo(PayPalFragment.create(bundle), true);
+    final Bundle bundle = getAuthorizationBundle(merchantName, sku, service.getType());
+
+    switch (service.getType()) {
+      case PaymentServiceMapper.PAYPAL:
+        fragmentNavigator.navigateTo(PayPalAuthorizationFragment.create(bundle), true);
         break;
-      case PaymentMethodMapper.MOL_POINTS:
-        fragmentNavigator.navigateTo(MolFragment.create(bundle), true);
+      case PaymentServiceMapper.ADYEN:
+        fragmentNavigator.navigateTo(AdyenAuthorizationFragment.create(bundle), true);
         break;
-      case PaymentMethodMapper.BOA_COMPRA:
-      case PaymentMethodMapper.BOA_COMPRA_GOLD:
-        fragmentNavigator.navigateTo(BoaCompraFragment.create(bundle), true);
-        break;
-      case PaymentMethodMapper.BRAINTREE_CREDIT_CARD:
-        fragmentNavigator.navigateTo(BraintreeCreditCardFragment.create(bundle), true);
-        break;
-      case PaymentMethodMapper.SANDBOX:
       default:
-        throw new IllegalArgumentException("Invalid payment method "
-            + paymentMethod.getId()
+        throw new IllegalArgumentException(service.getType()
             + " does not require authorization. Can not navigate to authorization view.");
     }
   }
@@ -111,18 +115,12 @@ public class BillingNavigator {
         bundleMapper.mapCancellation());
   }
 
-  private Bundle getProductBundle(String sellerId, String productId, String developerPayload,
-      String paymentMethodName) {
-    if (productId != null && sellerId != null) {
-      final Bundle bundle = new Bundle();
-      bundle.putString(PaymentActivity.EXTRA_PRODUCT_ID, productId);
-      bundle.putString(PaymentActivity.EXTRA_APPLICATION_ID, sellerId);
-      bundle.putString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD, developerPayload);
-      bundle.putString(PaymentActivity.EXTRA_PAYMENT_METHOD_NAME, paymentMethodName);
-      return bundle;
-    }
-
-    throw new IllegalArgumentException("Invalid product. Only in-app and paid apps supported");
+  private Bundle getAuthorizationBundle(String merchantName, String sku, String serviceName) {
+    final Bundle bundle = new Bundle();
+    bundle.putString(PaymentActivity.EXTRA_SKU, sku);
+    bundle.putString(PaymentActivity.EXTRA_MERCHANT_NAME, merchantName);
+    bundle.putString(PaymentActivity.EXTRA_SERVICE_NAME, serviceName);
+    return bundle;
   }
 
   private PayPalResult map(Result result) {
@@ -144,6 +142,40 @@ public class BillingNavigator {
       default:
         return new BillingNavigator.PayPalResult(BillingNavigator.PayPalResult.ERROR, null);
     }
+  }
+
+  public void navigateToAdyenCreditCardView(PaymentRequest paymentRequest) {
+    fragmentNavigator.navigateTo(
+        new CreditCardFragmentBuilder().setPaymentMethod(paymentRequest.getPaymentMethod())
+            .setPublicKey(paymentRequest.getPublicKey())
+            .setGenerationtime(paymentRequest.getGenerationTime())
+            .setAmount(paymentRequest.getAmount())
+            .setShopperReference(paymentRequest.getShopperReference())
+            .setCVCFieldStatus(CreditCardFragmentBuilder.CvcFieldStatus.REQUIRED)
+            .setCreditCardInfoListener(details -> detailsRelay.call(details))
+            .build(), false);
+  }
+
+  public Observable<CreditCardPaymentDetails> adyenResults() {
+    return detailsRelay;
+  }
+
+  public void popToPaymentView() {
+    fragmentNavigator.cleanBackStack();
+  }
+
+  public void navigateToUriForResult(String redirectUrl) {
+    customTabsNavigator.navigateToCustomTabs(
+        new CustomTabsIntent.Builder().setToolbarColor(customTabsToolbarColor)
+            .build(), Uri.parse(redirectUrl));
+  }
+
+  public Observable<Uri> uriResults() {
+    return customTabsNavigator.customTabResults();
+  }
+
+  public void popAdyenCreditCardView() {
+    fragmentNavigator.popBackStack();
   }
 
   public static class PayPalResult {

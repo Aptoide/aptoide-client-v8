@@ -1,7 +1,6 @@
 package cm.aptoide.pt.account.view.user;
 
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -46,14 +45,6 @@ public class ManageUserPresenter implements Presenter {
     handleSaveDataClick();
     handleCancelClick();
     onViewCreatedLoadUserData();
-  }
-
-  @Override public void saveState(Bundle state) {
-    // does nothing
-  }
-
-  @Override public void restoreState(Bundle state) {
-    // does nothing
   }
 
   private void onViewCreatedLoadUserData() {

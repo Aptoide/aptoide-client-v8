@@ -13,8 +13,6 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.AutoUpdate;
-import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -22,8 +20,12 @@ import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.download.DownloadFactory;
+import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstallerFactory;
+import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.navigator.TabNavigatorActivity;
 import cm.aptoide.pt.notification.ContentPuller;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -36,16 +38,11 @@ import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
-import cm.aptoide.pt.view.navigator.TabNavigatorActivity;
 import com.jakewharton.rxrelay.PublishRelay;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 
-/**
- * Created by neuro on 06-05-2016.
- */
 public class MainActivity extends TabNavigatorActivity
     implements MainView, DeepLinkManager.DeepLinkMessages {
 
@@ -60,22 +57,18 @@ public class MainActivity extends TabNavigatorActivity
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(LAYOUT);
-    installManager =
-        ((AptoideApplication) getApplicationContext()).getInstallManager(InstallerFactory.DEFAULT);
-    final AptoideAccountManager accountManager =
-        ((AptoideApplication) getApplicationContext()).getAccountManager();
-    final String marketName = ((AptoideApplication) getApplicationContext()).getMarketName();
+    final AptoideApplication application = (AptoideApplication) getApplicationContext();
+    installManager = application.getInstallManager(InstallerFactory.DEFAULT);
+    final AptoideAccountManager accountManager = application.getAccountManager();
+    final String marketName = application.getMarketName();
     final AutoUpdate autoUpdate =
         new AutoUpdate(this, new DownloadFactory(marketName), new PermissionManager(),
-            installManager, getResources(),
-            ((AptoideApplication) getApplicationContext()).getAutoUpdateUrl(), R.mipmap.ic_launcher,
+            installManager, getResources(), application.getAutoUpdateUrl(), R.mipmap.ic_launcher,
             false, marketName);
-    final OkHttpClient httpClient =
-        ((AptoideApplication) getApplicationContext()).getDefaultClient();
+    final OkHttpClient httpClient = application.getDefaultClient();
 
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
-    final SharedPreferences sharedPreferences =
-        ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences();
+    final SharedPreferences sharedPreferences = application.getDefaultSharedPreferences();
     final SharedPreferences securePreferences =
         SecurePreferencesImplementation.getInstance(getApplicationContext(), sharedPreferences);
 
@@ -84,29 +77,25 @@ public class MainActivity extends TabNavigatorActivity
 
     final FragmentNavigator fragmentNavigator = getFragmentNavigator();
 
-    final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(accountManager,
-        ((AptoideApplication) getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7(),
-        new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-            ((AptoideApplication) getApplicationContext().getApplicationContext()).getDatabase(),
-            Store.class)), AccessorFactory.getAccessorFor(
-        ((AptoideApplication) getApplicationContext().getApplicationContext()).getDatabase(),
-        Store.class), httpClient, converterFactory,
-        ((AptoideApplication) getApplicationContext()).getTokenInvalidator(), sharedPreferences);
+    final StoreUtilsProxy storeUtilsProxy =
+        new StoreUtilsProxy(accountManager, application.getAccountSettingsBodyInterceptorPoolV7(),
+            new StoreCredentialsProviderImpl(
+                AccessorFactory.getAccessorFor(application.getDatabase(), Store.class)),
+            AccessorFactory.getAccessorFor(application.getDatabase(), Store.class), httpClient,
+            converterFactory, application.getTokenInvalidator(), sharedPreferences);
 
-    final String defaultTheme =
-        ((AptoideApplication) getApplicationContext().getApplicationContext()).getDefaultTheme();
+    final String defaultTheme = application.getDefaultThemeName();
     final DeepLinkManager deepLinkManager =
         new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator, this, this,
-            sharedPreferences, AccessorFactory.getAccessorFor(
-            ((AptoideApplication) getApplicationContext().getApplicationContext()).getDatabase(),
-            Store.class), defaultTheme,
-            ((AptoideApplication) getApplicationContext()).getAptoideNavigationTracker(),
-            ((AptoideApplication) getApplicationContext()).getPageViewsAnalytics());
+            sharedPreferences,
+            AccessorFactory.getAccessorFor(application.getDatabase(), Store.class), defaultTheme,
+            application.getDefaultStoreName(), application.getNavigationTracker(),
+            application.getPageViewsAnalytics());
 
     final ApkFy apkFy = new ApkFy(this, getIntent(), securePreferences);
 
     final NotificationSyncScheduler notificationSyncScheduler =
-        ((AptoideApplication) getApplicationContext()).getNotificationSyncScheduler();
+        application.getNotificationSyncScheduler();
 
     InstallCompletedNotifier installCompletedNotifier =
         new InstallCompletedNotifier(PublishRelay.create(), installManager,
@@ -114,13 +103,12 @@ public class MainActivity extends TabNavigatorActivity
 
     snackBarLayout = findViewById(R.id.snackbar_layout);
     installErrorsDismissEvent = PublishRelay.create();
-    attachPresenter(new MainPresenter(this, installManager,
-            ((AptoideApplication) getApplicationContext()).getRootInstallationRetryHandler(),
+    attachPresenter(
+        new MainPresenter(this, installManager, application.getRootInstallationRetryHandler(),
             CrashReport.getInstance(), apkFy, autoUpdate, new ContentPuller(this),
-            notificationSyncScheduler, installCompletedNotifier, sharedPreferences, securePreferences,
-            fragmentNavigator, deepLinkManager,
-            ((AptoideApplication) getApplicationContext()).getDefaultStore(), defaultTheme),
-        savedInstanceState);
+            notificationSyncScheduler, installCompletedNotifier, sharedPreferences,
+            securePreferences, fragmentNavigator, deepLinkManager,
+            application.getDefaultStoreName(), defaultTheme, savedInstanceState == null));
   }
 
   @Override public void showInstallationError(int numberOfErrors) {

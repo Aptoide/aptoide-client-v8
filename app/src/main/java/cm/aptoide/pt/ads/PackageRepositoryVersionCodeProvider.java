@@ -1,6 +1,6 @@
 package cm.aptoide.pt.ads;
 
-import cm.aptoide.pt.PackageRepository;
+import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import rx.Single;
 

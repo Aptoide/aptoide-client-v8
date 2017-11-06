@@ -15,20 +15,11 @@ import cm.aptoide.pt.crashreports.CrashReport;
 
 public class InAppBillingService extends Service {
 
-  private AptoideInAppBillingService.Stub billingBinder;
-
-  @Override public void onCreate() {
-    super.onCreate();
-    billingBinder = new ExternalBillingBinder(this,
+  @Override public IBinder onBind(Intent intent) {
+    return new ExternalBillingBinder(this,
         ((AptoideApplication) getApplicationContext()).getInAppBillingSerializer(),
         ((AptoideApplication) getApplicationContext()).getPaymentThrowableCodeMapper(),
-        ((AptoideApplication) getApplicationContext()).getBilling(), CrashReport.getInstance(),
-        ((AptoideApplication) getApplicationContext()).getBillingIdResolver(),
-        BuildConfig.IN_BILLING_SUPPORTED_API_VERSION,
-        ((AptoideApplication) getApplicationContext()).getBillingAnalytics());
-  }
-
-  @Override public IBinder onBind(Intent intent) {
-    return billingBinder;
+        CrashReport.getInstance(), BuildConfig.IN_BILLING_SUPPORTED_API_VERSION,
+        ((AptoideApplication) getApplicationContext()).getBillingAnalytics(), getPackageManager());
   }
 }

@@ -12,17 +12,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.navigator.ActivityNavigator;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.navigator.FragmentResultNavigator;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.util.ScreenTrackingUtils;
 import cm.aptoide.pt.view.MainActivity;
 import cm.aptoide.pt.view.leak.LeakFragment;
-import cm.aptoide.pt.view.navigator.ActivityNavigator;
-import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
-import cm.aptoide.pt.view.navigator.FragmentResultNavigator;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -32,12 +32,10 @@ public abstract class FragmentView extends LeakFragment implements View {
 
   private static final String TAG = FragmentView.class.getName();
 
-  private Presenter presenter;
   private boolean startActivityForResultCalled;
-  private String defaultStore;
-  private String defaultTheme;
-  private AptoideNavigationTracker navigationTracker;
+  private NavigationTracker navigationTracker;
   private ActivityResultNavigator activityResultNavigator;
+  private String defaultThemeName;
 
   public FragmentNavigator getFragmentNavigator() {
     return activityResultNavigator.getFragmentNavigator();
@@ -66,12 +64,12 @@ public abstract class FragmentView extends LeakFragment implements View {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    defaultStore = ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore();
-    defaultTheme = ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
+    defaultThemeName =
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultThemeName();
     ScreenTrackingUtils.getInstance()
         .incrementNumberOfScreens();
     navigationTracker =
-        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker();
+        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
   }
 
   @Override public void onDestroy() {
@@ -97,17 +95,6 @@ public abstract class FragmentView extends LeakFragment implements View {
   public void startActivityForResult(Intent intent, int requestCode, @Nullable Bundle options) {
     startActivityForResultCalled = true;
     super.startActivityForResult(intent, requestCode, options);
-  }
-
-  @Override public void onSaveInstanceState(Bundle outState) {
-    if (presenter != null) {
-      presenter.saveState(outState);
-    } else {
-      Logger.w(this.getClass()
-          .getName(), "No presenter was attached.");
-    }
-
-    super.onSaveInstanceState(outState);
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -144,12 +131,8 @@ public abstract class FragmentView extends LeakFragment implements View {
     return lifecycle().flatMap(event -> convertToEvent(event));
   }
 
-  @Override public void attachPresenter(Presenter presenter, Bundle savedInstanceState) {
-    if (savedInstanceState != null) {
-      presenter.restoreState(savedInstanceState);
-    }
-    this.presenter = presenter;
-    this.presenter.present();
+  @Override public void attachPresenter(Presenter presenter) {
+    presenter.present();
   }
 
   protected void hideKeyboard() {
@@ -190,11 +173,7 @@ public abstract class FragmentView extends LeakFragment implements View {
     return startActivityForResultCalled;
   }
 
-  protected String getDefaultStore() {
-    return defaultStore;
-  }
-
   protected String getDefaultTheme() {
-    return defaultTheme;
+    return defaultThemeName;
   }
 }

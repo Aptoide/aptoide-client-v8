@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.view.ThemeUtils;
-import cm.aptoide.pt.view.permission.PermissionServiceFragment;
+import cm.aptoide.pt.permission.PermissionServiceFragment;
 
 /**
  * Created by neuro on 14-04-2016.
@@ -51,10 +51,11 @@ public abstract class UIComponentFragment extends PermissionServiceFragment impl
   @CallSuper @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    String storeTheme =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
-    ThemeUtils.setStoreTheme(getActivity(), storeTheme);
-    ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(storeTheme));
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    ThemeUtils.setStoreTheme(getActivity(), application.getDefaultThemeName());
+    ThemeUtils.setStatusBarThemeColor(getActivity(),
+        StoreTheme.get(application.getDefaultThemeName()));
     super.onCreateView(inflater, container, savedInstanceState);
     return inflater.inflate(getContentViewId(), container, false);
   }

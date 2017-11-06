@@ -46,7 +46,7 @@ public abstract class WebService<T, U> {
   private final String baseHost;
   private final OkHttpClient httpClient;
 
-  private Retrofit retrofit;
+  protected Retrofit retrofit;
 
   protected WebService(Class<T> clazz, OkHttpClient httpClient, Converter.Factory converterFactory,
       String baseHost) {
@@ -117,7 +117,8 @@ public abstract class WebService<T, U> {
     execute(successRequestListener, false);
   }
 
-  @Deprecated public void execute(SuccessRequestListener<U> successRequestListener, boolean bypassCache) {
+  @Deprecated
+  public void execute(SuccessRequestListener<U> successRequestListener, boolean bypassCache) {
     execute(successRequestListener, defaultErrorRequestListener(), bypassCache);
   }
 

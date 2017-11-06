@@ -690,6 +690,7 @@
   <string name="storetab_short_followings">Following\n%s</string>
   <string name="storetab_short_followers">Followers\n%s</string>
   <string name="storetab_short_follow_error">An error occurred while following store</string>
+  <string name="list_store_apps_fragment_title">Store Apps</string>
   <string name="edit_store_youtube_helper_text">Enter Your user or Channel</string>
 </resources>
 

@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
-import cm.aptoide.pt.FirstLaunchAnalytics;
 import cm.aptoide.pt.analytics.events.FabricEvent;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
 import cm.aptoide.pt.analytics.events.FlurryEvent;
