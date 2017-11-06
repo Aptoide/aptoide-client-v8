@@ -90,11 +90,11 @@ public class SearchManager {
 
   public Observable<List<String>> getTrendingApps(){
     List<String> test = new ArrayList<>();
-    test.add("Option1");
-    test.add("Option2");
-    test.add("Option3");
-    test.add("Option4");
-    test.add("Option5");
+    test.add("Facebook");
+    test.add("Twitter");
+    test.add("Google");
+    test.add("Hill Climb Racing");
+    test.add("Aptoide");
     return Observable.just(test);
 
   }

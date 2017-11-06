@@ -1,8 +1,10 @@
 package cm.aptoide.pt.search.view;
 
+import android.util.Pair;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
+import com.jakewharton.rxrelay.PublishRelay;
 import java.util.List;
 import rx.Observable;
 
@@ -27,7 +29,13 @@ public interface SearchView extends View {
 
   Observable<Boolean> getSearchWidgetFocusState();
 
+  PublishRelay<String> handleSearchOnClick();
+
+  Observable<CharSequence> onQueryTextChanged();
+
   void showTrendingMenu(List<String> apps);
+
+  void hideTrendingMenu(String query, boolean keyboard);
 
   void showVoiceSearch();
 

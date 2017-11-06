@@ -65,6 +65,9 @@ public class SearchResultPresenter implements Presenter {
     handleFollowedStoresListReachedBottom();
     handleTitleBarClick();
     restoreSelectedTab();
+    handleClickOnTrendingList();
+    handleSearchFocusGone();
+    handleQueryTextChanged();
   }
 
   private void restoreSelectedTab() {
@@ -100,13 +103,70 @@ public class SearchResultPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.RESUME))
         .observeOn(viewScheduler)
         .flatMap(__ -> view.getSearchWidgetFocusState())
-        .filter(status -> status==true)
+        .filter(status -> status == true)
         .flatMap(__ -> searchManager.getTrendingApps())
         .observeOn(viewScheduler)
         .doOnNext(trending -> view.showTrendingMenu(trending))
         .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE))
         .subscribe(__ -> {
         }, crashReport::log);
+  }
+
+  private void handleClickOnTrendingList() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.handleSearchOnClick())
+        .flatMap(click -> Observable.just(view.getViewModel())
+            .filter(viewModel -> viewModel.getAllStoresOffset() == 0
+                && viewModel.getFollowedStoresOffset() == 0)
+            .observeOn(viewScheduler)
+            .doOnNext(viewModel -> {
+              view.showLoading();
+              view.hideTrendingMenu(click, true);
+            })
+            .doOnNext(viewModel -> analytics.search(click))
+            .flatMap(viewModel -> loadData(click, viewModel.getStoreName(),
+                viewModel.isOnlyTrustedApps(), 0).onErrorResumeNext(err -> {
+              crashReport.log(err);
+              return Observable.just(null);
+            })
+                .observeOn(viewScheduler)
+                .doOnNext(__2 -> view.hideLoading())
+                .doOnNext(data -> {
+                  if (getItemCount(data) == 0 && data != null) {
+                    view.showNoResultsView();
+                    analytics.searchNoResults(viewModel.getCurrentQuery());
+                  } else {
+                    view.showResultsView();
+                    if (viewModel.isAllStoresSelected()) {
+                      view.showAllStoresResult();
+                    } else {
+                      view.showFollowedStoresResult();
+                    }
+                  }
+                })))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, crashReport::log);
+  }
+
+  private void handleSearchFocusGone(){
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .observeOn(viewScheduler)
+        .flatMap(__ -> view.getSearchWidgetFocusState())
+        .filter(state -> state.equals(false))
+        .doOnNext(__ -> view.hideTrendingMenu(null, true))
+        .subscribe(__ -> {},crashReport::log);
+  }
+
+  private void handleQueryTextChanged(){
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .observeOn(viewScheduler)
+        .filter(__ -> !view.onQueryTextChanged().equals(""))
+        .doOnNext(__ -> view.hideTrendingMenu(null, false))
+        .subscribe(__ -> {}, crashReport::log);
   }
 
   private void stopLoadingMoreOnDestroy() {

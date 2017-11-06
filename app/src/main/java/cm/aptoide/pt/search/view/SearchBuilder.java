@@ -43,21 +43,19 @@ public class SearchBuilder {
   public void attachSearch(@NonNull Context context, @NonNull MenuItem menuItem) {
     final Context applicationContext = context.getApplicationContext();
     final SearchView searchView = (SearchView) menuItem.getActionView();
-    ComponentName componentName = new ComponentName(applicationContext, SearchActivity.class);
+    final ComponentName componentName = new ComponentName(applicationContext, SearchActivity.class);
     searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName));
 
-    final UnableToSearchAction unableToSearchAction =
-        () -> ShowMessage.asToast(applicationContext, R.string.search_minimum_chars);
+    final UnableToSearchAction unableToSearchAction = new WebSocketUnableToSearchAction(applicationContext);
 
-    final QueryResultRepository queryResultRepository = (int pos) -> {
-      Cursor item = (Cursor) searchView.getSuggestionsAdapter()
-          .getItem(pos);
-      return item.getString(1);
-    };
+    final WebSocketQueryResultRepository queryResultRepository = new WebSocketQueryResultRepository(searchView);
 
+    final TrendingQueryResultRepository trendingQueryResultRepository = new TrendingQueryResultRepository(queryResultRepository);
+
+    final SearchAppsWebSocket searchAppsWebSocket = new SearchAppsWebSocket();
     final SearchActionsHandler actionsHandler =
-        new SearchActionsHandler(new SearchAppsWebSocket(), menuItem, searchNavigator,
-            unableToSearchAction, queryResultRepository, lastQuery);
+        new SearchActionsHandler(searchAppsWebSocket, menuItem, searchNavigator,
+            unableToSearchAction, queryResultRepository, trendingQueryResultRepository, lastQuery);
 
     searchView.setOnQueryTextListener(actionsHandler);
     searchView.setOnSuggestionListener(actionsHandler);

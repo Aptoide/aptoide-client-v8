@@ -83,10 +83,6 @@ public abstract class WebSocketManager extends WebSocketListener implements WebS
     }
   }
 
-  @Override public void onMessage(WebSocket webSocket, ByteString bytes) {
-    super.onMessage(webSocket, bytes);
-  }
-
   @Override public void onClosing(WebSocket webSocket, int code, String reason) {
     Log.d(TAG, reason);
     webSocket.close(1000, null);
@@ -159,6 +155,8 @@ public abstract class WebSocketManager extends WebSocketListener implements WebS
 
     return webSocket;
   }
-
+  public WebSocket connect(){
+    return connect(getPort());
+  }
   protected abstract String getPort();
 }

@@ -1,5 +1,6 @@
 package cm.aptoide.pt.search.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
@@ -24,6 +25,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -50,7 +52,6 @@ import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
-import cm.aptoide.pt.search.view.item.TrendingListViewholder;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.view.BackButtonFragment;
@@ -58,15 +59,13 @@ import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
 import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
-import com.jakewharton.rxbinding.support.v7.widget.RxActionMenuView;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
-import com.jakewharton.rxbinding.view.MenuItemActionViewEvent;
 import com.jakewharton.rxbinding.view.RxMenuItem;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
+import com.twitter.sdk.android.core.models.Search;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
@@ -110,6 +109,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   private PublishRelay<SearchAppResult> onItemViewClickRelay;
   private PublishRelay<Pair<SearchAppResult, View>> onOpenPopupMenuClickRelay;
   private PublishRelay<SearchAdResult> onAdClickRelay;
+  private PublishRelay<String> trendingItemClick;
   private SearchManager searchManager;
   private Scheduler mainThreadScheduler;
   private SearchNavigator searchNavigator;
@@ -268,9 +268,27 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
       return RxView.focusChanges(searchMenuItem.getActionView());
   }
 
+  @Override public Observable<CharSequence> onQueryTextChanged(){
+    return RxSearchView.queryTextChanges(
+        (android.support.v7.widget.SearchView) searchMenuItem.getActionView());
+  }
+
   @Override public void showTrendingMenu(List<String> apps) {
     trendingListAdapter.updateEntries(apps);
     trendingList.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void hideTrendingMenu(String query, boolean keyboard){
+    searchMenuItem.collapseActionView();
+    if(keyboard){
+      InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+      View view = getActivity().getCurrentFocus();
+      if(view==null)
+        view = new View(getActivity());
+      imm.hideSoftInputFromWindow(view.getWindowToken(),0);
+    }
+    trendingList.setVisibility(View.GONE);
+    searchMenuItem.setTitle(query);
   }
 
   @Override public void showVoiceSearch() {
@@ -514,6 +532,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     onItemViewClickRelay = PublishRelay.create();
     onOpenPopupMenuClickRelay = PublishRelay.create();
     onAdClickRelay = PublishRelay.create();
+    trendingItemClick = PublishRelay.create();
 
     final List<SearchAppResult> searchResultFollowedStores = new ArrayList<>();
     final List<SearchAdResult> searchResultAdsFollowedStores = new ArrayList<>();
@@ -532,14 +551,12 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
             searchResultAllStores, searchResultAdsAllStores, crashReport);
     setHasOptionsMenu(true);
 
-    TrendingListViewholder.TrendingClickListener listener = (view, position) -> handleSearchOnClick(position);
-
-    this.trendingListAdapter = new TrendingListAdapter(listener);
+    this.trendingListAdapter = new TrendingListAdapter(trendingItemClick);
 
   }
 
-  public Observable<String> handleSearchOnClick(int position){
-    return Observable.just(trendingListAdapter.getEntry(position));
+  @Override public PublishRelay<String> handleSearchOnClick(){
+    return trendingItemClick;
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

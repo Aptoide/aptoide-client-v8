@@ -1,11 +1,13 @@
 package cm.aptoide.pt.search.view;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.search.view.item.TrendingListViewholder;
+import com.jakewharton.rxrelay.PublishRelay;
 import java.util.List;
 
 /**
@@ -14,10 +16,11 @@ import java.util.List;
 
 public class TrendingListAdapter extends RecyclerView.Adapter<TrendingListViewholder> {
 
-  private TrendingListViewholder.TrendingClickListener clickListener;
+  private PublishRelay<String> clickListener;
   private List<String> entries;
 
-  public TrendingListAdapter(TrendingListViewholder.TrendingClickListener listener) {
+  public TrendingListAdapter(PublishRelay<String> listener) {
+    this.clickListener=listener;
   }
 
   @Override public TrendingListViewholder onCreateViewHolder(ViewGroup parent, int viewType) {
