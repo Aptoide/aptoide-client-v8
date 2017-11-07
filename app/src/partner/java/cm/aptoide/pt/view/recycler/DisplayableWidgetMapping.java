@@ -51,6 +51,10 @@ import cm.aptoide.pt.download.view.completed.CompletedDownloadDisplayable;
 import cm.aptoide.pt.download.view.completed.CompletedDownloadWidget;
 import cm.aptoide.pt.download.view.scheduled.ScheduledDownloadDisplayable;
 import cm.aptoide.pt.download.view.scheduled.ScheduledDownloadWidget;
+import cm.aptoide.pt.firstinstall.displayable.FirstInstallAdDisplayable;
+import cm.aptoide.pt.firstinstall.displayable.FirstInstallAppDisplayable;
+import cm.aptoide.pt.firstinstall.widget.FirstInstallAdWidget;
+import cm.aptoide.pt.firstinstall.widget.FirstInstallAppWidget;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.reviews.ReviewsLanguageFilterDisplayable;
 import cm.aptoide.pt.reviews.ReviewsLanguageFilterWidget;
@@ -306,6 +310,12 @@ public class DisplayableWidgetMapping {
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping((LoginWidget.class), LoginDisplayable.class));
+
+    displayableWidgetMappings.add(new DisplayableWidgetMapping((FirstInstallAppWidget.class),
+        FirstInstallAppDisplayable.class));
+
+    displayableWidgetMappings.add(new DisplayableWidgetMapping((FirstInstallAdWidget.class),
+        FirstInstallAdDisplayable.class));
 
     return displayableWidgetMappings;
   }

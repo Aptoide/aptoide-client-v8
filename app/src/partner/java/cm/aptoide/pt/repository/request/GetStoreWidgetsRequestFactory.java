@@ -8,18 +8,18 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.store.GetUserRequest;
-import cm.aptoide.pt.preferences.AdultContent;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
 /**
- * Created by trinkes on 27/02/2017.
+ * Created by neuro on 03-01-2017.
  */
+class GetStoreWidgetsRequestFactory {
 
-public class GetUserRequestFactory {
-
+  private final StoreCredentialsProvider storeCredentialsProvider;
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
@@ -27,20 +27,20 @@ public class GetUserRequestFactory {
   private final SharedPreferences sharedPreferences;
   private final Resources resources;
   private final WindowManager windowManager;
-  private final StoreCredentialsProvider storeCredentialsProvider;
   private final String clientUniqueId;
   private final String partnerId;
-  private final AdultContent adultContent;
+  private final boolean accountMature;
   private final String filters;
   private final ConnectivityManager systemService;
   private final AdsApplicationVersionCodeProvider versionCodeProvider;
 
-  public GetUserRequestFactory(BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+  public GetStoreWidgetsRequestFactory(StoreCredentialsProvider storeCredentialsProvider,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
-      StoreCredentialsProvider storeCredentialsProvider, String clientUniqueId, String partnerId,
-      AdultContent adultContent, String filters, ConnectivityManager systemService,
-      AdsApplicationVersionCodeProvider versionCodeProvider) {
+      String clientUniqueId, String partnerId, boolean accountMature, String filters,
+      ConnectivityManager systemService, AdsApplicationVersionCodeProvider versionCodeProvider) {
+    this.storeCredentialsProvider = storeCredentialsProvider;
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
@@ -48,26 +48,26 @@ public class GetUserRequestFactory {
     this.sharedPreferences = sharedPreferences;
     this.resources = resources;
     this.windowManager = windowManager;
-    this.storeCredentialsProvider = storeCredentialsProvider;
     this.clientUniqueId = clientUniqueId;
     this.partnerId = partnerId;
-    this.adultContent = adultContent;
+    this.accountMature = accountMature;
     this.filters = filters;
     this.systemService = systemService;
     this.versionCodeProvider = versionCodeProvider;
   }
 
-  public GetUserRequest newGetUser(String url, boolean googlePlayServicesAvailable) {
+  public GetStoreWidgetsRequest newStoreWidgets(String url, boolean googlePlayServicesAvailable) {
+    return GetStoreWidgetsRequest.ofAction(url, storeCredentialsProvider.fromUrl(url),
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
+        resources, windowManager, clientUniqueId, googlePlayServicesAvailable, partnerId,
+        accountMature, filters, systemService, versionCodeProvider);
+  }
 
-    final Boolean isAdultContentEnabled = adultContent.enabled()
-        .first()
-        .toSingle()
-        .toBlocking()
-        .value();
-
-    return GetUserRequest.of(url, storeCredentialsProvider.fromUrl(url), bodyInterceptor,
-        httpClient, converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager,
-        clientUniqueId, googlePlayServicesAvailable, partnerId, isAdultContentEnabled, filters,
-        systemService, versionCodeProvider);
+  public GetStoreWidgetsRequest newStoreWidgets(String url, boolean googlePlayServicesAvailable,
+      String storeName, StoreContext storeContext) {
+    return GetStoreWidgetsRequest.ofAction(url, storeCredentialsProvider.fromUrl(url),
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
+        resources, windowManager, clientUniqueId, googlePlayServicesAvailable, partnerId,
+        accountMature, filters, systemService, versionCodeProvider, storeName, storeContext);
   }
 }

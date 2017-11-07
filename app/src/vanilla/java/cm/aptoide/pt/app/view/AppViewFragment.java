@@ -81,6 +81,7 @@ import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.GetRecommendedRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.AppAction;
@@ -94,6 +95,7 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.repository.request.RequestFactory;
 import cm.aptoide.pt.search.ReferrerUtils;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
@@ -335,10 +337,11 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
     super.onCreate(savedInstanceState);
 
-    handleSavedInstance(savedInstanceState);
-
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
+
+    handleSavedInstance(savedInstanceState);
+
     this.appViewModel.setDefaultTheme(application.getDefaultThemeName());
     this.appViewModel.setMarketName(application.getMarketName());
 
@@ -407,6 +410,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             analytics);
     notLoggedInShareAnalytics = application.getNotLoggedInShareAnalytics();
     navigationTracker = application.getNavigationTracker();
+
     setHasOptionsMenu(true);
   }
 
