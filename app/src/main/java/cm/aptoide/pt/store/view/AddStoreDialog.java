@@ -38,7 +38,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.FragmentResultNavigator;
 import cm.aptoide.pt.search.view.StoreSearchActivity;
-import cm.aptoide.pt.search.suggestionsprovider.SearchWebSocket;
+import cm.aptoide.pt.search.suggestionsprovider.websocket.SearchWebSocket;
 import cm.aptoide.pt.search.suggestionsprovider.StoreSuggestions;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;

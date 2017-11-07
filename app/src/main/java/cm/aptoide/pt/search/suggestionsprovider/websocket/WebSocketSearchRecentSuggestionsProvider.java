@@ -1,4 +1,4 @@
-package cm.aptoide.pt.search.suggestionsprovider;
+package cm.aptoide.pt.search.suggestionsprovider.websocket;
 
 import android.content.SearchRecentSuggestionsProvider;
 import android.content.res.Resources;
@@ -14,11 +14,11 @@ import java.util.concurrent.TimeUnit;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-abstract class WebSocketSearchRecentSuggestionsProvider extends SearchRecentSuggestionsProvider {
+public abstract class WebSocketSearchRecentSuggestionsProvider extends SearchRecentSuggestionsProvider {
 
   private final CrashReport crashReport;
 
-  WebSocketSearchRecentSuggestionsProvider(CrashReport crashReport) {
+  public WebSocketSearchRecentSuggestionsProvider(CrashReport crashReport) {
     this.crashReport = crashReport;
   }
 
@@ -74,11 +74,11 @@ abstract class WebSocketSearchRecentSuggestionsProvider extends SearchRecentSugg
     return null;
   }
 
-  abstract BlockingQueue<MatrixCursor> getBlockingQueue();
+  public abstract BlockingQueue<MatrixCursor> getBlockingQueue();
 
-  abstract String getSearchProvider(Resources resources);
+  public abstract String getSearchProvider(Resources resources);
 
-  abstract SearchWebSocket getSearchSocket();
+  public abstract SearchWebSocket getSearchSocket();
 
   private String buildJson(String query) {
     JSONObject jsonObject = new JSONObject();

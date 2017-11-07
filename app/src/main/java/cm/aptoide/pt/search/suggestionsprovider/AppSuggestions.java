@@ -9,6 +9,9 @@ import android.content.res.Resources;
 import android.database.MatrixCursor;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.search.suggestionsprovider.websocket.SearchWebSocket;
+import cm.aptoide.pt.search.suggestionsprovider.websocket.SearchWebSocketProvider;
+import cm.aptoide.pt.search.suggestionsprovider.websocket.WebSocketSearchRecentSuggestionsProvider;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -23,7 +26,7 @@ public class AppSuggestions extends WebSocketSearchRecentSuggestionsProvider {
     searchWebSocketProvider = new SearchWebSocketProvider();
   }
 
-  @Override protected BlockingQueue<MatrixCursor> getBlockingQueue() {
+  @Override public BlockingQueue<MatrixCursor> getBlockingQueue() {
     return blockingQueue;
   }
 

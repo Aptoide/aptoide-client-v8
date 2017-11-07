@@ -1,4 +1,4 @@
-package cm.aptoide.pt.search.suggestionsprovider;
+package cm.aptoide.pt.search.suggestionsprovider.websocket;
 
 import android.app.SearchManager;
 import android.database.MatrixCursor;
