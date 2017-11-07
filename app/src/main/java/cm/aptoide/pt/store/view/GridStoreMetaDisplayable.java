@@ -161,21 +161,26 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
   }
 
   public GridStoreMetaWidget.HomeMeta.Badge getBadge() {
-    switch (getPojo().getData()
-        .getStore()
-        .getBadge()
-        .getName()) {
-      case BRONZE:
-        return GridStoreMetaWidget.HomeMeta.Badge.BRONZE;
-      case SILVER:
-        return GridStoreMetaWidget.HomeMeta.Badge.SILVER;
-      case GOLD:
-        return GridStoreMetaWidget.HomeMeta.Badge.GOLD;
-      case PLATINUM:
-        return GridStoreMetaWidget.HomeMeta.Badge.PLATINUM;
-      case NONE:
-      default:
-        return GridStoreMetaWidget.HomeMeta.Badge.NONE;
+    if (hasStore()) {
+      switch (getPojo().getData()
+          .getStore()
+          .getBadge()
+          .getName()) {
+        case BRONZE:
+          return GridStoreMetaWidget.HomeMeta.Badge.BRONZE;
+        case SILVER:
+          return GridStoreMetaWidget.HomeMeta.Badge.SILVER;
+        case GOLD:
+          return GridStoreMetaWidget.HomeMeta.Badge.GOLD;
+        case PLATINUM:
+          return GridStoreMetaWidget.HomeMeta.Badge.PLATINUM;
+        case NONE:
+          return GridStoreMetaWidget.HomeMeta.Badge.TIN;
+        default:
+          return GridStoreMetaWidget.HomeMeta.Badge.NONE;
+      }
+    } else {
+      return GridStoreMetaWidget.HomeMeta.Badge.NONE;
     }
   }
 
