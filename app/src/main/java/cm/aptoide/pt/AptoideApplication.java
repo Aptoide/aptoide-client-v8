@@ -1271,8 +1271,8 @@ public abstract class AptoideApplication extends Application {
           new TimelineRepositoryFactory(new HashMap<>(), getAccountSettingsBodyInterceptorPoolV7(),
               getDefaultClient(), getDefaultSharedPreferences(), getTokenInvalidator(),
               new LinksHandlerFactory(this), getPackageRepository(),
-              WebService.getDefaultConverter(),
-              new TimelineResponseCardMapper(accountManager, getMarketName()),
+              WebService.getDefaultConverter(), new TimelineResponseCardMapper(accountManager,
+              getInstallManager(InstallerFactory.ROLLBACK), getMarketName()),
               RepositoryFactory.getUpdateRepository(context,
                   ((AptoideApplication) context.getApplicationContext()).getDefaultSharedPreferences()));
     }
