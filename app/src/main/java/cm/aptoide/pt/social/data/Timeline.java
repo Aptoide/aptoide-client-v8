@@ -1,10 +1,10 @@
 package cm.aptoide.pt.social.data;
 
 import cm.aptoide.pt.BuildConfig;
-import cm.aptoide.pt.install.Install;
-import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.download.DownloadFactory;
+import cm.aptoide.pt.install.Install;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.social.TimelineUserProvider;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
@@ -155,9 +155,16 @@ public class Timeline {
         });
   }
 
+  public Completable setPostRead(List<Post> posts, CardType postType) {
+    return Observable.from(posts)
+        .flatMapCompletable(
+            post -> timelineAnalytics.setPostRead(post.getCardId(), postType.name()))
+        .toCompletable();
+  }
+
   public Completable setPostRead(String markAsReadUrl, String cardId, CardType cardType) {
     if (markAsReadUrl != null && !markAsReadUrl.isEmpty()) {
-      return service.setPostRead(markAsReadUrl, cardId, cardType.name());
+      return timelineAnalytics.setPostRead(cardId, cardType.name());
     }
     return Completable.complete();
   }

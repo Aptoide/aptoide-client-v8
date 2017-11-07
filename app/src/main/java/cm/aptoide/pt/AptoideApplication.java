@@ -84,6 +84,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
+import cm.aptoide.pt.dataprovider.ws.v7.PostReadRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
@@ -139,6 +140,7 @@ import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootValueSaver;
 import cm.aptoide.pt.social.TimelineRepositoryFactory;
+import cm.aptoide.pt.social.data.ReadPostsPersistence;
 import cm.aptoide.pt.social.data.TimelinePostsRepository;
 import cm.aptoide.pt.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.spotandshare.AccountGroupNameProvider;
@@ -280,6 +282,7 @@ public abstract class AptoideApplication extends Application {
   private Adyen adyen;
   private PurchaseFactory purchaseFactory;
   private AppCenter appCenter;
+  private ReadPostsPersistence readPostsPersistence;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -410,6 +413,10 @@ public abstract class AptoideApplication extends Application {
         .map(account -> account.isLoggedIn())
         .distinctUntilChanged()
         .subscribe(isLoggedIn -> aptoideApplicationAnalytics.updateDimension(isLoggedIn));
+
+    dispatchPostReadEventInterval().subscribe(() -> {
+    }, throwable -> CrashReport.getInstance()
+        .log(throwable));
 
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
@@ -1357,6 +1364,28 @@ public abstract class AptoideApplication extends Application {
       purchaseFactory = new PurchaseFactory();
     }
     return purchaseFactory;
+  }
+
+  public ReadPostsPersistence getReadPostsPersistence() {
+    if (readPostsPersistence == null) {
+      readPostsPersistence = new ReadPostsPersistence(new ArrayList<>());
+    }
+    return readPostsPersistence;
+  }
+
+  private Completable dispatchPostReadEventInterval() {
+    return Observable.interval(10, TimeUnit.SECONDS)
+        .switchMap(__ -> getReadPostsPersistence().getPosts(10)
+            .toObservable()
+            .filter(postReads -> !postReads.isEmpty())
+            .flatMap(postsRead -> PostReadRequest.of(postsRead, getBodyInterceptorPoolV7(),
+                getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
+                getDefaultSharedPreferences())
+                .observe()
+                .flatMapCompletable(___ -> getReadPostsPersistence().removePosts(postsRead)))
+            .repeatWhen(completed -> completed.takeWhile(
+                ____ -> !getReadPostsPersistence().isPostsEmpty())))
+        .toCompletable();
   }
 }
 
