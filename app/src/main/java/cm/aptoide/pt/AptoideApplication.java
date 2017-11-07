@@ -154,11 +154,11 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.utils.q.QManager;
+import cm.aptoide.pt.view.ActivityProvider;
+import cm.aptoide.pt.view.FragmentProvider;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.AppCenterRepository;
 import cm.aptoide.pt.view.app.AppService;
-import cm.aptoide.pt.view.ActivityProvider;
-import cm.aptoide.pt.view.FragmentProvider;
 import cm.aptoide.pt.view.entry.EntryActivity;
 import cm.aptoide.pt.view.entry.EntryPointChooser;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
@@ -1264,8 +1264,8 @@ public abstract class AptoideApplication extends Application {
           new TimelineRepositoryFactory(new HashMap<>(), getAccountSettingsBodyInterceptorPoolV7(),
               getDefaultClient(), getDefaultSharedPreferences(), getTokenInvalidator(),
               new LinksHandlerFactory(this), getPackageRepository(),
-              WebService.getDefaultConverter(),
-              new TimelineResponseCardMapper(accountManager, getMarketName()),
+              WebService.getDefaultConverter(), new TimelineResponseCardMapper(accountManager,
+              getInstallManager(InstallerFactory.ROLLBACK), getMarketName()),
               RepositoryFactory.getUpdateRepository(context,
                   ((AptoideApplication) context.getApplicationContext()).getDefaultSharedPreferences()));
     }
