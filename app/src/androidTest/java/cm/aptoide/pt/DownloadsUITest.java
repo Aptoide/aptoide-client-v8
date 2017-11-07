@@ -50,7 +50,7 @@ public class DownloadsUITest {
   private int whileiterations = 0;
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
-  //@Rule public RetryTestRule retry = new RetryTestRule(NUMBER_OF_RETRIES);
+  @Rule public RetryTestRule retry = new RetryTestRule(NUMBER_OF_RETRIES);
 
   private static ViewAction swipeRigthOnLeftMost() {
     return new GeneralSwipeAction(Swipe.FAST, GeneralLocation.CENTER_LEFT,
@@ -89,14 +89,12 @@ public class DownloadsUITest {
   @Test public void downloadAndInstall() throws InterruptedException {
     UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
     boolean isInstalling = false;
-    int cyclecount = 0;
     goToApp(LIGHT_APP_TO_SEARCH, 2);
     cancelIfDownloading();
     while (!hasOpenedAppView()&& whileiterations < MAX_NUMBER_WHILEITERARTIONS) {
       whileiterations++;
       Thread.sleep(WAIT_TIME);
     }
-    onView(withId(R.id.action_btn)).check(matches(withText(R.string.install)));
     onView(withId(R.id.action_btn)).perform(click());
     Thread.sleep(LONGER_WAIT_TIME);
     try {
