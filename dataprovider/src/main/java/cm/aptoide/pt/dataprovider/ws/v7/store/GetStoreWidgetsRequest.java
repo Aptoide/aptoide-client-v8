@@ -103,8 +103,8 @@ public class GetStoreWidgetsRequest
     return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets")
         .get(), body, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
         sharedPreferences, storeCredentials, clientUniqueId, isGooglePlayServicesAvailable,
-        partnerId, accountMature, httpClient, filters, tokenInvalidator, sharedPreferences,
-        resources, windowManager, connectivityManager, versionCodeProvider);
+        partnerId, accountMature, filters, resources, windowManager, connectivityManager,
+        versionCodeProvider, new WSWidgetsUtils());
   }
 
   public String getUrl() {
