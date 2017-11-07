@@ -141,19 +141,27 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
   private void showBadge(HomeMeta.Badge badge, boolean storeOwner) {
     switch (badge) {
       case NONE:
+        badgeIcon.setVisibility(View.GONE);
+        break;
+      case TIN:
         badgeIcon.setImageResource(R.drawable.tin);
+        badgeIcon.setVisibility(View.VISIBLE);
         break;
       case BRONZE:
         badgeIcon.setImageResource(R.drawable.bronze);
+        badgeIcon.setVisibility(View.VISIBLE);
         break;
       case SILVER:
         badgeIcon.setImageResource(R.drawable.silver);
+        badgeIcon.setVisibility(View.VISIBLE);
         break;
       case GOLD:
         badgeIcon.setImageResource(R.drawable.gold);
+        badgeIcon.setVisibility(View.VISIBLE);
         break;
       case PLATINUM:
         badgeIcon.setImageResource(R.drawable.platinum);
+        badgeIcon.setVisibility(View.VISIBLE);
         break;
     }
     badgeIcon.setOnClickListener(v -> badgeDialogFactory.create(badge, storeOwner)
@@ -480,10 +488,10 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     }
 
     /**
-     * the order must be corrected(NONE<BRONZE<SILVER<GOLD<PLATINUM)
+     * the order must be corrected(NONE<TIN<BRONZE<SILVER<GOLD<PLATINUM)
      */
     enum Badge {
-      NONE, BRONZE, SILVER, GOLD, PLATINUM
+      NONE, TIN, BRONZE, SILVER, GOLD, PLATINUM
     }
   }
 }
