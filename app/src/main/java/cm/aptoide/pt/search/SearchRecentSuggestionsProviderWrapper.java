@@ -7,7 +7,7 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.util.Log;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.search.websocket.WebSocketManager;
+import cm.aptoide.pt.search.websocket.SearchSocket;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -22,6 +22,11 @@ public abstract class SearchRecentSuggestionsProviderWrapper
     extends SearchRecentSuggestionsProvider {
 
   private static final String TAG = SearchRecentSuggestionsProviderWrapper.class.getName();
+  private final SearchSocket searchSocket;
+
+  protected SearchRecentSuggestionsProviderWrapper(SearchSocket webSocketManager) {
+    this.searchSocket = webSocketManager;
+  }
 
   @Override public boolean onCreate() {
 
@@ -37,19 +42,16 @@ public abstract class SearchRecentSuggestionsProviderWrapper
 
     if (c != null) {
       BlockingQueue<MatrixCursor> arrayBlockingQueue = new ArrayBlockingQueue<>(1);
-      WebSocketManager.setBlockingQueue(arrayBlockingQueue);
 
       MatrixCursor matrixCursor = null;
 
-      WebSocketManager storeAutoCompleteWebSocket = getWebSocket();
-      storeAutoCompleteWebSocket.send(buildJson(selectionArgs[0]));
-      //SearchWebSocketManager.getWebSocket().send();
+      searchSocket.send(buildJson(selectionArgs[0]));
+
       try {
         matrixCursor = arrayBlockingQueue.poll(5, TimeUnit.SECONDS);
 
         for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
           matrixCursor.newRow()
-              //.add(c.getString(c.getColumnIndex(SearchManager.SUGGEST_COLUMN_ICON_1)))
               .add(c.getString(c.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1)))
               .add(c.getString(c.getColumnIndex(SearchManager.SUGGEST_COLUMN_QUERY)))
               .add("1");
@@ -67,8 +69,6 @@ public abstract class SearchRecentSuggestionsProviderWrapper
   }
 
   public abstract String getSearchProvider();
-
-  public abstract WebSocketManager getWebSocket();
 
   protected String buildJson(String query) {
     JSONObject jsonObject = new JSONObject();

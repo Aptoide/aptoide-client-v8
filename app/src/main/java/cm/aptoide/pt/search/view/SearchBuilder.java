@@ -8,16 +8,13 @@ package cm.aptoide.pt.search.view;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
-import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.SearchView;
 import android.view.MenuItem;
-import cm.aptoide.pt.R;
 import cm.aptoide.pt.search.SearchActionsHandler;
 import cm.aptoide.pt.search.SearchNavigator;
-import cm.aptoide.pt.search.websocket.SearchAppsWebSocket;
-import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.search.websocket.SearchWebSocketProvider;
 
 /**
  * Created by neuro on 01-06-2016.
@@ -46,13 +43,16 @@ public class SearchBuilder {
     final ComponentName componentName = new ComponentName(applicationContext, SearchActivity.class);
     searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName));
 
-    final UnableToSearchAction unableToSearchAction = new WebSocketUnableToSearchAction(applicationContext);
+    final UnableToSearchAction unableToSearchAction =
+        new WebSocketUnableToSearchAction(applicationContext);
 
-    final WebSocketQueryResultRepository queryResultRepository = new WebSocketQueryResultRepository(searchView);
+    final WebSocketQueryResultRepository queryResultRepository =
+        new WebSocketQueryResultRepository(searchView);
 
-    final TrendingQueryResultRepository trendingQueryResultRepository = new TrendingQueryResultRepository(queryResultRepository);
+    final TrendingQueryResultRepository trendingQueryResultRepository =
+        new TrendingQueryResultRepository(queryResultRepository);
 
-    final SearchAppsWebSocket searchAppsWebSocket = new SearchAppsWebSocket();
+    final SearchWebSocketProvider searchAppsWebSocket = new SearchWebSocketProvider(listener);
     final SearchActionsHandler actionsHandler =
         new SearchActionsHandler(searchAppsWebSocket, menuItem, searchNavigator,
             unableToSearchAction, queryResultRepository, trendingQueryResultRepository, lastQuery);

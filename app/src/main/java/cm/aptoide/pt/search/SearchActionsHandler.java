@@ -6,13 +6,13 @@ import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.pt.search.view.QueryResultRepository;
 import cm.aptoide.pt.search.view.UnableToSearchAction;
-import cm.aptoide.pt.search.websocket.WebSocketManager;
+import cm.aptoide.pt.search.websocket.SearchSocket;
 
 public class SearchActionsHandler
     implements SearchView.OnQueryTextListener, SearchView.OnSuggestionListener,
     View.OnFocusChangeListener, View.OnClickListener {
 
-  private final WebSocketManager searchWebSocket;
+  private final SearchSocket searchWebSocket;
   private final MenuItem menuItem;
   private final SearchNavigator searchNavigator;
   private final UnableToSearchAction unableToSearchAction;
@@ -20,9 +20,10 @@ public class SearchActionsHandler
   private final QueryResultRepository trendingQueryResultRepository;
   private final String lastQuery;
 
-  public SearchActionsHandler(WebSocketManager searchWebSocket, MenuItem menuItem,
+  public SearchActionsHandler(SearchSocket searchWebSocket, MenuItem menuItem,
       SearchNavigator searchNavigator, UnableToSearchAction unableToSearchAction,
-      QueryResultRepository webSocketQueryResultRepository, QueryResultRepository trendingQueryResultRepository, String lastQuery) {
+      QueryResultRepository webSocketQueryResultRepository,
+      QueryResultRepository trendingQueryResultRepository, String lastQuery) {
     this.searchWebSocket = searchWebSocket;
     this.menuItem = menuItem;
     this.searchNavigator = searchNavigator;
@@ -74,7 +75,7 @@ public class SearchActionsHandler
   @Override public void onClick(View v) {
     searchWebSocket.connect();
 
-    if(lastQueryIsEmpty()){
+    if (lastQueryIsEmpty()) {
 
     }
   }
