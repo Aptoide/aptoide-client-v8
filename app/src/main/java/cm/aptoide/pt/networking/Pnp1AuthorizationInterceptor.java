@@ -22,17 +22,22 @@ public class Pnp1AuthorizationInterceptor implements Interceptor {
 
   @Override public Response intercept(Chain chain) throws IOException {
     Request request = chain.request();
-
-    HttpUrl url = request.url()
-        .newBuilder()
-        .addQueryParameter(ACCESS_TOKEN_KEY, authenticationPersistence.getAuthentication()
-            .toBlocking()
-            .value()
-            .getAccessToken())
-        .build();
-    request = request.newBuilder()
-        .url(url)
-        .build();
+    HttpUrl url;
+    if (authenticationPersistence.getAuthentication()
+        .toBlocking()
+        .value()
+        .isAuthenticated()) {
+      url = request.url()
+          .newBuilder()
+          .addQueryParameter(ACCESS_TOKEN_KEY, authenticationPersistence.getAuthentication()
+              .toBlocking()
+              .value()
+              .getAccessToken())
+          .build();
+      request = request.newBuilder()
+          .url(url)
+          .build();
+    }
 
     Response response = chain.proceed(request);
     if (response.code() == 401) {
