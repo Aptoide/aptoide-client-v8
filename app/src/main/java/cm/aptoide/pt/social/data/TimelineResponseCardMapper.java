@@ -6,6 +6,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AdTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialAppTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialArticle;
@@ -40,6 +41,7 @@ import cm.aptoide.pt.dataprovider.model.v7.timeline.UserSharerTimeline;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.Video;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.VideoTimelineItem;
 import cm.aptoide.pt.install.Install;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.social.data.publisher.AptoidePublisher;
 import cm.aptoide.pt.social.data.publisher.MediaPublisher;
@@ -55,9 +57,12 @@ import rx.Single;
 
 public class TimelineResponseCardMapper {
   private final AptoideAccountManager accountManager;
+  private final InstallManager installManager;
   private final String marketName;
 
-  public TimelineResponseCardMapper(AptoideAccountManager accountManager, String marketName) {
+  public TimelineResponseCardMapper(AptoideAccountManager accountManager,
+      InstallManager installManager, String marketName) {
+    this.installManager = installManager;
     this.marketName = marketName;
     this.accountManager = accountManager;
   }
@@ -67,25 +72,28 @@ public class TimelineResponseCardMapper {
     final List<Post> cards = new ArrayList();
     return accountManager.accountStatus()
         .first()
-        .map(account -> {
-          for (TimelineItem<TimelineCard> item : cardList) {
-            try {
-              cards.add(addMappedCardFromItem(linksFactory, item, account.getNickname(),
-                  account.hasStore() ? account.getStore()
-                      .getName() : null));
-            } catch (Exception e) {
-              CrashReport.getInstance()
-                  .log(e);
-            }
-          }
+        .flatMap(account -> installManager.getInstalledApps()
+            .first()
+            .map(installedApps -> {
+              for (TimelineItem<TimelineCard> item : cardList) {
+                try {
+                  cards.add(addMappedCardFromItem(linksFactory, item, account.getNickname(),
+                      account.hasStore() ? account.getStore()
+                          .getName() : null, installedApps));
+                } catch (Exception e) {
+                  CrashReport.getInstance()
+                      .log(e);
+                }
+              }
 
-          return cards;
-        })
+              return cards;
+            }))
         .toSingle();
   }
 
   private Post addMappedCardFromItem(LinksHandlerFactory linksFactory,
-      TimelineItem<TimelineCard> item, String myUserName, String myStoreName) throws Exception {
+      TimelineItem<TimelineCard> item, String myUserName, String myStoreName,
+      List<Install> installedApps) throws Exception {
     String abUrl = null;
     if (item.getAb() != null
         && item.getAb()
@@ -97,9 +105,9 @@ public class TimelineResponseCardMapper {
 
     if (item instanceof ArticleTimelineItem) {
       final Article article = ((ArticleTimelineItem) item).getData();
+      App relatedApp = getRelatedToApp(article.getApps(), installedApps);
       return new Media(article.getCardId(), article.getTitle(), article.getThumbnailUrl(),
-          article.getDate(), article.getApps()
-          .get(0), abUrl, new MediaPublisher(article.getPublisher()
+          article.getDate(), relatedApp, abUrl, new MediaPublisher(article.getPublisher()
           .getName(), new PublisherAvatar(article.getPublisher()
           .getLogoUrl())), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
           article.getPublisher()
@@ -108,9 +116,9 @@ public class TimelineResponseCardMapper {
           CardType.ARTICLE, getMarkAsReadUrl(article));
     } else if (item instanceof VideoTimelineItem) {
       final Video video = ((VideoTimelineItem) item).getData();
+      App relatedApp = getRelatedToApp(video.getApps(), installedApps);
       return new Media(video.getCardId(), video.getTitle(), video.getThumbnailUrl(),
-          video.getDate(), video.getApps()
-          .get(0), abUrl, new MediaPublisher(video.getPublisher()
+          video.getDate(), relatedApp, abUrl, new MediaPublisher(video.getPublisher()
           .getName(), new PublisherAvatar(video.getPublisher()
           .getLogoUrl())), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
           video.getPublisher()
@@ -274,12 +282,12 @@ public class TimelineResponseCardMapper {
         final SocialArticle socialArticle = ((SocialArticleTimelineItem) item).getData();
         UserSharerTimeline user =
             new UserSharerTimeline(socialArticle.getUser(), socialArticle.getStore());
+        App relatedApp = getRelatedToApp(socialArticle.getApps(), installedApps);
         if (!TextUtils.isEmpty(socialArticle.getContent())) {
           return new SocialMedia(socialArticle.getCardId(),
               new Poster(user.getUser(), user.getStore(), myUserName, myStoreName),
               socialArticle.getTitle(), socialArticle.getThumbnailUrl(), socialArticle.getDate(),
-              socialArticle.getApps()
-                  .get(0), abUrl, new MediaPublisher(socialArticle.getPublisher()
+              relatedApp, abUrl, new MediaPublisher(socialArticle.getPublisher()
               .getName(), new PublisherAvatar(socialArticle.getPublisher()
               .getLogoUrl())), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
               socialArticle.getPublisher()
@@ -298,8 +306,7 @@ public class TimelineResponseCardMapper {
           return new SocialMedia(socialArticle.getCardId(),
               new Poster(user.getUser(), user.getStore(), myUserName, myStoreName),
               socialArticle.getTitle(), socialArticle.getThumbnailUrl(), socialArticle.getDate(),
-              socialArticle.getApps()
-                  .get(0), abUrl, new MediaPublisher(socialArticle.getPublisher()
+              relatedApp, abUrl, new MediaPublisher(socialArticle.getPublisher()
               .getName(), new PublisherAvatar(socialArticle.getPublisher()
               .getLogoUrl())), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
               socialArticle.getPublisher()
@@ -315,13 +322,12 @@ public class TimelineResponseCardMapper {
         final SocialVideo socialVideo = ((SocialVideoTimelineItem) item).getData();
         UserSharerTimeline user =
             new UserSharerTimeline(socialVideo.getUser(), socialVideo.getStore());
-
+        App relatedApp = getRelatedToApp(socialVideo.getApps(), installedApps);
         if (!TextUtils.isEmpty(socialVideo.getContent())) {
           return new SocialMedia(socialVideo.getCardId(),
               new Poster(user.getUser(), user.getStore(), myUserName, myStoreName),
               socialVideo.getTitle(), socialVideo.getThumbnailUrl(), socialVideo.getDate(),
-              socialVideo.getApps()
-                  .get(0), abUrl, new MediaPublisher(socialVideo.getPublisher()
+              relatedApp, abUrl, new MediaPublisher(socialVideo.getPublisher()
               .getName(), new PublisherAvatar(socialVideo.getPublisher()
               .getLogoUrl())), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
               socialVideo.getPublisher()
@@ -338,8 +344,7 @@ public class TimelineResponseCardMapper {
           return new SocialMedia(socialVideo.getCardId(),
               new Poster(user.getUser(), user.getStore(), myUserName, myStoreName),
               socialVideo.getTitle(), socialVideo.getThumbnailUrl(), socialVideo.getDate(),
-              socialVideo.getApps()
-                  .get(0), abUrl, new MediaPublisher(socialVideo.getPublisher()
+              relatedApp, abUrl, new MediaPublisher(socialVideo.getPublisher()
               .getName(), new PublisherAvatar(socialVideo.getPublisher()
               .getLogoUrl())), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
               socialVideo.getPublisher()
@@ -379,6 +384,7 @@ public class TimelineResponseCardMapper {
       } else if (item instanceof AggregatedSocialArticleTimelineItem) {
         final AggregatedSocialArticle aggregatedSocialArticle =
             ((AggregatedSocialArticleTimelineItem) item).getData();
+        App relatedApp = getRelatedToApp(aggregatedSocialArticle.getApps(), installedApps);
         List<Poster> posters = new ArrayList<>();
         for (UserSharerTimeline sharer : aggregatedSocialArticle.getSharers()) {
           posters.add(new Poster(sharer.getUser(), sharer.getStore(), myUserName, myStoreName));
@@ -401,8 +407,7 @@ public class TimelineResponseCardMapper {
         }
         return new AggregatedMedia("n/a", posters, aggregatedSocialArticle.getTitle(),
             aggregatedSocialArticle.getThumbnailUrl(), aggregatedSocialArticle.getDate(),
-            aggregatedSocialArticle.getApps()
-                .get(0), abUrl, new MediaPublisher(aggregatedSocialArticle.getPublisher()
+            relatedApp, abUrl, new MediaPublisher(aggregatedSocialArticle.getPublisher()
             .getName(), new PublisherAvatar(aggregatedSocialArticle.getPublisher()
             .getLogoUrl())), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             aggregatedSocialArticle.getPublisher()
@@ -412,6 +417,7 @@ public class TimelineResponseCardMapper {
       } else if (item instanceof AggregatedSocialVideoTimelineItem) {
         final AggregatedSocialVideo aggregatedSocialVideo =
             ((AggregatedSocialVideoTimelineItem) item).getData();
+        App relatedApp = getRelatedToApp(aggregatedSocialVideo.getApps(), installedApps);
         List<Poster> posters = new ArrayList<>();
         for (UserSharerTimeline sharer : aggregatedSocialVideo.getSharers()) {
           posters.add(new Poster(sharer.getUser(), sharer.getStore(), myUserName, myStoreName));
@@ -434,9 +440,8 @@ public class TimelineResponseCardMapper {
         }
 
         return new AggregatedMedia("n/a", posters, aggregatedSocialVideo.getTitle(),
-            aggregatedSocialVideo.getThumbnailUrl(), aggregatedSocialVideo.getDate(),
-            aggregatedSocialVideo.getApps()
-                .get(0), abUrl, new MediaPublisher(aggregatedSocialVideo.getPublisher()
+            aggregatedSocialVideo.getThumbnailUrl(), aggregatedSocialVideo.getDate(), relatedApp,
+            abUrl, new MediaPublisher(aggregatedSocialVideo.getPublisher()
             .getName(), new PublisherAvatar(aggregatedSocialVideo.getPublisher()
             .getLogoUrl())), linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             aggregatedSocialVideo.getPublisher()
@@ -524,6 +529,18 @@ public class TimelineResponseCardMapper {
 
       throw new RuntimeException("item is not of any known type, treat it in this method.");
     }
+  }
+
+  private App getRelatedToApp(List<App> apps, List<Install> installedApps) {
+    for (App app : apps) {
+      for (Install installed : installedApps) {
+        if (app.getPackageName()
+            .equals(installed.getPackageName())) {
+          return app;
+        }
+      }
+    }
+    return apps.get(0);
   }
 
   @Nullable private String getMarkAsReadUrl(TimelineCard card) {

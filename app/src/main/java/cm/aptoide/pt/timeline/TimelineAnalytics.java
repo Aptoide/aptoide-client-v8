@@ -22,6 +22,7 @@ import cm.aptoide.pt.social.data.PopularApp;
 import cm.aptoide.pt.social.data.PopularAppTouchEvent;
 import cm.aptoide.pt.social.data.Post;
 import cm.aptoide.pt.social.data.RatedRecommendation;
+import cm.aptoide.pt.social.data.ReadPostsPersistence;
 import cm.aptoide.pt.social.data.Recommendation;
 import cm.aptoide.pt.social.data.SocialHeaderCardTouchEvent;
 import cm.aptoide.pt.social.data.StoreAppCardTouchEvent;
@@ -34,6 +35,7 @@ import java.util.HashMap;
 import java.util.Map;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
+import rx.Completable;
 
 /**
  * Created by jdandrade on 27/10/2016.
@@ -81,12 +83,13 @@ public class TimelineAnalytics {
   private final SharedPreferences sharedPreferences;
   private final NotificationAnalytics notificationAnalytics;
   private final NavigationTracker navigationTracker;
+  private final ReadPostsPersistence readPostsPersistence;
 
   public TimelineAnalytics(Analytics analytics, AppEventsLogger facebook,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator, String appId,
       SharedPreferences sharedPreferences, NotificationAnalytics notificationAnalytics,
-      NavigationTracker navigationTracker) {
+      NavigationTracker navigationTracker, ReadPostsPersistence readPostsPersistence) {
     this.analytics = analytics;
     this.facebook = facebook;
     this.bodyInterceptor = bodyInterceptor;
@@ -97,6 +100,7 @@ public class TimelineAnalytics {
     this.sharedPreferences = sharedPreferences;
     this.notificationAnalytics = notificationAnalytics;
     this.navigationTracker = navigationTracker;
+    this.readPostsPersistence = readPostsPersistence;
   }
 
   public void sendSocialCardPreviewActionEvent(String value) {
@@ -406,7 +410,8 @@ public class TimelineAnalytics {
   }
 
   public void sendLikeEvent(CardTouchEvent event) {
-    HashMap<String, Object> data = parseEventData(event, true, EventErrorHandler.GenericErrorEvent.OK);
+    HashMap<String, Object> data =
+        parseEventData(event, true, EventErrorHandler.GenericErrorEvent.OK);
     analytics.sendEvent(createEvent(LIKE, data));
   }
 
@@ -451,8 +456,8 @@ public class TimelineAnalytics {
   }
 
   public void sendOpenStoreProfileEvent(CardTouchEvent touchEvent) {
-    HashMap<String, Object> data = parseEventData(touchEvent, true,
-        EventErrorHandler.GenericErrorEvent.OK);
+    HashMap<String, Object> data =
+        parseEventData(touchEvent, true, EventErrorHandler.GenericErrorEvent.OK);
     analytics.sendEvent(createEvent(OPEN_STORE_PROFILE, data));
   }
 
@@ -645,17 +650,20 @@ public class TimelineAnalytics {
   }
 
   public void sendCommentEvent(CardTouchEvent event) {
-    HashMap<String, Object> data = parseEventData(event, true, EventErrorHandler.GenericErrorEvent.OK);
+    HashMap<String, Object> data =
+        parseEventData(event, true, EventErrorHandler.GenericErrorEvent.OK);
     analytics.sendEvent(createEvent(COMMENT, data));
   }
 
-  public void sendErrorCommentEvent(CardTouchEvent event, EventErrorHandler.GenericErrorEvent error) {
+  public void sendErrorCommentEvent(CardTouchEvent event,
+      EventErrorHandler.GenericErrorEvent error) {
     HashMap<String, Object> data = parseEventData(event, false, error);
     analytics.sendEvent(createEvent(COMMENT, data));
   }
 
   public void sendShareEvent(CardTouchEvent event) {
-    HashMap<String, Object> data = parseEventData(event, true, EventErrorHandler.GenericErrorEvent.OK);
+    HashMap<String, Object> data =
+        parseEventData(event, true, EventErrorHandler.GenericErrorEvent.OK);
     analytics.sendEvent(createEvent(SHARE, data));
   }
 
@@ -665,8 +673,8 @@ public class TimelineAnalytics {
   }
 
   public void sendShareCompleted(ShareEvent event) {
-    HashMap<String, Object> data = parseShareCompletedEventData(event, true,
-        EventErrorHandler.ShareErrorEvent.OK);
+    HashMap<String, Object> data =
+        parseShareCompletedEventData(event, true, EventErrorHandler.ShareErrorEvent.OK);
     analytics.sendEvent(createEvent(SHARE_SEND, data));
   }
 
@@ -685,7 +693,7 @@ public class TimelineAnalytics {
     HashMap<String, Object> data = new HashMap<>();
     String previousContext = null;
     String store = null;
-    if(navigationTracker.getPreviousScreen()!=null){
+    if (navigationTracker.getPreviousScreen() != null) {
       previousContext = navigationTracker.getPreviousScreen()
           .getFragment();
       store = navigationTracker.getPreviousScreen()
@@ -704,6 +712,10 @@ public class TimelineAnalytics {
             sharedPreferences));
   }
 
+  public Completable setPostRead(String cardId, String name) {
+    return readPostsPersistence.addPost(cardId, name);
+  }
+
   public HashMap<String, Object> parseEventData(CardTouchEvent event, boolean status,
       EventErrorHandler.GenericErrorEvent errorCode) {
     final Post post = event.getCard();
@@ -719,11 +731,11 @@ public class TimelineAnalytics {
     data.put("previous_context", previousContext);
     data.put("store", store);
 
-    if(navigationTracker.getPreviousScreen()!=null){
+    if (navigationTracker.getPreviousScreen() != null) {
       previousContext = navigationTracker.getPreviousScreen()
-        .getFragment();
+          .getFragment();
       store = navigationTracker.getPreviousScreen()
-        .getStore();
+          .getStore();
     }
 
     result.put("status", status ? "success" : "fail");
@@ -801,7 +813,7 @@ public class TimelineAnalytics {
     data.put("previous_context", previousContext);
     data.put("store", store);
 
-    if(navigationTracker.getPreviousScreen()!=null){
+    if (navigationTracker.getPreviousScreen() != null) {
       previousContext = navigationTracker.getPreviousScreen()
           .getFragment();
       store = navigationTracker.getPreviousScreen()
@@ -815,7 +827,7 @@ public class TimelineAnalytics {
       error = errorHandler.handleShareErrorParsing(errorCode);
       result.put("error", error);
     }
-    
+
     if (postType.isMedia()) {
       Media card = (Media) post;
       data.put("source", card.getPublisherName());
