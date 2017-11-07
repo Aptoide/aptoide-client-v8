@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -34,8 +35,11 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.navigator.FragmentResultNavigator;
 import cm.aptoide.pt.search.view.StoreSearchActivity;
-import cm.aptoide.pt.search.websocket.StoreAutoCompleteWebSocket;
+import cm.aptoide.pt.search.suggestionsprovider.SearchWebSocket;
+import cm.aptoide.pt.search.suggestionsprovider.StoreSuggestions;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
@@ -46,25 +50,17 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.MainActivity;
 import cm.aptoide.pt.view.dialog.BaseDialog;
-import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.navigator.FragmentResultNavigator;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
-/**
- * Created with IntelliJ IDEA. User: rmateus Date: 18-10-2013 Time: 17:27 To change this template
- * use File | Settings |
- * File Templates.
- */
 public class AddStoreDialog extends BaseDialog {
 
   public static final int PRIVATE_STORE_INVALID_CREDENTIALS_CODE = 21;
   public static final int PRIVATE_STORE_ERROR_CODE = 22;
   private static final String TAG = AddStoreDialog.class.getName();
-  private static StoreAutoCompleteWebSocket storeAutoCompleteWebSocket;
 
   private final int PRIVATE_STORE_REQUEST_CODE = 20;
 
@@ -86,6 +82,7 @@ public class AddStoreDialog extends BaseDialog {
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
   private StoreAnalytics storeAnalytics;
+  private SearchWebSocket searchWebSocket;
 
   @Override public void onAttach(Activity activity) {
     super.onAttach(activity);
@@ -145,8 +142,8 @@ public class AddStoreDialog extends BaseDialog {
 
   @Override public void onDetach() {
     super.onDetach();
-    if (storeAutoCompleteWebSocket != null) {
-      storeAutoCompleteWebSocket.disconnect();
+    if (searchWebSocket != null) {
+      searchWebSocket.disconnect();
     }
   }
 
@@ -178,11 +175,14 @@ public class AddStoreDialog extends BaseDialog {
           dismiss();
           break;
         case PRIVATE_STORE_INVALID_CREDENTIALS_CODE:
-          ShowMessage.asSnack(this, R.string.ws_error_invalid_grant);
+          Snackbar.make(image, R.string.ws_error_invalid_grant, Snackbar.LENGTH_SHORT)
+              .show();
           break;
         case PRIVATE_STORE_ERROR_CODE:
         default:
-          ShowMessage.asSnack(this, R.string.error_occured);
+          Snackbar.make(image, R.string.error_occured, Snackbar.LENGTH_SHORT)
+              .show();
+          break;
       }
     }
   }
@@ -219,12 +219,10 @@ public class AddStoreDialog extends BaseDialog {
   private void setupSearchView() {
     searchView.setIconifiedByDefault(false);
     image.setImageDrawable(null);
-    searchAutoComplete.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-      @Override public void onFocusChange(View view, boolean b) {
-        if (getDialog() != null) {
-          if (!searchAutoComplete.isFocused() && getDialog().isShowing() && isResumed()) {
-            dismiss();
-          }
+    searchAutoComplete.setOnFocusChangeListener((view, b) -> {
+      if (getDialog() != null) {
+        if (!searchAutoComplete.isFocused() && getDialog().isShowing() && isResumed()) {
+          dismiss();
         }
       }
     });
@@ -233,10 +231,14 @@ public class AddStoreDialog extends BaseDialog {
   private void setupStoreSearch(SearchView searchView) {
     final SearchManager searchManager = (SearchManager) getContext().getApplicationContext()
         .getSystemService(Context.SEARCH_SERVICE);
-    ComponentName cn =
+    final ComponentName cn =
         new ComponentName(getContext().getApplicationContext(), StoreSearchActivity.class);
     searchView.setSearchableInfo(searchManager.getSearchableInfo(cn));
-    storeAutoCompleteWebSocket = new StoreAutoCompleteWebSocket();
+
+    final StoreSuggestions searchWebSocketProvider =
+        new StoreSuggestions();
+
+    searchWebSocket = searchWebSocketProvider.getSearchSocket();
 
     searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
       @Override public boolean onQueryTextSubmit(String query) {
@@ -266,16 +268,11 @@ public class AddStoreDialog extends BaseDialog {
       }
     });
 
-    searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
-      @Override public void onFocusChange(View view, boolean hasFocus) {
-        if (!hasFocus) {
-          storeAutoCompleteWebSocket.disconnect();
-        }
+    searchView.setOnQueryTextFocusChangeListener((view, hasFocus) -> {
+      if (!hasFocus) {
+        searchWebSocket.disconnect();
       }
     });
-
-    searchView.setOnSearchClickListener(
-        v -> storeAutoCompleteWebSocket.connect(StoreAutoCompleteWebSocket.STORE_WEBSOCKET_PORT));
   }
 
   private void getStore(String storeName) {
@@ -332,11 +329,15 @@ public class AddStoreDialog extends BaseDialog {
                     .this, PRIVATE_STORE_REQUEST_CODE, storeName, false);
                 dialogFragment.show(getFragmentManager(), PrivateStoreDialog.class.getName());
                 break;
+
               default:
-                ShowMessage.asSnack(this, error.getDescription());
+                Snackbar.make(image, error.getDescription(), Snackbar.LENGTH_SHORT)
+                    .show();
+                break;
             }
           } else {
-            ShowMessage.asSnack(this, R.string.error_occured);
+            Snackbar.make(image, R.string.error_occured, Snackbar.LENGTH_SHORT)
+                .show();
           }
         }, storeName, accountManager);
   }
@@ -346,6 +347,6 @@ public class AddStoreDialog extends BaseDialog {
   }
 
   private enum BundleArgs {
-    STORE_NAME,
+    STORE_NAME
   }
 }

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.search.websocket;
+package cm.aptoide.pt.search.suggestionsprovider;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -9,11 +9,10 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
 
-/**
- * Created by pedroribeiro on 16/01/17.
- */
+public class SearchWebSocket implements WebSocket {
 
-public class SearchSocket implements WebSocket {
+  private static final int CLOSE_STATUS_CODE = 1000;
+  private static final String CLOSE_REASON = "";
 
   private final Request request;
   private final OkHttpClient client;
@@ -22,18 +21,12 @@ public class SearchSocket implements WebSocket {
   private WebSocket webSocket;
   private ScheduledFuture future;
 
-  public SearchSocket(ScheduledExecutorService scheduledExecutorService, Request request,
+  SearchWebSocket(ScheduledExecutorService scheduledExecutorService, Request request,
       OkHttpClient client, WebSocketListener listener) {
     this.scheduledExecutorService = scheduledExecutorService;
     this.request = request;
     this.client = client;
     this.listener = listener;
-  }
-
-  public void disconnect() {
-    if (webSocket != null) {
-      webSocket.close(1000, "");
-    }
   }
 
   @Override public Request request() {
@@ -45,25 +38,15 @@ public class SearchSocket implements WebSocket {
   }
 
   @Override public boolean send(String text) {
-    if (webSocket == null) {
-      webSocket = connect();
-    }
-
-    final boolean[] result = { false };
-    Runnable runnable = () -> {
-      result[0] = webSocket.send(text);
-    };
-
-    if (future != null) {
-      future.cancel(false);
-    }
-
-    future = scheduledExecutorService.schedule(runnable, 500L, TimeUnit.MILLISECONDS);
-    return result[0];
+    final Runnable runnable = () -> webSocket.send(text);
+    sendData(runnable);
+    return true;
   }
 
   @Override public boolean send(ByteString bytes) {
-    return false;
+    final Runnable runnable = () -> webSocket.send(bytes);
+    sendData(runnable);
+    return true;
   }
 
   @Override public boolean close(int code, String reason) {
@@ -75,7 +58,21 @@ public class SearchSocket implements WebSocket {
     webSocket.cancel();
   }
 
-  public WebSocket connect() {
-    return client.newWebSocket(request, listener);
+  private void sendData(Runnable runnable) {
+    if (webSocket == null) {
+      webSocket = client.newWebSocket(request, listener);
+    }
+
+    if (future != null) {
+      future.cancel(true);
+    }
+
+    future = scheduledExecutorService.schedule(runnable, 500L, TimeUnit.MILLISECONDS);
+  }
+
+  public void disconnect() {
+    if (webSocket != null) {
+      webSocket.close(CLOSE_STATUS_CODE, CLOSE_REASON);
+    }
   }
 }

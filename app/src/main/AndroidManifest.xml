@@ -100,14 +100,20 @@
         />
 
     <provider
-        android:name="cm.aptoide.pt.search.SearchSuggestionProvider"
+        android:name=".search.suggestionsprovider.AppSuggestions"
         android:authorities="${suggestionProviderAuthority}"
         android:exported="false"
         />
 
     <provider
-        android:name="cm.aptoide.pt.search.StoreSearchSuggestionProvider"
+        android:name=".search.suggestionsprovider.StoreSuggestions"
         android:authorities="${storeSuggestionProviderAuthority}"
+        android:exported="false"
+        />
+
+    <provider
+        android:name=".search.suggestionsprovider.DefaultSuggestions"
+        android:authorities="${suggestionProviderAuthority}"
         android:exported="false"
         />
 

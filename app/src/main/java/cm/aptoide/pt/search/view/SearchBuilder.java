@@ -14,7 +14,7 @@ import android.support.v7.widget.SearchView;
 import android.view.MenuItem;
 import cm.aptoide.pt.search.SearchActionsHandler;
 import cm.aptoide.pt.search.SearchNavigator;
-import cm.aptoide.pt.search.websocket.SearchWebSocketProvider;
+import cm.aptoide.pt.search.suggestionsprovider.AppSuggestions;
 
 /**
  * Created by neuro on 01-06-2016.
@@ -40,8 +40,6 @@ public class SearchBuilder {
   public void attachSearch(@NonNull Context context, @NonNull MenuItem menuItem) {
     final Context applicationContext = context.getApplicationContext();
     final SearchView searchView = (SearchView) menuItem.getActionView();
-    final ComponentName componentName = new ComponentName(applicationContext, SearchActivity.class);
-    searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName));
 
     final UnableToSearchAction unableToSearchAction =
         new WebSocketUnableToSearchAction(applicationContext);
@@ -49,14 +47,14 @@ public class SearchBuilder {
     final WebSocketQueryResultRepository queryResultRepository =
         new WebSocketQueryResultRepository(searchView);
 
-    final TrendingQueryResultRepository trendingQueryResultRepository =
-        new TrendingQueryResultRepository(queryResultRepository);
+    final AppSuggestions appSuggestions = new AppSuggestions();
 
-    final SearchWebSocketProvider searchAppsWebSocket = new SearchWebSocketProvider(listener);
     final SearchActionsHandler actionsHandler =
-        new SearchActionsHandler(searchAppsWebSocket, menuItem, searchNavigator,
-            unableToSearchAction, queryResultRepository, trendingQueryResultRepository, lastQuery);
+        new SearchActionsHandler(appSuggestions.getSearchSocket(), menuItem,
+            searchNavigator, unableToSearchAction, queryResultRepository, lastQuery);
 
+    final ComponentName componentName = new ComponentName(applicationContext, SearchActivity.class);
+    searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName));
     searchView.setOnQueryTextListener(actionsHandler);
     searchView.setOnSuggestionListener(actionsHandler);
     searchView.setOnQueryTextFocusChangeListener(actionsHandler);
