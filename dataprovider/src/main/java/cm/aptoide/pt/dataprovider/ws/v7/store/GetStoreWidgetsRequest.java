@@ -87,6 +87,26 @@ public class GetStoreWidgetsRequest
         versionCodeProvider, new WSWidgetsUtils());
   }
 
+  public static GetStoreWidgetsRequest ofAction(String url, StoreCredentials storeCredentials,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
+      String clientUniqueId, boolean isGooglePlayServicesAvailable, String partnerId,
+      boolean accountMature, String filters, ConnectivityManager connectivityManager,
+      AdsApplicationVersionCodeProvider versionCodeProvider, String storeName,
+      StoreContext storeContext) {
+
+    final Body body =
+        new Body(storeCredentials, WidgetsArgs.createDefault(resources, windowManager),
+            storeContext, storeName);
+
+    return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets")
+        .get(), body, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+        sharedPreferences, storeCredentials, clientUniqueId, isGooglePlayServicesAvailable,
+        partnerId, accountMature, httpClient, filters, tokenInvalidator, sharedPreferences,
+        resources, windowManager, connectivityManager, versionCodeProvider);
+  }
+
   public String getUrl() {
     return url;
   }

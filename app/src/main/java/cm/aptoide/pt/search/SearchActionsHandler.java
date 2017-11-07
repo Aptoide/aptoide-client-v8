@@ -29,6 +29,7 @@ public class SearchActionsHandler
     this.searchNavigator = searchNavigator;
     this.unableToSearchAction = unableToSearchAction;
     this.queryResultRepository = queryResultRepository;
+
     this.lastQuery = lastQuery;
   }
 

@@ -436,7 +436,8 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     searchNavigator = new SearchNavigator(getFragmentNavigator(), viewModel.getStoreName(),
         viewModel.getDefaultStoreName());
 
-    searchBuilder = new SearchBuilder(searchManagerService, searchNavigator);
+    searchBuilder =
+        new SearchBuilder(searchManagerService, searchNavigator, viewModel.getCurrentQuery());
 
     final AptoideApplication applicationContext =
         (AptoideApplication) getContext().getApplicationContext();
