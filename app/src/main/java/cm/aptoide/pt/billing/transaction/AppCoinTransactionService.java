@@ -37,7 +37,7 @@ public class AppCoinTransactionService implements TransactionService {
   private Map<String, TransactionSimulator> transactionSimList = new HashMap<>();
   private SharedPreferences sharedPreferences;
   private Map<String, Product> products = new HashMap<>();
-  public static final String CONTRACT_ADDRESS = "91ccb60de3e7888ba562cbe18817209444a2d254";
+  public static final String CONTRACT_ADDRESS = "62000e73a34179ad57215412af7c0da73a0de26c";
   private static final String RECEIVER_ADDR = "9bf504d8f8abeca13863c3d260d7be237fa3fd18";
   private static final boolean REALTRANSACTION = true;
 
