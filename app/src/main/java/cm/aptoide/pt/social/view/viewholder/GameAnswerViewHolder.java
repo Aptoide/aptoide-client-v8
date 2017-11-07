@@ -130,7 +130,7 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
         .load("http://pool.img.aptoide.com/dfl/783ac07187647799c87c4e1d5cde6b8b_icon.png", this.headerIcon);
     this.headerTitle.setText(getStyledTitle(itemView.getContext(), getTitle(itemView.getContext()
         .getResources()), marketName));
-    if(card.getCardsLeft() == 0)
+    if(card.getCardsLeft() <= 0)
       this.headerSubTitle.setText("No more cards. Come back tomorrow for more!");
     else
       this.headerSubTitle.setText(String.valueOf(card.getCardsLeft())+" cards left today.");

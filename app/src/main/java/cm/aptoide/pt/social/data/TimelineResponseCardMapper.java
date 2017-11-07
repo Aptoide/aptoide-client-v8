@@ -6,8 +6,41 @@ import cm.aptoide.pt.Install;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
-import cm.aptoide.pt.dataprovider.model.v7.timeline.*;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.AdTimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialAppTimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialArticle;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialArticleTimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialInstall;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialInstallTimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialStoreLatestApps;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialStoreLatestAppsTimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialVideo;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialVideoTimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.AppUpdateTimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.Article;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.ArticleTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.Game;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.GameTimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.MinimalCard;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.PopularAppTimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.RecommendationTimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SimilarTimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialArticle;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialArticleTimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialInstall;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialInstallTimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialRecommendation;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialRecommendationTimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialStoreLatestApps;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialStoreLatestAppsTimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialVideo;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialVideoTimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.StoreLatestAppsTimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.TimelineCard;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.TimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.UserSharerTimeline;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.Video;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.VideoTimelineItem;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.social.data.publisher.AptoidePublisher;
 import cm.aptoide.pt.social.data.publisher.MediaPublisher;
@@ -472,39 +505,61 @@ public class TimelineResponseCardMapper {
             getMarkAsReadUrl(aggregatedSocialStoreLatestApps)));
       } else if (item instanceof AdTimelineItem) {
         cards.add(new AdPost());
-      }
+      } else if (item instanceof GameTimelineItem) {
 
-      else if (item instanceof GameTimelineItem) {
         final Game game = ((GameTimelineItem) item).getData();
-        String questionIcon;
-        if(game.getDisplayApp()==null)
-          questionIcon=null;
-        else
-          questionIcon=game.getDisplayApp().getIcon();
-        if(game.getGameType() == 1) {
-          cards.add(new Game1(game.getCardId(), game.getRightAnswer(), game.getAnswerURL(),
-              game.getQuestion(), game.getRankings().getScore(), game.getRankings().getGRanking(), game.getRankings().getLRanking(),
-              game.getRankings().getFRanking(), abUrl, false, CardType.GAME1, game.getRankings().getCardsLeft(), game.getWrongAnswer().getName(), game.getWrongAnswer().getUrl(), questionIcon));
-        }
-        if(game.getGameType() == 2) {
-          cards.add(new Game2(game.getCardId(), game.getRightAnswer(), game.getAnswerURL(),
-              game.getQuestion(), game.getRankings().getScore(), game.getRankings().getGRanking(), game.getRankings().getLRanking(),
-              game.getRankings().getFRanking(), abUrl, false, CardType.GAME2, game.getRankings().getCardsLeft(), game.getWrongAnswer().getIcon(), game.getWrongAnswer().getUrl(), questionIcon));
-        }
-        if(game.getGameType() == 3) {
-          final String questionName;
-          if(game.getDisplayApp()== null){
+        if (game.getRankings().getCardsLeft()>0) {
+          String questionIcon;
+          if (game.getDisplayApp() == null) {
             questionIcon = null;
-            questionName = null;
+          } else {
+            questionIcon = game.getDisplayApp()
+                .getIcon();
           }
-          else{
-            questionIcon = game.getDisplayApp().getIcon();
-            questionName = game.getDisplayApp().getName();
+          if (game.getGameType() == 1) {
+            cards.add(new Game1(game.getCardId(), game.getRightAnswer(), game.getAnswerURL(),
+                game.getQuestion(), game.getRankings()
+                .getScore(), game.getRankings()
+                .getGRanking(), game.getRankings()
+                .getLRanking(), game.getRankings()
+                .getFRanking(), abUrl, false, CardType.GAME1, game.getRankings()
+                .getCardsLeft(), game.getWrongAnswer()
+                .getName(), game.getWrongAnswer()
+                .getUrl(), questionIcon));
           }
-          cards.add(new Game3(game.getCardId(), game.getRightAnswer(), game.getAnswerURL(),
-              game.getQuestion(), game.getRankings().getScore(), game.getRankings().getGRanking(), game.getRankings().getLRanking(),
-              game.getRankings().getFRanking(), abUrl, false, CardType.GAME3, game.getRankings().getCardsLeft(), game.getWrongAnswer().getIcon(), game.getWrongAnswer().getName(),
-              game.getWrongAnswer().getUrl(), questionIcon, questionName));
+          if (game.getGameType() == 2) {
+            cards.add(new Game2(game.getCardId(), game.getRightAnswer(), game.getAnswerURL(),
+                game.getQuestion(), game.getRankings()
+                .getScore(), game.getRankings()
+                .getGRanking(), game.getRankings()
+                .getLRanking(), game.getRankings()
+                .getFRanking(), abUrl, false, CardType.GAME2, game.getRankings()
+                .getCardsLeft(), game.getWrongAnswer()
+                .getIcon(), game.getWrongAnswer()
+                .getUrl(), questionIcon));
+          }
+          if (game.getGameType() == 3) {
+            final String questionName;
+            if (game.getDisplayApp() == null) {
+              questionIcon = null;
+              questionName = null;
+            } else {
+              questionIcon = game.getDisplayApp()
+                  .getIcon();
+              questionName = game.getDisplayApp()
+                  .getName();
+            }
+            cards.add(new Game3(game.getCardId(), game.getRightAnswer(), game.getAnswerURL(),
+                game.getQuestion(), game.getRankings()
+                .getScore(), game.getRankings()
+                .getGRanking(), game.getRankings()
+                .getLRanking(), game.getRankings()
+                .getFRanking(), abUrl, false, CardType.GAME3, game.getRankings()
+                .getCardsLeft(), game.getWrongAnswer()
+                .getIcon(), game.getWrongAnswer()
+                .getName(), game.getWrongAnswer()
+                .getUrl(), questionIcon, questionName));
+          }
         }
       }
     }
