@@ -1,28 +1,37 @@
 package cm.aptoide.pt.remotebootconfig.datamodel;
 
-import lombok.Data;
-
 /**
  * Created by diogoloureiro on 18/01/2017.
  *
  * Appearance Class
  */
 
-@SuppressWarnings("WeakerAccess") @Data public class Appearance {
+public class Appearance {
   private String theme;
   private Splash splash;
   private Toolbar toolbar;
 
-  /**
-   * Appearance constructor
-   *
-   * @param theme defines the partner theme to apply to the all store
-   * @param splash defines the splash screen options
-   * @param toolbar defines the toolbar options
-   */
-  public Appearance(String theme, Splash splash, Toolbar toolbar) {
+  public String getTheme() {
+    return theme;
+  }
+
+  public void setTheme(String theme) {
     this.theme = theme;
+  }
+
+  public Splash getSplash() {
+    return splash;
+  }
+
+  public void setSplash(Splash splash) {
     this.splash = splash;
+  }
+
+  public Toolbar getToolbar() {
+    return toolbar;
+  }
+
+  public void setToolbar(Toolbar toolbar) {
     this.toolbar = toolbar;
   }
 }

@@ -62,6 +62,7 @@ import cm.aptoide.pt.social.data.TimelineAdsRepository;
 import cm.aptoide.pt.social.data.TimelinePostsRepository;
 import cm.aptoide.pt.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.social.data.TimelineService;
+import cm.aptoide.pt.social.data.analytics.EventErrorHandler;
 import cm.aptoide.pt.social.data.share.ShareDialogFactory;
 import cm.aptoide.pt.social.data.share.ShareDialogInterface;
 import cm.aptoide.pt.social.data.share.ShareEvent;
@@ -214,8 +215,9 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
     timelineService =
         new TimelineService(userId, baseBodyInterceptorV7, defaultClient, defaultConverter,
-            new TimelineResponseCardMapper(accountManager, marketName), tokenInvalidator,
-            sharedPreferences);
+            new TimelineResponseCardMapper(accountManager,
+                application.getInstallManager(InstallerFactory.ROLLBACK), marketName),
+            tokenInvalidator, sharedPreferences);
     crashReport = CrashReport.getInstance();
   }
 
@@ -323,6 +325,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     floatingActionButton = null;
     layoutManager = null;
     bottomAlreadyReached = false;
+    layoutManager = null;
     timelinePostsRepository.clearLoading();
   }
 
@@ -614,19 +617,28 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   private void handleSharePreviewAnswer() {
+
+    final ShareEvent[] share = new ShareEvent[1];
     shareDialog.cancels()
-        .doOnNext(shareEvent -> timelineAnalytics.sendShareCompleted(false))
+        .doOnNext(shareEvent -> timelineAnalytics.sendErrorShareCompleted(shareEvent,
+            EventErrorHandler.ShareErrorEvent.CANCELLED))
         .compose(bindUntilEvent(LifecycleEvent.PAUSE))
         .subscribe();
 
     shareDialog.shares()
         .doOnNext(event -> sharePostPublishSubject.onNext(event))
-        .doOnNext(shareEvent -> timelineAnalytics.sendShareCompleted(true))
+        .doOnNext(shareEvent -> {
+          if (shareEvent.getEvent() == ShareEvent.SHARE) {
+            timelineAnalytics.sendShareCompleted(shareEvent);
+          } else {
+            timelineAnalytics.sendErrorShareCompleted(shareEvent,
+                EventErrorHandler.ShareErrorEvent.UNKNOWN_ERROR);
+          }
+        })
         .compose(bindUntilEvent(LifecycleEvent.PAUSE))
         .subscribe(shareEvent -> {
         }, throwable -> {
           crashReport.log(throwable);
-          timelineAnalytics.sendShareCompleted(false);
         });
     shareDialog.show();
   }

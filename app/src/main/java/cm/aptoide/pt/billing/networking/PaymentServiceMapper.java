@@ -17,10 +17,6 @@ import java.util.List;
 public class PaymentServiceMapper {
 
   public static final String PAYPAL = "PAYPAL";
-  public static final String BOA_COMPRA = "BOA_COMPRA";
-  public static final String SANDBOX = "SANDBOX";
-  public static final String BOA_COMPRA_GOLD = "BOA_COMPRA_GOLD";
-  public static final String MOL_POINTS = "MOLPOINTS";
   public static final String ADYEN = "ADYEN";
 
   private final CrashLogger crashLogger;
@@ -63,12 +59,6 @@ public class PaymentServiceMapper {
         }
         throw new IllegalArgumentException(
             "PayPal not supported in Android API lower than " + minimumAPILevelPayPal);
-      case BOA_COMPRA:
-      case BOA_COMPRA_GOLD:
-      case MOL_POINTS:
-      case SANDBOX:
-        return new PaymentService(billingIdManager.generateServiceId(response.getId()),
-            response.getName(), response.getLabel(), response.getDescription(), response.getIcon());
       case ADYEN:
         if (currentAPILevel >= minimumAPILevelAdyen) {
           return new AdyenPaymentService(billingIdManager.generateServiceId(response.getId()),
