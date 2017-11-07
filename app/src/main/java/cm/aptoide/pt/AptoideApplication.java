@@ -1379,7 +1379,8 @@ public abstract class AptoideApplication extends Application {
             .toObservable()
             .filter(postReads -> !postReads.isEmpty())
             .flatMap(postsRead -> PostReadRequest.of(postsRead, getBodyInterceptorPoolV7(),
-                getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator())
+                getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
+                getDefaultSharedPreferences())
                 .observe()
                 .flatMapCompletable(___ -> getReadPostsPersistence().removePosts(postsRead)))
             .repeatWhen(completed -> completed.takeWhile(
