@@ -57,7 +57,7 @@ public class ManageStorePresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.youtubeUserFocusChanged()
-            .doOnNext(focusChanged -> view.changeYoutubeUI()))
+            .doOnNext(focusChanged -> view.youtubeRevertUIState()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -67,7 +67,7 @@ public class ManageStorePresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.twitterUserFocusChanged()
-            .doOnNext(focusChanged -> view.changeTwitterUI()))
+            .doOnNext(focusChanged -> view.twitterRevertUIState()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -77,7 +77,7 @@ public class ManageStorePresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.twitchUserFocusChanged()
-            .doOnNext(focusChanged -> view.changeTwitchUI()))
+            .doOnNext(focusChanged -> view.twitchRevertUIState()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -87,7 +87,7 @@ public class ManageStorePresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.facebookUserFocusChanged()
-            .doOnNext(focusChanged -> view.changeFacebookUI()))
+            .doOnNext(focusChanged -> view.facebookRevertUIState()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -97,7 +97,7 @@ public class ManageStorePresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.youtubeClick()
-            .doOnNext(click -> view.manageYoutubeViews()))
+            .doOnNext(click -> view.youtubeExpandEditText()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -107,7 +107,7 @@ public class ManageStorePresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.twitterClick()
-            .doOnNext(click -> view.manageTwitterViews()))
+            .doOnNext(click -> view.twitterExpandEditText()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -117,7 +117,7 @@ public class ManageStorePresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.twitchClick()
-            .doOnNext(click -> view.manageTwitchViews()))
+            .doOnNext(click -> view.twitchExpandEditText()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -127,7 +127,7 @@ public class ManageStorePresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.facebookClick()
-            .doOnNext(click -> view.manageFacebookViews()))
+            .doOnNext(click -> view.facebookExpandEditText()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));

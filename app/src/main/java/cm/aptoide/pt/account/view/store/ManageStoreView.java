@@ -33,29 +33,29 @@ public interface ManageStoreView extends ImagePickerView {
 
   void hideKeyboard();
 
-  void manageFacebookViews();
+  void facebookExpandEditText();
 
-  void manageTwitchViews();
+  void twitchExpandEditText();
 
-  void manageTwitterViews();
+  void twitterExpandEditText();
 
-  void manageYoutubeViews();
+  void youtubeExpandEditText();
 
   void setViewLinkErrors(List<BaseV7Response.StoreLinks> storeLinks);
 
   Observable<Boolean> facebookUserFocusChanged();
 
-  void changeFacebookUI();
+  void facebookRevertUIState();
 
   Observable<Boolean> twitchUserFocusChanged();
 
-  void changeTwitchUI();
+  void twitchRevertUIState();
 
   Observable<Boolean> twitterUserFocusChanged();
 
-  void changeTwitterUI();
+  void twitterRevertUIState();
 
   Observable<Boolean> youtubeUserFocusChanged();
 
-  void changeYoutubeUI();
+  void youtubeRevertUIState();
 }
