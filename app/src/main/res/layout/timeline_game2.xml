@@ -22,6 +22,18 @@
         android:orientation="horizontal"
         >
 
+      <View
+          android:id="@+id/top_margin_line"
+          android:layout_width="match_parent"
+          android:layout_height="5dp"
+          android:layout_alignParentTop="true"
+          android:layout_marginEnd="12dp"
+          android:layout_marginLeft="12dp"
+          android:layout_marginRight="12dp"
+          android:layout_marginStart="12dp"
+          android:background="@color/orange_700"
+          />
+
       <ImageView
           android:id="@+id/displayable_social_timeline_game_card_icon"
           android:layout_width="40dp"
@@ -30,6 +42,7 @@
           android:layout_marginStart="12.7dp"
           android:layout_marginTop="14dp"
           tools:ignore="contentDescription"
+          tools:src="@mipmap/ic_launcher"
           />
 
       <TextView
@@ -66,73 +79,8 @@
           android:layout_height="20dp"
           android:layout_alignParentRight="true"
           android:layout_marginTop="18dp"
+          android:visibility="invisible"
           />
-
-
-      <!--<ImageView-->
-          <!--android:id="@+id/displayable_social_timeline_game_card_leaderboard_icon"-->
-          <!--android:layout_width="15dp"-->
-          <!--android:layout_height="15dp"-->
-          <!--android:layout_marginRight="5dp"-->
-          <!--android:layout_marginTop="@dimen/appstimeline_card_icon"-->
-          <!--android:layout_toLeftOf="@+id/displayable_social_timeline_game_card_leaderboard"-->
-          <!--android:src="@drawable/leaderboard_global"-->
-          <!--/>-->
-
-      <!--<ProgressBar-->
-          <!--android:id="@+id/rank_progress"-->
-          <!--android:layout_width="10dp"-->
-          <!--android:layout_height="10dp"-->
-          <!--android:layout_toRightOf="@id/displayable_social_timeline_game_card_leaderboard_icon"-->
-          <!--android:layout_marginLeft="7dp"-->
-          <!--android:layout_marginTop="15dp"-->
-          <!--android:visibility="visible"-->
-          <!--android:indeterminate="true" />-->
-
-      <!--<TextView-->
-          <!--android:id="@id/displayable_social_timeline_game_card_leaderboard"-->
-          <!--android:layout_width="wrap_content"-->
-          <!--android:layout_height="wrap_content"-->
-          <!--android:layout_alignEnd="@+id/card_custom_view_line_separator"-->
-          <!--android:layout_marginRight="3dp"-->
-          <!--android:layout_marginTop="18dp"-->
-          <!--android:text="#1234"-->
-          <!--android:visibility="invisible"-->
-          <!--style="@style/Aptoide.TextView.Regular.XS.Grey"-->
-          <!--android:layout_alignRight="@+id/card_custom_view_line_separator"-->
-          <!--/>-->
-
-      <!--<ImageView-->
-          <!--android:id="@+id/displayable_social_timeline_game_card_score_icon"-->
-          <!--android:layout_width="15dp"-->
-          <!--android:layout_height="15dp"-->
-          <!--android:layout_marginRight="5dp"-->
-          <!--android:layout_marginTop="@dimen/appstimeline_card_icon"-->
-          <!--android:layout_toLeftOf="@+id/displayable_social_timeline_game_card_score"-->
-          <!--android:src="@drawable/leaderboard_score"-->
-          <!--/>-->
-
-      <!--<TextView-->
-          <!--android:id="@id/displayable_social_timeline_game_card_score"-->
-          <!--android:layout_width="wrap_content"-->
-          <!--android:layout_height="wrap_content"-->
-          <!--android:layout_marginRight="5dp"-->
-          <!--android:layout_marginTop="18dp"-->
-          <!--android:layout_toLeftOf="@id/displayable_social_timeline_game_card_leaderboard_icon"-->
-          <!--android:text="2000"-->
-          <!--android:visibility="invisible"-->
-          <!--style="@style/Aptoide.TextView.Regular.XS.Grey"-->
-          <!--/>-->
-
-      <!--<ProgressBar-->
-          <!--android:id="@+id/score_progress"-->
-          <!--android:layout_width="10dp"-->
-          <!--android:layout_height="10dp"-->
-          <!--android:layout_toLeftOf="@id/displayable_social_timeline_game_card_leaderboard_icon"-->
-          <!--android:layout_marginRight="7dp"-->
-          <!--android:layout_marginTop="15dp"-->
-          <!--android:visibility="visible"-->
-          <!--android:indeterminate="true" />-->
 
       <View
           android:id="@+id/card_custom_view_line_separator"
@@ -162,6 +110,7 @@
           android:layout_alignParentTop="true"
           android:orientation="vertical"
           android:visibility="visible"
+          android:background="@color/tw__solid_white"
           >
 
         <include layout="@layout/timeline_icon_question_body"
@@ -177,8 +126,11 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="145dp"
+            android:layout_marginBottom="30dp"
             android:src="@mipmap/ic_launcher"
             />
 
@@ -199,8 +151,12 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp"
             android:layout_marginTop="145dp"
+            android:layout_marginBottom="30dp"
+
             android:src="@mipmap/ic_launcher"
             />
 
@@ -242,21 +198,6 @@
             />
 
       </RelativeLayout>
-
     </RelativeLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.7dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="14dp"
-        android:background="@color/timeline_separator"
-        android:visibility="visible"
-        />
-
-    <include layout="@layout/social_bar_timeline" />
   </LinearLayout>
 </android.support.v7.widget.CardView>
