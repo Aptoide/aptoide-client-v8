@@ -63,7 +63,6 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.custom.AptoideViewPager;
 import cm.aptoide.pt.view.fragment.BasePagerToolbarFragment;
-import cm.aptoide.pt.share.ShareStoreHelper;
 import com.astuetz.PagerSlidingTabStrip;
 import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
@@ -110,7 +109,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private TimelineAnalytics timelineAnalytics;
   private TokenInvalidator tokenInvalidator;
   private StoreAnalytics storeAnalytics;
-  private ShareStoreHelper shareStoreHelper;
   private String storeUrl;
   private String iconPath;
   private String marketName;
@@ -188,7 +186,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
         navigationTracker);
     storeAnalytics = new StoreAnalytics(AppEventsLogger.newLogger(getContext()), analytics);
     marketName = application.getMarketName();
-    shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);
 
     final SearchManager searchManager =
         (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
@@ -382,11 +379,11 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     int i = item.getItemId();
 
-    if (i == R.id.menu_share) {
-      shareStoreHelper.shareStore(storeUrl, iconPath);
-
-      return true;
-    }
+    //if (i == R.id.menu_share) {
+    //  shareStoreHelper.shareStore(storeUrl, iconPath);
+//
+    //  return true;
+    //}
 
     return super.onOptionsItemSelected(item);
   }

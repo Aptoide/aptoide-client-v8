@@ -149,9 +149,9 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter
       case myDownloads:
         return AptoideApplication.getFragmentProvider()
             .newDownloadsFragment();
-      case mySpotShare:
-        return AptoideApplication.getFragmentProvider()
-            .newSpotShareFragment(false);
+      //case mySpotShare:
+      //  return AptoideApplication.getFragmentProvider()
+      //      .newSpotShareFragment(false);
       case myStores:
         return AptoideApplication.getFragmentProvider()
             .newSubscribedStoresFragment(event, storeTheme, tab.getTag(), storeContext);

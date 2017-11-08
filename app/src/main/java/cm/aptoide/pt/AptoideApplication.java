@@ -141,10 +141,6 @@ import cm.aptoide.pt.root.RootValueSaver;
 import cm.aptoide.pt.social.TimelineRepositoryFactory;
 import cm.aptoide.pt.social.data.TimelinePostsRepository;
 import cm.aptoide.pt.social.data.TimelineResponseCardMapper;
-import cm.aptoide.pt.spotandshare.AccountGroupNameProvider;
-import cm.aptoide.pt.spotandshare.ShareApps;
-import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
-import cm.aptoide.pt.spotandshare.group.GroupNameProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
@@ -216,7 +212,6 @@ public abstract class AptoideApplication extends Application {
   private static FragmentProvider fragmentProvider;
   private static ActivityProvider activityProvider;
   private static DisplayableWidgetMapping displayableWidgetMapping;
-  private static ShareApps shareApps;
   private static boolean autoUpdateWasCalled = false;
   private AptoideAccountManager accountManager;
   private BodyInterceptor<BaseBody> bodyInterceptorPoolV7;
@@ -301,9 +296,9 @@ public abstract class AptoideApplication extends Application {
     AptoideApplication.autoUpdateWasCalled = autoUpdateWasCalled;
   }
 
-  public static ShareApps getShareApps() {
-    return shareApps;
-  }
+  //public static ShareApps getShareApps() {
+  //  return shareApps;
+  //}
 
   public LeakTool getLeakTool() {
     if (leakTool == null) {
@@ -346,7 +341,7 @@ public abstract class AptoideApplication extends Application {
     fragmentProvider = createFragmentProvider();
     activityProvider = createActivityProvider();
     displayableWidgetMapping = createDisplayableWidgetMapping();
-    shareApps = new ShareApps(new SpotAndShareAnalytics(Analytics.getInstance()));
+    //shareApps = new ShareApps(new SpotAndShareAnalytics(Analytics.getInstance()));
 
     //
     // do not erase this code. it is useful to figure out when someone forgot to attach an error handler when subscribing and the app
@@ -568,10 +563,10 @@ public abstract class AptoideApplication extends Application {
     return PreferenceManager.getDefaultSharedPreferences(this);
   }
 
-  public GroupNameProvider getGroupNameProvider() {
-    return new AccountGroupNameProvider(getAccountManager(), Build.MANUFACTURER, Build.MODEL,
-        Build.ID);
-  }
+  //public GroupNameProvider getGroupNameProvider() {
+  //  return new AccountGroupNameProvider(getAccountManager(), Build.MANUFACTURER, Build.MODEL,
+  //      Build.ID);
+  //}
 
   public NotificationService getPnpV1NotificationService() {
     if (pnpV1NotificationService == null) {

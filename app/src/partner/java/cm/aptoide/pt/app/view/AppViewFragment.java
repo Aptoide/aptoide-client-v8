@@ -86,7 +86,6 @@ import cm.aptoide.pt.search.ReferrerUtils;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.view.SearchBuilder;
-import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
@@ -111,7 +110,6 @@ import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
-import cm.aptoide.pt.share.ShareAppHelper;
 import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -162,7 +160,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private StoredMinimalAdAccessor storedMinimalAdAccessor;
   private BillingAnalytics billingAnalytics;
   private PurchaseBundleMapper purchaseBundleMapper;
-  private ShareAppHelper shareAppHelper;
   private DownloadFactory downloadFactory;
   private TimelineAnalytics timelineAnalytics;
   private AppViewAnalytics appViewAnalytics;
@@ -380,18 +377,18 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
         ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), StoredMinimalAd.class);
-    final SpotAndShareAnalytics spotAndShareAnalytics = new SpotAndShareAnalytics(analytics);
+    //final SpotAndShareAnalytics spotAndShareAnalytics = new SpotAndShareAnalytics(analytics);
     appViewAnalytics = new AppViewAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
     appViewSimilarAppAnalytics = new AppViewSimilarAppAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
 
     installAppRelay = PublishRelay.create();
-    shareAppHelper =
-        new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
-            spotAndShareAnalytics, timelineAnalytics, installAppRelay,
-            application.getDefaultSharedPreferences(),
-            application.isCreateStoreUserPrivacyEnabled());
+    //shareAppHelper =
+    //    new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
+    //        spotAndShareAnalytics, timelineAnalytics, installAppRelay,
+    //        application.getDefaultSharedPreferences(),
+    //        application.isCreateStoreUserPrivacyEnabled());
     downloadFactory = new DownloadFactory(getMarketName());
     appViewAnalytics = new AppViewAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
@@ -644,9 +641,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       final Long storeId = appHasStore ? getApp().getStore()
           .getId() : null;
 
-      shareAppHelper.shareApp(getAppName(), getPackageName(), appViewModel.getwUrl(),
-          (getApp() == null ? null : getApp().getIcon()), averageRating,
-          SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW, storeId);
+      //shareAppHelper.shareApp(getAppName(), getPackageName(), appViewModel.getwUrl(),
+      //    (getApp() == null ? null : getApp().getIcon()), averageRating,
+      //    SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW, storeId);
 
       appViewAnalytics.sendAppShareEvent();
       return true;
@@ -807,7 +804,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     clearDisplayables().addDisplayables(setupDisplayables(getApp), true);
     setupObservables(getApp);
     showHideOptionsMenu(true);
-    setupShare(getApp);
+    //setupShare(getApp);
     if (getOpenType() == OpenType.OPEN_WITH_INSTALL_POPUP) {
       setOpenType(null);
       GenericDialogs.createGenericOkCancelMessage(getContext(), getMarketName(),

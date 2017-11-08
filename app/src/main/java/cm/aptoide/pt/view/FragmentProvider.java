@@ -161,7 +161,7 @@ public interface FragmentProvider {
   @Deprecated Fragment newInviteFriendsFragment(InviteFriendsContract.View.OpenMode openMode,
       String tag);
 
-  @Deprecated Fragment newSpotShareFragment(boolean showToolbar);
+  //@Deprecated Fragment newSpotShareFragment(boolean showToolbar);
 
   @Deprecated Fragment newThankYouConnectingFragment(String tag);
 
