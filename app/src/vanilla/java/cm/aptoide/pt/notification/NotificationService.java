@@ -14,7 +14,7 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Single;
 
-public class PnpV1NotificationService implements NotificationService {
+public class NotificationService {
   private final String applicationId;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
@@ -26,7 +26,7 @@ public class PnpV1NotificationService implements NotificationService {
   private final SharedPreferences sharedPreferences;
   private final Resources resources;
 
-  public PnpV1NotificationService(String applicationId, OkHttpClient httpClient,
+  public NotificationService(String applicationId, OkHttpClient httpClient,
       Converter.Factory converterFactory, IdsRepository idsRepository, String versionName,
       String extraId, SharedPreferences sharedPreferences, Resources resources,
       AuthenticationPersistence authenticationPersistence, AptoideAccountManager accountManager) {
@@ -42,7 +42,7 @@ public class PnpV1NotificationService implements NotificationService {
     this.accountManager = accountManager;
   }
 
-  @Override public Single<List<AptoideNotification>> getSocialNotifications() {
+  public Single<List<AptoideNotification>> getSocialNotifications() {
     return authenticationPersistence.getAuthentication()
         .flatMapObservable(
             authentication -> PullSocialNotificationRequest.of(idsRepository.getUniqueIdentifier(),
@@ -55,7 +55,7 @@ public class PnpV1NotificationService implements NotificationService {
         .toSingle();
   }
 
-  @Override public Single<List<AptoideNotification>> getCampaignNotifications() {
+  public Single<List<AptoideNotification>> getCampaignNotifications() {
     return PullCampaignNotificationsRequest.of(idsRepository.getUniqueIdentifier(), versionName,
         applicationId, httpClient, converterFactory, extraId, sharedPreferences, resources)
         .observe()
@@ -81,9 +81,10 @@ public class PnpV1NotificationService implements NotificationService {
 
       aptoideNotifications.add(
           new AptoideNotification(notification.getBody(), notification.getImg(),
-              notification.getTitle(), notification.getUrl(), notification.getType(), appName,
-              graphic, AptoideNotification.NOT_DISMISSED, id, notification.getExpire(),
-              notification.getUrlTrack(), notification.getUrlTrackNc(), false));
+              notification.getTitle(), notification.getUrl(), notification.getType(),
+              System.currentTimeMillis(), appName, graphic, AptoideNotification.NOT_DISMISSED, id,
+              notification.getUrlTrack(), notification.getUrlTrackNc(), false,
+              notification.getExpire() * 1000));
     }
     return aptoideNotifications;
   }
@@ -102,10 +103,12 @@ public class PnpV1NotificationService implements NotificationService {
       }
 
       aptoideNotifications.add(
-          new AptoideNotification(notification.getAbTestingGroup(), notification.getBody(),
-              notification.getCampaignId(), notification.getImg(), notification.getLang(),
-              notification.getTitle(), notification.getUrl(), notification.getUrlTrack(), appName,
-              graphic, id, notification.getExpire(), notification.getUrlTrackNc(), false));
+          new AptoideNotification(notification.getBody(), notification.getImg(),
+              notification.getTitle(), notification.getUrl(), AptoideNotification.CAMPAIGN, appName,
+              graphic, AptoideNotification.NOT_DISMISSED, id, notification.getUrlTrack(),
+              notification.getUrlTrackNc(), false, System.currentTimeMillis(),
+              notification.getExpire(), notification.getAbTestingGroup(),
+              notification.getCampaignId(), notification.getLang()));
     }
     return aptoideNotifications;
   }

@@ -30,8 +30,6 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
-import cm.aptoide.pt.analytics.NavigationTracker;
-import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
@@ -40,11 +38,19 @@ import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.app.AppBoughtReceiver;
 import cm.aptoide.pt.app.AppRepository;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
+import cm.aptoide.pt.app.view.displayable.AppViewDescriptionDisplayable;
+import cm.aptoide.pt.app.view.displayable.AppViewDeveloperDisplayable;
+import cm.aptoide.pt.app.view.displayable.AppViewFlagThisDisplayable;
+import cm.aptoide.pt.app.view.displayable.AppViewInstallDisplayable;
+import cm.aptoide.pt.app.view.displayable.AppViewRateAndCommentsDisplayable;
+import cm.aptoide.pt.app.view.displayable.AppViewScreenshotsDisplayable;
+import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAppsDisplayable;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.exception.BillingException;
 import cm.aptoide.pt.billing.purchase.PaidAppPurchase;
@@ -75,9 +81,11 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.AppAction;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -86,6 +94,8 @@ import cm.aptoide.pt.search.ReferrerUtils;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.view.SearchBuilder;
+import cm.aptoide.pt.share.ShareAppHelper;
+import cm.aptoide.pt.social.data.ReadPostsPersistence;
 import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
@@ -98,20 +108,11 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.ThemeUtils;
-import cm.aptoide.pt.app.view.displayable.AppViewDescriptionDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewDeveloperDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewFlagThisDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewInstallDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewRateAndCommentsDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewScreenshotsDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAppsDisplayable;
 import cm.aptoide.pt.view.dialog.DialogBadgeV7;
 import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
-import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
-import cm.aptoide.pt.share.ShareAppHelper;
 import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -361,11 +362,13 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     converterFactory = WebService.getDefaultConverter();
     Analytics analytics = Analytics.getInstance();
     issuesAnalytics = new IssuesAnalytics(analytics, Answers.getInstance());
+    ReadPostsPersistence readPostsPersistence =
+        ((AptoideApplication) getContext().getApplicationContext()).getReadPostsPersistence();
     timelineAnalytics = new TimelineAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
         application.getDefaultSharedPreferences(), new NotificationAnalytics(httpClient, analytics),
-        navigationTracker);
+        navigationTracker, readPostsPersistence);
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
             timelineAnalytics, tokenInvalidator, application.getDefaultSharedPreferences());

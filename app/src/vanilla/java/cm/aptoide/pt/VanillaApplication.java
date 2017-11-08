@@ -7,6 +7,11 @@ package cm.aptoide.pt;
 
 import android.os.Environment;
 import cm.aptoide.pt.account.LoginPreferences;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.notification.NotificationService;
+import cm.aptoide.pt.notification.NotificationSyncScheduler;
+import cm.aptoide.pt.notification.sync.NotificationSyncFactory;
+import cm.aptoide.pt.notification.sync.NotificationSyncManager;
 import cm.aptoide.pt.view.ActivityProvider;
 import cm.aptoide.pt.view.FragmentProvider;
 import cm.aptoide.pt.view.configuration.implementation.VanillaActivityProvider;
@@ -14,6 +19,8 @@ import cm.aptoide.pt.view.configuration.implementation.VanillaFragmentProvider;
 import com.google.android.gms.common.GoogleApiAvailability;
 
 public class VanillaApplication extends AptoideApplication {
+
+  private NotificationSyncScheduler notificationSyncScheduler;
 
   @Override public String getCachePath() {
     return Environment.getExternalStorageDirectory()
@@ -74,5 +81,18 @@ public class VanillaApplication extends AptoideApplication {
 
   @Override public ActivityProvider createActivityProvider() {
     return new VanillaActivityProvider();
+  }
+
+  @Override public NotificationSyncScheduler getNotificationSyncScheduler() {
+    if (notificationSyncScheduler == null) {
+      notificationSyncScheduler = new NotificationSyncManager(getSyncScheduler(), true,
+          new NotificationSyncFactory(getDefaultSharedPreferences(),
+              new NotificationService(BuildConfig.APPLICATION_ID, getDefaultClient(),
+                  WebService.getDefaultConverter(), getIdsRepository(), BuildConfig.VERSION_NAME,
+                  getExtraId(), getDefaultSharedPreferences(), getResources(),
+                  getAuthenticationPersistence(), getAccountManager()),
+              getNotificationProvider()));
+    }
+    return notificationSyncScheduler;
   }
 }
