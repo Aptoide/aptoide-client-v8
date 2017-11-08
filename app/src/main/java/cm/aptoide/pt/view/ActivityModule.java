@@ -5,8 +5,12 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.WindowManager;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.view.AccountErrorMapper;
+import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -16,12 +20,14 @@ import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
+import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.FragmentResultNavigator;
 import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.notification.ContentPuller;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
+import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.presenter.MainPresenter;
 import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
@@ -29,12 +35,17 @@ import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.util.ApkFy;
+import com.facebook.CallbackManager;
+import com.facebook.login.LoginManager;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import dagger.Module;
 import dagger.Provides;
 import java.util.Map;
 import javax.inject.Named;
+
+import static android.content.Context.WINDOW_SERVICE;
 
 @Module public class ActivityModule {
 
@@ -106,4 +117,20 @@ import javax.inject.Named;
             CrashReport.getInstance()), sharedPreferences, secureSharedPreferences,
         fragmentNavigator, deepLinkManager, defaultStoreName, defaultTheme, firstCreated);
   }
+
+  @ActivityScope @Provides AccountNavigator provideAccountNavigator(FragmentNavigator fragmentNavigator, AptoideAccountManager accountManager,
+      CallbackManager callbackManager, GoogleApiClient googleApiClient){
+    return new AccountNavigator(fragmentNavigator, accountManager,
+        ((ActivityNavigator) activity), LoginManager.getInstance(), callbackManager, googleApiClient,
+        PublishRelay.create(),defaultStoreName, defaultTheme, "http://m.aptoide.com/account/password-recovery");
+  }
+
+  @Provides @ActivityScope AccountErrorMapper provideAccountErrorMapper(){
+    return new AccountErrorMapper(activity);
+  }
+
+  @ActivityScope @Provides ScreenOrientationManager provideScreenOrientationManager(){
+    return new ScreenOrientationManager(activity, (WindowManager) activity.getSystemService(WINDOW_SERVICE));
+  }
+
 }

@@ -33,10 +33,7 @@ import cm.aptoide.pt.account.AndroidAccountManagerPersistence;
 import cm.aptoide.pt.account.AndroidAccountProvider;
 import cm.aptoide.pt.account.DatabaseStoreDataPersist;
 import cm.aptoide.pt.account.FacebookLoginResult;
-import cm.aptoide.pt.account.FacebookSignUpAdapter;
-import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.account.LoginPreferences;
-import cm.aptoide.pt.account.MatureContentPersistence;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
@@ -150,20 +147,15 @@ import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
-import com.facebook.login.LoginManager;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flurry.android.FlurryAgent;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Scope;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
@@ -183,7 +175,6 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 import static cm.aptoide.pt.preferences.managed.ManagedKeys.CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY;
-import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
 public abstract class AptoideApplication extends Application {
 
@@ -200,19 +191,19 @@ public abstract class AptoideApplication extends Application {
   @Inject AptoideDownloadManager downloadManager;
   @Inject CacheHelper cacheHelper;
   @Inject AppEventsLogger appEventsLogger;
-  private AptoideAccountManager accountManager;
-  private BodyInterceptor<BaseBody> bodyInterceptorPoolV7;
+  @Inject AptoideAccountManager accountManager;
+  @Inject @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7;
   private BodyInterceptor<BaseBody> bodyInterceptorWebV7;
   private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3;
-  private Preferences preferences;
+  @Inject Preferences preferences;
   private cm.aptoide.pt.preferences.SecurePreferences securePreferences;
   private SecureCoderDecoder secureCodeDecoder;
   private AdultContent adultContent;
   @Inject IdsRepository idsRepository;
-  private GoogleApiClient googleSignInClient;
+  @Inject GoogleApiClient googleSignInClient;
   private LeakTool leakTool;
   private String aptoideMd5sum;
-  private OkHttpClient defaultClient;
+  @Inject @Named("default") OkHttpClient defaultClient;
   private OkHttpClient longTimeoutClient;
   private L2Cache httpClientCache;
   @Inject @Named("user-agent") Interceptor userAgentInterceptor;
@@ -245,13 +236,13 @@ public abstract class AptoideApplication extends Application {
   private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody>
       noAuthorizationBodyInterceptorV3;
   private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
-  private CallbackManager facebookCallbackManager;
+  @Inject CallbackManager facebookCallbackManager;
   private Map<Integer, Result> fragmentResulMap;
   private PublishRelay<FacebookLoginResult> facebookLoginResultRelay;
   private NavigationTracker navigationTracker;
   private BillingPool billingPool;
   private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
-  private AccountAnalytics accountAnalytics;
+  @Inject AccountAnalytics accountAnalytics;
   private PageViewsAnalytics pageViewsAnalytics;
   private BodyInterceptor<BaseBody> accountSettingsBodyInterceptorPoolV7;
   private BodyInterceptor<BaseBody> accountSettingsBodyInterceptorWebV7;
@@ -688,16 +679,6 @@ public abstract class AptoideApplication extends Application {
               new DatabaseStoreDataPersist.DatabaseStoreMapper()), accountFactory,
               accountDataMigration, androidAccountProvider, authenticationPersistence,
               Schedulers.io());
-
-      accountManager = new AptoideAccountManager.Builder().setAccountPersistence(
-          new MatureContentPersistence(accountPersistence, getLocalAdultContent()))
-          .setAccountService(accountService)
-          .registerSignUpAdapter(GoogleSignUpAdapter.TYPE,
-              new GoogleSignUpAdapter(getGoogleSignInClient(), getLoginPreferences()))
-          .registerSignUpAdapter(FacebookSignUpAdapter.TYPE,
-              new FacebookSignUpAdapter(Arrays.asList("email"), LoginManager.getInstance(),
-                  getLoginPreferences()))
-          .build();
     }
     return accountManager;
   }
@@ -708,7 +689,6 @@ public abstract class AptoideApplication extends Application {
 
   public Preferences getPreferences() {
     if (preferences == null) {
-      preferences = new Preferences(defaultSharedPreferences);
     }
     return preferences;
   }
@@ -723,13 +703,6 @@ public abstract class AptoideApplication extends Application {
 
   public GoogleApiClient getGoogleSignInClient() {
     if (googleSignInClient == null) {
-      googleSignInClient = new GoogleApiClient.Builder(this).addApi(GOOGLE_SIGN_IN_API,
-          new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
-              .requestScopes(new Scope("https://www.googleapis.com/auth/contacts.readonly"))
-              .requestScopes(new Scope(Scopes.PROFILE))
-              .requestServerAuthCode(BuildConfig.GMS_SERVER_ID)
-              .build())
-          .build();
     }
     return googleSignInClient;
   }
@@ -922,10 +895,6 @@ public abstract class AptoideApplication extends Application {
    */
   public BodyInterceptor<BaseBody> getBodyInterceptorPoolV7() {
     if (bodyInterceptorPoolV7 == null) {
-      bodyInterceptorPoolV7 =
-          new BodyInterceptorV7(idsRepository, authenticationPersistence, getAptoideMd5sum(),
-              getAptoidePackage(), getQManager(), Cdn.POOL, defaultSharedPreferences,
-              getResources(), BuildConfig.VERSION_CODE);
     }
     return bodyInterceptorPoolV7;
   }
@@ -1161,7 +1130,6 @@ public abstract class AptoideApplication extends Application {
 
   public CallbackManager getFacebookCallbackManager() {
     if (facebookCallbackManager == null) {
-      facebookCallbackManager = CallbackManager.Factory.create();
     }
     return facebookCallbackManager;
   }
@@ -1204,10 +1172,6 @@ public abstract class AptoideApplication extends Application {
 
   public AccountAnalytics getAccountAnalytics() {
     if (accountAnalytics == null) {
-      accountAnalytics = new AccountAnalytics(Analytics.getInstance(), getBodyInterceptorPoolV7(),
-          getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
-          BuildConfig.APPLICATION_ID, defaultSharedPreferences, appEventsLogger,
-          getNavigationTracker());
     }
     return accountAnalytics;
   }

@@ -22,6 +22,7 @@ import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountPersistence;
 import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
 import cm.aptoide.pt.account.AndroidAccountDataMigration;
@@ -119,8 +120,10 @@ import cn.dreamtobe.filedownloader.OkHttp3Connection;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.core.CrashlyticsCore;
+import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.internal.CallbackManagerImpl;
 import com.facebook.login.LoginManager;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -710,4 +713,18 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     Realm.setDefaultConfiguration(realmConfiguration);
     return new Database();
   }
+
+  @Singleton @Provides CallbackManager provideCallbackManager(){
+    return new CallbackManagerImpl();
+  }
+
+  @Singleton @Provides AccountAnalytics provideAccountAnalytics(@Named("pool-v7") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient defaulClient, TokenInvalidator tokenInvalidator, @Named ("default") SharedPreferences defaultSharedPreferences,
+      AppEventsLogger appEventsLogger, NavigationTracker navigationTracker){
+    return new AccountAnalytics(Analytics.getInstance(), bodyInterceptorPoolV7,
+        defaulClient, WebService.getDefaultConverter(), tokenInvalidator,
+        BuildConfig.APPLICATION_ID, defaultSharedPreferences, appEventsLogger,
+        navigationTracker);
+  }
+
 }

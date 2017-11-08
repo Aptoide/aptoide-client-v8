@@ -16,10 +16,10 @@ import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.billing.view.BillingNavigator;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.view.fragment.FragmentView;
-import com.facebook.login.LoginManager;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Map;
+import javax.inject.Inject;
 import rx.Observable;
 
 public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigator
@@ -29,7 +29,7 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
   private FragmentNavigator fragmentNavigator;
   private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
   private Map<Integer, Result> fragmentResultMap;
-  private AccountNavigator accountNavigator;
+  @Inject AccountNavigator accountNavigator;
   private BillingNavigator billingNavigator;
   private ScreenOrientationManager screenOrientationManager;
 
@@ -146,15 +146,6 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
 
   public AccountNavigator getAccountNavigator() {
     if (accountNavigator == null) {
-      accountNavigator = new AccountNavigator(getFragmentNavigator(),
-          ((AptoideApplication) getApplicationContext()).getAccountManager(),
-          getActivityNavigator(), LoginManager.getInstance(),
-          ((AptoideApplication) getApplicationContext()).getFacebookCallbackManager(),
-          ((AptoideApplication) getApplicationContext()).getGoogleSignInClient(),
-          ((AptoideApplication) getApplicationContext()).getFacebookLoginResultRelay(),
-          ((AptoideApplication) getApplicationContext()).getDefaultStoreName(),
-          ((AptoideApplication) getApplicationContext()).getDefaultThemeName(),
-          "http://m.aptoide.com/account/password-recovery");
     }
     return accountNavigator;
   }

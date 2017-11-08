@@ -9,7 +9,7 @@ public abstract class BaseFragment extends RxFragment {
   public FragmentComponent getFragmentComponent() {
     if (fragmentComponent == null) {
       fragmentComponent = ((BaseActivity) getActivity()).getActivityComponent()
-          .plus(new FragmentModule());
+          .plus(new FragmentModule(this, getArguments().getBoolean("dismiss_to_navigate_to_main_view"), getArguments().getBoolean("clean_back_stack")));
     }
     return fragmentComponent;
   }
