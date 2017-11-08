@@ -6,7 +6,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.model.v1.GetPullNotificationsResponse;
 import cm.aptoide.pt.dataprovider.ws.v1.notification.PullCampaignNotificationsRequest;
 import cm.aptoide.pt.dataprovider.ws.v1.notification.PullSocialNotificationRequest;
-import cm.aptoide.pt.networking.AuthenticationPersistence;
 import cm.aptoide.pt.networking.IdsRepository;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,7 +19,6 @@ public class NotificationService {
   private final Converter.Factory converterFactory;
   private final IdsRepository idsRepository;
   private final String versionName;
-  private final AuthenticationPersistence authenticationPersistence;
   private final AptoideAccountManager accountManager;
   private final String extraId;
   private final SharedPreferences sharedPreferences;
@@ -29,13 +27,12 @@ public class NotificationService {
   public NotificationService(String applicationId, OkHttpClient httpClient,
       Converter.Factory converterFactory, IdsRepository idsRepository, String versionName,
       String extraId, SharedPreferences sharedPreferences, Resources resources,
-      AuthenticationPersistence authenticationPersistence, AptoideAccountManager accountManager) {
+      AptoideAccountManager accountManager) {
     this.applicationId = applicationId;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.idsRepository = idsRepository;
     this.versionName = versionName;
-    this.authenticationPersistence = authenticationPersistence;
     this.extraId = extraId;
     this.sharedPreferences = sharedPreferences;
     this.resources = resources;
@@ -43,12 +40,12 @@ public class NotificationService {
   }
 
   public Single<List<AptoideNotification>> getSocialNotifications() {
-    return authenticationPersistence.getAuthentication()
-        .flatMapObservable(
-            authentication -> PullSocialNotificationRequest.of(idsRepository.getUniqueIdentifier(),
-                versionName, applicationId, httpClient, converterFactory, extraId,
-                authentication.getAccessToken(), sharedPreferences, resources)
-                .observe())
+    return accountManager.accountStatus()
+        .first()
+        .flatMap(account -> PullSocialNotificationRequest.of(idsRepository.getUniqueIdentifier(),
+            versionName, applicationId, httpClient, converterFactory, extraId, sharedPreferences,
+            resources, account.isLoggedIn())
+            .observe())
         .flatMap(response -> accountManager.accountStatus()
             .first()
             .map(account -> convertSocialNotifications(response, account.getId())))

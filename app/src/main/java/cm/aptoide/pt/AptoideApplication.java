@@ -39,6 +39,8 @@ import cm.aptoide.pt.account.AndroidAccountManagerPersistence;
 import cm.aptoide.pt.account.AndroidAccountProvider;
 import cm.aptoide.pt.account.DatabaseStoreDataPersist;
 import cm.aptoide.pt.account.FacebookLoginResult;
+import cm.aptoide.pt.account.FacebookSignUpAdapter;
+import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.account.MatureContentPersistence;
 import cm.aptoide.pt.account.view.store.StoreManager;
@@ -119,7 +121,6 @@ import cm.aptoide.pt.notification.NotificationPolicyFactory;
 import cm.aptoide.pt.notification.NotificationProvider;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.notification.NotificationsCleaner;
-import cm.aptoide.pt.notification.NotificationService;
 import cm.aptoide.pt.notification.SystemNotificationShower;
 import cm.aptoide.pt.preferences.AdultContent;
 import cm.aptoide.pt.preferences.LocalPersistenceAdultContent;
@@ -165,6 +166,7 @@ import com.crashlytics.android.answers.Answers;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flurry.android.FlurryAgent;
@@ -181,6 +183,7 @@ import io.realm.RealmConfiguration;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
@@ -728,6 +731,11 @@ public abstract class AptoideApplication extends Application {
       accountManager = new AptoideAccountManager.Builder().setAccountPersistence(
           new MatureContentPersistence(accountPersistence, getLocalAdultContent()))
           .setAccountService(accountService)
+          .registerSignUpAdapter(GoogleSignUpAdapter.TYPE,
+              new GoogleSignUpAdapter(getGoogleSignInClient(), getLoginPreferences()))
+          .registerSignUpAdapter(FacebookSignUpAdapter.TYPE,
+              new FacebookSignUpAdapter(Arrays.asList("email"), LoginManager.getInstance(),
+                  getLoginPreferences()))
           .build();
     }
     return accountManager;
