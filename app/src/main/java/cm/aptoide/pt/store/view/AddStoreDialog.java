@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
@@ -47,9 +46,9 @@ import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
-import rx.Completable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -68,7 +67,6 @@ public class AddStoreDialog extends BaseDialog {
   private SearchView searchView;
   private Button addStoreButton;
   private LinearLayout topStoresButton;
-  private ImageView image;
   private BodyInterceptor<BaseBody> baseBodyBodyInterceptor;
   private StoreCredentialsProvider storeCredentialsProvider;
   private OkHttpClient httpClient;
@@ -160,12 +158,12 @@ public class AddStoreDialog extends BaseDialog {
           dismiss();
           break;
         case PRIVATE_STORE_INVALID_CREDENTIALS_CODE:
-          Snackbar.make(image, R.string.ws_error_invalid_grant, Snackbar.LENGTH_SHORT)
+          Snackbar.make(searchView, R.string.ws_error_invalid_grant, Snackbar.LENGTH_SHORT)
               .show();
           break;
         case PRIVATE_STORE_ERROR_CODE:
         default:
-          Snackbar.make(image, R.string.error_occured, Snackbar.LENGTH_SHORT)
+          Snackbar.make(searchView, R.string.error_occured, Snackbar.LENGTH_SHORT)
               .show();
           break;
       }
@@ -202,12 +200,11 @@ public class AddStoreDialog extends BaseDialog {
   private void bindViews(View view) {
     addStoreButton = (Button) view.findViewById(R.id.button_dialog_add_store);
     topStoresButton = (LinearLayout) view.findViewById(R.id.button_top_stores);
-    searchView = (SearchView) view.findViewById(R.id.search_view);
+    searchView = (SearchView) view.findViewById(R.id.store_search_view);
   }
 
   private void setupSearch() {
 
-    /*
     subscriptions.add(RxView.focusChanges(searchView)
         .skip(300, TimeUnit.MILLISECONDS) // enough time to render the view
         .filter(event -> !event)
@@ -217,38 +214,42 @@ public class AddStoreDialog extends BaseDialog {
             dialog.dismiss();
           }
         }));
-        */
 
     final SearchCursorAdapter searchCursorAdapter = new SearchCursorAdapter(getContext());
     searchView.setSuggestionsAdapter(searchCursorAdapter);
 
     subscriptions.add(RxSearchView.queryTextChangeEvents(searchView)
         .observeOn(AndroidSchedulers.mainThread())
-        .flatMap(event -> handleQueryEvent(event, searchCursorAdapter).toObservable())
+        .doOnNext(event -> handleQueryEvent(event, searchCursorAdapter))
         .subscribe());
 
     subscriptions.add(search.listenForSuggestions()
-        .retry(3)
         .filter(data -> data != null && data.size() > 0)
+        .retry(3)
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(data -> searchCursorAdapter.setData(data))
         .subscribe());
   }
 
-  private Completable handleQueryEvent(SearchViewQueryTextEvent event,
+  private void handleQueryEvent(SearchViewQueryTextEvent event,
       SearchCursorAdapter searchCursorAdapter) {
-    final String query = event.queryText()
-        .toString();
     if (event.queryText()
-        .length() >= 1) {
-      if (event.isSubmitted()) {
-        return Completable.fromAction(() -> addStoreAction(query));
-      }
-
-      return Completable.fromAction(() -> search.getSuggestionsFor(query));
+        .length() == 0) {
+      searchCursorAdapter.setData(Collections.emptyList());
+      return;
     }
 
-    return Completable.fromAction(() -> searchCursorAdapter.setData(Collections.emptyList()));
+    final String query = event.queryText()
+        .toString();
+
+    if (event.isSubmitted()) {
+      addStoreAction(query);
+      return;
+    }
+
+    if(query.length()>=3){
+      search.getSuggestionsFor(query);
+    }
   }
 
   private void getStore(String storeName) {
@@ -304,12 +305,12 @@ public class AddStoreDialog extends BaseDialog {
                 break;
 
               default:
-                Snackbar.make(image, error.getDescription(), Snackbar.LENGTH_SHORT)
+                Snackbar.make(searchView, error.getDescription(), Snackbar.LENGTH_SHORT)
                     .show();
                 break;
             }
           } else {
-            Snackbar.make(image, R.string.error_occured, Snackbar.LENGTH_SHORT)
+            Snackbar.make(searchView, R.string.error_occured, Snackbar.LENGTH_SHORT)
                 .show();
           }
         }, storeName, accountManager);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:aptoide="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/add_store_dialog_background"
@@ -41,7 +41,7 @@
         >
 
       <android.support.v7.widget.SearchView
-          android:id="@+id/search_view"
+          android:id="@+id/store_search_view"
           android:layout_width="wrap_content"
           android:layout_height="match_parent"
           android:layout_alignParentLeft="true"
@@ -53,7 +53,8 @@
           android:imeOptions="flagNoExtractUi|actionSearch"
           android:maxLines="1"
           android:queryHint="@string/store_name"
-          aptoide:iconifiedByDefault="false"
+          app:iconifiedByDefault="false"
+          app:searchIcon="@null"
           >
       </android.support.v7.widget.SearchView>
 

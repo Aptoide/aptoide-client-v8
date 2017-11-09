@@ -40,6 +40,11 @@ public class Search {
 
   public Observable<List<String>> listenForSuggestions() {
     return webSocket.listen()
+        .doOnNext(event -> {
+          if (event.getStatus() == SocketEvent.Status.CLOSING) {
+            webSocket.send(new byte[0]);
+          }
+        })
         .filter(event -> event.getStatus() == SocketEvent.Status.MESSAGE)
         .filter(event -> event.hasData())
         .flatMap(event -> {
