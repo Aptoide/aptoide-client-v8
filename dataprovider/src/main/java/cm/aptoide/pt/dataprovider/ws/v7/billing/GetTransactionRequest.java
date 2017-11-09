@@ -13,13 +13,17 @@ import retrofit2.Converter;
 import retrofit2.Response;
 import rx.Observable;
 
-public class GetTransactionRequest
-    extends V7<Response<GetTransactionRequest.ResponseBody>, GetTransactionRequest.RequestBody> {
+public class GetTransactionRequest extends V7<Response<GetTransactionRequest.ResponseBody>, Void> {
 
-  private GetTransactionRequest(GetTransactionRequest.RequestBody body, String baseHost,
-      OkHttpClient httpClient, Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
-      TokenInvalidator tokenInvalidator) {
+  private final long productId;
+  private final String accessToken;
+
+  private GetTransactionRequest(Void body, String baseHost, OkHttpClient httpClient,
+      Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
+      TokenInvalidator tokenInvalidator, long productId, String accessToken) {
     super(body, baseHost, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+    this.productId = productId;
+    this.accessToken = accessToken;
   }
 
   public static String getHost(SharedPreferences sharedPreferences) {
@@ -32,16 +36,15 @@ public class GetTransactionRequest
 
   public static GetTransactionRequest of(BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, long productId) {
-    final RequestBody body = new RequestBody();
-    body.setProductId(productId);
-    return new GetTransactionRequest(body, getHost(sharedPreferences), httpClient, converterFactory,
-        bodyInterceptor, tokenInvalidator);
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, long productId,
+      String accessToken) {
+    return new GetTransactionRequest(null, getHost(sharedPreferences), httpClient, converterFactory,
+        bodyInterceptor, tokenInvalidator, productId, accessToken);
   }
 
   @Override protected Observable<Response<ResponseBody>> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getBillingTransaction(body, bypassCache);
+    return interfaces.getBillingTransaction(productId, "Bearer " + accessToken);
   }
 
   public static class RequestBody extends BaseBody {

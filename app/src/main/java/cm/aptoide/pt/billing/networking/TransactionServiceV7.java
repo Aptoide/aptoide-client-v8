@@ -11,6 +11,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.CreateTransactionRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetTransactionRequest;
+import cm.aptoide.pt.networking.AuthenticationPersistence;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Single;
@@ -24,12 +25,13 @@ public class TransactionServiceV7 implements TransactionService {
   private final SharedPreferences sharedPreferences;
   private final BillingIdManager billingIdManager;
   private final TransactionFactory transactionFactory;
+  private final AuthenticationPersistence authenticationPersistence;
 
   public TransactionServiceV7(TransactionMapperV7 transactionMapper,
       BodyInterceptor<BaseBody> bodyInterceptorV7, Converter.Factory converterFactory,
       OkHttpClient httpClient, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, BillingIdManager billingIdManager,
-      TransactionFactory transactionFactory) {
+      TransactionFactory transactionFactory, AuthenticationPersistence authenticationPersistence) {
     this.transactionMapper = transactionMapper;
     this.bodyInterceptorV7 = bodyInterceptorV7;
     this.converterFactory = converterFactory;
@@ -38,12 +40,15 @@ public class TransactionServiceV7 implements TransactionService {
     this.sharedPreferences = sharedPreferences;
     this.billingIdManager = billingIdManager;
     this.transactionFactory = transactionFactory;
+    this.authenticationPersistence = authenticationPersistence;
   }
 
   @Override public Single<Transaction> getTransaction(String customerId, String productId) {
-    return GetTransactionRequest.of(bodyInterceptorV7, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences, billingIdManager.resolveProductId(productId))
-        .observe(true)
+    return authenticationPersistence.getAuthentication()
+        .flatMapObservable(authentication -> GetTransactionRequest.of(bodyInterceptorV7, httpClient,
+            converterFactory, tokenInvalidator, sharedPreferences,
+            billingIdManager.resolveProductId(productId), authentication.getAccessToken())
+            .observe())
         .toSingle()
         .flatMap(response -> {
           if (response.isSuccessful()) {

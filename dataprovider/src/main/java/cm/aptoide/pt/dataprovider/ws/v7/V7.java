@@ -73,12 +73,14 @@ import retrofit2.Converter;
 import retrofit2.Response;
 import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 import retrofit2.http.Url;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -136,6 +138,11 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
   }
 
   @Override public Observable<U> observe(boolean bypassCache) {
+
+    if (body == null) {
+      return handleToken(retryOnTicket(super.observe(bypassCache)), bypassCache);
+    }
+
     return bodyInterceptor.intercept(body)
         .flatMapObservable(
             body -> handleToken(retryOnTicket(super.observe(bypassCache)), bypassCache));
@@ -474,10 +481,9 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
         @Body GetPurchasesRequest.RequestBody body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("inapp/bank/transaction/getMeta")
+    @GET("inapp/bank/transaction/getMeta")
     Observable<Response<GetTransactionRequest.ResponseBody>> getBillingTransaction(
-        @Body GetTransactionRequest.RequestBody body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Query("product_id") long productId, @Header("Authorization") String authorization);
 
     @POST("inapp/bank/transaction/set")
     Observable<CreateTransactionRequest.ResponseBody> createBillingTransaction(
@@ -497,10 +503,9 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
         @Body UpdateAuthorizationRequest.RequestBody body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("inapp/bank/authorization/getMeta")
+    @GET("inapp/bank/authorization/getMeta")
     Observable<Response<GetAuthorizationRequest.ResponseBody>> getBillingAuthorization(
-        @Body GetAuthorizationRequest.RequestBody body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Query("transaction_id") long transactionId, @Header("Authorization") String authorization);
 
     @POST("user/timeline/card/del") Observable<BaseV7Response> deletePost(
         @Body PostDeleteRequest.Body body,

@@ -11,6 +11,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetAuthorizationRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.UpdateAuthorizationRequest;
+import cm.aptoide.pt.networking.AuthenticationPersistence;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Single;
@@ -25,11 +26,13 @@ public class AuthorizationServiceV7 implements AuthorizationService {
   private final BodyInterceptor<BaseBody> bodyInterceptorV7;
   private final BillingIdManager billingIdManager;
   private final AuthorizationFactory authorizationFactory;
+  private final AuthenticationPersistence authenticationPersistence;
 
   public AuthorizationServiceV7(AuthorizationMapperV7 authorizationMapper, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, BodyInterceptor<BaseBody> bodyInterceptorV7,
-      BillingIdManager billingIdManager, AuthorizationFactory authorizationFactory) {
+      BillingIdManager billingIdManager, AuthorizationFactory authorizationFactory,
+      AuthenticationPersistence authenticationPersistence) {
     this.authorizationMapper = authorizationMapper;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
@@ -38,12 +41,15 @@ public class AuthorizationServiceV7 implements AuthorizationService {
     this.bodyInterceptorV7 = bodyInterceptorV7;
     this.billingIdManager = billingIdManager;
     this.authorizationFactory = authorizationFactory;
+    this.authenticationPersistence = authenticationPersistence;
   }
 
   @Override public Single<Authorization> getAuthorization(String transactionId, String customerId) {
-    return GetAuthorizationRequest.of(billingIdManager.resolveTransactionId(transactionId),
-        sharedPreferences, httpClient, converterFactory, bodyInterceptorV7, tokenInvalidator)
-        .observe(true)
+    return authenticationPersistence.getAuthentication()
+        .flatMapObservable(authentication -> GetAuthorizationRequest.of(
+            billingIdManager.resolveTransactionId(transactionId), sharedPreferences, httpClient,
+            converterFactory, bodyInterceptorV7, tokenInvalidator, authentication.getAccessToken())
+            .observe())
         .toSingle()
         .flatMap(response -> {
 
