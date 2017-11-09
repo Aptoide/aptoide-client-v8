@@ -9,12 +9,13 @@ import java.util.concurrent.ScheduledExecutorService;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
+@Deprecated
 public class SearchWebSocketProvider {
 
   private static final String WEBSOCKETS_SCHEME = BuildConfig.APTOIDE_WEBSOCKETS_SCHEME;
   private static final String WEBSOCKETS_HOST = BuildConfig.APTOIDE_WEBSOCKETS_HOST;
-  private static final String SEARCH_WEBSOCKET_PORT = "9000";
   private static final String STORE_WEBSOCKET_PORT = "9002";
+  private static final String SEARCH_WEBSOCKET_PORT = "9000";
 
   private final ScheduledExecutorService scheduledExecutorService;
   private final OkHttpClient client;

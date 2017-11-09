@@ -1,12 +1,9 @@
 package cm.aptoide.pt.search.suggestionsprovider.websocket;
 
 import android.content.SearchRecentSuggestionsProvider;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
-import android.os.CancellationSignal;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.crashreports.CrashReport;
 import java.util.concurrent.BlockingQueue;
@@ -14,7 +11,9 @@ import java.util.concurrent.TimeUnit;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public abstract class WebSocketSearchRecentSuggestionsProvider extends SearchRecentSuggestionsProvider {
+@Deprecated
+public abstract class WebSocketSearchRecentSuggestionsProvider
+    extends SearchRecentSuggestionsProvider {
 
   private final CrashReport crashReport;
 
@@ -23,18 +22,8 @@ public abstract class WebSocketSearchRecentSuggestionsProvider extends SearchRec
   }
 
   @Override public boolean onCreate() {
-    setupSuggestions(getSearchProvider(getContext().getResources()), DATABASE_MODE_QUERIES);
+    setupSuggestions(getAuthority(), DATABASE_MODE_QUERIES);
     return super.onCreate();
-  }
-
-  @Nullable @Override
-  public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection,
-      @Nullable String[] selectionArgs, @Nullable String sortOrder,
-      @Nullable CancellationSignal cancellationSignal) {
-
-    // TODO use the cancellationSignal with the blocking queue
-
-    return super.query(uri, projection, selection, selectionArgs, sortOrder, cancellationSignal);
   }
 
   @Nullable @Override public Cursor query(final Uri uri, String[] projection, String selection,
@@ -50,7 +39,7 @@ public abstract class WebSocketSearchRecentSuggestionsProvider extends SearchRec
           && query.trim()
           .length() > 0) {
 
-        getSearchSocket().send(buildJson(query));
+        getSearchWebSocket().send(buildJson(query));
 
         MatrixCursor matrixCursor = getBlockingQueue().poll(5, TimeUnit.SECONDS);
 
@@ -74,11 +63,11 @@ public abstract class WebSocketSearchRecentSuggestionsProvider extends SearchRec
     return null;
   }
 
+  public abstract String getAuthority();
+
+  public abstract SearchWebSocket getSearchWebSocket();
+
   public abstract BlockingQueue<MatrixCursor> getBlockingQueue();
-
-  public abstract String getSearchProvider(Resources resources);
-
-  public abstract SearchWebSocket getSearchSocket();
 
   private String buildJson(String query) {
     JSONObject jsonObject = new JSONObject();

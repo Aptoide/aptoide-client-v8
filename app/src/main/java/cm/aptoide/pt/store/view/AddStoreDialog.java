@@ -2,16 +2,10 @@ package cm.aptoide.pt.store.view;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.SearchManager;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +14,6 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
@@ -35,11 +28,11 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.navigator.FragmentResultNavigator;
-import cm.aptoide.pt.search.view.StoreSearchActivity;
-import cm.aptoide.pt.search.suggestionsprovider.websocket.SearchWebSocket;
-import cm.aptoide.pt.search.suggestionsprovider.StoreSuggestions;
+import cm.aptoide.pt.search.Search;
+import cm.aptoide.pt.search.SearchCursorAdapter;
+import cm.aptoide.pt.search.SearchFactory;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
@@ -48,13 +41,17 @@ import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.view.MainActivity;
 import cm.aptoide.pt.view.dialog.BaseDialog;
 import com.facebook.appevents.AppEventsLogger;
+import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
+import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import com.jakewharton.rxbinding.view.RxView;
-import com.trello.rxlifecycle.android.FragmentEvent;
+import java.util.Collections;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
+import rx.Completable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.subscriptions.CompositeSubscription;
 
 public class AddStoreDialog extends BaseDialog {
 
@@ -71,31 +68,37 @@ public class AddStoreDialog extends BaseDialog {
   private SearchView searchView;
   private Button addStoreButton;
   private LinearLayout topStoresButton;
-  private TextView topStoreText1;
-  private TextView topStoreText2;
   private ImageView image;
-  private String givenStoreName;
   private BodyInterceptor<BaseBody> baseBodyBodyInterceptor;
   private StoreCredentialsProvider storeCredentialsProvider;
-  private SearchView.SearchAutoComplete searchAutoComplete;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
   private StoreAnalytics storeAnalytics;
-  private SearchWebSocket searchWebSocket;
+
+  private Search search;
+  private CompositeSubscription subscriptions;
 
   @Override public void onAttach(Activity activity) {
     super.onAttach(activity);
-    if (activity instanceof MainActivity) {
-      navigator = ((MainActivity) activity).getFragmentNavigator();
+    if (ActivityResultNavigator.class.isAssignableFrom(activity.getClass())) {
+      navigator = ((ActivityResultNavigator) activity).getFragmentNavigator();
     } else {
-      Logger.e(TAG, "Launched AddStoreDialog from invalid Activity");
-      throw new IllegalStateException();
+      final IllegalStateException exception = new IllegalStateException(
+          AddStoreDialog.class.getSimpleName()
+              + " must extend class "
+              + ActivityResultNavigator.class.getSimpleName());
+
+      Logger.e(TAG, exception);
+      throw exception;
     }
   }
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    subscriptions = new CompositeSubscription();
+
     tokenInvalidator =
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     converterFactory = WebService.getDefaultConverter();
@@ -114,51 +117,33 @@ public class AddStoreDialog extends BaseDialog {
     storeAnalytics =
         new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
             Analytics.getInstance());
+
+    search = new SearchFactory().createSearchForStore();
   }
 
   @Override public void onViewCreated(final View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     bindViews(view);
-    setupSearchView();
-    setupStoreSearch(searchView);
-    RxView.clicks(addStoreButton)
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+    setupSearch();
+    setupButtonHandlers();
+  }
+
+  @Override public void onDestroyView() {
+    if (subscriptions != null && !subscriptions.isUnsubscribed()) {
+      subscriptions.unsubscribe();
+    }
+    super.onDestroyView();
+  }
+
+  private void setupButtonHandlers() {
+    subscriptions.add(RxView.clicks(addStoreButton)
         .subscribe(click -> {
           addStoreAction();
           storeAnalytics.sendStoreTabInteractEvent("Add Store");
-        });
-    RxView.clicks(topStoresButton)
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(click -> topStoresAction());
+        }));
 
-    RxView.clicks(topStoreText1)
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(click -> topStoresAction());
-
-    RxView.clicks(topStoreText2)
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(click -> topStoresAction());
-  }
-
-  @Override public void onDetach() {
-    super.onDetach();
-    if (searchWebSocket != null) {
-      searchWebSocket.disconnect();
-    }
-  }
-
-  @Override public void show(FragmentManager manager, String tag) {
-    if (navigator == null) {
-      Logger.w(TAG, FragmentResultNavigator.class.getName() + " is null.");
-    }
-    super.show(manager, tag);
-  }
-
-  @Override public int show(FragmentTransaction transaction, String tag) {
-    if (navigator == null) {
-      Logger.w(TAG, FragmentResultNavigator.class.getName() + " is null.");
-    }
-    return super.show(transaction, tag);
+    subscriptions.add(RxView.clicks(topStoresButton)
+        .subscribe(click -> topStoresAction()));
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -189,15 +174,23 @@ public class AddStoreDialog extends BaseDialog {
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
-    if (getDialog() != null) {
-      getDialog().getWindow()
+    final Dialog dialog = getDialog();
+    if (dialog != null) {
+      dialog.getWindow()
           .requestFeature(Window.FEATURE_NO_TITLE);
+      dialog.setCancelable(true);
     }
     return inflater.inflate(R.layout.dialog_add_store, container, false);
   }
 
-  private void addStoreAction() {
-    givenStoreName = searchView.getQuery()
+  private void addStoreAction(String storeName) {
+    AddStoreDialog.this.storeName = storeName;
+    getStore(storeName);
+    showLoadingDialog();
+  }
+
+  @Deprecated private void addStoreAction() {
+    String givenStoreName = searchView.getQuery()
         .toString();
     if (givenStoreName.length() > 0) {
       AddStoreDialog.this.storeName = givenStoreName;
@@ -207,78 +200,59 @@ public class AddStoreDialog extends BaseDialog {
   }
 
   private void bindViews(View view) {
-    searchView = (SearchView) view.findViewById(R.id.edit_store_uri);
     addStoreButton = (Button) view.findViewById(R.id.button_dialog_add_store);
     topStoresButton = (LinearLayout) view.findViewById(R.id.button_top_stores);
-    topStoreText1 = (TextView) view.findViewById(R.id.top_stores_text_1);
-    topStoreText2 = (TextView) view.findViewById(R.id.top_stores_text_2);
-    image = (ImageView) view.findViewById(R.id.search_mag_icon);
-    searchAutoComplete = (SearchView.SearchAutoComplete) view.findViewById(R.id.search_src_text);
+    searchView = (SearchView) view.findViewById(R.id.search_view);
   }
 
-  private void setupSearchView() {
-    searchView.setIconifiedByDefault(false);
-    image.setImageDrawable(null);
-    searchAutoComplete.setOnFocusChangeListener((view, b) -> {
-      if (getDialog() != null) {
-        if (!searchAutoComplete.isFocused() && getDialog().isShowing() && isResumed()) {
-          dismiss();
-        }
-      }
-    });
+  private void setupSearch() {
+
+    /*
+    subscriptions.add(RxView.focusChanges(searchView)
+        .skip(300, TimeUnit.MILLISECONDS) // enough time to render the view
+        .filter(event -> !event)
+        .subscribe(event -> {
+          final Dialog dialog = AddStoreDialog.this.getDialog();
+          if (dialog != null && dialog.isShowing() && isResumed()) {
+            dialog.dismiss();
+          }
+        }));
+        */
+
+    final SearchCursorAdapter searchCursorAdapter = new SearchCursorAdapter(getContext());
+    searchView.setSuggestionsAdapter(searchCursorAdapter);
+
+    subscriptions.add(RxSearchView.queryTextChangeEvents(searchView)
+        .observeOn(AndroidSchedulers.mainThread())
+        .flatMap(event -> handleQueryEvent(event, searchCursorAdapter).toObservable())
+        .subscribe());
+
+    subscriptions.add(search.listenForSuggestions()
+        .retry(3)
+        .filter(data -> data != null && data.size() > 0)
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(data -> searchCursorAdapter.setData(data))
+        .subscribe());
   }
 
-  private void setupStoreSearch(SearchView searchView) {
-    final SearchManager searchManager = (SearchManager) getContext().getApplicationContext()
-        .getSystemService(Context.SEARCH_SERVICE);
-    final ComponentName cn =
-        new ComponentName(getContext().getApplicationContext(), StoreSearchActivity.class);
-    searchView.setSearchableInfo(searchManager.getSearchableInfo(cn));
-
-    final StoreSuggestions searchWebSocketProvider =
-        new StoreSuggestions();
-
-    searchWebSocket = searchWebSocketProvider.getSearchSocket();
-
-    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-      @Override public boolean onQueryTextSubmit(String query) {
-        givenStoreName = query;
-        searchView.setQuery(givenStoreName, false);
-        addStoreAction();
-        return true;
+  private Completable handleQueryEvent(SearchViewQueryTextEvent event,
+      SearchCursorAdapter searchCursorAdapter) {
+    final String query = event.queryText()
+        .toString();
+    if (event.queryText()
+        .length() >= 1) {
+      if (event.isSubmitted()) {
+        return Completable.fromAction(() -> addStoreAction(query));
       }
 
-      @Override public boolean onQueryTextChange(String newText) {
-        //searchView.setQuery(newText, false);
-        return false;
-      }
-    });
+      return Completable.fromAction(() -> search.getSuggestionsFor(query));
+    }
 
-    searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-      @Override public boolean onSuggestionSelect(int position) {
-        return false;
-      }
-
-      @Override public boolean onSuggestionClick(int position) {
-        Cursor item = (Cursor) searchView.getSuggestionsAdapter()
-            .getItem(position);
-        givenStoreName = item.getString(1);
-        searchView.setQuery(givenStoreName, false);
-        return true;
-      }
-    });
-
-    searchView.setOnQueryTextFocusChangeListener((view, hasFocus) -> {
-      if (!hasFocus) {
-        searchWebSocket.disconnect();
-      }
-    });
+    return Completable.fromAction(() -> searchCursorAdapter.setData(Collections.emptyList()));
   }
 
   private void getStore(String storeName) {
-    GetStoreMetaRequest getHomeMetaRequest = buildRequest(storeName);
-
-    executeRequest(getHomeMetaRequest);
+    executeRequest(buildRequest(storeName));
   }
 
   private void showLoadingDialog() {
@@ -291,8 +265,7 @@ public class AddStoreDialog extends BaseDialog {
   }
 
   private void topStoresAction() {
-    navigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newFragmentTopStores(), true);
+    navigator.navigateTo(FragmentTopStores.newInstance(), true);
     if (isAdded()) {
       dismiss();
     }

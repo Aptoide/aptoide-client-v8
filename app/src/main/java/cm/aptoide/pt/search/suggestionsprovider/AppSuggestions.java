@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.search.suggestionsprovider;
 
-import android.content.res.Resources;
 import android.database.MatrixCursor;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -15,29 +14,33 @@ import cm.aptoide.pt.search.suggestionsprovider.websocket.WebSocketSearchRecentS
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
+@Deprecated
 public class AppSuggestions extends WebSocketSearchRecentSuggestionsProvider {
 
-  private final SearchWebSocketProvider searchWebSocketProvider;
-  private final BlockingQueue<MatrixCursor> blockingQueue = new ArrayBlockingQueue<>(1);
-  private SearchWebSocket searchSocket;
+
+  private SearchWebSocketProvider searchWebSocketProvider = new SearchWebSocketProvider();
+  private BlockingQueue<MatrixCursor> blockingQueue = new ArrayBlockingQueue<>(1);
 
   public AppSuggestions() {
     super(CrashReport.getInstance());
-    searchWebSocketProvider = new SearchWebSocketProvider();
   }
 
-  @Override public BlockingQueue<MatrixCursor> getBlockingQueue() {
+  public SearchWebSocket getSearchWebSocket() {
+    if (searchWebSocketProvider == null) {
+      searchWebSocketProvider = new SearchWebSocketProvider();
+      blockingQueue = new ArrayBlockingQueue<>(1);
+    }
+    blockingQueue.clear();
+    return searchWebSocketProvider.getSearchAppsSocket(blockingQueue);
+  }
+
+  public BlockingQueue<MatrixCursor> getBlockingQueue() {
     return blockingQueue;
   }
 
-  @Override public String getSearchProvider(Resources resources) {
-    return resources.getString(R.string.search_suggestion_provider_authority);
+  public String getAuthority() {
+    return getContext().getResources()
+        .getString(R.string.search_suggestion_provider_authority);
   }
 
-  @Override public SearchWebSocket getSearchSocket() {
-    if (searchSocket == null) {
-      searchSocket = searchWebSocketProvider.getSearchAppsSocket(blockingQueue);
-    }
-    return searchSocket;
-  }
 }

@@ -50,7 +50,7 @@ public class SearchBuilder {
     final AppSuggestions appSuggestions = new AppSuggestions();
 
     final SearchActionsHandler actionsHandler =
-        new SearchActionsHandler(appSuggestions.getSearchSocket(), menuItem,
+        new SearchActionsHandler(appSuggestions.getSearchWebSocket(), menuItem,
             searchNavigator, unableToSearchAction, queryResultRepository, lastQuery);
 
     final ComponentName componentName = new ComponentName(applicationContext, SearchActivity.class);
