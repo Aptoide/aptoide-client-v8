@@ -33,45 +33,17 @@ public class DownloadCompleteAnalytics {
   }
 
   public void installClicked(ScreenTagHistory previousScreen, ScreenTagHistory currentScreen,
-      String id, String packageName, String trustedValue, String editorsBrickPosition) {
-    createEvents(previousScreen, currentScreen, id, packageName, trustedValue,
-        editorsBrickPosition);
-  }
+      String id, String packageName, String trustedValue, String editorsBrickPosition,
+      InstallType installType) {
 
-  @NonNull private Bundle mapToBundle(Map<String, String> map) {
-    Bundle parameters = new Bundle();
-    if (map != null) {
-      for (String s : map.keySet()) {
-        parameters.putString(s, map.get(s));
-      }
-    }
-    return parameters;
-  }
-
-  public void downloadCompleted(String id) {
-    sendEvent(analytics.getFlurryEvent(id + PARTIAL_EVENT_NAME));
-    sendEvent(analytics.getFacebookEvent(id + PARTIAL_EVENT_NAME));
-    sendEvent(analytics.getFabricEvent(id + EVENT_NAME));
-    sendEvent(analytics.getFlurryEvent(id + EVENT_NAME));
-    sendEvent(analytics.getFacebookEvent(id + EVENT_NAME));
-  }
-
-  private void sendEvent(Event event) {
-    if (event != null) {
-      analytics.sendEvent(event);
-    }
-  }
-
-  private void createEvents(ScreenTagHistory previousScreen, ScreenTagHistory currentScreen,
-      String id, String packageName, String trustedValue, String editorsChoiceBrickPosition) {
-
-    if (editorsChoiceBrickPosition != null) {
+    if (editorsBrickPosition != null) {
       HashMap<String, String> map = new HashMap<>();
       map.put(PACKAGE_NAME, packageName);
       if (previousScreen.getFragment() != null) {
         map.put("fragment", previousScreen.getFragment());
       }
-      map.put("position", editorsChoiceBrickPosition);
+      map.put("position", editorsBrickPosition);
+      map.put("type", installType.name());
       FlurryEvent editorsEvent = new FlurryEvent(PARTIAL_EVENT_NAME, map);
       FacebookEvent editorsChoiceFacebookEvent =
           new FacebookEvent(facebookLogger, PARTIAL_EVENT_NAME, mapToBundle(map));
@@ -105,5 +77,33 @@ public class DownloadCompleteAnalytics {
     analytics.save(id + EVENT_NAME, downloadFabricEvent);
     analytics.save(id + EVENT_NAME, downloadFlurryEvent);
     analytics.save(id + EVENT_NAME, downloadFacebookEvent);
+  }
+
+  @NonNull private Bundle mapToBundle(Map<String, String> map) {
+    Bundle parameters = new Bundle();
+    if (map != null) {
+      for (String s : map.keySet()) {
+        parameters.putString(s, map.get(s));
+      }
+    }
+    return parameters;
+  }
+
+  public void downloadCompleted(String id) {
+    sendEvent(analytics.getFlurryEvent(id + PARTIAL_EVENT_NAME));
+    sendEvent(analytics.getFacebookEvent(id + PARTIAL_EVENT_NAME));
+    sendEvent(analytics.getFabricEvent(id + EVENT_NAME));
+    sendEvent(analytics.getFlurryEvent(id + EVENT_NAME));
+    sendEvent(analytics.getFacebookEvent(id + EVENT_NAME));
+  }
+
+  private void sendEvent(Event event) {
+    if (event != null) {
+      analytics.sendEvent(event);
+    }
+  }
+
+  public enum InstallType {
+    INSTALL, UPDATE, DOWNGRADE,
   }
 }
