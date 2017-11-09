@@ -17,6 +17,7 @@ import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
+import rx.Single;
 
 public class SearchManager {
 
@@ -96,7 +97,6 @@ public class SearchManager {
     test.add("Hill Climb Racing");
     test.add("Aptoide");
     return Observable.just(test);
-
   }
 
   private boolean hasResults(ListSearchApps listSearchApps) {

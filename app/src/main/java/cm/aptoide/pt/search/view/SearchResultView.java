@@ -4,11 +4,12 @@ import android.util.Pair;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
+import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.List;
 import rx.Observable;
 
-public interface SearchView extends View {
+public interface SearchResultView extends View {
   Observable<Void> clickTitleBar();
 
   void showFollowedStoresResult();
@@ -27,15 +28,7 @@ public interface SearchView extends View {
 
   void showWidgetClickView();
 
-  Observable<Boolean> getSearchWidgetFocusState();
-
-  PublishRelay<String> handleSearchOnClick();
-
-  Observable<CharSequence> onQueryTextChanged();
-
-  void showTrendingMenu(List<String> apps);
-
-  void hideTrendingMenu(String query, boolean keyboard);
+  Observable<SearchViewQueryTextEvent> onQueryTextChanged();
 
   void showVoiceSearch();
 
@@ -72,6 +65,8 @@ public interface SearchView extends View {
   void setViewWithStoreNameAsSingleTab(String storeName);
 
   void setFocusInSearchView();
+
+  void setTrending(List<String> trending);
 
   interface Model {
 

@@ -78,7 +78,7 @@ public class AddStoreDialog extends BaseDialog {
   private TokenInvalidator tokenInvalidator;
   private StoreAnalytics storeAnalytics;
 
-  private SearchSuggestionManager search;
+  private SearchSuggestionManager searchSuggestionManager;
   private CompositeSubscription subscriptions;
 
   @Override public void onAttach(Activity activity) {
@@ -120,7 +120,7 @@ public class AddStoreDialog extends BaseDialog {
         new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
             Analytics.getInstance());
 
-    search = new SearchFactory().createSearchForStore();
+    searchSuggestionManager = new SearchFactory().createSearchForStore();
   }
 
   @Override public void onViewCreated(final View view, Bundle savedInstanceState) {
@@ -233,7 +233,7 @@ public class AddStoreDialog extends BaseDialog {
         .doOnNext(event -> handleQueryEvent(event, searchCursorAdapter))
         .subscribe());
 
-    subscriptions.add(search.listenForSuggestions()
+    subscriptions.add(searchSuggestionManager.listenForSuggestions()
         .filter(data -> data != null && data.size() > 0)
         .retry(3)
         .observeOn(AndroidSchedulers.mainThread())
@@ -258,7 +258,7 @@ public class AddStoreDialog extends BaseDialog {
     }
 
     if (query.length() >= COMPLETION_THRESHOLD) {
-      search.getSuggestionsFor(query);
+      searchSuggestionManager.getSuggestionsFor(query);
     }
   }
 

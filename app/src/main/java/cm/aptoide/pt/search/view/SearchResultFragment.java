@@ -1,6 +1,5 @@
 package cm.aptoide.pt.search.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
@@ -9,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.ActionBar;
@@ -17,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -25,7 +24,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -46,8 +45,8 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.search.SearchAnalytics;
+import cm.aptoide.pt.search.SearchCursorAdapter;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
@@ -61,10 +60,9 @@ import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
-import com.jakewharton.rxbinding.view.RxMenuItem;
+import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
-import com.twitter.sdk.android.core.models.Search;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -74,9 +72,10 @@ import retrofit2.Converter;
 import rx.Observable;
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.subjects.PublishSubject;
 import rx.subscriptions.Subscriptions;
 
-public class SearchResultFragment extends BackButtonFragment implements SearchView {
+public class SearchResultFragment extends BackButtonFragment implements SearchResultView {
 
   private static final String TAG = SearchResultFragment.class.getName();
 
@@ -88,6 +87,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   private static final String ALL_STORES_SEARCH_LIST_STATE = "all_stores_search_list_state";
   private static final String FOLLOWED_STORES_SEARCH_LIST_STATE =
       "followed_stores_search_list_state";
+  //private static final int COMPLETION_THRESHOLD = 0;
 
   private View noSearchLayout;
   private EditText noSearchLayoutSearchQuery;
@@ -97,7 +97,6 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   private LinearLayout buttonsLayout;
   private Button followedStoresButton;
   private Button allStoresButton;
-  private RecyclerView trendingList;
 
   private RecyclerView followedStoresResultList;
   private RecyclerView allStoresResultList;
@@ -109,20 +108,20 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   private PublishRelay<SearchAppResult> onItemViewClickRelay;
   private PublishRelay<Pair<SearchAppResult, View>> onOpenPopupMenuClickRelay;
   private PublishRelay<SearchAdResult> onAdClickRelay;
-  private PublishRelay<String> trendingItemClick;
   private SearchManager searchManager;
   private Scheduler mainThreadScheduler;
   private SearchNavigator searchNavigator;
   private CrashReport crashReport;
   private SearchAnalytics searchAnalytics;
   private float listItemPadding;
-  private MenuItem searchMenuItem;
-  private SearchBuilder searchBuilder;
   private String defaultThemeName;
   private boolean isMultiStoreSearch;
   private String defaultStoreName;
   private IssuesAnalytics issuesAnalytics;
-  private TrendingListAdapter trendingListAdapter;
+  private SearchView searchView;
+  private SearchCursorAdapter searchCursorAdapter;
+  private TrendingManager trendingManager;
+  private PublishSubject<SearchViewQueryTextEvent> queryTextChangedPublisher;
 
   public static SearchResultFragment newInstance(String currentQuery, String defaultStoreName) {
     return newInstance(currentQuery, false, defaultStoreName);
@@ -159,7 +158,6 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     noSearchLayoutSearchQuery = (EditText) view.findViewById(R.id.search_text);
     noResultsSearchButton = (ImageView) view.findViewById(R.id.ic_search_button);
     searchResultsLayout = view.findViewById(R.id.search_results_layout);
-    trendingList = (RecyclerView) view.findViewById(R.id.trending_suggestions);
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
   }
@@ -264,32 +262,10 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     setFocusInSearchView();
   }
 
-  @Override public Observable<Boolean> getSearchWidgetFocusState() {
-      return RxView.focusChanges(searchMenuItem.getActionView());
+  @Override public Observable<SearchViewQueryTextEvent> onQueryTextChanged(){
+    return queryTextChangedPublisher;
   }
 
-  @Override public Observable<CharSequence> onQueryTextChanged(){
-    return RxSearchView.queryTextChanges(
-        (android.support.v7.widget.SearchView) searchMenuItem.getActionView());
-  }
-
-  @Override public void showTrendingMenu(List<String> apps) {
-    trendingListAdapter.updateEntries(apps);
-    trendingList.setVisibility(View.VISIBLE);
-  }
-
-  @Override public void hideTrendingMenu(String query, boolean keyboard){
-    searchMenuItem.collapseActionView();
-    if(keyboard){
-      InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
-      View view = getActivity().getCurrentFocus();
-      if(view==null)
-        view = new View(getActivity());
-      imm.hideSoftInputFromWindow(view.getWindowToken(),0);
-    }
-    trendingList.setVisibility(View.GONE);
-    searchMenuItem.setTitle(query);
-  }
 
   @Override public void showVoiceSearch() {
     noSearchLayout.setVisibility(View.GONE);
@@ -392,9 +368,13 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   }
 
   @Override public void setFocusInSearchView() {
-    if (searchMenuItem != null) {
-      searchMenuItem.expandActionView();
+    if (searchView != null) {
+      searchView.setIconified(false);
     }
+  }
+
+  @Override public void setTrending(List<String> trending) {
+    searchCursorAdapter.setData(trending);
   }
 
   private Observable<Void> recyclerViewReachedBottom(RecyclerView recyclerView) {
@@ -443,33 +423,26 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_search_results, menu);
-    if (searchBuilder != null && searchBuilder.isValid()) {
-      final FragmentActivity activity = getActivity();
-      // from getActivity() "May return null if the fragment is associated with a Context instead."
-      final Context context = getContext();
+    MenuItem searchMenuItem = menu.findItem(R.id.action_search);
+    searchView = (SearchView) searchMenuItem.getActionView();
+    searchCursorAdapter = new SearchCursorAdapter(getContext());
+    searchView.setSuggestionsAdapter(searchCursorAdapter);
+    searchView.setIconifiedByDefault(false);
 
-      if (activity != null) {
-        searchMenuItem = menu.findItem(R.id.action_search);
-        searchBuilder.attachSearch(activity, searchMenuItem);
-        issuesAnalytics.attachSearchSuccess(false);
-        return;
-      } else if (context != null) {
-        searchMenuItem = menu.findItem(R.id.action_search);
-        searchBuilder.attachSearch(context, searchMenuItem);
-        issuesAnalytics.attachSearchSuccess(true);
-        return;
-      } else {
-        issuesAnalytics.attachSearchFailed(true);
-        Logger.e(TAG, new IllegalStateException(
-            "Unable to attach search to this fragment due to null parent"));
-      }
-    } else {
-      issuesAnalytics.attachSearchFailed(false);
-      Logger.e(TAG, new IllegalStateException(
-          "Unable to attach search to this fragment due to invalid search builder"));
-    }
 
-    menu.removeItem(R.id.action_search);
+    //AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) searchView.findViewById(
+    //    android.support.v7.appcompat.R.id.search_src_text);
+    //autoCompleteTextView.setThreshold(COMPLETION_THRESHOLD);
+
+    getLifecycle()
+        .filter(event -> event.equals(cm.aptoide.pt.presenter.View.LifecycleEvent.CREATE))
+        .flatMap(__ -> RxSearchView.queryTextChangeEvents(searchView))
+        .doOnNext(event -> queryTextChangedPublisher.onNext(event))
+        .compose(bindUntilEvent(cm.aptoide.pt.presenter.View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+         }, e -> crashReport.log(e));
+
+    queryTextChangedPublisher.onNext(null);
   }
 
   @Override public String getDefaultTheme() {
@@ -480,17 +453,14 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     super.onCreate(savedInstanceState);
 
     crashReport = CrashReport.getInstance();
-
     viewModel = loadViewModel(getArguments());
+    queryTextChangedPublisher = PublishSubject.create();
 
     final android.app.SearchManager searchManagerService =
         (android.app.SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
 
     searchNavigator = new SearchNavigator(getFragmentNavigator(), viewModel.getStoreName(),
         viewModel.getDefaultStoreName());
-
-    searchBuilder =
-        new SearchBuilder(searchManagerService, searchNavigator, viewModel.getCurrentQuery());
 
     final AptoideApplication applicationContext =
         (AptoideApplication) getContext().getApplicationContext();
@@ -533,7 +503,6 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     onItemViewClickRelay = PublishRelay.create();
     onOpenPopupMenuClickRelay = PublishRelay.create();
     onAdClickRelay = PublishRelay.create();
-    trendingItemClick = PublishRelay.create();
 
     final List<SearchAppResult> searchResultFollowedStores = new ArrayList<>();
     final List<SearchAdResult> searchResultAdsFollowedStores = new ArrayList<>();
@@ -551,19 +520,12 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
         new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, onOpenPopupMenuClickRelay,
             searchResultAllStores, searchResultAdsAllStores, crashReport);
     setHasOptionsMenu(true);
-
-    this.trendingListAdapter = new TrendingListAdapter(trendingItemClick);
-
   }
 
-  @Override public PublishRelay<String> handleSearchOnClick(){
-    return trendingItemClick;
-  }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     findChildViews(view);
-    trendingList.setLayoutManager(new LinearLayoutManager(getContext()));
     attachFollowedStoresResultListDependencies();
     attachAllStoresResultListDependencies();
     attachToolbar();
@@ -571,7 +533,6 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     attachPresenter(new SearchResultPresenter(this, searchAnalytics, searchNavigator, crashReport,
         mainThreadScheduler, searchManager, onAdClickRelay, onItemViewClickRelay,
         onOpenPopupMenuClickRelay, isMultiStoreSearch, defaultThemeName, defaultStoreName));
-    trendingList.setAdapter(trendingListAdapter);
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
