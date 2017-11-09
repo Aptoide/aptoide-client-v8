@@ -14,7 +14,7 @@ import okhttp3.WebSocketListener;
 /**
  * Created by franciscocalado on 11/7/17.
  */
-
+@Deprecated
 public class SearchWebSocketListener extends WebSocketListener {
 
   private static final String TAG = SearchWebSocketListener.class.getName();

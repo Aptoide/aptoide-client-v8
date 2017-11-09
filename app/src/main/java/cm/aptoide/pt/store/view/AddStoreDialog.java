@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -56,6 +57,9 @@ public class AddStoreDialog extends BaseDialog {
 
   public static final int PRIVATE_STORE_INVALID_CREDENTIALS_CODE = 21;
   public static final int PRIVATE_STORE_ERROR_CODE = 22;
+
+  private static final int COMPLETION_THRESHOLD = 3;
+
   private static final String TAG = AddStoreDialog.class.getName();
 
   private final int PRIVATE_STORE_REQUEST_CODE = 20;
@@ -218,6 +222,10 @@ public class AddStoreDialog extends BaseDialog {
     final SearchCursorAdapter searchCursorAdapter = new SearchCursorAdapter(getContext());
     searchView.setSuggestionsAdapter(searchCursorAdapter);
 
+    AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) searchView.findViewById(
+        android.support.v7.appcompat.R.id.search_src_text);
+    autoCompleteTextView.setThreshold(COMPLETION_THRESHOLD);
+
     subscriptions.add(RxSearchView.queryTextChangeEvents(searchView)
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(event -> handleQueryEvent(event, searchCursorAdapter))
@@ -247,7 +255,7 @@ public class AddStoreDialog extends BaseDialog {
       return;
     }
 
-    if(query.length()>=3){
+    if (query.length() >= COMPLETION_THRESHOLD) {
       search.getSuggestionsFor(query);
     }
   }

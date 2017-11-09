@@ -9,7 +9,7 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
 
-public class SearchWebSocket implements WebSocket {
+@Deprecated public class SearchWebSocket implements WebSocket {
 
   private static final int CLOSE_STATUS_CODE = 1000;
   private static final String CLOSE_REASON = "";
