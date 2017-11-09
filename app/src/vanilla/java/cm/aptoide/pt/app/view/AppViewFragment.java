@@ -84,6 +84,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.download.DownloadCompleteAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.AppAction;
+import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.InstallerFactory;
@@ -938,7 +939,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             appViewAnalytics, installAppRelay, this,
             new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
                 AppEventsLogger.newLogger(getContext().getApplicationContext())), navigationTracker,
-            getEditorsBrickPosition());
+            getEditorsBrickPosition(), new InstallAnalytics(Analytics.getInstance(),
+                AppEventsLogger.newLogger(getContext().getApplicationContext())));
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics, storeAnalytics));
     displayables.add(

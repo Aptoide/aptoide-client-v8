@@ -14,6 +14,7 @@ import java.util.HashMap;
 public class InstallAnalytics {
 
   private static final String APPLICATION_INSTALL = "Application Install";
+  private static final String EDITORS_APPLICATION_INSTALL = "Editors_Choice_Application_Install";
   private static final String TYPE = "Type";
   private static final String PACKAGE_NAME = "Package Name";
   private static final String TRUSTED_BADGE = "Trusted Badge";
@@ -65,5 +66,27 @@ public class InstallAnalytics {
     map.put(TYPE, REPLACED);
     map.put(PACKAGE_NAME, packageName);
     return map;
+  }
+
+  public void installStarted(String lastStep, String packageName, int installingVersion,
+      InstallType installType) {
+    if (lastStep.contains("apps-group-editors-choice")) {
+      Bundle data = new Bundle();
+      data.putString("package_name", packageName);
+      data.putString("type", installType.name());
+      analytics.save(packageName + installingVersion,
+          new FacebookEvent(facebook, EDITORS_APPLICATION_INSTALL, data));
+    }
+  }
+
+  public void installCompleted(String packageName, int installingVersion) {
+    FacebookEvent event = analytics.getFacebookEvent(packageName + installingVersion);
+    if (event != null) {
+      analytics.sendEvent(event);
+    }
+  }
+
+  public enum InstallType {
+    INSTALL, UPDATE, DOWNGRADE
   }
 }
