@@ -14,6 +14,7 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v3.BaseV3Response;
 import cm.aptoide.pt.dataprovider.model.v3.ErrorResponse;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import java.io.IOException;
 import okhttp3.OkHttpClient;
@@ -26,11 +27,24 @@ import rx.Observable;
  */
 public abstract class V3<U> extends WebService<Service, U> {
 
+  protected static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
+      + "://"
+      + BuildConfig.APTOIDE_WEB_SERVICES_HOST
+      + "/webservices/3/";
+
   protected final BaseBody map;
   private final String INVALID_ACCESS_TOKEN_CODE = "invalid_token";
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final TokenInvalidator tokenInvalidator;
   private boolean accessTokenRetry = false;
+
+  protected V3(String baseHost, BaseBody baseBody,
+      BodyInterceptor<BaseBody> bodyInterceptor, TokenInvalidator tokenInvalidator) {
+    super(Service.class, new OkHttpClient(), WebService.getDefaultConverter(), baseHost);
+    this.map = baseBody;
+    this.bodyInterceptor = bodyInterceptor;
+    this.tokenInvalidator = tokenInvalidator;
+  }
 
   protected V3(BaseBody baseBody, OkHttpClient httpClient, Converter.Factory converterFactory,
       BodyInterceptor<BaseBody> bodyInterceptor, TokenInvalidator tokenInvalidator,

@@ -101,6 +101,7 @@ import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.view.SearchBuilder;
 import cm.aptoide.pt.share.ShareAppHelper;
+import cm.aptoide.pt.social.data.ReadPostsPersistence;
 import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
@@ -368,11 +369,13 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     converterFactory = WebService.getDefaultConverter();
     Analytics analytics = Analytics.getInstance();
     issuesAnalytics = new IssuesAnalytics(analytics, Answers.getInstance());
+    ReadPostsPersistence readPostsPersistence =
+        ((AptoideApplication) getContext().getApplicationContext()).getReadPostsPersistence();
     timelineAnalytics = new TimelineAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
         application.getDefaultSharedPreferences(), new NotificationAnalytics(httpClient, analytics),
-        navigationTracker);
+        navigationTracker, readPostsPersistence);
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
             timelineAnalytics, tokenInvalidator, application.getDefaultSharedPreferences());

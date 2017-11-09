@@ -84,6 +84,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
+import cm.aptoide.pt.dataprovider.ws.v7.PostReadRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
@@ -118,13 +119,9 @@ import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.notification.NotificationIdsMapper;
 import cm.aptoide.pt.notification.NotificationPolicyFactory;
 import cm.aptoide.pt.notification.NotificationProvider;
-import cm.aptoide.pt.notification.NotificationService;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.notification.NotificationsCleaner;
-import cm.aptoide.pt.notification.PnpV1NotificationService;
 import cm.aptoide.pt.notification.SystemNotificationShower;
-import cm.aptoide.pt.notification.sync.NotificationSyncFactory;
-import cm.aptoide.pt.notification.sync.NotificationSyncManager;
 import cm.aptoide.pt.preferences.AdultContent;
 import cm.aptoide.pt.preferences.LocalPersistenceAdultContent;
 import cm.aptoide.pt.preferences.PRNGFixes;
@@ -139,6 +136,7 @@ import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootValueSaver;
 import cm.aptoide.pt.social.TimelineRepositoryFactory;
+import cm.aptoide.pt.social.data.ReadPostsPersistence;
 import cm.aptoide.pt.social.data.TimelinePostsRepository;
 import cm.aptoide.pt.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.spotandshare.AccountGroupNameProvider;
@@ -244,11 +242,9 @@ public abstract class AptoideApplication extends Application {
   private PurchaseBundleMapper purchaseBundleMapper;
   private PaymentThrowableCodeMapper paymentThrowableCodeMapper;
   private MultipartBodyInterceptor multipartBodyInterceptor;
-  private NotificationService pnpV1NotificationService;
   private NotificationCenter notificationCenter;
   private QManager qManager;
   private EntryPointChooser entryPointChooser;
-  private NotificationSyncScheduler notificationSyncScheduler;
   private RootAvailabilityManager rootAvailabilityManager;
   private RootInstallationRetryHandler rootInstallationRetryHandler;
   private RefreshTokenInvalidator tokenInvalidator;
@@ -280,6 +276,7 @@ public abstract class AptoideApplication extends Application {
   private Adyen adyen;
   private PurchaseFactory purchaseFactory;
   private AppCenter appCenter;
+  private ReadPostsPersistence readPostsPersistence;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -410,6 +407,10 @@ public abstract class AptoideApplication extends Application {
         .map(account -> account.isLoggedIn())
         .distinctUntilChanged()
         .subscribe(isLoggedIn -> aptoideApplicationAnalytics.updateDimension(isLoggedIn));
+
+    dispatchPostReadEventInterval().subscribe(() -> {
+    }, throwable -> CrashReport.getInstance()
+        .log(throwable));
 
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
@@ -546,14 +547,7 @@ public abstract class AptoideApplication extends Application {
     return storeManager;
   }
 
-  public NotificationSyncScheduler getNotificationSyncScheduler() {
-    if (notificationSyncScheduler == null) {
-      notificationSyncScheduler = new NotificationSyncManager(getSyncScheduler(), true,
-          new NotificationSyncFactory(getDefaultSharedPreferences(), getPnpV1NotificationService(),
-              getNotificationProvider()));
-    }
-    return notificationSyncScheduler;
-  }
+  public abstract NotificationSyncScheduler getNotificationSyncScheduler();
 
   public SyncScheduler getSyncScheduler() {
     if (syncScheduler == null) {
@@ -571,17 +565,6 @@ public abstract class AptoideApplication extends Application {
   public GroupNameProvider getGroupNameProvider() {
     return new AccountGroupNameProvider(getAccountManager(), Build.MANUFACTURER, Build.MODEL,
         Build.ID);
-  }
-
-  public NotificationService getPnpV1NotificationService() {
-    if (pnpV1NotificationService == null) {
-      pnpV1NotificationService =
-          new PnpV1NotificationService(BuildConfig.APPLICATION_ID, getDefaultClient(),
-              WebService.getDefaultConverter(), getIdsRepository(), BuildConfig.VERSION_NAME,
-              getExtraId(), getDefaultSharedPreferences(), getResources(),
-              getAuthenticationPersistence(), getAccountManager());
-    }
-    return pnpV1NotificationService;
   }
 
   public OkHttpClient getLongTimeoutClient() {
@@ -1357,6 +1340,28 @@ public abstract class AptoideApplication extends Application {
       purchaseFactory = new PurchaseFactory();
     }
     return purchaseFactory;
+  }
+
+  public ReadPostsPersistence getReadPostsPersistence() {
+    if (readPostsPersistence == null) {
+      readPostsPersistence = new ReadPostsPersistence(new ArrayList<>());
+    }
+    return readPostsPersistence;
+  }
+
+  private Completable dispatchPostReadEventInterval() {
+    return Observable.interval(10, TimeUnit.SECONDS)
+        .switchMap(__ -> getReadPostsPersistence().getPosts(10)
+            .toObservable()
+            .filter(postReads -> !postReads.isEmpty())
+            .flatMap(postsRead -> PostReadRequest.of(postsRead, getBodyInterceptorPoolV7(),
+                getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
+                getDefaultSharedPreferences())
+                .observe()
+                .flatMapCompletable(___ -> getReadPostsPersistence().removePosts(postsRead)))
+            .repeatWhen(completed -> completed.takeWhile(
+                ____ -> !getReadPostsPersistence().isPostsEmpty())))
+        .toCompletable();
   }
 }
 

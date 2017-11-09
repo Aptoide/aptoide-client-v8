@@ -10,6 +10,7 @@ import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvid
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.preferences.AdultContent;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -29,7 +30,7 @@ class GetStoreWidgetsRequestFactory {
   private final WindowManager windowManager;
   private final String clientUniqueId;
   private final String partnerId;
-  private final boolean accountMature;
+  private final AdultContent adultContent;
   private final String filters;
   private final ConnectivityManager systemService;
   private final AdsApplicationVersionCodeProvider versionCodeProvider;
@@ -38,7 +39,7 @@ class GetStoreWidgetsRequestFactory {
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
-      String clientUniqueId, String partnerId, boolean accountMature, String filters,
+      String clientUniqueId, String partnerId, AdultContent adultContent, String filters,
       ConnectivityManager systemService, AdsApplicationVersionCodeProvider versionCodeProvider) {
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.bodyInterceptor = bodyInterceptor;
@@ -50,24 +51,38 @@ class GetStoreWidgetsRequestFactory {
     this.windowManager = windowManager;
     this.clientUniqueId = clientUniqueId;
     this.partnerId = partnerId;
-    this.accountMature = accountMature;
+    this.adultContent = adultContent;
     this.filters = filters;
     this.systemService = systemService;
     this.versionCodeProvider = versionCodeProvider;
   }
 
   public GetStoreWidgetsRequest newStoreWidgets(String url, boolean googlePlayServicesAvailable) {
+
+    final Boolean adultContentEnabled = adultContent.enabled()
+        .first()
+        .toSingle()
+        .toBlocking()
+        .value();
+
     return GetStoreWidgetsRequest.ofAction(url, storeCredentialsProvider.fromUrl(url),
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
         resources, windowManager, clientUniqueId, googlePlayServicesAvailable, partnerId,
-        accountMature, filters, systemService, versionCodeProvider);
+        adultContentEnabled, filters, systemService, versionCodeProvider);
   }
 
   public GetStoreWidgetsRequest newStoreWidgets(String url, boolean googlePlayServicesAvailable,
       String storeName, StoreContext storeContext) {
+
+    final Boolean adultContentEnabled = adultContent.enabled()
+        .first()
+        .toSingle()
+        .toBlocking()
+        .value();
+
     return GetStoreWidgetsRequest.ofAction(url, storeCredentialsProvider.fromUrl(url),
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
         resources, windowManager, clientUniqueId, googlePlayServicesAvailable, partnerId,
-        accountMature, filters, systemService, versionCodeProvider, storeName, storeContext);
+        adultContentEnabled, filters, systemService, versionCodeProvider, storeName, storeContext);
   }
 }

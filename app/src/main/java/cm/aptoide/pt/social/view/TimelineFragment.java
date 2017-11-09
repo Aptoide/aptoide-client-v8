@@ -60,7 +60,6 @@ import cm.aptoide.pt.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.social.data.Timeline;
 import cm.aptoide.pt.social.data.TimelineAdsRepository;
 import cm.aptoide.pt.social.data.TimelinePostsRepository;
-import cm.aptoide.pt.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.social.data.TimelineService;
 import cm.aptoide.pt.social.data.analytics.EventErrorHandler;
 import cm.aptoide.pt.social.data.share.ShareDialogFactory;
@@ -211,12 +210,11 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         AppEventsLogger.newLogger(getContext().getApplicationContext()), baseBodyInterceptorV7,
         defaultClient, defaultConverter, tokenInvalidator, BuildConfig.APPLICATION_ID,
         sharedPreferences, new NotificationAnalytics(defaultClient, Analytics.getInstance()),
-        application.getNavigationTracker());
+        application.getNavigationTracker(),
+        ((AptoideApplication) getContext().getApplicationContext()).getReadPostsPersistence());
 
     timelineService =
         new TimelineService(userId, baseBodyInterceptorV7, defaultClient, defaultConverter,
-            new TimelineResponseCardMapper(accountManager,
-                application.getInstallManager(InstallerFactory.ROLLBACK), marketName),
             tokenInvalidator, sharedPreferences);
     crashReport = CrashReport.getInstance();
   }
