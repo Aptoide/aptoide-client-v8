@@ -1,7 +1,10 @@
-package cm.aptoide.pt.analytics;
+package cm.aptoide.pt.download;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.Event;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.analytics.events.FabricEvent;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
 import cm.aptoide.pt.analytics.events.FlurryEvent;
@@ -10,9 +13,6 @@ import com.facebook.appevents.AppEventsLogger;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by trinkes on 09/08/2017.
- */
 public class DownloadCompleteAnalytics {
 
   public static final String EVENT_NAME = "Download Complete";
