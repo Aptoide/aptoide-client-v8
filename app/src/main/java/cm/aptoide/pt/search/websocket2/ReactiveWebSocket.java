@@ -43,22 +43,10 @@ public class ReactiveWebSocket {
   }
 
   public Observable<SocketEvent> listen() {
-
-    // observable that emulates ping/pong in the websocket to keep the connection open.
-    //Observable<Long> o1 = Observable.interval(2, TimeUnit.SECONDS)
-    //    .doOnNext(__ -> {
-    //      if (webSocket != null && webSocket.queueSize() == 0) {
-    //        webSocket.send(ByteString.EMPTY);
-    //      }
-    //    });
-
-    Observable<SocketEvent> o2 = Observable.create(emitter -> {
+    return Observable.create(emitter -> {
       webSocket = client.newWebSocket(request, new ReactiveWebSocketListener(emitter));
       emitter.setCancellation(() -> webSocket.close(CLOSE_STATUS_CODE, null));
     }, Emitter.BackpressureMode.LATEST);
-
-    //return Observable.zip(o1, o2, (interval, event) -> event);
-    return o2;
   }
 
   private static class ReactiveWebSocketListener extends WebSocketListener {

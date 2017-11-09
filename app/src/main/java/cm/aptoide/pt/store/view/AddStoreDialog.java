@@ -30,7 +30,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.search.Search;
+import cm.aptoide.pt.search.SearchSuggestionManager;
 import cm.aptoide.pt.search.SearchCursorAdapter;
 import cm.aptoide.pt.search.SearchFactory;
 import cm.aptoide.pt.store.StoreAnalytics;
@@ -78,7 +78,7 @@ public class AddStoreDialog extends BaseDialog {
   private TokenInvalidator tokenInvalidator;
   private StoreAnalytics storeAnalytics;
 
-  private Search search;
+  private SearchSuggestionManager search;
   private CompositeSubscription subscriptions;
 
   @Override public void onAttach(Activity activity) {
@@ -128,6 +128,7 @@ public class AddStoreDialog extends BaseDialog {
     bindViews(view);
     setupSearch();
     setupButtonHandlers();
+    dismissIfFocusIsLost();
   }
 
   @Override public void onDestroyView() {
@@ -135,6 +136,18 @@ public class AddStoreDialog extends BaseDialog {
       subscriptions.unsubscribe();
     }
     super.onDestroyView();
+  }
+
+  private void dismissIfFocusIsLost() {
+    subscriptions.add(RxView.focusChanges(searchView)
+        .skip(300, TimeUnit.MILLISECONDS) // enough time to render the view
+        .filter(event -> !event)
+        .subscribe(event -> {
+          final Dialog dialog = AddStoreDialog.this.getDialog();
+          if (dialog != null && dialog.isShowing() && isResumed()) {
+            dialog.dismiss();
+          }
+        }));
   }
 
   private void setupButtonHandlers() {
@@ -208,17 +221,6 @@ public class AddStoreDialog extends BaseDialog {
   }
 
   private void setupSearch() {
-
-    subscriptions.add(RxView.focusChanges(searchView)
-        .skip(300, TimeUnit.MILLISECONDS) // enough time to render the view
-        .filter(event -> !event)
-        .subscribe(event -> {
-          final Dialog dialog = AddStoreDialog.this.getDialog();
-          if (dialog != null && dialog.isShowing() && isResumed()) {
-            dialog.dismiss();
-          }
-        }));
-
     final SearchCursorAdapter searchCursorAdapter = new SearchCursorAdapter(getContext());
     searchView.setSuggestionsAdapter(searchCursorAdapter);
 

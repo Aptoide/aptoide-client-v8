@@ -10,13 +10,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import rx.Observable;
 
-public class Search {
+public class SearchSuggestionManager {
 
   private static final int SUGGESTION_COUNT = 5;
   private final ObjectMapper objectMapper;
   private final ReactiveWebSocket webSocket;
 
-  protected Search(ObjectMapper objectMapper, ReactiveWebSocket webSocket) {
+  SearchSuggestionManager(ObjectMapper objectMapper, ReactiveWebSocket webSocket) {
     this.objectMapper = objectMapper;
     this.webSocket = webSocket;
   }

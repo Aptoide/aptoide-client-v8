@@ -10,15 +10,15 @@ public class SearchFactory {
   private static final int SEARCH_WEB_SOCKET_PORT = 9000;
   private static final int STORE_WEB_SOCKET_PORT = 9002;
 
-  public Search createSearchForStore() {
+  public SearchSuggestionManager createSearchForStore() {
     return createSearch(STORE_WEB_SOCKET_PORT);
   }
 
-  public Search createSearchForApps() {
+  public SearchSuggestionManager createSearchForApps() {
     return createSearch(SEARCH_WEB_SOCKET_PORT);
   }
 
-  private Search createSearch(int socketPort) {
+  private SearchSuggestionManager createSearch(int socketPort) {
 
     final String url = String.format("%s%s:%d", BuildConfig.APTOIDE_WEBSOCKETS_SCHEME,
         BuildConfig.APTOIDE_WEBSOCKETS_HOST, socketPort);
@@ -28,6 +28,6 @@ public class SearchFactory {
 
     final OkHttpClient client = new OkHttpClient();
 
-    return new Search(new ObjectMapper(), new ReactiveWebSocket(client, request));
+    return new SearchSuggestionManager(new ObjectMapper(), new ReactiveWebSocket(client, request));
   }
 }
