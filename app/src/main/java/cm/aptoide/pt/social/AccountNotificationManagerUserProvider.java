@@ -70,6 +70,10 @@ public class AccountNotificationManagerUserProvider implements TimelineUserProvi
         return new Integer[] { AptoideNotification.LIKE };
       case AptoideNotification.POPULAR:
         return new Integer[] { AptoideNotification.POPULAR };
+      case AptoideNotification.NEW_SHARE:
+        return new Integer[] { AptoideNotification.NEW_SHARE };
+      case AptoideNotification.NEW_ACTIVITY:
+        return new Integer[] { AptoideNotification.NEW_ACTIVITY };
     }
     return null;
   }

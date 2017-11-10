@@ -69,11 +69,11 @@ public class NotificationCenter {
           return notificationProvider.save(notification)
               .toSingleDefault(notification);
         })
-        .flatMap(aptideNotification -> notificationPolicyFactory.getPolicy(aptideNotification)
+        .flatMap(aptoideNotification -> notificationPolicyFactory.getPolicy(aptoideNotification)
             .shouldShow()
             .flatMapObservable(shouldShow -> {
               if (shouldShow) {
-                return Observable.just(aptideNotification);
+                return Observable.just(aptoideNotification);
               } else {
                 return Observable.empty();
               }
