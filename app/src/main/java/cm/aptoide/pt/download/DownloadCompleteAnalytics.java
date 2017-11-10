@@ -20,7 +20,6 @@ public class DownloadCompleteAnalytics {
 
   private static final String PACKAGE_NAME = "Package Name";
   private static final String TRUSTED_BADGE = "Trusted Badge";
-  private static final String SOURCE = "Source";
   private Analytics analytics;
   private Answers fabric;
   private AppEventsLogger facebookLogger;

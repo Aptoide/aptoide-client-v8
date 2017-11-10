@@ -136,8 +136,8 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
     GetAppMeta.App app = getPojo().getNodes()
         .getMeta()
         .getData();
-    installAnalytics.installStarted(navigationTracker.getCurrentScreen()
-            .getTag(), app.getPackageName(), versionCode,
+    installAnalytics.installStarted(navigationTracker.getPreviousScreen(),
+        navigationTracker.getCurrentScreen(), app.getPackageName(), versionCode,
         InstallAnalytics.InstallType.valueOf(installType.name()));
     analytics.installClicked(navigationTracker.getPreviousScreen(),
         navigationTracker.getCurrentScreen(), app.getMd5(), app.getPackageName(), app.getFile()

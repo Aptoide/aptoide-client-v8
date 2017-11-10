@@ -44,8 +44,8 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class DeepLinkManager {
 
+  public static final String DEEPLINK_KEY = "Deeplink";
   private static final String TAG = DeepLinkManager.class.getName();
-
   private final StoreUtilsProxy storeUtilsProxy;
   private final StoreRepository storeRepository;
   private final FragmentNavigator fragmentNavigator;
@@ -77,9 +77,8 @@ public class DeepLinkManager {
   }
 
   public boolean showDeepLink(Intent intent) {
-    String deeplinkOrNotification = "Deeplink";
+    String deeplinkOrNotification = DEEPLINK_KEY;
     if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT)) {
-
       if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY)) {
         appViewDeepLink(intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY));
       } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY)) {
