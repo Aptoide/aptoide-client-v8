@@ -146,8 +146,10 @@ import cm.aptoide.pt.spotandshare.group.GroupNameProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
-import cm.aptoide.pt.sync.SyncService;
-import cm.aptoide.pt.sync.SyncStorage;
+import cm.aptoide.pt.sync.alarm.AlarmSyncScheduler;
+import cm.aptoide.pt.sync.alarm.AlarmSyncService;
+import cm.aptoide.pt.sync.alarm.SyncStorage;
+import cm.aptoide.pt.sync.rx.RxSyncScheduler;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
@@ -257,7 +259,6 @@ public abstract class AptoideApplication extends Application {
   private Database database;
   private NotificationProvider notificationProvider;
   private SyncStorage syncStorage;
-  private SyncScheduler syncScheduler;
   private TimelineRepositoryFactory timelineRepositoryFactory;
   private AuthenticationPersistence authenticationPersistence;
   private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody>
@@ -277,6 +278,7 @@ public abstract class AptoideApplication extends Application {
   private PurchaseFactory purchaseFactory;
   private AppCenter appCenter;
   private ReadPostsPersistence readPostsPersistence;
+  private SyncScheduler alarmSyncScheduler;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -549,15 +551,6 @@ public abstract class AptoideApplication extends Application {
 
   public abstract NotificationSyncScheduler getNotificationSyncScheduler();
 
-  public SyncScheduler getSyncScheduler() {
-    if (syncScheduler == null) {
-      syncScheduler =
-          new SyncScheduler(this, SyncService.class, (AlarmManager) getSystemService(ALARM_SERVICE),
-              getSyncStorage());
-    }
-    return syncScheduler;
-  }
-
   public SharedPreferences getDefaultSharedPreferences() {
     return PreferenceManager.getDefaultSharedPreferences(this);
   }
@@ -822,7 +815,9 @@ public abstract class AptoideApplication extends Application {
       billingPool =
           new BillingPool(getDefaultSharedPreferences(), getBodyInterceptorV3(), getDefaultClient(),
               getAccountManager(), getDatabase(), getResources(), getPackageRepository(),
-              getTokenInvalidator(), getSyncScheduler(), getInAppBillingSerializer(),
+              getTokenInvalidator(),
+              new RxSyncScheduler(new HashMap<>(), CrashReport.getInstance()),
+              getInAppBillingSerializer(),
               getBodyInterceptorPoolV7(), getAccountSettingsBodyInterceptorPoolV7(),
               new HashMap<>(), WebService.getDefaultConverter(), CrashReport.getInstance(),
               getAdyen(), getPurchaseFactory(), Build.VERSION_CODES.JELLY_BEAN,
@@ -1362,6 +1357,14 @@ public abstract class AptoideApplication extends Application {
             .repeatWhen(completed -> completed.takeWhile(
                 ____ -> !getReadPostsPersistence().isPostsEmpty())))
         .toCompletable();
+  }
+
+  public SyncScheduler getAlarmSyncScheduler() {
+    if (alarmSyncScheduler == null) {
+      alarmSyncScheduler = new AlarmSyncScheduler(this, AlarmSyncService.class,
+          (AlarmManager) getSystemService(ALARM_SERVICE), getSyncStorage());
+    }
+    return alarmSyncScheduler;
   }
 }
 

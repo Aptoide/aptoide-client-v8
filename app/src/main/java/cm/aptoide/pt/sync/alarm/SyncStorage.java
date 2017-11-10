@@ -1,5 +1,6 @@
-package cm.aptoide.pt.sync;
+package cm.aptoide.pt.sync.alarm;
 
+import cm.aptoide.pt.sync.Sync;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
