@@ -47,8 +47,10 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.search.SearchAnalytics;
 import cm.aptoide.pt.search.SearchCursorAdapter;
+import cm.aptoide.pt.search.SearchFactory;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.SearchSuggestionManager;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.store.StoreTheme;
@@ -87,6 +89,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
   private static final String ALL_STORES_SEARCH_LIST_STATE = "all_stores_search_list_state";
   private static final String FOLLOWED_STORES_SEARCH_LIST_STATE =
       "followed_stores_search_list_state";
+  private static final int COMPLETION_THRESHOLD = 0;
   //private static final int COMPLETION_THRESHOLD = 0;
 
   private View noSearchLayout;
@@ -122,6 +125,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
   private SearchCursorAdapter searchCursorAdapter;
   private TrendingManager trendingManager;
   private PublishSubject<SearchViewQueryTextEvent> queryTextChangedPublisher;
+  private MenuItem searchMenuItem;
 
   public static SearchResultFragment newInstance(String currentQuery, String defaultStoreName) {
     return newInstance(currentQuery, false, defaultStoreName);
@@ -253,13 +257,12 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
     searchResultsLayout.setVisibility(View.VISIBLE);
   }
 
-  @Override public void showWidgetClickView() {
+  @Override public void hideLists() {
     noSearchLayout.setVisibility(View.GONE);
     searchResultsLayout.setVisibility(View.GONE);
     buttonsLayout.setVisibility(View.GONE);
     followedStoresResultList.setVisibility(View.GONE);
     allStoresResultList.setVisibility(View.GONE);
-    setFocusInSearchView();
   }
 
   @Override public Observable<SearchViewQueryTextEvent> onQueryTextChanged(){
@@ -367,9 +370,9 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
     allStoresButton.setVisibility(View.GONE);
   }
 
-  @Override public void setFocusInSearchView() {
-    if (searchView != null) {
-      searchView.setIconified(false);
+  @Override public void focusInSearchBar() {
+    if (searchMenuItem != null) {
+      searchMenuItem.expandActionView();
     }
   }
 
@@ -423,19 +426,16 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_search_results, menu);
-    MenuItem searchMenuItem = menu.findItem(R.id.action_search);
+    searchMenuItem = menu.findItem(R.id.action_search);
     searchView = (SearchView) searchMenuItem.getActionView();
-    searchCursorAdapter = new SearchCursorAdapter(getContext());
     searchView.setSuggestionsAdapter(searchCursorAdapter);
-    searchView.setIconifiedByDefault(false);
 
 
-    //AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) searchView.findViewById(
-    //    android.support.v7.appcompat.R.id.search_src_text);
-    //autoCompleteTextView.setThreshold(COMPLETION_THRESHOLD);
+    AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) searchView.findViewById(
+        android.support.v7.appcompat.R.id.search_src_text);
+    autoCompleteTextView.setThreshold(COMPLETION_THRESHOLD);
 
     getLifecycle()
-        .filter(event -> event.equals(cm.aptoide.pt.presenter.View.LifecycleEvent.CREATE))
         .flatMap(__ -> RxSearchView.queryTextChangeEvents(searchView))
         .doOnNext(event -> queryTextChangedPublisher.onNext(event))
         .compose(bindUntilEvent(cm.aptoide.pt.presenter.View.LifecycleEvent.DESTROY))
@@ -455,6 +455,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
     crashReport = CrashReport.getInstance();
     viewModel = loadViewModel(getArguments());
     queryTextChangedPublisher = PublishSubject.create();
+    searchCursorAdapter = new SearchCursorAdapter(getContext());
 
     final android.app.SearchManager searchManagerService =
         (android.app.SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
@@ -532,7 +533,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
     setupTheme();
     attachPresenter(new SearchResultPresenter(this, searchAnalytics, searchNavigator, crashReport,
         mainThreadScheduler, searchManager, onAdClickRelay, onItemViewClickRelay,
-        onOpenPopupMenuClickRelay, isMultiStoreSearch, defaultThemeName, defaultStoreName));
+        onOpenPopupMenuClickRelay, isMultiStoreSearch, defaultThemeName, defaultStoreName, searchCursorAdapter, new SearchFactory().createSearchForApps()));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {

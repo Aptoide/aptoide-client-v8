@@ -26,7 +26,7 @@ public interface SearchResultView extends View {
 
   void showResultsView();
 
-  void showWidgetClickView();
+  void hideLists();
 
   Observable<SearchViewQueryTextEvent> onQueryTextChanged();
 
@@ -64,7 +64,7 @@ public interface SearchResultView extends View {
 
   void setViewWithStoreNameAsSingleTab(String storeName);
 
-  void setFocusInSearchView();
+  void focusInSearchBar();
 
   void setTrending(List<String> trending);
 

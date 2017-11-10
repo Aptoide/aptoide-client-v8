@@ -7,18 +7,21 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.search.SearchAnalytics;
+import cm.aptoide.pt.search.SearchCursorAdapter;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.SearchSuggestionManager;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
+import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.List;
 import rx.Observable;
 import rx.Scheduler;
-import rx.android.schedulers.AndroidSchedulers;
 
 public class SearchResultPresenter implements Presenter {
 
+  private static final int COMPLETION_THRESHOLD = 3;
   private final SearchResultView view;
   private final SearchAnalytics analytics;
   private final SearchNavigator navigator;
@@ -32,13 +35,15 @@ public class SearchResultPresenter implements Presenter {
   private final String defaultThemeName;
   private final boolean isMultiStoreSearch;
   private final TrendingManager trendingManager;
+  private final SearchCursorAdapter searchCursorAdapter;
+  private final SearchSuggestionManager searchSuggestionManager;
 
   public SearchResultPresenter(SearchResultView view, SearchAnalytics analytics,
       SearchNavigator navigator, CrashReport crashReport, Scheduler viewScheduler,
       SearchManager searchManager, PublishRelay<SearchAdResult> onAdClickRelay,
       PublishRelay<SearchAppResult> onItemViewClickRelay,
       PublishRelay<Pair<SearchAppResult, android.view.View>> onOpenPopupMenuClickRelay,
-      boolean isMultiStoreSearch, String defaultStoreName, String defaultThemeName) {
+      boolean isMultiStoreSearch, String defaultStoreName, String defaultThemeName, SearchCursorAdapter searchCursorAdapter, SearchSuggestionManager searchSuggestionManager) {
     this.view = view;
     this.analytics = analytics;
     this.navigator = navigator;
@@ -51,6 +56,8 @@ public class SearchResultPresenter implements Presenter {
     this.isMultiStoreSearch = isMultiStoreSearch;
     this.defaultStoreName = defaultStoreName;
     this.defaultThemeName = defaultThemeName;
+    this.searchCursorAdapter = searchCursorAdapter;
+    this.searchSuggestionManager = searchSuggestionManager;
     this.trendingManager = new TrendingManager();
 
   }
@@ -69,9 +76,9 @@ public class SearchResultPresenter implements Presenter {
     handleFollowedStoresListReachedBottom();
     handleTitleBarClick();
     restoreSelectedTab();
-    handleQueryTextChanged();
     handleWidgetTrendingRequest();
-    handleEmptySearchQuery();
+    listenForSuggestions();
+    handleQueryTextChanged();
   }
 
   private void restoreSelectedTab() {
@@ -96,7 +103,7 @@ public class SearchResultPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .flatMap(__ -> view.clickTitleBar())
-        .doOnNext(__ -> view.setFocusInSearchView())
+        .doOnNext(__ -> view.focusInSearchBar())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
@@ -106,61 +113,52 @@ public class SearchResultPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.onQueryTextChanged())
+        .filter(data -> data == null)
         .map(__ -> view.getViewModel())
         .filter(viewModel -> viewModel.getCurrentQuery()==null||viewModel.getCurrentQuery().isEmpty())
         .flatMap(__ -> trendingManager.getTrendingSuggestions())
-        .observeOn(AndroidSchedulers.mainThread())
+        .observeOn(viewScheduler)
+        .doOnNext(__ -> view.hideLists())
+        .doOnNext(__ -> view.focusInSearchBar())
         .doOnNext(data -> view.setTrending(data))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
   }
 
-  //private void handleClickOnTrendingList() {
-  //  view.getLifecycle()
-  //      .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-  //      .flatMap(__ -> view.handleSearchOnClick())
-  //      .flatMap(click -> Observable.just(view.getViewModel())
-  //          .filter(viewModel -> viewModel.getAllStoresOffset() == 0
-  //              && viewModel.getFollowedStoresOffset() == 0)
-  //          .observeOn(viewScheduler)
-  //          .doOnNext(viewModel -> {
-  //            view.showLoading();
-  //            view.hideTrendingMenu(click, true);
-  //          })
-  //          .doOnNext(viewModel -> analytics.search(click))
-  //          .flatMap(viewModel -> loadData(click, viewModel.getStoreName(),
-  //              viewModel.isOnlyTrustedApps(), 0).onErrorResumeNext(err -> {
-  //            crashReport.log(err);
-  //            return Observable.just(null);
-  //          })
-  //              .observeOn(viewScheduler)
-  //              .doOnNext(__2 -> view.hideLoading())
-  //              .doOnNext(data -> {
-  //                if (getItemCount(data) == 0 && data != null) {
-  //                  view.showNoResultsView();
-  //                  analytics.searchNoResults(viewModel.getCurrentQuery());
-  //                } else {
-  //                  view.showResultsView();
-  //                  if (viewModel.isAllStoresSelected()) {
-  //                    view.showAllStoresResult();
-  //                  } else {
-  //                    view.showFollowedStoresResult();
-  //                  }
-  //                }
-  //              })))
-  //      .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-  //      .subscribe(__ -> {
-  //      }, e -> crashReport.log(e));
-  //}
+  private void listenForSuggestions(){
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> searchSuggestionManager.listenForSuggestions())
+        .filter(data -> data != null && data.size() > 0)
+        .doOnNext(data -> searchCursorAdapter.setData(data))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
+  }
 
   private void handleQueryTextChanged(){
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.onQueryTextChanged())
         .observeOn(viewScheduler)
-        .filter(__ -> !view.onQueryTextChanged().equals(""))
-        //.doOnNext(__ -> )
+        .filter(data -> data!=null)
+        .doOnNext(data -> handleQueryEvent(data))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {}, e -> crashReport.log(e));
+  }
+
+  private void handleQueryEvent(SearchViewQueryTextEvent event){
+    final String query = event.queryText()
+        .toString();
+
+    if (event.isSubmitted()) {
+      return;
+    }
+
+    if (query.length() >= COMPLETION_THRESHOLD) {
+      searchSuggestionManager.getSuggestionsFor(query);
+    }
   }
 
   private void stopLoadingMoreOnDestroy() {
@@ -443,17 +441,5 @@ public class SearchResultPresenter implements Presenter {
         }, e -> crashReport.log(e));
   }
 
-  private void handleEmptySearchQuery(){
-    view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .map(__ -> view.getViewModel())
-        .filter(viewModel -> viewModel.getAllStoresOffset() == 0
-            && viewModel.getFollowedStoresOffset() == 0)
-        .filter(viewModel -> viewModel.getCurrentQuery() == null || viewModel.getCurrentQuery().isEmpty())
-        .observeOn(viewScheduler)
-        .doOnNext(__ -> view.showWidgetClickView())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, e -> crashReport.log(e));
-  }
+
 }
