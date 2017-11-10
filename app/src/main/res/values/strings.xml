@@ -1,4 +1,5 @@
 <resources>
+  <string name="ok">OK</string>
   <!-- NavDrawer List items -->
   <string name="drawer_title_my_account">My Account</string>
   <string name="drawer_title_spot_share">Spot&amp;Share</string>

@@ -405,7 +405,6 @@ dependencies {
 
 
   leakCompile "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY_VERSION}"
-  compile project(path: ':spotandshare')
 
 
   compile "com.github.bumptech.glide:glide:${GLIDE_VERSION}"

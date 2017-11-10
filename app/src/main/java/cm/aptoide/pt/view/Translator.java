@@ -274,10 +274,10 @@ import cm.aptoide.pt.utils.AptoideUtils;
       case "Comments on this store":
         translated = context.getString(R.string.comment_store_title);
         break;
-      case "Spot & Share":
-      case "Spot&Share":
-        translated = context.getString(R.string.spot_share);
-        break;
+      //case "Spot & Share":
+      //case "Spot&Share":
+      //  translated = context.getString(R.string.spot_share);
+      //  break;
       case "Followed Stores":
         translated = context.getString(R.string.followed_stores);
         break;
