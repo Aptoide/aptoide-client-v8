@@ -1,5 +1,6 @@
-package cm.aptoide.pt.sync;
+package cm.aptoide.pt.sync.alarm;
 
+import cm.aptoide.pt.sync.Sync;
 import rx.Completable;
 
 public class OneOffSyncWrapper extends Sync {
