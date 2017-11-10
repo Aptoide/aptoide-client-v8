@@ -65,6 +65,11 @@ public class TransactionServiceV7 implements TransactionService {
                     billingIdManager.generateServiceId(), productId, Transaction.Status.NEW));
           }
 
+          if (response.code() == 304) {
+            return Single.error(
+                new IllegalStateException("Server has outdated data. Can not return transaction."));
+          }
+
           return Single.just(
               transactionFactory.create(billingIdManager.generateTransactionId(), customerId,
                   billingIdManager.generateServiceId(), productId, Transaction.Status.FAILED));
