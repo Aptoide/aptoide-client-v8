@@ -1,10 +1,13 @@
 package cm.aptoide.pt.store.view.home;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -22,6 +25,7 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DrawerAnalytics;
+import cm.aptoide.pt.PartnerApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.analytics.Analytics;
@@ -33,6 +37,7 @@ import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.TabNavigation;
 import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.preferences.PartnersSecurePreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.view.SearchBuilder;
@@ -48,6 +53,7 @@ import com.trello.rxlifecycle.android.FragmentEvent;
 import java.text.NumberFormat;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import cm.aptoide.pt.firstinstall.FirstInstallFragment;
 
 /**
  * Created by neuro on 09-05-2016.
@@ -171,6 +177,7 @@ public class HomeFragment extends StoreFragment {
 
     drawerAnalytics = new DrawerAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    handleFirstInstall(savedInstanceState);
   }
 
   @Nullable @Override
@@ -407,5 +414,32 @@ public class HomeFragment extends StoreFragment {
 
   private enum BundleKeys {
     STORE_NAME, STORE_CONTEXT, STORE_THEME
+  }
+
+  /**
+   * show first install fragment with animation
+   */
+  @SuppressLint("PrivateResource") private void handleFirstInstall(Bundle savedInstanceState) {
+    ConnectivityManager connectivityManager =
+        (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+    if (connectivityManager != null) {
+      if (savedInstanceState == null
+          && connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+          .isConnected()
+          && ((PartnerApplication) getContext().getApplicationContext()).getBootConfig()
+          .getPartner()
+          .getSwitches()
+          .getOptions()
+          .getFirst_install()
+          .isEnable()
+          && !PartnersSecurePreferences.isFirstInstallFinished(
+          ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())) {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.abc_slide_in_bottom, R.anim.abc_slide_out_bottom);
+        transaction.add(R.id.fragment_placeholder, FirstInstallFragment.newInstance());
+        transaction.addToBackStack(null);
+        transaction.commit();
+      }
+    }
   }
 }

@@ -116,6 +116,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import cm.aptoide.pt.firstinstall.displayable.FirstInstallAdDisplayable;
+import cm.aptoide.pt.firstinstall.displayable.FirstInstallAppDisplayable;
+import cm.aptoide.pt.firstinstall.widget.FirstInstallAdWidget;
+import cm.aptoide.pt.firstinstall.widget.FirstInstallAppWidget;
 
 /**
  * Created by neuro on 10-10-2016.
@@ -306,6 +310,12 @@ public class DisplayableWidgetMapping {
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping((LoginWidget.class), LoginDisplayable.class));
+
+    displayableWidgetMappings.add(new DisplayableWidgetMapping((FirstInstallAppWidget.class),
+        FirstInstallAppDisplayable.class));
+
+    displayableWidgetMappings.add(new DisplayableWidgetMapping((FirstInstallAdWidget.class),
+        FirstInstallAdDisplayable.class));
 
     return displayableWidgetMappings;
   }

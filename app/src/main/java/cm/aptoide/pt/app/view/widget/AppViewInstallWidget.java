@@ -8,6 +8,10 @@ package cm.aptoide.pt.app.view.widget;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,14 +28,15 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
-import cm.aptoide.pt.install.Install;
-import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.app.AppBoughtReceiver;
+import cm.aptoide.pt.app.view.AppViewFragment;
+import cm.aptoide.pt.app.view.AppViewNavigator;
+import cm.aptoide.pt.app.view.displayable.AppViewInstallDisplayable;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -49,22 +54,22 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.DownloadInstallBaseEvent;
 import cm.aptoide.pt.download.InstallEvent;
 import cm.aptoide.pt.download.InstallEventConverter;
+import cm.aptoide.pt.install.Install;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstallerFactory;
+import cm.aptoide.pt.install.view.InstallWarningDialog;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.app.view.AppViewFragment;
-import cm.aptoide.pt.app.view.AppViewNavigator;
-import cm.aptoide.pt.app.view.displayable.AppViewInstallDisplayable;
 import cm.aptoide.pt.view.dialog.SharePreviewDialog;
-import cm.aptoide.pt.install.view.InstallWarningDialog;
-import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
@@ -235,6 +240,30 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
     permissionService = ((PermissionService) getContext());
     permissionManager = new PermissionManager();
+
+    setActionButtonBackground();
+  }
+
+  private void setActionButtonBackground() {
+    final Resources resources = itemView.getResources();
+    final StoreTheme theme = StoreTheme.get(
+        (((AptoideApplication) getContext().getApplication()).getDefaultThemeName()));
+    Drawable background = actionButton.getBackground();
+
+    if (background instanceof ShapeDrawable) {
+      ((ShapeDrawable) background).getPaint()
+          .setColor(resources.getColor(theme.getPrimaryColor()));
+    } else if (background instanceof GradientDrawable) {
+      ((GradientDrawable) background).setColor(resources.getColor(theme.getPrimaryColor()));
+    }
+
+    background = actionButton.getBackground();
+    if (background instanceof ShapeDrawable) {
+      ((ShapeDrawable) background).getPaint()
+          .setColor(resources.getColor(theme.getPrimaryColor()));
+    } else if (background instanceof GradientDrawable) {
+      ((GradientDrawable) background).setColor(resources.getColor(theme.getPrimaryColor()));
+    }
   }
 
   private void updateUi(AppViewInstallDisplayable displayable, Install install, boolean isSetup,

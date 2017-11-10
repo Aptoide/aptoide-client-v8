@@ -55,12 +55,7 @@ android {
   productFlavors {
     partner {
       dimension "product"
-      applicationId "com.aptoide.partners.apps"
-    }
-
-    vanilla {
-      dimension "product"
-      applicationId "cm.aptoide.pt"
+      applicationId "com.aptoide.partners.dfloureiro"
     }
 
     internal {
@@ -128,7 +123,8 @@ android {
     boolean hasSuffix = applicationIdSuffix != null
 
     if (applicationIdBase.contains('partner') && hasSuffix &&
-        (applicationIdSuffix.contains('dev') || applicationIdSuffix.contains('internal'))) {
+        (applicationIdSuffix.contains('dev') || applicationIdSuffix.contains('internal') ||
+            applicationIdSuffix.contains('fairy'))) {
       setIgnore(true)
     }
   }

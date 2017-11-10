@@ -12,7 +12,7 @@ public class Options {
 
   private boolean shortcut;
   private Multistore multistore;
-  @JsonProperty("first_install") private FirstInstall firstInstall;
+  private FirstInstall first_install;
 
   public boolean isShortcut() {
     return shortcut;
@@ -30,11 +30,11 @@ public class Options {
     this.multistore = multistore;
   }
 
-  public FirstInstall getFirstInstall() {
-    return firstInstall;
+  public FirstInstall getFirst_install() {
+    return first_install;
   }
 
-  public void setFirstInstall(FirstInstall firstInstall) {
-    this.firstInstall = firstInstall;
+  public void setFirst_install(FirstInstall firstInstall) {
+    this.first_install = firstInstall;
   }
 }
