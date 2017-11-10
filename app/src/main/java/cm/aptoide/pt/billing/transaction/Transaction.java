@@ -38,7 +38,7 @@ public class Transaction {
   }
 
   public boolean isProcessing() {
-    return Status.PROCESSING.equals(status) || Status.LOCAL_PROCESSING.equals(status);
+    return Status.PROCESSING.equals(status);
   }
 
   public boolean isFailed() {
@@ -54,6 +54,6 @@ public class Transaction {
   }
 
   public enum Status {
-    NEW, PENDING_SERVICE_AUTHORIZATION, PROCESSING, COMPLETED, FAILED, LOCAL_PROCESSING
+    NEW, PENDING_SERVICE_AUTHORIZATION, PROCESSING, COMPLETED, FAILED
   }
 }

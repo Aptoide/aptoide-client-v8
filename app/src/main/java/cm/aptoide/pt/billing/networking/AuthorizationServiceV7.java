@@ -69,6 +69,11 @@ public class AuthorizationServiceV7 implements AuthorizationService {
                     null));
           }
 
+          if (response.code() == 304) {
+            return Single.error(
+                new IllegalStateException("Server has outdated data. Can not return authorization."));
+          }
+
           return Single.just(
               authorizationFactory.create(billingIdManager.generateAuthorizationId(), customerId,
                   null, Authorization.Status.FAILED, null, null, null, null, null, transactionId,
