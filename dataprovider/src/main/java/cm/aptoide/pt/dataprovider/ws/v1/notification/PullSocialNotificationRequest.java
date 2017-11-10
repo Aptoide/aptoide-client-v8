@@ -47,6 +47,7 @@ public class PullSocialNotificationRequest
     if (isLogged) {
       pretendedNotificationTypes.add(1);
       pretendedNotificationTypes.add(2);
+      pretendedNotificationTypes.add(4);
       pretendedNotificationTypes.add(5);
       pretendedNotificationTypes.add(6);
     }
