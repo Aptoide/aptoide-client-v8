@@ -115,6 +115,7 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
               baseBodyInterceptor, httpClient, converterFactory,
               ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
               ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
+
       Action1<ListFullReviews> listFullReviewsAction = listTopFullReviews -> {
         List<FullReview> reviews = listTopFullReviews.getDataList()
             .getList();

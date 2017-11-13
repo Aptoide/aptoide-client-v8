@@ -27,7 +27,9 @@ public class ReviewsRatingWidget extends Widget<ReviewsRatingDisplayable> {
   }
 
   private void setupRating(GetAppMeta.App data) {
-    ratingTotalsLayout.setup(data);
-    ratingBarsLayout.setup(data);
+    ratingTotalsLayout.setup(data.getStats()
+        .getGlobalRating());
+    ratingBarsLayout.setup(data.getStats()
+        .getGlobalRating());
   }
 }

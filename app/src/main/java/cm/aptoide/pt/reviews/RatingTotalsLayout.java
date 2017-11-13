@@ -20,13 +20,9 @@ public class RatingTotalsLayout {
     ratingBar = (AppCompatRatingBar) view.findViewById(R.id.rating_bar);
   }
 
-  public void setup(GetAppMeta.App data) {
-    GetAppMeta.Stats stats = data.getStats();
-    usersVoted.setText(AptoideUtils.StringU.withSuffix(stats.getRating()
-        .getTotal()));
-    ratingValue.setText(String.format(Locale.getDefault(), "%.1f", stats.getRating()
-        .getAvg()));
-    ratingBar.setRating(stats.getRating()
-        .getAvg());
+  public void setup(GetAppMeta.Stats.Rating rating) {
+    usersVoted.setText(AptoideUtils.StringU.withSuffix(rating.getTotal()));
+    ratingValue.setText(String.format(Locale.getDefault(), "%.1f", rating.getAvg()));
+    ratingBar.setRating(rating.getAvg());
   }
 }
