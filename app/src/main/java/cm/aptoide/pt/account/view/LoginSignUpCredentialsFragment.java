@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.AptoideCredentials;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
@@ -84,6 +85,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    marketName = ((AptoideApplication) getActivity().getApplication()).getMarketName();
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {

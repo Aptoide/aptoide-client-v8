@@ -87,6 +87,13 @@ android {
       versionCode project.DEV_VERSION_CODE.toInteger()
     }
 
+    uitest {
+      dimension "mode"
+      applicationIdSuffix"uitest"
+      versionName "8.5.1." + getDate()
+      versionCode project.DEV_VERSION_CODE.toInteger()
+    }
+
     prod {
       dimension "mode"
     }
@@ -273,6 +280,7 @@ android {
     preDexLibraries = project.APTOIDE_PRE_DEX_LIBRARIES
     javaMaxHeapSize = project.APTOIDE_DEX_JAVA_MAX_HEAP_SIZE
   }
+  sourceSets { release { java.srcDirs = ['src/release/java', 'src/release/java/'] } }
 }
 
 dependencies {
@@ -280,6 +288,7 @@ dependencies {
   // Testing-only dependencies
   testCompile "junit:junit:${JUNIT_VERSION}"
   testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+
   // Force usage of support annotations in the test app, since it is internally used by the runner module.
   androidTestCompile("com.android.support.test:runner:${RUNNER_VERSION}") {
     exclude group: "com.android.support", module: "support-annotations"
@@ -318,6 +327,8 @@ dependencies {
   fairyCompile project(path: ':dataprovider', configuration: 'prodRelease')
   fairyCompile project(path: ':aptoide-account-manager', configuration: 'prodRelease')
 
+  uitestCompile project(path: ':dataprovider', configuration: 'prodRelease')
+  uitestCompile project(path: ':aptoide-account-manager', configuration: 'prodRelease')
 
   compile project(path: ':utils', configuration: 'release')
   compile project(path: ':crashreports', configuration: 'release')
@@ -340,8 +351,9 @@ dependencies {
   androidTestCompile "com.android.support.test.espresso:espresso-intents:${ESPRESSO_VERSION}"
   androidTestCompile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
   androidTestCompile "com.android.support.test.uiautomator:uiautomator-v18:${UIAUTOMATOR_VERSION}"
-
-
+  androidTestCompile "com.jakewharton.rxrelay:rxrelay:${RX_RELAY}"
+  androidTestCompile "org.mockito:mockito-android:${MOCKITO_CORE_ANDROID_VERSION}"
+  androidTestCompile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VERSION}"
 
   compile "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
 

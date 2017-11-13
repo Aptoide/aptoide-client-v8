@@ -18,21 +18,18 @@ import android.support.v4.app.NotificationCompat;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountPersistence;
 import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.Store;
 import cm.aptoide.pt.account.AccountAnalytics;
-import cm.aptoide.pt.account.AccountServiceV3;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
-import cm.aptoide.pt.account.AndroidAccountDataMigration;
-import cm.aptoide.pt.account.AndroidAccountManagerPersistence;
 import cm.aptoide.pt.account.AndroidAccountProvider;
-import cm.aptoide.pt.account.DatabaseStoreDataPersist;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.account.LoginPreferences;
-import cm.aptoide.pt.account.MatureContentPersistence;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.Analytics;
@@ -55,9 +52,7 @@ import cm.aptoide.pt.dataprovider.cache.POSTCacheKeyAlgorithm;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
-import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.DownloadInstallationProvider;
@@ -78,7 +73,6 @@ import cm.aptoide.pt.install.installer.RootInstallErrorNotificationFactory;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.install.rollback.RollbackFactory;
 import cm.aptoide.pt.install.rollback.RollbackRepository;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
 import cm.aptoide.pt.networking.BodyInterceptorV7;
@@ -117,6 +111,7 @@ import cm.aptoide.pt.sync.SyncStorage;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.q.QManager;
+import cm.aptoide.pt.view.ApplicationTestScope;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
@@ -153,7 +148,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Named;
-import javax.inject.Singleton;
 import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -165,7 +159,11 @@ import rx.schedulers.Schedulers;
 
 import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
-@Module public class ApplicationModule {
+/**
+ * Created by jose_messejana on 09-11-2017.
+ */
+
+@Module public class ApplicationModuleTest{
 
   private final Application application;
   private final String imageCachePath;
@@ -178,7 +176,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   private final String aptoideMd5sum;
   private final LoginPreferences loginPreferences;
 
-  public ApplicationModule(Application application, String imageCachePath, String cachePath,
+  public ApplicationModuleTest(Application application, String imageCachePath, String cachePath,
       String accountType, String partnerId, String marketName, String extraId,
       String aptoidePackage, String aptoideMd5sum, LoginPreferences loginPreferences) {
     this.application = application;
@@ -194,7 +192,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
 
-  @Named("default") @Singleton @Provides InstallManager provideDefaultInstallManager(
+  @Named("default") @ApplicationTestScope @Provides InstallManager provideDefaultInstallManager(
       AptoideDownloadManager downloadManager, DownloadRepository downloadRepository,
       InstalledRepository installedRepository,
       @Named("default") SharedPreferences defaultSharedPreferences,
@@ -206,12 +204,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         downloadRepository, installedRepository);
   }
 
-  @Singleton @Provides InstallerAnalytics provideInstallerAnalytics(Answers answers,
+  @ApplicationTestScope @Provides InstallerAnalytics provideInstallerAnalytics(Answers answers,
       AppEventsLogger appEventsLogger) {
     return new InstallFabricEvents(Analytics.getInstance(), answers, appEventsLogger);
   }
 
-  @Named("rollback") @Singleton @Provides InstallManager provideRollbackInstallManager(
+  @Named("rollback") @ApplicationTestScope @Provides InstallManager provideRollbackInstallManager(
       AptoideDownloadManager downloadManager, DownloadRepository downloadRepository,
       InstalledRepository installedRepository,
       @Named("default") SharedPreferences defaultSharedPreferences,
@@ -223,7 +221,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         downloadRepository, installedRepository);
   }
 
-  @Singleton @Provides AptoideDownloadManager provideAptoideDownloadManager(
+  @ApplicationTestScope @Provides AptoideDownloadManager provideAptoideDownloadManager(
       AppEventsLogger appEventsLogger, DownloadAccessor downloadAccessor,
       @Named("user-agent") Interceptor userAgentInterceptor, CacheHelper cacheHelper,
       AuthenticationPersistence authenticationPersistence, Answers answers) {
@@ -250,7 +248,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         FileDownloader.getImpl(), cachePath, apkPath, obbPath);
   }
 
-  @Singleton @Provides @Named("default") Installer provideDefaultInstaller(
+  @ApplicationTestScope @Provides @Named("default") Installer provideDefaultInstaller(
       InstallationProvider installationProvider,
       @Named("default") SharedPreferences sharedPreferences,
       InstalledRepository installedRepository, RootAvailabilityManager rootAvailabilityManager,
@@ -261,30 +259,30 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         rootAvailabilityManager, sharedPreferences, installerAnalytics);
   }
 
-  @Singleton @Provides @Named("rollback") Installer provideRollbackInstaller(
+  @ApplicationTestScope @Provides @Named("rollback") Installer provideRollbackInstaller(
       @Named("default") Installer defaultInstaller, RollbackRepository rollbackRepository,
       InstallationProvider installationProvider) {
     return new RollbackInstaller(defaultInstaller, rollbackRepository,
         new RollbackFactory(imageCachePath), installationProvider);
   }
 
-  @Singleton @Provides RollbackRepository provideRollbackRepository(
+  @ApplicationTestScope @Provides RollbackRepository provideRollbackRepository(
       RollbackAccessor rollbackAcessor) {
     return new RollbackRepository(rollbackAcessor);
   }
 
-  @Singleton @Provides RollbackAccessor provideRollbackAccessor(Database database) {
+  @ApplicationTestScope @Provides RollbackAccessor provideRollbackAccessor(Database database) {
     return new RollbackAccessor(database);
   }
 
-  @Singleton @Provides InstallationProvider provideInstallationProvider(
+  @ApplicationTestScope @Provides InstallationProvider provideInstallationProvider(
       AptoideDownloadManager downloadManager, DownloadAccessor downloadAccessor,
       InstalledRepository installedRepository, Database database) {
     return new DownloadInstallationProvider(downloadManager, downloadAccessor, installedRepository,
         new MinimalAdMapper(), AccessorFactory.getAccessorFor(database, StoredMinimalAd.class));
   }
 
-  @Singleton @Provides CacheHelper provideCacheHelper(
+  @ApplicationTestScope @Provides CacheHelper provideCacheHelper(
       @Named("default") SharedPreferences defaultSharedPreferences) {
     final List<CacheHelper.FolderToManage> folders = new LinkedList<>();
 
@@ -297,31 +295,31 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         new FileUtils());
   }
 
-  @Singleton @Provides AppEventsLogger provideAppEventsLogger() {
+  @ApplicationTestScope @Provides AppEventsLogger provideAppEventsLogger() {
     return AppEventsLogger.newLogger(application);
   }
 
-  @Singleton @Provides DownloadRepository provideDownloadRepository(Database database) {
+  @ApplicationTestScope @Provides DownloadRepository provideDownloadRepository(Database database) {
     return new DownloadRepository(new DownloadAccessor(database));
   }
 
-  @Singleton @Provides Answers provideAnswers(Fabric fabric) {
+  @ApplicationTestScope @Provides Answers provideAnswers(Fabric fabric) {
     return fabric.getKit(Answers.class);
   }
 
-  @Singleton @Provides Crashlytics provideCrashlytics(Fabric fabric) {
+  @ApplicationTestScope @Provides Crashlytics provideCrashlytics(Fabric fabric) {
     return fabric.getKit(Crashlytics.class);
   }
 
-  @Singleton @Provides TwitterCore provideTwitter(Fabric fabric) {
+  @ApplicationTestScope @Provides TwitterCore provideTwitter(Fabric fabric) {
     return fabric.getKit(TwitterCore.class);
   }
 
-  @Singleton @Provides TwitterAuthClient provideTwitterAuthClient(Fabric fabric) {
+  @ApplicationTestScope @Provides TwitterAuthClient provideTwitterAuthClient(Fabric fabric) {
     return new TwitterAuthClient();
   }
 
-  @Singleton @Provides Fabric provideFabric() {
+  @ApplicationTestScope @Provides Fabric provideFabric() {
     return Fabric.with(application, new Answers(), new Crashlytics.Builder().core(
         new CrashlyticsCore.Builder().disabled(BuildConfig.CRASH_REPORTS_DISABLED)
             .build())
@@ -329,58 +327,58 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         new TwitterAuthConfig(BuildConfig.TWITTER_KEY, BuildConfig.TWITTER_SECRET)));
   }
 
-  @Singleton @Provides InstalledRepository provideInstalledRepository(Database database,
+  @ApplicationTestScope @Provides InstalledRepository provideInstalledRepository(Database database,
       InstalledAccessor installedAccessor) {
     return new InstalledRepository(installedAccessor);
   }
 
-  @Singleton @Provides DownloadFactory provideDownloadFactory() {
+  @ApplicationTestScope @Provides DownloadFactory provideDownloadFactory() {
     return new DownloadFactory(marketName);
   }
 
-  @Singleton @Provides InstalledAccessor provideInstalledAccessor(Database database) {
+  @ApplicationTestScope @Provides InstalledAccessor provideInstalledAccessor(Database database) {
     return new InstalledAccessor(database);
   }
 
-  @Singleton @Provides DownloadAccessor provideDownloadAccessor(Database database) {
+  @ApplicationTestScope @Provides DownloadAccessor provideDownloadAccessor(Database database) {
     return new DownloadAccessor(database);
   }
 
-  @Singleton @Provides @Named("user-agent") Interceptor provideUserAgentInterceptor(
+  @ApplicationTestScope @Provides @Named("user-agent") Interceptor provideUserAgentInterceptor(
       AndroidAccountProvider androidAccountProvider, IdsRepository idsRepository) {
     return new UserAgentInterceptor(androidAccountProvider, idsRepository, partnerId,
         new DisplayMetrics(), AptoideUtils.SystemU.TERMINAL_INFO,
         AptoideUtils.Core.getDefaultVername(application));
   }
 
-  @Singleton @Provides @Named("retrofit-log") Interceptor provideRetrofitLogInterceptor() {
+  @ApplicationTestScope @Provides @Named("retrofit-log") Interceptor provideRetrofitLogInterceptor() {
     return new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
   }
 
-  @Singleton @Provides IdsRepository provideIdsRepository(
+  @ApplicationTestScope @Provides IdsRepository provideIdsRepository(
       @Named("secure") SharedPreferences secureSharedPreferences, ContentResolver contentResolver) {
     return new IdsRepository(secureSharedPreferences, application,
         Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID));
   }
 
-  @Singleton @Provides ContentResolver provideContentResolver() {
+  @ApplicationTestScope @Provides ContentResolver provideContentResolver() {
     return application.getContentResolver();
   }
 
-  @Singleton @Provides AndroidAccountProvider provideAndroidAccountProvider(
+  @ApplicationTestScope @Provides AndroidAccountProvider provideAndroidAccountProvider(
       AccountManager accountManager) {
     return new AndroidAccountProvider(accountManager, accountType, Schedulers.io());
   }
 
-  @Singleton @Provides PermissionManager providePermissionManager() {
+  @ApplicationTestScope @Provides PermissionManager providePermissionManager() {
     return new PermissionManager();
   }
 
-  @Singleton @Provides AccountManager provideAccountManager() {
+  @ApplicationTestScope @Provides AccountManager provideAccountManager() {
     return AccountManager.get(application);
   }
 
-  @Singleton @Provides RootAvailabilityManager provideRootAvailabilityManager(
+  @ApplicationTestScope @Provides RootAvailabilityManager provideRootAvailabilityManager(
       @Named("secure") SharedPreferences secureSharedPreferences) {
     return new RootAvailabilityManager(new RootValueSaver() {
       final String IS_PHONE_ROOTED = "IS_PHONE_ROOTED";
@@ -398,34 +396,34 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     });
   }
 
-  @Singleton @Provides Map<Integer, Result> provideFragmentNavigatorMap() {
+  @ApplicationTestScope @Provides Map<Integer, Result> provideFragmentNavigatorMap() {
     return new HashMap<>();
   }
 
-  @Singleton @Provides BehaviorRelay<Map<Integer, Result>> provideFragmentNavigatorRelay() {
+  @ApplicationTestScope @Provides BehaviorRelay<Map<Integer, Result>> provideFragmentNavigatorRelay() {
     return BehaviorRelay.create();
   }
 
-  @Singleton @Provides Resources provideResources() {
+  @ApplicationTestScope @Provides Resources provideResources() {
     return application.getResources();
   }
 
-  @Singleton @Provides AuthenticationPersistence provideAuthenticationPersistence(
+  @ApplicationTestScope @Provides AuthenticationPersistence provideAuthenticationPersistence(
       AndroidAccountProvider androidAccountProvider) {
     return new AuthenticationPersistence(androidAccountProvider,
         ((AccountManager) application.getSystemService(Context.ACCOUNT_SERVICE)));
   }
 
-  @Singleton @Provides @Named("default") SharedPreferences getDefaultSharedPerefences() {
+  @ApplicationTestScope @Provides @Named("default") SharedPreferences getDefaultSharedPerefences() {
     return PreferenceManager.getDefaultSharedPreferences(application);
   }
 
-  @Singleton @Provides @Named("secure") SharedPreferences getSecureSharedPerefences(
+  @ApplicationTestScope @Provides @Named("secure") SharedPreferences getSecureSharedPerefences(
       @Named("default") SharedPreferences defaultSharedPreferences) {
     return new SecurePreferencesImplementation(application, defaultSharedPreferences);
   }
 
-  @Singleton @Provides RootInstallationRetryHandler provideRootInstallationRetryHandler(
+  @ApplicationTestScope @Provides RootInstallationRetryHandler provideRootInstallationRetryHandler(
       @Named("rollback") InstallManager rollbackInstallManager) {
     Intent retryActionIntent = new Intent(application, RootInstallNotificationEventReceiver.class);
     retryActionIntent.setAction(RootInstallNotificationEventReceiver.ROOT_INSTALL_RETRY_ACTION);
@@ -454,14 +452,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
             deleteAction));
   }
 
-  @Singleton @Provides NotificationSyncScheduler provideNotificationSyncScheduler(
+  @ApplicationTestScope @Provides NotificationSyncScheduler provideNotificationSyncScheduler(
       SyncScheduler syncScheduler, @Named("default") SharedPreferences sharedPreferences,
       NotificationProvider notificationProvider, NotificationService notificationService) {
     return new NotificationSyncManager(syncScheduler, true,
         new NotificationSyncFactory(sharedPreferences, notificationService, notificationProvider));
   }
 
-  @Singleton @Provides NotificationService providePnp1NotificationService(
+  @ApplicationTestScope @Provides NotificationService providePnp1NotificationService(
       @Named("default") OkHttpClient defaultClient, IdsRepository idsRepository,
       @Named("default") SharedPreferences defaultSharedPreferences, Resources resources,
       AptoideAccountManager aptoideAccountManager,
@@ -471,7 +469,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         defaultSharedPreferences, resources, authenticationPersistence, aptoideAccountManager);
   }
 
-  @Singleton @Provides GoogleApiClient provideGoogleApiClient() {
+  @ApplicationTestScope @Provides GoogleApiClient provideGoogleApiClient() {
     return new GoogleApiClient.Builder(application).addApi(GOOGLE_SIGN_IN_API,
         new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
             .requestScopes(new Scope("https://www.googleapis.com/auth/contacts.readonly"))
@@ -481,7 +479,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .build();
   }
 
-  @Singleton @Provides AptoideAccountManager provideAptoideAccountManager(AdultContent adultContent,
+  @ApplicationTestScope @Provides AptoideAccountManager provideAptoideAccountManager(AdultContent adultContent,
       StoreAccessor storeAccessor, @Named("default") OkHttpClient httpClient,
       @Named("long-timeout") OkHttpClient longTimeoutHttpClient, AccountManager accountManager,
       @Named("secure") SharedPreferences secureSharedPreferences,
@@ -494,33 +492,127 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("multipart")
           BodyInterceptor<HashMapNotNull<String, RequestBody>> multipartBodyInterceptor,
       AndroidAccountProvider androidAccountProvider, GoogleApiClient googleApiClient,
-      @Named("no-authentication-v3") BodyInterceptor<BaseBody> noAuthenticationBodyInterceptorV3,
+      @Named("no-authentication-v3") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> noAuthenticationBodyInterceptorV3,
       ObjectMapper objectMapper) {
-    Logger.d("TAG123","HERE");
     FacebookSdk.sdkInitialize(application);
     final AccountFactory accountFactory = new AccountFactory();
+    Account account = new Account() {
+      @Override public List<Store> getSubscribedStores() {
+        return new ArrayList<>();
+      }
 
+      @Override public String getId() {
+        return "1";
+      }
+
+      @Override public String getNickname() {
+        return "D01";
+      }
+
+      @Override public String getAvatar() {
+        return "avatar";
+      }
+
+      @Override public boolean isAdultContentEnabled() {
+        return true;
+      }
+
+      @Override public Access getAccess() {
+        return Access.PRIVATE;
+      }
+
+      @Override public boolean isAccessConfirmed() {
+        return true;
+      }
+
+      @Override public boolean isLoggedIn() {
+        return false;
+      }
+
+      @Override public String getEmail() {
+        return "jose.messejana@aptoide.com";
+      }
+
+      @Override public Store getStore() {
+        return null;
+      }
+
+      @Override public boolean hasStore() {
+        return false;
+      }
+
+      @Override public boolean isPublicUser() {
+        return false;
+      }
+
+      @Override public boolean isPublicStore() {
+        return false;
+      }
+    };
     final AccountService accountService =
-        new AccountServiceV3(accountFactory, httpClient, longTimeoutHttpClient,
-            WebService.getDefaultConverter(), objectMapper, defaultSharedPreferences, extraId,
-            tokenInvalidator, authenticationPersistence, noAuthenticationBodyInterceptorV3,
-            multipartBodyInterceptor, bodyInterceptorWebV7, bodyInterceptorPoolV7);
+        new AccountService() {
+          @Override public Single<Account> getAccount(String email, String password) {
+            return Single.just(account);
+          }
 
-    final AndroidAccountDataMigration accountDataMigration =
-        new AndroidAccountDataMigration(secureSharedPreferences, defaultSharedPreferences,
-            accountManager, secureCoderDecoder, SQLiteDatabaseHelper.DATABASE_VERSION,
-            application.getDatabasePath(SQLiteDatabaseHelper.DATABASE_NAME)
-                .getPath(), accountType, BuildConfig.VERSION_NAME, Schedulers.io());
+          @Override public Single<Account> createAccount(String email, String metadata, String name,
+              String type) {
+            return Single.just(account);
+          }
 
-    final AccountPersistence accountPersistence =
-        new AndroidAccountManagerPersistence(accountManager,
-            new DatabaseStoreDataPersist(storeAccessor,
-                new DatabaseStoreDataPersist.DatabaseStoreMapper()), accountFactory,
-            accountDataMigration, androidAccountProvider, authenticationPersistence,
-            Schedulers.io());
+          @Override public Single<Account> createAccount(String email, String password) {
+            return Single.just(account);
+          }
 
-    return new AptoideAccountManager.Builder().setAccountPersistence(
-        new MatureContentPersistence(accountPersistence, adultContent))
+          @Override public Single<Account> getAccount() {
+            return Single.just(account);
+          }
+
+          @Override public Completable updateAccount(String nickname, String avatarPath) {
+            return Completable.complete();
+          }
+
+          @Override public Completable updateAccount(String accessLevel) {
+            return Completable.complete();
+          }
+
+          @Override public Completable updateAccountUsername(String username) {
+            return Completable.complete();
+          }
+
+          @Override public Completable unsubscribeStore(String storeName, String storeUserName,
+              String storePassword) {
+            return Completable.complete();
+          }
+
+          @Override public Completable subscribeStore(String storeName, String storeUserName,
+              String storePassword) {
+            return Completable.complete();
+          }
+
+          @Override public Completable updateAccount(boolean adultContentEnabled) {
+            return Completable.complete();
+          }
+
+          @Override public Completable removeAccount() {
+            return Completable.complete();
+          }
+        };
+
+    final AccountPersistence accountPersistence = new AccountPersistence() {
+      @Override public Completable saveAccount(Account account) {
+        return Completable.complete();
+      }
+
+      @Override public Single<Account> getAccount() {
+        return Single.just(account);
+      }
+
+      @Override public Completable removeAccount() {
+        return Completable.complete();
+      }
+    };
+    return new AptoideAccountManager.Builder().setAccountPersistence(accountPersistence)
         .setAccountService(accountService)
         .registerSignUpAdapter(GoogleSignUpAdapter.TYPE,
             new GoogleSignUpAdapter(googleApiClient, loginPreferences))
@@ -530,7 +622,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .build();
   }
 
-  @Singleton @Provides @Named("default") OkHttpClient provideOkHttpClient(
+  @ApplicationTestScope @Provides @Named("default") OkHttpClient provideOkHttpClient(
       @Named("user-agent") Interceptor userAgentInterceptor, L2Cache cache,
       @Named("default") SharedPreferences sharedPreferences,
       @Named("retrofit-log") Interceptor retrofitLogInterceptor) {
@@ -552,7 +644,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return okHttpClientBuilder.build();
   }
 
-  @Singleton @Provides @Named("long-timeout") OkHttpClient provideLongTimeoutOkHttpClient(
+  @ApplicationTestScope @Provides @Named("long-timeout") OkHttpClient provideLongTimeoutOkHttpClient(
       @Named("user-agent") Interceptor userAgentInterceptor,
       @Named("default") SharedPreferences sharedPreferences,
       @Named("retrofit-log") Interceptor retrofitLogInterceptor) {
@@ -569,36 +661,36 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return okHttpClientBuilder.build();
   }
 
-  @Singleton @Provides public ObjectMapper provideNonNullObjectMapper() {
+  @ApplicationTestScope @Provides public ObjectMapper provideNonNullObjectMapper() {
     final ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     return objectMapper;
   }
 
-  @Singleton @Provides L2Cache provideL2Cache() {
+  @ApplicationTestScope @Provides L2Cache provideL2Cache() {
     return new L2Cache(new POSTCacheKeyAlgorithm(),
         new File(application.getCacheDir(), AptoideApplication.CACHE_FILE_NAME));
   }
 
-  @Singleton @Provides NotificationProvider provideNotificationProvider(
+  @ApplicationTestScope @Provides NotificationProvider provideNotificationProvider(
       NotificationAccessor notificationAccessor) {
     return new NotificationProvider(notificationAccessor, Schedulers.io());
   }
 
-  @Singleton @Provides NotificationAccessor provideNotificationAccessor(Database database) {
+  @ApplicationTestScope @Provides NotificationAccessor provideNotificationAccessor(Database database) {
     return new NotificationAccessor(database);
   }
 
-  @Singleton @Provides SyncScheduler provideSyncScheduler(SyncStorage syncStorage) {
+  @ApplicationTestScope @Provides SyncScheduler provideSyncScheduler(SyncStorage syncStorage) {
     return new SyncScheduler(application, SyncService.class,
         (AlarmManager) application.getSystemService(Context.ALARM_SERVICE), syncStorage);
   }
 
-  @Singleton @Provides SyncStorage provideSyncStorage() {
+  @ApplicationTestScope @Provides SyncStorage provideSyncStorage() {
     return new SyncStorage(new HashMap<>());
   }
 
-  @Singleton @Provides StoreUtilsProxy provideStoreUtilsProxy(AptoideAccountManager accountManager,
+  @ApplicationTestScope @Provides StoreUtilsProxy provideStoreUtilsProxy(AptoideAccountManager accountManager,
       StoreAccessor storeAccessor, @Named("default") OkHttpClient httpClient,
       @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       @Named("account-settings-pool-v7")
@@ -608,29 +700,29 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences);
   }
 
-  @Singleton @Provides TokenInvalidator provideTokenInvalidator(
+  @ApplicationTestScope @Provides TokenInvalidator provideTokenInvalidator(
       @Named("default") OkHttpClient httpClient,
       @Named("default") SharedPreferences sharedPreferences,
       AuthenticationPersistence authenticationPersistence,
-      @Named("no-authentication-v3") BodyInterceptor<BaseBody> bodyInterceptor) {
+      @Named("no-authentication-v3") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptor) {
     return new RefreshTokenInvalidator(bodyInterceptor, httpClient,
         WebService.getDefaultConverter(), sharedPreferences, extraId, new NoOpTokenInvalidator(),
         authenticationPersistence);
   }
 
-  @Singleton @Provides @Named("no-authentication-v3")
-  BodyInterceptor<BaseBody> provideNoAuthenticationBodyInterceptorV3(IdsRepository idsRepository) {
+  @ApplicationTestScope @Provides @Named("no-authentication-v3")
+  BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> provideNoAuthenticationBodyInterceptorV3(IdsRepository idsRepository) {
     return new NoAuthenticationBodyInterceptorV3(idsRepository, aptoideMd5sum, aptoidePackage);
   }
 
-  @Singleton @Provides @Named("account-settings-pool-v7")
+  @ApplicationTestScope @Provides @Named("account-settings-pool-v7")
   BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> provideAccountSettingsBodyInterceptorPoolV7(
       @Named("pool-v7") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptor,
       AdultContent adultContent) {
     return new AccountSettingsBodyInterceptorV7(bodyInterceptor, adultContent);
   }
 
-  @Singleton @Provides @Named("pool-v7")
+  @ApplicationTestScope @Provides @Named("pool-v7")
   BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> provideBodyInterceptorPoolV7(
       AuthenticationPersistence authenticationPersistence, IdsRepository idsRepository,
       @Named("default") SharedPreferences sharedPreferences, Resources resources,
@@ -639,7 +731,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         aptoidePackage, qManager, Cdn.POOL, sharedPreferences, resources, BuildConfig.VERSION_CODE);
   }
 
-  @Singleton @Provides @Named("multipart")
+  @ApplicationTestScope @Provides @Named("multipart")
   BodyInterceptor<HashMapNotNull<String, RequestBody>> provideMultipartBodyInterceptor(
       IdsRepository idsRepository, AuthenticationPersistence authenticationPersistence,
       RequestBodyFactory requestBodyFactory) {
@@ -647,11 +739,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         authenticationPersistence);
   }
 
-  @Singleton @Provides RequestBodyFactory provideRequestBodyFactory() {
+  @ApplicationTestScope @Provides RequestBodyFactory provideRequestBodyFactory() {
     return new RequestBodyFactory();
   }
 
-  @Singleton @Provides @Named("web-v7")
+  @ApplicationTestScope @Provides @Named("web-v7")
   BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> provideBodyInterceptorWebV7(
       AuthenticationPersistence authenticationPersistence, IdsRepository idsRepository,
       @Named("default") SharedPreferences sharedPreferences, Resources resources,
@@ -660,52 +752,52 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         aptoidePackage, qManager, Cdn.WEB, sharedPreferences, resources, BuildConfig.VERSION_CODE);
   }
 
-  @Singleton @Provides QManager provideQManager(
+  @ApplicationTestScope @Provides QManager provideQManager(
       @Named("default") SharedPreferences sharedPreferences, Resources resources) {
     return new QManager(sharedPreferences, resources,
         ((ActivityManager) application.getSystemService(Context.ACTIVITY_SERVICE)),
         ((WindowManager) application.getSystemService(Context.WINDOW_SERVICE)));
   }
 
-  @Singleton @Provides AdultContent provideLocalAdultContent(Preferences preferences,
+  @ApplicationTestScope @Provides AdultContent provideLocalAdultContent(Preferences preferences,
       SecurePreferences securePreferences) {
     return new LocalPersistenceAdultContent(preferences, securePreferences);
   }
 
-  @Singleton @Provides Preferences provideDefaultPreferences(
+  @ApplicationTestScope @Provides Preferences provideDefaultPreferences(
       @Named("default") SharedPreferences sharedPreferences) {
     return new Preferences(sharedPreferences);
   }
 
-  @Singleton @Provides SecurePreferences provideSecurePreferences(
+  @ApplicationTestScope @Provides SecurePreferences provideSecurePreferences(
       @Named("default") SharedPreferences sharedPreferences,
       SecureCoderDecoder secureCoderDecoder) {
     return new SecurePreferences(sharedPreferences, secureCoderDecoder);
   }
 
-  @Singleton @Provides StoreAccessor provideStoreAccessor(Database database) {
+  @ApplicationTestScope @Provides StoreAccessor provideStoreAccessor(Database database) {
     return new StoreAccessor(database);
   }
 
-  @Singleton @Provides SecureCoderDecoder provideSecureCoderDecoder(
+  @ApplicationTestScope @Provides SecureCoderDecoder provideSecureCoderDecoder(
       @Named("default") SharedPreferences sharedPreferences) {
     return new SecureCoderDecoder.Builder(application, sharedPreferences).create();
   }
 
-  @Singleton @Provides StoreRepository provideStoreRepository(StoreAccessor storeAccessor) {
+  @ApplicationTestScope @Provides StoreRepository provideStoreRepository(StoreAccessor storeAccessor) {
     return new StoreRepository(storeAccessor);
   }
 
-  @Singleton @Provides PageViewsAnalytics providePageViewsAnalytics(AppEventsLogger appEventsLogger,
+  @ApplicationTestScope @Provides PageViewsAnalytics providePageViewsAnalytics(AppEventsLogger appEventsLogger,
       NavigationTracker navigationTracker) {
     return new PageViewsAnalytics(appEventsLogger, Analytics.getInstance(), navigationTracker);
   }
 
-  @Singleton @Provides NavigationTracker provideNavigationTracker() {
+  @ApplicationTestScope @Provides NavigationTracker provideNavigationTracker() {
     return new NavigationTracker(new ArrayList<>(), new TrackerFilter());
   }
 
-  @Singleton @Provides Database provideDatabase() {
+  @ApplicationTestScope @Provides Database provideDatabase() {
     Realm.init(application);
     final RealmConfiguration realmConfiguration =
         new RealmConfiguration.Builder().name(BuildConfig.REALM_FILE_NAME)
@@ -716,11 +808,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new Database();
   }
 
-  @Singleton @Provides CallbackManager provideCallbackManager(){
+  @ApplicationTestScope @Provides CallbackManager provideCallbackManager(){
     return new CallbackManagerImpl();
   }
 
-  @Singleton @Provides AccountAnalytics provideAccountAnalytics(@Named("pool-v7") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+  @ApplicationTestScope @Provides AccountAnalytics provideAccountAnalytics(@Named("pool-v7") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient defaulClient, TokenInvalidator tokenInvalidator, @Named ("default") SharedPreferences defaultSharedPreferences,
       AppEventsLogger appEventsLogger, NavigationTracker navigationTracker){
     return new AccountAnalytics(Analytics.getInstance(), bodyInterceptorPoolV7,
@@ -728,5 +820,4 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         BuildConfig.APPLICATION_ID, defaultSharedPreferences, appEventsLogger,
         navigationTracker);
   }
-
 }

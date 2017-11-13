@@ -15,6 +15,9 @@ import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObjectNotFoundException;
 import android.support.test.uiautomator.UiSelector;
 import android.support.v4.content.ContextCompat;
+import cm.aptoide.accountmanager.AccountPersistence;
+import cm.aptoide.accountmanager.AccountService;
+import cm.aptoide.accountmanager.CredentialsValidator;
 import cm.aptoide.pt.view.MainActivity;
 import java.io.IOException;
 import org.junit.Before;
@@ -27,7 +30,6 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
-import static android.support.test.espresso.action.ViewActions.swipeRight;
 import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -44,17 +46,19 @@ public class SignInSignUpUITests {
   private final String SIGNUPEMAILTESTEND = "@aptoide.com";
   private final String LOGINEMAIL = "jose.messejana@aptoide.com";
   private final String PASS = "aptoide1234";
-  private final int WAIT_TIME = 550;
-  private final int LONGER_WAIT_TIME = 2000;
   private final int NUMBER_OF_RETRIES = 2;
   private final int MAX_NUMBER_WHILEITERARTIONS = 45;
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
-  //@Rule public RetryTestRule retry = new RetryTestRule(NUMBER_OF_RETRIES);
+  // @Rule public RetryTestRule retry = new RetryTestRule(NUMBER_OF_RETRIES);
   private String SIGNUPEMAILTEST = "";
   private String STORENAME = "a";
   private int nonerrormessagesphotos = 0;
   private int whileiterations = 0;
+
+  private AccountPersistence dataPersistMock;
+  private AccountService serviceMock;
+  private CredentialsValidator credentialsValidatorMock;
 
   private static ViewAction swipeRigthOnLeftMost() {
     return new GeneralSwipeAction(Swipe.FAST, GeneralLocation.CENTER_LEFT,
@@ -62,6 +66,9 @@ public class SignInSignUpUITests {
   }
 
   @Before public void setUp() throws IOException, InterruptedException {
+    //dataPersistMock = mock(AccountPersistence.class);
+    //serviceMock = mock(AccountService.class);
+    //credentialsValidatorMock = mock(CredentialsValidator.class);
     whileiterations = 0;
     SIGNUPEMAILTEST = SIGNUPEMAILTESTBGN + System.currentTimeMillis() + SIGNUPEMAILTESTEND;
     STORENAME = STORENAME + System.currentTimeMillis();
@@ -70,6 +77,8 @@ public class SignInSignUpUITests {
     }
     logOutorGoBack();
   }
+
+
 
   @Test public void signInEmptyEmail() throws InterruptedException {
     goToMyAccount();
@@ -134,88 +143,49 @@ public class SignInSignUpUITests {
   @Test public void signUp() throws InterruptedException {
     goToMyAccount();
     performSignUp(SIGNUPEMAILTEST, PASS);
-    while (notSignUp() && whileiterations < MAX_NUMBER_WHILEITERARTIONS) {
-      whileiterations++;
-      Thread.sleep(LONGER_WAIT_TIME);
-    }
     completeSignUp();
+    onView(withId(R.id.action_search)).check(matches(isDisplayed()));
   }
 
   @Test public void signUpPrivateUser() throws InterruptedException {
     goToMyAccount();
     performSignUp(SIGNUPEMAILTEST, PASS);
-    while (notSignUp() && whileiterations < MAX_NUMBER_WHILEITERARTIONS) {
-      whileiterations++;
-      Thread.sleep(LONGER_WAIT_TIME);
-    }
     completeSignUpPrivate();
+    onView(withId(R.id.action_search)).check(matches(isDisplayed()));
   }
 
   @Test public void signUpMoreInfoPublicUser() throws InterruptedException {
     goToMyAccount();
     performSignUp(SIGNUPEMAILTEST, PASS);
-    while (notSignUp() && whileiterations < MAX_NUMBER_WHILEITERARTIONS) {
-      whileiterations++;
-      Thread.sleep(LONGER_WAIT_TIME);
-    }
     completeSignUpMoreInfoPublic();
+    onView(withId(R.id.action_search)).check(matches(isDisplayed()));
   }
 
   @Test public void signUpWithCreateStore() throws InterruptedException {
     goToMyAccount();
     performSignUp(SIGNUPEMAILTEST, PASS);
-    while (notSignUp() && whileiterations < MAX_NUMBER_WHILEITERARTIONS) {
-      whileiterations++;
-      Thread.sleep(LONGER_WAIT_TIME);
-    }
     completeSignUpWithStore();
-    while (!hasLoggedIn() && whileiterations < MAX_NUMBER_WHILEITERARTIONS * 5) {
-      whileiterations++;
-      Thread.sleep(WAIT_TIME);
-    }
-    goToMyAccount();
-    onView(withId(R.id.my_account_store_name)).check(matches(withText(STORENAME)));
+    onView(withId(R.id.action_search)).check(matches(isDisplayed()));
   }
 
   @Test public void signUpcreateStoreAfter() throws InterruptedException {
     goToMyAccount();
     performSignUp(SIGNUPEMAILTEST, PASS);
-    while (notSignUp() && whileiterations < MAX_NUMBER_WHILEITERARTIONS) {
-      whileiterations++;
-      Thread.sleep(LONGER_WAIT_TIME);
-    }
     completeSignUp();
-    Thread.sleep(WAIT_TIME);
     onView(withText(R.string.stores)).perform(click());
-    Thread.sleep(LONGER_WAIT_TIME);
     onView(withId(R.id.create_store_action)).perform(click());
     createStore();
-    while (!hasLoggedIn() && whileiterations < MAX_NUMBER_WHILEITERARTIONS * 4) {
-      whileiterations++;
-      Thread.sleep(WAIT_TIME);
-    }
-    onView(withText(R.string.stores)).perform(swipeRight());
-    onView(withText(R.string.home_title)).perform(click());
-    Thread.sleep(WAIT_TIME);
-    goToMyAccount();
-    onView(withId(R.id.my_account_store_name)).check(matches(withText(STORENAME)));
+    onView(withId(R.id.action_search)).check(matches(isDisplayed()));
   }
 
 
   @Test public void signIn() throws InterruptedException {
     goToMyAccount();
     performLogin(LOGINEMAIL, PASS);
-    while (!hasLoggedIn() && whileiterations < MAX_NUMBER_WHILEITERARTIONS) {
-      whileiterations++;
-      Thread.sleep(LONGER_WAIT_TIME);
-    }
-    checkIfLoggedIn();
-    goToMyAccount();
-    Thread.sleep(WAIT_TIME);
-    onView(withId(R.id.button_logout)).check(matches(isDisplayed()));
+    onView(withId(R.id.action_search)).check(matches(isDisplayed()));
   }
 
-  @Test public void profilePhoto() throws InterruptedException, UiObjectNotFoundException { //Arrastar as imagens primeiro
+ /* @Test public void profilePhoto() throws InterruptedException, UiObjectNotFoundException { //Arrastar as imagens primeiro
     nonerrormessagesphotos = 0;
     UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
     int deviceHeight = mDevice.getDisplayHeight();
@@ -224,13 +194,10 @@ public class SignInSignUpUITests {
     performLogin(LOGINEMAIL, PASS);
     while (!hasLoggedIn() && whileiterations < MAX_NUMBER_WHILEITERARTIONS) {
       whileiterations++;
-      Thread.sleep(LONGER_WAIT_TIME);
     }
     goToMyAccount();
     onView(withId(R.id.my_account_edit_user_profile)).perform(click());
-    Thread.sleep(WAIT_TIME);
     onView(withId(R.id.create_user_image_action)).perform(click());
-    Thread.sleep(WAIT_TIME);
     allowPermission(mDevice, "WRITE_EXTERNAL_STORAGE");
     onView(withId(R.id.button_gallery)).perform(click());
     getPhotoFromStorage(mDevice, deviceHeight, deviceWidth, "user");
@@ -249,24 +216,20 @@ public class SignInSignUpUITests {
     performLogin(LOGINEMAIL, PASS);
     while (!hasLoggedIn() && whileiterations < MAX_NUMBER_WHILEITERARTIONS) {
       whileiterations++;
-      Thread.sleep(LONGER_WAIT_TIME);
     }
     goToMyAccount();
     onView(withId(R.id.my_account_edit_user_store)).perform(click());
-    Thread.sleep(WAIT_TIME);
     onView(withId(R.id.create_store_image_action)).perform(click());
-    Thread.sleep(WAIT_TIME);
     allowPermission(mDevice, "WRITE_EXTERNAL_STORAGE");
     onView(withId(R.id.button_gallery)).perform(click());
     getPhotoFromStorage(mDevice, deviceHeight, deviceWidth, "store");
-    Thread.sleep(LONGER_WAIT_TIME * 2);
     if(nonerrormessagesphotos != 1){
       throw new IllegalStateException("Unexpected number of error messages displayed"); //if it has different than 1 means that one of the photos didn't display the error or the accepted photo displayed an error
     }
     onView(withId(R.id.theme_selector)).perform(swipeUp());
     onView(withId(R.id.theme_selector)).perform(swipeUp());
     onView(withId(R.id.create_store_action)).perform(click());
-  }
+  } */
 
   private boolean isFirstTime() {
     try {
@@ -339,10 +302,25 @@ public class SignInSignUpUITests {
     }
   }
 
+  private void performLogin(String email, String pass) throws InterruptedException {
+  /*  final Account accountMock = mock(Account.class);
+    final AptoideCredentials credentials = new AptoideCredentials(LOGINEMAIL, PASS);
+    Thread.sleep(500);
+    when(credentialsValidatorMock.validate(eq(credentials), anyBoolean())).thenReturn(
+        Completable.complete());
+    when(serviceMock.getAccount(LOGINEMAIL, PASS)).thenReturn(
+        Single.just(accountMock));
+    when(dataPersistMock.saveAccount(accountMock)).thenReturn(
+        Completable.complete()); */
+    onView(withId(R.id.show_login_with_aptoide_area)).perform(click());
+    onView(withId(R.id.username)).perform(replaceText(email));
+    onView(withId(R.id.password)).perform(replaceText(pass), closeSoftKeyboard());
+    onView(withId(R.id.button_login)).perform(click());
+  }
+
   private void logOutorGoBack() {
     try {
       onView(withId(R.id.toolbar)).perform(swipeRigthOnLeftMost());
-      Thread.sleep(WAIT_TIME);
       onView(withId(R.id.profile_email_text)).perform(click());
       onView(withId(R.id.toolbar)).perform(swipeLeft());
       goToMyAccount();
@@ -354,23 +332,13 @@ public class SignInSignUpUITests {
 
   private void goToMyAccount() throws InterruptedException {
     onView(withId(R.id.toolbar)).perform(swipeRigthOnLeftMost());
-    Thread.sleep(WAIT_TIME);
     onView(withText(R.string.drawer_title_my_account)).perform(click());
-  }
-
-  private void performLogin(String email, String pass) throws InterruptedException {
-    onView(withId(R.id.show_login_with_aptoide_area)).perform(click());
-    onView(withId(R.id.username)).perform(replaceText(email));
-    onView(withId(R.id.password)).perform(replaceText(pass), closeSoftKeyboard());
-    Thread.sleep(WAIT_TIME);
-    onView(withId(R.id.button_login)).perform(click());
   }
 
   private void performSignUp(String email, String pass) throws InterruptedException {
     onView(withId(R.id.show_join_aptoide_area)).perform(click());
     onView(withId(R.id.username)).perform(replaceText(email));
     onView(withId(R.id.password)).perform(replaceText(pass), closeSoftKeyboard());
-    Thread.sleep(WAIT_TIME);
     onView(withId(R.id.button_sign_up)).perform(click());
   }
 
@@ -391,68 +359,31 @@ public class SignInSignUpUITests {
   private void completeSignUp() throws InterruptedException {
     onView(withId(R.id.create_user_username_inserted)).perform(replaceText("a1"));
     onView(withId(R.id.create_user_create_profile)).perform(click());
-    while (!hasCreatedUser(false) && whileiterations < MAX_NUMBER_WHILEITERARTIONS * 2) {
-      whileiterations++;
-      Thread.sleep(WAIT_TIME);
-    }
-    while (!hasCreatedStore() && whileiterations < MAX_NUMBER_WHILEITERARTIONS * 3) {
-      whileiterations++;
-      Thread.sleep(WAIT_TIME);
-    }
-    Thread.sleep(WAIT_TIME);
     onView(withId(R.id.create_store_skip)).perform(click());
   }
 
   private void completeSignUpPrivate() throws InterruptedException {
     onView(withId(R.id.create_user_username_inserted)).perform(replaceText("a1"));
     onView(withId(R.id.create_user_create_profile)).perform(click());
-    while (!hasCreatedUser(true) && whileiterations < MAX_NUMBER_WHILEITERARTIONS * 2) {
-      whileiterations++;
-      Thread.sleep(WAIT_TIME);
-    }
     onView(withId(R.id.logged_in_private_button)).perform(click());
-    while (!hasCreatedStore() && whileiterations < MAX_NUMBER_WHILEITERARTIONS * 3) {
-      whileiterations++;
-      Thread.sleep(WAIT_TIME);
-    }
-    Thread.sleep(WAIT_TIME);
     onView(withId(R.id.create_store_skip)).perform(click());
   }
 
   private void completeSignUpMoreInfoPublic() throws InterruptedException {
     onView(withId(R.id.create_user_username_inserted)).perform(replaceText("a1"));
     onView(withId(R.id.create_user_create_profile)).perform(click());
-    while (!hasCreatedUser(true) && whileiterations < MAX_NUMBER_WHILEITERARTIONS * 2) {
-      whileiterations++;
-      Thread.sleep(WAIT_TIME);
-    }
     onView(withId(R.id.logged_in_continue)).perform(click());
-    while (!hasCreatedStore() && whileiterations < MAX_NUMBER_WHILEITERARTIONS * 3) {
-      whileiterations++;
-      Thread.sleep(WAIT_TIME);
-    }
-    Thread.sleep(WAIT_TIME);
     onView(withId(R.id.create_store_skip)).perform(click());
   }
 
   private void completeSignUpWithStore() throws InterruptedException {
     onView(withId(R.id.create_user_username_inserted)).perform(replaceText("a1"));
     onView(withId(R.id.create_user_create_profile)).perform(click());
-    while (!hasCreatedUser(false) && whileiterations < MAX_NUMBER_WHILEITERARTIONS * 3) {
-      whileiterations++;
-      Thread.sleep(WAIT_TIME);
-    }
-    while (!hasCreatedStore() && whileiterations < MAX_NUMBER_WHILEITERARTIONS * 4) {
-      whileiterations++;
-      Thread.sleep(WAIT_TIME);
-    }
-    Thread.sleep(WAIT_TIME);
     createStore();
   }
 
   private void createStore() throws InterruptedException {
     onView(withId(R.id.create_store_name)).perform(replaceText(STORENAME), closeSoftKeyboard());
-    Thread.sleep(WAIT_TIME);
     onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
     onView(withId(R.id.theme_selector)).perform(swipeUp());
     onView(withId(R.id.create_store_action)).perform(click());
@@ -497,14 +428,11 @@ public class SignInSignUpUITests {
         mDevice.findObject(new UiSelector().clickable(true)
             .index(i))
             .click();
-        Thread.sleep(WAIT_TIME);
         try {
           onView(withText("OK")).perform(click());
-          Thread.sleep(WAIT_TIME);
         } catch (Exception e) {
           nonerrormessagesphotos++;
         }
-        Thread.sleep(WAIT_TIME *2);
         if(i<2) {
           goToImageStorage(test);
         }
@@ -521,9 +449,7 @@ public class SignInSignUpUITests {
     else{
       onView(withId(R.id.create_store_image_action)).perform(click());
     }
-    Thread.sleep(WAIT_TIME);
     onView(withId(R.id.button_gallery)).perform(click());
-    Thread.sleep(WAIT_TIME);
   }
 
 }

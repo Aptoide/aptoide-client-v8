@@ -89,8 +89,6 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
 import cm.aptoide.pt.networking.BodyInterceptorV3;
-import cm.aptoide.pt.networking.BodyInterceptorV7;
-import cm.aptoide.pt.networking.Cdn;
 import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.networking.MultipartBodyInterceptor;
 import cm.aptoide.pt.networking.NoAuthenticationBodyInterceptorV3;
@@ -193,7 +191,7 @@ public abstract class AptoideApplication extends Application {
   @Inject AppEventsLogger appEventsLogger;
   @Inject AptoideAccountManager accountManager;
   @Inject @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7;
-  private BodyInterceptor<BaseBody> bodyInterceptorWebV7;
+  @Inject @Named("web-v7") BodyInterceptor<BaseBody> bodyInterceptorWebV7;
   private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3;
   @Inject Preferences preferences;
   private cm.aptoide.pt.preferences.SecurePreferences securePreferences;
@@ -204,7 +202,7 @@ public abstract class AptoideApplication extends Application {
   private LeakTool leakTool;
   private String aptoideMd5sum;
   @Inject @Named("default") OkHttpClient defaultClient;
-  private OkHttpClient longTimeoutClient;
+  @Inject @Named("long-timeout") OkHttpClient longTimeoutClient;
   private L2Cache httpClientCache;
   @Inject @Named("user-agent") Interceptor userAgentInterceptor;
   @Inject AndroidAccountProvider androidAccountProvider;
@@ -286,6 +284,12 @@ public abstract class AptoideApplication extends Application {
       leakTool = new LeakTool();
     }
     return leakTool;
+  }
+
+  public void setComponent(ApplicationComponent component) {
+    Logger.d("TAG123","here12");
+    this.applicationComponent = component;
+    applicationComponent.inject(this);
   }
 
   @Override public void onCreate() {
@@ -389,18 +393,14 @@ public abstract class AptoideApplication extends Application {
         .distinctUntilChanged()
         .subscribe(isLoggedIn -> aptoideApplicationAnalytics.updateDimension(isLoggedIn));
 
+
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
   }
 
   public ApplicationComponent getApplicationComponent() {
     if (applicationComponent == null) {
-      applicationComponent = DaggerApplicationComponent.builder()
-          .applicationModule(
-              new ApplicationModule(this, getImageCachePath(), getCachePath(), getAccountType(),
-                  getPartnerId(), getMarketName(), getExtraId(), getAptoidePackage(),
-                  getAptoideMd5sum(), getLoginPreferences()))
-          .build();
+      applicationComponent = ComponentFactory.create(this);
     }
     return applicationComponent;
   }
@@ -904,10 +904,6 @@ public abstract class AptoideApplication extends Application {
    */
   public BodyInterceptor<BaseBody> getBodyInterceptorWebV7() {
     if (bodyInterceptorWebV7 == null) {
-      bodyInterceptorWebV7 =
-          new BodyInterceptorV7(idsRepository, authenticationPersistence, getAptoideMd5sum(),
-              getAptoidePackage(), getQManager(), Cdn.WEB, defaultSharedPreferences, getResources(),
-              BuildConfig.VERSION_CODE);
     }
     return bodyInterceptorWebV7;
   }
@@ -983,7 +979,7 @@ public abstract class AptoideApplication extends Application {
     return null;
   }
 
-  private String getAptoidePackage() {
+  protected String getAptoidePackage() {
     return BuildConfig.APPLICATION_ID;
   }
 
