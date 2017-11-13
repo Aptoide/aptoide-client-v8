@@ -6,7 +6,7 @@ class StoreValidationException extends Throwable {
   public static final int EMPTY_AVATAR = 1;
   public static final String FACEBOOK_1 = "FACEBOOK_1";
   public static final String FACEBOOK_2 = "FACEBOOK_2";
-  public static final String TWITCH_1 = "TWITCH1_1";
+  public static final String TWITCH_1 = "TWITCH_1";
   public static final String TWITCH_2 = "TWITCH_2";
   public static final String TWITTER_1 = "TWITTER_1";
   public static final String TWITTER_2 = "TWITTER_2";

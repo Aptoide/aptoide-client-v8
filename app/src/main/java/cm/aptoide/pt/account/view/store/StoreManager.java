@@ -1,6 +1,7 @@
 package cm.aptoide.pt.account.view.store;
 
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.view.exception.InvalidImageException;
@@ -17,6 +18,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.SetStoreImageRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -64,46 +66,60 @@ public class StoreManager {
 
   public Completable createOrUpdate(String storeName, String storeDescription,
       String storeImagePath, boolean hasNewAvatar, String storeThemeName, boolean storeExists,
-      List<SimpleSetStoreRequest.StoreLinks> storeLinksList) {
+      List<SocialLink> storeLinksList) {
     return Completable.defer(() -> {
       if (storeExists) {
         return updateStore(storeName, storeDescription, storeImagePath, hasNewAvatar,
-            storeThemeName, storeLinksList);
+            storeThemeName, socialLinkToStoreLink(storeLinksList));
       }
       return createStore(storeName, storeDescription, storeImagePath, hasNewAvatar, storeThemeName,
-          storeLinksList);
+          socialLinkToStoreLink(storeLinksList));
     })
-        .onErrorResumeNext(err -> {
-          if (err instanceof StoreCreationException || err instanceof InvalidImageException) {
-            return Completable.error(err);
-          }
-          if (err instanceof AptoideWsV7Exception) {
-            if (((AptoideWsV7Exception) err).getBaseResponse()
-                .getErrors()
-                .get(0)
-                .getCode()
-                .equals(ERROR_API_1)) {
-              return Completable.error(new InvalidImageException(Collections.singletonList(InvalidImageException.ImageError.API_ERROR)));
-            } else if (((AptoideWsV7Exception) err).getBaseResponse()
-                .getErrors()
-                .get(0)
-                .getCode()
-                .equals(ERROR_STORE_9)) {
-              return Completable.error(new SocialLinkException(
-                  ((AptoideWsV7Exception) err).getBaseResponse()
-                      .getErrors()
-                      .get(0)
-                      .getDetails()
-                      .getStoreLinks()));
-            } else {
-              return Completable.error(new InvalidImageException(Collections.singletonList(InvalidImageException.ImageError.API_ERROR),
-                  err.getMessage()));
-            }
-          }
+        .onErrorResumeNext(err -> getOnErrorCompletable(err));
+  }
 
-          // it's an unknown error
-          return Completable.error(err);
-        });
+  @NonNull private Completable getOnErrorCompletable(Throwable err) {
+    if (err instanceof StoreCreationException || err instanceof InvalidImageException) {
+      return Completable.error(err);
+    }
+    if (err instanceof AptoideWsV7Exception) {
+      if (((AptoideWsV7Exception) err).getBaseResponse()
+          .getErrors()
+          .get(0)
+          .getCode()
+          .equals(ERROR_API_1)) {
+        return Completable.error(new InvalidImageException(
+            Collections.singletonList(InvalidImageException.ImageError.API_ERROR)));
+      } else if (((AptoideWsV7Exception) err).getBaseResponse()
+          .getErrors()
+          .get(0)
+          .getCode()
+          .equals(ERROR_STORE_9)) {
+        return Completable.error(new SocialLinkException(
+            ((AptoideWsV7Exception) err).getBaseResponse()
+                .getErrors()
+                .get(0)
+                .getDetails()
+                .getStoreLinks()));
+      } else {
+        return Completable.error(new InvalidImageException(
+            Collections.singletonList(InvalidImageException.ImageError.API_ERROR),
+            err.getMessage()));
+      }
+    }
+
+    // it's an unknown error
+    return Completable.error(err);
+  }
+
+  private List<SimpleSetStoreRequest.StoreLinks> socialLinkToStoreLink(
+      List<SocialLink> socialLinksList) {
+    List<SimpleSetStoreRequest.StoreLinks> storeLinks = new ArrayList<>();
+    for (SocialLink socialLink : socialLinksList) {
+      storeLinks.add(
+          new SimpleSetStoreRequest.StoreLinks(socialLink.getType(), socialLink.getUrl()));
+    }
+    return storeLinks;
   }
 
   private Completable createStore(String storeName, String storeDescription, String storeImage,

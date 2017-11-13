@@ -3,7 +3,7 @@ package cm.aptoide.pt.account.view.store;
 import android.support.annotation.StringRes;
 import cm.aptoide.pt.account.view.ImagePickerView;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
-import java.util.List;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import rx.Completable;
 import rx.Observable;
 
@@ -15,13 +15,7 @@ public interface ManageStoreView extends ImagePickerView {
 
   Observable<Void> cancelClick();
 
-  Observable<Void> facebookClick();
-
-  Observable<Void> twitchClick();
-
-  Observable<Void> twitterClick();
-
-  Observable<Void> youtubeClick();
+  Observable<Void> socialChannelClick(Store.SocialChannelType socialChannelType);
 
   Completable showError(@StringRes int errorMessage);
 
@@ -33,29 +27,11 @@ public interface ManageStoreView extends ImagePickerView {
 
   void hideKeyboard();
 
-  void facebookExpandEditText();
+  void expandEditText(Store.SocialChannelType socialChannelType);
 
-  void twitchExpandEditText();
+  void setViewLinkErrors(int error, BaseV7Response.Type type);
 
-  void twitterExpandEditText();
+  Observable<Boolean> socialChannelFocusChanged(Store.SocialChannelType socialChannelType);
 
-  void youtubeExpandEditText();
-
-  void setViewLinkErrors(List<BaseV7Response.StoreLinks> storeLinks);
-
-  Observable<Boolean> facebookUserFocusChanged();
-
-  void facebookRevertUIState();
-
-  Observable<Boolean> twitchUserFocusChanged();
-
-  void twitchRevertUIState();
-
-  Observable<Boolean> twitterUserFocusChanged();
-
-  void twitterRevertUIState();
-
-  Observable<Boolean> youtubeUserFocusChanged();
-
-  void youtubeRevertUIState();
+  void revertSocialChannelUIState(Store.SocialChannelType socialChannelType);
 }

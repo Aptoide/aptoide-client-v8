@@ -2,7 +2,6 @@ package cm.aptoide.pt.account.view.store;
 
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
-import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.store.StoreTheme;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,7 +21,7 @@ import org.parceler.Parcel;
   String pictureUri;
   StoreTheme storeTheme;
   boolean newAvatar;
-  List<SimpleSetStoreRequest.StoreLinks> storeLinks;
+  List<SocialLink> socialLinks;
 
   public ManageStoreViewModel() {
     this.storeId = -1;
@@ -31,7 +30,7 @@ import org.parceler.Parcel;
     this.pictureUri = "";
     this.storeTheme = StoreTheme.DEFAULT;
     this.newAvatar = false;
-    this.storeLinks = Collections.emptyList();
+    this.socialLinks = Collections.emptyList();
   }
 
   public ManageStoreViewModel(long storeId, StoreTheme storeTheme, String storeName,
@@ -41,7 +40,7 @@ import org.parceler.Parcel;
     this.storeDescription = storeDescription;
     this.pictureUri = pictureUri;
     this.storeTheme = storeTheme;
-    this.storeLinks = buildStoreLinksList(storeLinks);
+    this.socialLinks = buildSocialLinksList(storeLinks);
     this.newAvatar = false;
   }
 
@@ -61,12 +60,11 @@ import org.parceler.Parcel;
     return model;
   }
 
-  private List<SimpleSetStoreRequest.StoreLinks> buildStoreLinksList(
+  private List<SocialLink> buildSocialLinksList(
       List<Store.SocialChannel> socialChannels) {
-    List<SimpleSetStoreRequest.StoreLinks> storeLinks = new ArrayList<>();
+    List<SocialLink> storeLinks = new ArrayList<>();
     for (Store.SocialChannel socialChannel : socialChannels) {
-      storeLinks.add(
-          new SimpleSetStoreRequest.StoreLinks(socialChannel.getType(), socialChannel.getUrl()));
+      storeLinks.add(new SocialLink(socialChannel.getType(), socialChannel.getUrl()));
     }
     return storeLinks;
   }
@@ -123,11 +121,11 @@ import org.parceler.Parcel;
     return storeId >= 0L;
   }
 
-  public List<SimpleSetStoreRequest.StoreLinks> getStoreLinks() {
-    return storeLinks;
+  public List<SocialLink> getSocialLinks() {
+    return socialLinks;
   }
 
-  public void setStoreLinks(List<SimpleSetStoreRequest.StoreLinks> storeLinks) {
-    this.storeLinks = storeLinks;
+  public void setSocialLinks(List<SocialLink> socialLinks) {
+    this.socialLinks = socialLinks;
   }
 }

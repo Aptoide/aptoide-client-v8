@@ -15,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,6 @@ import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
-import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.permission.PermissionProvider;
@@ -64,9 +64,6 @@ import rx.Completable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-
-import static cm.aptoide.pt.dataprovider.model.v7.store.Store.SocialChannelType.FACEBOOK;
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class ManageStoreFragment extends BackButtonFragment implements ManageStoreView {
 
@@ -235,20 +232,18 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     return RxView.clicks(cancelChangesButton);
   }
 
-  @Override public Observable<Void> facebookClick() {
-    return RxView.clicks(facebookRow);
-  }
-
-  @Override public Observable<Void> twitchClick() {
-    return RxView.clicks(twitchRow);
-  }
-
-  @Override public Observable<Void> twitterClick() {
-    return RxView.clicks(twitterRow);
-  }
-
-  @Override public Observable<Void> youtubeClick() {
-    return RxView.clicks(youtubeRow);
+  public Observable<Void> socialChannelClick(Store.SocialChannelType socialChannelType) {
+    switch (socialChannelType) {
+      case FACEBOOK:
+        return RxView.clicks(facebookRow);
+      case TWITCH:
+        return RxView.clicks(twitchRow);
+      case TWITTER:
+        return RxView.clicks(twitterRow);
+      case YOUTUBE:
+        return RxView.clicks(youtubeRow);
+    }
+    return Observable.empty();
   }
 
   @Override public Completable showError(@StringRes int errorMessage) {
@@ -271,63 +266,86 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     }
   }
 
-  @Override public void facebookExpandEditText() {
-    showEditTextHideTextView(facebookTextAndPlus, facebookUsernameWrapper, facebookUser);
-  }
-
-  @Override public void twitchExpandEditText() {
-    showEditTextHideTextView(twitchTextAndPlus, twitchUsernameWrapper, twitchUser);
-  }
-
-  @Override public void twitterExpandEditText() {
-    showEditTextHideTextView(twitterTextAndPlus, twitterUsernameWrapper, twitterUser);
-  }
-
-  @Override public void youtubeExpandEditText() {
-    showEditTextHideTextView(youtubeTextAndPlus, youtubeUsernameWrapper, youtubeUser);
-  }
-
-  @Override public void setViewLinkErrors(List<BaseV7Response.StoreLinks> storeLinks) {
-    for (BaseV7Response.StoreLinks storeLink : storeLinks) {
-      setViewError(storeLink.getType()
-          .toString());
+  @Override public void expandEditText(Store.SocialChannelType socialChannelType) {
+    switch (socialChannelType) {
+      case FACEBOOK:
+        showEditTextHideTextView(facebookTextAndPlus, facebookUsernameWrapper, facebookUser);
+        break;
+      case TWITCH:
+        showEditTextHideTextView(twitchTextAndPlus, twitchUsernameWrapper, twitchUser);
+        break;
+      case TWITTER:
+        showEditTextHideTextView(twitterTextAndPlus, twitterUsernameWrapper, twitterUser);
+        break;
+      case YOUTUBE:
+        showEditTextHideTextView(youtubeTextAndPlus, youtubeUsernameWrapper, youtubeUser);
+        break;
     }
   }
 
-  @Override public Observable<Boolean> facebookUserFocusChanged() {
-    return RxView.focusChanges(facebookUser);
+  @Override public void setViewLinkErrors(@StringRes int error, BaseV7Response.Type type) {
+    switch (type) {
+      case TWITCH_1:
+      case TWITCH_2:
+        twitchUsernameWrapper.setErrorEnabled(true);
+        twitchUsernameWrapper.setError(getString(error));
+        break;
+      case TWITTER_1:
+      case TWITTER_2:
+        twitterUsernameWrapper.setErrorEnabled(true);
+        twitterUsernameWrapper.setError(getString(error));
+        break;
+      case YOUTUBE_1:
+      case YOUTUBE_2:
+        youtubeUsernameWrapper.setErrorEnabled(true);
+        youtubeUsernameWrapper.setError(getString(error));
+        break;
+      case FACEBOOK_1:
+      case FACEBOOK_2:
+        facebookUsernameWrapper.setErrorEnabled(true);
+        facebookUsernameWrapper.setError(getString(error));
+        break;
+    }
   }
 
-  @Override public void facebookRevertUIState() {
-    changeSocialRowTextAndAppearance(facebookUser, facebookText,
-        R.style.Aptoide_TextView_Regular_XS_Facebook, facebookTextAndPlus, facebookUsernameWrapper);
+  @Override
+  public Observable<Boolean> socialChannelFocusChanged(Store.SocialChannelType socialChannelType) {
+    switch (socialChannelType) {
+      case FACEBOOK:
+        return RxView.focusChanges(facebookUser);
+      case TWITCH:
+        return RxView.focusChanges(twitchUser);
+      case TWITTER:
+        return RxView.focusChanges(twitterUser);
+      case YOUTUBE:
+        return RxView.focusChanges(youtubeUser);
+    }
+    return Observable.empty();
   }
 
-  @Override public Observable<Boolean> twitchUserFocusChanged() {
-    return RxView.focusChanges(twitchUser);
-  }
-
-  @Override public void twitchRevertUIState() {
-    changeSocialRowTextAndAppearance(twitchUser, twitchText,
-        R.style.Aptoide_TextView_Regular_XS_Twitch, twitchTextAndPlus, twitchUsernameWrapper);
-  }
-
-  @Override public Observable<Boolean> twitterUserFocusChanged() {
-    return RxView.focusChanges(twitterUser);
-  }
-
-  @Override public void twitterRevertUIState() {
-    changeSocialRowTextAndAppearance(twitterUser, twitterText,
-        R.style.Aptoide_TextView_Regular_XS_Twitter, twitterTextAndPlus, twitterUsernameWrapper);
-  }
-
-  @Override public Observable<Boolean> youtubeUserFocusChanged() {
-    return RxView.focusChanges(youtubeUser);
-  }
-
-  @Override public void youtubeRevertUIState() {
-    changeSocialRowTextAndAppearance(youtubeUser, youtubeText,
-        R.style.Aptoide_TextView_Regular_XS_Youtube, youtubeTextAndPlus, youtubeUsernameWrapper);
+  @Override public void revertSocialChannelUIState(Store.SocialChannelType socialChannelType) {
+    switch (socialChannelType) {
+      case FACEBOOK:
+        changeSocialRowTextAndAppearance(facebookUser, facebookText,
+            R.style.Aptoide_TextView_Regular_XS_Facebook, facebookTextAndPlus,
+            facebookUsernameWrapper, R.string.facebook, Store.SocialChannelType.FACEBOOK);
+        break;
+      case TWITCH:
+        changeSocialRowTextAndAppearance(twitchUser, twitchText,
+            R.style.Aptoide_TextView_Regular_XS_Twitch, twitchTextAndPlus, twitchUsernameWrapper,
+            R.string.twitch, Store.SocialChannelType.TWITCH);
+        break;
+      case TWITTER:
+        changeSocialRowTextAndAppearance(twitterUser, twitterText,
+            R.style.Aptoide_TextView_Regular_XS_Twitter, twitterTextAndPlus, twitterUsernameWrapper,
+            R.string.twitter, Store.SocialChannelType.TWITTER);
+        break;
+      case YOUTUBE:
+        changeSocialRowTextAndAppearance(youtubeUser, youtubeText,
+            R.style.Aptoide_TextView_Regular_XS_Youtube, youtubeTextAndPlus, youtubeUsernameWrapper,
+            R.string.youtube, Store.SocialChannelType.YOUTUBE);
+        break;
+    }
   }
 
   private void showEditTextHideTextView(RelativeLayout relativeLayout,
@@ -340,7 +358,8 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
 
   private void changeSocialRowTextAndAppearance(EditText editText, TextView textView,
       @StyleRes int style, RelativeLayout relativeLayout,
-      CustomTextInputLayout customTextInputLayout) {
+      CustomTextInputLayout customTextInputLayout, @StringRes int socialNetworkName,
+      Store.SocialChannelType socialChannelType) {
     if (!editText.hasFocus()) {
       if (!editText.getText()
           .toString()
@@ -349,12 +368,12 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
             .toString());
         setTextViewAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha, textView);
       } else {
-        String facebookPojoUrl = getUrl(FACEBOOK);
-        if (facebookPojoUrl != null) {
-          textView.setText(removeBaseUrl(facebookPojoUrl));
+        String pojoUrl = getUrl(socialChannelType);
+        if (pojoUrl != null) {
+          textView.setText(removeBaseUrl(pojoUrl));
           setTextViewAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha, textView);
         } else {
-          textView.setText(getString(R.string.facebook));
+          textView.setText(getString(socialNetworkName));
           setTextViewAppearance(style, textView);
         }
       }
@@ -364,7 +383,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   }
 
   private String getUrl(Store.SocialChannelType channelType) {
-    for (SimpleSetStoreRequest.StoreLinks channel : currentModel.getStoreLinks()) {
+    for (SocialLink channel : currentModel.getSocialLinks()) {
       if (channel.getType()
           .equals(channelType)) {
         return channel.getUrl();
@@ -378,35 +397,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
       textView.setTextAppearance(getContext(), resId);
     } else {
       textView.setTextAppearance(resId);
-    }
-  }
-
-  private void setViewError(String error) {
-    if (error.equals(StoreValidationException.FACEBOOK_1)) {
-      facebookUsernameWrapper.setErrorEnabled(true);
-      facebookUsernameWrapper.setError(getString(R.string.edit_store_social_link_invalid_url_text));
-    } else if (error.equals(StoreValidationException.FACEBOOK_2)) {
-      facebookUsernameWrapper.setErrorEnabled(true);
-      facebookUsernameWrapper.setError(
-          getString(R.string.edit_store_page_doesnt_exist_error_short));
-    } else if (error.equals(StoreValidationException.TWITCH_1)) {
-      twitchUsernameWrapper.setErrorEnabled(true);
-      twitchUsernameWrapper.setError(getString(R.string.edit_store_social_link_invalid_url_text));
-    } else if (error.equals(StoreValidationException.TWITCH_2)) {
-      twitchUsernameWrapper.setErrorEnabled(true);
-      twitchUsernameWrapper.setError(getString(R.string.edit_store_social_link_channel_error));
-    } else if (error.equals(StoreValidationException.TWITTER_1)) {
-      twitterUsernameWrapper.setErrorEnabled(true);
-      twitterUsernameWrapper.setError(getString(R.string.edit_store_social_link_invalid_url_text));
-    } else if (error.equals(StoreValidationException.TWITTER_2)) {
-      twitterUsernameWrapper.setErrorEnabled(true);
-      twitterUsernameWrapper.setError(getString(R.string.edit_store_page_doesnt_exist_error_short));
-    } else if (error.equals(StoreValidationException.YOUTUBE_1)) {
-      youtubeUsernameWrapper.setErrorEnabled(true);
-      youtubeUsernameWrapper.setError(getString(R.string.edit_store_social_link_invalid_url_text));
-    } else if (error.equals(StoreValidationException.YOUTUBE_2)) {
-      youtubeUsernameWrapper.setErrorEnabled(true);
-      youtubeUsernameWrapper.setError(getString(R.string.edit_store_social_link_channel_error));
     }
   }
 
@@ -440,17 +430,14 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
       dialogFragment.dismiss();
       dialogFragment = null;
     }
-    super.onDestroyView();
-  }
-
-  @Override public void onDestroy() {
-    super.onDestroy();
     hideKeyboard();
+    super.onDestroyView();
   }
 
   @Override public void hideKeyboard() {
     super.hideKeyboard();
   }
+
 
   private void attachPresenters() {
     final ImagePickerPresenter imagePickerPresenter =
@@ -538,7 +525,8 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     youtubeEndRowIcon = (ImageView) view.findViewById(R.id.edit_store_youtube_plus);
 
     waitDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity(),
-        getApplicationContext().getString(R.string.please_wait_upload));
+        getActivity().getApplicationContext()
+            .getString(R.string.please_wait_upload));
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
   }
 
@@ -547,7 +535,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
         .toString(), storeDescription.getText()
         .toString());
     currentModel.setStoreTheme(themeSelectorAdapter.getSelectedTheme());
-    currentModel.setStoreLinks(getStoreLinks());
+    currentModel.setSocialLinks(getStoreLinks());
     return currentModel;
   }
 
@@ -557,30 +545,30 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
    *
    * @return
    */
-  private List<SimpleSetStoreRequest.StoreLinks> getStoreLinks() {
-    List<SimpleSetStoreRequest.StoreLinks> storeLinksList = new ArrayList<>();
+  private List<SocialLink> getStoreLinks() {
+    List<SocialLink> storeLinksList = new ArrayList<>();
     if (!TextUtils.isEmpty(facebookUser.getText()
         .toString())) {
-      storeLinksList.add(
-          new SimpleSetStoreRequest.StoreLinks(FACEBOOK, setFacebookUrl(facebookUser.getText()
+      storeLinksList.add(new SocialLink(Store.SocialChannelType.FACEBOOK,
+          setSocialChannelUrl(Store.SocialChannelType.FACEBOOK, facebookUser.getText()
               .toString())));
     }
     if (!TextUtils.isEmpty(twitchUser.getText()
         .toString())) {
-      storeLinksList.add(new SimpleSetStoreRequest.StoreLinks(Store.SocialChannelType.TWITCH,
-          setTwitchUrl(twitchUser.getText()
+      storeLinksList.add(new SocialLink(Store.SocialChannelType.TWITCH,
+          setSocialChannelUrl(Store.SocialChannelType.TWITCH, twitchUser.getText()
               .toString())));
     }
     if (!TextUtils.isEmpty(twitterUser.getText()
         .toString())) {
-      storeLinksList.add(new SimpleSetStoreRequest.StoreLinks(Store.SocialChannelType.TWITTER,
-          setTwitterUrl(twitterUser.getText()
+      storeLinksList.add(new SocialLink(Store.SocialChannelType.TWITTER,
+          setSocialChannelUrl(Store.SocialChannelType.TWITTER, twitterUser.getText()
               .toString())));
     }
     if (!TextUtils.isEmpty(youtubeUser.getText()
         .toString())) {
-      storeLinksList.add(new SimpleSetStoreRequest.StoreLinks(Store.SocialChannelType.YOUTUBE,
-          setYoutubeUrl(youtubeUser.getText()
+      storeLinksList.add(new SocialLink(Store.SocialChannelType.YOUTUBE,
+          setSocialChannelUrl(Store.SocialChannelType.YOUTUBE, youtubeUser.getText()
               .toString())));
     }
     if (storeLinksList.isEmpty()) {
@@ -589,32 +577,30 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     return storeLinksList;
   }
 
-  private String setYoutubeUrl(String youtubeUsername) {
-    if (youtubeUsername.contains("http")) {
-      return youtubeUsername;
+  private String setSocialChannelUrl(Store.SocialChannelType socialChannelType, String username) {
+    switch (socialChannelType) {
+      case FACEBOOK:
+        if (!Patterns.WEB_URL.matcher(username)
+            .matches()) {
+          return ManageStoreViewModel.FACEBOOK_BASE_URL + username;
+        }
+      case TWITCH:
+        if (!Patterns.WEB_URL.matcher(username)
+            .matches()) {
+          return ManageStoreViewModel.TWITCH_BASE_URL + username;
+        }
+      case TWITTER:
+        if (!Patterns.WEB_URL.matcher(username)
+            .matches()) {
+          return ManageStoreViewModel.TWITTER_BASE_URL + username;
+        }
+      case YOUTUBE:
+        if (!Patterns.WEB_URL.matcher(username)
+            .matches()) {
+          return ManageStoreViewModel.YOUTUBE_BASE_URL + username;
+        }
     }
-    return ManageStoreViewModel.YOUTUBE_BASE_URL + youtubeUsername;
-  }
-
-  private String setTwitterUrl(String twitterUsername) {
-    if (twitterUsername.contains("http")) {
-      return twitterUsername;
-    }
-    return ManageStoreViewModel.TWITTER_BASE_URL + twitterUsername;
-  }
-
-  private String setTwitchUrl(String twitchUsername) {
-    if (twitchUsername.contains("http")) {
-      return twitchUsername;
-    }
-    return ManageStoreViewModel.TWITCH_BASE_URL + twitchUsername;
-  }
-
-  private String setFacebookUrl(String facebookUsername) {
-    if (facebookUsername.contains("http")) {
-      return facebookUsername;
-    }
-    return ManageStoreViewModel.FACEBOOK_BASE_URL + facebookUsername;
+    return username;
   }
 
   private void setupViewsDefaultDataUsingCurrentModel() {
@@ -641,11 +627,11 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   }
 
   private void setSocialChannelsUsernames() {
-    List<SimpleSetStoreRequest.StoreLinks> storeLinksList = currentModel.getStoreLinks();
+    List<SocialLink> storeLinksList = currentModel.getSocialLinks();
     if (!storeLinksList.isEmpty()) {
-      for (SimpleSetStoreRequest.StoreLinks storeLinks : storeLinksList) {
+      for (SocialLink storeLinks : storeLinksList) {
         if (storeLinks.getType()
-            .equals(FACEBOOK)) {
+            .equals(Store.SocialChannelType.FACEBOOK)) {
           setStoreSocialSentUrl(storeLinks, facebookText, facebookEndRowIcon);
         } else if (storeLinks.getType()
             .equals(Store.SocialChannelType.TWITCH)) {
@@ -669,7 +655,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
    * @param textView
    * @param imageView
    */
-  private void setStoreSocialSentUrl(SimpleSetStoreRequest.StoreLinks storeLinks, TextView textView,
+  private void setStoreSocialSentUrl(SocialLink storeLinks, TextView textView,
       ImageView imageView) {
     setTextViewAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha, textView);
     textView.setText(removeBaseUrl(storeLinks.getUrl()));

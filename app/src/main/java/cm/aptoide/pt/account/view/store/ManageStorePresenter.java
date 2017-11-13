@@ -9,12 +9,24 @@ import cm.aptoide.pt.account.view.exception.InvalidImageException;
 import cm.aptoide.pt.account.view.exception.SocialLinkException;
 import cm.aptoide.pt.account.view.exception.StoreCreationException;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import java.util.List;
 import rx.Completable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+
+import static cm.aptoide.pt.account.view.store.StoreValidationException.FACEBOOK_1;
+import static cm.aptoide.pt.account.view.store.StoreValidationException.FACEBOOK_2;
+import static cm.aptoide.pt.account.view.store.StoreValidationException.TWITCH_1;
+import static cm.aptoide.pt.account.view.store.StoreValidationException.TWITCH_2;
+import static cm.aptoide.pt.account.view.store.StoreValidationException.TWITTER_1;
+import static cm.aptoide.pt.account.view.store.StoreValidationException.TWITTER_2;
+import static cm.aptoide.pt.account.view.store.StoreValidationException.YOUTUBE_1;
+import static cm.aptoide.pt.account.view.store.StoreValidationException.YOUTUBE_2;
 
 public class ManageStorePresenter implements Presenter {
 
@@ -56,8 +68,8 @@ public class ManageStorePresenter implements Presenter {
   private void handleYoutubeEditTextFocus() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> view.youtubeUserFocusChanged()
-            .doOnNext(focusChanged -> view.youtubeRevertUIState()))
+        .flatMap(__ -> view.socialChannelFocusChanged(Store.SocialChannelType.YOUTUBE)
+            .doOnNext(click -> view.revertSocialChannelUIState(Store.SocialChannelType.YOUTUBE)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -66,8 +78,8 @@ public class ManageStorePresenter implements Presenter {
   private void handleTwitterEditTextFocus() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> view.twitterUserFocusChanged()
-            .doOnNext(focusChanged -> view.twitterRevertUIState()))
+        .flatMap(__ -> view.socialChannelFocusChanged(Store.SocialChannelType.TWITTER)
+            .doOnNext(click -> view.revertSocialChannelUIState(Store.SocialChannelType.TWITTER)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -76,8 +88,8 @@ public class ManageStorePresenter implements Presenter {
   private void handleTwitchEditTextFocus() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> view.twitchUserFocusChanged()
-            .doOnNext(focusChanged -> view.twitchRevertUIState()))
+        .flatMap(__ -> view.socialChannelFocusChanged(Store.SocialChannelType.TWITCH)
+            .doOnNext(click -> view.revertSocialChannelUIState(Store.SocialChannelType.TWITCH)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -86,8 +98,8 @@ public class ManageStorePresenter implements Presenter {
   private void handleFacebookEditTextFocus() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> view.facebookUserFocusChanged()
-            .doOnNext(focusChanged -> view.facebookRevertUIState()))
+        .flatMap(__ -> view.socialChannelFocusChanged(Store.SocialChannelType.FACEBOOK))
+        .doOnNext(click -> view.revertSocialChannelUIState(Store.SocialChannelType.FACEBOOK))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -96,8 +108,8 @@ public class ManageStorePresenter implements Presenter {
   private void handleYoutubeClick() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> view.youtubeClick()
-            .doOnNext(click -> view.youtubeExpandEditText()))
+        .flatMap(__ -> view.socialChannelClick(Store.SocialChannelType.YOUTUBE)
+            .doOnNext(click -> view.expandEditText(Store.SocialChannelType.YOUTUBE)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -106,8 +118,8 @@ public class ManageStorePresenter implements Presenter {
   private void handleTwitterClick() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> view.twitterClick()
-            .doOnNext(click -> view.twitterExpandEditText()))
+        .flatMap(__ -> view.socialChannelClick(Store.SocialChannelType.TWITTER)
+            .doOnNext(click -> view.expandEditText(Store.SocialChannelType.TWITTER)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -116,8 +128,8 @@ public class ManageStorePresenter implements Presenter {
   private void handleTwitchClick() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> view.twitchClick()
-            .doOnNext(click -> view.twitchExpandEditText()))
+        .flatMap(__ -> view.socialChannelClick(Store.SocialChannelType.TWITCH)
+            .doOnNext(click -> view.expandEditText(Store.SocialChannelType.TWITCH)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -126,8 +138,8 @@ public class ManageStorePresenter implements Presenter {
   private void handleFacebookClick() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> view.facebookClick()
-            .doOnNext(click -> view.facebookExpandEditText()))
+        .flatMap(__ -> view.socialChannelClick(Store.SocialChannelType.FACEBOOK)
+            .doOnNext(click -> view.expandEditText(Store.SocialChannelType.FACEBOOK)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -182,7 +194,7 @@ public class ManageStorePresenter implements Presenter {
             mediaStoragePath -> storeManager.createOrUpdate(storeModel.getStoreName(),
                 storeModel.getStoreDescription(), mediaStoragePath, storeModel.hasNewAvatar(),
                 storeModel.getStoreTheme()
-                    .getThemeName(), storeModel.storeExists(), storeModel.getStoreLinks()));
+                    .getThemeName(), storeModel.storeExists(), storeModel.getSocialLinks()));
   }
 
   private void navigate() {
@@ -222,10 +234,34 @@ public class ManageStorePresenter implements Presenter {
         return view.showError(R.string.ws_error_API_1);
       }
     } else if (err instanceof SocialLinkException) {
-      view.setViewLinkErrors(((SocialLinkException) err).getStoreLinks());
+      sendErrorsToView(((SocialLinkException) err).getStoreLinks());
     }
 
     crashReport.log(err);
     return view.showGenericError();
+  }
+
+  private void sendErrorsToView(List<BaseV7Response.StoreLinks> storeLinks) {
+    for (BaseV7Response.StoreLinks storeLink : storeLinks) {
+      view.setViewLinkErrors(getErrorMessage(storeLink.getType()
+          .toString()), storeLink.getType());
+    }
+  }
+
+  private int getErrorMessage(String type) {
+    switch (type) {
+      case TWITCH_1:
+      case FACEBOOK_1:
+      case TWITTER_1:
+      case YOUTUBE_1:
+        return R.string.edit_store_social_link_invalid_url_text;
+      case TWITCH_2:
+      case YOUTUBE_2:
+        return R.string.edit_store_social_link_channel_error;
+      case FACEBOOK_2:
+      case TWITTER_2:
+        return R.string.edit_store_page_doesnt_exist_error_short;
+    }
+    return R.string.all_message_general_error;
   }
 }
