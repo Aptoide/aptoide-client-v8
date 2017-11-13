@@ -13,7 +13,7 @@ import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.view.BillingNavigator;
-import cm.aptoide.pt.billing.view.PaymentActivity;
+import cm.aptoide.pt.billing.view.BillingActivity;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.permission.PermissionServiceFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
@@ -39,7 +39,7 @@ public class PayPalAuthorizationFragment extends PermissionServiceFragment imple
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     billing = ((AptoideApplication) getContext().getApplicationContext()).getBilling(
-        getArguments().getString(PaymentActivity.EXTRA_MERCHANT_NAME));
+        getArguments().getString(BillingActivity.EXTRA_MERCHANT_NAME));
     billingAnalytics =
         ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
     billingNavigator = ((ActivityResultNavigator) getContext()).getBillingNavigator();
@@ -60,8 +60,8 @@ public class PayPalAuthorizationFragment extends PermissionServiceFragment imple
 
     attachPresenter(
         new PayPalAuthorizationPresenter(this, billing, billingAnalytics, billingNavigator,
-            AndroidSchedulers.mainThread(), getArguments().getString(PaymentActivity.EXTRA_SKU),
-            getArguments().getString(PaymentActivity.EXTRA_SERVICE_NAME)));
+            AndroidSchedulers.mainThread(), getArguments().getString(BillingActivity.EXTRA_SKU),
+            getArguments().getString(BillingActivity.EXTRA_SERVICE_NAME)));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {

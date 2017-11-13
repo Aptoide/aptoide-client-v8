@@ -1,4 +1,4 @@
-package cm.aptoide.pt.billing.view;
+package cm.aptoide.pt.billing.view.adyen;
 
 import cm.aptoide.pt.presenter.View;
 import com.adyen.core.PaymentRequest;

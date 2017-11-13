@@ -164,7 +164,7 @@
     </activity>
 
     <activity
-        android:name=".billing.view.PaymentActivity"
+        android:name=".billing.view.BillingActivity"
         android:launchMode="singleInstance"
         android:screenOrientation="sensor"
         android:theme="@style/AppBaseTheme.NoTitle.Transparent"

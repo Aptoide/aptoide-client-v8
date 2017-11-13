@@ -1,4 +1,4 @@
-package cm.aptoide.pt.billing.view;
+package cm.aptoide.pt.billing.view.adyen;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +13,8 @@ import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.payment.Adyen;
+import cm.aptoide.pt.billing.view.BillingNavigator;
+import cm.aptoide.pt.billing.view.BillingActivity;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.permission.PermissionServiceFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
@@ -45,7 +47,7 @@ public class AdyenAuthorizationFragment extends PermissionServiceFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     billing = ((AptoideApplication) getContext().getApplicationContext()).getBilling(
-        getArguments().getString(PaymentActivity.EXTRA_MERCHANT_NAME));
+        getArguments().getString(BillingActivity.EXTRA_MERCHANT_NAME));
     navigator = ((ActivityResultNavigator) getActivity()).getBillingNavigator();
     analytics = ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
     adyen = ((AptoideApplication) getContext().getApplicationContext()).getAdyen();
@@ -76,9 +78,9 @@ public class AdyenAuthorizationFragment extends PermissionServiceFragment
     registerClickHandler(clickHandler);
 
     attachPresenter(
-        new AdyenAuthorizationPresenter(this, getArguments().getString(PaymentActivity.EXTRA_SKU),
+        new AdyenAuthorizationPresenter(this, getArguments().getString(BillingActivity.EXTRA_SKU),
             billing, navigator, analytics,
-            getArguments().getString(PaymentActivity.EXTRA_SERVICE_NAME), adyen,
+            getArguments().getString(BillingActivity.EXTRA_SERVICE_NAME), adyen,
             AndroidSchedulers.mainThread()));
   }
 
