@@ -170,7 +170,7 @@ import lombok.EqualsAndHashCode;
   @Data public static class Stats {
 
     private Stats.Rating rating;
-    private Stats.Rating prating;
+    @JsonProperty("prating") private Stats.Rating globalRating;
     private int downloads;
     private int pdownloads;
 
