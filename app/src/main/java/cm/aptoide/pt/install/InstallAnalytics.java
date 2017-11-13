@@ -2,8 +2,10 @@ package cm.aptoide.pt.install;
 
 import android.os.Bundle;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
 import cm.aptoide.pt.analytics.events.FlurryEvent;
+import cm.aptoide.pt.view.DeepLinkManager;
 import com.facebook.appevents.AppEventsLogger;
 import java.util.HashMap;
 
@@ -13,7 +15,10 @@ import java.util.HashMap;
 
 public class InstallAnalytics {
 
+  public static final String NOTIFICATION_APPLICATION_INSTALL =
+      "Aptoide_Push_Notification_Application_Install";
   private static final String APPLICATION_INSTALL = "Application Install";
+  private static final String EDITORS_APPLICATION_INSTALL = "Editors_Choice_Application_Install";
   private static final String TYPE = "Type";
   private static final String PACKAGE_NAME = "Package Name";
   private static final String TRUSTED_BADGE = "Trusted Badge";
@@ -65,5 +70,35 @@ public class InstallAnalytics {
     map.put(TYPE, REPLACED);
     map.put(PACKAGE_NAME, packageName);
     return map;
+  }
+
+  public void installStarted(ScreenTagHistory previousScreen, ScreenTagHistory currentScreen,
+      String packageName, int installingVersion, InstallType installType) {
+    if (currentScreen.getTag()
+        .contains("apps-group-editors-choice")) {
+      Bundle data = new Bundle();
+      data.putString("package_name", packageName);
+      data.putString("type", installType.name());
+      analytics.save(packageName + installingVersion,
+          new FacebookEvent(facebook, EDITORS_APPLICATION_INSTALL, data));
+    } else if (previousScreen.getFragment()
+        .equals(DeepLinkManager.DEEPLINK_KEY)) {
+      Bundle data = new Bundle();
+      data.putString("package_name", packageName);
+      data.putString("type", installType.name());
+      analytics.save(packageName + installingVersion,
+          new FacebookEvent(facebook, NOTIFICATION_APPLICATION_INSTALL, data));
+    }
+  }
+
+  public void installCompleted(String packageName, int installingVersion) {
+    FacebookEvent event = analytics.getFacebookEvent(packageName + installingVersion);
+    if (event != null) {
+      analytics.sendEvent(event);
+    }
+  }
+
+  public enum InstallType {
+    INSTALL, UPDATE, DOWNGRADE
   }
 }
