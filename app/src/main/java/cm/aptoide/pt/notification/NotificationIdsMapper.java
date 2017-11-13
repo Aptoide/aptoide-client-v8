@@ -11,6 +11,7 @@ public class NotificationIdsMapper {
         return 0;
       case AptoideNotification.COMMENT:
       case AptoideNotification.LIKE:
+      case AptoideNotification.NEW_FOLLOWER:
       case AptoideNotification.NEW_SHARE:
       case AptoideNotification.NEW_ACTIVITY:
         return 1;
@@ -31,7 +32,7 @@ public class NotificationIdsMapper {
       case 1:
         return new Integer[] {
             AptoideNotification.LIKE, AptoideNotification.COMMENT, AptoideNotification.NEW_SHARE,
-            AptoideNotification.NEW_ACTIVITY
+            AptoideNotification.NEW_ACTIVITY, AptoideNotification.NEW_FOLLOWER
         };
       case 2:
         return new Integer[] {
