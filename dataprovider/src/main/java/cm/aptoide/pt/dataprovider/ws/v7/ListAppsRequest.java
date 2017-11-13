@@ -57,13 +57,23 @@ public class ListAppsRequest extends V7<ListApps, ListAppsRequest.Body> {
     }
   }
 
+  public static ListAppsRequest ofTrending(String url, int limit,
+      BaseRequestWithStore.StoreCredentials storeCredentials,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences){
+    V7Url listAppsV7Url = new V7Url(url).remove("listApps");
+    return new ListAppsRequest(listAppsV7Url.get(), new Body(storeCredentials, limit, sharedPreferences, Sort.trending7d), bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+        sharedPreferences);
+  }
+
   @Override
   protected Observable<ListApps> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
     return interfaces.listApps(url != null ? url : "", body, bypassCache);
   }
 
   public enum Sort {
-    latest,
+    latest, trending7d,
   }
 
   public static class Body extends BaseBody implements Endless {
@@ -92,6 +102,16 @@ public class ListAppsRequest extends V7<ListApps, ListAppsRequest.Body> {
       this.storeUser = storeCredentials.getUsername();
       this.storePassSha1 = storeCredentials.getPasswordSha1();
       this.limit = limit;
+      setNotApkTags(sharedPreferences);
+    }
+
+    public Body(BaseRequestWithStore.StoreCredentials storeCredentials, int limit,
+        SharedPreferences sharedPreferences, Sort sort) {
+      super();
+      this.storeUser = storeCredentials.getUsername();
+      this.storePassSha1 = storeCredentials.getPasswordSha1();
+      this.limit = limit;
+      this.sort=sort;
       setNotApkTags(sharedPreferences);
     }
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_search_bar"
-    android:layout_width="344dp"
-    android:layout_height="48dp"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
     android:layout_margin="8dp">
     <!--android:background="@drawable/widget_search_box"-->
 
@@ -15,8 +15,8 @@
 
   <ImageView
       android:id="@+id/icon"
-      android:layout_width="28dp"
-      android:layout_height="28dp"
+      android:layout_width="34dp"
+      android:layout_height="34dp"
       android:layout_marginStart="14dp"
       android:layout_marginLeft="14dp"
       android:layout_marginTop="10dp"
@@ -27,7 +27,7 @@
       android:layout_height="24dp"
       android:layout_toEndOf="@id/icon"
       android:layout_toRightOf="@id/icon"
-      android:layout_marginTop="12dp"
+      android:layout_marginTop="19dp"
       android:layout_marginStart="14dp"
       android:layout_marginLeft="14dp"
       android:text="Search for App"
@@ -35,13 +35,13 @@
       />
 
   <ImageView
-      android:layout_width="19dp"
-      android:layout_height="19dp"
+      android:layout_width="28dp"
+      android:layout_height="28dp"
       android:layout_alignParentEnd="true"
       android:layout_alignParentRight="true"
       android:layout_marginEnd="16dp"
       android:layout_marginRight="16dp"
-      android:layout_marginTop="12dp"
+      android:layout_marginTop="13dp"
       android:background="@drawable/voice_search_icon"
       />
 </RelativeLayout>

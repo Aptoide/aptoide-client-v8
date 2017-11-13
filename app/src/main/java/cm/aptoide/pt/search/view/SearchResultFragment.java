@@ -45,6 +45,7 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.search.SearchAnalytics;
 import cm.aptoide.pt.search.SearchCursorAdapter;
 import cm.aptoide.pt.search.SearchFactory;
@@ -53,6 +54,7 @@ import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.SearchSuggestionManager;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
+import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.view.BackButtonFragment;
@@ -126,6 +128,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
   private TrendingManager trendingManager;
   private PublishSubject<SearchViewQueryTextEvent> queryTextChangedPublisher;
   private MenuItem searchMenuItem;
+  private StoreCredentialsProviderImpl storeCredentialsProvider;
 
   public static SearchResultFragment newInstance(String currentQuery, String defaultStoreName) {
     return newInstance(currentQuery, false, defaultStoreName);
@@ -436,13 +439,13 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
     autoCompleteTextView.setThreshold(COMPLETION_THRESHOLD);
 
     getLifecycle()
+        .filter(event -> event==LifecycleEvent.RESUME)
         .flatMap(__ -> RxSearchView.queryTextChangeEvents(searchView))
         .doOnNext(event -> queryTextChangedPublisher.onNext(event))
-        .compose(bindUntilEvent(cm.aptoide.pt.presenter.View.LifecycleEvent.DESTROY))
+        .compose(bindUntilEvent(LifecycleEvent.PAUSE))
         .subscribe(__ -> {
          }, e -> crashReport.log(e));
 
-    queryTextChangedPublisher.onNext(null);
   }
 
   @Override public String getDefaultTheme() {
@@ -456,6 +459,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
     viewModel = loadViewModel(getArguments());
     queryTextChangedPublisher = PublishSubject.create();
     searchCursorAdapter = new SearchCursorAdapter(getContext());
+
 
     final android.app.SearchManager searchManagerService =
         (android.app.SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
@@ -483,6 +487,10 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
     issuesAnalytics = new IssuesAnalytics(analytics, Answers.getInstance());
 
     final AptoideApplication application = (AptoideApplication) getActivity().getApplication();
+    storeCredentialsProvider = new StoreCredentialsProviderImpl(
+        AccessorFactory.getAccessorFor(application.getDatabase(),
+            cm.aptoide.pt.database.realm.Store.class));
+    trendingManager= new TrendingManager(storeCredentialsProvider.fromUrl(V7.getHost(sharedPreferences)), bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences);
 
     final StoreAccessor storeAccessor =
         AccessorFactory.getAccessorFor(applicationContext.getDatabase(), Store.class);
@@ -533,7 +541,8 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
     setupTheme();
     attachPresenter(new SearchResultPresenter(this, searchAnalytics, searchNavigator, crashReport,
         mainThreadScheduler, searchManager, onAdClickRelay, onItemViewClickRelay,
-        onOpenPopupMenuClickRelay, isMultiStoreSearch, defaultThemeName, defaultStoreName, searchCursorAdapter, new SearchFactory().createSearchForApps()));
+        onOpenPopupMenuClickRelay, isMultiStoreSearch, defaultThemeName, defaultStoreName,
+        searchCursorAdapter, new SearchFactory().createSearchForApps(), trendingManager));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {

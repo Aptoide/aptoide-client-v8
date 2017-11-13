@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.util.Pair;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.search.SearchAnalytics;
@@ -22,6 +23,7 @@ import rx.Scheduler;
 public class SearchResultPresenter implements Presenter {
 
   private static final int COMPLETION_THRESHOLD = 3;
+  private static final String TAG = SearchResultPresenter.class.getName();
   private final SearchResultView view;
   private final SearchAnalytics analytics;
   private final SearchNavigator navigator;
@@ -43,7 +45,8 @@ public class SearchResultPresenter implements Presenter {
       SearchManager searchManager, PublishRelay<SearchAdResult> onAdClickRelay,
       PublishRelay<SearchAppResult> onItemViewClickRelay,
       PublishRelay<Pair<SearchAppResult, android.view.View>> onOpenPopupMenuClickRelay,
-      boolean isMultiStoreSearch, String defaultStoreName, String defaultThemeName, SearchCursorAdapter searchCursorAdapter, SearchSuggestionManager searchSuggestionManager) {
+      boolean isMultiStoreSearch, String defaultStoreName, String defaultThemeName, SearchCursorAdapter searchCursorAdapter,
+      SearchSuggestionManager searchSuggestionManager, TrendingManager trendingManager) {
     this.view = view;
     this.analytics = analytics;
     this.navigator = navigator;
@@ -58,7 +61,7 @@ public class SearchResultPresenter implements Presenter {
     this.defaultThemeName = defaultThemeName;
     this.searchCursorAdapter = searchCursorAdapter;
     this.searchSuggestionManager = searchSuggestionManager;
-    this.trendingManager = new TrendingManager();
+    this.trendingManager = trendingManager;
 
   }
 
@@ -112,8 +115,10 @@ public class SearchResultPresenter implements Presenter {
   private void handleWidgetTrendingRequest() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.onQueryTextChanged())
-        .filter(data -> data == null)
+        .flatMap(__ -> view.onQueryTextChanged()
+          .filter(data -> data == null || data.queryText().length()==0)
+          .first()
+        )
         .map(__ -> view.getViewModel())
         .filter(viewModel -> viewModel.getCurrentQuery()==null||viewModel.getCurrentQuery().isEmpty())
         .flatMap(__ -> trendingManager.getTrendingSuggestions())
@@ -129,8 +134,10 @@ public class SearchResultPresenter implements Presenter {
   private void listenForSuggestions(){
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> searchSuggestionManager.listenForSuggestions())
+        .flatMap(__ -> searchSuggestionManager.listenForSuggestions()
+        .retry(3))
         .filter(data -> data != null && data.size() > 0)
+        .observeOn(viewScheduler)
         .doOnNext(data -> searchCursorAdapter.setData(data))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -141,24 +148,37 @@ public class SearchResultPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.onQueryTextChanged())
-        .observeOn(viewScheduler)
         .filter(data -> data!=null)
-        .doOnNext(data -> handleQueryEvent(data))
+        .filter(data -> data.queryText().length()>0)
+        .flatMap(data -> {
+          final String query = data.queryText()
+              .toString();
+          if(query.length()<COMPLETION_THRESHOLD){
+            return trendingManager.getTrendingSuggestions()
+                .doOnNext(trendingList -> view.setTrending(trendingList));
+          }
+          return handleQueryEvent(data);
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {}, e -> crashReport.log(e));
   }
 
-  private void handleQueryEvent(SearchViewQueryTextEvent event){
-    final String query = event.queryText()
-        .toString();
+  private Observable<Void> handleQueryEvent(SearchViewQueryTextEvent event){
+    return Observable.fromCallable(()->{
+      final String query = event.queryText()
+          .toString();
 
-    if (event.isSubmitted()) {
-      return;
-    }
+      if (event.isSubmitted()) {
+        Logger.v(TAG,"Searching for: "+query);
+        return null;
+      }
 
-    if (query.length() >= COMPLETION_THRESHOLD) {
-      searchSuggestionManager.getSuggestionsFor(query);
-    }
+      if (query.length() >= COMPLETION_THRESHOLD) {
+        searchSuggestionManager.getSuggestionsFor(query);
+      }
+      return null;
+    });
+
   }
 
   private void stopLoadingMoreOnDestroy() {

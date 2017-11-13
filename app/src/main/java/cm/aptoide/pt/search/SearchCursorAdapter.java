@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import cm.aptoide.pt.R;
 import java.util.List;
 
 public class SearchCursorAdapter extends CursorAdapter {
@@ -38,11 +39,11 @@ public class SearchCursorAdapter extends CursorAdapter {
 
   @Override public View newView(Context context, Cursor cursor, ViewGroup parent) {
     return LayoutInflater.from(context)
-        .inflate(android.R.layout.simple_dropdown_item_1line, parent, false);
+        .inflate(R.layout.simple_dropdown_item, parent, false);
   }
 
   @Override public void bindView(View view, Context context, Cursor cursor) {
-    TextView textView = (TextView) view.findViewById(android.R.id.text1);
+    TextView textView = (TextView) view.findViewById(R.id.dropdown_text);
     textView.setText(
         cursor.getString(cursor.getColumnIndex(android.app.SearchManager.SUGGEST_COLUMN_TEXT_1)));
   }
