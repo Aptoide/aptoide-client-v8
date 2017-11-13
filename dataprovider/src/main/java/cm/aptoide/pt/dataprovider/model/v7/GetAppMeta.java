@@ -170,6 +170,7 @@ import lombok.EqualsAndHashCode;
   @Data public static class Stats {
 
     private Stats.Rating rating;
+    private Stats.Rating prating;
     private int downloads;
     private int pdownloads;
 
