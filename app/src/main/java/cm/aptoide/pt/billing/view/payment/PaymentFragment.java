@@ -1,4 +1,4 @@
-package cm.aptoide.pt.billing.view;
+package cm.aptoide.pt.billing.view.payment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,6 +21,8 @@ import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.BillingIdManager;
 import cm.aptoide.pt.billing.payment.PaymentService;
 import cm.aptoide.pt.billing.product.Product;
+import cm.aptoide.pt.billing.view.BillingActivity;
+import cm.aptoide.pt.billing.view.BillingNavigator;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.PermissionServiceFragment;
@@ -77,12 +79,12 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     billing = ((AptoideApplication) getContext().getApplicationContext()).getBilling(
-        getArguments().getString(PaymentActivity.EXTRA_MERCHANT_NAME));
+        getArguments().getString(BillingActivity.EXTRA_MERCHANT_NAME));
     billingAnalytics =
         ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
     billingNavigator = ((ActivityResultNavigator) getContext()).getBillingNavigator();
     billingIdManager = ((AptoideApplication) getContext().getApplicationContext()).getIdResolver(
-        getArguments().getString(PaymentActivity.EXTRA_MERCHANT_NAME));
+        getArguments().getString(BillingActivity.EXTRA_MERCHANT_NAME));
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -115,9 +117,9 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
             .build();
 
     attachPresenter(new PaymentPresenter(this, billing, billingNavigator, billingAnalytics,
-        getArguments().getString(PaymentActivity.EXTRA_MERCHANT_NAME),
-        getArguments().getString(PaymentActivity.EXTRA_SKU),
-        getArguments().getString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD), new HashSet<>()));
+        getArguments().getString(BillingActivity.EXTRA_MERCHANT_NAME),
+        getArguments().getString(BillingActivity.EXTRA_SKU),
+        getArguments().getString(BillingActivity.EXTRA_DEVELOPER_PAYLOAD), new HashSet<>()));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {

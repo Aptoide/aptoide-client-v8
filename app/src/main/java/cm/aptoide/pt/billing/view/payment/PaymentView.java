@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 19/08/2016.
  */
 
-package cm.aptoide.pt.billing.view;
+package cm.aptoide.pt.billing.view.payment;
 
 import cm.aptoide.pt.billing.payment.PaymentService;
 import cm.aptoide.pt.billing.product.Product;

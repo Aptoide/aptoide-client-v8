@@ -3,13 +3,14 @@
  * Modified by Marcelo Benites on 29/08/2016.
  */
 
-package cm.aptoide.pt.billing.view;
+package cm.aptoide.pt.billing.view.payment;
 
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.payment.PaymentService;
 import cm.aptoide.pt.billing.exception.ServiceNotAuthorizedException;
 import cm.aptoide.pt.billing.product.Product;
+import cm.aptoide.pt.billing.view.BillingNavigator;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import java.io.IOException;

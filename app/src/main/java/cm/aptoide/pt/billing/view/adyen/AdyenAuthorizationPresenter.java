@@ -1,9 +1,10 @@
-package cm.aptoide.pt.billing.view;
+package cm.aptoide.pt.billing.view.adyen;
 
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.authorization.AdyenAuthorization;
 import cm.aptoide.pt.billing.payment.Adyen;
+import cm.aptoide.pt.billing.view.BillingNavigator;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import com.adyen.core.models.PaymentMethod;

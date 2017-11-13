@@ -56,7 +56,7 @@ import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAppsDisplayable;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.exception.BillingException;
 import cm.aptoide.pt.billing.purchase.PaidAppPurchase;
-import cm.aptoide.pt.billing.view.PaymentActivity;
+import cm.aptoide.pt.billing.view.BillingActivity;
 import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.IssuesAnalytics;
@@ -577,7 +577,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   public void buyApp(GetAppMeta.App app) {
     billingAnalytics.sendPaymentViewShowEvent();
     startActivityForResult(
-        PaymentActivity.getIntent(getActivity(), app.getId(), BuildConfig.APPLICATION_ID),
+        BillingActivity.getIntent(getActivity(), app.getId(), BuildConfig.APPLICATION_ID),
         PAY_APP_REQUEST_CODE);
   }
 
