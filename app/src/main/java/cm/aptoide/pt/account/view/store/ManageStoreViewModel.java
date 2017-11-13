@@ -40,8 +40,8 @@ import org.parceler.Parcel;
     this.storeDescription = storeDescription;
     this.pictureUri = pictureUri;
     this.storeTheme = storeTheme;
-    this.socialLinks = buildSocialLinksList(storeLinks);
     this.newAvatar = false;
+    this.socialLinks = buildSocialLinksList(storeLinks);
   }
 
   public static ManageStoreViewModel update(ManageStoreViewModel model, String storeName,

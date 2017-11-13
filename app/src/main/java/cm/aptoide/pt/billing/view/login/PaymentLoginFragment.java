@@ -19,6 +19,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.account.view.GooglePlayServicesFragment;
@@ -97,7 +98,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     crashReport = CrashReport.getInstance();
-    errorMapper = new AccountErrorMapper(getContext());
+    errorMapper = new AccountErrorMapper(getContext(), new ErrorsMapper());
     orientationManager = ((ActivityResultNavigator) getContext()).getScreenOrientationManager();
     setHasOptionsMenu(true);
   }

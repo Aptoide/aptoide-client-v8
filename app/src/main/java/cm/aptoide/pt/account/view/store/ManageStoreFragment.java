@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.StyleRes;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,6 +30,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.ImagePickerErrorHandler;
 import cm.aptoide.pt.account.view.ImagePickerNavigator;
 import cm.aptoide.pt.account.view.ImagePickerPresenter;
@@ -38,7 +40,6 @@ import cm.aptoide.pt.account.view.UriToPathResolver;
 import cm.aptoide.pt.account.view.exception.InvalidImageException;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
@@ -47,7 +48,6 @@ import cm.aptoide.pt.presenter.CompositePresenter;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.CustomTextInputLayout;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
@@ -60,7 +60,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.parceler.Parcels;
-import rx.Completable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -97,7 +96,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   private AccountPermissionProvider accountPermissionProvider;
   private StoreManager storeManager;
   private String packageName;
-  private String fileProviderAuthority;
   private PhotoFileGenerator photoFileGenerator;
   private View facebookRow;
   private CustomTextInputLayout facebookUsernameWrapper;
@@ -152,9 +150,11 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     accountPermissionProvider = new AccountPermissionProvider(((PermissionProvider) getActivity()));
     storeManager = ((AptoideApplication) getActivity().getApplicationContext()).getStoreManager();
     packageName = (getActivity().getApplicationContext()).getPackageName();
-    fileProviderAuthority = BuildConfig.APPLICATION_ID + ".provider";
+
+    String fileProviderAuthority = BuildConfig.APPLICATION_ID + ".provider";
     photoFileGenerator = new PhotoFileGenerator(getActivity(),
         getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileProviderAuthority);
+
     crashReport = CrashReport.getInstance();
     uriToPathResolver = new UriToPathResolver(getActivity().getContentResolver());
     imagePickerNavigator = new ImagePickerNavigator(getActivityNavigator());
@@ -172,7 +172,48 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     setupToolbarTitle();
     setupThemeSelector();
     setupViewsDefaultDataUsingCurrentModel();
+
+    registerSocialEditTextClickListeners();
+
+    registerSocialFocusChangeListeners();
+
     attachPresenters();
+  }
+
+  private void registerSocialFocusChangeListeners() {
+    facebookUser.setOnFocusChangeListener(
+        (v, focus) -> changeSocialRowTextAndAppearance(facebookUser, facebookText,
+            R.style.Aptoide_TextView_Regular_XS_Facebook, facebookTextAndPlus,
+            facebookUsernameWrapper, R.string.facebook, Store.SocialChannelType.FACEBOOK));
+
+    twitchUser.setOnFocusChangeListener(
+        (v, focus) -> changeSocialRowTextAndAppearance(twitchUser, twitchText,
+            R.style.Aptoide_TextView_Regular_XS_Twitch, twitchTextAndPlus, twitchUsernameWrapper,
+            R.string.twitch, Store.SocialChannelType.TWITCH));
+
+    twitterUser.setOnFocusChangeListener(
+        (v, focus) -> changeSocialRowTextAndAppearance(twitterUser, twitterText,
+            R.style.Aptoide_TextView_Regular_XS_Twitter, twitterTextAndPlus, twitterUsernameWrapper,
+            R.string.twitter, Store.SocialChannelType.TWITTER));
+
+    youtubeUser.setOnFocusChangeListener(
+        (v, focus) -> changeSocialRowTextAndAppearance(youtubeUser, youtubeText,
+            R.style.Aptoide_TextView_Regular_XS_Youtube, youtubeTextAndPlus, youtubeUsernameWrapper,
+            R.string.youtube, Store.SocialChannelType.YOUTUBE));
+  }
+
+  private void registerSocialEditTextClickListeners() {
+    facebookRow.setOnClickListener(
+        __ -> showEditTextHideTextView(facebookTextAndPlus, facebookUsernameWrapper, facebookUser));
+
+    twitchRow.setOnClickListener(
+        __ -> showEditTextHideTextView(twitchTextAndPlus, twitchUsernameWrapper, twitchUser));
+
+    twitterRow.setOnClickListener(
+        __ -> showEditTextHideTextView(twitterTextAndPlus, twitterUsernameWrapper, twitterUser));
+
+    youtubeRow.setOnClickListener(
+        __ -> showEditTextHideTextView(youtubeTextAndPlus, youtubeUsernameWrapper, youtubeUser));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -225,33 +266,13 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
 
   @Override public Observable<ManageStoreViewModel> saveDataClick() {
     return RxView.clicks(saveDataButton)
-        .map(__ -> updateAndGetStoreModel());
+        .map(__ -> updateAndGetStoreModel())
+        .doOnNext(__ -> hideKeyboard());
   }
 
   @Override public Observable<Void> cancelClick() {
-    return RxView.clicks(cancelChangesButton);
-  }
-
-  public Observable<Void> socialChannelClick(Store.SocialChannelType socialChannelType) {
-    switch (socialChannelType) {
-      case FACEBOOK:
-        return RxView.clicks(facebookRow);
-      case TWITCH:
-        return RxView.clicks(twitchRow);
-      case TWITTER:
-        return RxView.clicks(twitterRow);
-      case YOUTUBE:
-        return RxView.clicks(youtubeRow);
-    }
-    return Observable.empty();
-  }
-
-  @Override public Completable showError(@StringRes int errorMessage) {
-    return ShowMessage.asLongObservableSnack(this, errorMessage);
-  }
-
-  @Override public Completable showGenericError() {
-    return ShowMessage.asLongObservableSnack(this, R.string.all_message_general_error);
+    return RxView.clicks(cancelChangesButton)
+        .doOnNext(__ -> hideKeyboard());
   }
 
   @Override public void showWaitProgressBar() {
@@ -266,86 +287,29 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     }
   }
 
-  @Override public void expandEditText(Store.SocialChannelType socialChannelType) {
-    switch (socialChannelType) {
-      case FACEBOOK:
-        showEditTextHideTextView(facebookTextAndPlus, facebookUsernameWrapper, facebookUser);
-        break;
-      case TWITCH:
-        showEditTextHideTextView(twitchTextAndPlus, twitchUsernameWrapper, twitchUser);
-        break;
-      case TWITTER:
-        showEditTextHideTextView(twitterTextAndPlus, twitterUsernameWrapper, twitterUser);
-        break;
-      case YOUTUBE:
-        showEditTextHideTextView(youtubeTextAndPlus, youtubeUsernameWrapper, youtubeUser);
-        break;
-    }
+  @Override public void showFacebookError(String error) {
+    facebookUsernameWrapper.setErrorEnabled(true);
+    facebookUsernameWrapper.setError(error);
   }
 
-  @Override public void setViewLinkErrors(@StringRes int error, BaseV7Response.Type type) {
-    switch (type) {
-      case TWITCH_1:
-      case TWITCH_2:
-        twitchUsernameWrapper.setErrorEnabled(true);
-        twitchUsernameWrapper.setError(getString(error));
-        break;
-      case TWITTER_1:
-      case TWITTER_2:
-        twitterUsernameWrapper.setErrorEnabled(true);
-        twitterUsernameWrapper.setError(getString(error));
-        break;
-      case YOUTUBE_1:
-      case YOUTUBE_2:
-        youtubeUsernameWrapper.setErrorEnabled(true);
-        youtubeUsernameWrapper.setError(getString(error));
-        break;
-      case FACEBOOK_1:
-      case FACEBOOK_2:
-        facebookUsernameWrapper.setErrorEnabled(true);
-        facebookUsernameWrapper.setError(getString(error));
-        break;
-    }
+  @Override public void showTwitterError(String error) {
+    twitterUsernameWrapper.setErrorEnabled(true);
+    twitterUsernameWrapper.setError(error);
   }
 
-  @Override
-  public Observable<Boolean> socialChannelFocusChanged(Store.SocialChannelType socialChannelType) {
-    switch (socialChannelType) {
-      case FACEBOOK:
-        return RxView.focusChanges(facebookUser);
-      case TWITCH:
-        return RxView.focusChanges(twitchUser);
-      case TWITTER:
-        return RxView.focusChanges(twitterUser);
-      case YOUTUBE:
-        return RxView.focusChanges(youtubeUser);
-    }
-    return Observable.empty();
+  @Override public void showTwitchError(String error) {
+    twitchUsernameWrapper.setErrorEnabled(true);
+    twitchUsernameWrapper.setError(error);
   }
 
-  @Override public void revertSocialChannelUIState(Store.SocialChannelType socialChannelType) {
-    switch (socialChannelType) {
-      case FACEBOOK:
-        changeSocialRowTextAndAppearance(facebookUser, facebookText,
-            R.style.Aptoide_TextView_Regular_XS_Facebook, facebookTextAndPlus,
-            facebookUsernameWrapper, R.string.facebook, Store.SocialChannelType.FACEBOOK);
-        break;
-      case TWITCH:
-        changeSocialRowTextAndAppearance(twitchUser, twitchText,
-            R.style.Aptoide_TextView_Regular_XS_Twitch, twitchTextAndPlus, twitchUsernameWrapper,
-            R.string.twitch, Store.SocialChannelType.TWITCH);
-        break;
-      case TWITTER:
-        changeSocialRowTextAndAppearance(twitterUser, twitterText,
-            R.style.Aptoide_TextView_Regular_XS_Twitter, twitterTextAndPlus, twitterUsernameWrapper,
-            R.string.twitter, Store.SocialChannelType.TWITTER);
-        break;
-      case YOUTUBE:
-        changeSocialRowTextAndAppearance(youtubeUser, youtubeText,
-            R.style.Aptoide_TextView_Regular_XS_Youtube, youtubeTextAndPlus, youtubeUsernameWrapper,
-            R.string.youtube, Store.SocialChannelType.YOUTUBE);
-        break;
-    }
+  @Override public void showYoutubeError(String error) {
+    youtubeUsernameWrapper.setErrorEnabled(true);
+    youtubeUsernameWrapper.setError(error);
+  }
+
+  @Override public void showError(String errorMessage) {
+    Snackbar.make(socialChannels, errorMessage, Snackbar.LENGTH_LONG)
+        .show();
   }
 
   private void showEditTextHideTextView(RelativeLayout relativeLayout,
@@ -426,18 +390,48 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
 
   @Override public void onDestroyView() {
     dismissWaitProgressBar();
+
     if (dialogFragment != null) {
       dialogFragment.dismiss();
       dialogFragment = null;
     }
+
     hideKeyboard();
+
+    clearSocialEditTextClickListeners();
+
+    clearSocialFocusListeners();
+
     super.onDestroyView();
+  }
+
+  private void clearSocialFocusListeners() {
+    facebookUser.setOnFocusChangeListener(null);
+    twitchUser.setOnFocusChangeListener(null);
+    twitterUser.setOnFocusChangeListener(null);
+    youtubeUser.setOnFocusChangeListener(null);
+
+    facebookUser = null;
+    twitchUser = null;
+    twitterUser = null;
+    youtubeUser = null;
+  }
+
+  private void clearSocialEditTextClickListeners() {
+    facebookRow.setOnClickListener(null);
+    twitchRow.setOnClickListener(null);
+    twitterRow.setOnClickListener(null);
+    youtubeRow.setOnClickListener(null);
+
+    facebookRow = null;
+    twitchRow = null;
+    twitterRow = null;
+    youtubeRow = null;
   }
 
   @Override public void hideKeyboard() {
     super.hideKeyboard();
   }
-
 
   private void attachPresenters() {
     final ImagePickerPresenter imagePickerPresenter =
@@ -446,8 +440,9 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
             getActivity().getContentResolver(), ImageLoader.with(getContext()));
 
     final ManageStorePresenter presenter =
-        new ManageStorePresenter(this, crashReport, storeManager, getResources(), uriToPathResolver,
-            packageName, manageStoreNavigator, goToHome);
+        new ManageStorePresenter(this, crashReport, storeManager, uriToPathResolver, packageName,
+            manageStoreNavigator, goToHome,
+            new ManageStoreErrorMapper(getResources(), new ErrorsMapper()));
 
     attachPresenter(new CompositePresenter(Arrays.asList(imagePickerPresenter, presenter)));
   }
@@ -474,7 +469,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
 
   public void setupToolbarTitle() {
     toolbar.setTitle(getViewTitle(currentModel));
-
     ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
     final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
     actionBar.setDisplayHomeAsUpEnabled(false);
@@ -542,8 +536,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   /**
    * This method will add a object to the returned list for each social channel already defined by
    * the user.
-   *
-   * @return
    */
   private List<SocialLink> getStoreLinks() {
     List<SocialLink> storeLinksList = new ArrayList<>();
@@ -577,30 +569,30 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     return storeLinksList;
   }
 
-  private String setSocialChannelUrl(Store.SocialChannelType socialChannelType, String username) {
+  private String setSocialChannelUrl(Store.SocialChannelType socialChannelType, String userInput) {
     switch (socialChannelType) {
       case FACEBOOK:
-        if (!Patterns.WEB_URL.matcher(username)
+        if (!Patterns.WEB_URL.matcher(userInput)
             .matches()) {
-          return ManageStoreViewModel.FACEBOOK_BASE_URL + username;
+          return ManageStoreViewModel.FACEBOOK_BASE_URL + userInput;
         }
       case TWITCH:
-        if (!Patterns.WEB_URL.matcher(username)
+        if (!Patterns.WEB_URL.matcher(userInput)
             .matches()) {
-          return ManageStoreViewModel.TWITCH_BASE_URL + username;
+          return ManageStoreViewModel.TWITCH_BASE_URL + userInput;
         }
       case TWITTER:
-        if (!Patterns.WEB_URL.matcher(username)
+        if (!Patterns.WEB_URL.matcher(userInput)
             .matches()) {
-          return ManageStoreViewModel.TWITTER_BASE_URL + username;
+          return ManageStoreViewModel.TWITTER_BASE_URL + userInput;
         }
       case YOUTUBE:
-        if (!Patterns.WEB_URL.matcher(username)
+        if (!Patterns.WEB_URL.matcher(userInput)
             .matches()) {
-          return ManageStoreViewModel.YOUTUBE_BASE_URL + username;
+          return ManageStoreViewModel.YOUTUBE_BASE_URL + userInput;
         }
     }
-    return username;
+    return userInput;
   }
 
   private void setupViewsDefaultDataUsingCurrentModel() {
@@ -618,7 +610,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
       storeDescription.setVisibility(View.VISIBLE);
       storeDescription.setText(currentModel.getStoreDescription());
       socialChannels.setVisibility(View.VISIBLE);
-      setSocialChannelsUsernames();
+      setSocialChannelsUserNames();
       loadImageStateless(currentModel.getPictureUri());
 
       saveDataButton.setText(R.string.save_edit_store);
@@ -626,7 +618,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     }
   }
 
-  private void setSocialChannelsUsernames() {
+  private void setSocialChannelsUserNames() {
     List<SocialLink> storeLinksList = currentModel.getSocialLinks();
     if (!storeLinksList.isEmpty()) {
       for (SocialLink storeLinks : storeLinksList) {
@@ -650,10 +642,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   /**
    * Sets social channel values that came from webservices. Meaning, social channels already
    * attached to the users store
-   *
-   * @param storeLinks
-   * @param textView
-   * @param imageView
    */
   private void setStoreSocialSentUrl(SocialLink storeLinks, TextView textView,
       ImageView imageView) {
