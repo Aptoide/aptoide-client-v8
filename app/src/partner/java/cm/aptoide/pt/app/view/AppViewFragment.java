@@ -37,7 +37,6 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.app.AppBoughtReceiver;
@@ -79,8 +78,10 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.download.DownloadCompleteAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.AppAction;
+import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.InstallerFactory;
@@ -916,7 +917,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             appViewAnalytics, installAppRelay, this,
             new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
                 AppEventsLogger.newLogger(getContext().getApplicationContext())), navigationTracker,
-            getEditorsBrickPosition());
+            getEditorsBrickPosition(), new InstallAnalytics(Analytics.getInstance(),
+                AppEventsLogger.newLogger(getContext().getApplicationContext())));
     displayables.add(installDisplayable);
     displayables.add(
         new AppViewRateAndCommentsDisplayable(getApp, storeCredentialsProvider, appViewAnalytics,
