@@ -52,6 +52,7 @@ import cm.aptoide.pt.search.SearchFactory;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.SearchSuggestionManager;
+import cm.aptoide.pt.search.TrendingService;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
@@ -487,10 +488,9 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
     issuesAnalytics = new IssuesAnalytics(analytics, Answers.getInstance());
 
     final AptoideApplication application = (AptoideApplication) getActivity().getApplication();
-    storeCredentialsProvider = new StoreCredentialsProviderImpl(
-        AccessorFactory.getAccessorFor(application.getDatabase(),
-            cm.aptoide.pt.database.realm.Store.class));
-    trendingManager= new TrendingManager(storeCredentialsProvider.fromUrl(V7.getHost(sharedPreferences)), bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences);
+
+    trendingManager= new TrendingManager(new TrendingService(new StoreCredentialsProviderImpl(
+        AccessorFactory.getAccessorFor(application.getDatabase(), Store.class)), bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences));
 
     final StoreAccessor storeAccessor =
         AccessorFactory.getAccessorFor(applicationContext.getDatabase(), Store.class);

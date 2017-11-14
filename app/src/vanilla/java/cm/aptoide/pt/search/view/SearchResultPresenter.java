@@ -121,9 +121,10 @@ public class SearchResultPresenter implements Presenter {
         )
         .map(__ -> view.getViewModel())
         .filter(viewModel -> viewModel.getCurrentQuery()==null||viewModel.getCurrentQuery().isEmpty())
-        .flatMap(__ -> trendingManager.getTrendingSuggestions())
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.hideLists())
+        .flatMap(__ -> trendingManager.getTrendingSuggestions())
+        .observeOn(viewScheduler)
         .doOnNext(__ -> view.focusInSearchBar())
         .doOnNext(data -> view.setTrending(data))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -155,6 +156,7 @@ public class SearchResultPresenter implements Presenter {
               .toString();
           if(query.length()<COMPLETION_THRESHOLD){
             return trendingManager.getTrendingSuggestions()
+                .observeOn(viewScheduler)
                 .doOnNext(trendingList -> view.setTrending(trendingList));
           }
           return handleQueryEvent(data);
