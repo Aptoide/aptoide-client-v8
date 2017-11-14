@@ -37,8 +37,13 @@ public class GetStoreWidgetsFragment extends GetStoreEndlessFragment<GetStoreWid
     super.load(create, refresh, savedInstanceState);
 
     if (getArguments().getBoolean(BundleKeys.ADD_ADULT_FILTER, false)) {
-      endlessRecyclerOnScrollListener.addOnEndlessFinishListener(
-          __ -> addDisplayable(new AdultRowDisplayable(GetStoreWidgetsFragment.this)));
+      endlessRecyclerOnScrollListener.addOnEndlessFinishListener(__ -> {
+        final AdultRowDisplayable displayable =
+            new AdultRowDisplayable(GetStoreWidgetsFragment.this);
+        if (!GetStoreWidgetsFragment.this.contains(displayable)) {
+          GetStoreWidgetsFragment.this.addDisplayable(displayable, true);
+        }
+      });
     }
   }
 

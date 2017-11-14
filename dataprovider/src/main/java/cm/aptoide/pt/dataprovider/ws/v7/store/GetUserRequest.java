@@ -25,7 +25,7 @@ import rx.schedulers.Schedulers;
  */
 
 public class GetUserRequest extends V7<GetStore, GetUserRequest.Body> {
-  private static final String TAG = GetUserRequest.class.getSimpleName();
+
   private final OkHttpClient httpClient;
   private final TokenInvalidator tokenInvalidator;
   private final BaseRequestWithStore.StoreCredentials storeCredentials;

@@ -21,28 +21,28 @@ import rx.functions.Action1;
 
 public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {
 
-  protected BaseAdapter adapter;
-  protected int offset;
-  protected boolean loading;
+  private final BaseAdapter adapter;
+  private final int visibleThreshold;
+  private final boolean bypassCache;
+  private final MultiLangPatch multiLangPatch;
+  private final List<OnEndlessFinish> onEndlessFinishList;
+  private final ErrorRequestListener errorRequestListener;
   private Action1 successRequestListener;
-  private MultiLangPatch multiLangPatch;
-  private List<OnEndlessFinish> onEndlessFinishList;
+  private Action0 onEndOfListReachedListener;
+  private int offset;
+  private boolean loading;
   private V7<? extends BaseV7EndlessResponse, ? extends Endless> v7request;
-  private ErrorRequestListener errorRequestListener;
   private int lastTotal;
   private int total;
   private boolean stableData = false;
-  private boolean endCallbackCalled;
   private boolean firstCallbackCalled;
-  private int visibleThreshold;
-  private boolean bypassCache;
+  private boolean endCallbackCalled;
   private int firstVisibleItem;
   private int totalItemCount;
   private int visibleItemCount;
   private RecyclerViewPositionHelper recyclerViewPositionHelper;
   private Subscription subscription;
   private BooleanAction onFirstLoadListener;
-  private Action0 onEndOfListReachedListener;
 
   public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter,
       V7<T, ? extends Endless> v7request, Action1<T> successRequestListener,
@@ -57,6 +57,8 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
     this.onEndOfListReachedListener = null;
     this.endCallbackCalled = false;
     this.firstCallbackCalled = false;
+    this.multiLangPatch = new MultiLangPatch();
+    this.onEndlessFinishList = new LinkedList<>();
   }
 
   public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter,
@@ -90,6 +92,8 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
     this.onEndOfListReachedListener = null;
     this.endCallbackCalled = false;
     this.firstCallbackCalled = false;
+    this.multiLangPatch = new MultiLangPatch();
+    this.onEndlessFinishList = new LinkedList<>();
   }
 
   public EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter) {
@@ -103,9 +107,12 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
     this.onEndOfListReachedListener = null;
     this.endCallbackCalled = false;
     this.firstCallbackCalled = false;
+    this.multiLangPatch = new MultiLangPatch();
+    this.onEndlessFinishList = new LinkedList<>();
   }
 
-  public EndlessRecyclerOnScrollListener() {
+  public BaseAdapter getAdapter() {
+    return adapter;
   }
 
   public void addOnEndlessFinishListener(OnEndlessFinish onEndlessFinish) {
@@ -144,14 +151,16 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
     if (!loading) {
       loading = true;
       adapter.addDisplayable(new ProgressBarDisplayable());
-      subscription = v7request.observe(bypassCache)
-          .observeOn(AndroidSchedulers.mainThread())
-          .doOnNext(response -> {
-            popProgressBarDisplayable();
-            multiLangPatch.updateTotal(response);
-          })
-          .subscribe(response -> handleLoadMoreResponseAfterWebRequest(bypassCache, response),
-              this::handleLoadMoreErrorAfterWebRequest);
+      if (v7request != null) {
+        subscription = v7request.observe(bypassCache)
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(response -> {
+              popProgressBarDisplayable();
+              multiLangPatch.updateTotal(response);
+            })
+            .subscribe(response -> handleLoadMoreResponseAfterWebRequest(bypassCache, response),
+                this::handleLoadMoreErrorAfterWebRequest);
+      }
     }
   }
 
@@ -227,6 +236,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
   public void removeListeners() {
     onFirstLoadListener = null;
     onEndOfListReachedListener = null;
+    successRequestListener = null;
   }
 
   public void stopLoading() {
@@ -241,22 +251,6 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
     multiLangPatch.updateOffset();
     offset = -1;
     total = 0;
-  }
-
-  private <T extends BaseV7EndlessResponse> void rebind(BaseAdapter adapter,
-      V7<T, ? extends Endless> v7request, Action1<T> successRequestListener,
-      ErrorRequestListener errorRequestListener, int visibleThreshold, boolean bypassCache,
-      BooleanAction<T> onFirstLoadListener, Action0 onEndOfListReachedListener) {
-    this.adapter = adapter;
-    this.v7request = v7request;
-    this.successRequestListener = successRequestListener;
-    this.errorRequestListener = errorRequestListener;
-    this.visibleThreshold = visibleThreshold;
-    this.bypassCache = bypassCache;
-    this.onFirstLoadListener = onFirstLoadListener;
-    this.onEndOfListReachedListener = onEndOfListReachedListener;
-    this.endCallbackCalled = false;
-    this.firstCallbackCalled = false;
   }
 
   public interface BooleanAction<T extends BaseV7Response> {
