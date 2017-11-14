@@ -1,5 +1,6 @@
 package cm.aptoide.pt.notification.view;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +15,7 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.link.LinksHandlerFactory;
+import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.notification.AptoideNotification;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
@@ -33,6 +35,18 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
   private InboxAdapter adapter;
 
   private PublishSubject<AptoideNotification> notificationSubject;
+  private TabNavigator tabNavigator;
+
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+
+    if (activity instanceof TabNavigator) {
+      tabNavigator = (TabNavigator) activity;
+    } else {
+      throw new IllegalStateException(
+          "Activity must implement " + TabNavigator.class.getSimpleName());
+    }
+  }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     int itemId = item.getItemId();
@@ -52,15 +66,16 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    attachPresenter(new InboxPresenter(this,
-        ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
-        new LinksHandlerFactory(getContext()), CrashReport.getInstance(),
-        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker(),
-        new NotificationAnalytics(
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient(),
-            Analytics.getInstance()),
-        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), navigationTracker)));
+    attachPresenter(
+        new InboxPresenter(this, new InboxNavigator(getFragmentNavigator(), tabNavigator),
+            ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
+            new LinksHandlerFactory(getContext()), CrashReport.getInstance(),
+            ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker(),
+            new NotificationAnalytics(
+                ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient(),
+                Analytics.getInstance()),
+            new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+                Analytics.getInstance(), navigationTracker)));
     notificationSubject = PublishSubject.create();
     adapter = new InboxAdapter(Collections.emptyList(), notificationSubject);
     setHasOptionsMenu(true);
@@ -79,6 +94,10 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
 
   @Override public Observable<AptoideNotification> notificationSelection() {
     return notificationSubject;
+  }
+
+  @Override public void goHome() {
+    getFragmentNavigator().cleanBackStack();
   }
 
   @Override public int getContentViewId() {

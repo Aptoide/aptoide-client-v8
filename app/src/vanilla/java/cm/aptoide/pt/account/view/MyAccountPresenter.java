@@ -1,6 +1,7 @@
 package cm.aptoide.pt.account.view;
 
 import android.content.SharedPreferences;
+import android.net.Uri;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
@@ -149,7 +150,24 @@ public class MyAccountPresenter implements Presenter {
         .flatMap(viewCreated -> view.notificationSelection())
         .flatMap(notification -> Observable.just(
             linkFactory.get(LinksHandlerFactory.NOTIFICATION_LINK, notification.getUrl()))
-            .doOnNext(link -> link.launch())
+            .flatMap(link -> {
+              String cardId = Uri.parse(link.getUrl())
+                  .getQueryParameter("cardId");
+              if (cardId != null) {
+                return Observable.just(cardId);
+              } else {
+                return Observable.empty();
+              }
+            })
+            .doOnNext(postId -> {
+              if (postId != null) {
+                navigator.navigateToTimelineWithPostId(postId);
+                view.goHome();
+              } else {
+                linkFactory.get(LinksHandlerFactory.NOTIFICATION_LINK, notification.getUrl())
+                    .launch();
+              }
+            })
             .doOnNext(
                 link -> analytics.notificationShown(notification.getNotificationCenterUrlTrack()))
             .doOnNext(__ -> navigationTracker.registerScreen(

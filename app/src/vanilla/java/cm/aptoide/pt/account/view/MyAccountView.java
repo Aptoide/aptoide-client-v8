@@ -37,4 +37,6 @@ public interface MyAccountView extends View {
   void hideHeader();
 
   void refreshUI(Store store);
+
+  void goHome();
 }

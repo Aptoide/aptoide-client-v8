@@ -1,6 +1,7 @@
 package cm.aptoide.pt.social.presenter;
 
 import android.content.res.Resources;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.Account;
@@ -54,6 +55,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.Completable;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -159,7 +161,9 @@ public class TimelinePresenter implements Presenter {
 
     onViewCreatedHandleVisibleItems();
 
-    onViewCreatedClickOnNotification();
+    onViewCreatedClickOnTimelineNotification();
+
+    onViewCreatedClickOnGeneralNotification();
 
     onViewCreatedClickOnNotificationCenter();
 
@@ -346,12 +350,48 @@ public class TimelinePresenter implements Presenter {
         }, throwable -> crashReport.log(throwable));
   }
 
-  private void onViewCreatedClickOnNotification() {
+  private void onViewCreatedClickOnTimelineNotification() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
                 .equals(CardTouchEvent.Type.NOTIFICATION))
+            .flatMap(cardTouchEvent -> Observable.just(
+                Uri.parse(((TimelineUser) cardTouchEvent.getCard()).getNotificationUrlAction())
+                    .getQueryParameter("cardId"))
+                .filter(postId -> postId != null)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(__ -> view.showPostProgressIndicator())
+                .flatMapSingle(cardId -> timeline.getFreshCards(cardId))
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(cards -> {
+                  if (cards != null && cards.size() > 0) {
+                    showCardsAndHidePostProgress(cards);
+                  } else if (cards != null && cards.size() == 0) {
+                    showEmptyStateAndHidePostProgress();
+                  } else {
+                    view.showGenericViewError();
+                  }
+                })
+                .retry()
+                .flatMapCompletable(__ -> timeline.notificationDismissed(
+                    ((TimelineUser) cardTouchEvent.getCard()).getNotificationId())
+                    .andThen(Completable.fromAction(() -> timelineAnalytics.notificationShown(
+                        ((TimelineUser) cardTouchEvent.getCard()).getAnalyticsUrl()))))))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cardTouchEvent -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
+  private void onViewCreatedClickOnGeneralNotification() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.postClicked()
+            .filter(cardTouchEvent -> cardTouchEvent.getActionType()
+                .equals(CardTouchEvent.Type.NOTIFICATION))
+            .filter(cardTouchEvent -> Uri.parse(
+                ((TimelineUser) cardTouchEvent.getCard()).getNotificationUrlAction())
+                .getQueryParameter("cardId") == null)
             .doOnNext(cardTouchEvent -> linksNavigator.get(LinksHandlerFactory.NOTIFICATION_LINK,
                 ((TimelineUser) cardTouchEvent.getCard()).getNotificationUrlAction())
                 .launch())

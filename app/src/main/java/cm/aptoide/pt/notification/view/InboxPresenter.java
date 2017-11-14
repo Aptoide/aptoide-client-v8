@@ -1,5 +1,6 @@
 package cm.aptoide.pt.notification.view;
 
+import android.net.Uri;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
@@ -15,6 +16,7 @@ import rx.android.schedulers.AndroidSchedulers;
 public class InboxPresenter implements Presenter {
 
   private final InboxView view;
+  private final InboxNavigator inboxNavigator;
   private final NotificationCenter notificationCenter;
   private final LinksHandlerFactory linkFactory;
   private final NotificationAnalytics analytics;
@@ -23,10 +25,12 @@ public class InboxPresenter implements Presenter {
   private final NavigationTracker navigationTracker;
   private final int NUMBER_OF_NOTIFICATIONS = 50;
 
-  public InboxPresenter(InboxView view, NotificationCenter notificationCenter,
-      LinksHandlerFactory linkFactory, CrashReport crashReport, NavigationTracker navigationTracker,
-      NotificationAnalytics analytics, PageViewsAnalytics pageViewsAnalytics) {
+  public InboxPresenter(InboxView view, InboxNavigator inboxNavigator,
+      NotificationCenter notificationCenter, LinksHandlerFactory linkFactory,
+      CrashReport crashReport, NavigationTracker navigationTracker, NotificationAnalytics analytics,
+      PageViewsAnalytics pageViewsAnalytics) {
     this.view = view;
+    this.inboxNavigator = inboxNavigator;
     this.notificationCenter = notificationCenter;
     this.linkFactory = linkFactory;
     this.crashReport = crashReport;
@@ -49,13 +53,30 @@ public class InboxPresenter implements Presenter {
         .flatMap(__ -> view.notificationSelection()
             .flatMap(notification -> Observable.just(
                 linkFactory.get(LinksHandlerFactory.NOTIFICATION_LINK, notification.getUrl()))
-                .doOnNext(link -> link.launch())
-                .doOnNext(link -> analytics.notificationShown(
+                .flatMap(link -> {
+                  String cardId = Uri.parse(link.getUrl())
+                      .getQueryParameter("cardId");
+                  if (cardId != null) {
+                    return Observable.just(cardId);
+                  } else {
+                    return Observable.empty();
+                  }
+                })
+                .doOnNext(postId -> {
+                  if (postId != null) {
+                    inboxNavigator.navigateToTimelineWithPostId(postId);
+                    view.goHome();
+                  } else {
+                    linkFactory.get(LinksHandlerFactory.NOTIFICATION_LINK, notification.getUrl())
+                        .launch();
+                  }
+                })
+                .doOnNext(postId -> analytics.notificationShown(
                     notification.getNotificationCenterUrlTrack()))
-                .doOnNext(link -> navigationTracker.registerScreen(ScreenTagHistory.Builder.build(
+                .doOnNext(postId -> navigationTracker.registerScreen(ScreenTagHistory.Builder.build(
                     this.getClass()
                         .getSimpleName())))
-                .doOnNext(link -> pageViewsAnalytics.sendPageViewedEvent())))
+                .doOnNext(postId -> pageViewsAnalytics.sendPageViewedEvent())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, throwable -> crashReport.log(throwable));

@@ -14,4 +14,6 @@ public interface InboxView extends View {
   void showNotifications(List<AptoideNotification> notifications);
 
   Observable<AptoideNotification> notificationSelection();
+
+  void goHome();
 }
