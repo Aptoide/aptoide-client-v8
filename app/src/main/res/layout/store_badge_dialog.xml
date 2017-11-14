@@ -188,6 +188,7 @@
         android:minHeight="24dp"
         android:minWidth="54dp"
         android:text="@string/got_it_button_text"
+        android:textAllCaps="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintRight_toRightOf="parent"

@@ -48,7 +48,6 @@ import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.TrackerFilter;
 import cm.aptoide.pt.billing.Billing;
@@ -89,6 +88,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.download.DownloadAnalytics;
+import cm.aptoide.pt.download.DownloadCompleteAnalytics;
 import cm.aptoide.pt.download.DownloadMirrorEventInterceptor;
 import cm.aptoide.pt.download.PaidAppsDownloadInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -119,13 +119,9 @@ import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.notification.NotificationIdsMapper;
 import cm.aptoide.pt.notification.NotificationPolicyFactory;
 import cm.aptoide.pt.notification.NotificationProvider;
-import cm.aptoide.pt.notification.NotificationService;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.notification.NotificationsCleaner;
-import cm.aptoide.pt.notification.PnpV1NotificationService;
 import cm.aptoide.pt.notification.SystemNotificationShower;
-import cm.aptoide.pt.notification.sync.NotificationSyncFactory;
-import cm.aptoide.pt.notification.sync.NotificationSyncManager;
 import cm.aptoide.pt.preferences.AdultContent;
 import cm.aptoide.pt.preferences.LocalPersistenceAdultContent;
 import cm.aptoide.pt.preferences.PRNGFixes;
@@ -246,11 +242,9 @@ public abstract class AptoideApplication extends Application {
   private PurchaseBundleMapper purchaseBundleMapper;
   private PaymentThrowableCodeMapper paymentThrowableCodeMapper;
   private MultipartBodyInterceptor multipartBodyInterceptor;
-  private NotificationService pnpV1NotificationService;
   private NotificationCenter notificationCenter;
   private QManager qManager;
   private EntryPointChooser entryPointChooser;
-  private NotificationSyncScheduler notificationSyncScheduler;
   private RootAvailabilityManager rootAvailabilityManager;
   private RootInstallationRetryHandler rootInstallationRetryHandler;
   private RefreshTokenInvalidator tokenInvalidator;
@@ -553,14 +547,7 @@ public abstract class AptoideApplication extends Application {
     return storeManager;
   }
 
-  public NotificationSyncScheduler getNotificationSyncScheduler() {
-    if (notificationSyncScheduler == null) {
-      notificationSyncScheduler = new NotificationSyncManager(getSyncScheduler(), true,
-          new NotificationSyncFactory(getDefaultSharedPreferences(), getPnpV1NotificationService(),
-              getNotificationProvider()));
-    }
-    return notificationSyncScheduler;
-  }
+  public abstract NotificationSyncScheduler getNotificationSyncScheduler();
 
   public SyncScheduler getSyncScheduler() {
     if (syncScheduler == null) {
@@ -578,17 +565,6 @@ public abstract class AptoideApplication extends Application {
   public GroupNameProvider getGroupNameProvider() {
     return new AccountGroupNameProvider(getAccountManager(), Build.MANUFACTURER, Build.MODEL,
         Build.ID);
-  }
-
-  public NotificationService getPnpV1NotificationService() {
-    if (pnpV1NotificationService == null) {
-      pnpV1NotificationService =
-          new PnpV1NotificationService(BuildConfig.APPLICATION_ID, getDefaultClient(),
-              WebService.getDefaultConverter(), getIdsRepository(), BuildConfig.VERSION_NAME,
-              getExtraId(), getDefaultSharedPreferences(), getResources(),
-              getAuthenticationPersistence(), getAccountManager());
-    }
-    return pnpV1NotificationService;
   }
 
   public OkHttpClient getLongTimeoutClient() {

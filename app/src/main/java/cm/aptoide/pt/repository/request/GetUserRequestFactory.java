@@ -59,7 +59,7 @@ public class GetUserRequestFactory {
 
   public GetUserRequest newGetUser(String url, boolean googlePlayServicesAvailable) {
 
-    final Boolean isAdultContentEnabled = adultContent.enabled()
+    final Boolean adultContentEnabled = adultContent.enabled()
         .first()
         .toSingle()
         .toBlocking()
@@ -67,7 +67,7 @@ public class GetUserRequestFactory {
 
     return GetUserRequest.of(url, storeCredentialsProvider.fromUrl(url), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager,
-        clientUniqueId, googlePlayServicesAvailable, partnerId, isAdultContentEnabled, filters,
+        clientUniqueId, googlePlayServicesAvailable, partnerId, adultContentEnabled, filters,
         systemService, versionCodeProvider);
   }
 }

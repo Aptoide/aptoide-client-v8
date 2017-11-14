@@ -15,8 +15,11 @@ import lombok.ToString;
   public static final int COMMENT = 1;
   public static final int LIKE = 2;
   public static final int POPULAR = 3;
+  public static final int NEW_FOLLOWER = 4;
+  public static final int NEW_SHARE = 5;
+  public static final int NEW_ACTIVITY = 6;
   public static final int NOT_DISMISSED = Notification.NOT_DISMISSED;
-  private final Long expire;
+  private Long expire;
   private String appName;
   private String graphic;
   private long dismissed;
@@ -36,7 +39,7 @@ import lombok.ToString;
 
   public AptoideNotification(String body, String img, String title, String url, int type,
       long timeStamp, String appName, String graphic, long dismissed, String ownerId,
-      Long expireSecsUtc, String urlTrack, String notificationCenterUrlTrack, boolean processed) {
+      String urlTrack, String notificationCenterUrlTrack, boolean processed, Long expireSecsUtc) {
     this.body = body;
     this.img = img;
     this.title = title;
@@ -54,29 +57,27 @@ import lombok.ToString;
   }
 
   public AptoideNotification(String body, String img, String title, String url, int type,
-      String appName, String graphic, long dismissed, String ownerId, Long expireSecsUtc,
-      String urlTrack, String notificationCenterUrlTrack, boolean processed) {
-    this(body, img, title, url, type, System.currentTimeMillis(), appName, graphic, dismissed,
-        ownerId, expireSecsUtc * 1000, urlTrack, notificationCenterUrlTrack, processed);
-  }
-
-  public AptoideNotification(String abTestingGroup, String body, int campaignId, String img,
-      String lang, String title, String url, String urlTrack, String appName, String graphic,
-      String ownerId, Long expireSecsUtc, String notificationCenterUrlTrack, boolean processed) {
-    this(abTestingGroup, body, campaignId, img, lang, title, url, urlTrack,
-        System.currentTimeMillis(), CAMPAIGN, NOT_DISMISSED, appName, graphic, ownerId,
-        expireSecsUtc, notificationCenterUrlTrack, processed);
-  }
-
-  public AptoideNotification(String abTestingGroup, String body, int campaignId, String img,
-      String lang, String title, String url, String urlTrack, long timeStamp, int type,
-      long dismissed, String appName, String graphic, String ownerId, Long expireSecsUtc,
-      String notificationCenterUrlTrack, boolean processed) {
-    this(body, img, title, url, type, timeStamp, appName, graphic, dismissed, ownerId,
-        expireSecsUtc, urlTrack, notificationCenterUrlTrack, processed);
+      String appName, String graphic, long dismissed, String ownerId, String urlTrack,
+      String notificationCenterUrlTrack, boolean processed, long timeStamp, Long expireSecsUtc,
+      String abTestingGroup, int campaignId, String lang) {
+    this(body, img, title, url, type, timeStamp, appName, graphic, dismissed, ownerId, urlTrack,
+        notificationCenterUrlTrack, processed, expireSecsUtc);
     this.abTestingGroup = abTestingGroup;
     this.campaignId = campaignId;
     this.lang = lang;
+  }
+
+  public AptoideNotification(String img, String title, String url, String urlTrack, String graphic,
+      int type, int campaignId, long timeStamp, String ownerId) {
+    this.img = img;
+    this.title = title;
+    this.url = url;
+    this.urlTrack = urlTrack;
+    this.graphic = graphic;
+    this.type = type;
+    this.campaignId = campaignId;
+    this.timeStamp = timeStamp;
+    this.ownerId = ownerId;
   }
 
   public boolean isProcessed() {
@@ -151,7 +152,8 @@ import lombok.ToString;
     return notificationCenterUrlTrack;
   }
 
-  @Retention(RetentionPolicy.SOURCE) @IntDef({ CAMPAIGN, COMMENT, LIKE, POPULAR })
+  @Retention(RetentionPolicy.SOURCE)
+  @IntDef({ CAMPAIGN, COMMENT, LIKE, POPULAR, NEW_FOLLOWER, NEW_SHARE, NEW_ACTIVITY })
   public @interface NotificationType {
   }
 }

@@ -35,6 +35,17 @@ public class ShadowCircleTransformation extends BitmapTransformation {
     spaceBetween = 0f;
   }
 
+  public ShadowCircleTransformation(Context context, View view, @ColorInt int shadowColor,
+      float spaceBetween, float strokeSize) {
+    super(context);
+    this.strokeSize = strokeSize;
+    // When hardware acceleration is setShadowLayer will only work for text views. We need to disable for the view
+    // to make sure it will work. There is a performance penalty by doing that.
+    view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+    this.shadowColor = shadowColor;
+    this.spaceBetween = spaceBetween;
+  }
+
   public ShadowCircleTransformation(Context context, View view, @ColorInt int shadowColor) {
     super(context);
     // When hardware acceleration is setShadowLayer will only work for text views. We need to disable for the view

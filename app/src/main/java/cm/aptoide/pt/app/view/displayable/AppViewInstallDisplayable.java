@@ -6,19 +6,20 @@
 package cm.aptoide.pt.app.view.displayable;
 
 import android.widget.Button;
-import cm.aptoide.pt.analytics.NavigationTracker;
-import cm.aptoide.pt.install.Install;
-import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.app.AppViewAnalytics;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
+import cm.aptoide.pt.download.DownloadCompleteAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
+import cm.aptoide.pt.install.Install;
+import cm.aptoide.pt.install.InstallAnalytics;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
-import cm.aptoide.pt.app.view.AppViewFragment;
 import com.jakewharton.rxrelay.PublishRelay;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,7 +38,6 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   private InstallManager installManager;
   private String md5;
   private String packageName;
-  private InstalledRepository installedRepository;
   private Button installButton;
   private DownloadFactory downloadFactory;
   private TimelineAnalytics timelineAnalytics;
@@ -45,6 +45,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   private DownloadCompleteAnalytics analytics;
   private NavigationTracker navigationTracker;
   private String editorsChoiceBrickPosition;
+  private InstallAnalytics installAnalytics;
 
   public AppViewInstallDisplayable() {
     super();
@@ -52,11 +53,11 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   }
 
   public AppViewInstallDisplayable(InstallManager installManager, GetApp getApp,
-      SearchAdResult searchAdResult, boolean shouldInstall, InstalledRepository installedRepository,
-      TimelineAnalytics timelineAnalytics, AppViewAnalytics appViewAnalytics,
-      PublishRelay installAppRelay, DownloadFactory downloadFactory,
-      AppViewFragment appViewFragment, DownloadCompleteAnalytics analytics,
-      NavigationTracker navigationTracker, String editorsChoiceBrickPosition) {
+      SearchAdResult searchAdResult, boolean shouldInstall, TimelineAnalytics timelineAnalytics,
+      AppViewAnalytics appViewAnalytics, PublishRelay installAppRelay,
+      DownloadFactory downloadFactory, AppViewFragment appViewFragment,
+      DownloadCompleteAnalytics analytics, NavigationTracker navigationTracker,
+      String editorsChoiceBrickPosition, InstallAnalytics installAnalytics) {
     super(getApp, appViewAnalytics);
     this.installManager = installManager;
     this.md5 = getApp.getNodes()
@@ -77,12 +78,12 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
     this.shouldInstall = shouldInstall;
     this.downloadFactory = downloadFactory;
     this.installAppRelay = installAppRelay;
-    this.installedRepository = installedRepository;
     this.timelineAnalytics = timelineAnalytics;
     this.appViewFragment = appViewFragment;
     this.analytics = analytics;
     this.navigationTracker = navigationTracker;
     this.editorsChoiceBrickPosition = editorsChoiceBrickPosition;
+    this.installAnalytics = installAnalytics;
   }
 
   public static AppViewInstallDisplayable newInstance(GetApp getApp, InstallManager installManager,
@@ -90,10 +91,11 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
       DownloadFactory downloadFactory, TimelineAnalytics timelineAnalytics,
       AppViewAnalytics appViewAnalytics, PublishRelay installAppRelay,
       AppViewFragment appViewFragment, DownloadCompleteAnalytics analytics,
-      NavigationTracker navigationTracker, String editorsBrickPosition) {
+      NavigationTracker navigationTracker, String editorsBrickPosition,
+      InstallAnalytics installAnalytics) {
     return new AppViewInstallDisplayable(installManager, getApp, searchAdResult, shouldInstall,
-        installedRepository, timelineAnalytics, appViewAnalytics, installAppRelay, downloadFactory,
-        appViewFragment, analytics, navigationTracker, editorsBrickPosition);
+        timelineAnalytics, appViewAnalytics, installAppRelay, downloadFactory, appViewFragment,
+        analytics, navigationTracker, editorsBrickPosition, installAnalytics);
   }
 
   public void startInstallationProcess() {
@@ -130,14 +132,17 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
     return installAppRelay;
   }
 
-  public void installAppClicked() {
+  public void installAppClicked(DownloadCompleteAnalytics.InstallType installType) {
     GetAppMeta.App app = getPojo().getNodes()
         .getMeta()
         .getData();
+    installAnalytics.installStarted(navigationTracker.getPreviousScreen(),
+        navigationTracker.getCurrentScreen(), app.getPackageName(), versionCode,
+        InstallAnalytics.InstallType.valueOf(installType.name()));
     analytics.installClicked(navigationTracker.getPreviousScreen(),
         navigationTracker.getCurrentScreen(), app.getMd5(), app.getPackageName(), app.getFile()
             .getMalware()
             .getRank()
-            .name(), editorsChoiceBrickPosition);
+            .name(), editorsChoiceBrickPosition, installType);
   }
 }

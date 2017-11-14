@@ -17,6 +17,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.store.ManageStoreFragment;
+import cm.aptoide.pt.account.view.store.ManageStoreViewModel;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
@@ -126,7 +127,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
           setupActionButton(homeMeta.isShowButton(), homeMeta.isOwner(), homeMeta.getStoreId(),
               StoreTheme.get(homeMeta.getThemeColor())
                   .getThemeName(), homeMeta.getMainName(), homeMeta.getDescription(),
-              homeMeta.getMainIcon(), homeMeta.isFollowingStore());
+              homeMeta.getMainIcon(), homeMeta.isFollowingStore(), homeMeta.getSocialChannels());
           showSocialChannels(homeMeta.getSocialChannels());
           showAppsCount(homeMeta.getAppsCount(), textStyle, homeMeta.isShowApps(),
               homeMeta.getStoreId());
@@ -260,11 +261,13 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
 
   private void setupActionButton(boolean shouldShow, boolean owner, long storeId,
       String storeThemeName, String storeName, String storeDescription, String storeImagePath,
-      boolean isFollowed) {
+      boolean isFollowed,
+      List<cm.aptoide.pt.dataprovider.model.v7.store.Store.SocialChannel> socialChannels) {
     if (shouldShow) {
       buttonsLayout.setVisibility(View.VISIBLE);
       if (owner) {
-        setupEditButton(storeId, storeThemeName, storeName, storeDescription, storeImagePath);
+        setupEditButton(storeId, storeThemeName, storeName, storeDescription, storeImagePath,
+            socialChannels);
       } else {
         setupFollowButton(storeName, isFollowed);
       }
@@ -316,19 +319,21 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
   }
 
   private void setupEditButton(long storeId, String storeThemeName, String storeName,
-      String storeDescription, String storeImagePath) {
+      String storeDescription, String storeImagePath,
+      List<cm.aptoide.pt.dataprovider.model.v7.store.Store.SocialChannel> socialChannels) {
     editStoreButton.setVisibility(View.VISIBLE);
     followStoreButton.setVisibility(View.GONE);
     editStoreButton.setOnClickListener(
         v -> navigateToEditStore(storeId, storeThemeName, storeName, storeDescription,
-            storeImagePath));
+            storeImagePath, socialChannels));
   }
 
   private void navigateToEditStore(long storeId, String storeThemeName, String storeName,
-      String storeDescription, String storeImagePath) {
-    ManageStoreFragment.ViewModel viewModel =
-        new ManageStoreFragment.ViewModel(storeId, StoreTheme.fromName(storeThemeName), storeName,
-            storeDescription, storeImagePath);
+      String storeDescription, String storeImagePath,
+      List<cm.aptoide.pt.dataprovider.model.v7.store.Store.SocialChannel> socialChannels) {
+    ManageStoreViewModel viewModel =
+        new ManageStoreViewModel(storeId, StoreTheme.fromName(storeThemeName), storeName,
+            storeDescription, storeImagePath, socialChannels);
     getFragmentNavigator().navigateTo(ManageStoreFragment.newInstance(viewModel, false), true);
   }
 

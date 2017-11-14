@@ -24,6 +24,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
 import cm.aptoide.pt.account.view.ImagePickerErrorHandler;
 import cm.aptoide.pt.account.view.ImagePickerNavigator;
@@ -126,7 +127,7 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
     createStoreUserPrivacyEnabled = application.isCreateStoreUserPrivacyEnabled();
     accountManager = ((AptoideApplication) getActivity().getApplication()).getAccountManager();
     errorMapper =
-        new CreateUserErrorMapper(context, new AccountErrorMapper(context), getResources());
+        new CreateUserErrorMapper(context, new AccountErrorMapper(context, new ErrorsMapper()), getResources());
 
     imagePickerErrorHandler = new ImagePickerErrorHandler(context);
 

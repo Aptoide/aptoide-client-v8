@@ -17,6 +17,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.preferences.AdultContent;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -42,7 +43,7 @@ public class RequestFactory {
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
-      String clientUniqueId, String partnerId, boolean accountMature, String filters,
+      String clientUniqueId, String partnerId, AdultContent accountMature, String filters,
       ConnectivityManager connectivityManager,
       AdsApplicationVersionCodeProvider versionCodeProvider, boolean googlePlayServicesAvailable) {
     this.storeCredentialsProvider = storeCredentialsProvider;
