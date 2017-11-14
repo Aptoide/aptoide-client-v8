@@ -22,12 +22,14 @@ public class NotificationCenter {
   private CompositeSubscription subscriptions;
   private NotificationProvider notificationProvider;
   private AptoideAccountManager accountManager;
+  private NotificationAnalytics notificationAnalytics;
 
   public NotificationCenter(NotificationProvider notificationProvider,
       NotificationSyncScheduler notificationSyncScheduler,
       SystemNotificationShower notificationShower, CrashReport crashReport,
       NotificationPolicyFactory notificationPolicyFactory,
-      NotificationsCleaner notificationsCleaner, AptoideAccountManager accountManager) {
+      NotificationsCleaner notificationsCleaner, AptoideAccountManager accountManager,
+      NotificationAnalytics notificationAnalytics) {
     this.notificationSyncScheduler = notificationSyncScheduler;
     this.notificationShower = notificationShower;
     this.notificationProvider = notificationProvider;
@@ -35,6 +37,7 @@ public class NotificationCenter {
     this.notificationPolicyFactory = notificationPolicyFactory;
     this.notificationsCleaner = notificationsCleaner;
     this.accountManager = accountManager;
+    this.notificationAnalytics = notificationAnalytics;
     subscriptions = new CompositeSubscription();
   }
 
@@ -65,6 +68,9 @@ public class NotificationCenter {
         .flatMapIterable(notifications -> notifications)
         .filter(notification -> !notification.isProcessed())
         .flatMapSingle(notification -> {
+          notificationAnalytics.sendSocialNotificationReceivedEvent(notification.getType(),
+              notification.getAbTestingGroup(), notification.getCampaignId(),
+              notification.getUrl());
           notification.setProcessed(true);
           return notificationProvider.save(notification)
               .toSingleDefault(notification);

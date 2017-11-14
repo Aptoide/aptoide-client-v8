@@ -217,6 +217,7 @@ public class DeepLinkManager {
   }
 
   private void newUpdatesDeepLink() {
+    /// TODO: 09/11/17 updates notification click
     Analytics.ApplicationLaunch.newUpdatesNotification();
     tabNavigator.navigate(new SimpleTabNavigation(TabNavigation.UPDATES));
   }

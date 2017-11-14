@@ -115,6 +115,7 @@ import cm.aptoide.pt.networking.NoAuthenticationBodyInterceptorV3;
 import cm.aptoide.pt.networking.NoOpTokenInvalidator;
 import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
+import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.notification.NotificationIdsMapper;
 import cm.aptoide.pt.notification.NotificationPolicyFactory;
@@ -522,7 +523,9 @@ public abstract class AptoideApplication extends Application {
               systemNotificationShower, CrashReport.getInstance(),
               new NotificationPolicyFactory(notificationProvider),
               new NotificationsCleaner(notificationAccessor,
-                  Calendar.getInstance(TimeZone.getTimeZone("UTC"))), getAccountManager());
+                  Calendar.getInstance(TimeZone.getTimeZone("UTC"))), getAccountManager(),
+              new NotificationAnalytics(Analytics.getInstance(),
+                  AppEventsLogger.newLogger(getApplicationContext())));
     }
     return notificationCenter;
   }
