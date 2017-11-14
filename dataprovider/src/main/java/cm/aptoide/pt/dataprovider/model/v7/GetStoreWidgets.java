@@ -29,7 +29,7 @@ import lombok.experimental.Accessors;
     public static final String COMMENTS_TYPE = "COMMENTS";
     public static final String STORE_GROUP = "STORES_GROUP";
 
-    private Type type;
+    private cm.aptoide.pt.dataprovider.model.v7.Type type;
     private String title; // Highlighted, Games, Categories, Timeline, Recommended for you,
     private String tag;
     // Aptoide Publishers

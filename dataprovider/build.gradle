@@ -127,4 +127,8 @@ dependencies {
   compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VERSION}"
 
   compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+
+  // Parceler - https://github.com/johncarl81/parceler
+  provided "org.parceler:parceler-api:${PARCELER_VERSION}"
+  annotationProcessor "org.parceler:parceler:${PARCELER_VERSION}"
 }
