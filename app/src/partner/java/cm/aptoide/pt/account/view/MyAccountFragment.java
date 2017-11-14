@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.account.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -39,6 +40,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.AptoideNotification;
 import cm.aptoide.pt.notification.NotificationAnalytics;
@@ -77,9 +79,21 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private CrashReport crashReport;
   private AccountNavigator accountNavigator;
+  private TabNavigator tabNavigator;
 
   public static Fragment newInstance() {
     return new MyAccountFragment();
+  }
+
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+
+    if (activity instanceof TabNavigator) {
+      tabNavigator = (TabNavigator) activity;
+    } else {
+      throw new IllegalStateException(
+          "Activity must implement " + TabNavigator.class.getSimpleName());
+    }
   }
 
   @Override public void onDestroy() {
@@ -150,7 +164,7 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
         .findViewById(R.id.more);
 
     attachPresenter(new MyAccountPresenter(this, accountManager, crashReport,
-        new MyAccountNavigator(getFragmentNavigator()),
+        new MyAccountNavigator(getFragmentNavigator(), tabNavigator),
         ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
         new LinksHandlerFactory(getContext()),
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
