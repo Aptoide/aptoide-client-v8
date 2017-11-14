@@ -5,29 +5,26 @@
 
 package cm.aptoide.pt.billing.payment;
 
-import android.content.SharedPreferences;
+import cm.aptoide.pt.billing.PaymentServiceSelector;
+import cm.aptoide.pt.preferences.Preferences;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
-import rx.Scheduler;
-import rx.Single;
 
 public class SharedPreferencesPaymentServiceSelector implements PaymentServiceSelector {
 
   private static final String SELECTED_SERVICE_TYPE = "SELECTED_SERVICE_TYPE";
   private final String defaultServiceType;
-  private final SharedPreferences preferences;
-  private final Scheduler scheduler;
+  private final Preferences preferences;
 
   public SharedPreferencesPaymentServiceSelector(String defaultServiceType,
-      SharedPreferences preferences, Scheduler scheduler) {
+      Preferences preferences) {
     this.defaultServiceType = defaultServiceType;
     this.preferences = preferences;
-    this.scheduler = scheduler;
   }
 
-  @Override public Single<PaymentService> selectedService(List<PaymentService> services) {
-    return getSelectedServiceName().flatMap(
+  @Override public Observable<PaymentService> getSelectedService(List<PaymentService> services) {
+    return getSelectedServiceName().flatMapSingle(
         serviceName -> getService(services, serviceName).switchIfEmpty(
             getService(services, defaultServiceType))
             .switchIfEmpty(Observable.just(services.get(0)))
@@ -36,15 +33,11 @@ public class SharedPreferencesPaymentServiceSelector implements PaymentServiceSe
   }
 
   @Override public Completable selectService(PaymentService service) {
-    return Completable.fromAction(() -> preferences.edit()
-        .putString(SELECTED_SERVICE_TYPE, service.getType())
-        .commit())
-        .subscribeOn(scheduler);
+    return preferences.save(SELECTED_SERVICE_TYPE, service.getType());
   }
 
-  private Single<String> getSelectedServiceName() {
-    return Single.fromCallable(() -> preferences.getString(SELECTED_SERVICE_TYPE, null))
-        .subscribeOn(scheduler);
+  private Observable<String> getSelectedServiceName() {
+    return preferences.getString(SELECTED_SERVICE_TYPE, null);
   }
 
   private Observable<PaymentService> getService(List<PaymentService> services, String serviceName) {

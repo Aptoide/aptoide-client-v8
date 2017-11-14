@@ -53,7 +53,17 @@ public class AuthorizationServiceV7 implements AuthorizationService {
         .toSingle()
         .flatMap(response -> {
 
+          if (response.raw()
+              .networkResponse() != null
+              && response.raw()
+              .networkResponse()
+              .code() == 304) {
+            return Single.error(
+                new IllegalStateException("Stale authorization for transaction " + transactionId));
+          }
+
           if (response.isSuccessful()) {
+
             if (response.body() != null && response.body()
                 .isOk()) {
               return Single.just(authorizationMapper.map(response.body()
@@ -67,11 +77,6 @@ public class AuthorizationServiceV7 implements AuthorizationService {
                 authorizationFactory.create(billingIdManager.generateAuthorizationId(), customerId,
                     null, Authorization.Status.NEW, null, null, null, null, null, transactionId,
                     null));
-          }
-
-          if (response.code() == 304) {
-            return Single.error(
-                new IllegalStateException("Server has outdated data. Can not return authorization."));
           }
 
           return Single.just(

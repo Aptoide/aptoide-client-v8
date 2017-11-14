@@ -183,6 +183,7 @@ import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -584,9 +585,11 @@ public abstract class AptoideApplication extends Application {
       okHttpClientBuilder.readTimeout(45, TimeUnit.SECONDS);
       okHttpClientBuilder.writeTimeout(45, TimeUnit.SECONDS);
 
-      final File cacheDirectory = new File("/");
-      final int cacheMaxSize = 10 * 1024 * 1024;
-      okHttpClientBuilder.cache(new Cache(cacheDirectory, cacheMaxSize)); // 10 MiB
+      final Cache cache = new Cache(getCacheDir(), 10 * 1024 * 1024);
+      try {
+        cache.evictAll();
+      } catch (IOException ignored) {}
+      okHttpClientBuilder.cache(cache); // 10 MiB
 
       okHttpClientBuilder.addInterceptor(new POSTCacheInterceptor(getHttpClientCache()));
       okHttpClientBuilder.addInterceptor(getUserAgentInterceptor());
@@ -821,7 +824,7 @@ public abstract class AptoideApplication extends Application {
               getBodyInterceptorPoolV7(), getAccountSettingsBodyInterceptorPoolV7(),
               new HashMap<>(), WebService.getDefaultConverter(), CrashReport.getInstance(),
               getAdyen(), getPurchaseFactory(), Build.VERSION_CODES.JELLY_BEAN,
-              Build.VERSION_CODES.JELLY_BEAN, getAuthenticationPersistence());
+              Build.VERSION_CODES.JELLY_BEAN, getAuthenticationPersistence(), getPreferences());
     }
     return billingPool;
   }

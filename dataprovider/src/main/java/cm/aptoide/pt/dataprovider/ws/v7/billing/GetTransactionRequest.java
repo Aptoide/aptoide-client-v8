@@ -30,7 +30,7 @@ public class GetTransactionRequest extends V7<Response<GetTransactionRequest.Res
     return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
         : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
         + "://"
-        + BuildConfig.APTOIDE_WEB_SERVICES_READ_V7_HOST
+        + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
         + "/api/7/";
   }
 

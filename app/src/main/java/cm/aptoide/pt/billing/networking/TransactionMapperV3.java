@@ -45,15 +45,13 @@ public class TransactionMapperV3 {
         status = Transaction.Status.FAILED;
     }
 
-    return transactionFactory.create(transactionId, customerId,
-        billingIdManager.generateServiceId(transactionResponse.getServiceId()), productId, status);
+    return transactionFactory.create(transactionId, customerId, productId, status);
   }
 
   private Transaction getErrorTransaction(List<ErrorResponse> errors, String customerId,
       String transactionId, String serviceId, String productId) {
 
-    Transaction transaction =
-        transactionFactory.create(transactionId, customerId, serviceId, productId,
+    Transaction transaction = transactionFactory.create(transactionId, customerId, productId,
             Transaction.Status.FAILED);
 
     if (errors == null || errors.isEmpty()) {
@@ -65,17 +63,17 @@ public class TransactionMapperV3 {
     if ("PRODUCT-204".equals(error.code)
         || "PRODUCT-209".equals(error.code)
         || "PRODUCT-214".equals(error.code)) {
-      transaction = transactionFactory.create(transactionId, customerId, serviceId, productId,
+      transaction = transactionFactory.create(transactionId, customerId, productId,
           Transaction.Status.PENDING_SERVICE_AUTHORIZATION);
     }
 
     if ("PRODUCT-200".equals(error.code)) {
-      transaction = transactionFactory.create(transactionId, customerId, serviceId, productId,
+      transaction = transactionFactory.create(transactionId, customerId, productId,
           Transaction.Status.COMPLETED);
     }
 
     if ("PRODUCT-216".equals(error.code) || "SYS-1".equals(error.code)) {
-      transaction = transactionFactory.create(transactionId, customerId, serviceId, productId,
+      transaction = transactionFactory.create(transactionId, customerId, productId,
           Transaction.Status.PROCESSING);
     }
 

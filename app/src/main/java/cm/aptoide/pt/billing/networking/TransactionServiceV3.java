@@ -63,13 +63,13 @@ public class TransactionServiceV3 implements TransactionService {
                       productId));
             }
             return Single.just(transactionFactory.create(billingIdManager.generateTransactionId(
-                billingIdManager.resolveProductId(productId)), customerId,
-                billingIdManager.generateServiceId(1), productId, Transaction.Status.COMPLETED));
+                billingIdManager.resolveProductId(productId)), customerId, productId,
+                Transaction.Status.COMPLETED));
           }
 
           return Single.just(transactionFactory.create(
               billingIdManager.generateTransactionId(billingIdManager.resolveProductId(productId)),
-              customerId, billingIdManager.generateServiceId(1), productId,
+              customerId, productId,
               Transaction.Status.FAILED));
         });
   }
@@ -85,16 +85,16 @@ public class TransactionServiceV3 implements TransactionService {
           if (response.isOk()) {
             if (response.isPaid()) {
               return transactionFactory.create(billingIdManager.generateTransactionId(
-                  billingIdManager.resolveProductId(productId)), customerId, serviceId, productId,
+                  billingIdManager.resolveProductId(productId)), customerId, productId,
                   Transaction.Status.PENDING_SERVICE_AUTHORIZATION);
             }
             return transactionFactory.create(billingIdManager.generateTransactionId(
-                billingIdManager.resolveProductId(productId)), customerId,
-                billingIdManager.generateServiceId(1), productId, Transaction.Status.COMPLETED);
+                billingIdManager.resolveProductId(productId)), customerId, productId,
+                Transaction.Status.COMPLETED);
           }
           return transactionFactory.create(
               billingIdManager.generateTransactionId(billingIdManager.resolveProductId(productId)),
-              customerId, billingIdManager.generateServiceId(1), productId,
+              customerId, productId,
               Transaction.Status.FAILED);
         });
   }

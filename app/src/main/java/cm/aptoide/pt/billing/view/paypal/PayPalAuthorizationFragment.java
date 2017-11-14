@@ -12,8 +12,8 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
-import cm.aptoide.pt.billing.view.BillingNavigator;
 import cm.aptoide.pt.billing.view.BillingActivity;
+import cm.aptoide.pt.billing.view.BillingNavigator;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.permission.PermissionServiceFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
@@ -23,7 +23,6 @@ import rx.android.schedulers.AndroidSchedulers;
 public class PayPalAuthorizationFragment extends PermissionServiceFragment implements PayPalView {
 
   private ProgressBar progressBar;
-  private RxAlertDialog unknownErrorDialog;
   private RxAlertDialog networkErrorDialog;
 
   private Billing billing;
@@ -53,10 +52,6 @@ public class PayPalAuthorizationFragment extends PermissionServiceFragment imple
         new RxAlertDialog.Builder(getContext()).setMessage(R.string.connection_error)
             .setPositiveButton(R.string.ok)
             .build();
-    unknownErrorDialog =
-        new RxAlertDialog.Builder(getContext()).setMessage(R.string.all_message_general_error)
-            .setPositiveButton(R.string.ok)
-            .build();
 
     attachPresenter(
         new PayPalAuthorizationPresenter(this, billing, billingAnalytics, billingNavigator,
@@ -79,8 +74,6 @@ public class PayPalAuthorizationFragment extends PermissionServiceFragment imple
     progressBar = null;
     networkErrorDialog.dismiss();
     networkErrorDialog = null;
-    unknownErrorDialog.dismiss();
-    unknownErrorDialog = null;
     super.onDestroyView();
   }
 
@@ -93,19 +86,13 @@ public class PayPalAuthorizationFragment extends PermissionServiceFragment imple
   }
 
   @Override public void showNetworkError() {
-    if (!networkErrorDialog.isShowing() && !unknownErrorDialog.isShowing()) {
+    if (!networkErrorDialog.isShowing()) {
       networkErrorDialog.show();
     }
   }
 
-  @Override public void showUnknownError() {
-    if (!networkErrorDialog.isShowing() && !unknownErrorDialog.isShowing()) {
-      unknownErrorDialog.show();
-    }
-  }
-
   @Override public Observable<Void> errorDismisses() {
-    return Observable.merge(networkErrorDialog.dismisses(), unknownErrorDialog.dismisses())
+    return networkErrorDialog.dismisses()
         .map(dialogInterface -> null);
   }
 }
