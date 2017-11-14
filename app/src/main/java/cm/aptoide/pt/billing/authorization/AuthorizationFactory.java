@@ -4,7 +4,6 @@ import cm.aptoide.pt.billing.Price;
 
 public class AuthorizationFactory {
 
-  public static final String WEB = "WEB";
   public static final String PAYPAL_SDK = "PAYPAL_SDK";
   public static final String ADYEN_SDK = "ADYEN_SDK";
 
@@ -17,8 +16,6 @@ public class AuthorizationFactory {
     }
 
     switch (type) {
-      case WEB:
-        return new WebAuthorization(id, customerId, status, url, redirectUrl, transactionId);
       case PAYPAL_SDK:
         return new PayPalAuthorization(id, customerId, status, transactionId, metadata, price,
             description);
@@ -36,10 +33,6 @@ public class AuthorizationFactory {
 
     if (authorization instanceof PayPalAuthorization) {
       return PAYPAL_SDK;
-    }
-
-    if (authorization instanceof WebAuthorization) {
-      return WEB;
     }
 
     return null;

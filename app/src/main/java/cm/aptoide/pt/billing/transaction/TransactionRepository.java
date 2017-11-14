@@ -50,8 +50,9 @@ public class TransactionRepository {
             customerId -> transactionPersistence.getTransaction(customerId, productId));
   }
 
-  public Single<List<Transaction>> getOtherTransactions(String transactionId, String productId) {
-    return transactionPersistence.getOtherTransactions(transactionId, productId);
+  public Single<List<Transaction>> getOtherTransactions(String customerId, String productId,
+      String transactionId) {
+    return transactionPersistence.getOtherTransactions(transactionId, productId, customerId);
   }
 
   public Completable removeTransaction(String transactionId) {

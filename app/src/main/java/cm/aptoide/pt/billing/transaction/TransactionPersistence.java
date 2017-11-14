@@ -13,5 +13,6 @@ public interface TransactionPersistence {
 
   Completable removeTransaction(String transactionId);
 
-  Single<List<Transaction>> getOtherTransactions(String transactionId, String productId);
+  Single<List<Transaction>> getOtherTransactions(String transactionId, String productId,
+      String customerId);
 }

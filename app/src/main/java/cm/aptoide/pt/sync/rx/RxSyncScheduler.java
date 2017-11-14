@@ -19,7 +19,7 @@ public class RxSyncScheduler implements SyncScheduler {
     this.consoleLogger = consoleLogger;
   }
 
-  @Override public void schedule(Sync sync) {
+  @Override public synchronized void schedule(Sync sync) {
     if (sync.isPeriodic()) {
       schedulePeriodicSync(sync);
     } else {
@@ -27,7 +27,7 @@ public class RxSyncScheduler implements SyncScheduler {
     }
   }
 
-  @Override public void cancel(String syncId) {
+  @Override public synchronized void cancel(String syncId) {
     final Subscription subscription = subscriptionStorage.remove(syncId);
 
     if (subscription != null) {
@@ -35,7 +35,7 @@ public class RxSyncScheduler implements SyncScheduler {
     }
   }
 
-  @Override public void reschedule(Sync sync) {
+  @Override public synchronized void reschedule(Sync sync) {
     if (isSyncScheduled(sync.getId())) {
       cancel(sync.getId());
       schedule(sync);
@@ -56,9 +56,10 @@ public class RxSyncScheduler implements SyncScheduler {
 
     subscriptionStorage.put(sync.getId(),
         Observable.interval(sync.getTrigger(), sync.getInterval(), TimeUnit.MILLISECONDS)
-            .flatMapCompletable(__ -> sync.execute()
+            .switchMap(__ -> sync.execute()
                 .doOnError(throwable -> consoleLogger.log(throwable))
-                .onErrorComplete())
+                .onErrorComplete()
+                .toObservable())
             .subscribe(__ -> {
             }, throwable -> {
               throw new OnErrorNotImplementedException(throwable);

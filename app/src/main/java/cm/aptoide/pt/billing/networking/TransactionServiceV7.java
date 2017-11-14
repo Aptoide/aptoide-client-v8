@@ -51,7 +51,18 @@ public class TransactionServiceV7 implements TransactionService {
             .observe())
         .toSingle()
         .flatMap(response -> {
+
+          if (response.raw()
+              .networkResponse() != null
+              && response.raw()
+              .networkResponse()
+              .code() == 304) {
+            return Single.error(
+                new IllegalStateException("Stale transaction for product " + productId));
+          }
+
           if (response.isSuccessful()) {
+
             final GetTransactionRequest.ResponseBody responseBody = response.body();
             if (responseBody != null && responseBody.isOk()) {
               return Single.just(transactionMapper.map(responseBody.getData()));
@@ -62,17 +73,12 @@ public class TransactionServiceV7 implements TransactionService {
           if (response.code() == 404) {
             return Single.just(
                 transactionFactory.create(billingIdManager.generateTransactionId(), customerId,
-                    billingIdManager.generateServiceId(), productId, Transaction.Status.NEW));
-          }
-
-          if (response.code() == 304) {
-            return Single.error(
-                new IllegalStateException("Server has outdated data. Can not return transaction."));
+                    productId, Transaction.Status.NEW));
           }
 
           return Single.just(
               transactionFactory.create(billingIdManager.generateTransactionId(), customerId,
-                  billingIdManager.generateServiceId(), productId, Transaction.Status.FAILED));
+                  productId, Transaction.Status.FAILED));
         });
   }
 
@@ -89,7 +95,7 @@ public class TransactionServiceV7 implements TransactionService {
           }
           return Single.just(
               transactionFactory.create(billingIdManager.generateTransactionId(), customerId,
-                  billingIdManager.generateServiceId(), productId, Transaction.Status.FAILED));
+                  productId, Transaction.Status.FAILED));
         });
   }
 
@@ -106,7 +112,7 @@ public class TransactionServiceV7 implements TransactionService {
           }
           return Single.just(
               transactionFactory.create(billingIdManager.generateTransactionId(), customerId,
-                  billingIdManager.generateServiceId(), productId, Transaction.Status.FAILED));
+                  productId, Transaction.Status.FAILED));
         });
   }
 }

@@ -52,9 +52,9 @@ public class PayPalAuthorizationPresenter implements Presenter {
     view.getLifecycle()
         .first(event -> event.equals(View.LifecycleEvent.RESUME))
         .doOnNext(__ -> view.showLoading())
-        .flatMap(created -> billing.getAuthorization(sku))
-        .first(authorization -> authorization instanceof PayPalAuthorization
-            && authorization.isPending())
+        .flatMap(created -> billing.getPayment(sku))
+        .first(payment -> payment.isPendingAuthorization())
+        .map(payment -> payment.getAuthorization())
         .cast(PayPalAuthorization.class)
         .delay(100, TimeUnit.MILLISECONDS)
         .observeOn(viewScheduler)
@@ -71,11 +71,9 @@ public class PayPalAuthorizationPresenter implements Presenter {
   private void onViewCreatedCheckAuthorizationActive() {
     view.getLifecycle()
         .first(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> billing.getAuthorization(sku))
-        .first(authorization -> authorization instanceof PayPalAuthorization
-            && authorization.isActive())
-        .cast(PayPalAuthorization.class)
-        .doOnNext(authorization -> analytics.sendAuthorizationSuccessEvent(serviceName))
+        .flatMap(created -> billing.getPayment(sku))
+        .first(payment -> payment.isCompleted())
+        .doOnNext(payment -> analytics.sendAuthorizationSuccessEvent(payment))
         .observeOn(viewScheduler)
         .doOnNext(__ -> {
           popView();
@@ -88,12 +86,11 @@ public class PayPalAuthorizationPresenter implements Presenter {
   private void onViewCreatedCheckAuthorizationFailed() {
     view.getLifecycle()
         .first(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> billing.getAuthorization(sku))
-        .first(authorization -> authorization instanceof PayPalAuthorization
-            && authorization.isFailed())
+        .flatMap(created -> billing.getPayment(sku))
+        .first(payment -> payment.isFailed())
         .cast(PayPalAuthorization.class)
         .observeOn(viewScheduler)
-        .doOnNext(__ -> view.showUnknownError())
+        .doOnNext(__ -> popViewWithError())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> showError(throwable));
@@ -102,7 +99,7 @@ public class PayPalAuthorizationPresenter implements Presenter {
   private void onViewCreatedCheckAuthorizationProcessing() {
     view.getLifecycle()
         .first(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> billing.getAuthorization(sku))
+        .flatMap(created -> billing.getPayment(sku))
         .first(authorization -> authorization.isProcessing())
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showLoading())
@@ -140,10 +137,7 @@ public class PayPalAuthorizationPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.errorDismisses())
-        .doOnNext(product -> {
-          analytics.sendAuthorizationErrorEvent(serviceName);
-          billingNavigator.popView();
-        })
+        .doOnNext(product -> popViewWithError())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> showError(throwable));
@@ -156,16 +150,20 @@ public class PayPalAuthorizationPresenter implements Presenter {
 
   private void showUnknownError() {
     view.hideLoading();
-    view.showUnknownError();
   }
 
   private void showError(Throwable throwable) {
-    view.hideLoading();
-
     if (throwable instanceof IOException) {
+      view.hideLoading();
       view.showNetworkError();
     } else {
-      view.showUnknownError();
+      popViewWithError();
     }
+  }
+
+  private void popViewWithError() {
+    analytics.sendAuthorizationErrorEvent(serviceName);
+    view.hideLoading();
+    billingNavigator.popView();
   }
 }

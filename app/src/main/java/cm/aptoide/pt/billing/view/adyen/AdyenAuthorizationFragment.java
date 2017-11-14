@@ -13,8 +13,8 @@ import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.payment.Adyen;
-import cm.aptoide.pt.billing.view.BillingNavigator;
 import cm.aptoide.pt.billing.view.BillingActivity;
+import cm.aptoide.pt.billing.view.BillingNavigator;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.permission.PermissionServiceFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
@@ -29,7 +29,6 @@ public class AdyenAuthorizationFragment extends PermissionServiceFragment
 
   private Billing billing;
   private ProgressBar progressBar;
-  private RxAlertDialog unknownErrorDialog;
   private RxAlertDialog networkErrorDialog;
   private BillingNavigator navigator;
   private BillingAnalytics analytics;
@@ -61,11 +60,6 @@ public class AdyenAuthorizationFragment extends PermissionServiceFragment
 
     networkErrorDialog =
         new RxAlertDialog.Builder(getContext()).setMessage(R.string.connection_error)
-            .setPositiveButton(R.string.ok)
-            .build();
-
-    unknownErrorDialog =
-        new RxAlertDialog.Builder(getContext()).setMessage(R.string.all_message_general_error)
             .setPositiveButton(R.string.ok)
             .build();
 
@@ -104,8 +98,6 @@ public class AdyenAuthorizationFragment extends PermissionServiceFragment
     progressBar = null;
     networkErrorDialog.dismiss();
     networkErrorDialog = null;
-    unknownErrorDialog.dismiss();
-    unknownErrorDialog = null;
     super.onDestroyView();
   }
 
@@ -118,19 +110,13 @@ public class AdyenAuthorizationFragment extends PermissionServiceFragment
   }
 
   @Override public Observable<Void> errorDismisses() {
-    return Observable.merge(networkErrorDialog.dismisses(), unknownErrorDialog.dismisses())
+    return networkErrorDialog.dismisses()
         .map(dialogInterface -> null);
   }
 
   @Override public void showNetworkError() {
-    if (!networkErrorDialog.isShowing() && !unknownErrorDialog.isShowing()) {
+    if (!networkErrorDialog.isShowing()) {
       networkErrorDialog.show();
-    }
-  }
-
-  @Override public void showUnknownError() {
-    if (!networkErrorDialog.isShowing() && !unknownErrorDialog.isShowing()) {
-      unknownErrorDialog.show();
     }
   }
 
