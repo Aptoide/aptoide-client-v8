@@ -7,7 +7,7 @@
   <string name="badgedialog_message_tin"> Congratulations!%s\nYou got the tin medal, because you reached: </string>
   <string name="badgedialog_message_tin_1">Store Created</string>
 
-  <string name="badgedialog_title_bronze">Bronze Store</string>
+  <string name="badgedialog_title_bronze">Bronze medal</string>
   <string name="badgedialog_message_bronze"> Congratulations!%s\nYou got the bronze medal, because you reached: </string>
   <string name="badgedialog_message_bronze_lock">Keep trying!%s\nTo unlock the bronze medal, you must reach:</string>
   <string name="badgedialog_message_bronze_1">50 apps</string>
@@ -15,7 +15,7 @@
   <string name="badgedialog_message_bronze_3">500 followers</string>
   <string name="badgedialog_message_bronze_4">100 reviews</string>
 
-  <string name="badgedialog_title_silver">Silver Store</string>
+  <string name="badgedialog_title_silver">Silver medal</string>
   <string name="badgedialog_message_silver"> Congratulations!%s\nYou got the silver medal, because you reached: </string>
   <string name="badgedialog_message_silver_lock">Keep trying!%s\nTo unlock the silver medal, you must reach:</string>
   <string name="badgedialog_message_silver_1">250 apps</string>
@@ -24,7 +24,7 @@
   <string name="badgedialog_message_silver_4">1 000 reviews</string>
 
 
-  <string name="badgedialog_title_gold">Gold Store</string>
+  <string name="badgedialog_title_gold">Gold medal</string>
   <string name="badgedialog_message_gold"> Congratulations!%s\nYou got the gold medal, because you reached: </string>
   <string name="badgedialog_message_gold_lock">Keep trying!%s\nTo unlock the gold medal, you must reach:</string>
   <string name="badgedialog_message_gold_1">800 apps</string>
