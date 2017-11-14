@@ -194,7 +194,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/reviews"
         tools:textAllCaps="true"
-        style="Aptoide.TextView.Medium.S"
+        style="@style/Aptoide.TextView.Medium.S"
         />
   </android.support.constraint.ConstraintLayout>
 
