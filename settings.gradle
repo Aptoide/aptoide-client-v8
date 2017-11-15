@@ -10,5 +10,4 @@ include 'app',
     ':utils',
     ':aptoide-account-manager',
     ':aptoide-database',
-    ':downloadmanager',
-    ':spotandshare'
+    ':downloadmanager'
