@@ -21,21 +21,19 @@ public class ManageUserPresenter implements Presenter {
   private final AptoideAccountManager accountManager;
   private final ThrowableToStringMapper errorMapper;
   private final ManageUserNavigator navigator;
-  private final ManageUserFragment.ViewModel userData;
   private final boolean isEditProfile;
   private final UriToPathResolver uriToPathResolver;
   private final boolean showPrivacyConfigs;
 
   public ManageUserPresenter(ManageUserView view, CrashReport crashReport,
       AptoideAccountManager accountManager, ThrowableToStringMapper errorMapper,
-      ManageUserNavigator navigator, ManageUserFragment.ViewModel userData, boolean isEditProfile,
+      ManageUserNavigator navigator, boolean isEditProfile,
       UriToPathResolver uriToPathResolver, boolean showPrivacyConfigs) {
     this.view = view;
     this.crashReport = crashReport;
     this.accountManager = accountManager;
     this.errorMapper = errorMapper;
     this.navigator = navigator;
-    this.userData = userData;
     this.isEditProfile = isEditProfile;
     this.uriToPathResolver = uriToPathResolver;
     this.showPrivacyConfigs = showPrivacyConfigs;
@@ -55,11 +53,6 @@ public class ManageUserPresenter implements Presenter {
             .toSingle())
         .map(userAccount -> {
 
-          // in case of configuration changes, after an edition, this is prefered
-          if (userData.hasData()) {
-            return userData;
-          }
-
           // if it is an edition and not after a configuration change event
           // after a configuration change this values could differ
           if (isEditProfile) {
@@ -73,8 +66,6 @@ public class ManageUserPresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(data -> {
-          view.loadImageStateless(data.getPictureUri());
-          view.setUserName(data.getName());
         }, err -> crashReport.log(err));
   }
 

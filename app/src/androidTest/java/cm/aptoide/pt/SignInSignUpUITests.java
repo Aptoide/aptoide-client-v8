@@ -19,7 +19,6 @@ import cm.aptoide.accountmanager.AccountPersistence;
 import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.CredentialsValidator;
 import cm.aptoide.pt.view.MainActivity;
-import java.io.IOException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -65,7 +64,7 @@ public class SignInSignUpUITests {
         GeneralLocation.CENTER_RIGHT, Press.FINGER);
   }
 
-  @Before public void setUp() throws IOException, InterruptedException {
+  @Before public void setUp() {
     //dataPersistMock = mock(AccountPersistence.class);
     //serviceMock = mock(AccountService.class);
     //credentialsValidatorMock = mock(CredentialsValidator.class);
@@ -80,95 +79,95 @@ public class SignInSignUpUITests {
 
 
 
-  @Test public void signInEmptyEmail() throws InterruptedException {
+  @Test public void signInEmptyEmail() {
     goToMyAccount();
     performLogin("", PASS);
     onView(withText(R.string.no_email_error_message)).check(matches(isDisplayed()));
   }
 
-  @Test public void signInEmptyPasswordSignIn() throws InterruptedException {
+  @Test public void signInEmptyPasswordSignIn() {
     goToMyAccount();
     performLogin(LOGINEMAIL, "");
     onView(withText(R.string.no_pass_error_message)).check(matches(isDisplayed()));
   }
 
-  @Test public void signInEmpty() throws InterruptedException {
+  @Test public void signInEmpty() {
     goToMyAccount();
     performLogin("", "");
     onView(withText(R.string.no_email_and_pass_error_message)).check(matches(isDisplayed()));
   }
 
-  @Test public void signInWrong() throws InterruptedException {
+  @Test public void signInWrong() {
     goToMyAccount();
     performLogin(LOGINEMAIL, "wrongpass");
     onView(withText(R.string.error_invalid_grant)).check(matches(isDisplayed()));
   }
 
-  @Test public void signUpInvalidEmail() throws InterruptedException {
+  @Test public void signUpInvalidEmail() {
     goToMyAccount();
     performSignUp("randomemail", PASS);
     onView(withText(R.string.ws_error_IARG_106)).check(matches(isDisplayed()));
   }
 
-  @Test public void signUpInvalidPassword() throws InterruptedException {
+  @Test public void signUpInvalidPassword() {
     goToMyAccount();
     performSignUp("randomemail", "igjsi1");
     onView(withText(R.string.password_validation_text)).check(matches(isDisplayed()));
   }
 
-  @Test public void signUpEmptyEmail() throws InterruptedException {
+  @Test public void signUpEmptyEmail() {
     goToMyAccount();
     performSignUp("", PASS);
     onView(withText(R.string.no_email_error_message)).check(matches(isDisplayed()));
   }
 
-  @Test public void signUpEmptyPassword() throws InterruptedException {
+  @Test public void signUpEmptyPassword() {
     goToMyAccount();
     performSignUp(LOGINEMAIL, "");
     onView(withText(R.string.no_pass_error_message)).check(matches(isDisplayed()));
   }
 
-  @Test public void signUpEmpty() throws InterruptedException {
+  @Test public void signUpEmpty() {
     goToMyAccount();
     performSignUp("", "");
     onView(withText(R.string.no_email_and_pass_error_message)).check(matches(isDisplayed()));
   }
 
-  @Test public void signUpEmailExists() throws InterruptedException {
+  @Test public void signUpEmailExists() {
     goToMyAccount();
     performSignUp(LOGINEMAIL, PASS);
     onView(withText(R.string.ws_error_WOP_9)).check(matches(isDisplayed()));
   }
 
-  @Test public void signUp() throws InterruptedException {
+  @Test public void signUp() {
     goToMyAccount();
     performSignUp(SIGNUPEMAILTEST, PASS);
     completeSignUp();
     onView(withId(R.id.action_search)).check(matches(isDisplayed()));
   }
 
-  @Test public void signUpPrivateUser() throws InterruptedException {
+  @Test public void signUpPrivateUser() {
     goToMyAccount();
     performSignUp(SIGNUPEMAILTEST, PASS);
     completeSignUpPrivate();
     onView(withId(R.id.action_search)).check(matches(isDisplayed()));
   }
 
-  @Test public void signUpMoreInfoPublicUser() throws InterruptedException {
+  @Test public void signUpMoreInfoPublicUser() {
     goToMyAccount();
     performSignUp(SIGNUPEMAILTEST, PASS);
     completeSignUpMoreInfoPublic();
     onView(withId(R.id.action_search)).check(matches(isDisplayed()));
   }
 
-  @Test public void signUpWithCreateStore() throws InterruptedException {
+  @Test public void signUpWithCreateStore() {
     goToMyAccount();
     performSignUp(SIGNUPEMAILTEST, PASS);
     completeSignUpWithStore();
     onView(withId(R.id.action_search)).check(matches(isDisplayed()));
   }
 
-  @Test public void signUpcreateStoreAfter() throws InterruptedException {
+  @Test public void signUpcreateStoreAfter() {
     goToMyAccount();
     performSignUp(SIGNUPEMAILTEST, PASS);
     completeSignUp();
@@ -179,7 +178,7 @@ public class SignInSignUpUITests {
   }
 
 
-  @Test public void signIn() throws InterruptedException {
+  @Test public void signIn() {
     goToMyAccount();
     performLogin(LOGINEMAIL, PASS);
     onView(withId(R.id.action_search)).check(matches(isDisplayed()));
@@ -302,7 +301,7 @@ public class SignInSignUpUITests {
     }
   }
 
-  private void performLogin(String email, String pass) throws InterruptedException {
+  private void performLogin(String email, String pass){
   /*  final Account accountMock = mock(Account.class);
     final AptoideCredentials credentials = new AptoideCredentials(LOGINEMAIL, PASS);
     Thread.sleep(500);
@@ -330,24 +329,16 @@ public class SignInSignUpUITests {
     }
   }
 
-  private void goToMyAccount() throws InterruptedException {
+  private void goToMyAccount() {
     onView(withId(R.id.toolbar)).perform(swipeRigthOnLeftMost());
     onView(withText(R.string.drawer_title_my_account)).perform(click());
   }
 
-  private void performSignUp(String email, String pass) throws InterruptedException {
+  private void performSignUp(String email, String pass) {
     onView(withId(R.id.show_join_aptoide_area)).perform(click());
     onView(withId(R.id.username)).perform(replaceText(email));
     onView(withId(R.id.password)).perform(replaceText(pass), closeSoftKeyboard());
     onView(withId(R.id.button_sign_up)).perform(click());
-  }
-
-  private void checkIfLoggedIn() {
-    onView(withId(R.id.toolbar)).perform(swipeRigthOnLeftMost());
-    onView(withId(R.id.profile_email_text)).check(matches(isDisplayed()));
-    onView(withId(R.id.profile_email_text)).check(matches(withText(LOGINEMAIL)));
-    onView(withId(R.id.profile_name_text)).check(matches(isDisplayed()));
-    onView(withId(R.id.toolbar)).perform(swipeLeft());
   }
 
   private void skipWizard() {
@@ -356,33 +347,45 @@ public class SignInSignUpUITests {
     onView(withId(R.id.skip_text)).perform(click());
   }
 
-  private void completeSignUp() throws InterruptedException {
-    onView(withId(R.id.create_user_username_inserted)).perform(replaceText("a1"));
-    onView(withId(R.id.create_user_create_profile)).perform(click());
-    onView(withId(R.id.create_store_skip)).perform(click());
-  }
-
-  private void completeSignUpPrivate() throws InterruptedException {
-    onView(withId(R.id.create_user_username_inserted)).perform(replaceText("a1"));
-    onView(withId(R.id.create_user_create_profile)).perform(click());
-    onView(withId(R.id.logged_in_private_button)).perform(click());
-    onView(withId(R.id.create_store_skip)).perform(click());
-  }
-
-  private void completeSignUpMoreInfoPublic() throws InterruptedException {
+  private void completeSignUp() {
     onView(withId(R.id.create_user_username_inserted)).perform(replaceText("a1"));
     onView(withId(R.id.create_user_create_profile)).perform(click());
     onView(withId(R.id.logged_in_continue)).perform(click());
+    onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
+    onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
     onView(withId(R.id.create_store_skip)).perform(click());
   }
 
-  private void completeSignUpWithStore() throws InterruptedException {
+  private void completeSignUpPrivate() {
     onView(withId(R.id.create_user_username_inserted)).perform(replaceText("a1"));
     onView(withId(R.id.create_user_create_profile)).perform(click());
+    onView(withId(R.id.logged_in_more_info_button)).perform(click());
+    onView(withId(R.id.logged_in_private_button)).perform(click());
+    onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
+    onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
+    onView(withId(R.id.create_store_skip)).perform(click());
+  }
+
+  private void completeSignUpMoreInfoPublic() {
+    onView(withId(R.id.create_user_username_inserted)).perform(replaceText("a1"));
+    onView(withId(R.id.create_user_create_profile)).perform(click());
+    onView(withId(R.id.logged_in_more_info_button)).perform(click());
+    onView(withId(R.id.logged_in_continue)).perform(click());
+    onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
+    onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
+    onView(withId(R.id.create_store_skip)).perform(click());
+  }
+
+  private void completeSignUpWithStore() {
+    onView(withId(R.id.create_user_username_inserted)).perform(replaceText("a1"));
+    onView(withId(R.id.create_user_create_profile)).perform(click());
+    onView(withId(R.id.logged_in_continue)).perform(click());
+    onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
+    onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
     createStore();
   }
 
-  private void createStore() throws InterruptedException {
+  private void createStore(){
     onView(withId(R.id.create_store_name)).perform(replaceText(STORENAME), closeSoftKeyboard());
     onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
     onView(withId(R.id.theme_selector)).perform(swipeUp());

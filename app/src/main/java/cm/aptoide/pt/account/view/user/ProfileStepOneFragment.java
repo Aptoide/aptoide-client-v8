@@ -33,6 +33,7 @@ public class ProfileStepOneFragment extends BaseToolbarFragment implements Profi
   private ProgressDialog waitDialog;
   private boolean externalLogin;
   private AccountNavigator accountNavigator;
+  
 
   public static ProfileStepOneFragment newInstance() {
     return new ProfileStepOneFragment();

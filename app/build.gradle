@@ -89,9 +89,6 @@ android {
 
     uitest {
       dimension "mode"
-      applicationIdSuffix"uitest"
-      versionName "8.5.1." + getDate()
-      versionCode project.DEV_VERSION_CODE.toInteger()
     }
 
     prod {

@@ -64,7 +64,6 @@ import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.cache.L2Cache;
-import cm.aptoide.pt.dataprovider.cache.POSTCacheInterceptor;
 import cm.aptoide.pt.dataprovider.cache.POSTCacheKeyAlgorithm;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
@@ -88,11 +87,9 @@ import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
-import cm.aptoide.pt.networking.BodyInterceptorV3;
 import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.networking.MultipartBodyInterceptor;
 import cm.aptoide.pt.networking.NoAuthenticationBodyInterceptorV3;
-import cm.aptoide.pt.networking.NoOpTokenInvalidator;
 import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.notification.NotificationIdsMapper;
@@ -145,7 +142,6 @@ import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -163,7 +159,6 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Named;
-import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
@@ -192,7 +187,7 @@ public abstract class AptoideApplication extends Application {
   @Inject AptoideAccountManager accountManager;
   @Inject @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7;
   @Inject @Named("web-v7") BodyInterceptor<BaseBody> bodyInterceptorWebV7;
-  private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3;
+  @Inject @Named("no-authentication-v3") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3;
   @Inject Preferences preferences;
   private cm.aptoide.pt.preferences.SecurePreferences securePreferences;
   private SecureCoderDecoder secureCodeDecoder;
@@ -207,12 +202,12 @@ public abstract class AptoideApplication extends Application {
   @Inject @Named("user-agent") Interceptor userAgentInterceptor;
   @Inject AndroidAccountProvider androidAccountProvider;
   private BillingAnalytics billingAnalytics;
-  private ObjectMapper nonNullObjectMapper;
-  private RequestBodyFactory requestBodyFactory;
+  @Inject ObjectMapper nonNullObjectMapper;
+  @Inject RequestBodyFactory requestBodyFactory;
   private ExternalBillingSerializer inAppBillingSerialzer;
   private PurchaseBundleMapper purchaseBundleMapper;
   private PaymentThrowableCodeMapper paymentThrowableCodeMapper;
-  private MultipartBodyInterceptor multipartBodyInterceptor;
+  @Inject @Named("multipart") MultipartBodyInterceptor multipartBodyInterceptor;
   private NotificationService pnpV1NotificationService;
   private NotificationCenter notificationCenter;
   private QManager qManager;
@@ -220,9 +215,9 @@ public abstract class AptoideApplication extends Application {
   private NotificationSyncScheduler notificationSyncScheduler;
   @Inject RootAvailabilityManager rootAvailabilityManager;
   private RootInstallationRetryHandler rootInstallationRetryHandler;
-  private RefreshTokenInvalidator tokenInvalidator;
+  @Inject RefreshTokenInvalidator tokenInvalidator;
   private FileManager fileManager;
-  private StoreManager storeManager;
+  @Inject StoreManager storeManager;
   private PackageRepository packageRepository;
   private AdsApplicationVersionCodeProvider applicationVersionCodeProvider;
   private AdsRepository adsRepository;
@@ -242,7 +237,7 @@ public abstract class AptoideApplication extends Application {
   private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
   @Inject AccountAnalytics accountAnalytics;
   private PageViewsAnalytics pageViewsAnalytics;
-  private BodyInterceptor<BaseBody> accountSettingsBodyInterceptorPoolV7;
+  @Inject @Named("account-settings-pool-v7") BodyInterceptor<BaseBody> accountSettingsBodyInterceptorPoolV7;
   private BodyInterceptor<BaseBody> accountSettingsBodyInterceptorWebV7;
   private Adyen adyen;
   private PurchaseFactory purchaseFactory;
@@ -412,10 +407,6 @@ public abstract class AptoideApplication extends Application {
 
   public TokenInvalidator getTokenInvalidator() {
     if (tokenInvalidator == null) {
-      tokenInvalidator =
-          new RefreshTokenInvalidator(getNoAuthenticationBodyInterceptorV3(), getDefaultClient(),
-              WebService.getDefaultConverter(), defaultSharedPreferences, getExtraId(),
-              new NoOpTokenInvalidator(), authenticationPersistence);
     }
     return tokenInvalidator;
   }
@@ -527,11 +518,6 @@ public abstract class AptoideApplication extends Application {
 
   public StoreManager getStoreManager() {
     if (storeManager == null) {
-      storeManager =
-          new StoreManager(accountManager, getDefaultClient(), WebService.getDefaultConverter(),
-              getMultipartBodyInterceptor(), getBodyInterceptorV3(),
-              getAccountSettingsBodyInterceptorPoolV7(), defaultSharedPreferences,
-              getTokenInvalidator(), getRequestBodyFactory(), getNonNullObjectMapper());
     }
     return storeManager;
   }
@@ -594,22 +580,6 @@ public abstract class AptoideApplication extends Application {
 
   public OkHttpClient getDefaultClient() {
     if (defaultClient == null) {
-      final OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
-      okHttpClientBuilder.readTimeout(45, TimeUnit.SECONDS);
-      okHttpClientBuilder.writeTimeout(45, TimeUnit.SECONDS);
-
-      final File cacheDirectory = new File("/");
-      final int cacheMaxSize = 10 * 1024 * 1024;
-      okHttpClientBuilder.cache(new Cache(cacheDirectory, cacheMaxSize)); // 10 MiB
-
-      okHttpClientBuilder.addInterceptor(new POSTCacheInterceptor(getHttpClientCache()));
-      okHttpClientBuilder.addInterceptor(getUserAgentInterceptor());
-
-      if (ToolboxManager.isToolboxEnableRetrofitLogs(defaultSharedPreferences)) {
-        okHttpClientBuilder.addInterceptor(retrofitLogInterceptor);
-      }
-
-      defaultClient = okHttpClientBuilder.build();
     }
     return defaultClient;
   }
@@ -910,8 +880,7 @@ public abstract class AptoideApplication extends Application {
 
   public BodyInterceptor<BaseBody> getAccountSettingsBodyInterceptorPoolV7() {
     if (accountSettingsBodyInterceptorPoolV7 == null) {
-      accountSettingsBodyInterceptorPoolV7 =
-          new AccountSettingsBodyInterceptorV7(getBodyInterceptorPoolV7(), getLocalAdultContent());
+
     }
     return accountSettingsBodyInterceptorPoolV7;
   }
@@ -926,19 +895,12 @@ public abstract class AptoideApplication extends Application {
 
   public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getBodyInterceptorV3() {
     if (bodyInterceptorV3 == null) {
-      bodyInterceptorV3 =
-          new BodyInterceptorV3(idsRepository, getAptoideMd5sum(), getAptoidePackage(),
-              getQManager(), defaultSharedPreferences, BodyInterceptorV3.RESPONSE_MODE_JSON,
-              Build.VERSION.SDK_INT, getNetworkOperatorManager(), authenticationPersistence);
     }
     return bodyInterceptorV3;
   }
 
   public BodyInterceptor<HashMapNotNull<String, RequestBody>> getMultipartBodyInterceptor() {
     if (multipartBodyInterceptor == null) {
-      multipartBodyInterceptor =
-          new MultipartBodyInterceptor(idsRepository, getRequestBodyFactory(),
-              authenticationPersistence);
     }
     return multipartBodyInterceptor;
   }
@@ -952,8 +914,6 @@ public abstract class AptoideApplication extends Application {
 
   public ObjectMapper getNonNullObjectMapper() {
     if (nonNullObjectMapper == null) {
-      nonNullObjectMapper = new ObjectMapper();
-      nonNullObjectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     }
     return nonNullObjectMapper;
   }

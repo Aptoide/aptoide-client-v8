@@ -3,7 +3,6 @@ package cm.aptoide.pt.account.view.store;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
@@ -20,7 +19,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.ImagePickerErrorHandler;
 import cm.aptoide.pt.account.view.ImagePickerNavigator;
@@ -32,6 +30,7 @@ import cm.aptoide.pt.account.view.exception.InvalidImageException;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.CompositePresenter;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -40,18 +39,15 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
 import cm.aptoide.pt.view.dialog.ImagePickerDialog;
-import cm.aptoide.pt.permission.AccountPermissionProvider;
-import cm.aptoide.pt.permission.PermissionProvider;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.Arrays;
+import javax.inject.Inject;
 import org.parceler.Parcel;
 import org.parceler.Parcels;
 import rx.Completable;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -79,15 +75,15 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   private ImagePickerDialog dialogFragment;
   private ImagePickerErrorHandler imagePickerErrorHandler;
   private ManageStoreNavigator manageStoreNavigator;
-  private ImageValidator imageValidator;
-  private ImagePickerNavigator imagePickerNavigator;
-  private UriToPathResolver uriToPathResolver;
-  private CrashReport crashReport;
-  private AccountPermissionProvider accountPermissionProvider;
+  @Inject ImageValidator imageValidator;
+  @Inject ImagePickerNavigator imagePickerNavigator;
+  @Inject UriToPathResolver uriToPathResolver;
+  @Inject AccountPermissionProvider accountPermissionProvider;
+  @Inject ImagePickerPresenter imagePickerPresenter;
+  @Inject ManageStorePresenter manageStorePresenter;
   private StoreManager storeManager;
   private String packageName;
-  private String fileProviderAuthority;
-  private PhotoFileGenerator photoFileGenerator;
+  @Inject PhotoFileGenerator photoFileGenerator;
 
   public static ManageStoreFragment newInstance(ViewModel storeModel, boolean goToHome) {
     Bundle args = new Bundle();
@@ -102,7 +98,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     currentModel = Parcels.unwrap(getArguments().getParcelable(EXTRA_STORE_MODEL));
-    goToHome = getArguments().getBoolean(EXTRA_GO_TO_HOME, true);
 
     dialogFragment =
         new ImagePickerDialog.Builder(getContext()).setViewRes(ImagePickerDialog.LAYOUT)
@@ -113,16 +108,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
             .build();
 
     imagePickerErrorHandler = new ImagePickerErrorHandler(getContext());
-    accountPermissionProvider = new AccountPermissionProvider(((PermissionProvider) getActivity()));
-    storeManager = ((AptoideApplication) getActivity().getApplicationContext()).getStoreManager();
-    packageName = (getActivity().getApplicationContext()).getPackageName();
-    fileProviderAuthority = BuildConfig.APPLICATION_ID + ".provider";
-    photoFileGenerator = new PhotoFileGenerator(getActivity(),
-        getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileProviderAuthority);
-    crashReport = CrashReport.getInstance();
-    uriToPathResolver = new UriToPathResolver(getActivity().getContentResolver());
-    imagePickerNavigator = new ImagePickerNavigator(getActivityNavigator());
-    imageValidator = new ImageValidator(ImageLoader.with(getActivity()), Schedulers.computation());
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     manageStoreNavigator =
@@ -223,6 +208,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
+    getFragmentComponent().inject(this);
     return inflater.inflate(R.layout.fragment_manage_store, container, false);
   }
 
@@ -254,16 +240,8 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   }
 
   private void attachPresenters() {
-    final ImagePickerPresenter imagePickerPresenter =
-        new ImagePickerPresenter(this, crashReport, accountPermissionProvider, photoFileGenerator,
-            imageValidator, AndroidSchedulers.mainThread(), uriToPathResolver, imagePickerNavigator,
-            getActivity().getContentResolver(), ImageLoader.with(getContext()));
 
-    final ManageStorePresenter presenter =
-        new ManageStorePresenter(this, crashReport, storeManager, getResources(), uriToPathResolver,
-            packageName, manageStoreNavigator, goToHome);
-
-    attachPresenter(new CompositePresenter(Arrays.asList(imagePickerPresenter, presenter)));
+    attachPresenter(new CompositePresenter(Arrays.asList(imagePickerPresenter, manageStorePresenter)));
   }
 
   public void setupThemeSelector() {

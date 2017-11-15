@@ -12,7 +12,6 @@ import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import cm.aptoide.pt.view.MainActivity;
-import java.io.IOException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -40,8 +39,6 @@ import static org.hamcrest.core.IsNot.not;
 public class SettingsUITests {
   private final String MATURE_APP = "Roullete Sex (Roleta do Sexo)";
   private final String MATURE_SEARCH = "kaoiproduct.roulletesexfree";
-  private final int WAIT_TIME = 550;
-  private final int LONGER_WAIT_TIME = 2000;
   private final int NUMBER_OF_RETRIES = 2;
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
@@ -52,31 +49,27 @@ public class SettingsUITests {
         GeneralLocation.CENTER_RIGHT, Press.FINGER);
   }
 
-  @Before public void setUp() throws IOException, InterruptedException {
+  @Before public void setUp() {
     if (isFirstTime()) {
       skipWizard();
     }
     logOutorGoBack();
   }
 
-  @Test public void matureTest() throws InterruptedException {
+  @Test public void matureTest() {
     goToSettings();
     onView(withId(R.id.list)).perform(RecyclerViewActions.scrollToPosition(11));
     onView(withId(R.id.list)).perform(RecyclerViewActions.actionOnItemAtPosition(11, click()));
-    Thread.sleep(WAIT_TIME);
     try {
       onView(withText(R.string.yes)).perform(click());
     } catch (NoMatchingViewException e) {
-      Thread.sleep(LONGER_WAIT_TIME);
       onView(withId(R.id.list)).perform(RecyclerViewActions.scrollToPosition(11));
       onView(withId(R.id.list)).perform(RecyclerViewActions.actionOnItemAtPosition(11, click()));
       onView(withText(R.string.yes)).perform(click());
     }
     pressBackButton();
-    Thread.sleep(WAIT_TIME);
     barOnlySearchApp(MATURE_SEARCH);
     onView(withId(R.id.search_src_text)).perform(pressImeActionButton());
-    Thread.sleep(LONGER_WAIT_TIME);
     try {
       onView(withText(MATURE_APP)).check(matches(isDisplayed()));
     } catch (AmbiguousViewMatcherException e) {
@@ -85,12 +78,9 @@ public class SettingsUITests {
     goToSettings();
     onView(withId(R.id.list)).perform(RecyclerViewActions.scrollToPosition(11));
     onView(withId(R.id.list)).perform(RecyclerViewActions.actionOnItemAtPosition(11, click()));
-    Thread.sleep(WAIT_TIME);
     pressBackButton();
-    Thread.sleep(WAIT_TIME);
     barOnlySearchApp(MATURE_SEARCH);
     onView(withId(R.id.search_src_text)).perform(pressImeActionButton());
-    Thread.sleep(LONGER_WAIT_TIME);
     try {
       onView(withText(MATURE_APP)).check(matches(not(isDisplayed())));
     } catch (NoMatchingViewException e1) {
@@ -110,7 +100,6 @@ public class SettingsUITests {
   private void logOutorGoBack() {
     try {
       onView(withId(R.id.toolbar)).perform(swipeRigthOnLeftMost());
-      Thread.sleep(WAIT_TIME);
       onView(withId(R.id.profile_email_text)).perform(click());
       onView(withId(R.id.toolbar)).perform(swipeLeft());
       goToMyAccount();
@@ -120,9 +109,8 @@ public class SettingsUITests {
     }
   }
 
-  private void goToMyAccount() throws InterruptedException {
+  private void goToMyAccount() {
     onView(withId(R.id.toolbar)).perform(swipeRigthOnLeftMost());
-    Thread.sleep(WAIT_TIME);
     onView(withText(R.string.drawer_title_my_account)).perform(click());
   }
 
@@ -133,15 +121,13 @@ public class SettingsUITests {
   }
 
 
-  private void barOnlySearchApp(String app) throws InterruptedException {
+  private void barOnlySearchApp(String app){
     onView(withId(R.id.action_search)).perform(click());
-    Thread.sleep(WAIT_TIME);
     onView(withId(R.id.search_src_text)).perform(replaceText(app));
   }
 
-  private void goToSettings() throws InterruptedException {
+  private void goToSettings(){
     onView(withId(R.id.toolbar)).perform(swipeRigthOnLeftMost());
-    Thread.sleep(WAIT_TIME);
     onView(withText(R.string.drawer_title_settings)).perform(click());
   }
 

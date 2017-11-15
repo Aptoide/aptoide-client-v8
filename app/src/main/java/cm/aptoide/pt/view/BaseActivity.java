@@ -3,6 +3,7 @@ package cm.aptoide.pt.view;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.presenter.View;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
@@ -28,7 +29,8 @@ public abstract class BaseActivity extends RxAppCompatActivity {
               ((AptoideApplication) getApplication()).getMarketName(),
               ((AptoideApplication) getApplication()).getAutoUpdateUrl(), (View) this,
               ((AptoideApplication) getApplication()).getDefaultThemeName(),
-              ((AptoideApplication) getApplication()).getDefaultStoreName(), firstCreated));
+              ((AptoideApplication) getApplication()).getDefaultStoreName(), firstCreated,
+              BuildConfig.APPLICATION_ID + ".provider"));
     }
     return activityComponent;
   }

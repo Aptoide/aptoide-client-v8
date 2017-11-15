@@ -3,6 +3,7 @@ package cm.aptoide.pt.view;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.os.Environment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
@@ -11,6 +12,11 @@ import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
 import cm.aptoide.pt.account.view.AccountNavigator;
+import cm.aptoide.pt.account.view.ImagePickerNavigator;
+import cm.aptoide.pt.account.view.PhotoFileGenerator;
+import cm.aptoide.pt.account.view.UriToPathResolver;
+import cm.aptoide.pt.account.view.store.ManageStoreNavigator;
+import cm.aptoide.pt.account.view.user.ManageUserNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -28,6 +34,8 @@ import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.notification.ContentPuller;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
+import cm.aptoide.pt.permission.AccountPermissionProvider;
+import cm.aptoide.pt.permission.PermissionProvider;
 import cm.aptoide.pt.presenter.MainPresenter;
 import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
@@ -57,10 +65,11 @@ import static android.content.Context.WINDOW_SERVICE;
   private final String defaultTheme;
   private final String defaultStoreName;
   private boolean firstCreated;
+  private final String fileProviderAuthority;
 
   public ActivityModule(AppCompatActivity activity, Intent intent, String marketName,
       String autoUpdateUrl, View view, String defaultTheme, String defaultStoreName,
-      boolean firstCreated) {
+      boolean firstCreated, String fileProviderAuthority) {
     this.activity = activity;
     this.intent = intent;
     this.marketName = marketName;
@@ -69,6 +78,7 @@ import static android.content.Context.WINDOW_SERVICE;
     this.firstCreated = firstCreated;
     this.defaultTheme = defaultTheme;
     this.defaultStoreName = defaultStoreName;
+    this.fileProviderAuthority = fileProviderAuthority;
   }
 
   @ActivityScope @Provides ApkFy provideApkFy(
@@ -133,4 +143,28 @@ import static android.content.Context.WINDOW_SERVICE;
     return new ScreenOrientationManager(activity, (WindowManager) activity.getSystemService(WINDOW_SERVICE));
   }
 
+  @ActivityScope @Provides AccountPermissionProvider provideAccountPermissionProvider(){
+    return new AccountPermissionProvider(((PermissionProvider) activity));
+  }
+
+  @ActivityScope @Provides PhotoFileGenerator providePhotoFileGenerator(){
+    return new PhotoFileGenerator(activity,
+        activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileProviderAuthority);
+  }
+
+  @ActivityScope @Provides UriToPathResolver provideUriToPathResolver(){
+    return new UriToPathResolver(activity.getContentResolver());
+  }
+
+  @ActivityScope @Provides ImagePickerNavigator provideImagePickerNavigator(){
+    return new ImagePickerNavigator((ActivityNavigator) activity);
+  }
+
+  @ActivityScope @Provides ManageStoreNavigator provideManageStoreNavigator(FragmentNavigator fragmentNavigator){
+    return new ManageStoreNavigator(fragmentNavigator, defaultStoreName, defaultTheme);
+  }
+
+  @ActivityScope @Provides ManageUserNavigator provideManageUserNavigator(FragmentNavigator fragmentNavigator){
+    return new ManageUserNavigator(fragmentNavigator, defaultStoreName, defaultTheme);
+  }
 }

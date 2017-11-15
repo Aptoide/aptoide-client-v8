@@ -30,6 +30,7 @@ import cm.aptoide.pt.account.AndroidAccountProvider;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.account.LoginPreferences;
+import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.Analytics;
@@ -49,9 +50,8 @@ import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.cache.L2Cache;
 import cm.aptoide.pt.dataprovider.cache.POSTCacheInterceptor;
 import cm.aptoide.pt.dataprovider.cache.POSTCacheKeyAlgorithm;
-import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
@@ -151,7 +151,6 @@ import javax.inject.Named;
 import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import rx.Completable;
 import rx.Single;
@@ -485,12 +484,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("secure") SharedPreferences secureSharedPreferences,
       @Named("default") SharedPreferences defaultSharedPreferences,
       SecureCoderDecoder secureCoderDecoder, AuthenticationPersistence authenticationPersistence,
-      TokenInvalidator tokenInvalidator, @Named("pool-v7")
+      RefreshTokenInvalidator tokenInvalidator, @Named("pool-v7")
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("web-v7")
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorWebV7,
       @Named("multipart")
-          BodyInterceptor<HashMapNotNull<String, RequestBody>> multipartBodyInterceptor,
+          MultipartBodyInterceptor multipartBodyInterceptor,
       AndroidAccountProvider androidAccountProvider, GoogleApiClient googleApiClient,
       @Named("no-authentication-v3") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> noAuthenticationBodyInterceptorV3,
       ObjectMapper objectMapper) {
@@ -692,7 +691,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @ApplicationTestScope @Provides StoreUtilsProxy provideStoreUtilsProxy(AptoideAccountManager accountManager,
       StoreAccessor storeAccessor, @Named("default") OkHttpClient httpClient,
-      @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences sharedPreferences, RefreshTokenInvalidator tokenInvalidator,
       @Named("account-settings-pool-v7")
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptor) {
     return new StoreUtilsProxy(accountManager, bodyInterceptor,
@@ -700,7 +699,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences);
   }
 
-  @ApplicationTestScope @Provides TokenInvalidator provideTokenInvalidator(
+  @ApplicationTestScope @Provides RefreshTokenInvalidator provideTokenInvalidator(
       @Named("default") OkHttpClient httpClient,
       @Named("default") SharedPreferences sharedPreferences,
       AuthenticationPersistence authenticationPersistence,
@@ -732,7 +731,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @ApplicationTestScope @Provides @Named("multipart")
-  BodyInterceptor<HashMapNotNull<String, RequestBody>> provideMultipartBodyInterceptor(
+  MultipartBodyInterceptor provideMultipartBodyInterceptor(
       IdsRepository idsRepository, AuthenticationPersistence authenticationPersistence,
       RequestBodyFactory requestBodyFactory) {
     return new MultipartBodyInterceptor(idsRepository, requestBodyFactory,
@@ -813,11 +812,23 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @ApplicationTestScope @Provides AccountAnalytics provideAccountAnalytics(@Named("pool-v7") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
-      @Named("default") OkHttpClient defaulClient, TokenInvalidator tokenInvalidator, @Named ("default") SharedPreferences defaultSharedPreferences,
+      @Named("default") OkHttpClient defaulClient, RefreshTokenInvalidator tokenInvalidator, @Named ("default") SharedPreferences defaultSharedPreferences,
       AppEventsLogger appEventsLogger, NavigationTracker navigationTracker){
     return new AccountAnalytics(Analytics.getInstance(), bodyInterceptorPoolV7,
         defaulClient, WebService.getDefaultConverter(), tokenInvalidator,
         BuildConfig.APPLICATION_ID, defaultSharedPreferences, appEventsLogger,
         navigationTracker);
+  }
+
+  @ApplicationTestScope @Provides StoreManager provideStoreManager(AptoideAccountManager accountManager, @Named("default") OkHttpClient okHttpClient,
+      @Named("multipart")MultipartBodyInterceptor multipartBodyInterceptor,
+      @Named("no-authentication-v3") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
+      @Named("account-settings-pool-v7") BodyInterceptor<BaseBody> accountSettingsBodyInterceptorPoolV7, @Named("default") SharedPreferences defaultSharedPreferences,
+      RefreshTokenInvalidator tokenInvalidator, RequestBodyFactory requestBodyFactory, ObjectMapper nonNullObjectMapper
+      ){
+    return new StoreManager(accountManager, okHttpClient, WebService.getDefaultConverter(),
+        multipartBodyInterceptor, bodyInterceptorV3,
+        accountSettingsBodyInterceptorPoolV7, defaultSharedPreferences,
+        tokenInvalidator, requestBodyFactory, nonNullObjectMapper);
   }
 }

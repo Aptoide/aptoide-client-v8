@@ -21,7 +21,6 @@ import android.support.test.uiautomator.UiSelector;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
 import cm.aptoide.pt.view.MainActivity;
-import java.io.IOException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -56,88 +55,68 @@ public class LandscapeUITests {
         GeneralLocation.CENTER_RIGHT, Press.FINGER);
   }
 
-  @Before public void setUp() throws IOException, InterruptedException {
+  @Before public void setUp() {
     if (isFirstTime()) {
       skipWizard();
     }
     logOutorGoBack();
   }
 
-  @Test public void landscapeHomeTab() throws InterruptedException {
+  @Test public void landscapeHomeTab() {
     Activity activity = mActivityRule.getActivity();
     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-    Thread.sleep(WAIT_TIME);
     onView(withText(R.string.stores)).perform(click());
     onView(withText(R.string.home_title)).perform(click());
-    Thread.sleep(WAIT_TIME);
     onView(withId(R.id.recycler_view)).perform(
         RecyclerViewActions.actionOnItemAtPosition(1, click()));
   }
 
-  @Test public void landscapeSearch() throws InterruptedException {
+  @Test public void landscapeSearch(){
     Activity activity = mActivityRule.getActivity();
     barOnlySearchApp(APP_TO_SEARCH);
-    Thread.sleep(WAIT_TIME);
     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-    Thread.sleep(LONGER_WAIT_TIME);
     barOnlySearchApp(APP_TO_SEARCH);
-    Thread.sleep(WAIT_TIME);
     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-    Thread.sleep(LONGER_WAIT_TIME);
     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-    Thread.sleep(WAIT_TIME);
     barOnlySearchApp(APP_TO_SEARCH);
-    Thread.sleep(WAIT_TIME);
     onView(withId(R.id.search_src_text)).perform(pressImeActionButton());
-    Thread.sleep(LONGER_WAIT_TIME);
     onView(withId(R.id.all_stores_result_list)).check(matches(isDisplayed()));
     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-    Thread.sleep(LONGER_WAIT_TIME);
     onView(withId(R.id.all_stores_result_list)).check(matches(isDisplayed()));
     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-    Thread.sleep(LONGER_WAIT_TIME);
     onView(withId(R.id.all_stores_result_list)).check(matches(isDisplayed()));
     onView(withId(R.id.all_stores_result_list)).perform(
         RecyclerViewActions.actionOnItemAtPosition(0, click()));
   }
 
-  @Test public void landscapeAppView() throws InterruptedException {
+  @Test public void landscapeAppView() {
     UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
     Activity activity = mActivityRule.getActivity();
     goToApp(APP_TO_SEARCH, 1);
     cancelIfDownloading();
-    Thread.sleep(WAIT_TIME);
     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-    Thread.sleep(LONGER_WAIT_TIME);
     onView(withId(R.id.action_btn)).check(matches(isDisplayed()));
     onView(withId(R.id.menu_share)).check(matches(isDisplayed()));
     onView(withId(R.id.app_icon)).check(matches(isDisplayed()));
     onView(withId(R.id.action_btn)).perform(click());
-    Thread.sleep(LONGER_WAIT_TIME);
     closePopUp();
     allowPermission(mDevice, "WRITE_EXTERNAL_STORAGE");
     closeIfIsNotLoggedInOnDownload();
-    Thread.sleep(WAIT_TIME);
     onView(withId(R.id.ic_action_pause)).perform(click());
-    Thread.sleep(WAIT_TIME);
     onView(withId(R.id.ic_action_resume)).perform(click());
     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-    Thread.sleep(LONGER_WAIT_TIME);
     onView(withId(R.id.ic_action_cancel)).perform(click());
     onView(withId(R.id.menu_share)).check(matches(isDisplayed()));
     onView(withId(R.id.app_icon)).check(matches(isDisplayed()));
-    Thread.sleep(LONGER_WAIT_TIME);
     onView(withId(R.id.action_btn)).check(matches(isDisplayed()));
   }
 
-  @Test public void landscapeSettings() throws InterruptedException {
+  @Test public void landscapeSettings() {
     boolean checked;
     Activity activity = mActivityRule.getActivity();
     goToSettings();
-    Thread.sleep(WAIT_TIME);
     onView(withId(R.id.list)).perform(RecyclerViewActions.scrollToPosition(11));
     onView(withId(R.id.list)).perform(RecyclerViewActions.actionOnItemAtPosition(11, click()));
-    Thread.sleep(WAIT_TIME);
     try {
       onView(withText(R.string.yes)).perform(click());
       checked = true;
@@ -145,10 +124,8 @@ public class LandscapeUITests {
       checked = false;
     }
     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-    Thread.sleep(LONGER_WAIT_TIME);
     onView(withId(R.id.list)).perform(RecyclerViewActions.scrollToPosition(11));
     onView(withId(R.id.list)).perform(RecyclerViewActions.actionOnItemAtPosition(11, click()));
-    Thread.sleep(WAIT_TIME);
     if (!checked) {
       onView(withText(R.string.yes)).perform(click());
       checked = true;
@@ -158,14 +135,12 @@ public class LandscapeUITests {
     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     onView(withId(R.id.list)).perform(RecyclerViewActions.scrollToPosition(11));
     onView(withId(R.id.list)).perform(RecyclerViewActions.actionOnItemAtPosition(11, click()));
-    Thread.sleep(WAIT_TIME);
     if (!checked) {
       onView(withText(R.string.yes)).perform(click());
     }
-    Thread.sleep(LONGER_WAIT_TIME);
   }
 
-  @Test public void landscapeWizard() throws InterruptedException {
+  @Test public void landscapeWizard(){
     Activity activity1 = mActivityRule.getActivity();
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity1);
     preferences.edit().clear().apply();
@@ -173,19 +148,11 @@ public class LandscapeUITests {
     mActivityRule.launchActivity(new Intent());
     Activity activity = mActivityRule.getActivity();
     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-    Thread.sleep(WAIT_TIME);
-    Thread.sleep(WAIT_TIME);
     onView(withId(R.id.next_icon)).perform(swipeLeft());
-    Thread.sleep(WAIT_TIME);
     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-    Thread.sleep(WAIT_TIME);
     onView(withId(R.id.next_icon)).perform(swipeLeft());
-    Thread.sleep(WAIT_TIME);
-    Thread.sleep(WAIT_TIME);
     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-    Thread.sleep(WAIT_TIME);
     onView(withId(R.id.skip_text)).perform(click());
-    Thread.sleep(WAIT_TIME);
     onView(withText(R.string.stores)).perform(click());
   }
 
@@ -205,7 +172,7 @@ public class LandscapeUITests {
     return (permissionStatus == PackageManager.PERMISSION_GRANTED);
   }
 
-  private void closePopUp() throws InterruptedException {
+  private void closePopUp() {
     try {
       onView(withText("OK")).perform(click());
     } catch (NoMatchingViewException e) {
@@ -253,9 +220,8 @@ public class LandscapeUITests {
     }
   }
 
-  private void goToMyAccount() throws InterruptedException {
+  private void goToMyAccount() {
     onView(withId(R.id.toolbar)).perform(swipeRigthOnLeftMost());
-    Thread.sleep(WAIT_TIME);
     onView(withText(R.string.drawer_title_my_account)).perform(click());
   }
 
@@ -265,24 +231,20 @@ public class LandscapeUITests {
     onView(withId(R.id.skip_text)).perform(click());
   }
 
-  private void goToApp(String app, int pos) throws InterruptedException {
+  private void goToApp(String app, int pos) {
     onView(withId(R.id.action_search)).perform(click());
-    Thread.sleep(WAIT_TIME);
     onView(withId(R.id.search_src_text)).perform(replaceText(app), pressImeActionButton());
-    Thread.sleep(LONGER_WAIT_TIME);
     onView(withId(R.id.all_stores_result_list)).perform(
         RecyclerViewActions.actionOnItemAtPosition(pos, click()));
   }
 
-  private void barOnlySearchApp(String app) throws InterruptedException {
+  private void barOnlySearchApp(String app) {
     onView(withId(R.id.action_search)).perform(click());
-    Thread.sleep(WAIT_TIME);
     onView(withId(R.id.search_src_text)).perform(replaceText(app));
   }
 
-  private void goToSettings() throws InterruptedException {
+  private void goToSettings(){
     onView(withId(R.id.toolbar)).perform(swipeRigthOnLeftMost());
-    Thread.sleep(WAIT_TIME);
     onView(withText(R.string.drawer_title_settings)).perform(click());
   }
 
