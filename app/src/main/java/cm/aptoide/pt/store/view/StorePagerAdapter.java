@@ -123,17 +123,17 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter
   private Fragment caseAPI(GetStoreTabs.Tab tab, boolean addAdultFilter) {
     Event event = tab.getEvent();
     switch (event.getName()) {
-      case getUserTimeline:
-        Long userId = null;
-        if (event.getData() != null
-            && event.getData()
-            .getUser() != null) {
-          userId = event.getData()
-              .getUser()
-              .getId();
-        }
-        return AptoideApplication.getFragmentProvider()
-            .newAppsTimelineFragment(event.getAction(), userId, storeId, storeContext);
+      //case getUserTimeline:
+      //  Long userId = null;
+      //  if (event.getData() != null
+      //      && event.getData()
+      //      .getUser() != null) {
+      //    userId = event.getData()
+      //        .getUser()
+      //        .getId();
+      //  }
+      //  return AptoideApplication.getFragmentProvider()
+      //      .newAppsTimelineFragment(event.getAction(), userId, storeId, storeContext);
       default:
         return AptoideApplication.getFragmentProvider()
             .newStoreTabGridRecyclerFragment(event, storeTheme, tab.getTag(), storeContext,

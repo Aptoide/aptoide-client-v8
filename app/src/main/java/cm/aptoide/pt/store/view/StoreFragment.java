@@ -51,7 +51,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.view.SearchBuilder;
-import cm.aptoide.pt.social.view.TimelineFragment;
+//import cm.aptoide.pt.social.view.TimelineFragment;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
@@ -275,19 +275,19 @@ public class StoreFragment extends BasePagerToolbarFragment {
      */
     StorePagerAdapter adapter = (StorePagerAdapter) viewPager.getAdapter();
     pagerSlidingTabStrip.setOnTabReselectedListener(position -> {
-      if (Event.Name.getUserTimeline.equals(adapter.getEventName(position))) {
-        //TODO We should not call fragment public methods since we do NOT know about its internal
-        //life cycle. A fragment A should call its activity in order to communicate with
-        //fragment B. Then when fragment B is ready it should register a listener
-        //with its activity in order receive external communication. Activity
-        //should buffer calls if there is no listener registered and deliver them
-        //after registration happens.
-        for (Fragment fragment : getChildFragmentManager().getFragments()) {
-          if (fragment != null && fragment instanceof TimelineFragment) {
-            ((TimelineFragment) fragment).goToTop();
-          }
-        }
-      }
+      //if (Event.Name.getUserTimeline.equals(adapter.getEventName(position))) {
+      //  //TODO We should not call fragment public methods since we do NOT know about its internal
+      //  //life cycle. A fragment A should call its activity in order to communicate with
+      //  //fragment B. Then when fragment B is ready it should register a listener
+      //  //with its activity in order receive external communication. Activity
+      //  //should buffer calls if there is no listener registered and deliver them
+      //  //after registration happens.
+      //  for (Fragment fragment : getChildFragmentManager().getFragments()) {
+      //    if (fragment != null && fragment instanceof TimelineFragment) {
+      //      ((TimelineFragment) fragment).goToTop();
+      //    }
+      //  }
+      //}
     });
 
     /* Be careful maintaining this code
@@ -477,6 +477,11 @@ public class StoreFragment extends BasePagerToolbarFragment {
       if(t.getEvent().getName().equals(Event.Name.myStores) ||
           t.getEvent().getName().equals(Event.Name.getMyStoresSubscribed)){
           tabIterator.remove();
+      }
+      if (t.getEvent()
+          .getName()
+          .equals(Event.Name.getUserTimeline)) {
+        tabIterator.remove();
       }
     }
     return storeUserAbstraction.getNodes()

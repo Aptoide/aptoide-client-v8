@@ -21,7 +21,7 @@ import cm.aptoide.pt.reviews.LatestReviewsFragment;
 import cm.aptoide.pt.reviews.ListReviewsFragment;
 import cm.aptoide.pt.reviews.RateAndReviewsFragment;
 import cm.aptoide.pt.search.model.SearchAdResult;
-import cm.aptoide.pt.social.view.TimelineFragment;
+//import cm.aptoide.pt.social.view.TimelineFragment;
 import cm.aptoide.pt.store.view.FragmentTopStores;
 import cm.aptoide.pt.store.view.GetStoreFragment;
 import cm.aptoide.pt.store.view.GetStoreWidgetsFragment;
@@ -31,9 +31,9 @@ import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.store.view.ads.GetAdsFragment;
 import cm.aptoide.pt.store.view.recommended.RecommendedStoresFragment;
 import cm.aptoide.pt.timeline.view.SocialFragment;
-import cm.aptoide.pt.timeline.view.TimeLineLikesFragment;
-import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
-import cm.aptoide.pt.timeline.view.follow.TimeLineFollowingFragment;
+//import cm.aptoide.pt.timeline.view.TimeLineLikesFragment;
+//import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
+//import cm.aptoide.pt.timeline.view.follow.TimeLineFollowingFragment;
 import cm.aptoide.pt.updates.view.UpdatesFragment;
 import cm.aptoide.pt.updates.view.excluded.ExcludedUpdatesFragment;
 import cm.aptoide.pt.updates.view.rollback.RollbackFragment;
@@ -177,10 +177,10 @@ public class PartnerFragmentProvider implements FragmentProvider {
     return new ListStoresFragment();
   }
 
-  @Override public Fragment newAppsTimelineFragment(String action, Long userId, Long storeId,
-      StoreContext storeContext) {
-    return TimelineFragment.newInstance(action, userId, storeId, storeContext);
-  }
+  //@Override public Fragment newAppsTimelineFragment(String action, Long userId, Long storeId,
+  //    StoreContext storeContext) {
+  //  return TimelineFragment.newInstance(action, userId, storeId, storeContext);
+  //}
 
   @Override public Fragment newDownloadsFragment() {
     return DownloadsFragment.newInstance();
@@ -235,36 +235,36 @@ public class PartnerFragmentProvider implements FragmentProvider {
     return SettingsFragment.newInstance();
   }
 
-  @Override
-  public Fragment newTimeLineFollowersUsingUserIdFragment(Long id, String storeTheme, String title,
-      StoreContext storeName) {
-    return TimeLineFollowersFragment.newInstanceUsingUser(id, defaultTheme, title, storeName);
-  }
-
-  @Override
-  public Fragment newTimeLineFollowingFragmentUsingUserId(Long id, String storeTheme, String title,
-      StoreContext storeContext) {
-    return TimeLineFollowingFragment.newInstanceUsingUserId(id, storeTheme, title, storeContext);
-  }
-
-  @Override
-  public Fragment newTimeLineFollowersUsingStoreIdFragment(Long id, String storeTheme, String title,
-      StoreContext storeContext) {
-    return TimeLineFollowersFragment.newInstanceUsingStore(id, storeTheme, title, storeContext);
-  }
-
-  @Override
-  public Fragment newTimeLineFollowingFragmentUsingStoreId(Long id, String storeTheme, String title,
-      StoreContext storeName) {
-    return TimeLineFollowingFragment.newInstanceUsingStoreId(id, storeTheme, title, storeName);
-  }
-
-  @Override
-  public Fragment newTimeLineLikesFragment(String cardUid, long numberOfLikes, String storeTheme,
-      String title, StoreContext storeContext) {
-    return TimeLineLikesFragment.newInstance(storeTheme, cardUid, numberOfLikes, title,
-        storeContext);
-  }
+  //@Override
+  //public Fragment newTimeLineFollowersUsingUserIdFragment(Long id, String storeTheme, String title,
+  //    StoreContext storeName) {
+  //  return TimeLineFollowersFragment.newInstanceUsingUser(id, defaultTheme, title, storeName);
+  //}
+//
+  //@Override
+  //public Fragment newTimeLineFollowingFragmentUsingUserId(Long id, String storeTheme, String title,
+  //    StoreContext storeContext) {
+  //  return TimeLineFollowingFragment.newInstanceUsingUserId(id, storeTheme, title, storeContext);
+  //}
+//
+  //@Override
+  //public Fragment newTimeLineFollowersUsingStoreIdFragment(Long id, String storeTheme, String title,
+  //    StoreContext storeContext) {
+  //  return TimeLineFollowersFragment.newInstanceUsingStore(id, storeTheme, title, storeContext);
+  //}
+//
+  //@Override
+  //public Fragment newTimeLineFollowingFragmentUsingStoreId(Long id, String storeTheme, String title,
+  //    StoreContext storeName) {
+  //  return TimeLineFollowingFragment.newInstanceUsingStoreId(id, storeTheme, title, storeName);
+  //}
+//
+  //@Override
+  //public Fragment newTimeLineLikesFragment(String cardUid, long numberOfLikes, String storeTheme,
+  //    String title, StoreContext storeContext) {
+  //  return TimeLineLikesFragment.newInstance(storeTheme, cardUid, numberOfLikes, title,
+  //      storeContext);
+  //}
 
   @Override
   public Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId,
@@ -309,10 +309,10 @@ public class PartnerFragmentProvider implements FragmentProvider {
     return ThankYouConnectingFragment.newInstance(tag);
   }
 
-  @Override public Fragment newTimeLineFollowersFragment(String storeTheme, String title,
-      StoreContext storeContext) {
-    return TimeLineFollowersFragment.newInstanceUsingUser(defaultTheme, title, storeContext);
-  }
+  //@Override public Fragment newTimeLineFollowersFragment(String storeTheme, String title,
+      //    StoreContext storeContext) {
+    //  return TimeLineFollowersFragment.newInstanceUsingUser(defaultTheme, title, storeContext);
+    //}
 
   @Override public Fragment newRecommendedStoresFragment() {
     return new RecommendedStoresFragment();

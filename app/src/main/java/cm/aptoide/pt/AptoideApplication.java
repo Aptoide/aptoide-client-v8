@@ -138,9 +138,9 @@ import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootValueSaver;
-import cm.aptoide.pt.social.TimelineRepositoryFactory;
-import cm.aptoide.pt.social.data.TimelinePostsRepository;
-import cm.aptoide.pt.social.data.TimelineResponseCardMapper;
+//import cm.aptoide.pt.social.TimelineRepositoryFactory;
+//import cm.aptoide.pt.social.data.TimelinePostsRepository;
+//import cm.aptoide.pt.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
@@ -257,7 +257,7 @@ public abstract class AptoideApplication extends Application {
   private NotificationProvider notificationProvider;
   private SyncStorage syncStorage;
   private SyncScheduler syncScheduler;
-  private TimelineRepositoryFactory timelineRepositoryFactory;
+  //private TimelineRepositoryFactory timelineRepositoryFactory;
   private AuthenticationPersistence authenticationPersistence;
   private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody>
       noAuthorizationBodyInterceptorV3;
@@ -1253,19 +1253,19 @@ public abstract class AptoideApplication extends Application {
     return syncStorage;
   }
 
-  public TimelinePostsRepository getTimelineRepository(String action, Context context) {
-    if (timelineRepositoryFactory == null) {
-      timelineRepositoryFactory =
-          new TimelineRepositoryFactory(new HashMap<>(), getAccountSettingsBodyInterceptorPoolV7(),
-              getDefaultClient(), getDefaultSharedPreferences(), getTokenInvalidator(),
-              new LinksHandlerFactory(this), getPackageRepository(),
-              WebService.getDefaultConverter(),
-              new TimelineResponseCardMapper(accountManager, getMarketName()),
-              RepositoryFactory.getUpdateRepository(context,
-                  ((AptoideApplication) context.getApplicationContext()).getDefaultSharedPreferences()));
-    }
-    return timelineRepositoryFactory.create(action);
-  }
+  //public TimelinePostsRepository getTimelineRepository(String action, Context context) {
+  //  if (timelineRepositoryFactory == null) {
+  //    timelineRepositoryFactory =
+  //        new TimelineRepositoryFactory(new HashMap<>(), getAccountSettingsBodyInterceptorPoolV7(),
+  //            getDefaultClient(), getDefaultSharedPreferences(), getTokenInvalidator(),
+  //            new LinksHandlerFactory(this), getPackageRepository(),
+  //            WebService.getDefaultConverter(),
+  //            new TimelineResponseCardMapper(accountManager, getMarketName()),
+  //            RepositoryFactory.getUpdateRepository(context,
+  //                ((AptoideApplication) context.getApplicationContext()).getDefaultSharedPreferences()));
+  //  }
+  //  return timelineRepositoryFactory.create(action);
+  //}
 
   public PageViewsAnalytics getPageViewsAnalytics() {
     if (pageViewsAnalytics == null) {

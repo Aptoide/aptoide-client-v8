@@ -102,7 +102,7 @@ public class DeepLinkManager {
         DeepLinkIntentReceiver.DeepLinksTargets.FROM_DOWNLOAD_NOTIFICATION)) {
       downloadNotificationDeepLink();
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.TIMELINE_DEEPLINK)) {
-      fromTimelineDeepLink(intent);
+      //fromTimelineDeepLink(intent);
       deeplinkOrNotification = "Notification";
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES)) {
       newUpdatesDeepLink();
@@ -202,11 +202,11 @@ public class DeepLinkManager {
     tabNavigator.navigate(new SimpleTabNavigation(TabNavigation.DOWNLOADS));
   }
 
-  private void fromTimelineDeepLink(Intent intent) {
-    Analytics.ApplicationLaunch.timelineNotification();
-    String cardId = intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.CARD_ID);
-    tabNavigator.navigate(new AppsTimelineTabNavigation(cardId));
-  }
+  //private void fromTimelineDeepLink(Intent intent) {
+  //  Analytics.ApplicationLaunch.timelineNotification();
+  //  String cardId = intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.CARD_ID);
+  //  tabNavigator.navigate(new AppsTimelineTabNavigation(cardId));
+  //}
 
   private void newUpdatesDeepLink() {
     Analytics.ApplicationLaunch.newUpdatesNotification();

@@ -96,8 +96,8 @@ public interface FragmentProvider {
 
   @Deprecated Fragment newListStoresFragment();
 
-  @Deprecated Fragment newAppsTimelineFragment(String action, Long userId, Long storeId,
-      StoreContext storeContext);
+  //@Deprecated Fragment newAppsTimelineFragment(String action, Long userId, Long storeId,
+  //    StoreContext storeContext);
 
   //@Deprecated Fragment newSubscribedStoresFragment(Event event, String storeTheme, String tag,
   //    StoreContext storeName);
@@ -128,20 +128,20 @@ public interface FragmentProvider {
 
   @Deprecated Fragment newSettingsFragment();
 
-  @Deprecated Fragment newTimeLineFollowersUsingUserIdFragment(Long id, String storeTheme,
-      String title, StoreContext storeName);
-
-  @Deprecated Fragment newTimeLineFollowingFragmentUsingUserId(Long id, String storeTheme,
-      String title, StoreContext storeContext);
-
-  @Deprecated Fragment newTimeLineFollowersUsingStoreIdFragment(Long id, String storeTheme,
-      String title, StoreContext storeContext);
-
-  @Deprecated Fragment newTimeLineFollowingFragmentUsingStoreId(Long id, String storeTheme,
-      String title, StoreContext storeName);
-
-  @Deprecated Fragment newTimeLineLikesFragment(String cardUid, long numberOfLikes,
-      String storeTheme, String title, StoreContext storeContext);
+  //@Deprecated Fragment newTimeLineFollowersUsingUserIdFragment(Long id, String storeTheme,
+  //    String title, StoreContext storeName);
+//
+  //@Deprecated Fragment newTimeLineFollowingFragmentUsingUserId(Long id, String storeTheme,
+  //    String title, StoreContext storeContext);
+//
+  //@Deprecated Fragment newTimeLineFollowersUsingStoreIdFragment(Long id, String storeTheme,
+  //    String title, StoreContext storeContext);
+//
+  //@Deprecated Fragment newTimeLineFollowingFragmentUsingStoreId(Long id, String storeTheme,
+  //    String title, StoreContext storeName);
+//
+  //@Deprecated Fragment newTimeLineLikesFragment(String cardUid, long numberOfLikes,
+  //    String storeTheme, String title, StoreContext storeContext);
 
   @Deprecated Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId,
       StoreContext storeContext);
@@ -165,8 +165,8 @@ public interface FragmentProvider {
 
   @Deprecated Fragment newThankYouConnectingFragment(String tag);
 
-  @Deprecated Fragment newTimeLineFollowersFragment(String storeTheme, String title,
-      StoreContext storeContext);
+  //@Deprecated Fragment newTimeLineFollowersFragment(String storeTheme, String title,
+  //    StoreContext storeContext);
 
   @Deprecated Fragment newRecommendedStoresFragment();
 }
