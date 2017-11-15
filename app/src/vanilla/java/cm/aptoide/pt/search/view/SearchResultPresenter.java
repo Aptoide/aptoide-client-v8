@@ -106,7 +106,10 @@ public class SearchResultPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .flatMap(__ -> view.clickTitleBar())
+        //.flatMap(__ -> trendingManager.getTrendingSuggestions())
+        .observeOn(viewScheduler)
         .doOnNext(__ -> view.focusInSearchBar())
+        //.doOnNext(data -> view.setTrending(data))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
@@ -171,6 +174,8 @@ public class SearchResultPresenter implements Presenter {
           .toString();
 
       if (event.isSubmitted()) {
+        view.collapseSearchBar();
+        navigator.navigate(query);
         Logger.v(TAG,"Searching for: "+query);
         return null;
       }

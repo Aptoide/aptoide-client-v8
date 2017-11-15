@@ -1,5 +1,6 @@
 package cm.aptoide.pt.search;
 
+import android.app.*;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.MatrixCursor;
@@ -44,7 +45,18 @@ public class SearchCursorAdapter extends CursorAdapter {
 
   @Override public void bindView(View view, Context context, Cursor cursor) {
     TextView textView = (TextView) view.findViewById(R.id.dropdown_text);
-    textView.setText(
-        cursor.getString(cursor.getColumnIndex(android.app.SearchManager.SUGGEST_COLUMN_TEXT_1)));
+    textView.setText(getQueryAtCurrentPosition(cursor));
+  }
+
+  public CharSequence getQueryAt(int position){
+    final Cursor cursor = getCursor();
+    if (cursor.moveToPosition(position)) {
+      return getQueryAtCurrentPosition(cursor);
+    }
+    throw new UnsupportedOperationException("Unable to find query at position "+position);
+  }
+
+  private String getQueryAtCurrentPosition(Cursor cursor) {
+    return cursor.getString(cursor.getColumnIndex(android.app.SearchManager.SUGGEST_COLUMN_TEXT_1));
   }
 }

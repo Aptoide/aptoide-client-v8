@@ -68,6 +68,10 @@ public interface SearchResultView extends View {
 
   void setTrending(List<String> trending);
 
+  void collapseSearchBar();
+
+  void displaySearchQuery(String query);
+
   interface Model {
 
     String getCurrentQuery();

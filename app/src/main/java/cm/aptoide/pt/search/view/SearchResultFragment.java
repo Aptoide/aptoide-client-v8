@@ -63,6 +63,7 @@ import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
 import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
+import com.jakewharton.rxbinding.support.v7.widget.RxActionMenuView;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
@@ -380,8 +381,20 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
     }
   }
 
+  @Override public void collapseSearchBar(){
+    if(searchMenuItem != null)
+      searchMenuItem.collapseActionView();
+  }
+
+  @Override public void displaySearchQuery(String query){
+    searchView.setQuery(query, false);
+  }
+
   @Override public void setTrending(List<String> trending) {
     searchCursorAdapter.setData(trending);
+  }
+
+  private void test(){
   }
 
   private Observable<Void> recyclerViewReachedBottom(RecyclerView recyclerView) {
@@ -433,6 +446,16 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
     searchMenuItem = menu.findItem(R.id.action_search);
     searchView = (SearchView) searchMenuItem.getActionView();
     searchView.setSuggestionsAdapter(searchCursorAdapter);
+    searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+      @Override public boolean onSuggestionSelect(int position) {
+        return false;
+      }
+
+      @Override public boolean onSuggestionClick(int position) {
+        queryTextChangedPublisher.onNext(SearchViewQueryTextEvent.create(searchView, searchCursorAdapter.getQueryAt(position), true));
+        return true;
+      }
+    });
 
 
     AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) searchView.findViewById(
