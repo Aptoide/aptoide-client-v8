@@ -50,6 +50,7 @@ public class FragmentTopStores extends AptoideBaseFragment<BaseAdapter> implemen
     super.onCreate(savedInstanceState);
     storeAnalytics =
         new StoreAnalytics(AppEventsLogger.newLogger(getContext()), Analytics.getInstance());
+    setHasOptionsMenu(true);
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -74,7 +75,6 @@ public class FragmentTopStores extends AptoideBaseFragment<BaseAdapter> implemen
   @Override public void setupViews() {
     super.setupViews();
     setupToolbar();
-    setHasOptionsMenu(true);
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {

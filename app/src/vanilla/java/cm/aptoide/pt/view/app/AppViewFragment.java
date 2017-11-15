@@ -47,6 +47,7 @@ import cm.aptoide.pt.billing.product.PaidAppPurchase;
 import cm.aptoide.pt.billing.view.PaymentActivity;
 import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.crashreports.IssuesAnalytics;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
@@ -191,6 +192,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
   private CrashReport crashReport;
   private String originTag;
+  private SearchBuilder searchBuilder;
+  private IssuesAnalytics issuesAnalytics;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -347,6 +350,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     Analytics analytics = Analytics.getInstance();
+    issuesAnalytics = new IssuesAnalytics(analytics, Answers.getInstance());
     timelineAnalytics = new TimelineAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
@@ -387,6 +391,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             analytics);
     notLoggedInShareAnalytics =
         ((AptoideApplication) getContext().getApplicationContext()).getNotLoggedInShareAnalytics();
+    setHasOptionsMenu(true);
   }
 
   private void handleSavedInstance(Bundle savedInstanceState) {
@@ -421,7 +426,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   @Override public void bindViews(View view) {
     super.bindViews(view);
     header = new AppViewHeader(view);
-    setHasOptionsMenu(true);
   }
 
   @Override public void onDestroyView() {
@@ -582,12 +586,31 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onCreateOptionsMenu(menu, inflater);
     this.menu = menu;
     inflater.inflate(R.menu.menu_appview_fragment, menu);
-    final String defaultStore =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore();
-    SearchBuilder searchBuilder =
-        new SearchBuilder(menu.findItem(R.id.action_search), getActivity(),
-            new SearchNavigator(getFragmentNavigator(), defaultStore));
-    searchBuilder.validateAndAttachSearch();
+    if (searchBuilder != null && searchBuilder.isValid()) {
+      final FragmentActivity activity = getActivity();
+      // from getActivity() "May return null if the fragment is associated with a Context instead."
+      final Context context = getContext();
+      if (activity != null) {
+        searchBuilder.attachSearch(activity, menu.findItem(R.id.action_search));
+        issuesAnalytics.attachSearchSuccess(false);
+        return;
+      } else if (context != null) {
+        searchBuilder.attachSearch(context, menu.findItem(R.id.action_search));
+        issuesAnalytics.attachSearchSuccess(true);
+        return;
+      } else {
+        issuesAnalytics.attachSearchFailed(true);
+        Logger.e(TAG, new IllegalStateException(
+            "Unable to attach search to this fragment due to null parent"));
+      }
+    } else {
+      issuesAnalytics.attachSearchFailed(false);
+      Logger.e(TAG, new IllegalStateException(
+          "Unable to attach search to this fragment due to invalid search builder"));
+    }
+
+    menu.removeItem(R.id.action_search);
+
     uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
   }
 

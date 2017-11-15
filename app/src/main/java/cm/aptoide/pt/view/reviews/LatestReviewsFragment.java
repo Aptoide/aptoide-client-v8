@@ -70,6 +70,7 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
     storeAnalytics =
         new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
             Analytics.getInstance());
+    setHasOptionsMenu(true);
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -103,7 +104,6 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
 
   @Override public void bindViews(View view) {
     super.bindViews(view);
-    setHasOptionsMenu(true);
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {

@@ -64,6 +64,7 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
     aptoideNavigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName()));
     pageViewsAnalytics.sendPageViewedEvent();
+    setHasOptionsMenu(true);
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -86,7 +87,6 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
   }
 
   private Toolbar setupToolbar(String title) {
-    setHasOptionsMenu(true);
 
     toolbar.setLogo(R.drawable.logo_toolbar);
 

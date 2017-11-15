@@ -30,22 +30,20 @@ public class SearchBuilder {
   private final SearchManager searchManager;
   private final String lastQuery;
 
-  public SearchBuilder(MenuItem menuItem, Context context, SearchNavigator searchNavigator) {
-    this(menuItem, context, searchNavigator, null);
+  public SearchBuilder(@NonNull SearchManager searchManager,
+      @NonNull SearchNavigator searchNavigator) {
+    this(searchManager, searchNavigator, null);
   }
 
-  public SearchBuilder(MenuItem menuItem, Context context, SearchNavigator searchNavigator,
-      @Nullable String lastQuery) {
-    this.applicationContext = context.getApplicationContext();
-    this.searchManager = (SearchManager) context.getSystemService(Context.SEARCH_SERVICE);
-    this.menuItem = menuItem;
+  public SearchBuilder(@NonNull SearchManager searchManager,
+      @NonNull SearchNavigator searchNavigator, @Nullable String lastQuery) {
+    this.searchManager = searchManager;
     this.searchNavigator = searchNavigator;
     this.lastQuery = lastQuery;
   }
 
-  public void validateAndAttachSearch() {
-    validateProperties();
-
+  public void attachSearch(@NonNull Context context, @NonNull MenuItem menuItem) {
+    final Context applicationContext = context.getApplicationContext();
     final SearchView searchView = (SearchView) menuItem.getActionView();
     setSearchableInfo(searchView, searchManager);
 

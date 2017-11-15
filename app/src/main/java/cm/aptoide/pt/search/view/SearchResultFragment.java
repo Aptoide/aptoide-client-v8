@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,6 +30,7 @@ import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.crashreports.IssuesAnalytics;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
@@ -37,6 +39,7 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.search.SearchAnalytics;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
@@ -45,6 +48,7 @@ import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
+import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
@@ -61,6 +65,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.Subscriptions;
 
 public class SearchResultFragment extends BackButtonFragment implements SearchView {
+
+  private static final String TAG = SearchResultFragment.class.getName();
 
   private static final int LAYOUT = R.layout.global_search_fragment;
   private static final String VIEW_MODEL = "view_model";
@@ -97,6 +103,8 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   private SearchAnalytics searchAnalytics;
   private float listItemPadding;
   private MenuItem searchMenuItem;
+  private SearchBuilder searchBuilder;
+  private IssuesAnalytics issuesAnalytics;
 
   public static SearchResultFragment newInstance(String currentQuery) {
     return newInstance(currentQuery, false);
@@ -376,12 +384,33 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_search_results, menu);
+    if (searchBuilder != null && searchBuilder.isValid()) {
+      final FragmentActivity activity = getActivity();
+      // from getActivity() "May return null if the fragment is associated with a Context instead."
+      final Context context = getContext();
 
-    searchMenuItem = menu.findItem(R.id.action_search);
-    final SearchBuilder searchBuilder =
-        new SearchBuilder(searchMenuItem, getContext(), getSearchNavigator(),
-            viewModel.getCurrentQuery());
-    searchBuilder.validateAndAttachSearch();
+      if (activity != null) {
+        searchMenuItem = menu.findItem(R.id.action_search);
+        searchBuilder.attachSearch(activity, searchMenuItem);
+        issuesAnalytics.attachSearchSuccess(false);
+        return;
+      } else if (context != null) {
+        searchMenuItem = menu.findItem(R.id.action_search);
+        searchBuilder.attachSearch(context, searchMenuItem);
+        issuesAnalytics.attachSearchSuccess(true);
+        return;
+      } else {
+        issuesAnalytics.attachSearchFailed(true);
+        Logger.e(TAG, new IllegalStateException(
+            "Unable to attach search to this fragment due to null parent"));
+      }
+    } else {
+      issuesAnalytics.attachSearchFailed(false);
+      Logger.e(TAG, new IllegalStateException(
+          "Unable to attach search to this fragment due to invalid search builder"));
+    }
+
+    menu.removeItem(R.id.action_search);
   }
 
   @Override public String getDefaultTheme() {
@@ -419,8 +448,10 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
 
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
 
-    searchAnalytics =
-        new SearchAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(applicationContext));
+    final Analytics analytics = Analytics.getInstance();
+    searchAnalytics = new SearchAnalytics(analytics, AppEventsLogger.newLogger(applicationContext));
+
+    issuesAnalytics = new IssuesAnalytics(analytics, Answers.getInstance());
 
     final StoreAccessor storeAccessor =
         AccessorFactory.getAccessorFor(applicationContext.getDatabase(), Store.class);
@@ -456,6 +487,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     allStoresResultAdapter =
         new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, onOpenPopupMenuClickRelay,
             searchResultAllStores, searchResultAdsAllStores, crashReport);
+    setHasOptionsMenu(true);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -489,7 +521,6 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    setHasOptionsMenu(true);
     return inflater.inflate(LAYOUT, container, false);
   }
 
