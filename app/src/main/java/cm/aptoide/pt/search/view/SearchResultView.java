@@ -1,16 +1,13 @@
 package cm.aptoide.pt.search.view;
 
-import android.util.Pair;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
-import com.jakewharton.rxrelay.PublishRelay;
 import java.util.List;
 import rx.Observable;
 
 public interface SearchResultView extends View {
-  Observable<Void> clickTitleBar();
 
   void showFollowedStoresResult();
 
@@ -29,8 +26,6 @@ public interface SearchResultView extends View {
   void hideLists();
 
   Observable<SearchViewQueryTextEvent> onQueryTextChanged();
-
-  void showVoiceSearch();
 
   void showLoading();
 
@@ -101,6 +96,5 @@ public interface SearchResultView extends View {
     boolean hasLoadedAds();
 
     void setHasLoadedAds();
-
   }
 }

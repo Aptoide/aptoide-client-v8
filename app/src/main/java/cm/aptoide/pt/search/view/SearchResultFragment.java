@@ -36,7 +36,6 @@ import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.crashreports.IssuesAnalytics;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
@@ -45,13 +44,11 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.search.SearchAnalytics;
 import cm.aptoide.pt.search.SearchCursorAdapter;
 import cm.aptoide.pt.search.SearchFactory;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
-import cm.aptoide.pt.search.SearchSuggestionManager;
 import cm.aptoide.pt.search.TrendingService;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
@@ -61,9 +58,7 @@ import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
-import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
-import com.jakewharton.rxbinding.support.v7.widget.RxActionMenuView;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
@@ -75,15 +70,13 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import org.parceler.Parcels;
 import retrofit2.Converter;
+import rx.Emitter;
 import rx.Observable;
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
-import rx.subscriptions.Subscriptions;
 
 public class SearchResultFragment extends BackButtonFragment implements SearchResultView {
-
-  private static final String TAG = SearchResultFragment.class.getName();
 
   private static final int LAYOUT = R.layout.global_search_fragment;
   private static final String VIEW_MODEL = "view_model";
@@ -94,7 +87,6 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
   private static final String FOLLOWED_STORES_SEARCH_LIST_STATE =
       "followed_stores_search_list_state";
   private static final int COMPLETION_THRESHOLD = 0;
-  //private static final int COMPLETION_THRESHOLD = 0;
 
   private View noSearchLayout;
   private EditText noSearchLayoutSearchQuery;
@@ -124,13 +116,11 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
   private String defaultThemeName;
   private boolean isMultiStoreSearch;
   private String defaultStoreName;
-  private IssuesAnalytics issuesAnalytics;
   private SearchView searchView;
   private SearchCursorAdapter searchCursorAdapter;
   private TrendingManager trendingManager;
   private PublishSubject<SearchViewQueryTextEvent> queryTextChangedPublisher;
   private MenuItem searchMenuItem;
-  private StoreCredentialsProviderImpl storeCredentialsProvider;
 
   public static SearchResultFragment newInstance(String currentQuery, String defaultStoreName) {
     return newInstance(currentQuery, false, defaultStoreName);
@@ -171,8 +161,11 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
   }
 
-  @Override public Observable<Void> clickTitleBar() {
-    return RxView.clicks(toolbar);
+  private void clickTitleBarExpandsList() {
+    getLifecycle().flatMap(__ -> RxView.clicks(toolbar))
+        .doOnNext(__ -> focusInSearchBar())
+        .compose(bindUntilEvent(cm.aptoide.pt.presenter.View.LifecycleEvent.DESTROY))
+        .subscribe();
   }
 
   @Override public void showFollowedStoresResult() {
@@ -270,17 +263,8 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
     allStoresResultList.setVisibility(View.GONE);
   }
 
-  @Override public Observable<SearchViewQueryTextEvent> onQueryTextChanged(){
+  @Override public Observable<SearchViewQueryTextEvent> onQueryTextChanged() {
     return queryTextChangedPublisher;
-  }
-
-
-  @Override public void showVoiceSearch() {
-    noSearchLayout.setVisibility(View.GONE);
-    searchResultsLayout.setVisibility(View.GONE);
-    buttonsLayout.setVisibility(View.GONE);
-    followedStoresResultList.setVisibility(View.GONE);
-    allStoresResultList.setVisibility(View.GONE);
   }
 
   @Override public void showLoading() {
@@ -322,7 +306,9 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
   }
 
   @Override public Observable<Integer> showPopup(boolean hasVersions, View anchor) {
-    return Observable.create(subscriber -> {
+
+    return Observable.create(emitter -> {
+
       final Context context = getContext();
       final PopupMenu popupMenu = new PopupMenu(context, anchor);
 
@@ -336,20 +322,20 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
       }
 
       popupMenu.setOnMenuItemClickListener(item -> {
-        subscriber.onNext(item.getItemId());
-        subscriber.onCompleted();
+        emitter.onNext(item.getItemId());
+        emitter.onCompleted();
         return true;
       });
 
-      popupMenu.setOnDismissListener(__ -> subscriber.onCompleted());
+      popupMenu.setOnDismissListener(__ -> emitter.onCompleted());
 
-      subscriber.add(Subscriptions.create(() -> {
+      emitter.setCancellation(() -> {
         popupMenu.setOnMenuItemClickListener(null);
         popupMenu.dismiss();
-      }));
+      });
 
       popupMenu.show();
-    });
+    }, Emitter.BackpressureMode.ERROR);
   }
 
   @Override public Observable<Void> followedStoresResultReachedBottom() {
@@ -379,22 +365,25 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
     if (searchMenuItem != null) {
       searchMenuItem.expandActionView();
     }
-  }
 
-  @Override public void collapseSearchBar(){
-    if(searchMenuItem != null)
-      searchMenuItem.collapseActionView();
-  }
-
-  @Override public void displaySearchQuery(String query){
-    searchView.setQuery(query, false);
+    if (searchView != null && viewModel != null) {
+      final String currentQuery = viewModel.getCurrentQuery();
+      if (currentQuery != null && currentQuery.length() > 0) {
+        searchView.setQuery(currentQuery, false);
+      }
+    }
   }
 
   @Override public void setTrending(List<String> trending) {
     searchCursorAdapter.setData(trending);
   }
 
-  private void test(){
+  @Override public void collapseSearchBar() {
+    if (searchMenuItem != null) searchMenuItem.collapseActionView();
+  }
+
+  @Override public void displaySearchQuery(String query) {
+    searchView.setQuery(query, false);
   }
 
   private Observable<Void> recyclerViewReachedBottom(RecyclerView recyclerView) {
@@ -452,24 +441,23 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
       }
 
       @Override public boolean onSuggestionClick(int position) {
-        queryTextChangedPublisher.onNext(SearchViewQueryTextEvent.create(searchView, searchCursorAdapter.getQueryAt(position), true));
+        queryTextChangedPublisher.onNext(
+            SearchViewQueryTextEvent.create(searchView, searchCursorAdapter.getQueryAt(position),
+                true));
         return true;
       }
     });
-
 
     AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) searchView.findViewById(
         android.support.v7.appcompat.R.id.search_src_text);
     autoCompleteTextView.setThreshold(COMPLETION_THRESHOLD);
 
-    getLifecycle()
-        .filter(event -> event==LifecycleEvent.RESUME)
+    getLifecycle().filter(event -> event == LifecycleEvent.RESUME)
         .flatMap(__ -> RxSearchView.queryTextChangeEvents(searchView))
         .doOnNext(event -> queryTextChangedPublisher.onNext(event))
         .compose(bindUntilEvent(LifecycleEvent.PAUSE))
         .subscribe(__ -> {
-         }, e -> crashReport.log(e));
-
+        }, e -> crashReport.log(e));
   }
 
   @Override public String getDefaultTheme() {
@@ -483,10 +471,6 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
     viewModel = loadViewModel(getArguments());
     queryTextChangedPublisher = PublishSubject.create();
     searchCursorAdapter = new SearchCursorAdapter(getContext());
-
-
-    final android.app.SearchManager searchManagerService =
-        (android.app.SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
 
     searchNavigator = new SearchNavigator(getFragmentNavigator(), viewModel.getStoreName(),
         viewModel.getDefaultStoreName());
@@ -508,18 +492,20 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
     final Analytics analytics = Analytics.getInstance();
     searchAnalytics = new SearchAnalytics(analytics, AppEventsLogger.newLogger(applicationContext));
 
-    issuesAnalytics = new IssuesAnalytics(analytics, Answers.getInstance());
-
     final AptoideApplication application = (AptoideApplication) getActivity().getApplication();
-
-    trendingManager= new TrendingManager(new TrendingService(new StoreCredentialsProviderImpl(
-        AccessorFactory.getAccessorFor(application.getDatabase(), Store.class)), bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences));
 
     final StoreAccessor storeAccessor =
         AccessorFactory.getAccessorFor(applicationContext.getDatabase(), Store.class);
+
+    trendingManager = new TrendingManager(
+        new TrendingService(new StoreCredentialsProviderImpl(storeAccessor), bodyInterceptor,
+            httpClient, converterFactory, tokenInvalidator, sharedPreferences));
+
     final HashMapNotNull<String, List<String>> subscribedStoresAuthMap =
         StoreUtils.getSubscribedStoresAuthMap(storeAccessor);
+
     final List<Long> subscribedStoresIds = StoreUtils.getSubscribedStoresIds(storeAccessor);
+
     final AdsRepository adsRepository = application.getAdsRepository();
 
     defaultThemeName = application.getDefaultThemeName();
@@ -551,17 +537,18 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
     allStoresResultAdapter =
         new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, onOpenPopupMenuClickRelay,
             searchResultAllStores, searchResultAdsAllStores, crashReport);
+
     setHasOptionsMenu(true);
   }
-
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     findChildViews(view);
     attachFollowedStoresResultListDependencies();
     attachAllStoresResultListDependencies();
-    attachToolbar();
+    setupToolbar();
     setupTheme();
+    clickTitleBarExpandsList();
     attachPresenter(new SearchResultPresenter(this, searchAnalytics, searchNavigator, crashReport,
         mainThreadScheduler, searchManager, onAdClickRelay, onItemViewClickRelay,
         onOpenPopupMenuClickRelay, isMultiStoreSearch, defaultThemeName, defaultStoreName,
@@ -697,11 +684,15 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
     allStoresResultList.addItemDecoration(getDefaultItemDecoration());
   }
 
-  private void attachToolbar() {
-    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-    actionBar.setDisplayHomeAsUpEnabled(true);
+  private void setupToolbar() {
     toolbar.setTitle(viewModel.getCurrentQuery());
-    actionBar.setTitle(toolbar.getTitle());
+
+    final AppCompatActivity activity = (AppCompatActivity) getActivity();
+    activity.setSupportActionBar(toolbar);
+    ActionBar actionBar = activity.getSupportActionBar();
+    if (actionBar != null) {
+      actionBar.setDisplayHomeAsUpEnabled(true);
+      actionBar.setTitle(toolbar.getTitle());
+    }
   }
 }

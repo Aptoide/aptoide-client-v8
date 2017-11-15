@@ -20,7 +20,8 @@ import java.util.List;
 import rx.Observable;
 import rx.Scheduler;
 
-public class SearchResultPresenter implements Presenter {
+@SuppressWarnings({ "WeakerAccess", "Convert2MethodRef" }) public class SearchResultPresenter
+    implements Presenter {
 
   private static final int COMPLETION_THRESHOLD = 3;
   private static final String TAG = SearchResultPresenter.class.getName();
@@ -45,8 +46,9 @@ public class SearchResultPresenter implements Presenter {
       SearchManager searchManager, PublishRelay<SearchAdResult> onAdClickRelay,
       PublishRelay<SearchAppResult> onItemViewClickRelay,
       PublishRelay<Pair<SearchAppResult, android.view.View>> onOpenPopupMenuClickRelay,
-      boolean isMultiStoreSearch, String defaultStoreName, String defaultThemeName, SearchCursorAdapter searchCursorAdapter,
-      SearchSuggestionManager searchSuggestionManager, TrendingManager trendingManager) {
+      boolean isMultiStoreSearch, String defaultStoreName, String defaultThemeName,
+      SearchCursorAdapter searchCursorAdapter, SearchSuggestionManager searchSuggestionManager,
+      TrendingManager trendingManager) {
     this.view = view;
     this.analytics = analytics;
     this.navigator = navigator;
@@ -62,7 +64,6 @@ public class SearchResultPresenter implements Presenter {
     this.searchCursorAdapter = searchCursorAdapter;
     this.searchSuggestionManager = searchSuggestionManager;
     this.trendingManager = trendingManager;
-
   }
 
   @Override public void present() {
@@ -77,7 +78,6 @@ public class SearchResultPresenter implements Presenter {
     handleClickOnNoResultsImage();
     handleAllStoresListReachedBottom();
     handleFollowedStoresListReachedBottom();
-    handleTitleBarClick();
     restoreSelectedTab();
     handleWidgetTrendingRequest();
     listenForSuggestions();
@@ -101,29 +101,17 @@ public class SearchResultPresenter implements Presenter {
         }, e -> crashReport.log(e));
   }
 
-  private void handleTitleBarClick() {
-    view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .observeOn(viewScheduler)
-        .flatMap(__ -> view.clickTitleBar())
-        //.flatMap(__ -> trendingManager.getTrendingSuggestions())
-        .observeOn(viewScheduler)
-        .doOnNext(__ -> view.focusInSearchBar())
-        //.doOnNext(data -> view.setTrending(data))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, e -> crashReport.log(e));
-  }
-
   private void handleWidgetTrendingRequest() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.onQueryTextChanged()
-          .filter(data -> data == null || data.queryText().length()==0)
-          .first()
-        )
+            .filter(data -> data == null
+                || data.queryText()
+                .length() == 0)
+            .first())
         .map(__ -> view.getViewModel())
-        .filter(viewModel -> viewModel.getCurrentQuery()==null||viewModel.getCurrentQuery().isEmpty())
+        .filter(viewModel -> viewModel.getCurrentQuery() == null || viewModel.getCurrentQuery()
+            .isEmpty())
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.hideLists())
         .flatMap(__ -> trendingManager.getTrendingSuggestions())
@@ -135,11 +123,11 @@ public class SearchResultPresenter implements Presenter {
         }, e -> crashReport.log(e));
   }
 
-  private void listenForSuggestions(){
+  private void listenForSuggestions() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> searchSuggestionManager.listenForSuggestions()
-        .retry(3))
+            .retry(3))
         .filter(data -> data != null && data.size() > 0)
         .observeOn(viewScheduler)
         .doOnNext(data -> searchCursorAdapter.setData(data))
@@ -148,16 +136,17 @@ public class SearchResultPresenter implements Presenter {
         }, e -> crashReport.log(e));
   }
 
-  private void handleQueryTextChanged(){
+  private void handleQueryTextChanged() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.onQueryTextChanged())
-        .filter(data -> data!=null)
-        .filter(data -> data.queryText().length()>0)
+        .filter(data -> data != null)
+        .filter(data -> data.queryText()
+            .length() > 0)
         .flatMap(data -> {
           final String query = data.queryText()
               .toString();
-          if(query.length()<COMPLETION_THRESHOLD){
+          if (query.length() < COMPLETION_THRESHOLD) {
             return trendingManager.getTrendingSuggestions()
                 .observeOn(viewScheduler)
                 .doOnNext(trendingList -> view.setTrending(trendingList));
@@ -165,18 +154,19 @@ public class SearchResultPresenter implements Presenter {
           return handleQueryEvent(data);
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {}, e -> crashReport.log(e));
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
   }
 
-  private Observable<Void> handleQueryEvent(SearchViewQueryTextEvent event){
-    return Observable.fromCallable(()->{
+  private Observable<Void> handleQueryEvent(SearchViewQueryTextEvent event) {
+    return Observable.fromCallable(() -> {
       final String query = event.queryText()
           .toString();
 
       if (event.isSubmitted()) {
         view.collapseSearchBar();
         navigator.navigate(query);
-        Logger.v(TAG,"Searching for: "+query);
+        Logger.v(TAG, "Searching for: " + query);
         return null;
       }
 
@@ -185,7 +175,6 @@ public class SearchResultPresenter implements Presenter {
       }
       return null;
     });
-
   }
 
   private void stopLoadingMoreOnDestroy() {
@@ -383,7 +372,7 @@ public class SearchResultPresenter implements Presenter {
   }
 
   private Observable<List<SearchAppResult>> loadData(String query, String storeName,
-      boolean onlyTrustedApps, int offset) {
+      boolean onlyTrustedApps) {
 
     if (storeName != null && !storeName.trim()
         .equals("")) {
@@ -391,18 +380,18 @@ public class SearchResultPresenter implements Presenter {
         view.setViewWithStoreNameAsSingleTab(storeName);
         return null;
       })
-          .flatMap(__ -> loadDataForSpecificStore(query, storeName, offset));
+          .flatMap(__ -> loadDataForSpecificStore(query, storeName));
     }
     // search every store. followed and not followed
-    return Observable.merge(loadDataForAllFollowedStores(query, onlyTrustedApps, offset),
-        loadDataForAllNonFollowedStores(query, onlyTrustedApps, offset));
+    return Observable.merge(loadDataForAllFollowedStores(query, onlyTrustedApps, 0),
+        loadDataForAllNonFollowedStores(query, onlyTrustedApps, 0));
   }
 
   @NonNull private Observable<List<SearchAppResult>> loadDataForAllNonFollowedStores(String query,
       boolean onlyTrustedApps, int offset) {
     return searchManager.searchInNonFollowedStores(query, onlyTrustedApps, offset)
         .observeOn(viewScheduler)
-        .doOnNext(view::addAllStoresResult)
+        .doOnNext(dataList -> view.addAllStoresResult(dataList))
         .doOnNext(data -> {
           final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.incrementOffsetAndCheckIfReachedBottomOfAllStores(getItemCount(data));
@@ -413,19 +402,18 @@ public class SearchResultPresenter implements Presenter {
       boolean onlyTrustedApps, int offset) {
     return searchManager.searchInFollowedStores(query, onlyTrustedApps, offset)
         .observeOn(viewScheduler)
-        .doOnNext(view::addFollowedStoresResult)
+        .doOnNext(dataList -> view.addFollowedStoresResult(dataList))
         .doOnNext(data -> {
           final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(getItemCount(data));
         });
   }
 
-  @NonNull
-  private Observable<List<SearchAppResult>> loadDataForSpecificStore(String query, String storeName,
-      int offset) {
-    return searchManager.searchInStore(query, storeName, offset)
+  @NonNull private Observable<List<SearchAppResult>> loadDataForSpecificStore(String query,
+      String storeName) {
+    return searchManager.searchInStore(query, storeName, 0)
         .observeOn(viewScheduler)
-        .doOnNext(view::addFollowedStoresResult)
+        .doOnNext(dataList -> view.addFollowedStoresResult(dataList))
         .doOnNext(data -> {
           final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.setAllStoresSelected(false);
@@ -439,12 +427,13 @@ public class SearchResultPresenter implements Presenter {
         .map(__ -> view.getViewModel())
         .filter(viewModel -> viewModel.getAllStoresOffset() == 0
             && viewModel.getFollowedStoresOffset() == 0)
-        .filter(viewModel -> viewModel.getCurrentQuery() != null && !viewModel.getCurrentQuery().isEmpty())
+        .filter(viewModel -> viewModel.getCurrentQuery() != null && !viewModel.getCurrentQuery()
+            .isEmpty())
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showLoading())
         .doOnNext(viewModel -> analytics.search(viewModel.getCurrentQuery()))
         .flatMap(viewModel -> loadData(viewModel.getCurrentQuery(), viewModel.getStoreName(),
-            viewModel.isOnlyTrustedApps(), 0).onErrorResumeNext(err -> {
+            viewModel.isOnlyTrustedApps()).onErrorResumeNext(err -> {
           crashReport.log(err);
           return Observable.just(null);
         })
@@ -467,6 +456,4 @@ public class SearchResultPresenter implements Presenter {
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
   }
-
-
 }
