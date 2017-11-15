@@ -29,8 +29,6 @@ import cm.aptoide.pt.store.view.ListStoresFragment;
 import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.store.view.ads.GetAdsFragment;
-import cm.aptoide.pt.store.view.my.MyStoresFragment;
-import cm.aptoide.pt.store.view.my.MyStoresSubscribedFragment;
 import cm.aptoide.pt.store.view.recommended.RecommendedStoresFragment;
 import cm.aptoide.pt.timeline.view.SocialFragment;
 import cm.aptoide.pt.timeline.view.TimeLineLikesFragment;
@@ -163,14 +161,6 @@ public class PartnerFragmentProvider implements FragmentProvider {
     return new GetStoreFragment();
   }
 
-  @Override public Fragment newMyStoresSubscribedFragment() {
-    return new MyStoresSubscribedFragment();
-  }
-
-  @Override public Fragment newMyStoresFragment() {
-    return new MyStoresFragment();
-  }
-
   @Override public Fragment newGetStoreWidgetsFragment(boolean addAdultFilter) {
     return GetStoreWidgetsFragment.newInstance(addAdultFilter);
   }
@@ -190,11 +180,6 @@ public class PartnerFragmentProvider implements FragmentProvider {
   @Override public Fragment newAppsTimelineFragment(String action, Long userId, Long storeId,
       StoreContext storeContext) {
     return TimelineFragment.newInstance(action, userId, storeId, storeContext);
-  }
-
-  @Override public Fragment newSubscribedStoresFragment(Event event, String storeTheme, String tag,
-      StoreContext storeName) {
-    return MyStoresFragment.newInstance(event, defaultTheme, tag, storeName);
   }
 
   @Override public Fragment newDownloadsFragment() {

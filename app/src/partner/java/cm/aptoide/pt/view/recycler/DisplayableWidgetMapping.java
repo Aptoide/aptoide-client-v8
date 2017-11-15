@@ -73,8 +73,6 @@ import cm.aptoide.pt.store.view.featured.AppBrickListWidget;
 import cm.aptoide.pt.store.view.featured.AppBrickWidget;
 import cm.aptoide.pt.store.view.home.AdultRowDisplayable;
 import cm.aptoide.pt.store.view.home.AdultRowWidget;
-import cm.aptoide.pt.store.view.my.MyStoreDisplayable;
-import cm.aptoide.pt.store.view.my.MyStoreWidget;
 import cm.aptoide.pt.store.view.recommended.RecommendedStoreDisplayable;
 import cm.aptoide.pt.store.view.recommended.RecommendedStoreWidget;
 import cm.aptoide.pt.timeline.view.displayable.FollowStoreDisplayable;
@@ -278,8 +276,8 @@ public class DisplayableWidgetMapping {
     displayableWidgetMappings.add(new DisplayableWidgetMapping((StoreAddCommentWidget.class),
         StoreAddCommentDisplayable.class));
 
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping((MyStoreWidget.class), MyStoreDisplayable.class));
+    //displayableWidgetMappings.add(
+    //    new DisplayableWidgetMapping((MyStoreWidget.class), MyStoreDisplayable.class));
 
     displayableWidgetMappings.add(new DisplayableWidgetMapping((RecommendedStoreWidget.class),
         RecommendedStoreDisplayable.class));

@@ -152,9 +152,9 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter
       //case mySpotShare:
       //  return AptoideApplication.getFragmentProvider()
       //      .newSpotShareFragment(false);
-      case myStores:
-        return AptoideApplication.getFragmentProvider()
-            .newSubscribedStoresFragment(event, storeTheme, tab.getTag(), storeContext);
+      //case myStores:
+      //  return AptoideApplication.getFragmentProvider()
+      //      .newSubscribedStoresFragment(event, storeTheme, tab.getTag(), storeContext);
       default:
         // Safe to throw exception as the tab should be filtered prior to getting here.
         throw new RuntimeException("Fragment type not implemented!");

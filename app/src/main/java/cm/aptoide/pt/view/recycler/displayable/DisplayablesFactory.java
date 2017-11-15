@@ -53,7 +53,6 @@ import cm.aptoide.pt.store.view.StoreAddCommentDisplayable;
 import cm.aptoide.pt.store.view.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.store.view.StoreLatestCommentsDisplayable;
 import cm.aptoide.pt.store.view.featured.AppBrickDisplayable;
-import cm.aptoide.pt.store.view.my.MyStoreDisplayable;
 import cm.aptoide.pt.store.view.recommended.RecommendedStoreDisplayable;
 import cm.aptoide.pt.store.view.StoreTabNavigator;
 import java.util.ArrayList;
@@ -367,16 +366,16 @@ public class DisplayablesFactory {
       StoreAnalytics storeAnalytics, StoreContext storeContext) {
     LinkedList<Displayable> displayables = new LinkedList<>();
 
-    if (viewObject instanceof MyStore) {
-      MyStore store = (MyStore) viewObject;
-      if (!store.isCreateStore()) {
-        displayables.add(new MyStoreDisplayable(store, storeContext));
-      } else if (store.isLogged()) {
-        displayables.add(new CreateStoreDisplayable(storeAnalytics, store.getTimelineStats()));
-      } else {
-        displayables.add(new LoginDisplayable());
-      }
-    }
+    //if (viewObject instanceof MyStore) {
+    //  MyStore store = (MyStore) viewObject;
+    //  if (!store.isCreateStore()) {
+    //    displayables.add(new MyStoreDisplayable(store, storeContext));
+    //  } else if (store.isLogged()) {
+    //    displayables.add(new CreateStoreDisplayable(storeAnalytics, store.getTimelineStats()));
+    //  } else {
+    //    displayables.add(new LoginDisplayable());
+    //  }
+    //}
     return displayables;
   }
 

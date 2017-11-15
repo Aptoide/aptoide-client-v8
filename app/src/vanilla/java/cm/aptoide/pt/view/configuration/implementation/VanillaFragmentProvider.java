@@ -31,8 +31,6 @@ import cm.aptoide.pt.store.view.ListStoresFragment;
 import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.store.view.ads.GetAdsFragment;
-import cm.aptoide.pt.store.view.my.MyStoresFragment;
-import cm.aptoide.pt.store.view.my.MyStoresSubscribedFragment;
 import cm.aptoide.pt.store.view.recommended.RecommendedStoresFragment;
 import cm.aptoide.pt.timeline.view.SocialFragment;
 import cm.aptoide.pt.timeline.view.TimeLineLikesFragment;

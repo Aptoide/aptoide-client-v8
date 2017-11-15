@@ -84,9 +84,9 @@ public interface FragmentProvider {
 
   @Deprecated Fragment newGetStoreFragment();
 
-  @Deprecated Fragment newMyStoresSubscribedFragment();
+  //@Deprecated Fragment newMyStoresSubscribedFragment();
 
-  @Deprecated Fragment newMyStoresFragment();
+  //@Deprecated Fragment newMyStoresFragment();
 
   @Deprecated Fragment newGetStoreWidgetsFragment(boolean addAdultFilter);
 
@@ -99,8 +99,8 @@ public interface FragmentProvider {
   @Deprecated Fragment newAppsTimelineFragment(String action, Long userId, Long storeId,
       StoreContext storeContext);
 
-  @Deprecated Fragment newSubscribedStoresFragment(Event event, String storeTheme, String tag,
-      StoreContext storeName);
+  //@Deprecated Fragment newSubscribedStoresFragment(Event event, String storeTheme, String tag,
+  //    StoreContext storeName);
 
   @Deprecated Fragment newDownloadsFragment();
 

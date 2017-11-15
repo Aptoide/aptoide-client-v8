@@ -5,8 +5,6 @@ import cm.aptoide.pt.app.view.ListAppsFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.reviews.ListReviewsFragment;
 import cm.aptoide.pt.store.view.ads.GetAdsFragment;
-import cm.aptoide.pt.store.view.my.MyStoresFragment;
-import cm.aptoide.pt.store.view.my.MyStoresSubscribedFragment;
 import cm.aptoide.pt.store.view.recommended.RecommendedStoresFragment;
 
 /**
@@ -24,10 +22,6 @@ public class StoreTabFragmentChooser {
         return GetStoreFragment.newInstance();
       case getStoresRecommended:
         return RecommendedStoresFragment.newInstance();
-      case getMyStoresSubscribed:
-        return MyStoresSubscribedFragment.newInstance();
-      case myStores:
-        return MyStoresFragment.newInstance();
       case getStoreWidgets:
         return GetStoreWidgetsFragment.newInstance(addAdultFilter);
       case listReviews:

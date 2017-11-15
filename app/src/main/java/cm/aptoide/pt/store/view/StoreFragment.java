@@ -67,6 +67,7 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
+import java.util.Iterator;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -465,6 +466,19 @@ public class StoreFragment extends BasePagerToolbarFragment {
           .setAction(parsedEventAction);
     }
 
+    List<GetStoreTabs.Tab> tabs = storeUserAbstraction.getNodes()
+        .getTabs()
+        .getList();
+
+
+    //Remove request for myStoreFragment
+    for(Iterator<GetStoreTabs.Tab> tabIterator = tabs.iterator(); tabIterator.hasNext();){
+      GetStoreTabs.Tab t = tabIterator.next();
+      if(t.getEvent().getName().equals(Event.Name.myStores) ||
+          t.getEvent().getName().equals(Event.Name.getMyStoresSubscribed)){
+          tabIterator.remove();
+      }
+    }
     return storeUserAbstraction.getNodes()
         .getTabs()
         .getList();
