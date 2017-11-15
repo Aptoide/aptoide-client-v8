@@ -1,9 +1,10 @@
-package cm.aptoide.pt.billing.view;
+package cm.aptoide.pt.billing.view.adyen;
 
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.authorization.AdyenAuthorization;
 import cm.aptoide.pt.billing.payment.Adyen;
+import cm.aptoide.pt.billing.view.BillingNavigator;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import com.adyen.core.models.PaymentMethod;
@@ -80,10 +81,9 @@ public class AdyenAuthorizationPresenter implements Presenter {
   private void onViewCreatedCheckAuthorizationActive() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> billing.getAuthorization(sku))
-        .first(authorization -> authorization.isActive())
-        .cast(AdyenAuthorization.class)
-        .doOnNext(authorization -> analytics.sendAuthorizationSuccessEvent(serviceName))
+        .flatMap(created -> billing.getPayment(sku))
+        .first(payment -> payment.isCompleted())
+        .doOnNext(payment -> analytics.sendAuthorizationSuccessEvent(payment))
         .observeOn(viewScheduler)
         .doOnNext(__ -> navigator.popToPaymentView())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -94,11 +94,11 @@ public class AdyenAuthorizationPresenter implements Presenter {
   private void onViewCreatedCheckAuthorizationFailed() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> billing.getAuthorization(sku))
-        .first(authorization -> authorization.isFailed())
+        .flatMap(created -> billing.getPayment(sku))
+        .first(payment -> payment.isFailed())
         .cast(AdyenAuthorization.class)
         .observeOn(viewScheduler)
-        .doOnNext(__ -> view.showUnknownError())
+        .doOnNext(__ -> popViewWithError())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> showError(throwable));
@@ -107,8 +107,8 @@ public class AdyenAuthorizationPresenter implements Presenter {
   private void onViewCreatedCheckAuthorizationProcessing() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> billing.getAuthorization(sku))
-        .first(authorization -> authorization.isProcessing())
+        .flatMap(created -> billing.getPayment(sku))
+        .filter(payment -> payment.isProcessing())
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showLoading())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -205,9 +205,9 @@ public class AdyenAuthorizationPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.showLoading())
-        .flatMap(__ -> billing.getAuthorization(sku))
-        .filter(authorization -> authorization instanceof AdyenAuthorization)
-        .first(authorization -> authorization.isPending())
+        .flatMap(__ -> billing.getPayment(sku))
+        .first(payment -> payment.isPendingAuthorization())
+        .map(payment -> payment.getAuthorization())
         .cast(AdyenAuthorization.class)
         .flatMapCompletable(authorization -> adyen.createPayment(authorization.getSession()))
         .observeOn(viewScheduler)
@@ -220,10 +220,7 @@ public class AdyenAuthorizationPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.errorDismisses())
-        .doOnNext(product -> {
-          analytics.sendAuthorizationErrorEvent(serviceName);
-          navigator.popToPaymentView();
-        })
+        .doOnNext(__ -> popViewWithError())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {
@@ -232,12 +229,17 @@ public class AdyenAuthorizationPresenter implements Presenter {
   }
 
   private void showError(Throwable throwable) {
-    view.hideLoading();
-
     if (throwable instanceof IOException) {
+      view.hideLoading();
       view.showNetworkError();
     } else {
-      view.showUnknownError();
+      popViewWithError();
     }
+  }
+
+  private void popViewWithError() {
+    view.hideLoading();
+    analytics.sendAuthorizationErrorEvent(serviceName);
+    navigator.popView();
   }
 }

@@ -147,8 +147,10 @@ import cm.aptoide.pt.spotandshare.group.GroupNameProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
-import cm.aptoide.pt.sync.SyncService;
-import cm.aptoide.pt.sync.SyncStorage;
+import cm.aptoide.pt.sync.alarm.AlarmSyncScheduler;
+import cm.aptoide.pt.sync.alarm.AlarmSyncService;
+import cm.aptoide.pt.sync.alarm.SyncStorage;
+import cm.aptoide.pt.sync.rx.RxSyncScheduler;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
@@ -179,6 +181,7 @@ import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -257,7 +260,6 @@ public abstract class AptoideApplication extends Application {
   private Database database;
   private NotificationProvider notificationProvider;
   private SyncStorage syncStorage;
-  private SyncScheduler syncScheduler;
   private TimelineRepositoryFactory timelineRepositoryFactory;
   private AuthenticationPersistence authenticationPersistence;
   private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody>
@@ -275,6 +277,7 @@ public abstract class AptoideApplication extends Application {
   private BodyInterceptor<BaseBody> accountSettingsBodyInterceptorWebV7;
   private Adyen adyen;
   private PurchaseFactory purchaseFactory;
+  private SyncScheduler alarmSyncScheduler;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -543,20 +546,11 @@ public abstract class AptoideApplication extends Application {
 
   public NotificationSyncScheduler getNotificationSyncScheduler() {
     if (notificationSyncScheduler == null) {
-      notificationSyncScheduler = new NotificationSyncManager(getSyncScheduler(), true,
+      notificationSyncScheduler = new NotificationSyncManager(getAlarmSyncScheduler(), true,
           new NotificationSyncFactory(getDefaultSharedPreferences(), getPnpV1NotificationService(),
               getNotificationProvider()));
     }
     return notificationSyncScheduler;
-  }
-
-  public SyncScheduler getSyncScheduler() {
-    if (syncScheduler == null) {
-      syncScheduler =
-          new SyncScheduler(this, SyncService.class, (AlarmManager) getSystemService(ALARM_SERVICE),
-              getSyncStorage());
-    }
-    return syncScheduler;
   }
 
   public SharedPreferences getDefaultSharedPreferences() {
@@ -603,10 +597,14 @@ public abstract class AptoideApplication extends Application {
       okHttpClientBuilder.readTimeout(45, TimeUnit.SECONDS);
       okHttpClientBuilder.writeTimeout(45, TimeUnit.SECONDS);
 
-      final File cacheDirectory = new File("/");
-      final int cacheMaxSize = 10 * 1024 * 1024;
-      okHttpClientBuilder.cache(new Cache(cacheDirectory, cacheMaxSize)); // 10 MiB
-
+      final Cache cache = new Cache(getCacheDir(), 10 * 1024 * 1024);
+      try {
+        // For billing to handle stale data properly the cache should only be stored in memory.
+        // In order to make sure it happens we clean up all data persisted in disk when client
+        // is first created. It only affects API calls with GET verb.
+        cache.evictAll();
+      } catch (IOException ignored) {}
+      okHttpClientBuilder.cache(cache); // 10 MiB
       okHttpClientBuilder.addInterceptor(new POSTCacheInterceptor(getHttpClientCache()));
       okHttpClientBuilder.addInterceptor(getUserAgentInterceptor());
 
@@ -834,11 +832,13 @@ public abstract class AptoideApplication extends Application {
       billingPool =
           new BillingPool(getDefaultSharedPreferences(), getBodyInterceptorV3(), getDefaultClient(),
               getAccountManager(), getDatabase(), getResources(), getPackageRepository(),
-              getTokenInvalidator(), getSyncScheduler(), getInAppBillingSerializer(),
+              getTokenInvalidator(),
+              new RxSyncScheduler(new HashMap<>(), CrashReport.getInstance()),
+              getInAppBillingSerializer(),
               getBodyInterceptorPoolV7(), getAccountSettingsBodyInterceptorPoolV7(),
               new HashMap<>(), WebService.getDefaultConverter(), CrashReport.getInstance(),
               getAdyen(), getPurchaseFactory(), Build.VERSION_CODES.JELLY_BEAN,
-              Build.VERSION_CODES.JELLY_BEAN);
+              Build.VERSION_CODES.JELLY_BEAN, getAuthenticationPersistence(), getPreferences());
     }
     return billingPool;
   }
@@ -1341,6 +1341,14 @@ public abstract class AptoideApplication extends Application {
       purchaseFactory = new PurchaseFactory();
     }
     return purchaseFactory;
+  }
+
+  public SyncScheduler getAlarmSyncScheduler() {
+    if (alarmSyncScheduler == null) {
+      alarmSyncScheduler = new AlarmSyncScheduler(this, AlarmSyncService.class,
+          (AlarmManager) getSystemService(ALARM_SERVICE), getSyncStorage());
+    }
+    return alarmSyncScheduler;
   }
 }
 

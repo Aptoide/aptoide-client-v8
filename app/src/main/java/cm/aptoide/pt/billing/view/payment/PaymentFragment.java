@@ -1,4 +1,4 @@
-package cm.aptoide.pt.billing.view;
+package cm.aptoide.pt.billing.view.payment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,6 +21,8 @@ import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.BillingIdManager;
 import cm.aptoide.pt.billing.payment.PaymentService;
 import cm.aptoide.pt.billing.product.Product;
+import cm.aptoide.pt.billing.view.BillingActivity;
+import cm.aptoide.pt.billing.view.BillingNavigator;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.PermissionServiceFragment;
@@ -33,10 +35,8 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxRadioGroup;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -55,7 +55,6 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
 
   private RxAlertDialog networkErrorDialog;
   private RxAlertDialog unknownErrorDialog;
-  private Map<String, PaymentService> serviceMap;
   private SpannableFactory spannableFactory;
 
   private boolean paymentLoading;
@@ -77,12 +76,12 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     billing = ((AptoideApplication) getContext().getApplicationContext()).getBilling(
-        getArguments().getString(PaymentActivity.EXTRA_MERCHANT_NAME));
+        getArguments().getString(BillingActivity.EXTRA_MERCHANT_NAME));
     billingAnalytics =
         ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
     billingNavigator = ((ActivityResultNavigator) getContext()).getBillingNavigator();
     billingIdManager = ((AptoideApplication) getContext().getApplicationContext()).getIdResolver(
-        getArguments().getString(PaymentActivity.EXTRA_MERCHANT_NAME));
+        getArguments().getString(BillingActivity.EXTRA_MERCHANT_NAME));
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -103,8 +102,6 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     cancelButton = (Button) view.findViewById(R.id.include_payment_buttons_cancel_button);
     buyButton = (Button) view.findViewById(R.id.include_payment_buttons_buy_button);
 
-    serviceMap = new HashMap<>();
-
     networkErrorDialog =
         new RxAlertDialog.Builder(getContext()).setMessage(R.string.connection_error)
             .setPositiveButton(android.R.string.ok)
@@ -115,9 +112,9 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
             .build();
 
     attachPresenter(new PaymentPresenter(this, billing, billingNavigator, billingAnalytics,
-        getArguments().getString(PaymentActivity.EXTRA_MERCHANT_NAME),
-        getArguments().getString(PaymentActivity.EXTRA_SKU),
-        getArguments().getString(PaymentActivity.EXTRA_DEVELOPER_PAYLOAD), new HashSet<>()));
+        getArguments().getString(BillingActivity.EXTRA_MERCHANT_NAME),
+        getArguments().getString(BillingActivity.EXTRA_SKU),
+        getArguments().getString(BillingActivity.EXTRA_DEVELOPER_PAYLOAD), new HashSet<>()));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -144,7 +141,6 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     serviceRadioGroup = null;
     cancelButton = null;
     buyButton = null;
-    serviceMap = null;
     networkErrorDialog.dismiss();
     networkErrorDialog = null;
     unknownErrorDialog.dismiss();
@@ -155,10 +151,10 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     super.onDestroyView();
   }
 
-  @Override public Observable<PaymentService> selectServiceEvent() {
+  @Override public Observable<String> selectServiceEvent() {
     return RxRadioGroup.checkedChanges(serviceRadioGroup)
-        .map(paymentId -> serviceMap.get(billingIdManager.generateServiceId(paymentId)))
-        .filter(service -> service != null);
+        .filter(serviceId -> serviceId != -1)
+        .map(serviceId -> billingIdManager.generateServiceId(serviceId));
   }
 
   @Override public Observable<Void> cancelEvent() {
@@ -171,10 +167,6 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     return RxView.clicks(buyButton)
         .subscribeOn(AndroidSchedulers.mainThread())
         .unsubscribeOn(AndroidSchedulers.mainThread());
-  }
-
-  @Override public void selectService(PaymentService payment) {
-    serviceRadioGroup.check((int) billingIdManager.resolveServiceId(payment.getId()));
   }
 
   @Override public void showPaymentLoading() {
@@ -192,35 +184,37 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     progressView.setVisibility(View.VISIBLE);
   }
 
-  @Override public void showPayments(List<PaymentService> payments) {
+  @Override
+  public void showPayments(List<PaymentService> services, PaymentService selectedService) {
     serviceRadioGroup.removeAllViews();
     noPaymentsText.setVisibility(View.GONE);
     buyButton.setVisibility(View.VISIBLE);
-    serviceMap.clear();
 
     RadioButton radioButton;
     CharSequence radioText;
-    for (PaymentService payment : payments) {
+    for (PaymentService service : services) {
 
       radioButton = (RadioButton) getActivity().getLayoutInflater()
           .inflate(R.layout.payment_item, serviceRadioGroup, false);
-      radioButton.setId((int) billingIdManager.resolveServiceId(payment.getId()));
+      radioButton.setId((int) billingIdManager.resolveServiceId(service.getId()));
 
       Glide.with(this)
-          .load(payment.getIcon())
+          .load(service.getIcon())
           .into(new RadioButtonTarget(AptoideUtils.ScreenU.getPixelsForDip(16, getResources()),
               radioButton));
 
-      if (TextUtils.isEmpty(payment.getDescription())) {
-        radioText = payment.getName();
+      if (TextUtils.isEmpty(service.getDescription())) {
+        radioText = service.getName();
       } else {
         radioText = spannableFactory.createTextAppearanceSpan(getContext(),
             R.style.TextAppearance_Aptoide_Caption,
-            payment.getName() + "\n" + payment.getDescription(), payment.getDescription());
+            service.getName() + "\n" + service.getDescription(), service.getDescription());
       }
       radioButton.setText(radioText);
 
-      serviceMap.put(payment.getId(), payment);
+      radioButton.setChecked(selectedService.getId()
+          .equals(service.getId()));
+
       serviceRadioGroup.addView(radioButton);
     }
   }

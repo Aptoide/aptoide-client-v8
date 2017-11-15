@@ -46,11 +46,13 @@ public class InMemoryTransactionPersistence implements TransactionPersistence {
   }
 
   @Override
-  public Single<List<Transaction>> getOtherTransactions(String transactionId, String productId) {
+  public Single<List<Transaction>> getOtherTransactions(String transactionId, String productId,
+      String customerId) {
     return Observable.from(transactions.values())
         .filter(transaction -> transaction.getProductId()
             .equals(productId) && !transaction.getId()
-            .equals(transactionId))
+            .equals(transactionId) && transaction.getCustomerId()
+            .equals(customerId))
         .toList()
         .toSingle();
   }

@@ -12,9 +12,10 @@ import android.support.annotation.Nullable;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.billing.Billing;
+import cm.aptoide.pt.billing.view.payment.PaymentFragment;
 import cm.aptoide.pt.view.BackButtonActivity;
 
-public class PaymentActivity extends BackButtonActivity {
+public class BillingActivity extends BackButtonActivity {
 
   public static final String EXTRA_DEVELOPER_PAYLOAD =
       "cm.aptoide.pt.view.payment.intent.extra.DEVELOPER_PAYLOAD";
@@ -28,7 +29,7 @@ public class PaymentActivity extends BackButtonActivity {
 
   public static Intent getIntent(Context context, String sku, String merchantName,
       String developerPayload) {
-    final Intent intent = new Intent(context, PaymentActivity.class);
+    final Intent intent = new Intent(context, BillingActivity.class);
     intent.putExtra(EXTRA_SKU, sku);
     intent.putExtra(EXTRA_MERCHANT_NAME, merchantName);
     intent.putExtra(EXTRA_DEVELOPER_PAYLOAD, developerPayload);
@@ -36,7 +37,7 @@ public class PaymentActivity extends BackButtonActivity {
   }
 
   public static Intent getIntent(Context context, long appId, String merchantName) {
-    final Intent intent = new Intent(context, PaymentActivity.class);
+    final Intent intent = new Intent(context, BillingActivity.class);
     intent.putExtra(EXTRA_SKU, String.valueOf(appId));
     intent.putExtra(EXTRA_MERCHANT_NAME, merchantName);
     return intent;

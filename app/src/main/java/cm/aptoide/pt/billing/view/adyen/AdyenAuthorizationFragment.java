@@ -1,4 +1,4 @@
-package cm.aptoide.pt.billing.view;
+package cm.aptoide.pt.billing.view.adyen;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +13,8 @@ import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.payment.Adyen;
+import cm.aptoide.pt.billing.view.BillingActivity;
+import cm.aptoide.pt.billing.view.BillingNavigator;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.permission.PermissionServiceFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
@@ -27,7 +29,6 @@ public class AdyenAuthorizationFragment extends PermissionServiceFragment
 
   private Billing billing;
   private ProgressBar progressBar;
-  private RxAlertDialog unknownErrorDialog;
   private RxAlertDialog networkErrorDialog;
   private BillingNavigator navigator;
   private BillingAnalytics analytics;
@@ -45,7 +46,7 @@ public class AdyenAuthorizationFragment extends PermissionServiceFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     billing = ((AptoideApplication) getContext().getApplicationContext()).getBilling(
-        getArguments().getString(PaymentActivity.EXTRA_MERCHANT_NAME));
+        getArguments().getString(BillingActivity.EXTRA_MERCHANT_NAME));
     navigator = ((ActivityResultNavigator) getActivity()).getBillingNavigator();
     analytics = ((AptoideApplication) getContext().getApplicationContext()).getBillingAnalytics();
     adyen = ((AptoideApplication) getContext().getApplicationContext()).getAdyen();
@@ -62,11 +63,6 @@ public class AdyenAuthorizationFragment extends PermissionServiceFragment
             .setPositiveButton(R.string.ok)
             .build();
 
-    unknownErrorDialog =
-        new RxAlertDialog.Builder(getContext()).setMessage(R.string.all_message_general_error)
-            .setPositiveButton(R.string.ok)
-            .build();
-
     clickHandler = new ClickHandler() {
       @Override public boolean handle() {
         backButton.call(null);
@@ -76,9 +72,9 @@ public class AdyenAuthorizationFragment extends PermissionServiceFragment
     registerClickHandler(clickHandler);
 
     attachPresenter(
-        new AdyenAuthorizationPresenter(this, getArguments().getString(PaymentActivity.EXTRA_SKU),
+        new AdyenAuthorizationPresenter(this, getArguments().getString(BillingActivity.EXTRA_SKU),
             billing, navigator, analytics,
-            getArguments().getString(PaymentActivity.EXTRA_SERVICE_NAME), adyen,
+            getArguments().getString(BillingActivity.EXTRA_SERVICE_NAME), adyen,
             AndroidSchedulers.mainThread()));
   }
 
@@ -102,8 +98,6 @@ public class AdyenAuthorizationFragment extends PermissionServiceFragment
     progressBar = null;
     networkErrorDialog.dismiss();
     networkErrorDialog = null;
-    unknownErrorDialog.dismiss();
-    unknownErrorDialog = null;
     super.onDestroyView();
   }
 
@@ -116,19 +110,13 @@ public class AdyenAuthorizationFragment extends PermissionServiceFragment
   }
 
   @Override public Observable<Void> errorDismisses() {
-    return Observable.merge(networkErrorDialog.dismisses(), unknownErrorDialog.dismisses())
+    return networkErrorDialog.dismisses()
         .map(dialogInterface -> null);
   }
 
   @Override public void showNetworkError() {
-    if (!networkErrorDialog.isShowing() && !unknownErrorDialog.isShowing()) {
+    if (!networkErrorDialog.isShowing()) {
       networkErrorDialog.show();
-    }
-  }
-
-  @Override public void showUnknownError() {
-    if (!networkErrorDialog.isShowing() && !unknownErrorDialog.isShowing()) {
-      unknownErrorDialog.show();
     }
   }
 

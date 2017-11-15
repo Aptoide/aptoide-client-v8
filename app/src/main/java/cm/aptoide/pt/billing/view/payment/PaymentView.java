@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 19/08/2016.
  */
 
-package cm.aptoide.pt.billing.view;
+package cm.aptoide.pt.billing.view.payment;
 
 import cm.aptoide.pt.billing.payment.PaymentService;
 import cm.aptoide.pt.billing.product.Product;
@@ -13,13 +13,11 @@ import rx.Observable;
 
 public interface PaymentView extends View {
 
-  Observable<PaymentService> selectServiceEvent();
+  Observable<String> selectServiceEvent();
 
   Observable<Void> cancelEvent();
 
   Observable<Void> buyEvent();
-
-  void selectService(PaymentService payment);
 
   void showPaymentLoading();
 
@@ -27,7 +25,7 @@ public interface PaymentView extends View {
 
   void showBuyLoading();
 
-  void showPayments(List<PaymentService> paymentList);
+  void showPayments(List<PaymentService> paymentList, PaymentService selectedService);
 
   void showProduct(Product product);
 

@@ -18,7 +18,7 @@ import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.exception.MerchantNotFoundException;
 import cm.aptoide.pt.billing.purchase.InAppPurchase;
 import cm.aptoide.pt.billing.purchase.Purchase;
-import cm.aptoide.pt.billing.view.PaymentActivity;
+import cm.aptoide.pt.billing.view.BillingActivity;
 import cm.aptoide.pt.billing.view.PaymentThrowableCodeMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.iab.AptoideInAppBillingService;
@@ -164,7 +164,7 @@ public class ExternalBillingBinder extends AptoideInAppBillingService.Stub {
     try {
       result.putInt(RESPONSE_CODE, RESULT_OK);
       result.putParcelable(BUY_INTENT, PendingIntent.getActivity(context, 0,
-          PaymentActivity.getIntent(context, sku, merchantName, developerPayload),
+          BillingActivity.getIntent(context, sku, merchantName, developerPayload),
           PendingIntent.FLAG_UPDATE_CURRENT));
       analytics.sendPaymentViewShowEvent();
     } catch (Exception exception) {

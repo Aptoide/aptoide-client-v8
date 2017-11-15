@@ -4,8 +4,9 @@ import android.os.Bundle;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.Event;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
-import cm.aptoide.pt.billing.product.Product;
+import cm.aptoide.pt.billing.payment.Payment;
 import cm.aptoide.pt.billing.product.InAppProduct;
+import cm.aptoide.pt.billing.product.Product;
 import com.facebook.appevents.AppEventsLogger;
 
 public class BillingAnalytics {
@@ -25,14 +26,15 @@ public class BillingAnalytics {
     analytics.sendEvent(getFacebookPaymentEvent("Payment_Pop_Up", "Show", new Bundle()));
   }
 
-  public void sendPaymentViewCancelEvent(Product product) {
-    analytics.sendEvent(
-        getFacebookPaymentEvent("Payment_Pop_Up", "Cancel", getProductBundle(product)));
+  public void sendPaymentViewCancelEvent(Payment payment) {
+    analytics.sendEvent(getFacebookPaymentEvent("Payment_Pop_Up", "Cancel",
+        getProductBundle(payment.getProduct())));
   }
 
-  public void sendPaymentViewBuyEvent(Product product, String serviceName) {
-    final Bundle bundle = getProductBundle(product);
-    bundle.putString("payment_method", serviceName);
+  public void sendPaymentViewBuyEvent(Payment payment) {
+    final Bundle bundle = getProductBundle(payment.getProduct());
+    bundle.putString("payment_method", payment.getSelectedPaymentService()
+        .getType());
     analytics.sendEvent(getFacebookPaymentEvent("Payment_Pop_Up", "Buy", bundle));
   }
 
@@ -60,9 +62,10 @@ public class BillingAnalytics {
     analytics.sendEvent(getFacebookPaymentEvent("Payment_Login", action, new Bundle()));
   }
 
-  public void sendAuthorizationSuccessEvent(String serviceName) {
+  public void sendAuthorizationSuccessEvent(Payment payment) {
     final Bundle bundle = new Bundle();
-    bundle.putString("payment_method", serviceName);
+    bundle.putString("payment_method", payment.getSelectedPaymentService()
+        .getType());
     analytics.sendEvent(getFacebookPaymentEvent("Payment_Authorization_Page", "Success", bundle));
   }
 

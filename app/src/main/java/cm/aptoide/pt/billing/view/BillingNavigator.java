@@ -6,9 +6,12 @@ import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.customtabs.CustomTabsIntent;
 import cm.aptoide.pt.BuildConfig;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.billing.networking.PaymentServiceMapper;
 import cm.aptoide.pt.billing.payment.PaymentService;
 import cm.aptoide.pt.billing.purchase.Purchase;
+import cm.aptoide.pt.billing.view.adyen.AdyenAuthorizationFragment;
+import cm.aptoide.pt.billing.view.adyen.CreditCardFragment;
 import cm.aptoide.pt.billing.view.login.PaymentLoginFragment;
 import cm.aptoide.pt.billing.view.paypal.PayPalAuthorizationFragment;
 import cm.aptoide.pt.navigator.ActivityNavigator;
@@ -117,9 +120,9 @@ public class BillingNavigator {
 
   private Bundle getAuthorizationBundle(String merchantName, String sku, String serviceName) {
     final Bundle bundle = new Bundle();
-    bundle.putString(PaymentActivity.EXTRA_SKU, sku);
-    bundle.putString(PaymentActivity.EXTRA_MERCHANT_NAME, merchantName);
-    bundle.putString(PaymentActivity.EXTRA_SERVICE_NAME, serviceName);
+    bundle.putString(BillingActivity.EXTRA_SKU, sku);
+    bundle.putString(BillingActivity.EXTRA_MERCHANT_NAME, merchantName);
+    bundle.putString(BillingActivity.EXTRA_SERVICE_NAME, serviceName);
     return bundle;
   }
 
@@ -145,15 +148,13 @@ public class BillingNavigator {
   }
 
   public void navigateToAdyenCreditCardView(PaymentRequest paymentRequest) {
-    fragmentNavigator.navigateTo(
-        new CreditCardFragmentBuilder().setPaymentMethod(paymentRequest.getPaymentMethod())
-            .setPublicKey(paymentRequest.getPublicKey())
-            .setGenerationtime(paymentRequest.getGenerationTime())
-            .setAmount(paymentRequest.getAmount())
-            .setShopperReference(paymentRequest.getShopperReference())
-            .setCVCFieldStatus(CreditCardFragmentBuilder.CvcFieldStatus.REQUIRED)
-            .setCreditCardInfoListener(details -> detailsRelay.call(details))
-            .build(), false);
+    final CreditCardFragment fragment =
+        CreditCardFragment.create(paymentRequest.getAmount(), paymentRequest.getPaymentMethod(),
+            paymentRequest.getPublicKey(), paymentRequest.getShopperReference(),
+            paymentRequest.getGenerationTime(), CreditCardFragmentBuilder.CvcFieldStatus.REQUIRED,
+            false, R.style.AptoideThemeDefault);
+    fragment.setCreditCardInfoListener(details -> detailsRelay.call(details));
+    fragmentNavigator.navigateTo(fragment, false);
   }
 
   public Observable<CreditCardPaymentDetails> adyenResults() {
