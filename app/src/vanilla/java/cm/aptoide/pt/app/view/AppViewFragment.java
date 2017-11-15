@@ -100,7 +100,6 @@ import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.view.SearchBuilder;
 import cm.aptoide.pt.share.ShareAppHelper;
-import cm.aptoide.pt.social.data.ReadPostsPersistence;
 import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
@@ -182,6 +181,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private NavigationTracker navigationTracker;
   private SearchBuilder searchBuilder;
   private IssuesAnalytics issuesAnalytics;
+  private InstallAnalytics installAnalytics;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -336,11 +336,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
     super.onCreate(savedInstanceState);
 
-    final AptoideApplication application =
-        (AptoideApplication) getContext().getApplicationContext();
-
     handleSavedInstance(savedInstanceState);
 
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
     this.appViewModel.setDefaultTheme(application.getDefaultThemeName());
     this.appViewModel.setMarketName(application.getMarketName());
 
@@ -368,14 +367,17 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     converterFactory = WebService.getDefaultConverter();
     Analytics analytics = Analytics.getInstance();
     issuesAnalytics = new IssuesAnalytics(analytics, Answers.getInstance());
-    ReadPostsPersistence readPostsPersistence =
-        ((AptoideApplication) getContext().getApplicationContext()).getReadPostsPersistence();
+
+    installAnalytics = new InstallAnalytics(analytics,
+        AppEventsLogger.newLogger(getContext().getApplicationContext()));
+
     timelineAnalytics = new TimelineAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
         application.getDefaultSharedPreferences(), new NotificationAnalytics(httpClient, analytics),
-        navigationTracker, readPostsPersistence);
+        navigationTracker, application.getReadPostsPersistence());
     socialRepository =
+
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
             timelineAnalytics, tokenInvalidator, application.getDefaultSharedPreferences());
     appRepository =
@@ -409,7 +411,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             analytics);
     notLoggedInShareAnalytics = application.getNotLoggedInShareAnalytics();
     navigationTracker = application.getNavigationTracker();
-
     setHasOptionsMenu(true);
   }
 
@@ -933,14 +934,14 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     if (getOpenType() == OpenType.OPEN_AND_INSTALL) {
       setOpenType(null);
     }
+
     installDisplayable =
         AppViewInstallDisplayable.newInstance(getApp, installManager, getSearchAdResult(),
             shouldInstall, installedRepository, downloadFactory, timelineAnalytics,
             appViewAnalytics, installAppRelay, this,
             new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
                 AppEventsLogger.newLogger(getContext().getApplicationContext())), navigationTracker,
-            getEditorsBrickPosition(), new InstallAnalytics(Analytics.getInstance(),
-                AppEventsLogger.newLogger(getContext().getApplicationContext())));
+            getEditorsBrickPosition(), installAnalytics);
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics, storeAnalytics));
     displayables.add(

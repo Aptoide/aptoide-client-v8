@@ -154,12 +154,15 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
     final Bundle args = new Bundle();
+
     if (userId != null) {
       args.putLong(USER_ID_KEY, userId);
     }
+
     if (storeId != null) {
       args.putLong(STORE_ID, storeId);
     }
+
     args.putSerializable(STORE_CONTEXT, storeContext);
     Fragment fragment = new TimelineFragment();
     args.putString(ACTION_KEY, action);
