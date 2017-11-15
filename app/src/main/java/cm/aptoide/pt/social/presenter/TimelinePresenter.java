@@ -373,11 +373,11 @@ public class TimelinePresenter implements Presenter {
                     view.showGenericViewError();
                   }
                 })
-                .retry()
-                .flatMapCompletable(__ -> timeline.notificationDismissed(
+                .flatMapCompletable(cards -> timeline.notificationDismissed(
                     ((TimelineUser) cardTouchEvent.getCard()).getNotificationId())
                     .andThen(Completable.fromAction(() -> timelineAnalytics.notificationShown(
-                        ((TimelineUser) cardTouchEvent.getCard()).getAnalyticsUrl()))))))
+                        ((TimelineUser) cardTouchEvent.getCard()).getAnalyticsUrl()))))
+                .retry()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
         }, throwable -> crashReport.log(throwable));
