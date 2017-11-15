@@ -17,13 +17,15 @@ public class GetTransactionRequest extends V7<Response<GetTransactionRequest.Res
 
   private final long productId;
   private final String accessToken;
+  private final String customerId;
 
   private GetTransactionRequest(Void body, String baseHost, OkHttpClient httpClient,
       Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
-      TokenInvalidator tokenInvalidator, long productId, String accessToken) {
+      TokenInvalidator tokenInvalidator, long productId, String accessToken, String customerId) {
     super(body, baseHost, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
     this.productId = productId;
     this.accessToken = accessToken;
+    this.customerId = customerId;
   }
 
   public static String getHost(SharedPreferences sharedPreferences) {
@@ -37,14 +39,14 @@ public class GetTransactionRequest extends V7<Response<GetTransactionRequest.Res
   public static GetTransactionRequest of(BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, long productId,
-      String accessToken) {
+      String accessToken, String customerId) {
     return new GetTransactionRequest(null, getHost(sharedPreferences), httpClient, converterFactory,
-        bodyInterceptor, tokenInvalidator, productId, accessToken);
+        bodyInterceptor, tokenInvalidator, productId, accessToken, customerId);
   }
 
   @Override protected Observable<Response<ResponseBody>> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getBillingTransaction(productId, "Bearer " + accessToken);
+    return interfaces.getBillingTransaction(productId, "Bearer " + accessToken, customerId);
   }
 
   public static class RequestBody extends BaseBody {

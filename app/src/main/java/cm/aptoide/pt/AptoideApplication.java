@@ -599,10 +599,12 @@ public abstract class AptoideApplication extends Application {
 
       final Cache cache = new Cache(getCacheDir(), 10 * 1024 * 1024);
       try {
+        // For billing to handle stale data properly the cache should only be stored in memory.
+        // In order to make sure it happens we clean up all data persisted in disk when client
+        // is first created. It only affects API calls with GET verb.
         cache.evictAll();
       } catch (IOException ignored) {}
       okHttpClientBuilder.cache(cache); // 10 MiB
-
       okHttpClientBuilder.addInterceptor(new POSTCacheInterceptor(getHttpClientCache()));
       okHttpClientBuilder.addInterceptor(getUserAgentInterceptor());
 

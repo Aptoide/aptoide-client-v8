@@ -47,7 +47,8 @@ public class TransactionServiceV7 implements TransactionService {
     return authenticationPersistence.getAuthentication()
         .flatMapObservable(authentication -> GetTransactionRequest.of(bodyInterceptorV7, httpClient,
             converterFactory, tokenInvalidator, sharedPreferences,
-            billingIdManager.resolveProductId(productId), authentication.getAccessToken())
+            billingIdManager.resolveProductId(productId), authentication.getAccessToken(),
+            customerId)
             .observe())
         .toSingle()
         .flatMap(response -> {

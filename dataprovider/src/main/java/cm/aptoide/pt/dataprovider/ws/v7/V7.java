@@ -481,7 +481,8 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
 
     @GET("inapp/bank/transaction/getMeta")
     Observable<Response<GetTransactionRequest.ResponseBody>> getBillingTransaction(
-        @Query("product_id") long productId, @Header("Authorization") String authorization);
+        @Query("product_id") long productId, @Header("Authorization") String authorization,
+        @Query("user_id") String customerId);
 
     @POST("inapp/bank/transaction/set")
     Observable<CreateTransactionRequest.ResponseBody> createBillingTransaction(
@@ -503,7 +504,8 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
 
     @GET("inapp/bank/authorization/getMeta")
     Observable<Response<GetAuthorizationRequest.ResponseBody>> getBillingAuthorization(
-        @Query("transaction_id") long transactionId, @Header("Authorization") String authorization);
+        @Query("transaction_id") long transactionId, @Header("Authorization") String authorization,
+        @Query("user_id") String customerId);
 
     @POST("user/timeline/card/del") Observable<BaseV7Response> deletePost(
         @Body PostDeleteRequest.Body body,

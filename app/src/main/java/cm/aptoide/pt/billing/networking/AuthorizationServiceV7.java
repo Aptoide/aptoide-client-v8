@@ -48,7 +48,8 @@ public class AuthorizationServiceV7 implements AuthorizationService {
     return authenticationPersistence.getAuthentication()
         .flatMapObservable(authentication -> GetAuthorizationRequest.of(
             billingIdManager.resolveTransactionId(transactionId), sharedPreferences, httpClient,
-            converterFactory, bodyInterceptorV7, tokenInvalidator, authentication.getAccessToken())
+            converterFactory, bodyInterceptorV7, tokenInvalidator, authentication.getAccessToken(),
+            customerId)
             .observe())
         .toSingle()
         .flatMap(response -> {
