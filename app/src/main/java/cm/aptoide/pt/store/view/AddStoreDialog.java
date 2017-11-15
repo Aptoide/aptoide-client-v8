@@ -30,9 +30,9 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.search.SearchSuggestionManager;
 import cm.aptoide.pt.search.SearchCursorAdapter;
 import cm.aptoide.pt.search.SearchFactory;
+import cm.aptoide.pt.search.SearchSuggestionManager;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
@@ -234,8 +234,6 @@ public class AddStoreDialog extends BaseDialog {
         .subscribe());
 
     subscriptions.add(searchSuggestionManager.listenForSuggestions()
-        .filter(data -> data != null && data.size() > 0)
-        .retry(3)
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(data -> searchCursorAdapter.setData(data))
         .subscribe());

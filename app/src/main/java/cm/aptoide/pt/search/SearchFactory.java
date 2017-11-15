@@ -1,7 +1,8 @@
 package cm.aptoide.pt.search;
 
 import cm.aptoide.pt.BuildConfig;
-import cm.aptoide.pt.search.websocket2.ReactiveWebSocket;
+import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.search.websocket.ReactiveWebSocket;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -28,6 +29,7 @@ public class SearchFactory {
 
     final OkHttpClient client = new OkHttpClient();
 
-    return new SearchSuggestionManager(new ObjectMapper(), new ReactiveWebSocket(client, request));
+    return new SearchSuggestionManager(new ObjectMapper(), new ReactiveWebSocket(client, request),
+        CrashReport.getInstance());
   }
 }

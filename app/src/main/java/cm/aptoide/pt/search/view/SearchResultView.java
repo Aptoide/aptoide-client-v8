@@ -3,7 +3,6 @@ package cm.aptoide.pt.search.view;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
-import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import java.util.List;
 import rx.Observable;
 
@@ -22,10 +21,6 @@ public interface SearchResultView extends View {
   void showNoResultsView();
 
   void showResultsView();
-
-  void hideLists();
-
-  Observable<SearchViewQueryTextEvent> onQueryTextChanged();
 
   void showLoading();
 
@@ -58,12 +53,6 @@ public interface SearchResultView extends View {
   void hideLoadingMore();
 
   void setViewWithStoreNameAsSingleTab(String storeName);
-
-  void focusInSearchBar();
-
-  void setTrending(List<String> trending);
-
-  void collapseSearchBar();
 
   void displaySearchQuery(String query);
 

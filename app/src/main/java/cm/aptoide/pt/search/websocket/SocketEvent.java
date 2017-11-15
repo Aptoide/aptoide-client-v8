@@ -1,4 +1,4 @@
-package cm.aptoide.pt.search.websocket2;
+package cm.aptoide.pt.search.websocket;
 
 public final class SocketEvent {
 

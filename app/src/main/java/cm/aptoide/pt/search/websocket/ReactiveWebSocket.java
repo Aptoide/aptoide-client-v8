@@ -1,4 +1,4 @@
-package cm.aptoide.pt.search.websocket2;
+package cm.aptoide.pt.search.websocket;
 
 import cm.aptoide.pt.logger.Logger;
 import java.nio.charset.Charset;

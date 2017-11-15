@@ -12,14 +12,12 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
-import java.util.ArrayList;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
-import rx.Single;
 
-public class SearchManager {
+@SuppressWarnings("Convert2MethodRef") public class SearchManager {
 
   private final SharedPreferences sharedPreferences;
   private final TokenInvalidator tokenInvalidator;
@@ -47,7 +45,7 @@ public class SearchManager {
 
   public Observable<SearchAdResult> getAdsForQuery(String query) {
     return adsRepository.getAdsFromSearch(query)
-        .map(SearchAdResult::new);
+        .map(minimalAd -> new SearchAdResult(minimalAd));
   }
 
   public Observable<List<SearchAppResult>> searchInNonFollowedStores(String query,
@@ -55,11 +53,11 @@ public class SearchManager {
     return ListSearchAppsRequest.of(query, offset, false, onlyTrustedApps, subscribedStoresIds,
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe(true)
-        .filter(this::hasResults)
+        .filter(listSearchApps -> hasResults(listSearchApps))
         .map(data -> data.getDataList()
             .getList())
         .flatMapIterable(list -> list)
-        .map(SearchAppResult::new)
+        .map(searchApp -> new SearchAppResult(searchApp))
         .toList();
   }
 
@@ -68,11 +66,11 @@ public class SearchManager {
     return ListSearchAppsRequest.of(query, offset, true, onlyTrustedApps, subscribedStoresIds,
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe(true)
-        .filter(this::hasResults)
+        .filter(listSearchApps -> hasResults(listSearchApps))
         .map(data -> data.getDataList()
             .getList())
         .flatMapIterable(list -> list)
-        .map(SearchAppResult::new)
+        .map(searchApp -> new SearchAppResult(searchApp))
         .toList();
   }
 
@@ -81,22 +79,12 @@ public class SearchManager {
     return ListSearchAppsRequest.of(query, storeName, offset, subscribedStoresAuthMap,
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe(true)
-        .filter(this::hasResults)
+        .filter(listSearchApps -> hasResults(listSearchApps))
         .map(data -> data.getDataList()
             .getList())
         .flatMapIterable(list -> list)
-        .map(SearchAppResult::new)
+        .map(searchApp -> new SearchAppResult(searchApp))
         .toList();
-  }
-
-  public Observable<List<String>> getTrendingApps(){
-    List<String> test = new ArrayList<>();
-    test.add("Facebook");
-    test.add("Twitter");
-    test.add("Google");
-    test.add("Hill Climb Racing");
-    test.add("Aptoide");
-    return Observable.just(test);
   }
 
   private boolean hasResults(ListSearchApps listSearchApps) {

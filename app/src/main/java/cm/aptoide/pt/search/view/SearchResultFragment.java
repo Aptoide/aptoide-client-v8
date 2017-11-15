@@ -44,6 +44,7 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.presenter.CompositePresenter;
 import cm.aptoide.pt.search.SearchAnalytics;
 import cm.aptoide.pt.search.SearchCursorAdapter;
 import cm.aptoide.pt.search.SearchFactory;
@@ -65,6 +66,7 @@ import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
@@ -76,7 +78,8 @@ import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 
-public class SearchResultFragment extends BackButtonFragment implements SearchResultView {
+public class SearchResultFragment extends BackButtonFragment
+    implements SearchResultView, SearchSuggestionsView {
 
   private static final int LAYOUT = R.layout.global_search_fragment;
   private static final String VIEW_MODEL = "view_model";
@@ -255,18 +258,6 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
     searchResultsLayout.setVisibility(View.VISIBLE);
   }
 
-  @Override public void hideLists() {
-    noSearchLayout.setVisibility(View.GONE);
-    searchResultsLayout.setVisibility(View.GONE);
-    buttonsLayout.setVisibility(View.GONE);
-    followedStoresResultList.setVisibility(View.GONE);
-    allStoresResultList.setVisibility(View.GONE);
-  }
-
-  @Override public Observable<SearchViewQueryTextEvent> onQueryTextChanged() {
-    return queryTextChangedPublisher;
-  }
-
   @Override public void showLoading() {
     progressBar.setVisibility(View.VISIBLE);
     noSearchLayout.setVisibility(View.GONE);
@@ -361,6 +352,22 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
     allStoresButton.setVisibility(View.GONE);
   }
 
+  @Override public void displaySearchQuery(String query) {
+    searchView.setQuery(query, false);
+  }
+
+  @Override public Observable<SearchViewQueryTextEvent> onQueryTextChanged() {
+    return queryTextChangedPublisher;
+  }
+
+  @Override public void collapseSearchBar() {
+    if (searchMenuItem != null) searchMenuItem.collapseActionView();
+  }
+
+  @Override public String getCurrentQuery() {
+    return viewModel != null ? viewModel.getCurrentQuery() : "";
+  }
+
   @Override public void focusInSearchBar() {
     if (searchMenuItem != null) {
       searchMenuItem.expandActionView();
@@ -376,14 +383,6 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
 
   @Override public void setTrending(List<String> trending) {
     searchCursorAdapter.setData(trending);
-  }
-
-  @Override public void collapseSearchBar() {
-    if (searchMenuItem != null) searchMenuItem.collapseActionView();
-  }
-
-  @Override public void displaySearchQuery(String query) {
-    searchView.setQuery(query, false);
   }
 
   private Observable<Void> recyclerViewReachedBottom(RecyclerView recyclerView) {
@@ -549,10 +548,19 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
     setupToolbar();
     setupTheme();
     clickTitleBarExpandsList();
-    attachPresenter(new SearchResultPresenter(this, searchAnalytics, searchNavigator, crashReport,
-        mainThreadScheduler, searchManager, onAdClickRelay, onItemViewClickRelay,
-        onOpenPopupMenuClickRelay, isMultiStoreSearch, defaultThemeName, defaultStoreName,
-        searchCursorAdapter, new SearchFactory().createSearchForApps(), trendingManager));
+
+    final SearchResultPresenter searchResultPresenter =
+        new SearchResultPresenter(this, searchAnalytics, searchNavigator, crashReport,
+            mainThreadScheduler, searchManager, onAdClickRelay, onItemViewClickRelay,
+            onOpenPopupMenuClickRelay, isMultiStoreSearch, defaultThemeName, defaultStoreName);
+
+    final SearchSuggestionsPresenter searchSuggestionsPresenter =
+        new SearchSuggestionsPresenter(this, new SearchFactory().createSearchForApps(),
+            mainThreadScheduler, searchCursorAdapter, crashReport, trendingManager,
+            searchNavigator);
+
+    attachPresenter(
+        new CompositePresenter(Arrays.asList(searchSuggestionsPresenter, searchResultPresenter)));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {

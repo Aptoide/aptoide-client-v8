@@ -39,7 +39,7 @@ public class TrendingService {
     this.sharedPreferences = sharedPreferences;
   }
 
-  public Observable<ListApps> getTrending(int limit){
+  public Observable<ListApps> getTrendingApps(int limit){
     ListAppsRequest.Body body =
         new ListAppsRequest.Body(storeCredentialsProvider.get(15), limit, sharedPreferences,
             ListAppsRequest.Sort.trending30d);
