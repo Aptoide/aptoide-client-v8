@@ -18,13 +18,15 @@ public class GetAuthorizationRequest extends
 
   private final long transactionId;
   private final String accessToken;
+  private final String customerId;
 
   private GetAuthorizationRequest(Void body, String baseHost, OkHttpClient httpClient,
       Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
-      TokenInvalidator tokenInvalidator, long transactionId, String accessToken) {
+      TokenInvalidator tokenInvalidator, long transactionId, String accessToken, String customerId) {
     super(body, baseHost, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
     this.transactionId = transactionId;
     this.accessToken = accessToken;
+    this.customerId = customerId;
   }
 
   public static String getHost(SharedPreferences sharedPreferences) {
@@ -38,15 +40,15 @@ public class GetAuthorizationRequest extends
   public static GetAuthorizationRequest of(long transactionId, SharedPreferences sharedPreferences,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       BodyInterceptor<BaseBody> bodyInterceptor, TokenInvalidator tokenInvalidator,
-      String accessToken) {
+      String accessToken, String customerId) {
     return new GetAuthorizationRequest(null, getHost(sharedPreferences), httpClient,
-        converterFactory, bodyInterceptor, tokenInvalidator, transactionId, accessToken);
+        converterFactory, bodyInterceptor, tokenInvalidator, transactionId, accessToken, customerId);
   }
 
   @Override
   protected Observable<Response<GetAuthorizationRequest.ResponseBody>> loadDataFromNetwork(
       Interfaces interfaces, boolean bypassCache) {
-    return interfaces.getBillingAuthorization(transactionId, "Bearer " + accessToken);
+    return interfaces.getBillingAuthorization(transactionId, "Bearer " + accessToken, customerId);
   }
 
   public static class ResponseBody extends BaseV7Response {
