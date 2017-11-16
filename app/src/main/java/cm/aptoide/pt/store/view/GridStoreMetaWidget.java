@@ -144,23 +144,23 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
         badgeIcon.setVisibility(View.GONE);
         break;
       case TIN:
-        badgeIcon.setImageResource(R.drawable.tin);
+        badgeIcon.setImageResource(R.drawable.tin_medal_gradient);
         badgeIcon.setVisibility(View.VISIBLE);
         break;
       case BRONZE:
-        badgeIcon.setImageResource(R.drawable.bronze);
+        badgeIcon.setImageResource(R.drawable.bronze_medal_gradient);
         badgeIcon.setVisibility(View.VISIBLE);
         break;
       case SILVER:
-        badgeIcon.setImageResource(R.drawable.silver);
+        badgeIcon.setImageResource(R.drawable.silver_medal_gradient);
         badgeIcon.setVisibility(View.VISIBLE);
         break;
       case GOLD:
-        badgeIcon.setImageResource(R.drawable.gold);
+        badgeIcon.setImageResource(R.drawable.gold_medal_gradient);
         badgeIcon.setVisibility(View.VISIBLE);
         break;
       case PLATINUM:
-        badgeIcon.setImageResource(R.drawable.platinum);
+        badgeIcon.setImageResource(R.drawable.platinum_medal_gradient);
         badgeIcon.setVisibility(View.VISIBLE);
         break;
     }
