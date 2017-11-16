@@ -66,16 +66,16 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    attachPresenter(
-        new InboxPresenter(this, new InboxNavigator(getFragmentNavigator(), tabNavigator),
-            ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
-            new LinksHandlerFactory(getContext()), CrashReport.getInstance(),
-            ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker(),
-            new NotificationAnalytics(
-                ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient(),
-                Analytics.getInstance()),
-            new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-                Analytics.getInstance(), navigationTracker)));
+    attachPresenter(new InboxPresenter(this,
+        new InboxNavigator(tabNavigator, new LinksHandlerFactory(getContext())),
+        ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
+        CrashReport.getInstance(),
+        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker(),
+        new NotificationAnalytics(
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient(),
+            Analytics.getInstance()),
+        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance(), navigationTracker)));
     notificationSubject = PublishSubject.create();
     adapter = new InboxAdapter(Collections.emptyList(), notificationSubject);
     setHasOptionsMenu(true);
