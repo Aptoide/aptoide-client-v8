@@ -14,15 +14,30 @@
     </shape>
   </item>
   <item
-      android:bottom="1dp"
-      android:left="5dp"
-      android:right="5dp"
-      android:top="6dp">
+      android:bottom="0dp"
+      android:left="10dp"
+      android:right="10dp"
+      android:top="10dp">
     <shape
         android:shape="oval">
       <stroke
           android:color="#01000000"
-          android:width="1dp"/>
+          android:width="2dp"/>
+      <size
+          android:height="190dp"
+          android:width="190dp"/>
+    </shape>
+  </item>
+  <item
+      android:bottom="1dp"
+      android:left="10dp"
+      android:right="10dp"
+      android:top="10dp">
+    <shape
+        android:shape="oval">
+      <stroke
+          android:color="#05000000"
+          android:width="2dp"/>
       <size
           android:height="190dp"
           android:width="190dp"/>
@@ -30,29 +45,14 @@
   </item>
   <item
       android:bottom="2dp"
-      android:left="5dp"
-      android:right="5dp"
-      android:top="6dp">
-    <shape
-        android:shape="oval">
-      <stroke
-          android:color="#05000000"
-          android:width="1dp"/>
-      <size
-          android:height="190dp"
-          android:width="190dp"/>
-    </shape>
-  </item>
-  <item
-      android:bottom="3dp"
-      android:left="5dp"
-      android:right="5dp"
-      android:top="6dp">
+      android:left="10dp"
+      android:right="10dp"
+      android:top="10dp">
     <shape
         android:shape="oval">
       <stroke
           android:color="#09000000"
-          android:width="1dp"/>
+          android:width="2dp"/>
       <size
           android:height="190dp"
           android:width="190dp"/>
@@ -60,29 +60,14 @@
   </item>
   <item
       android:bottom="4dp"
-      android:left="5dp"
-      android:right="5dp"
-      android:top="6dp">
+      android:left="10dp"
+      android:right="10dp"
+      android:top="10dp">
     <shape
         android:shape="oval">
       <stroke
           android:color="#0F000000"
-          android:width="1dp"/>
-      <size
-          android:height="190dp"
-          android:width="190dp"/>
-    </shape>
-  </item>
-  <item
-      android:bottom="5dp"
-      android:left="5dp"
-      android:right="5dp"
-      android:top="6dp">
-    <shape
-        android:shape="oval">
-      <stroke
-          android:color="#14000000"
-          android:width="1dp"/>
+          android:width="2dp"/>
       <size
           android:height="190dp"
           android:width="190dp"/>
@@ -90,9 +75,39 @@
   </item>
   <item
       android:bottom="6dp"
-      android:left="6dp"
-      android:right="6dp"
-      android:top="6dp">
+      android:left="10dp"
+      android:right="10dp"
+      android:top="10dp">
+    <shape
+        android:shape="oval">
+      <stroke
+          android:color="#14000000"
+          android:width="2dp"/>
+      <size
+          android:height="190dp"
+          android:width="190dp"/>
+    </shape>
+  </item>
+  <item
+      android:bottom="8dp"
+      android:left="10dp"
+      android:right="10dp"
+      android:top="10dp">
+    <shape
+        android:shape="oval">
+      <stroke
+          android:color="#14000000"
+          android:width="2dp"/>
+      <size
+          android:height="190dp"
+          android:width="190dp"/>
+    </shape>
+  </item>
+  <item
+      android:bottom="10dp"
+      android:left="10dp"
+      android:right="10dp"
+      android:top="10dp">
     <shape
         android:shape="oval">
       <stroke
