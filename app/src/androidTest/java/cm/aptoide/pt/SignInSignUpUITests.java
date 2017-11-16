@@ -15,9 +15,6 @@ import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObjectNotFoundException;
 import android.support.test.uiautomator.UiSelector;
 import android.support.v4.content.ContextCompat;
-import cm.aptoide.accountmanager.AccountPersistence;
-import cm.aptoide.accountmanager.AccountService;
-import cm.aptoide.accountmanager.CredentialsValidator;
 import cm.aptoide.pt.view.MainActivity;
 import org.junit.Before;
 import org.junit.Rule;
@@ -41,23 +38,15 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 public class SignInSignUpUITests {
-  private final String SIGNUPEMAILTESTBGN = "jose.messejana+";
-  private final String SIGNUPEMAILTESTEND = "@aptoide.com";
   private final String LOGINEMAIL = "jose.messejana@aptoide.com";
   private final String PASS = "aptoide1234";
-  private final int NUMBER_OF_RETRIES = 2;
-  private final int MAX_NUMBER_WHILEITERARTIONS = 45;
+  private final int NUMBER_OF_RETRIES = 3;
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
-  // @Rule public RetryTestRule retry = new RetryTestRule(NUMBER_OF_RETRIES);
-  private String SIGNUPEMAILTEST = "";
+  @Rule public RetryTestRule retry = new RetryTestRule(NUMBER_OF_RETRIES);
   private String STORENAME = "a";
   private int nonerrormessagesphotos = 0;
-  private int whileiterations = 0;
 
-  private AccountPersistence dataPersistMock;
-  private AccountService serviceMock;
-  private CredentialsValidator credentialsValidatorMock;
 
   private static ViewAction swipeRigthOnLeftMost() {
     return new GeneralSwipeAction(Swipe.FAST, GeneralLocation.CENTER_LEFT,
@@ -65,16 +54,10 @@ public class SignInSignUpUITests {
   }
 
   @Before public void setUp() {
-    //dataPersistMock = mock(AccountPersistence.class);
-    //serviceMock = mock(AccountService.class);
-    //credentialsValidatorMock = mock(CredentialsValidator.class);
-    whileiterations = 0;
-    SIGNUPEMAILTEST = SIGNUPEMAILTESTBGN + System.currentTimeMillis() + SIGNUPEMAILTESTEND;
-    STORENAME = STORENAME + System.currentTimeMillis();
+    TestType.types = TestType.TestTypes.REGULAR;
     if (isFirstTime()) {
-      skipWizard();
+     skipWizard();
     }
-    logOutorGoBack();
   }
 
 
@@ -98,6 +81,7 @@ public class SignInSignUpUITests {
   }
 
   @Test public void signInWrong() {
+    TestType.types = TestType.TestTypes.SIGNINWRONG;
     goToMyAccount();
     performLogin(LOGINEMAIL, "wrongpass");
     onView(withText(R.string.error_invalid_grant)).check(matches(isDisplayed()));
@@ -134,42 +118,43 @@ public class SignInSignUpUITests {
   }
 
   @Test public void signUpEmailExists() {
+    TestType.types = TestType.TestTypes.USEDEMAIL;
     goToMyAccount();
-    performSignUp(LOGINEMAIL, PASS);
+    performSignUp(LOGINEMAIL, PASS+5);
     onView(withText(R.string.ws_error_WOP_9)).check(matches(isDisplayed()));
   }
 
   @Test public void signUp() {
     goToMyAccount();
-    performSignUp(SIGNUPEMAILTEST, PASS);
+    performSignUp(LOGINEMAIL, PASS);
     completeSignUp();
     onView(withId(R.id.action_search)).check(matches(isDisplayed()));
   }
 
   @Test public void signUpPrivateUser() {
     goToMyAccount();
-    performSignUp(SIGNUPEMAILTEST, PASS);
+    performSignUp(LOGINEMAIL, PASS);
     completeSignUpPrivate();
     onView(withId(R.id.action_search)).check(matches(isDisplayed()));
   }
 
   @Test public void signUpMoreInfoPublicUser() {
     goToMyAccount();
-    performSignUp(SIGNUPEMAILTEST, PASS);
+    performSignUp(LOGINEMAIL, PASS);
     completeSignUpMoreInfoPublic();
     onView(withId(R.id.action_search)).check(matches(isDisplayed()));
   }
 
   @Test public void signUpWithCreateStore() {
     goToMyAccount();
-    performSignUp(SIGNUPEMAILTEST, PASS);
+    performSignUp(LOGINEMAIL, PASS);
     completeSignUpWithStore();
     onView(withId(R.id.action_search)).check(matches(isDisplayed()));
   }
 
   @Test public void signUpcreateStoreAfter() {
     goToMyAccount();
-    performSignUp(SIGNUPEMAILTEST, PASS);
+    performSignUp(LOGINEMAIL, PASS);
     completeSignUp();
     onView(withText(R.string.stores)).perform(click());
     onView(withId(R.id.create_store_action)).perform(click());
@@ -302,15 +287,6 @@ public class SignInSignUpUITests {
   }
 
   private void performLogin(String email, String pass){
-  /*  final Account accountMock = mock(Account.class);
-    final AptoideCredentials credentials = new AptoideCredentials(LOGINEMAIL, PASS);
-    Thread.sleep(500);
-    when(credentialsValidatorMock.validate(eq(credentials), anyBoolean())).thenReturn(
-        Completable.complete());
-    when(serviceMock.getAccount(LOGINEMAIL, PASS)).thenReturn(
-        Single.just(accountMock));
-    when(dataPersistMock.saveAccount(accountMock)).thenReturn(
-        Completable.complete()); */
     onView(withId(R.id.show_login_with_aptoide_area)).perform(click());
     onView(withId(R.id.username)).perform(replaceText(email));
     onView(withId(R.id.password)).perform(replaceText(pass), closeSoftKeyboard());

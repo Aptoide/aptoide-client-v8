@@ -19,6 +19,7 @@ import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.Account;
+import cm.aptoide.accountmanager.AccountException;
 import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountPersistence;
 import cm.aptoide.accountmanager.AccountService;
@@ -50,6 +51,7 @@ import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.cache.L2Cache;
 import cm.aptoide.pt.dataprovider.cache.POSTCacheInterceptor;
 import cm.aptoide.pt.dataprovider.cache.POSTCacheKeyAlgorithm;
+import cm.aptoide.pt.dataprovider.model.v3.ErrorResponse;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
@@ -73,6 +75,7 @@ import cm.aptoide.pt.install.installer.RootInstallErrorNotificationFactory;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.install.rollback.RollbackFactory;
 import cm.aptoide.pt.install.rollback.RollbackRepository;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
 import cm.aptoide.pt.networking.BodyInterceptorV7;
@@ -551,15 +554,37 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     final AccountService accountService =
         new AccountService() {
           @Override public Single<Account> getAccount(String email, String password) {
+            if(TestType.types.equals(TestType.TestTypes.REGULAR)) {
+              Logger.d("TAG123","here1");
+              return Single.just(account);
+            }
+            else if(TestType.types.equals(TestType.TestTypes.SIGNINWRONG)) {
+              Logger.d("TAG123","here2");
+              Throwable throwable = new Throwable(new AccountException("invalid_grant"));
+              return Single.error(new AccountException("invalid_grant"));
+            }
             return Single.just(account);
           }
 
           @Override public Single<Account> createAccount(String email, String metadata, String name,
               String type) {
-            return Single.just(account);
+              return Single.just(account);
           }
 
           @Override public Single<Account> createAccount(String email, String password) {
+            if(TestType.types.equals(TestType.TestTypes.REGULAR)) {
+              Logger.d("TAG123","here1");
+              return Single.just(account);
+            }
+            else if(TestType.types.equals(TestType.TestTypes.USEDEMAIL)) {
+              Throwable throwable = new Throwable("cm.aptoide.accountmanager.AccountException");
+              Logger.d("TAG123","here3");
+              List<ErrorResponse> list = new ArrayList<>();
+              ErrorResponse errorResponse = new ErrorResponse();
+              errorResponse.code = "WOP-9";
+              list.add(errorResponse);
+              return Single.error(new AccountException(list));
+            }
             return Single.just(account);
           }
 
@@ -826,9 +851,15 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("account-settings-pool-v7") BodyInterceptor<BaseBody> accountSettingsBodyInterceptorPoolV7, @Named("default") SharedPreferences defaultSharedPreferences,
       RefreshTokenInvalidator tokenInvalidator, RequestBodyFactory requestBodyFactory, ObjectMapper nonNullObjectMapper
       ){
-    return new StoreManager(accountManager, okHttpClient, WebService.getDefaultConverter(),
+      final StoreManager storeManager = new StoreManager(accountManager, okHttpClient, WebService.getDefaultConverter(),
         multipartBodyInterceptor, bodyInterceptorV3,
         accountSettingsBodyInterceptorPoolV7, defaultSharedPreferences,
-        tokenInvalidator, requestBodyFactory, nonNullObjectMapper);
+        tokenInvalidator, requestBodyFactory, nonNullObjectMapper){
+        @Override
+        protected Completable createStore(String a, String b, String c, boolean d, String e){
+          return Completable.complete();
+        }
+      };
+      return storeManager;
   }
 }

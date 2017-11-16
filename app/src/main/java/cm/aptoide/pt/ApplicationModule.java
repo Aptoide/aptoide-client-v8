@@ -732,11 +732,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("no-authentication-v3") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
       @Named("account-settings-pool-v7") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> accountSettingsBodyInterceptorPoolV7,
       @Named("default") SharedPreferences defaultSharedPreferences,
-      RefreshTokenInvalidator tokenInvalidator, RequestBodyFactory requestBodyFactory, ObjectMapper nonNullObjectMapper){
+      RefreshTokenInvalidator tokenInvalidator, RequestBodyFactory requestBodyFactory, ObjectMapper nonNullObjectMapper) {
     return new StoreManager(accountManager, okHttpClient, WebService.getDefaultConverter(),
-        multipartBodyInterceptor, bodyInterceptorV3,
-        accountSettingsBodyInterceptorPoolV7, defaultSharedPreferences,
-        tokenInvalidator, requestBodyFactory, nonNullObjectMapper);
+        multipartBodyInterceptor, bodyInterceptorV3, accountSettingsBodyInterceptorPoolV7,
+        defaultSharedPreferences, tokenInvalidator, requestBodyFactory, nonNullObjectMapper);
   }
 
 }

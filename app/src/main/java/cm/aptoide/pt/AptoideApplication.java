@@ -281,12 +281,6 @@ public abstract class AptoideApplication extends Application {
     return leakTool;
   }
 
-  public void setComponent(ApplicationComponent component) {
-    Logger.d("TAG123","here12");
-    this.applicationComponent = component;
-    applicationComponent.inject(this);
-  }
-
   @Override public void onCreate() {
 
     getApplicationComponent().inject(this);

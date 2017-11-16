@@ -93,7 +93,7 @@ public class StoreManager {
         });
   }
 
-  private Completable createStore(String storeName, String storeDescription, String storeImage,
+  protected Completable createStore(String storeName, String storeDescription, String storeImage,
       boolean hasNewAvatar, String storeThemeName) {
 
     if (TextUtils.isEmpty(storeName)) {
