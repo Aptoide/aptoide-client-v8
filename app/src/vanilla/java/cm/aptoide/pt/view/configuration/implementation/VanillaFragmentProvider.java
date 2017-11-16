@@ -2,11 +2,8 @@ package cm.aptoide.pt.view.configuration.implementation;
 
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.addressbook.data.Contact;
-import cm.aptoide.pt.addressbook.view.AddressBookFragment;
 import cm.aptoide.pt.addressbook.view.InviteFriendsFragment;
-import cm.aptoide.pt.addressbook.view.PhoneInputFragment;
 import cm.aptoide.pt.addressbook.view.SyncResultFragment;
-import cm.aptoide.pt.addressbook.view.ThankYouConnectingFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.ListAppsFragment;
 import cm.aptoide.pt.app.view.OtherVersionsFragment;

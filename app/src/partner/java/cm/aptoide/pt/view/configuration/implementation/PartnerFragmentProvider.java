@@ -1,12 +1,6 @@
 package cm.aptoide.pt.view.configuration.implementation;
 
 import android.support.v4.app.Fragment;
-import cm.aptoide.pt.addressbook.data.Contact;
-import cm.aptoide.pt.addressbook.view.AddressBookFragment;
-import cm.aptoide.pt.addressbook.view.InviteFriendsFragment;
-import cm.aptoide.pt.addressbook.view.PhoneInputFragment;
-import cm.aptoide.pt.addressbook.view.SyncResultFragment;
-import cm.aptoide.pt.addressbook.view.ThankYouConnectingFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.ListAppsFragment;
 import cm.aptoide.pt.app.view.OtherVersionsFragment;
@@ -284,30 +278,30 @@ public class PartnerFragmentProvider implements FragmentProvider {
         storeContext);
   }
 
-  @Override public Fragment newAddressBookFragment() {
-    return AddressBookFragment.newInstance();
-  }
+  //@Override public Fragment newAddressBookFragment() {
+  //  return AddressBookFragment.newInstance();
+  //}
 
-  @Override public Fragment newSyncSuccessFragment(List<Contact> contacts, String tag) {
-    return SyncResultFragment.newInstance(contacts, tag);
-  }
+  //@Override public Fragment newSyncSuccessFragment(List<Contact> contacts, String tag) {
+  //  return SyncResultFragment.newInstance(contacts, tag);
+  //}
 
-  @Override public Fragment newPhoneInputFragment(String tag) {
-    return PhoneInputFragment.newInstance(tag);
-  }
+  //@Override public Fragment newPhoneInputFragment(String tag) {
+  //  return PhoneInputFragment.newInstance(tag);
+  //}
 
-  @Override public Fragment newInviteFriendsFragment(InviteFriendsContract.View.OpenMode openMode,
-      String tag) {
-    return InviteFriendsFragment.newInstance(openMode, tag);
-  }
+  //@Override public Fragment newInviteFriendsFragment(InviteFriendsContract.View.OpenMode openMode,
+  //    String tag) {
+  //  return InviteFriendsFragment.newInstance(openMode, tag);
+  //}
 
   //@Override public Fragment newSpotShareFragment(boolean showToolbar) {
   //  return SpotSharePreviewFragment.newInstance(showToolbar);
   //}
 
-  @Override public Fragment newThankYouConnectingFragment(String tag) {
-    return ThankYouConnectingFragment.newInstance(tag);
-  }
+  //@Override public Fragment newThankYouConnectingFragment(String tag) {
+  //  return ThankYouConnectingFragment.newInstance(tag);
+  //}
 
   //@Override public Fragment newTimeLineFollowersFragment(String storeTheme, String title,
       //    StoreContext storeContext) {

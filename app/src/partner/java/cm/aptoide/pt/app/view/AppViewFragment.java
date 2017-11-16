@@ -110,6 +110,7 @@ import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
+import cm.aptoide.pt.view.share.ShareAppHelper;
 import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -173,6 +174,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private NavigationTracker navigationTracker;
   private SearchBuilder searchBuilder;
   private IssuesAnalytics issuesAnalytics;
+  private ShareAppHelper shareAppHelper;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -384,11 +386,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
 
     installAppRelay = PublishRelay.create();
-    //shareAppHelper =
-    //    new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
-    //        spotAndShareAnalytics, timelineAnalytics, installAppRelay,
-    //        application.getDefaultSharedPreferences(),
-    //        application.isCreateStoreUserPrivacyEnabled());
+    shareAppHelper =
+        new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
+            installAppRelay, application.getDefaultSharedPreferences(),
+            application.isCreateStoreUserPrivacyEnabled());
     downloadFactory = new DownloadFactory(getMarketName());
     appViewAnalytics = new AppViewAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
@@ -641,11 +642,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       final Long storeId = appHasStore ? getApp().getStore()
           .getId() : null;
 
-      //shareAppHelper.shareApp(getAppName(), getPackageName(), appViewModel.getwUrl(),
-      //    (getApp() == null ? null : getApp().getIcon()), averageRating,
-      //    SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW, storeId);
-
+      shareAppHelper.shareApp(getAppName(), appViewModel.getwUrl());
       appViewAnalytics.sendAppShareEvent();
+
       return true;
     } else if (i == R.id.menu_schedule) {
       appViewAnalytics.sendScheduleDownloadEvent();
@@ -804,7 +803,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     clearDisplayables().addDisplayables(setupDisplayables(getApp), true);
     setupObservables(getApp);
     showHideOptionsMenu(true);
-    //setupShare(getApp);
+    setupShare(getApp);
     if (getOpenType() == OpenType.OPEN_WITH_INSTALL_POPUP) {
       setOpenType(null);
       GenericDialogs.createGenericOkCancelMessage(getContext(), getMarketName(),

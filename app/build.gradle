@@ -379,7 +379,7 @@ dependencies {
   }
 
   //lib phone number
-  compile "com.googlecode.libphonenumber:libphonenumber:${LIB_PHONE_NUMBER_VERSION}"
+  //compile "com.googlecode.libphonenumber:libphonenumber:${LIB_PHONE_NUMBER_VERSION}"
 
   compile('com.twitter.sdk.android:twitter-core:2.3.0@aar') {
     transitive = true;
@@ -405,9 +405,9 @@ dependencies {
 
   compile "com.github.bumptech.glide:glide:${GLIDE_VERSION}"
 
-  compile("com.mopub:mopub-sdk-native-static:${MOPUB_VERSION}@aar") {
-    transitive = true
-  }
+  //compile("com.mopub:mopub-sdk-native-static:${MOPUB_VERSION}@aar") {
+  //  transitive = true
+  //}
 
   compile "com.adyen.checkout:core:${ADYEN_VERSION}"
   compile "com.adyen.checkout:ui:${ADYEN_VERSION}"

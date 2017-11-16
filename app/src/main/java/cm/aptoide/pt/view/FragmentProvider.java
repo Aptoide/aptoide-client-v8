@@ -1,7 +1,6 @@
 package cm.aptoide.pt.view;
 
 import android.support.v4.app.Fragment;
-import cm.aptoide.pt.addressbook.data.Contact;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -152,18 +151,18 @@ public interface FragmentProvider {
   @Deprecated Fragment newCommentGridRecyclerFragmentWithCommentDialogOpen(CommentType commentType,
       String elementId, StoreContext storeContext);
 
-  @Deprecated Fragment newAddressBookFragment();
+  //@Deprecated Fragment newAddressBookFragment();
 
-  @Deprecated Fragment newSyncSuccessFragment(List<Contact> contacts, String tag);
+  //@Deprecated Fragment newSyncSuccessFragment(List<Contact> contacts, String tag);
 
-  @Deprecated Fragment newPhoneInputFragment(String tag);
+  //@Deprecated Fragment newPhoneInputFragment(String tag);
 
-  @Deprecated Fragment newInviteFriendsFragment(InviteFriendsContract.View.OpenMode openMode,
-      String tag);
+  //@Deprecated Fragment newInviteFriendsFragment(InviteFriendsContract.View.OpenMode openMode,
+  //    String tag);
 
   //@Deprecated Fragment newSpotShareFragment(boolean showToolbar);
 
-  @Deprecated Fragment newThankYouConnectingFragment(String tag);
+  //@Deprecated Fragment newThankYouConnectingFragment(String tag);
 
   //@Deprecated Fragment newTimeLineFollowersFragment(String storeTheme, String title,
   //    StoreContext storeContext);
