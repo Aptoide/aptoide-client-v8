@@ -33,7 +33,7 @@
         android:id="@+id/tin_medal"
         android:layout_width="24dp"
         android:layout_height="wrap_content"
-        android:src="@drawable/tin_flat_icon"
+        android:src="@drawable/ic_tin_flat_icon"
         />
   </FrameLayout>
   <View
@@ -81,7 +81,7 @@
         android:id="@+id/bronze_medal"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:src="@drawable/bronze_flat_icon"
+        android:src="@drawable/ic_bronze_flat_icon"
         />
   </FrameLayout>
   <View
@@ -128,7 +128,7 @@
         android:id="@+id/silver_medal"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:src="@drawable/silver_flat_icon"
+        android:src="@drawable/ic_silver_flat_icon"
         />
   </FrameLayout>
   <View
@@ -175,7 +175,7 @@
         android:id="@+id/gold_medal"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:src="@drawable/gold_flat_icon"
+        android:src="@drawable/ic_gold_flat_icon"
         />
   </FrameLayout>
   <View
@@ -208,7 +208,7 @@
         android:id="@+id/platinum_medal"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:src="@drawable/platinum_flat_icon"
+        android:src="@drawable/ic_platinum_flat_icon"
         />
   </FrameLayout>
   <View

@@ -90,7 +90,7 @@ public class BadgeDialogFactory {
       default:
         mainColor = R.color.tin_medal;
         secondaryColor = R.color.tin_medal_secodary;
-        medalIcon.setImageDrawable(resources.getDrawable(R.drawable.tin));
+        medalIcon.setImageResource(R.drawable.tin_medal_gradient);
         medalTextTv.setText(resources.getString(R.string.badgedialog_title_tin));
         congratulationsMessageTv.setText(
             resources.getString(R.string.badgedialog_message_tin, "\uD83C\uDF89"));
@@ -104,13 +104,13 @@ public class BadgeDialogFactory {
         break;
       case BRONZE:
         if (isRankLocked(storeBadge, selectedBadge)) {
-          medalIcon.setImageDrawable(resources.getDrawable(R.drawable.lock));
+          medalIcon.setImageResource(R.drawable.lock_medal_gradient);
           mainColor = R.color.grey_fog_dark;
           secondaryColor = R.color.grey_fog_light;
           congratulationsMessageTv.setText(
               resources.getString(R.string.badgedialog_message_bronze_lock, " \uD83D\uDCAA"));
         } else {
-          medalIcon.setImageDrawable(resources.getDrawable(R.drawable.bronze));
+          medalIcon.setImageResource(R.drawable.bronze_medal_gradient);
           mainColor = R.color.bronze_medal;
           secondaryColor = R.color.bronze_medal_secodary;
           congratulationsMessageTv.setText(
@@ -130,13 +130,13 @@ public class BadgeDialogFactory {
         break;
       case SILVER:
         if (isRankLocked(storeBadge, selectedBadge)) {
-          medalIcon.setImageDrawable(resources.getDrawable(R.drawable.lock));
+          medalIcon.setImageResource(R.drawable.lock_medal_gradient);
           mainColor = R.color.grey_fog_dark;
           secondaryColor = R.color.grey_fog_light;
           congratulationsMessageTv.setText(
               resources.getString(R.string.badgedialog_message_silver_lock, " \uD83D\uDCAA"));
         } else {
-          medalIcon.setImageDrawable(resources.getDrawable(R.drawable.silver));
+          medalIcon.setImageResource(R.drawable.silver_medal_gradient);
           mainColor = R.color.silver_medal;
           secondaryColor = R.color.silver_medal_secodary;
           congratulationsMessageTv.setText(
@@ -156,13 +156,13 @@ public class BadgeDialogFactory {
         break;
       case GOLD:
         if (isRankLocked(storeBadge, selectedBadge)) {
-          medalIcon.setImageDrawable(resources.getDrawable(R.drawable.lock));
+          medalIcon.setImageResource(R.drawable.lock_medal_gradient);
           mainColor = R.color.grey_fog_dark;
           secondaryColor = R.color.grey_fog_light;
           congratulationsMessageTv.setText(
               resources.getString(R.string.badgedialog_message_gold_lock, " \uD83D\uDCAA"));
         } else {
-          medalIcon.setImageDrawable(resources.getDrawable(R.drawable.gold));
+          medalIcon.setImageResource(R.drawable.gold_medal_gradient);
           mainColor = R.color.gold_medal;
           secondaryColor = R.color.gold_medal_secodary;
           congratulationsMessageTv.setText(
@@ -182,13 +182,13 @@ public class BadgeDialogFactory {
         break;
       case PLATINUM:
         if (isRankLocked(storeBadge, selectedBadge)) {
-          medalIcon.setImageDrawable(resources.getDrawable(R.drawable.lock));
+          medalIcon.setImageResource(R.drawable.lock_medal_gradient);
           mainColor = R.color.grey_fog_dark;
           secondaryColor = R.color.grey_fog_light;
           congratulationsMessageTv.setText(
               resources.getString(R.string.badgedialog_message_platinum_lock, " \uD83D\uDCAA"));
         } else {
-          medalIcon.setImageDrawable(resources.getDrawable(R.drawable.platinum));
+          medalIcon.setImageResource(R.drawable.platinum_medal_gradient);
           mainColor = R.color.platinum_medal;
           secondaryColor = R.color.platinum_medal_secodary;
           congratulationsMessageTv.setText(
