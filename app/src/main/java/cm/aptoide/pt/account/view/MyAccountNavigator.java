@@ -63,7 +63,7 @@ public class MyAccountNavigator {
     tabNavigator.navigate(new AppsTimelineTabNavigation(postId));
   }
 
-  @NonNull Observable<String> goToNotification(AptoideNotification notification,
+  @NonNull Observable<String> navigateToNotification(AptoideNotification notification,
       MyAccountView view) {
     return Observable.just(
         linkFactory.get(LinksHandlerFactory.NOTIFICATION_LINK, notification.getUrl()))
@@ -79,7 +79,7 @@ public class MyAccountNavigator {
         .doOnNext(postId -> {
           if (postId != null) {
             navigateToTimelineWithPostId(postId);
-            view.goHome();
+            view.goToHome();
           } else {
             linkFactory.get(LinksHandlerFactory.NOTIFICATION_LINK, notification.getUrl())
                 .launch();

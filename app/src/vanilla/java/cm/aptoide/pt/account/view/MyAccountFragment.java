@@ -276,7 +276,7 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     setOrHideUserStore(store.getName(), store.getAvatar());
   }
 
-  @Override public void goHome() {
+  @Override public void goToHome() {
     getFragmentNavigator().cleanBackStack();
   }
 

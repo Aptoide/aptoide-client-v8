@@ -38,5 +38,5 @@ public interface MyAccountView extends View {
 
   void refreshUI(Store store);
 
-  void goHome();
+  void goToHome();
 }

@@ -163,10 +163,11 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     moreNotificationsButton = (Button) view.findViewById(R.id.my_account_notifications_header)
         .findViewById(R.id.more);
 
+    LinksHandlerFactory linkFactory = new LinksHandlerFactory(getContext());
     attachPresenter(new MyAccountPresenter(this, accountManager, crashReport,
-        new MyAccountNavigator(getFragmentNavigator(), tabNavigator),
+        new MyAccountNavigator(getFragmentNavigator(), tabNavigator, linkFactory),
         ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
-        new LinksHandlerFactory(getContext()),
+        linkFactory,
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker(),
         new NotificationAnalytics(httpClient, Analytics.getInstance()),
@@ -234,6 +235,10 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
 
   @Override public void hideHeader() {
     header.setVisibility(View.INVISIBLE);
+  }
+
+  @Override public void goToHome() {
+    getFragmentNavigator().cleanBackStack();
   }
 
   private void setUserAvatar(Account account) {
