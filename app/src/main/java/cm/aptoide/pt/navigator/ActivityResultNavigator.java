@@ -189,9 +189,8 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
 
   public MyAccountNavigator getMyAccountNavigator() {
     if (myAccountNavigator == null) {
-      myAccountNavigator =
-          new MyAccountNavigator(getFragmentNavigator(), (TabNavigator) this, getLinkFactory(),
-              getAccountNavigator(), getNotificationNavigator());
+      myAccountNavigator = new MyAccountNavigator(getFragmentNavigator(), getAccountNavigator(),
+          getNotificationNavigator());
     }
     return myAccountNavigator;
   }

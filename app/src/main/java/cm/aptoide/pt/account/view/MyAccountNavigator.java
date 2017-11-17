@@ -4,30 +4,22 @@ import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import cm.aptoide.pt.account.view.store.ManageStoreViewModel;
 import cm.aptoide.pt.account.view.user.ManageUserFragment;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
-import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.notification.AptoideNotification;
 import cm.aptoide.pt.notification.view.InboxFragment;
 import cm.aptoide.pt.notification.view.NotificationNavigator;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.view.StoreFragment;
-import cm.aptoide.pt.timeline.view.navigation.AppsTimelineTabNavigation;
 
 public class MyAccountNavigator {
 
   private final FragmentNavigator fragmentNavigator;
-  private final TabNavigator tabNavigator;
-  private final LinksHandlerFactory linkFactory;
   private final AccountNavigator accountNavigator;
   private final NotificationNavigator notificationNavigator;
 
-  public MyAccountNavigator(FragmentNavigator fragmentNavigator, TabNavigator tabNavigator,
-      LinksHandlerFactory linkFactory, AccountNavigator accountNavigator,
+  public MyAccountNavigator(FragmentNavigator fragmentNavigator, AccountNavigator accountNavigator,
       NotificationNavigator notificationNavigator) {
     this.fragmentNavigator = fragmentNavigator;
-    this.tabNavigator = tabNavigator;
-    this.linkFactory = linkFactory;
     this.accountNavigator = accountNavigator;
     this.notificationNavigator = notificationNavigator;
   }
@@ -56,10 +48,6 @@ public class MyAccountNavigator {
   public void navigateToStoreView(String storeName, String storeTheme) {
     fragmentNavigator.navigateTo(
         StoreFragment.newInstance(storeName, storeTheme, StoreFragment.OpenType.GetStore), true);
-  }
-
-  public void navigateToTimelineWithPostId(String postId) {
-    tabNavigator.navigate(new AppsTimelineTabNavigation(postId));
   }
 
   public void navigateToNotification(AptoideNotification notification) {

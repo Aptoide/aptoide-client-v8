@@ -48,7 +48,7 @@ public class MyAccountPresenter implements Presenter {
     handleMoreNotificationsClick();
     handleEditStoreClick();
     handleHeaderVisibility();
-    hangleGetNotifications();
+    handleGetNotifications();
     handleNotificationClick();
     handleUserEditClick();
     handleUserLayoutClick();
@@ -128,7 +128,7 @@ public class MyAccountPresenter implements Presenter {
         }, throwable -> crashReport.log(throwable));
   }
 
-  private void hangleGetNotifications() {
+  private void handleGetNotifications() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> notificationCenter.getInboxNotifications(NUMBER_OF_NOTIFICATIONS))
