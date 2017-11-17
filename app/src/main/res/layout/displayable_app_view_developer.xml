@@ -19,7 +19,6 @@
   -->
 
   <TextView
-      android:id="@+id/additional_info"
       android:layout_width="match_parent"
       android:layout_height="48dp"
       android:gravity="center_vertical"
@@ -33,7 +32,6 @@
       />
 
   <LinearLayout
-      android:id="@+id/additional_info_layout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical"
