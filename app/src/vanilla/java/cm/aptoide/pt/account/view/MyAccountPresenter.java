@@ -143,12 +143,12 @@ public class MyAccountPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.notificationSelection())
-        .flatMap(notification -> navigator.navigateToNotification(notification, this.view)
-            .doOnNext(
-                link -> analytics.notificationShown(notification.getNotificationCenterUrlTrack()))
-            .doOnNext(__ -> navigationTracker.registerScreen(
-                ScreenTagHistory.Builder.build("Notification")))
-            .doOnNext(__ -> pageViewsAnalytics.sendPageViewedEvent()))
+        .doOnNext(notification -> {
+          navigator.navigateToNotification(notification);
+          analytics.sendNotificationTouchEvent(notification.getNotificationCenterUrlTrack());
+          navigationTracker.registerScreen(ScreenTagHistory.Builder.build("Notification"));
+          pageViewsAnalytics.sendPageViewedEvent();
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, throwable -> crashReport.log(throwable));
@@ -226,7 +226,7 @@ public class MyAccountPresenter implements Presenter {
             .observeOn(AndroidSchedulers.mainThread())
             .doOnCompleted(() -> {
               ManagerPreferences.setAddressBookSyncValues(false, sharedPreferences);
-              view.navigateToHome();
+              navigator.navigateToHome();
             })
             .doOnError(throwable -> crashReport.log(throwable)).<Void>toObservable())
         .retry();

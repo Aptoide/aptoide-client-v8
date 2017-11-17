@@ -165,7 +165,7 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
 
     LinksHandlerFactory linkFactory = new LinksHandlerFactory(getContext());
     attachPresenter(new MyAccountPresenter(this, accountManager, crashReport,
-        new MyAccountNavigator(getFragmentNavigator(), tabNavigator, linkFactory),
+        ((ActivityResultNavigator) getContext()).getMyAccountNavigator(),
         ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
         linkFactory,
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
@@ -225,20 +225,12 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     return RxView.clicks(userProfileEditButton);
   }
 
-  @Override public void navigateToHome() {
-    accountNavigator.navigateToHomeView();
-  }
-
   @Override public void showHeader() {
     header.setVisibility(View.VISIBLE);
   }
 
   @Override public void hideHeader() {
     header.setVisibility(View.INVISIBLE);
-  }
-
-  @Override public void goToHome() {
-    getFragmentNavigator().cleanBackStack();
   }
 
   private void setUserAvatar(Account account) {

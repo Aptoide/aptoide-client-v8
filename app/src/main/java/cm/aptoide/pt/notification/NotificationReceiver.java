@@ -70,7 +70,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
   private void callDeepLink(Context context, Intent intent) {
     String trackUrl = intent.getStringExtra(NOTIFICATION_TRACK_URL);
-    analytics.notificationShown(trackUrl);
+    analytics.sendNotificationTouchEvent(trackUrl);
     String targetUrl = intent.getStringExtra(NOTIFICATION_TARGET_URL);
     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(targetUrl));
     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

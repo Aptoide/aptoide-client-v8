@@ -1,7 +1,5 @@
 package cm.aptoide.pt.account.view;
 
-import android.net.Uri;
-import android.support.annotation.NonNull;
 import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import cm.aptoide.pt.account.view.store.ManageStoreViewModel;
 import cm.aptoide.pt.account.view.user.ManageUserFragment;
@@ -11,26 +9,27 @@ import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.notification.AptoideNotification;
 import cm.aptoide.pt.notification.view.InboxFragment;
+import cm.aptoide.pt.notification.view.NotificationNavigator;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.timeline.view.navigation.AppsTimelineTabNavigation;
-import rx.Observable;
-
-/**
- * Created by pedroribeiro on 16/05/17.
- */
 
 public class MyAccountNavigator {
 
   private final FragmentNavigator fragmentNavigator;
   private final TabNavigator tabNavigator;
   private final LinksHandlerFactory linkFactory;
+  private final AccountNavigator accountNavigator;
+  private final NotificationNavigator notificationNavigator;
 
   public MyAccountNavigator(FragmentNavigator fragmentNavigator, TabNavigator tabNavigator,
-      LinksHandlerFactory linkFactory) {
+      LinksHandlerFactory linkFactory, AccountNavigator accountNavigator,
+      NotificationNavigator notificationNavigator) {
     this.fragmentNavigator = fragmentNavigator;
     this.tabNavigator = tabNavigator;
     this.linkFactory = linkFactory;
+    this.accountNavigator = accountNavigator;
+    this.notificationNavigator = notificationNavigator;
   }
 
   public void navigateToInboxView() {
@@ -63,27 +62,11 @@ public class MyAccountNavigator {
     tabNavigator.navigate(new AppsTimelineTabNavigation(postId));
   }
 
-  @NonNull Observable<String> navigateToNotification(AptoideNotification notification,
-      MyAccountView view) {
-    return Observable.just(
-        linkFactory.get(LinksHandlerFactory.NOTIFICATION_LINK, notification.getUrl()))
-        .flatMap(link -> {
-          String cardId = Uri.parse(link.getUrl())
-              .getQueryParameter("cardId");
-          if (cardId != null) {
-            return Observable.just(cardId);
-          } else {
-            return Observable.empty();
-          }
-        })
-        .doOnNext(postId -> {
-          if (postId != null) {
-            navigateToTimelineWithPostId(postId);
-            view.goToHome();
-          } else {
-            linkFactory.get(LinksHandlerFactory.NOTIFICATION_LINK, notification.getUrl())
-                .launch();
-          }
-        });
+  public void navigateToNotification(AptoideNotification notification) {
+    notificationNavigator.navigateToNotification(notification);
+  }
+
+  public void navigateToHome() {
+    accountNavigator.navigateToHomeView();
   }
 }
