@@ -20,7 +20,7 @@ public class DownloadsPresenter implements Presenter {
 
   @Override public void present() {
 
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.RESUME)
         .first()
         .observeOn(Schedulers.computation())

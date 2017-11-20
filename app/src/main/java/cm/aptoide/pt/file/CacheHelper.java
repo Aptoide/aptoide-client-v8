@@ -141,7 +141,6 @@ public class CacheHelper implements CacheManager {
      */
     final long cacheTime;
 
-    @java.beans.ConstructorProperties({ "folder", "cacheTime" })
     public FolderToManage(File folder, long cacheTime) {
       this.folder = folder;
       this.cacheTime = cacheTime;

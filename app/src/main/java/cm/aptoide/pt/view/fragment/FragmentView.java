@@ -124,10 +124,10 @@ public abstract class FragmentView extends LeakFragment implements View {
 
   @NonNull @Override
   public final <T> LifecycleTransformer<T> bindUntilEvent(@NonNull LifecycleEvent lifecycleEvent) {
-    return RxLifecycle.bindUntilEvent(getLifecycle(), lifecycleEvent);
+    return RxLifecycle.bindUntilEvent(getLifecycleEvents(), lifecycleEvent);
   }
 
-  @Override public Observable<LifecycleEvent> getLifecycle() {
+  @Override public Observable<LifecycleEvent> getLifecycleEvents() {
     return lifecycle().flatMap(event -> convertToEvent(event));
   }
 

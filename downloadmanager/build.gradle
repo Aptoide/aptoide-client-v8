@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 
 android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
@@ -8,21 +7,16 @@ android {
 
   defaultConfig {
     minSdkVersion project.MINIMUM_SDK_VERSION
-
-    // remove this after removing lombok
-    javaCompileOptions {
-      annotationProcessorOptions {
-        includeCompileClasspath true
-      }
-    }
   }
+
+  defaultPublishConfig "release"
 
   buildTypes {
     debug {
       minifyEnabled false
     }
     release {
-      minifyEnabled true
+      minifyEnabled false
     }
   }
 
@@ -49,12 +43,9 @@ android {
 }
 
 dependencies {
-
-  implementation project(path: ':utils')
-  implementation project(path: ':crashreports')
   implementation project(path: ':aptoide-database')
-
-  implementation fileTree(dir: 'libs', include: ['*.jar'])
+  implementation project(path: ':crashreports')
+  compileOnly project(path: ':utils')
 
   testImplementation "junit:junit:${JUNIT_VERSION}"
   testImplementation "org.mockito:mockito-inline:${MOCKITO_CORE_VERSION}"
@@ -74,7 +65,7 @@ dependencies {
 
   // kotlin
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-  implementation "io.reactivex:rxkotlin:$rx_kotlin_version"
+  //implementation "io.reactivex:rxkotlin:$rx_kotlin_version"
 
   // download lib 1 (LingoChamp)
   implementation "com.liulishuo.filedownloader:library:${FILE_DOWNLOADER_VERSION}"

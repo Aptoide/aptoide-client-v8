@@ -18,7 +18,7 @@ android {
       minifyEnabled false
     }
     release {
-      minifyEnabled true
+      minifyEnabled false
     }
   }
 
@@ -54,15 +54,11 @@ android {
     exclude 'META-INF/MANIFEST.MF'
     exclude 'META-INF/LGPL2.1'
   }
-
-  lintOptions {
-    abortOnError false
-  }
 }
 
 dependencies {
-
   implementation project(path: ':dataprovider')
+  implementation project(path: ':crashreports')
 
   testImplementation "junit:junit:${JUNIT_VERSION}"
   testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"

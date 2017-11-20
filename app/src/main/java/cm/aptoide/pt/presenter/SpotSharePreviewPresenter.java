@@ -21,7 +21,7 @@ public class SpotSharePreviewPresenter implements Presenter {
   }
 
   @Override public void present() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.RESUME))
         .flatMap(
             resumed -> startSelection().compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE)))

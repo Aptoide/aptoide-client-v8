@@ -18,7 +18,7 @@ public interface View {
   @NonNull @CheckResult <T> LifecycleTransformer<T> bindUntilEvent(
       @NonNull LifecycleEvent lifecycleEvent);
 
-  Observable<LifecycleEvent> getLifecycle();
+  Observable<LifecycleEvent> getLifecycleEvents();
 
   void attachPresenter(Presenter presenter);
 

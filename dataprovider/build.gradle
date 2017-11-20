@@ -8,25 +8,20 @@ android {
 
   defaultConfig {
     minSdkVersion project.MINIMUM_SDK_VERSION
-
-    // remove this after removing lombok
-    javaCompileOptions {
-      annotationProcessorOptions {
-        includeCompileClasspath true
-      }
-    }
   }
 
   lintOptions {
     abortOnError false
   }
 
+  defaultPublishConfig "release"
+
   buildTypes {
     debug {
       minifyEnabled false
     }
     release {
-      minifyEnabled true
+      minifyEnabled false
     }
   }
 
@@ -93,11 +88,9 @@ android {
 }
 
 dependencies {
-  implementation project(path: ':utils')
-  implementation project(path: ':aptoidepreferences')
   implementation project(path: ':crashreports')
-
-  implementation fileTree(dir: 'libs', include: ['*.jar'])
+  implementation project(path: ':aptoidepreferences')
+  compileOnly project(path: ':utils')
 
   testImplementation "com.squareup.okhttp3:mockwebserver:${MOCK_WEB_SERVER_VERSION}"
   testImplementation "junit:junit:${JUNIT_VERSION}"

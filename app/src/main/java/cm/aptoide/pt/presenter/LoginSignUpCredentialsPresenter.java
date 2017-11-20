@@ -70,7 +70,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   }
 
   private void handleTogglePasswordVisibility() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.RESUME))
         .flatMap(resumed -> togglePasswordVisibility())
         .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE))
@@ -79,7 +79,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   }
 
   private void handleForgotPasswordClick() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.RESUME))
         .flatMap(resumed -> forgotPasswordSelection())
         .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE))
@@ -88,7 +88,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   }
 
   private void handleAptoideLoginEvent() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.aptoideLoginEvent()
             .doOnNext(click -> {
@@ -116,7 +116,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   }
 
   private void handleAptoideSignUpEvent() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.aptoideSignUpEvent()
             .doOnNext(click -> {
@@ -148,7 +148,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   }
 
   private void handleAptoideShowLoginEvent() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> aptoideShowLoginClick())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -161,7 +161,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   }
 
   private void handleAptoideShowSignUpEvent() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> showAptoideSignUpEvent())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -174,7 +174,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   }
 
   private void handleAccountStatusChangeWhileShowingView() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.RESUME))
         .flatMapSingle(__ -> accountManager.accountStatus()
             .first()
@@ -191,7 +191,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   }
 
   private void handleGoogleSignUpEvent() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> showOrHideGoogleSignUp())
         .flatMap(__ -> view.googleSignUpEvent())
@@ -218,7 +218,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   }
 
   private void handleGoogleSignUpResult() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> accountNavigator.googleSignUpResults(RESOLVE_GOOGLE_CREDENTIALS_REQUEST_CODE)
             .flatMapCompletable(result -> accountManager.signUp(GoogleSignUpAdapter.TYPE, result)
@@ -239,7 +239,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   }
 
   private void handleFacebookSignUpEvent() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> showOrHideFacebookSignUp())
         .flatMap(__ -> view.facebookSignUpEvent())
@@ -258,7 +258,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   }
 
   private void handleFacebookSignUpWithRequiredPermissionsEvent() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.facebookSignUpWithRequiredPermissionsInEvent())
         .doOnNext(event -> {
@@ -275,7 +275,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   }
 
   private void handleFacebookSignUpResult() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> accountNavigator.facebookSignUpResults()
             .flatMapCompletable(result -> accountManager.signUp(FacebookSignUpAdapter.TYPE, result)

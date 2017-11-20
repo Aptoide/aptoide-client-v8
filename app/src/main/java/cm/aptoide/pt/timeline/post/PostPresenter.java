@@ -71,7 +71,7 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
   }
 
   private void onViewCreatedHandleAppNotFoundErrorAction() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(viewCreated -> view.getAppNotFoundErrorAction())
         .doOnNext(click -> fragmentNavigator.navigateTo(
@@ -83,7 +83,7 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
   }
 
   private void onCreateLoginErrorHandle() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(viewCreated -> view.getLoginClick())
         .doOnNext(loginClicked -> accountNavigator.navigateToAccountView(
@@ -94,7 +94,7 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
   }
 
   private void showPreviewAppsOnStart() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event == View.LifecycleEvent.RESUME && isExternalOpen())
         .flatMap(__ -> loadPostPreview(view.getExternalUrlToShare()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -109,7 +109,7 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
   }
 
   private void showRelatedAppsOnStart() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(this::getRelatedAppsLifecycleFilter)
         .doOnNext(lifecycleEvent -> view.clearAllRelated())
         .doOnNext(lifecycleEvent -> view.showRelatedAppsLoading())
@@ -141,7 +141,7 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
   }
 
   private void handleRelatedAppClick() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.getClickedView()
             .flatMapCompletable(view::setRelatedAppSelected))
@@ -151,7 +151,7 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
   }
 
   private void handleCancelButtonClick() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.cancelButtonPressed()
             .doOnNext(click -> analytics.sendClosePostEvent(PostAnalytics.CloseType.X))
@@ -170,7 +170,7 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
   }
 
   private void showCardPreviewAfterTextChanges() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(viewCreated -> view.onInputTextChanged()
             .debounce(1, TimeUnit.SECONDS)
@@ -220,7 +220,7 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
   }
 
   private void showRelatedAppsAfterTextChanges() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(viewCreated -> view.onInputTextChanged()
             .debounce(1, TimeUnit.SECONDS)
@@ -258,7 +258,7 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
 
   private void postOnTimelineOnButtonClick() {
 
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.shareButtonPressed()
             .observeOn(Schedulers.io())

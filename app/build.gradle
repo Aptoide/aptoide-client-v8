@@ -32,13 +32,6 @@ android {
     versionName "8.5.3.0"
     testProguardFile 'proguard-rules-test.pro'
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
-    // remove this after removing lombok
-    javaCompileOptions {
-      annotationProcessorOptions {
-        includeCompileClasspath true
-      }
-    }
   }
 
   lintOptions {
@@ -280,6 +273,7 @@ dependencies {
   implementation project(path: ':utils')
   implementation project(path: ':crashreports')
   implementation project(path: ':aptoide-database')
+  implementation project(path: ':aptoidepreferences')
   implementation project(path: ':downloadmanager')
   implementation project(path: ':dataprovider')
   implementation project(path: ':aptoide-account-manager')
@@ -401,6 +395,12 @@ dependencies {
   implementation "com.adyen.checkout:cardscan:${ADYEN_VERSION}"
 
   fairyImplementation "testfairy:testfairy-android-sdk:${TEST_FAIRY_VERSION}"
+
+  compileOnly "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VERSION}"
+  compileOnly "org.nanohttpd:nanohttpd:${NANOHTTPD_VERSION}"
+  compileOnly "com.liulishuo.filedownloader:library:${FILE_DOWNLOADER_VERSION}"
+  compileOnly "cn.dreamtobe.filedownloader:filedownloader-okhttp3-connection:${FILE_DOWNLOADER_OKHTTP_IMP_VERSION}"
+
 
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }

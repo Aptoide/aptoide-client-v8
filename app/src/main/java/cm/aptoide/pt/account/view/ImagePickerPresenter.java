@@ -51,7 +51,7 @@ public class ImagePickerPresenter implements Presenter {
   }
 
   public void handlePickImageClick() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.selectStoreImageClick()
             .retry()
@@ -93,7 +93,7 @@ public class ImagePickerPresenter implements Presenter {
   }
 
   private void handleCameraSelection() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.dialogCameraSelected()
             .doOnNext(__2 -> accountPermissionProvider.requestCameraPermission(CAMERA_PICK)))
@@ -103,7 +103,7 @@ public class ImagePickerPresenter implements Presenter {
   }
 
   private void handleGalleryImageResult() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> accountPermissionProvider.permissionResultCamera(GALLERY_PICK)
             .filter(permissions -> permissions.get(0)
@@ -130,7 +130,7 @@ public class ImagePickerPresenter implements Presenter {
   }
 
   private void handleGallerySelection() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.dialogGallerySelected()
             .doOnNext(__2 -> accountPermissionProvider.requestGalleryPermission(GALLERY_PICK)))
@@ -140,7 +140,7 @@ public class ImagePickerPresenter implements Presenter {
   }
 
   private void handleCameraImageResult() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> accountPermissionProvider.permissionResultCamera(CAMERA_PICK)
             .filter(permissions -> {

@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
 
 android {
@@ -11,21 +10,16 @@ android {
     minSdkVersion project.MINIMUM_SDK_VERSION
     // This should be a property set in Java code by the user of this lib
     buildConfigField 'boolean', 'DELETE_DB', 'false'
-
-    // remove this after removing lombok
-    javaCompileOptions {
-      annotationProcessorOptions {
-        includeCompileClasspath true
-      }
-    }
   }
+
+  defaultPublishConfig "release"
 
   buildTypes {
     debug {
       minifyEnabled false
     }
     release {
-      minifyEnabled true
+      minifyEnabled false
     }
   }
 
@@ -52,10 +46,8 @@ android {
 }
 
 dependencies {
-
+  implementation project(path: ':utils')
   implementation project(path: ':crashreports')
-
-  implementation fileTree(dir: 'libs', include: ['*.jar'])
 
   testImplementation "junit:junit:${JUNIT_VERSION}"
   //noinspection GradleDependency
