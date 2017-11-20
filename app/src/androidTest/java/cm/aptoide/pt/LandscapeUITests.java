@@ -35,6 +35,8 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static cm.aptoide.pt.UITests.NUMBER_OF_RETRIES;
+import static cm.aptoide.pt.UITests.skipWizard;
 
 /**
  * Created by jose_messejana on 24-10-2017.
@@ -43,12 +45,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 @RunWith(AndroidJUnit4.class)
 public class LandscapeUITests {
   private final String APP_TO_SEARCH = "Facebook";
-  private final int WAIT_TIME = 550;
-  private final int LONGER_WAIT_TIME = 2000;
-  private final int NUMBER_OF_RETRIES = 2;
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
-  //@Rule public RetryTestRule retry = new RetryTestRule(NUMBER_OF_RETRIES);
+  @Rule public RetryTestRule retry = new RetryTestRule(NUMBER_OF_RETRIES);
 
   private static ViewAction swipeRigthOnLeftMost() {
     return new GeneralSwipeAction(Swipe.FAST, GeneralLocation.CENTER_LEFT,
@@ -56,10 +55,9 @@ public class LandscapeUITests {
   }
 
   @Before public void setUp() {
-    if (isFirstTime()) {
+    if (UITests.isFirstTime()) {
       skipWizard();
     }
-    logOutorGoBack();
   }
 
   @Test public void landscapeHomeTab() {
@@ -156,15 +154,6 @@ public class LandscapeUITests {
     onView(withText(R.string.stores)).perform(click());
   }
 
-  private boolean isFirstTime() {
-    try {
-      onView(withId(R.id.next_icon)).check(matches(isDisplayed()));
-      return true;
-    } catch (NoMatchingViewException e) {
-      return false;
-    }
-  }
-
   private boolean hasPermission(String permission) {
     Context context = InstrumentationRegistry.getTargetContext();
     String finalpermission = "android.permission." + permission;
@@ -200,18 +189,6 @@ public class LandscapeUITests {
     }
   }
 
-  private void logOutorGoBack() {
-    try {
-      onView(withId(R.id.toolbar)).perform(swipeRigthOnLeftMost());
-      Thread.sleep(WAIT_TIME);
-      onView(withId(R.id.profile_email_text)).perform(click());
-      onView(withId(R.id.toolbar)).perform(swipeLeft());
-      goToMyAccount();
-      onView(withId(R.id.button_logout)).perform(click());
-    } catch (Exception e) {
-      onView(withId(R.id.toolbar)).perform(swipeLeft());
-    }
-  }
 
   private void cancelIfDownloading() {
     try {
@@ -219,18 +196,6 @@ public class LandscapeUITests {
     } catch (Exception e) {
     }
   }
-
-  private void goToMyAccount() {
-    onView(withId(R.id.toolbar)).perform(swipeRigthOnLeftMost());
-    onView(withText(R.string.drawer_title_my_account)).perform(click());
-  }
-
-  private void skipWizard() {
-    onView(withId(R.id.next_icon)).perform(click());
-    onView(withId(R.id.next_icon)).perform(click());
-    onView(withId(R.id.skip_text)).perform(click());
-  }
-
   private void goToApp(String app, int pos) {
     onView(withId(R.id.action_search)).perform(click());
     onView(withId(R.id.search_src_text)).perform(replaceText(app), pressImeActionButton());

@@ -528,7 +528,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       }
 
       @Override public boolean isLoggedIn() {
-        return false;
+        if(TestType.types.equals(TestType.TestTypes.LOGGEDIN))
+          return true;
+        else
+          return false;
       }
 
       @Override public String getEmail() {
@@ -555,12 +558,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         new AccountService() {
           @Override public Single<Account> getAccount(String email, String password) {
             if(TestType.types.equals(TestType.TestTypes.REGULAR)) {
-              Logger.d("TAG123","here1");
+              Logger.d("TAG123","REGULAR");
               return Single.just(account);
             }
             else if(TestType.types.equals(TestType.TestTypes.SIGNINWRONG)) {
-              Logger.d("TAG123","here2");
-              Throwable throwable = new Throwable(new AccountException("invalid_grant"));
+              Logger.d("TAG123","SIGNINWRONG");
               return Single.error(new AccountException("invalid_grant"));
             }
             return Single.just(account);
@@ -573,17 +575,20 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
           @Override public Single<Account> createAccount(String email, String password) {
             if(TestType.types.equals(TestType.TestTypes.REGULAR)) {
-              Logger.d("TAG123","here1");
+              Logger.d("TAG123","REGULAR");
               return Single.just(account);
             }
             else if(TestType.types.equals(TestType.TestTypes.USEDEMAIL)) {
-              Throwable throwable = new Throwable("cm.aptoide.accountmanager.AccountException");
-              Logger.d("TAG123","here3");
+              Logger.d("TAG123","USEDEMAIL");
               List<ErrorResponse> list = new ArrayList<>();
               ErrorResponse errorResponse = new ErrorResponse();
               errorResponse.code = "WOP-9";
               list.add(errorResponse);
               return Single.error(new AccountException(list));
+            }
+            else if(TestType.types.equals(TestType.TestTypes.INVALIDEMAIL)) {
+              Logger.d("TAG123","INVALIDEMAIL");
+              return Single.error(new AccountException("IARG_106"));
             }
             return Single.just(account);
           }

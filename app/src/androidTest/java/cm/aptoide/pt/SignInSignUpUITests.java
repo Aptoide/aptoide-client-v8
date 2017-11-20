@@ -3,12 +3,7 @@ package cm.aptoide.pt;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.NoMatchingViewException;
-import android.support.test.espresso.ViewAction;
-import android.support.test.espresso.action.GeneralLocation;
-import android.support.test.espresso.action.GeneralSwipeAction;
-import android.support.test.espresso.action.Press;
-import android.support.test.espresso.action.Swipe;
+import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.UiDevice;
@@ -25,12 +20,12 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static cm.aptoide.pt.UITests.skipWizard;
 
 /**
  * Created by jose_messejana on 24-10-2017.
@@ -40,27 +35,18 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 public class SignInSignUpUITests {
   private final String LOGINEMAIL = "jose.messejana@aptoide.com";
   private final String PASS = "aptoide1234";
-  private final int NUMBER_OF_RETRIES = 3;
+  private final String STORENAME = "a";
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
-  @Rule public RetryTestRule retry = new RetryTestRule(NUMBER_OF_RETRIES);
-  private String STORENAME = "a";
+  @Rule public RetryTestRule retry = new RetryTestRule(UITests.NUMBER_OF_RETRIES);
   private int nonerrormessagesphotos = 0;
-
-
-  private static ViewAction swipeRigthOnLeftMost() {
-    return new GeneralSwipeAction(Swipe.FAST, GeneralLocation.CENTER_LEFT,
-        GeneralLocation.CENTER_RIGHT, Press.FINGER);
-  }
 
   @Before public void setUp() {
     TestType.types = TestType.TestTypes.REGULAR;
-    if (isFirstTime()) {
+    if (UITests.isFirstTime()) {
      skipWizard();
     }
   }
-
-
 
   @Test public void signInEmptyEmail() {
     goToMyAccount();
@@ -88,6 +74,7 @@ public class SignInSignUpUITests {
   }
 
   @Test public void signUpInvalidEmail() {
+    TestType.types = TestType.TestTypes.INVALIDEMAIL;
     goToMyAccount();
     performSignUp("randomemail", PASS);
     onView(withText(R.string.ws_error_IARG_106)).check(matches(isDisplayed()));
@@ -152,20 +139,16 @@ public class SignInSignUpUITests {
     onView(withId(R.id.action_search)).check(matches(isDisplayed()));
   }
 
-  @Test public void signUpcreateStoreAfter() {
-    goToMyAccount();
-    performSignUp(LOGINEMAIL, PASS);
-    completeSignUp();
-    onView(withText(R.string.stores)).perform(click());
-    onView(withId(R.id.create_store_action)).perform(click());
-    createStore();
-    onView(withId(R.id.action_search)).check(matches(isDisplayed()));
-  }
-
-
   @Test public void signIn() {
     goToMyAccount();
     performLogin(LOGINEMAIL, PASS);
+    onView(withId(R.id.action_search)).check(matches(isDisplayed()));
+  }
+
+  @Test public void signOut(){
+    TestType.types = TestType.TestTypes.LOGGEDIN;
+    goToMyAccount();
+    onView(withId(R.id.button_logout)).perform(click());
     onView(withId(R.id.action_search)).check(matches(isDisplayed()));
   }
 
@@ -176,16 +159,12 @@ public class SignInSignUpUITests {
     int deviceWidth = mDevice.getDisplayWidth();
     goToMyAccount();
     performLogin(LOGINEMAIL, PASS);
-    while (!hasLoggedIn() && whileiterations < MAX_NUMBER_WHILEITERARTIONS) {
-      whileiterations++;
-    }
     goToMyAccount();
     onView(withId(R.id.my_account_edit_user_profile)).perform(click());
     onView(withId(R.id.create_user_image_action)).perform(click());
     allowPermission(mDevice, "WRITE_EXTERNAL_STORAGE");
     onView(withId(R.id.button_gallery)).perform(click());
     getPhotoFromStorage(mDevice, deviceHeight, deviceWidth, "user");
-    Thread.sleep(LONGER_WAIT_TIME * 2);
     if(nonerrormessagesphotos != 1){
       throw new IllegalStateException("Unexpected number of error messages displayed"); //if it has different than 1 means that one of the photos didn't display the error or the accepted photo displayed an error
     }
@@ -198,9 +177,6 @@ public class SignInSignUpUITests {
     int deviceWidth = mDevice.getDisplayWidth();
     goToMyAccount();
     performLogin(LOGINEMAIL, PASS);
-    while (!hasLoggedIn() && whileiterations < MAX_NUMBER_WHILEITERARTIONS) {
-      whileiterations++;
-    }
     goToMyAccount();
     onView(withId(R.id.my_account_edit_user_store)).perform(click());
     onView(withId(R.id.create_store_image_action)).perform(click());
@@ -213,56 +189,12 @@ public class SignInSignUpUITests {
     onView(withId(R.id.theme_selector)).perform(swipeUp());
     onView(withId(R.id.theme_selector)).perform(swipeUp());
     onView(withId(R.id.create_store_action)).perform(click());
-  } */
-
-  private boolean isFirstTime() {
-    try {
-      onView(withId(R.id.next_icon)).check(matches(isDisplayed()));
-      return true;
-    } catch (NoMatchingViewException e) {
-      return false;
-    }
   }
+*/
 
-  private boolean hasLoggedIn() {
-    try {
-      onView(withId(R.id.toolbar)).check(matches(isDisplayed()));
-      return true;
-    } catch (NoMatchingViewException e) {
-      return false;
-    }
-  }
-
-  private boolean notSignUp() {
-    try {
-      onView(withId(R.id.create_user_username_inserted)).check(matches(isDisplayed()));
-      return false;
-    } catch (NoMatchingViewException e) {
-      return true;
-    }
-  }
-
-  private boolean hasCreatedUser(boolean isMoreInfo) {
-    try {
-      if (isMoreInfo) {
-        onView(withId(R.id.logged_in_more_info_button)).perform(click());
-      } else {
-        onView(withId(R.id.logged_in_continue)).perform(click());
-      }
-      return true;
-    } catch (NoMatchingViewException e) {
-      return false;
-    }
-  }
-
-  private boolean hasCreatedStore() {
-    try {
-      onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
-      onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
-      return true;
-    } catch (NoMatchingViewException e) {
-      return false;
-    }
+  private void goToMyAccount() {
+    onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+    onView(withText(R.string.drawer_title_my_account)).perform(click());
   }
 
   private boolean hasPermission(String permission) {
@@ -293,34 +225,11 @@ public class SignInSignUpUITests {
     onView(withId(R.id.button_login)).perform(click());
   }
 
-  private void logOutorGoBack() {
-    try {
-      onView(withId(R.id.toolbar)).perform(swipeRigthOnLeftMost());
-      onView(withId(R.id.profile_email_text)).perform(click());
-      onView(withId(R.id.toolbar)).perform(swipeLeft());
-      goToMyAccount();
-      onView(withId(R.id.button_logout)).perform(click());
-    } catch (Exception e) {
-      onView(withId(R.id.toolbar)).perform(swipeLeft());
-    }
-  }
-
-  private void goToMyAccount() {
-    onView(withId(R.id.toolbar)).perform(swipeRigthOnLeftMost());
-    onView(withText(R.string.drawer_title_my_account)).perform(click());
-  }
-
   private void performSignUp(String email, String pass) {
     onView(withId(R.id.show_join_aptoide_area)).perform(click());
     onView(withId(R.id.username)).perform(replaceText(email));
     onView(withId(R.id.password)).perform(replaceText(pass), closeSoftKeyboard());
     onView(withId(R.id.button_sign_up)).perform(click());
-  }
-
-  private void skipWizard() {
-    onView(withId(R.id.next_icon)).perform(click());
-    onView(withId(R.id.next_icon)).perform(click());
-    onView(withId(R.id.skip_text)).perform(click());
   }
 
   private void completeSignUp() {
