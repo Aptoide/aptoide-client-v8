@@ -231,7 +231,8 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
                 .doOnError(throwable -> {
                   view.showError(errorMapper.map(throwable));
                   crashReport.log(throwable);
-                  accountAnalytics.sendGoogleSignUpFailEvent(throwable);
+                  accountAnalytics.sendSignUpErrorEvent(AccountAnalytics.LoginMethod.GOOGLE,
+                      throwable);
                 }))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -286,36 +287,19 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
                 })
                 .doOnTerminate(() -> view.hideLoading())
                 .doOnError(throwable -> {
-                  sendFacebookErrorAnalyics(throwable);
-
                   if (throwable instanceof FacebookSignUpException
                       && ((FacebookSignUpException) throwable).getCode()
                       == FacebookSignUpException.MISSING_REQUIRED_PERMISSIONS) {
                     view.showFacebookPermissionsRequiredError(throwable);
-                  } else {
-                    crashReport.log(throwable);
-                    view.showError(errorMapper.map(throwable));
                   }
+                  accountAnalytics.sendSignUpErrorEvent(AccountAnalytics.LoginMethod.FACEBOOK,
+                      throwable);
+                  crashReport.log(throwable);
+                  view.showError(errorMapper.map(throwable));
                 }))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
-  }
-
-  private void sendFacebookErrorAnalyics(Throwable throwable) {
-    if (throwable instanceof FacebookSignUpException) {
-      switch (((FacebookSignUpException) throwable).getCode()) {
-        case FacebookSignUpException.MISSING_REQUIRED_PERMISSIONS:
-          accountAnalytics.sendFacebookMissingPermissionsEvent();
-          break;
-        case FacebookSignUpException.USER_CANCELLED:
-          accountAnalytics.sendFacebookUserCancelledEvent();
-          break;
-        case FacebookSignUpException.ERROR:
-          accountAnalytics.sendFacebookErrorEvent();
-          break;
-      }
-    }
   }
 
   private Observable<Void> aptoideShowLoginClick() {

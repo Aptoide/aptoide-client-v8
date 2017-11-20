@@ -152,7 +152,6 @@ public class PaymentLoginPresenter implements Presenter {
                 .observeOn(viewScheduler)
                 .doOnTerminate(() -> view.hideLoading())
                 .doOnError(throwable -> {
-                  sendFacebookSignUpErrorEvent(throwable);
 
                   if (throwable instanceof FacebookSignUpException
                       && ((FacebookSignUpException) throwable).getCode()
@@ -162,6 +161,8 @@ public class PaymentLoginPresenter implements Presenter {
                     view.showError(errorMapper.map(throwable));
                     crashReport.log(throwable);
                   }
+                  accountAnalytics.sendSignUpErrorEvent(AccountAnalytics.LoginMethod.FACEBOOK,
+                      throwable);
                 }))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -213,7 +214,8 @@ public class PaymentLoginPresenter implements Presenter {
                 .doOnError(throwable -> {
                   view.showError(errorMapper.map(throwable));
                   crashReport.log(throwable);
-                  accountAnalytics.sendGoogleSignUpFailEvent(throwable);
+                  accountAnalytics.sendSignUpErrorEvent(AccountAnalytics.LoginMethod.GOOGLE,
+                      throwable);
                 }))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -236,21 +238,5 @@ public class PaymentLoginPresenter implements Presenter {
         .doOnNext(__ -> accountNavigator.navigateToRecoverPasswordView())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
-  }
-
-  private void sendFacebookSignUpErrorEvent(Throwable throwable) {
-    if (throwable instanceof FacebookSignUpException) {
-      switch (((FacebookSignUpException) throwable).getCode()) {
-        case FacebookSignUpException.MISSING_REQUIRED_PERMISSIONS:
-          accountAnalytics.sendFacebookMissingPermissionsEvent();
-          break;
-        case FacebookSignUpException.USER_CANCELLED:
-          accountAnalytics.sendFacebookUserCancelledEvent();
-          break;
-        case FacebookSignUpException.ERROR:
-          accountAnalytics.sendFacebookErrorEvent();
-          break;
-      }
-    }
   }
 }
