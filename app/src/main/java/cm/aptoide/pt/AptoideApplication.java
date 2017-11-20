@@ -591,7 +591,8 @@ public abstract class AptoideApplication extends Application {
         // In order to make sure it happens we clean up all data persisted in disk when client
         // is first created. It only affects API calls with GET verb.
         cache.evictAll();
-      } catch (IOException ignored) {}
+      } catch (IOException ignored) {
+      }
       okHttpClientBuilder.cache(cache); // 10 MiB
       okHttpClientBuilder.addInterceptor(new POSTCacheInterceptor(getHttpClientCache()));
       okHttpClientBuilder.addInterceptor(getUserAgentInterceptor());
@@ -822,11 +823,11 @@ public abstract class AptoideApplication extends Application {
               getAccountManager(), getDatabase(), getResources(), getPackageRepository(),
               getTokenInvalidator(),
               new RxSyncScheduler(new HashMap<>(), CrashReport.getInstance()),
-              getInAppBillingSerializer(),
-              getBodyInterceptorPoolV7(), getAccountSettingsBodyInterceptorPoolV7(),
-              new HashMap<>(), WebService.getDefaultConverter(), CrashReport.getInstance(),
-              getAdyen(), getPurchaseFactory(), Build.VERSION_CODES.JELLY_BEAN,
-              Build.VERSION_CODES.JELLY_BEAN, getAuthenticationPersistence(), getPreferences());
+              getInAppBillingSerializer(), getBodyInterceptorPoolV7(),
+              getAccountSettingsBodyInterceptorPoolV7(), new HashMap<>(),
+              WebService.getDefaultConverter(), CrashReport.getInstance(), getAdyen(),
+              getPurchaseFactory(), Build.VERSION_CODES.JELLY_BEAN, Build.VERSION_CODES.JELLY_BEAN,
+              getAuthenticationPersistence(), getPreferences());
     }
     return billingPool;
   }

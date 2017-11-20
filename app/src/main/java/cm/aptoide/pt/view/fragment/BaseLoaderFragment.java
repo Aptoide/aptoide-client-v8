@@ -11,12 +11,11 @@ import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
-import cm.aptoide.pt.view.swipe.LoaderLayoutHandler;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.view.LoadInterface;
-import lombok.Getter;
+import cm.aptoide.pt.view.swipe.LoaderLayoutHandler;
 
 /**
  * Created by neuro on 16-04-2016.
@@ -24,7 +23,7 @@ import lombok.Getter;
 public abstract class BaseLoaderFragment extends UIComponentFragment implements LoadInterface {
 
   private LoaderLayoutHandler loaderLayoutHandler;
-  @Getter private boolean create = true;
+  private boolean create = true;
 
   @CallSuper @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
@@ -108,5 +107,9 @@ public abstract class BaseLoaderFragment extends UIComponentFragment implements 
     }
     CrashReport.getInstance()
         .log(throwable);
+  }
+
+  public boolean isCreate() {
+    return this.create;
   }
 }

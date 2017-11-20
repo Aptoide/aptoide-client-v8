@@ -67,48 +67,66 @@ public class AndroidAppInfo implements Serializable {
     return this.apk;
   }
 
-  public FileInfo getMainObb() {
-    return this.mainObb;
-  }
-
-  public FileInfo getPatchObb() {
-    return this.patchObb;
-  }
-
-  public String getAppName() {
-    return this.appName;
-  }
-
-  public String getPackageName() {
-    return this.packageName;
-  }
-
-  public List<FileInfo> getFileInfos() {
-    return this.fileInfos;
-  }
-
   public void setApk(FileInfo apk) {
     this.apk = apk;
+  }
+
+  public FileInfo getMainObb() {
+    return this.mainObb;
   }
 
   public void setMainObb(FileInfo mainObb) {
     this.mainObb = mainObb;
   }
 
+  public FileInfo getPatchObb() {
+    return this.patchObb;
+  }
+
   public void setPatchObb(FileInfo patchObb) {
     this.patchObb = patchObb;
+  }
+
+  public String getAppName() {
+    return this.appName;
   }
 
   public void setAppName(String appName) {
     this.appName = appName;
   }
 
+  public String getPackageName() {
+    return this.packageName;
+  }
+
   public void setPackageName(String packageName) {
     this.packageName = packageName;
   }
 
+  public List<FileInfo> getFileInfos() {
+    return this.fileInfos;
+  }
+
   public void setFileInfos(List<FileInfo> fileInfos) {
     this.fileInfos = fileInfos;
+  }
+
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    final Object $apk = this.getApk();
+    result = result * PRIME + ($apk == null ? 43 : $apk.hashCode());
+    final Object $mainObb = this.getMainObb();
+    result = result * PRIME + ($mainObb == null ? 43 : $mainObb.hashCode());
+    final Object $patchObb = this.getPatchObb();
+    result = result * PRIME + ($patchObb == null ? 43 : $patchObb.hashCode());
+    final Object $appName = this.getAppName();
+    result = result * PRIME + ($appName == null ? 43 : $appName.hashCode());
+    final Object $packageName = this.getPackageName();
+    result = result * PRIME + ($packageName == null ? 43 : $packageName.hashCode());
+    final Object $fileInfos = this.getFileInfos();
+    result = result * PRIME + ($fileInfos == null ? 43 : $fileInfos.hashCode());
+    return result;
   }
 
   public boolean equals(Object o) {
@@ -149,28 +167,6 @@ public class AndroidAppInfo implements Serializable {
     return true;
   }
 
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final Object $apk = this.getApk();
-    result = result * PRIME + ($apk == null ? 43 : $apk.hashCode());
-    final Object $mainObb = this.getMainObb();
-    result = result * PRIME + ($mainObb == null ? 43 : $mainObb.hashCode());
-    final Object $patchObb = this.getPatchObb();
-    result = result * PRIME + ($patchObb == null ? 43 : $patchObb.hashCode());
-    final Object $appName = this.getAppName();
-    result = result * PRIME + ($appName == null ? 43 : $appName.hashCode());
-    final Object $packageName = this.getPackageName();
-    result = result * PRIME + ($packageName == null ? 43 : $packageName.hashCode());
-    final Object $fileInfos = this.getFileInfos();
-    result = result * PRIME + ($fileInfos == null ? 43 : $fileInfos.hashCode());
-    return result;
-  }
-
-  protected boolean canEqual(Object other) {
-    return other instanceof AndroidAppInfo;
-  }
-
   public String toString() {
     return "AndroidAppInfo(apk="
         + this.getApk()
@@ -185,5 +181,9 @@ public class AndroidAppInfo implements Serializable {
         + ", fileInfos="
         + this.getFileInfos()
         + ")";
+  }
+
+  protected boolean canEqual(Object other) {
+    return other instanceof AndroidAppInfo;
   }
 }

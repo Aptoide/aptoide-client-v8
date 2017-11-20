@@ -75,6 +75,5 @@ public class GetPurchasesRequest
     public void setList(List<PurchaseResponse> list) {
       this.list = list;
     }
-
   }
 }

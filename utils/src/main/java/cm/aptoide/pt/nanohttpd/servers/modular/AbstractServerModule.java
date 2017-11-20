@@ -9,12 +9,12 @@ public abstract class AbstractServerModule implements ServerModule {
 
   private final String endpoint;
 
-  public String getEndpoint() {
-    return endpoint;
-  }
-
   public AbstractServerModule(String endpoint) {
     this.endpoint = endpoint;
+  }
+
+  public String getEndpoint() {
+    return endpoint;
   }
 
   @Override public boolean accepts(NanoHTTPD.IHTTPSession session) {

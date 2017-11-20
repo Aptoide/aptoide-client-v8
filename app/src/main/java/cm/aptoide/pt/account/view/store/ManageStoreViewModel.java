@@ -60,8 +60,7 @@ import org.parceler.Parcel;
     return model;
   }
 
-  private List<SocialLink> buildSocialLinksList(
-      List<Store.SocialChannel> socialChannels) {
+  private List<SocialLink> buildSocialLinksList(List<Store.SocialChannel> socialChannels) {
     List<SocialLink> storeLinks = new ArrayList<>();
     for (Store.SocialChannel socialChannel : socialChannels) {
       storeLinks.add(new SocialLink(socialChannel.getType(), socialChannel.getUrl()));

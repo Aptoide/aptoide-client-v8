@@ -8,8 +8,7 @@ import java.util.List;
 /**
  * Created by neuro on 29-01-2017.
  */
-public class SendApk extends AndroidAppInfoMessage
-    implements Serializable {
+public class SendApk extends AndroidAppInfoMessage implements Serializable {
 
   private static final long serialVersionUID = -68949027607957107L;
 

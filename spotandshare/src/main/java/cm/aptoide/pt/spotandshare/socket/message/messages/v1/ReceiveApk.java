@@ -4,8 +4,7 @@ import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.Host;
 import java.io.Serializable;
 
-public class ReceiveApk extends AndroidAppInfoMessage
-    implements Serializable {
+public class ReceiveApk extends AndroidAppInfoMessage implements Serializable {
 
   private static final long serialVersionUID = -4823114091941029036L;
 

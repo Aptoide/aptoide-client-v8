@@ -24,6 +24,7 @@ public class QManager {
   private String glEs;
   private Integer densityDpi;
   private String cachedFilters;
+
   public QManager(SharedPreferences sharedPreferences, Resources resources,
       ActivityManager activityManager, WindowManager windowManager) {
     this.glExtensionsManager = new GlExtensionsManager(sharedPreferences);

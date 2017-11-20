@@ -47,12 +47,12 @@ public class Host implements Serializable {
     return ip != null ? ip.equals(host.ip) : host.ip == null;
   }
 
-  public String getIp() {
-    return this.ip;
+  public String toString() {
+    return "Host(ip=" + this.getIp() + ", port=" + this.getPort() + ")";
   }
 
-  public int getPort() {
-    return this.port;
+  public String getIp() {
+    return this.ip;
   }
 
   public Host setIp(String ip) {
@@ -60,12 +60,12 @@ public class Host implements Serializable {
     return this;
   }
 
+  public int getPort() {
+    return this.port;
+  }
+
   public Host setPort(int port) {
     this.port = port;
     return this;
-  }
-
-  public String toString() {
-    return "Host(ip=" + this.getIp() + ", port=" + this.getPort() + ")";
   }
 }

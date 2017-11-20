@@ -21,11 +21,6 @@ public class FileInfo implements Serializable {
     this.size = size;
   }
 
-  public void setFilePath(String filePath) {
-    this.filePath = filePath;
-    this.fileName = extractFileName(filePath);
-  }
-
   private String extractFileName(String filePath) {
     return filePath.substring(filePath.lastIndexOf(File.separatorChar), filePath.length());
   }
@@ -44,20 +39,37 @@ public class FileInfo implements Serializable {
     return this.filePath;
   }
 
-  public String getFileName() {
-    return this.fileName;
+  public void setFilePath(String filePath) {
+    this.filePath = filePath;
+    this.fileName = extractFileName(filePath);
   }
 
-  public long getSize() {
-    return this.size;
+  public String getFileName() {
+    return this.fileName;
   }
 
   public void setFileName(String fileName) {
     this.fileName = fileName;
   }
 
+  public long getSize() {
+    return this.size;
+  }
+
   public void setSize(long size) {
     this.size = size;
+  }
+
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    final Object $filePath = this.getFilePath();
+    result = result * PRIME + ($filePath == null ? 43 : $filePath.hashCode());
+    final Object $fileName = this.getFileName();
+    result = result * PRIME + ($fileName == null ? 43 : $fileName.hashCode());
+    final long $size = this.getSize();
+    result = result * PRIME + (int) ($size >>> 32 ^ $size);
+    return result;
   }
 
   public boolean equals(Object o) {
@@ -79,22 +91,6 @@ public class FileInfo implements Serializable {
     return true;
   }
 
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final Object $filePath = this.getFilePath();
-    result = result * PRIME + ($filePath == null ? 43 : $filePath.hashCode());
-    final Object $fileName = this.getFileName();
-    result = result * PRIME + ($fileName == null ? 43 : $fileName.hashCode());
-    final long $size = this.getSize();
-    result = result * PRIME + (int) ($size >>> 32 ^ $size);
-    return result;
-  }
-
-  protected boolean canEqual(Object other) {
-    return other instanceof FileInfo;
-  }
-
   public String toString() {
     return "FileInfo(filePath="
         + this.getFilePath()
@@ -103,5 +99,9 @@ public class FileInfo implements Serializable {
         + ", size="
         + this.getSize()
         + ")";
+  }
+
+  protected boolean canEqual(Object other) {
+    return other instanceof FileInfo;
   }
 }

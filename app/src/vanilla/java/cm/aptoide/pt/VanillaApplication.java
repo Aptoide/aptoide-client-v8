@@ -74,18 +74,6 @@ public class VanillaApplication extends AptoideApplication {
     return true;
   }
 
-  @Override public LoginPreferences getLoginPreferences() {
-    return new LoginPreferences(this, GoogleApiAvailability.getInstance());
-  }
-
-  @Override public FragmentProvider createFragmentProvider() {
-    return new VanillaFragmentProvider();
-  }
-
-  @Override public ActivityProvider createActivityProvider() {
-    return new VanillaActivityProvider();
-  }
-
   @Override public NotificationSyncScheduler getNotificationSyncScheduler() {
     if (notificationSyncScheduler == null) {
       notificationSyncScheduler = new NotificationSyncManager(getAlarmSyncScheduler(), true,
@@ -96,11 +84,22 @@ public class VanillaApplication extends AptoideApplication {
                       .addInterceptor(
                           new Pnp1AuthorizationInterceptor(getAuthenticationPersistence(),
                               getTokenInvalidator()))
-                      .build(),
-                  WebService.getDefaultConverter(), getIdsRepository(), BuildConfig.VERSION_NAME,
-                  getExtraId(), getDefaultSharedPreferences(), getResources(), getAccountManager()),
-              getNotificationProvider()));
+                      .build(), WebService.getDefaultConverter(), getIdsRepository(),
+                  BuildConfig.VERSION_NAME, getExtraId(), getDefaultSharedPreferences(),
+                  getResources(), getAccountManager()), getNotificationProvider()));
     }
     return notificationSyncScheduler;
+  }
+
+  @Override public LoginPreferences getLoginPreferences() {
+    return new LoginPreferences(this, GoogleApiAvailability.getInstance());
+  }
+
+  @Override public FragmentProvider createFragmentProvider() {
+    return new VanillaFragmentProvider();
+  }
+
+  @Override public ActivityProvider createActivityProvider() {
+    return new VanillaActivityProvider();
   }
 }

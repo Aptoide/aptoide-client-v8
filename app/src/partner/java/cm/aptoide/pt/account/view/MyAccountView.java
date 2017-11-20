@@ -26,5 +26,4 @@ public interface MyAccountView extends View {
   void showHeader();
 
   void hideHeader();
-
 }

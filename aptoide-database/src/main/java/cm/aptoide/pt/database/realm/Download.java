@@ -12,9 +12,8 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode(callSuper = false) public class Download extends RealmObject {
+public class Download extends RealmObject {
 
   public static final int ACTION_INSTALL = 0;
   public static final int ACTION_UPDATE = 1;
@@ -183,5 +182,52 @@ import lombok.EqualsAndHashCode;
 
   @Retention(RetentionPolicy.SOURCE) @IntDef({ GENERIC_ERROR, NOT_ENOUGH_SPACE_ERROR, NO_ERROR })
   public @interface DownloadError {
+  }
+
+  @Override public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    Download download = (Download) o;
+
+    if (getOverallDownloadStatus() != download.getOverallDownloadStatus()) return false;
+    if (getOverallProgress() != download.getOverallProgress()) return false;
+    if (getTimeStamp() != download.getTimeStamp()) return false;
+    if (getDownloadSpeed() != download.getDownloadSpeed()) return false;
+    if (getVersionCode() != download.getVersionCode()) return false;
+    if (getAction() != download.getAction()) return false;
+    if (isScheduled() != download.isScheduled()) return false;
+    if (getDownloadError() != download.getDownloadError()) return false;
+    if (!getMd5().equals(download.getMd5())) return false;
+    if (getAppName() != null ? !getAppName().equals(download.getAppName())
+        : download.getAppName() != null) {
+      return false;
+    }
+    if (getIcon() != null ? !getIcon().equals(download.getIcon()) : download.getIcon() != null) {
+      return false;
+    }
+    if (getPackageName() != null ? !getPackageName().equals(download.getPackageName())
+        : download.getPackageName() != null) {
+      return false;
+    }
+    return getVersionName() != null ? getVersionName().equals(download.getVersionName())
+        : download.getVersionName() == null;
+  }
+
+  @Override public int hashCode() {
+    int result = getOverallDownloadStatus();
+    result = 31 * result + getOverallProgress();
+    result = 31 * result + getMd5().hashCode();
+    result = 31 * result + (getAppName() != null ? getAppName().hashCode() : 0);
+    result = 31 * result + (getIcon() != null ? getIcon().hashCode() : 0);
+    result = 31 * result + (int) (getTimeStamp() ^ (getTimeStamp() >>> 32));
+    result = 31 * result + getDownloadSpeed();
+    result = 31 * result + (getPackageName() != null ? getPackageName().hashCode() : 0);
+    result = 31 * result + getVersionCode();
+    result = 31 * result + getAction();
+    result = 31 * result + (isScheduled() ? 1 : 0);
+    result = 31 * result + (getVersionName() != null ? getVersionName().hashCode() : 0);
+    result = 31 * result + getDownloadError();
+    return result;
   }
 }

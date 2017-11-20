@@ -4,14 +4,13 @@ import android.content.res.Resources;
 import android.view.WindowManager;
 import cm.aptoide.pt.view.recycler.widget.WidgetFactory;
 import java.util.List;
-import lombok.Getter;
 
 /**
  * Created by neuro on 16-04-2016.
  */
 public class DisplayableGroup extends Displayable {
 
-  @Getter private final List<Displayable> children;
+  private final List<Displayable> children;
   private final WindowManager windowManager;
   private final Resources resources;
 
@@ -45,6 +44,11 @@ public class DisplayableGroup extends Displayable {
     }
   }
 
+  @Override public int getDefaultPerLineCount() {
+    throw new IllegalStateException(
+        "getDefaultPerLineCount() on DisplayableGroup should not " + "be called!");
+  }
+
   @Override protected Configs getConfig() {
     // Stub
     // Should not be used
@@ -56,8 +60,7 @@ public class DisplayableGroup extends Displayable {
         "getViewLayout() on DisplayableGroup should not be " + "called!");
   }
 
-  @Override public int getDefaultPerLineCount() {
-    throw new IllegalStateException(
-        "getDefaultPerLineCount() on DisplayableGroup should not " + "be called!");
+  public List<Displayable> getChildren() {
+    return this.children;
   }
 }

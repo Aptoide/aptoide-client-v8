@@ -7,8 +7,7 @@ import java.io.Serializable;
 /**
  * Created by neuro on 29-01-2017.
  */
-public class RequestPermissionToSend extends AndroidAppInfoMessage
-    implements Serializable {
+public class RequestPermissionToSend extends AndroidAppInfoMessage implements Serializable {
 
   private static final long serialVersionUID = -7964770150534506715L;
 

@@ -25,8 +25,8 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
 
   private static final String TAG = AptoideMessageServerSocket.class.getSimpleName();
 
-  private final ConcurrentLinkedQueue<AptoideMessageServerController>
-      aptoideMessageControllers = new ConcurrentLinkedQueue<>();
+  private final ConcurrentLinkedQueue<AptoideMessageServerController> aptoideMessageControllers =
+      new ConcurrentLinkedQueue<>();
   private AptoideMessageServerController aptoideMessageServerController;
 
   public AptoideMessageServerSocket(int port, int serverSocketTimeout, int timeout) {
