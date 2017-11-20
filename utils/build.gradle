@@ -75,10 +75,6 @@ dependencies {
   compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
   compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
-  provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
-  // Just for lombok not to complain
-  provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
-
   compile "io.reactivex:rxjava:${RXJAVA_VERSION}"
   compile "io.reactivex:rxandroid:${RXANDROID_VERSION}"
   compile "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"

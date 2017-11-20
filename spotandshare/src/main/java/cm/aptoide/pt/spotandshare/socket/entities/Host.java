@@ -3,13 +3,11 @@ package cm.aptoide.pt.spotandshare.socket.entities;
 import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
-import lombok.Data;
-import lombok.experimental.Accessors;
 
 /**
  * Created by neuro on 27-01-2017.
  */
-@Data @Accessors(chain = true) public class Host implements Serializable {
+public class Host implements Serializable {
   private String ip;
   private int port;
 
@@ -47,5 +45,27 @@ import lombok.experimental.Accessors;
 
     if (port != host.port) return false;
     return ip != null ? ip.equals(host.ip) : host.ip == null;
+  }
+
+  public String getIp() {
+    return this.ip;
+  }
+
+  public int getPort() {
+    return this.port;
+  }
+
+  public Host setIp(String ip) {
+    this.ip = ip;
+    return this;
+  }
+
+  public Host setPort(int port) {
+    this.port = port;
+    return this;
+  }
+
+  public String toString() {
+    return "Host(ip=" + this.getIp() + ", port=" + this.getPort() + ")";
   }
 }
