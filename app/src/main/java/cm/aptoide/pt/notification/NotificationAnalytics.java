@@ -18,7 +18,7 @@ public class NotificationAnalytics {
     this.analytics = analytics;
   }
 
-  public void notificationShown(String url) {
+  public void sendNotificationTouchEvent(String url) {
     analytics.sendEvent(new KnockEvent(url, client));
   }
 }
