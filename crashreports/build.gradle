@@ -1,26 +1,29 @@
 apply plugin: 'com.android.library'
-apply plugin: 'me.tatarka.retrolambda'
-
-retrolambda {
-  jvmArgs '-noverify'
-  //defaultMethods true
-}
+apply plugin: 'kotlin-android'
+//apply plugin: 'kotlin-kapt'
 
 android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
   buildToolsVersion BUILD_TOOLS_VERSION
 
   defaultConfig {
-    minSdkVersion project.LIB_MINIMUM_SDK_VERSION
+    minSdkVersion project.MINIMUM_SDK_VERSION
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-  }
 
-  publishNonDefault true
+    // remove this after removing lombok
+    javaCompileOptions {
+      annotationProcessorOptions {
+        includeCompileClasspath true
+      }
+    }
+  }
 
   buildTypes {
     debug {
       minifyEnabled false
-      shrinkResources false
+    }
+    release {
+      minifyEnabled true
     }
   }
 
@@ -42,14 +45,14 @@ android {
 }
 
 dependencies {
-  compile fileTree(dir: 'libs', include: ['*.jar'])
-  androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+  implementation project(path: ':utils')
+
+  implementation fileTree(dir: 'libs', include: ['*.jar'])
+  androidTestImplementation("com.android.support.test.espresso:espresso-core:${EXPRESSO_VERSION}", {
     exclude group: 'com.android.support', module: 'support-annotations'
   })
-  testCompile 'junit:junit:4.12'
+  testImplementation "junit:junit:${JUNIT_VERSION}"
 
-  debugCompile project(path: ':utils', configuration: 'debug')
-  releaseCompile project(path: ':utils', configuration: 'release')
-
-  provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
+  compileOnly "org.projectlombok:lombok:${LOMBOK_VERSION}"
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }

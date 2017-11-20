@@ -1,14 +1,5 @@
-/*
- * Copyright (c) 2016.
- * Modified on 08/07/2016.
- */
-
 apply plugin: 'com.android.library'
-apply plugin: 'me.tatarka.retrolambda'
-
-retrolambda {
-  jvmArgs '-noverify'
-}
+apply plugin: 'kotlin-android'
 
 android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
@@ -22,17 +13,24 @@ android {
     abortOnError false
   }
 
-  publishNonDefault true
-
-  productFlavors {
-    prod {}
-    internal {}
+  buildTypes {
+    debug {
+      minifyEnabled false
+    }
+    release {
+      minifyEnabled true
+    }
   }
 
-  buildTypes {
-    release {
-      minifyEnabled false
-      shrinkResources false
+  flavorDimensions "mode"
+  productFlavors {
+    internal {
+      dimension "mode"
+      matchingFallbacks = ['prod']
+    }
+    prod {
+      dimension "mode"
+      matchingFallbacks = ['internal']
     }
   }
 
@@ -64,14 +62,14 @@ android {
 
 dependencies {
 
-  testCompile "junit:junit:${JUNIT_VERSION}"
-  testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+  implementation project(path: ':dataprovider')
 
-  internalCompile project(path: ':dataprovider', configuration: 'internalRelease')
-  prodCompile project(path: ':dataprovider', configuration: 'prodRelease')
+  testImplementation "junit:junit:${JUNIT_VERSION}"
+  testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
 
-  compile "com.jakewharton.rxrelay:rxrelay:${RX_RELAY}"
-  compile "io.reactivex:rxjava:${RXJAVA_VERSION}"
-  compile "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
-  compile "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
+  implementation "com.jakewharton.rxrelay:rxrelay:${RX_RELAY}"
+  implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
+  implementation "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
+  implementation "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }

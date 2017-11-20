@@ -1,14 +1,6 @@
-/*
- * Copyright (c) 2016.
- * Modified on 08/07/2016.
- */
 apply plugin: 'com.android.library'
-apply plugin: 'me.tatarka.retrolambda'
-
-retrolambda {
-  jvmArgs '-noverify'
-  //defaultMethods true
-}
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
@@ -16,18 +8,25 @@ android {
 
   defaultConfig {
     minSdkVersion project.MINIMUM_SDK_VERSION
+
+    // remove this after removing lombok
+    javaCompileOptions {
+      annotationProcessorOptions {
+        includeCompileClasspath true
+      }
+    }
   }
 
   lintOptions {
     abortOnError false
   }
 
-  publishNonDefault true
-
   buildTypes {
-    release {
+    debug {
       minifyEnabled false
-      shrinkResources false
+    }
+    release {
+      minifyEnabled true
     }
   }
 
@@ -54,36 +53,24 @@ android {
 }
 
 dependencies {
+  implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-  //
-  // inter-projects dependencies
-  //
-
-  //
-  // custom libs in folders
-  //
-
-  compile fileTree(dir: 'libs', include: ['*.jar'])
-
-  //
-  // from remote repos
-  //
-
-  testCompile "junit:junit:${JUNIT_VERSION}"
+  testImplementation "junit:junit:${JUNIT_VERSION}"
 
   //noinspection GradleDependency
-  compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
-  compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+  implementation "com.android.support:design:${SUPPORT_LIB_VERSION}"
+  implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
-  provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
+  compileOnly "org.projectlombok:lombok:${LOMBOK_VERSION}"
   // Just for lombok not to complain
-  provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
+  compileOnly "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
 
-  compile "io.reactivex:rxjava:${RXJAVA_VERSION}"
-  compile "io.reactivex:rxandroid:${RXANDROID_VERSION}"
-  compile "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
+  implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
+  implementation "io.reactivex:rxandroid:${RXANDROID_VERSION}"
+  implementation "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
   // And ProGuard rules for RxJava!
-  compile "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
+  implementation "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
 
-  compile("org.nanohttpd:nanohttpd:2.3.0")
+  implementation "org.nanohttpd:nanohttpd:2.3.0"
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }

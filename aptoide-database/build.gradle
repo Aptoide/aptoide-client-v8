@@ -1,15 +1,7 @@
-/*
- * Copyright (c) 2016.
- * Modified on 08/07/2016.
- */
-
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
-apply plugin: 'me.tatarka.retrolambda'
-retrolambda {
-  jvmArgs '-noverify'
-  //defaultMethods true
-}
 
 android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
@@ -19,14 +11,21 @@ android {
     minSdkVersion project.MINIMUM_SDK_VERSION
     // This should be a property set in Java code by the user of this lib
     buildConfigField 'boolean', 'DELETE_DB', 'false'
+
+    // remove this after removing lombok
+    javaCompileOptions {
+      annotationProcessorOptions {
+        includeCompileClasspath true
+      }
+    }
   }
 
-  publishNonDefault true
-
   buildTypes {
-    release {
+    debug {
       minifyEnabled false
-      shrinkResources false
+    }
+    release {
+      minifyEnabled true
     }
   }
 
@@ -54,26 +53,22 @@ android {
 
 dependencies {
 
-  //
-  // inter-projects dependencies
-  //
-  compile project(path: ':crashreports', configuration: 'release')
+  implementation project(path: ':crashreports')
 
-  //
-  // custom libs in folders
-  //
+  implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-  compile fileTree(dir: 'libs', include: ['*.jar'])
-
-  //
-  // from remote repos
-  //
-
-  testCompile "junit:junit:${JUNIT_VERSION}"
+  testImplementation "junit:junit:${JUNIT_VERSION}"
   //noinspection GradleDependency
-  compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+  implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
-  provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
+  implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
+  implementation "io.reactivex:rxandroid:${RXANDROID_VERSION}"
+  implementation "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
+  // And ProGuard rules for RxJava!
+  implementation "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
+
+  compileOnly "org.projectlombok:lombok:${LOMBOK_VERSION}"
   // Just for lombok not to complain
-  provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
+  compileOnly "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
