@@ -118,6 +118,7 @@ import cm.aptoide.pt.networking.UserAgentInterceptor;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.notification.NotificationIdsMapper;
+import cm.aptoide.pt.notification.NotificationInfo;
 import cm.aptoide.pt.notification.NotificationPolicyFactory;
 import cm.aptoide.pt.notification.NotificationProvider;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
@@ -278,6 +279,8 @@ public abstract class AptoideApplication extends Application {
   private PurchaseFactory purchaseFactory;
   private AppCenter appCenter;
   private ReadPostsPersistence readPostsPersistence;
+  private SystemNotificationShower systemNotificationShower;
+  private PublishRelay<NotificationInfo> notificationsPublishRelay;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -413,6 +416,9 @@ public abstract class AptoideApplication extends Application {
     }, throwable -> CrashReport.getInstance()
         .log(throwable));
 
+    systemNotificationShower = getSystemNotificationShower();
+    systemNotificationShower.setupNotificationPublishRelaySubscribe();
+
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
   }
@@ -492,12 +498,9 @@ public abstract class AptoideApplication extends Application {
           RootInstallNotificationEventReceiver.ROOT_INSTALL_DISMISS_ACTION),
           PendingIntent.FLAG_UPDATE_CURRENT);
 
-      final SystemNotificationShower systemNotificationShower = new SystemNotificationShower(this,
-          (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE),
-          new NotificationIdsMapper());
       int notificationId = 230498;
       rootInstallationRetryHandler =
-          new RootInstallationRetryHandler(notificationId, systemNotificationShower,
+          new RootInstallationRetryHandler(notificationId, getSystemNotificationShower(),
               getInstallManager(InstallerFactory.ROLLBACK), PublishRelay.create(), 0, this,
               new RootInstallErrorNotificationFactory(notificationId,
                   BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher), action,
@@ -506,12 +509,27 @@ public abstract class AptoideApplication extends Application {
     return rootInstallationRetryHandler;
   }
 
+  @NonNull private SystemNotificationShower getSystemNotificationShower() {
+    if (systemNotificationShower == null) {
+      systemNotificationShower = new SystemNotificationShower(this,
+          (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE),
+          new NotificationIdsMapper(), getNotificationsPublishRelay(), notificationCenter,
+          new NotificationAnalytics(Analytics.getInstance(),
+              AppEventsLogger.newLogger(getApplicationContext())), CrashReport.getInstance(),
+          getNotificationProvider());
+    }
+    return systemNotificationShower;
+  }
+
+  public PublishRelay<NotificationInfo> getNotificationsPublishRelay() {
+    if (notificationsPublishRelay == null) {
+      notificationsPublishRelay = PublishRelay.create();
+    }
+    return notificationsPublishRelay;
+  }
+
   public NotificationCenter getNotificationCenter() {
     if (notificationCenter == null) {
-
-      final SystemNotificationShower systemNotificationShower = new SystemNotificationShower(this,
-          (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE),
-          new NotificationIdsMapper());
 
       final NotificationAccessor notificationAccessor = AccessorFactory.getAccessorFor(
           ((AptoideApplication) this.getApplicationContext()).getDatabase(), Notification.class);
@@ -520,7 +538,7 @@ public abstract class AptoideApplication extends Application {
 
       notificationCenter =
           new NotificationCenter(notificationProvider, getNotificationSyncScheduler(),
-              systemNotificationShower, CrashReport.getInstance(),
+              getSystemNotificationShower(), CrashReport.getInstance(),
               new NotificationPolicyFactory(notificationProvider),
               new NotificationsCleaner(notificationAccessor,
                   Calendar.getInstance(TimeZone.getTimeZone("UTC"))), getAccountManager(),

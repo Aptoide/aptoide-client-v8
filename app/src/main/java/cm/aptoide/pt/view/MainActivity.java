@@ -15,6 +15,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
@@ -27,6 +28,7 @@ import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.TabNavigatorActivity;
 import cm.aptoide.pt.notification.ContentPuller;
+import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.presenter.MainPresenter;
@@ -38,6 +40,7 @@ import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxrelay.PublishRelay;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -90,7 +93,8 @@ public class MainActivity extends TabNavigatorActivity
             sharedPreferences,
             AccessorFactory.getAccessorFor(application.getDatabase(), Store.class), defaultTheme,
             application.getDefaultStoreName(), application.getNavigationTracker(),
-            application.getPageViewsAnalytics());
+            application.getPageViewsAnalytics(), new NotificationAnalytics(Analytics.getInstance(),
+            AppEventsLogger.newLogger(getApplicationContext())));
 
     final ApkFy apkFy = new ApkFy(this, getIntent(), securePreferences);
 

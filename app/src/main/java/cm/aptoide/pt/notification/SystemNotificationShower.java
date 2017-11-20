@@ -3,8 +3,10 @@ package cm.aptoide.pt.notification;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -13,9 +15,11 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.RemoteViews;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.installer.RootInstallErrorNotification;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import com.bumptech.glide.request.target.NotificationTarget;
+import com.jakewharton.rxrelay.PublishRelay;
 import rx.Completable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
@@ -26,15 +30,29 @@ import rx.schedulers.Schedulers;
  */
 
 public class SystemNotificationShower {
+
   private Context context;
   private NotificationManager notificationManager;
   private NotificationIdsMapper notificationIdsMapper;
+  private NotificationCenter notificationCenter;
+  private NotificationAnalytics notificationAnalytics;
+  private CrashReport crashReport;
+  private NotificationProvider notificationProvider;
+  private PublishRelay<NotificationInfo> notificationPublishRelay;
 
   public SystemNotificationShower(Context context, NotificationManager notificationManager,
-      NotificationIdsMapper notificationIdsMapper) {
+      NotificationIdsMapper notificationIdsMapper,
+      PublishRelay<NotificationInfo> notificationPublishRelay,
+      NotificationCenter notificationCenter, NotificationAnalytics notificationAnalytics,
+      CrashReport crashReport, NotificationProvider notificationProvider) {
     this.context = context;
     this.notificationManager = notificationManager;
     this.notificationIdsMapper = notificationIdsMapper;
+    this.notificationPublishRelay = notificationPublishRelay;
+    this.notificationCenter = notificationCenter;
+    this.notificationAnalytics = notificationAnalytics;
+    this.crashReport = crashReport;
+    this.notificationProvider = notificationProvider;
   }
 
   public Completable showNotification(AptoideNotification aptoideNotification) {
@@ -163,5 +181,68 @@ public class SystemNotificationShower {
 
   public void dismissNotification(int notificationId) {
     notificationManager.cancel(notificationId);
+  }
+
+  private Completable dismissNotificationAfterAction(int notificationId) {
+    return Completable.defer(() -> {
+      try {
+        return notificationCenter.notificationDismissed(
+            notificationIdsMapper.getNotificationType(notificationId));
+      } catch (RuntimeException e) {
+        return Completable.error(e);
+      }
+    });
+  }
+
+  private void callDeepLink(Context context, NotificationInfo notificationInfo) {
+    String trackUrl = notificationInfo.getNotificationTrackUrl();
+    notificationAnalytics.notificationShown(trackUrl);
+    String targetUrl = notificationInfo.getNotificationUrl();
+    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(targetUrl));
+    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    try {
+      context.startActivity(i);
+    } catch (ActivityNotFoundException e) {
+      crashReport.log(e);
+    }
+  }
+
+  public void setupNotificationPublishRelaySubscribe() {
+    setNotificationPressPublishRelaySubscribe();
+    setNotificationDismissPublishRelaySubscribe();
+    setNotificationBootCompletedPublishRelaySubscribe();
+  }
+
+  private void setNotificationBootCompletedPublishRelaySubscribe() {
+    notificationPublishRelay.filter(notificationInfo -> notificationInfo.getAction()
+        .equals(Intent.ACTION_BOOT_COMPLETED))
+        .doOnNext(__ -> notificationCenter.setup())
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
+  private void setNotificationDismissPublishRelaySubscribe() {
+    notificationPublishRelay.filter(notificationInfo -> notificationInfo.getAction()
+        .equals(NotificationReceiver.NOTIFICATION_DISMISSED_ACTION))
+        .filter(notificationInfo -> notificationInfo.getNotificationType() < 7)
+        .doOnNext(notificationInfo -> callDeepLink(context, notificationInfo))
+        .doOnNext(notificationInfo -> dismissNotificationAfterAction(
+            notificationInfo.getNotificationType()))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
+  private void setNotificationPressPublishRelaySubscribe() {
+    notificationPublishRelay.filter(notificationInfo -> notificationInfo.getAction()
+        .equals(NotificationReceiver.NOTIFICATION_PRESSED_ACTION))
+        .flatMapSingle(notificationInfo -> notificationProvider.getLastShowed(
+            notificationIdsMapper.getNotificationType(notificationInfo.getNotificationType()))
+            .doOnSuccess(notification -> notificationAnalytics.sendSocialNotificationPressedEvent(
+                notification))
+            .map(notification -> notificationInfo))
+        .doOnNext(notificationInfo -> dismissNotificationAfterAction(
+            notificationInfo.getNotificationType()))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
   }
 }
