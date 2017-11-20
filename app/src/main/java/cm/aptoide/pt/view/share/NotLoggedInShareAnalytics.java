@@ -46,8 +46,8 @@ public class NotLoggedInShareAnalytics {
     loginEventBundle = createBundle(LOGIN_FACEBOOK_PARAMETER, NONE_PARAMETER);
   }
 
-  public void sendGoogleSignUpFailEvent() {
-    accountAnalytics.sendGoogleSignUpFailEvent();
+  public void sendGoogleSignUpFailEvent(Throwable exception) {
+    accountAnalytics.sendGoogleSignUpFailEvent(exception);
     analytics.sendEvent(new FacebookEvent(facebook, EVENT_NAME,
         createBundle(LOGIN_GOOGLE_PARAMETER, LOGIN_INCOMPLETE_PARAMETER)));
     loginEventBundle = null;

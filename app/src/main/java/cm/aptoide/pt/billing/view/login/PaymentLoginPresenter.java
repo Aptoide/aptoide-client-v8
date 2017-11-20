@@ -213,7 +213,7 @@ public class PaymentLoginPresenter implements Presenter {
                 .doOnError(throwable -> {
                   view.showError(errorMapper.map(throwable));
                   crashReport.log(throwable);
-                  accountAnalytics.sendGoogleSignUpFailEvent();
+                  accountAnalytics.sendGoogleSignUpFailEvent(throwable);
                 }))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

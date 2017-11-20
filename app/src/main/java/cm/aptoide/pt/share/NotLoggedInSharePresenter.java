@@ -153,7 +153,7 @@ public class NotLoggedInSharePresenter implements Presenter {
                 .doOnError(throwable -> {
                   view.showError(errorMapper.map(throwable));
                   crashReport.log(throwable);
-                  analytics.sendGoogleSignUpFailEvent();
+                  analytics.sendGoogleSignUpFailEvent(throwable);
                 }))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

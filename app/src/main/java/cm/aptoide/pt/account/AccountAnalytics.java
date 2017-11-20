@@ -26,6 +26,11 @@ public class AccountAnalytics {
   public static final String ACTION = "CLICK";
   public static final String CONTEXT = "LOGIN";
   public static final String STORE = "store";
+  public static final String PERMISSIONS_DENIED = "Permissions Denied";
+  public static final String SDK_ERROR = "SDK Error";
+  public static final String USER_CANCELED = "User canceled";
+  public static final String GENERAL_ERROR = "General Error";
+  public static final String SUCCESS = "Success";
   private static final String STATUS = "Status";
   private static final String FACEBOOK_LOGIN_EVENT_NAME = "Account_Login_Screen";
   private static final String FLURRY_LOGIN_EVENT_NAME = "Account_Login_Screen";
@@ -39,7 +44,7 @@ public class AccountAnalytics {
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
   private final TokenInvalidator tokenInvalidator;
-  private final String appId;
+  private final String aptoideAppId;
   private final SharedPreferences sharedPreferences;
   private final AppEventsLogger facebook;
   private final NavigationTracker navigationTracker;
@@ -51,14 +56,14 @@ public class AccountAnalytics {
 
   public AccountAnalytics(Analytics analytics, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, String appId, SharedPreferences sharedPreferences,
+      TokenInvalidator tokenInvalidator, String aptoideAppId, SharedPreferences sharedPreferences,
       AppEventsLogger facebook, NavigationTracker navigationTracker) {
     this.analytics = analytics;
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
-    this.appId = appId;
+    this.aptoideAppId = aptoideAppId;
     this.sharedPreferences = sharedPreferences;
     this.facebook = facebook;
     this.navigationTracker = navigationTracker;
@@ -122,12 +127,17 @@ public class AccountAnalytics {
   }
 
   public void sendAptoideLoginFailEvent() {
-    sendLoginFailEvents(LoginMethod.APTOIDE, SignUpLoginStatus.FAILED,
-        LoginStatusDetail.GENERAL_ERROR);
+    sendLoginFailEvents(LoginMethod.APTOIDE, SignUpLoginStatus.FAILED, GENERAL_ERROR,
+        GENERAL_ERROR);
   }
 
-  public void sendGoogleSignUpFailEvent() {
-    sendLoginFailEvents(LoginMethod.GOOGLE, SignUpLoginStatus.FAILED, LoginStatusDetail.SDK_ERROR);
+  public void sendGoogleSignUpFailEvent(Throwable exception) {
+    if (exception instanceof GoogleSignUpException) {
+      sendLoginFailEvents(LoginMethod.GOOGLE, SignUpLoginStatus.FAILED, SDK_ERROR,
+          ((GoogleSignUpException) exception).getError());
+    } else {
+      sendLoginFailEvents(LoginMethod.GOOGLE, SignUpLoginStatus.FAILED, SDK_ERROR, GENERAL_ERROR);
+    }
   }
 
   public void sendAptoideSignUpFailEvent() {
@@ -138,48 +148,46 @@ public class AccountAnalytics {
   }
 
   public void sendFacebookMissingPermissionsEvent() {
-    sendLoginFailEvents(LoginMethod.FACEBOOK, SignUpLoginStatus.FAILED,
-        LoginStatusDetail.PERMISSIONS_DENIED);
+    sendLoginFailEvents(LoginMethod.FACEBOOK, SignUpLoginStatus.FAILED, PERMISSIONS_DENIED,
+        PERMISSIONS_DENIED);
   }
 
   public void sendFacebookUserCancelledEvent() {
-    sendLoginFailEvents(LoginMethod.FACEBOOK, SignUpLoginStatus.FAILED, LoginStatusDetail.CANCEL);
+    sendLoginFailEvents(LoginMethod.FACEBOOK, SignUpLoginStatus.FAILED, USER_CANCELED,
+        USER_CANCELED);
   }
 
   public void sendFacebookErrorEvent() {
-    sendLoginFailEvents(LoginMethod.FACEBOOK, SignUpLoginStatus.FAILED,
-        LoginStatusDetail.SDK_ERROR);
+    sendLoginFailEvents(LoginMethod.FACEBOOK, SignUpLoginStatus.FAILED, SDK_ERROR, SDK_ERROR);
   }
 
   private void setupLoginEvents(LoginMethod aptoide) {
     aptoideSuccessLoginEvent = createAptoideLoginEvent();
-    facebookSuccessLoginEvent =
-        createFacebookEvent(aptoide, SignUpLoginStatus.SUCCESS, LoginStatusDetail.SUCCESS);
-    flurrySuccessLoginEvent =
-        createFlurryEvent(aptoide, SignUpLoginStatus.SUCCESS, LoginStatusDetail.SUCCESS);
+    facebookSuccessLoginEvent = createFacebookEvent(aptoide, SignUpLoginStatus.SUCCESS, SUCCESS);
+    flurrySuccessLoginEvent = createFlurryEvent(aptoide, SignUpLoginStatus.SUCCESS, SUCCESS);
   }
 
   private FacebookEvent createFacebookEvent(LoginMethod loginMethod, SignUpLoginStatus loginStatus,
-      LoginStatusDetail loginStatusDetail) {
+      String loginStatusDetail) {
     Bundle bundle = new Bundle();
     bundle.putString(LOGIN_METHOD, loginMethod.getMethod());
     bundle.putString(STATUS, loginStatus.getStatus());
-    bundle.putString(STATUS_DETAIL, loginStatusDetail.getLoginStatusDetail());
+    bundle.putString(STATUS_DETAIL, loginStatusDetail);
     return new FacebookEvent(facebook, FACEBOOK_LOGIN_EVENT_NAME, bundle);
   }
 
   private void sendLoginFailEvents(LoginMethod loginMethod, SignUpLoginStatus loginStatus,
-      LoginStatusDetail statusDetail) {
+      String statusDetail, String loginStatusDetail) {
     analytics.sendEvent(createFlurryEvent(loginMethod, loginStatus, statusDetail));
-    analytics.sendEvent(createFacebookEvent(loginMethod, loginStatus, statusDetail));
+    analytics.sendEvent(createFacebookEvent(loginMethod, loginStatus, loginStatusDetail));
   }
 
   private FlurryEvent createFlurryEvent(LoginMethod loginMethod, SignUpLoginStatus loginStatus,
-      LoginStatusDetail loginStatusDetail) {
+      String loginStatusDetail) {
     Map<String, String> map = new HashMap<>();
     map.put(LOGIN_METHOD, loginMethod.getMethod());
     map.put(STATUS, loginStatus.getStatus());
-    map.put(STATUS_DETAIL, loginStatusDetail.getLoginStatusDetail());
+    map.put(STATUS_DETAIL, loginStatusDetail);
     return new FlurryEvent(FLURRY_LOGIN_EVENT_NAME, map);
   }
 
@@ -192,7 +200,7 @@ public class AccountAnalytics {
     }
     map.put(PREVIOUS_CONTEXT, navigationTracker.getPreviousViewName());
     return new AptoideEvent(map, APTOIDE_EVENT_NAME, ACTION, CONTEXT, bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator, appId, sharedPreferences);
+        converterFactory, tokenInvalidator, aptoideAppId, sharedPreferences);
   }
 
   private enum LoginMethod {
@@ -220,21 +228,6 @@ public class AccountAnalytics {
 
     public String getStatus() {
       return status;
-    }
-  }
-
-  private enum LoginStatusDetail {
-    PERMISSIONS_DENIED("Permissions Denied"), SDK_ERROR("SDK Error"), CANCEL(
-        "User canceled"), GENERAL_ERROR("General Error"), SUCCESS("Success");
-
-    private final String loginStatusDetail;
-
-    LoginStatusDetail(String statusDetail) {
-      this.loginStatusDetail = statusDetail;
-    }
-
-    public String getLoginStatusDetail() {
-      return loginStatusDetail;
     }
   }
 }

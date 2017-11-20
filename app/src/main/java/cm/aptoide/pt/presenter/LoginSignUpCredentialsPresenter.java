@@ -231,7 +231,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
                 .doOnError(throwable -> {
                   view.showError(errorMapper.map(throwable));
                   crashReport.log(throwable);
-                  accountAnalytics.sendGoogleSignUpFailEvent();
+                  accountAnalytics.sendGoogleSignUpFailEvent(throwable);
                 }))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
