@@ -81,9 +81,6 @@ ext {
   RUNNER_VERSION = '0.5'
   RULES_VERSION = '0.5'
 
-  // Lombok plugin
-  LOMBOK_VERSION = '1.16.18'
-
   JACKSON_VERSION = '2.8.5'
 
   // Material tab strip

@@ -38,16 +38,16 @@ public class PartnerApplication extends AptoideApplication {
     return bootConfig;
   }
 
+  public void setBootConfig(BootConfig bootConfig) {
+    this.bootConfig = bootConfig;
+  }
+
   private ObjectMapper getObjectMapper() {
     if (objectMapper == null) {
       objectMapper =
           new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
     return objectMapper;
-  }
-
-  public void setBootConfig(BootConfig bootConfig) {
-    this.bootConfig = bootConfig;
   }
 
   @Override public String getCachePath() {
@@ -140,15 +140,13 @@ public class PartnerApplication extends AptoideApplication {
         hasMultiStoreSearch());
   }
 
-
   @Override public NotificationSyncScheduler getNotificationSyncScheduler() {
     if (notificationSyncScheduler == null) {
       notificationSyncScheduler = new PushNotificationSyncManager(getAlarmSyncScheduler(), true,
           new NotificationSyncFactory(
               new NotificationService(getExtraId(), getDefaultSharedPreferences(), getResources(),
                   getBaseContext(), getTokenInvalidator(), getBodyInterceptorV3(),
-                  getAccountManager()),
-              getNotificationProvider(), getDefaultSharedPreferences()));
+                  getAccountManager()), getNotificationProvider(), getDefaultSharedPreferences()));
     }
     return notificationSyncScheduler;
   }

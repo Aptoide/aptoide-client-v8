@@ -58,8 +58,5 @@ dependencies {
   //noinspection GradleDependency
   implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
-  compileOnly "org.projectlombok:lombok:${LOMBOK_VERSION}"
-  // Just for lombok not to complain
-  compileOnly "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }

@@ -99,10 +99,6 @@ dependencies {
 
   implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-  compileOnly "org.projectlombok:lombok:${LOMBOK_VERSION}"
-  // Just for lombok not to complain
-  compileOnly "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
-
   testImplementation "com.squareup.okhttp3:mockwebserver:${MOCK_WEB_SERVER_VERSION}"
   testImplementation "junit:junit:${JUNIT_VERSION}"
   testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"

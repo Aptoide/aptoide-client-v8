@@ -9,7 +9,6 @@ import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.LifecycleSchim;
 import cm.aptoide.pt.view.recycler.widget.WidgetFactory;
-import lombok.experimental.Accessors;
 import rx.subscriptions.CompositeSubscription;
 
 /**

@@ -4,9 +4,6 @@ dependencies {
   compile fileTree(dir: 'libs', include: ['*.jar'])
 
   compile "io.reactivex:rxjava:${RXJAVA_VERSION}"
-  compileOnly "org.projectlombok:lombok:${LOMBOK_VERSION}"
-  // Just for lombok not to complain
-  compileOnly "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
 }
 
 sourceCompatibility = "1.8"

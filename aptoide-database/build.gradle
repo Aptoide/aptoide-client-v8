@@ -66,9 +66,5 @@ dependencies {
   implementation "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
   // And ProGuard rules for RxJava!
   implementation "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
-
-  compileOnly "org.projectlombok:lombok:${LOMBOK_VERSION}"
-  // Just for lombok not to complain
-  compileOnly "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
