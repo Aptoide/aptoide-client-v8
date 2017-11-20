@@ -114,7 +114,7 @@ public class TimelineAnalytics {
   }
 
   public void notificationShown(String url) {
-    notificationAnalytics.notificationShown(url);
+    notificationAnalytics.sendNotificationTouchEvent(url);
   }
 
   private Bundle createSocialActionEventData(TimelineSocialActionData timelineSocialActionData) {
