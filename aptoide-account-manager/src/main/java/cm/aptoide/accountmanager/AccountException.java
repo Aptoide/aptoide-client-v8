@@ -67,6 +67,10 @@ public class AccountException extends Exception {
     return code != null;
   }
 
+  public Map<String, String> getErrors() {
+    return errors;
+  }
+
   @NonNull private Map<String, String> getErrorsList(List<ErrorResponse> errorResponses) {
     Map<String, String> errors = new HashMap<>();
     for (ErrorResponse error : errorResponses) {

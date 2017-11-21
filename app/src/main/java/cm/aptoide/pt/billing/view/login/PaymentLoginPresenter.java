@@ -110,7 +110,8 @@ public class PaymentLoginPresenter implements Presenter {
                       orientationManager.unlock();
                     })
                     .doOnError(throwable -> {
-                      accountAnalytics.sendAptoideSignUpFailEvent();
+                      accountAnalytics.sendSignUpErrorEvent(AccountAnalytics.LoginMethod.APTOIDE,
+                          throwable);
                       view.showError(errorMapper.map(throwable));
                       crashReport.log(throwable);
                     }))
@@ -135,7 +136,8 @@ public class PaymentLoginPresenter implements Presenter {
                   orientationManager.unlock();
                 })
                 .doOnError(throwable -> {
-                  accountAnalytics.sendAptoideLoginFailEvent();
+                  accountAnalytics.sendLoginErrorEvent(AccountAnalytics.LoginMethod.APTOIDE,
+                      throwable);
                   view.showError(errorMapper.map(throwable));
                   crashReport.log(throwable);
                 }))
@@ -161,7 +163,7 @@ public class PaymentLoginPresenter implements Presenter {
                     view.showError(errorMapper.map(throwable));
                     crashReport.log(throwable);
                   }
-                  accountAnalytics.sendSignUpErrorEvent(AccountAnalytics.LoginMethod.FACEBOOK,
+                  accountAnalytics.sendLoginErrorEvent(AccountAnalytics.LoginMethod.FACEBOOK,
                       throwable);
                 }))
             .retry())
@@ -214,7 +216,7 @@ public class PaymentLoginPresenter implements Presenter {
                 .doOnError(throwable -> {
                   view.showError(errorMapper.map(throwable));
                   crashReport.log(throwable);
-                  accountAnalytics.sendSignUpErrorEvent(AccountAnalytics.LoginMethod.GOOGLE,
+                  accountAnalytics.sendLoginErrorEvent(AccountAnalytics.LoginMethod.GOOGLE,
                       throwable);
                 }))
             .retry())

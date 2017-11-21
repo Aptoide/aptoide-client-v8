@@ -120,7 +120,7 @@ public class NotLoggedInShareAnalytics {
   }
 
   public void sendSignUpErrorEvent(AccountAnalytics.LoginMethod loginMethod, Throwable throwable) {
-    accountAnalytics.sendSignUpErrorEvent(loginMethod, throwable);
+    accountAnalytics.sendLoginErrorEvent(loginMethod, throwable);
     if (loginMethod.equals(AccountAnalytics.LoginMethod.GOOGLE)) {
       sendGoogleSignUpFailEvent();
     }

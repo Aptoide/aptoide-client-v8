@@ -109,7 +109,8 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
                   view.hideLoading();
                   crashReport.log(throwable);
                   unlockScreenRotation();
-                  accountAnalytics.sendAptoideLoginFailEvent();
+                  accountAnalytics.sendLoginErrorEvent(AccountAnalytics.LoginMethod.APTOIDE,
+                      throwable);
                 })).retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
@@ -136,7 +137,8 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
                       view.hideLoading();
                     })
                     .doOnError(throwable -> {
-                      accountAnalytics.sendAptoideSignUpFailEvent();
+                      accountAnalytics.sendSignUpErrorEvent(AccountAnalytics.LoginMethod.APTOIDE,
+                          throwable);
                       view.showError(errorMapper.map(throwable));
                       crashReport.log(throwable);
                       unlockScreenRotation();
@@ -231,7 +233,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
                 .doOnError(throwable -> {
                   view.showError(errorMapper.map(throwable));
                   crashReport.log(throwable);
-                  accountAnalytics.sendSignUpErrorEvent(AccountAnalytics.LoginMethod.GOOGLE,
+                  accountAnalytics.sendLoginErrorEvent(AccountAnalytics.LoginMethod.GOOGLE,
                       throwable);
                 }))
             .retry())
@@ -292,7 +294,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
                       == FacebookSignUpException.MISSING_REQUIRED_PERMISSIONS) {
                     view.showFacebookPermissionsRequiredError(throwable);
                   }
-                  accountAnalytics.sendSignUpErrorEvent(AccountAnalytics.LoginMethod.FACEBOOK,
+                  accountAnalytics.sendLoginErrorEvent(AccountAnalytics.LoginMethod.FACEBOOK,
                       throwable);
                   crashReport.log(throwable);
                   view.showError(errorMapper.map(throwable));
