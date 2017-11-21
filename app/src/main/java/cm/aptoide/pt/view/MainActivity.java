@@ -93,8 +93,9 @@ public class MainActivity extends TabNavigatorActivity
             sharedPreferences,
             AccessorFactory.getAccessorFor(application.getDatabase(), Store.class), defaultTheme,
             application.getDefaultStoreName(), application.getNavigationTracker(),
-            application.getPageViewsAnalytics(), new NotificationAnalytics(Analytics.getInstance(),
-            AppEventsLogger.newLogger(getApplicationContext())));
+            application.getPageViewsAnalytics(), new NotificationAnalytics(
+            ((AptoideApplication) getApplicationContext()).getDefaultClient(),
+            Analytics.getInstance(), AppEventsLogger.newLogger(getApplicationContext())));
 
     final ApkFy apkFy = new ApkFy(this, getIntent(), securePreferences);
 

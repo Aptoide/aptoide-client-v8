@@ -174,7 +174,8 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
         new LinksHandlerFactory(getContext()),
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
         ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker(),
-        new NotificationAnalytics(httpClient, Analytics.getInstance()),
+        new NotificationAnalytics(httpClient, Analytics.getInstance(),
+            AppEventsLogger.newLogger(getContext())),
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
             Analytics.getInstance(), navigationTracker)));
   }

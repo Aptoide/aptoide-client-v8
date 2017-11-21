@@ -25,12 +25,8 @@ public class NotificationAnalytics {
   private OkHttpClient client;
   private AppEventsLogger facebook;
 
-  public NotificationAnalytics(OkHttpClient client, Analytics analytics) {
+  public NotificationAnalytics(OkHttpClient client, Analytics analytics, AppEventsLogger facebook) {
     this.client = client;
-    this.analytics = analytics;
-  }
-
-  public NotificationAnalytics(Analytics analytics, AppEventsLogger facebook) {
     this.analytics = analytics;
     this.facebook = facebook;
   }

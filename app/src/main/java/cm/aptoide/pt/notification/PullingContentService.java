@@ -65,8 +65,9 @@ public class PullingContentService extends Service {
     sharedPreferences = application.getDefaultSharedPreferences();
     updateRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
     installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
-    notificationAnalytics = new NotificationAnalytics(Analytics.getInstance(),
-        AppEventsLogger.newLogger(getApplicationContext()));
+    notificationAnalytics =
+        new NotificationAnalytics(((AptoideApplication) getApplicationContext()).getDefaultClient(),
+            Analytics.getInstance(), AppEventsLogger.newLogger(getApplicationContext()));
 
     subscriptions = new CompositeSubscription();
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);

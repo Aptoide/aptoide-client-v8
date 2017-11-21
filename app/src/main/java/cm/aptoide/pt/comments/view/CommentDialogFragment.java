@@ -154,7 +154,7 @@ public class CommentDialogFragment
         ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7(),
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        new NotificationAnalytics(httpClient, analytics),
+        new NotificationAnalytics(httpClient, analytics, AppEventsLogger.newLogger(getContext())),
         ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker(),
         ((AptoideApplication) getContext().getApplicationContext()).getReadPostsPersistence());
   }
