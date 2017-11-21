@@ -12,11 +12,11 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.app.view.displayable.AppViewRateThisDisplayable;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.app.view.displayable.AppViewRateThisDisplayable;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import java.util.Locale;
 

@@ -32,7 +32,8 @@ abstract class BaseShareDialog<T extends Post> implements ShareDialogInterface<T
 
   @Override public Observable<ShareEvent> shares() {
     return dialog.positiveClicks()
-        .map(__ -> updateEventWithPrivacyCheckbox(shareEvent)).onErrorReturn(throwable -> shareEvent);
+        .map(__ -> updateEventWithPrivacyCheckbox(shareEvent))
+        .onErrorReturn(throwable -> shareEvent);
   }
 
   @Override public Observable<ShareEvent> cancels() {

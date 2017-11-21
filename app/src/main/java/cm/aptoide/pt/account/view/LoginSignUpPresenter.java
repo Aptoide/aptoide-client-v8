@@ -28,7 +28,7 @@ public class LoginSignUpPresenter extends BottomSheetBehavior.BottomSheetCallbac
   }
 
   @Override public void present() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .doOnNext(__ -> {
           LoginSignUpCredentialsFragment fragment = null;

@@ -8,21 +8,19 @@ package cm.aptoide.pt.comments.view;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.comments.CommentAdder;
 import cm.aptoide.pt.comments.ReviewWithAppName;
-import cm.aptoide.pt.view.FragmentProvider;
 import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.view.FragmentProvider;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
-import lombok.Getter;
 
 public class RateAndReviewCommentDisplayable extends DisplayablePojo<ReviewWithAppName> {
 
-  @Getter private CommentAdder commentAdder;
-  @Getter private int numberComments;
+  private CommentAdder commentAdder;
+  private int numberComments;
   private FragmentNavigator fragmentNavigator;
   private FragmentProvider fragmentProvider;
 
   public RateAndReviewCommentDisplayable() {
   }
-
   public RateAndReviewCommentDisplayable(ReviewWithAppName pojo) {
     super(pojo);
   }
@@ -34,6 +32,14 @@ public class RateAndReviewCommentDisplayable extends DisplayablePojo<ReviewWithA
     this.numberComments = numberComments;
     this.fragmentNavigator = fragmentNavigator;
     this.fragmentProvider = fragmentProvider;
+  }
+
+  public CommentAdder getCommentAdder() {
+    return commentAdder;
+  }
+
+  public int getNumberComments() {
+    return numberComments;
   }
 
   @Override protected Configs getConfig() {

@@ -72,7 +72,7 @@ public class PaymentLoginPresenter implements Presenter {
   }
 
   private void handleGrantFacebookRequiredPermissionsEvent() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.grantFacebookRequiredPermissionsEvent())
         .doOnNext(__ -> view.showLoading())
@@ -82,7 +82,7 @@ public class PaymentLoginPresenter implements Presenter {
   }
 
   private void onViewCreatedCheckLoginStatus() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> accountManager.accountStatus())
         .filter(account -> account.isLoggedIn())
@@ -94,7 +94,7 @@ public class PaymentLoginPresenter implements Presenter {
   }
 
   private void handleAptoideSignUpEvent() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(event -> view.aptoideSignUpEvent()
             .doOnNext(__ -> {
@@ -120,7 +120,7 @@ public class PaymentLoginPresenter implements Presenter {
   }
 
   private void handleAptoideLoginEvent() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(event -> view.aptoideLoginEvent()
             .doOnNext(__ -> {
@@ -145,7 +145,7 @@ public class PaymentLoginPresenter implements Presenter {
   }
 
   private void handleFacebookSignUpResult() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> accountNavigator.facebookSignUpResults()
             .flatMapCompletable(result -> accountManager.signUp(FacebookSignUpAdapter.TYPE, result)
@@ -169,7 +169,7 @@ public class PaymentLoginPresenter implements Presenter {
   }
 
   public void handleFacebookSignUpEvent() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.facebookSignUpEvent())
         .doOnNext(__ -> view.showLoading())
@@ -180,7 +180,7 @@ public class PaymentLoginPresenter implements Presenter {
   }
 
   private void handleGoogleSignUpEvent() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.googleSignUpEvent())
         .doOnNext(event -> view.showLoading())
@@ -204,7 +204,7 @@ public class PaymentLoginPresenter implements Presenter {
   }
 
   private void handleGoogleSignUpResult() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> accountNavigator.googleSignUpResults(RESOLVE_GOOGLE_CREDENTIALS_REQUEST_CODE)
             .flatMapCompletable(result -> accountManager.signUp(GoogleSignUpAdapter.TYPE, result)
@@ -221,7 +221,7 @@ public class PaymentLoginPresenter implements Presenter {
   }
 
   private void handleBackButtonAndUpNavigationEvent() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> Observable.merge(view.backButtonEvent(), view.upNavigationEvent()))
         .doOnNext(__ -> accountNavigator.popViewWithResult(requestCode, false))
@@ -230,7 +230,7 @@ public class PaymentLoginPresenter implements Presenter {
   }
 
   private void handleRecoverPasswordEvent() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.recoverPasswordEvent())
         .doOnNext(__ -> accountNavigator.navigateToRecoverPasswordView())

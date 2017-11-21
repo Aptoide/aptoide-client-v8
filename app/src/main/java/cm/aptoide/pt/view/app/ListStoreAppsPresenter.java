@@ -47,7 +47,7 @@ public class ListStoreAppsPresenter implements Presenter {
   }
 
   private void onCreateHandleRetry() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.getRetryEvent()
             .observeOn(viewScheduler)
@@ -75,7 +75,7 @@ public class ListStoreAppsPresenter implements Presenter {
   }
 
   private void onCreateHandleRefresh() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(lifecycleEvent -> view.getRefreshEvent()
             .flatMapSingle(refresh -> appCenter.loadFreshApps(storeId, limit)
@@ -93,7 +93,7 @@ public class ListStoreAppsPresenter implements Presenter {
   }
 
   private void onCreateLoadApps() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMapSingle(lifecycleEvent -> appCenter.getApps(storeId, limit)
             .observeOn(viewScheduler)
@@ -108,7 +108,7 @@ public class ListStoreAppsPresenter implements Presenter {
   }
 
   private void onCreateHandleBottomReached() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.reachesBottom()
             .observeOn(viewScheduler)
@@ -132,7 +132,7 @@ public class ListStoreAppsPresenter implements Presenter {
   }
 
   private void onCreateHandleAppClicks() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.getAppClick()
             .doOnNext(app -> fragmentNavigator.navigateTo(

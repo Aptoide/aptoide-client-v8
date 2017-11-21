@@ -47,7 +47,7 @@ public class ProfileStepTwoPresenter implements Presenter {
         .retry()
         .map(__ -> null);
 
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> Observable.merge(handleContinueClick, handlePrivateProfileClick))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

@@ -51,7 +51,7 @@ public class ProfileStepOnePresenter implements Presenter {
             Analytics.Account.ProfileAction.MORE_INFO))
         .doOnNext(__ -> accountNavigator.navigateToProfileStepTwoView());
 
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> Observable.merge(handleContinueClick, handleMoreInfoClick))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

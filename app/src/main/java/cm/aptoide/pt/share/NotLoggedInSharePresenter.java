@@ -62,7 +62,7 @@ public class NotLoggedInSharePresenter implements Presenter {
   }
 
   private void handleFakeToolbarEvent() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.getFakeToolbarClick()
             .doOnNext(click -> analytics.sendTapOnFakeToolbar()))
@@ -72,7 +72,7 @@ public class NotLoggedInSharePresenter implements Presenter {
   }
 
   private void handleOutsideEvent() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.getOutsideClick()
             .doOnNext(click -> analytics.sendTapOutside()))
@@ -82,7 +82,7 @@ public class NotLoggedInSharePresenter implements Presenter {
   }
 
   private void handleFakeTimelineEvent() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.getFakeTimelineClick()
             .doOnNext(click -> analytics.sendTapOnFakeTimeline()))
@@ -92,7 +92,7 @@ public class NotLoggedInSharePresenter implements Presenter {
   }
 
   private void handleCloseEvent() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.closeEvent())
         .doOnNext(closeClicked -> analytics.sendCloseEvent())
@@ -103,7 +103,7 @@ public class NotLoggedInSharePresenter implements Presenter {
   }
 
   private void handleBackEvent() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.backEvent())
         .doOnNext(closeClicked -> analytics.sendBackButtonPressed())
@@ -114,7 +114,7 @@ public class NotLoggedInSharePresenter implements Presenter {
   }
 
   private void handleGoogleSignInEvent() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> showOrHideGoogleLogin())
         .flatMap(__ -> view.googleSignUpEvent())
@@ -140,7 +140,7 @@ public class NotLoggedInSharePresenter implements Presenter {
   }
 
   private void handleGoogleSignInResult() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> accountNavigator.googleSignUpResults(RESOLVE_GOOGLE_CREDENTIALS_REQUEST_CODE)
             .flatMapCompletable(result -> accountManager.signUp(GoogleSignUpAdapter.TYPE, result)
@@ -161,7 +161,7 @@ public class NotLoggedInSharePresenter implements Presenter {
   }
 
   private void handleFacebookSignInEvent() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> showOrHideFacebookLogin())
         .flatMap(__ -> view.facebookSignUpEvent())
@@ -180,7 +180,7 @@ public class NotLoggedInSharePresenter implements Presenter {
   }
 
   private void handleFacebookSignInResult() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> accountNavigator.facebookSignUpResults()
             .flatMapCompletable(result -> accountManager.signUp(FacebookSignUpAdapter.TYPE, result)
@@ -224,7 +224,7 @@ public class NotLoggedInSharePresenter implements Presenter {
   }
 
   private void handleFacebookSignInWithRequiredPermissionsEvent() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.facebookSignUpWithRequiredPermissionsInEvent())
         .doOnNext(event -> {

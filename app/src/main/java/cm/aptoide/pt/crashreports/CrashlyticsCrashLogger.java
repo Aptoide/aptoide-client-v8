@@ -8,7 +8,6 @@ import com.crashlytics.android.core.CrashlyticsCore;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterCore;
 import io.fabric.sdk.android.Fabric;
-import lombok.Setter;
 
 /**
  * Created by neuro on 09-12-2016.
@@ -21,7 +20,7 @@ public class CrashlyticsCrashLogger implements CrashLogger {
   private static final String LANGUAGE = "Language";
 
   //var with the language the app is set to
-  @Setter private String language;
+  private String language;
 
   public CrashlyticsCrashLogger(Context context, boolean isDisabled) {
 
@@ -32,6 +31,10 @@ public class CrashlyticsCrashLogger implements CrashLogger {
         new TwitterAuthConfig(BuildConfig.TWITTER_KEY, BuildConfig.TWITTER_SECRET)));
     Logger.d(TAG, "Setup of " + this.getClass()
         .getSimpleName() + " complete.");
+  }
+
+  public String getLanguage() {
+    return language;
   }
 
   /**
@@ -57,5 +60,9 @@ public class CrashlyticsCrashLogger implements CrashLogger {
       Crashlytics.setString(LANGUAGE, language);
       Crashlytics.setString(key, value);
     }
+  }
+
+  public void setLanguage(String language) {
+    this.language = language;
   }
 }

@@ -38,7 +38,7 @@ public class InboxPresenter implements Presenter {
 
   @Override public void present() {
 
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> notificationCenter.getInboxNotifications(NUMBER_OF_NOTIFICATIONS))
         .observeOn(viewScheduler)
@@ -47,7 +47,7 @@ public class InboxPresenter implements Presenter {
         .subscribe(notifications -> {
         }, throwable -> crashReport.log(throwable));
 
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.notificationSelection())
         .doOnNext(notification -> {
@@ -61,7 +61,7 @@ public class InboxPresenter implements Presenter {
         .subscribe(notificationUrl -> {
         }, throwable -> crashReport.log(throwable));
 
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMapCompletable(create -> notificationCenter.setAllNotificationsRead())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

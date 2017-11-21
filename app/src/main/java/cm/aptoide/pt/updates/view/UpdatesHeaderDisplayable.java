@@ -1,6 +1,5 @@
 package cm.aptoide.pt.updates.view;
 
-import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.database.realm.Download;
@@ -9,23 +8,21 @@ import cm.aptoide.pt.download.DownloadEventConverter;
 import cm.aptoide.pt.download.DownloadInstallBaseEvent;
 import cm.aptoide.pt.download.InstallEvent;
 import cm.aptoide.pt.download.InstallEventConverter;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
-import lombok.Getter;
 
 /**
  * Created by neuro on 02-08-2016.
  */
 public class UpdatesHeaderDisplayable extends Displayable {
 
-  @Getter private String label;
+  private String label;
+  private InstallManager installManager;
   private Analytics analytics;
   private DownloadEventConverter converter;
-  @Getter private InstallManager installManager;
   private InstallEventConverter installConverter;
-
   public UpdatesHeaderDisplayable() {
   }
-
   public UpdatesHeaderDisplayable(InstallManager installManager, String label, Analytics analytics,
       DownloadEventConverter downloadInstallEventConverter,
       InstallEventConverter installConverter) {
@@ -34,6 +31,14 @@ public class UpdatesHeaderDisplayable extends Displayable {
     this.analytics = analytics;
     this.converter = downloadInstallEventConverter;
     this.installConverter = installConverter;
+  }
+
+  public String getLabel() {
+    return label;
+  }
+
+  public InstallManager getInstallManager() {
+    return installManager;
   }
 
   @Override protected Configs getConfig() {

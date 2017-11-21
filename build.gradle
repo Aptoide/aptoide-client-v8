@@ -1,27 +1,29 @@
 buildscript {
+
+  ext.kotlin_version = '1.1.51'
+  ext.realm_version = '3.7.2'
+
   repositories {
     jcenter()
+    google()
     mavenLocal()
   }
-  dependencies {
-    classpath 'com.android.tools.build:gradle:2.3.3'
-    classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
-    classpath 'me.tatarka:gradle-retrolambda:3.3.0'
-    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.1'
-    classpath 'io.realm:realm-gradle-plugin:3.5.0'
-    //classpath 'com.novoda:gradle-android-command-plugin:1.5.0'
-  }
 
-  // Exclude the version that the android plugin depends on.
-  configurations.classpath.exclude group: 'com.android.tools.external.lombok'
+  dependencies {
+    classpath 'com.android.tools.build:gradle:3.1.0-alpha03'
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    classpath "io.realm:realm-gradle-plugin:$realm_version"
+  }
 }
 
 allprojects {
   repositories {
+    google()
     jcenter()
     maven { url 'https://maven.fabric.io/public' }
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url "https://jitpack.io" }
+    mavenCentral()
   }
 }
 
@@ -30,24 +32,16 @@ task clean(type: Delete) {
 }
 
 task wrapper(type: Wrapper) {
-  gradleVersion = '3.5'
+  gradleVersion = '4.3.1'
   distributionUrl = "https://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
 }
 
 ext {
 
-  //
-  // gradle build script vars
-  //
-  USE_JACK = false // http://tools.android.com/tech-docs/jackandjill
-  BUILD_TOOLS_VERSION = '25.0.0'
+  BUILD_TOOLS_VERSION = '26.0.3'
 
-  //
-  // gradle build script dependencies versions
-  //
-
-  // Google Android Support
-  SUPPORT_LIB_VERSION = '25.3.1'
+  SUPPORT_LIB_VERSION = '26.1.0'
+  SUPPORT_LIB_VERSION_ANNOTATIONS = '26.1.0'
 
   // Google Play Services
   PLAY_SERVICES_VERSION = '9.8.0'
@@ -59,7 +53,7 @@ ext {
   // Rx
   RXJAVA_VERSION = '1.2.7'
   RXANDROID_VERSION = '1.2.1'
-  JW_RX_BINDING_VERSION = '1.0.0'
+  JW_RX_BINDING_VERSION = '1.0.1'
   RXJAVA_PROGUARD_RULES_VERSION = '1.2.7.0'
   TRELLO_RX_LIFECYCLE_VERSION = '1.0'
   RX_RELAY = '1.2.0'
@@ -71,27 +65,26 @@ ext {
   // Test
   MOCK_WEB_SERVER_VERSION = '3.4.1'
   JUNIT_VERSION = '4.12'
-  MOCKITO_CORE_VERSION = '1.10.19'
+  MOCKITO_CORE_VERSION = '2.9.0'
+  MOCKITO_KOTLIN_VERSION = '1.5.0'
+  ROBOT_ELECTRIC_VERSION = '3.4.2'
   EXPRESSO_VERSION = '2.2.2'
   RUNNER_VERSION = '0.5'
   RULES_VERSION = '0.5'
 
-  // Lombok plugin
-  LOMBOK_VERSION = '1.16.8'
-
   JACKSON_VERSION = '2.8.5'
 
   // Material tab strip
-  MATERIAL_TAB_STRIP_VERSION = '1.1.0'
+  MATERIAL_TAB_STRIP_VERSION = '1.1.1'
 
   // Glide
   GLIDE_VERSION = '3.7.0'
 
   // Facebook Android SDK
-  FACEBOOK_ANDROID_SDK_VERSION = '4.17.0'
+  FACEBOOK_ANDROID_SDK_VERSION = '4.27.0'
 
   // File Downloader lib
-  FILE_DOWNLOADER_VERSION = '1.4.1'
+  FILE_DOWNLOADER_VERSION = '1.6.4'
   FILE_DOWNLOADER_OKHTTP_IMP_VERSION = '1.0.0'
 
   PAYPAL_SDK = '2.15.0'
@@ -117,7 +110,13 @@ ext {
   MOPUB_VERSION = '4.11.0'
 
   TEST_FAIRY_VERSION = '1.5.5'
+
+  rx_kotlin_version = '1.0.0'
+
+  FETCH_VERSION = '1.1.3'
+
+  NANOHTTPD_VERSION = '2.3.1'
 }
 
 // see 'Multi-module reports' in https://developer.android.com/studio/test/command-line.html
-apply plugin: 'android-reporting'
+// apply plugin: 'android-reporting'

@@ -5,13 +5,12 @@
 
 package cm.aptoide.pt.download.view.scheduled;
 
-import cm.aptoide.pt.install.Install;
-import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.realm.Scheduled;
+import cm.aptoide.pt.install.Install;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.view.recycler.displayable.SelectableDisplayablePojo;
-import lombok.Getter;
 import rx.Observable;
 
 /**
@@ -20,7 +19,7 @@ import rx.Observable;
 public class ScheduledDownloadDisplayable extends SelectableDisplayablePojo<Scheduled> {
 
   private static final String TAG = ScheduledDownloadDisplayable.class.getSimpleName();
-  @Getter private InstallManager installManager;
+  private InstallManager installManager;
 
   public ScheduledDownloadDisplayable() {
   }
@@ -28,6 +27,10 @@ public class ScheduledDownloadDisplayable extends SelectableDisplayablePojo<Sche
   public ScheduledDownloadDisplayable(Scheduled pojo, InstallManager installManager) {
     super(pojo);
     this.installManager = installManager;
+  }
+
+  public InstallManager getInstallManager() {
+    return installManager;
   }
 
   @Override protected Configs getConfig() {

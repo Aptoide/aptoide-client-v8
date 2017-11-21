@@ -1,34 +1,22 @@
-/*
- * Copyright (c) 2016.
- * Modified on 08/07/2016.
- */
-
 apply plugin: 'com.android.library'
-apply plugin: 'me.tatarka.retrolambda'
-retrolambda {
-  jvmArgs '-noverify'
-  //defaultMethods true
-}
+apply plugin: 'kotlin-android'
 
 android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
   buildToolsVersion BUILD_TOOLS_VERSION
 
   defaultConfig {
-    minSdkVersion project.LIB_MINIMUM_SDK_VERSION
+    minSdkVersion project.MINIMUM_SDK_VERSION
   }
 
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
-  }
-
-  publishNonDefault true
+  defaultPublishConfig "release"
 
   buildTypes {
+    debug {
+      minifyEnabled false
+    }
     release {
       minifyEnabled false
-      shrinkResources false
     }
   }
 
@@ -55,29 +43,11 @@ android {
 }
 
 dependencies {
+  implementation project(path: ':utils')
 
-  //
-  // inter-projects dependencies
-  //
-
-  //
-  // custom libs in folders
-  //
-
-  compile fileTree(dir: 'libs', include: ['*.jar'])
-
-  //
-  // from remote repos
-  //
-
-  testCompile "junit:junit:${JUNIT_VERSION}"
+  testImplementation "junit:junit:${JUNIT_VERSION}"
   //noinspection GradleDependency
-  compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+  implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
-  debugCompile project(path: ':utils', configuration: 'debug')
-  releaseCompile project(path: ':utils', configuration: 'release')
-
-  provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
-  // Just for lombok not to complain
-  provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }

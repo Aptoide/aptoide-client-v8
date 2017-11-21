@@ -61,7 +61,7 @@ public class PaymentPresenter implements Presenter {
   }
 
   private void onViewCreatedNavigateToCustomerAuthentication() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.showPaymentLoading())
         .flatMap(__ -> billing.getCustomer()
@@ -78,7 +78,7 @@ public class PaymentPresenter implements Presenter {
   }
 
   private void onViewCreatedHandleCustomerAuthenticationResult() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> navigator.customerAuthenticationResults(CUSTOMER_AUTHORIZATION_REQUEST_CODE))
         .doOnNext(authenticated -> analytics.sendCustomerAuthenticationResultEvent(authenticated))
@@ -91,7 +91,7 @@ public class PaymentPresenter implements Presenter {
   }
 
   private void onViewCreatedShowPayment() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> billing.getCustomer()
             .isAuthenticated())
@@ -108,7 +108,7 @@ public class PaymentPresenter implements Presenter {
   }
 
   private void onViewCreatedCheckPaymentResult() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.showPurchaseLoading())
         .flatMap(__ -> billing.getCustomer()
@@ -147,7 +147,7 @@ public class PaymentPresenter implements Presenter {
   }
 
   private void handleCancelEvent() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(__ -> view.cancelEvent())
@@ -164,7 +164,7 @@ public class PaymentPresenter implements Presenter {
   }
 
   private void handleSelectServiceEvent() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(created -> view.selectServiceEvent())
@@ -175,7 +175,7 @@ public class PaymentPresenter implements Presenter {
   }
 
   private void handleBuyEvent() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
         .flatMap(__ -> view.buyEvent()
             .doOnNext(___ -> view.showBuyLoading())

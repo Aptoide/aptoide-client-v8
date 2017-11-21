@@ -1,15 +1,6 @@
-/*
- * Copyright (c) 2016.
- * Modified on 08/07/2016.
- */
-
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 apply plugin: 'realm-android'
-apply plugin: 'me.tatarka.retrolambda'
-retrolambda {
-  jvmArgs '-noverify'
-  //defaultMethods true
-}
 
 android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
@@ -21,12 +12,14 @@ android {
     buildConfigField 'boolean', 'DELETE_DB', 'false'
   }
 
-  publishNonDefault true
+  defaultPublishConfig "release"
 
   buildTypes {
+    debug {
+      minifyEnabled false
+    }
     release {
       minifyEnabled false
-      shrinkResources false
     }
   }
 
@@ -53,27 +46,17 @@ android {
 }
 
 dependencies {
+  implementation project(path: ':utils')
+  implementation project(path: ':crashreports')
 
-  //
-  // inter-projects dependencies
-  //
-  compile project(path: ':crashreports', configuration: 'release')
-
-  //
-  // custom libs in folders
-  //
-
-  compile fileTree(dir: 'libs', include: ['*.jar'])
-
-  //
-  // from remote repos
-  //
-
-  testCompile "junit:junit:${JUNIT_VERSION}"
+  testImplementation "junit:junit:${JUNIT_VERSION}"
   //noinspection GradleDependency
-  compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+  implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
-  provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
-  // Just for lombok not to complain
-  provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
+  implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
+  implementation "io.reactivex:rxandroid:${RXANDROID_VERSION}"
+  implementation "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
+  // And ProGuard rules for RxJava!
+  implementation "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }

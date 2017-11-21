@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.presenter;
 
-import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.trello.rxlifecycle.LifecycleTransformer;
@@ -19,7 +18,7 @@ public interface View {
   @NonNull @CheckResult <T> LifecycleTransformer<T> bindUntilEvent(
       @NonNull LifecycleEvent lifecycleEvent);
 
-  Observable<LifecycleEvent> getLifecycle();
+  Observable<LifecycleEvent> getLifecycleEvents();
 
   void attachPresenter(Presenter presenter);
 

@@ -1,5 +1,12 @@
 import com.android.builder.model.ProductFlavor
 
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+// apply plugin: 'kotlin-android-extensions' // https://kotlinlang.org/docs/tutorials/android-plugin.html
+apply plugin: 'kotlin-kapt'
+apply plugin: 'io.fabric'
+apply plugin: 'realm-android'
+
 buildscript {
 
   repositories {
@@ -7,18 +14,8 @@ buildscript {
   }
 
   dependencies {
-    classpath 'io.fabric.tools:gradle:1.22.0'
+    classpath 'io.fabric.tools:gradle:1.24.4'
   }
-}
-
-apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
-apply plugin: 'realm-android'
-apply plugin: 'me.tatarka.retrolambda'
-apply plugin: 'com.getkeepsafe.dexcount'
-
-retrolambda {
-  jvmArgs '-noverify'
 }
 
 android {
@@ -56,11 +53,13 @@ android {
     partner {
       dimension "product"
       applicationId "com.aptoide.partners.dfloureiro"
+      matchingFallbacks = ['internal', 'prod']
     }
 
     vanilla {
       dimension "product"
       applicationId "cm.aptoide.pt"
+      matchingFallbacks = ['internal', 'prod']
     }
 
     internal {
@@ -75,6 +74,7 @@ android {
       applicationIdSuffix "dev"
       versionName "8.5.3." + getDate()
       versionCode project.DEV_VERSION_CODE.toInteger()
+      matchingFallbacks = ['internal', 'prod']
     }
 
     prod {
@@ -83,6 +83,7 @@ android {
 
     leak {
       dimension "mode"
+      matchingFallbacks = ['internal', 'prod']
     }
 
     fairy {
@@ -90,6 +91,7 @@ android {
       applicationIdSuffix "testfairy"
       versionName "8.5.3." + getDate()
       versionCode project.DEV_VERSION_CODE.toInteger()
+      matchingFallbacks = ['internal', 'prod']
     }
   }
 
@@ -112,6 +114,7 @@ android {
       minifyEnabled false
       shrinkResources false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
+      matchingFallbacks = ['release']
     }
   }
 
@@ -158,9 +161,9 @@ android {
     String applicationId = applicationIdBase
 
     def searchSuggestionProviderAuthority =
-        "${applicationIdBase}.provider.SearchSuggestionProvider";
+        "${applicationIdBase}.provider.SearchSuggestionProvider"
     def storeSuggestionProviderAuthority =
-        "${applicationIdBase}.provider.StoreSearchSuggestionProvider";
+        "${applicationIdBase}.provider.StoreSearchSuggestionProvider"
     def toolboxProviderAuthority = "${applicationIdBase}.StubProvider"
 
     if (applicationIdSuffix != null) {
@@ -236,7 +239,7 @@ android {
       resValue "string", "TEST_FAIRY_TOKEN", "\"" + project.TEST_FAIRY_TOKEN + "\""
     }
 
-    variant.outputs.each { output ->
+    variant.outputs.all { vOutput ->
       def SEP = "_"
       def dimension = variant.productFlavors[0].name
       def flavor = variant.productFlavors[1].name
@@ -254,7 +257,7 @@ android {
           versionCode +
           ".apk"
 
-      output.outputFile = new File(output.outputFile.parent, newApkName)
+      outputFileName = newApkName
     }
   }
 
@@ -266,163 +269,143 @@ android {
 }
 
 dependencies {
+  implementation project(path: ':spotandshare')
+  implementation project(path: ':utils')
+  implementation project(path: ':crashreports')
+  implementation project(path: ':aptoide-database')
+  implementation project(path: ':aptoidepreferences')
+  implementation project(path: ':downloadmanager')
+  implementation project(path: ':dataprovider')
+  implementation project(path: ':aptoide-account-manager')
 
   // Testing-only dependencies
-  testCompile "junit:junit:${JUNIT_VERSION}"
-  testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+  testImplementation "junit:junit:${JUNIT_VERSION}"
+  testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
   // Force usage of support annotations in the test app, since it is internally used by the runner module.
-  androidTestCompile("com.android.support.test:runner:${RUNNER_VERSION}") {
+  androidTestImplementation("com.android.support.test:runner:${RUNNER_VERSION}") {
     exclude group: "com.android.support", module: "support-annotations"
   }
-  androidTestCompile "com.android.support.test:rules:${RULES_VERSION}"
-  androidTestCompile("com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}") {
+  androidTestImplementation "com.android.support.test:rules:${RULES_VERSION}"
+  androidTestImplementation("com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}") {
     exclude group: "com.android.support", module: "support-annotations"
   }
-  androidTestCompile "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
+  androidTestImplementation "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
 
-  androidTestCompile "io.reactivex:rxjava:${RXJAVA_VERSION}"
-  compile "io.reactivex:rxjava:${RXJAVA_VERSION}"
+  androidTestImplementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
+  implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
 
-  androidTestCompile("com.android.support:multidex:${MULTIDEX_VERSION}") {
-    exclude group: "com.android.support", module: "support-annotations"
-  }
-
-  compile("com.android.support:multidex:${MULTIDEX_VERSION}") {
+  androidTestImplementation("com.android.support:multidex:${MULTIDEX_VERSION}") {
     exclude group: "com.android.support", module: "support-annotations"
   }
 
-  compile project(path: ':aptoide-database', configuration: 'release')
+  implementation("com.android.support:multidex:${MULTIDEX_VERSION}") {
+    exclude group: "com.android.support", module: "support-annotations"
+  }
 
-  internalCompile project(path: ':dataprovider', configuration: 'internalRelease')
-  internalCompile project(path: ':aptoide-account-manager', configuration: 'internalRelease')
-
-  devCompile project(path: ':dataprovider', configuration: 'prodRelease')
-  devCompile project(path: ':aptoide-account-manager', configuration: 'prodRelease')
-
-  prodCompile project(path: ':dataprovider', configuration: 'prodRelease')
-  prodCompile project(path: ':aptoide-account-manager', configuration: 'prodRelease')
-
-  leakCompile project(path: ':dataprovider', configuration: 'prodRelease')
-  leakCompile project(path: ':aptoide-account-manager', configuration: 'prodRelease')
-
-  fairyCompile project(path: ':dataprovider', configuration: 'prodRelease')
-  fairyCompile project(path: ':aptoide-account-manager', configuration: 'prodRelease')
-
-
-  compile project(path: ':utils', configuration: 'release')
-  compile project(path: ':crashreports', configuration: 'release')
-  compile project(path: ':downloadmanager', configuration: 'release')
-
-  testCompile "junit:junit:${JUNIT_VERSION}"
-  testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+  testImplementation "junit:junit:${JUNIT_VERSION}"
+  testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
   // Force usage of support annotations in the test app, since it is internally used by the runner module.
-  androidTestCompile "junit:junit:${JUNIT_VERSION}"
-  androidTestCompile("com.android.support.test:runner:${RUNNER_VERSION}") {
+  androidTestImplementation "junit:junit:${JUNIT_VERSION}"
+  androidTestImplementation("com.android.support.test:runner:${RUNNER_VERSION}") {
     exclude group: "com.android.support", module: "support-annotations"
   }
-  androidTestCompile "com.android.support.test:rules:${RULES_VERSION}"
-  androidTestCompile("com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}") {
+  androidTestImplementation "com.android.support.test:rules:${RULES_VERSION}"
+  androidTestImplementation("com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}") {
     exclude group: "com.android.support", module: "support-annotations"
   }
-  androidTestCompile "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
+  androidTestImplementation "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
 
-  compile "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
+  implementation "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
+  implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
-  //noinspection GradleDependency
-  compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
-  //noinspection GradleDependency
   // Cannot update or settings will crash :/
-  compile "com.android.support:preference-v7:${SUPPORT_LIB_VERSION}"
-  //noinspection GradleDependency
-  compile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
-  //noinspection GradleDependency
-  compile "com.android.support:palette-v7:${SUPPORT_LIB_VERSION}"
-  //noinspection GradleDependency
-  compile "com.android.support:support-v13:${SUPPORT_LIB_VERSION}"
-  //noinspection GradleDependency
-  compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
-  compile "com.android.support:cardview-v7:${SUPPORT_LIB_VERSION}"
-  compile "com.android.support:customtabs:${SUPPORT_LIB_VERSION}"
-  //compile "com.android.support:percent:${SUPPORT_LIB_VERSION}"
+  implementation "com.android.support:preference-v7:${SUPPORT_LIB_VERSION}"
+  implementation "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
+  implementation "com.android.support:palette-v7:${SUPPORT_LIB_VERSION}"
+  implementation "com.android.support:support-v13:${SUPPORT_LIB_VERSION}"
+  implementation "com.android.support:design:${SUPPORT_LIB_VERSION}"
+  implementation "com.android.support:cardview-v7:${SUPPORT_LIB_VERSION}"
+  implementation "com.android.support:customtabs:${SUPPORT_LIB_VERSION}"
 
-  provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
+  implementation "com.jpardogo.materialtabstrip:library:${MATERIAL_TAB_STRIP_VERSION}"
 
-  compile "com.jpardogo.materialtabstrip:library:${MATERIAL_TAB_STRIP_VERSION}"
-
-  compile "com.trello:rxlifecycle:${TRELLO_RX_LIFECYCLE_VERSION}"
+  implementation "com.trello:rxlifecycle:${TRELLO_RX_LIFECYCLE_VERSION}"
   // If you want pre-written Activities and Fragments you can subclass as providers
-  compile "com.trello:rxlifecycle-components:${TRELLO_RX_LIFECYCLE_VERSION}"
-  compile "com.jakewharton.rxrelay:rxrelay:${RX_RELAY}"
+  implementation "com.trello:rxlifecycle-components:${TRELLO_RX_LIFECYCLE_VERSION}"
+  implementation "com.jakewharton.rxrelay:rxrelay:${RX_RELAY}"
 
   //    Apagar
-  compile "com.jakewharton.rxbinding:rxbinding:${JW_RX_BINDING_VERSION}"
-  compile "com.jakewharton.rxbinding:rxbinding-design:${JW_RX_BINDING_VERSION}"
-  compile "com.jakewharton.rxbinding:rxbinding-support-v4:${JW_RX_BINDING_VERSION}"
-  compile "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${JW_RX_BINDING_VERSION}"
-  compile "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${JW_RX_BINDING_VERSION}"
+  implementation "com.jakewharton.rxbinding:rxbinding:${JW_RX_BINDING_VERSION}"
+  implementation "com.jakewharton.rxbinding:rxbinding-design:${JW_RX_BINDING_VERSION}"
+  implementation "com.jakewharton.rxbinding:rxbinding-support-v4:${JW_RX_BINDING_VERSION}"
+  implementation "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${JW_RX_BINDING_VERSION}"
+  implementation "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${JW_RX_BINDING_VERSION}"
 
   // paypal SDK
-  compile("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
+  implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
     exclude group: 'io.card'
   }
 
   // Flurry Android sdk
-  compile "com.flurry.android:analytics:${FLURRY_VERSION}"
+  implementation "com.flurry.android:analytics:${FLURRY_VERSION}"
 
   // Remote install
-  compile 'org.slf4j:slf4j-simple:1.7.21'
-  compile 'org.slf4j:slf4j-api:1.7.21'
-  compile 'org.jmdns:jmdns:3.5.1'
+  implementation 'org.slf4j:slf4j-simple:1.7.21'
+  implementation 'org.slf4j:slf4j-api:1.7.21'
+  implementation 'org.jmdns:jmdns:3.5.1'
 
   //  Sixpack
-  compile 'com.seatgeek:sixpack-java:0.4-SNAPSHOT'
+  implementation 'com.seatgeek:sixpack-java:0.4-SNAPSHOT'
 
   // Fabric
-  compile("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS_VERSION}@aar") {
-    transitive = true;
-  }
-
-  //lib phone number
-  compile "com.googlecode.libphonenumber:libphonenumber:${LIB_PHONE_NUMBER_VERSION}"
-
-  compile('com.twitter.sdk.android:twitter-core:2.3.0@aar') {
-    transitive = true;
-  }
-
-  compile("com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}")
-
-  // Parceler - https://github.com/johncarl81/parceler
-  compile "org.parceler:parceler-api:${PARCELER_VERSION}"
-  annotationProcessor "org.parceler:parceler:${PARCELER_VERSION}"
-
-  compile "com.android.support.constraint:constraint-layout:${CONSTRAINT_LAYOUT_VERSION}"
-  //noinspection GradleDependency
-  compile "com.google.android.gms:play-services-basement:${PLAY_SERVICES_VERSION}"
-  //noinspection GradleDependency
-  compile "com.google.android.gms:play-services-auth:${PLAY_SERVICES_VERSION}"
-
-  compile "com.facebook.android:facebook-android-sdk:${FACEBOOK_ANDROID_SDK_VERSION}"
-
-
-  leakCompile "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY_VERSION}"
-  compile project(path: ':spotandshare')
-
-
-  compile "com.github.bumptech.glide:glide:${GLIDE_VERSION}"
-
-  compile("com.mopub:mopub-sdk-native-static:${MOPUB_VERSION}@aar") {
+  implementation("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS_VERSION}@aar") {
     transitive = true
   }
 
-  compile "com.adyen.checkout:core:${ADYEN_VERSION}"
-  compile "com.adyen.checkout:ui:${ADYEN_VERSION}"
-  compile "com.adyen.checkout:utils:${ADYEN_VERSION}"
-  compile "com.adyen.checkout:cardscan:${ADYEN_VERSION}"
+  //lib phone number
+  implementation "com.googlecode.libphonenumber:libphonenumber:${LIB_PHONE_NUMBER_VERSION}"
 
-  fairyCompile "testfairy:testfairy-android-sdk:${TEST_FAIRY_VERSION}"
+  implementation('com.twitter.sdk.android:twitter-core:2.3.0@aar') {
+    transitive = true
+  }
+
+  implementation("com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}")
+
+  // Parceler - https://github.com/johncarl81/parceler
+  implementation "org.parceler:parceler-api:${PARCELER_VERSION}"
+  kapt "org.parceler:parceler:${PARCELER_VERSION}"
+
+  implementation "com.android.support.constraint:constraint-layout:${CONSTRAINT_LAYOUT_VERSION}"
+  implementation "com.google.android.gms:play-services-basement:${PLAY_SERVICES_VERSION}"
+  implementation "com.google.android.gms:play-services-auth:${PLAY_SERVICES_VERSION}"
+
+  implementation "com.facebook.android:facebook-android-sdk:${FACEBOOK_ANDROID_SDK_VERSION}"
+
+  leakImplementation "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY_VERSION}"
+
+  implementation "com.github.bumptech.glide:glide:${GLIDE_VERSION}"
+
+  implementation("com.mopub:mopub-sdk-native-static:${MOPUB_VERSION}@aar") {
+    transitive = true
+  }
+
+  implementation "com.adyen.checkout:core:${ADYEN_VERSION}"
+  implementation "com.adyen.checkout:ui:${ADYEN_VERSION}"
+  implementation "com.adyen.checkout:utils:${ADYEN_VERSION}"
+  implementation "com.adyen.checkout:cardscan:${ADYEN_VERSION}"
+
+  fairyImplementation "testfairy:testfairy-android-sdk:${TEST_FAIRY_VERSION}"
+
+  compileOnly "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VERSION}"
+  compileOnly "org.nanohttpd:nanohttpd:${NANOHTTPD_VERSION}"
+  compileOnly "com.liulishuo.filedownloader:library:${FILE_DOWNLOADER_VERSION}"
+  compileOnly "cn.dreamtobe.filedownloader:filedownloader-okhttp3-connection:${FILE_DOWNLOADER_OKHTTP_IMP_VERSION}"
+
+
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 
-String getDate() {
+static String getDate() {
   def date = new Date()
   def formattedDate = date.format('yyyyMMdd')
   return formattedDate

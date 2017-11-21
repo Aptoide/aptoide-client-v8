@@ -74,7 +74,7 @@ public class ShareApkSandbox extends NanoHTTPD {
         : context.getString(stringId);
   }
 
-  @Override public Response serve(IHTTPSession session) {
+  @Override public NanoHTTPD.Response serve(IHTTPSession session) {
     return shareApkServer.serve(session);
   }
 

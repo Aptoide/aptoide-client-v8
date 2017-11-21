@@ -1,9 +1,6 @@
 apply plugin: 'com.android.library'
-apply plugin: 'me.tatarka.retrolambda'
-retrolambda {
-  jvmArgs '-noverify'
-  //defaultMethods true
-}
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
@@ -17,10 +14,21 @@ android {
     abortOnError false
   }
 
-  publishNonDefault true
+  defaultPublishConfig "release"
 
+  buildTypes {
+    debug {
+      minifyEnabled false
+    }
+    release {
+      minifyEnabled false
+    }
+  }
+
+  flavorDimensions "mode"
   productFlavors {
     internal {
+      dimension "mode"
       buildConfigField "String", "APTOIDE_WEB_SERVICES_SCHEME",
           "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_SCHEME + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_HOST",
@@ -35,8 +43,10 @@ android {
           "\"" + project.APTOIDE_WEB_SERVICES_NOTIFICATION_HOST + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_READ_V7_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_READ_V7_HOST+ "\""
+      matchingFallbacks = ['internal', 'prod']
     }
     prod {
+      dimension "mode"
       buildConfigField "String", "APTOIDE_WEB_SERVICES_SCHEME",
           "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_SCHEME + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_HOST",
@@ -51,13 +61,7 @@ android {
           "\"" + project.APTOIDE_WEB_SERVICES_NOTIFICATION_HOST + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_READ_V7_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_READ_V7_HOST+ "\""
-    }
-  }
-
-  buildTypes {
-    release {
-      minifyEnabled false
-      shrinkResources false
+      matchingFallbacks = ['prod', 'internal']
     }
   }
 
@@ -84,51 +88,34 @@ android {
 }
 
 dependencies {
+  implementation project(path: ':crashreports')
+  implementation project(path: ':aptoidepreferences')
+  compileOnly project(path: ':utils')
 
-  //
-  // inter-projects dependencies
-  //
+  testImplementation "com.squareup.okhttp3:mockwebserver:${MOCK_WEB_SERVER_VERSION}"
+  testImplementation "junit:junit:${JUNIT_VERSION}"
+  testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+  testImplementation "com.android.support.test:testing-support-lib:0.1"
 
-  compile project(path: ':aptoidepreferences', configuration: 'release')
-  compile project(path: ':utils', configuration: 'release')
-  compile project(path: ':crashreports', configuration: 'release')
+  implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+  implementation "com.google.android.gms:play-services-base:${PLAY_SERVICES_VERSION}"
 
-  //
-  // custom libs in folders
-  //
-
-  compile fileTree(dir: 'libs', include: ['*.jar'])
-
-  //
-  // from remote repos
-  //
-
-  provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
-  // Just for lombok not to complain
-  provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
-
-  testCompile "com.squareup.okhttp3:mockwebserver:${MOCK_WEB_SERVER_VERSION}"
-  testCompile "junit:junit:${JUNIT_VERSION}"
-  testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-  testCompile "com.android.support.test:testing-support-lib:0.1"
-
-  //noinspection GradleDependency
-  compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
-  //noinspection GradleDependency
-  compile "com.google.android.gms:play-services-base:${PLAY_SERVICES_VERSION}"
-
-  compile "io.reactivex:rxjava:${RXJAVA_VERSION}"
-  compile "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
+  implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
+  implementation "io.reactivex:rxandroid:${RXANDROID_VERSION}"
+  implementation "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
   // And ProGuard rules for RxJava!
-  compile "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
-  compile "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
-  compile "com.squareup.retrofit2:adapter-rxjava:${RETROFIT_VERSION}"
-  compile "com.squareup.retrofit2:converter-jackson:${RETROFIT_VERSION}"
-  compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VERSION}"
+  implementation "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
 
-  compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+  implementation "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
+  implementation "com.squareup.retrofit2:adapter-rxjava:${RETROFIT_VERSION}"
+  implementation "com.squareup.retrofit2:converter-jackson:${RETROFIT_VERSION}"
+  implementation "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VERSION}"
+
+  implementation "com.squareup.okhttp3:logging-interceptor:3.4.1"
 
   // Parceler - https://github.com/johncarl81/parceler
-  provided "org.parceler:parceler-api:${PARCELER_VERSION}"
-  annotationProcessor "org.parceler:parceler:${PARCELER_VERSION}"
+  compileOnly "org.parceler:parceler-api:${PARCELER_VERSION}"
+  kapt "org.parceler:parceler:${PARCELER_VERSION}"
+
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }

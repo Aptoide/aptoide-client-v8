@@ -1,19 +1,57 @@
-apply plugin: 'java'
-apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
-retrolambda {
-  jvmArgs '-noverify'
-  //defaultMethods true
+android {
+  compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
+  buildToolsVersion BUILD_TOOLS_VERSION
+
+  defaultConfig {
+    minSdkVersion project.MINIMUM_SDK_VERSION
+
+    javaCompileOptions {
+      annotationProcessorOptions {
+        includeCompileClasspath false
+      }
+    }
+  }
+
+  lintOptions {
+    abortOnError false
+  }
+
+  defaultPublishConfig "release"
+
+  buildTypes {
+    debug {
+      minifyEnabled false
+    }
+    release {
+      minifyEnabled false
+    }
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  packagingOptions {
+    exclude 'META-INF/services/javax.annotation.processing.Processor'
+    exclude 'META-INF/DEPENDENCIES.txt'
+    exclude 'META-INF/DEPENDENCIES'
+    exclude 'META-INF/LICENSE.txt'
+    exclude 'META-INF/LICENSE'
+    exclude 'META-INF/NOTICE.txt'
+    exclude 'META-INF/NOTICE'
+    exclude 'META-INF/MANIFEST.MF'
+    exclude 'META-INF/LGPL2.1'
+  }
 }
 
 dependencies {
-  compile fileTree(dir: 'libs', include: ['*.jar'])
+  implementation project(path: ':utils')
 
-  compile "io.reactivex:rxjava:${RXJAVA_VERSION}"
-  compileOnly "org.projectlombok:lombok:${LOMBOK_VERSION}"
-  // Just for lombok not to complain
-  compileOnly "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
+  compileOnly "io.reactivex:rxjava:${RXJAVA_VERSION}"
+  compileOnly "org.nanohttpd:nanohttpd:${NANOHTTPD_VERSION}"
 }
-
-sourceCompatibility = "1.8"
-targetCompatibility = "1.8"

@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2016.
-  ~ Modified on 27/06/2016.
-  -->
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="cm.aptoide.pt">
@@ -171,9 +166,14 @@
         >
       <intent-filter>
         <action android:name="android.intent.action.VIEW"/>
+
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
-        <data android:scheme="billing" android:host="aptoide.com" android:pathPrefix="/adyen"/>
+
+        <data
+            android:host="aptoide.com"
+            android:pathPrefix="/adyen"
+            android:scheme="billing"/>
       </intent-filter>
     </activity>
 
@@ -390,11 +390,9 @@
 
     <activity
         android:name=".spotandshare.view.TransferRecordActivity"
-        android:configChanges="orientation|keyboardHidden|screenSize">
-    </activity>
+        android:configChanges="orientation|keyboardHidden|screenSize"/>
 
-    <activity android:name=".spotandshare.view.ShareAptoideActivity">
-    </activity>
+    <activity android:name=".spotandshare.view.ShareAptoideActivity"/>
 
     <activity
         android:name="com.mopub.common.MoPubBrowser"

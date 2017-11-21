@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import java.util.List;
-import lombok.Getter;
 
 /**
  * Created by jdandrade on 17/05/2017.
@@ -16,15 +15,15 @@ public class AggregatedSocialArticle implements TimelineCard {
 
   private final List<MinimalCard> minimalCardList;
   private final List<UserSharerTimeline> sharers;
-  @Getter private final Publisher publisher;
-  @Getter private final String cardId;
-  @Getter private final String title;
-  @Getter private final String thumbnailUrl;
-  @Getter private final String url;
-  @Getter private final Date date;
-  @Getter private final List<App> apps;
-  @Getter private final Ab ab;
-  @Getter private final Urls urls;
+  private final Publisher publisher;
+  private final String cardId;
+  private final String title;
+  private final String thumbnailUrl;
+  private final String url;
+  private final Date date;
+  private final List<App> apps;
+  private final Ab ab;
+  private final Urls urls;
 
   public AggregatedSocialArticle(@JsonProperty("uid") String cardId,
       @JsonProperty("title") String title, @JsonProperty("thumbnail") String thumbnailUrl,
@@ -53,5 +52,41 @@ public class AggregatedSocialArticle implements TimelineCard {
 
   public List<UserSharerTimeline> getSharers() {
     return sharers;
+  }
+
+  public Publisher getPublisher() {
+    return this.publisher;
+  }
+
+  public String getCardId() {
+    return this.cardId;
+  }
+
+  public Urls getUrls() {
+    return this.urls;
+  }
+
+  public String getTitle() {
+    return this.title;
+  }
+
+  public String getThumbnailUrl() {
+    return this.thumbnailUrl;
+  }
+
+  public String getUrl() {
+    return this.url;
+  }
+
+  public Date getDate() {
+    return this.date;
+  }
+
+  public List<App> getApps() {
+    return this.apps;
+  }
+
+  public Ab getAb() {
+    return this.ab;
   }
 }

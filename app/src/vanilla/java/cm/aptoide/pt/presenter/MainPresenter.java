@@ -73,7 +73,7 @@ public class MainPresenter implements Presenter {
   }
 
   @Override public void present() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
         .doOnNext(created -> apkFy.run())
         .filter(created -> firstCreated)
@@ -88,7 +88,7 @@ public class MainPresenter implements Presenter {
   }
 
   private void setupInstallErrorsDisplay() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> View.LifecycleEvent.RESUME.equals(event))
         .flatMap(lifecycleEvent -> rootInstallationRetryHandler.retries()
             .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE)))
@@ -101,7 +101,7 @@ public class MainPresenter implements Presenter {
           view.showInstallationError(installationProgresses.size());
         }, throwable -> crashReport.log(throwable));
 
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> View.LifecycleEvent.RESUME.equals(lifecycleEvent))
         .flatMap(lifecycleEvent -> installManager.getTimedOutInstallations())
         .filter(installationProgresses -> !installationProgresses.isEmpty())
@@ -110,13 +110,13 @@ public class MainPresenter implements Presenter {
         .subscribe(noInstallErrors -> view.dismissInstallationError(),
             throwable -> crashReport.log(throwable));
 
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> View.LifecycleEvent.RESUME.equals(lifecycleEvent))
         .flatMap(event -> installCompletedNotifier.getWatcher())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(allInstallsCompleted -> view.showInstallationSuccessMessage());
 
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> View.LifecycleEvent.RESUME.equals(lifecycleEvent))
         .flatMap(lifecycleEvent -> view.getInstallErrorsDismiss())
         .flatMapCompletable(click -> installManager.cleanTimedOutInstalls())

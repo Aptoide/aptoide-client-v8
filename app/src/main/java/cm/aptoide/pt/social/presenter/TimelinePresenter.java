@@ -187,7 +187,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void clickOnReportAbuse() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
@@ -204,7 +204,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void clickOnIgnoreUpdate() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
@@ -220,7 +220,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void clickOnUnfollowStore() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
@@ -238,7 +238,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void clickOnUnfollowUser() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
@@ -260,7 +260,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void clickOnDeletePost() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
@@ -282,7 +282,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void handleScrollEvents() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.getScrollEvents())
         .doOnNext(position -> timelineAnalytics.scrollToPosition(position))
@@ -292,7 +292,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void clickOnEmptyStateAction() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
@@ -305,7 +305,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void onViewCreatedShowUser() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> timeline.getUser(false)
             .observeOn(AndroidSchedulers.mainThread())
@@ -327,7 +327,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void onViewCreatedClickOnAddressBook() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
@@ -339,7 +339,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void onViewCreatedClickOnNotificationCenter() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
@@ -351,7 +351,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void onViewCreatedClickOnTimelineNotification() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
@@ -384,7 +384,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void onViewCreatedClickOnGeneralNotification() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
@@ -405,7 +405,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void handleNativeAdError() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
@@ -419,7 +419,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void onViewCreatedClickOnLastComment() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.postClicked()
             .filter(cardClicked -> cardClicked.getActionType()
@@ -437,7 +437,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void onViewCreatedHandleVisibleItems() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(lifecycleEvent -> view.getVisibleItems()
             .filter(post -> !post.getType()
@@ -472,7 +472,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void handlePostNavigation() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> timelineNavigation.postNavigation()
             .observeOn(AndroidSchedulers.mainThread())
@@ -495,7 +495,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void listenToScrollUp() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.scrolled()
             .throttleLast(1, TimeUnit.SECONDS)
@@ -509,7 +509,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void listenToScrollDown() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.scrolled()
             .throttleLast(1, TimeUnit.SECONDS)
@@ -523,7 +523,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void handleFabClick() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(__ -> view.floatingActionButtonClicked()
@@ -535,7 +535,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void onCreateShowPosts() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.showGeneralProgressIndicator())
         .flatMapSingle(__ -> accountManager.accountStatus()
@@ -567,7 +567,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void onPullToRefreshRefreshPosts() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.refreshes()
             .flatMapSingle(__ -> accountManager.accountStatus()
@@ -599,7 +599,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void onBottomReachedShowMorePosts() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(create -> view.reachesBottom()
             .observeOn(AndroidSchedulers.mainThread())
@@ -620,7 +620,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void onRetryShowPosts() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(__ -> view.retry()
@@ -650,7 +650,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void clickOnPostHeader() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked())
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
@@ -690,7 +690,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void clickOnPostBody() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
@@ -778,7 +778,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void clickOnLikeSocialPost() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
@@ -841,7 +841,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void handleLoginMessageClick() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.loginActionClick())
         .observeOn(AndroidSchedulers.mainThread())
@@ -852,7 +852,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void clickOnLikeNonSocialPost() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
@@ -904,7 +904,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void clickOnCommentSocialPost() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked())
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
@@ -946,7 +946,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void clickOnCommentNonSocialPost() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked())
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
@@ -994,7 +994,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void clickOnCommentsNumberLabel() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(create -> view.postClicked())
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
@@ -1020,7 +1020,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void clickOnShare() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked())
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
@@ -1074,7 +1074,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void commentPostResponse() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.commentPosted())
         .flatMapCompletable(comment -> timeline.sharePost(comment.getPost()
@@ -1101,7 +1101,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void sharePostConfirmation() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.shareConfirmation()
             .flatMapSingle(shareEvent -> timeline.sharePost(shareEvent.getPost())
@@ -1118,7 +1118,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void clickOnTimelineStats() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked())
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()
@@ -1174,7 +1174,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void clickOnLikesPreview() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
@@ -1192,7 +1192,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void clickOnLogin() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.postClicked())
         .filter(cardTouchEvent -> cardTouchEvent.getActionType()

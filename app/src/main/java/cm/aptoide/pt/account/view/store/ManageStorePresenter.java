@@ -53,7 +53,7 @@ public class ManageStorePresenter implements Presenter {
   }
 
   private void handleCancel() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.cancelClick()
             .doOnNext(__2 -> {
@@ -65,7 +65,7 @@ public class ManageStorePresenter implements Presenter {
   }
 
   private void handleSaveData() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.saveDataClick()
             .flatMapCompletable(storeModel -> handleSaveClick(storeModel))

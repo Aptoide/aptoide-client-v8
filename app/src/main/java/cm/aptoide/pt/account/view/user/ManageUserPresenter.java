@@ -48,7 +48,7 @@ public class ManageUserPresenter implements Presenter {
   }
 
   private void onViewCreatedLoadUserData() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMapSingle(__ -> accountManager.accountStatus()
             .first()
@@ -89,7 +89,7 @@ public class ManageUserPresenter implements Presenter {
   }
 
   private void handleSaveDataClick() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.saveUserDataButtonClick()
             .doOnNext(__2 -> view.showProgressDialog())
@@ -108,7 +108,7 @@ public class ManageUserPresenter implements Presenter {
   }
 
   private void handleCancelClick() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.cancelButtonClick()
             .doOnNext(__2 -> navigator.goBack()))
