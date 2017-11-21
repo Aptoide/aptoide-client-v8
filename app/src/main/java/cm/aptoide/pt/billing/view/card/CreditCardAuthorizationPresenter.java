@@ -1,4 +1,4 @@
-package cm.aptoide.pt.billing.view.adyen;
+package cm.aptoide.pt.billing.view.card;
 
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
@@ -13,9 +13,9 @@ import rx.Completable;
 import rx.Scheduler;
 import rx.exceptions.OnErrorNotImplementedException;
 
-public class AdyenAuthorizationPresenter implements Presenter {
+public class CreditCardAuthorizationPresenter implements Presenter {
 
-  private final AdyenAuthorizationView view;
+  private final CreditCardAuthorizationView view;
   private final String sku;
   private final Billing billing;
   private final BillingNavigator navigator;
@@ -24,7 +24,8 @@ public class AdyenAuthorizationPresenter implements Presenter {
   private final Adyen adyen;
   private final Scheduler viewScheduler;
 
-  public AdyenAuthorizationPresenter(AdyenAuthorizationView view, String sku, Billing billing,
+  public CreditCardAuthorizationPresenter(CreditCardAuthorizationView view, String sku,
+      Billing billing,
       BillingNavigator navigator, BillingAnalytics analytics, String serviceName, Adyen adyen,
       Scheduler viewScheduler) {
     this.view = view;
@@ -61,17 +62,17 @@ public class AdyenAuthorizationPresenter implements Presenter {
 
     handleAdyenPaymentResult();
 
-    handleBackEvent();
+    handleCancel();
   }
 
-  private void handleBackEvent() {
+  private void handleCancel() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.backButtonEvent())
+        .flatMap(created -> view.cancelEvent())
         .observeOn(viewScheduler)
         .doOnNext(__ -> {
           analytics.sendAuthorizationCancelEvent(serviceName);
-          navigator.popToPaymentView();
+          navigator.popView();
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -85,7 +86,7 @@ public class AdyenAuthorizationPresenter implements Presenter {
         .first(payment -> payment.isCompleted())
         .doOnNext(payment -> analytics.sendAuthorizationSuccessEvent(payment))
         .observeOn(viewScheduler)
-        .doOnNext(__ -> navigator.popToPaymentView())
+        .doOnNext(__ -> navigator.popView())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> showError(throwable));
@@ -119,7 +120,8 @@ public class AdyenAuthorizationPresenter implements Presenter {
   private void handleAdyenCreditCardResults() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(authorization -> navigator.adyenResults())
+        .flatMap(authorization -> view.creditCardDetailsEvent())
+        .doOnNext(__ -> view.showLoading())
         .flatMapCompletable(details -> adyen.finishPayment(details))
         .observeOn(viewScheduler)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -133,7 +135,6 @@ public class AdyenAuthorizationPresenter implements Presenter {
         .flatMapSingle(__ -> adyen.getRedirectUrl())
         .observeOn(viewScheduler)
         .doOnNext(redirectUrl -> {
-          navigator.popAdyenCreditCardView();
           view.showLoading();
           navigator.navigateToUriForResult(redirectUrl);
         })
@@ -176,12 +177,14 @@ public class AdyenAuthorizationPresenter implements Presenter {
         .flatMapSingle(__ -> adyen.getPaymentData())
         .observeOn(viewScheduler)
         .doOnNext(data -> {
+          view.hideLoading();
           if (data.getPaymentMethod()
               .getType()
               .equals(PaymentMethod.Type.CARD)) {
-            navigator.navigateToAdyenCreditCardView(data);
+            view.showCreditCardView(data.getPaymentMethod(), data.getAmount(), true,
+                data.getShopperReference() != null, data.getPublicKey(), data.getGenerationTime());
           } else {
-            view.showCvvView(data);
+            view.showCvcView(data.getAmount(), data.getPaymentMethod());
           }
         })
         .observeOn(viewScheduler)
@@ -206,6 +209,8 @@ public class AdyenAuthorizationPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.showLoading())
         .flatMap(__ -> billing.getPayment(sku))
+        .observeOn(viewScheduler)
+        .doOnNext(payment -> view.showProduct(payment.getProduct()))
         .first(payment -> payment.isPendingAuthorization())
         .map(payment -> payment.getAuthorization())
         .cast(AdyenAuthorization.class)
@@ -238,7 +243,6 @@ public class AdyenAuthorizationPresenter implements Presenter {
   }
 
   private void popViewWithError() {
-    view.hideLoading();
     analytics.sendAuthorizationErrorEvent(serviceName);
     navigator.popView();
   }
