@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.Application;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -117,7 +116,6 @@ import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationCenter;
-import cm.aptoide.pt.notification.NotificationIdsMapper;
 import cm.aptoide.pt.notification.NotificationInfo;
 import cm.aptoide.pt.notification.NotificationPolicyFactory;
 import cm.aptoide.pt.notification.NotificationProvider;
@@ -281,6 +279,7 @@ public abstract class AptoideApplication extends Application {
   private ReadPostsPersistence readPostsPersistence;
   private SystemNotificationShower systemNotificationShower;
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
+  private NotificationsCleaner notificationsCleaner;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -405,6 +404,7 @@ public abstract class AptoideApplication extends Application {
     }
 
     startNotificationCenter();
+    startNotificationCleaner();
     getRootInstallationRetryHandler().start();
     AptoideApplicationAnalytics aptoideApplicationAnalytics = new AptoideApplicationAnalytics();
     accountManager.accountStatus()
@@ -417,7 +417,6 @@ public abstract class AptoideApplication extends Application {
         .log(throwable));
 
     systemNotificationShower = getSystemNotificationShower();
-    systemNotificationShower.setupNotificationPublishRelaySubscribe();
 
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
@@ -455,6 +454,20 @@ public abstract class AptoideApplication extends Application {
                 .log(throwable));
 
     getNotificationCenter().setup();
+  }
+
+  private void startNotificationCleaner() {
+    getNotificationCleaner().setup();
+  }
+
+  private NotificationsCleaner getNotificationCleaner() {
+    if (notificationsCleaner == null) {
+      notificationsCleaner = new NotificationsCleaner(AccessorFactory.getAccessorFor(
+          ((AptoideApplication) this.getApplicationContext()).getDatabase(), Notification.class),
+          Calendar.getInstance(TimeZone.getTimeZone("UTC")), getAccountManager(),
+          getNotificationProvider(), CrashReport.getInstance());
+    }
+    return notificationsCleaner;
   }
 
   public abstract String getCachePath();
@@ -509,17 +522,7 @@ public abstract class AptoideApplication extends Application {
     return rootInstallationRetryHandler;
   }
 
-  @NonNull private SystemNotificationShower getSystemNotificationShower() {
-    if (systemNotificationShower == null) {
-      systemNotificationShower = new SystemNotificationShower(this,
-          (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE),
-          new NotificationIdsMapper(), getNotificationsPublishRelay(), notificationCenter,
-          new NotificationAnalytics(Analytics.getInstance(),
-              AppEventsLogger.newLogger(getApplicationContext())), CrashReport.getInstance(),
-          getNotificationProvider());
-    }
-    return systemNotificationShower;
-  }
+  @NonNull protected abstract SystemNotificationShower getSystemNotificationShower();
 
   public PublishRelay<NotificationInfo> getNotificationsPublishRelay() {
     if (notificationsPublishRelay == null) {
@@ -538,11 +541,8 @@ public abstract class AptoideApplication extends Application {
 
       notificationCenter =
           new NotificationCenter(notificationProvider, getNotificationSyncScheduler(),
-              getSystemNotificationShower(), CrashReport.getInstance(),
               new NotificationPolicyFactory(notificationProvider),
-              new NotificationsCleaner(notificationAccessor,
-                  Calendar.getInstance(TimeZone.getTimeZone("UTC"))), getAccountManager(),
-              new NotificationAnalytics(Analytics.getInstance(),
+              new NotificationAnalytics(getDefaultClient(), Analytics.getInstance(),
                   AppEventsLogger.newLogger(getApplicationContext())));
     }
     return notificationCenter;
