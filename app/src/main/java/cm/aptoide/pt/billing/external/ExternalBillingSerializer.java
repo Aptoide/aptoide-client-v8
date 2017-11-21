@@ -7,7 +7,7 @@ package cm.aptoide.pt.billing.external;
 
 import cm.aptoide.pt.billing.product.InAppProduct;
 import cm.aptoide.pt.billing.product.Product;
-import cm.aptoide.pt.dataprovider.ws.v7.billing.GetPurchasesRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.billing.PurchaseResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,7 +30,7 @@ public class ExternalBillingSerializer {
   }
 
   public String serializePurchase(
-      GetPurchasesRequest.ResponseBody.Purchase.Data.DeveloperPurchase purchase)
+      PurchaseResponse.Data.DeveloperPurchase purchase)
       throws JsonProcessingException {
     return new ObjectMapper().writeValueAsString(purchase);
   }

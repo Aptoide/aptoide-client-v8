@@ -30,7 +30,6 @@ import cm.aptoide.pt.billing.networking.TransactionServiceV3;
 import cm.aptoide.pt.billing.networking.TransactionServiceV7;
 import cm.aptoide.pt.billing.payment.Adyen;
 import cm.aptoide.pt.billing.payment.PaymentService;
-import cm.aptoide.pt.billing.payment.PaymentServiceSelector;
 import cm.aptoide.pt.billing.payment.SharedPreferencesPaymentServiceSelector;
 import cm.aptoide.pt.billing.persistence.InMemoryTransactionPersistence;
 import cm.aptoide.pt.billing.persistence.RealmAuthorizationMapper;
@@ -51,6 +50,8 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.install.PackageRepository;
+import cm.aptoide.pt.networking.AuthenticationPersistence;
+import cm.aptoide.pt.preferences.Preferences;
 import cm.aptoide.pt.sync.SyncScheduler;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.HashMap;
@@ -82,6 +83,8 @@ public class BillingPool {
   private final PurchaseFactory purchaseFactory;
   private final int minimumAPILevelPayPal;
   private final int minimumAPILevelAdyen;
+  private final AuthenticationPersistence authenticationPersistence;
+  private final Preferences preferences;
 
   private BillingSyncScheduler billingSyncSchedulerV7;
   private AuthorizationRepository inAppAuthorizationRepository;
@@ -116,7 +119,8 @@ public class BillingPool {
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> accountSettingsBodyInterceptorPoolV7,
       HashMap<String, Billing> poll, Converter.Factory converterFactory, CrashReport crashLogger,
       Adyen adyen, PurchaseFactory purchaseFactory, int minimumAPILevelPayPal,
-      int minimumAPILevelAdyen) {
+      int minimumAPILevelAdyen, AuthenticationPersistence authenticationPersistence,
+      Preferences preferences) {
     this.sharedPreferences = sharedPreferences;
     this.pool = poll;
     this.bodyInterceptorV3 = bodyInterceptorV3;
@@ -136,6 +140,8 @@ public class BillingPool {
     this.purchaseFactory = purchaseFactory;
     this.minimumAPILevelPayPal = minimumAPILevelPayPal;
     this.minimumAPILevelAdyen = minimumAPILevelAdyen;
+    this.authenticationPersistence = authenticationPersistence;
+    this.preferences = preferences;
   }
 
   public Billing get(String merchantName) {
@@ -157,11 +163,11 @@ public class BillingPool {
     if (merchantName.equals(BuildConfig.APPLICATION_ID)) {
       return new Billing(merchantName, getBillingServiceV3(), getPaidAppTransactionRepository(),
           getPaidAppAuthorizationRepository(), getServiceSelector(), getCustomer(),
-          getPurchaseTokenDecoder(), getBillingSyncSchedulerV3(), purchaseFactory);
+          getPurchaseTokenDecoder(), getBillingSyncSchedulerV3());
     } else {
       return new Billing(merchantName, getBillingServiceV7(), getInAppTransactionRepository(),
           getInAppAuthorizationRepository(), getServiceSelector(), getCustomer(),
-          getPurchaseTokenDecoder(), getBillingSyncSchedulerV7(), purchaseFactory);
+          getPurchaseTokenDecoder(), getBillingSyncSchedulerV7());
     }
   }
 
@@ -239,7 +245,7 @@ public class BillingPool {
     if (serviceSelector == null) {
       serviceSelector =
           new SharedPreferencesPaymentServiceSelector(BuildConfig.DEFAULT_PAYMENT_SERVICE_TYPE,
-              sharedPreferences, Schedulers.io());
+              preferences);
     }
     return serviceSelector;
   }
@@ -251,7 +257,8 @@ public class BillingPool {
               new AuthorizationServiceV7(
                   new AuthorizationMapperV7(getAuthorizationFactory(), getBillingIdManagerV7()),
                   httpClient, WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences,
-                  bodyInterceptorPoolV7, getBillingIdManagerV7(), getAuthorizationFactory()),
+                  bodyInterceptorPoolV7, getBillingIdManagerV7(), getAuthorizationFactory(),
+                  authenticationPersistence),
               getTransactionPersistence(), getAuthorizationPersistence(), getLocalIdGenerator()),
           syncScheduler, new HashSet<>(), new HashMap<>());
     }
@@ -278,7 +285,8 @@ public class BillingPool {
       transactionServiceV7 = new TransactionServiceV7(
           new TransactionMapperV7(getTransactionFactory(), getBillingIdManagerV7()),
           bodyInterceptorPoolV7, WebService.getDefaultConverter(), httpClient, tokenInvalidator,
-          sharedPreferences, getBillingIdManagerV7(), getTransactionFactory());
+          sharedPreferences, getBillingIdManagerV7(), getTransactionFactory(),
+          authenticationPersistence);
     }
     return transactionServiceV7;
   }

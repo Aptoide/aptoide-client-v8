@@ -14,48 +14,41 @@ import retrofit2.Response;
 import rx.Observable;
 
 public class GetAuthorizationRequest extends
-    V7<Response<GetAuthorizationRequest.ResponseBody>, GetAuthorizationRequest.RequestBody> {
+    V7<Response<GetAuthorizationRequest.ResponseBody>, Void> {
 
-  private GetAuthorizationRequest(RequestBody body, String baseHost, OkHttpClient httpClient,
+  private final long transactionId;
+  private final String accessToken;
+  private final String customerId;
+
+  private GetAuthorizationRequest(Void body, String baseHost, OkHttpClient httpClient,
       Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
-      TokenInvalidator tokenInvalidator) {
+      TokenInvalidator tokenInvalidator, long transactionId, String accessToken, String customerId) {
     super(body, baseHost, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+    this.transactionId = transactionId;
+    this.accessToken = accessToken;
+    this.customerId = customerId;
   }
 
   public static String getHost(SharedPreferences sharedPreferences) {
     return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
         : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
         + "://"
-        + BuildConfig.APTOIDE_WEB_SERVICES_READ_V7_HOST
+        + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
         + "/api/7/";
   }
 
   public static GetAuthorizationRequest of(long transactionId, SharedPreferences sharedPreferences,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      BodyInterceptor<BaseBody> bodyInterceptor, TokenInvalidator tokenInvalidator) {
-    final RequestBody requestBody = new RequestBody();
-    requestBody.setTransactionId(transactionId);
-    return new GetAuthorizationRequest(requestBody, getHost(sharedPreferences), httpClient,
-        converterFactory, bodyInterceptor, tokenInvalidator);
+      BodyInterceptor<BaseBody> bodyInterceptor, TokenInvalidator tokenInvalidator,
+      String accessToken, String customerId) {
+    return new GetAuthorizationRequest(null, getHost(sharedPreferences), httpClient,
+        converterFactory, bodyInterceptor, tokenInvalidator, transactionId, accessToken, customerId);
   }
 
   @Override
   protected Observable<Response<GetAuthorizationRequest.ResponseBody>> loadDataFromNetwork(
       Interfaces interfaces, boolean bypassCache) {
-    return interfaces.getBillingAuthorization(body, bypassCache);
-  }
-
-  public static class RequestBody extends BaseBody {
-
-    private long transactionId;
-
-    public long getTransactionId() {
-      return transactionId;
-    }
-
-    public void setTransactionId(long transactionId) {
-      this.transactionId = transactionId;
-    }
+    return interfaces.getBillingAuthorization(transactionId, "Bearer " + accessToken, customerId);
   }
 
   public static class ResponseBody extends BaseV7Response {

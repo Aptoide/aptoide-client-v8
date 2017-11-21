@@ -6,7 +6,6 @@ import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -22,7 +21,6 @@ public class MyAccountPresenter implements Presenter {
   private final CrashReport crashReport;
   private final MyAccountNavigator navigator;
   private final NotificationCenter notificationCenter;
-  private final LinksHandlerFactory linkFactory;
   private final int NUMBER_OF_NOTIFICATIONS = 3;
   private final SharedPreferences sharedPreferences;
   private final NotificationAnalytics analytics;
@@ -31,15 +29,13 @@ public class MyAccountPresenter implements Presenter {
 
   public MyAccountPresenter(MyAccountView view, AptoideAccountManager accountManager,
       CrashReport crashReport, MyAccountNavigator navigator, NotificationCenter notificationCenter,
-      LinksHandlerFactory linkFactory, SharedPreferences sharedPreferences,
-      NavigationTracker navigationTracker, NotificationAnalytics analytics,
-      PageViewsAnalytics pageViewsAnalytics) {
+      SharedPreferences sharedPreferences, NavigationTracker navigationTracker,
+      NotificationAnalytics analytics, PageViewsAnalytics pageViewsAnalytics) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
     this.navigator = navigator;
     this.notificationCenter = notificationCenter;
-    this.linkFactory = linkFactory;
     this.sharedPreferences = sharedPreferences;
     this.navigationTracker = navigationTracker;
     this.analytics = analytics;
@@ -52,7 +48,7 @@ public class MyAccountPresenter implements Presenter {
     handleMoreNotificationsClick();
     handleEditStoreClick();
     handleHeaderVisibility();
-    hangleGetNotifications();
+    handleGetNotifications();
     handleNotificationClick();
     handleUserEditClick();
     handleUserLayoutClick();
@@ -132,7 +128,7 @@ public class MyAccountPresenter implements Presenter {
         }, throwable -> crashReport.log(throwable));
   }
 
-  private void hangleGetNotifications() {
+  private void handleGetNotifications() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> notificationCenter.getInboxNotifications(NUMBER_OF_NOTIFICATIONS))
@@ -147,14 +143,12 @@ public class MyAccountPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.notificationSelection())
-        .flatMap(notification -> Observable.just(
-            linkFactory.get(LinksHandlerFactory.NOTIFICATION_LINK, notification.getUrl()))
-            .doOnNext(link -> link.launch())
-            .doOnNext(
-                link -> analytics.notificationShown(notification.getNotificationCenterUrlTrack()))
-            .doOnNext(__ -> navigationTracker.registerScreen(
-                ScreenTagHistory.Builder.build("Notification")))
-            .doOnNext(__ -> pageViewsAnalytics.sendPageViewedEvent()))
+        .doOnNext(notification -> {
+          navigator.navigateToNotification(notification);
+          analytics.sendNotificationTouchEvent(notification.getNotificationCenterUrlTrack());
+          navigationTracker.registerScreen(ScreenTagHistory.Builder.build("Notification"));
+          pageViewsAnalytics.sendPageViewedEvent();
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, throwable -> crashReport.log(throwable));
@@ -232,7 +226,7 @@ public class MyAccountPresenter implements Presenter {
             .observeOn(AndroidSchedulers.mainThread())
             .doOnCompleted(() -> {
               ManagerPreferences.setAddressBookSyncValues(false, sharedPreferences);
-              view.navigateToHome();
+              navigator.navigateToHome();
             })
             .doOnError(throwable -> crashReport.log(throwable)).<Void>toObservable())
         .retry();

@@ -74,14 +74,14 @@ public class InstallAnalytics {
 
   public void installStarted(ScreenTagHistory previousScreen, ScreenTagHistory currentScreen,
       String packageName, int installingVersion, InstallType installType) {
-    if (currentScreen.getTag()
+    if (currentScreen.getTag() != null && currentScreen.getTag()
         .contains("apps-group-editors-choice")) {
       Bundle data = new Bundle();
       data.putString("package_name", packageName);
       data.putString("type", installType.name());
       analytics.save(packageName + installingVersion,
           new FacebookEvent(facebook, EDITORS_APPLICATION_INSTALL, data));
-    } else if (previousScreen.getFragment()
+    } else if (currentScreen.getTag() != null && previousScreen.getFragment()
         .equals(DeepLinkManager.DEEPLINK_KEY)) {
       Bundle data = new Bundle();
       data.putString("package_name", packageName);

@@ -88,7 +88,7 @@ public class VanillaApplication extends AptoideApplication {
 
   @Override public NotificationSyncScheduler getNotificationSyncScheduler() {
     if (notificationSyncScheduler == null) {
-      notificationSyncScheduler = new NotificationSyncManager(getSyncScheduler(), true,
+      notificationSyncScheduler = new NotificationSyncManager(getAlarmSyncScheduler(), true,
           new NotificationSyncFactory(getDefaultSharedPreferences(),
               new NotificationService(BuildConfig.APPLICATION_ID,
                   new OkHttpClient.Builder().readTimeout(45, TimeUnit.SECONDS)

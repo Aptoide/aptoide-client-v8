@@ -143,7 +143,7 @@ public class PartnerApplication extends AptoideApplication {
 
   @Override public NotificationSyncScheduler getNotificationSyncScheduler() {
     if (notificationSyncScheduler == null) {
-      notificationSyncScheduler = new PushNotificationSyncManager(getSyncScheduler(), true,
+      notificationSyncScheduler = new PushNotificationSyncManager(getAlarmSyncScheduler(), true,
           new NotificationSyncFactory(
               new NotificationService(getExtraId(), getDefaultSharedPreferences(), getResources(),
                   getBaseContext(), getTokenInvalidator(), getBodyInterceptorV3(),
