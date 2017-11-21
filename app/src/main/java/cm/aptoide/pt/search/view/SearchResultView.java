@@ -54,8 +54,6 @@ public interface SearchResultView extends View {
 
   void setViewWithStoreNameAsSingleTab(String storeName);
 
-  void displaySearchQuery(String query);
-
   interface Model {
 
     String getCurrentQuery();

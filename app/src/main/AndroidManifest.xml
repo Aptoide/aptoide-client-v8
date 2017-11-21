@@ -100,7 +100,7 @@
         />
 
     <provider
-        android:name=".search.suggestionsprovider.AppSuggestions"
+        android:name=".search.suggestions.AppSuggestions"
         android:authorities="${suggestionProviderAuthority}"
         android:exported="false"
         />

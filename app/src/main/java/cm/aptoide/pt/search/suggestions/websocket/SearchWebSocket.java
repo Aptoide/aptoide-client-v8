@@ -1,4 +1,4 @@
-package cm.aptoide.pt.search.suggestionsprovider.websocket;
+package cm.aptoide.pt.search.suggestions.websocket;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;

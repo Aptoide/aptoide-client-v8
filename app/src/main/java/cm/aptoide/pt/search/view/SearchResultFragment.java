@@ -50,7 +50,7 @@ import cm.aptoide.pt.search.SearchCursorAdapter;
 import cm.aptoide.pt.search.SearchFactory;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
-import cm.aptoide.pt.search.TrendingService;
+import cm.aptoide.pt.search.suggestions.TrendingService;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
@@ -62,6 +62,7 @@ import cm.aptoide.pt.view.custom.DividerItemDecoration;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
+import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -165,10 +166,22 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private void clickTitleBarExpandsList() {
-    getLifecycle().flatMap(__ -> RxView.clicks(toolbar))
+    getLifecycle().filter(event -> event == LifecycleEvent.RESUME)
+        .flatMap(__ -> RxView.clicks(toolbar))
         .doOnNext(__ -> focusInSearchBar())
-        .compose(bindUntilEvent(cm.aptoide.pt.presenter.View.LifecycleEvent.DESTROY))
-        .subscribe();
+        .compose(bindUntilEvent(LifecycleEvent.PAUSE))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
+  }
+
+  private void clickSearchIconExpandsList() {
+    getLifecycle().filter(event -> event == LifecycleEvent.RESUME)
+        .flatMap(__ -> RxToolbar.itemClicks(toolbar)
+            .filter(item -> item.getItemId() == searchMenuItem.getItemId()))
+        .doOnNext(__ -> focusInSearchBar())
+        .compose(bindUntilEvent(LifecycleEvent.PAUSE))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
   }
 
   @Override public void showFollowedStoresResult() {
@@ -350,10 +363,6 @@ public class SearchResultFragment extends BackButtonFragment
   @Override public void setViewWithStoreNameAsSingleTab(String storeName) {
     followedStoresButton.setText(storeName);
     allStoresButton.setVisibility(View.GONE);
-  }
-
-  @Override public void displaySearchQuery(String query) {
-    searchView.setQuery(query, false);
   }
 
   @Override public Observable<SearchViewQueryTextEvent> onQueryTextChanged() {
@@ -548,6 +557,7 @@ public class SearchResultFragment extends BackButtonFragment
     setupToolbar();
     setupTheme();
     clickTitleBarExpandsList();
+    clickSearchIconExpandsList();
 
     final SearchResultPresenter searchResultPresenter =
         new SearchResultPresenter(this, searchAnalytics, searchNavigator, crashReport,

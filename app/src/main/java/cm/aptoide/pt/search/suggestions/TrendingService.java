@@ -1,4 +1,4 @@
-package cm.aptoide.pt.search;
+package cm.aptoide.pt.search.suggestions;
 
 import android.content.SharedPreferences;
 import cm.aptoide.pt.AptoideApplication;

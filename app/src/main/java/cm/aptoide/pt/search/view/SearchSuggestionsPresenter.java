@@ -1,12 +1,15 @@
 package cm.aptoide.pt.search.view;
 
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.search.SearchCursorAdapter;
 import cm.aptoide.pt.search.SearchNavigator;
-import cm.aptoide.pt.search.SearchSuggestionManager;
+import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
+import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import java.util.concurrent.TimeUnit;
+import rx.Observable;
 import rx.Scheduler;
 
 @SuppressWarnings("Convert2MethodRef") public class SearchSuggestionsPresenter
@@ -55,12 +58,12 @@ import rx.Scheduler;
   private void handleQueryTextSubmitted() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.onQueryTextChanged()
-            .throttleFirst(250, TimeUnit.MILLISECONDS))
+        .flatMap(__ -> getDebouncedQueryChanges())
         .filter(data -> data != null
             && data.queryText()
             .length() > 0
             && data.isSubmitted())
+        .observeOn(viewScheduler)
         .doOnNext(data -> {
           view.collapseSearchBar();
           navigator.navigate(data.queryText()
@@ -71,11 +74,15 @@ import rx.Scheduler;
         }, e -> crashReport.log(e));
   }
 
+  @NonNull private Observable<SearchViewQueryTextEvent> getDebouncedQueryChanges() {
+    return view.onQueryTextChanged()
+        .debounce(250, TimeUnit.MILLISECONDS);
+  }
+
   private void handleQueryTextCleaned() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.onQueryTextChanged()
-            .throttleFirst(250, TimeUnit.MILLISECONDS))
+        .flatMap(__ -> getDebouncedQueryChanges())
         .filter(data -> data != null
             && data.queryText()
             .length() == 0)
@@ -90,8 +97,7 @@ import rx.Scheduler;
   private void handleQueryTextChanged() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.onQueryTextChanged()
-            .throttleFirst(250, TimeUnit.MILLISECONDS))
+        .flatMap(__ -> getDebouncedQueryChanges())
         .filter(data -> data != null
             && data.queryText()
             .length() > 0)
@@ -117,8 +123,8 @@ import rx.Scheduler;
         .flatMapSingle(__ -> trendingManager.getTrendingSuggestions())
         .filter(data -> data != null && data.size() > 0)
         .observeOn(viewScheduler)
-        .doOnNext(__ -> view.focusInSearchBar())
         .doOnNext(data -> view.setTrending(data))
+        .doOnNext(__ -> view.focusInSearchBar())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));

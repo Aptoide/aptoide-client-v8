@@ -6,7 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.pt.search.view.QueryResultRepository;
 import cm.aptoide.pt.search.view.UnableToSearchAction;
-import cm.aptoide.pt.search.suggestionsprovider.websocket.SearchWebSocket;
+import cm.aptoide.pt.search.suggestions.websocket.SearchWebSocket;
 
 public class SearchActionsHandler
     implements SearchView.OnQueryTextListener, SearchView.OnSuggestionListener,

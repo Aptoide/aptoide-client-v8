@@ -3,6 +3,7 @@ package cm.aptoide.pt.search;
 import android.support.annotation.VisibleForTesting;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.websocket.ReactiveWebSocket;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.concurrent.TimeUnit;

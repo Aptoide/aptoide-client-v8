@@ -1,6 +1,6 @@
 package cm.aptoide.pt.search.view;
 
-import cm.aptoide.pt.search.TrendingService;
+import cm.aptoide.pt.search.suggestions.TrendingService;
 import java.util.List;
 import rx.Single;
 

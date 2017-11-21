@@ -1,4 +1,4 @@
-package cm.aptoide.pt.search;
+package cm.aptoide.pt.search.suggestions;
 
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.search.websocket.ReactiveWebSocket;
@@ -17,7 +17,7 @@ public class SearchSuggestionManager {
   private final ReactiveWebSocket webSocket;
   private final CrashReport crashReport;
 
-  SearchSuggestionManager(ObjectMapper objectMapper, ReactiveWebSocket webSocket,
+  public SearchSuggestionManager(ObjectMapper objectMapper, ReactiveWebSocket webSocket,
       CrashReport crashReport) {
     this.objectMapper = objectMapper;
     this.webSocket = webSocket;
@@ -43,7 +43,7 @@ public class SearchSuggestionManager {
     return webSocket.listen()
         .flatMap(event -> {
           if (event.getStatus() == SocketEvent.Status.FAILURE) {
-            return Observable.error(new SearchFailureException("Socket failure"));
+            return Observable.error(new SearchSuggestionException("Socket failure"));
           }
 
           return Observable.just(event);
@@ -54,19 +54,19 @@ public class SearchSuggestionManager {
           try {
             return Observable.just(getSuggestionsFrom(event.getData()));
           } catch (IOException e) {
-            return Observable.error(new SearchFailureException(e));
+            return Observable.error(new SearchSuggestionException(e));
           }
         });
   }
 
   public Observable<List<String>> listenForSuggestions() {
     return listenWebSocket().doOnError(throwable -> {
-      if (SearchFailureException.class.isAssignableFrom(throwable.getClass())) {
+      if (SearchSuggestionException.class.isAssignableFrom(throwable.getClass())) {
         crashReport.log(throwable);
       }
     })
         .retry((retryCount, throwable) -> {
-          if (SearchFailureException.class.isAssignableFrom(throwable.getClass())) {
+          if (SearchSuggestionException.class.isAssignableFrom(throwable.getClass())) {
             return true;
           }
           return false;

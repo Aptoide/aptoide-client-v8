@@ -1,4 +1,4 @@
-package cm.aptoide.pt.search.suggestionsprovider.websocket;
+package cm.aptoide.pt.search.suggestions.websocket;
 
 import android.content.SearchRecentSuggestionsProvider;
 import android.database.Cursor;

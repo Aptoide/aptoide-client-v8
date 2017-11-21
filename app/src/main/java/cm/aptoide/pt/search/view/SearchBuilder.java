@@ -14,7 +14,7 @@ import android.support.v7.widget.SearchView;
 import android.view.MenuItem;
 import cm.aptoide.pt.search.SearchActionsHandler;
 import cm.aptoide.pt.search.SearchNavigator;
-import cm.aptoide.pt.search.suggestionsprovider.AppSuggestions;
+import cm.aptoide.pt.search.suggestions.AppSuggestions;
 
 /**
  * Created by neuro on 01-06-2016.
