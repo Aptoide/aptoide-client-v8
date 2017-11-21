@@ -42,7 +42,7 @@ public class SignInSignUpUITests {
   private int nonerrormessagesphotos = 0;
 
   @Before public void setUp() {
-    TestType.types = TestType.TestTypes.REGULAR;
+    TestType.types = TestType.TestTypes.SIGNSIGNUPTESTS;
     if (UITests.isFirstTime()) {
      skipWizard();
     }

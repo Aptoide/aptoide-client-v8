@@ -21,17 +21,10 @@ import android.support.multidex.MultiDex;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
 import android.view.WindowManager;
-import cm.aptoide.accountmanager.AccountFactory;
-import cm.aptoide.accountmanager.AccountPersistence;
-import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
-import cm.aptoide.pt.account.AccountServiceV3;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
-import cm.aptoide.pt.account.AndroidAccountDataMigration;
-import cm.aptoide.pt.account.AndroidAccountManagerPersistence;
 import cm.aptoide.pt.account.AndroidAccountProvider;
-import cm.aptoide.pt.account.DatabaseStoreDataPersist;
 import cm.aptoide.pt.account.FacebookLoginResult;
 import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.account.view.store.StoreManager;
@@ -140,7 +133,6 @@ import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flurry.android.FlurryAgent;
@@ -616,33 +608,6 @@ public abstract class AptoideApplication extends Application {
 
   public AptoideAccountManager getAccountManager() {
     if (accountManager == null) {
-
-      FacebookSdk.sdkInitialize(this);
-
-      final AccountFactory accountFactory = new AccountFactory();
-
-      final AccountService accountService =
-          new AccountServiceV3(accountFactory, getDefaultClient(), getLongTimeoutClient(),
-              WebService.getDefaultConverter(), getNonNullObjectMapper(), defaultSharedPreferences,
-              getExtraId(), getTokenInvalidator(), authenticationPersistence,
-              getNoAuthenticationBodyInterceptorV3(), getMultipartBodyInterceptor(),
-              getBodyInterceptorWebV7(), getBodyInterceptorPoolV7());
-
-      final AndroidAccountDataMigration accountDataMigration = new AndroidAccountDataMigration(
-          SecurePreferencesImplementation.getInstance(this, defaultSharedPreferences),
-          defaultSharedPreferences, androidAccountManager,
-          new SecureCoderDecoder.Builder(this, defaultSharedPreferences).create(),
-          SQLiteDatabaseHelper.DATABASE_VERSION,
-          getDatabasePath(SQLiteDatabaseHelper.DATABASE_NAME).getPath(), getAccountType(),
-          BuildConfig.VERSION_NAME, Schedulers.io());
-
-      final AccountPersistence accountPersistence =
-          new AndroidAccountManagerPersistence(androidAccountManager, new DatabaseStoreDataPersist(
-              AccessorFactory.getAccessorFor(
-                  ((AptoideApplication) this.getApplicationContext()).database, Store.class),
-              new DatabaseStoreDataPersist.DatabaseStoreMapper()), accountFactory,
-              accountDataMigration, androidAccountProvider, authenticationPersistence,
-              Schedulers.io());
     }
     return accountManager;
   }

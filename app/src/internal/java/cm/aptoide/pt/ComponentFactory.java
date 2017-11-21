@@ -6,7 +6,7 @@ package cm.aptoide.pt;
 
 public class ComponentFactory {
 
-  public static ApplicationComponentTest create(AptoideApplication context){
+  public static ApplicationComponent create(AptoideApplication context){
     return DaggerApplicationComponent.builder().applicationModule(new ApplicationModule(context, context.getImageCachePath(), context.getCachePath(),
         context.getAccountType(), context.getPartnerId(), context.getMarketName(), context.getExtraId(), context.getAptoidePackage(),
         context.getAptoideMd5sum(), context.getLoginPreferences())).build();

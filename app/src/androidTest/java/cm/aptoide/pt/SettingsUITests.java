@@ -1,12 +1,14 @@
 package cm.aptoide.pt;
 
-import android.support.test.espresso.AmbiguousViewMatcherException;
+import android.app.Activity;
+import android.content.SharedPreferences;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v7.preference.PreferenceManager;
 import cm.aptoide.pt.view.MainActivity;
 import org.junit.Before;
 import org.junit.Rule;
@@ -15,9 +17,6 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
-import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -26,7 +25,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static cm.aptoide.pt.UITests.NUMBER_OF_RETRIES;
 import static cm.aptoide.pt.UITests.skipWizard;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.core.IsNot.not;
 
 /**
  * Created by jose_messejana on 24-10-2017.
@@ -47,40 +45,35 @@ public class SettingsUITests {
   }
 
   @Test public void matureTest() {
+    TestType.types = TestType.TestTypes.MATURE;
+    Activity activity1 = mActivityRule.getActivity();
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity1);
+    boolean mature = preferences.getBoolean("matureChkBox",false);
     goToSettings();
     onView(withId(R.id.list)).perform(RecyclerViewActions.scrollToPosition(11));
     onView(withId(R.id.list)).perform(RecyclerViewActions.actionOnItemAtPosition(11, click()));
     try {
       onView(withText(R.string.yes)).perform(click());
     } catch (NoMatchingViewException e) {
-      onView(withId(R.id.list)).perform(RecyclerViewActions.scrollToPosition(11));
-      onView(withId(R.id.list)).perform(RecyclerViewActions.actionOnItemAtPosition(11, click()));
-      onView(withText(R.string.yes)).perform(click());
     }
-    pressBackButton();
-    barOnlySearchApp(MATURE_SEARCH);
-    //
-    onView(withId(R.id.search_src_text)).perform(pressImeActionButton());
-    try {
-      onView(withText(MATURE_APP)).check(matches(isDisplayed()));
-    } catch (AmbiguousViewMatcherException e) {
+    if(mature == preferences.getBoolean("matureChkBox",false)){
+      onView(withId(R.id.action_btn)).perform(click()); //if it's equal fail
+    }
+    else{
+      mature = !mature;
     }
     pressBackButton();
     goToSettings();
     onView(withId(R.id.list)).perform(RecyclerViewActions.scrollToPosition(11));
     onView(withId(R.id.list)).perform(RecyclerViewActions.actionOnItemAtPosition(11, click()));
-    pressBackButton();
-    barOnlySearchApp(MATURE_SEARCH);
-    onView(withId(R.id.search_src_text)).perform(pressImeActionButton());
     try {
-      onView(withText(MATURE_APP)).check(matches(not(isDisplayed())));
-    } catch (NoMatchingViewException e1) {
+      onView(withText(R.string.yes)).perform(click());
+    } catch (NoMatchingViewException e) {
     }
-  }
-
-  private void barOnlySearchApp(String app){
-    onView(withId(R.id.action_search)).perform(click());
-    onView(withId(R.id.search_src_text)).perform(replaceText(app));
+    pressBackButton();
+    if(mature == preferences.getBoolean("matureChkBox",false)){
+      onView(withId(R.id.action_btn)).perform(click()); //if it's equal fail
+    }
   }
 
   private void goToSettings(){

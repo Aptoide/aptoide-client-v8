@@ -498,157 +498,150 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       ObjectMapper objectMapper) {
     FacebookSdk.sdkInitialize(application);
     final AccountFactory accountFactory = new AccountFactory();
-    Account account = new Account() {
-      @Override public List<Store> getSubscribedStores() {
-        return new ArrayList<>();
-      }
 
-      @Override public String getId() {
-        return "1";
-      }
+      Account account = new Account() {
+        @Override public List<Store> getSubscribedStores() {
+          return new ArrayList<>();
+        }
 
-      @Override public String getNickname() {
-        return "D01";
-      }
+        @Override public String getId() {
+          return "1";
+        }
 
-      @Override public String getAvatar() {
-        return "avatar";
-      }
+        @Override public String getNickname() {
+          return "D01";
+        }
 
-      @Override public boolean isAdultContentEnabled() {
-        return true;
-      }
+        @Override public String getAvatar() {
+          return "avatar";
+        }
 
-      @Override public Access getAccess() {
-        return Access.PRIVATE;
-      }
-
-      @Override public boolean isAccessConfirmed() {
-        return true;
-      }
-
-      @Override public boolean isLoggedIn() {
-        if(TestType.types.equals(TestType.TestTypes.LOGGEDIN))
+        @Override public boolean isAdultContentEnabled() {
           return true;
-        else
+        }
+
+        @Override public Access getAccess() {
+          return Access.PRIVATE;
+        }
+
+        @Override public boolean isAccessConfirmed() {
+          return true;
+        }
+
+        @Override public boolean isLoggedIn() {
+          if (TestType.types.equals(TestType.TestTypes.LOGGEDIN)) return true;
+          else return false;
+        }
+
+        @Override public String getEmail() {
+          return "jose.messejana@aptoide.com";
+        }
+
+        @Override public Store getStore() {
+          return null;
+        }
+
+        @Override public boolean hasStore() {
           return false;
-      }
+        }
 
-      @Override public String getEmail() {
-        return "jose.messejana@aptoide.com";
-      }
+        @Override public boolean isPublicUser() {
+          return false;
+        }
 
-      @Override public Store getStore() {
-        return null;
-      }
-
-      @Override public boolean hasStore() {
-        return false;
-      }
-
-      @Override public boolean isPublicUser() {
-        return false;
-      }
-
-      @Override public boolean isPublicStore() {
-        return false;
-      }
-    };
-    final AccountService accountService =
-        new AccountService() {
-          @Override public Single<Account> getAccount(String email, String password) {
-            if(TestType.types.equals(TestType.TestTypes.REGULAR)) {
-              Logger.d("TAG123","REGULAR");
-              return Single.just(account);
-            }
-            else if(TestType.types.equals(TestType.TestTypes.SIGNINWRONG)) {
-              Logger.d("TAG123","SIGNINWRONG");
-              return Single.error(new AccountException("invalid_grant"));
-            }
+        @Override public boolean isPublicStore() {
+          return false;
+        }
+      };
+      final AccountService accountService = new AccountService() {
+        @Override public Single<Account> getAccount(String email, String password) {
+          if (TestType.types.equals(TestType.TestTypes.SIGNSIGNUPTESTS)) {
+            Logger.d("TAG123", "REGULAR");
             return Single.just(account);
+          } else if (TestType.types.equals(TestType.TestTypes.SIGNINWRONG)) {
+            Logger.d("TAG123", "SIGNINWRONG");
+            return Single.error(new AccountException("invalid_grant"));
           }
+          return Single.just(account);
+        }
 
-          @Override public Single<Account> createAccount(String email, String metadata, String name,
-              String type) {
-              return Single.just(account);
-          }
+        @Override public Single<Account> createAccount(String email, String metadata, String name,
+            String type) {
+          return Single.just(account);
+        }
 
-          @Override public Single<Account> createAccount(String email, String password) {
-            if(TestType.types.equals(TestType.TestTypes.REGULAR)) {
-              Logger.d("TAG123","REGULAR");
-              return Single.just(account);
-            }
-            else if(TestType.types.equals(TestType.TestTypes.USEDEMAIL)) {
-              Logger.d("TAG123","USEDEMAIL");
-              List<ErrorResponse> list = new ArrayList<>();
-              ErrorResponse errorResponse = new ErrorResponse();
-              errorResponse.code = "WOP-9";
-              list.add(errorResponse);
-              return Single.error(new AccountException(list));
-            }
-            else if(TestType.types.equals(TestType.TestTypes.INVALIDEMAIL)) {
-              Logger.d("TAG123","INVALIDEMAIL");
-              return Single.error(new AccountException("IARG_106"));
-            }
+        @Override public Single<Account> createAccount(String email, String password) {
+          if (TestType.types.equals(TestType.TestTypes.SIGNSIGNUPTESTS)) {
+            Logger.d("TAG123", "REGULAR");
             return Single.just(account);
+          } else if (TestType.types.equals(TestType.TestTypes.USEDEMAIL)) {
+            Logger.d("TAG123", "USEDEMAIL");
+            List<ErrorResponse> list = new ArrayList<>();
+            ErrorResponse errorResponse = new ErrorResponse();
+            errorResponse.code = "WOP-9";
+            list.add(errorResponse);
+            return Single.error(new AccountException(list));
+          } else if (TestType.types.equals(TestType.TestTypes.INVALIDEMAIL)) {
+            Logger.d("TAG123", "INVALIDEMAIL");
+            return Single.error(new AccountException("IARG_106"));
           }
+          return Single.just(account);
+        }
 
-          @Override public Single<Account> getAccount() {
-            return Single.just(account);
-          }
+        @Override public Single<Account> getAccount() {
+          return Single.just(account);
+        }
 
-          @Override public Completable updateAccount(String nickname, String avatarPath) {
-            return Completable.complete();
-          }
+        @Override public Completable updateAccount(String nickname, String avatarPath) {
+          return Completable.complete();
+        }
 
-          @Override public Completable updateAccount(String accessLevel) {
-            return Completable.complete();
-          }
+        @Override public Completable updateAccount(String accessLevel) {
+          return Completable.complete();
+        }
 
-          @Override public Completable updateAccountUsername(String username) {
-            return Completable.complete();
-          }
+        @Override public Completable updateAccountUsername(String username) {
+          return Completable.complete();
+        }
 
-          @Override public Completable unsubscribeStore(String storeName, String storeUserName,
-              String storePassword) {
-            return Completable.complete();
-          }
+        @Override public Completable unsubscribeStore(String storeName, String storeUserName, String storePassword) {
+          return Completable.complete();
+        }
 
-          @Override public Completable subscribeStore(String storeName, String storeUserName,
-              String storePassword) {
-            return Completable.complete();
-          }
+        @Override public Completable subscribeStore(String storeName, String storeUserName, String storePassword) {
+          return Completable.complete();
+        }
 
-          @Override public Completable updateAccount(boolean adultContentEnabled) {
-            return Completable.complete();
-          }
+        @Override public Completable updateAccount(boolean adultContentEnabled) {
+          return Completable.complete();
+        }
 
-          @Override public Completable removeAccount() {
-            return Completable.complete();
-          }
-        };
+        @Override public Completable removeAccount() {
+          return Completable.complete();
+        }
+      };
+      final AccountPersistence accountPersistence = new AccountPersistence() {
+        @Override public Completable saveAccount(Account account) {
+          return Completable.complete();
+        }
 
-    final AccountPersistence accountPersistence = new AccountPersistence() {
-      @Override public Completable saveAccount(Account account) {
-        return Completable.complete();
-      }
+        @Override public Single<Account> getAccount() {
+          return Single.just(account);
+        }
 
-      @Override public Single<Account> getAccount() {
-        return Single.just(account);
-      }
+        @Override public Completable removeAccount() {
+          return Completable.complete();
+        }
+      };
 
-      @Override public Completable removeAccount() {
-        return Completable.complete();
-      }
-    };
-    return new AptoideAccountManager.Builder().setAccountPersistence(accountPersistence)
-        .setAccountService(accountService)
-        .registerSignUpAdapter(GoogleSignUpAdapter.TYPE,
-            new GoogleSignUpAdapter(googleApiClient, loginPreferences))
-        .registerSignUpAdapter(FacebookSignUpAdapter.TYPE,
-            new FacebookSignUpAdapter(Arrays.asList("email"), LoginManager.getInstance(),
-                loginPreferences))
-        .build();
+      return new AptoideAccountManager.Builder().setAccountPersistence(accountPersistence)
+          .setAccountService(accountService)
+          .registerSignUpAdapter(GoogleSignUpAdapter.TYPE,
+              new GoogleSignUpAdapter(googleApiClient, loginPreferences))
+          .registerSignUpAdapter(FacebookSignUpAdapter.TYPE,
+              new FacebookSignUpAdapter(Arrays.asList("email"), LoginManager.getInstance(),
+                  loginPreferences))
+          .build();
   }
 
   @ApplicationTestScope @Provides @Named("default") OkHttpClient provideOkHttpClient(
@@ -748,7 +741,24 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> provideAccountSettingsBodyInterceptorPoolV7(
       @Named("pool-v7") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptor,
       AdultContent adultContent) {
-    return new AccountSettingsBodyInterceptorV7(bodyInterceptor, adultContent);
+    if(TestType.types.equals(TestType.TestTypes.MATURE)) {
+      return new AccountSettingsBodyInterceptorV7(bodyInterceptor, adultContent) {
+        @Override public Single<BaseBody> intercept(BaseBody body) {
+          return Single.zip(bodyInterceptor.intercept(body), adultContent.enabled()
+              .first()
+              .toSingle(), (bodyV7, adultContentEnabled) -> {
+            bodyV7.setMature(adultContentEnabled);
+            if (bodyV7.isMature() == adultContentEnabled){
+              return bodyV7;
+            }
+            return null;
+          });
+        }
+      };
+    }
+    else{
+        return new AccountSettingsBodyInterceptorV7(bodyInterceptor, adultContent);
+      }
   }
 
   @ApplicationTestScope @Provides @Named("pool-v7")
