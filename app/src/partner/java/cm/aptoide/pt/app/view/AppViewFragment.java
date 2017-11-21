@@ -37,7 +37,6 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.app.AppBoughtReceiver;
@@ -54,7 +53,7 @@ import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAppsDisplayable;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.exception.BillingException;
 import cm.aptoide.pt.billing.purchase.PaidAppPurchase;
-import cm.aptoide.pt.billing.view.PaymentActivity;
+import cm.aptoide.pt.billing.view.BillingActivity;
 import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.IssuesAnalytics;
@@ -79,8 +78,10 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.download.DownloadCompleteAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.AppAction;
+import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.InstallerFactory;
@@ -569,7 +570,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   public void buyApp(GetAppMeta.App app) {
     billingAnalytics.sendPaymentViewShowEvent();
     startActivityForResult(
-        PaymentActivity.getIntent(getActivity(), app.getId(), BuildConfig.APPLICATION_ID),
+        BillingActivity.getIntent(getActivity(), app.getId(), BuildConfig.APPLICATION_ID),
         PAY_APP_REQUEST_CODE);
   }
 
@@ -916,7 +917,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             appViewAnalytics, installAppRelay, this,
             new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
                 AppEventsLogger.newLogger(getContext().getApplicationContext())), navigationTracker,
-            getEditorsBrickPosition());
+            getEditorsBrickPosition(), new InstallAnalytics(Analytics.getInstance(),
+                AppEventsLogger.newLogger(getContext().getApplicationContext())));
     displayables.add(installDisplayable);
     displayables.add(
         new AppViewRateAndCommentsDisplayable(getApp, storeCredentialsProvider, appViewAnalytics,

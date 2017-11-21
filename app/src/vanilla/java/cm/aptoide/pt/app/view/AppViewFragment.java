@@ -39,7 +39,6 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.app.AppBoughtReceiver;
@@ -57,7 +56,7 @@ import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAppsDisplayable;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.exception.BillingException;
 import cm.aptoide.pt.billing.purchase.PaidAppPurchase;
-import cm.aptoide.pt.billing.view.PaymentActivity;
+import cm.aptoide.pt.billing.view.BillingActivity;
 import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.IssuesAnalytics;
@@ -82,8 +81,10 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.download.DownloadCompleteAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.AppAction;
+import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.InstallerFactory;
@@ -99,7 +100,6 @@ import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.view.SearchBuilder;
 import cm.aptoide.pt.share.ShareAppHelper;
-import cm.aptoide.pt.social.data.ReadPostsPersistence;
 import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
@@ -181,6 +181,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private NavigationTracker navigationTracker;
   private SearchBuilder searchBuilder;
   private IssuesAnalytics issuesAnalytics;
+  private InstallAnalytics installAnalytics;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -335,11 +336,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
     super.onCreate(savedInstanceState);
 
-    final AptoideApplication application =
-        (AptoideApplication) getContext().getApplicationContext();
-
     handleSavedInstance(savedInstanceState);
 
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
     this.appViewModel.setDefaultTheme(application.getDefaultThemeName());
     this.appViewModel.setMarketName(application.getMarketName());
 
@@ -367,15 +367,18 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     converterFactory = WebService.getDefaultConverter();
     Analytics analytics = Analytics.getInstance();
     issuesAnalytics = new IssuesAnalytics(analytics, Answers.getInstance());
-    ReadPostsPersistence readPostsPersistence =
-        ((AptoideApplication) getContext().getApplicationContext()).getReadPostsPersistence();
+
+    installAnalytics = new InstallAnalytics(analytics,
+        AppEventsLogger.newLogger(getContext().getApplicationContext()));
+
     timelineAnalytics = new TimelineAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
         application.getDefaultSharedPreferences(),
         new NotificationAnalytics(httpClient, analytics, AppEventsLogger.newLogger(getContext())),
-        navigationTracker, readPostsPersistence);
+        navigationTracker, application.getReadPostsPersistence());
     socialRepository =
+
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
             timelineAnalytics, tokenInvalidator, application.getDefaultSharedPreferences());
     appRepository =
@@ -409,7 +412,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             analytics);
     notLoggedInShareAnalytics = application.getNotLoggedInShareAnalytics();
     navigationTracker = application.getNavigationTracker();
-
     setHasOptionsMenu(true);
   }
 
@@ -576,7 +578,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   public void buyApp(GetAppMeta.App app) {
     billingAnalytics.sendPaymentViewShowEvent();
     startActivityForResult(
-        PaymentActivity.getIntent(getActivity(), app.getId(), BuildConfig.APPLICATION_ID),
+        BillingActivity.getIntent(getActivity(), app.getId(), BuildConfig.APPLICATION_ID),
         PAY_APP_REQUEST_CODE);
   }
 
@@ -933,13 +935,14 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     if (getOpenType() == OpenType.OPEN_AND_INSTALL) {
       setOpenType(null);
     }
+
     installDisplayable =
         AppViewInstallDisplayable.newInstance(getApp, installManager, getSearchAdResult(),
             shouldInstall, installedRepository, downloadFactory, timelineAnalytics,
             appViewAnalytics, installAppRelay, this,
             new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
                 AppEventsLogger.newLogger(getContext().getApplicationContext())), navigationTracker,
-            getEditorsBrickPosition());
+            getEditorsBrickPosition(), installAnalytics);
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics, storeAnalytics));
     displayables.add(

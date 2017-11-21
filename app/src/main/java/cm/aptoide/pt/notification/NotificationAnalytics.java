@@ -31,7 +31,7 @@ public class NotificationAnalytics {
     this.facebook = facebook;
   }
 
-  public void notificationShown(String url) {
+  public void sendNotificationTouchEvent(String url) {
     analytics.sendEvent(new KnockEvent(url, client));
   }
 

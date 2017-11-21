@@ -1,59 +1,23 @@
 package cm.aptoide.pt.billing.transaction;
 
-public class Transaction {
+public interface Transaction {
+  String getCustomerId();
 
-  private final String id;
-  private final String productId;
-  private final String customerId;
-  private final Status status;
-  private final String serviceId;
+  String getProductId();
 
-  public Transaction(String id, String productId, String customerId, Status status,
-      String serviceId) {
-    this.productId = productId;
-    this.customerId = customerId;
-    this.status = status;
-    this.serviceId = serviceId;
-    this.id = id;
-  }
+  String getId();
 
-  public String getCustomerId() {
-    return customerId;
-  }
+  boolean isNew();
 
-  public String getProductId() {
-    return productId;
-  }
+  boolean isCompleted();
 
-  public boolean isNew() {
-    return Status.NEW.equals(status);
-  }
+  boolean isPendingAuthorization();
 
-  public boolean isCompleted() {
-    return Status.COMPLETED.equals(status);
-  }
+  boolean isProcessing();
 
-  public boolean isPendingAuthorization() {
-    return Status.PENDING_SERVICE_AUTHORIZATION.equals(status);
-  }
-
-  public boolean isProcessing() {
-    return Status.PROCESSING.equals(status) || Status.LOCAL_PROCESSING.equals(status);
-  }
-
-  public boolean isFailed() {
-    return Status.FAILED.equals(status);
-  }
-
-  public String getServiceId() {
-    return serviceId;
-  }
-
-  public String getId() {
-    return id;
-  }
+  boolean isFailed();
 
   public enum Status {
-    NEW, PENDING_SERVICE_AUTHORIZATION, PROCESSING, COMPLETED, FAILED, LOCAL_PROCESSING
+    NEW, PENDING_SERVICE_AUTHORIZATION, PROCESSING, COMPLETED, FAILED
   }
 }

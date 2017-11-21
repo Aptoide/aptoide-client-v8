@@ -31,7 +31,6 @@
         android:id="@+id/medal_icon"
         android:layout_width="98dp"
         android:layout_height="98dp"
-        android:src="@drawable/gold"
         app:layout_constraintBottom_toBottomOf="@+id/dummy_header"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -188,12 +187,13 @@
         android:minHeight="24dp"
         android:minWidth="54dp"
         android:text="@string/got_it_button_text"
+        android:textAllCaps="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/reviews"
         tools:textAllCaps="true"
-        style="Aptoide.TextView.Medium.S"
+        style="@style/Aptoide.TextView.Medium.S"
         />
   </android.support.constraint.ConstraintLayout>
 

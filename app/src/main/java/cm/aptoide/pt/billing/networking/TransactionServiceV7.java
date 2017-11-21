@@ -11,6 +11,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.CreateTransactionRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetTransactionRequest;
+import cm.aptoide.pt.networking.AuthenticationPersistence;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Single;
@@ -24,12 +25,13 @@ public class TransactionServiceV7 implements TransactionService {
   private final SharedPreferences sharedPreferences;
   private final BillingIdManager billingIdManager;
   private final TransactionFactory transactionFactory;
+  private final AuthenticationPersistence authenticationPersistence;
 
   public TransactionServiceV7(TransactionMapperV7 transactionMapper,
       BodyInterceptor<BaseBody> bodyInterceptorV7, Converter.Factory converterFactory,
       OkHttpClient httpClient, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, BillingIdManager billingIdManager,
-      TransactionFactory transactionFactory) {
+      TransactionFactory transactionFactory, AuthenticationPersistence authenticationPersistence) {
     this.transactionMapper = transactionMapper;
     this.bodyInterceptorV7 = bodyInterceptorV7;
     this.converterFactory = converterFactory;
@@ -38,15 +40,30 @@ public class TransactionServiceV7 implements TransactionService {
     this.sharedPreferences = sharedPreferences;
     this.billingIdManager = billingIdManager;
     this.transactionFactory = transactionFactory;
+    this.authenticationPersistence = authenticationPersistence;
   }
 
   @Override public Single<Transaction> getTransaction(String customerId, String productId) {
-    return GetTransactionRequest.of(bodyInterceptorV7, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences, billingIdManager.resolveProductId(productId))
-        .observe(true)
+    return authenticationPersistence.getAuthentication()
+        .flatMapObservable(authentication -> GetTransactionRequest.of(bodyInterceptorV7, httpClient,
+            converterFactory, tokenInvalidator, sharedPreferences,
+            billingIdManager.resolveProductId(productId), authentication.getAccessToken(),
+            customerId)
+            .observe())
         .toSingle()
         .flatMap(response -> {
+
+          if (response.raw()
+              .networkResponse() != null
+              && response.raw()
+              .networkResponse()
+              .code() == 304) {
+            return Single.error(
+                new IllegalStateException("Stale transaction for product " + productId));
+          }
+
           if (response.isSuccessful()) {
+
             final GetTransactionRequest.ResponseBody responseBody = response.body();
             if (responseBody != null && responseBody.isOk()) {
               return Single.just(transactionMapper.map(responseBody.getData()));
@@ -57,12 +74,12 @@ public class TransactionServiceV7 implements TransactionService {
           if (response.code() == 404) {
             return Single.just(
                 transactionFactory.create(billingIdManager.generateTransactionId(), customerId,
-                    billingIdManager.generateServiceId(), productId, Transaction.Status.NEW));
+                    productId, Transaction.Status.NEW));
           }
 
           return Single.just(
               transactionFactory.create(billingIdManager.generateTransactionId(), customerId,
-                  billingIdManager.generateServiceId(), productId, Transaction.Status.FAILED));
+                  productId, Transaction.Status.FAILED));
         });
   }
 
@@ -79,7 +96,7 @@ public class TransactionServiceV7 implements TransactionService {
           }
           return Single.just(
               transactionFactory.create(billingIdManager.generateTransactionId(), customerId,
-                  billingIdManager.generateServiceId(), productId, Transaction.Status.FAILED));
+                  productId, Transaction.Status.FAILED));
         });
   }
 
@@ -96,7 +113,7 @@ public class TransactionServiceV7 implements TransactionService {
           }
           return Single.just(
               transactionFactory.create(billingIdManager.generateTransactionId(), customerId,
-                  billingIdManager.generateServiceId(), productId, Transaction.Status.FAILED));
+                  productId, Transaction.Status.FAILED));
         });
   }
 }

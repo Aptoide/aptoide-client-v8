@@ -44,6 +44,7 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.download.DownloadCompleteAnalytics;
 import cm.aptoide.pt.download.DownloadEvent;
 import cm.aptoide.pt.download.DownloadEventConverter;
 import cm.aptoide.pt.download.DownloadFactory;
@@ -423,7 +424,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     return view -> {
       final Context context = view.getContext();
       final PermissionService permissionRequest = (PermissionService) getContext();
-
+      displayable.installAppClicked(DownloadCompleteAnalytics.InstallType.DOWNGRADE);
       permissionRequest.requestAccessToExternalFileSystem(() -> {
 
         showMessageOKCancel(getContext().getResources()
@@ -512,8 +513,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
           ManagerPreferences.getNotLoggedInInstallClicks(sharedPreferences) + 1, sharedPreferences);
       if (installOrUpgradeMsg == R.string.installing_msg) {
         Analytics.ClickedOnInstallButton.clicked(app);
-        displayable.installAppClicked();
       }
+      displayable.installAppClicked(isUpdate ? DownloadCompleteAnalytics.InstallType.UPDATE
+          : DownloadCompleteAnalytics.InstallType.INSTALL);
 
       showRootInstallWarningPopup(context);
       compositeSubscription.add(permissionManager.requestDownloadAccess(permissionService)
