@@ -1,6 +1,5 @@
 package cm.aptoide.pt.notification.view;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,9 +13,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
-import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.notification.AptoideNotification;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
@@ -68,23 +65,13 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
     list.setLayoutManager(new LinearLayoutManager(getContext()));
 
     attachPresenter(new InboxPresenter(this,
-        ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
-        new LinksHandlerFactory(getContext()), CrashReport.getInstance(),
-        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker(),
-        new NotificationAnalytics(
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient(),
-            Analytics.getInstance(), AppEventsLogger.newLogger(getContext())),
-        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), navigationTracker)));
-
-    attachPresenter(new InboxPresenter(this,
         ((ActivityResultNavigator) getContext()).getInboxNavigator(),
         ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
         CrashReport.getInstance(),
         ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker(),
         new NotificationAnalytics(
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient(),
-            Analytics.getInstance()),
+            Analytics.getInstance(), AppEventsLogger.newLogger(getContext())),
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
             Analytics.getInstance(), navigationTracker), AndroidSchedulers.mainThread()));
   }

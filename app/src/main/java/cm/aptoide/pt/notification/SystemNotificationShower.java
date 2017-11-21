@@ -213,7 +213,7 @@ public class SystemNotificationShower implements Presenter {
 
   private void callDeepLink(Context context, NotificationInfo notificationInfo) {
     String trackUrl = notificationInfo.getNotificationTrackUrl();
-    notificationAnalytics.notificationShown(trackUrl);
+    notificationAnalytics.sendNotificationTouchEvent(trackUrl);
     String targetUrl = notificationInfo.getNotificationUrl();
     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(targetUrl));
     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
