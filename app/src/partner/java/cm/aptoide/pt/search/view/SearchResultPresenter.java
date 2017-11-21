@@ -68,7 +68,7 @@ public class SearchResultPresenter implements Presenter {
   }
 
   private void restoreSelectedTab() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .first()
         .toSingle()
@@ -85,7 +85,7 @@ public class SearchResultPresenter implements Presenter {
   }
 
   private void handleTitleBarClick() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .flatMap(__ -> view.clickTitleBar())
@@ -96,7 +96,7 @@ public class SearchResultPresenter implements Presenter {
   }
 
   private void stopLoadingMoreOnDestroy() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.DESTROY))
         .first()
         .toSingle()
@@ -105,7 +105,7 @@ public class SearchResultPresenter implements Presenter {
   }
 
   private void handleAllStoresListReachedBottom() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .flatMap(__ -> view.allStoresResultReachedBottom())
@@ -136,7 +136,7 @@ public class SearchResultPresenter implements Presenter {
   }
 
   private void handleFollowedStoresListReachedBottom() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .flatMap(__ -> view.followedStoresResultReachedBottom())
@@ -163,7 +163,7 @@ public class SearchResultPresenter implements Presenter {
   }
 
   private void firstAdsDataLoad() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .map(__ -> view.getViewModel())
         .filter(viewModel -> !viewModel.hasLoadedAds())
@@ -189,7 +189,7 @@ public class SearchResultPresenter implements Presenter {
   }
 
   private void handleClickToOpenAppViewFromItem() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .flatMap(__ -> onItemViewClickRelay)
@@ -200,7 +200,7 @@ public class SearchResultPresenter implements Presenter {
   }
 
   private void handleClickToOpenAppViewFromAdd() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .flatMap(__ -> onAdClickRelay)
@@ -215,7 +215,7 @@ public class SearchResultPresenter implements Presenter {
   }
 
   private void handleClickToOpenPopupMenu() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .flatMap(__ -> onOpenPopupMenuClickRelay)
@@ -246,7 +246,7 @@ public class SearchResultPresenter implements Presenter {
   }
 
   private void handleClickOnNoResultsImage() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .flatMap(__ -> view.clickNoResultsSearchButton())
@@ -269,7 +269,7 @@ public class SearchResultPresenter implements Presenter {
   }
 
   private void handleClickFollowedStoresSearchButton() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .flatMap(__ -> view.clickFollowedStoresSearchButton())
@@ -280,7 +280,7 @@ public class SearchResultPresenter implements Presenter {
   }
 
   private void handleClickEverywhereSearchButton() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .flatMap(__ -> view.clickEverywhereSearchButton())
@@ -352,7 +352,7 @@ public class SearchResultPresenter implements Presenter {
   }
 
   private void firstSearchDataLoad() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .map(__ -> view.getViewModel())
         .filter(viewModel -> viewModel.getAllStoresOffset() == 0

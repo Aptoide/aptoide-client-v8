@@ -454,7 +454,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    getLifecycle().filter(lifecycleEvent -> lifecycleEvent.equals(LifecycleEvent.CREATE))
+    getLifecycleEvents().filter(lifecycleEvent -> lifecycleEvent.equals(LifecycleEvent.CREATE))
         .flatMap(viewCreated -> accountNavigator.notLoggedInViewResults(LOGIN_REQUEST_CODE)
             .filter(success -> success)
             .flatMapCompletable(

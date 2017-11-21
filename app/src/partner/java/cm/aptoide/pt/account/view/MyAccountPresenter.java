@@ -58,7 +58,7 @@ public class MyAccountPresenter implements Presenter {
   }
 
   private void markNotificationsRead() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .first()
         .flatMapCompletable(create -> notificationCenter.setAllNotificationsRead())
@@ -68,7 +68,7 @@ public class MyAccountPresenter implements Presenter {
   }
 
   private void showAndPopulateAccountViews() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(resumed -> accountManager.accountStatus()
             .first())
@@ -80,7 +80,7 @@ public class MyAccountPresenter implements Presenter {
   }
 
   private void handleSignOutButtonClick() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(resumed -> signOutClick())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -89,7 +89,7 @@ public class MyAccountPresenter implements Presenter {
   }
 
   private void handleMoreNotificationsClick() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(resumed -> view.moreNotificationsClick()
             .doOnNext(clicked -> navigator.navigateToInboxView()))
@@ -99,7 +99,7 @@ public class MyAccountPresenter implements Presenter {
   }
 
   private void handleHeaderVisibility() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> notificationCenter.haveNotifications())
         .observeOn(AndroidSchedulers.mainThread())
@@ -116,7 +116,7 @@ public class MyAccountPresenter implements Presenter {
   }
 
   private void hangleGetNotifications() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> notificationCenter.getInboxNotifications(NUMBER_OF_NOTIFICATIONS))
         .observeOn(AndroidSchedulers.mainThread())
@@ -127,7 +127,7 @@ public class MyAccountPresenter implements Presenter {
   }
 
   private void handleNotificationClick() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.notificationSelection())
         .flatMap(notification -> Observable.just(
@@ -144,7 +144,7 @@ public class MyAccountPresenter implements Presenter {
   }
 
   private void handleUserEditClick() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.editUserProfileClick()
             .flatMap(click -> accountManager.accountStatus())

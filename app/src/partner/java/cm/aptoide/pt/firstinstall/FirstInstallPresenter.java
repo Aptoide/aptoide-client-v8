@@ -117,7 +117,7 @@ public class FirstInstallPresenter implements Presenter {
    * handle the install all button click
    */
   private void handleInstallAllClick() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(resumed -> view.installAllClick())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -129,7 +129,7 @@ public class FirstInstallPresenter implements Presenter {
    * handle the close button click
    */
   private void handleCloseClick() {
-    view.getLifecycle()
+    view.getLifecycleEvents()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(resumed -> view.closeClick())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
