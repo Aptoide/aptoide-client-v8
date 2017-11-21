@@ -26,8 +26,7 @@ public class GetStoreFragment extends StoreTabWidgetsGridRecyclerFragment {
             .getWidgets()))
         .doOnNext(displayables -> {
           // We only want one Adult Switch in Home Fragment.
-          if (getParentFragment() != null
-              && getParentFragment() instanceof HomeFragment) {
+          if (getParentFragment() != null && getParentFragment() instanceof HomeFragment) {
             displayables.add(new AdultRowDisplayable(GetStoreFragment.this));
           }
         });

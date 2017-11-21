@@ -1,12 +1,10 @@
 package cm.aptoide.pt.analytics;
 
-import lombok.Data;
-
 /**
  * Created by pedroribeiro on 29/06/17.
  */
 
-@Data public class Tracking {
+public class Tracking {
 
   private final String url;
   private final String packageName;
@@ -23,5 +21,29 @@ import lombok.Data;
     this.browser = browser;
     this.siteVersion = siteVersion;
     this.userAgent = userAgent;
+  }
+
+  public String getUrl() {
+    return url;
+  }
+
+  public String getPackageName() {
+    return packageName;
+  }
+
+  public String getCountry() {
+    return country;
+  }
+
+  public String getBrowser() {
+    return browser;
+  }
+
+  public String getSiteVersion() {
+    return siteVersion;
+  }
+
+  public String getUserAgent() {
+    return userAgent;
   }
 }

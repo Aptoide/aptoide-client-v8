@@ -8,23 +8,10 @@ import java.util.HashMap;
 
 public class EventErrorHandler {
 
-  public enum GenericErrorEvent{
-    OK,
-    LOGIN,
-    NO_STORE,
-    PRIVATE_USER
-  }
-
-  public enum ShareErrorEvent{
-    OK,
-    CANCELLED,
-    UNKNOWN_ERROR
-  }
-
-  public HashMap<String,Object> handleGenericErrorParsing(GenericErrorEvent errorEvent){
+  public HashMap<String, Object> handleGenericErrorParsing(GenericErrorEvent errorEvent) {
     HashMap<String, Object> error = new HashMap<>();
 
-    switch (errorEvent){
+    switch (errorEvent) {
       case LOGIN:
         error.put("message", "User not logged in");
         error.put("type", "LOGIN");
@@ -42,10 +29,10 @@ public class EventErrorHandler {
     return error;
   }
 
-  public HashMap<String,Object> handleShareErrorParsing(ShareErrorEvent errorEvent){
+  public HashMap<String, Object> handleShareErrorParsing(ShareErrorEvent errorEvent) {
     HashMap<String, Object> error = new HashMap<>();
 
-    switch (errorEvent){
+    switch (errorEvent) {
       case CANCELLED:
         error.put("message", "Share Action Cancelled");
         error.put("type", "CANCELLED");
@@ -57,5 +44,13 @@ public class EventErrorHandler {
     }
 
     return error;
+  }
+
+  public enum GenericErrorEvent {
+    OK, LOGIN, NO_STORE, PRIVATE_USER
+  }
+
+  public enum ShareErrorEvent {
+    OK, CANCELLED, UNKNOWN_ERROR
   }
 }

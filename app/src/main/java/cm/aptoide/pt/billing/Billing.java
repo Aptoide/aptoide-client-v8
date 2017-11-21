@@ -112,8 +112,7 @@ public class Billing {
         .toSingle()
         .flatMapCompletable(authorizedTransaction -> authorizationRepository.updateAuthorization(
             authorizedTransaction.getAuthorization()
-                .getId(),
-                metadata, Authorization.Status.PENDING_SYNC));
+                .getId(), metadata, Authorization.Status.PENDING_SYNC));
   }
 
   public Completable selectService(String serviceId) {

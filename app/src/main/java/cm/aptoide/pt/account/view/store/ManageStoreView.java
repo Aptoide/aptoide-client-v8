@@ -24,5 +24,4 @@ public interface ManageStoreView extends ImagePickerView {
   void showYoutubeError(String error);
 
   void showError(String error);
-
 }

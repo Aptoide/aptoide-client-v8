@@ -5,14 +5,11 @@
 
 package cm.aptoide.pt.dataprovider.model.v7;
 
-import lombok.EqualsAndHashCode;
-
 /**
  * Created by neuro on 20-04-2016.
  */
 //@Data
-@EqualsAndHashCode(callSuper = true) public abstract class BaseV7EndlessResponse
-    extends BaseV7Response {
+public abstract class BaseV7EndlessResponse extends BaseV7Response {
 
   protected static final int NEXT_STEP = 10;
 
@@ -34,5 +31,27 @@ import lombok.EqualsAndHashCode;
 
   public boolean hasStableTotal() {
     return stableTotal;
+  }
+
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + super.hashCode();
+    result = result * PRIME + (this.stableTotal ? 79 : 97);
+    return result;
+  }
+
+  public boolean equals(Object o) {
+    if (o == this) return true;
+    if (!(o instanceof BaseV7EndlessResponse)) return false;
+    final BaseV7EndlessResponse other = (BaseV7EndlessResponse) o;
+    if (!other.canEqual((Object) this)) return false;
+    if (!super.equals(o)) return false;
+    if (this.stableTotal != other.stableTotal) return false;
+    return true;
+  }
+
+  protected boolean canEqual(Object other) {
+    return other instanceof BaseV7EndlessResponse;
   }
 }

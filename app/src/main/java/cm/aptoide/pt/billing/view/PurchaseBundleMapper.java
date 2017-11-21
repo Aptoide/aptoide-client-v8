@@ -7,11 +7,11 @@ package cm.aptoide.pt.billing.view;
 
 import android.app.Activity;
 import android.os.Bundle;
-import cm.aptoide.pt.billing.purchase.PurchaseFactory;
 import cm.aptoide.pt.billing.external.ExternalBillingBinder;
 import cm.aptoide.pt.billing.purchase.InAppPurchase;
 import cm.aptoide.pt.billing.purchase.PaidAppPurchase;
 import cm.aptoide.pt.billing.purchase.Purchase;
+import cm.aptoide.pt.billing.purchase.PurchaseFactory;
 
 public class PurchaseBundleMapper {
 

@@ -12,7 +12,6 @@ import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
-import lombok.Getter;
 
 /**
  * Created on 28/04/16.
@@ -21,8 +20,8 @@ import lombok.Getter;
  */
 public class GridAppDisplayable extends DisplayablePojo<App> {
 
-  @Getter private String tag;
-  @Getter private boolean totalDownloads;
+  private String tag;
+  private boolean totalDownloads;
   private NavigationTracker navigationTracker;
   private StoreContext storeContext;
 
@@ -53,5 +52,13 @@ public class GridAppDisplayable extends DisplayablePojo<App> {
 
   public StoreContext getStoreContext() {
     return storeContext;
+  }
+
+  public String getTag() {
+    return this.tag;
+  }
+
+  public boolean isTotalDownloads() {
+    return this.totalDownloads;
   }
 }

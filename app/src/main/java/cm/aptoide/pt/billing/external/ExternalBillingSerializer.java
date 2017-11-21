@@ -29,8 +29,7 @@ public class ExternalBillingSerializer {
     return serializedProducts;
   }
 
-  public String serializePurchase(
-      PurchaseResponse.Data.DeveloperPurchase purchase)
+  public String serializePurchase(PurchaseResponse.Data.DeveloperPurchase purchase)
       throws JsonProcessingException {
     return new ObjectMapper().writeValueAsString(purchase);
   }

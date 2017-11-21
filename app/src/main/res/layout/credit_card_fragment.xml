@@ -4,302 +4,337 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:fillViewport="true"
-    android:fadingEdge="none"
-    android:adjustViewBounds="true"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:adjustViewBounds="true"
+    android:fadingEdge="none"
+    android:fillViewport="true"
+    >
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@color/background_light_grey"
+      android:orientation="vertical"
+      >
+
 
     <LinearLayout
-        android:orientation="vertical"
-        android:background="@color/background_light_grey"
+        android:id="@+id/adyen_payment_form_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:background="@color/white"
+        android:orientation="vertical"
+        >
 
+      <View style="@style/Divider"/>
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          android:paddingLeft="22dp"
+          android:paddingRight="22dp"
+          >
 
         <LinearLayout
-            android:orientation="vertical"
-            android:id="@+id/adyen_payment_form_layout"
+            android:id="@+id/card_number_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
-            android:background="@color/white">
+            android:background="@android:color/transparent"
+            android:orientation="vertical"
+            android:paddingTop="12dp"
+            >
 
-            <View style="@style/Divider" />
+          <RelativeLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="10dp"
+              android:orientation="horizontal"
+              >
 
-            <LinearLayout
-                android:paddingLeft="22dp"
-                android:paddingRight="22dp"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/credit_card_no_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="@string/card_number"
+                android:textSize="12sp"
+                />
 
-                <LinearLayout
-                    android:id="@+id/card_number_layout"
-                    android:paddingTop="12dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:orientation="vertical">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/lock_icon"
+                />
+          </RelativeLayout>
 
-                    <RelativeLayout
-                        android:orientation="horizontal"
-                        android:layout_marginTop="10dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center_vertical"
+              >
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            android:text="@string/card_number"
-                            android:id="@+id/credit_card_no_label"
-                            android:textSize="12sp" />
+            <com.adyen.ui.views.CreditCardEditText
+                android:id="@+id/adyen_credit_card_no"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableLeft="@drawable/cc_placeholder_icon"
+                android:drawablePadding="12dp"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:hint="@string/hint_card_number"
+                android:inputType="phone"
+                />
 
-                        <ImageView
-                            android:src="@drawable/lock_icon"
-                            android:layout_alignParentRight="true"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </RelativeLayout>
+            <ImageButton
+                android:id="@+id/scan_card_button"
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="-4dp"
+                android:layout_marginRight="-4dp"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_scan_generic_24dp"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical">
-
-                        <com.adyen.ui.views.CreditCardEditText
-                            android:id="@+id/adyen_credit_card_no"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:hint="@string/hint_card_number"
-                            android:inputType="phone"
-                            android:focusable="true"
-                            android:gravity="center_vertical"
-                            android:drawableLeft="@drawable/cc_placeholder_icon"
-                            android:drawablePadding="12dp"/>
-
-                        <ImageButton
-                            android:id="@+id/scan_card_button"
-                            style="@style/Widget.AppCompat.Button.Borderless"
-                            android:layout_width="56dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="-4dp"
-                            android:layout_marginEnd="-4dp"
-                            android:src="@drawable/ic_scan_generic_24dp"
-                            android:contentDescription="@null" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/expiry_and_cvc_layout"
-                    android:paddingTop="22dp"
-                    android:paddingBottom="12dp"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".20"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/expiry_date"
-                            android:id="@+id/credit_card_exp_date_label"
-                            android:textSize="12sp" />
-
-                        <com.adyen.ui.views.ExpiryDateEditText
-                            android:id="@+id/adyen_credit_card_exp_date"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="phone"
-                            android:hint="@string/hint_expiry_date"
-                            android:layout_marginRight="15dp"
-                            android:nextFocusDown="@+id/adyen_credit_card_cvc" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".10"
-                        android:orientation="vertical">
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/adyen_cvc_layout"
-                        android:layout_weight=".20"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/cvc_cvv"
-                            android:id="@+id/credit_card_cvc_label"
-                            android:layout_gravity="left"
-                            android:textSize="12sp" />
-
-                        <com.adyen.ui.views.CVCEditText
-                            android:id="@+id/adyen_credit_card_cvc"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/hint_cvc_cvv"
-                            android:inputType="phone"
-                            android:gravity="left" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/card_holder_name_layout"
-                    android:visibility="gone"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="12dp"
-                    android:background="@android:color/white"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="left"
-                        android:text="@string/cardholder_name"
-                        android:id="@+id/card_holder_name_label"
-                        android:textSize="12sp" />
-
-                    <com.adyen.ui.views.CardHolderEditText
-                        android:id="@+id/credit_card_holder_name"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/hint_cardholder_name"
-                        android:inputType="textCapWords|textNoSuggestions"
-                        android:focusable="true" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/card_installments_area"
-                    android:visibility="gone"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="12dp"
-                    android:background="@android:color/white"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="left"
-                        android:text="@string/card_number_of_installments"
-                        android:id="@+id/installments_label"
-                        android:textSize="12sp" />
-
-                    <Spinner android:layout_width="match_parent"
-                             android:layout_height="wrap_content"
-                             android:id="@+id/installments_spinner" />
-
-                    <View style="@style/BoldDivider" />
-
-                </LinearLayout>
-
-                <RelativeLayout
-                    android:id="@+id/layout_save_card"
-                    android:clipChildren="false"
-                    android:clipToPadding="false"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="12dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:orientation="horizontal">
-
-                    <RelativeLayout
-                        android:id="@+id/layout_click_area_save_card"
-                        android:layout_centerVertical="true"
-                        android:gravity="center"
-                        android:layout_gravity="center"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_alignParentLeft="true"
-                            android:text="@string/remember_card_hint"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
-                        <com.adyen.ui.views.CheckoutCheckBox
-                            android:checked="true"
-                            android:gravity="center"
-                            android:layout_gravity="center"
-                            android:id="@+id/save_card_checkbox"
-                            android:layout_alignParentRight="true"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </RelativeLayout>
-
-                </RelativeLayout>
-
-            </LinearLayout>
+          </LinearLayout>
 
         </LinearLayout>
 
-        <View style="@style/Divider" />
+        <LinearLayout
+            android:id="@+id/expiry_and_cvc_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:orientation="horizontal"
+            android:paddingBottom="12dp"
+            android:paddingTop="22dp"
+            >
 
-        <RelativeLayout
-            android:layout_margin="22dp"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <FrameLayout
-                android:layout_gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.adyen.ui.views.CheckoutButton
-                    style="@style/adyenRoundCheckoutButton"
-                    android:padding="20dp"
-                    android:textSize="20sp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/collectCreditCardData"
-                    android:enabled="false"/>
-
-            </FrameLayout>
+          <LinearLayout
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight=".20"
+              android:orientation="vertical"
+              >
 
             <TextView
-                android:textSize="20sp"
-                android:id="@+id/amount_text_view"
-                android:layout_centerInParent="true"
-                android:textColor="@color/white"
+                android:id="@+id/credit_card_exp_date_label"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="@string/expiry_date"
+                android:textSize="12sp"
+                />
 
-            <com.adyen.ui.views.loadinganimation.ThreeDotsLoadingView
-                style="@style/LoadingAnimationView"
-                android:id="@+id/processing_progress_bar"
-                app:indicatorColor="@color/white"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:visibility="invisible"
+            <com.adyen.ui.views.ExpiryDateEditText
+                android:id="@+id/adyen_credit_card_exp_date"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:hint="@string/hint_expiry_date"
+                android:inputType="phone"
+                android:nextFocusDown="@+id/adyen_credit_card_cvc"
+                />
+
+          </LinearLayout>
+
+          <LinearLayout
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight=".10"
+              android:orientation="vertical"
+              >
+          </LinearLayout>
+
+          <LinearLayout
+              android:id="@+id/adyen_cvc_layout"
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight=".20"
+              android:orientation="vertical"
+              >
+
+            <TextView
+                android:id="@+id/credit_card_cvc_label"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="@string/cvc_cvv"
+                android:textSize="12sp"
+                />
+
+            <com.adyen.ui.views.CVCEditText
+                android:id="@+id/adyen_credit_card_cvc"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:hint="@string/hint_cvc_cvv"
+                android:inputType="phone"
+                />
+
+          </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/card_holder_name_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:orientation="vertical"
+            android:paddingBottom="12dp"
+            android:paddingTop="10dp"
+            android:visibility="gone"
+            >
+
+          <TextView
+              android:id="@+id/card_holder_name_label"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="left"
+              android:text="@string/cardholder_name"
+              android:textSize="12sp"
+              />
+
+          <com.adyen.ui.views.CardHolderEditText
+              android:id="@+id/credit_card_holder_name"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:focusable="true"
+              android:hint="@string/hint_cardholder_name"
+              android:inputType="textCapWords|textNoSuggestions"
+              />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/card_installments_area"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:orientation="vertical"
+            android:paddingBottom="12dp"
+            android:paddingTop="10dp"
+            android:visibility="gone"
+            >
+
+          <TextView
+              android:id="@+id/installments_label"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="left"
+              android:text="@string/card_number_of_installments"
+              android:textSize="12sp"
+              />
+
+          <Spinner
+              android:id="@+id/installments_spinner"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              />
+
+          <View style="@style/BoldDivider"/>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_save_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            android:paddingBottom="12dp"
+            android:paddingTop="10dp"
+            android:visibility="gone"
+            >
+
+          <RelativeLayout
+              android:id="@+id/layout_click_area_save_card"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_centerVertical="true"
+              android:layout_gravity="center"
+              android:gravity="center"
+              >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="@string/remember_card_hint"
+                />
+
+            <com.adyen.ui.views.CheckoutCheckBox
+                android:id="@+id/save_card_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center"
+                android:checked="true"
+                android:gravity="center"
+                />
+          </RelativeLayout>
 
         </RelativeLayout>
 
+      </LinearLayout>
+
     </LinearLayout>
+
+    <View style="@style/Divider"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="22dp"
+        >
+
+      <FrameLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          >
+
+        <com.adyen.ui.views.CheckoutButton
+            android:id="@+id/collectCreditCardData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:padding="20dp"
+            android:textSize="20sp"
+            style="@style/adyenRoundCheckoutButton"
+            />
+
+      </FrameLayout>
+
+      <TextView
+          android:id="@+id/amount_text_view"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerInParent="true"
+          android:textColor="@color/white"
+          android:textSize="20sp"
+          />
+
+      <com.adyen.ui.views.loadinganimation.ThreeDotsLoadingView
+          android:id="@+id/processing_progress_bar"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerHorizontal="true"
+          android:layout_centerVertical="true"
+          android:visibility="invisible"
+          app:indicatorColor="@color/white"
+          style="@style/LoadingAnimationView"
+          />
+
+    </RelativeLayout>
+
+  </LinearLayout>
 
 </ScrollView>
 

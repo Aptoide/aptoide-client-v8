@@ -125,13 +125,6 @@ public class CreditCardFragment extends Fragment
     return fragment;
   }
 
-  /**
-   * The listener interface for receiving the card payment details.
-   */
-  public interface CreditCardInfoListener {
-    void onCreditCardInfoProvided(CreditCardPaymentDetails creditCardPaymentDetails);
-  }
-
   public void setCreditCardInfoListener(
       @NonNull final CreditCardInfoListener creditCardInfoListener) {
     this.creditCardInfoListener = creditCardInfoListener;
@@ -206,37 +199,6 @@ public class CreditCardFragment extends Fragment
       for (PaymentCardScanner paymentCardScanner : paymentCardScanners) {
         paymentCardScanner.setListener(this);
       }
-    }
-  }
-
-  @Override
-  public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-    super.onCreateContextMenu(menu, v, menuInfo);
-
-    if (v == scanCardButton) {
-      int size = paymentCardScanners.size();
-
-      if (size == 1) {
-        PaymentCardScanner paymentCardScanner = paymentCardScanners.get(0);
-        paymentCardScanner.startScan();
-      } else if (size > 1) {
-        for (int itemId = 0; itemId < size; itemId++) {
-          PaymentCardScanner paymentCardScanner = paymentCardScanners.get(itemId);
-          menu.add(Menu.NONE, itemId, Menu.NONE, paymentCardScanner.getDisplayDescription());
-        }
-      }
-    }
-  }
-
-  @Override public boolean onContextItemSelected(MenuItem item) {
-    int index = item.getItemId();
-
-    if (index >= 0 && index < paymentCardScanners.size()) {
-      PaymentCardScanner paymentCardScanner = paymentCardScanners.get(index);
-      paymentCardScanner.startScan();
-      return true;
-    } else {
-      return super.onContextItemSelected(item);
     }
   }
 
@@ -387,6 +349,62 @@ public class CreditCardFragment extends Fragment
     return fragmentView;
   }
 
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    CreditCardEditText creditCardNoView =
+        ((CreditCardEditText) view.findViewById(R.id.adyen_credit_card_no));
+    creditCardNoView.requestFocus();
+    InputMethodManager imm =
+        (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+    imm.showSoftInput(creditCardNoView, InputMethodManager.SHOW_IMPLICIT);
+  }
+
+  @Override public void onResume() {
+    super.onResume();
+
+    for (PaymentCardScanner paymentCardScanner : paymentCardScanners) {
+      paymentCardScanner.onResume();
+    }
+  }
+
+  @Override public void onPause() {
+    super.onPause();
+
+    for (PaymentCardScanner paymentCardScanner : paymentCardScanners) {
+      paymentCardScanner.onPause();
+    }
+  }
+
+  @Override
+  public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+    super.onCreateContextMenu(menu, v, menuInfo);
+
+    if (v == scanCardButton) {
+      int size = paymentCardScanners.size();
+
+      if (size == 1) {
+        PaymentCardScanner paymentCardScanner = paymentCardScanners.get(0);
+        paymentCardScanner.startScan();
+      } else if (size > 1) {
+        for (int itemId = 0; itemId < size; itemId++) {
+          PaymentCardScanner paymentCardScanner = paymentCardScanners.get(itemId);
+          menu.add(Menu.NONE, itemId, Menu.NONE, paymentCardScanner.getDisplayDescription());
+        }
+      }
+    }
+  }
+
+  @Override public boolean onContextItemSelected(MenuItem item) {
+    int index = item.getItemId();
+
+    if (index >= 0 && index < paymentCardScanners.size()) {
+      PaymentCardScanner paymentCardScanner = paymentCardScanners.get(index);
+      paymentCardScanner.startScan();
+      return true;
+    } else {
+      return super.onContextItemSelected(item);
+    }
+  }
+
   @NonNull private Map<String, CreditCardFragmentBuilder.CvcFieldStatus> getAllowedCardTypes() {
     final Map<String, CreditCardFragmentBuilder.CvcFieldStatus> allowedCardTypes = new HashMap<>();
     final List<PaymentMethod> memberPaymentMethods = paymentMethod.getMemberPaymentMethods();
@@ -422,22 +440,6 @@ public class CreditCardFragment extends Fragment
       }
     }
     return allowedCardTypes;
-  }
-
-  @Override public void onResume() {
-    super.onResume();
-
-    for (PaymentCardScanner paymentCardScanner : paymentCardScanners) {
-      paymentCardScanner.onResume();
-    }
-  }
-
-  @Override public void onPause() {
-    super.onPause();
-
-    for (PaymentCardScanner paymentCardScanner : paymentCardScanners) {
-      paymentCardScanner.onPause();
-    }
   }
 
   private String getToken() {
@@ -483,15 +485,6 @@ public class CreditCardFragment extends Fragment
     return true;
   }
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    CreditCardEditText creditCardNoView =
-        ((CreditCardEditText) view.findViewById(R.id.adyen_credit_card_no));
-    creditCardNoView.requestFocus();
-    InputMethodManager imm =
-        (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-    imm.showSoftInput(creditCardNoView, InputMethodManager.SHOW_IMPLICIT);
-  }
-
   @Override public void onCVCFieldStatusChanged(
       final CreditCardFragmentBuilder.CvcFieldStatus cvcFieldStatus) {
     this.cvcFieldStatus = cvcFieldStatus;
@@ -506,5 +499,12 @@ public class CreditCardFragment extends Fragment
         cvcView.setOptional(false);
       }
     }
+  }
+
+  /**
+   * The listener interface for receiving the card payment details.
+   */
+  public interface CreditCardInfoListener {
+    void onCreditCardInfoProvided(CreditCardPaymentDetails creditCardPaymentDetails);
   }
 }

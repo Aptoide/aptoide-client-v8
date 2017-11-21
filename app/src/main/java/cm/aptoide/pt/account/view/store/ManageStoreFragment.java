@@ -180,6 +180,11 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     attachPresenters();
   }
 
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
+  }
+
   private void registerSocialFocusChangeListeners() {
     facebookUser.setOnFocusChangeListener(
         (v, focus) -> changeSocialRowTextAndAppearance(facebookUser, facebookText,
@@ -214,11 +219,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
 
     youtubeRow.setOnClickListener(
         __ -> showEditTextHideTextView(youtubeTextAndPlus, youtubeUsernameWrapper, youtubeUser));
-  }
-
-  @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName());
   }
 
   /**

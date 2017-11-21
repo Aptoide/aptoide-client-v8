@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import java.util.List;
-import lombok.Data;
 
 /**
  * Created by neuro on 27-04-2016.
@@ -231,9 +230,49 @@ public class Store {
     }
   }
 
-  @Data public static class Urls {
+  public static class Urls {
 
     private String mobile;
+
+    public Urls() {
+    }
+
+    public String getMobile() {
+      return this.mobile;
+    }
+
+    public void setMobile(String mobile) {
+      this.mobile = mobile;
+    }
+
+    public int hashCode() {
+      final int PRIME = 59;
+      int result = 1;
+      final Object $mobile = this.getMobile();
+      result = result * PRIME + ($mobile == null ? 43 : $mobile.hashCode());
+      return result;
+    }
+
+    public boolean equals(Object o) {
+      if (o == this) return true;
+      if (!(o instanceof Urls)) return false;
+      final Urls other = (Urls) o;
+      if (!other.canEqual((Object) this)) return false;
+      final Object this$mobile = this.getMobile();
+      final Object other$mobile = other.getMobile();
+      if (this$mobile == null ? other$mobile != null : !this$mobile.equals(other$mobile)) {
+        return false;
+      }
+      return true;
+    }
+
+    public String toString() {
+      return "Store.Urls(mobile=" + this.getMobile() + ")";
+    }
+
+    protected boolean canEqual(Object other) {
+      return other instanceof Urls;
+    }
   }
 
   public static class Badge {

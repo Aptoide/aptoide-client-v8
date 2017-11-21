@@ -9,7 +9,6 @@ import cm.aptoide.pt.database.realm.Scheduled;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import java.util.List;
-import lombok.Cleanup;
 import rx.Observable;
 
 /**
@@ -44,24 +43,36 @@ public class ScheduledAccessor extends SimpleAccessor<Scheduled> {
         md5s[i] = s.getMd5();
       }
 
-      @Cleanup Realm realm = database.get();
-      realm.beginTransaction();
-      realm.insertOrUpdate(scheduledList);
-      RealmResults<Scheduled> results = realm.where(Scheduled.class)
-          .in(Scheduled.MD5, md5s)
-          .findAll();
-      for (Scheduled dbScheduled : results) {
-        dbScheduled.setDownloading(true);
+      Realm realm = database.get();
+      try {
+        realm.beginTransaction();
+        realm.insertOrUpdate(scheduledList);
+        RealmResults<Scheduled> results = realm.where(Scheduled.class)
+            .in(Scheduled.MD5, md5s)
+            .findAll();
+        for (Scheduled dbScheduled : results) {
+          dbScheduled.setDownloading(true);
+        }
+        realm.commitTransaction();
+        return scheduledList;
+      } finally {
+        if (realm != null) {
+          realm.close();
+        }
       }
-      realm.commitTransaction();
-      return scheduledList;
     });
   }
 
   public boolean hasScheduleDownloads() {
-    @Cleanup Realm realm = database.get();
-    return realm.where(Scheduled.class)
-        .findAll()
-        .size() != 0;
+    Realm realm = database.get();
+    try {
+      return realm.where(Scheduled.class)
+          .findAll()
+          .size() != 0;
+    } finally {
+      if (realm != null) {
+        realm.close();
+      }
+    }
   }
 }

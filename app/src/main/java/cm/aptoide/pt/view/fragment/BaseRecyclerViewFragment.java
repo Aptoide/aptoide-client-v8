@@ -105,10 +105,6 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     return this;
   }
 
-  public boolean contains(Displayable displayable) {
-    return displayables != null && displayables.contains(displayable);
-  }
-
   @Override @CallSuper
   public BaseRecyclerViewFragment addDisplayable(Displayable displayable, boolean finishedLoading) {
     adapter.addDisplayable(displayable);
@@ -180,6 +176,10 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
 
     adapter.clearDisplayables();
     adapter.addDisplayables(displayables);
+  }
+
+  public boolean contains(Displayable displayable) {
+    return displayables != null && displayables.contains(displayable);
   }
 
   @CallSuper public BaseRecyclerViewFragment addDisplayableWithAnimation(int position,

@@ -11,14 +11,13 @@ import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
-import lombok.Getter;
 
 /**
  * Created by neuro on 09-05-2016.
  */
 public class AppBrickListDisplayable extends DisplayablePojo<App> {
 
-  @Getter private String tag;
+  private String tag;
   private NavigationTracker navigationTracker;
   private StoreContext storeContext;
 
@@ -47,5 +46,9 @@ public class AppBrickListDisplayable extends DisplayablePojo<App> {
 
   public StoreContext getStoreContext() {
     return storeContext;
+  }
+
+  public String getTag() {
+    return this.tag;
   }
 }

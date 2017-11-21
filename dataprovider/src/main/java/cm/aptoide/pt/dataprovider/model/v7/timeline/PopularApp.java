@@ -7,19 +7,18 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import java.util.List;
-import lombok.Getter;
 
 /**
  * Created by jdandrade on 27/04/2017.
  */
 
 public class PopularApp implements TimelineCard {
-  @Getter private final String cardId;
-  @Getter private final Ab ab;
-  @Getter private final List<Comment.User> users;
-  @Getter private final Date date;
+  private final String cardId;
+  private final Ab ab;
+  private final List<Comment.User> users;
+  private final Date date;
   private final Urls urls;
-  @Getter private App popularApplication;
+  private App popularApplication;
 
   @JsonCreator PopularApp(@JsonProperty("uid") String cardId, @JsonProperty("ab") Ab ab,
       @JsonProperty("apps") List<App> popularApps,
@@ -35,7 +34,27 @@ public class PopularApp implements TimelineCard {
     }
   }
 
+  public String getCardId() {
+    return this.cardId;
+  }
+
   @Override public Urls getUrls() {
     return urls;
+  }
+
+  public Ab getAb() {
+    return this.ab;
+  }
+
+  public List<Comment.User> getUsers() {
+    return this.users;
+  }
+
+  public Date getDate() {
+    return this.date;
+  }
+
+  public App getPopularApplication() {
+    return this.popularApplication;
   }
 }
