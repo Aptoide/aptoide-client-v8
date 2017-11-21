@@ -3,12 +3,11 @@ package cm.aptoide.pt.search;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.search.websocket.ReactiveWebSocket;
 import cm.aptoide.pt.search.websocket.SocketEvent;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import org.json.JSONException;
-import org.json.JSONObject;
 import rx.Observable;
 
 public class SearchSuggestionManager {
@@ -32,14 +31,12 @@ public class SearchSuggestionManager {
   }
 
   private String buildPayload(String query) {
-    JSONObject jsonObject = new JSONObject();
     try {
-      jsonObject.put("query", query);
-      jsonObject.put("limit", SUGGESTION_COUNT);
-    } catch (JSONException e) {
+      return objectMapper.writeValueAsString(new Query(query, SUGGESTION_COUNT));
+    } catch (JsonProcessingException e) {
       e.printStackTrace();
     }
-    return jsonObject.toString();
+    return "";
   }
 
   private Observable<List<String>> listenWebSocket() {
@@ -79,5 +76,23 @@ public class SearchSuggestionManager {
 
   private List<String> getSuggestionsFrom(byte[] data) throws IOException {
     return Arrays.asList(objectMapper.readValue(data, String[].class));
+  }
+
+  private static final class Query {
+    private final String query;
+    private final int limit;
+
+    private Query(String query, int limit) {
+      this.query = query;
+      this.limit = limit;
+    }
+
+    public String getQuery() {
+      return query;
+    }
+
+    public int getLimit() {
+      return limit;
+    }
   }
 }

@@ -1,20 +1,16 @@
 package cm.aptoide.pt.search.view;
 
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.search.SearchCursorAdapter;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.SearchSuggestionManager;
+import java.util.concurrent.TimeUnit;
 import rx.Scheduler;
-import rx.Single;
 
-public class SearchSuggestionsPresenter implements Presenter {
-
-  private static final String TAG = SearchSuggestionsPresenter.class.getName();
-
-  private static final int COMPLETION_THRESHOLD = 3;
+@SuppressWarnings("Convert2MethodRef") public class SearchSuggestionsPresenter
+    implements Presenter {
 
   private final SearchSuggestionsView view;
   private final SearchSuggestionManager searchSuggestionManager;
@@ -39,6 +35,8 @@ public class SearchSuggestionsPresenter implements Presenter {
 
   @Override public void present() {
     handleReceivedSuggestions();
+    handleQueryTextSubmitted();
+    handleQueryTextCleaned();
     handleQueryTextChanged();
     showSuggestionsIfCurrentQueryIsEmpty();
   }
@@ -54,38 +52,51 @@ public class SearchSuggestionsPresenter implements Presenter {
         }, e -> crashReport.log(e));
   }
 
+  private void handleQueryTextSubmitted() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.onQueryTextChanged()
+            .throttleFirst(250, TimeUnit.MILLISECONDS))
+        .filter(data -> data != null
+            && data.queryText()
+            .length() > 0
+            && data.isSubmitted())
+        .doOnNext(data -> {
+          view.collapseSearchBar();
+          navigator.navigate(data.queryText()
+              .toString());
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
+  }
+
+  private void handleQueryTextCleaned() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.onQueryTextChanged()
+            .throttleFirst(250, TimeUnit.MILLISECONDS))
+        .filter(data -> data != null
+            && data.queryText()
+            .length() == 0)
+        .flatMapSingle(data -> trendingManager.getTrendingSuggestions()
+            .observeOn(viewScheduler)
+            .doOnSuccess(trendingList -> view.setTrending(trendingList)))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
+  }
+
   private void handleQueryTextChanged() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.onQueryTextChanged())
+        .flatMap(__ -> view.onQueryTextChanged()
+            .throttleFirst(250, TimeUnit.MILLISECONDS))
         .filter(data -> data != null
             && data.queryText()
             .length() > 0)
-        .flatMapSingle(data -> {
-          final String query = data.queryText()
-              .toString();
-          if (query.length() < COMPLETION_THRESHOLD) {
-            return trendingManager.getTrendingSuggestions()
-                .observeOn(viewScheduler)
-                .doOnSuccess(trendingList -> view.setTrending(trendingList));
-          }
-          return Single.fromCallable(() -> {
-            final String query1 = data.queryText()
-                .toString();
-
-            if (data.isSubmitted()) {
-              view.collapseSearchBar();
-              navigator.navigate(query1);
-              Logger.v(TAG, "Searching for: " + query1);
-              return null;
-            }
-
-            if (query1.length() >= COMPLETION_THRESHOLD) {
-              searchSuggestionManager.getSuggestionsFor(query1);
-            }
-            return null;
-          });
-        })
+        .doOnNext(data -> searchSuggestionManager.getSuggestionsFor(data.queryText()
+            .toString()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));

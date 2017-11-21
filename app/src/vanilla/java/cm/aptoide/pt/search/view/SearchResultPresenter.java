@@ -155,6 +155,7 @@ import rx.Scheduler;
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .map(__ -> view.getViewModel())
+        .filter(viewModel -> hasValidQuery(viewModel))
         .filter(viewModel -> !viewModel.hasLoadedAds())
         .flatMap(viewModel -> searchManager.getAdsForQuery(viewModel.getCurrentQuery())
             .onErrorReturn(err -> {
@@ -175,6 +176,11 @@ import rx.Scheduler;
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
+  }
+
+  private boolean hasValidQuery(SearchResultView.Model viewModel) {
+    return viewModel.getCurrentQuery() != null && !viewModel.getCurrentQuery()
+        .isEmpty();
   }
 
   private void handleClickToOpenAppViewFromItem() {
@@ -335,8 +341,7 @@ import rx.Scheduler;
         .map(__ -> view.getViewModel())
         .filter(viewModel -> viewModel.getAllStoresOffset() == 0
             && viewModel.getFollowedStoresOffset() == 0)
-        .filter(viewModel -> viewModel.getCurrentQuery() != null && !viewModel.getCurrentQuery()
-            .isEmpty())
+        .filter(viewModel -> hasValidQuery(viewModel))
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showLoading())
         .doOnNext(viewModel -> analytics.search(viewModel.getCurrentQuery()))

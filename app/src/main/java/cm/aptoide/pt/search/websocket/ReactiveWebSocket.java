@@ -49,7 +49,7 @@ public class ReactiveWebSocket {
     }, Emitter.BackpressureMode.LATEST);
   }
 
-  private static class ReactiveWebSocketListener extends WebSocketListener {
+  private static final class ReactiveWebSocketListener extends WebSocketListener {
 
     private static final String TAG = ReactiveWebSocketListener.class.getName();
 
@@ -81,7 +81,6 @@ public class ReactiveWebSocket {
     @Override public void onClosing(WebSocket webSocket, int code, String reason) {
       super.onClosing(webSocket, code, reason);
       emitter.onNext(new SocketEvent(SocketEvent.Status.CLOSING));
-      //webSocket.close(CLOSE_STATUS_CODE, null);
       Logger.v(TAG, "onClosing :: ");
     }
 

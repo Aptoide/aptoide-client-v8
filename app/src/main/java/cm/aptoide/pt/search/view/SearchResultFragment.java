@@ -560,7 +560,7 @@ public class SearchResultFragment extends BackButtonFragment
             searchNavigator);
 
     attachPresenter(
-        new CompositePresenter(Arrays.asList(searchSuggestionsPresenter, searchResultPresenter)));
+        new CompositePresenter(Arrays.asList(searchResultPresenter, searchSuggestionsPresenter)));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {

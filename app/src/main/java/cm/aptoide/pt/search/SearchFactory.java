@@ -1,22 +1,39 @@
 package cm.aptoide.pt.search;
 
+import android.support.annotation.VisibleForTesting;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.search.websocket.ReactiveWebSocket;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
 public class SearchFactory {
-  private static final int SEARCH_WEB_SOCKET_PORT = 9000;
-  private static final int STORE_WEB_SOCKET_PORT = 9002;
+  private static final int APP_SEARCH_WEB_SOCKET_PORT = 9000;
+  private static final int STORE_SEARCH_WEB_SOCKET_PORT = 9002;
+
+  private final OkHttpClient client;
+  private final ObjectMapper objectMapper;
+
+  public SearchFactory() {
+    client = new OkHttpClient.Builder().readTimeout(0, TimeUnit.SECONDS)
+        .writeTimeout(0, TimeUnit.SECONDS)
+        .build();
+    objectMapper = new ObjectMapper();
+  }
+
+  @VisibleForTesting public SearchFactory(OkHttpClient client, ObjectMapper objectMapper) {
+    this.client = client;
+    this.objectMapper = objectMapper;
+  }
 
   public SearchSuggestionManager createSearchForStore() {
-    return createSearch(STORE_WEB_SOCKET_PORT);
+    return createSearch(STORE_SEARCH_WEB_SOCKET_PORT);
   }
 
   public SearchSuggestionManager createSearchForApps() {
-    return createSearch(SEARCH_WEB_SOCKET_PORT);
+    return createSearch(APP_SEARCH_WEB_SOCKET_PORT);
   }
 
   private SearchSuggestionManager createSearch(int socketPort) {
@@ -27,9 +44,7 @@ public class SearchFactory {
     final Request request = new Request.Builder().url(url)
         .build();
 
-    final OkHttpClient client = new OkHttpClient();
-
-    return new SearchSuggestionManager(new ObjectMapper(), new ReactiveWebSocket(client, request),
+    return new SearchSuggestionManager(objectMapper, new ReactiveWebSocket(client, request),
         CrashReport.getInstance());
   }
 }
