@@ -47,7 +47,8 @@ public class SystemNotificationShower implements Presenter {
       NotificationIdsMapper notificationIdsMapper, NotificationCenter notificationCenter,
       NotificationAnalytics notificationAnalytics, CrashReport crashReport,
       NotificationProvider notificationProvider,
-      NotificationApplicationView notificationApplicationView) {
+      NotificationApplicationView notificationApplicationView,
+      CompositeSubscription subscriptions) {
     this.context = context;
     this.notificationManager = notificationManager;
     this.notificationIdsMapper = notificationIdsMapper;
@@ -55,18 +56,18 @@ public class SystemNotificationShower implements Presenter {
     this.notificationAnalytics = notificationAnalytics;
     this.crashReport = crashReport;
     this.notificationProvider = notificationProvider;
+    this.subscriptions = subscriptions;
     view = notificationApplicationView;
-    subscriptions = new CompositeSubscription();
   }
 
   @Override public void present() {
-    setNotificationPressPublishRelaySubscribe();
-    setNotificationDismissPublishRelaySubscribe();
-    setNotificationBootCompletedPublishRelaySubscribe();
+    setNotificationPressSubscribe();
+    setNotificationDismissSubscribe();
+    setNotificationBootCompletedSubscribe();
     showNewNotification();
   }
 
-  public void showNewNotification() {
+  private void showNewNotification() {
     subscriptions.add(notificationCenter.getNewNotifications()
         .flatMapCompletable(aptoideNotification -> {
           int notificationId =
@@ -224,14 +225,14 @@ public class SystemNotificationShower implements Presenter {
     }
   }
 
-  private void setNotificationBootCompletedPublishRelaySubscribe() {
+  private void setNotificationBootCompletedSubscribe() {
     view.getActionBootCompleted()
         .doOnNext(__ -> notificationCenter.setup())
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
   }
 
-  private void setNotificationDismissPublishRelaySubscribe() {
+  private void setNotificationDismissSubscribe() {
     view.getNotificationDismissed()
         .filter(notificationInfo -> notificationInfo.getNotificationType() < 7)
         .doOnNext(notificationInfo -> dismissNotificationAfterAction(
@@ -240,7 +241,7 @@ public class SystemNotificationShower implements Presenter {
         }, throwable -> crashReport.log(throwable));
   }
 
-  private void setNotificationPressPublishRelaySubscribe() {
+  private void setNotificationPressSubscribe() {
     view.getNotificationClick()
         .flatMapSingle(notificationInfo -> notificationProvider.getLastShowed(
             notificationIdsMapper.getNotificationType(notificationInfo.getNotificationType()))

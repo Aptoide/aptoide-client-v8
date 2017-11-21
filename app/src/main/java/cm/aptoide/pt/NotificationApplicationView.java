@@ -18,6 +18,7 @@ import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
 import rx.Observable;
 import rx.subjects.BehaviorSubject;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by pedroribeiro on 20/11/17.
@@ -26,12 +27,12 @@ import rx.subjects.BehaviorSubject;
 public abstract class NotificationApplicationView extends AptoideApplication
     implements NotificationView {
 
-  private final BehaviorSubject<LifecycleEvent> lifecycleEventBehaviorSubject =
-      BehaviorSubject.create();
+  private BehaviorSubject<LifecycleEvent> lifecycleEventBehaviorSubject;
   private SystemNotificationShower systemNotificationShower;
 
   @Override public void onCreate() {
     super.onCreate();
+    lifecycleEventBehaviorSubject = BehaviorSubject.create();
     lifecycleEventBehaviorSubject.onNext(LifecycleEvent.CREATE);
     attachPresenter(getSystemNotificationShower());
   }
@@ -43,7 +44,7 @@ public abstract class NotificationApplicationView extends AptoideApplication
           new NotificationIdsMapper(), getNotificationCenter(),
           new NotificationAnalytics(getDefaultClient(), Analytics.getInstance(),
               AppEventsLogger.newLogger(getApplicationContext())), CrashReport.getInstance(),
-          getNotificationProvider(), this);
+          getNotificationProvider(), this, new CompositeSubscription());
     }
     return systemNotificationShower;
   }
