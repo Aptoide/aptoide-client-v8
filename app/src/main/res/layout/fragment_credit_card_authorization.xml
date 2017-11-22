@@ -6,7 +6,7 @@
     >
 
   <FrameLayout
-      android:id="@+id/fragment_payment_overlay"
+      android:id="@+id/fragment_credit_card_authorization_overlay"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:background="@color/overlay_black"
@@ -15,7 +15,7 @@
       />
 
   <ScrollView
-      android:id="@+id/fragment_payment_scroll"
+      android:id="@+id/fragment_payment_card"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_centerInParent="true"
@@ -32,6 +32,18 @@
 
       <include layout="@layout/include_payment_product"/>
 
+      <TextView
+          android:layout_marginTop="16dp"
+          android:layout_marginEnd="16dp"
+          android:layout_marginRight="16dp"
+          tools:text="****8500"
+          android:gravity="end"
+          style="@style/TextAppearance.Aptoide.Title"
+          android:id="@+id/fragment_credit_card_authorization_pre_authorized_card"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          />
+
       <com.braintreepayments.cardform.view.CardForm
           android:id="@+id/fragment_braintree_credit_card_form"
           android:layout_width="match_parent"
@@ -39,26 +51,33 @@
           android:layout_margin="16dp"
           />
 
+      <CheckBox
+          android:id="@+id/fragment_credit_card_authorization_remember_card_check_box"
+          android:text="@string/remember_card_hint"
+          android:checked="true"
+          android:layout_width="match_parent"
+          android:layout_marginBottom="16dp"
+          android:layout_height="wrap_content" />
+
       <include layout="@layout/include_payment_buttons"/>
     </LinearLayout>
   </ScrollView>
 
   <LinearLayout
-      android:id="@+id/fragment_braintree_progress_bar"
+      android:id="@+id/fragment_credit_card_authorization_progress_bar"
       android:layout_width="0dp"
       android:layout_height="0dp"
-      android:layout_alignBottom="@id/fragment_payment_scroll"
-      android:layout_alignEnd="@id/fragment_payment_scroll"
-      android:layout_alignLeft="@id/fragment_payment_scroll"
-      android:layout_alignRight="@id/fragment_payment_scroll"
-      android:layout_alignStart="@id/fragment_payment_scroll"
-      android:layout_alignTop="@id/fragment_payment_scroll"
+      android:layout_alignBottom="@id/fragment_payment_card"
+      android:layout_alignEnd="@id/fragment_payment_card"
+      android:layout_alignLeft="@id/fragment_payment_card"
+      android:layout_alignRight="@id/fragment_payment_card"
+      android:layout_alignStart="@id/fragment_payment_card"
+      android:layout_alignTop="@id/fragment_payment_card"
       android:background="@drawable/dialog_bg"
       android:clickable="true"
       android:gravity="center"
       android:orientation="vertical"
       android:visibility="gone"
-      tools:visibility="visible"
       >
     <ProgressBar
         android:layout_width="wrap_content"
