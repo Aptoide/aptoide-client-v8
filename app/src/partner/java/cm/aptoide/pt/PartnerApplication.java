@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import rx.Completable;
 import rx.Single;
 
-public class PartnerApplication extends AptoideApplication {
+public class PartnerApplication extends NotificationApplicationView {
 
   private BootConfig bootConfig;
   private ObjectMapper objectMapper;
@@ -38,16 +38,16 @@ public class PartnerApplication extends AptoideApplication {
     return bootConfig;
   }
 
+  public void setBootConfig(BootConfig bootConfig) {
+    this.bootConfig = bootConfig;
+  }
+
   private ObjectMapper getObjectMapper() {
     if (objectMapper == null) {
       objectMapper =
           new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
     return objectMapper;
-  }
-
-  public void setBootConfig(BootConfig bootConfig) {
-    this.bootConfig = bootConfig;
   }
 
   @Override public String getCachePath() {
@@ -113,8 +113,15 @@ public class PartnerApplication extends AptoideApplication {
     return false;
   }
 
-  @Override public ActivityProvider createActivityProvider() {
-    return new PartnerActivityProvider();
+  @Override public NotificationSyncScheduler getNotificationSyncScheduler() {
+    if (notificationSyncScheduler == null) {
+      notificationSyncScheduler = new PushNotificationSyncManager(getAlarmSyncScheduler(), true,
+          new NotificationSyncFactory(
+              new NotificationService(getExtraId(), getDefaultSharedPreferences(), getResources(),
+                  getBaseContext(), getTokenInvalidator(), getBodyInterceptorV3(),
+                  getAccountManager()), getNotificationProvider(), getDefaultSharedPreferences()));
+    }
+    return notificationSyncScheduler;
   }
 
   @Override public Completable createShortcut() {
@@ -140,16 +147,7 @@ public class PartnerApplication extends AptoideApplication {
         hasMultiStoreSearch());
   }
 
-
-  @Override public NotificationSyncScheduler getNotificationSyncScheduler() {
-    if (notificationSyncScheduler == null) {
-      notificationSyncScheduler = new PushNotificationSyncManager(getAlarmSyncScheduler(), true,
-          new NotificationSyncFactory(
-              new NotificationService(getExtraId(), getDefaultSharedPreferences(), getResources(),
-                  getBaseContext(), getTokenInvalidator(), getBodyInterceptorV3(),
-                  getAccountManager()),
-              getNotificationProvider(), getDefaultSharedPreferences()));
-    }
-    return notificationSyncScheduler;
+  @Override public ActivityProvider createActivityProvider() {
+    return new PartnerActivityProvider();
   }
 }

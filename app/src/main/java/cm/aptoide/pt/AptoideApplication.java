@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.Application;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -115,8 +114,9 @@ import cm.aptoide.pt.networking.NoAuthenticationBodyInterceptorV3;
 import cm.aptoide.pt.networking.NoOpTokenInvalidator;
 import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
+import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationCenter;
-import cm.aptoide.pt.notification.NotificationIdsMapper;
+import cm.aptoide.pt.notification.NotificationInfo;
 import cm.aptoide.pt.notification.NotificationPolicyFactory;
 import cm.aptoide.pt.notification.NotificationProvider;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
@@ -279,6 +279,9 @@ public abstract class AptoideApplication extends Application {
   private PurchaseFactory purchaseFactory;
   private AppCenter appCenter;
   private ReadPostsPersistence readPostsPersistence;
+  private SystemNotificationShower systemNotificationShower;
+  private PublishRelay<NotificationInfo> notificationsPublishRelay;
+  private NotificationsCleaner notificationsCleaner;
   private SyncScheduler alarmSyncScheduler;
 
   public static FragmentProvider getFragmentProvider() {
@@ -404,6 +407,7 @@ public abstract class AptoideApplication extends Application {
     }
 
     startNotificationCenter();
+    startNotificationCleaner();
     getRootInstallationRetryHandler().start();
     AptoideApplicationAnalytics aptoideApplicationAnalytics = new AptoideApplicationAnalytics();
     accountManager.accountStatus()
@@ -414,6 +418,8 @@ public abstract class AptoideApplication extends Application {
     dispatchPostReadEventInterval().subscribe(() -> {
     }, throwable -> CrashReport.getInstance()
         .log(throwable));
+
+    systemNotificationShower = getSystemNotificationShower();
 
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
@@ -451,6 +457,20 @@ public abstract class AptoideApplication extends Application {
                 .log(throwable));
 
     getNotificationCenter().setup();
+  }
+
+  private void startNotificationCleaner() {
+    getNotificationCleaner().setup();
+  }
+
+  private NotificationsCleaner getNotificationCleaner() {
+    if (notificationsCleaner == null) {
+      notificationsCleaner = new NotificationsCleaner(AccessorFactory.getAccessorFor(
+          ((AptoideApplication) this.getApplicationContext()).getDatabase(), Notification.class),
+          Calendar.getInstance(TimeZone.getTimeZone("UTC")), getAccountManager(),
+          getNotificationProvider(), CrashReport.getInstance());
+    }
+    return notificationsCleaner;
   }
 
   public abstract String getCachePath();
@@ -494,12 +514,9 @@ public abstract class AptoideApplication extends Application {
           RootInstallNotificationEventReceiver.ROOT_INSTALL_DISMISS_ACTION),
           PendingIntent.FLAG_UPDATE_CURRENT);
 
-      final SystemNotificationShower systemNotificationShower = new SystemNotificationShower(this,
-          (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE),
-          new NotificationIdsMapper());
       int notificationId = 230498;
       rootInstallationRetryHandler =
-          new RootInstallationRetryHandler(notificationId, systemNotificationShower,
+          new RootInstallationRetryHandler(notificationId, getSystemNotificationShower(),
               getInstallManager(InstallerFactory.ROLLBACK), PublishRelay.create(), 0, this,
               new RootInstallErrorNotificationFactory(notificationId,
                   BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher), action,
@@ -508,12 +525,17 @@ public abstract class AptoideApplication extends Application {
     return rootInstallationRetryHandler;
   }
 
+  @NonNull protected abstract SystemNotificationShower getSystemNotificationShower();
+
+  public PublishRelay<NotificationInfo> getNotificationsPublishRelay() {
+    if (notificationsPublishRelay == null) {
+      notificationsPublishRelay = PublishRelay.create();
+    }
+    return notificationsPublishRelay;
+  }
+
   public NotificationCenter getNotificationCenter() {
     if (notificationCenter == null) {
-
-      final SystemNotificationShower systemNotificationShower = new SystemNotificationShower(this,
-          (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE),
-          new NotificationIdsMapper());
 
       final NotificationAccessor notificationAccessor = AccessorFactory.getAccessorFor(
           ((AptoideApplication) this.getApplicationContext()).getDatabase(), Notification.class);
@@ -522,10 +544,9 @@ public abstract class AptoideApplication extends Application {
 
       notificationCenter =
           new NotificationCenter(notificationProvider, getNotificationSyncScheduler(),
-              systemNotificationShower, CrashReport.getInstance(),
               new NotificationPolicyFactory(notificationProvider),
-              new NotificationsCleaner(notificationAccessor,
-                  Calendar.getInstance(TimeZone.getTimeZone("UTC"))), getAccountManager());
+              new NotificationAnalytics(getDefaultClient(), Analytics.getInstance(),
+                  AppEventsLogger.newLogger(getApplicationContext())));
     }
     return notificationCenter;
   }

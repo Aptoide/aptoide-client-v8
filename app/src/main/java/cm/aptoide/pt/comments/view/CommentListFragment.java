@@ -183,7 +183,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        new NotificationAnalytics(httpClient, analytics), navigationTracker,
+        new NotificationAnalytics(httpClient, analytics, AppEventsLogger.newLogger(getContext())),
+        navigationTracker,
         ((AptoideApplication) getContext().getApplicationContext()).getReadPostsPersistence());
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);

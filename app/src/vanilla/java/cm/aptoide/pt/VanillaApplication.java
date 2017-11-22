@@ -21,7 +21,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 
-public class VanillaApplication extends AptoideApplication {
+public class VanillaApplication extends NotificationApplicationView {
 
   private NotificationSyncScheduler notificationSyncScheduler;
 
@@ -74,18 +74,6 @@ public class VanillaApplication extends AptoideApplication {
     return true;
   }
 
-  @Override public LoginPreferences getLoginPreferences() {
-    return new LoginPreferences(this, GoogleApiAvailability.getInstance());
-  }
-
-  @Override public FragmentProvider createFragmentProvider() {
-    return new VanillaFragmentProvider();
-  }
-
-  @Override public ActivityProvider createActivityProvider() {
-    return new VanillaActivityProvider();
-  }
-
   @Override public NotificationSyncScheduler getNotificationSyncScheduler() {
     if (notificationSyncScheduler == null) {
       notificationSyncScheduler = new NotificationSyncManager(getAlarmSyncScheduler(), true,
@@ -102,5 +90,17 @@ public class VanillaApplication extends AptoideApplication {
               getNotificationProvider()));
     }
     return notificationSyncScheduler;
+  }
+
+  @Override public LoginPreferences getLoginPreferences() {
+    return new LoginPreferences(this, GoogleApiAvailability.getInstance());
+  }
+
+  @Override public FragmentProvider createFragmentProvider() {
+    return new VanillaFragmentProvider();
+  }
+
+  @Override public ActivityProvider createActivityProvider() {
+    return new VanillaActivityProvider();
   }
 }
