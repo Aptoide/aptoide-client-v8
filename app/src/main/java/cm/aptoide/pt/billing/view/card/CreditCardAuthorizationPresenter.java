@@ -97,7 +97,6 @@ public class CreditCardAuthorizationPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> billing.getPayment(sku))
         .first(payment -> payment.isFailed())
-        .cast(AdyenAuthorization.class)
         .observeOn(viewScheduler)
         .doOnNext(__ -> popViewWithError())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

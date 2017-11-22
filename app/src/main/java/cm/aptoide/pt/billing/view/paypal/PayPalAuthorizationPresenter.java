@@ -88,7 +88,6 @@ public class PayPalAuthorizationPresenter implements Presenter {
         .first(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> billing.getPayment(sku))
         .first(payment -> payment.isFailed())
-        .cast(PayPalAuthorization.class)
         .observeOn(viewScheduler)
         .doOnNext(__ -> popViewWithError())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
