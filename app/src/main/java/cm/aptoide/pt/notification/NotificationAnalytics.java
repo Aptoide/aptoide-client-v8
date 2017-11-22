@@ -64,21 +64,29 @@ public class NotificationAnalytics {
 
   private Bundle createSocialNotificationPressedEventBundle(Notification notification) {
     Bundle bundle = new Bundle();
-    bundle.putInt(TYPE, notification.getType());
-    bundle.putString(AB_TESTING_GROUP, notification.getAbTestingGroup());
     bundle.putInt(CAMPAIGN_ID, notification.getCampaignId());
-    bundle.putString(PACKAGE_NAME, getPackageNameFromUrl(notification.getUrl()));
+    bundle.putString(TYPE, String.valueOf(matchNotificationTypeToString(notification.getType())));
+    bundle = addToBundleIfNotNull(bundle, notification.getAbTestingGroup(), notification.getUrl());
     return bundle;
   }
 
   private Bundle createSocialImpressionEventBundle(@AptoideNotification.NotificationType int type,
       String abTestingGroup, int campaignId, String url) {
     Bundle bundle = new Bundle();
+    bundle.putInt(CAMPAIGN_ID, campaignId);
     bundle.putString(TYPE, matchNotificationTypeToString(type).toString()
         .toLowerCase());
-    bundle.putString(AB_TESTING_GROUP, abTestingGroup);
-    bundle.putInt(CAMPAIGN_ID, campaignId);
-    bundle.putString(PACKAGE_NAME, getPackageNameFromUrl(url));
+    bundle = addToBundleIfNotNull(bundle, abTestingGroup, getPackageNameFromUrl(url));
+    return bundle;
+  }
+
+  private Bundle addToBundleIfNotNull(Bundle bundle, String abTestingGroup, String url) {
+    if (abTestingGroup != null && !abTestingGroup.isEmpty()) {
+      bundle.putString(AB_TESTING_GROUP, abTestingGroup);
+    }
+    if (url != null && !url.isEmpty()) {
+      bundle.putString(PACKAGE_NAME, getPackageNameFromUrl(url));
+    }
     return bundle;
   }
 
