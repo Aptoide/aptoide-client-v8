@@ -1319,7 +1319,7 @@ public abstract class AptoideApplication extends Application {
       accountAnalytics = new AccountAnalytics(Analytics.getInstance(), getBodyInterceptorPoolV7(),
           getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
           BuildConfig.APPLICATION_ID, getDefaultSharedPreferences(),
-          AppEventsLogger.newLogger(this), getNavigationTracker());
+          AppEventsLogger.newLogger(this), getNavigationTracker(), CrashReport.getInstance());
     }
     return accountAnalytics;
   }
