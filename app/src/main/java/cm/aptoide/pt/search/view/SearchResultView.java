@@ -56,6 +56,10 @@ public interface SearchResultView extends View {
 
   interface Model {
 
+    List<SearchAppResult> getFollowedStoresSearchAppResults();
+
+    List<SearchAdResult> getFollowedStoresSearchAdResults();
+
     String getCurrentQuery();
 
     String getStoreName();
@@ -83,5 +87,11 @@ public interface SearchResultView extends View {
     boolean hasLoadedAds();
 
     void setHasLoadedAds();
+
+    List<SearchAppResult> getAllStoresSearchAppResults();
+
+    List<SearchAdResult> getAllStoresSearchAdResults();
+
+    boolean hasData();
   }
 }

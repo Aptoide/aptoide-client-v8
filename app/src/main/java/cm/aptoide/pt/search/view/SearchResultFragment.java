@@ -6,6 +6,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -50,9 +51,9 @@ import cm.aptoide.pt.search.SearchCursorAdapter;
 import cm.aptoide.pt.search.SearchFactory;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
-import cm.aptoide.pt.search.suggestions.TrendingService;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
+import cm.aptoide.pt.search.suggestions.TrendingService;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtils;
@@ -97,7 +98,7 @@ public class SearchResultFragment extends BackButtonFragment
   private ImageView noResultsSearchButton;
   private View searchResultsLayout;
   private ProgressBar progressBar;
-  private LinearLayout buttonsLayout;
+  private LinearLayout allAndFollowedStoresButtonsLayout;
   private Button followedStoresButton;
   private Button allStoresButton;
 
@@ -152,15 +153,22 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private void findChildViews(View view) {
-    followedStoresResultList = (RecyclerView) view.findViewById(R.id.followed_stores_result_list);
-    allStoresResultList = (RecyclerView) view.findViewById(R.id.all_stores_result_list);
-    followedStoresButton = (Button) view.findViewById(R.id.subscribed);
-    allStoresButton = (Button) view.findViewById(R.id.everywhere);
-    buttonsLayout = (LinearLayout) view.findViewById(R.id.buttons_layout);
+    allAndFollowedStoresButtonsLayout = (LinearLayout) view.findViewById(
+        R.id.fragment_search_result_all_followed_stores_buttons_layout);
+    allStoresResultList =
+        (RecyclerView) view.findViewById(R.id.fragment_search_result_all_stores_app_list);
+
+    followedStoresResultList =
+        (RecyclerView) view.findViewById(R.id.fragment_search_result_followed_stores_app_list);
+    allStoresButton = (Button) view.findViewById(R.id.fragment_search_result_all_stores_button);
+    followedStoresButton =
+        (Button) view.findViewById(R.id.fragment_search_result_followed_stores_button);
+
+    searchResultsLayout = view.findViewById(R.id.fragment_search_result_layout);
+
     noSearchLayout = view.findViewById(R.id.no_search_results_layout);
     noSearchLayoutSearchQuery = (EditText) view.findViewById(R.id.search_text);
     noResultsSearchButton = (ImageView) view.findViewById(R.id.ic_search_button);
-    searchResultsLayout = view.findViewById(R.id.search_results_layout);
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
   }
@@ -261,7 +269,7 @@ public class SearchResultFragment extends BackButtonFragment
   @Override public void showNoResultsView() {
     noSearchLayout.setVisibility(View.VISIBLE);
     searchResultsLayout.setVisibility(View.GONE);
-    buttonsLayout.setVisibility(View.GONE);
+    allAndFollowedStoresButtonsLayout.setVisibility(View.GONE);
     followedStoresResultList.setVisibility(View.GONE);
     allStoresResultList.setVisibility(View.GONE);
   }
@@ -283,10 +291,12 @@ public class SearchResultFragment extends BackButtonFragment
 
   @Override public void addFollowedStoresResult(List<SearchAppResult> dataList) {
     followedStoresResultAdapter.addResultForSearch(dataList);
+    viewModel.addFollowedStoresSearchAppResults(dataList);
   }
 
   @Override public void addAllStoresResult(List<SearchAppResult> dataList) {
     allStoresResultAdapter.addResultForSearch(dataList);
+    viewModel.addAllStoresSearchAppResults(dataList);
   }
 
   @Override public Model getViewModel() {
@@ -295,10 +305,12 @@ public class SearchResultFragment extends BackButtonFragment
 
   @Override public void setFollowedStoresAdsResult(SearchAdResult ad) {
     followedStoresResultAdapter.setResultForAd(ad);
+    viewModel.addFollowedStoresSearchAdResults(Arrays.asList(ad));
   }
 
   @Override public void setAllStoresAdsResult(SearchAdResult ad) {
     allStoresResultAdapter.setResultForAd(ad);
+    viewModel.addAllStoresSearchAdResults(Arrays.asList(ad));
   }
 
   @Override public void setFollowedStoresAdsEmpty() {
@@ -476,7 +488,14 @@ public class SearchResultFragment extends BackButtonFragment
     super.onCreate(savedInstanceState);
 
     crashReport = CrashReport.getInstance();
-    viewModel = loadViewModel(getArguments());
+
+    if (viewModel == null && savedInstanceState != null && savedInstanceState.containsKey(
+        VIEW_MODEL)) {
+      viewModel = Parcels.unwrap(savedInstanceState.getParcelable(VIEW_MODEL));
+    } else if (viewModel == null && getArguments().containsKey(VIEW_MODEL)) {
+      viewModel = Parcels.unwrap(getArguments().getParcelable(VIEW_MODEL));
+    }
+
     queryTextChangedPublisher = PublishSubject.create();
     searchCursorAdapter = new SearchCursorAdapter(getContext());
 
@@ -559,6 +578,13 @@ public class SearchResultFragment extends BackButtonFragment
     clickTitleBarExpandsList();
     clickSearchIconExpandsList();
 
+    if (viewModel != null && viewModel.hasData()) {
+      restoreViewState(savedInstanceState != null ? savedInstanceState.getParcelable(
+          ALL_STORES_SEARCH_LIST_STATE) : null,
+          savedInstanceState != null ? savedInstanceState.getParcelable(
+              FOLLOWED_STORES_SEARCH_LIST_STATE) : null);
+    }
+
     final SearchResultPresenter searchResultPresenter =
         new SearchResultPresenter(this, searchAnalytics, searchNavigator, crashReport,
             mainThreadScheduler, searchManager, onAdClickRelay, onItemViewClickRelay,
@@ -611,83 +637,71 @@ public class SearchResultFragment extends BackButtonFragment
     return new LinearLayoutManager(getContext(), LinearLayout.VERTICAL, false);
   }
 
-  @NonNull private SearchViewModel loadViewModel(Bundle arguments) {
-    return Parcels.unwrap(arguments.getParcelable(VIEW_MODEL));
-  }
-
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     return inflater.inflate(LAYOUT, container, false);
   }
 
-  @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-    super.onViewStateRestored(savedInstanceState);
-    if (savedInstanceState != null) {
-      if (savedInstanceState.containsKey(VIEW_MODEL)) {
-        viewModel = loadViewModel(savedInstanceState);
-      }
-
-      if (allStoresResultAdapter != null) {
-        allStoresResultAdapter.restoreState(viewModel.allStoresSearchAppResults,
-            viewModel.allStoresSearchAdResults);
-        allStoresResultAdapter.notifyDataSetChanged();
-      }
-
-      if (savedInstanceState.containsKey(ALL_STORES_SEARCH_LIST_STATE)
-          && allStoresResultList != null) {
-
-        RecyclerView.LayoutManager layoutManager = allStoresResultList.getLayoutManager();
-        if (layoutManager == null) {
-          layoutManager = getDefaultLayoutManager();
-          allStoresResultList.setLayoutManager(layoutManager);
-        }
-        layoutManager.onRestoreInstanceState(
-            savedInstanceState.getParcelable(ALL_STORES_SEARCH_LIST_STATE));
-      }
-
-      if (followedStoresResultAdapter != null) {
-        followedStoresResultAdapter.restoreState(viewModel.followedStoresSearchAppResults,
-            viewModel.followedStoresSearchAdResults);
-        followedStoresResultAdapter.notifyDataSetChanged();
-      }
-
-      if (savedInstanceState.containsKey(FOLLOWED_STORES_SEARCH_LIST_STATE)
-          && followedStoresResultList != null) {
-        RecyclerView.LayoutManager layoutManager = followedStoresResultList.getLayoutManager();
-        if (layoutManager == null) {
-          layoutManager = getDefaultLayoutManager();
-          followedStoresResultList.setLayoutManager(layoutManager);
-        }
-        layoutManager.onRestoreInstanceState(
-            savedInstanceState.getParcelable(FOLLOWED_STORES_SEARCH_LIST_STATE));
-      }
-    }
-  }
-
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
 
-    if (allStoresResultAdapter != null) {
-      final Pair<List<SearchAppResult>, List<SearchAdResult>> allStoresState =
-          allStoresResultAdapter.getState();
-      viewModel.setAllStoresSearchAppResults(allStoresState.first);
-      viewModel.setAllStoresSearchAdResults(allStoresState.second);
-    }
-
-    if (followedStoresResultAdapter != null) {
-      final Pair<List<SearchAppResult>, List<SearchAdResult>> followedStoresState =
-          followedStoresResultAdapter.getState();
-      viewModel.setFollowedStoresSearchAppResults(followedStoresState.first);
-      viewModel.setFollowedStoresSearchAdResults(followedStoresState.second);
-    }
-
     outState.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
+
     outState.putParcelable(ALL_STORES_SEARCH_LIST_STATE, allStoresResultList.getLayoutManager()
         .onSaveInstanceState());
+
     outState.putParcelable(FOLLOWED_STORES_SEARCH_LIST_STATE,
         followedStoresResultList.getLayoutManager()
             .onSaveInstanceState());
+  }
+
+  private void restoreViewState(@Nullable Parcelable allStoresSearchListState,
+      @Nullable Parcelable followedStoresSearchListState) {
+
+    final List<SearchAppResult> allStoresSearchAppResults =
+        viewModel.getAllStoresSearchAppResults();
+    if (allStoresSearchAppResults.size() > 0) {
+      //allStoresResultList.setVis
+      allStoresResultAdapter.restoreState(allStoresSearchAppResults,
+          viewModel.getAllStoresSearchAdResults());
+      allStoresResultAdapter.notifyDataSetChanged();
+    }
+
+    if (allStoresSearchListState != null) {
+
+      RecyclerView.LayoutManager layoutManager = allStoresResultList.getLayoutManager();
+      if (layoutManager == null) {
+        layoutManager = getDefaultLayoutManager();
+        allStoresResultList.setLayoutManager(layoutManager);
+      }
+      layoutManager.onRestoreInstanceState(allStoresSearchListState);
+    }
+
+    final List<SearchAppResult> followedStoresSearchAppResults =
+        viewModel.getFollowedStoresSearchAppResults();
+    if (followedStoresSearchAppResults.size() > 0) {
+      followedStoresResultAdapter.restoreState(followedStoresSearchAppResults,
+          viewModel.getFollowedStoresSearchAdResults());
+      followedStoresResultAdapter.notifyDataSetChanged();
+    }
+
+    if (followedStoresSearchListState != null) {
+      RecyclerView.LayoutManager layoutManager = followedStoresResultList.getLayoutManager();
+      if (layoutManager == null) {
+        layoutManager = getDefaultLayoutManager();
+        followedStoresResultList.setLayoutManager(layoutManager);
+      }
+      layoutManager.onRestoreInstanceState(followedStoresSearchListState);
+    }
+
+    showResultsView();
+
+    if (viewModel.isAllStoresSelected()) {
+      showAllStoresResult();
+    } else {
+      showFollowedStoresResult();
+    }
   }
 
   private void attachFollowedStoresResultListDependencies() {

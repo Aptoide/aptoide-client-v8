@@ -2,10 +2,12 @@ package cm.aptoide.pt.search.view;
 
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
+import java.util.LinkedList;
 import java.util.List;
 import org.parceler.Parcel;
 
-@SuppressWarnings("WeakerAccess") @Parcel public class SearchViewModel implements SearchResultView.Model {
+@SuppressWarnings("WeakerAccess") @Parcel public class SearchViewModel
+    implements SearchResultView.Model {
   String currentQuery;
   String storeName;
   boolean onlyTrustedApps;
@@ -24,61 +26,51 @@ import org.parceler.Parcel;
   List<SearchAdResult> followedStoresSearchAdResults;
 
   SearchViewModel() {
+    this.allStoresSearchAppResults = new LinkedList<>();
+    this.allStoresSearchAdResults = new LinkedList<>();
+    this.followedStoresSearchAppResults = new LinkedList<>();
+    this.followedStoresSearchAdResults = new LinkedList<>();
   }
 
   SearchViewModel(String currentQuery, String storeName, boolean onlyTrustedApps,
-      boolean allStoresSelected, String defaultStoreName) {
+      boolean allStoresSelected, String defaultStoreName,
+      List<SearchAppResult> allStoresSearchAppResults,
+      List<SearchAdResult> allStoresSearchAdResults,
+      List<SearchAppResult> followedStoresSearchAppResults,
+      List<SearchAdResult> followedStoresSearchAdResults) {
     this.currentQuery = currentQuery;
     this.storeName = storeName;
     this.onlyTrustedApps = onlyTrustedApps;
     this.allStoresSelected = allStoresSelected;
     this.defaultStoreName = defaultStoreName;
+    this.allStoresSearchAppResults = allStoresSearchAppResults;
+    this.allStoresSearchAdResults = allStoresSearchAdResults;
+    this.followedStoresSearchAppResults = followedStoresSearchAppResults;
+    this.followedStoresSearchAdResults = followedStoresSearchAdResults;
   }
 
   SearchViewModel(String currentQuery, String storeName, boolean onlyTrustedApps,
       String defaultStoreName) {
-    this(currentQuery, storeName, onlyTrustedApps, true, defaultStoreName);
+    this(currentQuery, storeName, onlyTrustedApps, true, defaultStoreName, new LinkedList<>(),
+        new LinkedList<>(), new LinkedList<>(), new LinkedList<>());
   }
 
   SearchViewModel(String currentQuery, boolean onlyTrustedApps, String defaultStoreName) {
-    this(currentQuery, null, onlyTrustedApps, true, defaultStoreName);
+    this(currentQuery, null, onlyTrustedApps, true, defaultStoreName, new LinkedList<>(),
+        new LinkedList<>(), new LinkedList<>(), new LinkedList<>());
   }
 
   SearchViewModel(String currentQuery, String storeName, String defaultStoreName) {
-    this(currentQuery, storeName, true, true, defaultStoreName);
+    this(currentQuery, storeName, true, true, defaultStoreName, new LinkedList<>(),
+        new LinkedList<>(), new LinkedList<>(), new LinkedList<>());
   }
 
-  public List<SearchAppResult> getAllStoresSearchAppResults() {
-    return allStoresSearchAppResults;
-  }
-
-  public void setAllStoresSearchAppResults(List<SearchAppResult> allStoresSearchAppResults) {
-    this.allStoresSearchAppResults = allStoresSearchAppResults;
-  }
-
-  public List<SearchAdResult> getAllStoresSearchAdResults() {
-    return allStoresSearchAdResults;
-  }
-
-  public void setAllStoresSearchAdResults(List<SearchAdResult> allStoresSearchAdResults) {
-    this.allStoresSearchAdResults = allStoresSearchAdResults;
-  }
-
-  public List<SearchAppResult> getFollowedStoresSearchAppResults() {
+  @Override public List<SearchAppResult> getFollowedStoresSearchAppResults() {
     return followedStoresSearchAppResults;
   }
 
-  public void setFollowedStoresSearchAppResults(
-      List<SearchAppResult> followedStoresSearchAppResults) {
-    this.followedStoresSearchAppResults = followedStoresSearchAppResults;
-  }
-
-  public List<SearchAdResult> getFollowedStoresSearchAdResults() {
+  @Override public List<SearchAdResult> getFollowedStoresSearchAdResults() {
     return followedStoresSearchAdResults;
-  }
-
-  public void setFollowedStoresSearchAdResults(List<SearchAdResult> followedStoresSearchAdResults) {
-    this.followedStoresSearchAdResults = followedStoresSearchAdResults;
   }
 
   @Override public String getCurrentQuery() {
@@ -141,5 +133,43 @@ import org.parceler.Parcel;
 
   @Override public void setHasLoadedAds() {
     loadedAds = true;
+  }
+
+  @Override public List<SearchAppResult> getAllStoresSearchAppResults() {
+    return allStoresSearchAppResults;
+  }
+
+  @Override public List<SearchAdResult> getAllStoresSearchAdResults() {
+    return allStoresSearchAdResults;
+  }
+
+  @Override public boolean hasData() {
+    return (allStoresSearchAppResults != null && allStoresSearchAppResults.size() > 0) || (
+        followedStoresSearchAppResults != null
+            && followedStoresSearchAppResults.size() > 0);
+  }
+
+  public void clearListData() {
+    this.allStoresSearchAdResults.clear();
+    this.allStoresSearchAppResults.clear();
+    this.followedStoresSearchAdResults.clear();
+    this.followedStoresSearchAppResults.clear();
+  }
+
+  public void addAllStoresSearchAdResults(List<SearchAdResult> allStoresSearchAdResults) {
+    this.allStoresSearchAdResults.addAll(allStoresSearchAdResults);
+  }
+
+  public void addFollowedStoresSearchAppResults(
+      List<SearchAppResult> followedStoresSearchAppResults) {
+    this.followedStoresSearchAppResults.addAll(followedStoresSearchAppResults);
+  }
+
+  public void addFollowedStoresSearchAdResults(List<SearchAdResult> followedStoresSearchAdResults) {
+    this.followedStoresSearchAdResults.addAll(followedStoresSearchAdResults);
+  }
+
+  public void addAllStoresSearchAppResults(List<SearchAppResult> allStoresSearchAppResults) {
+    this.allStoresSearchAppResults.addAll(allStoresSearchAppResults);
   }
 }

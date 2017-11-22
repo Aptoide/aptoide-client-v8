@@ -12,6 +12,7 @@ import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import com.jakewharton.rxrelay.PublishRelay;
+import java.util.Collections;
 import java.util.List;
 import rx.Observable;
 import rx.Scheduler;
@@ -64,24 +65,6 @@ import rx.Scheduler;
     handleClickOnNoResultsImage();
     handleAllStoresListReachedBottom();
     handleFollowedStoresListReachedBottom();
-    restoreSelectedTab();
-  }
-
-  private void restoreSelectedTab() {
-    view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .first()
-        .toSingle()
-        .map(__ -> view.getViewModel())
-        .subscribe(viewModel -> {
-          if (viewModel.getAllStoresOffset() > 0 && viewModel.getFollowedStoresOffset() > 0) {
-            if (viewModel.isAllStoresSelected()) {
-              view.showAllStoresResult();
-            } else {
-              view.showFollowedStoresResult();
-            }
-          }
-        }, e -> crashReport.log(e));
   }
 
   private void stopLoadingMoreOnDestroy() {
