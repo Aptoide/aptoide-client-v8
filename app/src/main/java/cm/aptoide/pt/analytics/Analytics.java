@@ -698,7 +698,9 @@ public class Analytics {
     public static final String OPEN_VIDEO_HEADER = "Open Video Header";
     public static final String OPEN_STORE = "Open Store";
     public static final String OPEN_APP_VIEW = "Open App View";
+    public static final String OPEN_LEADERBOARD = "Open Leaderboard";
     public static final String UPDATE_APP = "Update Application";
+    public static final String ANSWER_GAME = "Answer Game";
 
     public static void clickOnCard(String cardType, String packageName, String title,
         String publisher, String action) {

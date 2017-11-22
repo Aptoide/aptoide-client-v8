@@ -211,6 +211,7 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
   }
 
   public void onPostDismissedLeft(Game2 card, int position){
+    card.setAnswerType("Swipe");
     if(rand<0.5) {
       cardTouchEventPublishSubject.onNext(
           new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(card.getApp().getIcon())));
@@ -222,6 +223,7 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
   }
 
   public void onPostDismissedRight(Game2 card, int position){
+    card.setAnswerType("Swipe");
     if(rand<0.5) {
       cardTouchEventPublishSubject.onNext(
           new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(card.getWrongIcon())));
@@ -237,6 +239,7 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
   }
 
   public void onClickLeft(int position, String status){
+    card.setAnswerType("Click");
     Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),
         R.anim.slide_out_left);
     animation.setDuration(1000);
@@ -262,6 +265,7 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
   }
 
   public void onClickRight(int position, String status){
+    card.setAnswerType("Click");
     Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),
         R.anim.slide_out_right);
     animation.setDuration(1000);

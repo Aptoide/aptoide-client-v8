@@ -207,11 +207,13 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
         marketName);
   }
   public void onPostDismissedLeft(Game3 card, int position){
+    card.setAnswerType("Swipe");
     cardTouchEventPublishSubject.onNext(
         new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(answerLeft.getText())));
   }
 
   public void onPostDismissedRight(Game3 card, int position){
+    card.setAnswerType("Swipe");
     cardTouchEventPublishSubject.onNext(
         new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(answerRight.getText())));
   }
@@ -221,6 +223,7 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
   }
 
   public void onClickLeft(int position){
+    card.setAnswerType("Click");
     Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),
         R.anim.slide_out_left);
     animation.setDuration(1000);
@@ -249,6 +252,7 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
   }
 
   public void onClickRight(int position){
+    card.setAnswerType("Click");
     Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),
         R.anim.slide_out_right);
     animation.setDuration(1000);

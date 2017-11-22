@@ -3,8 +3,8 @@
 
   <ImageView
       android:id="@+id/trophy_image"
-      android:layout_width="30dp"
-      android:layout_height="30dp"
+      android:layout_width="40dp"
+      android:layout_height="40dp"
       android:layout_below="@id/answer_status"
       android:layout_toRightOf="@id/get_app_button"
       android:layout_marginTop="10dp"
@@ -17,9 +17,9 @@
       android:layout_width="40dp"
       android:layout_height="wrap_content"
       android:layout_toRightOf="@id/trophy_image"
-      android:layout_marginTop="10dp"
-      android:layout_marginLeft="20dp"
-      android:textSize="11dp"
+      android:layout_marginLeft="15dp"
+      android:layout_marginTop="2dp"
+      android:textSize="12dp"
       android:gravity="center"
       style="@style/Aptoide.TextView.Medium.L.Black"
       android:text="Score"
@@ -31,7 +31,7 @@
       android:layout_height="wrap_content"
       android:layout_toLeftOf="@+id/status_increment"
       android:layout_toRightOf="@id/trophy_image"
-      android:layout_marginTop="5dp"
+      android:layout_marginTop="20dp"
       android:layout_marginLeft="12dp"
       android:layout_below="@id/score_id"
       android:gravity="center"
@@ -45,7 +45,7 @@
       android:layout_width="25dp"
       android:layout_height="wrap_content"
       android:layout_below="@id/score_id"
-      android:layout_marginTop="5dp"
+      android:layout_marginTop="20dp"
       android:layout_marginRight="2dp"
       android:layout_toLeftOf="@+id/global_value"
       android:textSize="12dp"
@@ -58,22 +58,44 @@
   <include layout="@layout/separator_vertical"
       android:id="@+id/separator1"
       android:layout_width="1dp"
-      android:layout_height="40dp"
+      android:layout_height="50dp"
       android:layout_toRightOf="@id/score_id"
       android:layout_marginLeft="10dp"
-      android:layout_marginTop="7dp"/>
+      android:layout_marginTop="5dp"/>
 
+  <include layout="@layout/separator_vertical"
+      android:id="@+id/separator11"
+      android:layout_width="1dp"
+      android:layout_height="50dp"
+      android:layout_toRightOf="@id/score_id"
+      android:layout_marginLeft="15dp"
+      android:layout_marginTop="5dp"/>
+
+
+  <TextView
+      android:layout_width="50dp"
+      android:layout_height="wrap_content"
+      android:layout_toRightOf="@id/separator11"
+      android:layout_toEndOf="@id/separator11"
+      android:layout_marginLeft="60dp"
+      android:layout_marginStart="60dp"
+      android:layout_marginTop="2dp"
+      android:textSize="12dp"
+      android:gravity="center"
+      style="@style/Aptoide.TextView.Medium.L.Black"
+      android:text="Rankings"
+      />
 
   <TextView
       android:id="@+id/global_id"
       android:layout_width="40dp"
       android:layout_height="wrap_content"
       android:layout_toRightOf="@id/score_id"
-      android:layout_marginTop="10dp"
-      android:layout_marginLeft="20dp"
+      android:layout_marginTop="20dp"
+      android:layout_marginLeft="25dp"
       android:gravity="center"
       android:textSize="11dp"
-      style="@style/Aptoide.TextView.Medium.L.Black"
+      style="@style/Aptoide.TextView.Medium.L"
       android:text="Global"
       />
 
@@ -84,7 +106,7 @@
       android:layout_toRightOf="@id/separator1"
       android:layout_below="@id/global_id"
       android:layout_marginTop="5dp"
-      android:layout_marginLeft="10dp"
+      android:layout_marginLeft="15dp"
       android:gravity="center"
       android:textSize="12dp"
       style="@style/Aptoide.TextView.Regular.S"
@@ -94,21 +116,21 @@
   <include layout="@layout/separator_vertical"
       android:id="@+id/separator2"
       android:layout_width="1dp"
-      android:layout_height="40dp"
+      android:layout_height="35dp"
       android:layout_toRightOf="@id/global_id"
       android:layout_marginLeft="10dp"
-      android:layout_marginTop="7dp"/>
+      android:layout_marginTop="20dp"/>
 
   <TextView
       android:id="@+id/country_id"
       android:layout_width="40dp"
       android:layout_height="wrap_content"
       android:layout_marginLeft="20dp"
-      android:layout_marginTop="10dp"
+      android:layout_marginTop="20dp"
       android:layout_toRightOf="@id/global_id"
       android:gravity="center"
       android:textSize="11dp"
-      style="@style/Aptoide.TextView.Medium.L.Black"
+      style="@style/Aptoide.TextView.Medium.L"
       android:text="Country"
       />
 
@@ -129,10 +151,10 @@
   <include layout="@layout/separator_vertical"
       android:id="@+id/separator3"
       android:layout_width="1dp"
-      android:layout_height="40dp"
+      android:layout_height="35dp"
       android:layout_toRightOf="@id/country_id"
       android:layout_marginLeft="10dp"
-      android:layout_marginTop="7dp"/>
+      android:layout_marginTop="20dp"/>
 
   <TextView
       android:id="@+id/friends_id"
@@ -140,10 +162,10 @@
       android:layout_height="wrap_content"
       android:layout_toRightOf="@id/country_id"
       android:layout_marginLeft="20dp"
-      android:layout_marginTop="10dp"
+      android:layout_marginTop="20dp"
       android:gravity="center"
       android:textSize="11dp"
-      style="@style/Aptoide.TextView.Medium.L.Black"
+      style="@style/Aptoide.TextView.Medium.L"
       android:text="Friends"
       />
 

@@ -68,76 +68,6 @@
           android:layout_marginTop="18dp"
           />
 
-      <!--<ImageView-->
-          <!--android:id="@+id/displayable_social_timeline_answer_card_leaderboard_icon"-->
-          <!--android:layout_width="15dp"-->
-          <!--android:layout_height="15dp"-->
-          <!--android:layout_marginRight="5dp"-->
-          <!--android:layout_marginTop="@dimen/appstimeline_card_icon"-->
-          <!--android:layout_toLeftOf="@+id/displayable_social_timeline_answer_card_leaderboard"-->
-          <!--android:src="@drawable/leaderboard_global"-->
-          <!--/>-->
-
-      <!--<TextView-->
-          <!--android:id="@id/displayable_social_timeline_answer_card_leaderboard"-->
-          <!--android:layout_width="wrap_content"-->
-          <!--android:layout_height="wrap_content"-->
-          <!--android:layout_alignEnd="@+id/card_custom_view_line_separator"-->
-          <!--android:layout_marginRight="3dp"-->
-          <!--android:layout_marginTop="18dp"-->
-          <!--android:text="#1234"-->
-          <!--style="@style/Aptoide.TextView.Regular.XS.Grey"-->
-          <!--android:visibility="invisible"-->
-          <!--android:layout_alignRight="@+id/card_custom_view_line_separator"-->
-          <!--/>-->
-
-      <!--<ProgressBar-->
-          <!--android:id="@+id/rank_progress"-->
-          <!--android:layout_width="10dp"-->
-          <!--android:layout_height="10dp"-->
-          <!--android:layout_toRightOf="@id/displayable_social_timeline_answer_card_leaderboard_icon"-->
-          <!--android:layout_marginLeft="5dp"-->
-          <!--android:layout_marginTop="18dp"-->
-          <!--/>-->
-
-
-      <!--<TextView-->
-          <!--android:id="@+id/displayable_social_timeline_answer_card_score"-->
-          <!--android:layout_width="wrap_content"-->
-          <!--android:layout_height="wrap_content"-->
-          <!--android:layout_marginRight="5dp"-->
-          <!--android:layout_marginTop="18dp"-->
-          <!--android:layout_toLeftOf="@+id/score_increment"-->
-          <!--android:text="2000"-->
-          <!--android:visibility="visible"-->
-          <!--style="@style/Aptoide.TextView.Regular.XS.Grey"-->
-          <!--/>-->
-
-
-      <!--<TextView-->
-          <!--android:id="@id/score_increment"-->
-          <!--android:layout_width="wrap_content"-->
-          <!--android:layout_height="wrap_content"-->
-          <!--android:layout_marginRight="5dp"-->
-          <!--android:layout_marginTop="18dp"-->
-          <!--android:layout_toLeftOf="@id/displayable_social_timeline_answer_card_leaderboard_icon"-->
-          <!--android:text="(+1)"-->
-          <!--android:textColor="@color/green"-->
-          <!--android:visibility="visible"-->
-          <!--style="@style/Aptoide.TextView.Regular.XS.Grey"-->
-          <!--/>-->
-
-
-      <!--<ImageView-->
-          <!--android:id="@+id/displayable_social_timeline_answer_card_score_icon"-->
-          <!--android:layout_width="15dp"-->
-          <!--android:layout_height="15dp"-->
-          <!--android:layout_marginRight="3dp"-->
-          <!--android:layout_marginTop="@dimen/appstimeline_card_icon"-->
-          <!--android:layout_toLeftOf="@id/displayable_social_timeline_answer_card_score"-->
-          <!--android:src="@drawable/leaderboard_score"-->
-          <!--/>-->
-
       <View
           android:id="@+id/card_custom_view_line_separator"
           android:layout_width="match_parent"
@@ -183,7 +113,9 @@
             android:layout_height="30dp"
             android:layout_below="@+id/app_name"
             android:layout_toRightOf="@id/get_app_icon"
+            android:layout_toEndOf="@id/get_app_icon"
             android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:layout_marginBottom="10dp"
             android:textSize="10sp"
             tools:text="get app"
@@ -196,6 +128,7 @@
             android:layout_height="50dp"
             android:layout_marginTop="35dp"
             android:layout_marginLeft="45dp"
+            android:layout_marginStart="45dp"
             />
 
         <TextView
@@ -204,6 +137,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginLeft="155dp"
+            android:layout_marginStart="155dp"
             android:gravity="center"
             android:text="Answer:"
             android:visibility="visible"
@@ -214,7 +148,9 @@
             android:layout_width="110dp"
             android:layout_height="40dp"
             android:layout_toRightOf="@id/get_app_icon"
+            android:layout_toEndOf="@id/get_app_icon"
             android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:text="Aptoide - App Store"
@@ -237,26 +173,11 @@
             layout="@layout/timeline_game_answer_stats_element"
             android:id="@+id/card_leaderboard"
             android:layout_width="310dp"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:layout_below="@id/get_app_button"
             android:layout_centerHorizontal="true"
             android:visibility="visible"
             />
-
-
-        <!--<Button-->
-        <!--android:id="@+id/expand_leaderboard"-->
-        <!--android:layout_width="110dp"-->
-        <!--android:layout_height="30dp"-->
-        <!--android:layout_below="@id/card_leaderboard"-->
-        <!--android:layout_toRightOf="@id/get_app_button"-->
-        <!--android:layout_marginTop="5dp"-->
-        <!--android:layout_marginLeft="85dp"-->
-        <!--android:textSize="8dp"-->
-        <!--android:text="full leaderboard"-->
-        <!--android:visibility="invisible"-->
-        <!--style="@style/Aptoide.Button.Ghost.ThinBlackAlpha"            />-->
-
 
       </RelativeLayout>
 
@@ -266,7 +187,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.7dp"
         android:layout_marginBottom="5dp"
-        android:layout_marginEnd="12dp"
+        android:layout_marginEnd="15dp"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="15dp"
         android:layout_marginStart="12dp"

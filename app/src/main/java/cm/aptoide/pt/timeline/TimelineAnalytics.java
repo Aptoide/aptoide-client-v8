@@ -17,6 +17,11 @@ import cm.aptoide.pt.social.data.AppUpdate;
 import cm.aptoide.pt.social.data.AppUpdateCardTouchEvent;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.CardType;
+import cm.aptoide.pt.social.data.Game;
+import cm.aptoide.pt.social.data.GameAnswer;
+import cm.aptoide.pt.social.data.GameAnswerTouchEvent;
+import cm.aptoide.pt.social.data.GameCardTouchEvent;
+import cm.aptoide.pt.social.data.LeaderboardTouchEvent;
 import cm.aptoide.pt.social.data.Media;
 import cm.aptoide.pt.social.data.PopularApp;
 import cm.aptoide.pt.social.data.PopularAppTouchEvent;
@@ -30,6 +35,7 @@ import cm.aptoide.pt.social.data.StoreLatestApps;
 import com.facebook.appevents.AppEventsLogger;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
@@ -56,6 +62,9 @@ public class TimelineAnalytics {
   private static final String OPEN_CHANNEL = "OPEN_CHANNEL";
   private static final String OPEN_STORE = "OPEN_STORE";
   private static final String OPEN_APP = "OPEN_APP";
+  private static final String GAME_LEADERBOARD_QUESTION = "GAME_LEADERBOARD_QUESTION";
+  private static final String GAME_LEADERBOARD_ANSWER = "GAME_LEADERBOARD_ANSWER";
+  private static final String GAME_PLAY = "GAME_PLAY";
   private static final String UPDATE_APP = "UPDATE_APP";
   private static final String FOLLOW_FRIENDS = "Apps_Timeline_Follow_Friends";
   private static final String LIKE = "LIKE";
@@ -619,12 +628,62 @@ public class TimelineAnalytics {
       sendOpenAppEvent(card.getType()
           .name(), TimelineAnalytics.SOURCE_APTOIDE, card.getPackageName());
     }
+    else if(postType.isGame()){
+      Game card = (Game) post;
+      if(cardTouchEvent instanceof LeaderboardTouchEvent){
+        LeaderboardTouchEvent event = (LeaderboardTouchEvent) cardTouchEvent;
+        Analytics.AppsTimeline.clickOnCard(event.getCard().getType().name(),Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.BLANK,
+            Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.OPEN_LEADERBOARD);
+        sendOpenLeaderboardEvent(event.getPosition(), event.getCard().getType().name(), GAME_LEADERBOARD_QUESTION);
+      }
+      else if(cardTouchEvent instanceof GameCardTouchEvent){
+        Analytics.AppsTimeline.clickOnCard(cardTouchEvent.getCard().getType().name(),Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.BLANK,
+            Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.ANSWER_GAME);
+        sendGameAnswerEvent(cardTouchEvent.getPosition(), card.getType().name(), card.getAnswerType());
+      }
+    }
+    else if(postType.equals(CardType.GAMEANSWER)){
+      if(cardTouchEvent instanceof LeaderboardTouchEvent){
+        LeaderboardTouchEvent event = (LeaderboardTouchEvent) cardTouchEvent;
+        Analytics.AppsTimeline.clickOnCard(event.getCard().getType().name(),Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.BLANK,
+            Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.OPEN_LEADERBOARD);
+        sendOpenLeaderboardEvent(event.getPosition(), event.getCard().getType().name(), GAME_LEADERBOARD_ANSWER);
+      }
+      else{
+        GameAnswer card = (GameAnswer) post;
+        Analytics.AppsTimeline.clickOnCard(postType.name(), card.getRightAnswer().getPackageName(),
+            Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.BLANK,
+            Analytics.AppsTimeline.OPEN_APP_VIEW);
+        sendOpenAppEvent(card.getType()
+            .name(), TimelineAnalytics.SOURCE_APTOIDE, card.getRightAnswer().getPackageName());
+
+      }
+    }
   }
 
   private Map<String, Object> createScrollingEventData(int position) {
     final Map<String, Object> eventMap = new HashMap<>();
     eventMap.put("position", position);
     return eventMap;
+  }
+
+  public void sendGameAnswerEvent(int position, String cardType, String answerType){
+    Map<String, Object> data = new HashMap<>();
+    data.put("position", position);
+    data.put("card_type", cardType);
+    data.put("source", TimelineAnalytics.SOURCE_APTOIDE);
+    data.put("play_gesture", answerType);
+    data = decorateWithScreenHistory(data);
+    analytics.sendEvent(createEvent(GAME_PLAY, data));
+  }
+
+  public void sendOpenLeaderboardEvent(int position, String cardType, String eventType){
+    Map<String, Object> data = new HashMap<>();
+    data.put("position", position);
+    data.put("card_type", cardType);
+    data.put("source", TimelineAnalytics.SOURCE_APTOIDE);
+    data = decorateWithScreenHistory(data);
+    analytics.sendEvent(createEvent(eventType, data));
   }
 
   public void sendCommentEvent(int position, boolean success) {

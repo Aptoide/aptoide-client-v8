@@ -20,6 +20,7 @@ public abstract class Game implements Post {
   private final boolean isLiked;
   private final CardType cardType;
   private int cardsLeft;
+  private String answerType;
 
   public Game(String cardId, App rightAnswer, String answerURL, String question, int score, int gRanking,
       int lRanking, int fRanking, String abUrl, boolean isLiked, CardType cardType, int played){
@@ -35,6 +36,7 @@ public abstract class Game implements Post {
     this.isLiked = isLiked;
     this.cardType = cardType;
     this.cardsLeft = played;
+    this.answerType = null;
   }
 
   @Override
@@ -85,4 +87,12 @@ public abstract class Game implements Post {
 
   public int getCardsLeft() {return cardsLeft;}
   public void setCardsLeft(int cardsLeft) {this.cardsLeft = cardsLeft;}
+
+  public String getAnswerType() {
+    return answerType;
+  }
+
+  public void setAnswerType(String answerType) {
+    this.answerType = answerType;
+  }
 }

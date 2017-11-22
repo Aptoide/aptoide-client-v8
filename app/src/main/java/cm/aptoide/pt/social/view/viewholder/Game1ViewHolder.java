@@ -178,11 +178,13 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
   }
 
   public void onPostDismissedLeft(Game1 card, int position){
+    card.setAnswerType("Swipe");
     cardTouchEventPublishSubject.onNext(
         new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(leftAnswer.getText())));
   }
 
   public void onPostDismissedRight(Game1 card, int position){
+    card.setAnswerType("Swipe");
     cardTouchEventPublishSubject.onNext(
         new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(rightAnswer.getText())));
   }
@@ -192,6 +194,7 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
   }
 
   public void onClickLeft(int position){
+    card.setAnswerType("Click");
     Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),
         R.anim.slide_out_left);
     animation.setDuration(1000);
@@ -217,6 +220,7 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
   }
 
   public void onClickRight(int position){
+    card.setAnswerType("Click");
     Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),
         R.anim.slide_out_right);
     animation.setDuration(1000);
