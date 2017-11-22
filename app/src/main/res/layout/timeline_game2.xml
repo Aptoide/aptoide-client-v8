@@ -25,7 +25,7 @@
       <View
           android:id="@+id/top_margin_line"
           android:layout_width="match_parent"
-          android:layout_height="5dp"
+          android:layout_height="2dp"
           android:layout_alignParentTop="true"
           android:layout_marginEnd="12dp"
           android:layout_marginLeft="12dp"
