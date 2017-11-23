@@ -1,7 +1,5 @@
 package cm.aptoide.pt.social.data;
 
-import java.util.ArrayList;
-import java.util.List;
 import rx.Single;
 
 /**
@@ -12,34 +10,36 @@ public class TimelinePostsRepository {
 
   private final PostsRemoteDataSource postsRemoteDataSource;
 
-  private List<Post> cachedPosts;
+  private TimelineModel cachedTimeline;
 
   public TimelinePostsRepository(PostsRemoteDataSource postsRemoteDataSource) {
     this.postsRemoteDataSource = postsRemoteDataSource;
   }
 
-  public Single<List<Post>> getCards() {
-    if (cachedPosts != null) {
-      return Single.just(new ArrayList<>(cachedPosts));
+  public Single<TimelineModel> getCards() {
+    if (cachedTimeline != null) {
+      return Single.just(
+          new TimelineModel(cachedTimeline.getTimelineVersion(), cachedTimeline.getPosts()));
     }
-    return postsRemoteDataSource.getCards()
-        .doOnSuccess(posts -> cachedPosts = posts)
-        .map(posts -> new ArrayList<>(posts));
+    return postsRemoteDataSource.getTimelineModel()
+        .doOnSuccess(timeline -> cachedTimeline = timeline)
+        .map(timelineModel -> new TimelineModel(timelineModel.getTimelineVersion(),
+            timelineModel.getPosts()));
   }
 
-  public Single<List<Post>> getFreshCards() {
-    return postsRemoteDataSource.getCards()
-        .doOnSuccess(posts -> cachedPosts = posts);
+  public Single<TimelineModel> getFreshCards() {
+    return postsRemoteDataSource.getTimelineModel()
+        .doOnSuccess(timelineModel -> cachedTimeline = timelineModel);
   }
 
-  public Single<List<Post>> getFreshCards(String postId) {
-    return postsRemoteDataSource.getCards(postId)
-        .doOnSuccess(posts -> cachedPosts = posts);
+  public Single<TimelineModel> getFreshCards(String postId) {
+    return postsRemoteDataSource.getTimelineModel(postId)
+        .doOnSuccess(timelineModel -> cachedTimeline = timelineModel);
   }
 
-  public Single<List<Post>> getNextCards() {
+  public Single<TimelineModel> getNextCards() {
     return postsRemoteDataSource.getNextCards()
-        .doOnSuccess(posts -> cachedPosts.addAll(posts));
+        .doOnSuccess(timelineModel -> cachedTimeline.addPosts(timelineModel.getPosts()));
   }
 
   public void clearLoading() {

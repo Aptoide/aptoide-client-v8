@@ -50,19 +50,19 @@ public class Timeline {
     this.updateRepository = updateRepository;
   }
 
-  public Single<List<Post>> getCards() {
+  public Single<TimelineModel> getCards() {
     return timelinePostsRepository.getCards();
   }
 
-  public Single<List<Post>> getFreshCards() {
+  public Single<TimelineModel> getFreshCards() {
     return timelinePostsRepository.getFreshCards();
   }
 
-  public Single<List<Post>> getFreshCards(String postId) {
+  public Single<TimelineModel> getFreshCards(String postId) {
     return timelinePostsRepository.getFreshCards(postId);
   }
 
-  public Single<List<Post>> getNextCards() {
+  public Single<TimelineModel> getNextCards() {
     return timelinePostsRepository.getNextCards();
   }
 

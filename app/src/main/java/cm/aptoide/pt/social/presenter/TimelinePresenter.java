@@ -364,10 +364,14 @@ public class TimelinePresenter implements Presenter {
                 .doOnNext(__ -> view.showPostProgressIndicator())
                 .flatMapSingle(cardId -> timeline.getFreshCards(cardId))
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(cards -> {
-                  if (cards != null && cards.size() > 0) {
-                    showCardsAndHidePostProgress(cards);
-                  } else if (cards != null && cards.size() == 0) {
+                .doOnNext(timelineModel -> {
+                  if (timelineModel != null
+                      && timelineModel.getPosts()
+                      .size() > 0) {
+                    showCardsAndHidePostProgress(timelineModel.getPosts());
+                  } else if (timelineModel != null
+                      && timelineModel.getPosts()
+                      .size() == 0) {
                     showEmptyStateAndHidePostProgress();
                   } else {
                     view.showGenericViewError();
@@ -479,10 +483,14 @@ public class TimelinePresenter implements Presenter {
             .doOnNext(__ -> view.showPostProgressIndicator())
             .flatMapSingle(cardId -> timeline.getFreshCards(cardId))
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(cards -> {
-              if (cards != null && cards.size() > 0) {
-                showCardsAndHidePostProgress(cards);
-              } else if (cards != null && cards.size() == 0) {
+            .doOnNext(timelineModel -> {
+              if (timelineModel.getPosts() != null
+                  && timelineModel.getPosts()
+                  .size() > 0) {
+                showCardsAndHidePostProgress(timelineModel.getPosts());
+              } else if (timelineModel.getPosts() != null
+                  && timelineModel.getPosts()
+                  .size() == 0) {
                 showEmptyStateAndHidePostProgress();
               } else {
                 view.showGenericViewError();
@@ -544,10 +552,14 @@ public class TimelinePresenter implements Presenter {
         .observeOn(Schedulers.io())
         .flatMapSingle(account -> timeline.getCards())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(cards -> {
-          if (cards != null && cards.size() > 0) {
-            showCardsAndHideProgress(cards);
-          } else if (cards != null && cards.size() == 0) {
+        .doOnNext(timelineModel -> {
+          if (timelineModel.getPosts() != null
+              && timelineModel.getPosts()
+              .size() > 0) {
+            showCardsAndHideProgress(timelineModel.getPosts());
+          } else if (timelineModel.getPosts() != null
+              && timelineModel.getPosts()
+              .size() == 0) {
             showEmptyStateAndHideProgress();
           } else {
             view.showGenericViewError();
@@ -576,10 +588,14 @@ public class TimelinePresenter implements Presenter {
             .observeOn(Schedulers.io())
             .flatMapSingle(account -> timeline.getFreshCards())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(cards -> {
-              if (cards != null && cards.size() > 0) {
-                showCardsAndHideRefresh(cards);
-              } else if (cards != null && cards.size() == 0) {
+            .doOnNext(timelineModel -> {
+              if (timelineModel.getPosts() != null
+                  && timelineModel.getPosts()
+                  .size() > 0) {
+                showCardsAndHideRefresh(timelineModel.getPosts());
+              } else if (timelineModel.getPosts() != null
+                  && timelineModel.getPosts()
+                  .size() == 0) {
                 showEmptyStateAndHideRefresh();
               } else {
                 view.showGenericViewError();
@@ -606,7 +622,8 @@ public class TimelinePresenter implements Presenter {
             .doOnNext(created -> view.showLoadMoreProgressIndicator())
             .flatMapSingle(bottomReached -> timeline.getNextCards())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(cards -> showMoreCardsAndHideLoadMoreProgress(cards))
+            .doOnNext(
+                timelineModel -> showMoreCardsAndHideLoadMoreProgress(timelineModel.getPosts()))
             .doOnError(throwable -> {
               crashReport.log(throwable);
               view.showGenericError();
@@ -631,10 +648,14 @@ public class TimelinePresenter implements Presenter {
             .observeOn(Schedulers.io())
             .flatMapSingle(account -> timeline.getCards())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(posts -> {
-              if (posts != null && posts.size() > 0) {
-                showCardsAndHideProgress(posts);
-              } else if (posts != null && posts.size() == 0) {
+            .doOnNext(timelineModel -> {
+              if (timelineModel.getPosts() != null
+                  && timelineModel.getPosts()
+                  .size() > 0) {
+                showCardsAndHideProgress(timelineModel.getPosts());
+              } else if (timelineModel.getPosts() != null
+                  && timelineModel.getPosts()
+                  .size() == 0) {
                 showEmptyStateAndHideProgress();
               } else {
                 view.showGenericViewError();

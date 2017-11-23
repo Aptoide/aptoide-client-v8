@@ -38,6 +38,7 @@ public class PostsRemoteDataSource {
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
   private String cardIdPriority;
+  private String timelineVersion;
 
   public PostsRemoteDataSource(String url, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient okhttp, Converter.Factory converterFactory, PackageRepository packageRepository,
@@ -62,9 +63,9 @@ public class PostsRemoteDataSource {
     this.postFilter = postFilter;
   }
 
-  @NonNull private Single<List<Post>> getCards(int limit, int offset) {
+  @NonNull private Single<TimelineModel> getTimelineModel(int limit, int offset) {
     if (loading || (offset >= total)) {
-      return Single.just(Collections.emptyList());
+      return Single.just(new TimelineModel("n/a", Collections.emptyList()));
     }
     return getPackages().flatMap(packages -> Observable.fromCallable(() -> loading = true)
         .flatMapSingle(
@@ -82,9 +83,15 @@ public class PostsRemoteDataSource {
         })
         .toSingle())
         .doOnError(__ -> loading = false)
-        .doOnSuccess(__ -> {
+        .doOnSuccess(timelineResponse -> {
           loading = false;
           cardIdPriority = null;
+          if (timelineResponse.getDataList()
+              .getData() != null) {
+            timelineVersion = timelineResponse.getDataList()
+                .getData()
+                .getVersion();
+          }
         })
         .map(timelineResponse -> timelineResponse.getDataList()
             .getList())
@@ -93,7 +100,8 @@ public class PostsRemoteDataSource {
         .flatMap(element -> postFilter.filter(element))
         .toList()
         .toSingle()
-        .flatMap(timelineResponse -> mapper.map(timelineResponse, linksHandlerFactory));
+        .flatMap(timelineResponse -> mapper.map(timelineResponse, linksHandlerFactory))
+        .flatMap(posts -> Single.just(new TimelineModel(timelineVersion, posts)));
   }
 
   private Single<List<String>> getPackages() {
@@ -103,19 +111,19 @@ public class PostsRemoteDataSource {
         .toSingle();
   }
 
-  public Single<List<Post>> getNextCards() {
-    return getCards(limit, currentOffset);
+  public Single<TimelineModel> getNextCards() {
+    return getTimelineModel(limit, currentOffset);
   }
 
-  public Single<List<Post>> getCards() {
+  public Single<TimelineModel> getTimelineModel() {
     postFilter.clear();
-    return getCards(limit, initialOffset);
+    return getTimelineModel(limit, initialOffset);
   }
 
-  public Single<List<Post>> getCards(String cardId) {
+  public Single<TimelineModel> getTimelineModel(String cardId) {
     postFilter.clear();
     cardIdPriority = cardId;
-    return getCards(limit, initialOffset);
+    return getTimelineModel(limit, initialOffset);
   }
 
   public void clearLoading() {
