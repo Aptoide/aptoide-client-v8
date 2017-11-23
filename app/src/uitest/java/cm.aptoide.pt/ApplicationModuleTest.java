@@ -3,7 +3,6 @@ package cm.aptoide.pt;
 import android.accounts.AccountManager;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
-import android.app.Application;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
@@ -12,6 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
@@ -20,7 +20,6 @@ import android.util.DisplayMetrics;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AccountException;
-import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountPersistence;
 import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -33,7 +32,9 @@ import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
+import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
@@ -48,11 +49,13 @@ import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.cache.L2Cache;
 import cm.aptoide.pt.dataprovider.cache.POSTCacheInterceptor;
 import cm.aptoide.pt.dataprovider.cache.POSTCacheKeyAlgorithm;
 import cm.aptoide.pt.dataprovider.model.v3.ErrorResponse;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.download.DownloadAnalytics;
@@ -67,6 +70,7 @@ import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.install.InstallerAnalytics;
+import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.install.RootInstallNotificationEventReceiver;
 import cm.aptoide.pt.install.installer.DefaultInstaller;
 import cm.aptoide.pt.install.installer.InstallationProvider;
@@ -75,7 +79,6 @@ import cm.aptoide.pt.install.installer.RootInstallErrorNotificationFactory;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.install.rollback.RollbackFactory;
 import cm.aptoide.pt.install.rollback.RollbackRepository;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
 import cm.aptoide.pt.networking.BodyInterceptorV7;
@@ -167,7 +170,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
 @Module public class ApplicationModuleTest{
 
-  private final Application application;
+  private final AptoideApplication application;
   private final String imageCachePath;
   private final String cachePath;
   private final String accountType;
@@ -178,7 +181,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   private final String aptoideMd5sum;
   private final LoginPreferences loginPreferences;
 
-  public ApplicationModuleTest(Application application, String imageCachePath, String cachePath,
+  public ApplicationModuleTest(AptoideApplication application, String imageCachePath, String cachePath,
       String accountType, String partnerId, String marketName, String extraId,
       String aptoidePackage, String aptoideMd5sum, LoginPreferences loginPreferences) {
     this.application = application;
@@ -481,23 +484,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .build();
   }
 
-  @ApplicationTestScope @Provides AptoideAccountManager provideAptoideAccountManager(AdultContent adultContent,
-      StoreAccessor storeAccessor, @Named("default") OkHttpClient httpClient,
-      @Named("long-timeout") OkHttpClient longTimeoutHttpClient, AccountManager accountManager,
-      @Named("secure") SharedPreferences secureSharedPreferences,
-      @Named("default") SharedPreferences defaultSharedPreferences,
-      SecureCoderDecoder secureCoderDecoder, AuthenticationPersistence authenticationPersistence,
-      RefreshTokenInvalidator tokenInvalidator, @Named("pool-v7")
-      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
-      @Named("web-v7")
-          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorWebV7,
-      @Named("multipart")
-          MultipartBodyInterceptor multipartBodyInterceptor,
-      AndroidAccountProvider androidAccountProvider, GoogleApiClient googleApiClient,
-      @Named("no-authentication-v3") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> noAuthenticationBodyInterceptorV3,
-      ObjectMapper objectMapper) {
+  @ApplicationTestScope @Provides AptoideAccountManager provideAptoideAccountManager(GoogleApiClient googleApiClient) {
+
     FacebookSdk.sdkInitialize(application);
-    final AccountFactory accountFactory = new AccountFactory();
 
       Account account = new Account() {
         @Override public List<Store> getSubscribedStores() {
@@ -556,10 +545,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       final AccountService accountService = new AccountService() {
         @Override public Single<Account> getAccount(String email, String password) {
           if (TestType.types.equals(TestType.TestTypes.SIGNSIGNUPTESTS)) {
-            Logger.d("TAG123", "REGULAR");
             return Single.just(account);
           } else if (TestType.types.equals(TestType.TestTypes.SIGNINWRONG)) {
-            Logger.d("TAG123", "SIGNINWRONG");
             return Single.error(new AccountException("invalid_grant"));
           }
           return Single.just(account);
@@ -572,17 +559,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
         @Override public Single<Account> createAccount(String email, String password) {
           if (TestType.types.equals(TestType.TestTypes.SIGNSIGNUPTESTS)) {
-            Logger.d("TAG123", "REGULAR");
             return Single.just(account);
           } else if (TestType.types.equals(TestType.TestTypes.USEDEMAIL)) {
-            Logger.d("TAG123", "USEDEMAIL");
             List<ErrorResponse> list = new ArrayList<>();
             ErrorResponse errorResponse = new ErrorResponse();
             errorResponse.code = "WOP-9";
             list.add(errorResponse);
             return Single.error(new AccountException(list));
           } else if (TestType.types.equals(TestType.TestTypes.INVALIDEMAIL)) {
-            Logger.d("TAG123", "INVALIDEMAIL");
             return Single.error(new AccountException("IARG_106"));
           }
           return Single.just(account);
@@ -741,24 +725,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> provideAccountSettingsBodyInterceptorPoolV7(
       @Named("pool-v7") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptor,
       AdultContent adultContent) {
-    if(TestType.types.equals(TestType.TestTypes.MATURE)) {
-      return new AccountSettingsBodyInterceptorV7(bodyInterceptor, adultContent) {
-        @Override public Single<BaseBody> intercept(BaseBody body) {
-          return Single.zip(bodyInterceptor.intercept(body), adultContent.enabled()
-              .first()
-              .toSingle(), (bodyV7, adultContentEnabled) -> {
-            bodyV7.setMature(adultContentEnabled);
-            if (bodyV7.isMature() == adultContentEnabled){
-              return bodyV7;
-            }
-            return null;
-          });
-        }
-      };
-    }
-    else{
-        return new AccountSettingsBodyInterceptorV7(bodyInterceptor, adultContent);
-      }
+    return new AccountSettingsBodyInterceptorV7(bodyInterceptor, adultContent);
   }
 
   @ApplicationTestScope @Provides @Named("pool-v7")
@@ -876,5 +843,22 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         }
       };
       return storeManager;
+  }
+
+  @ApplicationTestScope @Provides AdsRepository provideAdsRepository(IdsRepository idsRepository, AptoideAccountManager accountManager,
+      @Named("default") OkHttpClient okHttpClient, QManager qManager,  @Named("default") SharedPreferences defaultSharedPreferences,
+      AdsApplicationVersionCodeProvider adsApplicationVersionCodeProvider) {
+    return new AdsRepository(idsRepository, accountManager, okHttpClient, WebService.getDefaultConverter(), qManager, defaultSharedPreferences,
+        application.getApplicationContext(), (ConnectivityManager) application.getSystemService(Context.CONNECTIVITY_SERVICE), application.getResources(),
+        adsApplicationVersionCodeProvider, AdNetworkUtils::isGooglePlayServicesAvailable, application::getPartnerId,
+        new MinimalAdMapper());
+  }
+
+  @ApplicationTestScope @Provides AdsApplicationVersionCodeProvider providesAdsApplicationVersionCodeProvider(PackageRepository packageRepository){
+      return new PackageRepositoryVersionCodeProvider(packageRepository, application.getPackageName());
+  }
+
+  @ApplicationTestScope @Provides PackageRepository providesPackageRepository(){
+    return new PackageRepository(application.getPackageManager());
   }
 }

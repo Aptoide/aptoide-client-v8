@@ -3,7 +3,6 @@ package cm.aptoide.pt;
 import android.accounts.AccountManager;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
-import android.app.Application;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
@@ -12,6 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
@@ -35,7 +35,9 @@ import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.account.MatureContentPersistence;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
+import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
@@ -50,10 +52,12 @@ import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.cache.L2Cache;
 import cm.aptoide.pt.dataprovider.cache.POSTCacheInterceptor;
 import cm.aptoide.pt.dataprovider.cache.POSTCacheKeyAlgorithm;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
@@ -69,6 +73,7 @@ import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.install.InstallerAnalytics;
+import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.install.RootInstallNotificationEventReceiver;
 import cm.aptoide.pt.install.installer.DefaultInstaller;
 import cm.aptoide.pt.install.installer.InstallationProvider;
@@ -165,7 +170,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
 @Module public class ApplicationModule {
 
-  private final Application application;
+  private final AptoideApplication application;
   private final String imageCachePath;
   private final String cachePath;
   private final String accountType;
@@ -176,7 +181,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   private final String aptoideMd5sum;
   private final LoginPreferences loginPreferences;
 
-  public ApplicationModule(Application application, String imageCachePath, String cachePath,
+  public ApplicationModule(AptoideApplication application, String imageCachePath, String cachePath,
       String accountType, String partnerId, String marketName, String extraId,
       String aptoidePackage, String aptoideMd5sum, LoginPreferences loginPreferences) {
     this.application = application;
@@ -738,5 +743,21 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         defaultSharedPreferences, tokenInvalidator, requestBodyFactory, nonNullObjectMapper);
   }
 
+  @Singleton @Provides AdsRepository provideAdsRepository(IdsRepository idsRepository, AptoideAccountManager accountManager,
+      @Named("default") OkHttpClient okHttpClient, QManager qManager,  @Named("default") SharedPreferences defaultSharedPreferences,
+      AdsApplicationVersionCodeProvider adsApplicationVersionCodeProvider) {
+    return new AdsRepository(idsRepository, accountManager, okHttpClient, WebService.getDefaultConverter(), qManager, defaultSharedPreferences,
+        application.getApplicationContext(), (ConnectivityManager) application.getSystemService(Context.CONNECTIVITY_SERVICE), application.getResources(),
+        adsApplicationVersionCodeProvider, AdNetworkUtils::isGooglePlayServicesAvailable, application::getPartnerId,
+        new MinimalAdMapper());
+  }
+
+  @Singleton @Provides AdsApplicationVersionCodeProvider providesAdsApplicationVersionCodeProvider(PackageRepository packageRepository){
+    return new PackageRepositoryVersionCodeProvider(packageRepository, application.getPackageName());
+  }
+
+  @Singleton @Provides PackageRepository providesPackageRepository(){
+    return new PackageRepository(application.getPackageManager());
+  }
 
 }

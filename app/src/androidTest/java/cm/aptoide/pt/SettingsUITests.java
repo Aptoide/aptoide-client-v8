@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.ViewInteraction;
-import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -23,6 +22,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static cm.aptoide.pt.UITests.NUMBER_OF_RETRIES;
+import static cm.aptoide.pt.UITests.goToSettings;
 import static cm.aptoide.pt.UITests.skipWizard;
 import static org.hamcrest.Matchers.allOf;
 
@@ -32,8 +32,6 @@ import static org.hamcrest.Matchers.allOf;
 
 @RunWith(AndroidJUnit4.class)
 public class SettingsUITests {
-  private final String MATURE_APP = "Roullete Sex (Roleta do Sexo)";
-  private final String MATURE_SEARCH = "kaoiproduct.roulletesexfree";
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
   @Rule public RetryTestRule retry = new RetryTestRule(NUMBER_OF_RETRIES);
@@ -74,11 +72,6 @@ public class SettingsUITests {
     if(mature == preferences.getBoolean("matureChkBox",false)){
       onView(withId(R.id.action_btn)).perform(click()); //if it's equal fail
     }
-  }
-
-  private void goToSettings(){
-    onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
-    onView(withText(R.string.drawer_title_settings)).perform(click());
   }
 
   private void pressBackButton() {

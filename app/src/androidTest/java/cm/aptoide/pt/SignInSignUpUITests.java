@@ -1,15 +1,8 @@
 package cm.aptoide.pt;
 
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.test.uiautomator.UiDevice;
-import android.support.test.uiautomator.UiObjectNotFoundException;
-import android.support.test.uiautomator.UiSelector;
-import android.support.v4.content.ContextCompat;
 import cm.aptoide.pt.view.MainActivity;
 import org.junit.Before;
 import org.junit.Rule;
@@ -39,12 +32,11 @@ public class SignInSignUpUITests {
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
   @Rule public RetryTestRule retry = new RetryTestRule(UITests.NUMBER_OF_RETRIES);
-  private int nonerrormessagesphotos = 0;
 
   @Before public void setUp() {
     TestType.types = TestType.TestTypes.SIGNSIGNUPTESTS;
     if (UITests.isFirstTime()) {
-     skipWizard();
+      skipWizard();
     }
   }
 
@@ -107,7 +99,7 @@ public class SignInSignUpUITests {
   @Test public void signUpEmailExists() {
     TestType.types = TestType.TestTypes.USEDEMAIL;
     goToMyAccount();
-    performSignUp(LOGINEMAIL, PASS+5);
+    performSignUp(LOGINEMAIL, PASS + 5);
     onView(withText(R.string.ws_error_WOP_9)).check(matches(isDisplayed()));
   }
 
@@ -145,80 +137,19 @@ public class SignInSignUpUITests {
     onView(withId(R.id.action_search)).check(matches(isDisplayed()));
   }
 
-  @Test public void signOut(){
+  @Test public void signOut() {
     TestType.types = TestType.TestTypes.LOGGEDIN;
     goToMyAccount();
     onView(withId(R.id.button_logout)).perform(click());
     onView(withId(R.id.action_search)).check(matches(isDisplayed()));
   }
 
- /* @Test public void profilePhoto() throws InterruptedException, UiObjectNotFoundException { //Arrastar as imagens primeiro
-    nonerrormessagesphotos = 0;
-    UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-    int deviceHeight = mDevice.getDisplayHeight();
-    int deviceWidth = mDevice.getDisplayWidth();
-    goToMyAccount();
-    performLogin(LOGINEMAIL, PASS);
-    goToMyAccount();
-    onView(withId(R.id.my_account_edit_user_profile)).perform(click());
-    onView(withId(R.id.create_user_image_action)).perform(click());
-    allowPermission(mDevice, "WRITE_EXTERNAL_STORAGE");
-    onView(withId(R.id.button_gallery)).perform(click());
-    getPhotoFromStorage(mDevice, deviceHeight, deviceWidth, "user");
-    if(nonerrormessagesphotos != 1){
-      throw new IllegalStateException("Unexpected number of error messages displayed"); //if it has different than 1 means that one of the photos didn't display the error or the accepted photo displayed an error
-    }
-    onView(withId(R.id.create_user_create_profile)).perform(click());
-  }
-
-  @Test public void storePhoto() throws InterruptedException, UiObjectNotFoundException {
-    UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-    int deviceHeight = mDevice.getDisplayHeight();
-    int deviceWidth = mDevice.getDisplayWidth();
-    goToMyAccount();
-    performLogin(LOGINEMAIL, PASS);
-    goToMyAccount();
-    onView(withId(R.id.my_account_edit_user_store)).perform(click());
-    onView(withId(R.id.create_store_image_action)).perform(click());
-    allowPermission(mDevice, "WRITE_EXTERNAL_STORAGE");
-    onView(withId(R.id.button_gallery)).perform(click());
-    getPhotoFromStorage(mDevice, deviceHeight, deviceWidth, "store");
-    if(nonerrormessagesphotos != 1){
-      throw new IllegalStateException("Unexpected number of error messages displayed"); //if it has different than 1 means that one of the photos didn't display the error or the accepted photo displayed an error
-    }
-    onView(withId(R.id.theme_selector)).perform(swipeUp());
-    onView(withId(R.id.theme_selector)).perform(swipeUp());
-    onView(withId(R.id.create_store_action)).perform(click());
-  }
-*/
-
   private void goToMyAccount() {
     onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
     onView(withText(R.string.drawer_title_my_account)).perform(click());
   }
 
-  private boolean hasPermission(String permission) {
-    Context context = InstrumentationRegistry.getTargetContext();
-    String finalpermission = "android.permission." + permission;
-    int permissionStatus = ContextCompat.checkSelfPermission(context, finalpermission);
-    return (permissionStatus == PackageManager.PERMISSION_GRANTED);
-  }
-
-  private void allowPermission(UiDevice mDevice, String permission) {
-    if (android.os.Build.VERSION.SDK_INT >= 23) {
-      if (!hasPermission(permission)) {
-        try {
-          mDevice.findObject(new UiSelector().clickable(true)
-              .checkable(false)
-              .textContains("ALLOW"))
-              .click();
-        } catch (Exception e1) {
-        }
-      }
-    }
-  }
-
-  private void performLogin(String email, String pass){
+  private void performLogin(String email, String pass) {
     onView(withId(R.id.show_login_with_aptoide_area)).perform(click());
     onView(withId(R.id.username)).perform(replaceText(email));
     onView(withId(R.id.password)).perform(replaceText(pass), closeSoftKeyboard());
@@ -270,74 +201,10 @@ public class SignInSignUpUITests {
     createStore();
   }
 
-  private void createStore(){
+  private void createStore() {
     onView(withId(R.id.create_store_name)).perform(replaceText(STORENAME), closeSoftKeyboard());
     onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
     onView(withId(R.id.theme_selector)).perform(swipeUp());
     onView(withId(R.id.create_store_action)).perform(click());
   }
-
-  //SECOND BATCH METHODS
-
-  private void getPhotoFromStorage(UiDevice mDevice, int height, int width, String test)
-      throws UiObjectNotFoundException, InterruptedException {
-   /* try {
-      mDevice.findObject(new UiSelector().clickable(true)
-          .textContains("Gallery"))
-          .click();
-    } catch (Exception e1) {
-    } */
-    if (android.os.Build.VERSION.SDK_INT < 23) {
-      mDevice.click(width / 8 * 7, height / 8);
-      try {
-        onView(withText("OK")).perform(click());
-      } catch (Exception e) {
-        nonerrormessagesphotos++;
-      }
-      goToImageStorage(test);
-      mDevice.click(width / 2, height / 8);
-      try {
-        onView(withText("OK")).perform(click());
-      } catch (Exception e) {
-        nonerrormessagesphotos++;
-      }
-      goToImageStorage(test);
-      mDevice.click(width / 8, height / 8);
-      try {
-        onView(withText("OK")).perform(click());
-      } catch (Exception e) {
-        nonerrormessagesphotos++;
-      }
-    } else if (android.os.Build.VERSION.SDK_INT == 23 || android.os.Build.VERSION.SDK_INT == 24) {
-      for(int i = 0; i<3; i++) {
-        mDevice.findObject(new UiSelector().clickable(true)
-            .index(1))
-            .click();
-        mDevice.findObject(new UiSelector().clickable(true)
-            .index(i))
-            .click();
-        try {
-          onView(withText("OK")).perform(click());
-        } catch (Exception e) {
-          nonerrormessagesphotos++;
-        }
-        if(i<2) {
-          goToImageStorage(test);
-        }
-      }
-    } else {
-      throw new IllegalArgumentException("This test (photo) doesn't work on Android 7");
-    }
-  }
-
-  private void goToImageStorage(String test) throws InterruptedException {
-    if(test.equals("user")){
-      onView(withId(R.id.create_user_image_action)).perform(click());
-    }
-    else{
-      onView(withId(R.id.create_store_image_action)).perform(click());
-    }
-    onView(withId(R.id.button_gallery)).perform(click());
-  }
-
 }

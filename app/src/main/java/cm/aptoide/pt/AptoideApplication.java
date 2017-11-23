@@ -1,7 +1,6 @@
 package cm.aptoide.pt;
 
 import android.accounts.AccountManager;
-import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.Application;
 import android.app.NotificationManager;
@@ -13,14 +12,12 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
-import android.net.ConnectivityManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
-import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
@@ -29,8 +26,6 @@ import cm.aptoide.pt.account.FacebookLoginResult;
 import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.AdsRepository;
-import cm.aptoide.pt.ads.MinimalAdMapper;
-import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.TrackerFilter;
@@ -55,7 +50,6 @@ import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.WebService;
-import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.cache.L2Cache;
 import cm.aptoide.pt.dataprovider.cache.POSTCacheKeyAlgorithm;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -202,7 +196,7 @@ public abstract class AptoideApplication extends Application {
   @Inject @Named("multipart") MultipartBodyInterceptor multipartBodyInterceptor;
   private NotificationService pnpV1NotificationService;
   private NotificationCenter notificationCenter;
-  private QManager qManager;
+  @Inject QManager qManager;
   private EntryPointChooser entryPointChooser;
   private NotificationSyncScheduler notificationSyncScheduler;
   @Inject RootAvailabilityManager rootAvailabilityManager;
@@ -210,9 +204,9 @@ public abstract class AptoideApplication extends Application {
   @Inject RefreshTokenInvalidator tokenInvalidator;
   private FileManager fileManager;
   @Inject StoreManager storeManager;
-  private PackageRepository packageRepository;
-  private AdsApplicationVersionCodeProvider applicationVersionCodeProvider;
-  private AdsRepository adsRepository;
+  @Inject PackageRepository packageRepository;
+  @Inject AdsApplicationVersionCodeProvider applicationVersionCodeProvider;
+  @Inject AdsRepository adsRepository;
   private NotificationProvider notificationProvider;
   private SyncStorage syncStorage;
   private SyncScheduler syncScheduler;
@@ -592,9 +586,6 @@ public abstract class AptoideApplication extends Application {
 
   public QManager getQManager() {
     if (qManager == null) {
-      qManager = new QManager(defaultSharedPreferences, getResources(),
-          ((ActivityManager) getSystemService(ACTIVITY_SERVICE)),
-          ((WindowManager) getSystemService(WINDOW_SERVICE)));
     }
     return qManager;
   }
@@ -686,7 +677,6 @@ public abstract class AptoideApplication extends Application {
 
   public PackageRepository getPackageRepository() {
     if (packageRepository == null) {
-      packageRepository = new PackageRepository(getPackageManager());
     }
     return packageRepository;
   }
@@ -989,20 +979,12 @@ public abstract class AptoideApplication extends Application {
 
   public AdsApplicationVersionCodeProvider getVersionCodeProvider() {
     if (applicationVersionCodeProvider == null) {
-      applicationVersionCodeProvider =
-          new PackageRepositoryVersionCodeProvider(getPackageRepository(), getPackageName());
     }
     return applicationVersionCodeProvider;
   }
 
   public AdsRepository getAdsRepository() {
     if (adsRepository == null) {
-      adsRepository = new AdsRepository(idsRepository, accountManager, getDefaultClient(),
-          WebService.getDefaultConverter(), qManager, defaultSharedPreferences,
-          getApplicationContext(),
-          (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getResources(),
-          getVersionCodeProvider(), AdNetworkUtils::isGooglePlayServicesAvailable,
-          this::getPartnerId, new MinimalAdMapper());
     }
     return adsRepository;
   }

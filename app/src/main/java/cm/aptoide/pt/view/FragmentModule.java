@@ -1,10 +1,10 @@
 package cm.aptoide.pt.view;
 
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.util.Pair;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
 import cm.aptoide.pt.account.view.AccountNavigator;
@@ -22,11 +22,14 @@ import cm.aptoide.pt.account.view.user.CreateUserErrorMapper;
 import cm.aptoide.pt.account.view.user.ManageUserNavigator;
 import cm.aptoide.pt.account.view.user.ManageUserPresenter;
 import cm.aptoide.pt.account.view.user.ManageUserView;
+import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
-import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
@@ -38,12 +41,14 @@ import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.view.SearchResultPresenter;
 import cm.aptoide.pt.search.view.SearchView;
+import cm.aptoide.pt.store.StoreUtils;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxrelay.PublishRelay;
 import dagger.Module;
 import dagger.Provides;
 import java.util.Arrays;
 import javax.inject.Named;
+import okhttp3.OkHttpClient;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -102,16 +107,6 @@ import rx.schedulers.Schedulers;
         isEditProfile, uriToPathResolver, isCreateStoreUserPrivacyEnabled);
   }
 
-  @FragmentScope @Provides SearchResultPresenter provideSearchResultPresenter(SearchAnalytics searchAnalytics, SearchNavigator searchNavigator,
-      SearchManager searchManager, @Named("SearchAdResult") PublishRelay<SearchAdResult> onAdClickRelay,
-      @Named("SearchAppResult") PublishRelay<SearchAppResult> onItemViewClickRelay,
-      @Named("OnOpenPopup") PublishRelay<Pair<SearchAppResult, View>> onOpenPopupMenuClickRelay){
-
-    return new SearchResultPresenter((SearchView) fragment, searchAnalytics, searchNavigator, CrashReport.getInstance(),
-        AndroidSchedulers.mainThread(), searchManager, onAdClickRelay, onItemViewClickRelay,
-        onOpenPopupMenuClickRelay, isMultiStoreSearch, defaultThemeName, defaultStoreName);
-  }
-
   @FragmentScope @Provides ImageValidator provideImageValidator(){
     return new ImageValidator(ImageLoader.with(fragment.getContext()), Schedulers.computation());
   }
@@ -119,25 +114,4 @@ import rx.schedulers.Schedulers;
   @FragmentScope @Provides CreateUserErrorMapper provideCreateUserErrorMapper(){
     return new CreateUserErrorMapper(fragment.getContext(), new AccountErrorMapper(fragment.getContext()), fragment.getResources());
   }
-
-  @FragmentScope @Provides SearchAnalytics provideSearchAnalytics(){
-      return new SearchAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(fragment.getContext().getApplicationContext()));
-  }
-
-  @FragmentScope @Provides StoreAccessor provideStoreAccessor(){
-    return  AccessorFactory.getAccessorFor(((AptoideApplication) fragment.getContext().getApplicationContext()).getDatabase(), Store.class);
-  }
-
-  @FragmentScope @Provides @Named("SearchAppResult") PublishRelay<SearchAppResult> provideOnItemViewClickRelay(){
-    return PublishRelay.create();
-  }
-
-  @FragmentScope @Provides @Named("SearchAdResult") PublishRelay<SearchAdResult> provideOnAdClickRelay(){
-    return PublishRelay.create();
-  }
-
-  @FragmentScope @Provides @Named("OnOpenPopup") PublishRelay<Pair<SearchAppResult, View>> provideOnOpenPopupMenuClickRelay(){
-    return PublishRelay.create();
-  }
-
 }

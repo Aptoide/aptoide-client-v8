@@ -19,7 +19,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.ImagePickerErrorHandler;
@@ -72,9 +71,7 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   @Inject ImagePickerNavigator imagePickerNavigator;
   @Inject ImagePickerPresenter imagePickerPresenter;
   @Inject ManageUserPresenter manageUserPresenter;
-  private AptoideAccountManager accountManager;
   @Inject CreateUserErrorMapper errorMapper;
-  private boolean createStoreUserPrivacyEnabled;
 
   public static ManageUserFragment newInstanceToEdit() {
     return newInstance(true);

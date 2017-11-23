@@ -1,6 +1,7 @@
 package cm.aptoide.pt.search.view;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -30,10 +31,19 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.IssuesAnalytics;
+import cm.aptoide.pt.database.AccessorFactory;
+import cm.aptoide.pt.database.accessors.StoreAccessor;
+import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.search.SearchAnalytics;
 import cm.aptoide.pt.search.SearchManager;
@@ -41,20 +51,23 @@ import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.store.StoreTheme;
+import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
 import com.crashlytics.android.answers.Answers;
+import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import javax.inject.Inject;
-import javax.inject.Named;
+import okhttp3.OkHttpClient;
 import org.parceler.Parcels;
+import retrofit2.Converter;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.Subscriptions;
 
 public class SearchResultFragment extends BackButtonFragment implements SearchView {
@@ -86,19 +99,20 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   private SearchResultAdapter allStoresResultAdapter;
   private SearchResultAdapter followedStoresResultAdapter;
   private Toolbar toolbar;
-  @Named("SearchAppResult")@Inject PublishRelay<SearchAppResult> onItemViewClickRelay;
-  @Named("OnOpenPopup") @Inject PublishRelay<Pair<SearchAppResult, View>> onOpenPopupMenuClickRelay;
-  @Named("SearchAdResult") @Inject PublishRelay<SearchAdResult> onAdClickRelay;
-  @Inject SearchManager searchManager;
-  @Inject SearchNavigator searchNavigator;
-  private CrashReport crashReport;
-  @Inject SearchAnalytics searchAnalytics;
+  private PublishRelay<SearchAppResult> onItemViewClickRelay;
+  private PublishRelay<Pair<SearchAppResult, View>> onOpenPopupMenuClickRelay;
+  private PublishRelay<SearchAdResult> onAdClickRelay;
+  private SearchManager searchManager;
+  private SearchNavigator searchNavigator;
+  private SearchAnalytics searchAnalytics;
   private float listItemPadding;
   private MenuItem searchMenuItem;
   private SearchBuilder searchBuilder;
   private String defaultThemeName;
+  private boolean isMultiStoreSearch;
+  private String defaultStoreName;
   private IssuesAnalytics issuesAnalytics;
-  @Inject SearchResultPresenter searchResultPresenter;
+  private CrashReport crashReport;
 
   public static SearchResultFragment newInstance(String currentQuery, String defaultStoreName) {
     return newInstance(currentQuery, false, defaultStoreName);
@@ -417,17 +431,51 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     final android.app.SearchManager searchManagerService =
         (android.app.SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
 
-    searchBuilder =
-        new SearchBuilder(searchManagerService, searchNavigator, viewModel.getCurrentQuery());
+    searchNavigator = new SearchNavigator(getFragmentNavigator(), viewModel.getStoreName(),
+        viewModel.getDefaultStoreName());
 
+    searchBuilder = new SearchBuilder(searchManagerService, searchNavigator);
+
+    final AptoideApplication applicationContext =
+        (AptoideApplication) getContext().getApplicationContext();
+
+    final SharedPreferences sharedPreferences = applicationContext.getDefaultSharedPreferences();
+
+    final TokenInvalidator tokenInvalidator = applicationContext.getTokenInvalidator();
+
+    final BodyInterceptor<BaseBody> bodyInterceptor =
+        applicationContext.getAccountSettingsBodyInterceptorPoolV7();
+
+    final OkHttpClient httpClient = applicationContext.getDefaultClient();
+
+    final Converter.Factory converterFactory = WebService.getDefaultConverter();
 
     final Analytics analytics = Analytics.getInstance();
+
+    searchAnalytics = new SearchAnalytics(analytics, AppEventsLogger.newLogger(applicationContext));
 
     issuesAnalytics = new IssuesAnalytics(analytics, Answers.getInstance());
 
     final AptoideApplication application = (AptoideApplication) getActivity().getApplication();
 
+    final StoreAccessor storeAccessor =
+        AccessorFactory.getAccessorFor(applicationContext.getDatabase(), Store.class);
+    final HashMapNotNull<String, List<String>> subscribedStoresAuthMap =
+        StoreUtils.getSubscribedStoresAuthMap(storeAccessor);
+    final List<Long> subscribedStoresIds = StoreUtils.getSubscribedStoresIds(storeAccessor);
+    final AdsRepository adsRepository = application.getAdsRepository();
+
     defaultThemeName = application.getDefaultThemeName();
+    defaultStoreName = application.getDefaultStoreName();
+    isMultiStoreSearch = application.hasMultiStoreSearch();
+
+    searchManager =
+        new SearchManager(sharedPreferences, tokenInvalidator, bodyInterceptor, httpClient,
+            converterFactory, subscribedStoresAuthMap, subscribedStoresIds, adsRepository);
+
+    onItemViewClickRelay = PublishRelay.create();
+    onOpenPopupMenuClickRelay = PublishRelay.create();
+    onAdClickRelay = PublishRelay.create();
 
     final List<SearchAppResult> searchResultFollowedStores = new ArrayList<>();
     final List<SearchAdResult> searchResultAdsFollowedStores = new ArrayList<>();
@@ -445,6 +493,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
         new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, onOpenPopupMenuClickRelay,
             searchResultAllStores, searchResultAdsAllStores, crashReport);
     setHasOptionsMenu(true);
+
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -454,7 +503,9 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     attachAllStoresResultListDependencies();
     attachToolbar();
     setupTheme();
-    attachPresenter(searchResultPresenter);
+    attachPresenter(new SearchResultPresenter(this, searchAnalytics, searchNavigator, crashReport,
+        AndroidSchedulers.mainThread(), searchManager, onAdClickRelay, onItemViewClickRelay,
+        onOpenPopupMenuClickRelay, isMultiStoreSearch, defaultThemeName, defaultStoreName));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {

@@ -74,15 +74,12 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   private Toolbar toolbar;
   private ImagePickerDialog dialogFragment;
   private ImagePickerErrorHandler imagePickerErrorHandler;
-  private ManageStoreNavigator manageStoreNavigator;
   @Inject ImageValidator imageValidator;
   @Inject ImagePickerNavigator imagePickerNavigator;
   @Inject UriToPathResolver uriToPathResolver;
   @Inject AccountPermissionProvider accountPermissionProvider;
   @Inject ImagePickerPresenter imagePickerPresenter;
   @Inject ManageStorePresenter manageStorePresenter;
-  private StoreManager storeManager;
-  private String packageName;
   @Inject PhotoFileGenerator photoFileGenerator;
 
   public static ManageStoreFragment newInstance(ViewModel storeModel, boolean goToHome) {
@@ -110,9 +107,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     imagePickerErrorHandler = new ImagePickerErrorHandler(getContext());
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    manageStoreNavigator =
-        new ManageStoreNavigator(getFragmentNavigator(), application.getDefaultStoreName(),
-            application.getDefaultThemeName());
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
