@@ -13,6 +13,7 @@ import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
@@ -21,19 +22,20 @@ import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.repository.StoreRepository;
-import cm.aptoide.pt.search.view.SearchResultFragment;
-import cm.aptoide.pt.store.StoreUtils;
-import cm.aptoide.pt.store.StoreUtilsProxy;
-import cm.aptoide.pt.timeline.view.navigation.AppsTimelineTabNavigation;
-import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.download.view.scheduled.ScheduledDownloadsFragment;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.SimpleTabNavigation;
 import cm.aptoide.pt.navigator.TabNavigation;
 import cm.aptoide.pt.navigator.TabNavigator;
+import cm.aptoide.pt.notification.NotificationAnalytics;
+import cm.aptoide.pt.repository.StoreRepository;
+import cm.aptoide.pt.search.view.SearchResultFragment;
+import cm.aptoide.pt.store.StoreUtils;
+import cm.aptoide.pt.store.StoreUtilsProxy;
+import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.store.view.StoreTabFragmentChooser;
+import cm.aptoide.pt.timeline.view.navigation.AppsTimelineTabNavigation;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -43,8 +45,8 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class DeepLinkManager {
 
+  public static final String DEEPLINK_KEY = "Deeplink";
   private static final String TAG = DeepLinkManager.class.getName();
-
   private final StoreUtilsProxy storeUtilsProxy;
   private final StoreRepository storeRepository;
   private final FragmentNavigator fragmentNavigator;
@@ -56,12 +58,14 @@ public class DeepLinkManager {
   private final String defaultStoreName;
   private NavigationTracker navigationTracker;
   private PageViewsAnalytics pageViewsAnalytics;
+  private NotificationAnalytics notificationAnalytics;
 
   public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, StoreRepository storeRepository,
       FragmentNavigator fragmentNavigator, TabNavigator tabNavigator,
       DeepLinkMessages deepLinkMessages, SharedPreferences sharedPreferences,
       StoreAccessor storeAccessor, String defaultTheme, String defaultStoreName,
-      NavigationTracker navigationTracker, PageViewsAnalytics pageViewsAnalytics) {
+      NavigationTracker navigationTracker, PageViewsAnalytics pageViewsAnalytics,
+      NotificationAnalytics notificationAnalytics) {
     this.storeUtilsProxy = storeUtilsProxy;
     this.storeRepository = storeRepository;
     this.fragmentNavigator = fragmentNavigator;
@@ -73,12 +77,12 @@ public class DeepLinkManager {
     this.defaultStoreName = defaultStoreName;
     this.navigationTracker = navigationTracker;
     this.pageViewsAnalytics = pageViewsAnalytics;
+    this.notificationAnalytics = notificationAnalytics;
   }
 
   public boolean showDeepLink(Intent intent) {
-    String deeplinkOrNotification = "Deeplink";
+    String deeplinkOrNotification = DEEPLINK_KEY;
     if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT)) {
-
       if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY)) {
         appViewDeepLink(intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY));
       } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY)) {
@@ -109,8 +113,10 @@ public class DeepLinkManager {
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.GENERIC_DEEPLINK)) {
       genericDeepLink(intent.getParcelableExtra(DeepLinkIntentReceiver.DeepLinksKeys.URI));
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.SCHEDULE_DEEPLINK)) {
-      scheduleDownloadsDeepLink(
-          intent.getParcelableExtra(DeepLinkIntentReceiver.DeepLinksKeys.URI));
+      scheduleDownloadsDeepLink(intent.getParcelableExtra(DeepLinkIntentReceiver.DeepLinksKeys.URI));
+    } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.USER_DEEPLINK)) {
+      openUserProfile(
+          intent.getLongExtra(DeepLinkIntentReceiver.DeepLinksTargets.USER_DEEPLINK, -1));
     } else {
       Analytics.ApplicationLaunch.launcher();
       return false;
@@ -118,6 +124,11 @@ public class DeepLinkManager {
     navigationTracker.registerScreen(ScreenTagHistory.Builder.build(deeplinkOrNotification));
     pageViewsAnalytics.sendPageViewedEvent();
     return true;
+  }
+
+  private void openUserProfile(long userId) {
+    fragmentNavigator.navigateTo(
+        StoreFragment.newInstance(userId, "default", StoreFragment.OpenType.GetHome), true);
   }
 
   private void appViewDeepLinkUname(String uname) {
@@ -209,6 +220,7 @@ public class DeepLinkManager {
   }
 
   private void newUpdatesDeepLink() {
+    notificationAnalytics.sendUpdatesNotificationClickEvent();
     Analytics.ApplicationLaunch.newUpdatesNotification();
     tabNavigator.navigate(new SimpleTabNavigation(TabNavigation.UPDATES));
   }

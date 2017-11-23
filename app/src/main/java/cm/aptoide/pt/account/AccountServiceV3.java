@@ -96,14 +96,13 @@ public class AccountServiceV3 implements AccountService {
                 oAuth.getRefreshToken(), oAuth.getAccessToken(), type)
                 .andThen(getAccount());
           } else {
-            return Single.error(new AccountException(oAuth.getError()));
+            return Single.error(new AccountException(oAuth));
           }
         })
         .onErrorResumeNext(throwable -> {
           if (throwable instanceof AptoideWsV3Exception) {
-            return Single.error(new AccountException(
-                ((AptoideWsV3Exception) throwable).getBaseResponse()
-                    .getError()));
+            AptoideWsV3Exception exception = (AptoideWsV3Exception) throwable;
+            return Single.error(new AccountException(exception));
           }
           return Single.error(throwable);
         });
@@ -122,9 +121,8 @@ public class AccountServiceV3 implements AccountService {
         })
         .onErrorResumeNext(throwable -> {
           if (throwable instanceof AptoideWsV3Exception) {
-            return Single.error(new AccountException(
-                ((AptoideWsV3Exception) throwable).getBaseResponse()
-                    .getError()));
+            AptoideWsV3Exception exception = (AptoideWsV3Exception) throwable;
+            return Single.error(new AccountException(exception));
           }
           return Single.error(throwable);
         });

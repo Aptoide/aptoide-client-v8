@@ -26,7 +26,7 @@ public class Product {
     this.packageVersionCode = packageVersionCode;
   }
 
-  public String getProductId() {
+  public String getId() {
     return id;
   }
 

@@ -25,7 +25,7 @@ import rx.schedulers.Schedulers;
  */
 
 public class GetUserRequest extends V7<GetStore, GetUserRequest.Body> {
-  private static final String TAG = GetUserRequest.class.getSimpleName();
+
   private final OkHttpClient httpClient;
   private final TokenInvalidator tokenInvalidator;
   private final BaseRequestWithStore.StoreCredentials storeCredentials;
@@ -97,11 +97,14 @@ public class GetUserRequest extends V7<GetStore, GetUserRequest.Body> {
         .getDataList()
         .getList())
         .observeOn(Schedulers.io())
-        .flatMap(wsWidget -> WSWidgetsUtils.loadWidgetNode(wsWidget, storeCredentials, false,
-            clientUniqueId, isGooglePlayServicesAvailable, partnerId, accountMature,
-            ((BodyInterceptor<BaseBody>) bodyInterceptor), httpClient, converterFactory, filters,
-            tokenInvalidator, sharedPreferences, resources, windowManager, connectivityManager,
-            versionCodeProvider))
+        .flatMap(wsWidget -> {
+          WSWidgetsUtils widgetsUtils = new WSWidgetsUtils();
+          return widgetsUtils.loadWidgetNode(wsWidget, storeCredentials, false, clientUniqueId,
+              isGooglePlayServicesAvailable, partnerId, accountMature,
+              ((BodyInterceptor<BaseBody>) bodyInterceptor), httpClient, converterFactory, filters,
+              tokenInvalidator, sharedPreferences, resources, windowManager, connectivityManager,
+              versionCodeProvider);
+        })
         .toList()
         .flatMapIterable(wsWidgets -> getStoreWidgets.getNodes()
             .getWidgets()

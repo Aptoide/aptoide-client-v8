@@ -1,6 +1,7 @@
 package cm.aptoide.pt.store.view;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
@@ -28,12 +29,21 @@ public class GetStoreWidgetsFragment extends GetStoreEndlessFragment<GetStoreWid
     return fragment;
   }
 
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+  }
+
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
 
     if (getArguments().getBoolean(BundleKeys.ADD_ADULT_FILTER, false)) {
-      endlessRecyclerOnScrollListener.addOnEndlessFinishListener(
-          __ -> addDisplayable(new AdultRowDisplayable(GetStoreWidgetsFragment.this)));
+      endlessRecyclerOnScrollListener.addOnEndlessFinishListener(__ -> {
+        final AdultRowDisplayable displayable =
+            new AdultRowDisplayable(GetStoreWidgetsFragment.this);
+        if (!GetStoreWidgetsFragment.this.contains(displayable)) {
+          GetStoreWidgetsFragment.this.addDisplayable(displayable, true);
+        }
+      });
     }
   }
 

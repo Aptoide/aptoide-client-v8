@@ -86,6 +86,10 @@
     <item name="android:textColor">@color/grey</item>
   </style>
 
+  <style name="Aptoide.TextView.Regular.M.Grey700">
+    <item name="android:textColor">@color/grey_700</item>
+  </style>
+
   <style name="Aptoide.TextView.Regular.M.BlackAlpha">
     <item name="android:textColor">@color/black_87_alpha</item>
   </style>
@@ -141,6 +145,22 @@
   <!-- Text Style -->
   <style name="Aptoide.TextView.Regular.XXS.GreyFog.AllCaps">
     <item name="android:textAllCaps">true</item>
+  </style>
+
+  <style name="Aptoide.TextView.Regular.XS.Facebook">
+    <item name="android:textColor">@color/facebook</item>
+  </style>
+
+  <style name="Aptoide.TextView.Regular.XS.Twitch">
+    <item name="android:textColor">@color/twitch</item>
+  </style>
+
+  <style name="Aptoide.TextView.Regular.XS.Twitter">
+    <item name="android:textColor">@color/twitter_color</item>
+  </style>
+
+  <style name="Aptoide.TextView.Regular.XS.Youtube">
+    <item name="android:textColor">@color/youtube</item>
   </style>
 
 </resources>

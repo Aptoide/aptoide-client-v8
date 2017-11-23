@@ -44,6 +44,7 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.download.DownloadCompleteAnalytics;
 import cm.aptoide.pt.download.DownloadEvent;
 import cm.aptoide.pt.download.DownloadEventConverter;
 import cm.aptoide.pt.download.DownloadFactory;
@@ -52,6 +53,7 @@ import cm.aptoide.pt.download.InstallEvent;
 import cm.aptoide.pt.download.InstallEventConverter;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.install.view.InstallWarningDialog;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
@@ -158,7 +160,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     final OkHttpClient httpClient = application.getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     accountManager = application.getAccountManager();
-    installManager = application.getRollbackInstallManager();
+    installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
     BodyInterceptor<BaseBody> bodyInterceptor =
         application.getAccountSettingsBodyInterceptorPoolV7();
     final TokenInvalidator tokenInvalidator = application.getTokenInvalidator();
@@ -182,8 +184,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                 AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
                 httpClient, WebService.getDefaultConverter(), tokenInvalidator,
                 BuildConfig.APPLICATION_ID, sharedPreferences,
-                new NotificationAnalytics(httpClient, analytics),
-                application.getNavigationTracker()), tokenInvalidator, sharedPreferences);
+                new NotificationAnalytics(httpClient, analytics,
+                    AppEventsLogger.newLogger(getContext())), application.getNavigationTracker(),
+                application.getReadPostsPersistence()), tokenInvalidator, sharedPreferences);
 
     appViewNavigator = getAppViewNavigator();
 
@@ -421,7 +424,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     return view -> {
       final Context context = view.getContext();
       final PermissionService permissionRequest = (PermissionService) getContext();
-
+      displayable.installAppClicked(DownloadCompleteAnalytics.InstallType.DOWNGRADE);
       permissionRequest.requestAccessToExternalFileSystem(() -> {
 
         showMessageOKCancel(getContext().getResources()
@@ -510,8 +513,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
           ManagerPreferences.getNotLoggedInInstallClicks(sharedPreferences) + 1, sharedPreferences);
       if (installOrUpgradeMsg == R.string.installing_msg) {
         Analytics.ClickedOnInstallButton.clicked(app);
-        displayable.installAppClicked();
       }
+      displayable.installAppClicked(isUpdate ? DownloadCompleteAnalytics.InstallType.UPDATE
+          : DownloadCompleteAnalytics.InstallType.INSTALL);
 
       showRootInstallWarningPopup(context);
       compositeSubscription.add(permissionManager.requestDownloadAccess(permissionService)

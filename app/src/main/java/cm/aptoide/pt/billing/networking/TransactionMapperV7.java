@@ -24,7 +24,6 @@ public class TransactionMapperV7 {
   public Transaction map(GetTransactionRequest.ResponseBody.Transaction response) {
     return transactionFactory.create(billingIdManager.generateTransactionId(response.getId()),
         String.valueOf(response.getUser()
-            .getId()), billingIdManager.generateServiceId(response.getService()
             .getId()), billingIdManager.generateProductId(response.getProduct()
             .getId()), Transaction.Status.valueOf(response.getStatus()));
   }

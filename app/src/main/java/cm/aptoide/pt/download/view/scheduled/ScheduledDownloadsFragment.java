@@ -38,6 +38,7 @@ import cm.aptoide.pt.download.InstallEventConverter;
 import cm.aptoide.pt.download.ScheduledDownloadRepository;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -97,7 +98,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
     final OkHttpClient httpClient = application.getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     bodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();
-    installManager = application.getRollbackInstallManager();
+    installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
     final TokenInvalidator tokenInvalidator = application.getTokenInvalidator();
     downloadConverter =
         new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,

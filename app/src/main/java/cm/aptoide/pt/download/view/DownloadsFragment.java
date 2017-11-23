@@ -24,6 +24,7 @@ import cm.aptoide.pt.download.DownloadEventConverter;
 import cm.aptoide.pt.download.InstallEventConverter;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.presenter.DownloadsPresenter;
 import cm.aptoide.pt.presenter.DownloadsView;
 import cm.aptoide.pt.store.view.StoreTabNavigator;
@@ -72,7 +73,8 @@ public class DownloadsFragment extends NavigationTrackFragment implements Downlo
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
             ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker());
     installManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getRollbackInstallManager();
+        ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
+            InstallerFactory.ROLLBACK);
     analytics = Analytics.getInstance();
 
     storeTabNavigator = new StoreTabNavigator(getFragmentNavigator());

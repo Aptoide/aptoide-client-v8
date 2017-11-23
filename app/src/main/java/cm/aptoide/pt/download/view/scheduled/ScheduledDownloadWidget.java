@@ -16,6 +16,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import rx.android.schedulers.AndroidSchedulers;
@@ -46,7 +47,8 @@ public class ScheduledDownloadWidget extends Widget<ScheduledDownloadDisplayable
 
   @Override public void bindView(ScheduledDownloadDisplayable displayable) {
     installManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getRollbackInstallManager();
+        ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
+            InstallerFactory.ROLLBACK);
     Scheduled scheduled = displayable.getPojo();
     final FragmentActivity context = getContext();
     ImageLoader.with(context)

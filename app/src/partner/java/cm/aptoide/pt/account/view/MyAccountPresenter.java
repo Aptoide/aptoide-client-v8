@@ -133,8 +133,8 @@ public class MyAccountPresenter implements Presenter {
         .flatMap(notification -> Observable.just(
             linkFactory.get(LinksHandlerFactory.NOTIFICATION_LINK, notification.getUrl()))
             .doOnNext(link -> link.launch())
-            .doOnNext(
-                link -> analytics.notificationShown(notification.getNotificationCenterUrlTrack()))
+            .doOnNext(link -> analytics.sendNotificationTouchEvent(
+                notification.getNotificationCenterUrlTrack()))
             .doOnNext(__ -> navigationTracker.registerScreen(
                 ScreenTagHistory.Builder.build("Notification")))
             .doOnNext(__ -> pageViewsAnalytics.sendPageViewedEvent()))
@@ -160,7 +160,7 @@ public class MyAccountPresenter implements Presenter {
             .observeOn(AndroidSchedulers.mainThread())
             .doOnCompleted(() -> {
               ManagerPreferences.setAddressBookSyncValues(false, sharedPreferences);
-              view.navigateToHome();
+              navigator.navigateToHome();
             })
             .doOnError(throwable -> crashReport.log(throwable)).<Void>toObservable())
         .retry();

@@ -3,7 +3,6 @@ package cm.aptoide.pt;
 import android.accounts.AccountManager;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -39,9 +38,9 @@ import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.TrackerFilter;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
@@ -62,6 +61,7 @@ import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.download.DownloadAnalytics;
+import cm.aptoide.pt.download.DownloadCompleteAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.DownloadInstallationProvider;
 import cm.aptoide.pt.download.DownloadMirrorEventInterceptor;
@@ -73,6 +73,7 @@ import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.install.InstallerAnalytics;
+import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.install.RootInstallNotificationEventReceiver;
 import cm.aptoide.pt.install.installer.DefaultInstaller;
@@ -82,7 +83,6 @@ import cm.aptoide.pt.install.installer.RootInstallErrorNotificationFactory;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.install.rollback.RollbackFactory;
 import cm.aptoide.pt.install.rollback.RollbackRepository;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
 import cm.aptoide.pt.networking.BodyInterceptorV7;
@@ -93,14 +93,7 @@ import cm.aptoide.pt.networking.NoAuthenticationBodyInterceptorV3;
 import cm.aptoide.pt.networking.NoOpTokenInvalidator;
 import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
-import cm.aptoide.pt.notification.NotificationIdsMapper;
 import cm.aptoide.pt.notification.NotificationProvider;
-import cm.aptoide.pt.notification.NotificationService;
-import cm.aptoide.pt.notification.NotificationSyncScheduler;
-import cm.aptoide.pt.notification.PnpV1NotificationService;
-import cm.aptoide.pt.notification.SystemNotificationShower;
-import cm.aptoide.pt.notification.sync.NotificationSyncFactory;
-import cm.aptoide.pt.notification.sync.NotificationSyncManager;
 import cm.aptoide.pt.preferences.AdultContent;
 import cm.aptoide.pt.preferences.LocalPersistenceAdultContent;
 import cm.aptoide.pt.preferences.Preferences;
@@ -116,8 +109,9 @@ import cm.aptoide.pt.root.RootValueSaver;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
-import cm.aptoide.pt.sync.SyncService;
-import cm.aptoide.pt.sync.SyncStorage;
+import cm.aptoide.pt.sync.alarm.AlarmSyncScheduler;
+import cm.aptoide.pt.sync.alarm.AlarmSyncService;
+import cm.aptoide.pt.sync.alarm.SyncStorage;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.q.QManager;
@@ -166,6 +160,7 @@ import rx.Completable;
 import rx.Single;
 import rx.schedulers.Schedulers;
 
+import static android.content.Context.ALARM_SERVICE;
 import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
 @Module public class ApplicationModule {
@@ -212,18 +207,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides InstallerAnalytics provideInstallerAnalytics(Answers answers,
       AppEventsLogger appEventsLogger) {
     return new InstallFabricEvents(Analytics.getInstance(), answers, appEventsLogger);
-  }
-
-  @Named("rollback") @Singleton @Provides InstallManager provideRollbackInstallManager(
-      AptoideDownloadManager downloadManager, DownloadRepository downloadRepository,
-      InstalledRepository installedRepository,
-      @Named("default") SharedPreferences defaultSharedPreferences,
-      @Named("secure") SharedPreferences secureSharedPreferences,
-      RootAvailabilityManager rootAvailabilityManager,
-      @Named("rollback") Installer rollbackInstaller) {
-    return new InstallManager(application, downloadManager, rollbackInstaller,
-        rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
-        downloadRepository, installedRepository);
   }
 
   @Singleton @Provides AptoideDownloadManager provideAptoideDownloadManager(
@@ -428,8 +411,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new SecurePreferencesImplementation(application, defaultSharedPreferences);
   }
 
-  @Singleton @Provides RootInstallationRetryHandler provideRootInstallationRetryHandler(
-      @Named("rollback") InstallManager rollbackInstallManager) {
+  @Singleton @Provides RootInstallationRetryHandler provideRootInstallationRetryHandler() {
+
+
     Intent retryActionIntent = new Intent(application, RootInstallNotificationEventReceiver.class);
     retryActionIntent.setAction(RootInstallNotificationEventReceiver.ROOT_INSTALL_RETRY_ACTION);
     PendingIntent retryPendingIntent = PendingIntent.getBroadcast(application, 2, retryActionIntent,
@@ -445,33 +429,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
             RootInstallNotificationEventReceiver.ROOT_INSTALL_DISMISS_ACTION),
         PendingIntent.FLAG_UPDATE_CURRENT);
 
-    final SystemNotificationShower systemNotificationShower =
-        new SystemNotificationShower(application,
-            (NotificationManager) application.getSystemService(Context.NOTIFICATION_SERVICE),
-            new NotificationIdsMapper());
     int notificationId = 230498;
-    return new RootInstallationRetryHandler(notificationId, systemNotificationShower,
-        rollbackInstallManager, PublishRelay.create(), 0, application,
+    return new RootInstallationRetryHandler(notificationId, application.getSystemNotificationShower(),
+        application.getInstallManager(InstallerFactory.ROLLBACK), PublishRelay.create(), 0, application,
         new RootInstallErrorNotificationFactory(notificationId,
             BitmapFactory.decodeResource(application.getResources(), R.mipmap.ic_launcher), action,
             deleteAction));
-  }
-
-  @Singleton @Provides NotificationSyncScheduler provideNotificationSyncScheduler(
-      SyncScheduler syncScheduler, @Named("default") SharedPreferences sharedPreferences,
-      NotificationProvider notificationProvider, NotificationService notificationService) {
-    return new NotificationSyncManager(syncScheduler, true,
-        new NotificationSyncFactory(sharedPreferences, notificationService, notificationProvider));
-  }
-
-  @Singleton @Provides NotificationService providePnp1NotificationService(
-      @Named("default") OkHttpClient defaultClient, IdsRepository idsRepository,
-      @Named("default") SharedPreferences defaultSharedPreferences, Resources resources,
-      AptoideAccountManager aptoideAccountManager,
-      AuthenticationPersistence authenticationPersistence) {
-    return new PnpV1NotificationService(BuildConfig.APPLICATION_ID, defaultClient,
-        WebService.getDefaultConverter(), idsRepository, BuildConfig.VERSION_NAME, extraId,
-        defaultSharedPreferences, resources, authenticationPersistence, aptoideAccountManager);
   }
 
   @Singleton @Provides GoogleApiClient provideGoogleApiClient() {
@@ -499,7 +462,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       AndroidAccountProvider androidAccountProvider, GoogleApiClient googleApiClient,
       @Named("no-authentication-v3") BodyInterceptor<BaseBody> noAuthenticationBodyInterceptorV3,
       ObjectMapper objectMapper) {
-    Logger.d("TAG123","HERE");
     FacebookSdk.sdkInitialize(application);
     final AccountFactory accountFactory = new AccountFactory();
 
@@ -593,8 +555,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides SyncScheduler provideSyncScheduler(SyncStorage syncStorage) {
-    return new SyncScheduler(application, SyncService.class,
-        (AlarmManager) application.getSystemService(Context.ALARM_SERVICE), syncStorage);
+    return new AlarmSyncScheduler(application, AlarmSyncService.class,
+        (AlarmManager) application.getSystemService(ALARM_SERVICE), syncStorage);
   }
 
   @Singleton @Provides SyncStorage provideSyncStorage() {
@@ -729,7 +691,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AccountAnalytics(Analytics.getInstance(), bodyInterceptorPoolV7,
         defaulClient, WebService.getDefaultConverter(), tokenInvalidator,
         BuildConfig.APPLICATION_ID, defaultSharedPreferences, appEventsLogger,
-        navigationTracker);
+        navigationTracker, CrashReport.getInstance());
   }
 
   @Singleton @Provides StoreManager provideStoreManager(AptoideAccountManager accountManager, @Named("default") OkHttpClient okHttpClient,

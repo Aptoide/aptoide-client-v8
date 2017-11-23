@@ -6,6 +6,7 @@ import cm.aptoide.accountmanager.SignUpAdapter;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import rx.Completable;
 import rx.Single;
@@ -33,7 +34,9 @@ public class GoogleSignUpAdapter implements SignUpAdapter<GoogleSignInResult> {
       return service.createAccount(account.getEmail(), account.getServerAuthCode(),
           account.getDisplayName(), "GOOGLE");
     } else {
-      return Single.error(new GoogleSignUpException());
+      return Single.error(new GoogleSignUpException(GoogleSignInStatusCodes.getStatusCodeString(
+          result.getStatus()
+              .getStatusCode())));
     }
   }
 

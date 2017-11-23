@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.model.v7;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.Data;
 
@@ -26,6 +27,10 @@ import lombok.Data;
 
   public boolean isOk() {
     return info != null && info.getStatus() == Info.Status.OK;
+  }
+
+  public enum Type {
+    FACEBOOK_1, FACEBOOK_2, TWITCH_1, TWITCH_2, TWITTER_1, TWITTER_2, YOUTUBE_1, YOUTUBE_2
   }
 
   @Data public static class Info {
@@ -56,5 +61,17 @@ import lombok.Data;
 
     private String code;
     private String description;
+    private Details details;
+  }
+
+  @Data public static class Details {
+    //Is only necessary for store/set requests and only appears with a STORE-9 error
+    @JsonProperty("store_links") private List<StoreLinks> storeLinks;
+  }
+
+  @Data public static class StoreLinks {
+    private Type type;
+    private String url;
+    private String error;
   }
 }

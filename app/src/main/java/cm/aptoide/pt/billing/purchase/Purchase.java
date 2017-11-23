@@ -32,15 +32,7 @@ public class Purchase {
     return Status.COMPLETED.equals(status);
   }
 
-  public boolean isPending() {
-    return Status.PENDING.equals(status);
-  }
-
-  public boolean isFailed() {
-    return Status.FAILED.equals(status);
-  }
-
   public static enum Status {
-    PENDING, COMPLETED, NEW, FAILED
+    COMPLETED, FAILED, NEW
   }
 }

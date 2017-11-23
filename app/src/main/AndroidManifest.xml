@@ -45,7 +45,7 @@
 
   <uses-sdk
       android:minSdkVersion="15"
-      tools:overrideLibrary="com.paypal.android.sdk.onetouch.core, com.paypal.android.sdk.payments, com.adyen.core, com.adyen.ui, com.adyen.adyencse, com.adyen.cardscan, com.adyen.utils"
+      tools:overrideLibrary="com.paypal.android.sdk.onetouch.core, com.paypal.android.sdk.payments, com.adyen.core, com.adyen.ui, com.braintreepayments.cardform"
       />
 
   <application
@@ -164,7 +164,7 @@
     </activity>
 
     <activity
-        android:name=".billing.view.PaymentActivity"
+        android:name=".billing.view.BillingActivity"
         android:launchMode="singleInstance"
         android:screenOrientation="sensor"
         android:theme="@style/AppBaseTheme.NoTitle.Transparent"
@@ -319,7 +319,7 @@
     </receiver>
 
     <service android:name=".notification.PullingContentService"/>
-    <service android:name=".sync.SyncService"/>
+    <service android:name=".sync.alarm.AlarmSyncService"/>
 
     <receiver android:name=".notification.NotificationReceiver">
       <intent-filter>

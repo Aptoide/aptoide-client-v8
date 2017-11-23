@@ -60,7 +60,7 @@ public class InstallService extends BaseService {
   @Inject AptoideDownloadManager downloadManager;
   @Inject @Named("rollback") Installer rollbackInstaller;
   @Inject @Named("default") Installer defaultInstaller;
-  @Inject @Named("rollback") InstallManager installManager;
+  private InstallManager installManager;
   @Inject InstalledRepository installedRepository;
 
   private CompositeSubscription subscriptions;
@@ -74,6 +74,7 @@ public class InstallService extends BaseService {
     getApplicationComponent().inject(this);
     Logger.d(TAG, "Install service is starting");
     final AptoideApplication application = (AptoideApplication) getApplicationContext();
+    installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
     marketName = application.getMarketName();
     subscriptions = new CompositeSubscription();
     setupNotification();

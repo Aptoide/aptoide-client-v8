@@ -9,16 +9,13 @@ import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.billing.networking.PaymentServiceMapper;
 import cm.aptoide.pt.billing.payment.PaymentService;
 import cm.aptoide.pt.billing.purchase.Purchase;
+import cm.aptoide.pt.billing.view.card.CreditCardAuthorizationFragment;
 import cm.aptoide.pt.billing.view.login.PaymentLoginFragment;
 import cm.aptoide.pt.billing.view.paypal.PayPalAuthorizationFragment;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.CustomTabsNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.Result;
-import com.adyen.core.PaymentRequest;
-import com.adyen.core.models.paymentdetails.CreditCardPaymentDetails;
-import com.adyen.ui.fragments.CreditCardFragmentBuilder;
-import com.jakewharton.rxrelay.PublishRelay;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalFuturePaymentActivity;
 import com.paypal.android.sdk.payments.PayPalPayment;
@@ -33,19 +30,17 @@ public class BillingNavigator {
   private final ActivityNavigator activityNavigator;
   private final FragmentNavigator fragmentNavigator;
   private final String marketName;
-  private final PublishRelay<CreditCardPaymentDetails> detailsRelay;
   private final CustomTabsNavigator customTabsNavigator;
   private final int customTabsToolbarColor;
 
   public BillingNavigator(PurchaseBundleMapper bundleMapper, ActivityNavigator activityNavigator,
       FragmentNavigator fragmentNavigator, String marketName,
-      PublishRelay<CreditCardPaymentDetails> detailsRelay, CustomTabsNavigator customTabsNavigator,
+      CustomTabsNavigator customTabsNavigator,
       @ColorInt int customTabsToolbarColor) {
     this.bundleMapper = bundleMapper;
     this.activityNavigator = activityNavigator;
     this.fragmentNavigator = fragmentNavigator;
     this.marketName = marketName;
-    this.detailsRelay = detailsRelay;
     this.customTabsNavigator = customTabsNavigator;
     this.customTabsToolbarColor = customTabsToolbarColor;
   }
@@ -69,7 +64,7 @@ public class BillingNavigator {
         fragmentNavigator.navigateTo(PayPalAuthorizationFragment.create(bundle), true);
         break;
       case PaymentServiceMapper.ADYEN:
-        fragmentNavigator.navigateTo(AdyenAuthorizationFragment.create(bundle), true);
+        fragmentNavigator.navigateTo(CreditCardAuthorizationFragment.create(bundle), true);
         break;
       default:
         throw new IllegalArgumentException(service.getType()
@@ -117,9 +112,9 @@ public class BillingNavigator {
 
   private Bundle getAuthorizationBundle(String merchantName, String sku, String serviceName) {
     final Bundle bundle = new Bundle();
-    bundle.putString(PaymentActivity.EXTRA_SKU, sku);
-    bundle.putString(PaymentActivity.EXTRA_MERCHANT_NAME, merchantName);
-    bundle.putString(PaymentActivity.EXTRA_SERVICE_NAME, serviceName);
+    bundle.putString(BillingActivity.EXTRA_SKU, sku);
+    bundle.putString(BillingActivity.EXTRA_MERCHANT_NAME, merchantName);
+    bundle.putString(BillingActivity.EXTRA_SERVICE_NAME, serviceName);
     return bundle;
   }
 
@@ -144,26 +139,6 @@ public class BillingNavigator {
     }
   }
 
-  public void navigateToAdyenCreditCardView(PaymentRequest paymentRequest) {
-    fragmentNavigator.navigateTo(
-        new CreditCardFragmentBuilder().setPaymentMethod(paymentRequest.getPaymentMethod())
-            .setPublicKey(paymentRequest.getPublicKey())
-            .setGenerationtime(paymentRequest.getGenerationTime())
-            .setAmount(paymentRequest.getAmount())
-            .setShopperReference(paymentRequest.getShopperReference())
-            .setCVCFieldStatus(CreditCardFragmentBuilder.CvcFieldStatus.REQUIRED)
-            .setCreditCardInfoListener(details -> detailsRelay.call(details))
-            .build(), false);
-  }
-
-  public Observable<CreditCardPaymentDetails> adyenResults() {
-    return detailsRelay;
-  }
-
-  public void popToPaymentView() {
-    fragmentNavigator.cleanBackStack();
-  }
-
   public void navigateToUriForResult(String redirectUrl) {
     customTabsNavigator.navigateToCustomTabs(
         new CustomTabsIntent.Builder().setToolbarColor(customTabsToolbarColor)
@@ -172,10 +147,6 @@ public class BillingNavigator {
 
   public Observable<Uri> uriResults() {
     return customTabsNavigator.customTabResults();
-  }
-
-  public void popAdyenCreditCardView() {
-    fragmentNavigator.popBackStack();
   }
 
   public static class PayPalResult {

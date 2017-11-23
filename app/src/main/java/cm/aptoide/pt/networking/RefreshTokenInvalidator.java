@@ -44,7 +44,7 @@ public class RefreshTokenInvalidator implements TokenInvalidator {
                   if (!oAuth.hasErrors()) {
                     return authenticationPersistence.updateAuthentication(oAuth.getAccessToken());
                   } else {
-                    return Completable.error(new AccountException(oAuth.getError()));
+                    return Completable.error(new AccountException(oAuth));
                   }
                 }));
   }

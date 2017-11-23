@@ -78,7 +78,7 @@ public class InstalledIntentService extends IntentService {
 
     subscriptions = new CompositeSubscription();
     analytics = Analytics.getInstance();
-    installManager = ((AptoideApplication) getApplicationContext()).getRollbackInstallManager();
+    installManager = ((AptoideApplication) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
     rootAvailabilityManager =
         ((AptoideApplication) getApplicationContext()).getRootAvailabilityManager();
     installAnalytics =
@@ -193,6 +193,7 @@ public class InstalledIntentService extends IntentService {
     if (packageInfo != null) {
       InstallEvent event =
           (InstallEvent) analytics.get(packageName + packageInfo.versionCode, InstallEvent.class);
+      installAnalytics.installCompleted(packageName, packageInfo.versionCode);
       if (event != null) {
         event.setPhoneRooted(rootAvailabilityManager.isRootAvailable()
             .toBlocking()

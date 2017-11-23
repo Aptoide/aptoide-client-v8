@@ -26,6 +26,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     if (activityComponent == null) {
       activityComponent = ((AptoideApplication) getApplication()).getApplicationComponent()
           .plus(new ActivityModule(this, getIntent(),
+              ((AptoideApplication) getApplication()).getNotificationSyncScheduler(),
               ((AptoideApplication) getApplication()).getMarketName(),
               ((AptoideApplication) getApplication()).getAutoUpdateUrl(), (View) this,
               ((AptoideApplication) getApplication()).getDefaultThemeName(),

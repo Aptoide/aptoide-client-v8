@@ -35,11 +35,11 @@ public class AuthorizationSync extends Sync {
   @Override public Completable execute() {
     return customer.getId()
         .flatMapCompletable(
-            customerId -> syncRemoteAuthorization(customerId, transactionId).andThen(
-                syncPayPalAuthorization(customerId, transactionId)));
+            customerId -> syncRemoteAuthorization(customerId, transactionId).onErrorComplete()
+                .andThen(syncMetadataAuthorization(customerId, transactionId)));
   }
 
-  private Completable syncPayPalAuthorization(String customerId, String transactionId) {
+  private Completable syncMetadataAuthorization(String customerId, String transactionId) {
     return authorizationPersistence.getAuthorization(customerId, transactionId)
         .first()
         .filter(authorization -> authorization instanceof MetadataAuthorization)

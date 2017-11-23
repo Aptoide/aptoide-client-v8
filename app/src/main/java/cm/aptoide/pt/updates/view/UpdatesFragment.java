@@ -26,6 +26,7 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.InstallEventConverter;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
+import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.repository.RepositoryFactory;
@@ -167,7 +168,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     bodyInterceptorV7 = application.getAccountSettingsBodyInterceptorPoolV7();
     httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    installManager = application.getRollbackInstallManager();
+    installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
     analytics = Analytics.getInstance();
     tokenInvalidator = application.getTokenInvalidator();
     downloadInstallEventConverter =
@@ -255,7 +256,9 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
               bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator,
               BuildConfig.APPLICATION_ID,
               ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-              new NotificationAnalytics(httpClient, analytics), navigationTracker),
+              new NotificationAnalytics(httpClient, analytics,
+                  AppEventsLogger.newLogger(getContext())), navigationTracker,
+              ((AptoideApplication) getContext().getApplicationContext()).getReadPostsPersistence()),
           installedRepository));
     }
     addDisplayables(installedDisplayablesList, false);

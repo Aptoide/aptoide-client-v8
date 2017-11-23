@@ -22,8 +22,13 @@ public class NotificationPolicyFactory {
         return new CampaignPolicy();
       case AptoideNotification.COMMENT:
       case AptoideNotification.LIKE:
-        return new SocialPolicy(notificationProvider,
-            new Integer[] { AptoideNotification.COMMENT, AptoideNotification.LIKE });
+      case AptoideNotification.NEW_ACTIVITY:
+      case AptoideNotification.NEW_SHARE:
+      case AptoideNotification.NEW_FOLLOWER:
+        return new SocialPolicy(notificationProvider, new Integer[] {
+            AptoideNotification.COMMENT, AptoideNotification.LIKE, AptoideNotification.NEW_SHARE,
+            AptoideNotification.NEW_ACTIVITY, AptoideNotification.NEW_FOLLOWER
+        });
       case AptoideNotification.POPULAR:
         return new SocialPolicy(notificationProvider,
             new Integer[] { AptoideNotification.POPULAR });

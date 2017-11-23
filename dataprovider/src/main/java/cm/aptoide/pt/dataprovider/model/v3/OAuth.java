@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Created by rmateus on 01-07-2014.
  */
-public class OAuth {
+public class OAuth extends BaseV3Response {
 
   private String accessToken;
   @JsonProperty("refresh_token") private String refreshToken;
@@ -33,7 +33,7 @@ public class OAuth {
     return error;
   }
 
-  public boolean hasErrors() {
-    return error != null;
+  @Override public boolean hasErrors() {
+    return super.hasErrors() || error != null;
   }
 }

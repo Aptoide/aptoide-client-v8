@@ -461,7 +461,6 @@
 
   <!-- DownloadManager -->
   <string name="timeout">Network connection timeout</string>
-  <string name="ip_blacklisted">Blacklisted IP</string>
   <string name="connection_error">No network connection</string>
   <string name="apk_not_found">Apk not found</string>
   <string name="invalid_apk">Invalid apk</string>
@@ -497,8 +496,6 @@
   <string name="votes">%s votes</string>
 
   <string name="reviewed_by">Reviewed by - %s</string>
-  <string name="installed_this">%s installed this.</string>
-
   <string name="schDown_nodownloadselect">No downloads selected</string>
   <string name="no_sch_downloads">Don\'t worry about mobile date. Use scheduled downloads to transfer apps later when you\'re on Wi-Fi. Just change your preferences to Wi-Fi on Settings -&gt; Download Options.</string>
   <string name="schDown_installselected">Install selected</string>

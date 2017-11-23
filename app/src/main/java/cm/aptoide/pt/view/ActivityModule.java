@@ -10,7 +10,6 @@ import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.account.view.AccountErrorMapper;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.account.view.ImagePickerNavigator;
 import cm.aptoide.pt.account.view.PhotoFileGenerator;
@@ -18,6 +17,7 @@ import cm.aptoide.pt.account.view.UriToPathResolver;
 import cm.aptoide.pt.account.view.store.ManageStoreNavigator;
 import cm.aptoide.pt.account.view.user.ManageUserNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -32,6 +32,7 @@ import cm.aptoide.pt.navigator.FragmentResultNavigator;
 import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.notification.ContentPuller;
+import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
@@ -41,10 +42,10 @@ import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.repository.StoreRepository;
-import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.util.ApkFy;
 import com.facebook.CallbackManager;
+import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.jakewharton.rxrelay.BehaviorRelay;
@@ -53,6 +54,7 @@ import dagger.Module;
 import dagger.Provides;
 import java.util.Map;
 import javax.inject.Named;
+import okhttp3.OkHttpClient;
 
 import static android.content.Context.WINDOW_SERVICE;
 
@@ -60,6 +62,7 @@ import static android.content.Context.WINDOW_SERVICE;
 
   private final AppCompatActivity activity;
   private final Intent intent;
+  private final NotificationSyncScheduler notificationSyncScheduler;
   private final String marketName;
   private final String autoUpdateUrl;
   private final View view;
@@ -68,11 +71,12 @@ import static android.content.Context.WINDOW_SERVICE;
   private boolean firstCreated;
   private final String fileProviderAuthority;
 
-  public ActivityModule(AppCompatActivity activity, Intent intent, String marketName,
+  public ActivityModule(AppCompatActivity activity, Intent intent, NotificationSyncScheduler notificationSyncScheduler, String marketName,
       String autoUpdateUrl, View view, String defaultTheme, String defaultStoreName,
       boolean firstCreated, String fileProviderAuthority) {
     this.activity = activity;
     this.intent = intent;
+    this.notificationSyncScheduler = notificationSyncScheduler;
     this.marketName = marketName;
     this.autoUpdateUrl = autoUpdateUrl;
     this.view = view;
@@ -108,16 +112,18 @@ import static android.content.Context.WINDOW_SERVICE;
   @ActivityScope @Provides DeepLinkManager provideDeepLinkManager(StoreUtilsProxy storeUtilsProxy,
       StoreRepository storeRepository, FragmentNavigator fragmentNavigator,
       @Named("default") SharedPreferences sharedPreferences, StoreAccessor storeAccessor,
+      @Named("default") OkHttpClient httpClient,
       NavigationTracker navigationTracker, PageViewsAnalytics pageViewsAnalytics) {
+    NotificationAnalytics notificationAnalytics = new NotificationAnalytics(httpClient, Analytics.getInstance(),
+        AppEventsLogger.newLogger(activity.getApplicationContext()));
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
         (TabNavigator) activity, (DeepLinkManager.DeepLinkMessages) activity, sharedPreferences,
-        storeAccessor, defaultTheme, defaultStoreName, navigationTracker, pageViewsAnalytics);
+        storeAccessor, defaultTheme, defaultStoreName, navigationTracker, pageViewsAnalytics, notificationAnalytics);
   }
 
   @ActivityScope @Provides Presenter provideMainPresenter(
       @Named("default") InstallManager installManager,
       RootInstallationRetryHandler rootInstallationRetryHandler, ApkFy apkFy, AutoUpdate autoUpdate,
-      NotificationSyncScheduler notificationSyncScheduler,
       @Named("default") SharedPreferences sharedPreferences,
       @Named("secure") SharedPreferences secureSharedPreferences,
       FragmentNavigator fragmentNavigator, DeepLinkManager deepLinkManager) {
@@ -134,10 +140,6 @@ import static android.content.Context.WINDOW_SERVICE;
     return new AccountNavigator(fragmentNavigator, accountManager,
         ((ActivityNavigator) activity), LoginManager.getInstance(), callbackManager, googleApiClient,
         PublishRelay.create(),defaultStoreName, defaultTheme, "http://m.aptoide.com/account/password-recovery");
-  }
-
-  @Provides @ActivityScope AccountErrorMapper provideAccountErrorMapper(){
-    return new AccountErrorMapper(activity);
   }
 
   @ActivityScope @Provides ScreenOrientationManager provideScreenOrientationManager(){

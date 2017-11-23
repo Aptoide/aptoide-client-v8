@@ -3,7 +3,6 @@ package cm.aptoide.pt;
 import android.accounts.AccountManager;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -36,9 +35,9 @@ import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.TrackerFilter;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
@@ -57,8 +56,10 @@ import cm.aptoide.pt.dataprovider.model.v3.ErrorResponse;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.download.DownloadAnalytics;
+import cm.aptoide.pt.download.DownloadCompleteAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.DownloadInstallationProvider;
 import cm.aptoide.pt.download.DownloadMirrorEventInterceptor;
@@ -70,6 +71,7 @@ import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.install.InstallerAnalytics;
+import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.install.RootInstallNotificationEventReceiver;
 import cm.aptoide.pt.install.installer.DefaultInstaller;
@@ -89,14 +91,7 @@ import cm.aptoide.pt.networking.NoAuthenticationBodyInterceptorV3;
 import cm.aptoide.pt.networking.NoOpTokenInvalidator;
 import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
-import cm.aptoide.pt.notification.NotificationIdsMapper;
 import cm.aptoide.pt.notification.NotificationProvider;
-import cm.aptoide.pt.notification.NotificationService;
-import cm.aptoide.pt.notification.NotificationSyncScheduler;
-import cm.aptoide.pt.notification.PnpV1NotificationService;
-import cm.aptoide.pt.notification.SystemNotificationShower;
-import cm.aptoide.pt.notification.sync.NotificationSyncFactory;
-import cm.aptoide.pt.notification.sync.NotificationSyncManager;
 import cm.aptoide.pt.preferences.AdultContent;
 import cm.aptoide.pt.preferences.LocalPersistenceAdultContent;
 import cm.aptoide.pt.preferences.Preferences;
@@ -112,8 +107,9 @@ import cm.aptoide.pt.root.RootValueSaver;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
-import cm.aptoide.pt.sync.SyncService;
-import cm.aptoide.pt.sync.SyncStorage;
+import cm.aptoide.pt.sync.alarm.AlarmSyncScheduler;
+import cm.aptoide.pt.sync.alarm.AlarmSyncService;
+import cm.aptoide.pt.sync.alarm.SyncStorage;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.q.QManager;
@@ -162,6 +158,7 @@ import rx.Completable;
 import rx.Single;
 import rx.schedulers.Schedulers;
 
+import static android.content.Context.ALARM_SERVICE;
 import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
 /**
@@ -212,18 +209,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @ApplicationTestScope @Provides InstallerAnalytics provideInstallerAnalytics(Answers answers,
       AppEventsLogger appEventsLogger) {
     return new InstallFabricEvents(Analytics.getInstance(), answers, appEventsLogger);
-  }
-
-  @Named("rollback") @ApplicationTestScope @Provides InstallManager provideRollbackInstallManager(
-      AptoideDownloadManager downloadManager, DownloadRepository downloadRepository,
-      InstalledRepository installedRepository,
-      @Named("default") SharedPreferences defaultSharedPreferences,
-      @Named("secure") SharedPreferences secureSharedPreferences,
-      RootAvailabilityManager rootAvailabilityManager,
-      @Named("rollback") Installer rollbackInstaller) {
-    return new InstallManager(application, downloadManager, rollbackInstaller,
-        rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
-        downloadRepository, installedRepository);
   }
 
   @ApplicationTestScope @Provides AptoideDownloadManager provideAptoideDownloadManager(
@@ -428,8 +413,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new SecurePreferencesImplementation(application, defaultSharedPreferences);
   }
 
-  @ApplicationTestScope @Provides RootInstallationRetryHandler provideRootInstallationRetryHandler(
-      @Named("rollback") InstallManager rollbackInstallManager) {
+  @ApplicationTestScope @Provides RootInstallationRetryHandler provideRootInstallationRetryHandler() {
+
+
     Intent retryActionIntent = new Intent(application, RootInstallNotificationEventReceiver.class);
     retryActionIntent.setAction(RootInstallNotificationEventReceiver.ROOT_INSTALL_RETRY_ACTION);
     PendingIntent retryPendingIntent = PendingIntent.getBroadcast(application, 2, retryActionIntent,
@@ -445,33 +431,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
             RootInstallNotificationEventReceiver.ROOT_INSTALL_DISMISS_ACTION),
         PendingIntent.FLAG_UPDATE_CURRENT);
 
-    final SystemNotificationShower systemNotificationShower =
-        new SystemNotificationShower(application,
-            (NotificationManager) application.getSystemService(Context.NOTIFICATION_SERVICE),
-            new NotificationIdsMapper());
     int notificationId = 230498;
-    return new RootInstallationRetryHandler(notificationId, systemNotificationShower,
-        rollbackInstallManager, PublishRelay.create(), 0, application,
+    return new RootInstallationRetryHandler(notificationId, application.getSystemNotificationShower(),
+        application.getInstallManager(InstallerFactory.ROLLBACK), PublishRelay.create(), 0, application,
         new RootInstallErrorNotificationFactory(notificationId,
             BitmapFactory.decodeResource(application.getResources(), R.mipmap.ic_launcher), action,
             deleteAction));
-  }
-
-  @ApplicationTestScope @Provides NotificationSyncScheduler provideNotificationSyncScheduler(
-      SyncScheduler syncScheduler, @Named("default") SharedPreferences sharedPreferences,
-      NotificationProvider notificationProvider, NotificationService notificationService) {
-    return new NotificationSyncManager(syncScheduler, true,
-        new NotificationSyncFactory(sharedPreferences, notificationService, notificationProvider));
-  }
-
-  @ApplicationTestScope @Provides NotificationService providePnp1NotificationService(
-      @Named("default") OkHttpClient defaultClient, IdsRepository idsRepository,
-      @Named("default") SharedPreferences defaultSharedPreferences, Resources resources,
-      AptoideAccountManager aptoideAccountManager,
-      AuthenticationPersistence authenticationPersistence) {
-    return new PnpV1NotificationService(BuildConfig.APPLICATION_ID, defaultClient,
-        WebService.getDefaultConverter(), idsRepository, BuildConfig.VERSION_NAME, extraId,
-        defaultSharedPreferences, resources, authenticationPersistence, aptoideAccountManager);
   }
 
   @ApplicationTestScope @Provides GoogleApiClient provideGoogleApiClient() {
@@ -544,10 +509,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       };
       final AccountService accountService = new AccountService() {
         @Override public Single<Account> getAccount(String email, String password) {
+          List<ErrorResponse> list = new ArrayList<>();
+          ErrorResponse errorResponse = new ErrorResponse();
           if (TestType.types.equals(TestType.TestTypes.SIGNSIGNUPTESTS)) {
             return Single.just(account);
           } else if (TestType.types.equals(TestType.TestTypes.SIGNINWRONG)) {
-            return Single.error(new AccountException("invalid_grant"));
+            errorResponse.code = "invalid_grant";
+            list.add(errorResponse);
+            return Single.error(new AccountException(list));
           }
           return Single.just(account);
         }
@@ -558,16 +527,18 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         }
 
         @Override public Single<Account> createAccount(String email, String password) {
+          List<ErrorResponse> list = new ArrayList<>();
+          ErrorResponse errorResponse = new ErrorResponse();
           if (TestType.types.equals(TestType.TestTypes.SIGNSIGNUPTESTS)) {
             return Single.just(account);
           } else if (TestType.types.equals(TestType.TestTypes.USEDEMAIL)) {
-            List<ErrorResponse> list = new ArrayList<>();
-            ErrorResponse errorResponse = new ErrorResponse();
             errorResponse.code = "WOP-9";
             list.add(errorResponse);
             return Single.error(new AccountException(list));
           } else if (TestType.types.equals(TestType.TestTypes.INVALIDEMAIL)) {
-            return Single.error(new AccountException("IARG_106"));
+            errorResponse.code = "IARG_106";
+            list.add(errorResponse);
+            return Single.error(new AccountException(list));
           }
           return Single.just(account);
         }
@@ -688,8 +659,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @ApplicationTestScope @Provides SyncScheduler provideSyncScheduler(SyncStorage syncStorage) {
-    return new SyncScheduler(application, SyncService.class,
-        (AlarmManager) application.getSystemService(Context.ALARM_SERVICE), syncStorage);
+    return new AlarmSyncScheduler(application, AlarmSyncService.class,
+        (AlarmManager) application.getSystemService(ALARM_SERVICE), syncStorage);
   }
 
   @ApplicationTestScope @Provides SyncStorage provideSyncStorage() {
@@ -824,7 +795,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AccountAnalytics(Analytics.getInstance(), bodyInterceptorPoolV7,
         defaulClient, WebService.getDefaultConverter(), tokenInvalidator,
         BuildConfig.APPLICATION_ID, defaultSharedPreferences, appEventsLogger,
-        navigationTracker);
+        navigationTracker, CrashReport.getInstance());
   }
 
   @ApplicationTestScope @Provides StoreManager provideStoreManager(AptoideAccountManager accountManager, @Named("default") OkHttpClient okHttpClient,
@@ -838,7 +809,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         accountSettingsBodyInterceptorPoolV7, defaultSharedPreferences,
         tokenInvalidator, requestBodyFactory, nonNullObjectMapper){
         @Override
-        protected Completable createStore(String a, String b, String c, boolean d, String e){
+        protected Completable createStore(String a, String b, String c, boolean d, String e, List<SimpleSetStoreRequest.StoreLinks> storeLinksList){
           return Completable.complete();
         }
       };

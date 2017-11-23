@@ -16,6 +16,7 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
 import cm.aptoide.pt.account.view.GooglePlayServicesFragment;
 import cm.aptoide.pt.analytics.Analytics;
@@ -72,7 +73,7 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    errorMapper = new AccountErrorMapper(getContext());
+    errorMapper = new AccountErrorMapper(getContext(), new ErrorsMapper());
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     requestCode = getArguments().getInt(FragmentNavigator.REQUEST_CODE_EXTRA);
