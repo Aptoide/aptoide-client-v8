@@ -6,9 +6,9 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.link.LinksHandlerFactory;
-import cm.aptoide.pt.social.data.PostsRemoteDataSource;
 import cm.aptoide.pt.social.data.TimelineCardFilter;
 import cm.aptoide.pt.social.data.TimelinePostsRepository;
+import cm.aptoide.pt.social.data.TimelineRemoteDataSource;
 import cm.aptoide.pt.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.updates.UpdateRepository;
 import java.util.HashSet;
@@ -61,9 +61,9 @@ public class TimelineRepositoryFactory {
           new TimelineCardFilter(duplicateFilter, packageRepository, updateRepository);
 
       repositories.put(action, new TimelinePostsRepository(
-          new PostsRemoteDataSource(action, baseBodyInterceptorV7, defaultClient, defaultConverter,
-              packageRepository, 20, 10, mapper, linksHandlerFactory, 20, 0, Integer.MAX_VALUE,
-              tokenInvalidator, defaultSharedPreferences, postFilter)));
+          new TimelineRemoteDataSource(action, baseBodyInterceptorV7, defaultClient,
+              defaultConverter, packageRepository, 20, 10, mapper, linksHandlerFactory, 20, 0,
+              Integer.MAX_VALUE, tokenInvalidator, defaultSharedPreferences, postFilter)));
     }
     return repositories.get(action);
   }

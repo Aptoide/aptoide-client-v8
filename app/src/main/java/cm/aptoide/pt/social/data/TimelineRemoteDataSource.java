@@ -19,7 +19,7 @@ import rx.Single;
  * Created by jdandrade on 01/08/2017.
  */
 
-public class PostsRemoteDataSource {
+public class TimelineRemoteDataSource {
   private final String url;
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final OkHttpClient okhttp;
@@ -40,7 +40,7 @@ public class PostsRemoteDataSource {
   private String cardIdPriority;
   private String timelineVersion;
 
-  public PostsRemoteDataSource(String url, BodyInterceptor<BaseBody> bodyInterceptor,
+  public TimelineRemoteDataSource(String url, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient okhttp, Converter.Factory converterFactory, PackageRepository packageRepository,
       int latestPackagesCount, int randomPackagesCount, TimelineResponseCardMapper mapper,
       LinksHandlerFactory linksHandlerFactory, int limit, int initialOffset, int initialTotal,

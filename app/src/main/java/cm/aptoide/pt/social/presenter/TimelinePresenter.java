@@ -564,6 +564,10 @@ public class TimelinePresenter implements Presenter {
           } else {
             view.showGenericViewError();
           }
+          String timelineVersion = timelineModel.getTimelineVersion();
+          if (timelineVersion != null) {
+            timelineAnalytics.setVersion(timelineVersion);
+          }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {

@@ -73,6 +73,7 @@ public class TimelineAnalytics {
   private static final String SOCIAL_CARD_PREVIEW = "Apps_Timeline_Social_Card_Preview";
   private static final String CARD_ACTION = "Apps_Timeline_Card_Action";
   private static final String BLANK = "(blank)";
+  private static final String TIMELINE_VERSION = "timeline_version";
   private final Analytics analytics;
   private final AppEventsLogger facebook;
   private final BodyInterceptor<BaseBody> bodyInterceptor;
@@ -84,6 +85,7 @@ public class TimelineAnalytics {
   private final NotificationAnalytics notificationAnalytics;
   private final NavigationTracker navigationTracker;
   private final ReadPostsPersistence readPostsPersistence;
+  private String version;
 
   public TimelineAnalytics(Analytics analytics, AppEventsLogger facebook,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
@@ -290,6 +292,7 @@ public class TimelineAnalytics {
     analytics.sendEvent(new FacebookEvent(facebook, TIMELINE_OPENED));
     Map<String, Object> map = new HashMap<>();
     map.put(PREVIOUS_CONTEXT, navigationTracker.getPreviousViewName());
+    map.put(TIMELINE_VERSION, version);
     analytics.sendEvent(
         new AptoideEvent(decorateWithScreenHistory(map), "OPEN_TIMELINE", "CLICK", "TIMELINE",
             bodyInterceptor, httpClient, converterFactory, tokenInvalidator, appId,
@@ -305,6 +308,7 @@ public class TimelineAnalytics {
   }
 
   private AptoideEvent createEvent(String event, Map<String, Object> data) {
+    data.put(TIMELINE_VERSION, version);
     return new AptoideEvent(data, event, "CLICK", "TIMELINE", bodyInterceptor, httpClient,
         converterFactory, tokenInvalidator, appId, sharedPreferences);
   }
@@ -645,6 +649,7 @@ public class TimelineAnalytics {
 
   private Map<String, Object> createScrollingEventData(int position) {
     final Map<String, Object> eventMap = new HashMap<>();
+    eventMap.put(TIMELINE_VERSION, version);
     eventMap.put("position", position);
     return eventMap;
   }
@@ -876,5 +881,9 @@ public class TimelineAnalytics {
     }
     data.put("result", result);
     return data;
+  }
+
+  public void setVersion(String version) {
+    this.version = version;
   }
 }
