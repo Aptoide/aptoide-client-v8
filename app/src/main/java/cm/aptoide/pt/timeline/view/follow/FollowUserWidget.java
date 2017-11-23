@@ -4,6 +4,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -29,6 +30,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import okhttp3.OkHttpClient;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
@@ -115,10 +117,17 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
           ShowMessage.asSnack(itemView,
               AptoideUtils.StringU.getFormattedString(R.string.store_followed,
                   getContext().getResources(), storeName));
+          follow.setText(R.string.unfollow);
         }, err -> {
           CrashReport.getInstance()
               .log(err);
         }, accountManager);
+      };
+
+      Action1<Void> unsubscribeStore = __ -> {
+        storeUtilsProxy.unSubscribeStore(storeName);
+        ShowMessage.asSnack(itemView, AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message, getContext().getResources(), storeName));
+        follow.setText(R.string.follow);
       };
 
       StoreRepository storeRepository =
@@ -127,9 +136,9 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(isSubscribed -> {
             if (isSubscribed) {
-              follow.setText(R.string.followed);
+              follow.setText(R.string.unfollow);
               compositeSubscription.add(RxView.clicks(follow)
-                  .subscribe(openStore));
+                  .subscribe(unsubscribeStore));
             } else {
               follow.setText(R.string.follow);
               compositeSubscription.add(RxView.clicks(follow)
@@ -138,6 +147,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
           }, (throwable) -> {
             throwable.printStackTrace();
           }));
+
     }
 
     final FragmentActivity context = getContext();
