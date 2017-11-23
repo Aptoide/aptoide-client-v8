@@ -19,7 +19,7 @@ import cm.aptoide.pt.search.suggestions.AppSuggestions;
 /**
  * Created by neuro on 01-06-2016.
  */
-public class SearchBuilder {
+@Deprecated public class SearchBuilder {
 
   private final SearchNavigator searchNavigator;
   private final SearchManager searchManager;

@@ -16,7 +16,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -25,7 +24,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -62,9 +60,6 @@ import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
-import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
-import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
-import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.ArrayList;
@@ -80,8 +75,7 @@ import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 
-public class SearchResultFragment extends BackButtonFragment
-    implements SearchResultView, SearchSuggestionsView {
+public class SearchResultFragment extends BackButtonFragment implements SearchResultView {
 
   private static final int LAYOUT = R.layout.global_search_fragment;
   private static final String VIEW_MODEL = "view_model";
@@ -91,7 +85,6 @@ public class SearchResultFragment extends BackButtonFragment
   private static final String ALL_STORES_SEARCH_LIST_STATE = "all_stores_search_list_state";
   private static final String FOLLOWED_STORES_SEARCH_LIST_STATE =
       "followed_stores_search_list_state";
-  private static final int COMPLETION_THRESHOLD = 0;
 
   private View noSearchLayout;
   private EditText noSearchLayoutSearchQuery;
@@ -121,11 +114,8 @@ public class SearchResultFragment extends BackButtonFragment
   private String defaultThemeName;
   private boolean isMultiStoreSearch;
   private String defaultStoreName;
-  private SearchView searchView;
-  private SearchCursorAdapter searchCursorAdapter;
   private TrendingManager trendingManager;
-  private PublishSubject<SearchViewQueryTextEvent> queryTextChangedPublisher;
-  private MenuItem searchMenuItem;
+  private AppSearchSuggestions appSearchSuggestions;
 
   public static SearchResultFragment newInstance(String currentQuery, String defaultStoreName) {
     return newInstance(currentQuery, false, defaultStoreName);
@@ -171,25 +161,6 @@ public class SearchResultFragment extends BackButtonFragment
     noResultsSearchButton = (ImageView) view.findViewById(R.id.ic_search_button);
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-  }
-
-  private void clickTitleBarExpandsList() {
-    getLifecycle().filter(event -> event == LifecycleEvent.RESUME)
-        .flatMap(__ -> RxView.clicks(toolbar))
-        .doOnNext(__ -> focusInSearchBar())
-        .compose(bindUntilEvent(LifecycleEvent.PAUSE))
-        .subscribe(__ -> {
-        }, err -> crashReport.log(err));
-  }
-
-  private void clickSearchIconExpandsList() {
-    getLifecycle().filter(event -> event == LifecycleEvent.RESUME)
-        .flatMap(__ -> RxToolbar.itemClicks(toolbar)
-            .filter(item -> item.getItemId() == searchMenuItem.getItemId()))
-        .doOnNext(__ -> focusInSearchBar())
-        .compose(bindUntilEvent(LifecycleEvent.PAUSE))
-        .subscribe(__ -> {
-        }, err -> crashReport.log(err));
   }
 
   @Override public void showFollowedStoresResult() {
@@ -377,35 +348,6 @@ public class SearchResultFragment extends BackButtonFragment
     allStoresButton.setVisibility(View.GONE);
   }
 
-  @Override public Observable<SearchViewQueryTextEvent> onQueryTextChanged() {
-    return queryTextChangedPublisher;
-  }
-
-  @Override public void collapseSearchBar() {
-    if (searchMenuItem != null) searchMenuItem.collapseActionView();
-  }
-
-  @Override public String getCurrentQuery() {
-    return viewModel != null ? viewModel.getCurrentQuery() : "";
-  }
-
-  @Override public void focusInSearchBar() {
-    if (searchMenuItem != null) {
-      searchMenuItem.expandActionView();
-    }
-
-    if (searchView != null && viewModel != null) {
-      final String currentQuery = viewModel.getCurrentQuery();
-      if (currentQuery != null && currentQuery.length() > 0) {
-        searchView.setQuery(currentQuery, false);
-      }
-    }
-  }
-
-  @Override public void setTrending(List<String> trending) {
-    searchCursorAdapter.setData(trending);
-  }
-
   private Observable<Void> recyclerViewReachedBottom(RecyclerView recyclerView) {
     return RxRecyclerView.scrollEvents(recyclerView)
         .filter(event -> event.dy() > 4)
@@ -452,32 +394,13 @@ public class SearchResultFragment extends BackButtonFragment
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_search_results, menu);
-    searchMenuItem = menu.findItem(R.id.action_search);
-    searchView = (SearchView) searchMenuItem.getActionView();
-    searchView.setSuggestionsAdapter(searchCursorAdapter);
-    searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-      @Override public boolean onSuggestionSelect(int position) {
-        return false;
-      }
 
-      @Override public boolean onSuggestionClick(int position) {
-        queryTextChangedPublisher.onNext(
-            SearchViewQueryTextEvent.create(searchView, searchCursorAdapter.getQueryAt(position),
-                true));
-        return true;
-      }
-    });
-
-    AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) searchView.findViewById(
-        android.support.v7.appcompat.R.id.search_src_text);
-    autoCompleteTextView.setThreshold(COMPLETION_THRESHOLD);
-
-    getLifecycle().filter(event -> event == LifecycleEvent.RESUME)
-        .flatMap(__ -> RxSearchView.queryTextChangeEvents(searchView))
-        .doOnNext(event -> queryTextChangedPublisher.onNext(event))
-        .compose(bindUntilEvent(LifecycleEvent.PAUSE))
-        .subscribe(__ -> {
-        }, e -> crashReport.log(e));
+    final MenuItem menuItem = menu.findItem(R.id.action_search);
+    if (appSearchSuggestions != null && menuItem != null) {
+      appSearchSuggestions.initialize(menuItem);
+    } else {
+      crashReport.log(new IllegalStateException("Search Suggestions not properly initialized"));
+    }
   }
 
   @Override public String getDefaultTheme() {
@@ -495,9 +418,6 @@ public class SearchResultFragment extends BackButtonFragment
     } else if (viewModel == null && getArguments().containsKey(VIEW_MODEL)) {
       viewModel = Parcels.unwrap(getArguments().getParcelable(VIEW_MODEL));
     }
-
-    queryTextChangedPublisher = PublishSubject.create();
-    searchCursorAdapter = new SearchCursorAdapter(getContext());
 
     searchNavigator = new SearchNavigator(getFragmentNavigator(), viewModel.getStoreName(),
         viewModel.getDefaultStoreName());
@@ -575,8 +495,6 @@ public class SearchResultFragment extends BackButtonFragment
     attachAllStoresResultListDependencies();
     setupToolbar();
     setupTheme();
-    clickTitleBarExpandsList();
-    clickSearchIconExpandsList();
 
     if (viewModel != null && viewModel.hasData()) {
       restoreViewState(savedInstanceState != null ? savedInstanceState.getParcelable(
@@ -590,10 +508,16 @@ public class SearchResultFragment extends BackButtonFragment
             mainThreadScheduler, searchManager, onAdClickRelay, onItemViewClickRelay,
             onOpenPopupMenuClickRelay, isMultiStoreSearch, defaultThemeName, defaultStoreName);
 
+    final SearchCursorAdapter searchCursorAdapter = new SearchCursorAdapter(getContext());
+
+    appSearchSuggestions = new AppSearchSuggestions(this, toolbar, crashReport,
+        viewModel != null ? viewModel.getCurrentQuery() : "", searchCursorAdapter,
+        PublishSubject.create());
+
     final SearchSuggestionsPresenter searchSuggestionsPresenter =
-        new SearchSuggestionsPresenter(this, new SearchFactory().createSearchForApps(),
-            mainThreadScheduler, searchCursorAdapter, crashReport, trendingManager,
-            searchNavigator);
+        new SearchSuggestionsPresenter(appSearchSuggestions,
+            new SearchFactory().createSearchForApps(), mainThreadScheduler, searchCursorAdapter,
+            crashReport, trendingManager, searchNavigator, true);
 
     attachPresenter(
         new CompositePresenter(Arrays.asList(searchResultPresenter, searchSuggestionsPresenter)));

@@ -5,7 +5,7 @@ import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import java.util.List;
 import rx.Observable;
 
-interface SearchSuggestionsView extends View {
+public interface SearchSuggestionsView extends View {
   Observable<SearchViewQueryTextEvent> onQueryTextChanged();
 
   void collapseSearchBar();

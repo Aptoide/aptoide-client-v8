@@ -33,7 +33,6 @@ public abstract class FragmentView extends LeakFragment implements View {
   private static final String TAG = FragmentView.class.getName();
 
   private boolean startActivityForResultCalled;
-  private NavigationTracker navigationTracker;
   private ActivityResultNavigator activityResultNavigator;
   private String defaultThemeName;
 
@@ -68,8 +67,6 @@ public abstract class FragmentView extends LeakFragment implements View {
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultThemeName();
     ScreenTrackingUtils.getInstance()
         .incrementNumberOfScreens();
-    navigationTracker =
-        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
   }
 
   @Override public void onDestroy() {

@@ -22,11 +22,13 @@ import rx.Scheduler;
   private final CrashReport crashReport;
   private final TrendingManager trendingManager;
   private final SearchNavigator navigator;
+  private boolean showSuggestionsOnFirstLoadWithEmptyQuery;
 
   public SearchSuggestionsPresenter(SearchSuggestionsView view,
       SearchSuggestionManager searchSuggestionManager, Scheduler viewScheduler,
       SearchCursorAdapter searchCursorAdapter, CrashReport crashReport,
-      TrendingManager trendingManager, SearchNavigator navigator) {
+      TrendingManager trendingManager, SearchNavigator navigator,
+      boolean showSuggestionsOnFirstLoadWithEmptyQuery) {
     this.view = view;
     this.searchSuggestionManager = searchSuggestionManager;
     this.viewScheduler = viewScheduler;
@@ -34,6 +36,7 @@ import rx.Scheduler;
     this.crashReport = crashReport;
     this.trendingManager = trendingManager;
     this.navigator = navigator;
+    this.showSuggestionsOnFirstLoadWithEmptyQuery = showSuggestionsOnFirstLoadWithEmptyQuery;
   }
 
   @Override public void present() {
@@ -41,7 +44,9 @@ import rx.Scheduler;
     handleQueryTextSubmitted();
     handleQueryTextCleaned();
     handleQueryTextChanged();
-    showSuggestionsIfCurrentQueryIsEmpty();
+    if(showSuggestionsOnFirstLoadWithEmptyQuery) {
+      showSuggestionsIfCurrentQueryIsEmpty();
+    }
   }
 
   private void handleReceivedSuggestions() {
