@@ -57,17 +57,14 @@ import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.install.view.InstallWarningDialog;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
-import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.timeline.SocialRepository;
-import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.view.recycler.widget.Widget;
-import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -180,13 +177,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     downloadFactory = displayable.getDownloadFactory();
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
-            new TimelineAnalytics(analytics,
-                AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
-                httpClient, WebService.getDefaultConverter(), tokenInvalidator,
-                BuildConfig.APPLICATION_ID, sharedPreferences,
-                new NotificationAnalytics(httpClient, analytics,
-                    AppEventsLogger.newLogger(getContext())), application.getNavigationTracker(),
-                application.getReadPostsPersistence()), tokenInvalidator, sharedPreferences);
+            application.getTimelineAnalytics(), tokenInvalidator, sharedPreferences);
 
     appViewNavigator = getAppViewNavigator();
 

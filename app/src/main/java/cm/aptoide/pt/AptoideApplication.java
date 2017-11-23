@@ -150,6 +150,7 @@ import cm.aptoide.pt.sync.alarm.AlarmSyncScheduler;
 import cm.aptoide.pt.sync.alarm.AlarmSyncService;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
 import cm.aptoide.pt.sync.rx.RxSyncScheduler;
+import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
@@ -283,6 +284,7 @@ public abstract class AptoideApplication extends Application {
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
   private NotificationsCleaner notificationsCleaner;
   private SyncScheduler alarmSyncScheduler;
+  private TimelineAnalytics timelineAnalytics;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -612,7 +614,8 @@ public abstract class AptoideApplication extends Application {
         // In order to make sure it happens we clean up all data persisted in disk when client
         // is first created. It only affects API calls with GET verb.
         cache.evictAll();
-      } catch (IOException ignored) {}
+      } catch (IOException ignored) {
+      }
       okHttpClientBuilder.cache(cache); // 10 MiB
       okHttpClientBuilder.addInterceptor(new POSTCacheInterceptor(getHttpClientCache()));
       okHttpClientBuilder.addInterceptor(getUserAgentInterceptor());
@@ -843,11 +846,11 @@ public abstract class AptoideApplication extends Application {
               getAccountManager(), getDatabase(), getResources(), getPackageRepository(),
               getTokenInvalidator(),
               new RxSyncScheduler(new HashMap<>(), CrashReport.getInstance()),
-              getInAppBillingSerializer(),
-              getBodyInterceptorPoolV7(), getAccountSettingsBodyInterceptorPoolV7(),
-              new HashMap<>(), WebService.getDefaultConverter(), CrashReport.getInstance(),
-              getAdyen(), getPurchaseFactory(), Build.VERSION_CODES.JELLY_BEAN,
-              Build.VERSION_CODES.JELLY_BEAN, getAuthenticationPersistence(), getPreferences());
+              getInAppBillingSerializer(), getBodyInterceptorPoolV7(),
+              getAccountSettingsBodyInterceptorPoolV7(), new HashMap<>(),
+              WebService.getDefaultConverter(), CrashReport.getInstance(), getAdyen(),
+              getPurchaseFactory(), Build.VERSION_CODES.JELLY_BEAN, Build.VERSION_CODES.JELLY_BEAN,
+              getAuthenticationPersistence(), getPreferences());
     }
     return billingPool;
   }
@@ -1391,6 +1394,19 @@ public abstract class AptoideApplication extends Application {
           (AlarmManager) getSystemService(ALARM_SERVICE), getSyncStorage());
     }
     return alarmSyncScheduler;
+  }
+
+  public TimelineAnalytics getTimelineAnalytics() {
+    if (timelineAnalytics == null) {
+      timelineAnalytics =
+          new TimelineAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(this),
+              getBodyInterceptorPoolV7(), getDefaultClient(), WebService.getDefaultConverter(),
+              getTokenInvalidator(), BuildConfig.APPLICATION_ID, getDefaultSharedPreferences(),
+              new NotificationAnalytics(getDefaultClient(), Analytics.getInstance(),
+                  AppEventsLogger.newLogger(this)), getNavigationTracker(),
+              getReadPostsPersistence());
+    }
+    return timelineAnalytics;
   }
 }
 

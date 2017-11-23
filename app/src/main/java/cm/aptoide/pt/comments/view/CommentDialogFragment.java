@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.comments.CommentBeforeSubmissionCallback;
@@ -28,7 +27,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForReview;
 import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForTimelineArticle;
 import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -148,15 +146,8 @@ public class CommentDialogFragment
     converterFactory = WebService.getDefaultConverter();
     onEmptyTextError =
         AptoideUtils.StringU.getResString(R.string.error_MARG_107, getContext().getResources());
-    Analytics analytics = Analytics.getInstance();
-    timelineAnalytics = new TimelineAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()),
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7(),
-        httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        new NotificationAnalytics(httpClient, analytics, AppEventsLogger.newLogger(getContext())),
-        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker(),
-        ((AptoideApplication) getContext().getApplicationContext()).getReadPostsPersistence());
+    timelineAnalytics =
+        ((AptoideApplication) getContext().getApplicationContext()).getTimelineAnalytics();
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,

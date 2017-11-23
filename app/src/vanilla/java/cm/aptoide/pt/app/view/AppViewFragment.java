@@ -92,7 +92,6 @@ import cm.aptoide.pt.install.view.remote.RemoteInstallDialog;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.search.ReferrerUtils;
@@ -371,14 +370,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installAnalytics = new InstallAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
 
-    timelineAnalytics = new TimelineAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
-        httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        application.getDefaultSharedPreferences(),
-        new NotificationAnalytics(httpClient, analytics, AppEventsLogger.newLogger(getContext())),
-        navigationTracker, application.getReadPostsPersistence());
+    timelineAnalytics = application.getTimelineAnalytics();
     socialRepository =
-
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
             timelineAnalytics, tokenInvalidator, application.getDefaultSharedPreferences());
     appRepository =
