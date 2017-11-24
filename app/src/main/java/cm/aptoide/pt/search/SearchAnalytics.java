@@ -44,7 +44,7 @@ public class SearchAnalytics {
   }
 
   public void searchWidgetClick(){
-    analytics.sendEvent(new FacebookEvent(facebook, SEARCH_FROM_WIDGET, createBundleData(QUERY, "")));
+    analytics.sendEvent(new FacebookEvent(facebook, SEARCH_FROM_WIDGET));
   }
 
   private Bundle createBundleData(String key, String value) {
