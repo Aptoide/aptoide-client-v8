@@ -3,6 +3,7 @@ package cm.aptoide.pt.timeline.view.follow;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
@@ -107,29 +108,6 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
           WebService.getDefaultConverter(), application.getTokenInvalidator(),
           application.getDefaultSharedPreferences());
 
-      Action1<Void> openStore = __ -> {
-        getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-            .newStoreFragment(storeName, storeTheme), true);
-      };
-
-      Action1<Void> subscribeStore = __ -> {
-        storeUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
-          ShowMessage.asSnack(itemView,
-              AptoideUtils.StringU.getFormattedString(R.string.store_followed,
-                  getContext().getResources(), storeName));
-          follow.setText(R.string.unfollow);
-        }, err -> {
-          CrashReport.getInstance()
-              .log(err);
-        }, accountManager);
-      };
-
-      Action1<Void> unsubscribeStore = __ -> {
-        storeUtilsProxy.unSubscribeStore(storeName);
-        ShowMessage.asSnack(itemView, AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message, getContext().getResources(), storeName));
-        follow.setText(R.string.follow);
-      };
-
       StoreRepository storeRepository =
           RepositoryFactory.getStoreRepository(getContext().getApplicationContext());
       compositeSubscription.add(storeRepository.isSubscribed(displayable.getStoreName())
@@ -144,17 +122,37 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
             throwable.printStackTrace();
           }));
 
-      follow.setOnClickListener(l -> storeRepository.isSubscribed(storeName)
+      //follow.setOnClickListener(l -> storeRepository.isSubscribed(storeName)
+      //    .observeOn(AndroidSchedulers.mainThread())
+      //    .subscribe(sub -> {
+      //      if(sub){
+      //        follow.setText(R.string.follow);
+      //        ShowMessage.asSnack(itemView, AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message, getContext().getResources(), storeName));
+      //        storeUtilsProxy.unSubscribeStore(storeName);
+      //      }
+      //      else{
+      //        follow.setText(R.string.unfollow);
+      //        ShowMessage.asSnack(itemView, AptoideUtils.StringU.getFormattedString(R.string.store_followed, getContext().getResources(), storeName));
+      //        storeUtilsProxy.subscribeStore(storeName);
+      //      }
+      //    }, e -> CrashReport.getInstance().log(e)));
+
+      compositeSubscription.add(RxView.clicks(follow)
+          .flatMap(__ -> storeRepository.isSubscribed(storeName))
           .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(sub -> {
-            if(sub){
+          .subscribe(isSubscribed -> {
+            if (isSubscribed) {
               follow.setText(R.string.follow);
-              ShowMessage.asSnack(itemView, AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message, getContext().getResources(), storeName));
+              Snackbar.make(itemView,
+                  AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
+                      getContext().getResources(), storeName), Snackbar.LENGTH_SHORT)
+                  .show();
               storeUtilsProxy.unSubscribeStore(storeName);
-            }
-            else{
+            } else {
               follow.setText(R.string.unfollow);
-              ShowMessage.asSnack(itemView, AptoideUtils.StringU.getFormattedString(R.string.store_followed, getContext().getResources(), storeName));
+              ShowMessage.asSnack(itemView,
+                  AptoideUtils.StringU.getFormattedString(R.string.store_followed,
+                      getContext().getResources(), storeName));
               storeUtilsProxy.subscribeStore(storeName);
             }
           }, e -> CrashReport.getInstance().log(e)));
