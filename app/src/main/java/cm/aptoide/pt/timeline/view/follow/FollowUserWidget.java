@@ -137,12 +137,8 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
           .subscribe(isSubscribed -> {
             if (isSubscribed) {
               follow.setText(R.string.unfollow);
-              //compositeSubscription.add(RxView.clicks(follow)
-              //    .subscribe(unsubscribeStore));
             } else {
               follow.setText(R.string.follow);
-              //compositeSubscription.add(RxView.clicks(follow)
-              //    .subscribe(subscribeStore));
             }
           }, (throwable) -> {
             throwable.printStackTrace();
@@ -161,7 +157,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
               ShowMessage.asSnack(itemView, AptoideUtils.StringU.getFormattedString(R.string.store_followed, getContext().getResources(), storeName));
               storeUtilsProxy.subscribeStore(storeName);
             }
-          }, e -> Log.d("TESTINGERROR", "Who knows!")));
+          }, e -> CrashReport.getInstance().log(e)));
     }
 
     final FragmentActivity context = getContext();
