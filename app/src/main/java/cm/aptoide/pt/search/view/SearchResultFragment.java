@@ -591,7 +591,7 @@ public class SearchResultFragment extends BackButtonFragment
             onOpenPopupMenuClickRelay, isMultiStoreSearch, defaultThemeName, defaultStoreName);
 
     final SearchSuggestionsPresenter searchSuggestionsPresenter =
-        new SearchSuggestionsPresenter(this, new SearchFactory().createSearchForApps(),
+        new SearchSuggestionsPresenter(this, searchAnalytics, new SearchFactory().createSearchForApps(),
             mainThreadScheduler, searchCursorAdapter, crashReport, trendingManager,
             searchNavigator);
 

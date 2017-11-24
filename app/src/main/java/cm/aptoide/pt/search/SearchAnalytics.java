@@ -17,6 +17,7 @@ public class SearchAnalytics {
   private static final String SEARCH = "Search";
   private static final String NO_RESULTS = "Search_No_Results";
   private static final String APP_CLICK = "Search_Results_App_View_Click";
+  private static final String SEARCH_FROM_WIDGET = "Search_From_Widget_Click";
   private final Analytics analytics;
   private final AppEventsLogger facebook;
 
@@ -40,6 +41,10 @@ public class SearchAnalytics {
     map.put(QUERY, query);
     map.put("package_name", packageName);
     analytics.sendEvent(new FacebookEvent(facebook, APP_CLICK, createComplexBundleData(map)));
+  }
+
+  public void searchWidgetClick(){
+    analytics.sendEvent(new FacebookEvent(facebook, SEARCH_FROM_WIDGET));
   }
 
   private Bundle createBundleData(String key, String value) {

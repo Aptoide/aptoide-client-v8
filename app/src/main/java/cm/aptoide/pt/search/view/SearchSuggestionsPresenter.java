@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.search.SearchAnalytics;
 import cm.aptoide.pt.search.SearchCursorAdapter;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
@@ -16,6 +17,7 @@ import rx.Scheduler;
     implements Presenter {
 
   private final SearchSuggestionsView view;
+  private final SearchAnalytics analytics;
   private final SearchSuggestionManager searchSuggestionManager;
   private final Scheduler viewScheduler;
   private final SearchCursorAdapter searchCursorAdapter;
@@ -23,11 +25,12 @@ import rx.Scheduler;
   private final TrendingManager trendingManager;
   private final SearchNavigator navigator;
 
-  public SearchSuggestionsPresenter(SearchSuggestionsView view,
+  public SearchSuggestionsPresenter(SearchSuggestionsView view, SearchAnalytics analytics,
       SearchSuggestionManager searchSuggestionManager, Scheduler viewScheduler,
       SearchCursorAdapter searchCursorAdapter, CrashReport crashReport,
       TrendingManager trendingManager, SearchNavigator navigator) {
     this.view = view;
+    this.analytics = analytics;
     this.searchSuggestionManager = searchSuggestionManager;
     this.viewScheduler = viewScheduler;
     this.searchCursorAdapter = searchCursorAdapter;
@@ -124,7 +127,9 @@ import rx.Scheduler;
         .filter(data -> data != null && data.size() > 0)
         .observeOn(viewScheduler)
         .doOnNext(data -> view.setTrending(data))
-        .doOnNext(__ -> view.focusInSearchBar())
+        .doOnNext(__ -> {
+          analytics.searchWidgetClick();
+          view.focusInSearchBar();})
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
