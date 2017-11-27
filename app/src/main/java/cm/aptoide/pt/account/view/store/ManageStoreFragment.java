@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.StyleRes;
@@ -26,7 +27,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.ImagePickerErrorHandler;
 import cm.aptoide.pt.account.view.ImagePickerNavigator;
 import cm.aptoide.pt.account.view.ImagePickerPresenter;
@@ -39,6 +43,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
+import cm.aptoide.pt.permission.PermissionProvider;
 import cm.aptoide.pt.presenter.CompositePresenter;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -57,6 +62,8 @@ import java.util.List;
 import javax.inject.Inject;
 import org.parceler.Parcels;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class ManageStoreFragment extends BackButtonFragment implements ManageStoreView {
 
@@ -114,6 +121,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   @Inject ImagePickerPresenter imagePickerPresenter;
   @Inject ManageStorePresenter manageStorePresenter;
   @Inject PhotoFileGenerator photoFileGenerator;
+  private List<Store.SocialChannelType> storeDeleteLinksList;
 
   public static ManageStoreFragment newInstance(ManageStoreViewModel storeModel, boolean goToHome) {
     Bundle args = new Bundle();
@@ -128,6 +136,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     currentModel = Parcels.unwrap(getArguments().getParcelable(EXTRA_STORE_MODEL));
+    goToHome = getArguments().getBoolean(EXTRA_GO_TO_HOME, true);
 
     dialogFragment =
         new ImagePickerDialog.Builder(getContext()).setViewRes(ImagePickerDialog.LAYOUT)
@@ -152,6 +161,11 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     registerSocialFocusChangeListeners();
 
     attachPresenters();
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   private void registerSocialFocusChangeListeners() {
@@ -188,11 +202,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
 
     youtubeRow.setOnClickListener(
         __ -> showEditTextHideTextView(youtubeTextAndPlus, youtubeUsernameWrapper, youtubeUser));
-  }
-
-  @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName());
   }
 
   /**
@@ -499,6 +508,45 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     return currentModel;
   }
 
+  private List<Store.SocialChannelType> checkLinksToDelete() {
+    List<SocialLink> socialLinks = currentModel.getSocialLinks();
+    for (SocialLink socialLink : socialLinks) {
+      setStoreDeleteLinksList(socialLink);
+    }
+    return storeDeleteLinksList;
+  }
+
+  private void setStoreDeleteLinksList(SocialLink socialLink) {
+    storeDeleteLinksList = new ArrayList<>();
+    if (!socialLink.getUrl()
+        .isEmpty()) {
+      if (socialLink.getType()
+          .equals(Store.SocialChannelType.FACEBOOK) && facebookUser.getText()
+          .toString()
+          .isEmpty()) {
+        storeDeleteLinksList.add(Store.SocialChannelType.FACEBOOK);
+      }
+      if (socialLink.getType()
+          .equals(Store.SocialChannelType.TWITCH) && twitchUser.getText()
+          .toString()
+          .isEmpty()) {
+        storeDeleteLinksList.add(Store.SocialChannelType.TWITCH);
+      }
+      if (socialLink.getType()
+          .equals(Store.SocialChannelType.TWITTER) && twitterUser.getText()
+          .toString()
+          .isEmpty()) {
+        storeDeleteLinksList.add(Store.SocialChannelType.TWITTER);
+      }
+      if (socialLink.getType()
+          .equals(Store.SocialChannelType.YOUTUBE) && youtubeUser.getText()
+          .toString()
+          .isEmpty()) {
+        storeDeleteLinksList.add(Store.SocialChannelType.YOUTUBE);
+      }
+    }
+  }
+
   /**
    * This method will add a object to the returned list for each social channel already defined by
    * the user.
@@ -590,16 +638,16 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
       for (SocialLink storeLinks : storeLinksList) {
         if (storeLinks.getType()
             .equals(Store.SocialChannelType.FACEBOOK)) {
-          setStoreSocialSentUrl(storeLinks, facebookText, facebookEndRowIcon);
+          setStoreSocialSentUrl(storeLinks, facebookText, facebookEndRowIcon, facebookUser);
         } else if (storeLinks.getType()
             .equals(Store.SocialChannelType.TWITCH)) {
-          setStoreSocialSentUrl(storeLinks, twitchText, twitchEndRowIcon);
+          setStoreSocialSentUrl(storeLinks, twitchText, twitchEndRowIcon, twitchUser);
         } else if (storeLinks.getType()
             .equals(Store.SocialChannelType.TWITTER)) {
-          setStoreSocialSentUrl(storeLinks, twitterText, twitterEndRowIcon);
+          setStoreSocialSentUrl(storeLinks, twitterText, twitterEndRowIcon, twitterUser);
         } else if (storeLinks.getType()
             .equals(Store.SocialChannelType.YOUTUBE)) {
-          setStoreSocialSentUrl(storeLinks, youtubeText, youtubeEndRowIcon);
+          setStoreSocialSentUrl(storeLinks, youtubeText, youtubeEndRowIcon, youtubeUser);
         }
       }
     }
@@ -609,10 +657,11 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
    * Sets social channel values that came from webservices. Meaning, social channels already
    * attached to the users store
    */
-  private void setStoreSocialSentUrl(SocialLink storeLinks, TextView textView,
-      ImageView imageView) {
+  private void setStoreSocialSentUrl(SocialLink storeLinks, TextView textView, ImageView imageView,
+      EditText editText) {
     setTextViewAppearance(R.style.Aptoide_TextView_Regular_S_BlackAlpha, textView);
     textView.setText(removeBaseUrl(storeLinks.getUrl()));
+    editText.setText(removeBaseUrl(storeLinks.getUrl()));
     imageView.setImageDrawable(getResources().getDrawable(R.drawable.edit_store_link_check));
   }
 

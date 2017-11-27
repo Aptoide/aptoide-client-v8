@@ -235,7 +235,7 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
                     android:text="@string/twitch"
-                    style="Aptoide.TextView.Regular.XS.Twitch"
+                    style="@style/Aptoide.TextView.Regular.XS.Twitch"
                     />
 
                 <ImageView

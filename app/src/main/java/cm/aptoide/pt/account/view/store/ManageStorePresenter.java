@@ -99,7 +99,8 @@ public class ManageStorePresenter implements Presenter {
             mediaStoragePath -> storeManager.createOrUpdate(storeModel.getStoreName(),
                 storeModel.getStoreDescription(), mediaStoragePath, storeModel.hasNewAvatar(),
                 storeModel.getStoreTheme()
-                    .getThemeName(), storeModel.storeExists(), storeModel.getSocialLinks()));
+                    .getThemeName(), storeModel.storeExists(), storeModel.getSocialLinks(),
+                storeModel.getSocialDeleteLinks()));
   }
 
   private void navigate() {
