@@ -28,7 +28,6 @@ import static cm.aptoide.pt.UITests.skipWizard;
 public class SignInSignUpUITests {
   private final String LOGINEMAIL = "jose.messejana@aptoide.com";
   private final String PASS = "aptoide1234";
-  private final String STORENAME = "a";
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
   @Rule public RetryTestRule retry = new RetryTestRule(UITests.NUMBER_OF_RETRIES);
@@ -203,7 +202,7 @@ public class SignInSignUpUITests {
   }
 
   private void createStore() {
-    onView(withId(R.id.create_store_name)).perform(replaceText(STORENAME), closeSoftKeyboard());
+    onView(withId(R.id.create_store_name)).perform(replaceText("a name"), closeSoftKeyboard());
     onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
     onView(withId(R.id.theme_selector)).perform(swipeUp());
     onView(withId(R.id.create_store_action)).perform(click());

@@ -804,7 +804,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         accountSettingsBodyInterceptorPoolV7, defaultSharedPreferences,
         tokenInvalidator, requestBodyFactory, nonNullObjectMapper){
         @Override
-        protected Completable createStore(String a, String b, String c, boolean d, String e, List<SimpleSetStoreRequest.StoreLinks> storeLinksList){
+        protected Completable createStore(String a, String b, String c, boolean d, String e, List<SimpleSetStoreRequest.StoreLinks> storeLinksList,
+            List<cm.aptoide.pt.dataprovider.model.v7.store.Store.SocialChannelType> storeDeleteSocialLinksList){
           return Completable.complete();
         }
       };
