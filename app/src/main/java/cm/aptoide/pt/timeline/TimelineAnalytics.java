@@ -31,7 +31,9 @@ import cm.aptoide.pt.social.data.StoreLatestApps;
 import cm.aptoide.pt.social.data.analytics.EventErrorHandler;
 import cm.aptoide.pt.social.data.share.ShareEvent;
 import com.facebook.appevents.AppEventsLogger;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -85,6 +87,7 @@ public class TimelineAnalytics {
   private final NotificationAnalytics notificationAnalytics;
   private final NavigationTracker navigationTracker;
   private final ReadPostsPersistence readPostsPersistence;
+  private final List<Map<String, Object>> openTimelineEventsData;
   private String version;
 
   public TimelineAnalytics(Analytics analytics, AppEventsLogger facebook,
@@ -103,6 +106,7 @@ public class TimelineAnalytics {
     this.notificationAnalytics = notificationAnalytics;
     this.navigationTracker = navigationTracker;
     this.readPostsPersistence = readPostsPersistence;
+    this.openTimelineEventsData = new ArrayList<>();
   }
 
   public void sendSocialCardPreviewActionEvent(String value) {
@@ -292,11 +296,12 @@ public class TimelineAnalytics {
     analytics.sendEvent(new FacebookEvent(facebook, TIMELINE_OPENED));
     Map<String, Object> map = new HashMap<>();
     map.put(PREVIOUS_CONTEXT, navigationTracker.getPreviousViewName());
-    map.put(TIMELINE_VERSION, version);
-    analytics.sendEvent(
-        new AptoideEvent(decorateWithScreenHistory(map), "OPEN_TIMELINE", "CLICK", "TIMELINE",
-            bodyInterceptor, httpClient, converterFactory, tokenInvalidator, appId,
-            sharedPreferences));
+    if (version != null) {
+      map.put(TIMELINE_VERSION, version);
+      flushTimelineTabOpenEvents(map);
+    } else {
+      openTimelineEventsData.add(map);
+    }
   }
 
   public void sendFollowFriendsEvent() {
@@ -885,5 +890,18 @@ public class TimelineAnalytics {
 
   public void setVersion(String version) {
     this.version = version;
+    if (openTimelineEventsData.size() > 0) {
+      for (Map<String, Object> data : openTimelineEventsData) {
+        data.put(TIMELINE_VERSION, version);
+        flushTimelineTabOpenEvents(data);
+      }
+    }
+  }
+
+  private void flushTimelineTabOpenEvents(Map<String, Object> data) {
+    analytics.sendEvent(
+        new AptoideEvent(decorateWithScreenHistory(data), "OPEN_TIMELINE", "CLICK", "TIMELINE",
+            bodyInterceptor, httpClient, converterFactory, tokenInvalidator, appId,
+            sharedPreferences));
   }
 }

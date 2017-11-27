@@ -91,6 +91,8 @@ public class TimelineRemoteDataSource {
             timelineVersion = timelineResponse.getDataList()
                 .getData()
                 .getVersion();
+          } else {
+            timelineVersion = "unknown";
           }
         })
         .map(timelineResponse -> timelineResponse.getDataList()

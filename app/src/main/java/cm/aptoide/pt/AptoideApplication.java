@@ -137,7 +137,7 @@ import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootValueSaver;
 import cm.aptoide.pt.social.TimelineRepositoryFactory;
 import cm.aptoide.pt.social.data.ReadPostsPersistence;
-import cm.aptoide.pt.social.data.TimelinePostsRepository;
+import cm.aptoide.pt.social.data.TimelineRepository;
 import cm.aptoide.pt.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.spotandshare.AccountGroupNameProvider;
 import cm.aptoide.pt.spotandshare.ShareApps;
@@ -1265,7 +1265,7 @@ public abstract class AptoideApplication extends Application {
     return syncStorage;
   }
 
-  public TimelinePostsRepository getTimelineRepository(String action, Context context) {
+  public TimelineRepository getTimelineRepository(String action, Context context) {
     if (timelineRepositoryFactory == null) {
       timelineRepositoryFactory =
           new TimelineRepositoryFactory(new HashMap<>(), getAccountSettingsBodyInterceptorPoolV7(),

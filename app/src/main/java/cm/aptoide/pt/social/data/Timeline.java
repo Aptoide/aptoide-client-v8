@@ -31,39 +31,39 @@ public class Timeline {
   private final InstallManager installManager;
   private final DownloadFactory downloadFactory;
   private final TimelineAnalytics timelineAnalytics;
-  private final TimelinePostsRepository timelinePostsRepository;
+  private final TimelineRepository timelineRepository;
   private final String marketName;
   private final TimelineUserProvider timelineUserProvider;
   private final UpdateRepository updateRepository;
 
   public Timeline(TimelineService service, InstallManager installManager,
       DownloadFactory downloadFactory, TimelineAnalytics timelineAnalytics,
-      TimelinePostsRepository timelinePostsRepository, String marketName,
+      TimelineRepository timelineRepository, String marketName,
       TimelineUserProvider timelineUserProvider, UpdateRepository updateRepository) {
     this.service = service;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.timelineAnalytics = timelineAnalytics;
-    this.timelinePostsRepository = timelinePostsRepository;
+    this.timelineRepository = timelineRepository;
     this.marketName = marketName;
     this.timelineUserProvider = timelineUserProvider;
     this.updateRepository = updateRepository;
   }
 
   public Single<TimelineModel> getCards() {
-    return timelinePostsRepository.getCards();
+    return timelineRepository.getCards();
   }
 
   public Single<TimelineModel> getFreshCards() {
-    return timelinePostsRepository.getFreshCards();
+    return timelineRepository.getFreshCards();
   }
 
   public Single<TimelineModel> getFreshCards(String postId) {
-    return timelinePostsRepository.getFreshCards(postId);
+    return timelineRepository.getFreshCards(postId);
   }
 
   public Single<TimelineModel> getNextCards() {
-    return timelinePostsRepository.getNextCards();
+    return timelineRepository.getNextCards();
   }
 
   public Observable<Install> updateApp(CardTouchEvent cardTouchEvent) {

@@ -56,7 +56,7 @@ import cm.aptoide.pt.social.data.SocialAction;
 import cm.aptoide.pt.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.social.data.Timeline;
 import cm.aptoide.pt.social.data.TimelineAdsRepository;
-import cm.aptoide.pt.social.data.TimelinePostsRepository;
+import cm.aptoide.pt.social.data.TimelineRepository;
 import cm.aptoide.pt.social.data.TimelineService;
 import cm.aptoide.pt.social.data.analytics.EventErrorHandler;
 import cm.aptoide.pt.social.data.share.ShareDialogFactory;
@@ -137,7 +137,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private PublishSubject<ShareEvent> sharePostPublishSubject;
   private PublishRelay<View> loginPrompt;
   private TimelineService timelineService;
-  private TimelinePostsRepository timelinePostsRepository;
+  private TimelineRepository timelineRepository;
   private DateCalculator dateCalculator;
   private boolean postIndicator;
   private boolean progressIndicator;
@@ -202,7 +202,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         new ShareDialogFactory(getContext(), new SharePostViewSetup(dateCalculator));
     installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
 
-    timelinePostsRepository =
+    timelineRepository =
         application.getTimelineRepository(getArguments().getString(ACTION_KEY), getContext());
 
     timelineAnalytics = application.getTimelineAnalytics();
@@ -282,7 +282,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
     Timeline timeline =
         new Timeline(timelineService, installManager, new DownloadFactory(marketName),
-            timelineAnalytics, timelinePostsRepository, marketName, timelineUserProvider,
+            timelineAnalytics, timelineRepository, marketName, timelineUserProvider,
             updateRepository);
 
     TimelineNavigator timelineNavigation = new TimelineNavigator(getFragmentNavigator(),
@@ -318,7 +318,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     layoutManager = null;
     bottomAlreadyReached = false;
     layoutManager = null;
-    timelinePostsRepository.clearLoading();
+    timelineRepository.clearLoading();
   }
 
   @Override public void showCards(List<Post> cards) {

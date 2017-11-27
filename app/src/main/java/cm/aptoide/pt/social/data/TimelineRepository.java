@@ -6,13 +6,13 @@ import rx.Single;
  * Created by jdandrade on 01/08/2017.
  */
 
-public class TimelinePostsRepository {
+public class TimelineRepository {
 
   private final TimelineRemoteDataSource timelineRemoteDataSource;
 
   private TimelineModel cachedTimeline;
 
-  public TimelinePostsRepository(TimelineRemoteDataSource timelineRemoteDataSource) {
+  public TimelineRepository(TimelineRemoteDataSource timelineRemoteDataSource) {
     this.timelineRemoteDataSource = timelineRemoteDataSource;
   }
 
