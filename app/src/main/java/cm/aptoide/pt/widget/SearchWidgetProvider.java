@@ -9,9 +9,6 @@ import android.net.Uri;
 import android.widget.RemoteViews;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.search.view.SearchActivity;
-import cm.aptoide.pt.view.MainActivity;
-import cm.aptoide.pt.view.entry.EntryActivity;
 
 /**
  * Created by franciscocalado on 10/16/17.
@@ -30,7 +27,7 @@ public class SearchWidgetProvider extends AppWidgetProvider {
 
       PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
-      RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.search_widget);
+      RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_search_layout);
       views.setOnClickPendingIntent(R.id.widget_search_bar, pendingIntent);
 
       manager.updateAppWidget(appWidgetId,views);
