@@ -44,10 +44,6 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
 
   private final ImageView headerIcon;
   private final TextView headerTitle;
-  private final TextView headerSubTitle;
-
-  private final ImageView arrowLeft;
-  private final ImageView arrowRight;
 
   //private final ProgressBar scoreProgress;
   private final ProgressBar leaderboardProgress;
@@ -79,13 +75,7 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
         (ImageView) itemView.findViewById(R.id.displayable_social_timeline_game_card_icon);
     this.headerTitle =
         (TextView) itemView.findViewById(R.id.displayable_social_timeline_game_card_title);
-    this.headerSubTitle =
-        (TextView) itemView.findViewById(R.id.displayable_social_timeline_game_card_subtitle);
 
-    this.arrowLeft = (ImageView) itemView.findViewById(R.id.left_arrow);
-    this.arrowRight = (ImageView) itemView.findViewById(R.id.right_arrow);
-
-    //this.scoreProgress = (ProgressBar) itemView.findViewById(R.id.score_progress);
     this.leaderboardProgress = (ProgressBar) itemView.findViewById(R.id.rank_progress);
 
     this.stampLeft = (ImageView) itemView.findViewById(R.id.stamp_left);
@@ -95,6 +85,11 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
     this.rankIcon = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_game_card_leaderboard_icon);
 
     this.headerStats = itemView.findViewById(R.id.stats_header);
+
+    itemView.setOnTouchListener((view, motionEvent) -> {
+      itemView.getParent().requestDisallowInterceptTouchEvent(true);
+      return false;
+    });
 
 
     rand = Math.random();
@@ -119,10 +114,6 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
     ImageLoader.with(itemView.getContext()).load("http://pool.img.aptoide.com/dfl/783ac07187647799c87c4e1d5cde6b8b_icon.png", this.headerIcon);
     this.headerTitle.setText(getStyledTitle(itemView.getContext(), getTitle(itemView.getContext()
         .getResources()), marketName));
-    if(card.getCardsLeft() == 1)
-      this.headerSubTitle.setText("Last card. Come back tomorrow for more!");
-    else
-      this.headerSubTitle.setText(String.valueOf(card.getCardsLeft())+" cards left today.");
 
     if (card.getQuestionIcon() == null){
       itemView.findViewById(R.id.icon_question).setVisibility(View.GONE);
@@ -177,10 +168,6 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
     LeaderboardTouchEvent event = new LeaderboardTouchEvent(card, CardTouchEvent.Type.BODY,
         position);
 
-    //score.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
-    //leaderboard.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
-    //scoreIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
-    //rankIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
     headerStats.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
 
 

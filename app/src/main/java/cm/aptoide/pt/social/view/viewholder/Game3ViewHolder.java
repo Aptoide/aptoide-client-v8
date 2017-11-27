@@ -31,8 +31,6 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
 
   private final TextView score;
   private final TextView leaderboard;
-  private final ImageView scoreIcon;
-  private final ImageView rankIcon;
   private View wrapper;
   private ImageView questionIcon;
   private TextView question;
@@ -45,12 +43,7 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
 
   private final ImageView headerIcon;
   private final TextView headerTitle;
-  private final TextView headerSubTitle;
 
-  private final ImageView arrowLeft;
-  private final ImageView arrowRight;
-
-  //private final ProgressBar scoreProgress;
   private final ProgressBar leaderboardProgress;
 
   private final ImageView stampLeft;
@@ -82,24 +75,18 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
         (ImageView) itemView.findViewById(R.id.displayable_social_timeline_game_card_icon);
     this.headerTitle =
         (TextView) itemView.findViewById(R.id.displayable_social_timeline_game_card_title);
-    this.headerSubTitle =
-        (TextView) itemView.findViewById(R.id.displayable_social_timeline_game_card_subtitle);
-
-    this.arrowLeft = (ImageView) itemView.findViewById(R.id.left_arrow);
-    this.arrowRight = (ImageView) itemView.findViewById(R.id.right_arrow);
 
     this.stampLeft = (ImageView) itemView.findViewById(R.id.stamp_left);
     this.stampRight = (ImageView) itemView.findViewById(R.id.stamp_right);
 
-    //this.scoreProgress = (ProgressBar) itemView.findViewById(R.id.score_progress);
     this.leaderboardProgress = (ProgressBar) itemView.findViewById(R.id.rank_progress);
-
-    this.scoreIcon = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_game_card_score_icon) ;
-    this.rankIcon = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_game_card_leaderboard_icon);
 
     this.headerStats = itemView.findViewById(R.id.stats_header);
 
-
+    itemView.setOnTouchListener((view, motionEvent) -> {
+      itemView.getParent().requestDisallowInterceptTouchEvent(true);
+      return false;
+    });
 
     rand=Math.random();
 
@@ -124,10 +111,6 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
     ImageLoader.with(itemView.getContext()).load("http://pool.img.aptoide.com/dfl/783ac07187647799c87c4e1d5cde6b8b_icon.png", this.headerIcon);
     this.headerTitle.setText(getStyledTitle(itemView.getContext(), getTitle(itemView.getContext()
         .getResources()), marketName));
-    if(card.getCardsLeft() == 1)
-      this.headerSubTitle.setText("Last card. Come back tomorrow for more!");
-    else
-      this.headerSubTitle.setText(String.valueOf(card.getCardsLeft())+" cards left today.");
 
     if (card.getQuestionIcon() == null){
       itemView.findViewById(R.id.icon_question).setVisibility(View.GONE);

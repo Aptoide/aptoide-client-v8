@@ -22,18 +22,6 @@
         android:orientation="horizontal"
         >
 
-      <!--<View-->
-          <!--android:id="@+id/top_margin_line"-->
-          <!--android:layout_width="match_parent"-->
-          <!--android:layout_height="5dp"-->
-          <!--android:layout_alignParentTop="true"-->
-          <!--android:layout_marginEnd="12dp"-->
-          <!--android:layout_marginLeft="12dp"-->
-          <!--android:layout_marginRight="12dp"-->
-          <!--android:layout_marginStart="12dp"-->
-          <!--android:background="@color/orange_700"-->
-          <!--/>-->
-
       <ImageView
           android:id="@+id/displayable_social_timeline_game_card_icon"
           android:layout_width="40dp"
@@ -59,20 +47,6 @@
           style="@style/Aptoide.TextView.Regular.S.Grey"
           />
 
-      <TextView
-          android:id="@+id/displayable_social_timeline_game_card_subtitle"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_below="@id/displayable_social_timeline_game_card_title"
-          android:layout_marginEnd="48dp"
-          android:layout_marginLeft="72dp"
-          android:layout_marginRight="48dp"
-          android:layout_marginStart="72dp"
-          android:lines="1"
-          tools:text="Há duas horas"
-          style="@style/Aptoide.TextView.Regular.XS.Grey"
-          />
-
       <include layout="@layout/game_stats_header"
           android:id="@+id/stats_header"
           android:layout_width="120dp"
@@ -80,71 +54,6 @@
           android:layout_alignParentRight = "true"
           android:layout_marginTop="18dp"
           />
-
-      <!--<ImageView-->
-          <!--android:id="@+id/displayable_social_timeline_game_card_leaderboard_icon"-->
-          <!--android:layout_width="15dp"-->
-          <!--android:layout_height="15dp"-->
-          <!--android:layout_toLeftOf="@id/displayable_social_timeline_game_card_leaderboard"-->
-          <!--android:layout_marginRight="5dp"-->
-          <!--android:layout_marginTop="@dimen/appstimeline_card_icon"-->
-          <!--android:src="@drawable/leaderboard_global"-->
-          <!--/>-->
-
-      <!--<ProgressBar-->
-          <!--android:id="@+id/rank_progress"-->
-          <!--android:layout_width="10dp"-->
-          <!--android:layout_height="10dp"-->
-          <!--android:layout_toRightOf="@id/displayable_social_timeline_game_card_leaderboard_icon"-->
-          <!--android:layout_marginLeft="12dp"-->
-          <!--android:layout_marginTop="20dp"-->
-          <!--android:visibility="visible"-->
-          <!--android:indeterminate="true" />-->
-
-      <!--<TextView-->
-          <!--android:id="@+id/displayable_social_timeline_game_card_leaderboard"-->
-          <!--android:layout_width="wrap_content"-->
-          <!--android:layout_height="wrap_content"-->
-          <!--android:layout_alignEnd="@+id/card_custom_view_line_separator"-->
-          <!--android:layout_marginRight="3dp"-->
-          <!--android:layout_marginTop="18dp"-->
-          <!--android:text="#1234"-->
-          <!--android:visibility="invisible"-->
-          <!--style="@style/Aptoide.TextView.Regular.XS.Grey"-->
-          <!--android:layout_alignRight="@+id/card_custom_view_line_separator"-->
-          <!--/>-->
-
-      <!--<ImageView-->
-          <!--android:id="@+id/displayable_social_timeline_game_card_score_icon"-->
-          <!--android:layout_width="15dp"-->
-          <!--android:layout_height="15dp"-->
-          <!--android:layout_toLeftOf="@id/displayable_social_timeline_game_card_score"-->
-          <!--android:layout_marginRight="5dp"-->
-          <!--android:layout_marginTop="@dimen/appstimeline_card_icon"-->
-          <!--android:src="@drawable/leaderboard_score"-->
-          <!--/>-->
-
-      <!--<TextView-->
-          <!--android:id="@+id/displayable_social_timeline_game_card_score"-->
-          <!--android:layout_width="wrap_content"-->
-          <!--android:layout_height="wrap_content"-->
-          <!--android:layout_toLeftOf="@id/displayable_social_timeline_game_card_leaderboard_icon"-->
-          <!--android:layout_marginRight="5dp"-->
-          <!--android:layout_marginTop="18dp"-->
-          <!--android:text="2000"-->
-          <!--android:visibility="invisible"-->
-          <!--style="@style/Aptoide.TextView.Regular.XS.Grey"-->
-          <!--/>-->
-
-      <!--<ProgressBar-->
-          <!--android:id="@+id/score_progress"-->
-          <!--android:layout_width="10dp"-->
-          <!--android:layout_height="10dp"-->
-          <!--android:layout_toLeftOf="@id/displayable_social_timeline_game_card_leaderboard_icon"-->
-          <!--android:layout_marginRight="12dp"-->
-          <!--android:layout_marginTop="20dp"-->
-          <!--android:visibility="visible"-->
-          <!--android:indeterminate="true" />-->
 
       <View
           android:id="@+id/card_custom_view_line_separator"
@@ -190,10 +99,11 @@
             style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/game_card_question3_icon_left"
+            android:layout_below="@+id/game_card_question3_icon_left"
             android:gravity="center"
+            android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="155dp"
+            android:layout_marginBottom="30dp"
             android:text="Answer1"
             />
 
@@ -201,10 +111,10 @@
             android:id="@id/game_card_question3_icon_left"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
+            android:layout_marginLeft="45dp"
+            android:layout_marginStart="45dp"
             android:layout_marginTop="143dp"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="0dp"
             tools:src="@mipmap/ic_launcher"
             />
 
@@ -213,13 +123,12 @@
             style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/game_card_question3_icon_right"
-            android:layout_toStartOf="@id/game_card_question3_icon_right"
+            android:layout_below="@+id/game_card_question3_icon_right"
             android:gravity="center"
             android:layout_marginRight="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginTop="155dp"
-            android:layout_marginBottom="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:text="Answer2"
             />
 
@@ -230,9 +139,8 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="143dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="30dp"
+            android:layout_marginRight="45dp"
+            android:layout_marginEnd="45dp"
             tools:src="@mipmap/ic_launcher"
             />
 
@@ -261,8 +169,25 @@
             android:visibility="invisible"
             />
 
-      </RelativeLayout>
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="155dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ad_icon"
+            />
 
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="155dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="OR"
+            style="@style/Aptoide.TextView.Medium.S.Black"
+            />
+
+      </RelativeLayout>
     </RelativeLayout>
       </LinearLayout>
 </android.support.v7.widget.CardView>

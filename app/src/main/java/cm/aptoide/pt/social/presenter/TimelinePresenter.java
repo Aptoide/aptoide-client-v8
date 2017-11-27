@@ -1163,13 +1163,13 @@ public class TimelinePresenter implements Presenter {
         answer =
             new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
                 card.getScore()+points, -1, -1, -1, status, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points,
-                card.getCardsLeft()-1);
+                -1);
       } else {
         status = "Wrong";
         answer =
             new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
                 card.getScore(), -1, -1, -1, status, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, 0,
-                card.getCardsLeft()-1);
+                -1);
       }
     } else {
       if (card.getRightAnswer()
@@ -1178,13 +1178,13 @@ public class TimelinePresenter implements Presenter {
         answer =
             new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
                 card.getScore()+points, -1, -1, -1, status, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points,
-                card.getCardsLeft()-1);
+                -1);
       } else {
         status = "Wrong";
         answer =
             new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
                 card.getScore(), -1, -1, -1, status, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, 0,
-                card.getCardsLeft()-1);
+                -1);
       }
     }
 
@@ -1208,6 +1208,8 @@ public class TimelinePresenter implements Presenter {
             int country = updateLeaderboardResponse.getData().getCountry();
             int friends = updateLeaderboardResponse.getData()
                 .getFriends();
+            int cardsLeft = updateLeaderboardResponse.getData().getCardsLeft();
+            gameAnswer.setCardsLeft(cardsLeft);
             gameAnswer.setgRanking(global);
             gameAnswer.setlRanking(country);
             gameAnswer.setfRanking(friends);

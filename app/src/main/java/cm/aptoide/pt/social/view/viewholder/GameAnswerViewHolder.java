@@ -48,6 +48,7 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
   private final TextView friendsStatus;
   private final ProgressBar rankProgress;
   private final ProgressBar leaderboardProgress;
+  private final ProgressBar cardsLeftProgress;
   private final String marketName;
   private final View leaderboardElement;
   private final View headerStats;
@@ -91,6 +92,7 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
 
     this.rankProgress = (ProgressBar) itemView.findViewById(R.id.rank_progress);
     this.leaderboardProgress = (ProgressBar) itemView.findViewById(R.id.leaderboard_progress);
+    this.cardsLeftProgress = (ProgressBar) itemView.findViewById(R.id.cards_left_progress);
 
     this.leaderboardElement = itemView.findViewById(R.id.card_leaderboard);
 
@@ -130,10 +132,21 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
         .load("http://pool.img.aptoide.com/dfl/783ac07187647799c87c4e1d5cde6b8b_icon.png", this.headerIcon);
     this.headerTitle.setText(getStyledTitle(itemView.getContext(), getTitle(itemView.getContext()
         .getResources()), marketName));
-    if(card.getCardsLeft() <= 0)
-      this.headerSubTitle.setText("No more cards. Come back tomorrow for more!");
-    else
+    if(card.getCardsLeft() <= 0) {
+      if (card.getCardsLeft() == -1) {
+        this.headerSubTitle.setVisibility(View.GONE);
+        this.cardsLeftProgress.setVisibility(View.VISIBLE);
+      } else {
+        this.headerSubTitle.setVisibility(View.VISIBLE);
+        this.cardsLeftProgress.setVisibility(View.GONE);
+        this.headerSubTitle.setText("No more cards. Come back tomorrow for more!");
+      }
+    }
+    else{
+      this.headerSubTitle.setVisibility(View.VISIBLE);
+      this.cardsLeftProgress.setVisibility(View.GONE);
       this.headerSubTitle.setText(String.valueOf(card.getCardsLeft())+" cards left today.");
+      }
 
     LeaderboardTouchEvent event  = new LeaderboardTouchEvent(card, CardTouchEvent.Type.BODY,
         position);
@@ -145,19 +158,6 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
 
     headerStats.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
 
-
-
-    //if(!card.getLoginButton()){
-    //    playerList.setVisibility(View.GONE);
-    //    logIn.setVisibility(View.VISIBLE);
-    //    logIn.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-    //        new CardTouchEvent(card, CardTouchEvent.Type.LOGIN)));
-    //    score.setVisibility(View.GONE);
-    //    leaderboard.setVisibility(View.GONE);
-    //    leaderboardIcon.setVisibility(View.GONE);
-    //    scoreIcon.setVisibility(View.GONE);
-    //    this.headerIncrement.setVisibility(View.GONE);
-    //}
     if(card.getgRanking() != -1){
       leaderboard.setVisibility(View.VISIBLE);
       rankProgress.setVisibility(View.INVISIBLE);

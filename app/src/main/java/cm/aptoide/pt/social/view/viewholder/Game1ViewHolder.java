@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -40,9 +41,8 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
 
   private final ImageView headerIcon;
   private final TextView headerTitle;
-  private final TextView headerSubTitle;
   private View wrapper;
-  //private final ProgressBar scoreProgress;
+
   private final ProgressBar leaderboardProgress;
 
   private final TextView stampLeft;
@@ -68,17 +68,16 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
     leftAnswer = (TextView) itemView.findViewById(R.id.left_answer);
     rightAnswer = (TextView) itemView.findViewById(R.id.right_answer);
 
+    itemView.setOnTouchListener((view, motionEvent) -> {
+      itemView.getParent().requestDisallowInterceptTouchEvent(true);
+      return false;
+    });
+
     this.headerIcon =
         (ImageView) itemView.findViewById(R.id.displayable_social_timeline_game_card_icon);
     this.headerTitle =
         (TextView) itemView.findViewById(R.id.displayable_social_timeline_game_card_title);
-    this.headerSubTitle =
-        (TextView) itemView.findViewById(R.id.displayable_social_timeline_game_card_subtitle);
 
-    //this.leftArrow = (ImageView) itemView.findViewById(R.id.left_arrow);
-    //this.rightArrow = (ImageView) itemView.findViewById(R.id.right_arrow);
-
-    //this.scoreProgress = (ProgressBar) itemView.findViewById(R.id.score_progress);
     this.leaderboardProgress = (ProgressBar) itemView.findViewById(R.id.rank_progress);
 
     this.stampLeft = (TextView) itemView.findViewById(R.id.stamp_left);
@@ -120,10 +119,6 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
     ImageLoader.with(itemView.getContext()).load("http://pool.img.aptoide.com/dfl/783ac07187647799c87c4e1d5cde6b8b_icon.png", this.headerIcon);
     this.headerTitle.setText(getStyledTitle(itemView.getContext(), getTitle(itemView.getContext()
         .getResources()), marketName));
-    if(card.getCardsLeft() == 1)
-      this.headerSubTitle.setText("Last card. Come back tomorrow for more!");
-    else
-      this.headerSubTitle.setText(String.valueOf(card.getCardsLeft())+" cards left today.");
 
     //Randomize right answer to left or right side (if 0<rand<0.5, right answer is on the left side)
     if(rand<0.5){

@@ -185,7 +185,6 @@ public class Timeline {
       if(posts.get(i).getType().isGame()){
         Game post = (Game) posts.get(i);
         post.setScore(score);
-        post.setCardsLeft(played);
         post.setgRanking(position);
       }
       if(posts.get(i).getType()==(CardType.GAMEANSWER)){

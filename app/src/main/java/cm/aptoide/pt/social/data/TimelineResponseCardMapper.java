@@ -508,7 +508,6 @@ public class TimelineResponseCardMapper {
       } else if (item instanceof GameTimelineItem) {
 
         final Game game = ((GameTimelineItem) item).getData();
-        if (game.getRankings().getCardsLeft()>0) {
           String questionIcon;
           if (game.getDisplayApp() == null) {
             questionIcon = null;
@@ -522,8 +521,7 @@ public class TimelineResponseCardMapper {
                 .getScore(), game.getRankings()
                 .getGRanking(), game.getRankings()
                 .getLRanking(), game.getRankings()
-                .getFRanking(), abUrl, false, CardType.GAME1, game.getRankings()
-                .getCardsLeft(), game.getWrongAnswer()
+                .getFRanking(), abUrl, false, CardType.GAME1, game.getWrongAnswer()
                 .getName(), game.getWrongAnswer()
                 .getUrl(), questionIcon));
           }
@@ -533,8 +531,7 @@ public class TimelineResponseCardMapper {
                 .getScore(), game.getRankings()
                 .getGRanking(), game.getRankings()
                 .getLRanking(), game.getRankings()
-                .getFRanking(), abUrl, false, CardType.GAME2, game.getRankings()
-                .getCardsLeft(), game.getWrongAnswer()
+                .getFRanking(), abUrl, false, CardType.GAME2, game.getWrongAnswer()
                 .getIcon(), game.getWrongAnswer()
                 .getUrl(), questionIcon));
           }
@@ -554,13 +551,11 @@ public class TimelineResponseCardMapper {
                 .getScore(), game.getRankings()
                 .getGRanking(), game.getRankings()
                 .getLRanking(), game.getRankings()
-                .getFRanking(), abUrl, false, CardType.GAME3, game.getRankings()
-                .getCardsLeft(), game.getWrongAnswer()
+                .getFRanking(), abUrl, false, CardType.GAME3, game.getWrongAnswer()
                 .getIcon(), game.getWrongAnswer()
                 .getName(), game.getWrongAnswer()
                 .getUrl(), questionIcon, questionName));
           }
-        }
       }
     }
   }

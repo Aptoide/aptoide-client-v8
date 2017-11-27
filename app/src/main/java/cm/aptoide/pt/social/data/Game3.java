@@ -20,8 +20,8 @@ public class Game3 extends Game {
   private boolean isLiked;
 
   public Game3(String cardId, App rightAnswer, String answerURL, String question, int score, int gRanking,
-      int lRanking, int fRanking, String abUrl, boolean isLiked, CardType cardType, int played, String wrongIcon, String wrongName, String wrongURL, String questionIcon, String questionName) {
-    super(cardId, rightAnswer, answerURL, question, score, gRanking, lRanking, fRanking, abUrl, isLiked, cardType, played);
+      int lRanking, int fRanking, String abUrl, boolean isLiked, CardType cardType, String wrongIcon, String wrongName, String wrongURL, String questionIcon, String questionName) {
+    super(cardId, rightAnswer, answerURL, question, score, gRanking, lRanking, fRanking, abUrl, isLiked, cardType);
     this.app = rightAnswer;
     this.wrongIcon = wrongIcon;
     this.wrongName = wrongName;

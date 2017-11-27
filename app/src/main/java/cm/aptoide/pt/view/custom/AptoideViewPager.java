@@ -18,7 +18,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
  */
 @Deprecated public class AptoideViewPager extends ViewPager {
 
-  private boolean enabled = false;
+  private boolean enabled = true;
   private boolean trackingEnabled = true;
 
   public AptoideViewPager(Context context) {

@@ -16,6 +16,7 @@ public class UpdateLeaderboardResponse extends BaseV7Response {
   public static class Data{
 
     private String uid;
+    private int cardsLeft;
     private int global;
     private int country;
     private int friends;
@@ -35,5 +36,8 @@ public class UpdateLeaderboardResponse extends BaseV7Response {
 
     public int getCountry() {return country;}
     public void setCountry(int country) {this.country = country;}
+
+    public int getCardsLeft() {return cardsLeft;}
+    public void setCardsLeft(int cardsLeft) {this.cardsLeft = cardsLeft;}
   }
 }
