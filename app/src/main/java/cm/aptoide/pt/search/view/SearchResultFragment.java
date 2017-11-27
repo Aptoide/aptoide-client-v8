@@ -51,8 +51,6 @@ import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
-import cm.aptoide.pt.search.suggestions.TrendingService;
-import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.view.BackButtonFragment;
@@ -444,9 +442,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
     final StoreAccessor storeAccessor =
         AccessorFactory.getAccessorFor(applicationContext.getDatabase(), Store.class);
 
-    trendingManager = new TrendingManager(
-        new TrendingService(new StoreCredentialsProviderImpl(storeAccessor), bodyInterceptor,
-            httpClient, converterFactory, tokenInvalidator, sharedPreferences));
+    trendingManager = application.getTrendingManager();
 
     final HashMapNotNull<String, List<String>> subscribedStoresAuthMap =
         StoreUtils.getSubscribedStoresAuthMap(storeAccessor);

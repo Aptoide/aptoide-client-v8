@@ -31,6 +31,7 @@ import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.IssuesAnalytics;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -49,8 +50,12 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.notification.NotificationAnalytics;
+import cm.aptoide.pt.search.SearchCursorAdapter;
+import cm.aptoide.pt.search.SearchFactory;
 import cm.aptoide.pt.search.SearchNavigator;
-import cm.aptoide.pt.search.view.SearchBuilder;
+import cm.aptoide.pt.search.view.AppSearchSuggestions;
+import cm.aptoide.pt.search.view.SearchSuggestionsPresenter;
+import cm.aptoide.pt.search.view.TrendingManager;
 import cm.aptoide.pt.share.ShareStoreHelper;
 import cm.aptoide.pt.social.view.TimelineFragment;
 import cm.aptoide.pt.store.StoreAnalytics;
@@ -73,6 +78,7 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by neuro on 06-05-2016.
@@ -116,8 +122,11 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private String marketName;
   private String defaultTheme;
   private Runnable registerViewpagerCurrentItem;
-  private SearchBuilder searchBuilder;
-  private IssuesAnalytics issuesAnalytics;
+
+  private AppSearchSuggestions appSearchSuggestions;
+  private CrashReport crashReport;
+  private SearchNavigator searchNavigator;
+  private TrendingManager trendingManager;
 
   public static StoreFragment newInstance(long userId, String storeTheme, OpenType openType) {
     return newInstance(userId, storeTheme, null, openType);
@@ -180,7 +189,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     Analytics analytics = Analytics.getInstance();
-    issuesAnalytics = new IssuesAnalytics(analytics, Answers.getInstance());
+
     timelineAnalytics = new TimelineAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
@@ -190,13 +199,13 @@ public class StoreFragment extends BasePagerToolbarFragment {
     marketName = application.getMarketName();
     shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);
 
-    final SearchManager searchManager =
-        (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
-
-    final SearchNavigator searchNavigator =
+    searchNavigator =
         new SearchNavigator(getFragmentNavigator(), storeName, application.getDefaultStoreName());
 
-    searchBuilder = new SearchBuilder(searchManager, searchNavigator);
+    trendingManager = application.getTrendingManager();
+
+    crashReport = CrashReport.getInstance();
+
     setHasOptionsMenu(true);
   }
 
@@ -353,30 +362,13 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_search, menu);
-    if (searchBuilder != null && searchBuilder.isValid()) {
-      final FragmentActivity activity = getActivity();
-      // from getActivity() "May return null if the fragment is associated with a Context instead."
-      final Context context = getContext();
-      if (activity != null) {
-        searchBuilder.attachSearch(activity, menu.findItem(R.id.action_search));
-        issuesAnalytics.attachSearchSuccess(false);
-        return;
-      } else if (context != null) {
-        searchBuilder.attachSearch(context, menu.findItem(R.id.action_search));
-        issuesAnalytics.attachSearchSuccess(true);
-        return;
-      } else {
-        issuesAnalytics.attachSearchFailed(true);
-        Logger.e(TAG, new IllegalStateException(
-            "Unable to attach search to this fragment due to null parent"));
-      }
-    } else {
-      issuesAnalytics.attachSearchFailed(false);
-      Logger.e(TAG, new IllegalStateException(
-          "Unable to attach search to this fragment due to invalid search builder"));
-    }
 
-    menu.removeItem(R.id.action_search);
+    final MenuItem menuItem = menu.findItem(R.id.action_search);
+    if (appSearchSuggestions != null && menuItem != null) {
+      appSearchSuggestions.initialize(menuItem);
+    } else {
+      menu.removeItem(R.id.action_search);
+    }
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -389,6 +381,23 @@ public class StoreFragment extends BasePagerToolbarFragment {
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    final SearchCursorAdapter searchCursorAdapter = new SearchCursorAdapter(getContext());
+
+    appSearchSuggestions =
+        new AppSearchSuggestions(this, getToolbar(), crashReport, "", searchCursorAdapter,
+            PublishSubject.create());
+
+    final SearchSuggestionsPresenter searchSuggestionsPresenter =
+        new SearchSuggestionsPresenter(appSearchSuggestions,
+            new SearchFactory().createSearchForApps(), AndroidSchedulers.mainThread(),
+            searchCursorAdapter, crashReport, trendingManager, searchNavigator,
+            false);
+
+    attachPresenter(searchSuggestionsPresenter);
   }
 
   /**

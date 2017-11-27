@@ -195,25 +195,9 @@ public class HomeFragment extends StoreFragment {
     defaultThemeName = application.getDefaultThemeName();
 
     searchNavigator =
-        new SearchNavigator(getFragmentNavigator(), application.getDefaultStoreName());
+        new SearchNavigator(getFragmentNavigator(), defaultThemeName);
 
-    final StoreAccessor storeAccessor =
-        AccessorFactory.getAccessorFor(application.getDatabase(), Store.class);
-
-    final SharedPreferences sharedPreferences = application.getDefaultSharedPreferences();
-
-    final TokenInvalidator tokenInvalidator = application.getTokenInvalidator();
-
-    final BodyInterceptor<BaseBody> bodyInterceptor =
-        application.getAccountSettingsBodyInterceptorPoolV7();
-
-    final OkHttpClient httpClient = application.getDefaultClient();
-
-    final Converter.Factory converterFactory = WebService.getDefaultConverter();
-
-    trendingManager = new TrendingManager(
-        new TrendingService(new StoreCredentialsProviderImpl(storeAccessor), bodyInterceptor,
-            httpClient, converterFactory, tokenInvalidator, sharedPreferences));
+    trendingManager = application.getTrendingManager();
 
     crashReport = CrashReport.getInstance();
 

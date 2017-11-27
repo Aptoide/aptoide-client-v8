@@ -67,6 +67,7 @@ import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
+import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Notification;
@@ -135,6 +136,8 @@ import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootValueSaver;
+import cm.aptoide.pt.search.suggestions.TrendingService;
+import cm.aptoide.pt.search.view.TrendingManager;
 import cm.aptoide.pt.social.TimelineRepositoryFactory;
 import cm.aptoide.pt.social.data.ReadPostsPersistence;
 import cm.aptoide.pt.social.data.TimelinePostsRepository;
@@ -200,6 +203,7 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Converter;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -280,6 +284,7 @@ public abstract class AptoideApplication extends Application {
   private AppCenter appCenter;
   private ReadPostsPersistence readPostsPersistence;
   private SyncScheduler alarmSyncScheduler;
+  private TrendingManager trendingManager;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -591,7 +596,8 @@ public abstract class AptoideApplication extends Application {
         // In order to make sure it happens we clean up all data persisted in disk when client
         // is first created. It only affects API calls with GET verb.
         cache.evictAll();
-      } catch (IOException ignored) {}
+      } catch (IOException ignored) {
+      }
       okHttpClientBuilder.cache(cache); // 10 MiB
       okHttpClientBuilder.addInterceptor(new POSTCacheInterceptor(getHttpClientCache()));
       okHttpClientBuilder.addInterceptor(getUserAgentInterceptor());
@@ -822,11 +828,11 @@ public abstract class AptoideApplication extends Application {
               getAccountManager(), getDatabase(), getResources(), getPackageRepository(),
               getTokenInvalidator(),
               new RxSyncScheduler(new HashMap<>(), CrashReport.getInstance()),
-              getInAppBillingSerializer(),
-              getBodyInterceptorPoolV7(), getAccountSettingsBodyInterceptorPoolV7(),
-              new HashMap<>(), WebService.getDefaultConverter(), CrashReport.getInstance(),
-              getAdyen(), getPurchaseFactory(), Build.VERSION_CODES.JELLY_BEAN,
-              Build.VERSION_CODES.JELLY_BEAN, getAuthenticationPersistence(), getPreferences());
+              getInAppBillingSerializer(), getBodyInterceptorPoolV7(),
+              getAccountSettingsBodyInterceptorPoolV7(), new HashMap<>(),
+              WebService.getDefaultConverter(), CrashReport.getInstance(), getAdyen(),
+              getPurchaseFactory(), Build.VERSION_CODES.JELLY_BEAN, Build.VERSION_CODES.JELLY_BEAN,
+              getAuthenticationPersistence(), getPreferences());
     }
     return billingPool;
   }
@@ -1370,6 +1376,29 @@ public abstract class AptoideApplication extends Application {
           (AlarmManager) getSystemService(ALARM_SERVICE), getSyncStorage());
     }
     return alarmSyncScheduler;
+  }
+
+  public TrendingManager getTrendingManager() {
+    if (trendingManager == null) {
+      final StoreAccessor storeAccessor =
+          AccessorFactory.getAccessorFor(getDatabase(), Store.class);
+
+      final SharedPreferences sharedPreferences = getDefaultSharedPreferences();
+
+      final TokenInvalidator tokenInvalidator = getTokenInvalidator();
+
+      final BodyInterceptor<BaseBody> bodyInterceptor = getAccountSettingsBodyInterceptorPoolV7();
+
+      final OkHttpClient httpClient = getDefaultClient();
+
+      final Converter.Factory converterFactory = WebService.getDefaultConverter();
+
+      trendingManager = new TrendingManager(
+          new TrendingService(new StoreCredentialsProviderImpl(storeAccessor), bodyInterceptor,
+              httpClient, converterFactory, tokenInvalidator, sharedPreferences));
+    }
+
+    return trendingManager;
   }
 }
 
