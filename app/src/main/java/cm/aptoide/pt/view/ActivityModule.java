@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
@@ -25,6 +26,7 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
@@ -57,6 +59,7 @@ import javax.inject.Named;
 import okhttp3.OkHttpClient;
 
 import static android.content.Context.WINDOW_SERVICE;
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 @Module public class ActivityModule {
 
@@ -87,15 +90,15 @@ import static android.content.Context.WINDOW_SERVICE;
   }
 
   @ActivityScope @Provides ApkFy provideApkFy(
-      @Named("secure") SharedPreferences securePreferences) {
+      @Named("secureShared") SharedPreferences securePreferences) {
     return new ApkFy(activity, intent, securePreferences);
   }
 
-  @ActivityScope @Provides AutoUpdate provideAutoUpdate(
-      @Named("default") InstallManager defaultInstallManager, DownloadFactory downloadFactory,
+  @ActivityScope @Provides AutoUpdate provideAutoUpdate(DownloadFactory downloadFactory,
       PermissionManager permissionManager, Resources resources) {
+    final AptoideApplication application = (AptoideApplication) getApplicationContext();
     return new AutoUpdate((ActivityView) activity, downloadFactory, permissionManager,
-        defaultInstallManager, resources, autoUpdateUrl, R.mipmap.ic_launcher, false, marketName);
+        application.getInstallManager(InstallerFactory.ROLLBACK), resources, autoUpdateUrl, R.mipmap.ic_launcher, false, marketName);
   }
 
   @ActivityScope @Provides FragmentNavigator provideFragmentNavigator(
@@ -121,12 +124,13 @@ import static android.content.Context.WINDOW_SERVICE;
         storeAccessor, defaultTheme, defaultStoreName, navigationTracker, pageViewsAnalytics, notificationAnalytics);
   }
 
-  @ActivityScope @Provides Presenter provideMainPresenter(
-      @Named("default") InstallManager installManager,
-      RootInstallationRetryHandler rootInstallationRetryHandler, ApkFy apkFy, AutoUpdate autoUpdate,
+  @ActivityScope @Provides Presenter provideMainPresenter(RootInstallationRetryHandler rootInstallationRetryHandler,
+      ApkFy apkFy, AutoUpdate autoUpdate,
       @Named("default") SharedPreferences sharedPreferences,
-      @Named("secure") SharedPreferences secureSharedPreferences,
+      @Named("secureShared") SharedPreferences secureSharedPreferences,
       FragmentNavigator fragmentNavigator, DeepLinkManager deepLinkManager) {
+    final AptoideApplication application = (AptoideApplication) getApplicationContext();
+    InstallManager installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
     return new MainPresenter((MainView) view, installManager, rootInstallationRetryHandler,
         CrashReport.getInstance(), apkFy, autoUpdate, new ContentPuller(activity),
         notificationSyncScheduler,

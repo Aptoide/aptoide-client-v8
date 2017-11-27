@@ -17,14 +17,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
 import android.support.v4.app.NotificationCompat;
-import android.telephony.TelephonyManager;
 import android.text.format.DateUtils;
 import android.util.SparseArray;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
 import cm.aptoide.pt.account.AndroidAccountProvider;
-import cm.aptoide.pt.account.FacebookLoginResult;
 import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.AdsRepository;
@@ -47,11 +45,9 @@ import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
-import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.cache.L2Cache;
 import cm.aptoide.pt.dataprovider.cache.POSTCacheKeyAlgorithm;
@@ -82,19 +78,15 @@ import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
 import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.networking.MultipartBodyInterceptor;
-import cm.aptoide.pt.networking.NoAuthenticationBodyInterceptorV3;
-import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.notification.NotificationInfo;
 import cm.aptoide.pt.notification.NotificationPolicyFactory;
 import cm.aptoide.pt.notification.NotificationProvider;
-import cm.aptoide.pt.notification.NotificationService;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.notification.NotificationsCleaner;
 import cm.aptoide.pt.notification.SystemNotificationShower;
 import cm.aptoide.pt.preferences.AdultContent;
-import cm.aptoide.pt.preferences.LocalPersistenceAdultContent;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.Preferences;
 import cm.aptoide.pt.preferences.RemotePersistenceAdultContent;
@@ -156,7 +148,6 @@ import javax.inject.Named;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
-import okhttp3.logging.HttpLoggingInterceptor;
 import rx.Completable;
 import rx.Observable;
 import rx.functions.Action1;
@@ -181,11 +172,11 @@ public abstract class AptoideApplication extends Application {
   @Inject AptoideAccountManager accountManager;
   @Inject @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7;
   @Inject @Named("web-v7") BodyInterceptor<BaseBody> bodyInterceptorWebV7;
-  @Inject @Named("no-authentication-v3") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3;
+  @Inject @Named("defaulInterceptorV3") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3;
   @Inject Preferences preferences;
-  private cm.aptoide.pt.preferences.SecurePreferences securePreferences;
-  private SecureCoderDecoder secureCodeDecoder;
-  private AdultContent adultContent;
+  @Inject @Named("secure") cm.aptoide.pt.preferences.SecurePreferences securePreferences;
+  @Inject SecureCoderDecoder secureCodeDecoder;
+  @Inject AdultContent adultContent;
   @Inject IdsRepository idsRepository;
   @Inject GoogleApiClient googleSignInClient;
   private LeakTool leakTool;
@@ -202,14 +193,12 @@ public abstract class AptoideApplication extends Application {
   private PurchaseBundleMapper purchaseBundleMapper;
   private PaymentThrowableCodeMapper paymentThrowableCodeMapper;
   @Inject @Named("multipart") MultipartBodyInterceptor multipartBodyInterceptor;
-  private NotificationService pnpV1NotificationService;
   private NotificationCenter notificationCenter;
   @Inject QManager qManager;
   private EntryPointChooser entryPointChooser;
-  private NotificationSyncScheduler notificationSyncScheduler;
   @Inject RootAvailabilityManager rootAvailabilityManager;
   private RootInstallationRetryHandler rootInstallationRetryHandler;
-  @Inject RefreshTokenInvalidator tokenInvalidator;
+  @Inject TokenInvalidator tokenInvalidator;
   private FileManager fileManager;
   @Inject StoreManager storeManager;
   @Inject PackageRepository packageRepository;
@@ -219,12 +208,11 @@ public abstract class AptoideApplication extends Application {
   private SyncStorage syncStorage;
   private TimelineRepositoryFactory timelineRepositoryFactory;
   @Inject AuthenticationPersistence authenticationPersistence;
-  private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody>
+  @Inject @Named("no-authentication-v3") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody>
       noAuthorizationBodyInterceptorV3;
   private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
   @Inject CallbackManager facebookCallbackManager;
   private Map<Integer, Result> fragmentResulMap;
-  private PublishRelay<FacebookLoginResult> facebookLoginResultRelay;
   private NavigationTracker navigationTracker;
   private BillingPool billingPool;
   private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
@@ -240,11 +228,10 @@ public abstract class AptoideApplication extends Application {
   @Inject @Named("retrofit-log") Interceptor retrofitLogInterceptor;
   @Inject AccountManager androidAccountManager;
   @Inject @Named("default") SharedPreferences defaultSharedPreferences;
-  @Inject @Named("secure") SharedPreferences secureSharedPreferences;
+  @Inject @Named("secureShared") SharedPreferences secureSharedPreferences;
   private ApplicationComponent applicationComponent;
   private AppCenter appCenter;
   private ReadPostsPersistence readPostsPersistence;
-  private SystemNotificationShower systemNotificationShower;
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
   private NotificationsCleaner notificationsCleaner;
   @Inject SyncScheduler alarmSyncScheduler;
@@ -386,8 +373,6 @@ public abstract class AptoideApplication extends Application {
     }, throwable -> CrashReport.getInstance()
         .log(throwable));
 
-    systemNotificationShower = getSystemNotificationShower();
-
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
   }
@@ -408,15 +393,6 @@ public abstract class AptoideApplication extends Application {
     if (tokenInvalidator == null) {
     }
     return tokenInvalidator;
-  }
-
-  public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getNoAuthenticationBodyInterceptorV3() {
-    if (noAuthorizationBodyInterceptorV3 == null) {
-      noAuthorizationBodyInterceptorV3 =
-          new NoAuthenticationBodyInterceptorV3(getIdsRepository(), getAptoideMd5sum(),
-              getAptoidePackage());
-    }
-    return noAuthorizationBodyInterceptorV3;
   }
 
   private void startNotificationCenter() {
@@ -507,9 +483,6 @@ public abstract class AptoideApplication extends Application {
   public NotificationCenter getNotificationCenter() {
     if (notificationCenter == null) {
 
-      final NotificationAccessor notificationAccessor = AccessorFactory.getAccessorFor(
-          ((AptoideApplication) this.getApplicationContext()).getDatabase(), Notification.class);
-
       final NotificationProvider notificationProvider = getNotificationProvider();
 
       notificationCenter =
@@ -530,12 +503,6 @@ public abstract class AptoideApplication extends Application {
     return notificationProvider;
   }
 
-  public StoreManager getStoreManager() {
-    if (storeManager == null) {
-    }
-    return storeManager;
-  }
-
   public abstract NotificationSyncScheduler getNotificationSyncScheduler();
 
   public SharedPreferences getDefaultSharedPreferences() {
@@ -545,28 +512,6 @@ public abstract class AptoideApplication extends Application {
   public GroupNameProvider getGroupNameProvider() {
     return new AccountGroupNameProvider(getAccountManager(), Build.MANUFACTURER, Build.MODEL,
         Build.ID);
-  }
-
-  public OkHttpClient getLongTimeoutClient() {
-    if (longTimeoutClient == null) {
-      final OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
-      okHttpClientBuilder.addInterceptor(getUserAgentInterceptor());
-      okHttpClientBuilder.addInterceptor(getToolboxRetrofitLogsInterceptor());
-      okHttpClientBuilder.connectTimeout(2, TimeUnit.MINUTES);
-      okHttpClientBuilder.readTimeout(2, TimeUnit.MINUTES);
-      okHttpClientBuilder.writeTimeout(2, TimeUnit.MINUTES);
-
-      if (ToolboxManager.isToolboxEnableRetrofitLogs(getDefaultSharedPreferences())) {
-        okHttpClientBuilder.addInterceptor(getToolboxRetrofitLogsInterceptor());
-      }
-
-      longTimeoutClient = okHttpClientBuilder.build();
-    }
-    return longTimeoutClient;
-  }
-
-  private Interceptor getToolboxRetrofitLogsInterceptor() {
-    return new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
   }
 
   public OkHttpClient getDefaultClient() {
@@ -647,25 +592,8 @@ public abstract class AptoideApplication extends Application {
 
   public cm.aptoide.pt.preferences.SecurePreferences getSecurePreferences() {
     if (securePreferences == null) {
-      securePreferences =
-          new cm.aptoide.pt.preferences.SecurePreferences(getDefaultSharedPreferences(),
-              getSecureCoderDecoder());
     }
     return securePreferences;
-  }
-
-  public GoogleApiClient getGoogleSignInClient() {
-    if (googleSignInClient == null) {
-    }
-    return googleSignInClient;
-  }
-
-  public SecureCoderDecoder getSecureCoderDecoder() {
-    if (secureCodeDecoder == null) {
-      secureCodeDecoder =
-          new SecureCoderDecoder.Builder(this, getDefaultSharedPreferences()).create();
-    }
-    return secureCodeDecoder;
   }
 
   public BillingAnalytics getBillingAnalytics() {
@@ -738,11 +666,6 @@ public abstract class AptoideApplication extends Application {
       inAppBillingSerialzer = new ExternalBillingSerializer();
     }
     return inAppBillingSerialzer;
-  }
-
-  public NetworkOperatorManager getNetworkOperatorManager() {
-    return new NetworkOperatorManager(
-        (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE));
   }
 
   private void clearFileCache() {
@@ -918,12 +841,6 @@ public abstract class AptoideApplication extends Application {
     return requestBodyFactory;
   }
 
-  public ObjectMapper getNonNullObjectMapper() {
-    if (nonNullObjectMapper == null) {
-    }
-    return nonNullObjectMapper;
-  }
-
   public String getAptoideMd5sum() {
     if (aptoideMd5sum == null) {
       synchronized (this) {
@@ -955,7 +872,6 @@ public abstract class AptoideApplication extends Application {
 
   private AdultContent getLocalAdultContent() {
     if (adultContent == null) {
-      adultContent = new LocalPersistenceAdultContent(getPreferences(), getSecurePreferences());
     }
     return adultContent;
   }
@@ -1085,24 +1001,11 @@ public abstract class AptoideApplication extends Application {
     return fragmentResultRelay;
   }
 
-  public CallbackManager getFacebookCallbackManager() {
-    if (facebookCallbackManager == null) {
-    }
-    return facebookCallbackManager;
-  }
-
   @SuppressLint("UseSparseArrays") public Map<Integer, Result> getFragmentResulMap() {
     if (fragmentResulMap == null) {
       fragmentResulMap = new HashMap<>();
     }
     return fragmentResulMap;
-  }
-
-  public PublishRelay<FacebookLoginResult> getFacebookLoginResultRelay() {
-    if (facebookLoginResultRelay == null) {
-      facebookLoginResultRelay = PublishRelay.create();
-    }
-    return facebookLoginResultRelay;
   }
 
   public NavigationTracker getNavigationTracker() {
@@ -1182,5 +1085,6 @@ public abstract class AptoideApplication extends Application {
   public IdsRepository getIdsRepository() {
     return idsRepository;
   }
+
 }
 

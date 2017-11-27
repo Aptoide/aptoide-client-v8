@@ -89,6 +89,7 @@ android {
 
     uitest {
       dimension "mode"
+      applicationIdSuffix "uitest"
     }
 
     prod {

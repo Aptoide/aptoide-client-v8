@@ -26,7 +26,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.ImagePickerErrorHandler;
 import cm.aptoide.pt.account.view.ImagePickerNavigator;
@@ -83,9 +82,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   private Toolbar toolbar;
   private ImagePickerDialog dialogFragment;
   private ImagePickerErrorHandler imagePickerErrorHandler;
-  private CrashReport crashReport;
-  private StoreManager storeManager;
-  private String packageName;
   private View facebookRow;
   private CustomTextInputLayout facebookUsernameWrapper;
   private View twitchRow;
@@ -142,8 +138,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
             .build();
 
     imagePickerErrorHandler = new ImagePickerErrorHandler(getContext());
-    final AptoideApplication application =
-        (AptoideApplication) getContext().getApplicationContext();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

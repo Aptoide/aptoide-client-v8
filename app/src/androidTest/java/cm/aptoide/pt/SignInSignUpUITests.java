@@ -167,6 +167,7 @@ public class SignInSignUpUITests {
     onView(withId(R.id.create_user_username_inserted)).perform(replaceText("a1"));
     onView(withId(R.id.create_user_create_profile)).perform(click());
     onView(withId(R.id.logged_in_continue)).perform(click());
+    onView(withId(R.id.create_store_name)).perform(replaceText("somethingdoenstmatter"));
     onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
     onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
     onView(withId(R.id.create_store_skip)).perform(click());

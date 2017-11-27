@@ -35,29 +35,23 @@ import rx.schedulers.Schedulers;
 @Module public class FragmentModule {
 
   private final Fragment fragment;
-  private final boolean isMultiStoreSearch;
   private final boolean dismissToNavigateToMainView;
   private final boolean navigateToHome;
   private final boolean goToHome;
   private final boolean isEditProfile;
   private final boolean isCreateStoreUserPrivacyEnabled;
   private final String packageName;
-  private final String defaultStoreName;
-  private final String defaultThemeName;
 
 
-  public FragmentModule(Fragment fragment, boolean isMultiStoreSearch,boolean dismissToNavigateToMainView, boolean navigateToHome, boolean goToHome,
-      boolean isEditProfile, boolean isCreateStoreUserPrivacyEnabled, String packageName, String defaultStoreName, String defaultThemeName) {
+  public FragmentModule(Fragment fragment,boolean dismissToNavigateToMainView, boolean navigateToHome, boolean goToHome,
+      boolean isEditProfile, boolean isCreateStoreUserPrivacyEnabled, String packageName) {
     this.fragment = fragment;
-    this.isMultiStoreSearch = isMultiStoreSearch;
     this.dismissToNavigateToMainView = dismissToNavigateToMainView;
     this.navigateToHome = navigateToHome;
     this.goToHome = goToHome;
     this.isEditProfile = isEditProfile;
     this.isCreateStoreUserPrivacyEnabled = isCreateStoreUserPrivacyEnabled;
     this.packageName = packageName;
-    this.defaultStoreName = defaultStoreName;
-    this.defaultThemeName = defaultThemeName;
   }
 
   @Provides @FragmentScope LoginSignUpCredentialsPresenter provideLoginSignUpPresenter(AptoideAccountManager accountManager, AccountNavigator accountNavigator,

@@ -11,9 +11,11 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
+import android.telephony.TelephonyManager;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
@@ -47,11 +49,13 @@ import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
+import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.cache.L2Cache;
 import cm.aptoide.pt.dataprovider.cache.POSTCacheInterceptor;
 import cm.aptoide.pt.dataprovider.cache.POSTCacheKeyAlgorithm;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v3.ErrorResponse;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
@@ -67,7 +71,6 @@ import cm.aptoide.pt.download.PaidAppsDownloadInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.install.InstallFabricEvents;
-import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.install.InstallerAnalytics;
@@ -83,6 +86,7 @@ import cm.aptoide.pt.install.rollback.RollbackFactory;
 import cm.aptoide.pt.install.rollback.RollbackRepository;
 import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
+import cm.aptoide.pt.networking.BodyInterceptorV3;
 import cm.aptoide.pt.networking.BodyInterceptorV7;
 import cm.aptoide.pt.networking.Cdn;
 import cm.aptoide.pt.networking.IdsRepository;
@@ -142,6 +146,7 @@ import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -193,18 +198,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     this.loginPreferences = loginPreferences;
   }
 
-
-  @Named("default") @ApplicationTestScope @Provides InstallManager provideDefaultInstallManager(
-      AptoideDownloadManager downloadManager, DownloadRepository downloadRepository,
-      InstalledRepository installedRepository,
-      @Named("default") SharedPreferences defaultSharedPreferences,
-      @Named("secure") SharedPreferences secureSharedPreferences,
-      RootAvailabilityManager rootAvailabilityManager,
-      @Named("default") Installer defaultInstaller) {
-    return new InstallManager(application, downloadManager, defaultInstaller,
-        rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
-        downloadRepository, installedRepository);
-  }
 
   @ApplicationTestScope @Provides InstallerAnalytics provideInstallerAnalytics(Answers answers,
       AppEventsLogger appEventsLogger) {
@@ -305,7 +298,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return fabric.getKit(TwitterCore.class);
   }
 
-  @ApplicationTestScope @Provides TwitterAuthClient provideTwitterAuthClient(Fabric fabric) {
+  @ApplicationTestScope @Provides TwitterAuthClient provideTwitterAuthClient() {
     return new TwitterAuthClient();
   }
 
@@ -317,8 +310,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         new TwitterAuthConfig(BuildConfig.TWITTER_KEY, BuildConfig.TWITTER_SECRET)));
   }
 
-  @ApplicationTestScope @Provides InstalledRepository provideInstalledRepository(Database database,
-      InstalledAccessor installedAccessor) {
+  @ApplicationTestScope @Provides InstalledRepository provideInstalledRepository(InstalledAccessor installedAccessor) {
     return new InstalledRepository(installedAccessor);
   }
 
@@ -346,8 +338,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @ApplicationTestScope @Provides IdsRepository provideIdsRepository(
-      @Named("secure") SharedPreferences secureSharedPreferences, ContentResolver contentResolver) {
-    return new IdsRepository(secureSharedPreferences, application,
+      @Named("default") SharedPreferences defaultSharedPreferences, ContentResolver contentResolver) {
+    return new IdsRepository(
+        SecurePreferencesImplementation.getInstance(application.getApplicationContext(),
+            defaultSharedPreferences), application,
         Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID));
   }
 
@@ -369,19 +363,18 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @ApplicationTestScope @Provides RootAvailabilityManager provideRootAvailabilityManager(
-      @Named("secure") SharedPreferences secureSharedPreferences) {
+      @Named("secure") SecurePreferences securePreferences) {
     return new RootAvailabilityManager(new RootValueSaver() {
       final String IS_PHONE_ROOTED = "IS_PHONE_ROOTED";
 
       @Override public Single<Boolean> isPhoneRoot() {
-        return Single.fromCallable(
-            () -> secureSharedPreferences.getBoolean(IS_PHONE_ROOTED, false));
+        return securePreferences.getBoolean(IS_PHONE_ROOTED, false)
+            .first()
+            .toSingle();
       }
 
       @Override public Completable save(boolean rootAvailable) {
-        return Completable.fromAction(() -> secureSharedPreferences.edit()
-            .putBoolean(IS_PHONE_ROOTED, rootAvailable)
-            .commit());
+        return securePreferences.save(IS_PHONE_ROOTED, rootAvailable);
       }
     });
   }
@@ -404,13 +397,17 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         ((AccountManager) application.getSystemService(Context.ACCOUNT_SERVICE)));
   }
 
-  @ApplicationTestScope @Provides @Named("default") SharedPreferences getDefaultSharedPerefences() {
+  @ApplicationTestScope @Provides @Named("default") SharedPreferences providesDefaultSharedPerefences() {
     return PreferenceManager.getDefaultSharedPreferences(application);
   }
 
-  @ApplicationTestScope @Provides @Named("secure") SharedPreferences getSecureSharedPerefences(
-      @Named("default") SharedPreferences defaultSharedPreferences) {
-    return new SecurePreferencesImplementation(application, defaultSharedPreferences);
+  @ApplicationTestScope @Provides @Named("secure") SecurePreferences providesSecurePerefences(
+      @Named("default") SharedPreferences defaultSharedPreferences, SecureCoderDecoder secureCoderDecoder) {
+    return new SecurePreferences(defaultSharedPreferences, secureCoderDecoder);
+  }
+
+  @ApplicationTestScope @Provides @Named("secureShared") SharedPreferences providesSecureSharedPreferences(@Named ("default") SharedPreferences defaultSharedPreferences){
+    return SecurePreferencesImplementation.getInstance(application.getApplicationContext(), defaultSharedPreferences);
   }
 
   @ApplicationTestScope @Provides RootInstallationRetryHandler provideRootInstallationRetryHandler() {
@@ -599,19 +596,23 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
           .build();
   }
 
-  @ApplicationTestScope @Provides @Named("default") OkHttpClient provideOkHttpClient(
-      @Named("user-agent") Interceptor userAgentInterceptor, L2Cache cache,
+  @ApplicationTestScope @Provides @Named("default") OkHttpClient provideOkHttpClient(L2Cache httpClientCache,
+      @Named("user-agent") Interceptor userAgentInterceptor,
       @Named("default") SharedPreferences sharedPreferences,
       @Named("retrofit-log") Interceptor retrofitLogInterceptor) {
     final OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
     okHttpClientBuilder.readTimeout(45, TimeUnit.SECONDS);
     okHttpClientBuilder.writeTimeout(45, TimeUnit.SECONDS);
 
-    final File cacheDirectory = new File("/");
-    final int cacheMaxSize = 10 * 1024 * 1024;
-    okHttpClientBuilder.cache(new Cache(cacheDirectory, cacheMaxSize)); // 10 MiB
-
-    okHttpClientBuilder.addInterceptor(new POSTCacheInterceptor(cache));
+    final Cache cache = new Cache(application.getCacheDir(), 10 * 1024 * 1024);
+    try {
+      // For billing to handle stale data properly the cache should only be stored in memory.
+      // In order to make sure it happens we clean up all data persisted in disk when client
+      // is first created. It only affects API calls with GET verb.
+      cache.evictAll();
+    } catch (IOException ignored) {}
+    okHttpClientBuilder.cache(cache); // 10 MiB
+    okHttpClientBuilder.addInterceptor(new POSTCacheInterceptor(httpClientCache));
     okHttpClientBuilder.addInterceptor(userAgentInterceptor);
 
     if (ToolboxManager.isToolboxEnableRetrofitLogs(sharedPreferences)) {
@@ -639,7 +640,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @ApplicationTestScope @Provides public ObjectMapper provideNonNullObjectMapper() {
-    final ObjectMapper objectMapper = new ObjectMapper();
+    ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     return objectMapper;
   }
@@ -669,7 +670,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @ApplicationTestScope @Provides StoreUtilsProxy provideStoreUtilsProxy(AptoideAccountManager accountManager,
       StoreAccessor storeAccessor, @Named("default") OkHttpClient httpClient,
-      @Named("default") SharedPreferences sharedPreferences, RefreshTokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       @Named("account-settings-pool-v7")
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptor) {
     return new StoreUtilsProxy(accountManager, bodyInterceptor,
@@ -677,7 +678,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences);
   }
 
-  @ApplicationTestScope @Provides RefreshTokenInvalidator provideTokenInvalidator(
+  @ApplicationTestScope @Provides TokenInvalidator provideTokenInvalidator(
       @Named("default") OkHttpClient httpClient,
       @Named("default") SharedPreferences sharedPreferences,
       AuthenticationPersistence authenticationPersistence,
@@ -737,19 +738,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @ApplicationTestScope @Provides AdultContent provideLocalAdultContent(Preferences preferences,
-      SecurePreferences securePreferences) {
+      @Named("secure") SecurePreferences securePreferences) {
     return new LocalPersistenceAdultContent(preferences, securePreferences);
   }
 
   @ApplicationTestScope @Provides Preferences provideDefaultPreferences(
       @Named("default") SharedPreferences sharedPreferences) {
     return new Preferences(sharedPreferences);
-  }
-
-  @ApplicationTestScope @Provides SecurePreferences provideSecurePreferences(
-      @Named("default") SharedPreferences sharedPreferences,
-      SecureCoderDecoder secureCoderDecoder) {
-    return new SecurePreferences(sharedPreferences, secureCoderDecoder);
   }
 
   @ApplicationTestScope @Provides StoreAccessor provideStoreAccessor(Database database) {
@@ -790,7 +785,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @ApplicationTestScope @Provides AccountAnalytics provideAccountAnalytics(@Named("pool-v7") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
-      @Named("default") OkHttpClient defaulClient, RefreshTokenInvalidator tokenInvalidator, @Named ("default") SharedPreferences defaultSharedPreferences,
+      @Named("default") OkHttpClient defaulClient, TokenInvalidator tokenInvalidator, @Named ("default") SharedPreferences defaultSharedPreferences,
       AppEventsLogger appEventsLogger, NavigationTracker navigationTracker){
     return new AccountAnalytics(Analytics.getInstance(), bodyInterceptorPoolV7,
         defaulClient, WebService.getDefaultConverter(), tokenInvalidator,
@@ -800,9 +795,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @ApplicationTestScope @Provides StoreManager provideStoreManager(AptoideAccountManager accountManager, @Named("default") OkHttpClient okHttpClient,
       @Named("multipart")MultipartBodyInterceptor multipartBodyInterceptor,
-      @Named("no-authentication-v3") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
+      @Named("defaulInterceptorV3") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
       @Named("account-settings-pool-v7") BodyInterceptor<BaseBody> accountSettingsBodyInterceptorPoolV7, @Named("default") SharedPreferences defaultSharedPreferences,
-      RefreshTokenInvalidator tokenInvalidator, RequestBodyFactory requestBodyFactory, ObjectMapper nonNullObjectMapper
+      TokenInvalidator tokenInvalidator, RequestBodyFactory requestBodyFactory, ObjectMapper nonNullObjectMapper
       ){
       final StoreManager storeManager = new StoreManager(accountManager, okHttpClient, WebService.getDefaultConverter(),
         multipartBodyInterceptor, bodyInterceptorV3,
@@ -826,10 +821,24 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @ApplicationTestScope @Provides AdsApplicationVersionCodeProvider providesAdsApplicationVersionCodeProvider(PackageRepository packageRepository){
-      return new PackageRepositoryVersionCodeProvider(packageRepository, application.getPackageName());
+    return new PackageRepositoryVersionCodeProvider(packageRepository, application.getPackageName());
   }
 
   @ApplicationTestScope @Provides PackageRepository providesPackageRepository(){
     return new PackageRepository(application.getPackageManager());
   }
+
+  @ApplicationTestScope @Provides @Named("defaulInterceptorV3") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> providesBodyInterceptorV3(
+      IdsRepository idsRepository, QManager qManager, @Named("default") SharedPreferences defaultSharedPreferences, NetworkOperatorManager networkOperatorManager,
+      AuthenticationPersistence authenticationPersistence){
+    return new BodyInterceptorV3(idsRepository, aptoideMd5sum, aptoidePackage,
+        qManager, defaultSharedPreferences, BodyInterceptorV3.RESPONSE_MODE_JSON,
+        Build.VERSION.SDK_INT, networkOperatorManager, authenticationPersistence);
+  }
+
+  @ApplicationTestScope @Provides NetworkOperatorManager providesNetworkOperatorManager(){
+    return new NetworkOperatorManager(
+        (TelephonyManager) application.getSystemService(Context.TELEPHONY_SERVICE));
+  }
+
 }

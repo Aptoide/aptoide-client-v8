@@ -10,8 +10,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.view.View;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.navigator.TabNavigatorActivity;
 import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
@@ -19,7 +21,6 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import com.jakewharton.rxrelay.PublishRelay;
 import javax.inject.Inject;
-import javax.inject.Named;
 import rx.Observable;
 
 public class MainActivity extends TabNavigatorActivity
@@ -27,7 +28,7 @@ public class MainActivity extends TabNavigatorActivity
 
   private static final int LAYOUT = R.layout.frame_layout;
 
-  @Inject @Named("default") InstallManager installManager;
+  private InstallManager installManager;
   @Inject Presenter presenter;
 
   private View snackBarLayout;
@@ -39,7 +40,8 @@ public class MainActivity extends TabNavigatorActivity
     getActivityComponent().inject(this);
 
     setContentView(LAYOUT);
-
+    final AptoideApplication application = (AptoideApplication) getApplicationContext();
+    installManager = application.getInstallManager(InstallerFactory.DEFAULT);
     snackBarLayout = findViewById(R.id.snackbar_layout);
     installErrorsDismissEvent = PublishRelay.create();
     attachPresenter(presenter);

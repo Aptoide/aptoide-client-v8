@@ -66,6 +66,8 @@ public class ManageUserPresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(data -> {
+          view.loadImageStateless(data.getPictureUri());
+          view.setUserName(data.getName());
         }, err -> crashReport.log(err));
   }
 
