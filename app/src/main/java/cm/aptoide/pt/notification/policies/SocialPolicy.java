@@ -1,6 +1,7 @@
 package cm.aptoide.pt.notification.policies;
 
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.notification.AptoideNotification;
 import cm.aptoide.pt.notification.NotificationProvider;
 import cm.aptoide.pt.notification.Policy;
 import java.util.concurrent.TimeUnit;
@@ -18,9 +19,10 @@ public class SocialPolicy implements Policy {
   private final static int police2Occurrences = 3;
 
   private NotificationProvider notificationProvider;
-  private Integer[] notificationsTypes;
+  @AptoideNotification.NotificationType private Integer[] notificationsTypes;
 
-  public SocialPolicy(NotificationProvider notificationProvider, Integer[] notificationsTypes) {
+  public SocialPolicy(NotificationProvider notificationProvider,
+      @AptoideNotification.NotificationType Integer[] notificationsTypes) {
     this.notificationProvider = notificationProvider;
     this.notificationsTypes = notificationsTypes;
   }
@@ -35,9 +37,9 @@ public class SocialPolicy implements Policy {
         (passRule1, passRule2) -> passRule1 && passRule2);
   }
 
-  @NonNull
-  private Single<Boolean> createPolicy(Integer[] notificationsTypes, long endTime, long startTime,
-      int occurrences) {
+  @NonNull private Single<Boolean> createPolicy(
+      @AptoideNotification.NotificationType Integer[] notificationsTypes, long endTime,
+      long startTime, int occurrences) {
     return notificationProvider.getDismissedNotifications(notificationsTypes, startTime, endTime)
         .map(aptoideNotifications -> aptoideNotifications.size() < occurrences);
   }

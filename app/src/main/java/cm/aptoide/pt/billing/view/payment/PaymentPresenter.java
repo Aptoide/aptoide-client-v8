@@ -179,7 +179,7 @@ public class PaymentPresenter implements Presenter {
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
         .flatMap(__ -> view.buyEvent()
             .doOnNext(___ -> view.showBuyLoading())
-            .flatMap(___ -> billing.getPayment(sku))
+            .flatMap(___ -> billing.getPayment(sku).first())
             .doOnNext(payment -> analytics.sendPaymentViewBuyEvent(payment))
             .flatMapCompletable(payment -> billing.processPayment(sku, payload)
                 .observeOn(AndroidSchedulers.mainThread())

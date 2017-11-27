@@ -28,6 +28,7 @@ import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.SimpleTabNavigation;
 import cm.aptoide.pt.navigator.TabNavigation;
 import cm.aptoide.pt.navigator.TabNavigator;
+import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.search.view.SearchResultFragment;
 import cm.aptoide.pt.store.StoreUtils;
@@ -57,12 +58,14 @@ public class DeepLinkManager {
   private final String defaultStoreName;
   private NavigationTracker navigationTracker;
   private PageViewsAnalytics pageViewsAnalytics;
+  private NotificationAnalytics notificationAnalytics;
 
   public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, StoreRepository storeRepository,
       FragmentNavigator fragmentNavigator, TabNavigator tabNavigator,
       DeepLinkMessages deepLinkMessages, SharedPreferences sharedPreferences,
       StoreAccessor storeAccessor, String defaultTheme, String defaultStoreName,
-      NavigationTracker navigationTracker, PageViewsAnalytics pageViewsAnalytics) {
+      NavigationTracker navigationTracker, PageViewsAnalytics pageViewsAnalytics,
+      NotificationAnalytics notificationAnalytics) {
     this.storeUtilsProxy = storeUtilsProxy;
     this.storeRepository = storeRepository;
     this.fragmentNavigator = fragmentNavigator;
@@ -74,6 +77,7 @@ public class DeepLinkManager {
     this.defaultStoreName = defaultStoreName;
     this.navigationTracker = navigationTracker;
     this.pageViewsAnalytics = pageViewsAnalytics;
+    this.notificationAnalytics = notificationAnalytics;
   }
 
   public boolean showDeepLink(Intent intent) {
@@ -216,6 +220,7 @@ public class DeepLinkManager {
   }
 
   private void newUpdatesDeepLink() {
+    notificationAnalytics.sendUpdatesNotificationClickEvent();
     Analytics.ApplicationLaunch.newUpdatesNotification();
     tabNavigator.navigate(new SimpleTabNavigation(TabNavigation.UPDATES));
   }

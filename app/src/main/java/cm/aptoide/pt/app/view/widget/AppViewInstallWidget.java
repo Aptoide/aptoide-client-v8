@@ -184,9 +184,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                 AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
                 httpClient, WebService.getDefaultConverter(), tokenInvalidator,
                 BuildConfig.APPLICATION_ID, sharedPreferences,
-                new NotificationAnalytics(httpClient, analytics),
-                application.getNavigationTracker(), application.getReadPostsPersistence()),
-            tokenInvalidator, sharedPreferences);
+                new NotificationAnalytics(httpClient, analytics,
+                    AppEventsLogger.newLogger(getContext())), application.getNavigationTracker(),
+                application.getReadPostsPersistence()), tokenInvalidator, sharedPreferences);
 
     appViewNavigator = getAppViewNavigator();
 

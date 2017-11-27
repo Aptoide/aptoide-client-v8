@@ -368,7 +368,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     timelineAnalytics = new TimelineAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        application.getDefaultSharedPreferences(), new NotificationAnalytics(httpClient, analytics),
+        application.getDefaultSharedPreferences(),
+        new NotificationAnalytics(httpClient, analytics, AppEventsLogger.newLogger(getContext())),
         navigationTracker, readPostsPersistence);
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
