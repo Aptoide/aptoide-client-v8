@@ -92,6 +92,7 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
     super.onCreate(savedInstanceState);
 
     Context context = getContext();
+
     if (savedInstanceState != null && savedInstanceState.containsKey(EXTRA_USER_MODEL)) {
       currentModel = Parcels.unwrap(savedInstanceState.getParcelable(EXTRA_USER_MODEL));
     } else {
@@ -124,6 +125,13 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
       cancelUserProfile.setVisibility(View.VISIBLE);
       header.setText(getString(R.string.edit_profile_header_message));
     }
+    if (savedInstanceState != null && savedInstanceState.containsKey(EXTRA_USER_MODEL)) {
+      currentModel = Parcels.unwrap(savedInstanceState.getParcelable(EXTRA_USER_MODEL));
+      loadImageStateless(currentModel.getPictureUri());
+      setUserName(currentModel.getName());
+    } else {
+      currentModel = new ViewModel();
+    }
     attachPresenters();
   }
 
@@ -135,7 +143,7 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    getFragmentComponent().inject(this);
+    getFragmentComponent(savedInstanceState).inject(this);
     return inflater.inflate(R.layout.fragment_manage_user, container, false);
   }
 

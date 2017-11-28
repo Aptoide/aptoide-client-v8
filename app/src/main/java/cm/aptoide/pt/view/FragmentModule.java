@@ -1,5 +1,6 @@
 package cm.aptoide.pt.view;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
@@ -35,6 +36,7 @@ import rx.schedulers.Schedulers;
 @Module public class FragmentModule {
 
   private final Fragment fragment;
+  private final Bundle savedInstance;
   private final boolean dismissToNavigateToMainView;
   private final boolean navigateToHome;
   private final boolean goToHome;
@@ -43,9 +45,10 @@ import rx.schedulers.Schedulers;
   private final String packageName;
 
 
-  public FragmentModule(Fragment fragment,boolean dismissToNavigateToMainView, boolean navigateToHome, boolean goToHome,
+  public FragmentModule(Fragment fragment, Bundle savedInstance, boolean dismissToNavigateToMainView, boolean navigateToHome, boolean goToHome,
       boolean isEditProfile, boolean isCreateStoreUserPrivacyEnabled, String packageName) {
     this.fragment = fragment;
+    this.savedInstance = savedInstance;
     this.dismissToNavigateToMainView = dismissToNavigateToMainView;
     this.navigateToHome = navigateToHome;
     this.goToHome = goToHome;
@@ -78,7 +81,7 @@ import rx.schedulers.Schedulers;
   @FragmentScope @Provides ManageUserPresenter provideManageUserPresenter(AptoideAccountManager accountManager, CreateUserErrorMapper errorMapper,
       ManageUserNavigator manageUserNavigator, UriToPathResolver uriToPathResolver){
     return new ManageUserPresenter((ManageUserView) fragment, CrashReport.getInstance(), accountManager, errorMapper, manageUserNavigator,
-        isEditProfile, uriToPathResolver, isCreateStoreUserPrivacyEnabled);
+        isEditProfile, uriToPathResolver, isCreateStoreUserPrivacyEnabled, savedInstance);
   }
 
   @FragmentScope @Provides ImageValidator provideImageValidator(){

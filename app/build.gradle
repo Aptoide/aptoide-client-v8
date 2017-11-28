@@ -348,7 +348,6 @@ dependencies {
   androidTestCompile "com.android.support.test.espresso:espresso-contrib:${ESPRESSO_VERSION}"
   androidTestCompile "com.android.support.test.espresso:espresso-intents:${ESPRESSO_VERSION}"
   androidTestCompile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
-  androidTestCompile "com.android.support.test.uiautomator:uiautomator-v18:${UIAUTOMATOR_VERSION}"
   androidTestCompile "com.jakewharton.rxrelay:rxrelay:${RX_RELAY}"
   androidTestCompile "org.mockito:mockito-android:${MOCKITO_CORE_ANDROID_VERSION}"
   androidTestCompile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VERSION}"

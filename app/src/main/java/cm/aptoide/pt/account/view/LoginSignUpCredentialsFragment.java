@@ -13,20 +13,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.view.ThrowableToStringMapper;
-import cm.aptoide.pt.navigator.ActivityResultNavigator;
-import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
@@ -62,7 +57,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   private boolean isPasswordVisible = false;
   private View credentialsEditTextsArea;
   private BottomSheetBehavior<View> bottomSheetBehavior;
-  @Inject AptoideAccountManager accountManager;
   @Inject LoginSignUpCredentialsPresenter presenter;
   private View rootView;
   @Inject AccountNavigator accountNavigator;
@@ -99,7 +93,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     super.onCreateView(inflater, container, savedInstanceState);
-    getFragmentComponent().inject(this);
+    getFragmentComponent(savedInstanceState).inject(this);
     return inflater.inflate(R.layout.fragment_login_sign_up_credentials, container, false);
   }
 

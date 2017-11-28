@@ -11,7 +11,6 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -151,14 +150,14 @@ public class SignInSignUpUITests {
   private void performLogin(String email, String pass) {
     onView(withId(R.id.show_login_with_aptoide_area)).perform(click());
     onView(withId(R.id.username)).perform(replaceText(email));
-    onView(withId(R.id.password)).perform(replaceText(pass), closeSoftKeyboard());
+    onView(withId(R.id.password)).perform(replaceText(pass));
     onView(withId(R.id.button_login)).perform(click());
   }
 
   private void performSignUp(String email, String pass) {
     onView(withId(R.id.show_join_aptoide_area)).perform(click());
     onView(withId(R.id.username)).perform(replaceText(email));
-    onView(withId(R.id.password)).perform(replaceText(pass), closeSoftKeyboard());
+    onView(withId(R.id.password)).perform(replaceText(pass));
     onView(withId(R.id.button_sign_up)).perform(click());
   }
 
@@ -202,7 +201,7 @@ public class SignInSignUpUITests {
   }
 
   private void createStore() {
-    onView(withId(R.id.create_store_name)).perform(replaceText("a name"), closeSoftKeyboard());
+    onView(withId(R.id.create_store_name)).perform(replaceText("a name"));
     onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
     onView(withId(R.id.theme_selector)).perform(swipeUp());
     onView(withId(R.id.create_store_action)).perform(click());

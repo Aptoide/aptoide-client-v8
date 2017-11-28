@@ -93,7 +93,7 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
   }
 
   @Override public void onViewCreated() {
-    getFragmentComponent().inject(this);
+    getFragmentComponent(null).inject(this);
     super.onViewCreated();
   }
 
