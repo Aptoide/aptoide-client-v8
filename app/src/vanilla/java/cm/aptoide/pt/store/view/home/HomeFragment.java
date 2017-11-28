@@ -54,8 +54,11 @@ import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.custom.BadgeView;
 import com.facebook.appevents.AppEventsLogger;
+import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
+import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.text.NumberFormat;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
@@ -204,7 +207,7 @@ public class HomeFragment extends StoreFragment {
     setHasOptionsMenu(true);
   }
 
-  protected boolean hasNavigation() {
+  protected boolean hasSearchFromStoreFragment() {
     return false;
   }
 
@@ -275,17 +278,15 @@ public class HomeFragment extends StoreFragment {
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.menu_fragment_home, menu);
+    inflater.inflate(R.menu.fragment_home, menu);
 
-    final MenuItem menuItem = menu.findItem(R.id.action_search);
+    final MenuItem menuItem = menu.findItem(R.id.menu_item_search);
     if (appSearchSuggestions != null && menuItem != null) {
       appSearchSuggestions.initialize(menuItem);
-    }
-
-    if (menuItem != null) {
+    } else if (menuItem != null) {
       menuItem.setVisible(false);
     } else {
-      menu.removeItem(R.id.action_search);
+      menu.removeItem(R.id.menu_item_search);
     }
   }
 
@@ -303,9 +304,14 @@ public class HomeFragment extends StoreFragment {
 
     final SearchCursorAdapter searchCursorAdapter = new SearchCursorAdapter(getContext());
 
+    final Toolbar toolbar = getToolbar();
+    final Observable<MenuItem> toolbarMenuItemClick = RxToolbar.itemClicks(toolbar)
+        .publish()
+        .autoConnect();
+
     appSearchSuggestions =
-        new AppSearchSuggestions(this, getToolbar(), crashReport, "", searchCursorAdapter,
-            PublishSubject.create());
+        new AppSearchSuggestions(this, RxView.clicks(toolbar), crashReport, "", searchCursorAdapter,
+            PublishSubject.create(), toolbarMenuItemClick);
 
     final SearchSuggestionsPresenter searchSuggestionsPresenter =
         new SearchSuggestionsPresenter(appSearchSuggestions,

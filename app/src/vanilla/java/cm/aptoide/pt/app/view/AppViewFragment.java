@@ -121,6 +121,8 @@ import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
+import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
+import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.Collections;
@@ -486,9 +488,14 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
     SearchCursorAdapter searchCursorAdapter = new SearchCursorAdapter(getContext());
 
+    final Toolbar toolbar = getToolbar();
+    final Observable<MenuItem> toolbarMenuItemClick = RxToolbar.itemClicks(toolbar)
+        .publish()
+        .autoConnect();
+
     appSearchSuggestions =
-        new AppSearchSuggestions(this, getToolbar(), crashReport, "", searchCursorAdapter,
-            PublishSubject.create());
+        new AppSearchSuggestions(this, RxView.clicks(toolbar), crashReport, "", searchCursorAdapter,
+            PublishSubject.create(), toolbarMenuItemClick);
 
     final SearchSuggestionsPresenter searchSuggestionsPresenter =
         new SearchSuggestionsPresenter(appSearchSuggestions,
@@ -496,6 +503,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             searchCursorAdapter, crashReport, trendingManager, searchNavigator, false);
 
     attachPresenter(searchSuggestionsPresenter);
+
+    handleMenuItemClick(toolbarMenuItemClick);
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -625,80 +634,103 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     this.menu = menu;
-    inflater.inflate(R.menu.menu_appview_fragment, menu);
+    inflater.inflate(R.menu.fragment_appview, menu);
 
-    final MenuItem menuItem = menu.findItem(R.id.action_search);
+    final MenuItem menuItem = menu.findItem(R.id.menu_item_search);
     if (appSearchSuggestions != null && menuItem != null) {
       appSearchSuggestions.initialize(menuItem);
+    } else if (menuItem != null) {
+      menuItem.setVisible(false);
     } else {
-      menu.removeItem(R.id.action_search);
+      menu.removeItem(R.id.menu_item_search);
     }
 
     uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
   }
 
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int i = item.getItemId();
-    if (i == R.id.menu_share) {
-
-      final boolean appRatingExists = getApp() != null
-          && getApp().getStats() != null
-          && getApp().getStats()
-          .getRating() != null;
-
-      final float averageRating = appRatingExists ? getApp().getStats()
-          .getRating()
-          .getAvg() : 0f;
-
-      final boolean appHasStore = getApp() != null && getApp().getStore() != null;
-
-      final Long storeId = appHasStore ? getApp().getStore()
-          .getId() : null;
-
-      shareAppHelper.shareApp(getAppName(), getPackageName(), appViewModel.getwUrl(),
-          (getApp() == null ? null : getApp().getIcon()), averageRating,
-          SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW, storeId);
-
-      appViewAnalytics.sendAppShareEvent();
-      return true;
-    } else if (i == R.id.menu_schedule) {
-      appViewAnalytics.sendScheduleDownloadEvent();
-      final Scheduled scheduled = createScheduled(getApp(), appViewModel.getAppAction());
-
-      ScheduledAccessor scheduledAccessor = AccessorFactory.getAccessorFor(
-          ((AptoideApplication) getContext().getApplicationContext()
-              .getApplicationContext()).getDatabase(), Scheduled.class);
-      scheduledAccessor.insert(scheduled);
-
-      String str = this.getString(R.string.added_to_scheduled);
-      ShowMessage.asSnack(this.getView(), str);
-      return true;
-    } else if (i == R.id.menu_uninstall && unInstallAction != null) {
-      unInstallAction.call();
-      return true;
-    } else if (i == R.id.menu_remote_install) {
-      appViewAnalytics.sendRemoteInstallEvent();
-      if (AptoideUtils.SystemU.getConnectionType(
-          (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE))
-          .equals("mobile")) {
-        GenericDialogs.createGenericOkMessage(getContext(),
-            getContext().getString(R.string.remote_install_menu_title),
-            getContext().getString(R.string.install_on_tv_mobile_error))
-            .subscribe(__ -> {
-            }, err -> CrashReport.getInstance()
-                .log(err));
-      } else {
-        DialogFragment newFragment = RemoteInstallDialog.newInstance(getAppId());
-        newFragment.show(getActivity().getSupportFragmentManager(),
-            RemoteInstallDialog.class.getSimpleName());
-      }
-    }
-
-    return super.onOptionsItemSelected(item);
-  }
-
   @Override public String getDefaultTheme() {
     return appViewModel.getDefaultTheme();
+  }
+
+  private void handleMenuItemClick(Observable<MenuItem> menuItemObservable) {
+    getLifecycle().filter(event -> event == LifecycleEvent.RESUME)
+        .flatMap(__ -> menuItemObservable)
+        .filter(menuItem -> menuItem != null)
+        .map(menuItem -> menuItem.getItemId())
+        .doOnNext(itemId -> {
+          switch (itemId) {
+            case R.id.menu_item_share:
+              handleShareAppMenuItemClick();
+              break;
+
+            case R.id.menu_schedule:
+              handleScheduleInstallMenuItemClick();
+              break;
+
+            case R.id.menu_uninstall:
+              if (unInstallAction != null) {
+                unInstallAction.call();
+              }
+              break;
+
+            case R.id.menu_remote_install:
+              handleRemoteInstallMenuClick();
+              break;
+          }
+        })
+        .compose(bindUntilEvent(LifecycleEvent.PAUSE))
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
+  }
+
+  private void handleShareAppMenuItemClick() {
+    final boolean appRatingExists = getApp() != null
+        && getApp().getStats() != null
+        && getApp().getStats()
+        .getRating() != null;
+
+    final float averageRating = appRatingExists ? getApp().getStats()
+        .getRating()
+        .getAvg() : 0f;
+
+    final boolean appHasStore = getApp() != null && getApp().getStore() != null;
+    final Long storeId = appHasStore ? getApp().getStore()
+        .getId() : null;
+    shareAppHelper.shareApp(getAppName(), getPackageName(), appViewModel.getwUrl(),
+        (getApp() == null ? null : getApp().getIcon()), averageRating,
+        SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW, storeId);
+    appViewAnalytics.sendAppShareEvent();
+  }
+
+  private void handleScheduleInstallMenuItemClick() {
+    appViewAnalytics.sendScheduleDownloadEvent();
+    final Scheduled scheduled = createScheduled(getApp(), appViewModel.getAppAction());
+
+    ScheduledAccessor scheduledAccessor = AccessorFactory.getAccessorFor(
+        ((AptoideApplication) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), Scheduled.class);
+    scheduledAccessor.insert(scheduled);
+
+    String str = this.getString(R.string.added_to_scheduled);
+    ShowMessage.asSnack(this.getView(), str);
+  }
+
+  private void handleRemoteInstallMenuClick() {
+    appViewAnalytics.sendRemoteInstallEvent();
+    if (AptoideUtils.SystemU.getConnectionType(
+        (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE))
+        .equals("mobile")) {
+      GenericDialogs.createGenericOkMessage(getContext(),
+          getContext().getString(R.string.remote_install_menu_title),
+          getContext().getString(R.string.install_on_tv_mobile_error))
+          .subscribe(__ -> {
+          }, err -> CrashReport.getInstance()
+              .log(err));
+    } else {
+      DialogFragment newFragment = RemoteInstallDialog.newInstance(getAppId());
+      newFragment.show(getActivity().getSupportFragmentManager(),
+          RemoteInstallDialog.class.getSimpleName());
+    }
   }
 
   private Scheduled createScheduled(GetAppMeta.App app, AppAction appAction) {

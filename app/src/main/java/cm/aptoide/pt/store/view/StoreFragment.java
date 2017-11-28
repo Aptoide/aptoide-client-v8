@@ -67,6 +67,8 @@ import cm.aptoide.pt.view.custom.AptoideViewPager;
 import cm.aptoide.pt.view.fragment.BasePagerToolbarFragment;
 import com.astuetz.PagerSlidingTabStrip;
 import com.facebook.appevents.AppEventsLogger;
+import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
+import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -195,7 +197,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     marketName = application.getMarketName();
     shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);
 
-    if (hasNavigation()) {
+    if (hasSearchFromStoreFragment()) {
       searchNavigator =
           new SearchNavigator(getFragmentNavigator(), storeName, application.getDefaultStoreName());
       trendingManager = application.getTrendingManager();
@@ -218,7 +220,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     }
   }
 
-  protected boolean hasNavigation() {
+  protected boolean hasSearchFromStoreFragment() {
     return true;
   }
 
@@ -326,39 +328,44 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.menu_fragment_store, menu);
+    if (hasSearchFromStoreFragment()) {
+      inflater.inflate(R.menu.fragment_store, menu);
 
-    final MenuItem menuItem = menu.findItem(R.id.action_search);
-    if (appSearchSuggestions != null && menuItem != null) {
-      appSearchSuggestions.initialize(menuItem);
-    }
-
-    if (menuItem != null) {
-      menuItem.setVisible(false);
-    } else {
-      menu.removeItem(R.id.action_search);
+      final MenuItem menuItem = menu.findItem(R.id.menu_item_search);
+      if (appSearchSuggestions != null && menuItem != null) {
+        appSearchSuggestions.initialize(menuItem);
+      } else if (menuItem != null) {
+        menuItem.setVisible(false);
+      } else {
+        menu.removeItem(R.id.menu_item_search);
+      }
     }
   }
 
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int i = item.getItemId();
-
-    if (i == R.id.menu_share) {
-      shareStoreHelper.shareStore(storeUrl, iconPath);
-      return true;
-    }
-
-    return super.onOptionsItemSelected(item);
+  private void handleOptionsItemSelected(Observable<MenuItem> toolbarMenuItemClick) {
+    getLifecycle().filter(event -> event == LifecycleEvent.RESUME)
+        .flatMap(__ -> toolbarMenuItemClick)
+        .filter(menuItem -> menuItem != null && menuItem.getItemId() == R.id.menu_item_share)
+        .doOnNext(__ -> {
+          shareStoreHelper.shareStore(storeUrl, iconPath);
+        })
+        .compose(bindUntilEvent(LifecycleEvent.PAUSE))
+        .subscribe(__ -> {
+        }, trowable -> crashReport.log(trowable));
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     final SearchCursorAdapter searchCursorAdapter = new SearchCursorAdapter(getContext());
 
-    if (hasNavigation()) {
-      appSearchSuggestions =
-          new AppSearchSuggestions(this, getToolbar(), crashReport, "", searchCursorAdapter,
-              PublishSubject.create());
+    if (hasSearchFromStoreFragment()) {
+      final Toolbar toolbar = getToolbar();
+      final Observable<MenuItem> toolbarMenuItemClick = RxToolbar.itemClicks(toolbar)
+          .publish()
+          .autoConnect();
+
+      appSearchSuggestions = new AppSearchSuggestions(this, RxView.clicks(toolbar), crashReport, "",
+          searchCursorAdapter, PublishSubject.create(), toolbarMenuItemClick);
 
       final SearchSuggestionsPresenter searchSuggestionsPresenter =
           new SearchSuggestionsPresenter(appSearchSuggestions,
@@ -366,6 +373,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
               searchCursorAdapter, crashReport, trendingManager, searchNavigator, false);
 
       attachPresenter(searchSuggestionsPresenter);
+
+      handleOptionsItemSelected(toolbarMenuItemClick);
     }
   }
 

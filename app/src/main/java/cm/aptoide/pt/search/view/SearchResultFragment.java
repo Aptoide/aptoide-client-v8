@@ -58,6 +58,7 @@ import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
+import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.ArrayList;
@@ -391,14 +392,19 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.menu_search_results, menu);
+    inflater.inflate(R.menu.fragment_search_result, menu);
 
-    final MenuItem menuItem = menu.findItem(R.id.action_search);
+    final MenuItem menuItem = menu.findItem(R.id.menu_item_search);
     if (appSearchSuggestions != null && menuItem != null) {
       appSearchSuggestions.initialize(menuItem);
+    } else if (menuItem != null) {
+      menuItem.setVisible(false);
+      crashReport.log(new IllegalStateException("Search Suggestions not properly initialized"));
     } else {
+      menu.removeItem(R.id.menu_item_search);
       crashReport.log(new IllegalStateException("Search Suggestions not properly initialized"));
     }
+
   }
 
   @Override public String getDefaultTheme() {
@@ -506,9 +512,13 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
 
     final SearchCursorAdapter searchCursorAdapter = new SearchCursorAdapter(getContext());
 
-    appSearchSuggestions = new AppSearchSuggestions(this, toolbar, crashReport,
+    final Observable<MenuItem> toolbarMenuItemClick = RxToolbar.itemClicks(toolbar)
+        .publish()
+        .autoConnect();
+
+    appSearchSuggestions = new AppSearchSuggestions(this, RxView.clicks(toolbar), crashReport,
         viewModel != null ? viewModel.getCurrentQuery() : "", searchCursorAdapter,
-        PublishSubject.create());
+        PublishSubject.create(), toolbarMenuItemClick);
 
     final SearchSuggestionsPresenter searchSuggestionsPresenter =
         new SearchSuggestionsPresenter(appSearchSuggestions,

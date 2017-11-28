@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.app.view;
 
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -56,7 +55,6 @@ import cm.aptoide.pt.billing.purchase.PaidAppPurchase;
 import cm.aptoide.pt.billing.view.BillingActivity;
 import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.crashreports.IssuesAnalytics;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
@@ -102,7 +100,6 @@ import cm.aptoide.pt.search.view.TrendingManager;
 import cm.aptoide.pt.share.ShareAppHelper;
 import cm.aptoide.pt.social.data.ReadPostsPersistence;
 import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
-import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
@@ -120,6 +117,8 @@ import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
+import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
+import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.Collections;
@@ -479,9 +478,15 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         });
 
     final SearchCursorAdapter searchCursorAdapter = new SearchCursorAdapter(getContext());
+
+    final Toolbar toolbar = getToolbar();
+    final Observable<MenuItem> toolbarMenuItemClick = RxToolbar.itemClicks(toolbar)
+        .publish()
+        .autoConnect();
+
     appSearchSuggestions =
-        new AppSearchSuggestions(this, getToolbar(), crashReport, "", searchCursorAdapter,
-            PublishSubject.create());
+        new AppSearchSuggestions(this, RxView.clicks(toolbar), crashReport, "", searchCursorAdapter,
+            PublishSubject.create(), toolbarMenuItemClick);
 
     final SearchSuggestionsPresenter searchSuggestionsPresenter =
         new SearchSuggestionsPresenter(appSearchSuggestions,
@@ -620,15 +625,13 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     this.menu = menu;
     inflater.inflate(R.menu.menu_appview_fragment, menu);
 
-    final MenuItem menuItem = menu.findItem(R.id.action_search);
+    final MenuItem menuItem = menu.findItem(R.id.menu_item_search);
     if (appSearchSuggestions != null && menuItem != null) {
       appSearchSuggestions.initialize(menuItem);
-    }
-
-    if (menuItem != null) {
+    } else if (menuItem != null) {
       menuItem.setVisible(false);
     } else {
-      menu.removeItem(R.id.action_search);
+      menu.removeItem(R.id.menu_item_search);
     }
 
     uninstallMenuItem = menu.findItem(R.id.menu_uninstall);

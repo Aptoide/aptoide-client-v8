@@ -55,8 +55,11 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.BackButton;
 import cm.aptoide.pt.view.custom.BadgeView;
 import com.facebook.appevents.AppEventsLogger;
+import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
+import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.text.NumberFormat;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
@@ -108,7 +111,7 @@ public class HomeFragment extends StoreFragment {
     return newInstance(defaultStore, StoreContext.home, defaultTheme);
   }
 
-  @Override protected boolean hasNavigation() {
+  @Override protected boolean hasSearchFromStoreFragment() {
     return false;
   }
 
@@ -193,12 +196,6 @@ public class HomeFragment extends StoreFragment {
     crashReport = CrashReport.getInstance();
   }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    return super.onCreateView(inflater, container, savedInstanceState);
-  }
-
   @Override public void onDestroyView() {
     userEmail = null;
     userAvatarImage = null;
@@ -265,26 +262,52 @@ public class HomeFragment extends StoreFragment {
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.menu_fragment_home, menu);
+    inflater.inflate(R.menu.fragment_home, menu);
 
-    final MenuItem menuItem = menu.findItem(R.id.action_search);
+    final MenuItem menuItem = menu.findItem(R.id.menu_item_search);
     if (appSearchSuggestions != null && menuItem != null) {
       appSearchSuggestions.initialize(menuItem);
-    }
-
-    if (menuItem != null) {
+    } else if (menuItem != null) {
       menuItem.setVisible(false);
     } else {
-      menu.removeItem(R.id.action_search);
+      menu.removeItem(R.id.menu_item_search);
     }
   }
 
-  @Override public void setupViews() {
-    super.setupViews();
-    accountManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-    accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
-    setupNavigationView();
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    backClickHandler = () -> {
+      if (isDrawerOpened()) {
+        closeDrawer();
+        return true;
+      }
+
+      return false;
+    };
+    registerClickHandler(backClickHandler);
+
+    final Toolbar toolbar = getToolbar();
+    final Observable<MenuItem> toolbarMenuItemClick = RxToolbar.itemClicks(toolbar)
+        .publish()
+        .autoConnect();
+
+    final SearchCursorAdapter searchCursorAdapter = new SearchCursorAdapter(getContext());
+    appSearchSuggestions =
+        new AppSearchSuggestions(this, RxView.clicks(toolbar), crashReport, "", searchCursorAdapter,
+            PublishSubject.create(), toolbarMenuItemClick);
+
+    final SearchSuggestionsPresenter searchSuggestionsPresenter =
+        new SearchSuggestionsPresenter(appSearchSuggestions,
+            new SearchFactory().createSearchForApps(), AndroidSchedulers.mainThread(),
+            searchCursorAdapter, crashReport, trendingManager, searchNavigator, false);
+
+    attachPresenter(searchSuggestionsPresenter);
+  }
+
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    return super.onCreateView(inflater, container, savedInstanceState);
   }
 
   protected boolean displayHomeUpAsEnabled() {
@@ -300,6 +323,14 @@ public class HomeFragment extends StoreFragment {
     });
   }
 
+  @Override public void setupViews() {
+    super.setupViews();
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
+    setupNavigationView();
+  }
+
   private View getTabLayout(StorePagerAdapter adapter, Event.Name tab) {
     for (int i = 0; i < adapter.getCount(); i++) {
       if (tab.equals(adapter.getEventName(i))) {
@@ -307,32 +338,6 @@ public class HomeFragment extends StoreFragment {
       }
     }
     return null;
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    backClickHandler = () -> {
-      if (isDrawerOpened()) {
-        closeDrawer();
-        return true;
-      }
-
-      return false;
-    };
-    registerClickHandler(backClickHandler);
-
-
-    final SearchCursorAdapter searchCursorAdapter = new SearchCursorAdapter(getContext());
-    appSearchSuggestions =
-        new AppSearchSuggestions(this, getToolbar(), crashReport, "", searchCursorAdapter,
-            PublishSubject.create());
-
-    final SearchSuggestionsPresenter searchSuggestionsPresenter =
-        new SearchSuggestionsPresenter(appSearchSuggestions,
-            new SearchFactory().createSearchForApps(), AndroidSchedulers.mainThread(),
-            searchCursorAdapter, crashReport, trendingManager, searchNavigator, false);
-
-    attachPresenter(searchSuggestionsPresenter);
   }
 
   private void setupNavigationView() {
@@ -442,10 +447,6 @@ public class HomeFragment extends StoreFragment {
     setHasOptionsMenu(true);
   }
 
-  private enum BundleKeys {
-    STORE_NAME, STORE_CONTEXT, STORE_THEME
-  }
-
   /**
    * show first install fragment with animation
    */
@@ -471,5 +472,9 @@ public class HomeFragment extends StoreFragment {
         transaction.commit();
       }
     }
+  }
+
+  private enum BundleKeys {
+    STORE_NAME, STORE_CONTEXT, STORE_THEME
   }
 }
