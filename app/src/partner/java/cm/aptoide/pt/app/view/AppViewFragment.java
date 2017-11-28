@@ -92,9 +92,13 @@ import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.search.ReferrerUtils;
+import cm.aptoide.pt.search.SearchCursorAdapter;
+import cm.aptoide.pt.search.SearchFactory;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
-import cm.aptoide.pt.search.view.SearchBuilder;
+import cm.aptoide.pt.search.view.AppSearchSuggestions;
+import cm.aptoide.pt.search.view.SearchSuggestionsPresenter;
+import cm.aptoide.pt.search.view.TrendingManager;
 import cm.aptoide.pt.share.ShareAppHelper;
 import cm.aptoide.pt.social.data.ReadPostsPersistence;
 import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
@@ -129,6 +133,7 @@ import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
+import rx.subjects.PublishSubject;
 
 /**
  * Created on 04/05/16.
@@ -168,16 +173,17 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private DownloadFactory downloadFactory;
   private TimelineAnalytics timelineAnalytics;
   private AppViewAnalytics appViewAnalytics;
-  private StoreAnalytics storeAnalytics;
   private AppViewSimilarAppAnalytics appViewSimilarAppAnalytics;
   private MinimalAdMapper adMapper;
   private PublishRelay installAppRelay;
   private AccountNavigator accountNavigator;
   private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
-  private CrashReport crashReport;
   private NavigationTracker navigationTracker;
-  private SearchBuilder searchBuilder;
-  private IssuesAnalytics issuesAnalytics;
+
+  private AppSearchSuggestions appSearchSuggestions;
+  private CrashReport crashReport;
+  private SearchNavigator searchNavigator;
+  private TrendingManager trendingManager;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -339,13 +345,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     this.appViewModel.setDefaultTheme(application.getDefaultThemeName());
     this.appViewModel.setMarketName(application.getMarketName());
 
-    final SearchManager searchManager =
-        (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
-
-    final SearchNavigator searchNavigator =
+    searchNavigator =
         new SearchNavigator(getFragmentNavigator(), application.getDefaultStoreName());
-
-    searchBuilder = new SearchBuilder(searchManager, searchNavigator);
 
     adMapper = new MinimalAdMapper();
 
@@ -361,9 +362,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     final TokenInvalidator tokenInvalidator = application.getTokenInvalidator();
     httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    Analytics analytics = Analytics.getInstance();
-    issuesAnalytics = new IssuesAnalytics(analytics, Answers.getInstance());
-    ReadPostsPersistence readPostsPersistence =
+    final Analytics analytics = Analytics.getInstance();
+
+    final ReadPostsPersistence readPostsPersistence =
         ((AptoideApplication) getContext().getApplicationContext()).getReadPostsPersistence();
     timelineAnalytics = new TimelineAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
@@ -385,6 +386,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
         ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), StoredMinimalAd.class);
+
     final SpotAndShareAnalytics spotAndShareAnalytics = new SpotAndShareAnalytics(analytics);
     appViewAnalytics = new AppViewAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
@@ -400,11 +402,13 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     downloadFactory = new DownloadFactory(getMarketName());
     appViewAnalytics = new AppViewAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
-    storeAnalytics =
-        new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            analytics);
+
     notLoggedInShareAnalytics = application.getNotLoggedInShareAnalytics();
     navigationTracker = application.getNavigationTracker();
+
+    trendingManager = application.getTrendingManager();
+    crashReport = CrashReport.getInstance();
+
     setHasOptionsMenu(true);
   }
 
@@ -467,12 +471,24 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
               crashReport.log(throwable);
             })
             .retry())
-        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
+        .compose(bindUntilEvent(cm.aptoide.pt.presenter.View.LifecycleEvent.DESTROY))
         .subscribe(result -> {
         }, throwable -> {
           crashReport = CrashReport.getInstance();
           crashReport.log(throwable);
         });
+
+    final SearchCursorAdapter searchCursorAdapter = new SearchCursorAdapter(getContext());
+    appSearchSuggestions =
+        new AppSearchSuggestions(this, getToolbar(), crashReport, "", searchCursorAdapter,
+            PublishSubject.create());
+
+    final SearchSuggestionsPresenter searchSuggestionsPresenter =
+        new SearchSuggestionsPresenter(appSearchSuggestions,
+            new SearchFactory().createSearchForApps(), AndroidSchedulers.mainThread(),
+            searchCursorAdapter, crashReport, trendingManager, searchNavigator, false);
+
+    attachPresenter(searchSuggestionsPresenter);
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -603,30 +619,17 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onCreateOptionsMenu(menu, inflater);
     this.menu = menu;
     inflater.inflate(R.menu.menu_appview_fragment, menu);
-    if (searchBuilder != null && searchBuilder.isValid()) {
-      final FragmentActivity activity = getActivity();
-      // from getActivity() "May return null if the fragment is associated with a Context instead."
-      final Context context = getContext();
-      if (activity != null) {
-        searchBuilder.attachSearch(activity, menu.findItem(R.id.action_search));
-        issuesAnalytics.attachSearchSuccess(false);
-        return;
-      } else if (context != null) {
-        searchBuilder.attachSearch(context, menu.findItem(R.id.action_search));
-        issuesAnalytics.attachSearchSuccess(true);
-        return;
-      } else {
-        issuesAnalytics.attachSearchFailed(true);
-        Logger.e(TAG, new IllegalStateException(
-            "Unable to attach search to this fragment due to null parent"));
-      }
-    } else {
-      issuesAnalytics.attachSearchFailed(false);
-      Logger.e(TAG, new IllegalStateException(
-          "Unable to attach search to this fragment due to invalid search builder"));
+
+    final MenuItem menuItem = menu.findItem(R.id.action_search);
+    if (appSearchSuggestions != null && menuItem != null) {
+      appSearchSuggestions.initialize(menuItem);
     }
 
-    menu.removeItem(R.id.action_search);
+    if (menuItem != null) {
+      menuItem.setVisible(false);
+    } else {
+      menu.removeItem(R.id.action_search);
+    }
 
     uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
   }

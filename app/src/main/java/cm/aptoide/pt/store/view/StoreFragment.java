@@ -6,7 +6,6 @@
 package cm.aptoide.pt.store.view;
 
 import android.app.Activity;
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -32,7 +30,6 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.crashreports.IssuesAnalytics;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
@@ -48,7 +45,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.search.SearchCursorAdapter;
 import cm.aptoide.pt.search.SearchFactory;
@@ -70,7 +66,6 @@ import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.custom.AptoideViewPager;
 import cm.aptoide.pt.view.fragment.BasePagerToolbarFragment;
 import com.astuetz.PagerSlidingTabStrip;
-import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.List;
@@ -200,12 +195,12 @@ public class StoreFragment extends BasePagerToolbarFragment {
     marketName = application.getMarketName();
     shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);
 
-    searchNavigator =
-        new SearchNavigator(getFragmentNavigator(), storeName, application.getDefaultStoreName());
-
-    trendingManager = application.getTrendingManager();
-
-    crashReport = CrashReport.getInstance();
+    if (hasNavigation()) {
+      searchNavigator =
+          new SearchNavigator(getFragmentNavigator(), storeName, application.getDefaultStoreName());
+      trendingManager = application.getTrendingManager();
+      crashReport = CrashReport.getInstance();
+    }
 
     setHasOptionsMenu(true);
   }
@@ -223,39 +218,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
     }
   }
 
-  @CallSuper @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    if (storeTheme != null) {
-      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(storeTheme));
-    }
-
-    return super.onCreateView(inflater, container, savedInstanceState);
-  }
-
-  @Override protected int[] getViewsToShowAfterLoadingId() {
-    return new int[] { R.id.pager, R.id.tabs };
-  }
-
-  @Override protected int getViewToShowAfterLoadingId() {
-    return -1;
-  }
-
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    if (create || tabs == null) {
-      loadData(refresh, openType).observeOn(AndroidSchedulers.mainThread())
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-          .subscribe(title -> {
-            this.title = title;
-            if (storeContext != StoreContext.home) {
-              setupToolbarDetails(getToolbar());
-            }
-            setupViewPager();
-          }, (throwable) -> handleError(throwable));
-    } else {
-      setupViewPager();
-    }
+  protected boolean hasNavigation() {
+    return true;
   }
 
   @Override public void onDestroyView() {
@@ -362,11 +326,15 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.menu_search, menu);
+    inflater.inflate(R.menu.menu_fragment_store, menu);
 
     final MenuItem menuItem = menu.findItem(R.id.action_search);
     if (appSearchSuggestions != null && menuItem != null) {
       appSearchSuggestions.initialize(menuItem);
+    }
+
+    if (menuItem != null) {
+      menuItem.setVisible(false);
     } else {
       menu.removeItem(R.id.action_search);
     }
@@ -377,7 +345,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
     if (i == R.id.menu_share) {
       shareStoreHelper.shareStore(storeUrl, iconPath);
-
       return true;
     }
 
@@ -388,17 +355,53 @@ public class StoreFragment extends BasePagerToolbarFragment {
     super.onViewCreated(view, savedInstanceState);
     final SearchCursorAdapter searchCursorAdapter = new SearchCursorAdapter(getContext());
 
-    appSearchSuggestions =
-        new AppSearchSuggestions(this, getToolbar(), crashReport, "", searchCursorAdapter,
-            PublishSubject.create());
+    if (hasNavigation()) {
+      appSearchSuggestions =
+          new AppSearchSuggestions(this, getToolbar(), crashReport, "", searchCursorAdapter,
+              PublishSubject.create());
 
-    final SearchSuggestionsPresenter searchSuggestionsPresenter =
-        new SearchSuggestionsPresenter(appSearchSuggestions,
-            new SearchFactory().createSearchForApps(), AndroidSchedulers.mainThread(),
-            searchCursorAdapter, crashReport, trendingManager, searchNavigator,
-            false);
+      final SearchSuggestionsPresenter searchSuggestionsPresenter =
+          new SearchSuggestionsPresenter(appSearchSuggestions,
+              new SearchFactory().createSearchForApps(), AndroidSchedulers.mainThread(),
+              searchCursorAdapter, crashReport, trendingManager, searchNavigator, false);
 
-    attachPresenter(searchSuggestionsPresenter);
+      attachPresenter(searchSuggestionsPresenter);
+    }
+  }
+
+  @CallSuper @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    if (storeTheme != null) {
+      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(storeTheme));
+    }
+
+    return super.onCreateView(inflater, container, savedInstanceState);
+  }
+
+  @Override protected int[] getViewsToShowAfterLoadingId() {
+    return new int[] { R.id.pager, R.id.tabs };
+  }
+
+  @Override protected int getViewToShowAfterLoadingId() {
+    return -1;
+  }
+
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    if (create || tabs == null) {
+      loadData(refresh, openType).observeOn(AndroidSchedulers.mainThread())
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+          .subscribe(title -> {
+            this.title = title;
+            if (storeContext != StoreContext.home) {
+              setupToolbarDetails(getToolbar());
+            }
+            setupViewPager();
+          }, (throwable) -> handleError(throwable));
+    } else {
+      setupViewPager();
+    }
   }
 
   /**

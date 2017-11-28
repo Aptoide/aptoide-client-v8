@@ -20,6 +20,9 @@ public class SearchFactory {
   public SearchFactory() {
     client = new OkHttpClient.Builder().readTimeout(0, TimeUnit.SECONDS)
         .writeTimeout(0, TimeUnit.SECONDS)
+        .connectTimeout(1, TimeUnit.MINUTES)
+        .pingInterval(1, TimeUnit.MINUTES)
+        //.retryOnConnectionFailure(true)
         .build();
     objectMapper = new ObjectMapper();
   }
