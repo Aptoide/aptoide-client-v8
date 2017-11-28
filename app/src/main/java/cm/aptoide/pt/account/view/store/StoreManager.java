@@ -1,13 +1,16 @@
 package cm.aptoide.pt.account.view.store;
 
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.view.exception.InvalidImageException;
+import cm.aptoide.pt.account.view.exception.SocialLinkException;
 import cm.aptoide.pt.account.view.exception.StoreCreationException;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v3.ErrorResponse;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
@@ -16,6 +19,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.SetStoreImageRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -29,6 +33,7 @@ public class StoreManager {
   private static final String ERROR_CODE_2 = "WOP-2";
   private static final String ERROR_CODE_3 = "WOP-3";
   private static final String ERROR_API_1 = "API-1";
+  private static final String ERROR_STORE_9 = "STORE-9";
 
   private final AptoideAccountManager accountManager;
   private final OkHttpClient httpClient;
@@ -61,40 +66,67 @@ public class StoreManager {
   }
 
   public Completable createOrUpdate(String storeName, String storeDescription,
-      String storeImagePath, boolean hasNewAvatar, String storeThemeName, boolean storeExists) {
+      String storeImagePath, boolean hasNewAvatar, String storeThemeName, boolean storeExists,
+      List<SocialLink> storeLinksList, List<Store.SocialChannelType> storeDeleteLinksList) {
     return Completable.defer(() -> {
       if (storeExists) {
         return updateStore(storeName, storeDescription, storeImagePath, hasNewAvatar,
-            storeThemeName);
+            storeThemeName, socialLinkToStoreLink(storeLinksList), storeDeleteLinksList);
       }
-      return createStore(storeName, storeDescription, storeImagePath, hasNewAvatar, storeThemeName);
+      return createStore(storeName, storeDescription, storeImagePath, hasNewAvatar, storeThemeName,
+          socialLinkToStoreLink(storeLinksList), storeDeleteLinksList);
     })
-        .onErrorResumeNext(err -> {
-          if (err instanceof StoreCreationException || err instanceof InvalidImageException) {
-            return Completable.error(err);
-          }
-          if (err instanceof AptoideWsV7Exception) {
-            if (((AptoideWsV7Exception) err).getBaseResponse()
+        .onErrorResumeNext(err -> getOnErrorCompletable(err));
+  }
+
+  @NonNull private Completable getOnErrorCompletable(Throwable err) {
+    if (err instanceof StoreCreationException || err instanceof InvalidImageException) {
+      return Completable.error(err);
+    }
+    if (err instanceof AptoideWsV7Exception) {
+      if (((AptoideWsV7Exception) err).getBaseResponse()
+          .getErrors()
+          .get(0)
+          .getCode()
+          .equals(ERROR_API_1)) {
+        return Completable.error(new InvalidImageException(
+            Collections.singletonList(InvalidImageException.ImageError.API_ERROR)));
+      } else if (((AptoideWsV7Exception) err).getBaseResponse()
+          .getErrors()
+          .get(0)
+          .getCode()
+          .equals(ERROR_STORE_9)) {
+        return Completable.error(new SocialLinkException(
+            ((AptoideWsV7Exception) err).getBaseResponse()
                 .getErrors()
                 .get(0)
-                .getCode()
-                .equals(ERROR_API_1)) {
-              return Completable.error(new InvalidImageException(
-                  Collections.singletonList(InvalidImageException.ImageError.API_ERROR)));
-            } else {
-              return Completable.error(new InvalidImageException(
-                  Collections.singletonList(InvalidImageException.ImageError.API_ERROR),
-                  err.getMessage()));
-            }
-          }
+                .getDetails()
+                .getStoreLinks()));
+      } else {
+        return Completable.error(new InvalidImageException(
+            Collections.singletonList(InvalidImageException.ImageError.API_ERROR),
+            err.getMessage()));
+      }
+    }
 
-          // it's an unknown error
-          return Completable.error(err);
-        });
+    // it's an unknown error
+    return Completable.error(err);
+  }
+
+  private List<SimpleSetStoreRequest.StoreLinks> socialLinkToStoreLink(
+      List<SocialLink> socialLinksList) {
+    List<SimpleSetStoreRequest.StoreLinks> storeLinks = new ArrayList<>();
+    for (SocialLink socialLink : socialLinksList) {
+      storeLinks.add(
+          new SimpleSetStoreRequest.StoreLinks(socialLink.getType(), socialLink.getUrl()));
+    }
+    return storeLinks;
   }
 
   private Completable createStore(String storeName, String storeDescription, String storeImage,
-      boolean hasNewAvatar, String storeThemeName) {
+      boolean hasNewAvatar, String storeThemeName,
+      List<SimpleSetStoreRequest.StoreLinks> storeLinksList,
+      List<Store.SocialChannelType> storeDeleteSocialLinksList) {
 
     if (TextUtils.isEmpty(storeName)) {
       return Completable.error(new StoreValidationException(StoreValidationException.EMPTY_NAME));
@@ -130,7 +162,7 @@ public class StoreManager {
           final Completable syncAccount = accountManager.updateAccount();
           if (needToUploadMoreStoreData(storeDescription, storeImage, hasNewAvatar)) {
             return updateStore(storeName, storeDescription, storeImage, hasNewAvatar,
-                storeThemeName).andThen(syncAccount);
+                storeThemeName, storeLinksList, storeDeleteSocialLinksList).andThen(syncAccount);
           }
           return syncAccount;
         });
@@ -142,7 +174,9 @@ public class StoreManager {
   }
 
   private Completable updateStore(String storeName, String storeDescription, String storeImage,
-      boolean hasNewAvatar, String storeThemeName) {
+      boolean hasNewAvatar, String storeThemeName,
+      List<SimpleSetStoreRequest.StoreLinks> storeLinksList,
+      List<Store.SocialChannelType> socialDeleteLinksList) {
 
     if (TextUtils.isEmpty(storeName)) {
       return Completable.error(new StoreValidationException(StoreValidationException.EMPTY_NAME));
@@ -155,28 +189,35 @@ public class StoreManager {
      * a store image, or a SetStore without image.
      */
     if (hasNewAvatar) {
-      return updateStoreWithAvatar(storeName, storeDescription, storeThemeName, storeImage);
+      return updateStoreWithAvatar(storeName, storeDescription, storeThemeName, storeImage,
+          storeLinksList, socialDeleteLinksList);
     }
 
-    return updateStoreWithoutAvatar(storeName, storeDescription, storeThemeName);
+    return updateStoreWithoutAvatar(storeName, storeDescription, storeThemeName, storeLinksList,
+        socialDeleteLinksList);
   }
 
   private Completable updateStoreWithoutAvatar(String storeName, String storeDescription,
-      String storeThemeName) {
+      String storeThemeName, List<SimpleSetStoreRequest.StoreLinks> storeLinksList,
+      List<Store.SocialChannelType> storeDeleteSocialLinksList) {
     return SimpleSetStoreRequest.of(storeName, storeThemeName, storeDescription, bodyInterceptorV7,
-        httpClient, converterFactory, tokenInvalidator, sharedPreferences)
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences, storeLinksList,
+        storeDeleteSocialLinksList)
         .observe()
         .toCompletable();
   }
 
   private Completable updateStoreWithAvatar(String storeName, String storeDescription,
-      String storeThemeName, String storeImagePath) {
+      String storeThemeName, String storeImagePath,
+      List<SimpleSetStoreRequest.StoreLinks> storeLinksList,
+      List<Store.SocialChannelType> socialDeleteLinksList) {
     return accountManager.accountStatus()
         .first()
         .toSingle()
         .flatMap(account -> SetStoreImageRequest.of(storeName, storeThemeName, storeDescription,
             storeImagePath, multipartBodyInterceptor, httpClient, converterFactory,
-            requestBodyFactory, objectMapper, sharedPreferences, tokenInvalidator)
+            requestBodyFactory, objectMapper, sharedPreferences, tokenInvalidator, storeLinksList,
+            socialDeleteLinksList)
             .observe()
             .toSingle())
         .toCompletable();

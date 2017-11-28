@@ -17,15 +17,16 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
-import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
-import cm.aptoide.pt.view.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Arrays;
@@ -62,7 +63,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   private View credentialsEditTextsArea;
   private BottomSheetBehavior<View> bottomSheetBehavior;
   private ThrowableToStringMapper errorMapper;
-  private String marketName;
   private AptoideAccountManager accountManager;
   private LoginSignUpCredentialsPresenter presenter;
   private boolean dismissToNavigateToMainView;
@@ -71,6 +71,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   private CrashReport crashReport;
   private AccountNavigator accountNavigator;
   private ScreenOrientationManager orientationManager;
+  private String marketName;
 
   public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,
       boolean cleanBackStack) {
@@ -86,8 +87,9 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    marketName = ((AptoideApplication) getActivity().getApplication()).getMarketName();
-    errorMapper = new AccountErrorMapper(getContext());
+
+    marketName = ((AptoideApplication) getApplicationContext()).getMarketName();
+    errorMapper = new AccountErrorMapper(getContext(), new ErrorsMapper());
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     crashReport = CrashReport.getInstance();
@@ -100,14 +102,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName());
-  }
-
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    outState.putString(USERNAME_KEY, aptoideEmailEditText.getText()
-        .toString());
-    outState.putString(PASSWORD_KEY, aptoidePasswordEditText.getText()
-        .toString());
   }
 
   @Override public void hideKeyboard() {
@@ -128,6 +122,14 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
       aptoideEmailEditText.setText(savedInstanceState.getString(USERNAME_KEY, ""));
       aptoidePasswordEditText.setText(savedInstanceState.getString(PASSWORD_KEY, ""));
     }
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putString(USERNAME_KEY, aptoideEmailEditText.getText()
+        .toString());
+    outState.putString(PASSWORD_KEY, aptoidePasswordEditText.getText()
+        .toString());
   }
 
   @Override public Observable<Void> showAptoideLoginAreaClick() {
@@ -345,7 +347,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
         dismissToNavigateToMainView, navigateToHome, accountNavigator,
         Arrays.asList("email", "user_friends"), Arrays.asList("email"), errorMapper,
         ((AptoideApplication) getContext().getApplicationContext()).getAccountAnalytics());
-    attachPresenter(presenter, null);
+    attachPresenter(presenter);
     registerClickHandler(presenter);
   }
 

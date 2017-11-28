@@ -20,11 +20,13 @@ public class ManagedKeys {
   public static final String MAX_FILE_CACHE = "maxFileCache";
   public static final String FORCE_SERVER_REFRESH_FLAG = "forceServerRefreshFlag";
   public static final String PREF_NEEDS_SQLITE_DB_MIGRATION = "needsSqliteDbMigration";
-  public static final String PREF_SHOW_UPDATE_NOTIFICATION = "showUpdatesNotification";
+  public static final String PREF_SHOW_UPDATE_NOTIFICATION = "notificationaptoide";
   public static final String UPDATES_FILTER_ALPHA_BETA_KEY = "updatesFilterAlphaBetaKey";
   public static final String UPDATES_SYSTEM_APPS_KEY = "updatesSystemAppsKey";
   public static final String SCHEDULE_DOWNLOAD_SETTING = "schDwnBox";
   public static final String ALLOW_ROOT_INSTALATION = "allowRoot";
+  public static final String DEBUG = "debugmode";
+  public static final String NOTIFICATION_TYPE = "notificationtype";
   public static final String PRIVACY_CONFIRMATION = "privacyconfirmation";
   public static final String DONT_SHOW_ME_AGAIN = "dontshowpreviewdialogagain";
   public static final String DONT_SHOW_CLEANED_VERSION = "dontshowpreviewdialogcleanpref";

@@ -13,7 +13,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.link.LinksHandlerFactory;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.notification.AptoideNotification;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
@@ -21,6 +21,7 @@ import com.facebook.appevents.AppEventsLogger;
 import java.util.Collections;
 import java.util.List;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 
 /**
@@ -52,17 +53,9 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    attachPresenter(new InboxPresenter(this,
-        ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
-        new LinksHandlerFactory(getContext()), CrashReport.getInstance(),
-        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker(),
-        new NotificationAnalytics(
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient(),
-            Analytics.getInstance()),
-        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), aptoideNavigationTracker)), savedInstanceState);
     notificationSubject = PublishSubject.create();
     adapter = new InboxAdapter(Collections.emptyList(), notificationSubject);
+    setHasOptionsMenu(true);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -70,6 +63,17 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
     list = (RecyclerView) view.findViewById(R.id.fragment_inbox_list);
     list.setAdapter(adapter);
     list.setLayoutManager(new LinearLayoutManager(getContext()));
+
+    attachPresenter(
+        new InboxPresenter(this, ((ActivityResultNavigator) getContext()).getInboxNavigator(),
+            ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
+            CrashReport.getInstance(),
+            ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker(),
+            new NotificationAnalytics(
+                ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient(),
+                Analytics.getInstance(), AppEventsLogger.newLogger(getContext())),
+            new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+                Analytics.getInstance(), navigationTracker), AndroidSchedulers.mainThread()));
   }
 
   @Override public void showNotifications(List<AptoideNotification> notifications) {
@@ -91,10 +95,5 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
   @Override protected void setupToolbarDetails(Toolbar toolbar) {
     super.setupToolbarDetails(toolbar);
     toolbar.setTitle(getString(R.string.myaccount_header_title));
-  }
-
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
-    setHasOptionsMenu(true);
   }
 }

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -18,7 +17,7 @@ import cm.aptoide.pt.social.data.Game1;
 import cm.aptoide.pt.social.data.GameCardTouchEvent;
 import cm.aptoide.pt.social.data.LeaderboardTouchEvent;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.view.spannable.SpannableFactory;
 import rx.subjects.PublishSubject;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -32,24 +31,19 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
   private final TextView score;
   private final TextView leaderboard;
   private final View statsHeader;
-  private ImageView questionIcon;
-  private TextView question;
   private final TextView leftAnswer;
   private final TextView rightAnswer;
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final SpannableFactory spannableFactory;
-
   private final ImageView headerIcon;
   private final TextView headerTitle;
-  private View wrapper;
-
   private final ProgressBar leaderboardProgress;
-
   private final TextView stampLeft;
   private final TextView stampRight;
-
-
   private final String marketName;
+  private ImageView questionIcon;
+  private TextView question;
+  private View wrapper;
   private Game1 card;
 
   private double rand;

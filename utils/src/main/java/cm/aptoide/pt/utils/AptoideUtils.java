@@ -91,6 +91,8 @@ public class AptoideUtils {
 
   public static class Core {
 
+    private static final String TAG = "Core";
+
     public static String getDefaultVername(Context context) {
       String verString = "";
       try {
@@ -101,6 +103,17 @@ public class AptoideUtils {
       }
 
       return "aptoide-" + verString;
+    }
+
+    public static int getVerCode(Context context) {
+      PackageManager manager = context.getPackageManager();
+      try {
+        PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
+        return info.versionCode;
+      } catch (PackageManager.NameNotFoundException e) {
+        Logger.e(TAG, e);
+        return -1;
+      }
     }
   }
 
@@ -766,7 +779,7 @@ public class AptoideUtils {
       return telephonyManager.getNetworkOperatorName();
     }
 
-    public static File readLogs(String mPath, String fileName) {
+    public static File readLogs(String mPath, String fileName, String extraLog) {
 
       Process process = null;
       try {
@@ -785,6 +798,9 @@ public class AptoideUtils {
       log.append("Device: " + Build.DEVICE + "\n");
       log.append("Brand: " + Build.BRAND + "\n");
       log.append("CPU: " + Build.CPU_ABI + "\n");
+      if (extraLog != null) {
+        log.append("Extra: " + extraLog + "\n");
+      }
       log.append("\nLogs:\n");
       try {
         outputStream = new FileOutputStream(logsFile);

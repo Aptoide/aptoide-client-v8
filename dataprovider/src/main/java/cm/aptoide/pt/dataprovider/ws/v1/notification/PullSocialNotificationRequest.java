@@ -23,12 +23,11 @@ import rx.Observable;
 
 public class PullSocialNotificationRequest
     extends PnpV1WebService<List<GetPullNotificationsResponse>> {
-
   private static List<Integer> pretendedNotificationTypes;
   private final Map<String, String> options;
   private final String id;
 
-  protected PullSocialNotificationRequest(String id, Map<String, String> options,
+  private PullSocialNotificationRequest(String id, Map<String, String> options,
       OkHttpClient okHttpClient, Converter.Factory converterFactory) {
     super(okHttpClient, converterFactory);
     this.options = options;
@@ -37,7 +36,7 @@ public class PullSocialNotificationRequest
 
   public static PullSocialNotificationRequest of(String uniqueIdentifier, String versionName,
       String appId, OkHttpClient httpClient, Converter.Factory converterFactory, String oemid,
-      String accessToken, SharedPreferences sharedPreferences, Resources resources) {
+      SharedPreferences sharedPreferences, Resources resources, boolean isLogged) {
 
     Map<String, String> options = new HashMap<>();
     pretendedNotificationTypes = new ArrayList<>();
@@ -45,10 +44,12 @@ public class PullSocialNotificationRequest
     options.put("language", AptoideUtils.SystemU.getCountryCode(resources));
     options.put("aptoide_version", versionName);
 
-    if (!TextUtils.isEmpty(accessToken)) {
-      options.put("access_token", accessToken);
+    if (isLogged) {
       pretendedNotificationTypes.add(1);
       pretendedNotificationTypes.add(2);
+      pretendedNotificationTypes.add(4);
+      pretendedNotificationTypes.add(5);
+      pretendedNotificationTypes.add(6);
     }
     pretendedNotificationTypes.add(3);
 
@@ -59,6 +60,7 @@ public class PullSocialNotificationRequest
     if (ToolboxManager.isDebug(sharedPreferences)) {
       options.put("debug", "true");
     }
+    options.put("status_in_json", String.valueOf(true));
 
     return new PullSocialNotificationRequest(uniqueIdentifier, options, httpClient,
         converterFactory);

@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 
 public class RootInstallNotificationEventReceiver extends BroadcastReceiver {

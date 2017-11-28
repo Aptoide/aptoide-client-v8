@@ -1,83 +1,71 @@
 package cm.aptoide.pt.notification.view;
 
-import android.os.Bundle;
 import cm.aptoide.pt.PageViewsAnalytics;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-
-/**
- * Created by pedroribeiro on 16/05/17.
- */
+import rx.Scheduler;
 
 public class InboxPresenter implements Presenter {
 
   private final InboxView view;
+  private final InboxNavigator inboxNavigator;
   private final NotificationCenter notificationCenter;
-  private final LinksHandlerFactory linkFactory;
   private final NotificationAnalytics analytics;
-  private PageViewsAnalytics pageViewsAnalytics;
-  private CrashReport crashReport;
-  private AptoideNavigationTracker aptoideNavigationTracker;
-  private int NUMBER_OF_NOTIFICATIONS = 50;
+  private final PageViewsAnalytics pageViewsAnalytics;
+  private final CrashReport crashReport;
+  private final NavigationTracker navigationTracker;
+  private final int NUMBER_OF_NOTIFICATIONS = 50;
+  private final Scheduler viewScheduler;
 
-  public InboxPresenter(InboxView view, NotificationCenter notificationCenter,
-      LinksHandlerFactory linkFactory, CrashReport crashReport,
-      AptoideNavigationTracker aptoideNavigationTracker, NotificationAnalytics analytics,
-      PageViewsAnalytics pageViewsAnalytics) {
+  public InboxPresenter(InboxView view, InboxNavigator inboxNavigator,
+      NotificationCenter notificationCenter, CrashReport crashReport,
+      NavigationTracker navigationTracker, NotificationAnalytics analytics,
+      PageViewsAnalytics pageViewsAnalytics, Scheduler viewScheduler) {
     this.view = view;
+    this.inboxNavigator = inboxNavigator;
     this.notificationCenter = notificationCenter;
-    this.linkFactory = linkFactory;
     this.crashReport = crashReport;
-    this.aptoideNavigationTracker = aptoideNavigationTracker;
+    this.navigationTracker = navigationTracker;
     this.analytics = analytics;
     this.pageViewsAnalytics = pageViewsAnalytics;
+    this.viewScheduler = viewScheduler;
   }
 
   @Override public void present() {
+
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> notificationCenter.getInboxNotifications(NUMBER_OF_NOTIFICATIONS))
-        .observeOn(AndroidSchedulers.mainThread())
+        .observeOn(viewScheduler)
         .doOnNext(notifications -> view.showNotifications(notifications))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notifications -> {
         }, throwable -> crashReport.log(throwable));
+
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.notificationSelection()
-            .flatMap(notification -> Observable.just(
-                linkFactory.get(LinksHandlerFactory.NOTIFICATION_LINK, notification.getUrl()))
-                .doOnNext(link -> link.launch())
-                .doOnNext(link -> analytics.notificationShown(
-                    notification.getNotificationCenterUrlTrack()))
-                .doOnNext(link -> aptoideNavigationTracker.registerScreen(
-                    ScreenTagHistory.Builder.build(this.getClass()
-                        .getSimpleName())))
-                .doOnNext(link -> pageViewsAnalytics.sendPageViewedEvent())))
+        .flatMap(__ -> view.notificationSelection())
+        .doOnNext(notification -> {
+          inboxNavigator.navigateToNotification(notification);
+          analytics.sendNotificationTouchEvent(notification.getNotificationCenterUrlTrack());
+          navigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
+              .getSimpleName()));
+          pageViewsAnalytics.sendPageViewedEvent();
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, throwable -> crashReport.log(throwable));
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .first()
         .flatMapCompletable(create -> notificationCenter.setAllNotificationsRead())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, throwable -> crashReport.log(throwable));
-  }
-
-  @Override public void saveState(Bundle state) {
-  }
-
-  @Override public void restoreState(Bundle state) {
   }
 }

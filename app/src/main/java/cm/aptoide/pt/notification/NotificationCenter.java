@@ -1,11 +1,8 @@
 package cm.aptoide.pt.notification;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReport;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by trinkes on 09/05/2017.
@@ -13,66 +10,42 @@ import rx.subscriptions.CompositeSubscription;
 
 public class NotificationCenter {
 
-  public static final int MAX_NUMBER_NOTIFICATIONS_SAVED = 50;
-  private final CrashReport crashReport;
   private NotificationSyncScheduler notificationSyncScheduler;
-  private SystemNotificationShower notificationShower;
   private NotificationPolicyFactory notificationPolicyFactory;
-  private NotificationsCleaner notificationsCleaner;
-  private CompositeSubscription subscriptions;
   private NotificationProvider notificationProvider;
-  private AptoideAccountManager accountManager;
+  private NotificationAnalytics notificationAnalytics;
 
   public NotificationCenter(NotificationProvider notificationProvider,
       NotificationSyncScheduler notificationSyncScheduler,
-      SystemNotificationShower notificationShower, CrashReport crashReport,
       NotificationPolicyFactory notificationPolicyFactory,
-      NotificationsCleaner notificationsCleaner, AptoideAccountManager accountManager) {
+      NotificationAnalytics notificationAnalytics) {
     this.notificationSyncScheduler = notificationSyncScheduler;
-    this.notificationShower = notificationShower;
     this.notificationProvider = notificationProvider;
-    this.crashReport = crashReport;
     this.notificationPolicyFactory = notificationPolicyFactory;
-    this.notificationsCleaner = notificationsCleaner;
-    this.accountManager = accountManager;
-    subscriptions = new CompositeSubscription();
+    this.notificationAnalytics = notificationAnalytics;
   }
 
   public void setup() {
     notificationSyncScheduler.schedule();
-    subscriptions.add(getNewNotifications().flatMapCompletable(
-        aptoideNotification -> notificationShower.showNotification(aptoideNotification))
-        .subscribe(aptoideNotification -> {
-        }, throwable -> crashReport.log(throwable)));
-
-    subscriptions.add(accountManager.accountStatus()
-        .filter(account -> account.isLoggedIn())
-        .flatMapCompletable(
-            account -> notificationsCleaner.cleanOtherUsersNotifications(account.getId()))
-        .subscribe(notificationsCleaned -> {
-        }, throwable -> crashReport.log(throwable)));
-
-    subscriptions.add(notificationProvider.getNotifications(1)
-        .flatMapCompletable(
-            aptoideNotifications -> notificationsCleaner.cleanLimitExceededNotifications(
-                MAX_NUMBER_NOTIFICATIONS_SAVED))
-        .subscribe(aptoideNotifications -> {
-        }, throwable -> crashReport.log(throwable)));
   }
 
-  private Observable<AptoideNotification> getNewNotifications() {
+  public Observable<AptoideNotification> getNewNotifications() {
     return notificationProvider.getAptoideNotifications()
         .flatMapIterable(notifications -> notifications)
         .filter(notification -> !notification.isProcessed())
-        .doOnNext(notification -> {
+        .flatMapSingle(notification -> {
+          notificationAnalytics.sendSocialNotificationReceivedEvent(notification.getType(),
+              notification.getAbTestingGroup(), notification.getCampaignId(),
+              notification.getUrl());
           notification.setProcessed(true);
-          notificationProvider.save(notification);
+          return notificationProvider.save(notification)
+              .toSingleDefault(notification);
         })
-        .flatMap(aptideNotification -> notificationPolicyFactory.getPolicy(aptideNotification)
+        .flatMap(aptoideNotification -> notificationPolicyFactory.getPolicy(aptoideNotification)
             .shouldShow()
             .flatMapObservable(shouldShow -> {
               if (shouldShow) {
-                return Observable.just(aptideNotification);
+                return Observable.just(aptoideNotification);
               } else {
                 return Observable.empty();
               }

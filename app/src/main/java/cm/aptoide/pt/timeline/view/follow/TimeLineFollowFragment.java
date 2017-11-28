@@ -2,10 +2,10 @@ package cm.aptoide.pt.timeline.view.follow;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.dataprovider.model.v7.GetFollowers;
@@ -34,6 +34,11 @@ public abstract class TimeLineFollowFragment extends GridRecyclerSwipeWithToolba
     return args;
   }
 
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setHasOptionsMenu(true);
+  }
+
   @Override protected boolean displayHomeUpAsEnabled() {
     return true;
   }
@@ -60,11 +65,6 @@ public abstract class TimeLineFollowFragment extends GridRecyclerSwipeWithToolba
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName(), "", storeContext);
-  }
-
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
-    setHasOptionsMenu(true);
   }
 
   @Override public void onDestroyView() {
@@ -96,9 +96,9 @@ public abstract class TimeLineFollowFragment extends GridRecyclerSwipeWithToolba
       getRecyclerView().clearOnScrollListeners();
       endlessRecyclerOnScrollListener =
           new EndlessRecyclerOnScrollListener(this.getAdapter(), request, action,
-              (throwable) -> throwable.printStackTrace(), 6, true, firstRequest, null);
-      endlessRecyclerOnScrollListener.setOnEndOfListReachedListener(
-          () -> addDisplayable(new MessageWhiteBgDisplayable(getFooterMessage(hidden[0]))));
+              Throwable::printStackTrace, 6, true, firstRequest, null);
+      endlessRecyclerOnScrollListener.addOnEndlessFinishListener(
+          __ -> addDisplayable(new MessageWhiteBgDisplayable(getFooterMessage(hidden[0]))));
       getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
       endlessRecyclerOnScrollListener.onLoadMore(refresh);
     } else {

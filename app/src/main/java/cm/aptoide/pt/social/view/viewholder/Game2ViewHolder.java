@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,7 +18,7 @@ import cm.aptoide.pt.social.data.Game2;
 import cm.aptoide.pt.social.data.GameCardTouchEvent;
 import cm.aptoide.pt.social.data.LeaderboardTouchEvent;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.view.spannable.SpannableFactory;
 import rx.subjects.PublishSubject;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -34,27 +33,21 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
   private final TextView leaderboard;
   private final ImageView scoreIcon;
   private final ImageView rankIcon;
-  private View wrapper;
-  private ImageView questionIcon;
-  private TextView question;
   private final ImageView answerLeft;
   private final ImageView answerRight;
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final SpannableFactory spannableFactory;
-
   private final ImageView headerIcon;
   private final TextView headerTitle;
-
   //private final ProgressBar scoreProgress;
   private final ProgressBar leaderboardProgress;
-
   private final ImageView stampLeft;
   private final ImageView stampRight;
-
   private final String marketName;
-
   private final View headerStats;
-
+  private View wrapper;
+  private ImageView questionIcon;
+  private TextView question;
   private Game2 card;
   private double rand;
 

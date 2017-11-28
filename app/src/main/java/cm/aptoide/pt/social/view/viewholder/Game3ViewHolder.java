@@ -18,7 +18,7 @@ import cm.aptoide.pt.social.data.Game3;
 import cm.aptoide.pt.social.data.GameCardTouchEvent;
 import cm.aptoide.pt.social.data.LeaderboardTouchEvent;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.view.spannable.SpannableFactory;
 import rx.subjects.PublishSubject;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -31,28 +31,22 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
 
   private final TextView score;
   private final TextView leaderboard;
-  private View wrapper;
-  private ImageView questionIcon;
-  private TextView question;
   private final TextView answerLeft;
   private final TextView answerRight;
   private final ImageView answerLeftIcon;
   private final ImageView answerRightIcon;
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final SpannableFactory spannableFactory;
-
   private final ImageView headerIcon;
   private final TextView headerTitle;
-
   private final ProgressBar leaderboardProgress;
-
   private final ImageView stampLeft;
   private final ImageView stampRight;
-
   private final String marketName;
-
   private final View headerStats;
-
+  private View wrapper;
+  private ImageView questionIcon;
+  private TextView question;
   private double rand;
 
   private Game3 card;

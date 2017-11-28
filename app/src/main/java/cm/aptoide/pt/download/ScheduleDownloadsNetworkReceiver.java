@@ -6,9 +6,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.download.view.scheduled.ScheduledDownloadsFragment;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
-import cm.aptoide.pt.view.downloads.scheduled.ScheduledDownloadsFragment;
 
 /**
  * Created by trinkes on 9/29/16.

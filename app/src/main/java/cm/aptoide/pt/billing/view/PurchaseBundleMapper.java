@@ -7,20 +7,25 @@ package cm.aptoide.pt.billing.view;
 
 import android.app.Activity;
 import android.os.Bundle;
-import cm.aptoide.pt.billing.Purchase;
 import cm.aptoide.pt.billing.external.ExternalBillingBinder;
-import cm.aptoide.pt.billing.product.InAppPurchase;
-import cm.aptoide.pt.billing.product.PaidAppPurchase;
-import cm.aptoide.pt.billing.product.SimplePurchase;
+import cm.aptoide.pt.billing.purchase.InAppPurchase;
+import cm.aptoide.pt.billing.purchase.PaidAppPurchase;
+import cm.aptoide.pt.billing.purchase.Purchase;
+import cm.aptoide.pt.billing.purchase.PurchaseFactory;
 
 public class PurchaseBundleMapper {
 
   private static final String APK_PATH = "APK_PATH";
   private static final String PRODUCT_ID = "PRODUCT_ID";
+  private static final String TRANSACTION_ID = "TRANSACTION_ID";
+  private static final String STATUS = "STATUS";
   private final PaymentThrowableCodeMapper throwableCodeMapper;
+  private final PurchaseFactory purchaseFactory;
 
-  public PurchaseBundleMapper(PaymentThrowableCodeMapper throwableCodeMapper) {
+  public PurchaseBundleMapper(PaymentThrowableCodeMapper throwableCodeMapper,
+      PurchaseFactory purchaseFactory) {
     this.throwableCodeMapper = throwableCodeMapper;
+    this.purchaseFactory = purchaseFactory;
   }
 
   public Bundle map(Purchase purchase) {
@@ -40,6 +45,8 @@ public class PurchaseBundleMapper {
       intent.putInt(ExternalBillingBinder.RESPONSE_CODE, ExternalBillingBinder.RESULT_OK);
       intent.putString(APK_PATH, ((PaidAppPurchase) purchase).getApkPath());
       intent.putString(PRODUCT_ID, purchase.getProductId());
+      intent.putString(TRANSACTION_ID, purchase.getTransactionId());
+      intent.putSerializable(STATUS, purchase.getStatus());
     } else {
       intent.putInt(ExternalBillingBinder.RESPONSE_CODE, throwableCodeMapper.map(
           new IllegalArgumentException(
@@ -54,8 +61,9 @@ public class PurchaseBundleMapper {
       if (data != null) {
 
         if (data.containsKey(APK_PATH) && data.containsKey(PRODUCT_ID)) {
-          return new PaidAppPurchase(data.getString(APK_PATH), SimplePurchase.Status.COMPLETED,
-              data.getString(PRODUCT_ID));
+          return purchaseFactory.create(data.getString(PRODUCT_ID), null, null,
+              (Purchase.Status) data.getSerializable(STATUS), null, PurchaseFactory.PAID_APP,
+              data.getString(APK_PATH), data.getString(TRANSACTION_ID));
         }
 
         throw new IllegalArgumentException("Intent does not contain paid app information");

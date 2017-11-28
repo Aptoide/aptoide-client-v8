@@ -1,25 +1,27 @@
 package cm.aptoide.pt.account.view.store;
 
-import android.support.annotation.StringRes;
 import cm.aptoide.pt.account.view.ImagePickerView;
-import rx.Completable;
 import rx.Observable;
 
 public interface ManageStoreView extends ImagePickerView {
 
   void loadImageStateless(String pictureUri);
 
-  Observable<ManageStoreFragment.ViewModel> saveDataClick();
+  Observable<ManageStoreViewModel> saveDataClick();
 
   Observable<Void> cancelClick();
-
-  Completable showError(@StringRes int errorMessage);
-
-  Completable showGenericError();
 
   void showWaitProgressBar();
 
   void dismissWaitProgressBar();
 
-  void hideKeyboard();
+  void showFacebookError(String error);
+
+  void showTwitterError(String error);
+
+  void showTwitchError(String error);
+
+  void showYoutubeError(String error);
+
+  void showError(String error);
 }

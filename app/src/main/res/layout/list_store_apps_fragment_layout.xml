@@ -1,0 +1,39 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbal_swipe_recycler_coordinator_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+  <android.support.v4.widget.SwipeRefreshLayout
+      android:id="@+id/swipe_container"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:layout_behavior="@string/appbar_scrolling_view_behavior"
+      >
+
+    <android.support.v7.widget.RecyclerView
+
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingEnd="@dimen/recycler_margin"
+        android:paddingLeft="@dimen/recycler_margin"
+        android:paddingRight="@dimen/recycler_margin"
+        android:paddingStart="@dimen/recycler_margin"
+        />
+
+
+  </android.support.v4.widget.SwipeRefreshLayout>
+
+  <include layout="@layout/app_bar_layout" />
+
+  <include layout="@layout/partial_view_incl_no_network" />
+
+  <include layout="@layout/partial_view_error" />
+
+  <include layout="@layout/partial_view_progress_bar" />
+
+</android.support.design.widget.CoordinatorLayout>
+

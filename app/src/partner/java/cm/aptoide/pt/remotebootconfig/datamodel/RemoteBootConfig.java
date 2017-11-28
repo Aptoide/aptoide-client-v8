@@ -1,7 +1,6 @@
 package cm.aptoide.pt.remotebootconfig.datamodel;
 
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
-import lombok.Data;
 
 /**
  * Created by diogoloureiro on 02/03/2017.
@@ -9,18 +8,23 @@ import lombok.Data;
  * Remote Boot Config class
  */
 
-@Data public class RemoteBootConfig {
+public class RemoteBootConfig {
   private BaseV7Response.Info info;
   private BootConfig data;
 
-  /**
-   * Remote Boot Config constructor
-   *
-   * @param info base request info
-   * @param data base boot config data
-   */
-  public RemoteBootConfig(BaseV7Response.Info info, BootConfig data) {
+  public BaseV7Response.Info getInfo() {
+    return info;
+  }
+
+  public void setInfo(BaseV7Response.Info info) {
     this.info = info;
+  }
+
+  public BootConfig getData() {
+    return data;
+  }
+
+  public void setData(BootConfig data) {
     this.data = data;
   }
 }

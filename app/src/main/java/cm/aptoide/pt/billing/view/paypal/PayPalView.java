@@ -11,7 +11,5 @@ public interface PayPalView extends View {
 
   void showNetworkError();
 
-  void showUnknownError();
-
   Observable<Void> errorDismisses();
 }

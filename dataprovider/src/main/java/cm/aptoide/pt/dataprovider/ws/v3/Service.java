@@ -3,13 +3,8 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v3.BaseV3Response;
 import cm.aptoide.pt.dataprovider.model.v3.CheckUserCredentialsJson;
-import cm.aptoide.pt.dataprovider.model.v3.InAppBillingAvailableResponse;
-import cm.aptoide.pt.dataprovider.model.v3.InAppBillingPurchasesResponse;
-import cm.aptoide.pt.dataprovider.model.v3.InAppBillingSkuDetailsResponse;
 import cm.aptoide.pt.dataprovider.model.v3.OAuth;
 import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
-import cm.aptoide.pt.dataprovider.model.v3.PaymentAuthorizationResponse;
-import cm.aptoide.pt.dataprovider.model.v3.PaymentAuthorizationsResponse;
 import cm.aptoide.pt.dataprovider.model.v3.TransactionResponse;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
@@ -26,40 +21,21 @@ import rx.Observable;
 
 public interface Service {
 
+  @POST("getPushNotifications") @FormUrlEncoded
+  Observable<GetPushNotificationsResponse> getPushNotifications(@FieldMap BaseBody arg,
+      @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
   @POST("addApkFlag") @FormUrlEncoded Observable<GenericResponseV2> addApkFlag(
       @FieldMap BaseBody arg, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
   @POST("getApkInfo") @FormUrlEncoded Observable<PaidApp> getApkInfo(@FieldMap BaseBody args,
       @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-  @POST("processInAppBilling") @FormUrlEncoded
-  Observable<InAppBillingAvailableResponse> getInAppBillingAvailable(@FieldMap BaseBody args);
-
-  @POST("processInAppBilling") @FormUrlEncoded
-  Observable<InAppBillingSkuDetailsResponse> getInAppBillingSkuDetails(@FieldMap BaseBody args);
-
-  @POST("processInAppBilling") @FormUrlEncoded
-  Observable<InAppBillingPurchasesResponse> getInAppBillingPurchases(@FieldMap BaseBody args);
-
-  @POST("processInAppBilling") @FormUrlEncoded
-  Observable<BaseV3Response> deleteInAppBillingPurchase(@FieldMap BaseBody args);
-
   @POST("checkProductPayment") @FormUrlEncoded Observable<TransactionResponse> getTransaction(
       @FieldMap BaseBody args);
 
-  @POST("productPurchaseAuthorization") @FormUrlEncoded
-  Observable<PaymentAuthorizationsResponse> getPaymentAuthorization(@FieldMap BaseBody args);
-
-  @POST("productPurchaseAuthorization") @FormUrlEncoded
-  Observable<PaymentAuthorizationResponse> createPaymentAuthorizationWithCode(
-      @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
   @POST("payProduct") @FormUrlEncoded Observable<TransactionResponse> createTransaction(
       @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-  @POST("createPurchaseAuthorization") @FormUrlEncoded
-  Observable<PaymentAuthorizationResponse> createPaymentAuthorization(@FieldMap BaseBody args,
-      @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
   @POST("oauth2Authentication") @FormUrlEncoded Observable<OAuth> oauth2Authentication(
       @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);

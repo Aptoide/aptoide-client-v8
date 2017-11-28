@@ -43,5 +43,8 @@
     this limit increased please contact support or create more users tomorrow.</string>
   <string name="ws_error_AUTH_1">Either email or password are not valid to login (upon name
         update)</string>
+  <string name="edit_store_social_link_invalid_url_text">Invalid Url</string>
+  <string name="edit_store_page_doesnt_exist_error_short">This page doesn\'t exist</string>
+  <string name="edit_store_social_link_channel_error">This channel doesn\'t exist</string>
 
 </resources>

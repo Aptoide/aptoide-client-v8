@@ -16,7 +16,7 @@ import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.GameAnswer;
 import cm.aptoide.pt.social.data.LeaderboardTouchEvent;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.view.spannable.SpannableFactory;
 import rx.subjects.PublishSubject;
 
 /**
@@ -52,10 +52,8 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
   private final String marketName;
   private final View leaderboardElement;
   private final View headerStats;
-
-  private int scoreValue;
-
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
+  private int scoreValue;
 
   public GameAnswerViewHolder(View itemView, PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
       SpannableFactory spannableFactory, String marketName) {

@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.presenter;
 
-import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.trello.rxlifecycle.LifecycleTransformer;
@@ -21,7 +20,7 @@ public interface View {
 
   Observable<LifecycleEvent> getLifecycle();
 
-  void attachPresenter(Presenter presenter, @Deprecated Bundle savedInstanceState);
+  void attachPresenter(Presenter presenter);
 
   enum LifecycleEvent {
     CREATE, START, RESUME, PAUSE, STOP, DESTROY,

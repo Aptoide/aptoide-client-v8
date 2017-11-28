@@ -178,6 +178,10 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     adapter.addDisplayables(displayables);
   }
 
+  public boolean contains(Displayable displayable) {
+    return displayables != null && displayables.contains(displayable);
+  }
+
   @CallSuper public BaseRecyclerViewFragment addDisplayableWithAnimation(int position,
       Displayable displayable) {
     adapter.addDisplayableWithAnimation(position, displayable);

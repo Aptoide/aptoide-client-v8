@@ -1,9 +1,7 @@
 package cm.aptoide.pt.social.leaderboard.view;
 
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -28,18 +26,12 @@ import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.GetLeaderboardEntriesResponse;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.social.leaderboard.data.Leaderboard;
 import cm.aptoide.pt.social.leaderboard.data.LeaderboardEntry;
-import cm.aptoide.pt.social.leaderboard.presenter.LeaderboardNavigator;
 import cm.aptoide.pt.social.leaderboard.presenter.LeaderboardOnItemSelectedListener;
 import cm.aptoide.pt.social.leaderboard.presenter.LeaderboardPresenter;
-import cm.aptoide.pt.view.BackButton;
 import cm.aptoide.pt.view.fragment.FragmentView;
-import cm.aptoide.pt.view.navigator.TabNavigator;
-import com.trello.rxlifecycle.LifecycleTransformer;
 import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -61,11 +53,8 @@ public class LeaderboardFragment extends FragmentView implements LeaderboardView
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
   private Toolbar toolbar;
-  private BackButton backButton;
-  private TabNavigator tabNavigator;
   private PublishSubject<LeaderboardEntry> leaderboardEntryPublishSubject;
   private PublishSubject<String> spinnerPublishSubject;
-  private LeaderboardPresenter presenter;
   private Spinner leaderboardSpinner;
   private View listHeader;
 
@@ -84,23 +73,18 @@ public class LeaderboardFragment extends FragmentView implements LeaderboardView
   private TextView thirdName;
   private TextView thirdScore;
 
+  public static LeaderboardFragment newInstance() {
+    Bundle args = new Bundle();
+    LeaderboardFragment fragment = new LeaderboardFragment();
+    fragment.setArguments(args);
+    return fragment;
+  }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     super.onCreateView(inflater, container, savedInstanceState);
     return inflater.inflate(R.layout.fragment_leaderboard, container, false);
-  }
-
-  @Override public void onAttach(Activity activity) {
-    super.onAttach(activity);
-
-    if (activity instanceof TabNavigator) {
-      tabNavigator = (TabNavigator) activity;
-    } else {
-      throw new IllegalStateException(
-          "Activity must implement " + TabNavigator.class.getSimpleName());
-    }
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -171,6 +155,20 @@ public class LeaderboardFragment extends FragmentView implements LeaderboardView
     return leaderboardEntryPublishSubject;
   }
 
+  public Observable<String> spinnerChoice() {
+    return spinnerPublishSubject;
+  }
+
+  public void waitForData() {
+    listHeader.setVisibility(View.GONE);
+    list.setVisibility(View.GONE);
+    userIcon.setVisibility(View.GONE);
+    userName.setVisibility(View.GONE);
+    userScore.setVisibility(View.GONE);
+    mainProgress.setVisibility(View.VISIBLE);
+    headerProgress.setVisibility(View.VISIBLE);
+  }
+
   @Override public void onViewCreated(android.view.View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     bindViews(view);
@@ -214,10 +212,7 @@ public class LeaderboardFragment extends FragmentView implements LeaderboardView
     leaderboardSpinner.setAdapter(spinnerAdapter);
     leaderboardSpinner.setOnItemSelectedListener(new LeaderboardOnItemSelectedListener(adapter, spinnerPublishSubject));
 
-    LeaderboardNavigator leaderboardNavigator =
-        new LeaderboardNavigator(getFragmentNavigator(), tabNavigator);
-    attachPresenter(new LeaderboardPresenter(this, leaderboard, CrashReport.getInstance(), leaderboardNavigator,
-        getFragmentNavigator()), savedInstanceState);
+    attachPresenter(new LeaderboardPresenter(this, leaderboard, CrashReport.getInstance()));
   }
 
   protected boolean hasToolbar() {
@@ -252,20 +247,6 @@ public class LeaderboardFragment extends FragmentView implements LeaderboardView
 
     this.toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     setHasOptionsMenu(true);
-  }
-
-  public Observable<String> spinnerChoice(){
-    return spinnerPublishSubject;
-  }
-
-  public void waitForData(){
-    listHeader.setVisibility(View.GONE);
-    list.setVisibility(View.GONE);
-    userIcon.setVisibility(View.GONE);
-    userName.setVisibility(View.GONE);
-    userScore.setVisibility(View.GONE);
-    mainProgress.setVisibility(View.VISIBLE);
-    headerProgress.setVisibility(View.VISIBLE);
   }
 
   public void showElements(){

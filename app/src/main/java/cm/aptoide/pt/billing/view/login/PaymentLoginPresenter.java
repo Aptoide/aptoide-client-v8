@@ -1,6 +1,5 @@
 package cm.aptoide.pt.billing.view.login;
 
-import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
@@ -8,10 +7,10 @@ import cm.aptoide.pt.account.FacebookSignUpException;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
-import cm.aptoide.pt.view.orientation.ScreenOrientationManager;
 import java.util.Collection;
 import rx.Observable;
 import rx.Scheduler;
@@ -72,14 +71,6 @@ public class PaymentLoginPresenter implements Presenter {
     handleAptoideSignUpEvent();
   }
 
-  @Override public void saveState(Bundle state) {
-
-  }
-
-  @Override public void restoreState(Bundle state) {
-
-  }
-
   private void handleGrantFacebookRequiredPermissionsEvent() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
@@ -119,7 +110,8 @@ public class PaymentLoginPresenter implements Presenter {
                       orientationManager.unlock();
                     })
                     .doOnError(throwable -> {
-                      accountAnalytics.sendAptoideSignUpFailEvent();
+                      accountAnalytics.sendSignUpErrorEvent(AccountAnalytics.LoginMethod.APTOIDE,
+                          throwable);
                       view.showError(errorMapper.map(throwable));
                       crashReport.log(throwable);
                     }))
@@ -144,7 +136,8 @@ public class PaymentLoginPresenter implements Presenter {
                   orientationManager.unlock();
                 })
                 .doOnError(throwable -> {
-                  accountAnalytics.sendAptoideLoginFailEvent();
+                  accountAnalytics.sendLoginErrorEvent(AccountAnalytics.LoginMethod.APTOIDE,
+                      throwable);
                   view.showError(errorMapper.map(throwable));
                   crashReport.log(throwable);
                 }))
@@ -161,7 +154,6 @@ public class PaymentLoginPresenter implements Presenter {
                 .observeOn(viewScheduler)
                 .doOnTerminate(() -> view.hideLoading())
                 .doOnError(throwable -> {
-                  sendFacebookSignUpErrorEvent(throwable);
 
                   if (throwable instanceof FacebookSignUpException
                       && ((FacebookSignUpException) throwable).getCode()
@@ -171,6 +163,8 @@ public class PaymentLoginPresenter implements Presenter {
                     view.showError(errorMapper.map(throwable));
                     crashReport.log(throwable);
                   }
+                  accountAnalytics.sendLoginErrorEvent(AccountAnalytics.LoginMethod.FACEBOOK,
+                      throwable);
                 }))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -222,7 +216,8 @@ public class PaymentLoginPresenter implements Presenter {
                 .doOnError(throwable -> {
                   view.showError(errorMapper.map(throwable));
                   crashReport.log(throwable);
-                  accountAnalytics.sendGoogleSignUpFailEvent();
+                  accountAnalytics.sendLoginErrorEvent(AccountAnalytics.LoginMethod.GOOGLE,
+                      throwable);
                 }))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -245,21 +240,5 @@ public class PaymentLoginPresenter implements Presenter {
         .doOnNext(__ -> accountNavigator.navigateToRecoverPasswordView())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
-  }
-
-  private void sendFacebookSignUpErrorEvent(Throwable throwable) {
-    if (throwable instanceof FacebookSignUpException) {
-      switch (((FacebookSignUpException) throwable).getCode()) {
-        case FacebookSignUpException.MISSING_REQUIRED_PERMISSIONS:
-          accountAnalytics.sendFacebookMissingPermissionsEvent();
-          break;
-        case FacebookSignUpException.USER_CANCELLED:
-          accountAnalytics.sendFacebookUserCancelledEvent();
-          break;
-        case FacebookSignUpException.ERROR:
-          accountAnalytics.sendFacebookErrorEvent();
-          break;
-      }
-    }
   }
 }

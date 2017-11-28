@@ -1,22 +1,21 @@
 package cm.aptoide.pt.timeline.post;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.timeline.post.exceptions.PostException;
 import cm.aptoide.pt.timeline.view.navigation.AppsTimelineTabNavigation;
 import cm.aptoide.pt.view.BackButton;
-import cm.aptoide.pt.view.app.AppViewFragment;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
-import cm.aptoide.pt.view.navigator.TabNavigator;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -26,13 +25,15 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 class PostPresenter implements Presenter, BackButton.ClickHandler {
-  public static final String UPLOADER_PACKAGENAME = "pt.caixamagica.aptoide.uploader";
+
   private static final String TAG = PostPresenter.class.getSimpleName();
+
+  private static final String UPLOADER_PACKAGE_NAME = "pt.caixamagica.aptoide.uploader";
+
   private final PostView view;
   private final CrashReport crashReport;
   private final PostManager postManager;
   private final FragmentNavigator fragmentNavigator;
-  private final PostFragment.PostUrlProvider postUrlProvider;
   private final TabNavigator tabNavigator;
   private PostAnalytics analytics;
   private UrlValidator urlValidator;
@@ -43,15 +44,13 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
 
   public PostPresenter(PostFragment view, CrashReport crashReport, PostManager postManager,
       FragmentNavigator fragmentNavigator, UrlValidator urlValidator,
-      AccountNavigator accountNavigator, PostFragment.PostUrlProvider postUrlProvider,
-      TabNavigator tabNavigator, PostAnalytics analytics) {
+      AccountNavigator accountNavigator, TabNavigator tabNavigator, PostAnalytics analytics) {
     this.view = view;
     this.crashReport = crashReport;
     this.postManager = postManager;
     this.fragmentNavigator = fragmentNavigator;
     this.urlValidator = urlValidator;
     this.accountNavigator = accountNavigator;
-    this.postUrlProvider = postUrlProvider;
     this.tabNavigator = tabNavigator;
     this.analytics = analytics;
   }
@@ -71,24 +70,16 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
     onViewCreatedHandleAppNotFoundErrorAction();
   }
 
-  @Override public void saveState(Bundle state) {
-    // does nothing
-  }
-
-  @Override public void restoreState(Bundle state) {
-    // does nothing
-  }
-
   private void onViewCreatedHandleAppNotFoundErrorAction() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(viewCreated -> view.getAppNotFoundErrorAction())
         .doOnNext(click -> fragmentNavigator.navigateTo(
-            AppViewFragment.newInstance(UPLOADER_PACKAGENAME, AppViewFragment.OpenType.OPEN_ONLY),
+            AppViewFragment.newInstance(UPLOADER_PACKAGE_NAME, AppViewFragment.OpenType.OPEN_ONLY),
             true))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(aVoid -> {
-        }, throwable -> crashReport.log(throwable));
+        }, crashReport::log);
   }
 
   private void onCreateLoginErrorHandle() {
@@ -99,48 +90,49 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
             Analytics.Account.AccountOrigins.POST_ON_TIMELINE))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> crashReport.log(err));
+        }, crashReport::log);
   }
 
   private void showPreviewAppsOnStart() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.RESUME && isExternalOpen())
-        .flatMap(__ -> loadPostPreview(postUrlProvider.getUrlToShare()))
+        .flatMap(__ -> loadPostPreview(view.getExternalUrlToShare()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> crashReport.log(err));
+        }, crashReport::log);
   }
 
   private boolean isExternalOpen() {
-    return postUrlProvider.getUrlToShare() != null && !postUrlProvider.getUrlToShare()
+    return view.getExternalUrlToShare() != null && !view.getExternalUrlToShare()
+        .trim()
         .isEmpty();
   }
 
   private void showRelatedAppsOnStart() {
     view.getLifecycle()
-        .filter(event -> getRelatedAppsLifecycleFilter(event))
+        .filter(this::getRelatedAppsLifecycleFilter)
         .doOnNext(lifecycleEvent -> view.clearAllRelated())
         .doOnNext(lifecycleEvent -> view.showRelatedAppsLoading())
         .observeOn(Schedulers.io())
         .switchMap(viewResumed -> {
           if (isExternalOpen()) {
-            return Observable.merge(postManager.getSuggestionApps(postUrlProvider.getUrlToShare())
+            return Observable.merge(postManager.getSuggestionApps(view.getExternalUrlToShare())
                 .toObservable(), postManager.getSuggestionApps()
                 .toObservable())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnTerminate(() -> view.hideRelatedAppsLoading());
+                .doOnTerminate(view::hideRelatedAppsLoading);
           } else {
             return postManager.getSuggestionApps()
                 .toObservable()
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnTerminate(() -> view.hideRelatedAppsLoading());
+                .doOnTerminate(view::hideRelatedAppsLoading);
           }
         })
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(relatedApps -> view.addRelatedApps(relatedApps))
+        .doOnNext(view::addRelatedApps)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> crashReport.log(err));
+        }, crashReport::log);
   }
 
   private boolean getRelatedAppsLifecycleFilter(View.LifecycleEvent event) {
@@ -152,10 +144,10 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.getClickedView()
-            .flatMapCompletable(app -> view.setRelatedAppSelected(app)))
+            .flatMapCompletable(view::setRelatedAppSelected))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> crashReport.log(err));
+        }, crashReport::log);
   }
 
   private void handleCancelButtonClick() {
@@ -166,7 +158,7 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
             .doOnNext(__2 -> goBack()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> crashReport.log(err));
+        }, crashReport::log);
   }
 
   private void goBack() {
@@ -200,15 +192,15 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
         });
   }
 
-  @NonNull private Observable<PostView.PostPreview> loadPostPreview(String url) {
+  @NonNull private Observable<PostPreview> loadPostPreview(String url) {
     return Observable.just(url)
-        .doOnNext(__2 -> view.showCardPreviewLoading())
-        .doOnNext(__2 -> view.hideCardPreview())
+        .doOnNext(__ -> view.showCardPreviewLoading())
+        .doOnNext(__ -> view.hideCardPreview())
         .observeOn(Schedulers.io())
-        .flatMapSingle(__2 -> postManager.getPreview(url))
+        .flatMapSingle(postManager::getPreview)
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(suggestion -> view.showCardPreview(suggestion))
-        .doOnNext(__2 -> view.hideCardPreviewLoading())
+        .doOnNext(view::showCardPreview)
+        .doOnNext(__ -> view.hideCardPreviewLoading())
         .doOnError(throwable -> view.hideCardPreviewLoading())
         .onErrorReturn(throwable -> {
           Logger.w(TAG, "showCardPreviewAfterTextChanges: ", throwable);
@@ -245,11 +237,11 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
             }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> crashReport.log(err));
+        }, crashReport::log);
   }
 
   private Observable<List<PostRemoteAccessor.RelatedApp>> loadRelatedApps(String url) {
-    return Completable.fromAction(() -> view.showRelatedAppsLoading())
+    return Completable.fromAction(view::showRelatedAppsLoading)
         .observeOn(Schedulers.io())
         .andThen(postManager.getSuggestionApps(url))
         .observeOn(AndroidSchedulers.mainThread())
@@ -258,7 +250,7 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
           view.addRelatedApps(relatedApps);
           postManager.setRemoteRelatedAppsAvailable(relatedApps.size() > 0);
         })
-        .doOnCompleted(() -> view.hideRelatedAppsLoading())
+        .doOnCompleted(view::hideRelatedAppsLoading)
         .observeOn(AndroidSchedulers.mainThread())
         .doOnError(throwable -> view.hideRelatedAppsLoading())
         .onErrorReturn(throwable -> Collections.emptyList());
@@ -274,23 +266,12 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
               url = getUrl(textToShare);
               hasComment = !textToShare.isEmpty();
               hasUrl = url != null;
-              return postManager.post(url, textToShare, view.getCurrentSelected() == null ? null
+              final String selectedPackageName = view.getCurrentSelected() == null ? null
                   : view.getCurrentSelected()
-                      .getPackageName())
-                  .observeOn(AndroidSchedulers.mainThread())
-                  .doOnSuccess(postId -> {
-                    view.showSuccessMessage();
-                    analytics.sendPostCompleteEvent(postManager.remoteRelatedAppsAvailable(),
-                        view.getCurrentSelected()
-                            .getPackageName(), hasComment, hasUrl, url == null ? "" : url,
-                        android.view.View.VISIBLE == view.getPreviewVisibility(), isExternalOpen());
-                  })
-                  .doOnSuccess(
-                      postId -> tabNavigator.navigate(new AppsTimelineTabNavigation(postId)))
-                  .doOnSuccess(postId -> goBack())
-                  .toCompletable();
+                      .getPackageName();
+              return sendPostData(textToShare, selectedPackageName);
             })
-            .doOnError(throwable -> handleError(throwable))
+            .doOnError(this::handleError)
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -300,10 +281,25 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
         });
   }
 
+  @NonNull private Completable sendPostData(String textToShare, String selectedPackageName) {
+    return postManager.post(url, textToShare, selectedPackageName)
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnSuccess(postId -> {
+          view.showSuccessMessage();
+          analytics.sendPostCompleteEvent(postManager.remoteRelatedAppsAvailable(),
+              view.getCurrentSelected()
+                  .getPackageName(), hasComment, hasUrl, url == null ? "" : url,
+              android.view.View.VISIBLE == view.getPreviewVisibility(), isExternalOpen());
+        })
+        .doOnSuccess(postId -> tabNavigator.navigate(new AppsTimelineTabNavigation(postId)))
+        .doOnSuccess(postId -> goBack())
+        .toCompletable();
+  }
+
   @Nullable private String getUrl(String textToShare) {
     String url;
     if (isExternalOpen()) {
-      url = postUrlProvider.getUrlToShare();
+      url = view.getExternalUrlToShare();
     } else {
       url = urlValidator.containsUrl(textToShare) ? urlValidator.getUrl(textToShare) : null;
     }
@@ -341,8 +337,15 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
               isSelected, packageName, hasComment, hasUrl, url == null ? "" : url,
               android.view.View.VISIBLE == view.getPreviewVisibility(), isExternalOpen());
           break;
+        case INVALID_URL:
+          view.showInvalidUrlError();
+          analytics.sendPostCompleteNoAppFoundEvent(postManager.remoteRelatedAppsAvailable(),
+              isSelected, packageName, hasComment, hasUrl, url == null ? "" : url,
+              android.view.View.VISIBLE == view.getPreviewVisibility(), isExternalOpen());
+          break;
       }
     } else if (throwable instanceof AptoideWsV7Exception) {
+      view.showGenericError();
       String errorCodes = parseErrorCode(((AptoideWsV7Exception) throwable).getBaseResponse()
           .getErrors());
       analytics.sendPostCompletedNetworkFailedEvent(postManager.remoteRelatedAppsAvailable(),

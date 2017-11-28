@@ -14,10 +14,10 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
-import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Completable;
 import rx.Observable;
@@ -62,14 +62,14 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment implements Profi
     }
   }
 
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    outState.putBoolean(ProfileStepOneFragment.IS_EXTERNAL_LOGIN, externalLogin);
-  }
-
   @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
     super.onViewStateRestored(savedInstanceState);
     loadExtras(savedInstanceState);
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putBoolean(ProfileStepOneFragment.IS_EXTERNAL_LOGIN, externalLogin);
   }
 
   @Override public int getContentViewId() {
@@ -111,7 +111,7 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment implements Profi
     ProfileStepTwoPresenter presenter =
         new ProfileStepTwoPresenter(this, accountManager, CrashReport.getInstance(),
             accountNavigator);
-    attachPresenter(presenter, null);
+    attachPresenter(presenter);
   }
 
   @Override protected void setupToolbarDetails(Toolbar toolbar) {
