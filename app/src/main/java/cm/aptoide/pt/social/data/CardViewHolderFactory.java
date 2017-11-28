@@ -155,11 +155,11 @@ public class CardViewHolderFactory {
         return new EmptyStateViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_empty_state_item, parent, false),
             cardTouchEventPublishSubject);
-      case GAME1:
+      case GAMETEXT:
         return new Game1ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.timeline_game1, parent, false),cardTouchEventPublishSubject, spannableFactory, marketName);
-      case GAME2:
+      case GAMEICON:
         return new Game2ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.timeline_game2, parent, false),cardTouchEventPublishSubject, spannableFactory, marketName);
-      case GAME3:
+      case GAMETEXTICON:
         return new Game3ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.timeline_game3, parent, false),cardTouchEventPublishSubject, spannableFactory, marketName);
       case GAMEANSWER:
         return new GameAnswerViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.timeline_game_answer, parent, false),cardTouchEventPublishSubject, spannableFactory, marketName);

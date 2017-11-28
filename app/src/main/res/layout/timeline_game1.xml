@@ -19,9 +19,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="63.3dp"
-        android:orientation="horizontal"
-        android:background="@drawable/game_card_header_gradient"
-        >
+        android:orientation="horizontal">
+        <!--android:background="@drawable/game_card_header_gradient"-->
+        <!--&gt;-->
 
       <ImageView
           android:id="@+id/displayable_social_timeline_game_card_icon"

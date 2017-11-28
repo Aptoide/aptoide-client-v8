@@ -10,7 +10,6 @@ public abstract class Game implements Post {
 
   private final String cardId;
   private final App rightAnswer;
-  private final String answerURL;
   private final String question;
   private int score;
   private int gRanking;
@@ -21,11 +20,10 @@ public abstract class Game implements Post {
   private final CardType cardType;
   private String answerType;
 
-  public Game(String cardId, App rightAnswer, String answerURL, String question, int score, int gRanking,
+  public Game(String cardId, App rightAnswer, String question, int score, int gRanking,
       int lRanking, int fRanking, String abUrl, boolean isLiked, CardType cardType){
     this.cardId = cardId;
     this.rightAnswer = rightAnswer;
-    this.answerURL = answerURL;
     this.question = question;
     this.score = score;
     this.gRanking = gRanking;
@@ -54,10 +52,6 @@ public abstract class Game implements Post {
 
   public App getRightAnswer() {
     return rightAnswer;
-  }
-
-  public String getAnswerURL() {
-    return answerURL;
   }
 
   public String getQuestion() {

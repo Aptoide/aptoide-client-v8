@@ -3,6 +3,7 @@ package cm.aptoide.pt.dataprovider.model.v7.timeline;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import retrofit2.http.GET;
 
 /**
  * Created by franciscocalado on 9/21/17.
@@ -11,20 +12,27 @@ import lombok.Getter;
 public class GameRankings {
 
   @Getter private final int score;
-  @Getter private final int cardsLeft;
-  @Getter private final int gRanking;
-  @Getter private final int lRanking;
-  @Getter private final int fRanking;
+  @Getter private final Rankings ranking;
 
   @JsonCreator
-  public GameRankings(@JsonProperty("score") int score, @JsonProperty("cardsLeft") int cardsLeft,
-      @JsonProperty("global") int gRanking, @JsonProperty("country") int lRanking,
-      @JsonProperty("friends") int fRanking) {
+  public GameRankings(@JsonProperty("score") int score,
+      @JsonProperty("ranking") Rankings ranking) {
     this.score = score;
-    this.cardsLeft = cardsLeft;
-    this.gRanking = gRanking;
-    this.lRanking = lRanking;
-    this.fRanking = fRanking;
+    this.ranking = ranking;
+  }
+
+  public static class Rankings {
+    @Getter private final int global;
+    @Getter private final int local;
+    @Getter private final int friends;
+
+    @JsonCreator
+    public Rankings(@JsonProperty("global") int global, @JsonProperty("country") int local,
+        @JsonProperty("friends") int friends){
+      this.global = global;
+      this.local = local;
+      this.friends = friends;
+    }
   }
 
 }

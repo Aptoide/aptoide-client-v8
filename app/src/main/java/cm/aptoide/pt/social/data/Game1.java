@@ -12,26 +12,20 @@ public class Game1 extends Game {
 
   private final App app;
   private final String wrongName;
-  private final String wrongURL;
   private final String questionIcon;
   private boolean isLiked;
   private boolean likedFromClick;
 
-  public Game1(String cardId, App rightAnswer, String answerURL, String question, int score, int gRanking,
-      int lRanking, int fRanking, String abUrl, boolean isLiked, CardType cardType, String wrongName, String wrongURL, String questionIcon) {
-    super(cardId, rightAnswer, answerURL, question, score, gRanking, lRanking, fRanking, abUrl, isLiked, cardType);
+  public Game1(String cardId, App rightAnswer, String question, int score, int gRanking,
+      int lRanking, int fRanking, String abUrl, boolean isLiked, CardType cardType, String wrongName, String questionIcon) {
+    super(cardId, rightAnswer, question, score, gRanking, lRanking, fRanking, abUrl, isLiked, cardType);
     this.app = rightAnswer;
     this.wrongName = wrongName;
-    this.wrongURL = wrongURL;
     this.questionIcon=questionIcon;
   }
 
   public String getWrongName() {
     return wrongName;
-  }
-
-  public String getWrongURL() {
-    return wrongURL;
   }
 
   public App getApp() {

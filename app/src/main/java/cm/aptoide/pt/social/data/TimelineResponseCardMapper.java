@@ -42,6 +42,7 @@ import cm.aptoide.pt.dataprovider.model.v7.timeline.UserSharerTimeline;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.Video;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.VideoTimelineItem;
 import cm.aptoide.pt.link.LinksHandlerFactory;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.social.data.publisher.AptoidePublisher;
 import cm.aptoide.pt.social.data.publisher.MediaPublisher;
 import cm.aptoide.pt.social.data.publisher.Poster;
@@ -508,57 +509,85 @@ public class TimelineResponseCardMapper {
       } else if (item instanceof GameTimelineItem) {
 
         final Game game = ((GameTimelineItem) item).getData();
-          String questionIcon;
-          if (game.getDisplayApp() == null) {
-            questionIcon = null;
-          } else {
-            questionIcon = game.getDisplayApp()
-                .getIcon();
-          }
-          if (game.getGameType() == 1) {
-            cards.add(new Game1(game.getCardId(), game.getRightAnswer(), game.getAnswerURL(),
-                game.getQuestion(), game.getRankings()
-                .getScore(), game.getRankings()
-                .getGRanking(), game.getRankings()
-                .getLRanking(), game.getRankings()
-                .getFRanking(), abUrl, false, CardType.GAME1, game.getWrongAnswer()
-                .getName(), game.getWrongAnswer()
-                .getUrl(), questionIcon));
-          }
-          if (game.getGameType() == 2) {
-            cards.add(new Game2(game.getCardId(), game.getRightAnswer(), game.getAnswerURL(),
-                game.getQuestion(), game.getRankings()
-                .getScore(), game.getRankings()
-                .getGRanking(), game.getRankings()
-                .getLRanking(), game.getRankings()
-                .getFRanking(), abUrl, false, CardType.GAME2, game.getWrongAnswer()
-                .getIcon(), game.getWrongAnswer()
-                .getUrl(), questionIcon));
-          }
-          if (game.getGameType() == 3) {
-            final String questionName;
-            if (game.getDisplayApp() == null) {
-              questionIcon = null;
-              questionName = null;
-            } else {
-              questionIcon = game.getDisplayApp()
-                  .getIcon();
-              questionName = game.getDisplayApp()
-                  .getName();
-            }
-            cards.add(new Game3(game.getCardId(), game.getRightAnswer(), game.getAnswerURL(),
-                game.getQuestion(), game.getRankings()
-                .getScore(), game.getRankings()
-                .getGRanking(), game.getRankings()
-                .getLRanking(), game.getRankings()
-                .getFRanking(), abUrl, false, CardType.GAME3, game.getWrongAnswer()
-                .getIcon(), game.getWrongAnswer()
-                .getName(), game.getWrongAnswer()
-                .getUrl(), questionIcon, questionName));
-          }
+
+        String questionIcon = game.getQuestion()
+            .getQuestionIcon();
+
+        if (game.getQuestion()
+            .getType()
+            .equals("TEXT") && game.getWrongAnswer()
+            .getIcon() == null) {
+          cards.add(new Game1(game.getCardId(), game.getRightAnswer(), game.getQuestion()
+              .getQuestionText(), game.getRankings()
+              .getScore(), game.getRankings()
+              .getRanking()
+              .getGlobal(), game.getRankings()
+              .getRanking()
+              .getLocal(), game.getRankings()
+              .getRanking()
+              .getFriends(), abUrl, false, CardType.GAMETEXT, game.getWrongAnswer()
+              .getName(), questionIcon));
+        } else if (game.getQuestion()
+            .getType()
+            .equals("ICON") && game.getWrongAnswer()
+            .getName() == null) {
+          cards.add(new Game2(game.getCardId(), game.getRightAnswer(), game.getQuestion()
+              .getQuestionText(), game.getRankings()
+              .getScore(), game.getRankings()
+              .getRanking()
+              .getGlobal(), game.getRankings()
+              .getRanking()
+              .getLocal(), game.getRankings()
+              .getRanking()
+              .getFriends(), abUrl, false, CardType.GAMEICON, game.getWrongAnswer()
+              .getIcon(), questionIcon));
+        } else if (game.getQuestion()
+            .getType()
+            .equals("TEXTICON") && !game.getWrongAnswer()
+            .getName()
+            .equals(null) && !game.getWrongAnswer()
+            .getIcon()
+            .equals(null)) {
+          cards.add(new Game3(game.getCardId(), game.getRightAnswer(), game.getQuestion()
+              .getQuestionText(), game.getRankings()
+              .getScore(), game.getRankings()
+              .getRanking()
+              .getGlobal(), game.getRankings()
+              .getRanking()
+              .getLocal(), game.getRankings()
+              .getRanking()
+              .getFriends(), abUrl, false, CardType.GAMETEXTICON, game.getWrongAnswer()
+              .getIcon(), game.getWrongAnswer()
+              .getName(), questionIcon));
+        } else {
+          if (game.getQuestion()
+              .getType()
+              .equals("TEXT") && !game.getWrongAnswer()
+              .getIcon()
+              .equals(null)) {
+            Logger.d("CONTRACTBREACHTEXT", "Bad mapping of cardtype TEXT");
+          }//send contract breach event to fabric
+          else if (game.getQuestion()
+              .getType()
+              .equals("ICON") && game.getWrongAnswer()
+              .getName()
+              .equals(null)) {
+            Logger.d("CONTRACTBREACHICON", "Bad mapping of cardtype ICON");
+          }//send contract breach event to fabric
+          else if (game.getQuestion()
+              .getType()
+              .equals("TEXTICON") && (game.getWrongAnswer()
+              .getName()
+              .equals(null) || game.getWrongAnswer()
+              .getIcon()
+              .equals(null))) {
+            Logger.d("CONTRACTBREACHTEXTICON", "Bad mapping of cardtype TEXTICON");
+          }//send contract breach event to fabric
+        }
       }
     }
   }
+
 
   @Nullable private String getMarkAsReadUrl(TimelineCard card) {
     return card.getUrls() == null ? null : card.getUrls()

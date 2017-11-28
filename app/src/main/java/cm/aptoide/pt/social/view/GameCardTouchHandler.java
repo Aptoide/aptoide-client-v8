@@ -40,57 +40,31 @@ public class GameCardTouchHandler extends ItemTouchHelper.SimpleCallback {
         if(dX<72) {
           viewHolder.itemView.findViewById(R.id.stamp_left).setAlpha(0.1f);
           if(viewHolder instanceof Game1ViewHolder || viewHolder instanceof Game2ViewHolder){
-            viewHolder.itemView.findViewById(R.id.right_answer).setAlpha(0.8f);
-            viewHolder.itemView.findViewById(R.id.left_answer).setAlpha(0.8f);
+            viewHolder.itemView.findViewById(R.id.right_answer).setAlpha(0.5f);
+            viewHolder.itemView.findViewById(R.id.left_answer).setAlpha(0.5f);
           }
           else{
-            viewHolder.itemView.findViewById(R.id.game_card_question3_answer_left).setAlpha(0.8f);
-            viewHolder.itemView.findViewById(R.id.game_card_question3_icon_left).setAlpha(0.8f);
-            viewHolder.itemView.findViewById(R.id.game_card_question3_answer_right).setAlpha(0.8f);
-            viewHolder.itemView.findViewById(R.id.game_card_question3_icon_right).setAlpha(0.8f);
+            viewHolder.itemView.findViewById(R.id.game_card_question3_answer_left).setAlpha(0.5f);
+            viewHolder.itemView.findViewById(R.id.game_card_question3_icon_left).setAlpha(0.5f);
+            viewHolder.itemView.findViewById(R.id.game_card_question3_answer_right).setAlpha(0.5f);
+            viewHolder.itemView.findViewById(R.id.game_card_question3_icon_right).setAlpha(0.5f);
           }
         }
         if(dX>=72 && dX<144){
           viewHolder.itemView.findViewById(R.id.stamp_left).setAlpha(0.2f);
           if(viewHolder instanceof Game1ViewHolder || viewHolder instanceof Game2ViewHolder){
-            viewHolder.itemView.findViewById(R.id.right_answer).setAlpha(0.6f);
-            viewHolder.itemView.findViewById(R.id.left_answer).setAlpha(0.6f);
+            viewHolder.itemView.findViewById(R.id.right_answer).setAlpha(0.3f);
+            viewHolder.itemView.findViewById(R.id.left_answer).setAlpha(0.3f);
           }
           else{
-            viewHolder.itemView.findViewById(R.id.game_card_question3_answer_left).setAlpha(0.6f);
-            viewHolder.itemView.findViewById(R.id.game_card_question3_icon_left).setAlpha(0.6f);
-            viewHolder.itemView.findViewById(R.id.game_card_question3_answer_right).setAlpha(0.6f);
-            viewHolder.itemView.findViewById(R.id.game_card_question3_icon_right).setAlpha(0.6f);
+            viewHolder.itemView.findViewById(R.id.game_card_question3_answer_left).setAlpha(0.3f);
+            viewHolder.itemView.findViewById(R.id.game_card_question3_icon_left).setAlpha(0.3f);
+            viewHolder.itemView.findViewById(R.id.game_card_question3_answer_right).setAlpha(0.3f);
+            viewHolder.itemView.findViewById(R.id.game_card_question3_icon_right).setAlpha(0.3f);
           }
         }
         if(dX>=144 && dX<216){
           viewHolder.itemView.findViewById(R.id.stamp_left).setAlpha(0.3f);
-          if(viewHolder instanceof Game1ViewHolder || viewHolder instanceof Game2ViewHolder){
-            viewHolder.itemView.findViewById(R.id.right_answer).setAlpha(0.4f);
-            viewHolder.itemView.findViewById(R.id.left_answer).setAlpha(0.4f);
-          }
-          else{
-            viewHolder.itemView.findViewById(R.id.game_card_question3_answer_left).setAlpha(0.4f);
-            viewHolder.itemView.findViewById(R.id.game_card_question3_icon_left).setAlpha(0.4f);
-            viewHolder.itemView.findViewById(R.id.game_card_question3_answer_right).setAlpha(0.4f);
-            viewHolder.itemView.findViewById(R.id.game_card_question3_icon_right).setAlpha(0.4f);
-          }
-        }
-        if(dX>=216 && dX<288){
-          viewHolder.itemView.findViewById(R.id.stamp_left).setAlpha(0.4f);
-          if(viewHolder instanceof Game1ViewHolder || viewHolder instanceof Game2ViewHolder){
-            viewHolder.itemView.findViewById(R.id.right_answer).setAlpha(0.2f);
-            viewHolder.itemView.findViewById(R.id.left_answer).setAlpha(0.2f);
-          }
-          else{
-            viewHolder.itemView.findViewById(R.id.game_card_question3_answer_left).setAlpha(0.2f);
-            viewHolder.itemView.findViewById(R.id.game_card_question3_icon_left).setAlpha(0.2f);
-            viewHolder.itemView.findViewById(R.id.game_card_question3_answer_right).setAlpha(0.2f);
-            viewHolder.itemView.findViewById(R.id.game_card_question3_icon_right).setAlpha(0.2f);
-          }
-        }
-        if(dX>=288 && dX<360){
-          viewHolder.itemView.findViewById(R.id.stamp_left).setAlpha(0.5f);
           if(viewHolder instanceof Game1ViewHolder || viewHolder instanceof Game2ViewHolder){
             viewHolder.itemView.findViewById(R.id.right_answer).setAlpha(0f);
             viewHolder.itemView.findViewById(R.id.left_answer).setAlpha(0f);
@@ -101,6 +75,12 @@ public class GameCardTouchHandler extends ItemTouchHelper.SimpleCallback {
             viewHolder.itemView.findViewById(R.id.game_card_question3_answer_right).setAlpha(0f);
             viewHolder.itemView.findViewById(R.id.game_card_question3_icon_right).setAlpha(0f);
           }
+        }
+        if(dX>=216 && dX<288){
+          viewHolder.itemView.findViewById(R.id.stamp_left).setAlpha(0.4f);
+        }
+        if(dX>=288 && dX<360){
+          viewHolder.itemView.findViewById(R.id.stamp_left).setAlpha(0.5f);
         }
         if(dX>=360 && dX<432) {
           viewHolder.itemView.findViewById(R.id.stamp_left).setAlpha(0.6f);
@@ -124,27 +104,27 @@ public class GameCardTouchHandler extends ItemTouchHelper.SimpleCallback {
         if(dX>-72){
           viewHolder.itemView.findViewById(R.id.stamp_right).setAlpha(0.1f);
           if(viewHolder instanceof Game1ViewHolder || viewHolder instanceof Game2ViewHolder){
-            viewHolder.itemView.findViewById(R.id.right_answer).setAlpha(0.8f);
-            viewHolder.itemView.findViewById(R.id.left_answer).setAlpha(0.8f);
+            viewHolder.itemView.findViewById(R.id.right_answer).setAlpha(0.5f);
+            viewHolder.itemView.findViewById(R.id.left_answer).setAlpha(0.5f);
           }
           else{
-            viewHolder.itemView.findViewById(R.id.game_card_question3_answer_left).setAlpha(0.8f);
-            viewHolder.itemView.findViewById(R.id.game_card_question3_icon_left).setAlpha(0.8f);
-            viewHolder.itemView.findViewById(R.id.game_card_question3_answer_right).setAlpha(0.8f);
-            viewHolder.itemView.findViewById(R.id.game_card_question3_icon_right).setAlpha(0.8f);
+            viewHolder.itemView.findViewById(R.id.game_card_question3_answer_left).setAlpha(0.5f);
+            viewHolder.itemView.findViewById(R.id.game_card_question3_icon_left).setAlpha(0.5f);
+            viewHolder.itemView.findViewById(R.id.game_card_question3_answer_right).setAlpha(0.5f);
+            viewHolder.itemView.findViewById(R.id.game_card_question3_icon_right).setAlpha(0.5f);
           }
         }
         if(dX<=-72 && dX>-144){
           viewHolder.itemView.findViewById(R.id.stamp_right).setAlpha(0.2f);
           if(viewHolder instanceof Game1ViewHolder || viewHolder instanceof Game2ViewHolder){
-            viewHolder.itemView.findViewById(R.id.right_answer).setAlpha(0.4f);
-            viewHolder.itemView.findViewById(R.id.left_answer).setAlpha(0.4f);
+            viewHolder.itemView.findViewById(R.id.right_answer).setAlpha(0.3f);
+            viewHolder.itemView.findViewById(R.id.left_answer).setAlpha(0.3f);
           }
           else{
-            viewHolder.itemView.findViewById(R.id.game_card_question3_answer_left).setAlpha(0.4f);
-            viewHolder.itemView.findViewById(R.id.game_card_question3_icon_left).setAlpha(0.4f);
-            viewHolder.itemView.findViewById(R.id.game_card_question3_answer_right).setAlpha(0.4f);
-            viewHolder.itemView.findViewById(R.id.game_card_question3_icon_right).setAlpha(0.4f);
+            viewHolder.itemView.findViewById(R.id.game_card_question3_answer_left).setAlpha(0.3f);
+            viewHolder.itemView.findViewById(R.id.game_card_question3_icon_left).setAlpha(0.3f);
+            viewHolder.itemView.findViewById(R.id.game_card_question3_answer_right).setAlpha(0.3f);
+            viewHolder.itemView.findViewById(R.id.game_card_question3_icon_right).setAlpha(0.3f);
           }
         }
         if(dX<=-144 && dX>-216){
