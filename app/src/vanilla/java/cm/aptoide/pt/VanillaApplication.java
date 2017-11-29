@@ -84,10 +84,9 @@ public class VanillaApplication extends NotificationApplicationView {
                       .addInterceptor(
                           new Pnp1AuthorizationInterceptor(getAuthenticationPersistence(),
                               getTokenInvalidator()))
-                      .build(),
-                  WebService.getDefaultConverter(), getIdsRepository(), BuildConfig.VERSION_NAME,
-                  getExtraId(), getDefaultSharedPreferences(), getResources(), getAccountManager()),
-              getNotificationProvider()));
+                      .build(), WebService.getDefaultConverter(), getIdsRepository(),
+                  BuildConfig.VERSION_NAME, getExtraId(), getDefaultSharedPreferences(),
+                  getResources(), getAccountManager()), getNotificationProvider()));
     }
     return notificationSyncScheduler;
   }

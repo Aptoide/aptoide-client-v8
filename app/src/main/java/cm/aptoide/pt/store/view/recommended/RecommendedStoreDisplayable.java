@@ -6,11 +6,11 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
-import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 import rx.Observable;
 

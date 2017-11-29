@@ -35,8 +35,7 @@ public class BillingNavigator {
 
   public BillingNavigator(PurchaseBundleMapper bundleMapper, ActivityNavigator activityNavigator,
       FragmentNavigator fragmentNavigator, String marketName,
-      CustomTabsNavigator customTabsNavigator,
-      @ColorInt int customTabsToolbarColor) {
+      CustomTabsNavigator customTabsNavigator, @ColorInt int customTabsToolbarColor) {
     this.bundleMapper = bundleMapper;
     this.activityNavigator = activityNavigator;
     this.fragmentNavigator = fragmentNavigator;

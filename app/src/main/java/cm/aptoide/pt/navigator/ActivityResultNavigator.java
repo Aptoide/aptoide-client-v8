@@ -173,8 +173,8 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
       billingNavigator = new BillingNavigator(
           ((AptoideApplication) getApplicationContext()).getPurchaseBundleMapper(),
           getActivityNavigator(), getFragmentNavigator(),
-          ((AptoideApplication) getApplicationContext()).getMarketName(),
-          this, ContextCompat.getColor(this, R.color.aptoide_orange));
+          ((AptoideApplication) getApplicationContext()).getMarketName(), this,
+          ContextCompat.getColor(this, R.color.aptoide_orange));
     }
     return billingNavigator;
   }
