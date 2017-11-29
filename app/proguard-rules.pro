@@ -68,3 +68,8 @@
 -keep class com.testfairy.** { *; }
 -dontwarn com.testfairy.**
 -keepattributes Exceptions, Signature, LineNumberTable
+
+# Parceler library
+-keep interface org.parceler.Parcel
+-keep @org.parceler.Parcel class * { *; }
+-keep class **$$Parcelable { *; }
