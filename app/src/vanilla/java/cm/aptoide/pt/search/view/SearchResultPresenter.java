@@ -6,13 +6,12 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.search.SearchAnalytics;
+import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import com.jakewharton.rxrelay.PublishRelay;
-import java.util.Collections;
 import java.util.List;
 import rx.Observable;
 import rx.Scheduler;
@@ -327,7 +326,6 @@ import rx.Scheduler;
         .filter(viewModel -> hasValidQuery(viewModel))
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showLoading())
-        .doOnNext(viewModel -> analytics.search(viewModel.getCurrentQuery()))
         .flatMap(viewModel -> loadData(viewModel.getCurrentQuery(), viewModel.getStoreName(),
             viewModel.isOnlyTrustedApps()).onErrorResumeNext(err -> {
           crashReport.log(err);

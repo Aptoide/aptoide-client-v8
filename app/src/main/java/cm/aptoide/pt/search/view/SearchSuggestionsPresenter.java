@@ -4,10 +4,11 @@ import android.support.annotation.NonNull;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.SearchCursorAdapter;
 import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
-import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import java.util.concurrent.TimeUnit;
 import rx.Observable;
 import rx.Scheduler;
@@ -23,12 +24,13 @@ import rx.Scheduler;
   private final TrendingManager trendingManager;
   private final SearchNavigator navigator;
   private boolean showSuggestionsOnFirstLoadWithEmptyQuery;
+  private final SearchAnalytics searchAnalytics;
 
   public SearchSuggestionsPresenter(SearchSuggestionsView view,
       SearchSuggestionManager searchSuggestionManager, Scheduler viewScheduler,
       SearchCursorAdapter searchCursorAdapter, CrashReport crashReport,
       TrendingManager trendingManager, SearchNavigator navigator,
-      boolean showSuggestionsOnFirstLoadWithEmptyQuery) {
+      boolean showSuggestionsOnFirstLoadWithEmptyQuery, SearchAnalytics searchAnalytics) {
     this.view = view;
     this.searchSuggestionManager = searchSuggestionManager;
     this.viewScheduler = viewScheduler;
@@ -37,6 +39,7 @@ import rx.Scheduler;
     this.trendingManager = trendingManager;
     this.navigator = navigator;
     this.showSuggestionsOnFirstLoadWithEmptyQuery = showSuggestionsOnFirstLoadWithEmptyQuery;
+    this.searchAnalytics = searchAnalytics;
   }
 
   @Override public void present() {
@@ -44,7 +47,7 @@ import rx.Scheduler;
     handleQueryTextSubmitted();
     handleQueryTextCleaned();
     handleQueryTextChanged();
-    if(showSuggestionsOnFirstLoadWithEmptyQuery) {
+    if (showSuggestionsOnFirstLoadWithEmptyQuery) {
       showSuggestionsIfCurrentQueryIsEmpty();
     }
   }
@@ -64,22 +67,23 @@ import rx.Scheduler;
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> getDebouncedQueryChanges())
-        .filter(data -> data != null
-            && data.queryText()
-            .length() > 0
-            && data.isSubmitted())
+        .filter(data -> data.hasQuery() && data.isSubmitted())
         .observeOn(viewScheduler)
+        .doOnNext(__ -> view.collapseSearchBar())
+        .doOnNext(data -> navigator.navigate(data.getQuery()))
         .doOnNext(data -> {
-          view.collapseSearchBar();
-          navigator.navigate(data.queryText()
-              .toString());
+          if (data.isSuggestion()) {
+            searchAnalytics.searchFromSuggestion(data.getQuery(), data.getPosition());
+          }else{
+            searchAnalytics.search(data.getQuery());
+          }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
   }
 
-  @NonNull private Observable<SearchViewQueryTextEvent> getDebouncedQueryChanges() {
+  @NonNull private Observable<SearchQueryEvent> getDebouncedQueryChanges() {
     return view.onQueryTextChanged()
         .debounce(250, TimeUnit.MILLISECONDS);
   }
@@ -88,9 +92,7 @@ import rx.Scheduler;
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> getDebouncedQueryChanges())
-        .filter(data -> data != null
-            && data.queryText()
-            .length() == 0)
+        .filter(data -> !data.hasQuery())
         .flatMapSingle(data -> trendingManager.getTrendingSuggestions()
             .observeOn(viewScheduler)
             .doOnSuccess(trendingList -> view.setTrending(trendingList)))
@@ -103,10 +105,8 @@ import rx.Scheduler;
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> getDebouncedQueryChanges())
-        .filter(data -> data != null
-            && data.queryText()
-            .length() > 0)
-        .doOnNext(data -> searchSuggestionManager.getSuggestionsFor(data.queryText()
+        .filter(data -> data.hasQuery() && !data.isSubmitted())
+        .doOnNext(data -> searchSuggestionManager.getSuggestionsFor(data.getQuery()
             .toString()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -122,7 +122,7 @@ import rx.Scheduler;
         .filter(data -> {
           final String currentQuery = view.getCurrentQuery();
           return (data == null
-              || data.queryText()
+              || data.getQuery()
               .length() == 0) && (currentQuery == null || currentQuery.isEmpty());
         })
         .flatMapSingle(__ -> trendingManager.getTrendingSuggestions())

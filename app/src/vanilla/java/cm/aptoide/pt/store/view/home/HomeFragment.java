@@ -40,10 +40,11 @@ import cm.aptoide.pt.navigator.TabNavigation;
 import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.SearchCursorAdapter;
 import cm.aptoide.pt.search.SearchFactory;
 import cm.aptoide.pt.search.SearchNavigator;
-import cm.aptoide.pt.search.view.AppSearchSuggestions;
+import cm.aptoide.pt.search.suggestions.AppSearchSuggestionsView;
 import cm.aptoide.pt.search.view.SearchSuggestionsPresenter;
 import cm.aptoide.pt.search.view.TrendingManager;
 import cm.aptoide.pt.spotandshare.view.SpotSharePreviewActivity;
@@ -92,10 +93,11 @@ public class HomeFragment extends StoreFragment {
   private ClickHandler backClickHandler;
   private PageViewsAnalytics pageViewsAnalytics;
   private String defaultThemeName;
-  private AppSearchSuggestions appSearchSuggestions;
+  private AppSearchSuggestionsView appSearchSuggestionsView;
   private CrashReport crashReport;
   private SearchNavigator searchNavigator;
   private TrendingManager trendingManager;
+  private SearchAnalytics searchAnalytics;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -203,6 +205,9 @@ public class HomeFragment extends StoreFragment {
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
             analytics, navigationTracker);
 
+    searchAnalytics = new SearchAnalytics(analytics,
+        AppEventsLogger.newLogger(getContext().getApplicationContext()));
+
     setRegisterFragment(false);
     setHasOptionsMenu(true);
   }
@@ -281,8 +286,8 @@ public class HomeFragment extends StoreFragment {
     inflater.inflate(R.menu.fragment_home, menu);
 
     final MenuItem menuItem = menu.findItem(R.id.menu_item_search);
-    if (appSearchSuggestions != null && menuItem != null) {
-      appSearchSuggestions.initialize(menuItem);
+    if (appSearchSuggestionsView != null && menuItem != null) {
+      appSearchSuggestionsView.initialize(menuItem);
     } else if (menuItem != null) {
       menuItem.setVisible(false);
     } else {
@@ -309,19 +314,19 @@ public class HomeFragment extends StoreFragment {
         .publish()
         .autoConnect();
 
-    appSearchSuggestions =
-        new AppSearchSuggestions(this, RxView.clicks(toolbar), crashReport, "", searchCursorAdapter,
-            PublishSubject.create(), toolbarMenuItemClick);
+    appSearchSuggestionsView =
+        new AppSearchSuggestionsView(this, RxView.clicks(toolbar), crashReport, "",
+            searchCursorAdapter, PublishSubject.create(), toolbarMenuItemClick, searchAnalytics);
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
 
     final SearchSuggestionsPresenter searchSuggestionsPresenter =
-        new SearchSuggestionsPresenter(appSearchSuggestions,
+        new SearchSuggestionsPresenter(appSearchSuggestionsView,
             new SearchFactory(application.getDefaultWebSocketClient(),
                 application.getNonNullObjectMapper()).createSearchForApps(),
             AndroidSchedulers.mainThread(), searchCursorAdapter, crashReport, trendingManager,
-            searchNavigator, false);
+            searchNavigator, false, searchAnalytics);
 
     attachPresenter(searchSuggestionsPresenter);
   }

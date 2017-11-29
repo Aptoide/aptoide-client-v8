@@ -35,6 +35,8 @@ import cm.aptoide.pt.presenter.MainPresenter;
 import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.repository.StoreRepository;
+import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.util.ApkFy;
@@ -88,14 +90,19 @@ public class MainActivity extends TabNavigatorActivity
             converterFactory, application.getTokenInvalidator(), sharedPreferences);
 
     final String defaultTheme = application.getDefaultThemeName();
+
+    final Analytics analytics = Analytics.getInstance();
+
     final DeepLinkManager deepLinkManager =
         new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator, this, this,
             sharedPreferences,
             AccessorFactory.getAccessorFor(application.getDatabase(), Store.class), defaultTheme,
-            application.getDefaultStoreName(), application.getNavigationTracker(),
-            application.getPageViewsAnalytics(), new NotificationAnalytics(
-            ((AptoideApplication) getApplicationContext()).getDefaultClient(),
-            Analytics.getInstance(), AppEventsLogger.newLogger(getApplicationContext())));
+            new NotificationAnalytics(
+                ((AptoideApplication) getApplicationContext()).getDefaultClient(), analytics,
+                AppEventsLogger.newLogger(getApplicationContext())),
+            application.getNavigationTracker(), application.getPageViewsAnalytics(),
+            new SearchNavigator(fragmentNavigator, application.getDefaultStoreName()),
+            new SearchAnalytics(analytics, AppEventsLogger.newLogger(getApplicationContext())));
 
     final ApkFy apkFy = new ApkFy(this, getIntent(), securePreferences);
 

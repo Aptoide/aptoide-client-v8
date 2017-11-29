@@ -46,10 +46,11 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.notification.NotificationAnalytics;
+import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.SearchCursorAdapter;
 import cm.aptoide.pt.search.SearchFactory;
 import cm.aptoide.pt.search.SearchNavigator;
-import cm.aptoide.pt.search.view.AppSearchSuggestions;
+import cm.aptoide.pt.search.suggestions.AppSearchSuggestionsView;
 import cm.aptoide.pt.search.view.SearchSuggestionsPresenter;
 import cm.aptoide.pt.search.view.TrendingManager;
 import cm.aptoide.pt.share.ShareStoreHelper;
@@ -120,10 +121,11 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private String defaultTheme;
   private Runnable registerViewpagerCurrentItem;
 
-  private AppSearchSuggestions appSearchSuggestions;
+  private AppSearchSuggestionsView appSearchSuggestionsView;
   private CrashReport crashReport;
   private SearchNavigator searchNavigator;
   private TrendingManager trendingManager;
+  private SearchAnalytics searchAnalytics;
 
   public static StoreFragment newInstance(long userId, String storeTheme, OpenType openType) {
     return newInstance(userId, storeTheme, null, openType);
@@ -198,6 +200,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);
 
     if (hasSearchFromStoreFragment()) {
+      searchAnalytics = new SearchAnalytics(analytics, AppEventsLogger.newLogger(getContext()));
       searchNavigator =
           new SearchNavigator(getFragmentNavigator(), storeName, application.getDefaultStoreName());
       trendingManager = application.getTrendingManager();
@@ -332,8 +335,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
       inflater.inflate(R.menu.fragment_store, menu);
 
       final MenuItem menuItem = menu.findItem(R.id.menu_item_search);
-      if (appSearchSuggestions != null && menuItem != null) {
-        appSearchSuggestions.initialize(menuItem);
+      if (appSearchSuggestionsView != null && menuItem != null) {
+        appSearchSuggestionsView.initialize(menuItem);
       } else if (menuItem != null) {
         menuItem.setVisible(false);
       } else {
@@ -364,18 +367,19 @@ public class StoreFragment extends BasePagerToolbarFragment {
           .publish()
           .autoConnect();
 
-      appSearchSuggestions = new AppSearchSuggestions(this, RxView.clicks(toolbar), crashReport, "",
-          searchCursorAdapter, PublishSubject.create(), toolbarMenuItemClick);
+      appSearchSuggestionsView =
+          new AppSearchSuggestionsView(this, RxView.clicks(toolbar), crashReport, "",
+              searchCursorAdapter, PublishSubject.create(), toolbarMenuItemClick, searchAnalytics);
 
       final AptoideApplication application =
           (AptoideApplication) getContext().getApplicationContext();
 
       final SearchSuggestionsPresenter searchSuggestionsPresenter =
-          new SearchSuggestionsPresenter(appSearchSuggestions,
+          new SearchSuggestionsPresenter(appSearchSuggestionsView,
               new SearchFactory(application.getDefaultWebSocketClient(),
                   application.getNonNullObjectMapper()).createSearchForApps(),
               AndroidSchedulers.mainThread(), searchCursorAdapter, crashReport, trendingManager,
-              searchNavigator, false);
+              searchNavigator, false, searchAnalytics);
 
       attachPresenter(searchSuggestionsPresenter);
 

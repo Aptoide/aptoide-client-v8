@@ -44,13 +44,14 @@ import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.presenter.CompositePresenter;
-import cm.aptoide.pt.search.SearchAnalytics;
+import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.SearchCursorAdapter;
 import cm.aptoide.pt.search.SearchFactory;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
+import cm.aptoide.pt.search.suggestions.AppSearchSuggestionsView;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.view.BackButtonFragment;
@@ -114,7 +115,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
   private boolean isMultiStoreSearch;
   private String defaultStoreName;
   private TrendingManager trendingManager;
-  private AppSearchSuggestions appSearchSuggestions;
+  private AppSearchSuggestionsView appSearchSuggestionsView;
 
   public static SearchResultFragment newInstance(String currentQuery, String defaultStoreName) {
     return newInstance(currentQuery, false, defaultStoreName);
@@ -395,8 +396,8 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
     inflater.inflate(R.menu.fragment_search_result, menu);
 
     final MenuItem menuItem = menu.findItem(R.id.menu_item_search);
-    if (appSearchSuggestions != null && menuItem != null) {
-      appSearchSuggestions.initialize(menuItem);
+    if (appSearchSuggestionsView != null && menuItem != null) {
+      appSearchSuggestionsView.initialize(menuItem);
     } else if (menuItem != null) {
       menuItem.setVisible(false);
       crashReport.log(new IllegalStateException("Search Suggestions not properly initialized"));
@@ -515,18 +516,20 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
         .publish()
         .autoConnect();
 
-    appSearchSuggestions = new AppSearchSuggestions(this, RxView.clicks(toolbar), crashReport,
-        viewModel != null ? viewModel.getCurrentQuery() : "", searchCursorAdapter,
-        PublishSubject.create(), toolbarMenuItemClick);
+    appSearchSuggestionsView =
+        new AppSearchSuggestionsView(this, RxView.clicks(toolbar), crashReport,
+            viewModel != null ? viewModel.getCurrentQuery() : "", searchCursorAdapter,
+            PublishSubject.create(), toolbarMenuItemClick, searchAnalytics);
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
 
     final SearchSuggestionsPresenter searchSuggestionsPresenter =
-        new SearchSuggestionsPresenter(appSearchSuggestions,
+        new SearchSuggestionsPresenter(appSearchSuggestionsView,
             new SearchFactory(application.getDefaultWebSocketClient(),
                 application.getNonNullObjectMapper()).createSearchForApps(), mainThreadScheduler,
-            searchCursorAdapter, crashReport, trendingManager, searchNavigator, true);
+            searchCursorAdapter, crashReport, trendingManager, searchNavigator, true,
+            searchAnalytics);
 
     attachPresenter(
         new CompositePresenter(Arrays.asList(searchResultPresenter, searchSuggestionsPresenter)));

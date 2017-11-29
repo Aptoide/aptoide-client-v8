@@ -1,4 +1,4 @@
-package cm.aptoide.pt.search.view;
+package cm.aptoide.pt.search.suggestions;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.SearchView;
@@ -7,15 +7,17 @@ import android.widget.AutoCompleteTextView;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.search.SearchCursorAdapter;
+import cm.aptoide.pt.search.analytics.SearchAnalytics;
+import cm.aptoide.pt.search.analytics.SearchSource;
+import cm.aptoide.pt.search.view.SearchSuggestionsView;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
-import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import java.util.List;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
-public class AppSearchSuggestions implements SearchSuggestionsView {
+public class AppSearchSuggestionsView implements SearchSuggestionsView {
 
   private static final int COMPLETION_THRESHOLD = 0;
 
@@ -24,15 +26,16 @@ public class AppSearchSuggestions implements SearchSuggestionsView {
   private final CrashReport crashReport;
   private final String currentQuery;
   private final SearchCursorAdapter searchCursorAdapter;
-  private final PublishSubject<SearchViewQueryTextEvent> queryTextChangedPublisher;
+  private final PublishSubject<SearchQueryEvent> queryTextChangedPublisher;
+  private final SearchAnalytics searchAnalytics;
   private SearchView searchView;
   private MenuItem searchMenuItem;
   private Observable<MenuItem> toolbarMenuItemClick;
 
-  public AppSearchSuggestions(FragmentView parentView, Observable<Void> toolbarClickObservable,
+  public AppSearchSuggestionsView(FragmentView parentView, Observable<Void> toolbarClickObservable,
       CrashReport crashReport, String currentQuery, SearchCursorAdapter searchCursorAdapter,
-      PublishSubject<SearchViewQueryTextEvent> queryTextChangedPublisher,
-      Observable<MenuItem> toolbarMenuItemClick) {
+      PublishSubject<SearchQueryEvent> queryTextChangedPublisher,
+      Observable<MenuItem> toolbarMenuItemClick, SearchAnalytics searchAnalytics) {
     this.parentView = parentView;
     this.toolbarClickObservable = toolbarClickObservable;
     this.crashReport = crashReport;
@@ -40,6 +43,7 @@ public class AppSearchSuggestions implements SearchSuggestionsView {
     this.searchCursorAdapter = searchCursorAdapter;
     this.queryTextChangedPublisher = queryTextChangedPublisher;
     this.toolbarMenuItemClick = toolbarMenuItemClick;
+    this.searchAnalytics = searchAnalytics;
   }
 
   public void initialize(@NonNull MenuItem searchMenuItem) {
@@ -52,9 +56,9 @@ public class AppSearchSuggestions implements SearchSuggestionsView {
       }
 
       @Override public boolean onSuggestionClick(int position) {
-        queryTextChangedPublisher.onNext(
-            SearchViewQueryTextEvent.create(searchView, searchCursorAdapter.getQueryAt(position),
-                true));
+        queryTextChangedPublisher.onNext(new SearchQueryEvent(
+            searchCursorAdapter.getQueryAt(position)
+                .toString(), position, true, true));
         return true;
       }
     });
@@ -65,7 +69,8 @@ public class AppSearchSuggestions implements SearchSuggestionsView {
 
     getLifecycle().filter(event -> event == LifecycleEvent.RESUME)
         .flatMap(__ -> RxSearchView.queryTextChangeEvents(searchView))
-        .doOnNext(event -> queryTextChangedPublisher.onNext(event))
+        .doOnNext(event -> queryTextChangedPublisher.onNext(new SearchQueryEvent(event.queryText()
+            .toString(), event.isSubmitted())))
         .compose(bindUntilEvent(LifecycleEvent.PAUSE))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
@@ -77,6 +82,7 @@ public class AppSearchSuggestions implements SearchSuggestionsView {
   private void toolbarClickExpandsSearch() {
     getLifecycle().filter(event -> event == LifecycleEvent.RESUME)
         .flatMap(__ -> toolbarClickObservable)
+        .doOnNext(__ -> searchAnalytics.searchStart(SearchSource.SEARCH_TOOLBAR))
         .doOnNext(__ -> focusInSearchBar())
         .compose(bindUntilEvent(LifecycleEvent.PAUSE))
         .subscribe(__ -> {
@@ -87,13 +93,14 @@ public class AppSearchSuggestions implements SearchSuggestionsView {
     getLifecycle().filter(event -> event == LifecycleEvent.RESUME)
         .flatMap(__ -> toolbarMenuItemClick)
         .filter(item -> item.getItemId() == searchMenuItem.getItemId())
+        .doOnNext(__ -> searchAnalytics.searchStart(SearchSource.SEARCH_ICON))
         .doOnNext(__ -> focusInSearchBar())
         .compose(bindUntilEvent(LifecycleEvent.PAUSE))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
   }
 
-  @Override public Observable<SearchViewQueryTextEvent> onQueryTextChanged() {
+  @Override public Observable<SearchQueryEvent> onQueryTextChanged() {
     return queryTextChangedPublisher;
   }
 

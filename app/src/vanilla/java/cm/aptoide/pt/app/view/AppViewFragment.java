@@ -94,11 +94,12 @@ import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.search.ReferrerUtils;
+import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.SearchCursorAdapter;
 import cm.aptoide.pt.search.SearchFactory;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
-import cm.aptoide.pt.search.view.AppSearchSuggestions;
+import cm.aptoide.pt.search.suggestions.AppSearchSuggestionsView;
 import cm.aptoide.pt.search.view.SearchSuggestionsPresenter;
 import cm.aptoide.pt.search.view.TrendingManager;
 import cm.aptoide.pt.share.ShareAppHelper;
@@ -185,9 +186,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private CrashReport crashReport;
   private NavigationTracker navigationTracker;
   private InstallAnalytics installAnalytics;
-  private AppSearchSuggestions appSearchSuggestions;
+  private AppSearchSuggestionsView appSearchSuggestionsView;
   private SearchNavigator searchNavigator;
   private TrendingManager trendingManager;
+  private SearchAnalytics searchAnalytics;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -410,6 +412,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     notLoggedInShareAnalytics = application.getNotLoggedInShareAnalytics();
     navigationTracker = application.getNavigationTracker();
 
+    searchAnalytics = new SearchAnalytics(analytics,
+        AppEventsLogger.newLogger(getContext().getApplicationContext()));
+
     searchNavigator =
         new SearchNavigator(getFragmentNavigator(), application.getDefaultStoreName());
 
@@ -493,18 +498,19 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         .publish()
         .autoConnect();
 
-    appSearchSuggestions =
-        new AppSearchSuggestions(this, RxView.clicks(toolbar), crashReport, "", searchCursorAdapter,
-            PublishSubject.create(), toolbarMenuItemClick);
+    appSearchSuggestionsView =
+        new AppSearchSuggestionsView(this, RxView.clicks(toolbar), crashReport, "",
+            searchCursorAdapter, PublishSubject.create(), toolbarMenuItemClick, searchAnalytics);
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    
+
     final SearchSuggestionsPresenter searchSuggestionsPresenter =
-        new SearchSuggestionsPresenter(appSearchSuggestions,
+        new SearchSuggestionsPresenter(appSearchSuggestionsView,
             new SearchFactory(application.getDefaultWebSocketClient(),
-                application.getNonNullObjectMapper()).createSearchForApps(), AndroidSchedulers.mainThread(),
-            searchCursorAdapter, crashReport, trendingManager, searchNavigator, false);
+                application.getNonNullObjectMapper()).createSearchForApps(),
+            AndroidSchedulers.mainThread(), searchCursorAdapter, crashReport, trendingManager,
+            searchNavigator, false, searchAnalytics);
 
     attachPresenter(searchSuggestionsPresenter);
 
@@ -641,8 +647,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     inflater.inflate(R.menu.fragment_appview, menu);
 
     final MenuItem menuItem = menu.findItem(R.id.menu_item_search);
-    if (appSearchSuggestions != null && menuItem != null) {
-      appSearchSuggestions.initialize(menuItem);
+    if (appSearchSuggestionsView != null && menuItem != null) {
+      appSearchSuggestionsView.initialize(menuItem);
     } else if (menuItem != null) {
       menuItem.setVisible(false);
     } else {
