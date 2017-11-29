@@ -404,7 +404,6 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
       menu.removeItem(R.id.menu_item_search);
       crashReport.log(new IllegalStateException("Search Suggestions not properly initialized"));
     }
-
   }
 
   @Override public String getDefaultTheme() {
@@ -520,10 +519,14 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
         viewModel != null ? viewModel.getCurrentQuery() : "", searchCursorAdapter,
         PublishSubject.create(), toolbarMenuItemClick);
 
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+
     final SearchSuggestionsPresenter searchSuggestionsPresenter =
         new SearchSuggestionsPresenter(appSearchSuggestions,
-            new SearchFactory().createSearchForApps(), mainThreadScheduler, searchCursorAdapter,
-            crashReport, trendingManager, searchNavigator, true);
+            new SearchFactory(application.getDefaultWebSocketClient(),
+                application.getNonNullObjectMapper()).createSearchForApps(), mainThreadScheduler,
+            searchCursorAdapter, crashReport, trendingManager, searchNavigator, true);
 
     attachPresenter(
         new CompositePresenter(Arrays.asList(searchResultPresenter, searchSuggestionsPresenter)));

@@ -43,6 +43,7 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.dialog.BaseDialog;
 import com.facebook.appevents.AppEventsLogger;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import com.jakewharton.rxbinding.view.RxView;
@@ -120,7 +121,10 @@ public class AddStoreDialog extends BaseDialog {
         new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
             Analytics.getInstance());
 
-    searchSuggestionManager = new SearchFactory().createSearchForStore();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    searchSuggestionManager = new SearchFactory(application.getDefaultWebSocketClient(),
+        application.getNonNullObjectMapper()).createSearchForStore();
   }
 
   @Override public void onViewCreated(final View view, Bundle savedInstanceState) {

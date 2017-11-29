@@ -313,10 +313,15 @@ public class HomeFragment extends StoreFragment {
         new AppSearchSuggestions(this, RxView.clicks(toolbar), crashReport, "", searchCursorAdapter,
             PublishSubject.create(), toolbarMenuItemClick);
 
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+
     final SearchSuggestionsPresenter searchSuggestionsPresenter =
         new SearchSuggestionsPresenter(appSearchSuggestions,
-            new SearchFactory().createSearchForApps(), AndroidSchedulers.mainThread(),
-            searchCursorAdapter, crashReport, trendingManager, searchNavigator, false);
+            new SearchFactory(application.getDefaultWebSocketClient(),
+                application.getNonNullObjectMapper()).createSearchForApps(),
+            AndroidSchedulers.mainThread(), searchCursorAdapter, crashReport, trendingManager,
+            searchNavigator, false);
 
     attachPresenter(searchSuggestionsPresenter);
   }

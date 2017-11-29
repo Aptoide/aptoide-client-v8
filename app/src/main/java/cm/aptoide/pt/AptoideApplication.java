@@ -605,6 +605,15 @@ public abstract class AptoideApplication extends Application {
     return longTimeoutClient;
   }
 
+  public OkHttpClient getDefaultWebSocketClient() {
+    return getDefaultClient().newBuilder()
+        .readTimeout(0, TimeUnit.SECONDS)
+        .writeTimeout(0, TimeUnit.SECONDS)
+        .connectTimeout(1, TimeUnit.MINUTES)
+        .pingInterval(3, TimeUnit.SECONDS)
+        .build();
+  }
+
   public OkHttpClient getDefaultClient() {
     if (defaultClient == null) {
       final OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();

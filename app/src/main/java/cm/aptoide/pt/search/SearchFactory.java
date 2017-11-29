@@ -1,12 +1,10 @@
 package cm.aptoide.pt.search;
 
-import android.support.annotation.VisibleForTesting;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.websocket.ReactiveWebSocket;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
@@ -17,17 +15,7 @@ public class SearchFactory {
   private final OkHttpClient client;
   private final ObjectMapper objectMapper;
 
-  public SearchFactory() {
-    client = new OkHttpClient.Builder().readTimeout(0, TimeUnit.SECONDS)
-        .writeTimeout(0, TimeUnit.SECONDS)
-        .connectTimeout(1, TimeUnit.MINUTES)
-        .pingInterval(1, TimeUnit.MINUTES)
-        //.retryOnConnectionFailure(true)
-        .build();
-    objectMapper = new ObjectMapper();
-  }
-
-  @VisibleForTesting public SearchFactory(OkHttpClient client, ObjectMapper objectMapper) {
+  public SearchFactory(OkHttpClient client, ObjectMapper objectMapper) {
     this.client = client;
     this.objectMapper = objectMapper;
   }
