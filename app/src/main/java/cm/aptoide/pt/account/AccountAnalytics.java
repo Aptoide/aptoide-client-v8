@@ -44,6 +44,7 @@ public class AccountAnalytics {
   private static final String PREVIOUS_CONTEXT = "previous_context";
   private static final String STATUS_DETAIL = "Status Detail";
   private static final String STATUS_DESCRIPTION = "Status Description";
+  private static final String STATUS_CODE = "Status Code";
   private final Analytics analytics;
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final OkHttpClient httpClient;
@@ -136,7 +137,7 @@ public class AccountAnalytics {
   private void sendGoogleLoginFailEvent(Throwable exception) {
     if (exception instanceof GoogleSignUpException) {
       sendEvents(LOGIN_EVENT_NAME, LoginMethod.GOOGLE, SignUpLoginStatus.FAILED, SDK_ERROR,
-          ((GoogleSignUpException) exception).getError());
+          LoginMethod.GOOGLE.toString(), ((GoogleSignUpException) exception).getError());
     } else {
       sendWebserviceErrors(LOGIN_EVENT_NAME, LoginMethod.GOOGLE, exception);
     }
@@ -145,17 +146,21 @@ public class AccountAnalytics {
   private void setupLoginEvents(LoginMethod aptoide) {
     aptoideSuccessLoginEvent = createAptoideLoginEvent();
     facebookSuccessLoginEvent =
-        createFacebookEvent(LOGIN_EVENT_NAME, aptoide, SignUpLoginStatus.SUCCESS, SUCCESS, null);
+        createFacebookEvent(LOGIN_EVENT_NAME, aptoide, SignUpLoginStatus.SUCCESS, SUCCESS, null,
+            null);
     flurrySuccessLoginEvent =
-        createFlurryEvent(LOGIN_EVENT_NAME, aptoide, SignUpLoginStatus.SUCCESS, SUCCESS, null);
+        createFlurryEvent(LOGIN_EVENT_NAME, aptoide, SignUpLoginStatus.SUCCESS, SUCCESS, null,
+            null);
   }
 
   private FacebookEvent createFacebookEvent(String eventName, LoginMethod loginMethod,
-      SignUpLoginStatus loginStatus, String statusDetail, String statusDescription) {
+      SignUpLoginStatus loginStatus, String statusDetail, String statusCode,
+      String statusDescription) {
     Bundle bundle = new Bundle();
     bundle.putString(LOGIN_METHOD, loginMethod.getMethod());
     bundle.putString(STATUS, loginStatus.getStatus());
     bundle.putString(STATUS_DETAIL, statusDetail);
+    bundle.putString(STATUS_CODE, statusCode);
     if (statusDescription != null) {
       bundle.putString(STATUS_DESCRIPTION, statusDescription);
     }
@@ -163,19 +168,23 @@ public class AccountAnalytics {
   }
 
   private void sendEvents(String eventName, LoginMethod loginMethod, SignUpLoginStatus loginStatus,
-      String statusDetail, String statusDescription) {
+      String statusDetail, String statusCode, String statusDescription) {
     analytics.sendEvent(
-        createFlurryEvent(eventName, loginMethod, loginStatus, statusDetail, statusDescription));
+        createFlurryEvent(eventName, loginMethod, loginStatus, statusDetail, statusCode,
+            statusDescription));
     analytics.sendEvent(
-        createFacebookEvent(eventName, loginMethod, loginStatus, statusDetail, statusDescription));
+        createFacebookEvent(eventName, loginMethod, loginStatus, statusDetail, statusCode,
+            statusDescription));
   }
 
   private FlurryEvent createFlurryEvent(String eventName, LoginMethod loginMethod,
-      SignUpLoginStatus loginStatus, String loginStatusDetail, @Nullable String statusDescription) {
+      SignUpLoginStatus loginStatus, String statusDetail, String statusCode,
+      @Nullable String statusDescription) {
     Map<String, String> map = new HashMap<>();
     map.put(LOGIN_METHOD, loginMethod.getMethod());
     map.put(STATUS, loginStatus.getStatus());
-    map.put(STATUS_DETAIL, loginStatusDetail);
+    map.put(STATUS_DETAIL, statusDetail);
+    map.put(STATUS_CODE, statusCode);
     if (statusDescription != null) {
       map.put(STATUS_DESCRIPTION, statusDescription);
     }
@@ -200,14 +209,17 @@ public class AccountAnalytics {
       switch (facebookSignUpException.getCode()) {
         case FacebookSignUpException.MISSING_REQUIRED_PERMISSIONS:
           sendEvents(LOGIN_EVENT_NAME, LoginMethod.FACEBOOK, SignUpLoginStatus.FAILED,
-              PERMISSIONS_DENIED, facebookSignUpException.getFacebookMessage());
+              PERMISSIONS_DENIED, String.valueOf(facebookSignUpException.getCode()),
+              facebookSignUpException.getFacebookMessage());
           break;
         case FacebookSignUpException.USER_CANCELLED:
           sendEvents(LOGIN_EVENT_NAME, LoginMethod.FACEBOOK, SignUpLoginStatus.FAILED,
-              USER_CANCELED, facebookSignUpException.getFacebookMessage());
+              USER_CANCELED, String.valueOf(facebookSignUpException.getCode()),
+              facebookSignUpException.getFacebookMessage());
           break;
         case FacebookSignUpException.ERROR:
           sendEvents(LOGIN_EVENT_NAME, LoginMethod.FACEBOOK, SignUpLoginStatus.FAILED, SDK_ERROR,
+              String.valueOf(facebookSignUpException.getCode()),
               facebookSignUpException.getFacebookMessage());
           break;
       }
@@ -222,25 +234,49 @@ public class AccountAnalytics {
       sendV7ExceptionEvent(loginMethod, ((AptoideWsV7Exception) throwable));
     } else if (throwable instanceof AptoideWsV3Exception) {
       sendV3ExceptionEvent(loginMethod, ((AptoideWsV3Exception) throwable));
+    } else if (throwable instanceof AccountException) {
+      sendV3ExceptionEvent(loginMethod, ((AccountException) throwable));
     } else {
-      sendEvents(eventName, loginMethod, SignUpLoginStatus.FAILED, GENERAL_ERROR,
+      sendEvents(eventName, loginMethod, SignUpLoginStatus.FAILED, GENERAL_ERROR, "no_code",
           throwable.toString());
       crashReport.log(throwable);
     }
+  }
+
+  private void sendV3ExceptionEvent(LoginMethod loginMethod, AccountException exception) {
+    String error = getWsError(exception);
+    String errorDescription = exception.getErrors()
+        .get(error);
+    sendEvents(LOGIN_EVENT_NAME, loginMethod, SignUpLoginStatus.FAILED, WEB_ERROR, error,
+        errorDescription);
+  }
+
+  private String getWsError(AccountException exception) {
+    return exception.getErrors()
+        .keySet()
+        .toString()
+        .replace("[", "")
+        .replace("]", "");
   }
 
   private void sendV7ExceptionEvent(LoginMethod loginMethod, AptoideWsV7Exception exception) {
     sendEvents(LOGIN_EVENT_NAME, loginMethod, SignUpLoginStatus.FAILED, WEB_ERROR,
         exception.getBaseResponse()
             .getErrors()
-            .toString());
+            .get(0)
+            .getCode(), exception.getBaseResponse()
+            .getErrors()
+            .get(0)
+            .getDescription());
   }
 
   private void sendV3ExceptionEvent(LoginMethod loginMethod, AptoideWsV3Exception exception) {
     sendEvents(LOGIN_EVENT_NAME, loginMethod, SignUpLoginStatus.FAILED, WEB_ERROR,
         exception.getBaseResponse()
             .getErrors()
-            .toString());
+            .get(0).code, exception.getBaseResponse()
+            .getErrors()
+            .get(0).msg);
   }
 
   public void sendLoginErrorEvent(LoginMethod loginMethod, Throwable throwable) {
@@ -269,6 +305,9 @@ public class AccountAnalytics {
     if (throwable instanceof AccountException) {
       sendEvents(SIGN_UP_EVENT_NAME, LoginMethod.APTOIDE, SignUpLoginStatus.FAILED, WEB_ERROR,
           ((AccountException) throwable).getErrors()
+              .keySet()
+              .toString(), ((AccountException) throwable).getErrors()
+              .values()
               .toString());
     } else {
       sendWebserviceErrors(SIGN_UP_EVENT_NAME, LoginMethod.APTOIDE, throwable);
