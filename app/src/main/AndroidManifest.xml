@@ -171,9 +171,14 @@
         >
       <intent-filter>
         <action android:name="android.intent.action.VIEW"/>
+
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
-        <data android:scheme="billing" android:host="aptoide.com" android:pathPrefix="/adyen"/>
+
+        <data
+            android:host="aptoide.com"
+            android:pathPrefix="/adyen"
+            android:scheme="billing"/>
       </intent-filter>
     </activity>
 

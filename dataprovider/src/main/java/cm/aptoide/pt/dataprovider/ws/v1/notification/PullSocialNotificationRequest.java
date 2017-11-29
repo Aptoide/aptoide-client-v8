@@ -36,7 +36,7 @@ public class PullSocialNotificationRequest
 
   public static PullSocialNotificationRequest of(String uniqueIdentifier, String versionName,
       String appId, OkHttpClient httpClient, Converter.Factory converterFactory, String oemid,
-      SharedPreferences sharedPreferences, Resources resources, boolean isLogged) {
+      SharedPreferences sharedPreferences, Resources resources, boolean isLoggedIn) {
 
     Map<String, String> options = new HashMap<>();
     pretendedNotificationTypes = new ArrayList<>();
@@ -44,7 +44,7 @@ public class PullSocialNotificationRequest
     options.put("language", AptoideUtils.SystemU.getCountryCode(resources));
     options.put("aptoide_version", versionName);
 
-    if (isLogged) {
+    if (isLoggedIn) {
       pretendedNotificationTypes.add(1);
       pretendedNotificationTypes.add(2);
       pretendedNotificationTypes.add(4);

@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
 import cm.aptoide.pt.dataprovider.model.v3.ErrorResponse;
 import cm.aptoide.pt.dataprovider.model.v3.OAuth;
+import cm.aptoide.pt.dataprovider.ws.v3.GenericResponseV3;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,17 +43,36 @@ public class AccountException extends Exception {
   public AccountException(AptoideWsV3Exception exception) {
     error = exception.getBaseResponse()
         .getError();
-    errors = getErrorsList(exception.getBaseResponse()
-        .getErrors());
-    errors.put(String.valueOf(exception.getBaseResponse()
-        .getError()), String.valueOf(exception.getBaseResponse()
-        .getErrorDescription()));
+    errors = createErrorsList(exception.getBaseResponse());
   }
 
   public AccountException(OAuth oAuth) {
     error = oAuth.getError();
-    errors = getErrorsList(oAuth.getErrors());
-    errors.put(oAuth.getError(), oAuth.getErrorDescription());
+    errors = createErrorsList(oAuth);
+  }
+
+  private Map<String, String> createErrorsList(OAuth oauth) {
+    if (oauth.getErrors() != null && !oauth.getErrors()
+        .isEmpty()) {
+      return getErrorsList(oauth.getErrors());
+    } else {
+      return createErrorList(oauth.getError(), oauth.getErrorDescription());
+    }
+  }
+
+  private Map<String, String> createErrorsList(GenericResponseV3 response) {
+    if (response.getErrors() != null && !response.getErrors()
+        .isEmpty()) {
+      return getErrorsList(response.getErrors());
+    } else {
+      return createErrorList(response.getError(), response.getErrorDescription());
+    }
+  }
+
+  private Map<String, String> createErrorList(String code, String description) {
+    Map<String, String> error = new HashMap<>();
+    error.put(code, description);
+    return error;
   }
 
   public String getCode() {

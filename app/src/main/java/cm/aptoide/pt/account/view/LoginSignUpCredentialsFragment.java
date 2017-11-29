@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
@@ -291,8 +292,12 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
     buttonLogin = (Button) view.findViewById(R.id.button_login);
     buttonSignUp = (Button) view.findViewById(R.id.button_sign_up);
-    buttonSignUp.setText(String.format(getString(R.string.join_company), marketName));
 
+    if ("vanilla".equalsIgnoreCase(BuildConfig.FLAVOR_product)) {
+      buttonSignUp.setText(String.format(getString(R.string.onboarding_button_join_us)));
+    } else {
+      buttonSignUp.setText(String.format(getString(R.string.join_company), marketName));
+    }
     aptoideEmailEditText = (EditText) view.findViewById(R.id.username);
     aptoidePasswordEditText = (EditText) view.findViewById(R.id.password);
     hideShowAptoidePasswordButton = (Button) view.findViewById(R.id.btn_show_hide_pass);
@@ -303,7 +308,11 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     credentialsEditTextsArea = view.findViewById(R.id.credentials_edit_texts);
     signUpSelectionButton = (Button) view.findViewById(R.id.show_join_aptoide_area);
     loginSelectionButton = (Button) view.findViewById(R.id.show_login_with_aptoide_area);
-    signUpSelectionButton.setText(String.format(getString(R.string.join_company), marketName));
+    if ("vanilla".equalsIgnoreCase(BuildConfig.FLAVOR_product)) {
+      buttonSignUp.setText(String.format(getString(R.string.onboarding_button_join_us)));
+    } else {
+      signUpSelectionButton.setText(String.format(getString(R.string.join_company), marketName));
+    }
     loginArea = view.findViewById(R.id.login_button_area);
     signUpArea = view.findViewById(R.id.sign_up_button_area);
     termsAndConditions = (TextView) view.findViewById(R.id.terms_and_conditions);

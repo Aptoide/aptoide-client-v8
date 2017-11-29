@@ -47,8 +47,12 @@ public class AccountErrorMapper implements ThrowableToStringMapper {
                     .getPackageName(), context.getResources()));
       } else {
         @StringRes int errorId = context.getResources()
-            .getIdentifier("error_" + ((AccountException) throwable).getError(), "string",
-                context.getPackageName());
+            .getIdentifier("error_" + ((AccountException) throwable).getErrors()
+                .entrySet()
+                .iterator()
+                .next()
+                .getKey()
+                .replace("-", "_"), "string", context.getPackageName());
         message = context.getString(errorId);
       }
     } else if (throwable instanceof AccountValidationException) {

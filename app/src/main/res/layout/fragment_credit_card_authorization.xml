@@ -33,15 +33,15 @@
       <include layout="@layout/include_payment_product"/>
 
       <TextView
-          android:layout_marginTop="16dp"
-          android:layout_marginEnd="16dp"
-          android:layout_marginRight="16dp"
-          tools:text="****8500"
-          android:gravity="end"
-          style="@style/TextAppearance.Aptoide.Title"
           android:id="@+id/fragment_credit_card_authorization_pre_authorized_card"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:layout_marginEnd="16dp"
+          android:layout_marginRight="16dp"
+          android:layout_marginTop="16dp"
+          android:gravity="end"
+          tools:text="****8500"
+          style="@style/TextAppearance.Aptoide.Title"
           />
 
       <com.braintreepayments.cardform.view.CardForm
@@ -53,11 +53,12 @@
 
       <CheckBox
           android:id="@+id/fragment_credit_card_authorization_remember_card_check_box"
-          android:text="@string/remember_card_hint"
-          android:checked="true"
           android:layout_width="match_parent"
+          android:layout_height="wrap_content"
           android:layout_marginBottom="16dp"
-          android:layout_height="wrap_content" />
+          android:checked="true"
+          android:text="@string/remember_card_hint"
+          />
 
       <include layout="@layout/include_payment_buttons"/>
     </LinearLayout>
