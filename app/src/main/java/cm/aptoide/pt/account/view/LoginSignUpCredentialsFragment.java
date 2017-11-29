@@ -77,6 +77,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
     marketName = ((AptoideApplication) getActivity().getApplication()).getMarketName();
   }
 
@@ -93,7 +94,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     super.onCreateView(inflater, container, savedInstanceState);
-    getFragmentComponent(savedInstanceState).inject(this);
     return inflater.inflate(R.layout.fragment_login_sign_up_credentials, container, false);
   }
 

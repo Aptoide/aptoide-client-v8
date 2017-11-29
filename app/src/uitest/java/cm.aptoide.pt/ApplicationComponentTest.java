@@ -11,7 +11,8 @@ import dagger.Component;
  * Created by jose_messejana on 10-11-2017.
  */
 
-@ApplicationTestScope @Component(modules = { ApplicationModuleTest.class }) public interface ApplicationComponentTest extends ApplicationComponent {
+@ApplicationTestScope @Component(modules = { ApplicationModuleTest.class })
+public interface ApplicationComponentTest extends ApplicationComponent {
 
   ActivityComponent plus(ActivityModule activityModule);
 

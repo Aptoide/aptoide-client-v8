@@ -170,7 +170,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
  * Created by jose_messejana on 09-11-2017.
  */
 
-@Module public class ApplicationModuleTest{
+@Module public class ApplicationModuleTest {
 
   private final AptoideApplication application;
   private final String imageCachePath;
@@ -183,8 +183,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   private final String aptoideMd5sum;
   private final LoginPreferences loginPreferences;
 
-  public ApplicationModuleTest(AptoideApplication application, String imageCachePath, String cachePath,
-      String accountType, String partnerId, String marketName, String extraId,
+  public ApplicationModuleTest(AptoideApplication application, String imageCachePath,
+      String cachePath, String accountType, String partnerId, String marketName, String extraId,
       String aptoidePackage, String aptoideMd5sum, LoginPreferences loginPreferences) {
     this.application = application;
     this.imageCachePath = imageCachePath;
@@ -197,7 +197,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     this.aptoideMd5sum = aptoideMd5sum;
     this.loginPreferences = loginPreferences;
   }
-
 
   @ApplicationTestScope @Provides InstallerAnalytics provideInstallerAnalytics(Answers answers,
       AppEventsLogger appEventsLogger) {
@@ -310,7 +309,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         new TwitterAuthConfig(BuildConfig.TWITTER_KEY, BuildConfig.TWITTER_SECRET)));
   }
 
-  @ApplicationTestScope @Provides InstalledRepository provideInstalledRepository(InstalledAccessor installedAccessor) {
+  @ApplicationTestScope @Provides InstalledRepository provideInstalledRepository(
+      InstalledAccessor installedAccessor) {
     return new InstalledRepository(installedAccessor);
   }
 
@@ -333,12 +333,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AptoideUtils.Core.getDefaultVername(application));
   }
 
-  @ApplicationTestScope @Provides @Named("retrofit-log") Interceptor provideRetrofitLogInterceptor() {
+  @ApplicationTestScope @Provides @Named("retrofit-log")
+  Interceptor provideRetrofitLogInterceptor() {
     return new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
   }
 
   @ApplicationTestScope @Provides IdsRepository provideIdsRepository(
-      @Named("default") SharedPreferences defaultSharedPreferences, ContentResolver contentResolver) {
+      @Named("default") SharedPreferences defaultSharedPreferences,
+      ContentResolver contentResolver) {
     return new IdsRepository(
         SecurePreferencesImplementation.getInstance(application.getApplicationContext(),
             defaultSharedPreferences), application,
@@ -383,7 +385,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new HashMap<>();
   }
 
-  @ApplicationTestScope @Provides BehaviorRelay<Map<Integer, Result>> provideFragmentNavigatorRelay() {
+  @ApplicationTestScope @Provides
+  BehaviorRelay<Map<Integer, Result>> provideFragmentNavigatorRelay() {
     return BehaviorRelay.create();
   }
 
@@ -397,21 +400,26 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         ((AccountManager) application.getSystemService(Context.ACCOUNT_SERVICE)));
   }
 
-  @ApplicationTestScope @Provides @Named("default") SharedPreferences providesDefaultSharedPerefences() {
+  @ApplicationTestScope @Provides @Named("default")
+  SharedPreferences providesDefaultSharedPerefences() {
     return PreferenceManager.getDefaultSharedPreferences(application);
   }
 
   @ApplicationTestScope @Provides @Named("secure") SecurePreferences providesSecurePerefences(
-      @Named("default") SharedPreferences defaultSharedPreferences, SecureCoderDecoder secureCoderDecoder) {
+      @Named("default") SharedPreferences defaultSharedPreferences,
+      SecureCoderDecoder secureCoderDecoder) {
     return new SecurePreferences(defaultSharedPreferences, secureCoderDecoder);
   }
 
-  @ApplicationTestScope @Provides @Named("secureShared") SharedPreferences providesSecureSharedPreferences(@Named ("default") SharedPreferences defaultSharedPreferences){
-    return SecurePreferencesImplementation.getInstance(application.getApplicationContext(), defaultSharedPreferences);
+  @ApplicationTestScope @Provides @Named("secureShared")
+  SharedPreferences providesSecureSharedPreferences(
+      @Named("default") SharedPreferences defaultSharedPreferences) {
+    return SecurePreferencesImplementation.getInstance(application.getApplicationContext(),
+        defaultSharedPreferences);
   }
 
-  @ApplicationTestScope @Provides RootInstallationRetryHandler provideRootInstallationRetryHandler() {
-
+  @ApplicationTestScope @Provides
+  RootInstallationRetryHandler provideRootInstallationRetryHandler() {
 
     Intent retryActionIntent = new Intent(application, RootInstallNotificationEventReceiver.class);
     retryActionIntent.setAction(RootInstallNotificationEventReceiver.ROOT_INSTALL_RETRY_ACTION);
@@ -429,11 +437,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         PendingIntent.FLAG_UPDATE_CURRENT);
 
     int notificationId = 230498;
-    return new RootInstallationRetryHandler(notificationId, application.getSystemNotificationShower(),
-        application.getInstallManager(InstallerFactory.ROLLBACK), PublishRelay.create(), 0, application,
-        new RootInstallErrorNotificationFactory(notificationId,
-            BitmapFactory.decodeResource(application.getResources(), R.mipmap.ic_launcher), action,
-            deleteAction));
+    return new RootInstallationRetryHandler(notificationId,
+        application.getSystemNotificationShower(),
+        application.getInstallManager(InstallerFactory.ROLLBACK), PublishRelay.create(), 0,
+        application, new RootInstallErrorNotificationFactory(notificationId,
+        BitmapFactory.decodeResource(application.getResources(), R.mipmap.ic_launcher), action,
+        deleteAction));
   }
 
   @ApplicationTestScope @Provides GoogleApiClient provideGoogleApiClient() {
@@ -446,158 +455,164 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .build();
   }
 
-  @ApplicationTestScope @Provides AptoideAccountManager provideAptoideAccountManager(GoogleApiClient googleApiClient) {
+  @ApplicationTestScope @Provides AptoideAccountManager provideAptoideAccountManager(
+      GoogleApiClient googleApiClient) {
 
     FacebookSdk.sdkInitialize(application);
 
-      Account account = new Account() {
-        @Override public List<Store> getSubscribedStores() {
-          return new ArrayList<>();
-        }
+    Account account = new Account() {
+      @Override public List<Store> getSubscribedStores() {
+        return new ArrayList<>();
+      }
 
-        @Override public String getId() {
-          return "1";
-        }
+      @Override public String getId() {
+        return "1";
+      }
 
-        @Override public String getNickname() {
-          return "D01";
-        }
+      @Override public String getNickname() {
+        return "D01";
+      }
 
-        @Override public String getAvatar() {
-          return "avatar";
-        }
+      @Override public String getAvatar() {
+        return "avatar";
+      }
 
-        @Override public boolean isAdultContentEnabled() {
+      @Override public boolean isAdultContentEnabled() {
+        return true;
+      }
+
+      @Override public Access getAccess() {
+        return Access.PRIVATE;
+      }
+
+      @Override public boolean isAccessConfirmed() {
+        return true;
+      }
+
+      @Override public boolean isLoggedIn() {
+        if (TestType.types.equals(TestType.TestTypes.LOGGEDIN)) {
           return true;
-        }
-
-        @Override public Access getAccess() {
-          return Access.PRIVATE;
-        }
-
-        @Override public boolean isAccessConfirmed() {
-          return true;
-        }
-
-        @Override public boolean isLoggedIn() {
-          if (TestType.types.equals(TestType.TestTypes.LOGGEDIN)) return true;
-          else return false;
-        }
-
-        @Override public String getEmail() {
-          return "jose.messejana@aptoide.com";
-        }
-
-        @Override public Store getStore() {
-          return null;
-        }
-
-        @Override public boolean hasStore() {
+        } else {
           return false;
         }
+      }
 
-        @Override public boolean isPublicUser() {
-          return false;
-        }
+      @Override public String getEmail() {
+        return "jose.messejana@aptoide.com";
+      }
 
-        @Override public boolean isPublicStore() {
-          return false;
-        }
-      };
-      final AccountService accountService = new AccountService() {
-        @Override public Single<Account> getAccount(String email, String password) {
-          List<ErrorResponse> list = new ArrayList<>();
-          ErrorResponse errorResponse = new ErrorResponse();
-          if (TestType.types.equals(TestType.TestTypes.SIGNSIGNUPTESTS)) {
-            return Single.just(account);
-          } else if (TestType.types.equals(TestType.TestTypes.SIGNINWRONG)) {
-            errorResponse.code = "invalid_grant";
-            list.add(errorResponse);
-            return Single.error(new AccountException(list));
-          }
+      @Override public Store getStore() {
+        return null;
+      }
+
+      @Override public boolean hasStore() {
+        return false;
+      }
+
+      @Override public boolean isPublicUser() {
+        return false;
+      }
+
+      @Override public boolean isPublicStore() {
+        return false;
+      }
+    };
+    final AccountService accountService = new AccountService() {
+      @Override public Single<Account> getAccount(String email, String password) {
+        List<ErrorResponse> list = new ArrayList<>();
+        ErrorResponse errorResponse = new ErrorResponse();
+        if (TestType.types.equals(TestType.TestTypes.SIGNSIGNUPTESTS)) {
           return Single.just(account);
+        } else if (TestType.types.equals(TestType.TestTypes.SIGNINWRONG)) {
+          errorResponse.code = "invalid_grant";
+          list.add(errorResponse);
+          return Single.error(new AccountException(list));
         }
+        return Single.just(account);
+      }
 
-        @Override public Single<Account> createAccount(String email, String metadata, String name,
-            String type) {
+      @Override public Single<Account> createAccount(String email, String metadata, String name,
+          String type) {
+        return Single.just(account);
+      }
+
+      @Override public Single<Account> createAccount(String email, String password) {
+        List<ErrorResponse> list = new ArrayList<>();
+        ErrorResponse errorResponse = new ErrorResponse();
+        if (TestType.types.equals(TestType.TestTypes.SIGNSIGNUPTESTS)) {
           return Single.just(account);
+        } else if (TestType.types.equals(TestType.TestTypes.USEDEMAIL)) {
+          errorResponse.code = "WOP-9";
+          list.add(errorResponse);
+          return Single.error(new AccountException(list));
+        } else if (TestType.types.equals(TestType.TestTypes.INVALIDEMAIL)) {
+          errorResponse.code = "IARG_106";
+          list.add(errorResponse);
+          return Single.error(new AccountException(list));
         }
+        return Single.just(account);
+      }
 
-        @Override public Single<Account> createAccount(String email, String password) {
-          List<ErrorResponse> list = new ArrayList<>();
-          ErrorResponse errorResponse = new ErrorResponse();
-          if (TestType.types.equals(TestType.TestTypes.SIGNSIGNUPTESTS)) {
-            return Single.just(account);
-          } else if (TestType.types.equals(TestType.TestTypes.USEDEMAIL)) {
-            errorResponse.code = "WOP-9";
-            list.add(errorResponse);
-            return Single.error(new AccountException(list));
-          } else if (TestType.types.equals(TestType.TestTypes.INVALIDEMAIL)) {
-            errorResponse.code = "IARG_106";
-            list.add(errorResponse);
-            return Single.error(new AccountException(list));
-          }
-          return Single.just(account);
-        }
+      @Override public Single<Account> getAccount() {
+        return Single.just(account);
+      }
 
-        @Override public Single<Account> getAccount() {
-          return Single.just(account);
-        }
+      @Override public Completable updateAccount(String nickname, String avatarPath) {
+        return Completable.complete();
+      }
 
-        @Override public Completable updateAccount(String nickname, String avatarPath) {
-          return Completable.complete();
-        }
+      @Override public Completable updateAccount(String accessLevel) {
+        return Completable.complete();
+      }
 
-        @Override public Completable updateAccount(String accessLevel) {
-          return Completable.complete();
-        }
+      @Override public Completable updateAccountUsername(String username) {
+        return Completable.complete();
+      }
 
-        @Override public Completable updateAccountUsername(String username) {
-          return Completable.complete();
-        }
+      @Override public Completable unsubscribeStore(String storeName, String storeUserName,
+          String storePassword) {
+        return Completable.complete();
+      }
 
-        @Override public Completable unsubscribeStore(String storeName, String storeUserName, String storePassword) {
-          return Completable.complete();
-        }
+      @Override public Completable subscribeStore(String storeName, String storeUserName,
+          String storePassword) {
+        return Completable.complete();
+      }
 
-        @Override public Completable subscribeStore(String storeName, String storeUserName, String storePassword) {
-          return Completable.complete();
-        }
+      @Override public Completable updateAccount(boolean adultContentEnabled) {
+        return Completable.complete();
+      }
 
-        @Override public Completable updateAccount(boolean adultContentEnabled) {
-          return Completable.complete();
-        }
+      @Override public Completable removeAccount() {
+        return Completable.complete();
+      }
+    };
+    final AccountPersistence accountPersistence = new AccountPersistence() {
+      @Override public Completable saveAccount(Account account) {
+        return Completable.complete();
+      }
 
-        @Override public Completable removeAccount() {
-          return Completable.complete();
-        }
-      };
-      final AccountPersistence accountPersistence = new AccountPersistence() {
-        @Override public Completable saveAccount(Account account) {
-          return Completable.complete();
-        }
+      @Override public Single<Account> getAccount() {
+        return Single.just(account);
+      }
 
-        @Override public Single<Account> getAccount() {
-          return Single.just(account);
-        }
+      @Override public Completable removeAccount() {
+        return Completable.complete();
+      }
+    };
 
-        @Override public Completable removeAccount() {
-          return Completable.complete();
-        }
-      };
-
-      return new AptoideAccountManager.Builder().setAccountPersistence(accountPersistence)
-          .setAccountService(accountService)
-          .registerSignUpAdapter(GoogleSignUpAdapter.TYPE,
-              new GoogleSignUpAdapter(googleApiClient, loginPreferences))
-          .registerSignUpAdapter(FacebookSignUpAdapter.TYPE,
-              new FacebookSignUpAdapter(Arrays.asList("email"), LoginManager.getInstance(),
-                  loginPreferences))
-          .build();
+    return new AptoideAccountManager.Builder().setAccountPersistence(accountPersistence)
+        .setAccountService(accountService)
+        .registerSignUpAdapter(GoogleSignUpAdapter.TYPE,
+            new GoogleSignUpAdapter(googleApiClient, loginPreferences))
+        .registerSignUpAdapter(FacebookSignUpAdapter.TYPE,
+            new FacebookSignUpAdapter(Arrays.asList("email"), LoginManager.getInstance(),
+                loginPreferences))
+        .build();
   }
 
-  @ApplicationTestScope @Provides @Named("default") OkHttpClient provideOkHttpClient(L2Cache httpClientCache,
-      @Named("user-agent") Interceptor userAgentInterceptor,
+  @ApplicationTestScope @Provides @Named("default") OkHttpClient provideOkHttpClient(
+      L2Cache httpClientCache, @Named("user-agent") Interceptor userAgentInterceptor,
       @Named("default") SharedPreferences sharedPreferences,
       @Named("retrofit-log") Interceptor retrofitLogInterceptor) {
     final OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
@@ -610,7 +625,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       // In order to make sure it happens we clean up all data persisted in disk when client
       // is first created. It only affects API calls with GET verb.
       cache.evictAll();
-    } catch (IOException ignored) {}
+    } catch (IOException ignored) {
+    }
     okHttpClientBuilder.cache(cache); // 10 MiB
     okHttpClientBuilder.addInterceptor(new POSTCacheInterceptor(httpClientCache));
     okHttpClientBuilder.addInterceptor(userAgentInterceptor);
@@ -622,8 +638,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return okHttpClientBuilder.build();
   }
 
-  @ApplicationTestScope @Provides @Named("long-timeout") OkHttpClient provideLongTimeoutOkHttpClient(
-      @Named("user-agent") Interceptor userAgentInterceptor,
+  @ApplicationTestScope @Provides @Named("long-timeout")
+  OkHttpClient provideLongTimeoutOkHttpClient(@Named("user-agent") Interceptor userAgentInterceptor,
       @Named("default") SharedPreferences sharedPreferences,
       @Named("retrofit-log") Interceptor retrofitLogInterceptor) {
     final OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
@@ -650,12 +666,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         new File(application.getCacheDir(), AptoideApplication.CACHE_FILE_NAME));
   }
 
-  @ApplicationTestScope @Provides NotificationProvider provideNotificationProvider(
-      NotificationAccessor notificationAccessor) {
-    return new NotificationProvider(notificationAccessor, Schedulers.io());
-  }
-
-  @ApplicationTestScope @Provides NotificationAccessor provideNotificationAccessor(Database database) {
+  @ApplicationTestScope @Provides NotificationAccessor provideNotificationAccessor(
+      Database database) {
     return new NotificationAccessor(database);
   }
 
@@ -668,8 +680,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new SyncStorage(new HashMap<>());
   }
 
-  @ApplicationTestScope @Provides StoreUtilsProxy provideStoreUtilsProxy(AptoideAccountManager accountManager,
-      StoreAccessor storeAccessor, @Named("default") OkHttpClient httpClient,
+  @ApplicationTestScope @Provides StoreUtilsProxy provideStoreUtilsProxy(
+      AptoideAccountManager accountManager, StoreAccessor storeAccessor,
+      @Named("default") OkHttpClient httpClient,
       @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       @Named("account-settings-pool-v7")
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptor) {
@@ -681,15 +694,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @ApplicationTestScope @Provides TokenInvalidator provideTokenInvalidator(
       @Named("default") OkHttpClient httpClient,
       @Named("default") SharedPreferences sharedPreferences,
-      AuthenticationPersistence authenticationPersistence,
-      @Named("no-authentication-v3") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptor) {
+      AuthenticationPersistence authenticationPersistence, @Named("no-authentication-v3")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptor) {
     return new RefreshTokenInvalidator(bodyInterceptor, httpClient,
         WebService.getDefaultConverter(), sharedPreferences, extraId, new NoOpTokenInvalidator(),
         authenticationPersistence);
   }
 
   @ApplicationTestScope @Provides @Named("no-authentication-v3")
-  BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> provideNoAuthenticationBodyInterceptorV3(IdsRepository idsRepository) {
+  BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> provideNoAuthenticationBodyInterceptorV3(
+      IdsRepository idsRepository) {
     return new NoAuthenticationBodyInterceptorV3(idsRepository, aptoideMd5sum, aptoidePackage);
   }
 
@@ -710,9 +724,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @ApplicationTestScope @Provides @Named("multipart")
-  MultipartBodyInterceptor provideMultipartBodyInterceptor(
-      IdsRepository idsRepository, AuthenticationPersistence authenticationPersistence,
-      RequestBodyFactory requestBodyFactory) {
+  MultipartBodyInterceptor provideMultipartBodyInterceptor(IdsRepository idsRepository,
+      AuthenticationPersistence authenticationPersistence, RequestBodyFactory requestBodyFactory) {
     return new MultipartBodyInterceptor(idsRepository, requestBodyFactory,
         authenticationPersistence);
   }
@@ -756,12 +769,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new SecureCoderDecoder.Builder(application, sharedPreferences).create();
   }
 
-  @ApplicationTestScope @Provides StoreRepository provideStoreRepository(StoreAccessor storeAccessor) {
+  @ApplicationTestScope @Provides StoreRepository provideStoreRepository(
+      StoreAccessor storeAccessor) {
     return new StoreRepository(storeAccessor);
   }
 
-  @ApplicationTestScope @Provides PageViewsAnalytics providePageViewsAnalytics(AppEventsLogger appEventsLogger,
-      NavigationTracker navigationTracker) {
+  @ApplicationTestScope @Provides PageViewsAnalytics providePageViewsAnalytics(
+      AppEventsLogger appEventsLogger, NavigationTracker navigationTracker) {
     return new PageViewsAnalytics(appEventsLogger, Analytics.getInstance(), navigationTracker);
   }
 
@@ -780,66 +794,81 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new Database();
   }
 
-  @ApplicationTestScope @Provides CallbackManager provideCallbackManager(){
+  @ApplicationTestScope @Provides CallbackManager provideCallbackManager() {
     return new CallbackManagerImpl();
   }
 
-  @ApplicationTestScope @Provides AccountAnalytics provideAccountAnalytics(@Named("pool-v7") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
-      @Named("default") OkHttpClient defaulClient, TokenInvalidator tokenInvalidator, @Named ("default") SharedPreferences defaultSharedPreferences,
-      AppEventsLogger appEventsLogger, NavigationTracker navigationTracker){
-    return new AccountAnalytics(Analytics.getInstance(), bodyInterceptorPoolV7,
-        defaulClient, WebService.getDefaultConverter(), tokenInvalidator,
-        BuildConfig.APPLICATION_ID, defaultSharedPreferences, appEventsLogger,
-        navigationTracker, CrashReport.getInstance());
+  @ApplicationTestScope @Provides AccountAnalytics provideAccountAnalytics(@Named("pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient defaulClient, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences defaultSharedPreferences, AppEventsLogger appEventsLogger,
+      NavigationTracker navigationTracker) {
+    return new AccountAnalytics(Analytics.getInstance(), bodyInterceptorPoolV7, defaulClient,
+        WebService.getDefaultConverter(), tokenInvalidator, BuildConfig.APPLICATION_ID,
+        defaultSharedPreferences, appEventsLogger, navigationTracker, CrashReport.getInstance());
   }
 
-  @ApplicationTestScope @Provides StoreManager provideStoreManager(AptoideAccountManager accountManager, @Named("default") OkHttpClient okHttpClient,
-      @Named("multipart")MultipartBodyInterceptor multipartBodyInterceptor,
-      @Named("defaulInterceptorV3") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
-      @Named("account-settings-pool-v7") BodyInterceptor<BaseBody> accountSettingsBodyInterceptorPoolV7, @Named("default") SharedPreferences defaultSharedPreferences,
-      TokenInvalidator tokenInvalidator, RequestBodyFactory requestBodyFactory, ObjectMapper nonNullObjectMapper
-      ){
-      final StoreManager storeManager = new StoreManager(accountManager, okHttpClient, WebService.getDefaultConverter(),
-        multipartBodyInterceptor, bodyInterceptorV3,
-        accountSettingsBodyInterceptorPoolV7, defaultSharedPreferences,
-        tokenInvalidator, requestBodyFactory, nonNullObjectMapper){
-        @Override
-        protected Completable createStore(String a, String b, String c, boolean d, String e, List<SimpleSetStoreRequest.StoreLinks> storeLinksList,
-            List<cm.aptoide.pt.dataprovider.model.v7.store.Store.SocialChannelType> storeDeleteSocialLinksList){
-          return Completable.complete();
-        }
-      };
-      return storeManager;
+  @ApplicationTestScope @Provides StoreManager provideStoreManager(
+      AptoideAccountManager accountManager, @Named("default") OkHttpClient okHttpClient,
+      @Named("multipart") MultipartBodyInterceptor multipartBodyInterceptor,
+      @Named("defaulInterceptorV3")
+          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
+      @Named("account-settings-pool-v7")
+          BodyInterceptor<BaseBody> accountSettingsBodyInterceptorPoolV7,
+      @Named("default") SharedPreferences defaultSharedPreferences,
+      TokenInvalidator tokenInvalidator, RequestBodyFactory requestBodyFactory,
+      ObjectMapper nonNullObjectMapper) {
+    final StoreManager storeManager =
+        new StoreManager(accountManager, okHttpClient, WebService.getDefaultConverter(),
+            multipartBodyInterceptor, bodyInterceptorV3, accountSettingsBodyInterceptorPoolV7,
+            defaultSharedPreferences, tokenInvalidator, requestBodyFactory, nonNullObjectMapper) {
+          @Override
+          protected Completable createStore(String a, String b, String c, boolean d, String e,
+              List<SimpleSetStoreRequest.StoreLinks> storeLinksList,
+              List<cm.aptoide.pt.dataprovider.model.v7.store.Store.SocialChannelType> storeDeleteSocialLinksList) {
+            return Completable.complete();
+          }
+        };
+    return storeManager;
   }
 
-  @ApplicationTestScope @Provides AdsRepository provideAdsRepository(IdsRepository idsRepository, AptoideAccountManager accountManager,
-      @Named("default") OkHttpClient okHttpClient, QManager qManager,  @Named("default") SharedPreferences defaultSharedPreferences,
+  @ApplicationTestScope @Provides AdsRepository provideAdsRepository(IdsRepository idsRepository,
+      AptoideAccountManager accountManager, @Named("default") OkHttpClient okHttpClient,
+      QManager qManager, @Named("default") SharedPreferences defaultSharedPreferences,
       AdsApplicationVersionCodeProvider adsApplicationVersionCodeProvider) {
-    return new AdsRepository(idsRepository, accountManager, okHttpClient, WebService.getDefaultConverter(), qManager, defaultSharedPreferences,
-        application.getApplicationContext(), (ConnectivityManager) application.getSystemService(Context.CONNECTIVITY_SERVICE), application.getResources(),
-        adsApplicationVersionCodeProvider, AdNetworkUtils::isGooglePlayServicesAvailable, application::getPartnerId,
+    return new AdsRepository(idsRepository, accountManager, okHttpClient,
+        WebService.getDefaultConverter(), qManager, defaultSharedPreferences,
+        application.getApplicationContext(),
+        (ConnectivityManager) application.getSystemService(Context.CONNECTIVITY_SERVICE),
+        application.getResources(), adsApplicationVersionCodeProvider,
+        AdNetworkUtils::isGooglePlayServicesAvailable, application::getPartnerId,
         new MinimalAdMapper());
   }
 
-  @ApplicationTestScope @Provides AdsApplicationVersionCodeProvider providesAdsApplicationVersionCodeProvider(PackageRepository packageRepository){
-    return new PackageRepositoryVersionCodeProvider(packageRepository, application.getPackageName());
+  @ApplicationTestScope @Provides
+  AdsApplicationVersionCodeProvider providesAdsApplicationVersionCodeProvider(
+      PackageRepository packageRepository) {
+    return new PackageRepositoryVersionCodeProvider(packageRepository,
+        application.getPackageName());
   }
 
-  @ApplicationTestScope @Provides PackageRepository providesPackageRepository(){
+  @ApplicationTestScope @Provides PackageRepository providesPackageRepository() {
     return new PackageRepository(application.getPackageManager());
   }
 
-  @ApplicationTestScope @Provides @Named("defaulInterceptorV3") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> providesBodyInterceptorV3(
-      IdsRepository idsRepository, QManager qManager, @Named("default") SharedPreferences defaultSharedPreferences, NetworkOperatorManager networkOperatorManager,
-      AuthenticationPersistence authenticationPersistence){
-    return new BodyInterceptorV3(idsRepository, aptoideMd5sum, aptoidePackage,
-        qManager, defaultSharedPreferences, BodyInterceptorV3.RESPONSE_MODE_JSON,
-        Build.VERSION.SDK_INT, networkOperatorManager, authenticationPersistence);
+  @ApplicationTestScope @Provides @Named("defaulInterceptorV3")
+  BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> providesBodyInterceptorV3(
+      IdsRepository idsRepository, QManager qManager,
+      @Named("default") SharedPreferences defaultSharedPreferences,
+      NetworkOperatorManager networkOperatorManager,
+      AuthenticationPersistence authenticationPersistence) {
+    return new BodyInterceptorV3(idsRepository, aptoideMd5sum, aptoidePackage, qManager,
+        defaultSharedPreferences, BodyInterceptorV3.RESPONSE_MODE_JSON, Build.VERSION.SDK_INT,
+        networkOperatorManager, authenticationPersistence);
   }
 
-  @ApplicationTestScope @Provides NetworkOperatorManager providesNetworkOperatorManager(){
+  @ApplicationTestScope @Provides NetworkOperatorManager providesNetworkOperatorManager() {
     return new NetworkOperatorManager(
         (TelephonyManager) application.getSystemService(Context.TELEPHONY_SERVICE));
   }
-
 }

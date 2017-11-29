@@ -6,9 +6,13 @@ package cm.aptoide.pt;
 
 public class ComponentFactory {
 
-  public static ApplicationComponentTest create(AptoideApplication context){
-    return DaggerApplicationComponentTest.builder().applicationModuleTest(new ApplicationModuleTest(context, context.getImageCachePath(), context.getCachePath(),
-        context.getAccountType(), context.getPartnerId(), context.getMarketName(), context.getExtraId(), context.getAptoidePackage(),
-        context.getAptoideMd5sum(), context.getLoginPreferences())).build();
+  public static ApplicationComponentTest create(AptoideApplication context) {
+    return DaggerApplicationComponentTest.builder()
+        .applicationModuleTest(
+            new ApplicationModuleTest(context, context.getImageCachePath(), context.getCachePath(),
+                context.getAccountType(), context.getPartnerId(), context.getMarketName(),
+                context.getExtraId(), context.getAptoidePackage(), context.getAptoideMd5sum(),
+                context.getLoginPreferences()))
+        .build();
   }
 }

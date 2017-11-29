@@ -30,8 +30,7 @@ import static org.hamcrest.Matchers.allOf;
  * Created by jose_messejana on 24-10-2017.
  */
 
-@RunWith(AndroidJUnit4.class)
-public class SettingsUITests {
+@RunWith(AndroidJUnit4.class) public class SettingsUITests {
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
   @Rule public RetryTestRule retry = new RetryTestRule(NUMBER_OF_RETRIES);
@@ -46,7 +45,7 @@ public class SettingsUITests {
     TestType.types = TestType.TestTypes.MATURE;
     Activity activity1 = mActivityRule.getActivity();
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity1);
-    boolean mature = preferences.getBoolean("matureChkBox",false);
+    boolean mature = preferences.getBoolean("matureChkBox", false);
     goToSettings();
     onView(withId(R.id.list)).perform(RecyclerViewActions.scrollToPosition(11));
     onView(withId(R.id.list)).perform(RecyclerViewActions.actionOnItemAtPosition(11, click()));
@@ -54,10 +53,9 @@ public class SettingsUITests {
       onView(withText(R.string.yes)).perform(click());
     } catch (NoMatchingViewException e) {
     }
-    if(mature == preferences.getBoolean("matureChkBox",false)){
+    if (mature == preferences.getBoolean("matureChkBox", false)) {
       onView(withId(R.id.action_btn)).perform(click()); //if it's equal fail
-    }
-    else{
+    } else {
       mature = !mature;
     }
     pressBackButton();
@@ -69,7 +67,7 @@ public class SettingsUITests {
     } catch (NoMatchingViewException e) {
     }
     pressBackButton();
-    if(mature == preferences.getBoolean("matureChkBox",false)){
+    if (mature == preferences.getBoolean("matureChkBox", false)) {
       onView(withId(R.id.action_btn)).perform(click()); //if it's equal fail
     }
   }

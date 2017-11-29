@@ -27,12 +27,10 @@ import static cm.aptoide.pt.UITests.skipWizard;
  * Created by jose_messejana on 24-10-2017.
  */
 
-@RunWith(AndroidJUnit4.class)
-public class LandscapeUITests {
+@RunWith(AndroidJUnit4.class) public class LandscapeUITests {
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
   @Rule public RetryTestRule retry = new RetryTestRule(NUMBER_OF_RETRIES);
-
 
   @Before public void setUp() {
     if (UITests.isFirstTime()) {
@@ -78,10 +76,12 @@ public class LandscapeUITests {
     }
   }
 
-  @Test public void landscapeWizard(){
+  @Test public void landscapeWizard() {
     Activity activity1 = mActivityRule.getActivity();
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity1);
-    preferences.edit().clear().apply();
+    preferences.edit()
+        .clear()
+        .apply();
     activity1.finish();
     mActivityRule.launchActivity(new Intent());
     Activity activity = mActivityRule.getActivity();
@@ -93,6 +93,4 @@ public class LandscapeUITests {
     onView(withId(R.id.skip_text)).perform(click());
     onView(withText(R.string.stores)).perform(click());
   }
-
-
 }

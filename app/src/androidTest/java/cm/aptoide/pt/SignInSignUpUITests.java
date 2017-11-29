@@ -23,8 +23,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
  * Created by jose_messejana on 24-10-2017.
  */
 
-@RunWith(AndroidJUnit4.class)
-public class SignInSignUpUITests {
+@RunWith(AndroidJUnit4.class) public class SignInSignUpUITests {
   private final String LOGINEMAIL = "jose.messejana@aptoide.com";
   private final String PASS = "aptoide1234";
   @Rule public ActivityTestRule<MainActivity> mActivityRule =

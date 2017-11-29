@@ -2,27 +2,19 @@ package cm.aptoide.pt;
 
 import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
-import android.app.ActivityManager;
 import android.app.Application;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.BitmapFactory;
-import android.net.ConnectivityManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
-import android.support.v4.app.NotificationCompat;
-import android.telephony.TelephonyManager;
-import android.text.format.DateUtils;
 import android.util.SparseArray;
-import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
@@ -31,10 +23,8 @@ import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
-import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
-import cm.aptoide.pt.analytics.TrackerFilter;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.BillingIdManager;
@@ -53,11 +43,8 @@ import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.WebService;
-import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.cache.L2Cache;
-import cm.aptoide.pt.dataprovider.cache.POSTCacheKeyAlgorithm;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
@@ -74,21 +61,13 @@ import cm.aptoide.pt.install.InstallFabricEvents;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.install.PackageRepository;
-import cm.aptoide.pt.install.RootInstallNotificationEventReceiver;
-import cm.aptoide.pt.install.installer.RootInstallErrorNotificationFactory;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.leak.LeakTool;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
-import cm.aptoide.pt.networking.BodyInterceptorV3;
-import cm.aptoide.pt.networking.BodyInterceptorV7;
-import cm.aptoide.pt.networking.Cdn;
 import cm.aptoide.pt.networking.IdsRepository;
-import cm.aptoide.pt.networking.NoAuthenticationBodyInterceptorV3;
-import cm.aptoide.pt.networking.NoOpTokenInvalidator;
-import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.notification.NotificationInfo;
@@ -101,7 +80,6 @@ import cm.aptoide.pt.preferences.AdultContent;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.Preferences;
 import cm.aptoide.pt.preferences.RemotePersistenceAdultContent;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -143,13 +121,11 @@ import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
-import java.io.File;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -180,69 +156,71 @@ public abstract class AptoideApplication extends Application {
   @Inject CacheHelper cacheHelper;
   @Inject AppEventsLogger appEventsLogger;
   @Inject AptoideAccountManager accountManager;
-  private BodyInterceptor<BaseBody> bodyInterceptorPoolV7;
-  private BodyInterceptor<BaseBody> bodyInterceptorWebV7;
-  private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3;
   @Inject Preferences preferences;
   @Inject @Named("secure") cm.aptoide.pt.preferences.SecurePreferences securePreferences;
   @Inject SecureCoderDecoder secureCodeDecoder;
   @Inject AdultContent adultContent;
   @Inject IdsRepository idsRepository;
   @Inject GoogleApiClient googleSignInClient;
-  private LeakTool leakTool;
-  private String aptoideMd5sum;
   @Inject @Named("default") OkHttpClient defaultClient;
-  private L2Cache httpClientCache;
   @Inject @Named("user-agent") Interceptor userAgentInterceptor;
   @Inject AndroidAccountProvider androidAccountProvider;
-  private BillingAnalytics billingAnalytics;
   @Inject ObjectMapper nonNullObjectMapper;
   @Inject RequestBodyFactory requestBodyFactory;
-  private ExternalBillingSerializer inAppBillingSerialzer;
-  private PurchaseBundleMapper purchaseBundleMapper;
-  private PaymentThrowableCodeMapper paymentThrowableCodeMapper;
-  private NotificationCenter notificationCenter;
-  private QManager qManager;
-  private EntryPointChooser entryPointChooser;
   @Inject RootAvailabilityManager rootAvailabilityManager;
-  private RootInstallationRetryHandler rootInstallationRetryHandler;
-  private RefreshTokenInvalidator tokenInvalidator;
-  private FileManager fileManager;
   @Inject StoreManager storeManager;
-  private PackageRepository packageRepository;
-  private AdsApplicationVersionCodeProvider applicationVersionCodeProvider;
-  private AdsRepository adsRepository;
-  private NotificationProvider notificationProvider;
-  private SyncStorage syncStorage;
-  private TimelineRepositoryFactory timelineRepositoryFactory;
   @Inject AuthenticationPersistence authenticationPersistence;
-  private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody>
-      noAuthorizationBodyInterceptorV3;
-  private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
   @Inject CallbackManager facebookCallbackManager;
-  private Map<Integer, Result> fragmentResulMap;
-  private NavigationTracker navigationTracker;
-  private BillingPool billingPool;
-  private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
   @Inject AccountAnalytics accountAnalytics;
-  private PageViewsAnalytics pageViewsAnalytics;
-  private BodyInterceptor<BaseBody> accountSettingsBodyInterceptorPoolV7;
-  private BodyInterceptor<BaseBody> accountSettingsBodyInterceptorWebV7;
-  private Adyen adyen;
-  private PurchaseFactory purchaseFactory;
-  private SparseArray<InstallManager> installManagers;
   @Inject InstalledAccessor installedAccessor;
   @Inject Crashlytics crashlytics;
   @Inject @Named("retrofit-log") Interceptor retrofitLogInterceptor;
   @Inject AccountManager androidAccountManager;
   @Inject @Named("default") SharedPreferences defaultSharedPreferences;
   @Inject @Named("secureShared") SharedPreferences secureSharedPreferences;
+  @Inject SyncScheduler alarmSyncScheduler;
+  @Inject @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7;
+  @Inject @Named("web-v7") BodyInterceptor<BaseBody> bodyInterceptorWebV7;
+  @Inject @Named("defaulInterceptorV3") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody>
+      bodyInterceptorV3;
+  @Inject L2Cache httpClientCache;
+  @Inject QManager qManager;
+  @Inject RootInstallationRetryHandler rootInstallationRetryHandler;
+  @Inject TokenInvalidator tokenInvalidator;
+  @Inject PackageRepository packageRepository;
+  @Inject AdsApplicationVersionCodeProvider applicationVersionCodeProvider;
+  @Inject AdsRepository adsRepository;
+  @Inject SyncStorage syncStorage;
+  @Inject @Named("no-authentication-v3") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody>
+      noAuthorizationBodyInterceptorV3;
+  @Inject NavigationTracker navigationTracker;
+  @Inject PageViewsAnalytics pageViewsAnalytics;
+  @Inject @Named("account-settings-pool-v7") BodyInterceptor<BaseBody>
+      accountSettingsBodyInterceptorPoolV7;
+  private LeakTool leakTool;
+  private String aptoideMd5sum;
+  private BillingAnalytics billingAnalytics;
+  private ExternalBillingSerializer inAppBillingSerialzer;
+  private PurchaseBundleMapper purchaseBundleMapper;
+  private PaymentThrowableCodeMapper paymentThrowableCodeMapper;
+  private NotificationCenter notificationCenter;
+  private EntryPointChooser entryPointChooser;
+  private FileManager fileManager;
+  private NotificationProvider notificationProvider;
+  private TimelineRepositoryFactory timelineRepositoryFactory;
+  private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
+  private Map<Integer, Result> fragmentResulMap;
+  private BillingPool billingPool;
+  private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
+  private BodyInterceptor<BaseBody> accountSettingsBodyInterceptorWebV7;
+  private Adyen adyen;
+  private PurchaseFactory purchaseFactory;
+  private SparseArray<InstallManager> installManagers;
   private ApplicationComponent applicationComponent;
   private AppCenter appCenter;
   private ReadPostsPersistence readPostsPersistence;
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
   private NotificationsCleaner notificationsCleaner;
-  @Inject SyncScheduler alarmSyncScheduler;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -398,22 +376,7 @@ public abstract class AptoideApplication extends Application {
   }
 
   public TokenInvalidator getTokenInvalidator() {
-    if (tokenInvalidator == null) {
-      tokenInvalidator =
-          new RefreshTokenInvalidator(getNoAuthenticationBodyInterceptorV3(), getDefaultClient(),
-              WebService.getDefaultConverter(), getDefaultSharedPreferences(), getExtraId(),
-              new NoOpTokenInvalidator(), getAuthenticationPersistence());
-    }
     return tokenInvalidator;
-  }
-
-  public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getNoAuthenticationBodyInterceptorV3() {
-    if (noAuthorizationBodyInterceptorV3 == null) {
-      noAuthorizationBodyInterceptorV3 =
-          new NoAuthenticationBodyInterceptorV3(getIdsRepository(), getAptoideMd5sum(),
-              getAptoidePackage());
-    }
-    return noAuthorizationBodyInterceptorV3;
   }
 
   private void startNotificationCenter() {
@@ -465,30 +428,6 @@ public abstract class AptoideApplication extends Application {
   public abstract boolean isCreateStoreUserPrivacyEnabled();
 
   public RootInstallationRetryHandler getRootInstallationRetryHandler() {
-    if (rootInstallationRetryHandler == null) {
-
-      Intent retryActionIntent = new Intent(this, RootInstallNotificationEventReceiver.class);
-      retryActionIntent.setAction(RootInstallNotificationEventReceiver.ROOT_INSTALL_RETRY_ACTION);
-      PendingIntent retryPendingIntent =
-          PendingIntent.getBroadcast(this, 2, retryActionIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-      NotificationCompat.Action action =
-          new NotificationCompat.Action(R.drawable.ic_refresh_black_24dp,
-              getString(R.string.generalscreen_short_root_install_timeout_error_action),
-              retryPendingIntent);
-
-      PendingIntent deleteAction = PendingIntent.getBroadcast(this, 3, retryActionIntent.setAction(
-          RootInstallNotificationEventReceiver.ROOT_INSTALL_DISMISS_ACTION),
-          PendingIntent.FLAG_UPDATE_CURRENT);
-
-      int notificationId = 230498;
-      rootInstallationRetryHandler =
-          new RootInstallationRetryHandler(notificationId, getSystemNotificationShower(),
-              getInstallManager(InstallerFactory.ROLLBACK), PublishRelay.create(), 0, this,
-              new RootInstallErrorNotificationFactory(notificationId,
-                  BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher), action,
-                  deleteAction));
-    }
     return rootInstallationRetryHandler;
   }
 
@@ -536,8 +475,6 @@ public abstract class AptoideApplication extends Application {
   }
 
   public OkHttpClient getDefaultClient() {
-    if (defaultClient == null) {
-    }
     return defaultClient;
   }
 
@@ -546,10 +483,6 @@ public abstract class AptoideApplication extends Application {
   }
 
   public L2Cache getHttpClientCache() {
-    if (httpClientCache == null) {
-      httpClientCache =
-          new L2Cache(new POSTCacheKeyAlgorithm(), new File(getCacheDir(), CACHE_FILE_NAME));
-    }
     return httpClientCache;
   }
 
@@ -583,11 +516,6 @@ public abstract class AptoideApplication extends Application {
   }
 
   public QManager getQManager() {
-    if (qManager == null) {
-      qManager = new QManager(getDefaultSharedPreferences(), getResources(),
-          ((ActivityManager) getSystemService(ACTIVITY_SERVICE)),
-          ((WindowManager) getSystemService(WINDOW_SERVICE)));
-    }
     return qManager;
   }
 
@@ -599,8 +527,6 @@ public abstract class AptoideApplication extends Application {
   }
 
   public AptoideAccountManager getAccountManager() {
-    if (accountManager == null) {
-    }
     return accountManager;
   }
 
@@ -609,14 +535,10 @@ public abstract class AptoideApplication extends Application {
   }
 
   public Preferences getPreferences() {
-    if (preferences == null) {
-    }
     return preferences;
   }
 
   public cm.aptoide.pt.preferences.SecurePreferences getSecurePreferences() {
-    if (securePreferences == null) {
-    }
     return securePreferences;
   }
 
@@ -640,11 +562,11 @@ public abstract class AptoideApplication extends Application {
               getAccountManager(), getDatabase(), getResources(), getPackageRepository(),
               getTokenInvalidator(),
               new RxSyncScheduler(new HashMap<>(), CrashReport.getInstance()),
-              getInAppBillingSerializer(),
-              getBodyInterceptorPoolV7(), getAccountSettingsBodyInterceptorPoolV7(),
-              new HashMap<>(), WebService.getDefaultConverter(), CrashReport.getInstance(),
-              getAdyen(), getPurchaseFactory(), Build.VERSION_CODES.JELLY_BEAN,
-              Build.VERSION_CODES.JELLY_BEAN, getAuthenticationPersistence(), getPreferences());
+              getInAppBillingSerializer(), getBodyInterceptorPoolV7(),
+              getAccountSettingsBodyInterceptorPoolV7(), new HashMap<>(),
+              WebService.getDefaultConverter(), CrashReport.getInstance(), getAdyen(),
+              getPurchaseFactory(), Build.VERSION_CODES.JELLY_BEAN, Build.VERSION_CODES.JELLY_BEAN,
+              getAuthenticationPersistence(), getPreferences());
     }
     return billingPool;
   }
@@ -665,9 +587,6 @@ public abstract class AptoideApplication extends Application {
   }
 
   public PackageRepository getPackageRepository() {
-    if (packageRepository == null) {
-      packageRepository = new PackageRepository(getPackageManager());
-    }
     return packageRepository;
   }
 
@@ -693,11 +612,6 @@ public abstract class AptoideApplication extends Application {
     return inAppBillingSerialzer;
   }
 
-  public NetworkOperatorManager getNetworkOperatorManager() {
-    return new NetworkOperatorManager(
-        (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE));
-  }
-
   private void clearFileCache() {
     getFileManager().purgeCache()
         .first()
@@ -718,20 +632,6 @@ public abstract class AptoideApplication extends Application {
   }
 
   private CacheHelper getCacheHelper() {
-    if (cacheHelper == null) {
-      List<CacheHelper.FolderToManage> folders = new LinkedList<>();
-
-      final String cachePath = getCachePath();
-
-      long month = DateUtils.DAY_IN_MILLIS;
-      folders.add(new CacheHelper.FolderToManage(new File(cachePath), month));
-      folders.add(new CacheHelper.FolderToManage(new File(cachePath + "icons/"), month));
-      folders.add(new CacheHelper.FolderToManage(
-          new File(getApplicationContext().getCacheDir() + "image_manager_disk_cache/"), month));
-      cacheHelper =
-          new CacheHelper(ManagerPreferences.getCacheLimit(getDefaultSharedPreferences()), folders,
-              new FileUtils());
-    }
     return cacheHelper;
   }
 
@@ -823,12 +723,6 @@ public abstract class AptoideApplication extends Application {
    * BaseBodyInterceptor for v7 ws calls with CDN = pool configuration
    */
   public BodyInterceptor<BaseBody> getBodyInterceptorPoolV7() {
-    if (bodyInterceptorPoolV7 == null) {
-      bodyInterceptorPoolV7 =
-          new BodyInterceptorV7(getIdsRepository(), getAuthenticationPersistence(),
-              getAptoideMd5sum(), getAptoidePackage(), getQManager(), Cdn.POOL,
-              getDefaultSharedPreferences(), getResources(), BuildConfig.VERSION_CODE);
-    }
     return bodyInterceptorPoolV7;
   }
 
@@ -836,20 +730,10 @@ public abstract class AptoideApplication extends Application {
    * BaseBodyInterceptor for v7 ws calls with CDN = web configuration
    */
   public BodyInterceptor<BaseBody> getBodyInterceptorWebV7() {
-    if (bodyInterceptorWebV7 == null) {
-      bodyInterceptorWebV7 =
-          new BodyInterceptorV7(getIdsRepository(), getAuthenticationPersistence(),
-              getAptoideMd5sum(), getAptoidePackage(), getQManager(), Cdn.WEB,
-              getDefaultSharedPreferences(), getResources(), BuildConfig.VERSION_CODE);
-    }
     return bodyInterceptorWebV7;
   }
 
   public BodyInterceptor<BaseBody> getAccountSettingsBodyInterceptorPoolV7() {
-    if (accountSettingsBodyInterceptorPoolV7 == null) {
-      accountSettingsBodyInterceptorPoolV7 =
-          new AccountSettingsBodyInterceptorV7(getBodyInterceptorPoolV7(), getLocalAdultContent());
-    }
     return accountSettingsBodyInterceptorPoolV7;
   }
 
@@ -862,19 +746,10 @@ public abstract class AptoideApplication extends Application {
   }
 
   public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getBodyInterceptorV3() {
-    if (bodyInterceptorV3 == null) {
-      bodyInterceptorV3 =
-          new BodyInterceptorV3(getIdsRepository(), getAptoideMd5sum(), getAptoidePackage(),
-              getQManager(), getDefaultSharedPreferences(), BodyInterceptorV3.RESPONSE_MODE_JSON,
-              Build.VERSION.SDK_INT, getNetworkOperatorManager(), getAuthenticationPersistence());
-    }
     return bodyInterceptorV3;
   }
 
   public RequestBodyFactory getRequestBodyFactory() {
-    if (requestBodyFactory == null) {
-      requestBodyFactory = new RequestBodyFactory();
-    }
     return requestBodyFactory;
   }
 
@@ -908,8 +783,6 @@ public abstract class AptoideApplication extends Application {
   }
 
   private AdultContent getLocalAdultContent() {
-    if (adultContent == null) {
-    }
     return adultContent;
   }
 
@@ -990,29 +863,14 @@ public abstract class AptoideApplication extends Application {
   }
 
   public AdsApplicationVersionCodeProvider getVersionCodeProvider() {
-    if (applicationVersionCodeProvider == null) {
-      applicationVersionCodeProvider =
-          new PackageRepositoryVersionCodeProvider(getPackageRepository(), getPackageName());
-    }
     return applicationVersionCodeProvider;
   }
 
   public AdsRepository getAdsRepository() {
-    if (adsRepository == null) {
-      adsRepository = new AdsRepository(getIdsRepository(), accountManager, getDefaultClient(),
-          WebService.getDefaultConverter(), qManager, getDefaultSharedPreferences(),
-          getApplicationContext(),
-          (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getResources(),
-          getVersionCodeProvider(), AdNetworkUtils::isGooglePlayServicesAvailable,
-          this::getPartnerId, new MinimalAdMapper());
-    }
     return adsRepository;
   }
 
   public SyncStorage getSyncStorage() {
-    if (syncStorage == null) {
-      syncStorage = new SyncStorage(new HashMap<>());
-    }
     return syncStorage;
   }
 
@@ -1031,11 +889,6 @@ public abstract class AptoideApplication extends Application {
   }
 
   public PageViewsAnalytics getPageViewsAnalytics() {
-    if (pageViewsAnalytics == null) {
-      pageViewsAnalytics =
-          new PageViewsAnalytics(AppEventsLogger.newLogger(this), Analytics.getInstance(),
-              getNavigationTracker());
-    }
     return pageViewsAnalytics;
   }
 
@@ -1054,9 +907,6 @@ public abstract class AptoideApplication extends Application {
   }
 
   public NavigationTracker getNavigationTracker() {
-    if (navigationTracker == null) {
-      navigationTracker = new NavigationTracker(new ArrayList<>(), new TrackerFilter());
-    }
     return navigationTracker;
   }
 
@@ -1076,8 +926,6 @@ public abstract class AptoideApplication extends Application {
   }
 
   public AccountAnalytics getAccountAnalytics() {
-    if (accountAnalytics == null) {
-    }
     return accountAnalytics;
   }
 
@@ -1122,14 +970,11 @@ public abstract class AptoideApplication extends Application {
   }
 
   public SyncScheduler getAlarmSyncScheduler() {
-    if (alarmSyncScheduler == null) {
-    }
     return alarmSyncScheduler;
   }
 
   public IdsRepository getIdsRepository() {
     return idsRepository;
   }
-
 }
 

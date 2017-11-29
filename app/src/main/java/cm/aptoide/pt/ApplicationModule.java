@@ -97,7 +97,6 @@ import cm.aptoide.pt.networking.NoAuthenticationBodyInterceptorV3;
 import cm.aptoide.pt.networking.NoOpTokenInvalidator;
 import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
-import cm.aptoide.pt.notification.NotificationProvider;
 import cm.aptoide.pt.preferences.AdultContent;
 import cm.aptoide.pt.preferences.LocalPersistenceAdultContent;
 import cm.aptoide.pt.preferences.Preferences;
@@ -308,7 +307,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         new TwitterAuthConfig(BuildConfig.TWITTER_KEY, BuildConfig.TWITTER_SECRET)));
   }
 
-  @Singleton @Provides InstalledRepository provideInstalledRepository(InstalledAccessor installedAccessor) {
+  @Singleton @Provides InstalledRepository provideInstalledRepository(
+      InstalledAccessor installedAccessor) {
     return new InstalledRepository(installedAccessor);
   }
 
@@ -336,7 +336,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides IdsRepository provideIdsRepository(
-      @Named("default") SharedPreferences defaultSharedPreferences, ContentResolver contentResolver) {
+      @Named("default") SharedPreferences defaultSharedPreferences,
+      ContentResolver contentResolver) {
     return new IdsRepository(
         SecurePreferencesImplementation.getInstance(application.getApplicationContext(),
             defaultSharedPreferences), application,
@@ -400,16 +401,18 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("secure") SecurePreferences providesSecurePerefences(
-      @Named("default") SharedPreferences defaultSharedPreferences, SecureCoderDecoder secureCoderDecoder) {
+      @Named("default") SharedPreferences defaultSharedPreferences,
+      SecureCoderDecoder secureCoderDecoder) {
     return new SecurePreferences(defaultSharedPreferences, secureCoderDecoder);
   }
 
-  @Singleton @Provides @Named("secureShared") SharedPreferences providesSecureSharedPreferences(@Named ("default") SharedPreferences defaultSharedPreferences){
-    return SecurePreferencesImplementation.getInstance(getApplicationContext(), defaultSharedPreferences);
+  @Singleton @Provides @Named("secureShared") SharedPreferences providesSecureSharedPreferences(
+      @Named("default") SharedPreferences defaultSharedPreferences) {
+    return SecurePreferencesImplementation.getInstance(getApplicationContext(),
+        defaultSharedPreferences);
   }
 
   @Singleton @Provides RootInstallationRetryHandler provideRootInstallationRetryHandler() {
-
 
     Intent retryActionIntent = new Intent(application, RootInstallNotificationEventReceiver.class);
     retryActionIntent.setAction(RootInstallNotificationEventReceiver.ROOT_INSTALL_RETRY_ACTION);
@@ -428,11 +431,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         PendingIntent.FLAG_UPDATE_CURRENT);
 
     int notificationId = 230498;
-    return new RootInstallationRetryHandler(notificationId, application.getSystemNotificationShower(),
-        application.getInstallManager(InstallerFactory.ROLLBACK), PublishRelay.create(), 0, application,
-        new RootInstallErrorNotificationFactory(notificationId,
-            BitmapFactory.decodeResource(application.getResources(), R.mipmap.ic_launcher), action,
-            deleteAction));
+    return new RootInstallationRetryHandler(notificationId,
+        application.getSystemNotificationShower(),
+        application.getInstallManager(InstallerFactory.ROLLBACK), PublishRelay.create(), 0,
+        application, new RootInstallErrorNotificationFactory(notificationId,
+        BitmapFactory.decodeResource(application.getResources(), R.mipmap.ic_launcher), action,
+        deleteAction));
   }
 
   @Singleton @Provides GoogleApiClient provideGoogleApiClient() {
@@ -448,13 +452,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AptoideAccountManager provideAptoideAccountManager(AdultContent adultContent,
       StoreAccessor storeAccessor, @Named("default") OkHttpClient httpClient,
       @Named("long-timeout") OkHttpClient longTimeoutHttpClient, AccountManager accountManager,
-      @Named("default") SharedPreferences defaultSharedPreferences, AuthenticationPersistence authenticationPersistence,
-      TokenInvalidator tokenInvalidator, @Named("pool-v7")
-      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("default") SharedPreferences defaultSharedPreferences,
+      AuthenticationPersistence authenticationPersistence, TokenInvalidator tokenInvalidator,
+      @Named("pool-v7")
+          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("web-v7")
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorWebV7,
-      @Named("multipart")
-          MultipartBodyInterceptor multipartBodyInterceptor,
+      @Named("multipart") MultipartBodyInterceptor multipartBodyInterceptor,
       AndroidAccountProvider androidAccountProvider, GoogleApiClient googleApiClient,
       @Named("no-authentication-v3") BodyInterceptor<BaseBody> noAuthenticationBodyInterceptorV3,
       ObjectMapper objectMapper) {
@@ -467,14 +471,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
             tokenInvalidator, authenticationPersistence, noAuthenticationBodyInterceptorV3,
             multipartBodyInterceptor, bodyInterceptorWebV7, bodyInterceptorPoolV7);
 
-
     final AndroidAccountDataMigration accountDataMigration = new AndroidAccountDataMigration(
         SecurePreferencesImplementation.getInstance(application, defaultSharedPreferences),
         defaultSharedPreferences, AccountManager.get(application),
         new SecureCoderDecoder.Builder(application, defaultSharedPreferences).create(),
         SQLiteDatabaseHelper.DATABASE_VERSION,
-        application.getDatabasePath(SQLiteDatabaseHelper.DATABASE_NAME).getPath(), application.getAccountType(),
-        BuildConfig.VERSION_NAME, Schedulers.io());
+        application.getDatabasePath(SQLiteDatabaseHelper.DATABASE_NAME)
+            .getPath(), application.getAccountType(), BuildConfig.VERSION_NAME, Schedulers.io());
 
     final AccountPersistence accountPersistence =
         new AndroidAccountManagerPersistence(accountManager,
@@ -508,7 +511,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       // In order to make sure it happens we clean up all data persisted in disk when client
       // is first created. It only affects API calls with GET verb.
       cache.evictAll();
-    } catch (IOException ignored) {}
+    } catch (IOException ignored) {
+    }
     okHttpClientBuilder.cache(cache); // 10 MiB
     okHttpClientBuilder.addInterceptor(new POSTCacheInterceptor(httpClientCache));
     okHttpClientBuilder.addInterceptor(userAgentInterceptor);
@@ -545,12 +549,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides L2Cache provideL2Cache() {
-    return new L2Cache(new POSTCacheKeyAlgorithm(), new File(application.getCacheDir(), AptoideApplication.CACHE_FILE_NAME));
-  }
-
-  @Singleton @Provides NotificationProvider provideNotificationProvider(
-      NotificationAccessor notificationAccessor) {
-    return new NotificationProvider(notificationAccessor, Schedulers.io());
+    return new L2Cache(new POSTCacheKeyAlgorithm(),
+        new File(application.getCacheDir(), AptoideApplication.CACHE_FILE_NAME));
   }
 
   @Singleton @Provides NotificationAccessor provideNotificationAccessor(Database database) {
@@ -607,8 +607,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         aptoidePackage, qManager, Cdn.POOL, sharedPreferences, resources, BuildConfig.VERSION_CODE);
   }
 
-  @Singleton @Provides @Named("multipart")
-  MultipartBodyInterceptor provideMultipartBodyInterceptor(
+  @Singleton @Provides @Named("multipart") MultipartBodyInterceptor provideMultipartBodyInterceptor(
       IdsRepository idsRepository, AuthenticationPersistence authenticationPersistence,
       RequestBodyFactory requestBodyFactory) {
     return new MultipartBodyInterceptor(idsRepository, requestBodyFactory,
@@ -678,56 +677,70 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new Database();
   }
 
-  @Singleton @Provides CallbackManager provideCallbackManager(){
+  @Singleton @Provides CallbackManager provideCallbackManager() {
     return new CallbackManagerImpl();
   }
 
-  @Singleton @Provides AccountAnalytics provideAccountAnalytics(@Named("pool-v7") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
-      @Named("default") OkHttpClient defaulClient, TokenInvalidator tokenInvalidator, @Named ("default") SharedPreferences defaultSharedPreferences,
-      AppEventsLogger appEventsLogger, NavigationTracker navigationTracker){
-    return new AccountAnalytics(Analytics.getInstance(), bodyInterceptorPoolV7,
-        defaulClient, WebService.getDefaultConverter(), tokenInvalidator,
-        BuildConfig.APPLICATION_ID, defaultSharedPreferences, appEventsLogger,
-        navigationTracker, CrashReport.getInstance());
+  @Singleton @Provides AccountAnalytics provideAccountAnalytics(@Named("pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient defaulClient, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences defaultSharedPreferences, AppEventsLogger appEventsLogger,
+      NavigationTracker navigationTracker) {
+    return new AccountAnalytics(Analytics.getInstance(), bodyInterceptorPoolV7, defaulClient,
+        WebService.getDefaultConverter(), tokenInvalidator, BuildConfig.APPLICATION_ID,
+        defaultSharedPreferences, appEventsLogger, navigationTracker, CrashReport.getInstance());
   }
 
-  @Singleton @Provides StoreManager provideStoreManager(AptoideAccountManager accountManager, @Named("default") OkHttpClient okHttpClient,
-      @Named("multipart")MultipartBodyInterceptor multipartBodyInterceptor,
-      @Named("defaulInterceptorV3") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
-      @Named("account-settings-pool-v7") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> accountSettingsBodyInterceptorPoolV7,
+  @Singleton @Provides StoreManager provideStoreManager(AptoideAccountManager accountManager,
+      @Named("default") OkHttpClient okHttpClient,
+      @Named("multipart") MultipartBodyInterceptor multipartBodyInterceptor,
+      @Named("defaulInterceptorV3")
+          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
+      @Named("account-settings-pool-v7")
+          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> accountSettingsBodyInterceptorPoolV7,
       @Named("default") SharedPreferences defaultSharedPreferences,
-      TokenInvalidator tokenInvalidator, RequestBodyFactory requestBodyFactory, ObjectMapper nonNullObjectMapper) {
+      TokenInvalidator tokenInvalidator, RequestBodyFactory requestBodyFactory,
+      ObjectMapper nonNullObjectMapper) {
     return new StoreManager(accountManager, okHttpClient, WebService.getDefaultConverter(),
         multipartBodyInterceptor, bodyInterceptorV3, accountSettingsBodyInterceptorPoolV7,
         defaultSharedPreferences, tokenInvalidator, requestBodyFactory, nonNullObjectMapper);
   }
 
-  @Singleton @Provides AdsRepository provideAdsRepository(IdsRepository idsRepository, AptoideAccountManager accountManager,
-      @Named("default") OkHttpClient okHttpClient, QManager qManager,  @Named("default") SharedPreferences defaultSharedPreferences,
+  @Singleton @Provides AdsRepository provideAdsRepository(IdsRepository idsRepository,
+      AptoideAccountManager accountManager, @Named("default") OkHttpClient okHttpClient,
+      QManager qManager, @Named("default") SharedPreferences defaultSharedPreferences,
       AdsApplicationVersionCodeProvider adsApplicationVersionCodeProvider) {
-    return new AdsRepository(idsRepository, accountManager, okHttpClient, WebService.getDefaultConverter(), qManager, defaultSharedPreferences,
-        application.getApplicationContext(), (ConnectivityManager) application.getSystemService(Context.CONNECTIVITY_SERVICE), application.getResources(),
-        adsApplicationVersionCodeProvider, AdNetworkUtils::isGooglePlayServicesAvailable, application::getPartnerId,
+    return new AdsRepository(idsRepository, accountManager, okHttpClient,
+        WebService.getDefaultConverter(), qManager, defaultSharedPreferences,
+        application.getApplicationContext(),
+        (ConnectivityManager) application.getSystemService(Context.CONNECTIVITY_SERVICE),
+        application.getResources(), adsApplicationVersionCodeProvider,
+        AdNetworkUtils::isGooglePlayServicesAvailable, application::getPartnerId,
         new MinimalAdMapper());
   }
 
-  @Singleton @Provides AdsApplicationVersionCodeProvider providesAdsApplicationVersionCodeProvider(PackageRepository packageRepository){
-    return new PackageRepositoryVersionCodeProvider(packageRepository, application.getPackageName());
+  @Singleton @Provides AdsApplicationVersionCodeProvider providesAdsApplicationVersionCodeProvider(
+      PackageRepository packageRepository) {
+    return new PackageRepositoryVersionCodeProvider(packageRepository,
+        application.getPackageName());
   }
 
-  @Singleton @Provides PackageRepository providesPackageRepository(){
+  @Singleton @Provides PackageRepository providesPackageRepository() {
     return new PackageRepository(application.getPackageManager());
   }
 
-  @Singleton @Provides @Named("defaulInterceptorV3") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> providesBodyInterceptorV3(
-      IdsRepository idsRepository, QManager qManager, @Named("default") SharedPreferences defaultSharedPreferences, NetworkOperatorManager networkOperatorManager,
-      AuthenticationPersistence authenticationPersistence){
-    return new BodyInterceptorV3(idsRepository, aptoideMd5sum, aptoidePackage,
-        qManager, defaultSharedPreferences, BodyInterceptorV3.RESPONSE_MODE_JSON,
-        Build.VERSION.SDK_INT, networkOperatorManager, authenticationPersistence);
+  @Singleton @Provides @Named("defaulInterceptorV3")
+  BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> providesBodyInterceptorV3(
+      IdsRepository idsRepository, QManager qManager,
+      @Named("default") SharedPreferences defaultSharedPreferences,
+      NetworkOperatorManager networkOperatorManager,
+      AuthenticationPersistence authenticationPersistence) {
+    return new BodyInterceptorV3(idsRepository, aptoideMd5sum, aptoidePackage, qManager,
+        defaultSharedPreferences, BodyInterceptorV3.RESPONSE_MODE_JSON, Build.VERSION.SDK_INT,
+        networkOperatorManager, authenticationPersistence);
   }
 
-  @Singleton @Provides NetworkOperatorManager providesNetworkOperatorManager(){
+  @Singleton @Provides NetworkOperatorManager providesNetworkOperatorManager() {
     return new NetworkOperatorManager(
         (TelephonyManager) application.getSystemService(Context.TELEPHONY_SERVICE));
   }
