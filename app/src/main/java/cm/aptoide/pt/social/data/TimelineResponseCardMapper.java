@@ -4,7 +4,6 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
@@ -51,7 +50,6 @@ import cm.aptoide.pt.social.data.publisher.AptoidePublisher;
 import cm.aptoide.pt.social.data.publisher.MediaPublisher;
 import cm.aptoide.pt.social.data.publisher.Poster;
 import cm.aptoide.pt.social.data.publisher.PublisherAvatar;
-import com.crashlytics.android.answers.Answers;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Single;
@@ -67,11 +65,11 @@ public class TimelineResponseCardMapper {
   private final TimelineGameAnalytics gameAnalytics;
 
   public TimelineResponseCardMapper(AptoideAccountManager accountManager,
-      InstallManager installManager, String marketName) {
+      InstallManager installManager, String marketName, TimelineGameAnalytics gameAnalytics) {
     this.installManager = installManager;
     this.marketName = marketName;
     this.accountManager = accountManager;
-    this.gameAnalytics = new TimelineGameAnalytics(Analytics.getInstance(), Answers.getInstance());
+    this.gameAnalytics = gameAnalytics;
   }
 
   public Single<List<Post>> map(List<TimelineItem<TimelineCard>> cardList,
@@ -575,11 +573,11 @@ public class TimelineResponseCardMapper {
           return game2;
         } else if (game.getQuestion()
             .getType()
-            .equals("TEXTICON") && !game.getWrongAnswer()
-            .getName()
-            .equals(null) && !game.getWrongAnswer()
-            .getIcon()
-            .equals(null)) {
+            .equals("TEXTICON")
+            && game.getWrongAnswer()
+            .getName() != null
+            && game.getWrongAnswer()
+            .getIcon() != null) {
           Game3 game3 = new Game3(game.getCardId(), game.getRightAnswer(), game.getQuestion()
               .getQuestionText(), game.getRankings()
               .getScore(), game.getRankings()

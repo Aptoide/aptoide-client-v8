@@ -136,6 +136,7 @@ import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootValueSaver;
 import cm.aptoide.pt.social.TimelineRepositoryFactory;
+import cm.aptoide.pt.social.analytics.TimelineGameAnalytics;
 import cm.aptoide.pt.social.data.ReadPostsPersistence;
 import cm.aptoide.pt.social.data.TimelinePostsRepository;
 import cm.aptoide.pt.social.data.TimelineResponseCardMapper;
@@ -1270,7 +1271,8 @@ public abstract class AptoideApplication extends Application {
               getDefaultClient(), getDefaultSharedPreferences(), getTokenInvalidator(),
               new LinksHandlerFactory(this), getPackageRepository(),
               WebService.getDefaultConverter(), new TimelineResponseCardMapper(accountManager,
-              getInstallManager(InstallerFactory.ROLLBACK), getMarketName()),
+              getInstallManager(InstallerFactory.ROLLBACK), getMarketName(),
+              new TimelineGameAnalytics(Analytics.getInstance(), Answers.getInstance())),
               RepositoryFactory.getUpdateRepository(context,
                   ((AptoideApplication) context.getApplicationContext()).getDefaultSharedPreferences()));
     }
