@@ -19,7 +19,7 @@ import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.search.model.SearchAdResult;
-import cm.aptoide.pt.timeline.TimelineAnalytics;
+import cm.aptoide.pt.social.analytics.TimelineAnalytics;
 import com.jakewharton.rxrelay.PublishRelay;
 import lombok.Getter;
 import lombok.Setter;

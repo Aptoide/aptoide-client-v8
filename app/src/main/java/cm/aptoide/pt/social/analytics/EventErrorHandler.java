@@ -1,4 +1,4 @@
-package cm.aptoide.pt.social.data.analytics;
+package cm.aptoide.pt.social.analytics;
 
 import java.util.HashMap;
 

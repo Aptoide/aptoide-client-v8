@@ -13,6 +13,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.ShareInstallCardRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.repository.exception.RepositoryIllegalArgumentException;
+import cm.aptoide.pt.social.analytics.TimelineAnalytics;
 import cm.aptoide.pt.timeline.view.ShareCardCallback;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;

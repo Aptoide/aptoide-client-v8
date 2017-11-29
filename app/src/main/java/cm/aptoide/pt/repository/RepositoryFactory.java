@@ -25,9 +25,9 @@ import cm.aptoide.pt.download.ScheduledDownloadRepository;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.rollback.RollbackRepository;
 import cm.aptoide.pt.networking.IdsRepository;
+import cm.aptoide.pt.social.analytics.TimelineAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.timeline.SocialRepository;
-import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.updates.UpdateRepository;
 import okhttp3.OkHttpClient;
 

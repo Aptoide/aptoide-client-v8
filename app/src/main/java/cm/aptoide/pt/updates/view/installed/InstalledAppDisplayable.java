@@ -8,7 +8,7 @@ package cm.aptoide.pt.updates.view.installed;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.install.InstalledRepository;
-import cm.aptoide.pt.timeline.TimelineAnalytics;
+import cm.aptoide.pt.social.analytics.TimelineAnalytics;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 import lombok.Getter;
 

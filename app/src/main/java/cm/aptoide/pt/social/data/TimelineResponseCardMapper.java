@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
@@ -45,11 +46,12 @@ import cm.aptoide.pt.dataprovider.model.v7.timeline.VideoTimelineItem;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.link.LinksHandlerFactory;
-import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.social.analytics.TimelineGameAnalytics;
 import cm.aptoide.pt.social.data.publisher.AptoidePublisher;
 import cm.aptoide.pt.social.data.publisher.MediaPublisher;
 import cm.aptoide.pt.social.data.publisher.Poster;
 import cm.aptoide.pt.social.data.publisher.PublisherAvatar;
+import com.crashlytics.android.answers.Answers;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Single;
@@ -62,12 +64,14 @@ public class TimelineResponseCardMapper {
   private final AptoideAccountManager accountManager;
   private final InstallManager installManager;
   private final String marketName;
+  private final TimelineGameAnalytics gameAnalytics;
 
   public TimelineResponseCardMapper(AptoideAccountManager accountManager,
       InstallManager installManager, String marketName) {
     this.installManager = installManager;
     this.marketName = marketName;
     this.accountManager = accountManager;
+    this.gameAnalytics = new TimelineGameAnalytics(Analytics.getInstance(), Answers.getInstance());
   }
 
   public Single<List<Post>> map(List<TimelineItem<TimelineCard>> cardList,
@@ -539,7 +543,7 @@ public class TimelineResponseCardMapper {
             .getType()
             .equals("TEXT") && game.getWrongAnswer()
             .getIcon() == null) {
-          return new Game1(game.getCardId(), game.getRightAnswer(), game.getQuestion()
+          Game1 game1 = new Game1(game.getCardId(), game.getRightAnswer(), game.getQuestion()
               .getQuestionText(), game.getRankings()
               .getScore(), game.getRankings()
               .getRanking()
@@ -549,11 +553,14 @@ public class TimelineResponseCardMapper {
               .getRanking()
               .getFriends(), abUrl, false, CardType.GAMETEXT, game.getWrongAnswer()
               .getName(), questionIcon);
+          gameAnalytics.cardMappingSucceeded(game.getQuestion()
+              .getType());
+          return game1;
         } else if (game.getQuestion()
             .getType()
             .equals("ICON") && game.getWrongAnswer()
             .getName() == null) {
-          return new Game2(game.getCardId(), game.getRightAnswer(), game.getQuestion()
+          Game2 game2 = new Game2(game.getCardId(), game.getRightAnswer(), game.getQuestion()
               .getQuestionText(), game.getRankings()
               .getScore(), game.getRankings()
               .getRanking()
@@ -563,6 +570,9 @@ public class TimelineResponseCardMapper {
               .getRanking()
               .getFriends(), abUrl, false, CardType.GAMEICON, game.getWrongAnswer()
               .getIcon(), questionIcon);
+          gameAnalytics.cardMappingSucceeded(game.getQuestion()
+              .getType());
+          return game2;
         } else if (game.getQuestion()
             .getType()
             .equals("TEXTICON") && !game.getWrongAnswer()
@@ -570,7 +580,7 @@ public class TimelineResponseCardMapper {
             .equals(null) && !game.getWrongAnswer()
             .getIcon()
             .equals(null)) {
-          return new Game3(game.getCardId(), game.getRightAnswer(), game.getQuestion()
+          Game3 game3 = new Game3(game.getCardId(), game.getRightAnswer(), game.getQuestion()
               .getQuestionText(), game.getRankings()
               .getScore(), game.getRankings()
               .getRanking()
@@ -581,28 +591,34 @@ public class TimelineResponseCardMapper {
               .getFriends(), abUrl, false, CardType.GAMETEXTICON, game.getWrongAnswer()
               .getIcon(), game.getWrongAnswer()
               .getName(), questionIcon);
+          gameAnalytics.cardMappingSucceeded(game.getQuestion()
+              .getType());
+          return game3;
         } else {
           if (game.getQuestion()
               .getType()
               .equals("TEXT")
               && game.getWrongAnswer()
               .getIcon() != null) {
-            Logger.d("CONTRACTBREACHTEXT", "Bad mapping of cardtype TEXT");
-          }//send contract breach event to fabric
+            gameAnalytics.cardMappingFailed(game.getQuestion()
+                .getType());
+          }
           else if (game.getQuestion()
               .getType()
               .equals("ICON") && game.getWrongAnswer()
               .getName() != null) {
-            Logger.d("CONTRACTBREACHICON", "Bad mapping of cardtype ICON");
-          }//send contract breach event to fabric
+            gameAnalytics.cardMappingFailed(game.getQuestion()
+                .getType());
+          }
           else if (game.getQuestion()
               .getType()
               .equals("TEXTICON") && (game.getWrongAnswer()
               .getName() != null
               || game.getWrongAnswer()
               .getIcon() != null)) {
-            Logger.d("CONTRACTBREACHTEXTICON", "Bad mapping of cardtype TEXTICON");
-          }//send contract breach event to fabric
+            gameAnalytics.cardMappingFailed(game.getQuestion()
+                .getType());
+          }
         }
       }
 

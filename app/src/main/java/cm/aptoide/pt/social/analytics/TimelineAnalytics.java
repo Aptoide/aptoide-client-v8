@@ -1,4 +1,4 @@
-package cm.aptoide.pt.timeline;
+package cm.aptoide.pt.social.analytics;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -32,8 +32,8 @@ import cm.aptoide.pt.social.data.SocialHeaderCardTouchEvent;
 import cm.aptoide.pt.social.data.StoreAppCardTouchEvent;
 import cm.aptoide.pt.social.data.StoreCardTouchEvent;
 import cm.aptoide.pt.social.data.StoreLatestApps;
-import cm.aptoide.pt.social.data.analytics.EventErrorHandler;
 import cm.aptoide.pt.social.data.share.ShareEvent;
+import cm.aptoide.pt.timeline.TimelineSocialActionData;
 import com.facebook.appevents.AppEventsLogger;
 import java.util.HashMap;
 import java.util.Map;

@@ -8,7 +8,7 @@ import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.social.TimelineUserProvider;
-import cm.aptoide.pt.timeline.TimelineAnalytics;
+import cm.aptoide.pt.social.analytics.TimelineAnalytics;
 import cm.aptoide.pt.timeline.TimelineSocialActionData;
 import cm.aptoide.pt.updates.UpdateRepository;
 import java.io.IOException;
