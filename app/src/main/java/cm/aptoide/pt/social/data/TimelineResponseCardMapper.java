@@ -573,7 +573,7 @@ public class TimelineResponseCardMapper {
           return game2;
         } else if (game.getQuestion()
             .getType()
-            .equals("TEXTICON")
+            .equals("TEXT_ICON")
             && game.getWrongAnswer()
             .getName() != null
             && game.getWrongAnswer()
@@ -610,7 +610,7 @@ public class TimelineResponseCardMapper {
           }
           else if (game.getQuestion()
               .getType()
-              .equals("TEXTICON") && (game.getWrongAnswer()
+              .equals("TEXT_ICON") && (game.getWrongAnswer()
               .getName() != null
               || game.getWrongAnswer()
               .getIcon() != null)) {
