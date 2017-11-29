@@ -36,7 +36,8 @@ public class NotificationAnalytics {
   }
 
   public void sendUpdatesNotificationReceivedEvent() {
-    analytics.sendEvent(new FacebookEvent(facebook, NOTIFICATION_IMPRESSION));
+    analytics.sendEvent(
+        new FacebookEvent(facebook, NOTIFICATION_IMPRESSION, createUpdateClickEventBundle()));
   }
 
   public void sendSocialNotificationReceivedEvent(@AptoideNotification.NotificationType int type,
@@ -57,7 +58,7 @@ public class NotificationAnalytics {
 
   private Bundle createUpdateClickEventBundle() {
     Bundle bundle = new Bundle();
-    bundle.putString(TYPE, NotificationTypes.CAMPAIGN.toString()
+    bundle.putString(TYPE, NotificationTypes.UPDATES.toString()
         .toLowerCase());
     return bundle;
   }
