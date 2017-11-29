@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -27,13 +26,10 @@ import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.timeline.view.displayable.FollowUserDisplayable;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import okhttp3.OkHttpClient;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 
 /**
  * Created by trinkes on 16/12/2016.
@@ -114,48 +110,21 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(isSubscribed -> {
             if (isSubscribed) {
-              follow.setText(R.string.unfollow);
+              follow.setVisibility(View.INVISIBLE);
             } else {
               follow.setText(R.string.follow);
             }
-          }, (throwable) -> {
-            throwable.printStackTrace();
-          }));
-
-      //follow.setOnClickListener(l -> storeRepository.isSubscribed(storeName)
-      //    .observeOn(AndroidSchedulers.mainThread())
-      //    .subscribe(sub -> {
-      //      if(sub){
-      //        follow.setText(R.string.follow);
-      //        ShowMessage.asSnack(itemView, AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message, getContext().getResources(), storeName));
-      //        storeUtilsProxy.unSubscribeStore(storeName);
-      //      }
-      //      else{
-      //        follow.setText(R.string.unfollow);
-      //        ShowMessage.asSnack(itemView, AptoideUtils.StringU.getFormattedString(R.string.store_followed, getContext().getResources(), storeName));
-      //        storeUtilsProxy.subscribeStore(storeName);
-      //      }
-      //    }, e -> CrashReport.getInstance().log(e)));
+          }, (throwable) -> throwable.printStackTrace()));
 
       compositeSubscription.add(RxView.clicks(follow)
-          .flatMap(__ -> storeRepository.isSubscribed(storeName))
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(isSubscribed -> {
-            if (isSubscribed) {
-              follow.setText(R.string.follow);
-              Snackbar.make(itemView,
-                  AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
-                      getContext().getResources(), storeName), Snackbar.LENGTH_SHORT)
-                  .show();
-              storeUtilsProxy.unSubscribeStore(storeName);
-            } else {
-              follow.setText(R.string.unfollow);
-              ShowMessage.asSnack(itemView,
-                  AptoideUtils.StringU.getFormattedString(R.string.store_followed,
-                      getContext().getResources(), storeName));
-              storeUtilsProxy.subscribeStore(storeName);
-            }
-          }, e -> CrashReport.getInstance().log(e)));
+          .subscribe(view -> {
+            Snackbar.make(itemView, AptoideUtils.StringU.getFormattedString(R.string.store_followed,
+                getContext().getResources(), storeName), Snackbar.LENGTH_SHORT)
+                .show();
+            follow.setVisibility(View.INVISIBLE);
+            storeUtilsProxy.subscribeStore(storeName);
+          }, e -> CrashReport.getInstance()
+              .log(e)));
     }
 
     final FragmentActivity context = getContext();
