@@ -65,7 +65,7 @@
           android:layout_height="20dp"
           android:layout_alignParentRight="true"
           android:layout_marginTop="18dp"
-          android:visibility="invisible"
+          android:visibility="visible"
           />
 
       <View
@@ -94,9 +94,9 @@
           android:layout_height="wrap_content"
           android:layout_alignParentLeft="true"
           android:layout_alignParentTop="true"
+          android:background="@color/tw__solid_white"
           android:orientation="vertical"
           android:visibility="visible"
-          android:background="@color/tw__solid_white"
           >
 
         <include layout="@layout/timeline_icon_question_body"
@@ -113,10 +113,10 @@
             android:layout_height="50dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_marginBottom="30dp"
             android:layout_marginLeft="20dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="145dp"
-            android:layout_marginBottom="30dp"
             android:src="@mipmap/ic_launcher"
             />
 
@@ -136,12 +136,12 @@
             android:id="@+id/right_answer"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginRight="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginTop="145dp"
+            android:layout_alignParentRight="true"
             android:layout_marginBottom="30dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="145dp"
 
             android:src="@mipmap/ic_launcher"
             />
@@ -162,11 +162,11 @@
             android:id="@+id/stamp_left"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@mipmap/ic_launcher"
-            android:layout_marginTop="60dp"
             android:layout_marginLeft="25dp"
+            android:layout_marginTop="60dp"
             android:alpha="0.0"
             android:rotation="-35"
+            android:src="@mipmap/ic_launcher"
             android:visibility="invisible"
             />
 
@@ -174,28 +174,28 @@
             android:id="@+id/stamp_right"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@mipmap/ic_launcher"
-            android:layout_marginTop="60dp"
-            android:layout_marginRight="25dp"
             android:layout_alignParentRight="true"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="60dp"
             android:alpha="0.0"
             android:rotation="35"
+            android:src="@mipmap/ic_launcher"
             android:visibility="invisible"
             />
 
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginTop="153dp"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="153dp"
             android:src="@drawable/ad_icon"
             />
 
         <TextView
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginTop="153dp"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="153dp"
             android:gravity="center"
             android:text="OR"
             style="@style/Aptoide.TextView.Medium.S.Black"
