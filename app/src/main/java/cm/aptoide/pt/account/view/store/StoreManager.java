@@ -123,7 +123,7 @@ public class StoreManager {
     return storeLinks;
   }
 
-  protected Completable createStore(String storeName, String storeDescription, String storeImage,
+  private Completable createStore(String storeName, String storeDescription, String storeImage,
       boolean hasNewAvatar, String storeThemeName,
       List<SimpleSetStoreRequest.StoreLinks> storeLinksList,
       List<Store.SocialChannelType> storeDeleteSocialLinksList) {

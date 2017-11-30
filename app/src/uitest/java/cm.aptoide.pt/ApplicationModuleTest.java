@@ -31,6 +31,7 @@ import cm.aptoide.pt.account.AndroidAccountProvider;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.account.LoginPreferences;
+import cm.aptoide.pt.account.view.store.SocialLink;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.ads.AdsRepository;
@@ -60,7 +61,6 @@ import cm.aptoide.pt.dataprovider.model.v3.ErrorResponse;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadCompleteAnalytics;
@@ -95,7 +95,6 @@ import cm.aptoide.pt.networking.NoAuthenticationBodyInterceptorV3;
 import cm.aptoide.pt.networking.NoOpTokenInvalidator;
 import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
-import cm.aptoide.pt.notification.NotificationProvider;
 import cm.aptoide.pt.preferences.AdultContent;
 import cm.aptoide.pt.preferences.LocalPersistenceAdultContent;
 import cm.aptoide.pt.preferences.Preferences;
@@ -823,9 +822,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
             multipartBodyInterceptor, bodyInterceptorV3, accountSettingsBodyInterceptorPoolV7,
             defaultSharedPreferences, tokenInvalidator, requestBodyFactory, nonNullObjectMapper) {
           @Override
-          protected Completable createStore(String a, String b, String c, boolean d, String e,
-              List<SimpleSetStoreRequest.StoreLinks> storeLinksList,
-              List<cm.aptoide.pt.dataprovider.model.v7.store.Store.SocialChannelType> storeDeleteSocialLinksList) {
+          public Completable createOrUpdate(String a, String b, String c, boolean d, String e,
+              boolean f, List<SocialLink> storeLinksList,
+              List<cm.aptoide.pt.dataprovider.model.v7.store.Store.SocialChannelType> storeDeleteLinksList) {
             return Completable.complete();
           }
         };
