@@ -86,12 +86,12 @@ public final class RepositoryFactory {
 
   public static AppRepository getAppRepository(Context context,
       SharedPreferences sharedPreferences) {
+    final AptoideApplication application = (AptoideApplication) context.getApplicationContext();
     return new AppRepository(getBaseBodyInterceptorV7(context), getBaseBodyInterceptorV3(context),
         new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
             ((AptoideApplication) context.getApplicationContext()).getDatabase(), Store.class)),
         getHttpClient(context), WebService.getDefaultConverter(), getTokenInvalidator(context),
-        sharedPreferences, context.getResources(),
-        ((AptoideApplication) context.getApplicationContext()).getPartnerId());
+        sharedPreferences, context.getResources(), application.getPartnerId());
   }
 
   private static BodyInterceptor<BaseBody> getBaseBodyInterceptorV7(Context context) {

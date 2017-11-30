@@ -1,7 +1,5 @@
 package cm.aptoide.pt.install;
 
-import cm.aptoide.pt.Install;
-import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.ArrayList;

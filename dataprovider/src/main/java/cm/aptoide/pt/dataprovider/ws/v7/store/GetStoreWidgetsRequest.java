@@ -101,8 +101,8 @@ public class GetStoreWidgetsRequest
             wsWidgets -> getStoreWidgets));
   }
 
-  protected Observable<List<GetStoreWidgets.WSWidget>> loadGetStoreWidgets(
-      GetStoreWidgets getStoreWidgets) {
+  private Observable<List<GetStoreWidgets.WSWidget>> loadGetStoreWidgets(
+      GetStoreWidgets getStoreWidgets, boolean bypassCache) {
     return Observable.from(getStoreWidgets.getDataList()
         .getList())
         .observeOn(Schedulers.io())

@@ -1,17 +1,18 @@
 package cm.aptoide.pt.billing.transaction;
 
+import java.util.List;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
 public interface TransactionPersistence {
 
-  Single<Transaction> createTransaction(String sellerId, String payerId, int paymentMethodId,
-      String productId, Transaction.Status status, String payload, String metadata);
-
-  Observable<Transaction> getTransaction(String sellerId, String payerId, String productId);
-
-  Completable removeTransaction(String sellerId, String payerId, String productId);
+  Observable<Transaction> getTransaction(String customerId, String productId);
 
   Completable saveTransaction(Transaction transaction);
+
+  Completable removeTransaction(String transactionId);
+
+  Single<List<Transaction>> getOtherTransactions(String transactionId, String productId,
+      String customerId);
 }

@@ -5,13 +5,21 @@ import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.remotebootconfig.BootConfigJSONUtils;
 import cm.aptoide.pt.remotebootconfig.datamodel.BootConfig;
 import cm.aptoide.pt.remotebootconfig.datamodel.RemoteBootConfig;
-import cm.aptoide.pt.view.configuration.FragmentProvider;
+import cm.aptoide.pt.view.ActivityProvider;
+import cm.aptoide.pt.view.FragmentProvider;
+import cm.aptoide.pt.view.configuration.implementation.PartnerActivityProvider;
 import cm.aptoide.pt.view.configuration.implementation.PartnerFragmentProvider;
 import rx.Completable;
 
 public class PartnerApplication extends AptoideApplication {
 
   private BootConfig bootConfig;
+
+  public void setRemoteBootConfig(RemoteBootConfig remoteBootConfig) {
+    BootConfigJSONUtils.saveRemoteBootConfig(getBaseContext(), remoteBootConfig,
+        "support@aptoide.com");
+    setBootConfig(remoteBootConfig.getData());
+  }
 
   public BootConfig getBootConfig() {
     if (bootConfig == null) {
@@ -21,18 +29,24 @@ public class PartnerApplication extends AptoideApplication {
     return bootConfig;
   }
 
-  public void setRemoteBootConfig(RemoteBootConfig remoteBootConfig) {
-    BootConfigJSONUtils.saveRemoteBootConfig(getBaseContext(), remoteBootConfig,
-        "support@aptoide.com");
-    this.bootConfig = remoteBootConfig.getData();
+  public void setBootConfig(BootConfig bootConfig) {
+    this.bootConfig = bootConfig;
   }
 
   @Override public String getCachePath() {
     return Environment.getExternalStorageDirectory()
-        .getAbsolutePath() + "/." + getDefaultStore() + "/";
+        .getAbsolutePath() + "/." + getDefaultStoreName() + "/";
   }
 
-  @Override public String getDefaultStore() {
+  @Override public boolean hasMultiStoreSearch() {
+    return getBootConfig().getPartner()
+        .getSwitches()
+        .getOptions()
+        .getMultistore()
+        .isSearch();
+  }
+
+  @Override public String getDefaultStoreName() {
     return getBootConfig().getPartner()
         .getStore()
         .getName();
@@ -42,10 +56,6 @@ public class PartnerApplication extends AptoideApplication {
     return getBootConfig().getPartner()
         .getStore()
         .getLabel();
-  }
-
-  @Override public LoginPreferences getLoginPreferences() {
-    return new LoginPreferences(getBootConfig());
   }
 
   @Override public String getFeedbackEmail() {
@@ -63,7 +73,7 @@ public class PartnerApplication extends AptoideApplication {
   }
 
   @Override public String getAutoUpdateUrl() {
-    return "http://imgs.aptoide.com/latest_version_" + getDefaultStore() + ".xml";
+    return "http://imgs.aptoide.com/latest_version_" + getDefaultStoreName() + ".xml";
   }
 
   @Override public String getPartnerId() {
@@ -76,7 +86,7 @@ public class PartnerApplication extends AptoideApplication {
         .getUid());
   }
 
-  @Override public String getDefaultTheme() {
+  @Override public String getDefaultThemeName() {
     return getBootConfig().getPartner()
         .getAppearance()
         .getTheme();
@@ -86,18 +96,30 @@ public class PartnerApplication extends AptoideApplication {
     return false;
   }
 
-  @Override public FragmentProvider createFragmentProvider() {
-    return new PartnerFragmentProvider(this);
+  @Override public ActivityProvider createActivityProvider() {
+    return new PartnerActivityProvider();
   }
 
   @Override public Completable createShortcut() {
-    if (bootConfig.getPartner()
-        .getSwitches()
-        .getOptions()
-        .isShortcut()) {
-      return super.createShortcut();
-    } else {
-      return null;
-    }
+    return Single.just(getBootConfig())
+        .flatMapCompletable(bootConfig -> {
+          if (bootConfig.getPartner()
+              .getSwitches()
+              .getOptions()
+              .isShortcut()) {
+            return super.createShortcut();
+          } else {
+            return Completable.complete();
+          }
+        });
+  }
+
+  @Override public LoginPreferences getLoginPreferences() {
+    return new LoginPreferences(getBootConfig());
+  }
+
+  @Override public FragmentProvider createFragmentProvider() {
+    return new PartnerFragmentProvider(getDefaultThemeName(), getDefaultStoreName(),
+        hasMultiStoreSearch());
   }
 }

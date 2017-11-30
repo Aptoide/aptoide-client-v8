@@ -1,6 +1,6 @@
 package cm.aptoide.pt.spotandshare.view;
 
-import cm.aptoide.pt.view.AnalyticsActivity;
+import cm.aptoide.pt.analytics.view.AnalyticsActivity;
 
 public abstract class SpotAndShareActivityView extends AnalyticsActivity {
 

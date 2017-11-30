@@ -8,7 +8,7 @@ import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import cm.aptoide.pt.view.app.AppViewFragment;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.zip.ZipEntry;

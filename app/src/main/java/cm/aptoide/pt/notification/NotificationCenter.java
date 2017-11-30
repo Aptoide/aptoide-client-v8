@@ -64,12 +64,19 @@ public class NotificationCenter {
   }
 
   private Observable<AptoideNotification> getNewNotifications() {
-    return notificationHandler.getHandlerNotifications()
-        .flatMap(aptideNotification -> notificationPolicyFactory.getPolicy(aptideNotification)
+    return notificationProvider.getAptoideNotifications()
+        .flatMapIterable(notifications -> notifications)
+        .filter(notification -> !notification.isProcessed())
+        .flatMapSingle(notification -> {
+          notification.setProcessed(true);
+          return notificationProvider.save(notification)
+              .toSingleDefault(notification);
+        })
+        .flatMap(aptoideNotification -> notificationPolicyFactory.getPolicy(aptoideNotification)
             .shouldShow()
             .flatMapObservable(shouldShow -> {
               if (shouldShow) {
-                return Observable.just(aptideNotification);
+                return Observable.just(aptoideNotification);
               } else {
                 return Observable.empty();
               }

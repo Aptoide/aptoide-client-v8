@@ -17,9 +17,10 @@ import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreDisplays;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.view.store.GridDisplayDisplayable;
-import cm.aptoide.pt.view.store.StoreTabFragmentChooser;
-import cm.aptoide.pt.view.store.home.HomeFragment;
+import cm.aptoide.pt.store.view.GridDisplayDisplayable;
+import cm.aptoide.pt.store.view.StoreTabFragmentChooser;
+import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
+import cm.aptoide.pt.store.view.home.HomeFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.functions.Action1;
 

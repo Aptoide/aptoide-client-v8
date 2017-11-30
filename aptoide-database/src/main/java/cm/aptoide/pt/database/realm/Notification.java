@@ -8,9 +8,6 @@ import io.realm.annotations.PrimaryKey;
  */
 
 public class Notification extends RealmObject {
-  public final static String OWNER_ID_KEY = "ownerId";
-  public final static String EXPIRE_KEY = "expire";
-  public final static String NOTIFICATION_CENTER_URL_TRACK_KEY = "notificationCenterUrlTrack";
   public final static String KEY = "key";
   public static final int NOT_DISMISSED = -1;
 

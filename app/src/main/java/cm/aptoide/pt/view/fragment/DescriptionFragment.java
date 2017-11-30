@@ -91,7 +91,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
         ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    partnerId = ((AptoideApplication) getContext().getApplicationContext()).getPartnerId();
+    partnerId = application.getPartnerId();
     setHasOptionsMenu(true);
   }
 

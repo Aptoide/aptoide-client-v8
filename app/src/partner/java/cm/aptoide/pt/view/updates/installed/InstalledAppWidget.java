@@ -7,6 +7,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.updates.view.installed.InstalledAppDisplayable;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 
 /**

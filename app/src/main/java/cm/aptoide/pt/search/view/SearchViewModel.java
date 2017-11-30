@@ -86,6 +86,10 @@ import org.parceler.Parcel;
     return storeName;
   }
 
+  public String getDefaultStoreName() {
+    return defaultStoreName;
+  }
+
   @Override public boolean isOnlyTrustedApps() {
     return onlyTrustedApps;
   }

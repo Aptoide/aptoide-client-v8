@@ -49,7 +49,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
             String tag = adapter.getItemTag(position);
             StoreContext storeContext = adapter.getItemStore();
 
-            ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker()
+            ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker()
                 .registerScreen(ScreenTagHistory.Builder.build(currentView, tag, storeContext));
 
             ((AptoideApplication) getContext().getApplicationContext()).getPageViewsAnalytics()

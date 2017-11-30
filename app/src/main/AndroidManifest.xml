@@ -45,7 +45,7 @@
 
   <uses-sdk
       android:minSdkVersion="15"
-      tools:overrideLibrary="com.paypal.android.sdk.onetouch.core, com.paypal.android.sdk.payments, com.braintreepayments.api.core, com.braintreepayments.api, com.braintreepayments.cardform"
+      tools:overrideLibrary="com.paypal.android.sdk.onetouch.core, com.paypal.android.sdk.payments, com.adyen.core, com.adyen.ui, com.braintreepayments.cardform"
       />
 
   <application
@@ -55,7 +55,7 @@
       android:networkSecurityConfig="@xml/network_security_config"
       android:supportsRtl="true"
       android:theme="@style/AptoideThemeDefault"
-      tools:replace="theme"
+      tools:replace="theme, allowBackup"
       >
 
     <activity
@@ -162,9 +162,18 @@
     </activity>
 
     <activity
-        android:name=".billing.view.PaymentActivity"
+        android:name=".billing.view.BillingActivity"
+        android:launchMode="singleInstance"
         android:screenOrientation="sensor"
-        android:theme="@style/AppBaseTheme.NoTitle.Transparent"/>
+        android:theme="@style/AppBaseTheme.NoTitle.Transparent"
+        >
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <data android:scheme="billing" android:host="aptoide.com" android:pathPrefix="/adyen"/>
+      </intent-filter>
+    </activity>
 
     <activity android:name=".account.view.LoginActivity"/>
     <activity android:name=".spotandshare.view.SpotSharePreviewActivity"/>
@@ -308,7 +317,7 @@
     </receiver>
 
     <service android:name=".notification.PullingContentService"/>
-    <service android:name=".sync.SyncService"/>
+    <service android:name=".sync.alarm.AlarmSyncService"/>
 
     <receiver android:name=".notification.NotificationReceiver">
       <intent-filter>
@@ -338,7 +347,7 @@
     </receiver>
     <receiver android:name=".install.RootInstallNotificationEventReceiver"/>
 
-    <service android:name=".InstallService"/>
+    <service android:name=".install.InstallService"/>
 
     <service android:name=".install.InstalledIntentService"/>
 
@@ -381,6 +390,7 @@
         android:name=".spotandshare.view.TransferRecordActivity"
         android:configChanges="orientation|keyboardHidden|screenSize">
     </activity>
+
     <activity android:name=".spotandshare.view.ShareAptoideActivity">
     </activity>
 

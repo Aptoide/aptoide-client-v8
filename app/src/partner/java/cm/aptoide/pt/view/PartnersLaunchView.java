@@ -41,13 +41,16 @@ public class PartnersLaunchView extends ActivityView {
 
   private boolean usesSplashScreen;
   private BootConfig bootConfig;
+  private String defaultThemeName;
   private String partnerId;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    partnerId = ((PartnerApplication) getApplicationContext()).getPartnerId();
-    bootConfig = ((PartnerApplication) getApplicationContext()).getBootConfig();
+    final PartnerApplication application = (PartnerApplication) getApplicationContext();
+    bootConfig = application.getBootConfig();
+    defaultThemeName = application.getDefaultThemeName();
+    partnerId = application.getPartnerId();
     if (getSupportActionBar() != null) {
       getSupportActionBar().hide();
     }
@@ -82,10 +85,10 @@ public class PartnersLaunchView extends ActivityView {
    */
   @Override public View onCreateView(View parent, String name, Context context,
       AttributeSet attrs) {
-    String storeTheme = ((AptoideApplication) getApplicationContext()).getDefaultTheme();
-    if (storeTheme != null) {
-      ThemeUtils.setStoreTheme(this, storeTheme);
-      ThemeUtils.setStatusBarThemeColor(this, StoreTheme.get(storeTheme));
+
+    if (defaultThemeName != null) {
+      ThemeUtils.setStoreTheme(this, defaultThemeName);
+      ThemeUtils.setStatusBarThemeColor(this, StoreTheme.get(defaultThemeName));
     }
     return super.onCreateView(parent, name, context, attrs);
   }

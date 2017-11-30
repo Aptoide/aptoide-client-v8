@@ -13,7 +13,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -27,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -42,14 +42,14 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.install.InstalledRepository;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.BackButtonActivity;
 import cm.aptoide.pt.view.custom.SimpleDividerItemDecoration;
 import cm.aptoide.pt.view.fragment.FragmentView;
-import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
-import cm.aptoide.pt.view.navigator.TabNavigator;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -64,7 +64,7 @@ public class PostFragment extends FragmentView implements PostView {
   private static final int MAX_CHARACTERS = 200;
   private ProgressBar previewLoading;
   private RecyclerView relatedApps;
-  private AppCompatEditText userInput;
+  private EditText userInput;
   private ImageView previewImage;
   private TextView previewTitle;
   private TextView urlShower;
@@ -192,7 +192,7 @@ public class PostFragment extends FragmentView implements PostView {
   }
 
   private void bindViews(@Nullable View view) {
-    userInput = (AppCompatEditText) view.findViewById(R.id.input_text);
+    userInput = (EditText) view.findViewById(R.id.input_text);
     previewImage = (ImageView) view.findViewById(R.id.preview_image);
     previewTitle = (TextView) view.findViewById(R.id.preview_title);
     previewLoading = (ProgressBar) view.findViewById(R.id.preview_progress_bar);
@@ -250,7 +250,7 @@ public class PostFragment extends FragmentView implements PostView {
         ((ActivityResultNavigator) getContext()).getAccountNavigator(), urlProvider, tabNavigator,
         analytics);
     ((BackButtonActivity) getActivity()).registerClickHandler(presenter);
-    attachPresenter(presenter, null);
+    attachPresenter(presenter);
   }
 
   private void showKeyboard() {

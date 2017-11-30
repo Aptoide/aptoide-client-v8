@@ -10,6 +10,7 @@ import android.widget.Button;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
+import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.view.Translator;
 import cm.aptoide.pt.view.recycler.displayable.FooterDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
@@ -28,8 +29,9 @@ public class FooterWidget extends Widget<FooterDisplayable> {
   }
 
   @Override public void bindView(FooterDisplayable displayable) {
-    final String marketName =
-        ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    final String marketName = application.getMarketName();
     final String buttonText = Translator.translate(displayable.getPojo()
         .getActions()
         .get(0)

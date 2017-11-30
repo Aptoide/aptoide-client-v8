@@ -11,7 +11,7 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.PopularApp;
-import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.view.spannable.SpannableFactory;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 
 class PopularAppPostShareDialog extends BaseShareDialog<PopularApp> {

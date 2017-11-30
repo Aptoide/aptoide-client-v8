@@ -14,7 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
-import cm.aptoide.pt.InstallManager;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
@@ -57,9 +57,9 @@ public class PullingContentService extends Service {
 
   @Override public void onCreate() {
     super.onCreate();
-    marketName = ((AptoideApplication) getApplicationContext()).getMarketName();
-    sharedPreferences =
-        ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences();
+    final AptoideApplication application = (AptoideApplication) getApplicationContext();
+    marketName = application.getMarketName();
+    sharedPreferences = application.getDefaultSharedPreferences();
     updateRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
     installManager =
         ((AptoideApplication) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);

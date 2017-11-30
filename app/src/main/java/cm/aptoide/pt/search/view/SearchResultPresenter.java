@@ -1,6 +1,5 @@
 package cm.aptoide.pt.search.view;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Pair;
 import cm.aptoide.pt.R;
@@ -28,12 +27,16 @@ public class SearchResultPresenter implements Presenter {
   private final PublishRelay<SearchAdResult> onAdClickRelay;
   private final PublishRelay<SearchAppResult> onItemViewClickRelay;
   private final PublishRelay<Pair<SearchAppResult, android.view.View>> onOpenPopupMenuClickRelay;
+  private final String defaultStoreName;
+  private final String defaultThemeName;
+  private final boolean isMultiStoreSearch;
 
   public SearchResultPresenter(SearchView view, SearchAnalytics analytics,
       SearchNavigator navigator, CrashReport crashReport, Scheduler viewScheduler,
       SearchManager searchManager, PublishRelay<SearchAdResult> onAdClickRelay,
       PublishRelay<SearchAppResult> onItemViewClickRelay,
-      PublishRelay<Pair<SearchAppResult, android.view.View>> onOpenPopupMenuClickRelay) {
+      PublishRelay<Pair<SearchAppResult, android.view.View>> onOpenPopupMenuClickRelay,
+      boolean isMultiStoreSearch, String defaultStoreName, String defaultThemeName) {
     this.view = view;
     this.analytics = analytics;
     this.navigator = navigator;
@@ -43,6 +46,9 @@ public class SearchResultPresenter implements Presenter {
     this.onAdClickRelay = onAdClickRelay;
     this.onItemViewClickRelay = onItemViewClickRelay;
     this.onOpenPopupMenuClickRelay = onOpenPopupMenuClickRelay;
+    this.isMultiStoreSearch = isMultiStoreSearch;
+    this.defaultStoreName = defaultStoreName;
+    this.defaultThemeName = defaultThemeName;
   }
 
   @Override public void present() {
@@ -58,14 +64,6 @@ public class SearchResultPresenter implements Presenter {
     handleAllStoresListReachedBottom();
     handleFollowedStoresListReachedBottom();
     handleTitleBarClick();
-  }
-
-  @Override public void saveState(Bundle state) {
-    // does nothing
-  }
-
-  @Override public void restoreState(Bundle state) {
-    // does nothing
   }
 
   private void handleTitleBarClick() {
@@ -211,16 +209,16 @@ public class SearchResultPresenter implements Presenter {
           final String packageName = data.getPackageName();
           final String storeName = data.getStoreName();
 
-          //FIXME which theme should be used?
-          // final String theme = view.getDefaultTheme()
-          final String theme = data.getStoreTheme();
-
           return view.showPopup(hasVersions, pair.second)
               .doOnNext(optionId -> {
                 if (optionId == R.id.versions) {
-                  navigator.goToOtherVersions(appName, appIcon, packageName);
+                  if (isMultiStoreSearch) {
+                    navigator.goToOtherVersions(appName, appIcon, packageName);
+                  } else {
+                    navigator.goToOtherVersions(appName, appIcon, packageName, defaultStoreName);
+                  }
                 } else if (optionId == R.id.go_to_store) {
-                  navigator.goToStoreFragment(storeName, theme);
+                  navigator.goToStoreFragment(storeName, defaultThemeName);
                 }
               });
         })
@@ -246,14 +244,9 @@ public class SearchResultPresenter implements Presenter {
     final String packageName = searchApp.getPackageName();
     final long appId = searchApp.getAppId();
     final String storeName = searchApp.getStoreName();
-
-    // FIXME which theme should be used?
-    //final String storeTheme = aptoideApplication.getDefaultTheme();
-    final String storeTheme = searchApp.getStoreTheme();
-
     analytics.searchAppClick(view.getViewModel()
         .getCurrentQuery(), packageName);
-    navigator.goToAppView(appId, packageName, storeTheme, storeName);
+    navigator.goToAppView(appId, packageName, defaultThemeName, storeName);
   }
 
   private void handleClickFollowedStoresSearchButton() {

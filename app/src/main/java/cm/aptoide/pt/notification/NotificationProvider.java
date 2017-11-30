@@ -93,4 +93,8 @@ public class NotificationProvider {
             .map(notification -> convertToAptoideNotification(notification))
             .toList());
   }
+
+  public Completable save(AptoideNotification notification) {
+    return save(convertToNotification(notification));
+  }
 }

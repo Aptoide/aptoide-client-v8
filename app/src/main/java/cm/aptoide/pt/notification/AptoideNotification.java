@@ -15,6 +15,8 @@ import lombok.ToString;
   public static final int COMMENT = 1;
   public static final int LIKE = 2;
   public static final int POPULAR = 3;
+  public static final int NEW_SHARE = 5;
+  public static final int NEW_ACTIVITY = 6;
   public static final int NOT_DISMISSED = Notification.NOT_DISMISSED;
   private final Long expire;
   private String appName;
@@ -141,7 +143,8 @@ import lombok.ToString;
     return notificationCenterUrlTrack;
   }
 
-  @Retention(RetentionPolicy.SOURCE) @IntDef({ CAMPAIGN, COMMENT, LIKE, POPULAR })
+  @Retention(RetentionPolicy.SOURCE)
+  @IntDef({ CAMPAIGN, COMMENT, LIKE, POPULAR, NEW_SHARE, NEW_ACTIVITY })
   public @interface NotificationType {
   }
 }

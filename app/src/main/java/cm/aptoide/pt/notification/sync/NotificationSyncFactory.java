@@ -19,8 +19,7 @@ public class NotificationSyncFactory {
   private final NotificationProvider notificationPersistence;
 
   public NotificationSyncFactory(SharedPreferences sharedPreferences,
-      NotificationNetworkService notificationService,
-      NotificationProvider notificationPersistence) {
+      NotificationService notificationService, NotificationProvider notificationPersistence) {
     this.sharedPreferences = sharedPreferences;
     this.notificationService = notificationService;
     this.notificationPersistence = notificationPersistence;

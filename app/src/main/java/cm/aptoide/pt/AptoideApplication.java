@@ -36,6 +36,7 @@ import cm.aptoide.accountmanager.AccountPersistence;
 import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
+import cm.aptoide.pt.account.AccountServiceV3;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
 import cm.aptoide.pt.account.AndroidAccountDataMigration;
 import cm.aptoide.pt.account.AndroidAccountManagerPersistence;
@@ -46,42 +47,21 @@ import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.account.MatureContentPersistence;
-import cm.aptoide.pt.account.V3AccountService;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
 import cm.aptoide.pt.analytics.DownloadCompleteAnalytics;
-import cm.aptoide.pt.billing.AccountPayer;
+import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.TrackerFilter;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
-import cm.aptoide.pt.billing.BillingIdResolver;
-import cm.aptoide.pt.billing.BillingService;
-import cm.aptoide.pt.billing.Payer;
-import cm.aptoide.pt.billing.PaymentMethodMapper;
-import cm.aptoide.pt.billing.PaymentMethodSelector;
-import cm.aptoide.pt.billing.PurchaseMapper;
-import cm.aptoide.pt.billing.SharedPreferencesPaymentMethodSelector;
-import cm.aptoide.pt.billing.V3BillingService;
-import cm.aptoide.pt.billing.authorization.AuthorizationFactory;
-import cm.aptoide.pt.billing.authorization.AuthorizationPersistence;
-import cm.aptoide.pt.billing.authorization.AuthorizationRepository;
-import cm.aptoide.pt.billing.authorization.AuthorizationService;
-import cm.aptoide.pt.billing.authorization.InMemoryAuthorizationPersistence;
-import cm.aptoide.pt.billing.authorization.V3AuthorizationService;
+import cm.aptoide.pt.billing.BillingIdManager;
+import cm.aptoide.pt.billing.BillingPool;
 import cm.aptoide.pt.billing.external.ExternalBillingSerializer;
-import cm.aptoide.pt.billing.product.ProductFactory;
-import cm.aptoide.pt.billing.sync.BillingSyncFactory;
-import cm.aptoide.pt.billing.sync.BillingSyncManager;
-import cm.aptoide.pt.billing.transaction.RealmTransactionPersistence;
-import cm.aptoide.pt.billing.transaction.TransactionFactory;
-import cm.aptoide.pt.billing.transaction.TransactionMapper;
-import cm.aptoide.pt.billing.transaction.TransactionPersistence;
-import cm.aptoide.pt.billing.transaction.TransactionRepository;
-import cm.aptoide.pt.billing.transaction.TransactionService;
-import cm.aptoide.pt.billing.transaction.V3TransactionService;
+import cm.aptoide.pt.billing.payment.Adyen;
+import cm.aptoide.pt.billing.purchase.PurchaseFactory;
 import cm.aptoide.pt.billing.view.PaymentThrowableCodeMapper;
 import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.crashreports.ConsoleLogger;
@@ -115,16 +95,19 @@ import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadMirrorEventInterceptor;
 import cm.aptoide.pt.download.PaidAppsDownloadInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.filemanager.CacheHelper;
-import cm.aptoide.pt.filemanager.FileManager;
+import cm.aptoide.pt.file.CacheHelper;
+import cm.aptoide.pt.file.FileManager;
 import cm.aptoide.pt.install.InstallFabricEvents;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstallerFactory;
+import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.install.RootInstallNotificationEventReceiver;
 import cm.aptoide.pt.install.installer.RootInstallErrorNotificationFactory;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.leak.LeakTool;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
 import cm.aptoide.pt.networking.BodyInterceptorV3;
 import cm.aptoide.pt.networking.BodyInterceptorV7;
@@ -169,18 +152,18 @@ import cm.aptoide.pt.spotandshare.group.GroupNameProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
-import cm.aptoide.pt.sync.SyncService;
-import cm.aptoide.pt.sync.SyncStorage;
+import cm.aptoide.pt.sync.alarm.AlarmSyncScheduler;
+import cm.aptoide.pt.sync.alarm.AlarmSyncService;
+import cm.aptoide.pt.sync.alarm.SyncStorage;
+import cm.aptoide.pt.sync.rx.RxSyncScheduler;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.utils.q.QManager;
-import cm.aptoide.pt.view.configuration.ActivityProvider;
-import cm.aptoide.pt.view.configuration.FragmentProvider;
-import cm.aptoide.pt.view.configuration.implementation.ActivityProviderImpl;
+import cm.aptoide.pt.view.ActivityProvider;
+import cm.aptoide.pt.view.FragmentProvider;
 import cm.aptoide.pt.view.entry.EntryActivity;
 import cm.aptoide.pt.view.entry.EntryPointChooser;
-import cm.aptoide.pt.view.navigator.Result;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
@@ -203,12 +186,13 @@ import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -264,7 +248,6 @@ public abstract class AptoideApplication extends Application {
   private ObjectMapper nonNullObjectMapper;
   private RequestBodyFactory requestBodyFactory;
   private ExternalBillingSerializer inAppBillingSerialzer;
-  private Billing billing;
   private PurchaseBundleMapper purchaseBundleMapper;
   private PaymentThrowableCodeMapper paymentThrowableCodeMapper;
   private MultipartBodyInterceptor multipartBodyInterceptor;
@@ -285,18 +268,7 @@ public abstract class AptoideApplication extends Application {
   private Database database;
   private NotificationProvider notificationProvider;
   private SyncStorage syncStorage;
-  private SyncScheduler syncScheduler;
-  private TransactionFactory transactionFactory;
-  private TransactionMapper transactionMapper;
-  private TransactionService transactionService;
-  private Payer payer;
-  private AuthorizationFactory authorizationFactory;
-  private AuthorizationService authorizationService;
-  private TransactionPersistence transactionPersistence;
-  private AuthorizationPersistence authorizationPersistence;
-  private BillingSyncManager billingSyncManager;
   private TimelineRepositoryFactory timelineRepositoryFactory;
-  private BillingIdResolver billingiIdResolver;
   private AuthenticationPersistence authenticationPersistence;
   private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody>
       noAuthorizationBodyInterceptorV3;
@@ -304,12 +276,16 @@ public abstract class AptoideApplication extends Application {
   private CallbackManager facebookCallbackManager;
   private Map<Integer, Result> fragmentResulMap;
   private PublishRelay<FacebookLoginResult> facebookLoginResultRelay;
-  private AptoideNavigationTracker aptoideNavigationTracker;
+  private NavigationTracker navigationTracker;
+  private BillingPool billingPool;
   private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
   private AccountAnalytics accountAnalytics;
   private PageViewsAnalytics pageViewsAnalytics;
-  private AccountSettingsBodyInterceptorV7 accountSettingsBodyInterceptorPoolV7;
-  private AccountSettingsBodyInterceptorV7 accountSettingsBodyInterceptorWebV7;
+  private BodyInterceptor<BaseBody> accountSettingsBodyInterceptorPoolV7;
+  private BodyInterceptor<BaseBody> accountSettingsBodyInterceptorWebV7;
+  private Adyen adyen;
+  private PurchaseFactory purchaseFactory;
+  private SyncScheduler alarmSyncScheduler;
 
   public LeakTool getLeakTool() {
     if (leakTool == null) {
@@ -455,6 +431,30 @@ public abstract class AptoideApplication extends Application {
     getNotificationCenter().setup();
   }
 
+  public abstract String getCachePath();
+
+  public abstract boolean hasMultiStoreSearch();
+
+  public abstract String getDefaultStoreName();
+
+  public abstract String getMarketName();
+
+  public abstract String getFeedbackEmail();
+
+  public abstract String getImageCachePath();
+
+  public abstract String getAccountType();
+
+  public abstract String getAutoUpdateUrl();
+
+  public abstract String getPartnerId();
+
+  public abstract String getExtraId();
+
+  public abstract String getDefaultThemeName();
+
+  public abstract boolean isCreateStoreUserPrivacyEnabled();
+
   public RootInstallationRetryHandler getRootInstallationRetryHandler() {
     if (rootInstallationRetryHandler == null) {
 
@@ -533,20 +533,11 @@ public abstract class AptoideApplication extends Application {
 
   public NotificationSyncScheduler getNotificationSyncScheduler() {
     if (notificationSyncScheduler == null) {
-      notificationSyncScheduler = new NotificationSyncManager(getSyncScheduler(), true,
-          new NotificationSyncFactory(getDefaultSharedPreferences(),
-              getNotificationNetworkService(), getNotificationProvider()));
+      notificationSyncScheduler = new NotificationSyncManager(getAlarmSyncScheduler(), true,
+          new NotificationSyncFactory(getDefaultSharedPreferences(), getPnpV1NotificationService(),
+              getNotificationProvider()));
     }
     return notificationSyncScheduler;
-  }
-
-  public SyncScheduler getSyncScheduler() {
-    if (syncScheduler == null) {
-      syncScheduler =
-          new SyncScheduler(this, SyncService.class, (AlarmManager) getSystemService(ALARM_SERVICE),
-              getSyncStorage());
-    }
-    return syncScheduler;
   }
 
   public SharedPreferences getDefaultSharedPreferences() {
@@ -558,12 +549,13 @@ public abstract class AptoideApplication extends Application {
         Build.ID);
   }
 
-  public NotificationHandler getNotificationHandler() {
-    if (notificationHandler == null) {
-      notificationHandler = new NotificationHandler(BuildConfig.APPLICATION_ID, getDefaultClient(),
-          WebService.getDefaultConverter(), getIdsRepository(), BuildConfig.VERSION_NAME,
-          getExtraId(), PublishRelay.create(), getDefaultSharedPreferences(), getResources(),
-          getAuthenticationPersistence(), getAccountManager());
+  public NotificationService getPnpV1NotificationService() {
+    if (pnpV1NotificationService == null) {
+      pnpV1NotificationService =
+          new PnpV1NotificationService(BuildConfig.APPLICATION_ID, getDefaultClient(),
+              WebService.getDefaultConverter(), getIdsRepository(), BuildConfig.VERSION_NAME,
+              getExtraId(), getDefaultSharedPreferences(), getResources(),
+              getAuthenticationPersistence(), getAccountManager());
     }
     return notificationHandler;
   }
@@ -592,10 +584,14 @@ public abstract class AptoideApplication extends Application {
       okHttpClientBuilder.readTimeout(45, TimeUnit.SECONDS);
       okHttpClientBuilder.writeTimeout(45, TimeUnit.SECONDS);
 
-      final File cacheDirectory = new File("/");
-      final int cacheMaxSize = 10 * 1024 * 1024;
-      okHttpClientBuilder.cache(new Cache(cacheDirectory, cacheMaxSize)); // 10 MiB
-
+      final Cache cache = new Cache(getCacheDir(), 10 * 1024 * 1024);
+      try {
+        // For billing to handle stale data properly the cache should only be stored in memory.
+        // In order to make sure it happens we clean up all data persisted in disk when client
+        // is first created. It only affects API calls with GET verb.
+        cache.evictAll();
+      } catch (IOException ignored) {}
+      okHttpClientBuilder.cache(cache); // 10 MiB
       okHttpClientBuilder.addInterceptor(new POSTCacheInterceptor(getHttpClientCache()));
       okHttpClientBuilder.addInterceptor(getUserAgentInterceptor());
 
@@ -632,7 +628,6 @@ public abstract class AptoideApplication extends Application {
 
   public AptoideDownloadManager getDownloadManager() {
     if (downloadManager == null) {
-
       final String apkPath = getCachePath() + "apks/";
       final String obbPath = getCachePath() + "obb/";
       final OkHttpClient.Builder httpClientBuilder =
@@ -669,6 +664,7 @@ public abstract class AptoideApplication extends Application {
 
     InstallManager installManager = installManagers.get(installerType);
     if (installManager == null) {
+
       installManager = new InstallManager(getApplicationContext(), getDownloadManager(),
           new InstallerFactory(new MinimalAdMapper(),
               new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance(),
@@ -709,7 +705,7 @@ public abstract class AptoideApplication extends Application {
       final AccountFactory accountFactory = new AccountFactory();
 
       final AccountService accountService =
-          new V3AccountService(accountFactory, getDefaultClient(), getLongTimeoutClient(),
+          new AccountServiceV3(accountFactory, getDefaultClient(), getLongTimeoutClient(),
               WebService.getDefaultConverter(), getNonNullObjectMapper(),
               getDefaultSharedPreferences(), getExtraId(), getTokenInvalidator(),
               getAuthenticationPersistence(), getNoAuthenticationBodyInterceptorV3(),
@@ -721,7 +717,7 @@ public abstract class AptoideApplication extends Application {
           new SecureCoderDecoder.Builder(this, getDefaultSharedPreferences()).create(),
           SQLiteDatabaseHelper.DATABASE_VERSION,
           getDatabasePath(SQLiteDatabaseHelper.DATABASE_NAME).getPath(), getAccountType(),
-          BuildConfig.VERSION_NAME);
+          BuildConfig.VERSION_NAME, Schedulers.io());
 
       final AccountPersistence accountPersistence =
           new AndroidAccountManagerPersistence(AccountManager.get(this),
@@ -816,117 +812,35 @@ public abstract class AptoideApplication extends Application {
     return billingAnalytics;
   }
 
-  public Billing getBilling() {
-
-    if (billing == null) {
-
-      final TransactionRepository transactionRepository =
-          new TransactionRepository(geTransactionPersistence(), getBillingSyncManager(), getPayer(),
-              getTransactionService());
-
-      final AuthorizationRepository authorizationRepository =
-          new AuthorizationRepository(getBillingSyncManager(), getPayer(),
-              getAuthorizationService(), getAuthorizationPersistence());
-
-      final BillingService billingService =
-          new V3BillingService(getBodyInterceptorV3(), getDefaultClient(),
-              WebService.getDefaultConverter(), getTokenInvalidator(),
-              getDefaultSharedPreferences(),
-              new PurchaseMapper(getInAppBillingSerializer(), getBillingIdResolver()),
-              new ProductFactory(getBillingIdResolver()), getPackageRepository(),
-              new PaymentMethodMapper(), getResources(), getBillingIdResolver(),
-              BuildConfig.IN_BILLING_SUPPORTED_API_VERSION);
-
-      final PaymentMethodSelector paymentMethodSelector =
-          new SharedPreferencesPaymentMethodSelector(BuildConfig.DEFAULT_PAYMENT_ID,
-              getDefaultSharedPreferences());
-
-      billing = new Billing(transactionRepository, billingService, authorizationRepository,
-          paymentMethodSelector, getPayer());
-    }
-    return billing;
+  public Billing getBilling(String merchantName) {
+    return getBillingPool().get(merchantName);
   }
 
-  public BillingIdResolver getBillingIdResolver() {
-    if (billingiIdResolver == null) {
-      billingiIdResolver = new BillingIdResolver(getAptoidePackage(), "/", "paid-app", "in-app");
+  public BillingPool getBillingPool() {
+    if (billingPool == null) {
+      billingPool =
+          new BillingPool(getDefaultSharedPreferences(), getBodyInterceptorV3(), getDefaultClient(),
+              getAccountManager(), getDatabase(), getResources(), getPackageRepository(),
+              getTokenInvalidator(),
+              new RxSyncScheduler(new HashMap<>(), CrashReport.getInstance()),
+              getInAppBillingSerializer(),
+              getBodyInterceptorPoolV7(), getAccountSettingsBodyInterceptorPoolV7(),
+              new HashMap<>(), WebService.getDefaultConverter(), CrashReport.getInstance(),
+              getAdyen(), getPurchaseFactory(), Build.VERSION_CODES.JELLY_BEAN,
+              Build.VERSION_CODES.JELLY_BEAN, getAuthenticationPersistence(), getPreferences());
     }
-    return billingiIdResolver;
+    return billingPool;
   }
 
-  public BillingSyncManager getBillingSyncManager() {
-    if (billingSyncManager == null) {
-      billingSyncManager = new BillingSyncManager(
-          new BillingSyncFactory(getPayer(), getTransactionService(), getAuthorizationService(),
-              geTransactionPersistence(), getAuthorizationPersistence()), getSyncScheduler(),
-          new HashSet<>());
+  public Adyen getAdyen() {
+    if (adyen == null) {
+      adyen = new Adyen(this, Charset.forName("UTF-8"), Schedulers.io(), PublishRelay.create());
     }
-    return billingSyncManager;
+    return adyen;
   }
 
-  public AuthorizationPersistence getAuthorizationPersistence() {
-    if (authorizationPersistence == null) {
-      authorizationPersistence =
-          new InMemoryAuthorizationPersistence(new HashMap<>(), PublishRelay.create(),
-              getAuthorizationFactory());
-    }
-    return authorizationPersistence;
-  }
-
-  public TransactionPersistence geTransactionPersistence() {
-    if (transactionPersistence == null) {
-      transactionPersistence =
-          new RealmTransactionPersistence(new HashMap<>(), PublishRelay.create(), getDatabase(),
-              getTransactionMapper(), getTransactionFactory());
-    }
-    return transactionPersistence;
-  }
-
-  public AuthorizationService getAuthorizationService() {
-    if (authorizationService == null) {
-      authorizationService =
-          new V3AuthorizationService(getAuthorizationFactory(), getBodyInterceptorV3(),
-              getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
-              getDefaultSharedPreferences());
-    }
-    return authorizationService;
-  }
-
-  public AuthorizationFactory getAuthorizationFactory() {
-    if (authorizationFactory == null) {
-      authorizationFactory = new AuthorizationFactory();
-    }
-    return authorizationFactory;
-  }
-
-  public Payer getPayer() {
-    if (payer == null) {
-      payer = new AccountPayer(getAccountManager());
-    }
-    return payer;
-  }
-
-  public TransactionService getTransactionService() {
-    if (transactionService == null) {
-      transactionService = new V3TransactionService(getTransactionMapper(), getBodyInterceptorV3(),
-          WebService.getDefaultConverter(), getDefaultClient(), getTokenInvalidator(),
-          getDefaultSharedPreferences(), getTransactionFactory(), getBillingIdResolver());
-    }
-    return transactionService;
-  }
-
-  public TransactionMapper getTransactionMapper() {
-    if (transactionMapper == null) {
-      transactionMapper = new TransactionMapper(getTransactionFactory());
-    }
-    return transactionMapper;
-  }
-
-  public TransactionFactory getTransactionFactory() {
-    if (transactionFactory == null) {
-      transactionFactory = new TransactionFactory();
-    }
-    return transactionFactory;
+  public BillingIdManager getIdResolver(String merchantName) {
+    return getBillingPool().getIdResolver(merchantName);
   }
 
   public Database getDatabase() {
@@ -959,7 +873,8 @@ public abstract class AptoideApplication extends Application {
 
   public PurchaseBundleMapper getPurchaseBundleMapper() {
     if (purchaseBundleMapper == null) {
-      purchaseBundleMapper = new PurchaseBundleMapper(getPaymentThrowableCodeMapper());
+      purchaseBundleMapper =
+          new PurchaseBundleMapper(getPaymentThrowableCodeMapper(), getPurchaseFactory());
     }
     return purchaseBundleMapper;
   }
@@ -1041,10 +956,6 @@ public abstract class AptoideApplication extends Application {
     });
   }
 
-  protected ActivityProvider createActivityProvider() {
-    return new ActivityProviderImpl();
-  }
-
   protected DisplayableWidgetMapping createDisplayableWidgetMapping() {
     return DisplayableWidgetMapping.getInstance();
   }
@@ -1089,7 +1000,7 @@ public abstract class AptoideApplication extends Application {
               getDefaultSharedPreferences());
 
       BaseRequestWithStore.StoreCredentials defaultStoreCredentials =
-          storeCredentials.get(getDefaultStore());
+          storeCredentials.get(getDefaultStoreName());
 
       return generateAptoideUuid().andThen(proxy.addDefaultStore(
           GetStoreMetaRequest.of(defaultStoreCredentials, getAccountSettingsBodyInterceptorPoolV7(),
@@ -1322,9 +1233,8 @@ public abstract class AptoideApplication extends Application {
           WebService.getDefaultConverter(), qManager, getDefaultSharedPreferences(),
           getApplicationContext(),
           (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getResources(),
-          getVersionCodeProvider(),
-          (context) -> AdNetworkUtils.isGooglePlayServicesAvailable(context), () -> getPartnerId(),
-          new MinimalAdMapper());
+          getVersionCodeProvider(), AdNetworkUtils::isGooglePlayServicesAvailable,
+          this::getPartnerId, new MinimalAdMapper());
     }
     return adsRepository;
   }
@@ -1342,25 +1252,19 @@ public abstract class AptoideApplication extends Application {
           new TimelineRepositoryFactory(new HashMap<>(), getAccountSettingsBodyInterceptorPoolV7(),
               getDefaultClient(), getDefaultSharedPreferences(), getTokenInvalidator(),
               new LinksHandlerFactory(this), getPackageRepository(),
-              WebService.getDefaultConverter(), new TimelineResponseCardMapper(getMarketName()),
+              WebService.getDefaultConverter(),
+              new TimelineResponseCardMapper(accountManager, getMarketName()),
               RepositoryFactory.getUpdateRepository(context,
                   ((AptoideApplication) context.getApplicationContext()).getDefaultSharedPreferences()));
     }
     return timelineRepositoryFactory.create(action);
   }
 
-  public AptoideNavigationTracker getAptoideNavigationTracker() {
-    if (aptoideNavigationTracker == null) {
-      aptoideNavigationTracker = new AptoideNavigationTracker(new ArrayList<>());
-    }
-    return aptoideNavigationTracker;
-  }
-
   public PageViewsAnalytics getPageViewsAnalytics() {
     if (pageViewsAnalytics == null) {
       pageViewsAnalytics =
           new PageViewsAnalytics(AppEventsLogger.newLogger(this), Analytics.getInstance(),
-              getAptoideNavigationTracker());
+              getNavigationTracker());
     }
     return pageViewsAnalytics;
   }
@@ -1393,25 +1297,18 @@ public abstract class AptoideApplication extends Application {
     return facebookLoginResultRelay;
   }
 
+  public NavigationTracker getNavigationTracker() {
+    if (navigationTracker == null) {
+      navigationTracker = new NavigationTracker(new ArrayList<>(), new TrackerFilter());
+    }
+    return navigationTracker;
+  }
+
   public abstract LoginPreferences getLoginPreferences();
 
-  public abstract String getFeedbackEmail();
-
-  public abstract String getImageCachePath();
-
-  public abstract String getAccountType();
-
-  public abstract String getAutoUpdateUrl();
-
-  public abstract String getPartnerId();
-
-  public abstract String getExtraId();
-
-  public abstract String getDefaultTheme();
-
-  public abstract boolean isCreateStoreUserPrivacyEnabled();
-
   public abstract FragmentProvider createFragmentProvider();
+
+  public abstract ActivityProvider createActivityProvider();
 
   public NotLoggedInShareAnalytics getNotLoggedInShareAnalytics() {
     if (notLoggedInShareAnalytics == null) {
@@ -1427,9 +1324,24 @@ public abstract class AptoideApplication extends Application {
       accountAnalytics = new AccountAnalytics(Analytics.getInstance(), getBodyInterceptorPoolV7(),
           getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
           BuildConfig.APPLICATION_ID, getDefaultSharedPreferences(),
-          AppEventsLogger.newLogger(this), getAptoideNavigationTracker());
+          AppEventsLogger.newLogger(this), getNavigationTracker());
     }
     return accountAnalytics;
+  }
+
+  public PurchaseFactory getPurchaseFactory() {
+    if (purchaseFactory == null) {
+      purchaseFactory = new PurchaseFactory();
+    }
+    return purchaseFactory;
+  }
+
+  public SyncScheduler getAlarmSyncScheduler() {
+    if (alarmSyncScheduler == null) {
+      alarmSyncScheduler = new AlarmSyncScheduler(this, AlarmSyncService.class,
+          (AlarmManager) getSystemService(ALARM_SERVICE), getSyncStorage());
+    }
+    return alarmSyncScheduler;
   }
 }
 

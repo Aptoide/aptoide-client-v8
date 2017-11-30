@@ -1,22 +1,21 @@
 package cm.aptoide.pt.timeline.post;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.timeline.post.exceptions.PostException;
 import cm.aptoide.pt.timeline.view.navigation.AppsTimelineTabNavigation;
 import cm.aptoide.pt.view.BackButton;
-import cm.aptoide.pt.view.app.AppViewFragment;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
-import cm.aptoide.pt.view.navigator.TabNavigator;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -69,14 +68,6 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
     handleRelatedAppClick();
     onCreateLoginErrorHandle();
     onViewCreatedHandleAppNotFoundErrorAction();
-  }
-
-  @Override public void saveState(Bundle state) {
-    // does nothing
-  }
-
-  @Override public void restoreState(Bundle state) {
-    // does nothing
   }
 
   private void onViewCreatedHandleAppNotFoundErrorAction() {
@@ -343,6 +334,7 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
           break;
       }
     } else if (throwable instanceof AptoideWsV7Exception) {
+      view.showGenericError();
       String errorCodes = parseErrorCode(((AptoideWsV7Exception) throwable).getBaseResponse()
           .getErrors());
       analytics.sendPostCompletedNetworkFailedEvent(postManager.remoteRelatedAppsAvailable(),
