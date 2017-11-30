@@ -1,6 +1,5 @@
 package cm.aptoide.pt;
 
-import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import cm.aptoide.pt.view.MainActivity;
@@ -17,6 +16,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static cm.aptoide.pt.UITests.goToMyAccount;
 import static cm.aptoide.pt.UITests.skipWizard;
 
 /**
@@ -139,11 +139,6 @@ import static cm.aptoide.pt.UITests.skipWizard;
     goToMyAccount();
     onView(withId(R.id.button_logout)).perform(click());
     onView(withId(R.id.action_search)).check(matches(isDisplayed()));
-  }
-
-  private void goToMyAccount() {
-    onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
-    onView(withText(R.string.drawer_title_my_account)).perform(click());
   }
 
   private void performLogin(String email, String pass) {

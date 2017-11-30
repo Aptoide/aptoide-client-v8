@@ -37,4 +37,9 @@ public class UITests {
     onView(withText(R.string.drawer_title_settings)).perform(click());
   }
 
+  protected static void goToMyAccount() {
+    onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+    onView(withText(R.string.drawer_title_my_account)).perform(click());
+  }
+
 }

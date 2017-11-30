@@ -11,4 +11,10 @@ public class ComponentFactory {
         context.getAccountType(), context.getPartnerId(), context.getMarketName(), context.getExtraId(), context.getAptoidePackage(),
         context.getAptoideMd5sum(), context.getLoginPreferences())).build();
   }
+
+  public static FragmentComponent create(ActivityComponent activityComponent, Fragment fragment, Bundle savedInstance, boolean dismissToNavigateToMainView, boolean navigateToHome, boolean goToHome,
+      boolean isEditProfile, boolean isCreateStoreUserPrivacyEnabled, String packageName){
+    return activityComponent.plus(new FragmentModule(fragment, savedInstance, dismissToNavigateToMainView, navigateToHome, goToHome, isEditProfile,
+        isCreateStoreUserPrivacyEnabled, packageName));
+  }
 }

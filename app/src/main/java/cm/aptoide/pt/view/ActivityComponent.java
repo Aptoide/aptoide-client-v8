@@ -8,4 +8,5 @@ public interface ActivityComponent {
   void inject(MainActivity activity);
 
   FragmentComponent plus(FragmentModule fragmentModule);
+  FragmentComponentTest plus(FragmentModuleTest fragmentModuleTest);
 }
