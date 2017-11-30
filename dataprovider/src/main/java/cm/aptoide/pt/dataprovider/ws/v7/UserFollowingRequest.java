@@ -14,8 +14,8 @@ import rx.Observable;
  * Created by jdandrade on 23/10/2017.
  */
 
-public class UnfollowUserRequest extends V7<BaseV7Response, UnfollowUserRequest.Body> {
-  private UnfollowUserRequest(Body body, OkHttpClient okhttp, Converter.Factory converterFactory,
+public class UserFollowingRequest extends V7<BaseV7Response, UserFollowingRequest.Body> {
+  private UserFollowingRequest(Body body, OkHttpClient okhttp, Converter.Factory converterFactory,
       BodyInterceptor<BaseBody> bodyInterceptor, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
     super(body, getHost(sharedPreferences), okhttp, converterFactory, bodyInterceptor,
@@ -30,25 +30,35 @@ public class UnfollowUserRequest extends V7<BaseV7Response, UnfollowUserRequest.
         + "/api/7/";
   }
 
-  public static UnfollowUserRequest of(Long userId, BodyInterceptor<BaseBody> bodyInterceptor,
+  public static UserFollowingRequest getFollowRequest(Long userId,
+      BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient okhttp, Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
-    return new UnfollowUserRequest(new UnfollowUserRequest.Body(userId), okhttp, converterFactory,
+    return new UserFollowingRequest(new UserFollowingRequest.Body(userId, "SUBSCRIBE"), okhttp,
+        converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences);
+  }
+
+  public static UserFollowingRequest getUnfollowRequest(Long userId,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient okhttp,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
+    return new UserFollowingRequest(new UserFollowingRequest.Body(userId, "UNSUBSCRIBE"), okhttp,
+        converterFactory,
         bodyInterceptor, tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.unfollowUser(body, bypassCache);
+    return interfaces.followingUser(body, bypassCache);
   }
 
   public static class Body extends BaseBody {
     private Long userId;
-    private String action = "UNSUBSCRIBE";
+    private String action;
 
-    public Body(Long userId) {
-
+    public Body(Long userId, String action) {
       this.userId = userId;
+      this.action = action;
     }
 
     public Long getUserId() {

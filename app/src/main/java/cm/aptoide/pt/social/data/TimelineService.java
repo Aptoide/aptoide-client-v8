@@ -9,7 +9,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.LikeCardRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForTimelineArticle;
 import cm.aptoide.pt.dataprovider.ws.v7.PostDeleteRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ShareCardRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.UnfollowUserRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.UserFollowingRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.repository.exception.RepositoryIllegalArgumentException;
 import okhttp3.OkHttpClient;
@@ -121,7 +121,8 @@ public class TimelineService {
   }
 
   public Completable unfollowUser(Long userId) {
-    return UnfollowUserRequest.of(userId, bodyInterceptor, okhttp, converterFactory,
+    return UserFollowingRequest.getUnfollowRequest(userId, bodyInterceptor, okhttp,
+        converterFactory,
         tokenInvalidator, sharedPreferences)
         .observe()
         .toCompletable();

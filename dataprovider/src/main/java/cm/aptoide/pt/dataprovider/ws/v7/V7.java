@@ -514,8 +514,8 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
         @Body PostDeleteRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("user/follower/set/") Observable<BaseV7Response> unfollowUser(
-        @Body UnfollowUserRequest.Body body,
+    @POST("user/follower/set/") Observable<BaseV7Response> followingUser(
+        @Body UserFollowingRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
   }
 }
