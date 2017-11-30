@@ -106,25 +106,37 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
 
       StoreRepository storeRepository =
           RepositoryFactory.getStoreRepository(getContext().getApplicationContext());
+      compositeSubscription.add(RxView.clicks(follow)
+          .flatMap(__ -> storeRepository.isSubscribed(storeName)
+              .first())
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(isSubscribed -> {
+            if (isSubscribed) {
+              follow.setText(R.string.follow);
+              Snackbar.make(itemView,
+                  AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
+                      getContext().getResources(), storeName), Snackbar.LENGTH_SHORT)
+                  .show();
+              storeUtilsProxy.unSubscribeStore(storeName);
+            } else {
+              follow.setText(R.string.unfollow);
+              Snackbar.make(itemView,
+                  AptoideUtils.StringU.getFormattedString(R.string.store_followed,
+                      getContext().getResources(), storeName), Snackbar.LENGTH_SHORT)
+                  .show();
+              storeUtilsProxy.subscribeStore(storeName);
+            }
+          }, e -> CrashReport.getInstance()
+              .log(e)));
       compositeSubscription.add(storeRepository.isSubscribed(displayable.getStoreName())
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(isSubscribed -> {
             if (isSubscribed) {
-              follow.setVisibility(View.INVISIBLE);
+              follow.setText(R.string.unfollow);
             } else {
               follow.setText(R.string.follow);
             }
           }, (throwable) -> throwable.printStackTrace()));
-
-      compositeSubscription.add(RxView.clicks(follow)
-          .subscribe(view -> {
-            Snackbar.make(itemView, AptoideUtils.StringU.getFormattedString(R.string.store_followed,
-                getContext().getResources(), storeName), Snackbar.LENGTH_SHORT)
-                .show();
-            follow.setVisibility(View.INVISIBLE);
-            storeUtilsProxy.subscribeStore(storeName);
-          }, e -> CrashReport.getInstance()
-              .log(e)));
     }
 
     final FragmentActivity context = getContext();
