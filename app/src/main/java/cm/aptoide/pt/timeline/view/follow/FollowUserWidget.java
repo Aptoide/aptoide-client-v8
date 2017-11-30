@@ -106,12 +106,14 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
 
       StoreRepository storeRepository =
           RepositoryFactory.getStoreRepository(getContext().getApplicationContext());
+
       compositeSubscription.add(RxView.clicks(follow)
           .flatMap(__ -> storeRepository.isSubscribed(storeName)
               .first())
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(isSubscribed -> {
             if (isSubscribed) {
+              follow.setVisibility(View.VISIBLE);
               follow.setText(R.string.follow);
               Snackbar.make(itemView,
                   AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
@@ -119,7 +121,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
                   .show();
               storeUtilsProxy.unSubscribeStore(storeName);
             } else {
-              follow.setText(R.string.unfollow);
+              follow.setVisibility(View.INVISIBLE);
               Snackbar.make(itemView,
                   AptoideUtils.StringU.getFormattedString(R.string.store_followed,
                       getContext().getResources(), storeName), Snackbar.LENGTH_SHORT)
@@ -128,12 +130,14 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
             }
           }, e -> CrashReport.getInstance()
               .log(e)));
+
       compositeSubscription.add(storeRepository.isSubscribed(displayable.getStoreName())
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(isSubscribed -> {
             if (isSubscribed) {
-              follow.setText(R.string.unfollow);
+              follow.setVisibility(View.INVISIBLE);
             } else {
+              follow.setVisibility(View.VISIBLE);
               follow.setText(R.string.follow);
             }
           }, (throwable) -> throwable.printStackTrace()));
@@ -177,10 +181,9 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     followingTv.setTextColor(displayable.getStoreColor(getContext().getApplicationContext()));
 
     compositeSubscription.add(RxView.clicks(itemView)
-        .subscribe(click -> displayable.viewClicked(getFragmentNavigator()), err -> {
-          CrashReport.getInstance()
-              .log(err);
-        }));
+        .subscribe(click -> displayable.viewClicked(getFragmentNavigator()),
+            err -> CrashReport.getInstance()
+                .log(err)));
   }
 
   private void setFollowColor(FollowUserDisplayable displayable) {
