@@ -303,12 +303,12 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
         @Body GetUserTimelineRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
+    //@POST("user/timeline/game/getLeaderboard") Observable<GetLeaderboardEntriesResponse> getLeaderboardEntries
     @POST Observable<GetLeaderboardEntriesResponse> getLeaderboardEntries(@Url String url,
-        @retrofit2.http.Body GetLeaderboardEntriesRequest.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Body GetLeaderboardEntriesRequest.Body body, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST Observable<UpdateLeaderboardResponse> updateLeaderboard(@Url String url,
-        @retrofit2.http.Body UpdateLeaderboardRequest.Body body,
+    @POST("user/timeline/game/setScore") Observable<UpdateLeaderboardResponse> updateLeaderboard(
+        @Body UpdateLeaderboardRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("listAppVersions") Observable<ListAppVersions> listAppVersions(

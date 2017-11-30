@@ -131,9 +131,9 @@ public class TimelineService {
   }
 
   public Observable<UpdateLeaderboardResponse> updateLeaderboard(int answer) {
-    return UpdateLeaderboardRequest.of("", answer, bodyInterceptor, okhttp, converterFactory, "",
+    return UpdateLeaderboardRequest.of(answer, bodyInterceptor, okhttp, converterFactory, "",
         tokenInvalidator, sharedPreferences)
-        .observe(true);
+        .observe();
   }
 
   public static class User {

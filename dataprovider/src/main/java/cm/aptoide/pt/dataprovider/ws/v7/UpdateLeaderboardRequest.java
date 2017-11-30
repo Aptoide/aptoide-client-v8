@@ -13,28 +13,26 @@ import rx.Observable;
 
 public class UpdateLeaderboardRequest extends V7<UpdateLeaderboardResponse, UpdateLeaderboardRequest.Body> {
 
-  private String url = "http://192.168.1.100:5000/api/7/user/timeline/game/setScore/";
-
-  UpdateLeaderboardRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+  UpdateLeaderboardRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
     super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
         tokenInvalidator);
-    //    this.url = url;
   }
 
-  public static UpdateLeaderboardRequest of(String url, int answer, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+  public static UpdateLeaderboardRequest of(int answer, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient,
       Converter.Factory converterFactory, String cardId, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
 
-    return new UpdateLeaderboardRequest(url,
-        new Body(answer, cardId, sharedPreferences), bodyInterceptor,
+    return new UpdateLeaderboardRequest(new Body(answer, cardId, sharedPreferences),
+        bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<UpdateLeaderboardResponse> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.updateLeaderboard(url, body, bypassCache);
+    return interfaces.updateLeaderboard(body, bypassCache);
   }
 
   public static class Body extends BaseBodyWithAlphaBetaKey {
@@ -50,8 +48,11 @@ public class UpdateLeaderboardRequest extends V7<UpdateLeaderboardResponse, Upda
 
     public String getCardUid(){return cardUid;}
 
-    public void setAnswer(int answer){this.answer=answer;}
     public int getAnswer(){return answer;}
+
+    public void setAnswer(int answer) {
+      this.answer = answer;
+    }
   }
 
 
