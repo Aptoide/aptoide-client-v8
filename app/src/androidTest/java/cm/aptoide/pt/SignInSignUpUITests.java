@@ -19,10 +19,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static cm.aptoide.pt.UITests.skipWizard;
 
-/**
- * Created by jose_messejana on 24-10-2017.
- */
-
 @RunWith(AndroidJUnit4.class) public class SignInSignUpUITests {
   private final String LOGINEMAIL = "jose.messejana@aptoide.com";
   private final String PASS = "aptoide1234";
