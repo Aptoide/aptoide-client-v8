@@ -36,7 +36,8 @@ public class NotificationAnalytics {
   }
 
   public void sendUpdatesNotificationReceivedEvent() {
-    analytics.sendEvent(new FacebookEvent(facebook, NOTIFICATION_IMPRESSION));
+    analytics.sendEvent(new FacebookEvent(facebook, NOTIFICATION_IMPRESSION,
+        createUpdateNotificationEventsBundle()));
   }
 
   public void sendSocialNotificationReceivedEvent(@AptoideNotification.NotificationType int type,
@@ -52,12 +53,12 @@ public class NotificationAnalytics {
 
   public void sendUpdatesNotificationClickEvent() {
     analytics.sendEvent(
-        new FacebookEvent(facebook, NOTIFICATION_PRESSED, createUpdateClickEventBundle()));
+        new FacebookEvent(facebook, NOTIFICATION_PRESSED, createUpdateNotificationEventsBundle()));
   }
 
-  private Bundle createUpdateClickEventBundle() {
+  private Bundle createUpdateNotificationEventsBundle() {
     Bundle bundle = new Bundle();
-    bundle.putString(TYPE, NotificationTypes.CAMPAIGN.toString()
+    bundle.putString(TYPE, NotificationTypes.UPDATES.toString()
         .toLowerCase());
     return bundle;
   }
