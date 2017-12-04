@@ -100,6 +100,7 @@ import cm.aptoide.pt.install.RootInstallNotificationEventReceiver;
 import cm.aptoide.pt.install.installer.RootInstallErrorNotificationFactory;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.leak.LeakTool;
+import cm.aptoide.pt.link.AptoideInstallParser;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.Result;
@@ -282,6 +283,7 @@ public abstract class AptoideApplication extends Application {
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
   private NotificationsCleaner notificationsCleaner;
   private SyncScheduler alarmSyncScheduler;
+  private NotificationAnalytics notificationAnalytics;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -543,7 +545,7 @@ public abstract class AptoideApplication extends Application {
                   AppEventsLogger.newLogger(getApplicationContext()), bodyInterceptorPoolV7,
                   getDefaultClient(), WebService.getDefaultConverter(), tokenInvalidator,
                   cm.aptoide.pt.dataprovider.BuildConfig.APPLICATION_ID,
-                  getDefaultSharedPreferences()));
+                  getDefaultSharedPreferences(), new AptoideInstallParser()));
     }
     return notificationCenter;
   }
@@ -1392,10 +1394,14 @@ public abstract class AptoideApplication extends Application {
   }
 
   public NotificationAnalytics getNotificationAnalytics() {
-    return new NotificationAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(this),
-        getBodyInterceptorPoolV7(), getDefaultClient(), WebService.getDefaultConverter(),
-        tokenInvalidator, cm.aptoide.pt.dataprovider.BuildConfig.APPLICATION_ID,
-        getDefaultSharedPreferences());
+    if (notificationAnalytics == null) {
+      notificationAnalytics =
+          new NotificationAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(this),
+              getBodyInterceptorPoolV7(), getDefaultClient(), WebService.getDefaultConverter(),
+              tokenInvalidator, cm.aptoide.pt.dataprovider.BuildConfig.APPLICATION_ID,
+              getDefaultSharedPreferences(), new AptoideInstallParser());
+    }
+    return notificationAnalytics;
   }
 }
 

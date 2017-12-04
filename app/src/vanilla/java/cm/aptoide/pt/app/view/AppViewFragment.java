@@ -93,6 +93,7 @@ import cm.aptoide.pt.install.view.remote.RemoteInstallDialog;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.search.ReferrerUtils;
@@ -933,6 +934,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     if (getOpenType() == OpenType.OPEN_AND_INSTALL) {
       setOpenType(null);
     }
+    NotificationAnalytics notificationAnalytics =
+        ((AptoideApplication) getContext().getApplicationContext()).getNotificationAnalytics();
 
     installDisplayable =
         AppViewInstallDisplayable.newInstance(getApp, installManager, getSearchAdResult(),
@@ -940,7 +943,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             appViewAnalytics, installAppRelay, this,
             new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
                 AppEventsLogger.newLogger(getContext().getApplicationContext())), navigationTracker,
-            getEditorsBrickPosition(), installAnalytics);
+            getEditorsBrickPosition(), installAnalytics,
+            notificationAnalytics.getCampaignId(app.getPackageName(), app.getId()),
+            notificationAnalytics.getAbTestingGroup(app.getPackageName(), app.getId()));
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics, storeAnalytics));
     displayables.add(

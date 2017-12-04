@@ -39,6 +39,8 @@ public class DownloadInstallBaseEvent implements Event {
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
+  private String abTestingGroup;
+  private Integer campaignId;
 
   public DownloadInstallBaseEvent(Action action, Origin origin, String packageName, String url,
       String obbUrl, String patchObbUrl, AppContext context, int versionCode,
@@ -67,6 +69,23 @@ public class DownloadInstallBaseEvent implements Event {
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
+  }
+
+  public String getAbTestingGroup() {
+    return abTestingGroup;
+  }
+
+  public void setAbTestingGroup(String abTestingGroup) {
+
+    this.abTestingGroup = abTestingGroup;
+  }
+
+  public Integer getCampaignId() {
+    return campaignId;
+  }
+
+  public void setCampaignId(int campaignId) {
+    this.campaignId = campaignId;
   }
 
   public String getScreenHistoryStore() {
