@@ -28,7 +28,6 @@ import static cm.aptoide.pt.UITests.skipWizard;
   private final String PASS = "aptoide1234";
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
-  @Rule public RetryTestRule retry = new RetryTestRule(UITests.NUMBER_OF_RETRIES);
 
   @Before public void setUp() {
     TestType.types = TestType.TestTypes.SIGNSIGNUPTESTS;

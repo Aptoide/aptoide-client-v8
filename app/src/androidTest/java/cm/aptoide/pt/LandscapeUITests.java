@@ -19,7 +19,6 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static cm.aptoide.pt.UITests.NUMBER_OF_RETRIES;
 import static cm.aptoide.pt.UITests.goToSettings;
 import static cm.aptoide.pt.UITests.skipWizard;
 
@@ -30,7 +29,6 @@ import static cm.aptoide.pt.UITests.skipWizard;
 @RunWith(AndroidJUnit4.class) public class LandscapeUITests {
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
-  @Rule public RetryTestRule retry = new RetryTestRule(NUMBER_OF_RETRIES);
 
   @Before public void setUp() {
     if (UITests.isFirstTime()) {

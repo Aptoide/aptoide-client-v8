@@ -15,7 +15,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
  */
 
 public class UITests {
-  protected final static int NUMBER_OF_RETRIES = 2;
 
   protected static boolean isFirstTime() {
     try {
