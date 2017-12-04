@@ -4,7 +4,6 @@ import android.os.Bundle;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
 import cm.aptoide.pt.analytics.events.KnockEvent;
-import cm.aptoide.pt.database.realm.Notification;
 import com.facebook.appevents.AppEventsLogger;
 import okhttp3.OkHttpClient;
 
@@ -49,17 +48,19 @@ public class NotificationAnalytics {
   public void sendPushNotificationReceivedEvent(@AptoideNotification.NotificationType int type,
       String abTestingGroup, int campaignId, String url) {
     analytics.sendEvent(new FacebookEvent(facebook, NOTIFICATION_RECEIVED,
-        createSocialImpressionEventBundle(type, abTestingGroup, campaignId, url)));
+        createPushNotificationEventBundle(type, abTestingGroup, campaignId, url)));
   }
 
-  public void sendPushNotficationImpressionEvent(AptoideNotification notification) {
+  public void sendPushNotficationImpressionEvent(@AptoideNotification.NotificationType int type,
+      String abTestingGroup, int campaignId, String url) {
     analytics.sendEvent(new FacebookEvent(facebook, NOTIFICATION_IMPRESSION,
-        createPushNotificationImpressionEventBundle(notification)));
+        createPushNotificationEventBundle(type, abTestingGroup, campaignId, url)));
   }
 
-  public void sendPushNotificationPressedEvent(Notification notification) {
+  public void sendPushNotificationPressedEvent(@AptoideNotification.NotificationType int type,
+      String abTestingGroup, int campaignId, String url) {
     analytics.sendEvent(new FacebookEvent(facebook, NOTIFICATION_PRESSED,
-        createSocialNotificationPressedEventBundle(notification)));
+        createPushNotificationEventBundle(type, abTestingGroup, campaignId, url)));
   }
 
   private Bundle createUpdateNotificationEventsBundle() {
@@ -69,29 +70,13 @@ public class NotificationAnalytics {
     return bundle;
   }
 
-  private Bundle createSocialNotificationPressedEventBundle(Notification notification) {
-    Bundle bundle = new Bundle();
-    bundle.putInt(CAMPAIGN_ID, notification.getCampaignId());
-    bundle.putString(TYPE, String.valueOf(matchNotificationTypeToString(notification.getType())));
-    bundle = addToBundleIfNotNull(bundle, notification.getAbTestingGroup(), notification.getUrl());
-    return bundle;
-  }
-
-  private Bundle createSocialImpressionEventBundle(@AptoideNotification.NotificationType int type,
+  private Bundle createPushNotificationEventBundle(@AptoideNotification.NotificationType int type,
       String abTestingGroup, int campaignId, String url) {
     Bundle bundle = new Bundle();
     bundle.putInt(CAMPAIGN_ID, campaignId);
     bundle.putString(TYPE, matchNotificationTypeToString(type).toString()
         .toLowerCase());
     bundle = addToBundleIfNotNull(bundle, abTestingGroup, getPackageNameFromUrl(url));
-    return bundle;
-  }
-
-  private Bundle createPushNotificationImpressionEventBundle(AptoideNotification notification) {
-    Bundle bundle = new Bundle();
-    bundle.putInt(CAMPAIGN_ID, notification.getCampaignId());
-    bundle.putString(TYPE, matchNotificationTypeToString(notification.getType()).toString());
-    bundle = addToBundleIfNotNull(bundle, notification.getAbTestingGroup(), notification.getUrl());
     return bundle;
   }
 

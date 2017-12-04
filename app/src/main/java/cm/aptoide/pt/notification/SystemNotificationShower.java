@@ -72,7 +72,9 @@ public class SystemNotificationShower implements Presenter {
         .flatMapCompletable(aptoideNotification -> {
           int notificationId =
               notificationIdsMapper.getNotificationId(aptoideNotification.getType());
-          notificationAnalytics.sendPushNotficationImpressionEvent(aptoideNotification);
+          notificationAnalytics.sendPushNotficationImpressionEvent(aptoideNotification.getType(),
+              aptoideNotification.getAbTestingGroup(), aptoideNotification.getCampaignId(),
+              aptoideNotification.getUrl());
           return mapToAndroidNotification(aptoideNotification, notificationId).doOnSuccess(
               notification -> notificationManager.notify(notificationId, notification))
               .toCompletable();
@@ -247,7 +249,8 @@ public class SystemNotificationShower implements Presenter {
         .flatMapSingle(notificationInfo -> notificationProvider.getLastShowed(
             notificationIdsMapper.getNotificationType(notificationInfo.getNotificationType()))
             .doOnSuccess(notification -> notificationAnalytics.sendPushNotificationPressedEvent(
-                notification))
+                notification.getType(), notification.getAbTestingGroup(),
+                notification.getCampaignId(), notification.getUrl()))
             .map(notification -> notificationInfo))
         .doOnNext(notificationInfo -> callDeepLink(context, notificationInfo))
         .doOnNext(notificationInfo -> dismissNotificationAfterAction(
