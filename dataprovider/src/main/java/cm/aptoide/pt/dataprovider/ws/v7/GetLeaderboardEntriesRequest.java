@@ -15,25 +15,26 @@ public class GetLeaderboardEntriesRequest extends V7<GetLeaderboardEntriesRespon
 
   private String url = "http://192.168.1.100:5000/api/7/user/timeline/game/getLeaderboard/";
 
-  GetLeaderboardEntriesRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+  GetLeaderboardEntriesRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
     super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
         tokenInvalidator);
   }
 
-  public static GetLeaderboardEntriesRequest of(String url, String filter, int offset, int limit, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+  public static GetLeaderboardEntriesRequest of(String filter, int offset, int limit,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
 
-    return new GetLeaderboardEntriesRequest(url,
-        new Body(sharedPreferences, filter, offset, limit), bodyInterceptor,
+    return new GetLeaderboardEntriesRequest(new Body(sharedPreferences, filter, offset, limit),
+        bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<GetLeaderboardEntriesResponse> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getLeaderboardEntries(url, body, bypassCache);
+    return interfaces.getLeaderboardEntries(body, bypassCache);
   }
   public static class Body extends BaseBodyWithAlphaBetaKey{
 

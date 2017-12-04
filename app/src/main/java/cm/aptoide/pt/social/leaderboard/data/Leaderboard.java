@@ -5,7 +5,6 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetLeaderboardEntriesRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.GetLeaderboardEntriesResponse;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -35,7 +34,7 @@ public class Leaderboard {
   }
 
   public Observable<List<List<LeaderboardEntry>>> getLeaderboardEntries(String filter) {
-    return GetLeaderboardEntriesRequest.of("", filter, 0, 10, bodyInterceptor, httpClient,
+    return GetLeaderboardEntriesRequest.of(filter, 0, 10, bodyInterceptor, httpClient,
         converterFactory, tokenInvalidator, sharedPreferences)
         .observe(true)
         .flatMap(getLeaderboardEntriesResponse -> Observable.just(getLeaderboardEntriesResponse.getData()))
