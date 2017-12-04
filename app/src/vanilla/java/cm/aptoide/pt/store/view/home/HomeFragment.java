@@ -44,9 +44,9 @@ import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.SearchCursorAdapter;
 import cm.aptoide.pt.search.SearchFactory;
 import cm.aptoide.pt.search.SearchNavigator;
-import cm.aptoide.pt.search.suggestions.AppSearchSuggestionsView;
+import cm.aptoide.pt.search.view.AppSearchSuggestionsView;
 import cm.aptoide.pt.search.view.SearchSuggestionsPresenter;
-import cm.aptoide.pt.search.view.TrendingManager;
+import cm.aptoide.pt.search.TrendingManager;
 import cm.aptoide.pt.spotandshare.view.SpotSharePreviewActivity;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.view.StoreFragment;
@@ -315,7 +315,7 @@ public class HomeFragment extends StoreFragment {
         .autoConnect();
 
     appSearchSuggestionsView =
-        new AppSearchSuggestionsView(this, RxView.clicks(toolbar), crashReport, "",
+        new AppSearchSuggestionsView(this, RxView.clicks(toolbar), crashReport,
             searchCursorAdapter, PublishSubject.create(), toolbarMenuItemClick, searchAnalytics);
 
     final AptoideApplication application =

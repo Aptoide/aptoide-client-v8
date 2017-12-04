@@ -26,7 +26,7 @@ import cm.aptoide.pt.install.rollback.RollbackRepository;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.root.RootAvailabilityManager;
-import cm.aptoide.pt.search.ReferrerUtils;
+import cm.aptoide.pt.util.ReferrerUtils;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.utils.AptoideUtils;

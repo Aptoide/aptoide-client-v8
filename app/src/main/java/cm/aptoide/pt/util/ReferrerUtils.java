@@ -3,7 +3,7 @@
  * Modified on 02/09/2016.
  */
 
-package cm.aptoide.pt.search;
+package cm.aptoide.pt.util;
 
 import android.content.Context;
 import android.content.Intent;

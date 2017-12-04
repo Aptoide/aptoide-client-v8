@@ -1,18 +1,15 @@
 package cm.aptoide.pt.search.suggestions;
 
 import android.content.SharedPreferences;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
-import rx.Single;
 
 /**
  * Created by franciscocalado on 11/14/17.

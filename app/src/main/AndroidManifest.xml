@@ -100,12 +100,6 @@
         />
 
     <provider
-        android:name=".search.suggestions.AppSuggestions"
-        android:authorities="${suggestionProviderAuthority}"
-        android:exported="false"
-        />
-
-    <provider
         android:name="android.support.v4.content.FileProvider"
         android:authorities="${applicationId}.provider"
         android:exported="false"

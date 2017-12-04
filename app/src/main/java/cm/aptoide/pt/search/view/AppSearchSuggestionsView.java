@@ -1,4 +1,4 @@
-package cm.aptoide.pt.search.suggestions;
+package cm.aptoide.pt.search.view;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.SearchView;
@@ -9,7 +9,7 @@ import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.search.SearchCursorAdapter;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.analytics.SearchSource;
-import cm.aptoide.pt.search.view.SearchSuggestionsView;
+import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
 import com.trello.rxlifecycle.LifecycleTransformer;
@@ -31,6 +31,14 @@ public class AppSearchSuggestionsView implements SearchSuggestionsView {
   private SearchView searchView;
   private MenuItem searchMenuItem;
   private Observable<MenuItem> toolbarMenuItemClick;
+
+  public AppSearchSuggestionsView(FragmentView parentView, Observable<Void> toolbarClickObservable,
+      CrashReport crashReport, SearchCursorAdapter searchCursorAdapter,
+      PublishSubject<SearchQueryEvent> queryTextChangedPublisher,
+      Observable<MenuItem> toolbarMenuItemClick, SearchAnalytics searchAnalytics) {
+    this(parentView, toolbarClickObservable, crashReport, "", searchCursorAdapter,
+        queryTextChangedPublisher, toolbarMenuItemClick, searchAnalytics);
+  }
 
   public AppSearchSuggestionsView(FragmentView parentView, Observable<Void> toolbarClickObservable,
       CrashReport crashReport, String currentQuery, SearchCursorAdapter searchCursorAdapter,

@@ -93,15 +93,15 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
-import cm.aptoide.pt.search.ReferrerUtils;
+import cm.aptoide.pt.util.ReferrerUtils;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.SearchCursorAdapter;
 import cm.aptoide.pt.search.SearchFactory;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
-import cm.aptoide.pt.search.suggestions.AppSearchSuggestionsView;
+import cm.aptoide.pt.search.view.AppSearchSuggestionsView;
 import cm.aptoide.pt.search.view.SearchSuggestionsPresenter;
-import cm.aptoide.pt.search.view.TrendingManager;
+import cm.aptoide.pt.search.TrendingManager;
 import cm.aptoide.pt.share.ShareAppHelper;
 import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
@@ -499,7 +499,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         .autoConnect();
 
     appSearchSuggestionsView =
-        new AppSearchSuggestionsView(this, RxView.clicks(toolbar), crashReport, "",
+        new AppSearchSuggestionsView(this, RxView.clicks(toolbar), crashReport,
             searchCursorAdapter, PublishSubject.create(), toolbarMenuItemClick, searchAnalytics);
 
     final AptoideApplication application =

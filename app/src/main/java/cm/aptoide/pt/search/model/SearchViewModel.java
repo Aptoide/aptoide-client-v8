@@ -1,7 +1,6 @@
-package cm.aptoide.pt.search.view;
+package cm.aptoide.pt.search.model;
 
-import cm.aptoide.pt.search.model.SearchAdResult;
-import cm.aptoide.pt.search.model.SearchAppResult;
+import cm.aptoide.pt.search.view.SearchResultView;
 import java.util.LinkedList;
 import java.util.List;
 import org.parceler.Parcel;
@@ -25,14 +24,14 @@ import org.parceler.Parcel;
   List<SearchAppResult> followedStoresSearchAppResults;
   List<SearchAdResult> followedStoresSearchAdResults;
 
-  SearchViewModel() {
+  public SearchViewModel() {
     this.allStoresSearchAppResults = new LinkedList<>();
     this.allStoresSearchAdResults = new LinkedList<>();
     this.followedStoresSearchAppResults = new LinkedList<>();
     this.followedStoresSearchAdResults = new LinkedList<>();
   }
 
-  SearchViewModel(String currentQuery, String storeName, boolean onlyTrustedApps,
+  public SearchViewModel(String currentQuery, String storeName, boolean onlyTrustedApps,
       boolean allStoresSelected, String defaultStoreName,
       List<SearchAppResult> allStoresSearchAppResults,
       List<SearchAdResult> allStoresSearchAdResults,
@@ -49,18 +48,18 @@ import org.parceler.Parcel;
     this.followedStoresSearchAdResults = followedStoresSearchAdResults;
   }
 
-  SearchViewModel(String currentQuery, String storeName, boolean onlyTrustedApps,
+  public SearchViewModel(String currentQuery, String storeName, boolean onlyTrustedApps,
       String defaultStoreName) {
     this(currentQuery, storeName, onlyTrustedApps, true, defaultStoreName, new LinkedList<>(),
         new LinkedList<>(), new LinkedList<>(), new LinkedList<>());
   }
 
-  SearchViewModel(String currentQuery, boolean onlyTrustedApps, String defaultStoreName) {
+  public SearchViewModel(String currentQuery, boolean onlyTrustedApps, String defaultStoreName) {
     this(currentQuery, null, onlyTrustedApps, true, defaultStoreName, new LinkedList<>(),
         new LinkedList<>(), new LinkedList<>(), new LinkedList<>());
   }
 
-  SearchViewModel(String currentQuery, String storeName, String defaultStoreName) {
+  public SearchViewModel(String currentQuery, String storeName, String defaultStoreName) {
     this(currentQuery, storeName, true, true, defaultStoreName, new LinkedList<>(),
         new LinkedList<>(), new LinkedList<>(), new LinkedList<>());
   }

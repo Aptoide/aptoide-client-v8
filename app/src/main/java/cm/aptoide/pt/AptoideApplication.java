@@ -137,7 +137,7 @@ import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootValueSaver;
 import cm.aptoide.pt.search.suggestions.TrendingService;
-import cm.aptoide.pt.search.view.TrendingManager;
+import cm.aptoide.pt.search.TrendingManager;
 import cm.aptoide.pt.social.TimelineRepositoryFactory;
 import cm.aptoide.pt.social.data.ReadPostsPersistence;
 import cm.aptoide.pt.social.data.TimelinePostsRepository;

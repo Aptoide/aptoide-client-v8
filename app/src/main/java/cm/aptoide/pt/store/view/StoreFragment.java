@@ -46,13 +46,13 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.notification.NotificationAnalytics;
-import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.SearchCursorAdapter;
 import cm.aptoide.pt.search.SearchFactory;
 import cm.aptoide.pt.search.SearchNavigator;
-import cm.aptoide.pt.search.suggestions.AppSearchSuggestionsView;
+import cm.aptoide.pt.search.TrendingManager;
+import cm.aptoide.pt.search.analytics.SearchAnalytics;
+import cm.aptoide.pt.search.view.AppSearchSuggestionsView;
 import cm.aptoide.pt.search.view.SearchSuggestionsPresenter;
-import cm.aptoide.pt.search.view.TrendingManager;
 import cm.aptoide.pt.share.ShareStoreHelper;
 import cm.aptoide.pt.social.view.TimelineFragment;
 import cm.aptoide.pt.store.StoreAnalytics;
@@ -368,7 +368,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
           .autoConnect();
 
       appSearchSuggestionsView =
-          new AppSearchSuggestionsView(this, RxView.clicks(toolbar), crashReport, "",
+          new AppSearchSuggestionsView(this, RxView.clicks(toolbar), crashReport,
               searchCursorAdapter, PublishSubject.create(), toolbarMenuItemClick, searchAnalytics);
 
       final AptoideApplication application =

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.search.view;
+package cm.aptoide.pt.search;
 
 import cm.aptoide.pt.search.suggestions.TrendingService;
 import java.util.List;
