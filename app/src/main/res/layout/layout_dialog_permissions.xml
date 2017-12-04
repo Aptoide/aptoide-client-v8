@@ -3,7 +3,6 @@
   ~ Modified on 21/07/2016.
   -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/dialog_permissions"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/dialog_bg"
@@ -11,7 +10,6 @@
     >
 
   <LinearLayout
-      android:id="@+id/dialog_app_layout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_margin="4dp"
@@ -62,7 +60,6 @@
 
 
   <ScrollView
-      android:id="@+id/dialog_scrollview"
       android:layout_width="match_parent"
       android:layout_height="0dip"
       android:layout_weight="1"

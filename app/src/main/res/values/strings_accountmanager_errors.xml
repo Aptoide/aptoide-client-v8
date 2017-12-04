@@ -3,46 +3,10 @@
 
   <!--errors-->
   <string name="error_occured">An error occurred. Please try again</string>
-  <string name="error_invalid_grant">Invalid username and password combination</string>
-  <string name="ws_error_MARG_200">@string/error_occured</string>
-  <string name="ws_error_MARG_203">@string/error_occured</string>
-  <string name="ws_error_MARG_204">@string/error_occured</string>
-  <string name="ws_error_IARG_200">@string/error_occured</string>
-  <string name="ws_error_AUTH_2">Invalid credentials!</string>
-  <string name="ws_error_AUTH_7">@string/error_occured</string>
-  <string name="ws_error_AUTH_100">Couldn\'t login with Google. Check your Google account (you may need to validate your email address)</string>
-  <string name="ws_error_AUTH_101">Couldn\'t login with Google. Please try again.</string>
-  <string name="ws_error_AUTH_102">Couldn\'t login with Facebook. Check your Facebook account (you may need to validate your email address)</string>
-  <string name="ws_error_AUTH_103">Couldn\'t login with Facebook. Please try again.</string>
   <string name="ws_error_invalid_grant">Invalid username and password combination</string>
-  <string name="ws_error_MARG_12">Missing hmac parameter</string>
-  <string name="ws_error_MARG_109">Missing email parameter</string>
-  <string name="ws_error_MARG_110">Missing passhash parameter</string>
-  <string name="ws_error_MARG_111">Missing name parameter</string>
-  <string name="ws_error_MARG_112">Missing user-agent parameter</string>
-  <string name="ws_error_IARG_5">Invalid hmac format</string>
-  <string name="ws_error_IARG_106">The e-mail address is not valid</string>
-  <string name="ws_error_IARG_111">Invalid passhash format</string>
-  <string name="ws_error_REPO_4">Invalid store name. You can only use letters, numbers and
-        hyphens. You can\'t use hyphens at the start nor at the end.</string>
-  <string name="ws_error_REPO_7">This user already has a valid store.</string>
-  <string name="ws_error_REPO_5">Store names must be at least 3 characters long.</string>
-  <string name="ws_error_REPO_6">Store name already taken. Choose another
-        one.</string>
-  <string name="ws_eror_WOP_">Invalid store name. You can only use letters, numbers and
-        hyphens. You can\'t use hyphens at the start nor at the end.</string>
-  <string name="ws_eror_WOP_1">You already have a store. You can\'t create another store with the same account</string>
   <string name="ws_error_WOP_2">Invalid store name. You can only use letters, numbers and
         hyphens. You can\'t use hyphens at the start nor at the end.</string>
-  <string name="ws_error_WOP_3">Store name already taken. Choose a different name for your store.</string>
-  <string name="ws_error_WOP_9">The email provided already exists</string>
-  <string name="ws_error_WOP_10">The email provided is not registered yet</string>
-  <string name="ws_error_WOP_11">The store couldn\'t be created. Please try again.</string>
   <string name="ws_error_API_1">The image is not valid.</string>
-  <string name="ws_error_QUOTA_2">Daily limit of created users reached for today. If you need
-    this limit increased please contact support or create more users tomorrow.</string>
-  <string name="ws_error_AUTH_1">Either email or password are not valid to login (upon name
-        update)</string>
   <string name="edit_store_social_link_invalid_url_text">Invalid Url</string>
   <string name="edit_store_page_doesnt_exist_error_short">This page doesn\'t exist</string>
   <string name="edit_store_social_link_channel_error">This channel doesn\'t exist</string>

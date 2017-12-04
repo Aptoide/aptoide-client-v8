@@ -27,7 +27,6 @@
 
 
   <LinearLayout
-      android:id="@+id/fragment_payment_login_logo_container"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_below="@id/fragment_payment_login_app_bar"
@@ -37,7 +36,6 @@
       >
 
     <ImageView
-        android:id="@+id/fragment_payment_login_logo"
         android:layout_width="168dp"
         android:layout_height="44dp"
         android:layout_marginTop="24dp"
@@ -66,7 +64,6 @@
   </LinearLayout>
 
   <LinearLayout
-      android:id="@+id/fragment_payment_login_social_buttons_container"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_alignParentBottom="true"
@@ -292,7 +289,6 @@
 
         >
       <TextView
-          android:id="@+id/fragment_payment_login_terms_and_conditions_text"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_gravity="center"
