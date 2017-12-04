@@ -133,24 +133,6 @@
       </intent-filter>
     </activity>
 
-    <activity android:name=".search.view.SearchActivity">
-      <intent-filter>
-        <action android:name="android.intent.action.SEARCH"/>
-      </intent-filter>
-      <meta-data
-          android:name="android.app.searchable"
-          android:resource="@xml/searchable"/>
-    </activity>
-
-    <activity android:name=".search.view.StoreSearchActivity">
-      <intent-filter>
-        <action android:name="android.intent.action.SEARCH"/>
-      </intent-filter>
-      <meta-data
-          android:name="android.app.searchable"
-          android:resource="@xml/store_searchable"/>
-    </activity>
-
     <activity
         android:name=".billing.view.BillingActivity"
         android:launchMode="singleInstance"
@@ -395,7 +377,7 @@
         <action android:name="android.appwidget.action.ACTION_WIDGET_RECEIVER"/>
       </intent-filter>
       <meta-data android:name="android.appwidget.provider"
-          android:resource="@xml/search_appwidget_info" />
+          android:resource="@xml/widget_search_app" />
     </receiver>
 
   </application>
