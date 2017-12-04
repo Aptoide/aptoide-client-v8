@@ -530,7 +530,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
         .toString(), storeDescription.getText()
         .toString());
     currentModel.setStoreTheme(themeSelectorAdapter.getSelectedTheme());
-    /// TODO: Pedro 21/11/17  : Check if there are deleted links
     currentModel.setSocialDelLinks(checkLinksToDelete());
     currentModel.setSocialLinks(getStoreLinks());
     return currentModel;
