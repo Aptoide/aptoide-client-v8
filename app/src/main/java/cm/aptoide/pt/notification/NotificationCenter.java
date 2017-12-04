@@ -34,7 +34,7 @@ public class NotificationCenter {
         .flatMapIterable(notifications -> notifications)
         .filter(notification -> !notification.isProcessed())
         .flatMapSingle(notification -> {
-          notificationAnalytics.sendSocialNotificationReceivedEvent(notification.getType(),
+          notificationAnalytics.sendPushNotificationReceivedEvent(notification.getType(),
               notification.getAbTestingGroup(), notification.getCampaignId(),
               notification.getUrl());
           notification.setProcessed(true);

@@ -4,7 +4,6 @@ import android.os.Bundle;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
 import cm.aptoide.pt.analytics.events.KnockEvent;
-import cm.aptoide.pt.database.realm.Notification;
 import com.facebook.appevents.AppEventsLogger;
 import okhttp3.OkHttpClient;
 
@@ -14,6 +13,7 @@ import okhttp3.OkHttpClient;
 
 public class NotificationAnalytics {
 
+  private static final String NOTIFICATION_RECEIVED = "Aptoide_Push_Notification_Received";
   private static final String NOTIFICATION_IMPRESSION = "Aptoide_Push_Notification_Impression";
   private static final String NOTIFICATION_PRESSED = "Aptoide_Push_Notification_Click";
 
@@ -36,41 +36,41 @@ public class NotificationAnalytics {
   }
 
   public void sendUpdatesNotificationReceivedEvent() {
-    analytics.sendEvent(new FacebookEvent(facebook, NOTIFICATION_IMPRESSION));
-  }
-
-  public void sendSocialNotificationReceivedEvent(@AptoideNotification.NotificationType int type,
-      String abTestingGroup, int campaignId, String url) {
-    analytics.sendEvent(new FacebookEvent(facebook, NOTIFICATION_IMPRESSION,
-        createSocialImpressionEventBundle(type, abTestingGroup, campaignId, url)));
-  }
-
-  public void sendSocialNotificationPressedEvent(Notification notification) {
-    analytics.sendEvent(new FacebookEvent(facebook, NOTIFICATION_PRESSED,
-        createSocialNotificationPressedEventBundle(notification)));
+    analytics.sendEvent(
+        new FacebookEvent(facebook, NOTIFICATION_RECEIVED, createUpdateNotificationEventsBundle()));
   }
 
   public void sendUpdatesNotificationClickEvent() {
     analytics.sendEvent(
-        new FacebookEvent(facebook, NOTIFICATION_PRESSED, createUpdateClickEventBundle()));
+        new FacebookEvent(facebook, NOTIFICATION_PRESSED, createUpdateNotificationEventsBundle()));
   }
 
-  private Bundle createUpdateClickEventBundle() {
+  public void sendPushNotificationReceivedEvent(@AptoideNotification.NotificationType int type,
+      String abTestingGroup, int campaignId, String url) {
+    analytics.sendEvent(new FacebookEvent(facebook, NOTIFICATION_RECEIVED,
+        createPushNotificationEventBundle(type, abTestingGroup, campaignId, url)));
+  }
+
+  public void sendPushNotficationImpressionEvent(@AptoideNotification.NotificationType int type,
+      String abTestingGroup, int campaignId, String url) {
+    analytics.sendEvent(new FacebookEvent(facebook, NOTIFICATION_IMPRESSION,
+        createPushNotificationEventBundle(type, abTestingGroup, campaignId, url)));
+  }
+
+  public void sendPushNotificationPressedEvent(@AptoideNotification.NotificationType int type,
+      String abTestingGroup, int campaignId, String url) {
+    analytics.sendEvent(new FacebookEvent(facebook, NOTIFICATION_PRESSED,
+        createPushNotificationEventBundle(type, abTestingGroup, campaignId, url)));
+  }
+
+  private Bundle createUpdateNotificationEventsBundle() {
     Bundle bundle = new Bundle();
-    bundle.putString(TYPE, NotificationTypes.CAMPAIGN.toString()
+    bundle.putString(TYPE, NotificationTypes.UPDATES.toString()
         .toLowerCase());
     return bundle;
   }
 
-  private Bundle createSocialNotificationPressedEventBundle(Notification notification) {
-    Bundle bundle = new Bundle();
-    bundle.putInt(CAMPAIGN_ID, notification.getCampaignId());
-    bundle.putString(TYPE, String.valueOf(matchNotificationTypeToString(notification.getType())));
-    bundle = addToBundleIfNotNull(bundle, notification.getAbTestingGroup(), notification.getUrl());
-    return bundle;
-  }
-
-  private Bundle createSocialImpressionEventBundle(@AptoideNotification.NotificationType int type,
+  private Bundle createPushNotificationEventBundle(@AptoideNotification.NotificationType int type,
       String abTestingGroup, int campaignId, String url) {
     Bundle bundle = new Bundle();
     bundle.putInt(CAMPAIGN_ID, campaignId);
