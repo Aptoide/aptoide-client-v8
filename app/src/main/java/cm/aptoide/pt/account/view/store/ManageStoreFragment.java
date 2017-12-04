@@ -537,6 +537,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   }
 
   private List<Store.SocialChannelType> checkLinksToDelete() {
+    storeDeleteLinksList = new ArrayList<>();
     List<SocialLink> socialLinks = currentModel.getSocialLinks();
     for (SocialLink socialLink : socialLinks) {
       setStoreDeleteLinksList(socialLink);
@@ -545,7 +546,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   }
 
   private void setStoreDeleteLinksList(SocialLink socialLink) {
-    storeDeleteLinksList = new ArrayList<>();
     if (!socialLink.getUrl()
         .isEmpty()) {
       if (socialLink.getType()
