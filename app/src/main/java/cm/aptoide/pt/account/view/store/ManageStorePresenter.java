@@ -171,6 +171,7 @@ public class ManageStorePresenter implements Presenter {
             break;
         }
       }
+      return;
     }
 
     crashReport.log(err);
