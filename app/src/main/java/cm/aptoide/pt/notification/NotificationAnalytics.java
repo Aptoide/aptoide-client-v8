@@ -14,6 +14,7 @@ import okhttp3.OkHttpClient;
 
 public class NotificationAnalytics {
 
+  private static final String NOTIFICATION_RECEIVED = "Aptoide_Push_Notification_Received";
   private static final String NOTIFICATION_IMPRESSION = "Aptoide_Push_Notification_Impression";
   private static final String NOTIFICATION_PRESSED = "Aptoide_Push_Notification_Click";
 
@@ -36,24 +37,29 @@ public class NotificationAnalytics {
   }
 
   public void sendUpdatesNotificationReceivedEvent() {
-    analytics.sendEvent(new FacebookEvent(facebook, NOTIFICATION_IMPRESSION,
-        createUpdateNotificationEventsBundle()));
-  }
-
-  public void sendSocialNotificationReceivedEvent(@AptoideNotification.NotificationType int type,
-      String abTestingGroup, int campaignId, String url) {
-    analytics.sendEvent(new FacebookEvent(facebook, NOTIFICATION_IMPRESSION,
-        createSocialImpressionEventBundle(type, abTestingGroup, campaignId, url)));
-  }
-
-  public void sendSocialNotificationPressedEvent(Notification notification) {
-    analytics.sendEvent(new FacebookEvent(facebook, NOTIFICATION_PRESSED,
-        createSocialNotificationPressedEventBundle(notification)));
+    analytics.sendEvent(
+        new FacebookEvent(facebook, NOTIFICATION_RECEIVED, createUpdateNotificationEventsBundle()));
   }
 
   public void sendUpdatesNotificationClickEvent() {
     analytics.sendEvent(
         new FacebookEvent(facebook, NOTIFICATION_PRESSED, createUpdateNotificationEventsBundle()));
+  }
+
+  public void sendPushNotificationReceivedEvent(@AptoideNotification.NotificationType int type,
+      String abTestingGroup, int campaignId, String url) {
+    analytics.sendEvent(new FacebookEvent(facebook, NOTIFICATION_RECEIVED,
+        createSocialImpressionEventBundle(type, abTestingGroup, campaignId, url)));
+  }
+
+  public void sendPushNotficationImpressionEvent(AptoideNotification notification) {
+    analytics.sendEvent(new FacebookEvent(facebook, NOTIFICATION_IMPRESSION,
+        createPushNotificationImpressionEventBundle(notification)));
+  }
+
+  public void sendPushNotificationPressedEvent(Notification notification) {
+    analytics.sendEvent(new FacebookEvent(facebook, NOTIFICATION_PRESSED,
+        createSocialNotificationPressedEventBundle(notification)));
   }
 
   private Bundle createUpdateNotificationEventsBundle() {
@@ -78,6 +84,14 @@ public class NotificationAnalytics {
     bundle.putString(TYPE, matchNotificationTypeToString(type).toString()
         .toLowerCase());
     bundle = addToBundleIfNotNull(bundle, abTestingGroup, getPackageNameFromUrl(url));
+    return bundle;
+  }
+
+  private Bundle createPushNotificationImpressionEventBundle(AptoideNotification notification) {
+    Bundle bundle = new Bundle();
+    bundle.putInt(CAMPAIGN_ID, notification.getCampaignId());
+    bundle.putString(TYPE, matchNotificationTypeToString(notification.getType()).toString());
+    bundle = addToBundleIfNotNull(bundle, notification.getAbTestingGroup(), notification.getUrl());
     return bundle;
   }
 
