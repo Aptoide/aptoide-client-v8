@@ -86,11 +86,6 @@ public class CreditCardAuthorizationFragment extends PermissionServiceFragment
     adyen = ((AptoideApplication) getContext().getApplicationContext()).getAdyen();
   }
 
-  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_credit_card_authorization, container, false);
-  }
-
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
@@ -139,6 +134,16 @@ public class CreditCardAuthorizationFragment extends PermissionServiceFragment
         AndroidSchedulers.mainThread()));
   }
 
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
+  }
+
+  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
+    return inflater.inflate(R.layout.fragment_credit_card_authorization, container, false);
+  }
+
   @Override public void onDestroyView() {
     unregisterClickHandler(clickHandler);
     progressBar = null;
@@ -157,35 +162,6 @@ public class CreditCardAuthorizationFragment extends PermissionServiceFragment
     cardForm.setOnCardFormValidListener(null);
     cardForm = null;
     super.onDestroyView();
-  }
-
-  @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName());
-  }
-
-  @Override
-  public void showCreditCardView(PaymentMethod paymentMethod, Amount amount, boolean cvcRequired,
-      boolean allowSave, String publicKey, String generationTime) {
-    this.paymentMethod = paymentMethod;
-    this.publicKey = publicKey;
-    this.generationTime = generationTime;
-    cvcOnly = false;
-    preAuthorizedCardText.setVisibility(View.GONE);
-    rememberCardCheckBox.setVisibility(View.VISIBLE);
-    showProductPrice(amount);
-    cardForm.cardRequired(true)
-        .expirationRequired(true)
-        .cvvRequired(cvcRequired)
-        .postalCodeRequired(false)
-        .mobileNumberRequired(false)
-        .actionLabel(getString(R.string.buy))
-        .setup(getActivity());
-  }
-
-  @Override public Observable<PaymentDetails> creditCardDetailsEvent() {
-    return Observable.merge(keyboardBuyRelay, RxView.clicks(buyButton))
-        .map(__ -> getPaymentDetails(publicKey, generationTime));
   }
 
   @Override public void showProduct(Product product) {
@@ -208,6 +184,11 @@ public class CreditCardAuthorizationFragment extends PermissionServiceFragment
         .map(dialogInterface -> null);
   }
 
+  @Override public Observable<PaymentDetails> creditCardDetailsEvent() {
+    return Observable.merge(keyboardBuyRelay, RxView.clicks(buyButton))
+        .map(__ -> getPaymentDetails(publicKey, generationTime));
+  }
+
   @Override public void showNetworkError() {
     if (!networkErrorDialog.isShowing()) {
       networkErrorDialog.show();
@@ -228,6 +209,25 @@ public class CreditCardAuthorizationFragment extends PermissionServiceFragment
     cardForm.cardRequired(false)
         .expirationRequired(false)
         .cvvRequired(true)
+        .postalCodeRequired(false)
+        .mobileNumberRequired(false)
+        .actionLabel(getString(R.string.buy))
+        .setup(getActivity());
+  }
+
+  @Override
+  public void showCreditCardView(PaymentMethod paymentMethod, Amount amount, boolean cvcRequired,
+      boolean allowSave, String publicKey, String generationTime) {
+    this.paymentMethod = paymentMethod;
+    this.publicKey = publicKey;
+    this.generationTime = generationTime;
+    cvcOnly = false;
+    preAuthorizedCardText.setVisibility(View.GONE);
+    rememberCardCheckBox.setVisibility(View.VISIBLE);
+    showProductPrice(amount);
+    cardForm.cardRequired(true)
+        .expirationRequired(true)
+        .cvvRequired(cvcRequired)
         .postalCodeRequired(false)
         .mobileNumberRequired(false)
         .actionLabel(getString(R.string.buy))

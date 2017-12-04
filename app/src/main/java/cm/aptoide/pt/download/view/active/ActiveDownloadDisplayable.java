@@ -1,8 +1,8 @@
 package cm.aptoide.pt.download.view.active;
 
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallManager;
-import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import rx.Observable;
 

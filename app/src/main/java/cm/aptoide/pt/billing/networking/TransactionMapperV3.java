@@ -51,8 +51,8 @@ public class TransactionMapperV3 {
   private Transaction getErrorTransaction(List<ErrorResponse> errors, String customerId,
       String transactionId, String serviceId, String productId) {
 
-    Transaction transaction = transactionFactory.create(transactionId, customerId, productId,
-            Transaction.Status.FAILED);
+    Transaction transaction =
+        transactionFactory.create(transactionId, customerId, productId, Transaction.Status.FAILED);
 
     if (errors == null || errors.isEmpty()) {
       return transaction;

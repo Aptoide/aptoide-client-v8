@@ -258,9 +258,9 @@ public class BillingPool {
                   new AuthorizationMapperV7(getAuthorizationFactory(), getBillingIdManagerV7()),
                   httpClient, WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences,
                   bodyInterceptorPoolV7, getBillingIdManagerV7(), getAuthorizationFactory(),
-                  authenticationPersistence),
-              getTransactionPersistence(), getAuthorizationPersistence(), getLocalIdGenerator()),
-          syncScheduler, new HashSet<>(), new HashMap<>());
+                  authenticationPersistence), getTransactionPersistence(),
+              getAuthorizationPersistence(), getLocalIdGenerator()), syncScheduler, new HashSet<>(),
+          new HashMap<>());
     }
     return billingSyncSchedulerV7;
   }
@@ -274,8 +274,8 @@ public class BillingPool {
                   getTransactionPersistence(), bodyInterceptorV3, httpClient,
                   WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences, customer,
                   resources, getBillingIdManagerV3()), getTransactionPersistence(),
-              getAuthorizationPersistence(), getLocalIdGenerator()), syncScheduler,
-          new HashSet<>(), new HashMap<>());
+              getAuthorizationPersistence(), getLocalIdGenerator()), syncScheduler, new HashSet<>(),
+          new HashMap<>());
     }
     return billingSyncSchedulerV3;
   }

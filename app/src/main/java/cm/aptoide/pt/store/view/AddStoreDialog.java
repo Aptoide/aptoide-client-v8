@@ -43,7 +43,6 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.dialog.BaseDialog;
 import com.facebook.appevents.AppEventsLogger;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import com.jakewharton.rxbinding.view.RxView;

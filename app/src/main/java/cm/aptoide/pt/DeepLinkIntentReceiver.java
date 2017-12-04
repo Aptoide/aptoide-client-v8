@@ -266,7 +266,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
         .equals("cm.aptoide.pt") && u.getPath()
         .equals("/deeplink") && u.getQueryParameter("name")
         .equals("getHome")) {
-      String id = u.getQueryParameter("id");
+      String id = u.getQueryParameter("user_id");
       if (id != null) {
         openUserScreen(Long.valueOf(id));
       }

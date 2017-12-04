@@ -64,16 +64,16 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
     list.setAdapter(adapter);
     list.setLayoutManager(new LinearLayoutManager(getContext()));
 
-    attachPresenter(new InboxPresenter(this,
-        ((ActivityResultNavigator) getContext()).getInboxNavigator(),
-        ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
-        CrashReport.getInstance(),
-        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker(),
-        new NotificationAnalytics(
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient(),
-            Analytics.getInstance(), AppEventsLogger.newLogger(getContext())),
-        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), navigationTracker), AndroidSchedulers.mainThread()));
+    attachPresenter(
+        new InboxPresenter(this, ((ActivityResultNavigator) getContext()).getInboxNavigator(),
+            ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
+            CrashReport.getInstance(),
+            ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker(),
+            new NotificationAnalytics(
+                ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient(),
+                Analytics.getInstance(), AppEventsLogger.newLogger(getContext())),
+            new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+                Analytics.getInstance(), navigationTracker), AndroidSchedulers.mainThread()));
   }
 
   @Override public void showNotifications(List<AptoideNotification> notifications) {

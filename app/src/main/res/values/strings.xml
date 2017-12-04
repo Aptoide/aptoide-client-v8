@@ -338,6 +338,7 @@
 
   <!-- 02/2017 strings for login / sign up -->
   <string name="join_company">Join %s</string>
+  <string name="onboarding_button_join_us">Join us</string>
   <string name="login">Login</string>
   <string name="login_company">Login %s</string>
   <string name="connect_with_facebook">Connect with Facebook</string>

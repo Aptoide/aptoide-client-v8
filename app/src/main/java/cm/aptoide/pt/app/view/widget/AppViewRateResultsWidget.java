@@ -6,8 +6,8 @@
 package cm.aptoide.pt.app.view.widget;
 
 import android.view.View;
-import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.app.view.displayable.AppViewRateResultsDisplayable;
+import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 
 /**
