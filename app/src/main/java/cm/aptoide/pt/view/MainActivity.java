@@ -15,11 +15,11 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
@@ -28,7 +28,6 @@ import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.TabNavigatorActivity;
 import cm.aptoide.pt.notification.ContentPuller;
-import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.presenter.MainPresenter;
@@ -40,7 +39,6 @@ import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxrelay.PublishRelay;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -80,12 +78,13 @@ public class MainActivity extends TabNavigatorActivity
 
     final FragmentNavigator fragmentNavigator = getFragmentNavigator();
 
+    TokenInvalidator tokenInvalidator = application.getTokenInvalidator();
     final StoreUtilsProxy storeUtilsProxy =
         new StoreUtilsProxy(accountManager, application.getAccountSettingsBodyInterceptorPoolV7(),
             new StoreCredentialsProviderImpl(
                 AccessorFactory.getAccessorFor(application.getDatabase(), Store.class)),
             AccessorFactory.getAccessorFor(application.getDatabase(), Store.class), httpClient,
-            converterFactory, application.getTokenInvalidator(), sharedPreferences);
+            converterFactory, tokenInvalidator, sharedPreferences);
 
     final String defaultTheme = application.getDefaultThemeName();
     final DeepLinkManager deepLinkManager =
@@ -93,9 +92,7 @@ public class MainActivity extends TabNavigatorActivity
             sharedPreferences,
             AccessorFactory.getAccessorFor(application.getDatabase(), Store.class), defaultTheme,
             application.getDefaultStoreName(), application.getNavigationTracker(),
-            application.getPageViewsAnalytics(), new NotificationAnalytics(
-            ((AptoideApplication) getApplicationContext()).getDefaultClient(),
-            Analytics.getInstance(), AppEventsLogger.newLogger(getApplicationContext())));
+            application.getPageViewsAnalytics(), application.getNotificationAnalytics());
 
     final ApkFy apkFy = new ApkFy(this, getIntent(), securePreferences);
 

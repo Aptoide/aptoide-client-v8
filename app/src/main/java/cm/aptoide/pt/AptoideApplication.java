@@ -64,7 +64,6 @@ import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
-import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
@@ -536,17 +535,15 @@ public abstract class AptoideApplication extends Application {
 
   public NotificationCenter getNotificationCenter() {
     if (notificationCenter == null) {
-
-      final NotificationAccessor notificationAccessor = AccessorFactory.getAccessorFor(
-          ((AptoideApplication) this.getApplicationContext()).getDatabase(), Notification.class);
-
       final NotificationProvider notificationProvider = getNotificationProvider();
-
       notificationCenter =
           new NotificationCenter(notificationProvider, getNotificationSyncScheduler(),
               new NotificationPolicyFactory(notificationProvider),
-              new NotificationAnalytics(getDefaultClient(), Analytics.getInstance(),
-                  AppEventsLogger.newLogger(getApplicationContext())));
+              new NotificationAnalytics(Analytics.getInstance(),
+                  AppEventsLogger.newLogger(getApplicationContext()), bodyInterceptorPoolV7,
+                  getDefaultClient(), WebService.getDefaultConverter(), tokenInvalidator,
+                  cm.aptoide.pt.dataprovider.BuildConfig.APPLICATION_ID,
+                  getDefaultSharedPreferences()));
     }
     return notificationCenter;
   }
@@ -1392,6 +1389,13 @@ public abstract class AptoideApplication extends Application {
           (AlarmManager) getSystemService(ALARM_SERVICE), getSyncStorage());
     }
     return alarmSyncScheduler;
+  }
+
+  public NotificationAnalytics getNotificationAnalytics() {
+    return new NotificationAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(this),
+        getBodyInterceptorPoolV7(), getDefaultClient(), WebService.getDefaultConverter(),
+        tokenInvalidator, cm.aptoide.pt.dataprovider.BuildConfig.APPLICATION_ID,
+        getDefaultSharedPreferences());
   }
 }
 

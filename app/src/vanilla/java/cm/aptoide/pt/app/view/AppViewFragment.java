@@ -8,6 +8,7 @@ package cm.aptoide.pt.app.view;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
@@ -92,7 +93,6 @@ import cm.aptoide.pt.install.view.remote.RemoteInstallDialog;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.search.ReferrerUtils;
@@ -371,18 +371,17 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installAnalytics = new InstallAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
 
+    SharedPreferences sharedPreferences = application.getDefaultSharedPreferences();
     timelineAnalytics = new TimelineAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        application.getDefaultSharedPreferences(),
-        new NotificationAnalytics(httpClient, analytics, AppEventsLogger.newLogger(getContext())),
-        navigationTracker, application.getReadPostsPersistence());
+        sharedPreferences, application.getNotificationAnalytics(), navigationTracker,
+        application.getReadPostsPersistence());
     socialRepository =
 
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
-            timelineAnalytics, tokenInvalidator, application.getDefaultSharedPreferences());
-    appRepository =
-        RepositoryFactory.getAppRepository(getContext(), application.getDefaultSharedPreferences());
+            timelineAnalytics, tokenInvalidator, sharedPreferences);
+    appRepository = RepositoryFactory.getAppRepository(getContext(), sharedPreferences);
     adsRepository = application.getAdsRepository();
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
@@ -401,8 +400,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installAppRelay = PublishRelay.create();
     shareAppHelper =
         new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
-            spotAndShareAnalytics, timelineAnalytics, installAppRelay,
-            application.getDefaultSharedPreferences(),
+            spotAndShareAnalytics, timelineAnalytics, installAppRelay, sharedPreferences,
             application.isCreateStoreUserPrivacyEnabled());
     downloadFactory = new DownloadFactory(getMarketName());
     appViewAnalytics = new AppViewAnalytics(analytics,

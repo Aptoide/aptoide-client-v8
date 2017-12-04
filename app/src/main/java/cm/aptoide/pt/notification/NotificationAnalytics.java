@@ -1,11 +1,19 @@
 package cm.aptoide.pt.notification;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.events.AptoideEvent;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
 import cm.aptoide.pt.analytics.events.KnockEvent;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import com.facebook.appevents.AppEventsLogger;
+import java.util.HashMap;
+import java.util.Map;
 import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 
 /**
  * Created by trinkes on 18/09/2017.
@@ -14,25 +22,40 @@ import okhttp3.OkHttpClient;
 public class NotificationAnalytics {
 
   private static final String NOTIFICATION_RECEIVED = "Aptoide_Push_Notification_Received";
+  public static final String IMPRESSION_ACTION = "IMPRESSION";
+  public static final String NOTIFICATION_BAR_CONTEXT = "NOTIFICATION_BAR";
   private static final String NOTIFICATION_IMPRESSION = "Aptoide_Push_Notification_Impression";
   private static final String NOTIFICATION_PRESSED = "Aptoide_Push_Notification_Click";
-
+  private static final String NOTIFICATION_EVENT_NAME = "NOTIFICATION";
   private static final String TYPE = "type";
   private static final String AB_TESTING_GROUP = "ab_testing_group";
   private static final String PACKAGE_NAME = "package_name";
   private static final String CAMPAIGN_ID = "campaign_id";
   private final Analytics analytics;
-  private OkHttpClient client;
+  private final OkHttpClient httpClient;
+  private final Converter.Factory converterFactory;
+  private final TokenInvalidator tokenInvalidator;
+  private final String appId;
+  private final SharedPreferences sharedPreferences;
+  private final BodyInterceptor<BaseBody> bodyInterceptor;
   private AppEventsLogger facebook;
 
-  public NotificationAnalytics(OkHttpClient client, Analytics analytics, AppEventsLogger facebook) {
-    this.client = client;
+  public NotificationAnalytics(Analytics analytics, AppEventsLogger facebook,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator, String appId,
+      SharedPreferences sharedPreferences) {
     this.analytics = analytics;
     this.facebook = facebook;
+    this.bodyInterceptor = bodyInterceptor;
+    this.httpClient = httpClient;
+    this.converterFactory = converterFactory;
+    this.tokenInvalidator = tokenInvalidator;
+    this.appId = appId;
+    this.sharedPreferences = sharedPreferences;
   }
 
   public void sendNotificationTouchEvent(String url) {
-    analytics.sendEvent(new KnockEvent(url, client));
+    analytics.sendEvent(new KnockEvent(url, httpClient));
   }
 
   public void sendUpdatesNotificationReceivedEvent() {
@@ -53,6 +76,14 @@ public class NotificationAnalytics {
 
   public void sendPushNotficationImpressionEvent(@AptoideNotification.NotificationType int type,
       String abTestingGroup, int campaignId, String url) {
+    if (type == AptoideNotification.CAMPAIGN) {
+      Map<String, Object> map = new HashMap<>();
+      map.put("campaign_id", campaignId);
+      map.put("ab_testing_group", abTestingGroup);
+      analytics.sendEvent(new AptoideEvent(map, NOTIFICATION_EVENT_NAME, IMPRESSION_ACTION,
+          NOTIFICATION_BAR_CONTEXT, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+          appId, sharedPreferences));
+    }
     analytics.sendEvent(new FacebookEvent(facebook, NOTIFICATION_IMPRESSION,
         createPushNotificationEventBundle(type, abTestingGroup, campaignId, url)));
   }
