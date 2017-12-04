@@ -38,8 +38,6 @@ import static cm.aptoide.pt.UITests.skipWizard;
     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     onView(withText(R.string.stores)).perform(click());
     onView(withText(R.string.home_title)).perform(click());
-    onView(withId(R.id.recycler_view)).perform(
-        RecyclerViewActions.actionOnItemAtPosition(1, click()));
   }
 
   @Test public void landscapeSettings() {
@@ -86,6 +84,5 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.next_icon)).perform(swipeLeft());
     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     onView(withId(R.id.skip_text)).perform(click());
-    onView(withText(R.string.stores)).perform(click());
   }
 }
