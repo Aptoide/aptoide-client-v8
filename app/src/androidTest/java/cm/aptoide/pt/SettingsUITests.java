@@ -33,8 +33,6 @@ import static org.hamcrest.Matchers.allOf;
 @RunWith(AndroidJUnit4.class) public class SettingsUITests {
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
-  @Rule public RetryTestRule retry = new RetryTestRule(NUMBER_OF_RETRIES);
-
   @Before public void setUp() {
     if (UITests.isFirstTime()) {
       skipWizard();

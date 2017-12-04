@@ -19,16 +19,11 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static cm.aptoide.pt.UITests.skipWizard;
 
-/**
- * Created by jose_messejana on 24-10-2017.
- */
-
 @RunWith(AndroidJUnit4.class) public class SignInSignUpUITests {
   private final String LOGINEMAIL = "jose.messejana@aptoide.com";
   private final String PASS = "aptoide1234";
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
-  @Rule public RetryTestRule retry = new RetryTestRule(UITests.NUMBER_OF_RETRIES);
 
   @Before public void setUp() {
     TestType.types = TestType.TestTypes.SIGNSIGNUPTESTS;
