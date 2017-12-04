@@ -129,7 +129,6 @@
 
       </RelativeLayout>
       <TextView
-          android:id="@+id/related_apps_header"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginLeft="@dimen/label_padding"

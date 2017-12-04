@@ -86,7 +86,6 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/displayable_social_timeline_recommendation_card_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"

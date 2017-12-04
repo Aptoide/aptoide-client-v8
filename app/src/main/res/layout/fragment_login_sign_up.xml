@@ -37,7 +37,6 @@ android:fitsSystemWindows="true"
       </android.support.design.widget.AppBarLayout>
 
       <ImageView
-          android:id="@+id/aptoide_logo"
           android:layout_width="200dp"
           android:layout_height="50dp"
           android:layout_gravity="center_horizontal"
