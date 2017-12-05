@@ -183,6 +183,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private SearchBuilder searchBuilder;
   private IssuesAnalytics issuesAnalytics;
   private InstallAnalytics installAnalytics;
+  private SharedPreferences sharedPreferences;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -371,6 +372,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
     installAnalytics = new InstallAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    sharedPreferences = application.getDefaultSharedPreferences();
 
     SharedPreferences sharedPreferences = application.getDefaultSharedPreferences();
     timelineAnalytics = new TimelineAnalytics(analytics,
@@ -379,9 +381,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         sharedPreferences, application.getNotificationAnalytics(), navigationTracker,
         application.getReadPostsPersistence());
     socialRepository =
-
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
-            timelineAnalytics, tokenInvalidator, sharedPreferences);
+            timelineAnalytics, tokenInvalidator, application.getDefaultSharedPreferences());
     appRepository = RepositoryFactory.getAppRepository(getContext(), sharedPreferences);
     adsRepository = application.getAdsRepository();
     installedRepository =
@@ -394,7 +395,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             .getApplicationContext()).getDatabase(), StoredMinimalAd.class);
     final SpotAndShareAnalytics spotAndShareAnalytics = new SpotAndShareAnalytics(analytics);
     appViewAnalytics = new AppViewAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()));
+        AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
+        httpClient, tokenInvalidator, converterFactory, sharedPreferences);
     appViewSimilarAppAnalytics = new AppViewSimilarAppAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
 
@@ -404,8 +406,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             spotAndShareAnalytics, timelineAnalytics, installAppRelay, sharedPreferences,
             application.isCreateStoreUserPrivacyEnabled());
     downloadFactory = new DownloadFactory(getMarketName());
-    appViewAnalytics = new AppViewAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()));
     storeAnalytics =
         new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
             analytics);
