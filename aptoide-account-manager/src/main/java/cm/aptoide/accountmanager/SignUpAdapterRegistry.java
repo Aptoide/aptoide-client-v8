@@ -26,6 +26,7 @@ public class SignUpAdapterRegistry {
 
   public Completable logoutAll() {
     return Observable.from(adapters.values())
+        .filter(adapter -> adapter.isEnabled())
         .map(adapter -> adapter.logout())
         .flatMapCompletable(logout -> logout)
         .toCompletable();
