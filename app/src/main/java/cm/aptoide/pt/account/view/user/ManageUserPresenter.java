@@ -1,7 +1,6 @@
 package cm.aptoide.pt.account.view.user;
 
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -25,12 +24,12 @@ public class ManageUserPresenter implements Presenter {
   private final boolean isEditProfile;
   private final UriToPathResolver uriToPathResolver;
   private final boolean showPrivacyConfigs;
-  private final Bundle savedInstance;
+  private final boolean isFirstTime;
 
   public ManageUserPresenter(ManageUserView view, CrashReport crashReport,
       AptoideAccountManager accountManager, ThrowableToStringMapper errorMapper,
       ManageUserNavigator navigator, boolean isEditProfile,
-      UriToPathResolver uriToPathResolver, boolean showPrivacyConfigs, Bundle savedInstance) {
+      UriToPathResolver uriToPathResolver, boolean showPrivacyConfigs, boolean isFirstTime) {
     this.view = view;
     this.crashReport = crashReport;
     this.accountManager = accountManager;
@@ -39,7 +38,7 @@ public class ManageUserPresenter implements Presenter {
     this.isEditProfile = isEditProfile;
     this.uriToPathResolver = uriToPathResolver;
     this.showPrivacyConfigs = showPrivacyConfigs;
-    this.savedInstance = savedInstance;
+    this.isFirstTime = isFirstTime;
   }
 
   @Override public void present() {
@@ -51,7 +50,7 @@ public class ManageUserPresenter implements Presenter {
   private void onViewCreatedLoadUserData() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
-        .filter(__ -> savedInstance == null)
+        .filter(__ -> isFirstTime)
         .flatMapSingle(__ -> accountManager.accountStatus()
             .first()
             .toSingle())

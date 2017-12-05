@@ -81,7 +81,7 @@ import rx.schedulers.Schedulers;
   @FragmentScope @Provides ManageUserPresenter provideManageUserPresenter(AptoideAccountManager accountManager, CreateUserErrorMapper errorMapper,
       ManageUserNavigator manageUserNavigator, UriToPathResolver uriToPathResolver){
     return new ManageUserPresenter((ManageUserView) fragment, CrashReport.getInstance(), accountManager, errorMapper, manageUserNavigator,
-        isEditProfile, uriToPathResolver, isCreateStoreUserPrivacyEnabled, savedInstance);
+        isEditProfile, uriToPathResolver, isCreateStoreUserPrivacyEnabled, savedInstance == null);
   }
 
   @FragmentScope @Provides ImageValidator provideImageValidator(){

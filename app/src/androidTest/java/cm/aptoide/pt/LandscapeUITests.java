@@ -19,18 +19,13 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static cm.aptoide.pt.UITests.NUMBER_OF_RETRIES;
 import static cm.aptoide.pt.UITests.goToSettings;
 import static cm.aptoide.pt.UITests.skipWizard;
 
-/**
- * Created by jose_messejana on 24-10-2017.
- */
-
 @RunWith(AndroidJUnit4.class) public class LandscapeUITests {
+
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
-  @Rule public RetryTestRule retry = new RetryTestRule(NUMBER_OF_RETRIES);
 
   @Before public void setUp() {
     if (UITests.isFirstTime()) {
@@ -43,8 +38,6 @@ import static cm.aptoide.pt.UITests.skipWizard;
     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     onView(withText(R.string.stores)).perform(click());
     onView(withText(R.string.home_title)).perform(click());
-    onView(withId(R.id.recycler_view)).perform(
-        RecyclerViewActions.actionOnItemAtPosition(1, click()));
   }
 
   @Test public void landscapeSettings() {
@@ -91,6 +84,5 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.next_icon)).perform(swipeLeft());
     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     onView(withId(R.id.skip_text)).perform(click());
-    onView(withText(R.string.stores)).perform(click());
   }
 }
