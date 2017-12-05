@@ -23,7 +23,6 @@
 
   <!--credits-->
   <ScrollView
-      android:id="@+id/scrollview"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:layout_above="@+id/site_layout"
@@ -32,7 +31,6 @@
       >
 
     <LinearLayout
-        android:id="@+id/scroll_child"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="3dp"
@@ -65,7 +63,6 @@
       >
 
     <TextView
-        android:id="@+id/site"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/about_site"

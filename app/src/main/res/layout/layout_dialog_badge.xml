@@ -108,7 +108,6 @@
           />
 
       <TextView
-          android:id="@+id/tv_reason_thirdparty_validated"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/reason_third_party"
@@ -157,7 +156,6 @@
           />
 
       <TextView
-          android:id="@+id/tv_reason_scanned_passed"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/reason_scanned"
@@ -182,7 +180,6 @@
           />
 
       <TextView
-          android:id="@+id/tv_reason_manual_qa"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/reason_manual"
@@ -200,7 +197,6 @@
         >
 
       <TextView
-          android:id="@+id/tv_reason_unknown"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/reason_unknown"
