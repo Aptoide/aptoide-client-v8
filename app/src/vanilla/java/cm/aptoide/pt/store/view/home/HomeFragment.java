@@ -249,6 +249,14 @@ public class HomeFragment extends StoreFragment {
 
     ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter()
         .getUnreadNotifications()
+        .flatMap(aptoideNotifications -> accountManager.accountStatus()
+            .flatMap(account -> {
+              if (account.isLoggedIn()) {
+                return Observable.just(aptoideNotifications);
+              } else {
+                return Observable.empty();
+              }
+            }))
         .observeOn(Schedulers.computation())
         .map(aptoideNotifications -> aptoideNotifications.size())
         .distinctUntilChanged()

@@ -530,13 +530,13 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
         .toString(), storeDescription.getText()
         .toString());
     currentModel.setStoreTheme(themeSelectorAdapter.getSelectedTheme());
-    /// TODO: Pedro 21/11/17  : Check if there are deleted links
     currentModel.setSocialDelLinks(checkLinksToDelete());
     currentModel.setSocialLinks(getStoreLinks());
     return currentModel;
   }
 
   private List<Store.SocialChannelType> checkLinksToDelete() {
+    storeDeleteLinksList = new ArrayList<>();
     List<SocialLink> socialLinks = currentModel.getSocialLinks();
     for (SocialLink socialLink : socialLinks) {
       setStoreDeleteLinksList(socialLink);
@@ -545,7 +545,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   }
 
   private void setStoreDeleteLinksList(SocialLink socialLink) {
-    storeDeleteLinksList = new ArrayList<>();
     if (!socialLink.getUrl()
         .isEmpty()) {
       if (socialLink.getType()

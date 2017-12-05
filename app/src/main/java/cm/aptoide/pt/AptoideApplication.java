@@ -64,7 +64,6 @@ import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
-import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Download;
@@ -102,6 +101,7 @@ import cm.aptoide.pt.install.RootInstallNotificationEventReceiver;
 import cm.aptoide.pt.install.installer.RootInstallErrorNotificationFactory;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.leak.LeakTool;
+import cm.aptoide.pt.link.AptoideInstallParser;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.Result;
@@ -288,6 +288,7 @@ public abstract class AptoideApplication extends Application {
   private NotificationsCleaner notificationsCleaner;
   private SyncScheduler alarmSyncScheduler;
   private TrendingManager trendingManager;
+  private NotificationAnalytics notificationAnalytics;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -541,17 +542,15 @@ public abstract class AptoideApplication extends Application {
 
   public NotificationCenter getNotificationCenter() {
     if (notificationCenter == null) {
-
-      final NotificationAccessor notificationAccessor = AccessorFactory.getAccessorFor(
-          ((AptoideApplication) this.getApplicationContext()).getDatabase(), Notification.class);
-
       final NotificationProvider notificationProvider = getNotificationProvider();
-
       notificationCenter =
           new NotificationCenter(notificationProvider, getNotificationSyncScheduler(),
               new NotificationPolicyFactory(notificationProvider),
-              new NotificationAnalytics(getDefaultClient(), Analytics.getInstance(),
-                  AppEventsLogger.newLogger(getApplicationContext())));
+              new NotificationAnalytics(Analytics.getInstance(),
+                  AppEventsLogger.newLogger(getApplicationContext()), bodyInterceptorPoolV7,
+                  getDefaultClient(), WebService.getDefaultConverter(), tokenInvalidator,
+                  cm.aptoide.pt.dataprovider.BuildConfig.APPLICATION_ID,
+                  getDefaultSharedPreferences(), new AptoideInstallParser()));
     }
     return notificationCenter;
   }
@@ -1429,6 +1428,17 @@ public abstract class AptoideApplication extends Application {
     }
 
     return trendingManager;
+  }
+
+  public NotificationAnalytics getNotificationAnalytics() {
+    if (notificationAnalytics == null) {
+      notificationAnalytics =
+          new NotificationAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(this),
+              getBodyInterceptorPoolV7(), getDefaultClient(), WebService.getDefaultConverter(),
+              tokenInvalidator, cm.aptoide.pt.dataprovider.BuildConfig.APPLICATION_ID,
+              getDefaultSharedPreferences(), new AptoideInstallParser());
+    }
+    return notificationAnalytics;
   }
 }
 

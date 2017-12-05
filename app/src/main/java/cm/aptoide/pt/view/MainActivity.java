@@ -18,8 +18,10 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
+import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
@@ -28,7 +30,6 @@ import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.TabNavigatorActivity;
 import cm.aptoide.pt.notification.ContentPuller;
-import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.presenter.MainPresenter;
@@ -82,12 +83,13 @@ public class MainActivity extends TabNavigatorActivity
 
     final FragmentNavigator fragmentNavigator = getFragmentNavigator();
 
+    TokenInvalidator tokenInvalidator = application.getTokenInvalidator();
+    final StoreAccessor storeAccessor =
+        AccessorFactory.getAccessorFor(application.getDatabase(), Store.class);
     final StoreUtilsProxy storeUtilsProxy =
         new StoreUtilsProxy(accountManager, application.getAccountSettingsBodyInterceptorPoolV7(),
-            new StoreCredentialsProviderImpl(
-                AccessorFactory.getAccessorFor(application.getDatabase(), Store.class)),
-            AccessorFactory.getAccessorFor(application.getDatabase(), Store.class), httpClient,
-            converterFactory, application.getTokenInvalidator(), sharedPreferences);
+            new StoreCredentialsProviderImpl(storeAccessor), storeAccessor, httpClient,
+            converterFactory, tokenInvalidator, sharedPreferences);
 
     final String defaultTheme = application.getDefaultThemeName();
 
@@ -95,11 +97,7 @@ public class MainActivity extends TabNavigatorActivity
 
     final DeepLinkManager deepLinkManager =
         new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator, this, this,
-            sharedPreferences,
-            AccessorFactory.getAccessorFor(application.getDatabase(), Store.class), defaultTheme,
-            new NotificationAnalytics(
-                ((AptoideApplication) getApplicationContext()).getDefaultClient(), analytics,
-                AppEventsLogger.newLogger(getApplicationContext())),
+            sharedPreferences, storeAccessor, defaultTheme, application.getNotificationAnalytics(),
             application.getNavigationTracker(), application.getPageViewsAnalytics(),
             new SearchNavigator(fragmentNavigator, application.getDefaultStoreName()),
             new SearchAnalytics(analytics, AppEventsLogger.newLogger(getApplicationContext())));
