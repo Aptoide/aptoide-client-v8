@@ -97,6 +97,14 @@ public class NotificationAnalytics {
 
   public void sendPushNotificationPressedEvent(@AptoideNotification.NotificationType int type,
       String abTestingGroup, int campaignId, String url) {
+    if (type == AptoideNotification.CAMPAIGN) {
+      Map<String, Object> map = new HashMap<>();
+      map.put("campaign_id", campaignId);
+      map.put("ab_testing_group", abTestingGroup);
+      analytics.sendEvent(new AptoideEvent(map, NOTIFICATION_EVENT_NAME, NOTIFICATION_PRESSED,
+          NOTIFICATION_BAR_CONTEXT, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+          appId, sharedPreferences));
+    }
     analytics.sendEvent(new FacebookEvent(facebook, NOTIFICATION_PRESSED,
         createPushNotificationEventBundle(type, abTestingGroup, campaignId, url)));
   }
