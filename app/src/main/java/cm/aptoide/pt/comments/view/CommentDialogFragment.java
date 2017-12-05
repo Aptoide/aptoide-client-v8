@@ -144,7 +144,7 @@ public class CommentDialogFragment
     httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     onEmptyTextError =
-        AptoideUtils.StringU.getResString(R.string.error_MARG_107, getContext().getResources());
+        AptoideUtils.StringU.getResString(R.string.ws_error_MARG_107, getContext().getResources());
     Analytics analytics = Analytics.getInstance();
     timelineAnalytics = new TimelineAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()),
