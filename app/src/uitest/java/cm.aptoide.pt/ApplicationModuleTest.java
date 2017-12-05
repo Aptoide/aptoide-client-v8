@@ -28,6 +28,7 @@ import cm.aptoide.accountmanager.Store;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
 import cm.aptoide.pt.account.AndroidAccountProvider;
+import cm.aptoide.pt.account.FacebookLoginResult;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.account.LoginPreferences;
@@ -129,6 +130,7 @@ import com.facebook.login.LoginManager;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
@@ -603,10 +605,30 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AptoideAccountManager.Builder().setAccountPersistence(accountPersistence)
         .setAccountService(accountService)
         .registerSignUpAdapter(GoogleSignUpAdapter.TYPE,
-            new GoogleSignUpAdapter(googleApiClient, loginPreferences))
+            new GoogleSignUpAdapter(googleApiClient, loginPreferences){
+          @Override public Single<Account>signUp(GoogleSignInResult result, AccountService service){
+            return Single.just(account);
+          }
+          @Override public Completable logout(){
+            return Completable.complete();
+          }
+          @Override public boolean isEnabled(){
+            return true;
+          }
+            })
         .registerSignUpAdapter(FacebookSignUpAdapter.TYPE,
             new FacebookSignUpAdapter(Arrays.asList("email"), LoginManager.getInstance(),
-                loginPreferences))
+                loginPreferences){
+              @Override public Single<Account>signUp(FacebookLoginResult result, AccountService service){
+                return Single.just(account);
+              }
+              @Override public Completable logout(){
+                return Completable.complete();
+              }
+              @Override public boolean isEnabled(){
+                return true;
+              }
+            })
         .build();
   }
 
