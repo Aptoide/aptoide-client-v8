@@ -2,6 +2,7 @@ package cm.aptoide.pt.notification;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.events.AptoideEvent;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
@@ -84,26 +85,31 @@ public class NotificationAnalytics {
   public void sendPushNotficationImpressionEvent(@AptoideNotification.NotificationType int type,
       String abTestingGroup, int campaignId, String url) {
     if (type == AptoideNotification.CAMPAIGN) {
-      Map<String, Object> map = new HashMap<>();
-      map.put("campaign_id", campaignId);
-      map.put("ab_testing_group", abTestingGroup);
-      analytics.sendEvent(new AptoideEvent(map, NOTIFICATION_EVENT_NAME, IMPRESSION_ACTION,
-          NOTIFICATION_BAR_CONTEXT, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-          appId, sharedPreferences));
+      analytics.sendEvent(
+          new AptoideEvent(createCampaignNotificationMap(abTestingGroup, campaignId),
+              NOTIFICATION_EVENT_NAME, IMPRESSION_ACTION, NOTIFICATION_BAR_CONTEXT, bodyInterceptor,
+              httpClient, converterFactory, tokenInvalidator, appId, sharedPreferences));
     }
     analytics.sendEvent(new FacebookEvent(facebook, NOTIFICATION_IMPRESSION,
         createPushNotificationEventBundle(type, abTestingGroup, campaignId, url)));
   }
 
+  @NonNull
+  private Map<String, Object> createCampaignNotificationMap(String abTestingGroup, int campaignId) {
+    Map<String, Object> map = new HashMap<>();
+    map.put("campaign_id", campaignId);
+    map.put("ab_testing_group", abTestingGroup);
+    return map;
+  }
+
   public void sendPushNotificationPressedEvent(@AptoideNotification.NotificationType int type,
       String abTestingGroup, int campaignId, String url) {
     if (type == AptoideNotification.CAMPAIGN) {
-      Map<String, Object> map = new HashMap<>();
-      map.put("campaign_id", campaignId);
-      map.put("ab_testing_group", abTestingGroup);
-      analytics.sendEvent(new AptoideEvent(map, NOTIFICATION_EVENT_NAME, NOTIFICATION_PRESSED,
-          NOTIFICATION_BAR_CONTEXT, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-          appId, sharedPreferences));
+      analytics.sendEvent(
+          new AptoideEvent(createCampaignNotificationMap(abTestingGroup, campaignId),
+              NOTIFICATION_EVENT_NAME, NOTIFICATION_PRESSED, NOTIFICATION_BAR_CONTEXT,
+              bodyInterceptor, httpClient, converterFactory, tokenInvalidator, appId,
+              sharedPreferences));
     }
     analytics.sendEvent(new FacebookEvent(facebook, NOTIFICATION_PRESSED,
         createPushNotificationEventBundle(type, abTestingGroup, campaignId, url)));
