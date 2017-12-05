@@ -16,13 +16,9 @@ import cm.aptoide.pt.R;
 
 public class SearchWidgetProvider extends AppWidgetProvider {
 
-  public void onUpdate(Context context, AppWidgetManager manager, int[] appWidgetIds){
-    final int N = appWidgetIds.length;
-
-    for(int i=0; i<N; i++){
-      int appWidgetId = appWidgetIds[i];
-
-      Intent intent  = new Intent(context, DeepLinkIntentReceiver.class);
+  public void onUpdate(Context context, AppWidgetManager manager, int[] appWidgetIds) {
+    for (int appWidgetId : appWidgetIds) {
+      Intent intent = new Intent(context, DeepLinkIntentReceiver.class);
       intent.setData(Uri.parse("aptoide://cm.aptoide.pt/deeplink?name=search"));
 
       PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
@@ -30,7 +26,7 @@ public class SearchWidgetProvider extends AppWidgetProvider {
       RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_search_layout);
       views.setOnClickPendingIntent(R.id.widget_search_bar, pendingIntent);
 
-      manager.updateAppWidget(appWidgetId,views);
+      manager.updateAppWidget(appWidgetId, views);
     }
   }
 }
