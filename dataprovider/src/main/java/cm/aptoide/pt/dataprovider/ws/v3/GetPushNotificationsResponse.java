@@ -3,6 +3,7 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 /**
  * Created by danielchen on 23/10/2017.
  */
+
 import cm.aptoide.pt.dataprovider.model.v3.BaseV3Response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
