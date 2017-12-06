@@ -635,7 +635,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     }
 
     if (!userInput.contains("http")) {
-      return "https" + userInput;
+      return "https://" + userInput;
     }
 
     return userInput;
