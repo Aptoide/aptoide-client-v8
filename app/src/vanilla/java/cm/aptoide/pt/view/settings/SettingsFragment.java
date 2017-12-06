@@ -398,7 +398,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
                           getContext().getResources(),
                           AptoideUtils.StringU.formatBytes(deletedSize, false)));
                 }, throwable -> {
-                  ShowMessage.asSnack(SettingsFragment.this, R.string.error_SYS_1);
+                  ShowMessage.asSnack(SettingsFragment.this, R.string.ws_error_SYS_1);
                   throwable.printStackTrace();
                 }));
             return false;
