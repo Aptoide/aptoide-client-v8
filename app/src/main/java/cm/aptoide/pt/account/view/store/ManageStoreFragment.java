@@ -313,6 +313,11 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
         .show();
   }
 
+  @Override public void showSuccessMessage() {
+    Snackbar.make(socialChannels, getString(R.string.done), Snackbar.LENGTH_LONG)
+        .show();
+  }
+
   private void showEditTextHideTextView(RelativeLayout relativeLayout,
       CustomTextInputLayout customTextInputLayout, EditText editText) {
     relativeLayout.setVisibility(View.GONE);
