@@ -110,7 +110,8 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
     }
     this.question.setText(card.getQuestion());
 
-    ImageLoader.with(itemView.getContext()).load("http://pool.img.aptoide.com/dfl/783ac07187647799c87c4e1d5cde6b8b_icon.png", this.headerIcon);
+    //ImageLoader.with(itemView.getContext()).load("http://pool.img.aptoide.com/dfl/783ac07187647799c87c4e1d5cde6b8b_icon.png", this.headerIcon);
+    headerIcon.setImageResource(R.drawable.aptoide_quiz_icon);
     this.headerTitle.setText(getStyledTitle(itemView.getContext(), getTitle(itemView.getContext()
         .getResources()), marketName));
 
