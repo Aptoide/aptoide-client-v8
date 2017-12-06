@@ -28,9 +28,9 @@
           android:layout_height="40dp"
           android:layout_marginLeft="12.7dp"
           android:layout_marginStart="12.7dp"
-          android:layout_marginTop="14dp"
+          android:layout_marginTop="10dp"
           tools:ignore="contentDescription"
-          tools:src="@mipmap/ic_launcher"
+          tools:src="@drawable/aptoide_quiz_icon"
           />
 
       <TextView
@@ -81,9 +81,9 @@
           android:layout_height="wrap_content"
           android:layout_alignParentLeft="true"
           android:layout_alignParentTop="true"
+          android:background="@color/tw__solid_white"
           android:orientation="vertical"
           android:visibility="visible"
-          android:background="@color/tw__solid_white"
           >
 
         <include layout="@layout/timeline_icon_question_body"
@@ -96,51 +96,51 @@
 
         <TextView
             android:id="@+id/game_card_question3_answer_left"
-            style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/game_card_question3_icon_left"
-            android:gravity="center"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
             android:layout_marginBottom="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:gravity="center"
             android:text="Answer1"
+            style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
             />
 
         <ImageView
             android:id="@id/game_card_question3_icon_left"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_marginBottom="0dp"
             android:layout_marginLeft="45dp"
             android:layout_marginStart="45dp"
             android:layout_marginTop="143dp"
-            android:layout_marginBottom="0dp"
             tools:src="@mipmap/ic_launcher"
             />
 
         <TextView
             android:id="@+id/game_card_question3_answer_right"
-            style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/game_card_question3_icon_right"
-            android:gravity="center"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="10dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
+            android:layout_below="@+id/game_card_question3_icon_right"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
             android:text="Answer2"
+            style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
             />
 
         <ImageView
             android:id="@id/game_card_question3_icon_right"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="143dp"
-            android:layout_marginRight="45dp"
+            android:layout_alignParentRight="true"
             android:layout_marginEnd="45dp"
+            android:layout_marginRight="45dp"
+            android:layout_marginTop="143dp"
             tools:src="@mipmap/ic_launcher"
             />
 
@@ -148,11 +148,11 @@
             android:id="@+id/stamp_left"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@mipmap/ic_launcher"
-            android:layout_marginTop="60dp"
             android:layout_marginLeft="25dp"
+            android:layout_marginTop="60dp"
             android:alpha="0.0"
             android:rotation="-35"
+            android:src="@mipmap/ic_launcher"
             android:visibility="invisible"
             />
 
@@ -160,28 +160,28 @@
             android:id="@+id/stamp_right"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@mipmap/ic_launcher"
-            android:layout_marginTop="60dp"
-            android:layout_marginRight="25dp"
             android:layout_alignParentRight="true"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="60dp"
             android:alpha="0.0"
             android:rotation="35"
+            android:src="@mipmap/ic_launcher"
             android:visibility="invisible"
             />
 
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginTop="155dp"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="155dp"
             android:src="@drawable/ad_icon"
             />
 
         <TextView
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginTop="155dp"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="155dp"
             android:gravity="center"
             android:text="OR"
             style="@style/Aptoide.TextView.Medium.S.Black"

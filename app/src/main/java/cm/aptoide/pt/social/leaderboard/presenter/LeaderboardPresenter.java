@@ -42,7 +42,13 @@ public class LeaderboardPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.spinnerChoice())
         .doOnNext(choice ->view.waitForData())
-        .flatMap(choice-> leaderboard.getLeaderboardEntries(choice))
+        .flatMap(choice -> {
+          if (choice.equals("friends")) {
+            return leaderboard.getLeaderboardEntries("friend");
+          } else {
+            return leaderboard.getLeaderboardEntries(choice);
+          }
+        })
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(leaderboardEntries->view.showLeaderboardEntries(leaderboardEntries))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

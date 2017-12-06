@@ -18,7 +18,11 @@ public class LeaderboardEntryMapper {
     LeaderboardEntry entry;
     List<GetLeaderboardEntriesResponse.User> current = data.getLeaderboard();
 
-    entry = new LeaderboardEntry(data.getUsername().getName(), data.getUsername().getPosition(), data.getUsername().getScore(), data.getUsername().getAvatar());
+    entry = new LeaderboardEntry(data.getUser()
+        .getName(), data.getUser()
+        .getPosition(), data.getUser()
+        .getScore(), data.getUser()
+        .getAvatar());
     username.add(entry);
 
     for(GetLeaderboardEntriesResponse.User user : data.getTop()){

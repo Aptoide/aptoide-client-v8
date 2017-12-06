@@ -13,8 +13,6 @@ import rx.Observable;
 
 public class GetLeaderboardEntriesRequest extends V7<GetLeaderboardEntriesResponse, GetLeaderboardEntriesRequest.Body> {
 
-  private String url = "http://192.168.1.100:5000/api/7/user/timeline/game/getLeaderboard/";
-
   GetLeaderboardEntriesRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
@@ -40,13 +38,13 @@ public class GetLeaderboardEntriesRequest extends V7<GetLeaderboardEntriesRespon
 
     private String filter;
     private int offset;
-    private int limit;
+    private int entries;
 
     protected Body(SharedPreferences sharedPreferences, String filter, int offset, int limit) {
       super(sharedPreferences);
       this.filter = filter;
       this.offset = offset;
-      this.limit = limit;
+      this.entries = limit;
     }
 
     public String getFilter() {return filter;}
@@ -55,7 +53,12 @@ public class GetLeaderboardEntriesRequest extends V7<GetLeaderboardEntriesRespon
     public int getOffset() {return offset;}
     public void setOffset(int offset) {this.offset = offset;}
 
-    public int getLimit() {return limit;}
-    public void setLimit(int limit) {this.limit = limit;}
+    public int getEntries() {
+      return entries;
+    }
+
+    public void setEntries(int entries) {
+      this.entries = entries;
+    }
   }
 }

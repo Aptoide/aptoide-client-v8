@@ -21,16 +21,16 @@ public class GetLeaderboardEntriesResponse extends BaseV7Response {
 
   public static class Data {
 
-    private User username;
+    private User user;
     private List<User> top;
     private List<User> leaderboard;
 
-    public User getUsername() {
-      return username;
+    public User getUser() {
+      return user;
     }
 
-    public void setUsername(User username) {
-      this.username = username;
+    public void setUsername(User user) {
+      this.user = user;
     }
 
     public List<User> getTop() {

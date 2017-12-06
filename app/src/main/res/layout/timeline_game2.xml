@@ -40,9 +40,9 @@
           android:layout_height="40dp"
           android:layout_marginLeft="12.7dp"
           android:layout_marginStart="12.7dp"
-          android:layout_marginTop="14dp"
+          android:layout_marginTop="10dp"
           tools:ignore="contentDescription"
-          tools:src="@mipmap/ic_launcher"
+          tools:src="@drawable/aptoide_quiz_icon"
           />
 
       <TextView

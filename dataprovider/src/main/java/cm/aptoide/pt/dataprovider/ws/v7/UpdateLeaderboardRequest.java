@@ -37,21 +37,23 @@ public class UpdateLeaderboardRequest extends V7<UpdateLeaderboardResponse, Upda
 
   public static class Body extends BaseBodyWithAlphaBetaKey {
 
-    private int answer;
+    private int points;
     private String cardUid;
 
-    public Body(int answer, String cardId, SharedPreferences sharedPreferences) {
+    public Body(int points, String cardId, SharedPreferences sharedPreferences) {
       super(sharedPreferences);
-      this.answer = answer;
+      this.points = points;
       this.cardUid = cardId;
     }
 
     public String getCardUid(){return cardUid;}
 
-    public int getAnswer(){return answer;}
+    public int getPoints() {
+      return points;
+    }
 
-    public void setAnswer(int answer) {
-      this.answer = answer;
+    public void setPoints(int points) {
+      this.points = points;
     }
   }
 

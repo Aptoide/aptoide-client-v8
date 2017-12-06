@@ -29,9 +29,9 @@
           android:layout_height="40dp"
           android:layout_marginLeft="12.7dp"
           android:layout_marginStart="12.7dp"
-          android:layout_marginTop="14dp"
+          android:layout_marginTop="10dp"
           tools:ignore="contentDescription"
-          tools:src="@mipmap/ic_launcher"
+          tools:src="@drawable/aptoide_quiz_icon"
           />
 
       <TextView
@@ -83,9 +83,9 @@
           android:layout_height="wrap_content"
           android:layout_alignParentLeft="true"
           android:layout_alignParentTop="true"
+          android:background="@color/tw__solid_white"
           android:orientation="vertical"
           android:visibility="visible"
-          android:background="@color/tw__solid_white"
           >
 
         <include layout="@layout/timeline_icon_question_body"
@@ -100,10 +100,10 @@
             android:id="@+id/right_answer"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="150dp"
+            android:layout_alignParentRight="true"
             android:layout_marginBottom="30dp"
+            android:layout_marginTop="150dp"
             android:gravity="center"
             android:padding="5dp"
             android:text="Right: Answer1"
@@ -114,10 +114,10 @@
             android:id="@+id/left_answer"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="150dp"
             android:layout_marginBottom="30dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="150dp"
             android:gravity="center"
             android:padding="5dp"
             android:text="Left: Answer2"
@@ -154,16 +154,16 @@
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginTop="150dp"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="150dp"
             android:src="@drawable/ad_icon"
             />
 
         <TextView
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginTop="150dp"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="150dp"
             android:gravity="center"
             android:text="OR"
             style="@style/Aptoide.TextView.Medium.S.Black"
