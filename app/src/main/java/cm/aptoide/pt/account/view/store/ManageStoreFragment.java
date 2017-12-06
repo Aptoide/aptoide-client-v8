@@ -616,21 +616,37 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
         if (!Patterns.WEB_URL.matcher(userInput)
             .matches()) {
           return ManageStoreViewModel.FACEBOOK_BASE_URL + userInput;
+        } else {
+          if (!userInput.contains("http")) {
+            return "https://" + userInput;
+          }
         }
       case TWITCH:
         if (!Patterns.WEB_URL.matcher(userInput)
             .matches()) {
           return ManageStoreViewModel.TWITCH_BASE_URL + userInput;
+        } else {
+          if (!userInput.contains("http")) {
+            return "https://" + userInput;
+          }
         }
       case TWITTER:
         if (!Patterns.WEB_URL.matcher(userInput)
             .matches()) {
           return ManageStoreViewModel.TWITTER_BASE_URL + userInput;
+        } else {
+          if (!userInput.contains("http")) {
+            return "https://" + userInput;
+          }
         }
       case YOUTUBE:
         if (!Patterns.WEB_URL.matcher(userInput)
             .matches()) {
           return ManageStoreViewModel.YOUTUBE_BASE_URL + userInput;
+        } else {
+          if (!userInput.contains("http")) {
+            return "https" + userInput;
+          }
         }
     }
     return userInput;
