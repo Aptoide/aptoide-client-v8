@@ -540,7 +540,7 @@ public class TimelineResponseCardMapper {
         if (game.getQuestion()
             .getType()
             .equals("TEXT") && game.getWrongAnswer()
-            .getIcon() == null) {
+            .getName() != null) {
           Game1 game1 = new Game1(game.getCardId(), game.getRightAnswer(), game.getQuestion()
               .getQuestionText(), game.getRankings()
               .getScore(), game.getRankings()
@@ -557,7 +557,7 @@ public class TimelineResponseCardMapper {
         } else if (game.getQuestion()
             .getType()
             .equals("ICON") && game.getWrongAnswer()
-            .getName() == null) {
+            .getIcon() != null) {
           Game2 game2 = new Game2(game.getCardId(), game.getRightAnswer(), game.getQuestion()
               .getQuestionText(), game.getRankings()
               .getScore(), game.getRankings()
@@ -597,23 +597,23 @@ public class TimelineResponseCardMapper {
               .getType()
               .equals("TEXT")
               && game.getWrongAnswer()
-              .getIcon() != null) {
+              .getName() == null) {
             gameAnalytics.cardMappingFailed(game.getQuestion()
                 .getType());
           }
           else if (game.getQuestion()
               .getType()
               .equals("ICON") && game.getWrongAnswer()
-              .getName() != null) {
+              .getIcon() == null) {
             gameAnalytics.cardMappingFailed(game.getQuestion()
                 .getType());
           }
           else if (game.getQuestion()
               .getType()
               .equals("TEXT_ICON") && (game.getWrongAnswer()
-              .getName() != null
+              .getName() == null
               || game.getWrongAnswer()
-              .getIcon() != null)) {
+              .getIcon() == null)) {
             gameAnalytics.cardMappingFailed(game.getQuestion()
                 .getType());
           }

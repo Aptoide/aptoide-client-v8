@@ -26,7 +26,7 @@ public class Game implements TimelineCard {
   @JsonCreator
   public Game(@JsonProperty("uid") String cardId, @JsonProperty("question") GameQuestion question,
       @JsonProperty("timestamp") Date timestamp, @JsonProperty("app") App rightAnswer,
-      @JsonProperty("wrongAnswer") WrongAnswer wrongAnswer,
+      @JsonProperty("wrong_answer") WrongAnswer wrongAnswer,
       @JsonProperty("stats") GameRankings rankings, @JsonProperty("ab") Ab ab) {
     this.ab = ab;
     this.cardId = cardId;
