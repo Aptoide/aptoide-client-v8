@@ -633,6 +633,11 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
           return ManageStoreViewModel.YOUTUBE_BASE_URL + userInput;
         }
     }
+
+    if (!userInput.contains("http")) {
+      return "https://" + userInput;
+    }
+
     return userInput;
   }
 
