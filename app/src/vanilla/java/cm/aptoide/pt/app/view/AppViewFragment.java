@@ -183,7 +183,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private SearchBuilder searchBuilder;
   private IssuesAnalytics issuesAnalytics;
   private InstallAnalytics installAnalytics;
-  private SharedPreferences sharedPreferences;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -372,7 +371,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
     installAnalytics = new InstallAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
-    sharedPreferences = application.getDefaultSharedPreferences();
 
     SharedPreferences sharedPreferences = application.getDefaultSharedPreferences();
     timelineAnalytics = new TimelineAnalytics(analytics,
@@ -382,7 +380,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         application.getReadPostsPersistence());
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
-            timelineAnalytics, tokenInvalidator, application.getDefaultSharedPreferences());
+            timelineAnalytics, tokenInvalidator, sharedPreferences);
     appRepository = RepositoryFactory.getAppRepository(getContext(), sharedPreferences);
     adsRepository = application.getAdsRepository();
     installedRepository =
