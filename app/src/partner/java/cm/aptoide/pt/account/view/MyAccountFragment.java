@@ -9,7 +9,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -43,7 +42,6 @@ import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.AptoideNotification;
-import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.view.InboxAdapter;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
 import com.facebook.appevents.AppEventsLogger;
@@ -81,7 +79,7 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
   private AccountNavigator accountNavigator;
   private TabNavigator tabNavigator;
 
-  public static Fragment newInstance() {
+  public static MyAccountFragment newInstance() {
     return new MyAccountFragment();
   }
 
@@ -164,17 +162,14 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
         .findViewById(R.id.more);
 
     LinksHandlerFactory linkFactory = new LinksHandlerFactory(getContext());
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
     attachPresenter(new MyAccountPresenter(this, accountManager, crashReport,
         ((ActivityResultNavigator) getContext()).getMyAccountNavigator(),
-        ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
-        linkFactory,
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker(),
-        new NotificationAnalytics(httpClient, Analytics.getInstance(),
-            AppEventsLogger.newLogger(getContext())),
+        application.getNotificationCenter(), linkFactory, application.getDefaultSharedPreferences(),
+        application.getNavigationTracker(), application.getNotificationAnalytics(),
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(),
-            ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker())));
+            Analytics.getInstance(), application.getNavigationTracker())));
   }
 
   @Override public int getContentViewId() {
