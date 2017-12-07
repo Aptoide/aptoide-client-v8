@@ -98,7 +98,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   private String packageName;
   private PhotoFileGenerator photoFileGenerator;
   private View facebookRow;
-  private CustomTextInputLayout facebookUsernameWrapper;
   private View twitchRow;
   private View twitterRow;
   private View youtubeRow;
@@ -106,6 +105,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   private RelativeLayout twitchTextAndPlus;
   private RelativeLayout twitterTextAndPlus;
   private RelativeLayout youtubeTextAndPlus;
+  private CustomTextInputLayout facebookUsernameWrapper;
   private CustomTextInputLayout twitchUsernameWrapper;
   private CustomTextInputLayout twitterUsernameWrapper;
   private CustomTextInputLayout youtubeUsernameWrapper;
@@ -291,21 +291,25 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   @Override public void showFacebookError(String error) {
     facebookUsernameWrapper.setErrorEnabled(true);
     facebookUsernameWrapper.setError(error);
+    facebookRow.performClick();
   }
 
   @Override public void showTwitterError(String error) {
     twitterUsernameWrapper.setErrorEnabled(true);
     twitterUsernameWrapper.setError(error);
+    twitterRow.performClick();
   }
 
   @Override public void showTwitchError(String error) {
     twitchUsernameWrapper.setErrorEnabled(true);
     twitchUsernameWrapper.setError(error);
+    twitchRow.performClick();
   }
 
   @Override public void showYoutubeError(String error) {
     youtubeUsernameWrapper.setErrorEnabled(true);
     youtubeUsernameWrapper.setError(error);
+    youtubeRow.performClick();
   }
 
   @Override public void showError(String errorMessage) {
@@ -718,6 +722,8 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   private void showKeyboard(EditText editText) {
     InputMethodManager imm =
         (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-    imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
+    if (imm != null) {
+      imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
+    }
   }
 }
