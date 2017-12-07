@@ -81,6 +81,7 @@ public class ManageStorePresenter implements Presenter {
         .andThen(saveData(storeModel))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnCompleted(() -> view.dismissWaitProgressBar())
+        .doOnCompleted(() -> view.showSuccessMessage())
         .doOnCompleted(() -> navigate())
         .onErrorResumeNext(err -> Completable.fromAction(() -> {
           view.dismissWaitProgressBar();

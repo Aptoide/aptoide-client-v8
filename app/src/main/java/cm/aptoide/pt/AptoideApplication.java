@@ -63,6 +63,7 @@ import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.leak.LeakTool;
+import cm.aptoide.pt.link.AptoideInstallParser;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.Result;
@@ -221,6 +222,7 @@ public abstract class AptoideApplication extends Application {
   private ReadPostsPersistence readPostsPersistence;
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
   private NotificationsCleaner notificationsCleaner;
+  private NotificationAnalytics notificationAnalytics;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -444,12 +446,14 @@ public abstract class AptoideApplication extends Application {
     if (notificationCenter == null) {
 
       final NotificationProvider notificationProvider = getNotificationProvider();
-
       notificationCenter =
           new NotificationCenter(notificationProvider, getNotificationSyncScheduler(),
               new NotificationPolicyFactory(notificationProvider),
-              new NotificationAnalytics(getDefaultClient(), Analytics.getInstance(),
-                  AppEventsLogger.newLogger(getApplicationContext())));
+              new NotificationAnalytics(Analytics.getInstance(),
+                  AppEventsLogger.newLogger(getApplicationContext()), bodyInterceptorPoolV7,
+                  getDefaultClient(), WebService.getDefaultConverter(), tokenInvalidator,
+                  cm.aptoide.pt.dataprovider.BuildConfig.APPLICATION_ID,
+                  getDefaultSharedPreferences(), new AptoideInstallParser()));
     }
     return notificationCenter;
   }
@@ -975,6 +979,17 @@ public abstract class AptoideApplication extends Application {
 
   public IdsRepository getIdsRepository() {
     return idsRepository;
+  }
+
+  public NotificationAnalytics getNotificationAnalytics() {
+    if (notificationAnalytics == null) {
+      notificationAnalytics =
+          new NotificationAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(this),
+              getBodyInterceptorPoolV7(), getDefaultClient(), WebService.getDefaultConverter(),
+              tokenInvalidator, cm.aptoide.pt.dataprovider.BuildConfig.APPLICATION_ID,
+              getDefaultSharedPreferences(), new AptoideInstallParser());
+    }
+    return notificationAnalytics;
   }
 }
 
