@@ -3,7 +3,6 @@ package cm.aptoide.pt.view;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.TestType;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
@@ -14,7 +13,6 @@ import cm.aptoide.pt.account.view.ImagePickerView;
 import cm.aptoide.pt.account.view.ImageValidator;
 import cm.aptoide.pt.account.view.PhotoFileGenerator;
 import cm.aptoide.pt.account.view.UriToPathResolver;
-import cm.aptoide.pt.account.view.exception.InvalidImageException;
 import cm.aptoide.pt.account.view.store.ManageStoreErrorMapper;
 import cm.aptoide.pt.account.view.store.ManageStoreNavigator;
 import cm.aptoide.pt.account.view.store.ManageStorePresenter;
@@ -29,11 +27,9 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
-import cm.aptoide.pt.presenter.View;
 import dagger.Module;
 import dagger.Provides;
 import java.util.Arrays;
-import rx.Completable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -64,8 +60,7 @@ import rx.schedulers.Schedulers;
     this.packageName = packageName;
   }
 
-  @Provides @FragmentScopeTest
-  LoginSignUpCredentialsPresenter provideLoginSignUpPresenter(AptoideAccountManager accountManager, AccountNavigator accountNavigator,
+  @FragmentScopeTest @Provides LoginSignUpCredentialsPresenter provideLoginSignUpPresenter(AptoideAccountManager accountManager, AccountNavigator accountNavigator,
       AccountErrorMapper errorMapper, AccountAnalytics accountAnalytics){
     return new LoginSignUpCredentialsPresenter((LoginSignUpCredentialsView) fragment, accountManager, CrashReport.getInstance(),
         dismissToNavigateToMainView, navigateToHome, accountNavigator,
@@ -73,50 +68,13 @@ import rx.schedulers.Schedulers;
         accountAnalytics);
   }
 
-  @Provides @FragmentScopeTest
-  ImagePickerPresenter provideImagePickerPresenter(AccountPermissionProvider accountPermissionProvider,
+  @FragmentScopeTest @Provides ImagePickerPresenter provideImagePickerPresenter(AccountPermissionProvider accountPermissionProvider,
       PhotoFileGenerator photoFileGenerator, ImageValidator imageValidator, UriToPathResolver uriToPathResolver, ImagePickerNavigator imagePickerNavigator){
     ImagePickerView view = (ImagePickerView) fragment;
     CrashReport crashReport = CrashReport.getInstance();
     return new ImagePickerPresenter(view, crashReport, accountPermissionProvider, photoFileGenerator,
         imageValidator, AndroidSchedulers.mainThread(), uriToPathResolver, imagePickerNavigator,
-        fragment.getActivity().getContentResolver(), ImageLoader.with(fragment.getContext())){
-
-      @Override public void handlePickImageClick() {
-        String imageUri = "";
-        if (TestType.types.equals(TestType.TestTypes.PHOTOSUCCESS)) {
-          imageUri = "content://media/external/images/media/246";
-        }
-        else if (TestType.types.equals(TestType.TestTypes.PHOTOMIN)){
-          imageUri = "content://media/external/images/media/118";
-        }
-        else if (TestType.types.equals(TestType.TestTypes.PHOTOMAX)){
-          imageUri = "content://media/external/images/media/1344";
-        }
-        final String createdUri = imageUri;
-        view.getLifecycle()
-            .filter(event -> event == View.LifecycleEvent.CREATE)
-            .flatMap(__ -> view.selectStoreImageClick()
-                .retry()
-                .flatMapCompletable(__2 -> {
-                  if(!createdUri.equals(""))
-                    return loadValidImageOrThrowForCamera(createdUri);
-                  else {
-                    view.showImagePickerDialog();
-                    return Completable.complete();
-                  }
-                })
-                .doOnError(err -> {
-                  crashReport.log(err);
-                  if (err instanceof InvalidImageException) {
-                    view.showIconPropertiesError((InvalidImageException) err);
-                  }
-                })
-                .retry())
-            .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-            .subscribe();
-      }
-    };
+        fragment.getActivity().getContentResolver(), ImageLoader.with(fragment.getContext()));
   }
 
   @FragmentScopeTest @Provides
@@ -129,7 +87,7 @@ import rx.schedulers.Schedulers;
   @FragmentScopeTest @Provides ManageUserPresenter provideManageUserPresenter(AptoideAccountManager accountManager, CreateUserErrorMapper errorMapper,
       ManageUserNavigator manageUserNavigator, UriToPathResolver uriToPathResolver){
     return new ManageUserPresenter((ManageUserView) fragment, CrashReport.getInstance(), accountManager, errorMapper, manageUserNavigator,
-        isEditProfile, uriToPathResolver, isCreateStoreUserPrivacyEnabled, savedInstance);
+        isEditProfile, uriToPathResolver, isCreateStoreUserPrivacyEnabled, savedInstance == null);
   }
 
   @FragmentScopeTest @Provides ImageValidator provideImageValidator(){

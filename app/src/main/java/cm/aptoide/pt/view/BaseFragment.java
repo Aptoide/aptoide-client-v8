@@ -18,7 +18,7 @@ public abstract class BaseFragment extends RxFragment {
       boolean isCreateStoreUserPrivacyEnabled = ((AptoideApplication) getContext().getApplicationContext()).isCreateStoreUserPrivacyEnabled();
       String packageName = (getActivity().getApplicationContext()).getPackageName();
       ActivityComponent activityComponent = ((BaseActivity) getActivity()).getActivityComponent();
-      fragmentComponent = ComponentFactory.create(activityComponent, this,savedInstanceState,dismissToNavigateToMainView,navigateToHome,goToHome,isEditProfile,
+      fragmentComponent = ComponentFactory.createFragmentComponent(activityComponent, this,savedInstanceState,dismissToNavigateToMainView,navigateToHome,goToHome,isEditProfile,
           isCreateStoreUserPrivacyEnabled,packageName);
     }
     return fragmentComponent;

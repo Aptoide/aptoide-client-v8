@@ -71,8 +71,7 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   @Inject ManageUserPresenter manageUserPresenter;
   @Inject CreateUserErrorMapper errorMapper;
 
-  public static ManageUserFragment newInstanceToEdit() {
-    return newInstance(true);
+  public static ManageUserFragment newInstanceToEdit() { return newInstance(true);
   }
 
   public static ManageUserFragment newInstanceToCreate() {

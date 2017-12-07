@@ -54,14 +54,14 @@ import static cm.aptoide.pt.UITests.skipWizard;
     TestType.types = TestType.TestTypes.SIGNINWRONG;
     goToMyAccount();
     performLogin(LOGINEMAIL, "wrongpass");
-    onView(withText(R.string.error_invalid_grant)).check(matches(isDisplayed()));
+    onView(withText(R.string.ws_error_invalid_grant)).check(matches(isDisplayed()));
   }
-
+//
   @Test public void signUpInvalidEmail() {
     TestType.types = TestType.TestTypes.INVALIDEMAIL;
     goToMyAccount();
     performSignUp("randomemail", PASS);
-    onView(withText(R.string.ws_error_IARG_106)).check(matches(isDisplayed()));
+    onView(withText(R.string.error_IARG_106)).check(matches(isDisplayed()));
   }
 
   @Test public void signUpInvalidPassword() {
@@ -87,12 +87,12 @@ import static cm.aptoide.pt.UITests.skipWizard;
     performSignUp("", "");
     onView(withText(R.string.no_email_and_pass_error_message)).check(matches(isDisplayed()));
   }
-
+//
   @Test public void signUpEmailExists() {
     TestType.types = TestType.TestTypes.USEDEMAIL;
     goToMyAccount();
     performSignUp(LOGINEMAIL, PASS + 5);
-    onView(withText(R.string.ws_error_WOP_9)).check(matches(isDisplayed()));
+    onView(withText(R.string.error_WOP_9)).check(matches(isDisplayed()));
   }
 
   @Test public void signUp() {

@@ -5,7 +5,7 @@ package cm.aptoide.pt;
  */
 
 public class TestType {
-  public static TestTypes types = TestTypes.REGULAR;
+  public static TestTypes types = TestTypes.PHOTOSUCCESS;
 
   public enum TestTypes {
     REGULAR, SIGNSIGNUPTESTS, SIGNINWRONG, LOGGEDIN, USEDEMAIL, INVALIDEMAIL, PHOTOMAX, PHOTOMIN, PHOTOSUCCESS, MATURE

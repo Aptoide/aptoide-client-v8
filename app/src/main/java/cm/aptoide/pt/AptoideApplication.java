@@ -365,7 +365,7 @@ public abstract class AptoideApplication extends Application {
 
   public ApplicationComponent getApplicationComponent() {
     if (applicationComponent == null) {
-      applicationComponent = ComponentFactory.create(this);
+      applicationComponent = ComponentFactory.createApplicationComponent(this);
     }
     return applicationComponent;
   }

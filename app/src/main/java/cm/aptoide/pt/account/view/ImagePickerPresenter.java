@@ -61,7 +61,7 @@ public class ImagePickerPresenter implements Presenter {
         }, err -> crashReport.log(err));
   }
 
-  @NonNull protected Completable loadValidImageOrThrowForCamera(String createdUri) {
+  @NonNull private Completable loadValidImageOrThrowForCamera(String createdUri) {
     return imageValidator.validateOrGetException(createdUri)
         .observeOn(uiScheduler)
         .doOnCompleted(() -> view.loadImage(createdUri));

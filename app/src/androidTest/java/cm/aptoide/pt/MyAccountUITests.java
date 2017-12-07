@@ -24,7 +24,6 @@ import static cm.aptoide.pt.UITests.skipWizard;
 @RunWith(AndroidJUnit4.class) public class MyAccountUITests {
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
-  @Rule public RetryTestRule retry = new RetryTestRule(UITests.NUMBER_OF_RETRIES);
 
   @Before public void setUp() {
     TestType.types = TestType.TestTypes.SIGNSIGNUPTESTS;
@@ -38,7 +37,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
     goToMyAccount();
     onView(withId(R.id.my_account_edit_user_profile)).perform(click());
     onView(withId(R.id.create_user_image_action)).perform(click());
-    onView(withId(R.id.create_user_choose_username)).perform(swipeUp());
+    onView(withText("Select from gallery")).perform(click());
+    onView(withId(R.id.create_user_username_inserted)).perform(swipeUp());
     onView(withId(R.id.create_user_create_profile)).perform(click());
     onView(withId(R.id.button_logout)).check(matches(isDisplayed()));
   }
@@ -48,11 +48,13 @@ import static cm.aptoide.pt.UITests.skipWizard;
     goToMyAccount();
     onView(withId(R.id.my_account_edit_user_profile)).perform(click());
     onView(withId(R.id.create_user_image_action)).perform(click());
+    onView(withText("Select from gallery")).perform(click());
     onView(withText("OK")).perform(click());
     TestType.types = TestType.TestTypes.PHOTOMAX;
     onView(withId(R.id.create_user_image_action)).perform(click());
+    onView(withText("Select from gallery")).perform(click());
     onView(withText("OK")).perform(click());
-    onView(withId(R.id.create_user_choose_username)).perform(swipeUp());
+    onView(withId(R.id.create_user_username_inserted)).perform(swipeUp());
     onView(withId(R.id.create_user_create_profile)).perform(click());
     onView(withId(R.id.button_logout)).check(matches(isDisplayed()));
   }
@@ -62,6 +64,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
     goToMyAccount();
     onView(withId(R.id.my_account_edit_user_store)).perform(click());
     onView(withId(R.id.create_store_image)).perform(click());
+    onView(withText("Select from gallery")).perform(click());
     onView(withId(R.id.create_store_image)).perform(swipeUp());
     onView(withId(R.id.theme_selector)).perform(swipeUp());
     onView(withId(R.id.theme_selector)).perform(swipeUp());
@@ -74,9 +77,11 @@ import static cm.aptoide.pt.UITests.skipWizard;
     goToMyAccount();
     onView(withId(R.id.my_account_edit_user_store)).perform(click());
     onView(withId(R.id.create_store_image)).perform(click());
+    onView(withText("Select from gallery")).perform(click());
     onView(withText("OK")).perform(click());
     TestType.types = TestType.TestTypes.PHOTOMAX;
     onView(withId(R.id.create_store_image_action)).perform(click());
+    onView(withText("Select from gallery")).perform(click());
     onView(withText("OK")).perform(click());
     onView(withId(R.id.create_store_image)).perform(swipeUp());
     onView(withId(R.id.theme_selector)).perform(swipeUp());
