@@ -54,7 +54,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
     TestType.types = TestType.TestTypes.SIGNINWRONG;
     goToMyAccount();
     performLogin(LOGINEMAIL, "wrongpass");
-    onView(withText(R.string.error_invalid_grant)).check(matches(isDisplayed()));
+    onView(withText(R.string.ws_error_invalid_grant)).check(matches(isDisplayed()));
   }
 
   @Test public void signUpInvalidEmail() {
