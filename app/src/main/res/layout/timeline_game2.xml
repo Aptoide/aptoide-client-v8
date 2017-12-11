@@ -22,18 +22,6 @@
         android:orientation="horizontal"
         >
 
-      <!--<View-->
-          <!--android:id="@+id/top_margin_line"-->
-          <!--android:layout_width="match_parent"-->
-          <!--android:layout_height="2dp"-->
-          <!--android:layout_alignParentTop="true"-->
-          <!--android:layout_marginEnd="12dp"-->
-          <!--android:layout_marginLeft="12dp"-->
-          <!--android:layout_marginRight="12dp"-->
-          <!--android:layout_marginStart="12dp"-->
-          <!--android:background="@color/orange_700"-->
-          <!--/>-->
-
       <ImageView
           android:id="@+id/displayable_social_timeline_game_card_icon"
           android:layout_width="40dp"
