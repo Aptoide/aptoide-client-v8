@@ -61,9 +61,8 @@ public class ManageStorePresenter implements Presenter {
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.cancelClick()
             .doOnNext(__2 -> {
-              navigate();
+              navigate(false);
             }))
-        .doOnNext(manageStoreViewModel -> navigator.popViewWithResult(requestCode, false))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -75,8 +74,7 @@ public class ManageStorePresenter implements Presenter {
         .flatMap(__ -> view.saveDataClick()
             .flatMapCompletable(storeModel -> handleSaveClick(storeModel))
             .doOnError(err -> crashReport.log(err))
-            .retry()
-            .doOnNext(manageStoreViewModel -> navigator.popViewWithResult(requestCode, true)))
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }
@@ -88,7 +86,7 @@ public class ManageStorePresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .doOnCompleted(() -> view.dismissWaitProgressBar())
         .doOnCompleted(() -> view.showSuccessMessage())
-        .doOnCompleted(() -> navigate())
+        .doOnCompleted(() -> navigate(true))
         .onErrorResumeNext(err -> Completable.fromAction(() -> {
           view.dismissWaitProgressBar();
           handleStoreCreationErrors(err);
@@ -110,12 +108,12 @@ public class ManageStorePresenter implements Presenter {
                 storeModel.getSocialDeleteLinks()));
   }
 
-  private void navigate() {
+  private void navigate(boolean success) {
     if (goBackToHome) {
       navigator.goToHome();
       return;
     }
-    navigator.goBack();
+    navigator.popViewWithResult(requestCode, success);
   }
 
   private void handleStoreCreationErrors(Throwable err) {

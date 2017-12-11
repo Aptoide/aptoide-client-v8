@@ -122,6 +122,7 @@ public class MyAccountPresenter implements Presenter {
             .first())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(account -> view.showAccount(account))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notification -> {
         }, throwable -> crashReport.log(throwable));
   }
