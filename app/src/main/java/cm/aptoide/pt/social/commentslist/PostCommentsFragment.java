@@ -80,23 +80,22 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
     sharedPreferences =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     replyEventPublishSubject = PublishSubject.create();
-    attachPresenter(new PostCommentsPresenter(this, new Comments(
-        new PostCommentsRepository(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            sharedPreferences)),
-        getArguments().containsKey(POST_ID_KEY) ? getArguments().getString(POST_ID_KEY) : null));
     adapter = new PostCommentsAdapter(new ArrayList<>(), replyEventPublishSubject);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
     list = (RecyclerView) view.findViewById(R.id.recycler_view);
     list.setAdapter(adapter);
     list.addItemDecoration(new ItemDividerDecoration(this));
     list.setLayoutManager(new LinearLayoutManager(getContext()));
     helper = RecyclerViewPositionHelper.createHelper(list);
     floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fabAdd);
-
-    super.onViewCreated(view, savedInstanceState);
     setHasOptionsMenu(true);
+    attachPresenter(new PostCommentsPresenter(this, new Comments(
+        new PostCommentsRepository(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+            sharedPreferences)),
+        getArguments().containsKey(POST_ID_KEY) ? getArguments().getString(POST_ID_KEY) : null));
   }
 
   @Nullable @Override
