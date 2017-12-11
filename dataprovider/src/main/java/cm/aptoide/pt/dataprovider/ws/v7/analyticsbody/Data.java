@@ -13,6 +13,8 @@ public class Data {
   private String previousContext;
   private String store;
   private String previousTag;
+  private Integer campaignId;
+  private String abTestGroup;
 
   public String getStore() {
     return store;
@@ -92,6 +94,22 @@ public class Data {
 
   public void setRoot(Root root) {
     this.root = root;
+  }
+
+  public Integer getCampaignId() {
+    return campaignId;
+  }
+
+  public void setCampaignId(int campaignId) {
+    this.campaignId = campaignId;
+  }
+
+  public String getAbTestGroup() {
+    return abTestGroup;
+  }
+
+  public void setAbTestGroup(String abTestGroup) {
+    this.abTestGroup = abTestGroup;
   }
 
   public enum DataOrigin {

@@ -1,6 +1,7 @@
 package cm.aptoide.pt.updates.view;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,7 +29,6 @@ import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.repository.exception.RepositoryItemNotFoundException;
 import cm.aptoide.pt.social.analytics.TimelineAnalytics;
@@ -80,6 +80,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   private CrashReport crashReport;
   private String marketName;
   private StoreTabNavigator storeTabNavigator;
+  private SharedPreferences sharedPreferences;
 
   @NonNull public static UpdatesFragment newInstance() {
     return new UpdatesFragment();
@@ -171,9 +172,10 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
     analytics = Analytics.getInstance();
     tokenInvalidator = application.getTokenInvalidator();
+    sharedPreferences = application.getDefaultSharedPreferences();
     downloadInstallEventConverter =
         new DownloadEventConverter(bodyInterceptorV7, httpClient, converterFactory,
-            tokenInvalidator, BuildConfig.APPLICATION_ID, application.getDefaultSharedPreferences(),
+            tokenInvalidator, BuildConfig.APPLICATION_ID, sharedPreferences,
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
             application.getNavigationTracker());
@@ -251,15 +253,13 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
                 getContext().getResources())), storeTabNavigator, navigationTracker));
 
     for (Installed installedApp : installedApps) {
+      AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
       installedDisplayablesList.add(new InstalledAppDisplayable(installedApp,
           new TimelineAnalytics(analytics, AppEventsLogger.newLogger(getContext()),
               bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator,
-              BuildConfig.APPLICATION_ID,
-              ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-              new NotificationAnalytics(httpClient, analytics,
-                  AppEventsLogger.newLogger(getContext())), navigationTracker,
-              ((AptoideApplication) getContext().getApplicationContext()).getReadPostsPersistence()),
-          installedRepository));
+              BuildConfig.APPLICATION_ID, application.getDefaultSharedPreferences(),
+              application.getNotificationAnalytics(), navigationTracker,
+              application.getReadPostsPersistence()), installedRepository));
     }
     addDisplayables(installedDisplayablesList, false);
     Logger.v(TAG, "listed installed apps");

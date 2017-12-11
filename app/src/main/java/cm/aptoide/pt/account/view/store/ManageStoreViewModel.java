@@ -32,7 +32,7 @@ import org.parceler.Parcel;
     this.storeTheme = StoreTheme.DEFAULT;
     this.newAvatar = false;
     this.socialLinks = Collections.emptyList();
-    this.socialLinks = Collections.emptyList();
+    this.socialDelLinks = Collections.emptyList();
   }
 
   public ManageStoreViewModel(long storeId, StoreTheme storeTheme, String storeName,

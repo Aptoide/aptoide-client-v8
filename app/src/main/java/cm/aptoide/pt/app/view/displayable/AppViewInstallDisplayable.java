@@ -46,6 +46,8 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   private NavigationTracker navigationTracker;
   private String editorsChoiceBrickPosition;
   private InstallAnalytics installAnalytics;
+  private int campaignId;
+  private String abTestingGroup;
 
   public AppViewInstallDisplayable() {
     super();
@@ -57,7 +59,8 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
       AppViewAnalytics appViewAnalytics, PublishRelay installAppRelay,
       DownloadFactory downloadFactory, AppViewFragment appViewFragment,
       DownloadCompleteAnalytics analytics, NavigationTracker navigationTracker,
-      String editorsChoiceBrickPosition, InstallAnalytics installAnalytics) {
+      String editorsChoiceBrickPosition, InstallAnalytics installAnalytics, int campaignId,
+      String abTestingGroup) {
     super(getApp, appViewAnalytics);
     this.installManager = installManager;
     this.md5 = getApp.getNodes()
@@ -84,6 +87,8 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
     this.navigationTracker = navigationTracker;
     this.editorsChoiceBrickPosition = editorsChoiceBrickPosition;
     this.installAnalytics = installAnalytics;
+    this.campaignId = campaignId;
+    this.abTestingGroup = abTestingGroup;
   }
 
   public static AppViewInstallDisplayable newInstance(GetApp getApp, InstallManager installManager,
@@ -92,10 +97,11 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
       AppViewAnalytics appViewAnalytics, PublishRelay installAppRelay,
       AppViewFragment appViewFragment, DownloadCompleteAnalytics analytics,
       NavigationTracker navigationTracker, String editorsBrickPosition,
-      InstallAnalytics installAnalytics) {
+      InstallAnalytics installAnalytics, int campaignId, String abTestingGroup) {
     return new AppViewInstallDisplayable(installManager, getApp, searchAdResult, shouldInstall,
         timelineAnalytics, appViewAnalytics, installAppRelay, downloadFactory, appViewFragment,
-        analytics, navigationTracker, editorsBrickPosition, installAnalytics);
+        analytics, navigationTracker, editorsBrickPosition, installAnalytics, campaignId,
+        abTestingGroup);
   }
 
   public void startInstallationProcess() {
@@ -144,5 +150,13 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
             .getMalware()
             .getRank()
             .name(), editorsChoiceBrickPosition, installType);
+  }
+
+  public int getCampaignId() {
+    return campaignId;
+  }
+
+  public String getAbTestingGroup() {
+    return abTestingGroup;
   }
 }

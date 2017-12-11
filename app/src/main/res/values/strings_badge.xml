@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <string name="badgedialog_message_final">To know more about the gamification, go to the dashboard at www.aptoide.com</string>
-
   <string name="badgedialog_title_tin">Tin medal</string>
   <string name="badgedialog_message_tin"> Congratulations!%s\nYou got the tin medal, because you reached: </string>
   <string name="badgedialog_message_tin_1">Store Created</string>

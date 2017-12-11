@@ -72,6 +72,9 @@ public class SystemNotificationShower implements Presenter {
         .flatMapCompletable(aptoideNotification -> {
           int notificationId =
               notificationIdsMapper.getNotificationId(aptoideNotification.getType());
+          notificationAnalytics.sendPushNotficationImpressionEvent(aptoideNotification.getType(),
+              aptoideNotification.getAbTestingGroup(), aptoideNotification.getCampaignId(),
+              aptoideNotification.getUrl());
           return mapToAndroidNotification(aptoideNotification, notificationId).doOnSuccess(
               notification -> notificationManager.notify(notificationId, notification))
               .toCompletable();
@@ -213,8 +216,6 @@ public class SystemNotificationShower implements Presenter {
   }
 
   private void callDeepLink(Context context, NotificationInfo notificationInfo) {
-    String trackUrl = notificationInfo.getNotificationTrackUrl();
-    notificationAnalytics.sendNotificationTouchEvent(trackUrl);
     String targetUrl = notificationInfo.getNotificationUrl();
     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(targetUrl));
     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -245,8 +246,15 @@ public class SystemNotificationShower implements Presenter {
     view.getNotificationClick()
         .flatMapSingle(notificationInfo -> notificationProvider.getLastShowed(
             notificationIdsMapper.getNotificationType(notificationInfo.getNotificationType()))
-            .doOnSuccess(notification -> notificationAnalytics.sendSocialNotificationPressedEvent(
-                notification))
+            .doOnSuccess(notification -> {
+              notificationAnalytics.sendPushNotificationPressedEvent(notification.getType(),
+                  notification.getAbTestingGroup(), notification.getCampaignId(),
+                  notification.getUrl());
+              notificationAnalytics.sendNotificationTouchEvent(
+                  notificationInfo.getNotificationTrackUrl(),
+                  notificationInfo.getNotificationType(), notificationInfo.getNotificationUrl(),
+                  notification.getCampaignId(), notification.getAbTestingGroup());
+            })
             .map(notification -> notificationInfo))
         .doOnNext(notificationInfo -> callDeepLink(context, notificationInfo))
         .doOnNext(notificationInfo -> dismissNotificationAfterAction(

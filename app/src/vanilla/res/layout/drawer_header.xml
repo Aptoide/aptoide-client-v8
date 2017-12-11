@@ -20,7 +20,6 @@
       />
 
   <RelativeLayout
-      android:id="@+id/chosen_account_content_view"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:paddingEnd="@dimen/keyline_1"

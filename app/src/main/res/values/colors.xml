@@ -10,7 +10,6 @@
   <color name="grey_fog_dark">#cccccc</color>
   <color name="grey_medium">#828282</color>
   <color name="black_87_alpha">#de000000</color>
-  <color name="blue_grey_87_alpha">#de607d8b</color>
   <color name="white">#FFF</color>
 
   <!-- social buttons colors -->
@@ -33,6 +32,5 @@
   <color name="platinum_medal">#69bde0</color>
   <color name="platinum_medal_secodary">#96D0E9</color>
   <color name="progress_bar_color">#e6e5e6</color>
-  <color name="achievement_requirement_background">#2cd8d8d8</color>
 
 </resources>

@@ -47,7 +47,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
-import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.social.analytics.TimelineAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
@@ -167,25 +166,21 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     //this object is used in loadExtras and loadExtras is called in the super
-    sharedPreferences =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
-    tokenInvalidator =
-        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
+    AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
+    sharedPreferences = application.getDefaultSharedPreferences();
+    tokenInvalidator = application.getTokenInvalidator();
     storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
         ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class));
-    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+    httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
+    bodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();
     final Analytics analytics = Analytics.getInstance();
     timelineAnalytics = new TimelineAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        new NotificationAnalytics(httpClient, analytics, AppEventsLogger.newLogger(getContext())),
-        navigationTracker,
-        ((AptoideApplication) getContext().getApplicationContext()).getReadPostsPersistence());
+        application.getDefaultSharedPreferences(), application.getNotificationAnalytics(),
+        navigationTracker, application.getReadPostsPersistence());
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);
   }

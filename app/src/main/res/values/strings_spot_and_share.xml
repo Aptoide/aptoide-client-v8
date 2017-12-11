@@ -13,7 +13,6 @@
 
   <string name="ok">OK</string>
 
-  <string name="enablingWifi">Enabling the Wi-Fi functionality</string>
   <string name="noHotspotYet">Please, you or your friend(s) should create a hotspot</string>
   <string name="couldNotCreateHotspot">Couldn\'t create the hotspot</string>
   <string name="unkownHotspotError">We are sorry, there was an error while trying to create the hotspot</string>
@@ -33,16 +32,9 @@
   <string name="receive">Receive</string>
   <string name="receiving">Receiving </string>
 
-  <string name="hotspotLeft">The creator of the group left !</string>
-  <string name="noSpaceForApp">You have no space available to the app: </string>
-  <string name="fileProblem">There was a problem with the file of </string>
-
-  <string name="welcome">Welcome </string>
   <string name="alertCreatorLeave">You are the creator of this group, if you leave it will be closed </string>
   <string name="leave">Leave</string>
   <string name="alertClientLeave">Are you sure you want to leave this group?</string>
-  <string name="alertClearApps1">This action will not just clear the history, but it will also delete the application files.</string>
-  <string name="alertClearApps2">Are you sure you want to delete?</string>
   <string name="delete">Delete</string>
 
   <string name="alertInstallApp">Are you sure you want to install the %1$s application?</string>
@@ -54,7 +46,6 @@
   <string name="alertDeleteApp">Are you sure you want to delete the %1$s application?</string>
 
   <string name="createGroup">Create group</string>
-  <string name="joinGroup">Join group</string>
   <string name="upperInstall">INSTALL</string>
   <string name="upperDelete">DELETE </string>
   <string name="upperResend">RESEND</string>
@@ -63,20 +54,8 @@
   <string name="clearHistory">CLEAR HISTORY</string>
   <string name="noRecordsDelete">No apps to delete</string>
 
-  <string name="reSendError"><b>ERROR ON SENDING</b></string>
-  <string name="reSendError_no_friends_in_group">No friends in the group yet. Invite them to join.</string>
-
-
-  <string name="mobileDataTitle">Mobile data</string>
-  <string name="mobileDataMessage">To join a group, you have to turn off your mobile data temporarily.</string>
-  <string name="turnOffButton">Turn off</string>
-  <string name="mDataJoinGroup">Turn off your data to join a group</string>
 
   <string name="sendApps">Send APPS</string>
-
-  <string name="reSendOutside"><b>No one is in the group yet</b></string>
-
-  <string name="unsupportedApp">App with this filename %1$s is not supported by this device</string>
 
   <string name="recoveringWifiState">Recovering the Wi-Fi status from when you joined the app</string>
 
