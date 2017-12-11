@@ -19,7 +19,7 @@ public class PurchaseMapperV3 {
 
   public Purchase map(PaidApp response, String productId) {
 
-    if (response.isOk() && response.isPaid()) {
+    if (response.isOk() && response.isPaid() && response.getPayment().isPaid()) {
       return purchaseFactory.create(productId, null, null, Purchase.Status.COMPLETED, null,
           PurchaseFactory.PAID_APP, response.getPath()
               .getStringPath(), null);
