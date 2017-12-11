@@ -59,4 +59,9 @@ public class PostCommentsAdapter extends RecyclerView.Adapter<PostCommentViewHol
     this.comments = comments;
     notifyDataSetChanged();
   }
+
+  public void addComments(List<Comment> comments) {
+    this.comments.addAll(comments);
+    notifyDataSetChanged();
+  }
 }

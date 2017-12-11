@@ -19,4 +19,8 @@ class Comments {
   public Single<List<Comment>> getComments(String postId) {
     return postCommentsRepository.getComments(postId);
   }
+
+  public Single<List<Comment>> getNextComments(String postId) {
+    return postCommentsRepository.getNextComments(postId);
+  }
 }

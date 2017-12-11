@@ -99,8 +99,9 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
     floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fabAdd);
     setHasOptionsMenu(true);
     attachPresenter(new PostCommentsPresenter(this, new Comments(
-        new PostCommentsRepository(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            sharedPreferences)), AndroidSchedulers.mainThread(), CrashReport.getInstance(),
+        new PostCommentsRepository(10, 0, Integer.MAX_VALUE, bodyInterceptor, httpClient,
+            converterFactory, tokenInvalidator, sharedPreferences)), AndroidSchedulers.mainThread(),
+        CrashReport.getInstance(),
         getArguments().containsKey(POST_ID_KEY) ? getArguments().getString(POST_ID_KEY) : null));
   }
 
@@ -154,6 +155,10 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
 
   @Override public void hideRefresh() {
     swipeRefreshLayout.setRefreshing(false);
+  }
+
+  @Override public void showMoreComments(List<Comment> comments) {
+    adapter.addComments(comments);
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {

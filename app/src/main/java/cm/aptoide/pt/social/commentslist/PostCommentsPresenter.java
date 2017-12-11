@@ -48,5 +48,19 @@ public class PostCommentsPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(comments -> {
         }, throwable -> crashReporter.log(throwable));
+
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reachesBottom()
+            .observeOn(viewScheduler)
+            .doOnNext(__ -> view.showLoadMoreProgressIndicator())
+            .flatMapSingle(__ -> comments.getNextComments(postId))
+            .observeOn(viewScheduler)
+            .doOnNext(comments -> view.showMoreComments(comments))
+            .doOnNext(__ -> view.hideLoadMoreProgressIndicator())
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(comments -> {
+        }, throwable -> crashReporter.log(throwable));
   }
 }
