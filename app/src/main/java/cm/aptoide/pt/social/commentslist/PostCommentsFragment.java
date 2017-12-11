@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
@@ -30,6 +31,7 @@ import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 
 /**
@@ -98,7 +100,7 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
     setHasOptionsMenu(true);
     attachPresenter(new PostCommentsPresenter(this, new Comments(
         new PostCommentsRepository(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            sharedPreferences)),
+            sharedPreferences)), AndroidSchedulers.mainThread(), CrashReport.getInstance(),
         getArguments().containsKey(POST_ID_KEY) ? getArguments().getString(POST_ID_KEY) : null));
   }
 
