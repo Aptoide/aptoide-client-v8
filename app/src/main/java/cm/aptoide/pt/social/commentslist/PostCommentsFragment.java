@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -22,6 +23,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
 import cm.aptoide.pt.view.recycler.RecyclerViewPositionHelper;
+import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +58,7 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
   private SharedPreferences sharedPreferences;
 
   private PublishSubject<String> replyEventPublishSubject;
+  private SwipeRefreshLayout swipeRefreshLayout;
 
   public static Fragment newInstance(String postId) {
     Fragment fragment = new PostCommentsFragment();
@@ -90,6 +93,7 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
     list.addItemDecoration(new ItemDividerDecoration(this));
     list.setLayoutManager(new LinearLayoutManager(getContext()));
     helper = RecyclerViewPositionHelper.createHelper(list);
+    swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
     floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fabAdd);
     setHasOptionsMenu(true);
     attachPresenter(new PostCommentsPresenter(this, new Comments(
@@ -127,6 +131,10 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
         .cast(Void.class);
   }
 
+  @Override public Observable<Void> refreshes() {
+    return RxSwipeRefreshLayout.refreshes(swipeRefreshLayout);
+  }
+
   @Override public void showLoadMoreProgressIndicator() {
     Logger.d(this.getClass()
         .getName(), "show indicator called");
@@ -139,7 +147,11 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
   }
 
   @Override public void showComments(List<Comment> comments) {
-    adapter.addComments(comments);
+    adapter.updateComments(comments);
+  }
+
+  @Override public void hideRefresh() {
+    swipeRefreshLayout.setRefreshing(false);
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {

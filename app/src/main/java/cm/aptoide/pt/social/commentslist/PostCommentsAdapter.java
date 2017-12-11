@@ -55,8 +55,8 @@ public class PostCommentsAdapter extends RecyclerView.Adapter<PostCommentViewHol
     return comments.size();
   }
 
-  public void addComments(List<Comment> commentList) {
-    this.comments.addAll(commentList);
+  public void updateComments(List<Comment> comments) {
+    this.comments = comments;
     notifyDataSetChanged();
   }
 }

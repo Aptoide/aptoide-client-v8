@@ -28,7 +28,20 @@ public class PostCommentsPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMapSingle(created -> comments.getComments(postId))
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(commentList -> view.showComments(commentList))
+        .doOnNext(comments -> view.showComments(comments))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(comments -> {
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable));
+
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.refreshes()
+            .flatMapSingle(__ -> comments.getComments(postId))
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(comments -> view.showComments(comments))
+            .doOnNext(comments -> view.hideRefresh())
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(comments -> {
         }, throwable -> CrashReport.getInstance()
