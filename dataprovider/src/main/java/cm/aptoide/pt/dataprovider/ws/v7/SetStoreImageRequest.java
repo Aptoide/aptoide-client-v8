@@ -62,23 +62,6 @@ public class SetStoreImageRequest extends V7<BaseV7Response, HashMapNotNull<Stri
         bodyInterceptor, httpClient, converterFactory, sharedPreferences, tokenInvalidator);
   }
 
-  public static SetStoreImageRequest of(long storeId, String storeTheme, String storeDescription,
-      String storeAvatarPath, BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory,
-      RequestBodyFactory requestBodyFactory, ObjectMapper serializer,
-      SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
-      List<SimpleSetStoreRequest.StoreLinks> storeLinksList) {
-    final HashMapNotNull<String, RequestBody> body = new HashMapNotNull<>();
-
-    body.put("store_id", requestBodyFactory.createBodyPartFromLong(storeId));
-    addStoreProperties(storeTheme, storeDescription, requestBodyFactory, serializer, body);
-    addStoreLinks(storeLinksList, body, serializer, requestBodyFactory);
-
-    return new SetStoreImageRequest(body,
-        requestBodyFactory.createBodyPartFromFile("store_avatar", new File(storeAvatarPath)),
-        bodyInterceptor, httpClient, converterFactory, sharedPreferences, tokenInvalidator);
-  }
-
   private static void addStoreDeleteLinks(List<Store.SocialChannelType> storeDeleteLinksList,
       HashMapNotNull<String, RequestBody> body, ObjectMapper serializer,
       RequestBodyFactory requestBodyFactory) {

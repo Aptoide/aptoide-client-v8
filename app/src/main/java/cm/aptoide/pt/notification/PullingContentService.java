@@ -15,7 +15,6 @@ import android.support.v4.app.NotificationCompat;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
@@ -26,7 +25,6 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.utils.AptoideUtils;
-import com.facebook.appevents.AppEventsLogger;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Observable;
@@ -65,9 +63,7 @@ public class PullingContentService extends Service {
     sharedPreferences = application.getDefaultSharedPreferences();
     updateRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
     installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
-    notificationAnalytics =
-        new NotificationAnalytics(((AptoideApplication) getApplicationContext()).getDefaultClient(),
-            Analytics.getInstance(), AppEventsLogger.newLogger(getApplicationContext()));
+    notificationAnalytics = application.getNotificationAnalytics();
 
     subscriptions = new CompositeSubscription();
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);

@@ -8,6 +8,7 @@ package cm.aptoide.pt.app.view;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
@@ -370,18 +371,16 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installAnalytics = new InstallAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
 
+    SharedPreferences sharedPreferences = application.getDefaultSharedPreferences();
     timelineAnalytics = new TimelineAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        application.getDefaultSharedPreferences(),
-        new NotificationAnalytics(httpClient, analytics, AppEventsLogger.newLogger(getContext())),
-        navigationTracker, application.getReadPostsPersistence());
+        sharedPreferences, application.getNotificationAnalytics(), navigationTracker,
+        application.getReadPostsPersistence());
     socialRepository =
-
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
-            timelineAnalytics, tokenInvalidator, application.getDefaultSharedPreferences());
-    appRepository =
-        RepositoryFactory.getAppRepository(getContext(), application.getDefaultSharedPreferences());
+            timelineAnalytics, tokenInvalidator, sharedPreferences);
+    appRepository = RepositoryFactory.getAppRepository(getContext(), sharedPreferences);
     adsRepository = application.getAdsRepository();
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
@@ -393,19 +392,17 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             .getApplicationContext()).getDatabase(), StoredMinimalAd.class);
     final SpotAndShareAnalytics spotAndShareAnalytics = new SpotAndShareAnalytics(analytics);
     appViewAnalytics = new AppViewAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()));
+        AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
+        httpClient, tokenInvalidator, converterFactory, sharedPreferences);
     appViewSimilarAppAnalytics = new AppViewSimilarAppAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
 
     installAppRelay = PublishRelay.create();
     shareAppHelper =
         new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
-            spotAndShareAnalytics, timelineAnalytics, installAppRelay,
-            application.getDefaultSharedPreferences(),
+            spotAndShareAnalytics, timelineAnalytics, installAppRelay, sharedPreferences,
             application.isCreateStoreUserPrivacyEnabled());
     downloadFactory = new DownloadFactory(getMarketName());
-    appViewAnalytics = new AppViewAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()));
     storeAnalytics =
         new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
             analytics);
@@ -934,6 +931,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     if (getOpenType() == OpenType.OPEN_AND_INSTALL) {
       setOpenType(null);
     }
+    NotificationAnalytics notificationAnalytics =
+        ((AptoideApplication) getContext().getApplicationContext()).getNotificationAnalytics();
 
     installDisplayable =
         AppViewInstallDisplayable.newInstance(getApp, installManager, getSearchAdResult(),
@@ -941,7 +940,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             appViewAnalytics, installAppRelay, this,
             new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
                 AppEventsLogger.newLogger(getContext().getApplicationContext())), navigationTracker,
-            getEditorsBrickPosition(), installAnalytics);
+            getEditorsBrickPosition(), installAnalytics,
+            notificationAnalytics.getCampaignId(app.getPackageName(), app.getId()),
+            notificationAnalytics.getAbTestingGroup(app.getPackageName(), app.getId()));
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics, storeAnalytics));
     displayables.add(

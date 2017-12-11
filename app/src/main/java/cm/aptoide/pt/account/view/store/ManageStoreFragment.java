@@ -83,7 +83,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   private ImagePickerDialog dialogFragment;
   private ImagePickerErrorHandler imagePickerErrorHandler;
   private View facebookRow;
-  private CustomTextInputLayout facebookUsernameWrapper;
   private View twitchRow;
   private View twitterRow;
   private View youtubeRow;
@@ -91,6 +90,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   private RelativeLayout twitchTextAndPlus;
   private RelativeLayout twitterTextAndPlus;
   private RelativeLayout youtubeTextAndPlus;
+  private CustomTextInputLayout facebookUsernameWrapper;
   private CustomTextInputLayout twitchUsernameWrapper;
   private CustomTextInputLayout twitterUsernameWrapper;
   private CustomTextInputLayout youtubeUsernameWrapper;
@@ -266,25 +266,34 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   @Override public void showFacebookError(String error) {
     facebookUsernameWrapper.setErrorEnabled(true);
     facebookUsernameWrapper.setError(error);
+    facebookRow.performClick();
   }
 
   @Override public void showTwitterError(String error) {
     twitterUsernameWrapper.setErrorEnabled(true);
     twitterUsernameWrapper.setError(error);
+    twitterRow.performClick();
   }
 
   @Override public void showTwitchError(String error) {
     twitchUsernameWrapper.setErrorEnabled(true);
     twitchUsernameWrapper.setError(error);
+    twitchRow.performClick();
   }
 
   @Override public void showYoutubeError(String error) {
     youtubeUsernameWrapper.setErrorEnabled(true);
     youtubeUsernameWrapper.setError(error);
+    youtubeRow.performClick();
   }
 
   @Override public void showError(String errorMessage) {
     Snackbar.make(socialChannels, errorMessage, Snackbar.LENGTH_LONG)
+        .show();
+  }
+
+  @Override public void showSuccessMessage() {
+    Snackbar.make(socialChannels, getString(R.string.done), Snackbar.LENGTH_LONG)
         .show();
   }
 
@@ -497,11 +506,13 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
         .toString(), storeDescription.getText()
         .toString());
     currentModel.setStoreTheme(themeSelectorAdapter.getSelectedTheme());
+    currentModel.setSocialDelLinks(checkLinksToDelete());
     currentModel.setSocialLinks(getStoreLinks());
     return currentModel;
   }
 
   private List<Store.SocialChannelType> checkLinksToDelete() {
+    storeDeleteLinksList = new ArrayList<>();
     List<SocialLink> socialLinks = currentModel.getSocialLinks();
     for (SocialLink socialLink : socialLinks) {
       setStoreDeleteLinksList(socialLink);
@@ -510,7 +521,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   }
 
   private void setStoreDeleteLinksList(SocialLink socialLink) {
-    storeDeleteLinksList = new ArrayList<>();
     if (!socialLink.getUrl()
         .isEmpty()) {
       if (socialLink.getType()
@@ -599,6 +609,11 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
           return ManageStoreViewModel.YOUTUBE_BASE_URL + userInput;
         }
     }
+
+    if (!userInput.contains("http")) {
+      return "https://" + userInput;
+    }
+
     return userInput;
   }
 
@@ -674,6 +689,8 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   private void showKeyboard(EditText editText) {
     InputMethodManager imm =
         (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-    imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
+    if (imm != null) {
+      imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
+    }
   }
 }

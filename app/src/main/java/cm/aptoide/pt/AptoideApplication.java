@@ -40,6 +40,8 @@ import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
+import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.database.realm.Store;
@@ -63,6 +65,7 @@ import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.leak.LeakTool;
+import cm.aptoide.pt.link.AptoideInstallParser;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.Result;
@@ -219,8 +222,10 @@ public abstract class AptoideApplication extends Application {
   private ApplicationComponent applicationComponent;
   private AppCenter appCenter;
   private ReadPostsPersistence readPostsPersistence;
+  private SystemNotificationShower systemNotificationShower;
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
   private NotificationsCleaner notificationsCleaner;
+  private NotificationAnalytics notificationAnalytics;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -359,6 +364,8 @@ public abstract class AptoideApplication extends Application {
     }, throwable -> CrashReport.getInstance()
         .log(throwable));
 
+    systemNotificationShower = getSystemNotificationShower();
+
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
   }
@@ -442,14 +449,15 @@ public abstract class AptoideApplication extends Application {
 
   public NotificationCenter getNotificationCenter() {
     if (notificationCenter == null) {
-
       final NotificationProvider notificationProvider = getNotificationProvider();
-
       notificationCenter =
           new NotificationCenter(notificationProvider, getNotificationSyncScheduler(),
               new NotificationPolicyFactory(notificationProvider),
-              new NotificationAnalytics(getDefaultClient(), Analytics.getInstance(),
-                  AppEventsLogger.newLogger(getApplicationContext())));
+              new NotificationAnalytics(Analytics.getInstance(),
+                  AppEventsLogger.newLogger(getApplicationContext()), bodyInterceptorPoolV7,
+                  getDefaultClient(), WebService.getDefaultConverter(), tokenInvalidator,
+                  cm.aptoide.pt.dataprovider.BuildConfig.APPLICATION_ID,
+                  getDefaultSharedPreferences(), new AptoideInstallParser()));
     }
     return notificationCenter;
   }
@@ -971,6 +979,17 @@ public abstract class AptoideApplication extends Application {
 
   public SyncScheduler getAlarmSyncScheduler() {
     return alarmSyncScheduler;
+  }
+
+  public NotificationAnalytics getNotificationAnalytics() {
+    if (notificationAnalytics == null) {
+      notificationAnalytics =
+          new NotificationAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(this),
+              getBodyInterceptorPoolV7(), getDefaultClient(), WebService.getDefaultConverter(),
+              tokenInvalidator, cm.aptoide.pt.dataprovider.BuildConfig.APPLICATION_ID,
+              getDefaultSharedPreferences(), new AptoideInstallParser());
+    }
+    return notificationAnalytics;
   }
 
   public IdsRepository getIdsRepository() {

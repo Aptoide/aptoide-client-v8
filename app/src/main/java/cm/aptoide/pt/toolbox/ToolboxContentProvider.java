@@ -228,6 +228,7 @@ public class ToolboxContentProvider extends ContentProvider {
 
   private MatrixCursor create(String key, String value) {
     final MatrixCursor cursor = new MatrixCursor(new String[] { key }, 1);
+    cursor.addRow(new String[] { value });
     return cursor;
   }
 }

@@ -18,6 +18,7 @@ import cm.aptoide.pt.dataprovider.ws.v3.CheckUserCredentialsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetStoreImageRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
+import cm.aptoide.pt.store.StoreTheme;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -160,7 +161,8 @@ public class StoreManager {
             }))
         .flatMapCompletable(data -> {
           final Completable syncAccount = accountManager.updateAccount();
-          if (needToUploadMoreStoreData(storeDescription, storeImage, hasNewAvatar)) {
+          if (needToUploadMoreStoreData(storeDescription, storeImage, hasNewAvatar,
+              storeThemeName)) {
             return updateStore(storeName, storeDescription, storeImage, hasNewAvatar,
                 storeThemeName, storeLinksList, storeDeleteSocialLinksList).andThen(syncAccount);
           }
@@ -169,8 +171,10 @@ public class StoreManager {
   }
 
   private boolean needToUploadMoreStoreData(String storeDescription, String storeImage,
-      boolean hasNewAvatar) {
-    return !TextUtils.isEmpty(storeDescription) || (hasNewAvatar && !TextUtils.isEmpty(storeImage));
+      boolean hasNewAvatar, String storeThemeName) {
+    return !TextUtils.isEmpty(storeDescription) || (hasNewAvatar && !TextUtils.isEmpty(storeImage)
+        || !storeThemeName.equals(StoreTheme.DEFAULT.toString()
+        .toLowerCase()));
   }
 
   private Completable updateStore(String storeName, String storeDescription, String storeImage,

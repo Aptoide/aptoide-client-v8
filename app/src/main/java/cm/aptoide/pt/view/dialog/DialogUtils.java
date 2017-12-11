@@ -148,7 +148,7 @@ import rx.subscriptions.Subscriptions;
 
         if (TextUtils.isEmpty(reviewTitle)) {
           titleTextInputLayout.setError(
-              AptoideUtils.StringU.getResString(R.string.error_MARG_107, resources));
+              AptoideUtils.StringU.getResString(R.string.ws_error_MARG_107, resources));
           return;
         }
 
@@ -266,7 +266,7 @@ import rx.subscriptions.Subscriptions;
 
       if (TextUtils.isEmpty(reviewTitle)) {
         titleTextInputLayout.setError(
-            AptoideUtils.StringU.getResString(R.string.error_MARG_107, resources));
+            AptoideUtils.StringU.getResString(R.string.ws_error_MARG_107, resources));
         return;
       }
 
