@@ -1,6 +1,7 @@
 package cm.aptoide.pt.account.view.store;
 
 import android.net.Uri;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.view.UriToPathResolver;
 import cm.aptoide.pt.account.view.exception.InvalidImageException;
 import cm.aptoide.pt.account.view.exception.SocialLinkException;
@@ -27,24 +28,25 @@ public class ManageStorePresenter implements Presenter {
 
   private final ManageStoreView view;
   private final CrashReport crashReport;
-  private final StoreManager storeManager;
   private final UriToPathResolver uriToPathResolver;
   private final String applicationPackageName;
   private final ManageStoreNavigator navigator;
   private final boolean goBackToHome;
   private final ManageStoreErrorMapper errorMapper;
+  private final AptoideAccountManager accountManager;
 
   public ManageStorePresenter(ManageStoreView view, CrashReport crashReport,
-      StoreManager storeManager, UriToPathResolver uriToPathResolver, String applicationPackageName,
-      ManageStoreNavigator navigator, boolean goBackToHome, ManageStoreErrorMapper errorMapper) {
+      UriToPathResolver uriToPathResolver, String applicationPackageName,
+      ManageStoreNavigator navigator, boolean goBackToHome, ManageStoreErrorMapper errorMapper,
+      AptoideAccountManager accountManager) {
     this.view = view;
     this.crashReport = crashReport;
-    this.storeManager = storeManager;
     this.uriToPathResolver = uriToPathResolver;
     this.applicationPackageName = applicationPackageName;
     this.navigator = navigator;
     this.goBackToHome = goBackToHome;
     this.errorMapper = errorMapper;
+    this.accountManager = accountManager;
   }
 
   @Override public void present() {
@@ -99,7 +101,7 @@ public class ManageStorePresenter implements Presenter {
       return "";
     })
         .flatMapCompletable(
-            mediaStoragePath -> storeManager.createOrUpdate(storeModel.getStoreName(),
+            mediaStoragePath -> accountManager.createOrUpdate(storeModel.getStoreName(),
                 storeModel.getStoreDescription(), mediaStoragePath, storeModel.hasNewAvatar(),
                 storeModel.getStoreTheme()
                     .getThemeName(), storeModel.storeExists(), storeModel.getSocialLinks(),

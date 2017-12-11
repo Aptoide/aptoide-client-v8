@@ -30,12 +30,10 @@ import com.facebook.login.LoginManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import dagger.Provides;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.inject.Named;
-import javax.inject.Singleton;
 import okhttp3.OkHttpClient;
 import rx.Completable;
 import rx.Single;
@@ -63,7 +61,7 @@ public class MockApplicationModule extends ApplicationModule {
       MultipartBodyInterceptor multipartBodyInterceptor,
       AndroidAccountProvider androidAccountProvider, GoogleApiClient googleApiClient,
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> noAuthenticationBodyInterceptorV3,
-      ObjectMapper objectMapper) {
+      ObjectMapper objectMapper, cm.aptoide.accountmanager.StoreManager storeManager) {
 
     FacebookSdk.sdkInitialize(application);
 

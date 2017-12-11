@@ -72,10 +72,12 @@ import rx.schedulers.Schedulers;
         fragment.getActivity().getContentResolver(), ImageLoader.with(fragment.getContext()));
   }
 
-  @FragmentScope @Provides ManageStorePresenter provideManageStorePresenter(StoreManager storeManager, UriToPathResolver uriToPathResolver,
-      ManageStoreNavigator manageStoreNavigator, ManageStoreErrorMapper manageStoreErrorMapper){
-    return new ManageStorePresenter((ManageStoreView) fragment, CrashReport.getInstance(), storeManager, uriToPathResolver,
-        packageName, manageStoreNavigator, goToHome, manageStoreErrorMapper);
+  @FragmentScope @Provides ManageStorePresenter provideManageStorePresenter(
+      UriToPathResolver uriToPathResolver, ManageStoreNavigator manageStoreNavigator,
+      ManageStoreErrorMapper manageStoreErrorMapper, AptoideAccountManager accountManager) {
+    return new ManageStorePresenter((ManageStoreView) fragment, CrashReport.getInstance(),
+        uriToPathResolver, packageName, manageStoreNavigator, goToHome, manageStoreErrorMapper,
+        accountManager);
   }
 
   @FragmentScope @Provides ManageUserPresenter provideManageUserPresenter(AptoideAccountManager accountManager, CreateUserErrorMapper errorMapper,
