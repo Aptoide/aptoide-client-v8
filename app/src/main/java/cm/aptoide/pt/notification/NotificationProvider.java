@@ -48,12 +48,13 @@ public class NotificationProvider {
   }
 
   private AptoideNotification convertToAptoideNotification(Notification notification) {
-    return new AptoideNotification(notification.getAbTestingGroup(), notification.getBody(),
-        notification.getCampaignId(), notification.getImg(), notification.getLang(),
-        notification.getTitle(), notification.getUrl(), notification.getUrlTrack(),
-        notification.getTimeStamp(), notification.getType(), notification.getDismissed(),
-        notification.getAppName(), notification.getGraphic(), notification.getOwnerId(),
-        notification.getExpire(), notification.getNotificationCenterUrlTrack());
+    return new AptoideNotification(notification.getBody(), notification.getImg(),
+        notification.getTitle(), notification.getUrl(), notification.getType(),
+        notification.getAppName(), notification.getGraphic(), notification.getDismissed(),
+        notification.getOwnerId(), notification.getUrlTrack(),
+        notification.getNotificationCenterUrlTrack(), notification.isProcessed(),
+        notification.getTimeStamp(), notification.getExpire(), notification.getAbTestingGroup(),
+        notification.getCampaignId(), notification.getLang());
   }
 
   public Completable save(List<AptoideNotification> aptideNotifications) {

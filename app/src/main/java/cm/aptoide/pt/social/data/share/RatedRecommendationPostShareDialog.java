@@ -10,8 +10,8 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.RatedRecommendation;
-import cm.aptoide.pt.view.spannable.SpannableFactory;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
+import cm.aptoide.pt.view.spannable.SpannableFactory;
 
 class RatedRecommendationPostShareDialog extends BaseShareDialog<RatedRecommendation> {
 

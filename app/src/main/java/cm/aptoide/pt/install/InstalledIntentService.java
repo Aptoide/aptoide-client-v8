@@ -194,6 +194,7 @@ public class InstalledIntentService extends IntentService {
     if (packageInfo != null) {
       InstallEvent event =
           (InstallEvent) analytics.get(packageName + packageInfo.versionCode, InstallEvent.class);
+      installAnalytics.installCompleted(packageName, packageInfo.versionCode);
       if (event != null) {
         event.setPhoneRooted(rootAvailabilityManager.isRootAvailable()
             .toBlocking()

@@ -23,6 +23,7 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.app.view.displayable.AppViewRateAndCommentsDisplayable;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -34,15 +35,14 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.reviews.LanguageFilterHelper;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.app.view.displayable.AppViewRateAndCommentsDisplayable;
 import cm.aptoide.pt.view.dialog.DialogUtils;
-import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.recycler.LinearLayoutManagerWithSmoothScroller;
 import cm.aptoide.pt.view.recycler.widget.Widget;
-import cm.aptoide.pt.reviews.LanguageFilterHelper;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.target.Target;
 import com.jakewharton.rxbinding.view.RxView;
@@ -138,11 +138,11 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
     storeName = app.getStore()
         .getName();
 
-    usersToVote = stats.getRating()
+    usersToVote = stats.getGlobalRating()
         .getTotal();
     usersVotedTextView.setText(AptoideUtils.StringU.withSuffix(usersToVote));
 
-    float ratingAvg = stats.getRating()
+    float ratingAvg = stats.getGlobalRating()
         .getAvg();
     ratingValue.setText(String.format(Locale.getDefault(), "%.1f", ratingAvg));
     ratingBar.setRating(ratingAvg);

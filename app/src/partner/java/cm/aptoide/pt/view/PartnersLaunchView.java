@@ -174,19 +174,7 @@ public class PartnersLaunchView extends ActivityView {
    */
   private void handleSplashScreenTimer() {
     setAdultContentValue();
-    if (usesSplashScreen) {
-      new java.util.Timer().schedule(new java.util.TimerTask() {
-        @Override public void run() {
-          startActivity();
-        }
-      }, ((PartnerApplication) getApplicationContext()).getBootConfig()
-          .getPartner()
-          .getAppearance()
-          .getSplash()
-          .getTimeout() * 1000);
-    } else {
-      startActivity();
-    }
+    startActivity();
   }
 
   /**

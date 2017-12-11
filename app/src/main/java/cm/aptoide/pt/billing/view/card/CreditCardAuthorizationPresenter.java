@@ -25,9 +25,8 @@ public class CreditCardAuthorizationPresenter implements Presenter {
   private final Scheduler viewScheduler;
 
   public CreditCardAuthorizationPresenter(CreditCardAuthorizationView view, String sku,
-      Billing billing,
-      BillingNavigator navigator, BillingAnalytics analytics, String serviceName, Adyen adyen,
-      Scheduler viewScheduler) {
+      Billing billing, BillingNavigator navigator, BillingAnalytics analytics, String serviceName,
+      Adyen adyen, Scheduler viewScheduler) {
     this.view = view;
     this.sku = sku;
     this.billing = billing;

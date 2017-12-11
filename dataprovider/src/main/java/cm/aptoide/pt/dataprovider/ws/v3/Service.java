@@ -5,8 +5,6 @@ import cm.aptoide.pt.dataprovider.model.v3.BaseV3Response;
 import cm.aptoide.pt.dataprovider.model.v3.CheckUserCredentialsJson;
 import cm.aptoide.pt.dataprovider.model.v3.OAuth;
 import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
-import cm.aptoide.pt.dataprovider.model.v3.PaymentAuthorizationResponse;
-import cm.aptoide.pt.dataprovider.model.v3.PaymentAuthorizationsResponse;
 import cm.aptoide.pt.dataprovider.model.v3.TransactionResponse;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
@@ -22,6 +20,10 @@ import retrofit2.http.PartMap;
 import rx.Observable;
 
 public interface Service {
+
+  @POST("getPushNotifications") @FormUrlEncoded
+  Observable<GetPushNotificationsResponse> getPushNotifications(@FieldMap BaseBody arg,
+      @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
   @POST("addApkFlag") @FormUrlEncoded Observable<GenericResponseV2> addApkFlag(
       @FieldMap BaseBody arg, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);

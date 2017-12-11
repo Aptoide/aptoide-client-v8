@@ -96,9 +96,9 @@ public abstract class TimeLineFollowFragment extends GridRecyclerSwipeWithToolba
       getRecyclerView().clearOnScrollListeners();
       endlessRecyclerOnScrollListener =
           new EndlessRecyclerOnScrollListener(this.getAdapter(), request, action,
-              (throwable) -> throwable.printStackTrace(), 6, true, firstRequest, null);
-      endlessRecyclerOnScrollListener.setOnEndOfListReachedListener(
-          () -> addDisplayable(new MessageWhiteBgDisplayable(getFooterMessage(hidden[0]))));
+              Throwable::printStackTrace, 6, true, firstRequest, null);
+      endlessRecyclerOnScrollListener.addOnEndlessFinishListener(
+          __ -> addDisplayable(new MessageWhiteBgDisplayable(getFooterMessage(hidden[0]))));
       getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
       endlessRecyclerOnScrollListener.onLoadMore(refresh);
     } else {

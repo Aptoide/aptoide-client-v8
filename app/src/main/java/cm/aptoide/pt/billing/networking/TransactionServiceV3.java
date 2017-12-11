@@ -69,8 +69,7 @@ public class TransactionServiceV3 implements TransactionService {
 
           return Single.just(transactionFactory.create(
               billingIdManager.generateTransactionId(billingIdManager.resolveProductId(productId)),
-              customerId, productId,
-              Transaction.Status.FAILED));
+              customerId, productId, Transaction.Status.FAILED));
         });
   }
 
@@ -94,8 +93,7 @@ public class TransactionServiceV3 implements TransactionService {
           }
           return transactionFactory.create(
               billingIdManager.generateTransactionId(billingIdManager.resolveProductId(productId)),
-              customerId, productId,
-              Transaction.Status.FAILED);
+              customerId, productId, Transaction.Status.FAILED);
         });
   }
 

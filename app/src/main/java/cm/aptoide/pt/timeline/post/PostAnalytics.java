@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.events.AptoideEvent;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -42,11 +43,12 @@ public class PostAnalytics {
   private final TokenInvalidator tokenInvalidator;
   private final String appId;
   private final SharedPreferences sharedPreferences;
+  private final NavigationTracker navigationTracker;
 
   public PostAnalytics(Analytics analytics, AppEventsLogger facebook,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator, String appId,
-      SharedPreferences sharedPreferences) {
+      SharedPreferences sharedPreferences, NavigationTracker navigationTracker) {
     this.analytics = analytics;
     this.facebook = facebook;
     this.bodyInterceptor = bodyInterceptor;
@@ -55,6 +57,7 @@ public class PostAnalytics {
     this.tokenInvalidator = tokenInvalidator;
     this.appId = appId;
     this.sharedPreferences = sharedPreferences;
+    this.navigationTracker = navigationTracker;
   }
 
   public void sendOpenEvent(OpenSource source) {
@@ -82,6 +85,25 @@ public class PostAnalytics {
   private AptoideEvent createAptoideEvent(String eventName, boolean success, boolean isExternal) {
     HashMap<String, Object> data = new HashMap<>();
     data.put("status", success ? "success" : "fail");
+    data.put("previous_context", navigationTracker.getPreviousScreen()
+        .getFragment());
+    data.put("store", navigationTracker.getPreviousScreen()
+        .getStore());
+    return new AptoideEvent(data, eventName, "CLICK", isExternal ? "EXTERNAL" : "TIMELINE",
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator, appId, sharedPreferences);
+  }
+
+  @NonNull private AptoideEvent createAptoideCompletedEvent(String eventName, String packageName,
+      boolean success, boolean isExternal) {
+    HashMap<String, Object> data = new HashMap<>();
+    HashMap<String, Object> specific = new HashMap<>();
+    specific.put("app", packageName);
+    data.put("specific", specific);
+    data.put("status", success ? "success" : "fail");
+    data.put("previous_context", navigationTracker.getPreviousScreen()
+        .getFragment());
+    data.put("store", navigationTracker.getPreviousScreen()
+        .getStore());
     return new AptoideEvent(data, eventName, "CLICK", isExternal ? "EXTERNAL" : "TIMELINE",
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, appId, sharedPreferences);
   }

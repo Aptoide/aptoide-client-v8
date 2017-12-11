@@ -130,6 +130,10 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
     return builder.toString();
   }
 
+  protected TokenInvalidator getTokenInvalidator() {
+    return tokenInvalidator;
+  }
+
   public B getBody() {
     return body;
   }
@@ -450,9 +454,8 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
         @Body RelatedAppRequest.Body request);
 
-    @POST("{path}") Observable<BaseV7Response> setPostRead(
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Body PostReadRequest.Body body,
-        @Path(encoded = true, value = "path") String path);
+    @POST("user/timeline/markAsRead") Observable<BaseV7Response> setPostRead(
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Body PostReadRequest.Body body);
 
     @POST("apps/getRecommended") Observable<ListApps> getRecommended(
         @Body GetRecommendedRequest.Body body,

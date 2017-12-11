@@ -26,11 +26,11 @@ import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
-import cm.aptoide.pt.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.view.recycler.displayable.DisplayablesFactory;
 import cm.aptoide.pt.store.view.GetStoreEndlessFragment;
 import cm.aptoide.pt.store.view.GridStoreDisplayable;
 import cm.aptoide.pt.store.view.recommended.RecommendedStoreDisplayable;
+import cm.aptoide.pt.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.view.recycler.displayable.DisplayablesFactory;
 import com.facebook.appevents.AppEventsLogger;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,6 +53,7 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
   private StoreAnalytics storeAnalytics;
+  private WSWidgetsUtils widgetsUtils;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -69,6 +70,7 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
     converterFactory = WebService.getDefaultConverter();
     storeAnalytics =
         new StoreAnalytics(AppEventsLogger.newLogger(getContext()), Analytics.getInstance());
+    widgetsUtils = new WSWidgetsUtils();
   }
 
   @Override protected V7<ListStores, ? extends Endless> buildRequest(boolean refresh, String url) {
@@ -91,8 +93,8 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
     return (throwable) -> {
       getRecyclerView().clearOnScrollListeners();
       LinkedList<String> errorsList = new LinkedList<>();
-      errorsList.add(WSWidgetsUtils.USER_NOT_LOGGED_ERROR);
-      if (WSWidgetsUtils.shouldAddObjectView(errorsList, throwable)) {
+      errorsList.add(USER_NOT_LOGGED_ERROR);
+      if (widgetsUtils.shouldAddObjectView(errorsList, throwable)) {
         DisplayablesFactory.loadLocalSubscribedStores(storeRepository)
             .compose(bindUntilEvent(LifecycleEvent.DESTROY))
             .subscribe(stores -> addDisplayables(getStoresDisplayable(stores)), err -> {

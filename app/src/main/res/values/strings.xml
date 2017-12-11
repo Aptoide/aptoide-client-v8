@@ -339,6 +339,7 @@
 
   <!-- 02/2017 strings for login / sign up -->
   <string name="join_company">Join %s</string>
+  <string name="onboarding_button_join_us">Join us</string>
   <string name="login">Login</string>
   <string name="login_company">Login %s</string>
   <string name="connect_with_facebook">Connect with Facebook</string>
@@ -462,7 +463,6 @@
 
   <!-- DownloadManager -->
   <string name="timeout">Network connection timeout</string>
-  <string name="ip_blacklisted">Blacklisted IP</string>
   <string name="connection_error">No network connection</string>
   <string name="apk_not_found">Apk not found</string>
   <string name="invalid_apk">Invalid apk</string>
@@ -498,8 +498,6 @@
   <string name="votes">%s votes</string>
 
   <string name="reviewed_by">Reviewed by - %s</string>
-  <string name="installed_this">%s installed this.</string>
-
   <string name="schDown_nodownloadselect">No downloads selected</string>
   <string name="no_sch_downloads">Don\'t worry about mobile date. Use scheduled downloads to transfer apps later when you\'re on Wi-Fi. Just change your preferences to Wi-Fi on Settings -&gt; Download Options.</string>
   <string name="schDown_installselected">Install selected</string>
@@ -683,7 +681,14 @@
   <string name="fragment_payment_login_description">To complete your purchase please log in</string>
   <string name="fragment_payment_login_separator_description">Or using your email</string>
 
-  <string name="my_store_create_store_followings">Following\n%s</string>
-  <string name="my_store_create_store_followers">Followers\n%s</string>
+
+  <!--store tab and home of store x: store widget and my store widget-->
+  <string name="storehometab_short_subscribers">Followers\n%s</string>
+  <string name="storehometab_short_apps">Apps\n%s</string>
+  <string name="storehometab_short_following">Following\n%s</string>
+  <string name="storetab_short_followings">Following\n%s</string>
+  <string name="storetab_short_followers">Followers\n%s</string>
+  <string name="storetab_short_follow_error">An error occurred while following store</string>
+  <string name="list_store_apps_fragment_title">Store Apps</string>
 </resources>
 

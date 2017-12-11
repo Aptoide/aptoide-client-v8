@@ -12,7 +12,7 @@ import cm.aptoide.pt.view.dialog.EditableTextDialog;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import cm.aptoide.pt.view.rx.RxSwitch;
-import cm.aptoide.pt.settings.PinDialog;
+import cm.aptoide.pt.view.settings.PinDialog;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -34,11 +34,13 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
   @Override protected void assignViews(View itemView) {
     adultSwitch = (SwitchCompat) itemView.findViewById(R.id.adult_content);
     adultPinSwitch = (SwitchCompat) itemView.findViewById(R.id.pin_adult_content);
+
     adultContentConfirmationDialog =
         new RxAlertDialog.Builder(getContext()).setMessage(R.string.are_you_adult)
             .setPositiveButton(R.string.yes)
             .setNegativeButton(R.string.no)
             .build();
+
     enableAdultContentPinDialog =
         new PinDialog.Builder(getContext()).setMessage(R.string.request_adult_pin)
             .setPositiveButton(R.string.ok)
@@ -46,13 +48,12 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
             .setView(R.layout.dialog_requestpin)
             .setEditText(R.id.pininput)
             .build();
+
     trackAnalytics = true;
+    adultContent = ((AptoideApplication) getContext().getApplicationContext()).getAdultContent();
   }
 
   @Override public void bindView(final AdultRowDisplayable displayable) {
-    final ReloadInterface reloader = displayable;
-    adultContent = ((AptoideApplication) getContext().getApplicationContext()).getAdultContent();
-
     compositeSubscription.add(adultContent.pinRequired()
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(pinRequired -> {
@@ -77,10 +78,10 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
           } else {
             adultSwitch.setEnabled(false);
             return adultContent.disable()
-                .doOnCompleted(() -> trackLock())
+                .doOnCompleted(this::trackLock)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnTerminate(() -> adultSwitch.setEnabled(true))
-                .doOnTerminate(() -> reload(reloader))
+                .doOnTerminate(() -> reload(displayable))
                 .toObservable();
           }
         })
@@ -97,10 +98,10 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
           } else {
             adultPinSwitch.setEnabled(false);
             return adultContent.disable()
-                .doOnCompleted(() -> trackLock())
+                .doOnCompleted(this::trackLock)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnTerminate(() -> adultPinSwitch.setEnabled(true))
-                .doOnTerminate(() -> reload(reloader))
+                .doOnTerminate(() -> reload(displayable))
                 .toObservable();
           }
         })
@@ -110,10 +111,10 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
     compositeSubscription.add(adultContentConfirmationDialog.positiveClicks()
         .doOnNext(click -> adultSwitch.setEnabled(false))
         .flatMap(click -> adultContent.enable()
-            .doOnCompleted(() -> trackUnlock())
+            .doOnCompleted(this::trackUnlock)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnTerminate(() -> adultSwitch.setEnabled(true))
-            .doOnTerminate(() -> reload(reloader))
+            .doOnTerminate(() -> reload(displayable))
             .toObservable())
         .retry()
         .subscribe());
@@ -121,7 +122,7 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
     compositeSubscription.add(enableAdultContentPinDialog.positiveClicks()
         .doOnNext(clock -> adultPinSwitch.setEnabled(false))
         .flatMap(pin -> adultContent.enable(Integer.valueOf(pin.toString()))
-            .doOnCompleted(() -> trackUnlock())
+            .doOnCompleted(this::trackUnlock)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError(throwable -> {
               if (throwable instanceof SecurityException) {
@@ -129,7 +130,7 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
               }
             })
             .doOnTerminate(() -> adultPinSwitch.setEnabled(true))
-            .doOnTerminate(() -> reload(reloader))
+            .doOnTerminate(() -> reload(displayable))
             .toObservable())
         .retry()
         .subscribe());

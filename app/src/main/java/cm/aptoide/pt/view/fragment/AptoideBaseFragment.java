@@ -12,6 +12,7 @@ import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.preferences.LocalPersistenceAdultContent;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.request.RequestFactory;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
@@ -31,16 +32,15 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     final BodyInterceptor<BaseBody> baseBodyInterceptorV7Pool =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    final BodyInterceptor<BaseBody> baseBodyInterceptorV7Web =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorWebV7();
     final OkHttpClient httpClient =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     AptoideApplication aptoideApplication =
         (AptoideApplication) getContext().getApplicationContext();
 
-    final boolean isAdultContentEnabled = aptoideApplication.getAccountManager()
-        .isAccountMature();
+    LocalPersistenceAdultContent adultContent =
+        new LocalPersistenceAdultContent(application.getPreferences(),
+            application.getSecurePreferences());
 
     requestFactoryCdnPool = new RequestFactory(new StoreCredentialsProviderImpl(
         AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
@@ -51,13 +51,16 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
         getContext().getResources(),
         (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
         application.getIdsRepository()
-            .getUniqueIdentifier(), application.getPartnerId(), isAdultContentEnabled,
+            .getUniqueIdentifier(), application.getPartnerId(), adultContent,
         application.getQManager()
             .getFilters(ManagerPreferences.getHWSpecsFilter(
                 ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
         (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
         aptoideApplication.getVersionCodeProvider(),
         AdNetworkUtils.isGooglePlayServicesAvailable(getContext()));
+
+    final BodyInterceptor<BaseBody> baseBodyInterceptorV7Web =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorWebV7();
 
     requestFactoryCdnWeb = new RequestFactory(new StoreCredentialsProviderImpl(
         AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
@@ -68,7 +71,7 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
         getContext().getResources(),
         (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
         application.getIdsRepository()
-            .getUniqueIdentifier(), application.getPartnerId(), isAdultContentEnabled,
+            .getUniqueIdentifier(), application.getPartnerId(), adultContent,
         application.getQManager()
             .getFilters(ManagerPreferences.getHWSpecsFilter(
                 ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),

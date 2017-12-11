@@ -15,8 +15,8 @@ import cm.aptoide.pt.R;
 
 public class ErrorsMapper {
 
-  public static @StringRes int getWebServiceErrorMessageFromCode(String errorCode,
-      String packageName, Resources resources) {
+  public @StringRes int getWebServiceErrorMessageFromCode(String errorCode, String packageName,
+      Resources resources) {
     int error =
         resources.getIdentifier("ws_error_" + errorCode.replace("-", "_"), "string", packageName);
 

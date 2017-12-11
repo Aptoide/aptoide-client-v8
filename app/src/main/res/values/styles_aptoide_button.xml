@@ -28,6 +28,11 @@
     <item name="android:textColor">@color/black_87_alpha</item>
   </style>
 
+  <style name="Aptoide.Button.Ghost.GreyFogLight">
+    <item name="android:background">@drawable/btn_ghost_theme_grey_fog_light</item>
+    <item name="android:textColor">@color/grey_fog_light</item>
+  </style>
+
   <style name="Aptoide.Button.S">
     <item name="android:layout_height">@dimen/button_small_height</item>
     <item name="android:textSize">10sp</item>

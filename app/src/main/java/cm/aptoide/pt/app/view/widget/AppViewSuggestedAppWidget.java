@@ -2,9 +2,9 @@ package cm.aptoide.pt.app.view.widget;
 
 import android.support.annotation.NonNull;
 import android.view.View;
-import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.app.view.GridAppWidget;
 import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAppDisplayable;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import rx.functions.Action1;
 
 /**

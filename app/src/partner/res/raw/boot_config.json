@@ -2,55 +2,55 @@
   "data": {
     "partner": {
       "config_id": 1447,
-      "uid": null,
+      "uid": "8dfcf6e932be5ad55e84834a10f437d8",
       "type": "mobile",
       "feedback": {
         "email": "support@aptoide.com"
       },
       "store": {
         "id": 1180850,
-        "name": "apps",
-        "label": "Aptoide",
+        "name": "dfloureiro",
+        "label": "Loureiro Market",
         "credentials": {
           "username": null,
           "password": null
         }
       },
       "appearance": {
-        "theme": "default",
+        "theme": "black",
         "splash": {
-          "enable": null,
-          "portrait": null,
-          "landscape": null,
+          "enable": true,
+          "portrait": "http://pool.img.aptoide.com/imgs/3c23aa6b2759042d2297528bcf5d5c3f_splashscreen_portrait.jpg",
+          "landscape": "http://pool.img.aptoide.com/imgs/d174c8fcca8e78a92293ca97bea3129a_splashscreen_landscape.jpg",
           "timeout": 3
         },
         "toolbar": {
           "icon": {
-            "enable": true
+            "enable": false
           }
         }
       },
       "switches": {
         "mature": {
-          "enable": true,
+          "enable": false,
           "value": false
         },
         "options": {
-          "shortcut": true,
+          "shortcut": false,
           "multistore": {
-            "enable": true,
-            "search": true
+            "enable": false,
+            "search": false
           },
           "first_install": {
-            "enable": false,
+            "enable": true,
             "offline": false
           }
         }
       },
       "social": {
         "login": {
-          "google": true,
-          "facebook": true
+          "google": false,
+          "facebook": false
         }
       }
     }

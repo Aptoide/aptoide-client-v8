@@ -12,7 +12,14 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.comments.ListFullReviewsSuccessRequestListener;
+import cm.aptoide.pt.comments.view.CommentDisplayable;
+import cm.aptoide.pt.comments.view.CommentsAdapter;
+import cm.aptoide.pt.comments.view.CommentsReadMoreDisplayable;
+import cm.aptoide.pt.comments.view.ItemCommentAdderView;
+import cm.aptoide.pt.comments.view.RateAndReviewCommentDisplayable;
+import cm.aptoide.pt.comments.view.SimpleReviewCommentAdder;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
@@ -27,22 +34,15 @@ import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.view.ThemeUtils;
-import cm.aptoide.pt.app.view.AppViewFragment;
-import cm.aptoide.pt.comments.view.CommentDisplayable;
-import cm.aptoide.pt.comments.view.CommentsAdapter;
-import cm.aptoide.pt.comments.view.CommentsReadMoreDisplayable;
-import cm.aptoide.pt.comments.view.ItemCommentAdderView;
-import cm.aptoide.pt.comments.view.RateAndReviewCommentDisplayable;
-import cm.aptoide.pt.comments.view.SimpleReviewCommentAdder;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
-import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.recycler.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.ProgressBarDisplayable;
@@ -236,12 +236,14 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
                 getFragmentNavigator(),
                 ((AptoideApplication) getContext().getApplicationContext()).getFragmentProvider()),
             (throwable) -> throwable.printStackTrace());
-    endlessRecyclerOnScrollListener.setOnEndlessFinish(endlessRecyclerOnScrollListener1 -> {
+
+    endlessRecyclerOnScrollListener.addOnEndlessFinishListener(endlessRecyclerOnScrollListener1 -> {
       if (languageFilter.hasMoreCountryCodes()) {
         endlessRecyclerOnScrollListener.reset(createListReviewsRequest(languageFilter.inc()
             .getValue()));
       }
     });
+
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
   }

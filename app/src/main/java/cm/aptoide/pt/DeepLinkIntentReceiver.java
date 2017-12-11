@@ -262,6 +262,16 @@ public class DeepLinkIntentReceiver extends ActivityView {
       downloadMyApp();
     } else if (uri.startsWith("aptoideinstall://")) {
       parseAptoideInstallUri(uri.substring("aptoideinstall://".length()));
+    } else if (u.getHost()
+        .equals("cm.aptoide.pt") && u.getPath()
+        .equals("/deeplink") && u.getQueryParameter("name")
+        .equals("getHome")) {
+      String id = u.getQueryParameter("user_id");
+      if (id != null) {
+        openUserScreen(Long.valueOf(id));
+      }
+      finish();
+      return;
     } else if (uri.startsWith("aptoide://")) {
       Uri parse = Uri.parse(uri);
       if ("getUserTimeline".equals(parse.getQueryParameter("name"))) {
@@ -282,6 +292,12 @@ public class DeepLinkIntentReceiver extends ActivityView {
     } else {
       finish();
     }
+  }
+
+  private void openUserScreen(Long userId) {
+    Intent i = new Intent(DeepLinkIntentReceiver.this, startClass);
+    i.putExtra(DeepLinksTargets.USER_DEEPLINK, userId);
+    startActivity(i);
   }
 
   public void startWithRepo(ArrayList<String> repo) {
@@ -539,6 +555,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     public static final String SEARCH_FRAGMENT = "searchFragment";
     public static final String GENERIC_DEEPLINK = "generic_deeplink";
     public static final String SCHEDULE_DEEPLINK = "schedule_downloads";
+    public static final String USER_DEEPLINK = "open_user_profile";
     public static final String TIMELINE_DEEPLINK = "apps_timeline";
   }
 

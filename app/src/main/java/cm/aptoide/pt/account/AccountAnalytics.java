@@ -3,12 +3,17 @@ package cm.aptoide.pt.account;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import cm.aptoide.accountmanager.AccountException;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.analytics.events.AptoideEvent;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
 import cm.aptoide.pt.analytics.events.FlurryEvent;
+import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
+import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -26,23 +31,30 @@ public class AccountAnalytics {
   public static final String ACTION = "CLICK";
   public static final String CONTEXT = "LOGIN";
   public static final String STORE = "store";
+  public static final String PERMISSIONS_DENIED = "Permissions Denied";
+  public static final String SDK_ERROR = "SDK Error";
+  public static final String USER_CANCELED = "User canceled";
+  public static final String GENERAL_ERROR = "General Error";
+  public static final String SUCCESS = "Success";
+  public static final String WEB_ERROR = "Web";
   private static final String STATUS = "Status";
-  private static final String FACEBOOK_LOGIN_EVENT_NAME = "Account_Login_Screen";
-  private static final String FLURRY_LOGIN_EVENT_NAME = "Account_Login_Screen";
-  private static final String FACEBOOK_SIGNUP_EVENT_NAME = "Account_Signup_Screen";
-  private static final String FLURRY_SIGNUP_EVENT_NAME = "Account_Signup_Screen";
+  private static final String LOGIN_EVENT_NAME = "Account_Login_Screen";
+  private static final String SIGN_UP_EVENT_NAME = "Account_Signup_Screen";
   private static final String LOGIN_METHOD = "Method";
   private static final String PREVIOUS_CONTEXT = "previous_context";
   private static final String STATUS_DETAIL = "Status Detail";
+  private static final String STATUS_DESCRIPTION = "Status Description";
+  private static final String STATUS_CODE = "Status Code";
   private final Analytics analytics;
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
   private final TokenInvalidator tokenInvalidator;
-  private final String appId;
+  private final String aptoideAppId;
   private final SharedPreferences sharedPreferences;
   private final AppEventsLogger facebook;
   private final NavigationTracker navigationTracker;
+  private final CrashReport crashReport;
   private AptoideEvent aptoideSuccessLoginEvent;
   private FacebookEvent facebookSuccessLoginEvent;
   private FlurryEvent flurrySuccessLoginEvent;
@@ -51,17 +63,18 @@ public class AccountAnalytics {
 
   public AccountAnalytics(Analytics analytics, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, String appId, SharedPreferences sharedPreferences,
-      AppEventsLogger facebook, NavigationTracker navigationTracker) {
+      TokenInvalidator tokenInvalidator, String aptoideAppId, SharedPreferences sharedPreferences,
+      AppEventsLogger facebook, NavigationTracker navigationTracker, CrashReport crashReport) {
     this.analytics = analytics;
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
-    this.appId = appId;
+    this.aptoideAppId = aptoideAppId;
     this.sharedPreferences = sharedPreferences;
     this.facebook = facebook;
     this.navigationTracker = navigationTracker;
+    this.crashReport = crashReport;
   }
 
   public void loginSuccess() {
@@ -105,8 +118,8 @@ public class AccountAnalytics {
   public void sendAptoideSignUpButtonPressed() {
     Bundle bundle = new Bundle();
     bundle.putString(STATUS, SignUpLoginStatus.SUCCESS.getStatus());
-    signUpFacebookEvent = new FacebookEvent(facebook, FACEBOOK_SIGNUP_EVENT_NAME, bundle);
-    signUpFlurryEvent = new FlurryEvent(FLURRY_SIGNUP_EVENT_NAME);
+    signUpFacebookEvent = new FacebookEvent(facebook, SIGN_UP_EVENT_NAME, bundle);
+    signUpFlurryEvent = new FlurryEvent(SIGN_UP_EVENT_NAME);
     clearLoginEvents();
   }
 
@@ -121,66 +134,61 @@ public class AccountAnalytics {
     flurrySuccessLoginEvent = null;
   }
 
-  public void sendAptoideLoginFailEvent() {
-    sendLoginFailEvents(LoginMethod.APTOIDE, SignUpLoginStatus.FAILED,
-        LoginStatusDetail.GENERAL_ERROR);
-  }
-
-  public void sendGoogleSignUpFailEvent() {
-    sendLoginFailEvents(LoginMethod.GOOGLE, SignUpLoginStatus.FAILED, LoginStatusDetail.SDK_ERROR);
-  }
-
-  public void sendAptoideSignUpFailEvent() {
-    analytics.sendEvent(new FlurryEvent(FLURRY_SIGNUP_EVENT_NAME));
-    Bundle bundle = new Bundle();
-    bundle.putString(STATUS, SignUpLoginStatus.FAILED.getStatus());
-    analytics.sendEvent(new FacebookEvent(facebook, FACEBOOK_SIGNUP_EVENT_NAME, bundle));
-  }
-
-  public void sendFacebookMissingPermissionsEvent() {
-    sendLoginFailEvents(LoginMethod.FACEBOOK, SignUpLoginStatus.FAILED,
-        LoginStatusDetail.PERMISSIONS_DENIED);
-  }
-
-  public void sendFacebookUserCancelledEvent() {
-    sendLoginFailEvents(LoginMethod.FACEBOOK, SignUpLoginStatus.FAILED, LoginStatusDetail.CANCEL);
-  }
-
-  public void sendFacebookErrorEvent() {
-    sendLoginFailEvents(LoginMethod.FACEBOOK, SignUpLoginStatus.FAILED,
-        LoginStatusDetail.SDK_ERROR);
+  private void sendGoogleLoginFailEvent(Throwable exception) {
+    if (exception instanceof GoogleSignUpException) {
+      sendEvents(LOGIN_EVENT_NAME, LoginMethod.GOOGLE, SignUpLoginStatus.FAILED, SDK_ERROR,
+          LoginMethod.GOOGLE.toString(), ((GoogleSignUpException) exception).getError());
+    } else {
+      sendWebserviceErrors(LOGIN_EVENT_NAME, LoginMethod.GOOGLE, exception);
+    }
   }
 
   private void setupLoginEvents(LoginMethod aptoide) {
     aptoideSuccessLoginEvent = createAptoideLoginEvent();
     facebookSuccessLoginEvent =
-        createFacebookEvent(aptoide, SignUpLoginStatus.SUCCESS, LoginStatusDetail.SUCCESS);
+        createFacebookEvent(LOGIN_EVENT_NAME, aptoide, SignUpLoginStatus.SUCCESS, SUCCESS, null,
+            null);
     flurrySuccessLoginEvent =
-        createFlurryEvent(aptoide, SignUpLoginStatus.SUCCESS, LoginStatusDetail.SUCCESS);
+        createFlurryEvent(LOGIN_EVENT_NAME, aptoide, SignUpLoginStatus.SUCCESS, SUCCESS, null,
+            null);
   }
 
-  private FacebookEvent createFacebookEvent(LoginMethod loginMethod, SignUpLoginStatus loginStatus,
-      LoginStatusDetail loginStatusDetail) {
+  private FacebookEvent createFacebookEvent(String eventName, LoginMethod loginMethod,
+      SignUpLoginStatus loginStatus, String statusDetail, String statusCode,
+      String statusDescription) {
     Bundle bundle = new Bundle();
     bundle.putString(LOGIN_METHOD, loginMethod.getMethod());
     bundle.putString(STATUS, loginStatus.getStatus());
-    bundle.putString(STATUS_DETAIL, loginStatusDetail.getLoginStatusDetail());
-    return new FacebookEvent(facebook, FACEBOOK_LOGIN_EVENT_NAME, bundle);
+    bundle.putString(STATUS_DETAIL, statusDetail);
+    bundle.putString(STATUS_CODE, statusCode);
+    if (statusDescription != null) {
+      bundle.putString(STATUS_DESCRIPTION, statusDescription);
+    }
+    return new FacebookEvent(facebook, eventName, bundle);
   }
 
-  private void sendLoginFailEvents(LoginMethod loginMethod, SignUpLoginStatus loginStatus,
-      LoginStatusDetail statusDetail) {
-    analytics.sendEvent(createFlurryEvent(loginMethod, loginStatus, statusDetail));
-    analytics.sendEvent(createFacebookEvent(loginMethod, loginStatus, statusDetail));
+  private void sendEvents(String eventName, LoginMethod loginMethod, SignUpLoginStatus loginStatus,
+      String statusDetail, String statusCode, String statusDescription) {
+    analytics.sendEvent(
+        createFlurryEvent(eventName, loginMethod, loginStatus, statusDetail, statusCode,
+            statusDescription));
+    analytics.sendEvent(
+        createFacebookEvent(eventName, loginMethod, loginStatus, statusDetail, statusCode,
+            statusDescription));
   }
 
-  private FlurryEvent createFlurryEvent(LoginMethod loginMethod, SignUpLoginStatus loginStatus,
-      LoginStatusDetail loginStatusDetail) {
+  private FlurryEvent createFlurryEvent(String eventName, LoginMethod loginMethod,
+      SignUpLoginStatus loginStatus, String statusDetail, String statusCode,
+      @Nullable String statusDescription) {
     Map<String, String> map = new HashMap<>();
     map.put(LOGIN_METHOD, loginMethod.getMethod());
     map.put(STATUS, loginStatus.getStatus());
-    map.put(STATUS_DETAIL, loginStatusDetail.getLoginStatusDetail());
-    return new FlurryEvent(FLURRY_LOGIN_EVENT_NAME, map);
+    map.put(STATUS_DETAIL, statusDetail);
+    map.put(STATUS_CODE, statusCode);
+    if (statusDescription != null) {
+      map.put(STATUS_DESCRIPTION, statusDescription);
+    }
+    return new FlurryEvent(eventName, map);
   }
 
   @NonNull private AptoideEvent createAptoideLoginEvent() {
@@ -192,10 +200,121 @@ public class AccountAnalytics {
     }
     map.put(PREVIOUS_CONTEXT, navigationTracker.getPreviousViewName());
     return new AptoideEvent(map, APTOIDE_EVENT_NAME, ACTION, CONTEXT, bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator, appId, sharedPreferences);
+        converterFactory, tokenInvalidator, aptoideAppId, sharedPreferences);
   }
 
-  private enum LoginMethod {
+  private void sendFacebookLoginErrorEvent(Throwable throwable) {
+    if (throwable instanceof FacebookSignUpException) {
+      FacebookSignUpException facebookSignUpException = ((FacebookSignUpException) throwable);
+      switch (facebookSignUpException.getCode()) {
+        case FacebookSignUpException.MISSING_REQUIRED_PERMISSIONS:
+          sendEvents(LOGIN_EVENT_NAME, LoginMethod.FACEBOOK, SignUpLoginStatus.FAILED,
+              PERMISSIONS_DENIED, String.valueOf(facebookSignUpException.getCode()),
+              facebookSignUpException.getFacebookMessage());
+          break;
+        case FacebookSignUpException.USER_CANCELLED:
+          sendEvents(LOGIN_EVENT_NAME, LoginMethod.FACEBOOK, SignUpLoginStatus.FAILED,
+              USER_CANCELED, String.valueOf(facebookSignUpException.getCode()),
+              facebookSignUpException.getFacebookMessage());
+          break;
+        case FacebookSignUpException.ERROR:
+          sendEvents(LOGIN_EVENT_NAME, LoginMethod.FACEBOOK, SignUpLoginStatus.FAILED, SDK_ERROR,
+              String.valueOf(facebookSignUpException.getCode()),
+              facebookSignUpException.getFacebookMessage());
+          break;
+      }
+    } else {
+      sendWebserviceErrors(LOGIN_EVENT_NAME, LoginMethod.FACEBOOK, throwable);
+    }
+  }
+
+  private void sendWebserviceErrors(String eventName, LoginMethod loginMethod,
+      Throwable throwable) {
+    if (throwable instanceof AptoideWsV7Exception) {
+      sendV7ExceptionEvent(loginMethod, ((AptoideWsV7Exception) throwable));
+    } else if (throwable instanceof AptoideWsV3Exception) {
+      sendV3ExceptionEvent(loginMethod, ((AptoideWsV3Exception) throwable));
+    } else if (throwable instanceof AccountException) {
+      sendV3ExceptionEvent(loginMethod, ((AccountException) throwable));
+    } else {
+      sendEvents(eventName, loginMethod, SignUpLoginStatus.FAILED, GENERAL_ERROR, "no_code",
+          throwable.toString());
+      crashReport.log(throwable);
+    }
+  }
+
+  private void sendV3ExceptionEvent(LoginMethod loginMethod, AccountException exception) {
+    String error = getWsError(exception);
+    String errorDescription = exception.getErrors()
+        .get(error);
+    sendEvents(LOGIN_EVENT_NAME, loginMethod, SignUpLoginStatus.FAILED, WEB_ERROR, error,
+        errorDescription);
+  }
+
+  private String getWsError(AccountException exception) {
+    return exception.getErrors()
+        .keySet()
+        .toString()
+        .replace("[", "")
+        .replace("]", "");
+  }
+
+  private void sendV7ExceptionEvent(LoginMethod loginMethod, AptoideWsV7Exception exception) {
+    sendEvents(LOGIN_EVENT_NAME, loginMethod, SignUpLoginStatus.FAILED, WEB_ERROR,
+        exception.getBaseResponse()
+            .getErrors()
+            .get(0)
+            .getCode(), exception.getBaseResponse()
+            .getErrors()
+            .get(0)
+            .getDescription());
+  }
+
+  private void sendV3ExceptionEvent(LoginMethod loginMethod, AptoideWsV3Exception exception) {
+    sendEvents(LOGIN_EVENT_NAME, loginMethod, SignUpLoginStatus.FAILED, WEB_ERROR,
+        exception.getBaseResponse()
+            .getErrors()
+            .get(0).code, exception.getBaseResponse()
+            .getErrors()
+            .get(0).msg);
+  }
+
+  public void sendLoginErrorEvent(LoginMethod loginMethod, Throwable throwable) {
+    switch (loginMethod) {
+      case APTOIDE:
+        sendWebserviceErrors(LOGIN_EVENT_NAME, LoginMethod.APTOIDE, throwable);
+        break;
+      case FACEBOOK:
+        sendFacebookLoginErrorEvent(throwable);
+        break;
+      case GOOGLE:
+        sendGoogleLoginFailEvent(throwable);
+        break;
+    }
+  }
+
+  public void sendSignUpErrorEvent(LoginMethod loginMethod, Throwable throwable) {
+    if (loginMethod.equals(LoginMethod.APTOIDE)) {
+      sendAptoideSignUpErrorEvent(throwable);
+    } else {
+      throw new IllegalStateException("unknown sign up method: " + loginMethod.name());
+    }
+  }
+
+  private void sendAptoideSignUpErrorEvent(Throwable throwable) {
+    if (throwable instanceof AccountException) {
+      sendEvents(SIGN_UP_EVENT_NAME, LoginMethod.APTOIDE, SignUpLoginStatus.FAILED, WEB_ERROR,
+          ((AccountException) throwable).getErrors()
+              .keySet()
+              .toString(), ((AccountException) throwable).getErrors()
+              .values()
+              .toString());
+    } else {
+      sendWebserviceErrors(SIGN_UP_EVENT_NAME, LoginMethod.APTOIDE, throwable);
+    }
+  }
+
+  public enum LoginMethod {
     APTOIDE("Aptoide"), FACEBOOK("FB"), GOOGLE("Google");
 
     private final String method;
@@ -220,21 +339,6 @@ public class AccountAnalytics {
 
     public String getStatus() {
       return status;
-    }
-  }
-
-  private enum LoginStatusDetail {
-    PERMISSIONS_DENIED("Permissions Denied"), SDK_ERROR("SDK Error"), CANCEL(
-        "User canceled"), GENERAL_ERROR("General Error"), SUCCESS("Success");
-
-    private final String loginStatusDetail;
-
-    LoginStatusDetail(String statusDetail) {
-      this.loginStatusDetail = statusDetail;
-    }
-
-    public String getLoginStatusDetail() {
-      return loginStatusDetail;
     }
   }
 }

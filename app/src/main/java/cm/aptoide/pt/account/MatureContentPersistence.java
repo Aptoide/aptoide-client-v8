@@ -24,7 +24,8 @@ public class MatureContentPersistence implements AccountPersistence {
   }
 
   @Override public Single<Account> getAccount() {
-    return wrappedAccountPersistence.getAccount();
+    return wrappedAccountPersistence.getAccount()
+        .map(account -> new MatureContentAccount(account, adultContent));
   }
 
   @Override public Completable removeAccount() {

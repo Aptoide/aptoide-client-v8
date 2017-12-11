@@ -60,8 +60,8 @@ import cm.aptoide.pt.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.social.data.Timeline;
 import cm.aptoide.pt.social.data.TimelineAdsRepository;
 import cm.aptoide.pt.social.data.TimelinePostsRepository;
-import cm.aptoide.pt.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.social.data.TimelineService;
+import cm.aptoide.pt.social.data.analytics.EventErrorHandler;
 import cm.aptoide.pt.social.data.share.ShareDialogFactory;
 import cm.aptoide.pt.social.data.share.ShareDialogInterface;
 import cm.aptoide.pt.social.data.share.ShareEvent;
@@ -154,12 +154,15 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
     final Bundle args = new Bundle();
+
     if (userId != null) {
       args.putLong(USER_ID_KEY, userId);
     }
+
     if (storeId != null) {
       args.putLong(STORE_ID, storeId);
     }
+
     args.putSerializable(STORE_CONTEXT, storeContext);
     Fragment fragment = new TimelineFragment();
     args.putString(ACTION_KEY, action);
@@ -214,13 +217,13 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), baseBodyInterceptorV7,
         defaultClient, defaultConverter, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        sharedPreferences, new NotificationAnalytics(defaultClient, Analytics.getInstance()),
-        application.getNavigationTracker());
+        sharedPreferences, new NotificationAnalytics(defaultClient, Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext())), application.getNavigationTracker(),
+        ((AptoideApplication) getContext().getApplicationContext()).getReadPostsPersistence());
 
     timelineService =
         new TimelineService(userId, baseBodyInterceptorV7, defaultClient, defaultConverter,
-            new TimelineResponseCardMapper(accountManager, marketName), tokenInvalidator,
-            sharedPreferences);
+            tokenInvalidator, sharedPreferences);
     crashReport = CrashReport.getInstance();
   }
 
@@ -328,6 +331,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     floatingActionButton = null;
     layoutManager = null;
     bottomAlreadyReached = false;
+    layoutManager = null;
     timelinePostsRepository.clearLoading();
   }
 
@@ -619,19 +623,28 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   private void handleSharePreviewAnswer() {
+
+    final ShareEvent[] share = new ShareEvent[1];
     shareDialog.cancels()
-        .doOnNext(shareEvent -> timelineAnalytics.sendShareCompleted(false))
+        .doOnNext(shareEvent -> timelineAnalytics.sendErrorShareCompleted(shareEvent,
+            EventErrorHandler.ShareErrorEvent.CANCELLED))
         .compose(bindUntilEvent(LifecycleEvent.PAUSE))
         .subscribe();
 
     shareDialog.shares()
         .doOnNext(event -> sharePostPublishSubject.onNext(event))
-        .doOnNext(shareEvent -> timelineAnalytics.sendShareCompleted(true))
+        .doOnNext(shareEvent -> {
+          if (shareEvent.getEvent() == ShareEvent.SHARE) {
+            timelineAnalytics.sendShareCompleted(shareEvent);
+          } else {
+            timelineAnalytics.sendErrorShareCompleted(shareEvent,
+                EventErrorHandler.ShareErrorEvent.UNKNOWN_ERROR);
+          }
+        })
         .compose(bindUntilEvent(LifecycleEvent.PAUSE))
         .subscribe(shareEvent -> {
         }, throwable -> {
           crashReport.log(throwable);
-          timelineAnalytics.sendShareCompleted(false);
         });
     shareDialog.show();
   }

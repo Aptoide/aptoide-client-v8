@@ -3,11 +3,11 @@ package cm.aptoide.pt.app.view;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
-import cm.aptoide.pt.search.view.SearchResultFragment;
 import cm.aptoide.pt.app.view.screenshots.ScreenshotsViewerFragment;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.search.view.SearchResultFragment;
 import java.util.ArrayList;
 
 public class AppViewNavigator {
