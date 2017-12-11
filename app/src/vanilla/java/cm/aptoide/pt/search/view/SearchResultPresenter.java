@@ -13,7 +13,7 @@ import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.List;
-import rx.Observable;
+import rx.Completable;
 import rx.Scheduler;
 import rx.Single;
 
@@ -271,13 +271,9 @@ import rx.Single;
 
     if (storeName != null && !storeName.trim()
         .equals("")) {
-      return Observable.fromCallable(() -> {
-        view.setViewWithStoreNameAsSingleTab(storeName);
-        return null;
-      })
-          .flatMapSingle(__ -> loadDataForSpecificStore(query, storeName, 0))
-          .map(list -> list != null ? list.size() : 0)
-          .toSingle();
+      return Completable.fromAction(() -> view.setViewWithStoreNameAsSingleTab(storeName))
+          .andThen(loadDataForSpecificStore(query, storeName, 0).map(
+              list -> list != null ? list.size() : 0));
     }
     // search every store. followed and not followed
     return Single.zip(loadDataForAllFollowedStores(query, onlyTrustedApps, 0),
@@ -337,7 +333,7 @@ import rx.Single;
             .observeOn(viewScheduler)
             .doOnSuccess(__2 -> view.hideLoading())
             .doOnSuccess(itemCount -> {
-              if (itemCount > 0) {
+              if (itemCount == 0) {
                 view.showNoResultsView();
                 analytics.searchNoResults(viewModel.getCurrentQuery());
               } else {
