@@ -220,6 +220,7 @@ public abstract class AptoideApplication extends Application {
   private ApplicationComponent applicationComponent;
   private AppCenter appCenter;
   private ReadPostsPersistence readPostsPersistence;
+  private SystemNotificationShower systemNotificationShower;
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
   private NotificationsCleaner notificationsCleaner;
   private NotificationAnalytics notificationAnalytics;
@@ -360,6 +361,8 @@ public abstract class AptoideApplication extends Application {
     dispatchPostReadEventInterval().subscribe(() -> {
     }, throwable -> CrashReport.getInstance()
         .log(throwable));
+
+    systemNotificationShower = getSystemNotificationShower();
 
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));

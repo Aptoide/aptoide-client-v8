@@ -553,7 +553,6 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    getFragmentComponent(savedInstanceState).inject(this);
     return inflater.inflate(LAYOUT, container, false);
   }
 
