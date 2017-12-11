@@ -7,9 +7,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.leaderboard.data.LeaderboardEntry;
-import java.util.List;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 import rx.subjects.PublishSubject;
 
 /**
@@ -44,7 +42,7 @@ public class LeaderboardViewHolder extends RecyclerView.ViewHolder {
     name.setText(entries.getName());
     if(name.getText().toString().toLowerCase().equals(currentUser.toLowerCase())) {
       name.setTextColor(itemView.getResources()
-          .getColor(R.color.card_store_title));
+          .getColor(R.color.appstimeline_recommends_title));
       if(entries.getAvatar()!=null)
         ImageLoader.with(itemView.getContext()).load(entries.getAvatar(), avatar);
       else

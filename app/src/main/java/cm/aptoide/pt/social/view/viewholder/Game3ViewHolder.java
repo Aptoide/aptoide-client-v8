@@ -176,7 +176,7 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
 
   private Spannable getStyledTitle(Context context, String title, String coloredTextPart) {
     return spannableFactory.createColorSpan(title,
-        ContextCompat.getColor(context, R.color.card_store_title), coloredTextPart);
+        ContextCompat.getColor(context, R.color.appstimeline_recommends_title), coloredTextPart);
   }
 
   public String getTitle(Resources resources) {
