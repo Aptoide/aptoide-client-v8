@@ -57,6 +57,7 @@ import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.text.NumberFormat;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -240,6 +241,14 @@ public class HomeFragment extends StoreFragment {
 
     ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter()
         .getUnreadNotifications()
+        .flatMap(aptoideNotifications -> accountManager.accountStatus()
+            .flatMap(account -> {
+              if (account.isLoggedIn()) {
+                return Observable.just(aptoideNotifications);
+              } else {
+                return Observable.empty();
+              }
+            }))
         .observeOn(Schedulers.computation())
         .map(aptoideNotifications -> aptoideNotifications.size())
         .distinctUntilChanged()

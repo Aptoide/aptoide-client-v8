@@ -136,16 +136,14 @@ public class CommentDialogFragment
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    sharedPreferences =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
-    tokenInvalidator =
-        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
-    baseBodyBodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+    AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
+    sharedPreferences = application.getDefaultSharedPreferences();
+    tokenInvalidator = application.getTokenInvalidator();
+    baseBodyBodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();
+    httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     onEmptyTextError =
-        AptoideUtils.StringU.getResString(R.string.error_MARG_107, getContext().getResources());
+        AptoideUtils.StringU.getResString(R.string.ws_error_MARG_107, getContext().getResources());
     timelineAnalytics =
         ((AptoideApplication) getContext().getApplicationContext()).getTimelineAnalytics();
   }

@@ -165,14 +165,13 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     //this object is used in loadExtras and loadExtras is called in the super
-    sharedPreferences =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
-    tokenInvalidator =
-        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
+    AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
+    sharedPreferences = application.getDefaultSharedPreferences();
+    tokenInvalidator = application.getTokenInvalidator();
     storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
         ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class));
-    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+    httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     bodyInterceptor =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();

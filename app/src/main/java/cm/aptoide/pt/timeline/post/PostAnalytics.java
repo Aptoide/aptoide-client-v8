@@ -85,24 +85,27 @@ public class PostAnalytics {
   private AptoideEvent createAptoideEvent(String eventName, boolean success, boolean isExternal) {
     HashMap<String, Object> data = new HashMap<>();
     data.put("status", success ? "success" : "fail");
-    data.put("previous_context", navigationTracker.getPreviousScreen().getFragment());
-    data.put("store", navigationTracker.getPreviousScreen().getStore());
+    data.put("previous_context", navigationTracker.getPreviousScreen()
+        .getFragment());
+    data.put("store", navigationTracker.getPreviousScreen()
+        .getStore());
     return new AptoideEvent(data, eventName, "CLICK", isExternal ? "EXTERNAL" : "TIMELINE",
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, appId, sharedPreferences);
   }
 
-  @NonNull
-  private AptoideEvent createAptoideCompletedEvent (String eventName, String packageName, boolean success, boolean isExternal){
+  @NonNull private AptoideEvent createAptoideCompletedEvent(String eventName, String packageName,
+      boolean success, boolean isExternal) {
     HashMap<String, Object> data = new HashMap<>();
-    HashMap<String, Object>  specific = new HashMap<>();
+    HashMap<String, Object> specific = new HashMap<>();
     specific.put("app", packageName);
     data.put("specific", specific);
     data.put("status", success ? "success" : "fail");
-    data.put("previous_context", navigationTracker.getPreviousScreen().getFragment());
-    data.put("store", navigationTracker.getPreviousScreen().getStore());
+    data.put("previous_context", navigationTracker.getPreviousScreen()
+        .getFragment());
+    data.put("store", navigationTracker.getPreviousScreen()
+        .getStore());
     return new AptoideEvent(data, eventName, "CLICK", isExternal ? "EXTERNAL" : "TIMELINE",
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, appId, sharedPreferences);
-
   }
 
   private Bundle createPostCompleteNoTextEventBundle(boolean relatedAppsAvailable,

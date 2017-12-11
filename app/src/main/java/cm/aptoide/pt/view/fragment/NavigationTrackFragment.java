@@ -6,9 +6,9 @@ import android.view.View;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import com.facebook.appevents.AppEventsLogger;
-import cm.aptoide.pt.analytics.NavigationTracker;
 
 /**
  * Created by pedroribeiro on 14/09/17.

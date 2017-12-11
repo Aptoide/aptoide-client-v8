@@ -8,7 +8,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rate_and_reviews_coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -56,7 +55,6 @@
         />
 
     <RelativeLayout
-        android:id="@+id/errors_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
@@ -98,7 +96,6 @@
           >
 
         <Button
-            android:id="@+id/change_ordering"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="10dp"
@@ -114,7 +111,6 @@
             />
 
         <Button
-            android:id="@+id/just_reviews"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"

@@ -83,7 +83,6 @@
         >
 
       <ImageView
-          android:id="@+id/success_image"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_gravity="center_horizontal"
@@ -91,7 +90,6 @@
           />
 
       <TextView
-          android:id="@+id/success_title"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_gravity="center_horizontal"
@@ -103,7 +101,6 @@
           />
 
       <TextView
-          android:id="@+id/success_description"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_gravity="center_horizontal"

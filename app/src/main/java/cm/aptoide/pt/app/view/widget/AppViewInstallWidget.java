@@ -113,6 +113,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
   private boolean isCreateStoreUserPrivacyEnabled;
   private boolean isMultiStoreSearch;
   private String defaultStoreName;
+  private int campaignId;
+  private String abTestGroup;
 
   public AppViewInstallWidget(View itemView) {
     super(itemView);
@@ -146,6 +148,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     this.displayable = displayable;
     this.displayable.setInstallButton(actionButton);
     crashReport = CrashReport.getInstance();
+    campaignId = displayable.getCampaignId();
+    abTestGroup = displayable.getAbTestingGroup();
     accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
@@ -457,12 +461,16 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     DownloadEvent report =
         downloadInstallEventConverter.create(download, DownloadEvent.Action.CLICK,
             DownloadEvent.AppContext.APPVIEW);
+    report.setCampaignId(campaignId);
+    report.setAbTestingGroup(abTestGroup);
 
     analytics.save(report.getPackageName() + report.getVersionCode(), report);
 
     InstallEvent installEvent =
         installConverter.create(download, DownloadInstallBaseEvent.Action.CLICK,
             DownloadInstallBaseEvent.AppContext.APPVIEW);
+    installEvent.setCampaignId(campaignId);
+    installEvent.setAbTestingGroup(abTestGroup);
     analytics.save(download.getPackageName() + download.getVersionCode(), installEvent);
   }
 

@@ -1,6 +1,7 @@
 package cm.aptoide.pt.updates.view;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -77,6 +78,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   private CrashReport crashReport;
   private String marketName;
   private StoreTabNavigator storeTabNavigator;
+  private SharedPreferences sharedPreferences;
 
   @NonNull public static UpdatesFragment newInstance() {
     return new UpdatesFragment();
@@ -168,9 +170,10 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
     analytics = Analytics.getInstance();
     tokenInvalidator = application.getTokenInvalidator();
+    sharedPreferences = application.getDefaultSharedPreferences();
     downloadInstallEventConverter =
         new DownloadEventConverter(bodyInterceptorV7, httpClient, converterFactory,
-            tokenInvalidator, BuildConfig.APPLICATION_ID, application.getDefaultSharedPreferences(),
+            tokenInvalidator, BuildConfig.APPLICATION_ID, sharedPreferences,
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
             application.getNavigationTracker());
@@ -248,6 +251,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
                 getContext().getResources())), storeTabNavigator, navigationTracker));
 
     for (Installed installedApp : installedApps) {
+      AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
       installedDisplayablesList.add(new InstalledAppDisplayable(installedApp,
           ((AptoideApplication) getContext().getApplicationContext()).getTimelineAnalytics(),
           installedRepository));

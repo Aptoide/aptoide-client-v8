@@ -2,7 +2,6 @@
 <resources>
   <color name="default_color2">#eb7319</color>
   <color name="aptoide_orange">@color/default_color</color>
-  <color name="aptoide_orange_700">@color/default_color_700</color>
   <color name="navdrawer_body_text_1_inverse">#deffffff</color>
   <color name="navdrawer_body_text_2_inverse">#d2ffffff</color>
   <color name="medium_gray">#b8b8b8</color>
@@ -10,12 +9,10 @@
   <color name="comment_gray">#f2f2f2</color>
   <color name="aptoide_color_focused">#e55c1b</color>
   <color name="aptoide_color_pressed">#000000</color>
-  <color name="aptoide_lite">#00b0c5</color>
   <color name="aptoide_tv">#00cc33</color>
 
   <!-- Transparent -->
   <color name="transparent_black">#99000000</color>
-  <color name="transparent_white">#CCFFFFFF</color>
   <color name="semi_transparent_black">#55000000</color>
   <color name="light_custom_gray">#ececec</color>
   <color name="lighter_custom_gray">#c6c6c6</color>
@@ -27,9 +24,7 @@
   <color name="overlay_black">#77000000</color>
   <color name="silver_dark">#999999</color>
   <color name="displayable_rate_and_review_background">#f2f2f2</color>
-  <color name="link">#2070DE</color>
   <color name="default_progress_bar_color">#FF33B5E5</color>
-  <color name="background_holo_light">#fff3f3f3</color>
   <color name="appview_rating_text">#FAB000</color>
   <color name="separators_grey">#1f000000</color>
   <color name="timeline_separator">#edf0f4</color>
@@ -41,9 +36,6 @@
   <color name="almost_black">#403f3d</color>
   <color name="green_tint_default">#45d316</color>
   <color name="working_well_text_color">#98cf1c</color>
-  <color name="card_store_title">#ff6d00</color>
-  <color name="comments_footer">#f2f2f2</color>
-  <color name="search_sponspored_label_background">#99d400</color>
 
   <!-- AppsTimeline colors -->
   <color name="appstimeline_grey">#4d4d4d</color>
@@ -51,7 +43,6 @@
 
   <!-- Create stores colors -->
   <color name="create_store_edit_text_background">#f5f5f5</color>
-  <color name="create_store_edit_text_color">#9c999999</color>
   <color name="create_store_title_color">#545454</color>
   <color name="create_store_hint_color">#7e7e7e</color>
   <color name="followed_stores_store_name_color">#5c5c5c</color>

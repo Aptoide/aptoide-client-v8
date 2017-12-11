@@ -1,7 +1,6 @@
 package cm.aptoide.pt.analytics;
 
 import android.os.Bundle;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
 import cm.aptoide.pt.analytics.events.FlurryEvent;
 import com.facebook.appevents.AppEventsLogger;

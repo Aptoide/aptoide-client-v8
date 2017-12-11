@@ -13,8 +13,8 @@ import retrofit2.Converter;
 import retrofit2.Response;
 import rx.Observable;
 
-public class GetAuthorizationRequest extends
-    V7<Response<GetAuthorizationRequest.ResponseBody>, Void> {
+public class GetAuthorizationRequest
+    extends V7<Response<GetAuthorizationRequest.ResponseBody>, Void> {
 
   private final long transactionId;
   private final String accessToken;
@@ -22,7 +22,8 @@ public class GetAuthorizationRequest extends
 
   private GetAuthorizationRequest(Void body, String baseHost, OkHttpClient httpClient,
       Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
-      TokenInvalidator tokenInvalidator, long transactionId, String accessToken, String customerId) {
+      TokenInvalidator tokenInvalidator, long transactionId, String accessToken,
+      String customerId) {
     super(body, baseHost, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
     this.transactionId = transactionId;
     this.accessToken = accessToken;
@@ -42,7 +43,8 @@ public class GetAuthorizationRequest extends
       BodyInterceptor<BaseBody> bodyInterceptor, TokenInvalidator tokenInvalidator,
       String accessToken, String customerId) {
     return new GetAuthorizationRequest(null, getHost(sharedPreferences), httpClient,
-        converterFactory, bodyInterceptor, tokenInvalidator, transactionId, accessToken, customerId);
+        converterFactory, bodyInterceptor, tokenInvalidator, transactionId, accessToken,
+        customerId);
   }
 
   @Override
