@@ -16,6 +16,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class MyAccountPresenter implements Presenter {
 
+  public static final int EDIT_STORE_REQUEST_CODE = 1230;
   private final MyAccountView view;
   private final AptoideAccountManager accountManager;
   private final CrashReport crashReport;
@@ -108,7 +109,7 @@ public class MyAccountPresenter implements Presenter {
                 .getMeta()
                 .getData()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(store -> navigator.navigateToEditStoreView(store),
+        .subscribe(store -> navigator.navigateToEditStoreView(store, EDIT_STORE_REQUEST_CODE),
             throwable -> crashReport.log(throwable));
   }
 
@@ -116,7 +117,7 @@ public class MyAccountPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .flatMap(__ -> navigator.editStoreResult())
+        .flatMap(__ -> navigator.editStoreResult(EDIT_STORE_REQUEST_CODE))
         .flatMap(__ -> accountManager.accountStatus()
             .first())
         .observeOn(AndroidSchedulers.mainThread())

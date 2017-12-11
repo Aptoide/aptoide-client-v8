@@ -34,11 +34,12 @@ public class ManageStorePresenter implements Presenter {
   private final boolean goBackToHome;
   private final ManageStoreErrorMapper errorMapper;
   private final AptoideAccountManager accountManager;
+  private final int requestCode;
 
   public ManageStorePresenter(ManageStoreView view, CrashReport crashReport,
       UriToPathResolver uriToPathResolver, String applicationPackageName,
       ManageStoreNavigator navigator, boolean goBackToHome, ManageStoreErrorMapper errorMapper,
-      AptoideAccountManager accountManager) {
+      AptoideAccountManager accountManager, int requestCode) {
     this.view = view;
     this.crashReport = crashReport;
     this.uriToPathResolver = uriToPathResolver;
@@ -47,6 +48,7 @@ public class ManageStorePresenter implements Presenter {
     this.goBackToHome = goBackToHome;
     this.errorMapper = errorMapper;
     this.accountManager = accountManager;
+    this.requestCode = requestCode;
   }
 
   @Override public void present() {
@@ -61,7 +63,7 @@ public class ManageStorePresenter implements Presenter {
             .doOnNext(__2 -> {
               navigate();
             }))
-        .doOnNext(manageStoreViewModel -> navigator.popViewWithResult(10, true))
+        .doOnNext(manageStoreViewModel -> navigator.popViewWithResult(requestCode, false))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -74,7 +76,7 @@ public class ManageStorePresenter implements Presenter {
             .flatMapCompletable(storeModel -> handleSaveClick(storeModel))
             .doOnError(err -> crashReport.log(err))
             .retry()
-            .doOnNext(manageStoreViewModel -> navigator.popViewWithResult(10, true)))
+            .doOnNext(manageStoreViewModel -> navigator.popViewWithResult(requestCode, true)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }

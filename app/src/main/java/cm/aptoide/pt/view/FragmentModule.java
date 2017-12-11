@@ -77,7 +77,7 @@ import rx.schedulers.Schedulers;
       ManageStoreErrorMapper manageStoreErrorMapper, AptoideAccountManager accountManager) {
     return new ManageStorePresenter((ManageStoreView) fragment, CrashReport.getInstance(),
         uriToPathResolver, packageName, manageStoreNavigator, goToHome, manageStoreErrorMapper,
-        accountManager);
+        accountManager,394587);
   }
 
   @FragmentScope @Provides ManageUserPresenter provideManageUserPresenter(AptoideAccountManager accountManager, CreateUserErrorMapper errorMapper,

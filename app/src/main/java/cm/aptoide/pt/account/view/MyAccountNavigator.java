@@ -1,5 +1,6 @@
 package cm.aptoide.pt.account.view;
 
+import android.app.Activity;
 import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import cm.aptoide.pt.account.view.store.ManageStoreViewModel;
 import cm.aptoide.pt.account.view.user.ManageUserFragment;
@@ -17,32 +18,30 @@ public class MyAccountNavigator {
   private final FragmentNavigator fragmentNavigator;
   private final AccountNavigator accountNavigator;
   private final NotificationNavigator notificationNavigator;
-  private final int editStoreRequestCode;
 
   public MyAccountNavigator(FragmentNavigator fragmentNavigator, AccountNavigator accountNavigator,
-      NotificationNavigator notificationNavigator, int editStoreRequestCode) {
+      NotificationNavigator notificationNavigator) {
     this.fragmentNavigator = fragmentNavigator;
     this.accountNavigator = accountNavigator;
     this.notificationNavigator = notificationNavigator;
-    this.editStoreRequestCode = editStoreRequestCode;
   }
 
   public void navigateToInboxView() {
     fragmentNavigator.navigateTo(new InboxFragment(), true);
   }
 
-  public void navigateToEditStoreView(Store store) {
+  public void navigateToEditStoreView(Store store, int requestCode) {
     ManageStoreViewModel viewModel = new ManageStoreViewModel(store.getId(), StoreTheme.fromName(
         store.getAppearance()
             .getTheme()), store.getName(), store.getAppearance()
         .getDescription(), store.getAvatar(), store.getSocialChannels());
     fragmentNavigator.navigateForResult(ManageStoreFragment.newInstance(viewModel, false),
-        editStoreRequestCode, true);
+        requestCode, true);
   }
 
-  public Observable<Void> editStoreResult() {
-    return fragmentNavigator.results(editStoreRequestCode)
-        .map(result -> null);
+  public Observable<Boolean> editStoreResult(int requestCode) {
+    return fragmentNavigator.results(requestCode)
+        .map(result -> result.getResultCode() == Activity.RESULT_OK);
   }
 
   public void navigateToEditProfileView() {
