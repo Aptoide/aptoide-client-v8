@@ -59,6 +59,7 @@ public class ManageStorePresenter implements Presenter {
             .doOnNext(__2 -> {
               navigate();
             }))
+        .doOnNext(manageStoreViewModel -> navigator.popViewWithResult(10, true))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -70,7 +71,8 @@ public class ManageStorePresenter implements Presenter {
         .flatMap(__ -> view.saveDataClick()
             .flatMapCompletable(storeModel -> handleSaveClick(storeModel))
             .doOnError(err -> crashReport.log(err))
-            .retry())
+            .retry()
+            .doOnNext(manageStoreViewModel -> navigator.popViewWithResult(10, true)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }

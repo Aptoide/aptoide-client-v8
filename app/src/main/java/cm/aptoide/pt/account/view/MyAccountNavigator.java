@@ -10,18 +10,21 @@ import cm.aptoide.pt.notification.view.InboxFragment;
 import cm.aptoide.pt.notification.view.NotificationNavigator;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.view.StoreFragment;
+import rx.Observable;
 
 public class MyAccountNavigator {
 
   private final FragmentNavigator fragmentNavigator;
   private final AccountNavigator accountNavigator;
   private final NotificationNavigator notificationNavigator;
+  private final int editStoreRequestCode;
 
   public MyAccountNavigator(FragmentNavigator fragmentNavigator, AccountNavigator accountNavigator,
-      NotificationNavigator notificationNavigator) {
+      NotificationNavigator notificationNavigator, int editStoreRequestCode) {
     this.fragmentNavigator = fragmentNavigator;
     this.accountNavigator = accountNavigator;
     this.notificationNavigator = notificationNavigator;
+    this.editStoreRequestCode = editStoreRequestCode;
   }
 
   public void navigateToInboxView() {
@@ -33,7 +36,13 @@ public class MyAccountNavigator {
         store.getAppearance()
             .getTheme()), store.getName(), store.getAppearance()
         .getDescription(), store.getAvatar(), store.getSocialChannels());
-    fragmentNavigator.navigateTo(ManageStoreFragment.newInstance(viewModel, false), true);
+    fragmentNavigator.navigateForResult(ManageStoreFragment.newInstance(viewModel, false),
+        editStoreRequestCode, true);
+  }
+
+  public Observable<Void> editStoreResult() {
+    return fragmentNavigator.results(editStoreRequestCode)
+        .map(result -> null);
   }
 
   public void navigateToEditProfileView() {

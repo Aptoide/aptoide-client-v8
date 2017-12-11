@@ -224,6 +224,7 @@ public class StoreManager {
             socialDeleteLinksList)
             .observe()
             .toSingle())
-        .toCompletable();
+        .toCompletable()
+        .andThen(accountManager.updateAccount());
   }
 }

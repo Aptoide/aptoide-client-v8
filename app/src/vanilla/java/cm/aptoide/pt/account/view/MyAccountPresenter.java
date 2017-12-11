@@ -45,6 +45,7 @@ public class MyAccountPresenter implements Presenter {
   @Override public void present() {
     showAndPopulateAccountViews();
     handleSignOutButtonClick();
+    handleEditStoreBackNavigation();
     handleMoreNotificationsClick();
     handleEditStoreClick();
     handleHeaderVisibility();
@@ -109,6 +110,19 @@ public class MyAccountPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(store -> navigator.navigateToEditStoreView(store),
             throwable -> crashReport.log(throwable));
+  }
+
+  private void handleEditStoreBackNavigation() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .flatMap(__ -> navigator.editStoreResult())
+        .flatMap(__ -> accountManager.accountStatus()
+            .first())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(account -> view.showAccount(account))
+        .subscribe(notification -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   private void handleHeaderVisibility() {
