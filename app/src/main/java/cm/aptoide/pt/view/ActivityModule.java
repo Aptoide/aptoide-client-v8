@@ -22,12 +22,17 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
+import cm.aptoide.pt.link.AptoideInstallParser;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.FragmentResultNavigator;
@@ -115,10 +120,13 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   @ActivityScope @Provides DeepLinkManager provideDeepLinkManager(StoreUtilsProxy storeUtilsProxy,
       StoreRepository storeRepository, FragmentNavigator fragmentNavigator,
       @Named("default") SharedPreferences sharedPreferences, StoreAccessor storeAccessor,
-      @Named("default") OkHttpClient httpClient,
-      NavigationTracker navigationTracker, PageViewsAnalytics pageViewsAnalytics) {
-    NotificationAnalytics notificationAnalytics = new NotificationAnalytics(httpClient, Analytics.getInstance(),
-        AppEventsLogger.newLogger(activity.getApplicationContext()));
+      @Named("default") OkHttpClient httpClient, @Named("pool-v7")
+      BodyInterceptor<BaseBody> bodyInterceptorV7,
+      NavigationTracker navigationTracker, PageViewsAnalytics pageViewsAnalytics, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences defaultSharedPreferences) {
+    NotificationAnalytics notificationAnalytics = new NotificationAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(activity.getApplicationContext()),bodyInterceptorV7,httpClient, WebService.getDefaultConverter(), tokenInvalidator,
+        cm.aptoide.pt.dataprovider.BuildConfig.APPLICATION_ID,defaultSharedPreferences,new AptoideInstallParser());
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
         (TabNavigator) activity, (DeepLinkManager.DeepLinkMessages) activity, sharedPreferences,
         storeAccessor, defaultTheme, defaultStoreName, navigationTracker, pageViewsAnalytics, notificationAnalytics);

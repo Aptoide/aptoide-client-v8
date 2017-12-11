@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.view.ActivityComponent;
@@ -30,6 +31,7 @@ public class ComponentFactory {
 
   public static FragmentComponentTest createFragmentComponent(ActivityComponent activityComponent, Fragment fragment, Bundle savedInstance, boolean dismissToNavigateToMainView, boolean navigateToHome, boolean goToHome,
       boolean isEditProfile, boolean isCreateStoreUserPrivacyEnabled, String packageName){
+    Logger.d("TAG123","here1");
       return ((ActivityComponentTest) activityComponent).plus(new FragmentModuleTest(fragment, savedInstance, dismissToNavigateToMainView, navigateToHome, goToHome, isEditProfile,
           isCreateStoreUserPrivacyEnabled, packageName));
   }
@@ -38,6 +40,7 @@ public class ComponentFactory {
       NotificationSyncScheduler notificationSyncScheduler, String marketName,
       String autoUpdateUrl, View view, String defaultTheme, String defaultStoreName,
       boolean firstCreated, String fileProviderAuthority){
+    Logger.d("TAG123","here2");
     return ((ApplicationComponentTest) applicationComponent).plus(new ActivityModuleTest(activity,intent, notificationSyncScheduler,marketName, autoUpdateUrl, view,defaultTheme,
         defaultStoreName,firstCreated,fileProviderAuthority));
   }
