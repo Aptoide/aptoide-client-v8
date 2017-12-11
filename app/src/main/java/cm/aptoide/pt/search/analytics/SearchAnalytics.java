@@ -30,11 +30,11 @@ public class SearchAnalytics {
   }
 
   private void search(String query, boolean isSuggestion, int suggestionPosition) {
-    Map<String, Object> map = new HashMap<>();
+    Map<String, String> map = new HashMap<>();
     map.put(AttributeKey.QUERY, query);
-    map.put(AttributeKey.IS_SUGGESTION, isSuggestion);
+    map.put(AttributeKey.IS_SUGGESTION, Boolean.toString(isSuggestion));
     if (isSuggestion) {
-      map.put(AttributeKey.SUGGESTION_POSITION, suggestionPosition);
+      map.put(AttributeKey.SUGGESTION_POSITION, Integer.toString(suggestionPosition));
     }
     analytics.sendEvent(
         new FacebookEvent(facebook, EventName.SEARCH, createComplexBundleData(map)));
@@ -46,7 +46,7 @@ public class SearchAnalytics {
   }
 
   public void searchAppClick(String query, String packageName) {
-    Map<String, Object> map = new HashMap<>();
+    Map<String, String> map = new HashMap<>();
     map.put(AttributeKey.QUERY, query);
     map.put(AttributeKey.PACKAGE_NAME, packageName);
     analytics.sendEvent(
@@ -64,10 +64,10 @@ public class SearchAnalytics {
     return data;
   }
 
-  private Bundle createComplexBundleData(Map<String, Object> keyValuePair) {
+  private Bundle createComplexBundleData(Map<String, String> keyValuePair) {
     Bundle bundle = new Bundle();
-    for (Map.Entry<String, Object> entry : keyValuePair.entrySet()) {
-      bundle.putString(entry.getKey(), (String) entry.getValue());
+    for (Map.Entry<String, String> entry : keyValuePair.entrySet()) {
+      bundle.putString(entry.getKey(), entry.getValue());
     }
     return bundle;
   }
