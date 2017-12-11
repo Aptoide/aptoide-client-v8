@@ -1,14 +1,10 @@
 package cm.aptoide.pt.presenter;
 
-import android.os.Bundle;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
-/**
- * Created by marcelobenites on 23/02/17.
- */
 public class SpotSharePreviewPresenter implements Presenter {
 
   private final SpotSharePreviewView view;
@@ -37,14 +33,6 @@ public class SpotSharePreviewPresenter implements Presenter {
     if (showToolbar) {
       view.showToolbar(toolbarTitle);
     }
-  }
-
-  @Override public void saveState(Bundle state) {
-
-  }
-
-  @Override public void restoreState(Bundle state) {
-
   }
 
   private Observable<Void> startSelection() {

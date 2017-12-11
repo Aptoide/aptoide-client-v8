@@ -33,7 +33,8 @@ public class NotificationProvider {
         aptoideNotification.getUrlTrack(), aptoideNotification.getNotificationCenterUrlTrack(),
         aptoideNotification.getTimeStamp(), aptoideNotification.getType(),
         aptoideNotification.getDismissed(), aptoideNotification.getAppName(),
-        aptoideNotification.getGraphic(), aptoideNotification.getOwnerId());
+        aptoideNotification.getGraphic(), aptoideNotification.getOwnerId(),
+        aptoideNotification.isProcessed());
   }
 
   public Single<List<AptoideNotification>> getDismissedNotifications(
@@ -48,12 +49,13 @@ public class NotificationProvider {
   }
 
   private AptoideNotification convertToAptoideNotification(Notification notification) {
-    return new AptoideNotification(notification.getAbTestingGroup(), notification.getBody(),
-        notification.getCampaignId(), notification.getImg(), notification.getLang(),
-        notification.getTitle(), notification.getUrl(), notification.getUrlTrack(),
-        notification.getTimeStamp(), notification.getType(), notification.getDismissed(),
-        notification.getAppName(), notification.getGraphic(), notification.getOwnerId(),
-        notification.getExpire(), notification.getNotificationCenterUrlTrack());
+    return new AptoideNotification(notification.getBody(), notification.getImg(),
+        notification.getTitle(), notification.getUrl(), notification.getType(),
+        notification.getAppName(), notification.getGraphic(), notification.getDismissed(),
+        notification.getOwnerId(), notification.getUrlTrack(),
+        notification.getNotificationCenterUrlTrack(), notification.isProcessed(),
+        notification.getTimeStamp(), notification.getExpire(), notification.getAbTestingGroup(),
+        notification.getCampaignId(), notification.getLang());
   }
 
   public Completable save(List<AptoideNotification> aptideNotifications) {
@@ -76,6 +78,13 @@ public class NotificationProvider {
     return notificationAccessor.getAll();
   }
 
+  public Observable<List<AptoideNotification>> getAptoideNotifications() {
+    return notificationAccessor.getAll()
+        .flatMap(notifications -> Observable.from(notifications)
+            .map(notification -> convertToAptoideNotification(notification))
+            .toList());
+  }
+
   public Single<Notification> getLastShowed(Integer[] notificationType) {
     return notificationAccessor.getLastShowed(notificationType);
   }
@@ -92,5 +101,9 @@ public class NotificationProvider {
         .flatMap(notifications -> Observable.from(notifications)
             .map(notification -> convertToAptoideNotification(notification))
             .toList());
+  }
+
+  public Completable save(AptoideNotification notification) {
+    return save(convertToNotification(notification));
   }
 }

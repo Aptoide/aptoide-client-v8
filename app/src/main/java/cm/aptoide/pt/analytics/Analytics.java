@@ -5,11 +5,8 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
-import cm.aptoide.pt.FirstLaunchAnalytics;
 import cm.aptoide.pt.analytics.events.FabricEvent;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
 import cm.aptoide.pt.analytics.events.FlurryEvent;
@@ -27,9 +24,6 @@ import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.ZipFile;
@@ -384,19 +378,6 @@ public class Analytics {
 
       public static void onResume(android.app.Activity activity) {
 
-        final AptoideAccountManager accountManager =
-            ((AptoideApplication) activity.getApplicationContext()).getAccountManager();
-        //This needs to be cleaned when localytics is killed
-        Bundle bundle = new Bundle();
-        if (!accountManager.isLoggedIn()) {
-          bundle.putString("Logged In", "Not Logged In");
-          AppEventsLogger.updateUserProperties(bundle,
-              response -> Logger.d("Facebook Analytics: ", response.toString()));
-        } else {
-          bundle.putString("Logged In", "Logged In");
-          AppEventsLogger.updateUserProperties(bundle,
-              response -> Logger.d("Facebook Analytics: ", response.toString()));
-        }
       }
 
       public static void onStart(android.app.Activity activity) {
@@ -437,8 +418,6 @@ public class Analytics {
   public static class Account {
 
     private static final String LOGIN_SIGN_UP_START_SCREEN = "Account_Login_Signup_Start_Screen";
-    private static final String SIGNUP_SCREEN = "Account_Signup_Screen";
-    private static final String LOGIN_SCREEN = "Account_Login_Screen";
     private static final String CREATE_USER_PROFILE = "Account_Create_A_User_Profile_Screen";
     private static final String PROFILE_SETTINGS = "Account_Profile_Settings_Screen";
     private static final String CREATE_YOUR_STORE = "Account_Create_Your_Store_Screen";
@@ -446,8 +425,6 @@ public class Analytics {
     private static final String SCREEN = "Screen";
     private static final String ENTRY = "Account_Entry";
     private static final String SOURCE = "Source";
-    private static final String STATUS = "Status";
-    private static final String STATUS_DETAIL = "Status Detail";
 
     public static void clickIn(StartupClick clickEvent, StartupClickOrigin startupClickOrigin) {
       track(LOGIN_SIGN_UP_START_SCREEN, ACTION, clickEvent.getClickEvent(), ALL);
@@ -455,21 +432,6 @@ public class Analytics {
       map.put(ACTION, clickEvent.getClickEvent());
       map.put(SCREEN, startupClickOrigin.getClickOrigin());
       logFacebookEvents(LOGIN_SIGN_UP_START_SCREEN, map);
-    }
-
-    public static void signInSuccessAptoide(SignUpLoginStatus result) {
-      track(SIGNUP_SCREEN, ALL);
-      logFacebookEvents(SIGNUP_SCREEN, STATUS, result.getStatus());
-    }
-
-    public static void loginStatus(LoginMethod loginMethod, SignUpLoginStatus status,
-        LoginStatusDetail statusDetail) {
-      track(LOGIN_SCREEN, METHOD, loginMethod.getMethod(), ALL);
-      Map<String, String> map = new HashMap<>();
-      map.put(METHOD, loginMethod.getMethod());
-      map.put(STATUS, status.getStatus());
-      map.put(STATUS_DETAIL, statusDetail.getLoginStatusDetail());
-      logFacebookEvents(LOGIN_SCREEN, map);
     }
 
     public static void createdUserProfile(boolean hasPicture) {
@@ -828,103 +790,6 @@ public class Analytics {
       data.putString(UTM_CONTENT, UNKNOWN);
       data.putString(ENTRY_POINT, UNKNOWN);
       setUserPropertiesWithBundle(data);
-    }
-  }
-
-  public static class AppViewViewedFrom {
-
-    public static final String APP_VIEWED_OPEN_FROM_EVENT_NAME_KEY = "App_Viewed_Open_From";
-    public static final int NUMBER_OF_STEPS_TO_RECORD = 5;
-    public static final String HOME_SCREEN_STEP = "home";
-    private static ArrayList<String> STEPS = new ArrayList<>();
-    private static String lastStep;
-
-    public static void appViewOpenFrom(String packageName, String developerName,
-        String trustedBadge) {
-
-      Collections.reverse(STEPS);
-      if (STEPS.contains(HOME_SCREEN_STEP)) {
-        String stringForSourceEvent = formatStepsToSingleEvent(STEPS);
-        HashMap<String, String> map = new HashMap<>();
-        map.put("Package Name", packageName);
-        map.put("Source", stringForSourceEvent);
-        map.put("Trusted Badge", trustedBadge);
-        map.put("Application Publisher", developerName);
-        int index = STEPS.indexOf(HOME_SCREEN_STEP);
-        if (index > 0) {
-          String source = STEPS.get(index - 1);
-          if (source.equals("apps-group-editors-choice")) {
-            map.put("editors package name", packageName);
-          } else {
-            map.put("bundle package name", source + "_" + packageName);
-            map.put("bundle category", source);
-          }
-        }
-        Logger.d(TAG, "appViewOpenFrom: " + map);
-
-        if (map.containsKey("Source") && !containsUnwantedValues(map.get("Source"))) {
-          track(APP_VIEWED_OPEN_FROM_EVENT_NAME_KEY, map, FLURRY);
-        }
-
-        Bundle parameters = new Bundle();
-        parameters.putString("Package Name", packageName);
-        parameters.putString("Source", stringForSourceEvent);
-        parameters.putString("Trusted Badge", trustedBadge);
-        parameters.putString("Application Publisher", developerName);
-        logFacebookEvents(APP_VIEWED_OPEN_FROM_EVENT_NAME_KEY, parameters);
-      }
-      STEPS.clear();
-    }
-
-    private static String formatStepsToSingleEvent(ArrayList<String> listOfSteps) {
-      return TextUtils.join("_", listOfSteps.subList(0, listOfSteps.indexOf(HOME_SCREEN_STEP)));
-    }
-
-    protected static boolean containsUnwantedValues(String source) {
-      String[] sourceArray = source.split("_");
-      for (String step : sourceArray) {
-        if (Arrays.asList(unwantedValuesList)
-            .contains(step)) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    public static void addStepToList(String step) {
-      if (!TextUtils.isEmpty(step)) {
-        STEPS.add(step.replace(" ", "-")
-            .toLowerCase());
-        Logger.d(TAG, "addStepToList() called with: step = [" + step + "]");
-        if (STEPS.size() > NUMBER_OF_STEPS_TO_RECORD) {
-          STEPS.remove(0);
-        }
-        lastStep = step;
-      }
-    }
-
-    static String getLastStep() {
-      return lastStep;
-    }
-  }
-
-  public static class HomePageEditorsChoice {
-
-    public static final String HOME_PAGE_EDITORS_CHOICE_FLURRY = "Home_Page_Editors_Choice";
-    public static final String HOME_PAGE_EDITORS_CHOICE_FACEBOOK = "Editors_Choice_Clicks";
-
-    public static void clickOnEditorsChoiceItem(int position, String packageName, boolean isHome) {
-      HashMap<String, String> map = new HashMap<>();
-      map.put("Application Name", packageName);
-      if (isHome) {
-        map.put("Search Position", "Home_" + Integer.valueOf(position)
-            .toString());
-      } else {
-        map.put("Search Position", "More_" + Integer.valueOf(position)
-            .toString());
-      }
-      logFacebookEvents(HOME_PAGE_EDITORS_CHOICE_FACEBOOK, map);
-      track(HOME_PAGE_EDITORS_CHOICE_FLURRY, map, FLURRY);
     }
   }
 

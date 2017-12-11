@@ -2,17 +2,12 @@ package cm.aptoide.pt.database.realm;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import java.util.Calendar;
-import java.util.TimeZone;
 
 /**
  * Created by trinkes on 10/05/2017.
  */
 
 public class Notification extends RealmObject {
-  public final static String OWNER_ID_KEY = "ownerId";
-  public final static String EXPIRE_KEY = "expire";
-  public final static String NOTIFICATION_CENTER_URL_TRACK_KEY = "notificationCenterUrlTrack";
   public final static String KEY = "key";
   public static final int NOT_DISMISSED = -1;
 
@@ -33,10 +28,12 @@ public class Notification extends RealmObject {
   private String appName;
   private String graphic;
   private String ownerId;
+  private boolean processed;
 
   public Notification(Long expire, String abTestingGroup, String body, int campaignId, String img,
       String lang, String title, String url, String urlTrack, String notificationCenterUrlTrack,
-      long timeStamp, int type, long dismissed, String appName, String graphic, String ownerId) {
+      long timeStamp, int type, long dismissed, String appName, String graphic, String ownerId,
+      boolean processed) {
     this.expire = expire;
     this.body = body;
     this.img = img;
@@ -53,6 +50,7 @@ public class Notification extends RealmObject {
     this.appName = appName;
     this.graphic = graphic;
     this.ownerId = ownerId;
+    this.processed = processed;
     key = String.valueOf(timeStamp + type);
   }
 
@@ -132,16 +130,11 @@ public class Notification extends RealmObject {
     this.dismissed = dismissed;
   }
 
-  public boolean isExpired() {
-    if (expire != null) {
-      Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-      long now = calendar.getTimeInMillis();
-      return now > expire;
-    }
-    return false;
-  }
-
   public String getNotificationCenterUrlTrack() {
     return notificationCenterUrlTrack;
+  }
+
+  public boolean isProcessed() {
+    return processed;
   }
 }

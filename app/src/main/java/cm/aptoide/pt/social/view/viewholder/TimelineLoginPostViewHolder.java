@@ -24,6 +24,6 @@ public class TimelineLoginPostViewHolder extends PostViewHolder<TimelineUser> {
 
   @Override public void setPost(TimelineUser card, int position) {
     this.button.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.LOGIN)));
+        new CardTouchEvent(card, position, CardTouchEvent.Type.LOGIN)));
   }
 }

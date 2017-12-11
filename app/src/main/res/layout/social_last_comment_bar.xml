@@ -40,6 +40,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginStart="15dp"
         android:layout_toEndOf="@id/card_last_comment_main_icon"
+        android:layout_toRightOf="@id/card_last_comment_main_icon"
         tools:text="Fábio das Costas"
         style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
         />
@@ -55,6 +56,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginStart="15dp"
         android:layout_toEndOf="@id/card_last_comment_main_icon"
+        android:layout_toRightOf="@id/card_last_comment_main_icon"
         android:maxLines="1"
         tools:text="Porque é que isto me está a puxar isto para aqui?!?"
         style="@style/Aptoide.TextView.Regular.XS.Grey"
@@ -62,7 +64,6 @@
   </RelativeLayout>
 
   <View
-      android:id="@+id/partial_social_timeline_thumbnail_divider_last_comment"
       android:layout_width="match_parent"
       android:layout_height="0.7dp"
       android:layout_marginEnd="12dp"

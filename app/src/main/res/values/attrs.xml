@@ -99,4 +99,10 @@
     <attr format="color" name="tailColor"/>
     <attr format="boolean" name="enableAnimation"/>
   </declare-styleable>
+
+  <declare-styleable name="CustomTextInputLayout">
+    <attr format="string" name="helperText"/>
+    <attr format="color|reference" name="helperTextColor"/>
+  </declare-styleable>
+
 </resources>

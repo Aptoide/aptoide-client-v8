@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2016.
-  ~ Modified on 25/08/2016.
-  -->
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true"
+    tools:layout_height="180dp"
     style="?attr/backgroundCard"
     >
-
 
   <ImageView
       android:id="@+id/icon"
@@ -18,11 +13,12 @@
       android:layout_height="96dp"
       android:layout_centerVertical="true"
       android:layout_margin="8dp"
+      tools:src="@drawable/logo_toolbar"
+      tools:tint="@color/orange"
       />
 
 
   <LinearLayout
-      android:id="@+id/container"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:layout_alignTop="@+id/icon"
@@ -48,6 +44,8 @@
           android:minWidth="2dp"
           android:padding="8dp"
           android:src="@drawable/ic_action_overflow"
+          android:visibility="invisible"
+          tools:visibility="visible"
           style="@style/focusableRowBackground"
           />
 
@@ -74,7 +72,6 @@
           android:layout_toStartOf="@id/ic_trusted_search"
           android:ellipsize="end"
           android:maxLines="1"
-          android:singleLine="true"
           android:textStyle="bold"
           style="?android:attr/textAppearanceMedium"
           />
@@ -104,7 +101,6 @@
 
   </LinearLayout>
 
-
   <View
       android:id="@+id/bottom_view"
       android:layout_width="fill_parent"
@@ -126,7 +122,7 @@
       android:ellipsize="end"
       android:gravity="center"
       android:lines="1"
-      android:singleLine="true"
+      android:maxLines="1"
       android:textColor="?attr/inverseTextColor"
       android:textSize="@dimen/text_size_small"
       />

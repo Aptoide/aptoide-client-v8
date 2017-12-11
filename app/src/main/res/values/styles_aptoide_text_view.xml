@@ -18,21 +18,6 @@
     <item name="android:fontFamily">sans-serif-medium</item>
   </style>
 
-  <style name="Aptoide.TextView.Regular.XXL">
-    <item name="android:textSize">34sp</item>
-    <item name="android:lineSpacingExtra">2dp</item>
-  </style>
-
-  <style name="Aptoide.TextView.Regular.XL">
-    <item name="android:textSize">24sp</item>
-    <item name="android:lineSpacingExtra">4dp</item>
-  </style>
-
-  <style name="Aptoide.TextView.Regular.L">
-    <item name="android:textSize">20sp</item>
-    <item name="android:lineSpacingExtra">4dp</item>
-  </style>
-
   <style name="Aptoide.TextView.Regular.M">
     <item name="android:textSize">16sp</item>
     <item name="android:lineSpacingExtra">4dp</item>
@@ -78,28 +63,16 @@
     <item name="android:textColor">@color/grey_fog_dark</item>
   </style>
 
-  <style name="Aptoide.TextView.Regular.L.Grey">
-    <item name="android:textColor">@color/grey</item>
-  </style>
-
-  <style name="Aptoide.TextView.Regular.M.Grey">
-    <item name="android:textColor">@color/grey</item>
+  <style name="Aptoide.TextView.Regular.M.Grey700">
+    <item name="android:textColor">@color/grey_700</item>
   </style>
 
   <style name="Aptoide.TextView.Regular.M.BlackAlpha">
     <item name="android:textColor">@color/black_87_alpha</item>
   </style>
 
-  <style name="Aptoide.TextView.Regular.M.Black">
-    <item name="android:textColor">@color/black</item>
-  </style>
-
   <style name="Aptoide.TextView.Regular.S.Grey">
     <item name="android:textColor">@color/grey</item>
-  </style>
-
-  <style name="Aptoide.TextView.Regular.S.Grey700">
-    <item name="android:textColor">@color/grey_700</item>
   </style>
 
   <style name="Aptoide.TextView.Regular.S.GreyMedium">
@@ -141,6 +114,22 @@
   <!-- Text Style -->
   <style name="Aptoide.TextView.Regular.XXS.GreyFog.AllCaps">
     <item name="android:textAllCaps">true</item>
+  </style>
+
+  <style name="Aptoide.TextView.Regular.XS.Facebook">
+    <item name="android:textColor">@color/facebook</item>
+  </style>
+
+  <style name="Aptoide.TextView.Regular.XS.Twitch">
+    <item name="android:textColor">@color/twitch</item>
+  </style>
+
+  <style name="Aptoide.TextView.Regular.XS.Twitter">
+    <item name="android:textColor">@color/twitter_color</item>
+  </style>
+
+  <style name="Aptoide.TextView.Regular.XS.Youtube">
+    <item name="android:textColor">@color/youtube</item>
   </style>
 
 </resources>

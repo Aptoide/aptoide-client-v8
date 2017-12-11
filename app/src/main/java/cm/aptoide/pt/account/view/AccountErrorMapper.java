@@ -14,9 +14,11 @@ import cm.aptoide.pt.view.ThrowableToStringMapper;
 public class AccountErrorMapper implements ThrowableToStringMapper {
 
   private final Context context;
+  private final ErrorsMapper errorsMapper;
 
-  public AccountErrorMapper(Context context) {
+  public AccountErrorMapper(Context context, ErrorsMapper errorsMapper) {
     this.context = context;
+    this.errorsMapper = errorsMapper;
   }
 
   @Override public String map(Throwable throwable) {
@@ -40,13 +42,17 @@ public class AccountErrorMapper implements ThrowableToStringMapper {
 
       if (((AccountException) throwable).hasCode()) {
         message = context.getString(
-            ErrorsMapper.getWebServiceErrorMessageFromCode(((AccountException) throwable).getCode(),
+            errorsMapper.getWebServiceErrorMessageFromCode(((AccountException) throwable).getCode(),
                 context.getApplicationContext()
                     .getPackageName(), context.getResources()));
       } else {
         @StringRes int errorId = context.getResources()
-            .getIdentifier("error_" + ((AccountException) throwable).getError(), "string",
-                context.getPackageName());
+            .getIdentifier("ws_error_" + ((AccountException) throwable).getErrors()
+                .entrySet()
+                .iterator()
+                .next()
+                .getKey()
+                .replace("-", "_"), "string", context.getPackageName());
         message = context.getString(errorId);
       }
     } else if (throwable instanceof AccountValidationException) {

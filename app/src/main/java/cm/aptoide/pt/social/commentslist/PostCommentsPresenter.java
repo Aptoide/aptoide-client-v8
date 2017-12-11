@@ -1,6 +1,5 @@
 package cm.aptoide.pt.social.commentslist;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
@@ -34,13 +33,5 @@ public class PostCommentsPresenter implements Presenter {
         .subscribe(comments -> {
         }, throwable -> CrashReport.getInstance()
             .log(throwable));
-  }
-
-  @Override public void saveState(Bundle state) {
-
-  }
-
-  @Override public void restoreState(Bundle state) {
-
   }
 }

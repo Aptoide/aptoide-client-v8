@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.view.BackButtonFragment;
 
 /**
@@ -23,12 +24,7 @@ public class WizardPageOneFragment extends BackButtonFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    navigationTracker.registerView(getClass().getSimpleName());
-  }
-
-  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_wizard_model_page, container, false);
+    pageViewsAnalytics.sendPageViewedEvent();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -39,6 +35,16 @@ public class WizardPageOneFragment extends BackButtonFragment {
       }
     };
     registerClickHandler(clickHandler);
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
+  }
+
+  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
+    return inflater.inflate(R.layout.fragment_wizard_model_page, container, false);
   }
 
   @Override public void onDestroyView() {

@@ -16,7 +16,6 @@ import static org.mockito.Mockito.when;
 
 public class AptoideAccountManagerTest {
 
-  private AccountAnalytics accountAnalyticsMock;
   private CredentialsValidator credentialsValidatorMock;
   private AccountPersistence dataPersistMock;
   private AccountService serviceMock;
@@ -24,17 +23,16 @@ public class AptoideAccountManagerTest {
   private PublishRelay accountRelayMock;
 
   @Before public void before() {
-    accountAnalyticsMock = mock(AccountAnalytics.class);
     credentialsValidatorMock = mock(CredentialsValidator.class);
     dataPersistMock = mock(AccountPersistence.class);
     serviceMock = mock(AccountService.class);
     accountRelayMock = mock(PublishRelay.class);
-    accountManager = new AptoideAccountManager.Builder().setAccountAnalytics(accountAnalyticsMock)
-        .setCredentialsValidator(credentialsValidatorMock)
-        .setAccountPersistence(dataPersistMock)
-        .setAccountService(serviceMock)
-        .setAccountRelay(accountRelayMock)
-        .build();
+    accountManager =
+        new AptoideAccountManager.Builder().setCredentialsValidator(credentialsValidatorMock)
+            .setAccountPersistence(dataPersistMock)
+            .setAccountService(serviceMock)
+            .setAccountRelay(accountRelayMock)
+            .build();
   }
 
   @Test public void shouldLogin() throws Exception {
@@ -61,7 +59,6 @@ public class AptoideAccountManagerTest {
     testSubscriber.assertCompleted();
     testSubscriber.assertNoErrors();
 
-    verify(accountAnalyticsMock).login("marcelo.benites@aptoide.com");
     verify(accountRelayMock).call(accountMock);
   }
 
@@ -88,7 +85,6 @@ public class AptoideAccountManagerTest {
     testSubscriber.assertCompleted();
     testSubscriber.assertNoErrors();
 
-    verify(accountAnalyticsMock).signUp();
     verify(accountRelayMock).call(accountMock);
   }
 
@@ -120,7 +116,6 @@ public class AptoideAccountManagerTest {
     testSubscriber.assertCompleted();
     testSubscriber.assertNoErrors();
 
-    verify(accountAnalyticsMock).login("john.lennon@aptoide.com");
     verify(accountRelayMock).call(accountMock);
   }
 }

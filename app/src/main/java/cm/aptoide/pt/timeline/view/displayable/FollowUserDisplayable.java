@@ -7,10 +7,10 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.GetFollowers;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.store.StoreTheme;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
-import cm.aptoide.pt.view.store.StoreFragment;
 
 /**
  * Created by trinkes on 16/12/2016.

@@ -41,7 +41,6 @@ android:fitsSystemWindows="true"
       </android.support.design.widget.AppBarLayout>
 
       <ImageView
-          android:id="@+id/aptoide_logo"
           android:layout_width="200dp"
           android:layout_height="50dp"
           android:layout_gravity="center_horizontal"
@@ -66,7 +65,6 @@ android:fitsSystemWindows="true"
           />
 
       <TextView
-          android:id="@+id/join_us"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           android:text="@string/wizard_sub_title_viewpager_three"

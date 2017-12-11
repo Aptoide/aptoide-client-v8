@@ -107,13 +107,17 @@ ext {
   LIB_PHONE_NUMBER_VERSION = '8.3.0'
   OKHTTP_VERSION = '3.6.0'
 
-  CONSTRAINT_LAYOUT_VERSION = '1.0.0'
+  CONSTRAINT_LAYOUT_VERSION = '1.0.2'
 
   LEAK_CANARY_VERSION = '1.5'
   PARCELER_VERSION = '1.1.6'
 
-  BRAINTREE_VERSION = '2.5.4'
-  BRAINTREE_CARD_FORM_VERSION = '3.0.6'
+  ADYEN_VERSION = '1.10.0'
+  CARD_FORM_VERSION = '3.0.6'
+
+  MOPUB_VERSION = '4.11.0'
+
+  TEST_FAIRY_VERSION = '1.5.5'
 }
 
 // see 'Multi-module reports' in https://developer.android.com/studio/test/command-line.html

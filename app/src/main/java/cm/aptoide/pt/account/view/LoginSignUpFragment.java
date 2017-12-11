@@ -2,10 +2,12 @@ package cm.aptoide.pt.account.view;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.presenter.LoginSignUpView;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
 
@@ -49,6 +51,18 @@ public class LoginSignUpFragment extends BaseToolbarFragment implements LoginSig
     return fragment;
   }
 
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setHasOptionsMenu(true);
+  }
+
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+    withBottomBar = args.getBoolean(BOTTOM_SHEET_WITH_BOTTOM_BAR);
+    dismissToNavigateToMainView = args.getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW);
+    navigateToHome = args.getBoolean(NAVIGATE_TO_HOME);
+  }
+
   @Override public void onAttach(Context context) {
     super.onAttach(context);
     if (context instanceof LoginBottomSheet) {
@@ -57,13 +71,6 @@ public class LoginSignUpFragment extends BaseToolbarFragment implements LoginSig
       throw new IllegalStateException(
           "Context should implement " + LoginBottomSheet.class.getSimpleName());
     }
-  }
-
-  @Override public void loadExtras(Bundle args) {
-    super.loadExtras(args);
-    withBottomBar = args.getBoolean(BOTTOM_SHEET_WITH_BOTTOM_BAR);
-    dismissToNavigateToMainView = args.getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW);
-    navigateToHome = args.getBoolean(NAVIGATE_TO_HOME);
   }
 
   @Override public void onDestroyView() {
@@ -81,7 +88,7 @@ public class LoginSignUpFragment extends BaseToolbarFragment implements LoginSig
     super.setupViews();
     presenter = new LoginSignUpPresenter(this, getFragmentChildNavigator(R.id.login_signup_layout),
         dismissToNavigateToMainView, navigateToHome);
-    attachPresenter(presenter, null);
+    attachPresenter(presenter);
     registerClickHandler(presenter);
     bottomSheetBehavior.setBottomSheetCallback(presenter);
   }
@@ -95,7 +102,6 @@ public class LoginSignUpFragment extends BaseToolbarFragment implements LoginSig
   }
 
   public void setupToolbarDetails(Toolbar toolbar) {
-    setHasOptionsMenu(true);
     toolbar.setLogo(R.drawable.logo_toolbar);
     toolbar.setTitle(toolbarTitle);
   }
@@ -147,5 +153,10 @@ public class LoginSignUpFragment extends BaseToolbarFragment implements LoginSig
 
   @Override public int getContentViewId() {
     return R.layout.fragment_login_sign_up;
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 }

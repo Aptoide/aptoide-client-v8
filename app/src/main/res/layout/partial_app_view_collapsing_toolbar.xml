@@ -83,14 +83,12 @@
           android:layout_marginLeft="@dimen/appview_header_side_margin"
           android:layout_marginStart="@dimen/appview_header_side_margin"
           android:scaleType="centerCrop"
-          app:layout_anchor="@id/app_bar"
           app:layout_anchorGravity="bottom|left|start"
           tools:src="@color/blue_700"
           />
 
 
       <LinearLayout
-          android:id="@+id/badges_layout"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_alignParentBottom="true"

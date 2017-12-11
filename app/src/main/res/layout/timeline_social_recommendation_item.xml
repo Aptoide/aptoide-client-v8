@@ -33,7 +33,6 @@
 
 
     <RelativeLayout
-        android:id="@+id/displayable_social_timeline_recommendation_card_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
@@ -104,6 +103,7 @@
           android:layout_marginRight="15.1dp"
           android:layout_marginStart="8.3dp"
           android:layout_toEndOf="@id/displayable_social_timeline_recommendation_icon"
+          android:layout_toRightOf="@+id/displayable_social_timeline_recommendation_icon"
           android:text="@string/review_get_app"
           android:textAllCaps="true"
           android:textSize="10sp"
@@ -112,7 +112,6 @@
     </RelativeLayout>
 
     <View
-        android:id="@+id/partial_social_timeline_thumbnail_divider2"
         android:layout_width="match_parent"
         android:layout_height="0.7dp"
         android:layout_marginEnd="12dp"

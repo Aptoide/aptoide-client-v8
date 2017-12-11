@@ -30,7 +30,6 @@
         >
 
       <ImageView
-          android:id="@+id/users_icon"
           android:layout_width="7.3dp"
           android:layout_height="8.7dp"
           android:layout_gravity="center_vertical"
@@ -88,7 +87,6 @@
   -->
 
   <LinearLayout
-      android:id="@+id/counts_layout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginEnd="11.7dp"
@@ -99,7 +97,6 @@
       >
 
     <RelativeLayout
-        android:id="@+id/five_rate_star_layout"
         android:layout_width="match_parent"
         android:layout_height="24dp"
         android:orientation="horizontal"
@@ -136,7 +133,6 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/four_rate_star_layout"
         android:layout_width="match_parent"
         android:layout_height="24dp"
         android:orientation="horizontal"
@@ -173,7 +169,6 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/three_rate_star_layout"
         android:layout_width="match_parent"
         android:layout_height="24dp"
         android:orientation="horizontal"
@@ -210,7 +205,6 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/two_rate_star_layout"
         android:layout_width="match_parent"
         android:layout_height="24dp"
         android:orientation="horizontal"
@@ -247,7 +241,6 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/one_rate_star_layout"
         android:layout_width="match_parent"
         android:layout_height="24dp"
         android:orientation="horizontal"

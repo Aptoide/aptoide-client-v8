@@ -11,7 +11,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     >
 
-  <android.support.v4.view.ViewPager
+  <cm.aptoide.pt.view.custom.AptoideViewPager
       android:id="@+id/view_pager"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
@@ -94,7 +94,6 @@
   </LinearLayout>
 
   <View
-      android:id="@+id/horizontal_separator"
       android:layout_width="match_parent"
       android:layout_height="1dp"
       android:layout_above="@id/skip_next_layout"

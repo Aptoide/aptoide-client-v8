@@ -1,6 +1,7 @@
 package cm.aptoide.pt.timeline.view;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -9,6 +10,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.view.fragment.BaseLoaderToolbarFragment;
 
 /**
@@ -47,11 +49,6 @@ public class SocialFragment extends BaseLoaderToolbarFragment {
     socialWebview.loadUrl(socialUrl);
   }
 
-  @Override public void loadExtras(Bundle args) {
-    socialUrl = args.getString(SOCIAL_URL);
-    pageTitle = args.getString(PAGE_TITLE);
-  }
-
   @Override public void setupViews() {
     super.setupViews();
     socialWebview.setWebChromeClient(new WebChromeClient() {
@@ -61,7 +58,6 @@ public class SocialFragment extends BaseLoaderToolbarFragment {
         finishLoading();
       }
     });
-    setHasOptionsMenu(true);
     socialWebview.getSettings()
         .setJavaScriptEnabled(true);
   }
@@ -79,8 +75,23 @@ public class SocialFragment extends BaseLoaderToolbarFragment {
     socialWebview = (WebView) view.findViewById(R.id.social_fragment_layout);
   }
 
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setHasOptionsMenu(true);
+  }
+
+  @Override public void loadExtras(Bundle args) {
+    socialUrl = args.getString(SOCIAL_URL);
+    pageTitle = args.getString(PAGE_TITLE);
+  }
+
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_empty, menu);
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 }

@@ -9,28 +9,46 @@ import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.LifecycleSchim;
 import cm.aptoide.pt.view.recycler.widget.WidgetFactory;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by neuro on 14-04-2016.
  */
-@Accessors(chain = true) public abstract class Displayable implements LifecycleSchim {
+public abstract class Displayable implements LifecycleSchim {
 
-  @Getter CompositeSubscription subscriptions;
-  @Getter private boolean fixedPerLineCount;
-  @Getter private int defaultPerLineCount;
-  @Setter @Getter private boolean isVisible = false;
+  private CompositeSubscription subscriptions;
+  private boolean fixedPerLineCount;
+  private int defaultPerLineCount;
+  private boolean isVisible = false;
 
   /**
    * Needed for reflective {@link Class#newInstance()}.
    */
   public Displayable() {
+    subscriptions = new CompositeSubscription();
     Configs config = getConfig();
     fixedPerLineCount = config.isFixedPerLineCount();
     defaultPerLineCount = config.getDefaultPerLineCount();
+  }
+
+  public CompositeSubscription getSubscriptions() {
+    return subscriptions;
+  }
+
+  public boolean isFixedPerLineCount() {
+    return fixedPerLineCount;
+  }
+
+  public int getDefaultPerLineCount() {
+    return defaultPerLineCount;
+  }
+
+  public boolean isVisible() {
+    return isVisible;
+  }
+
+  public void setVisible(boolean visible) {
+    isVisible = visible;
   }
 
   //public abstract Type getType();
@@ -118,13 +136,21 @@ import rx.subscriptions.CompositeSubscription;
     return this;
   }
 
-  @Getter public class Configs {
+  public class Configs {
     private final int defaultPerLineCount;
     private final boolean fixedPerLineCount;
 
     public Configs(int defaultPerLineCount, boolean fixedPerLineCount) {
       this.defaultPerLineCount = defaultPerLineCount;
       this.fixedPerLineCount = fixedPerLineCount;
+    }
+
+    public int getDefaultPerLineCount() {
+      return this.defaultPerLineCount;
+    }
+
+    public boolean isFixedPerLineCount() {
+      return this.fixedPerLineCount;
     }
   }
 }

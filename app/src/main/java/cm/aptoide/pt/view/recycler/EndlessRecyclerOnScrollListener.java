@@ -12,84 +12,122 @@ import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.view.recycler.displayable.ProgressBarDisplayable;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.LinkedList;
+import java.util.List;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {
 
-  public static String TAG = EndlessRecyclerOnScrollListener.class.getSimpleName();
-  protected final BaseAdapter adapter;
-  protected final Action1 successRequestListener;
-  private final MultiLangPatch multiLangPatch = new MultiLangPatch();
-  protected V7<? extends BaseV7EndlessResponse, ? extends Endless> v7request;
-  protected ErrorRequestListener errorRequestListener;
-  protected int lastTotal;
-  protected int total;
-  protected int offset;
-  protected boolean stableData = false;
-  @Setter protected BooleanAction onFirstLoadListener;
-  @Setter protected Action0 onEndOfListReachedListener;
-  protected boolean endCallbackCalled;
-  protected boolean firstCallbackCalled;
-  protected boolean loading;
-  private int visibleThreshold;
-  // The minimum amount of items to have below your current scroll position before load
-  private boolean bypassCache;
+  private final BaseAdapter adapter;
+  private final int visibleThreshold;
+  private final boolean bypassCache;
+  private final MultiLangPatch multiLangPatch;
+  private final List<OnEndlessFinish> onEndlessFinishList;
+  private final ErrorRequestListener errorRequestListener;
+  private Action1 successRequestListener;
+  private Action0 onEndOfListReachedListener;
+  private int offset;
+  private boolean loading;
+  private V7<? extends BaseV7EndlessResponse, ? extends Endless> v7request;
+  private int lastTotal;
+  private int total;
+  private boolean stableData = false;
+  private boolean firstCallbackCalled;
+  private boolean endCallbackCalled;
   private int firstVisibleItem;
   private int totalItemCount;
   private int visibleItemCount;
-  private RecyclerViewPositionHelper mRecyclerViewHelper;
+  private RecyclerViewPositionHelper recyclerViewPositionHelper;
   private Subscription subscription;
-  @Setter private OnEndlessFinish onEndlessFinish;
+  private BooleanAction onFirstLoadListener;
 
   public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter,
       V7<T, ? extends Endless> v7request, Action1<T> successRequestListener,
       ErrorRequestListener errorRequestListener) {
-    this(baseAdapter, v7request, successRequestListener, errorRequestListener, 6, false, null,
-        null);
+    this.adapter = baseAdapter;
+    this.v7request = v7request;
+    this.successRequestListener = successRequestListener;
+    this.errorRequestListener = errorRequestListener;
+    this.visibleThreshold = 6;
+    this.bypassCache = false;
+    this.onFirstLoadListener = null;
+    this.onEndOfListReachedListener = null;
+    this.endCallbackCalled = false;
+    this.firstCallbackCalled = false;
+    this.multiLangPatch = new MultiLangPatch();
+    this.onEndlessFinishList = new LinkedList<>();
   }
 
   public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter,
       V7<T, ? extends Endless> v7request, Action1<T> successRequestListener,
       ErrorRequestListener errorRequestListener, int visibleThreshold, boolean bypassCache,
       BooleanAction<T> onFirstLoadListener, Action0 onEndOfListReachedListener) {
+    this.multiLangPatch = new MultiLangPatch();
+    this.onEndlessFinishList = new LinkedList<>();
     this.adapter = baseAdapter;
     this.v7request = v7request;
     this.successRequestListener = successRequestListener;
     this.errorRequestListener = errorRequestListener;
     this.visibleThreshold = visibleThreshold;
     this.bypassCache = bypassCache;
+    this.onFirstLoadListener = onFirstLoadListener;
     this.onEndOfListReachedListener = onEndOfListReachedListener;
     this.endCallbackCalled = false;
     this.firstCallbackCalled = false;
-    this.onFirstLoadListener = onFirstLoadListener;
   }
 
   public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter,
       V7<T, ? extends Endless> v7request, Action1<T> successRequestListener,
       ErrorRequestListener errorRequestListener, boolean bypassCache) {
-    this(baseAdapter, v7request, successRequestListener, errorRequestListener, 6, bypassCache, null,
-        null);
+    this.adapter = baseAdapter;
+    this.v7request = v7request;
+    this.successRequestListener = successRequestListener;
+    this.errorRequestListener = errorRequestListener;
+    this.visibleThreshold = 6;
+    this.bypassCache = bypassCache;
+    this.onFirstLoadListener = null;
+    this.onEndOfListReachedListener = null;
+    this.endCallbackCalled = false;
+    this.firstCallbackCalled = false;
+    this.multiLangPatch = new MultiLangPatch();
+    this.onEndlessFinishList = new LinkedList<>();
   }
 
-  public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(
-      BaseAdapter baseAdapter) {
-    this(baseAdapter, null, null, null, 0, false, null, null);
+  public EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter) {
+    this.adapter = baseAdapter;
+    this.v7request = null;
+    this.successRequestListener = null;
+    this.errorRequestListener = null;
+    this.visibleThreshold = 0;
+    this.bypassCache = false;
+    this.onFirstLoadListener = null;
+    this.onEndOfListReachedListener = null;
+    this.endCallbackCalled = false;
+    this.firstCallbackCalled = false;
+    this.multiLangPatch = new MultiLangPatch();
+    this.onEndlessFinishList = new LinkedList<>();
+  }
+
+  public BaseAdapter getAdapter() {
+    return adapter;
+  }
+
+  public void addOnEndlessFinishListener(OnEndlessFinish onEndlessFinish) {
+    onEndlessFinishList.add(onEndlessFinish);
   }
 
   @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
     super.onScrolled(recyclerView, dx, dy);
 
-    if (mRecyclerViewHelper == null) {
-      mRecyclerViewHelper = RecyclerViewPositionHelper.createHelper(recyclerView);
+    if (recyclerViewPositionHelper == null) {
+      recyclerViewPositionHelper = RecyclerViewPositionHelper.createHelper(recyclerView);
     }
+
     visibleItemCount = recyclerView.getChildCount();
-    int firstVisibleItemPosition = mRecyclerViewHelper.findFirstVisibleItemPosition();
+    int firstVisibleItemPosition = recyclerViewPositionHelper.findFirstVisibleItemPosition();
     firstVisibleItem = (firstVisibleItemPosition == -1 ? 0 : firstVisibleItemPosition);
 
     if (shouldLoadMore()) {
@@ -99,72 +137,88 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 
   private boolean shouldLoadMore() {
     return !loading
-        && mRecyclerViewHelper != null
-        && mRecyclerViewHelper.recyclerView.isAttachedToWindow()
-        && (totalItemCount - visibleItemCount) < (firstVisibleItem + visibleThreshold - 1)
+        && recyclerViewPositionHelper != null
+        && recyclerViewPositionHelper.recyclerView.isAttachedToWindow()
+        && isNearTheEndOfTheList()
         && hasMoreElements();
+  }
+
+  private boolean isNearTheEndOfTheList() {
+    return (totalItemCount - visibleItemCount) < (firstVisibleItem + visibleThreshold - 1);
   }
 
   public void onLoadMore(boolean bypassCache) {
     if (!loading) {
       loading = true;
       adapter.addDisplayable(new ProgressBarDisplayable());
-      subscription = v7request.observe(bypassCache)
-          .observeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(response -> {
-            popProgressBarDisplayable();
-            multiLangPatch.updateTotal(response);
-            if (response.hasData()) {
+      if (v7request != null) {
+        subscription = v7request.observe(bypassCache)
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(response -> {
+              popProgressBarDisplayable();
+              multiLangPatch.updateTotal(response);
+            })
+            .subscribe(response -> handleLoadMoreResponseAfterWebRequest(bypassCache, response),
+                this::handleLoadMoreErrorAfterWebRequest);
+      }
+    }
+  }
 
-              stableData = response.hasStableTotal();
-              if (stableData) {
-                total = response.getTotal();
-                offset = response.getNextSize();
-              } else {
-                total += (lastTotal = response.getTotal());
-                offset += response.getNextSize();
-              }
-              v7request.getBody()
-                  .setOffset(offset);
-            }
+  private void handleLoadMoreErrorAfterWebRequest(Throwable error) {
+    error.printStackTrace();
+    popProgressBarDisplayable();
+    errorRequestListener.onError(error);
+    loading = false;
+  }
 
-            if (onFirstLoadListener != null && !firstCallbackCalled) {
-              if (!onFirstLoadListener.call(response)) {
-                successRequestListener.call(response);
-              }
-              firstCallbackCalled = true;
-            } else {
-              // FIXME: 17/08/16 use response.getList() instead
-              successRequestListener.call(response);
-            }
+  private void handleLoadMoreResponseAfterWebRequest(boolean bypassCache,
+      BaseV7EndlessResponse response) {
+    if (response.hasData()) {
 
-            if (!hasMoreElements() && onEndOfListReachedListener != null && !endCallbackCalled) {
-              onEndOfListReachedListener.call();
-              endCallbackCalled = true;
-            }
+      stableData = response.hasStableTotal();
+      if (stableData) {
+        total = response.getTotal();
+        offset = response.getNextSize();
+      } else {
+        total += (lastTotal = response.getTotal());
+        offset += response.getNextSize();
+      }
+      v7request.getBody()
+          .setOffset(offset);
+    }
 
-            loading = false;
-            if (mRecyclerViewHelper != null) {
-              totalItemCount = mRecyclerViewHelper.getItemCount();
-            }
+    if (onFirstLoadListener != null && !firstCallbackCalled) {
+      if (!onFirstLoadListener.call(response)) {
+        successRequestListener.call(response);
+      }
+      firstCallbackCalled = true;
+    } else {
+      // FIXME: 17/08/16 use response.getList() instead
+      successRequestListener.call(response);
+    }
 
-            if (!hasMoreElements()) {
-              if (onEndlessFinish != null) {
-                onEndlessFinish.onEndlessFinish(this);
-              }
-            }
+    loading = false;
+    if (recyclerViewPositionHelper != null) {
+      totalItemCount = recyclerViewPositionHelper.getItemCount();
+    }
 
-            if (shouldLoadMore()) {
-              onLoadMore(bypassCache);
-            }
-          }, error -> {
-            error.printStackTrace();
-            //remove spinner if webservice respond with error
-            popProgressBarDisplayable();
-            errorRequestListener.onError(error);
-            loading = false;
-          });
+    if (!hasMoreElements()) {
+      if (onEndOfListReachedListener != null && !endCallbackCalled) {
+        onEndOfListReachedListener.call();
+        endCallbackCalled = true;
+      }
+
+      if (onEndlessFinishList != null) {
+        for (OnEndlessFinish onEndlessFinish : onEndlessFinishList) {
+          if (onEndlessFinish != null) {
+            onEndlessFinish.onEndlessFinish(this);
+          }
+        }
+      }
+    }
+
+    if (shouldLoadMore()) {
+      onLoadMore(bypassCache);
     }
   }
 
@@ -182,19 +236,18 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
   public void removeListeners() {
     onFirstLoadListener = null;
     onEndOfListReachedListener = null;
+    successRequestListener = null;
   }
 
   public void stopLoading() {
     if (subscription != null && !subscription.isUnsubscribed()) {
       subscription.unsubscribe();
     }
-
     popProgressBarDisplayable();
   }
 
   public void reset(V7<? extends BaseV7EndlessResponse, ? extends Endless> v7request) {
     this.v7request = v7request;
-
     multiLangPatch.updateOffset();
     offset = -1;
     total = 0;
@@ -206,19 +259,5 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 
   public interface OnEndlessFinish {
     void onEndlessFinish(EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener);
-  }
-
-  private class MultiLangPatch {
-
-    @Getter private int total;
-    private int totalWaiting;
-
-    public void updateTotal(BaseV7EndlessResponse response) {
-      this.totalWaiting += response.getTotal();
-    }
-
-    public void updateOffset() {
-      total = totalWaiting;
-    }
   }
 }

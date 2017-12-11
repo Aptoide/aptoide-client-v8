@@ -10,6 +10,35 @@ public class Data {
   private String teleco; //typo telco - this will change in v2
   private Result result;
   private Root root;
+  private String previousContext;
+  private String store;
+  private String previousTag;
+  private Integer campaignId;
+  private String abTestGroup;
+
+  public String getStore() {
+    return store;
+  }
+
+  public void setStore(String store) {
+    this.store = store;
+  }
+
+  public String getPreviousTag() {
+    return previousTag;
+  }
+
+  public void setPreviousTag(String previousTag) {
+    this.previousTag = previousTag;
+  }
+
+  public String getPreviousContext() {
+    return previousContext;
+  }
+
+  public void setPreviousContext(String previousContext) {
+    this.previousContext = previousContext;
+  }
 
   public DataOrigin getOrigin() {
     return origin;
@@ -65,6 +94,22 @@ public class Data {
 
   public void setRoot(Root root) {
     this.root = root;
+  }
+
+  public Integer getCampaignId() {
+    return campaignId;
+  }
+
+  public void setCampaignId(int campaignId) {
+    this.campaignId = campaignId;
+  }
+
+  public String getAbTestGroup() {
+    return abTestGroup;
+  }
+
+  public void setAbTestGroup(String abTestGroup) {
+    this.abTestGroup = abTestGroup;
   }
 
   public enum DataOrigin {

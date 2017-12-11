@@ -15,7 +15,6 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.model.v7.ListComments;
-import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetHomeMeta;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
@@ -35,20 +34,21 @@ import rx.schedulers.Schedulers;
 /**
  * Created by neuro on 27-04-2016.
  */
-public class WSWidgetsUtils {
-  public static final String USER_DONT_HAVE_STORE_ERROR = "MYSTORE-1";
-  public static final String USER_NOT_LOGGED_ERROR = "AUTH-5";
+@Deprecated public class WSWidgetsUtils {
+  private static final String USER_DONT_HAVE_STORE_ERROR = "MYSTORE-1";
+  private static final String USER_NOT_LOGGED_ERROR = "AUTH-5";
 
-  public static Observable<GetStoreWidgets.WSWidget> loadWidgetNode(
-      GetStoreWidgets.WSWidget wsWidget, BaseRequestWithStore.StoreCredentials storeCredentials,
-      boolean refresh, String clientUniqueId, boolean googlePlayServicesAvailable, String oemid,
-      boolean mature, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+  @Deprecated
+  public Observable<GetStoreWidgets.WSWidget> loadWidgetNode(GetStoreWidgets.WSWidget wsWidget,
+      BaseRequestWithStore.StoreCredentials storeCredentials, boolean bypassCache,
+      String clientUniqueId, boolean googlePlayServicesAvailable, String oemid, boolean mature,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, String q, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
       ConnectivityManager connectivityManager,
       AdsApplicationVersionCodeProvider versionCodeProvider) {
 
-    if (isKnownType(wsWidget.getType())) {
+    if (wsWidget.getType() != null) {
 
       String url = null;
       // Can be null in legacy ws :/
@@ -60,7 +60,7 @@ public class WSWidgetsUtils {
         case APPS_GROUP:
           return ListAppsRequest.ofAction(url, storeCredentials, bodyInterceptor, httpClient,
               converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager)
-              .observe(refresh)
+              .observe(bypassCache)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
@@ -69,7 +69,7 @@ public class WSWidgetsUtils {
         case STORES_GROUP:
           return ListStoresRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory,
               tokenInvalidator, sharedPreferences)
-              .observe(refresh)
+              .observe(bypassCache)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
@@ -78,7 +78,7 @@ public class WSWidgetsUtils {
         case DISPLAYS:
           return GetStoreDisplaysRequest.ofAction(url, storeCredentials, bodyInterceptor,
               httpClient, converterFactory, tokenInvalidator, sharedPreferences)
-              .observe(refresh)
+              .observe(bypassCache)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
@@ -88,7 +88,7 @@ public class WSWidgetsUtils {
           return GetAdsRequest.ofHomepage(clientUniqueId, googlePlayServicesAvailable, oemid,
               mature, httpClient, converterFactory, q, sharedPreferences, resources, windowManager,
               connectivityManager, versionCodeProvider)
-              .observe(refresh)
+              .observe(bypassCache)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
@@ -97,16 +97,16 @@ public class WSWidgetsUtils {
         case HOME_META:
           return GetHomeMetaRequest.ofAction(url, storeCredentials, bodyInterceptor, httpClient,
               converterFactory, tokenInvalidator, sharedPreferences)
-              .observe(refresh)
+              .observe(bypassCache)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listApps -> wsWidget);
 
         case COMMENTS_GROUP:
-          return ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials, bodyInterceptor,
-              httpClient, converterFactory, tokenInvalidator, sharedPreferences)
-              .observe(refresh)
+          return ListCommentsRequest.ofStoreAction(url, bypassCache, storeCredentials,
+              bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
+              .observe(bypassCache)
               .observeOn(Schedulers.io())
               .doOnNext(listComments -> wsWidget.setViewObject(
                   new Pair<ListComments, BaseRequestWithStore.StoreCredentials>(listComments,
@@ -115,9 +115,9 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case REVIEWS_GROUP:
-          return ListFullReviewsRequest.ofAction(url, refresh, storeCredentials, bodyInterceptor,
-              httpClient, converterFactory, tokenInvalidator, sharedPreferences)
-              .observe(refresh)
+          return ListFullReviewsRequest.ofAction(url, bypassCache, storeCredentials,
+              bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
+              .observe(bypassCache)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
@@ -127,7 +127,7 @@ public class WSWidgetsUtils {
         case STORES_RECOMMENDED:
           return GetMyStoreListRequest.of(url, bodyInterceptor, httpClient, converterFactory,
               tokenInvalidator, sharedPreferences, resources, windowManager)
-              .observe(refresh)
+              .observe(bypassCache)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .doOnError(throwable -> {
@@ -145,11 +145,11 @@ public class WSWidgetsUtils {
           return Observable.zip(
               GetTimelineStatsRequest.of(bodyInterceptor, null, httpClient, converterFactory,
                   tokenInvalidator, sharedPreferences)
-                  .observe(refresh)
+                  .observe(bypassCache)
                   .onErrorReturn(throwable -> null),
               GetMyStoreMetaRequest.of(bodyInterceptor, httpClient, converterFactory,
                   tokenInvalidator, sharedPreferences)
-                  .observe(refresh)
+                  .observe(bypassCache)
                   .observeOn(Schedulers.io())
                   .map(getStoreMeta -> {
                     GetHomeMeta.Data data = new GetHomeMeta.Data();
@@ -175,7 +175,7 @@ public class WSWidgetsUtils {
         case APP_META:
           return GetAppMetaRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory,
               tokenInvalidator, sharedPreferences)
-              .observe(refresh)
+              .observe(bypassCache)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
@@ -193,11 +193,7 @@ public class WSWidgetsUtils {
     }
   }
 
-  private static boolean isKnownType(Type type) {
-    return type != null;
-  }
-
-  public static boolean shouldAddObjectView(List<String> list, Throwable throwable) {
+  @Deprecated public boolean shouldAddObjectView(List<String> list, Throwable throwable) {
     if (throwable instanceof AptoideWsV7Exception) {
       for (BaseV7Response.Error error : ((AptoideWsV7Exception) throwable).getBaseResponse()
           .getErrors()) {

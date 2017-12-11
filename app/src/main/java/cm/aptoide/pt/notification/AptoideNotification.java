@@ -15,8 +15,11 @@ import lombok.ToString;
   public static final int COMMENT = 1;
   public static final int LIKE = 2;
   public static final int POPULAR = 3;
+  public static final int NEW_FOLLOWER = 4;
+  public static final int NEW_SHARE = 5;
+  public static final int NEW_ACTIVITY = 6;
   public static final int NOT_DISMISSED = Notification.NOT_DISMISSED;
-  private final Long expire;
+  private Long expire;
   private String appName;
   private String graphic;
   private long dismissed;
@@ -32,10 +35,11 @@ import lombok.ToString;
   private @NotificationType int type;
   private long timeStamp;
   private String notificationCenterUrlTrack;
+  private boolean processed;
 
   public AptoideNotification(String body, String img, String title, String url, int type,
       long timeStamp, String appName, String graphic, long dismissed, String ownerId,
-      Long expireSecsUtc, String urlTrack, String notificationCenterUrlTrack) {
+      String urlTrack, String notificationCenterUrlTrack, boolean processed, Long expireSecsUtc) {
     this.body = body;
     this.img = img;
     this.title = title;
@@ -49,32 +53,39 @@ import lombok.ToString;
     this.expire = expireSecsUtc;
     this.urlTrack = urlTrack;
     this.notificationCenterUrlTrack = notificationCenterUrlTrack;
+    this.processed = processed;
   }
 
   public AptoideNotification(String body, String img, String title, String url, int type,
-      String appName, String graphic, long dismissed, String ownerId, Long expireSecsUtc,
-      String urlTrack, String notificationCenterUrlTrack) {
-    this(body, img, title, url, type, System.currentTimeMillis(), appName, graphic, dismissed,
-        ownerId, expireSecsUtc * 1000, urlTrack, notificationCenterUrlTrack);
-  }
-
-  public AptoideNotification(String abTestingGroup, String body, int campaignId, String img,
-      String lang, String title, String url, String urlTrack, String appName, String graphic,
-      String ownerId, Long expireSecsUtc, String notificationCenterUrlTrack) {
-    this(abTestingGroup, body, campaignId, img, lang, title, url, urlTrack,
-        System.currentTimeMillis(), CAMPAIGN, NOT_DISMISSED, appName, graphic, ownerId,
-        expireSecsUtc, notificationCenterUrlTrack);
-  }
-
-  public AptoideNotification(String abTestingGroup, String body, int campaignId, String img,
-      String lang, String title, String url, String urlTrack, long timeStamp, int type,
-      long dismissed, String appName, String graphic, String ownerId, Long expireSecsUtc,
-      String notificationCenterUrlTrack) {
-    this(body, img, title, url, type, timeStamp, appName, graphic, dismissed, ownerId,
-        expireSecsUtc, urlTrack, notificationCenterUrlTrack);
+      String appName, String graphic, long dismissed, String ownerId, String urlTrack,
+      String notificationCenterUrlTrack, boolean processed, long timeStamp, Long expireSecsUtc,
+      String abTestingGroup, int campaignId, String lang) {
+    this(body, img, title, url, type, timeStamp, appName, graphic, dismissed, ownerId, urlTrack,
+        notificationCenterUrlTrack, processed, expireSecsUtc);
     this.abTestingGroup = abTestingGroup;
     this.campaignId = campaignId;
     this.lang = lang;
+  }
+
+  public AptoideNotification(String img, String title, String url, String urlTrack, String graphic,
+      int type, int campaignId, long timeStamp, String ownerId) {
+    this.img = img;
+    this.title = title;
+    this.url = url;
+    this.urlTrack = urlTrack;
+    this.graphic = graphic;
+    this.type = type;
+    this.campaignId = campaignId;
+    this.timeStamp = timeStamp;
+    this.ownerId = ownerId;
+  }
+
+  public boolean isProcessed() {
+    return processed;
+  }
+
+  public void setProcessed(boolean processed) {
+    this.processed = processed;
   }
 
   public long getDismissed() {
@@ -141,7 +152,8 @@ import lombok.ToString;
     return notificationCenterUrlTrack;
   }
 
-  @Retention(RetentionPolicy.SOURCE) @IntDef({ CAMPAIGN, COMMENT, LIKE, POPULAR })
+  @Retention(RetentionPolicy.SOURCE)
+  @IntDef({ CAMPAIGN, COMMENT, LIKE, POPULAR, NEW_FOLLOWER, NEW_SHARE, NEW_ACTIVITY })
   public @interface NotificationType {
   }
 }

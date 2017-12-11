@@ -11,6 +11,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserLikesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.timeline.view.displayable.FollowUserDisplayable;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowFragment;
 import cm.aptoide.pt.view.recycler.EndlessRecyclerOnScrollListener;
@@ -33,8 +34,8 @@ public class TimeLineLikesFragment extends TimeLineFollowFragment {
   private String defaultTheme;
 
   public static TimeLineLikesFragment newInstance(String storeTheme, String cardUid,
-      long numberOfLikes, String title) {
-    Bundle args = new Bundle();
+      long numberOfLikes, String title, StoreContext storeContext) {
+    Bundle args = TimeLineFollowFragment.buildBundle(storeContext);
     args.putString(TITLE_KEY, title);
     args.putString(BundleCons.STORE_THEME, storeTheme);
     args.putString(BundleKeys.CARD_UID, cardUid);
@@ -46,13 +47,13 @@ public class TimeLineLikesFragment extends TimeLineFollowFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    defaultTheme = ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
-    baseBodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    defaultTheme = application.getDefaultThemeName();
+    baseBodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();
+    httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    tokenInvalidator =
-        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
+    tokenInvalidator = application.getTokenInvalidator();
   }
 
   @Override public void loadExtras(Bundle args) {

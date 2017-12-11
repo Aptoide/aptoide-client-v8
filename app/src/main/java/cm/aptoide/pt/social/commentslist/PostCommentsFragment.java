@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
@@ -80,10 +81,9 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     replyEventPublishSubject = PublishSubject.create();
     attachPresenter(new PostCommentsPresenter(this, new Comments(
-            new PostCommentsRepository(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-                sharedPreferences)),
-            getArguments().containsKey(POST_ID_KEY) ? getArguments().getString(POST_ID_KEY) : null),
-        savedInstanceState);
+        new PostCommentsRepository(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+            sharedPreferences)),
+        getArguments().containsKey(POST_ID_KEY) ? getArguments().getString(POST_ID_KEY) : null));
     adapter = new PostCommentsAdapter(new ArrayList<>(), replyEventPublishSubject);
   }
 
@@ -141,5 +141,10 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
 
   @Override public void showComments(List<Comment> comments) {
     adapter.addComments(comments);
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 }

@@ -8,11 +8,12 @@ import android.text.style.ForegroundColorSpan;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.TimelineStats;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
-import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.view.spannable.SpannableFactory;
 import lombok.Getter;
 
 /**
@@ -28,6 +29,7 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
   private TimelineAnalytics timelineAnalytics;
   private long storeId;
   private Resources resources;
+  private StoreContext storeContext;
 
   public TimeLineStatsDisplayable() {
   }
@@ -79,18 +81,18 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
           .newTimeLineFollowersUsingStoreIdFragment(storeId, storeTheme,
               AptoideUtils.StringU.getFormattedString(
                   R.string.social_timeline_followers_fragment_title, resources, getPojo().getData()
-                      .getFollowers())), true);
+                      .getFollowers()), storeContext), true);
     } else if (userId != null && userId > 0) {
       navigator.navigateTo(AptoideApplication.getFragmentProvider()
           .newTimeLineFollowersUsingUserIdFragment(userId, storeTheme,
               AptoideUtils.StringU.getFormattedString(
                   R.string.social_timeline_followers_fragment_title, resources, getPojo().getData()
-                      .getFollowers())), true);
+                      .getFollowers()), storeContext), true);
     } else {
       navigator.navigateTo(AptoideApplication.getFragmentProvider()
           .newTimeLineFollowersFragment(storeTheme, AptoideUtils.StringU.getFormattedString(
               R.string.social_timeline_followers_fragment_title, resources, getPojo().getData()
-                  .getFollowers())), true);
+                  .getFollowers()), storeContext), true);
     }
     return null;
   }
@@ -101,13 +103,13 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
           .newTimeLineFollowingFragmentUsingStoreId(storeId, storeTheme,
               AptoideUtils.StringU.getFormattedString(
                   R.string.social_timeline_following_fragment_title, resources, getPojo().getData()
-                      .getFollowing())), true);
+                      .getFollowing()), storeContext), true);
     } else {
       navigator.navigateTo(AptoideApplication.getFragmentProvider()
           .newTimeLineFollowingFragmentUsingUserId(userId, storeTheme,
               AptoideUtils.StringU.getFormattedString(
                   R.string.social_timeline_following_fragment_title, resources, getPojo().getData()
-                      .getFollowing())), true);
+                      .getFollowing()), storeContext), true);
     }
     return null;
   }

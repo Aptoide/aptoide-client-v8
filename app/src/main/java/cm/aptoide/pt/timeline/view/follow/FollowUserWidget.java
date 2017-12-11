@@ -3,6 +3,7 @@ package cm.aptoide.pt.timeline.view.follow;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
@@ -25,12 +26,10 @@ import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.timeline.view.displayable.FollowUserDisplayable;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import okhttp3.OkHttpClient;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 
 /**
  * Created by trinkes on 16/12/2016.
@@ -72,12 +71,12 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
   }
 
   @Override public void bindView(FollowUserDisplayable displayable) {
-    accountManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    accountManager = application.getAccountManager();
     final BodyInterceptor<BaseBody> bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    final OkHttpClient httpClient =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+        application.getAccountSettingsBodyInterceptorPoolV7();
+    final OkHttpClient httpClient = application.getDefaultClient();
 
     if (!displayable.isLike()) {
       followLayout.setVisibility(View.GONE);
@@ -94,8 +93,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
       }
 
       final String storeName = displayable.getStoreName();
-      final String storeTheme =
-          ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
+      final String storeTheme = application.getDefaultThemeName();
 
       final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor,
           new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
@@ -103,43 +101,46 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
                   .getApplicationContext()).getDatabase(), Store.class)),
           AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
               .getApplicationContext()).getDatabase(), Store.class), httpClient,
-          WebService.getDefaultConverter(),
-          ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
-          ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
-
-      Action1<Void> openStore = __ -> {
-        getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-            .newStoreFragment(storeName, storeTheme), true);
-      };
-
-      Action1<Void> subscribeStore = __ -> {
-        storeUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
-          ShowMessage.asSnack(itemView,
-              AptoideUtils.StringU.getFormattedString(R.string.store_followed,
-                  getContext().getResources(), storeName));
-        }, err -> {
-          CrashReport.getInstance()
-              .log(err);
-        }, accountManager);
-      };
+          WebService.getDefaultConverter(), application.getTokenInvalidator(),
+          application.getDefaultSharedPreferences());
 
       StoreRepository storeRepository =
           RepositoryFactory.getStoreRepository(getContext().getApplicationContext());
+
+      compositeSubscription.add(RxView.clicks(follow)
+          .flatMap(__ -> storeRepository.isSubscribed(storeName)
+              .first())
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(isSubscribed -> {
+            if (isSubscribed) {
+              follow.setVisibility(View.VISIBLE);
+              follow.setText(R.string.follow);
+              Snackbar.make(itemView,
+                  AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
+                      getContext().getResources(), storeName), Snackbar.LENGTH_SHORT)
+                  .show();
+              storeUtilsProxy.unSubscribeStore(storeName);
+            } else {
+              follow.setVisibility(View.INVISIBLE);
+              Snackbar.make(itemView,
+                  AptoideUtils.StringU.getFormattedString(R.string.store_followed,
+                      getContext().getResources(), storeName), Snackbar.LENGTH_SHORT)
+                  .show();
+              storeUtilsProxy.subscribeStore(storeName);
+            }
+          }, e -> CrashReport.getInstance()
+              .log(e)));
+
       compositeSubscription.add(storeRepository.isSubscribed(displayable.getStoreName())
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(isSubscribed -> {
             if (isSubscribed) {
-              follow.setText(R.string.followed);
-              compositeSubscription.add(RxView.clicks(follow)
-                  .subscribe(openStore));
+              follow.setVisibility(View.INVISIBLE);
             } else {
+              follow.setVisibility(View.VISIBLE);
               follow.setText(R.string.follow);
-              compositeSubscription.add(RxView.clicks(follow)
-                  .subscribe(subscribeStore));
             }
-          }, (throwable) -> {
-            throwable.printStackTrace();
-          }));
+          }, (throwable) -> throwable.printStackTrace()));
     }
 
     final FragmentActivity context = getContext();
@@ -180,10 +181,9 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     followingTv.setTextColor(displayable.getStoreColor(getContext().getApplicationContext()));
 
     compositeSubscription.add(RxView.clicks(itemView)
-        .subscribe(click -> displayable.viewClicked(getFragmentNavigator()), err -> {
-          CrashReport.getInstance()
-              .log(err);
-        }));
+        .subscribe(click -> displayable.viewClicked(getFragmentNavigator()),
+            err -> CrashReport.getInstance()
+                .log(err)));
   }
 
   private void setFollowColor(FollowUserDisplayable displayable) {

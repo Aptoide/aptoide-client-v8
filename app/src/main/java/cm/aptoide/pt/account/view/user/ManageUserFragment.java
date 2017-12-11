@@ -24,6 +24,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
 import cm.aptoide.pt.account.view.ImagePickerErrorHandler;
 import cm.aptoide.pt.account.view.ImagePickerNavigator;
@@ -32,14 +33,15 @@ import cm.aptoide.pt.account.view.ImageValidator;
 import cm.aptoide.pt.account.view.PhotoFileGenerator;
 import cm.aptoide.pt.account.view.UriToPathResolver;
 import cm.aptoide.pt.account.view.exception.InvalidImageException;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.permission.AccountPermissionProvider;
+import cm.aptoide.pt.permission.PermissionProvider;
 import cm.aptoide.pt.presenter.CompositePresenter;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.dialog.ImagePickerDialog;
-import cm.aptoide.pt.view.permission.AccountPermissionProvider;
-import cm.aptoide.pt.view.permission.PermissionProvider;
 import com.jakewharton.rxbinding.support.design.widget.RxSnackbar;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Arrays;
@@ -56,7 +58,6 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   private static final String EXTRA_USER_MODEL = "user_model";
   private static final String EXTRA_IS_EDIT = "is_edit";
   @DrawableRes private static final int DEFAULT_IMAGE_PLACEHOLDER = R.drawable.create_user_avatar;
-
   private ImageView userPicture;
   private RelativeLayout userPictureLayout;
   private EditText userName;
@@ -111,9 +112,10 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
     Bundle args = getArguments();
     isEditProfile = args != null && args.getBoolean(EXTRA_IS_EDIT, false);
 
-    navigator = new ManageUserNavigator(getFragmentNavigator(),
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultStore(),
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme());
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    navigator = new ManageUserNavigator(getFragmentNavigator(), application.getDefaultStoreName(),
+        application.getDefaultThemeName());
     fileProviderAuthority = BuildConfig.APPLICATION_ID + ".provider";
     photoFileGenerator = new PhotoFileGenerator(getActivity(),
         getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileProviderAuthority);
@@ -122,11 +124,11 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
     accountPermissionProvider = new AccountPermissionProvider(((PermissionProvider) getActivity()));
     imageValidator = new ImageValidator(ImageLoader.with(context), Schedulers.computation());
     imagePickerNavigator = new ImagePickerNavigator(getActivityNavigator());
-    createStoreUserPrivacyEnabled =
-        ((AptoideApplication) getActivity().getApplication()).isCreateStoreUserPrivacyEnabled();
+    createStoreUserPrivacyEnabled = application.isCreateStoreUserPrivacyEnabled();
     accountManager = ((AptoideApplication) getActivity().getApplication()).getAccountManager();
     errorMapper =
-        new CreateUserErrorMapper(context, new AccountErrorMapper(context), getResources());
+        new CreateUserErrorMapper(context, new AccountErrorMapper(context, new ErrorsMapper()),
+            getResources());
 
     imagePickerErrorHandler = new ImagePickerErrorHandler(context);
 
@@ -142,15 +144,32 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
         context.getString(R.string.please_wait_upload));
   }
 
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    outState.putParcelable(EXTRA_USER_MODEL, Parcels.wrap(currentModel));
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    bindViews(view);
+    setupToolbar();
+    if (isEditProfile) {
+      createUserButton.setText(getString(R.string.edit_profile_save_button));
+      cancelUserProfile.setVisibility(View.VISIBLE);
+      header.setText(getString(R.string.edit_profile_header_message));
+    }
+    attachPresenters();
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     return inflater.inflate(R.layout.fragment_manage_user, container, false);
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putParcelable(EXTRA_USER_MODEL, Parcels.wrap(currentModel));
   }
 
   private void bindViews(View view) {
@@ -186,19 +205,7 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
             currentModel, isEditProfile, uriToPathResolver, createStoreUserPrivacyEnabled);
 
     attachPresenter(
-        new CompositePresenter(Arrays.asList(manageUserPresenter, imagePickerPresenter)), null);
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    bindViews(view);
-    setupToolbar();
-    if (isEditProfile) {
-      createUserButton.setText(getString(R.string.edit_profile_save_button));
-      cancelUserProfile.setVisibility(View.VISIBLE);
-      header.setText(getString(R.string.edit_profile_header_message));
-    }
-    attachPresenters();
+        new CompositePresenter(Arrays.asList(manageUserPresenter, imagePickerPresenter)));
   }
 
   @Override public void onDestroyView() {

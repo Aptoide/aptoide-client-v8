@@ -1,11 +1,11 @@
 package cm.aptoide.pt.social.data;
 
 import android.text.TextUtils;
-import cm.aptoide.pt.PackageRepository;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.Recommendation;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.TimelineItem;
+import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.updates.UpdateRepository;
 import java.util.Set;
 import rx.Observable;
@@ -51,7 +51,7 @@ public class TimelineCardFilter {
           .toSingle()
           .onErrorResumeNext(err -> Single.just(null))
           .flatMapObservable(update -> {
-            if (update.isExcluded()) {
+            if (update == null || update.isExcluded()) {
               return Observable.empty();
             } else {
               return Observable.just(timelineCard);

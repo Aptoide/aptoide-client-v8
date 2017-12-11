@@ -22,6 +22,8 @@ import android.widget.EditText;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.repository.RepositoryFactory;
@@ -41,6 +43,7 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
 
   public static final String SCREENSHOT_PATH = "SCREENSHOT_PATH";
   public static final String LOGS_FILE_NAME = "logs.txt";
+  private static final String CARD_ID = "card_id";
   private final String KEY_SCREENSHOT_PATH = "screenShotPath";
   private Button sendFeedbackBtn;
   private CheckBox logsAndScreenshotsCb;
@@ -49,6 +52,8 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
   private EditText subgectEdit;
   private Subscription unManagedSubscription;
   private InstalledRepository installedRepository;
+  private String cardId;
+  private NavigationTracker aptoideNavigationTracker;
 
   public static SendFeedbackFragment newInstance(String screenshotFilePath) {
     SendFeedbackFragment sendFeedbackFragment = new SendFeedbackFragment();
@@ -58,18 +63,33 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
     return sendFeedbackFragment;
   }
 
+  public static SendFeedbackFragment newInstance(String screenShotPath, String cardId) {
+    SendFeedbackFragment sendFeedbackFragment = new SendFeedbackFragment();
+    Bundle bundle = new Bundle();
+    bundle.putString(SCREENSHOT_PATH, screenShotPath);
+    bundle.putString(CARD_ID, cardId);
+    sendFeedbackFragment.setArguments(bundle);
+    return sendFeedbackFragment;
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
+  }
+
   @Override public void setArguments(Bundle args) {
     super.setArguments(args);
     screenShotPath = args.getString(SCREENSHOT_PATH);
-  }
-
-  @Override public void onAttach(Activity activity) {
-    super.onAttach(activity);
+    cardId = args.getString(CARD_ID);
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     outState.putString(KEY_SCREENSHOT_PATH, screenShotPath);
+  }
+
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -85,6 +105,9 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
     super.onCreate(savedInstanceState);
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
+    aptoideNavigationTracker =
+        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
+    setHasOptionsMenu(true);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -103,7 +126,6 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
 
   @Override public void setupViews() {
     super.setupViews();
-    setHasOptionsMenu(true);
     RxView.clicks(sendFeedbackBtn)
         .subscribe(aVoid -> sendFeedback(), err -> {
           CrashReport.getInstance()
@@ -128,46 +150,12 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
       Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
       emailIntent.setType("message/rfc822");
 
+      final AptoideApplication application =
+          (AptoideApplication) getContext().getApplicationContext();
       emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {
-          ((AptoideApplication) getContext().getApplicationContext()).getFeedbackEmail()
+          application.getFeedbackEmail()
       });
-
-      //String versionName = "";
-      //Installed installed = DeprecatedDatabase.InstalledQ.get(getContext().getPackageName(), realm);
-      //if (installed != null) {
-      //  versionName = installed.getVersionName();
-      //}
-      //
-      //emailIntent.putExtra(Intent.EXTRA_SUBJECT,
-      //    "[Feedback]-" + versionName + ": " + subgectEdit.getText().toString());
-      //emailIntent.putExtra(Intent.EXTRA_TEXT, messageBodyEdit.getText().toString());
-      ////attach screenshots and logs
-      //if (logsAndScreenshotsCb.isChecked()) {
-      //  ArrayList<Uri> uris = new ArrayList<Uri>();
-      //  File ss = new File(screenShotPath);
-      //  if (ss != null) {
-      //    Uri urifile = Uri.fromFile(ss);
-      //    uris.add(urifile);
-      //  }
-      //
-      //  File logs = AptoideUtils.SystemU.readLogs(Application.getConfiguration().getCachePath(),
-      //      LOGS_FILE_NAME);
-      //  if (logs != null) {
-      //    Uri urifile = Uri.fromFile(logs);
-      //    uris.add(urifile);
-      //  }
-      //  emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
-      //}
-      //try {
-      //  startActivity(emailIntent);
-      //  getActivity().onBackPressed();
-      //  //				Analytics.SendFeedback.sendFeedback();
-      //} catch (android.content.ActivityNotFoundException ex) {
-      //  ShowMessage.asSnack(getView(), R.string.feedback_no_email);
-      //}
-
-      //attach screenshots and logs
-      //				Analytics.SendFeedback.sendFeedback();
+      final String cachePath = application.getCachePath();
       unManagedSubscription = installedRepository.getInstalled(getContext().getPackageName())
           .first()
           .observeOn(AndroidSchedulers.mainThread())
@@ -189,12 +177,13 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
                 File ss = new File(screenShotPath);
                 uris.add(getUriFromFile(ss));
               }
-              File logs = AptoideUtils.SystemU.readLogs(
-                  ((AptoideApplication) getContext().getApplicationContext()).getCachePath(),
-                  LOGS_FILE_NAME);
+              File logs = AptoideUtils.SystemU.readLogs(cachePath, LOGS_FILE_NAME,
+                  cardId != null ? cardId : aptoideNavigationTracker.getPrettyScreenHistory());
+
               if (logs != null) {
                 uris.add(getUriFromFile(logs));
               }
+
               emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
             }
             try {

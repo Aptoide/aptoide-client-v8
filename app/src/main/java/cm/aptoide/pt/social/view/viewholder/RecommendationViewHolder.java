@@ -3,6 +3,7 @@ package cm.aptoide.pt.social.view.viewholder;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.PopupMenu;
 import android.text.Spannable;
 import android.view.View;
 import android.widget.Button;
@@ -12,12 +13,14 @@ import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.CardTouchEvent;
+import cm.aptoide.pt.social.data.Post;
+import cm.aptoide.pt.social.data.PostPopupMenuBuilder;
 import cm.aptoide.pt.social.data.Recommendation;
 import cm.aptoide.pt.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.timeline.view.LikeButtonView;
 import cm.aptoide.pt.util.DateCalculator;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.view.spannable.SpannableFactory;
 import java.util.Date;
 import rx.subjects.PublishSubject;
 
@@ -42,6 +45,7 @@ public class RecommendationViewHolder extends PostViewHolder<Recommendation> {
   private final TextView commentButton;
   private final TextView shareButton;
   private final String marketName;
+  private final View overflowMenu;
 
   public RecommendationViewHolder(View view,
       PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, DateCalculator dateCalculator,
@@ -71,30 +75,31 @@ public class RecommendationViewHolder extends PostViewHolder<Recommendation> {
     this.commentButton = (TextView) view.findViewById(R.id.social_comment);
     this.shareButton = (TextView) view.findViewById(R.id.social_share);
     this.marketName = marketName;
+    this.overflowMenu = itemView.findViewById(R.id.overflow_menu);
   }
 
-  @Override public void setPost(Recommendation card, int position) {
+  @Override public void setPost(Recommendation post, int position) {
     ImageLoader.with(itemView.getContext())
-        .loadWithShadowCircleTransform(card.getPublisherDrawableId(), headerIcon);
-    this.headerTitle.setText(getStyledTitle(itemView.getContext(), card));
+        .loadWithShadowCircleTransform(post.getPublisherDrawableId(), headerIcon);
+    this.headerTitle.setText(getStyledTitle(itemView.getContext(), post));
     this.headerSubTitle.setText(
-        getTimeSinceRecommendation(itemView.getContext(), card.getTimestamp()));
+        getTimeSinceRecommendation(itemView.getContext(), post.getTimestamp()));
     ImageLoader.with(itemView.getContext())
-        .load(card.getAppIcon(), appIcon);
-    this.appName.setText(card.getAppName());
+        .load(post.getAppIcon(), appIcon);
+    this.appName.setText(post.getAppName());
     this.relatedToText.setText(itemView.getContext()
         .getString(R.string.timeline_short_related_to)
         .toLowerCase());
-    this.relatedToApp.setText(card.getRelatedToAppName());
+    this.relatedToApp.setText(post.getRelatedToAppName());
 
     this.getAppButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
+        new CardTouchEvent(post, position, CardTouchEvent.Type.BODY)));
     this.appIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
-    if (card.isLiked()) {
-      if (card.isLikeFromClick()) {
+        new CardTouchEvent(post, position, CardTouchEvent.Type.BODY)));
+    if (post.isLiked()) {
+      if (post.isLikeFromClick()) {
         likeButton.setHeartState(true);
-        card.setLikedFromClick(false);
+        post.setLikedFromClick(false);
       } else {
         likeButton.setHeartStateWithoutAnimation(true);
       }
@@ -102,15 +107,16 @@ public class RecommendationViewHolder extends PostViewHolder<Recommendation> {
       likeButton.setHeartState(false);
     }
 
-    handleCommentsInformation(card);
+    setupOverflowMenu(post, position);
+    handleCommentsInformation(post, position);
 
     this.like.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new SocialCardTouchEvent(card, CardTouchEvent.Type.LIKE, position)));
+        new SocialCardTouchEvent(post, CardTouchEvent.Type.LIKE, position)));
 
     this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new SocialCardTouchEvent(card, CardTouchEvent.Type.COMMENT, position)));
+        new SocialCardTouchEvent(post, CardTouchEvent.Type.COMMENT, position)));
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.SHARE)));
+        new CardTouchEvent(post, position, CardTouchEvent.Type.SHARE)));
   }
 
   private Spannable getStyledTitle(Context context, Recommendation card) {
@@ -126,5 +132,18 @@ public class RecommendationViewHolder extends PostViewHolder<Recommendation> {
   public String getTitle(Resources resources) {
     return AptoideUtils.StringU.getFormattedString(
         R.string.timeline_title_card_title_recommend_present_singular, resources, marketName);
+  }
+
+  private void setupOverflowMenu(Post post, int position) {
+    overflowMenu.setOnClickListener(view -> {
+      PopupMenu popupMenu = new PostPopupMenuBuilder().prepMenu(itemView.getContext(), overflowMenu)
+          .addReportAbuse(menuItem -> {
+            cardTouchEventPublishSubject.onNext(
+                new CardTouchEvent(post, position, CardTouchEvent.Type.REPORT_ABUSE));
+            return false;
+          })
+          .getPopupMenu();
+      popupMenu.show();
+    });
   }
 }

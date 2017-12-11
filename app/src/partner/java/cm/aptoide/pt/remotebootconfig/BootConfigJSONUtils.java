@@ -9,14 +9,10 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.PartnersSecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.remotebootconfig.datamodel.RemoteBootConfig;
-import com.google.gson.Gson;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Created by diogoloureiro on 11/08/2017.
@@ -32,14 +28,18 @@ public class BootConfigJSONUtils {
   /**
    * get remote boot config that was saved
    */
-  public static RemoteBootConfig getSavedRemoteBootConfig(Context context) {
+  public static RemoteBootConfig getSavedRemoteBootConfig(Context context,
+      ObjectMapper objectMapper) {
     if (isSavedRemoteBootConfigAvailable(getSharedPreferences(context))) {
-      Gson gson = new Gson();
-      String json =
-          PartnersSecurePreferences.getRemoteBootConfigJSONString(getSharedPreferences(context));
-      return gson.fromJson(json, RemoteBootConfig.class);
+      try {
+        final String json =
+            PartnersSecurePreferences.getRemoteBootConfigJSONString(getSharedPreferences(context));
+        return objectMapper.readValue(json, RemoteBootConfig.class);
+      } catch (IOException e) {
+        throw new IllegalStateException("Could not load local boot configuration", e);
+      }
     } else {
-      return getLocalBootConfig(context);
+      return getLocalBootConfig(context, objectMapper);
     }
   }
 
@@ -49,30 +49,40 @@ public class BootConfigJSONUtils {
    * @param context context
    * @param remoteBootConfig remote boot config object to save as a shared preference
    * @param feedbackEmail
+   * @param objectMapper
    */
   public static void saveRemoteBootConfig(Context context, RemoteBootConfig remoteBootConfig,
-      String feedbackEmail) {
+      String feedbackEmail, ObjectMapper objectMapper) {
     if (isSavedRemoteBootConfigAvailable(getSharedPreferences(context))) {
-      if (isRemoteBootConfigValid(remoteBootConfig, getSavedRemoteBootConfig(context),
+      if (isRemoteBootConfigValid(remoteBootConfig, getSavedRemoteBootConfig(context, objectMapper),
           feedbackEmail)) {
-        saveBootConfigToSharedPreferences(remoteBootConfig, getSharedPreferences(context));
+        try {
+          saveBootConfigToSharedPreferences(remoteBootConfig, getSharedPreferences(context),
+              objectMapper);
+        } catch (JsonProcessingException ignored) {
+          getLocalBootConfig(context, objectMapper);
+        }
       } else {
-        Logger.d(TAG, "can't save it, something is wrong with it");
+        getLocalBootConfig(context, objectMapper);
       }
     } else {
-      getLocalBootConfig(context);
+      getLocalBootConfig(context, objectMapper);
     }
   }
 
   /**
    * get local raw .json boot config
    */
-  private static RemoteBootConfig getLocalBootConfig(Context context) {
-    RemoteBootConfig remoteBootConfig =
-        new Gson().fromJson(readJSONBootConfigFromRawFile(context).toString(),
-            RemoteBootConfig.class);
-    saveBootConfigToSharedPreferences(remoteBootConfig, getSharedPreferences(context));
-    return remoteBootConfig;
+  private static RemoteBootConfig getLocalBootConfig(Context context, ObjectMapper objectMapper) {
+    try {
+      final RemoteBootConfig remoteBootConfig = objectMapper.readValue(context.getResources()
+          .openRawResource(R.raw.boot_config), RemoteBootConfig.class);
+      saveBootConfigToSharedPreferences(remoteBootConfig, getSharedPreferences(context),
+          objectMapper);
+      return remoteBootConfig;
+    } catch (IOException e) {
+      throw new IllegalStateException("Could not load local boot configuration", e);
+    }
   }
 
   /**
@@ -90,9 +100,9 @@ public class BootConfigJSONUtils {
    * saves the boot config to the shared preferences
    */
   private static void saveBootConfigToSharedPreferences(RemoteBootConfig remoteBootConfig,
-      SharedPreferences sharedPreferences) {
-    Gson gson = new Gson();
-    String json = gson.toJson(remoteBootConfig);
+      SharedPreferences sharedPreferences, ObjectMapper objectMapper)
+      throws JsonProcessingException {
+    final String json = objectMapper.writeValueAsString(remoteBootConfig);
     PartnersSecurePreferences.setRemoteBootConfigJSONString(json, sharedPreferences);
     Logger.d(TAG + " saved ", json);
   }
@@ -195,48 +205,6 @@ public class BootConfigJSONUtils {
           .setEmail(feedbackEmail);
     }
     return true;
-  }
-
-  /**
-   * Read JSON object from raw file present in the assets of the apk.
-   * this file is read only, and should be pre-loaded in the res/raw.
-   *
-   * @param context context it's being called
-   */
-  private static JSONObject readJSONBootConfigFromRawFile(Context context) {
-    JSONObject jsonObject = null;
-
-    try {
-      InputStream inputStream = context.getResources()
-          .openRawResource(R.raw.boot_config);
-
-      if (inputStream != null) {
-        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-        String receiveString;
-        StringBuilder stringBuilder = new StringBuilder();
-
-        while ((receiveString = bufferedReader.readLine()) != null) {
-          stringBuilder.append(receiveString);
-        }
-
-        inputStream.close();
-        jsonObject = new JSONObject(stringBuilder.toString());
-      }
-    } catch (FileNotFoundException e) {
-      Logger.e(TAG, "boot_config.json file not found: " + e.toString());
-      CrashReport.getInstance()
-          .log(e);
-    } catch (IOException e) {
-      Logger.e(TAG, "Can not read boot_config.json file: " + e.toString());
-      CrashReport.getInstance()
-          .log(e);
-    } catch (JSONException e) {
-      Logger.e(TAG, "Failed to create JSONObject from boot_config.json String: " + e.toString());
-      CrashReport.getInstance()
-          .log(e);
-    }
-    return jsonObject;
   }
 
   /**

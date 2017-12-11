@@ -2,7 +2,6 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/displayable_social_timeline_app_update_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     card_view:cardUseCompatPadding="true"
@@ -63,13 +62,16 @@
           />
 
       <ImageView
-          android:layout_width="15dp"
-          android:layout_height="15dp"
+          android:id="@+id/overflow_menu"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
           android:layout_alignEnd="@+id/card_custom_view_line_separator"
           android:layout_alignRight="@+id/card_custom_view_line_separator"
-          android:layout_marginTop="@dimen/appstimeline_card_icon"
-          android:src="@drawable/appstimeline_appupdate_shop_icon"
+          android:layout_marginTop="8dp"
+          android:padding="8dp"
+          android:src="@drawable/menu_overflow_24dp"
           />
+
 
       <View
           android:id="@+id/card_custom_view_line_separator"

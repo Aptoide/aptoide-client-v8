@@ -15,7 +15,7 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.publisher.Poster;
 import cm.aptoide.pt.timeline.view.LikeButtonView;
 import cm.aptoide.pt.util.DateCalculator;
-import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.view.spannable.SpannableFactory;
 import java.util.List;
 import rx.subjects.PublishSubject;
 
@@ -83,6 +83,7 @@ public class MinimalCardViewFactory {
         .loadWithShadowCircleTransform(post.getMinimalPostPosters()
             .get(0)
             .getPrimaryAvatar(), minimalCardHeaderMainAvatar);
+    View overflowMenu = subCardView.findViewById(R.id.overflow_menu);
 
     /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
 
@@ -133,25 +134,27 @@ public class MinimalCardViewFactory {
     showLikesPreview(post, context);
     /* END - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
 
+    setupOverflowMenu(overflowMenu, post, position, subCardView);
+
     socialCommentBar.setOnClickListener(view -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(post, CardTouchEvent.Type.LAST_COMMENT)));
+        new CardTouchEvent(post, position, CardTouchEvent.Type.LAST_COMMENT)));
     like.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new SocialCardTouchEvent(post, CardTouchEvent.Type.LIKE, position)));
     commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new SocialCardTouchEvent(post, CardTouchEvent.Type.COMMENT, position)));
     shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new MinimalPostTouchEvent(originalPost, post, CardTouchEvent.Type.SHARE)));
+        new MinimalPostTouchEvent(originalPost, post, CardTouchEvent.Type.SHARE, position)));
     this.likePreviewContainer.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new LikesPreviewCardTouchEvent(post, post.getLikesNumber(),
-            CardTouchEvent.Type.LIKES_PREVIEW)));
+            CardTouchEvent.Type.LIKES_PREVIEW, position)));
     this.numberLikes.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new LikesPreviewCardTouchEvent(post, post.getLikesNumber(),
-            CardTouchEvent.Type.LIKES_PREVIEW)));
+            CardTouchEvent.Type.LIKES_PREVIEW, position)));
     this.numberLikesOneLike.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new LikesPreviewCardTouchEvent(post, post.getLikesNumber(),
-            CardTouchEvent.Type.LIKES_PREVIEW)));
+            CardTouchEvent.Type.LIKES_PREVIEW, position)));
     this.numberComments.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(post, CardTouchEvent.Type.COMMENT_NUMBER)));
+        new CardTouchEvent(post, position, CardTouchEvent.Type.COMMENT_NUMBER)));
     return subCardView;
   }
 
@@ -307,6 +310,33 @@ public class MinimalCardViewFactory {
     numberLikes.setText(context.getString(R.string.timeline_short_like_present_plural, likesNumber)
         .toLowerCase());
     numberLikesOneLike.setVisibility(View.INVISIBLE);
+  }
+
+  private void setupOverflowMenu(View overflowMenu, MinimalPost post, int position,
+      View subCardView) {
+    overflowMenu.setOnClickListener(view -> {
+      PostPopupMenuBuilder postPopupMenuBuilder =
+          new PostPopupMenuBuilder().prepMenu(subCardView.getContext(), overflowMenu)
+              .addReportAbuse(menuItem -> {
+                cardTouchEventPublishSubject.onNext(
+                    new CardTouchEvent(post, position, CardTouchEvent.Type.REPORT_ABUSE));
+                return false;
+              });
+      if (post.getMinimalPostPosters()
+          .size() == 1) {
+        Poster poster = post.getMinimalPostPosters()
+            .get(0);
+        if (poster.getUser() != null && !poster.isMe()) {
+          postPopupMenuBuilder.addUnfollowUser(menuItem -> {
+            cardTouchEventPublishSubject.onNext(new UserUnfollowCardTouchEvent(poster.getUser()
+                .getId(), poster.getPrimaryName(), position, post));
+            return false;
+          });
+        }
+      }
+      postPopupMenuBuilder.getPopupMenu()
+          .show();
+    });
   }
 
   public View getView(Post originalPost, List<Post> minimalCards, int numberOfCardsToShow,

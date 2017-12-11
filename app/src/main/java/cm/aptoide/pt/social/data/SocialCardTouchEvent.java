@@ -5,14 +5,7 @@ package cm.aptoide.pt.social.data;
  */
 
 public class SocialCardTouchEvent extends CardTouchEvent {
-  private final int postPosition;
-
   public SocialCardTouchEvent(Post card, Type actionType, int postPosition) {
-    super(card, actionType);
-    this.postPosition = postPosition;
-  }
-
-  public int getPostPosition() {
-    return postPosition;
+    super(card, postPosition, actionType);
   }
 }

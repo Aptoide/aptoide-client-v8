@@ -10,13 +10,12 @@ import rx.Single;
 
 public class PostManager {
 
-  public static final String APP_NOT_FOUND_ERROR_CODE = "APP-1";
   private final PostAccessor postRemoteRepository;
   private final PostAccessor postLocalRepository;
   private AptoideAccountManager accountManager;
   private boolean remoteRelatedAppsAvailable = false;
 
-  public PostManager(PostRemoteAccessor postRemoteRepository, PostAccessor postLocalRepository,
+  PostManager(PostRemoteAccessor postRemoteRepository, PostAccessor postLocalRepository,
       AptoideAccountManager accountManager) {
     this.postRemoteRepository = postRemoteRepository;
     this.postLocalRepository = postLocalRepository;
@@ -24,19 +23,26 @@ public class PostManager {
   }
 
   public Single<String> post(String url, String content, String packageName) {
-    return validateLogin().flatMap(userLogged -> validateInsertedText(content, packageName, url))
-        .flatMap(validPost -> postRemoteRepository.postOnTimeline(addProtocolIfNeeded(url),
+    return validateLogin().flatMap(__ -> hasValidDescriptionAndPackage(content, packageName, url))
+        .flatMap(__ -> postRemoteRepository.postOnTimeline(addProtocolIfNeeded(url),
             getContent(url, content), packageName))
-        .onErrorResumeNext(throwable -> handleErrors(throwable));
+        .onErrorResumeNext(this::handleErrors);
   }
 
   private Single handleErrors(Throwable throwable) {
-    if (throwable instanceof AptoideWsV7Exception) {
-      if (((AptoideWsV7Exception) throwable).getBaseResponse()
+    if (AptoideWsV7Exception.class.isAssignableFrom(throwable.getClass())) {
+      final AptoideWsV7Exception wsV7Exception = (AptoideWsV7Exception) throwable;
+      final String errorCode = wsV7Exception.getBaseResponse()
           .getError()
-          .getCode()
-          .equals(APP_NOT_FOUND_ERROR_CODE)) {
-        return Single.error(new PostException(PostException.ErrorCode.NO_APP_FOUND));
+          .getCode();
+      switch (errorCode) {
+        default:
+        case Errors.APP_NOT_FOUND_ERROR_CODE:
+          return Single.error(new PostException(PostException.ErrorCode.NO_APP_FOUND));
+        case Errors.USER_TIMELINECARD_1:
+          return Single.error(new PostException(PostException.ErrorCode.INVALID_URL));
+        case Errors.USER_TIMELINECARD_2:
+          return Single.error(new PostException(PostException.ErrorCode.INVALID_URL));
       }
     }
     return Single.error(throwable);
@@ -59,7 +65,8 @@ public class PostManager {
         });
   }
 
-  private Single<Boolean> validateInsertedText(String textToShare, String packageName, String url) {
+  private Single<Boolean> hasValidDescriptionAndPackage(String textToShare, String packageName,
+      String url) {
     if ((textToShare == null || textToShare.isEmpty()) && (url == null || url.isEmpty())) {
       return Single.error(new PostException(PostException.ErrorCode.INVALID_TEXT));
     } else if (packageName == null || packageName.isEmpty()) {
@@ -83,20 +90,26 @@ public class PostManager {
     return url;
   }
 
-  public Single<PostView.PostPreview> getPreview(String url) {
+  Single<PostPreview> getPreview(String url) {
     return postRemoteRepository.getCardPreview(addProtocolIfNeeded(url))
-        .onErrorReturn(throwable -> new PostView.PostPreview(null, null, url));
+        .onErrorReturn(throwable -> new PostPreview(null, null, url));
   }
 
-  public boolean remoteRelatedAppsAvailable() {
+  boolean remoteRelatedAppsAvailable() {
     return remoteRelatedAppsAvailable;
   }
 
-  public void setRemoteRelatedAppsAvailable(boolean remoteRelatedAppsAvailable) {
+  void setRemoteRelatedAppsAvailable(boolean remoteRelatedAppsAvailable) {
     this.remoteRelatedAppsAvailable = remoteRelatedAppsAvailable;
   }
 
   enum Origin {
     Installed, Remote, Searched
+  }
+
+  private static final class Errors {
+    private static final String APP_NOT_FOUND_ERROR_CODE = "APP-1";
+    private static final String USER_TIMELINECARD_1 = "USERTIMELINECARD-1";
+    private static final String USER_TIMELINECARD_2 = "USERTIMELINECARD-2";
   }
 }

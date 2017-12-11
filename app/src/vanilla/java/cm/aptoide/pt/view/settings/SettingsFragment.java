@@ -32,15 +32,17 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.filemanager.FileManager;
+import cm.aptoide.pt.file.FileManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.AdultContent;
@@ -57,6 +59,7 @@ import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.dialog.EditableTextDialog;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import cm.aptoide.pt.view.rx.RxPreference;
+import com.facebook.appevents.AppEventsLogger;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -98,8 +101,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private SharedPreferences sharedPreferences;
   private String marketName;
   private Database database;
-  private AptoideNavigationTracker aptoideNavigationTracker;
+  private NavigationTracker navigationTracker;
   private UpdateRepository repository;
+  private PageViewsAnalytics pageViewsAnalytics;
+  private String defaultThemeName;
 
   public static Fragment newInstance() {
     return new SettingsFragment();
@@ -107,7 +112,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    defaultThemeName = application.getDefaultThemeName();
+    marketName = application.getMarketName();
     trackAnalytics = true;
     database = ((AptoideApplication) getContext().getApplicationContext()).getDatabase();
     adultContent = ((AptoideApplication) getContext().getApplicationContext()).getAdultContent();
@@ -140,13 +148,17 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     notificationSyncScheduler =
         ((AptoideApplication) getContext().getApplicationContext()).getNotificationSyncScheduler();
-    aptoideNavigationTracker =
-        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker();
+    navigationTracker =
+        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
 
     repository = RepositoryFactory.getUpdateRepository(getContext(),
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
-    aptoideNavigationTracker.registerView(this.getClass()
-        .getSimpleName());
+    pageViewsAnalytics =
+        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance(), navigationTracker);
+    navigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName()));
+    pageViewsAnalytics.sendPageViewedEvent();
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
@@ -159,11 +171,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
   @CallSuper @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    String storeTheme =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultTheme();
-    if (storeTheme != null) {
-      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(storeTheme));
+    if (defaultThemeName != null) {
+      ThemeUtils.setStoreTheme(getActivity(), defaultThemeName);
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(defaultThemeName));
     }
 
     return super.onCreateView(inflater, container, savedInstanceState);
@@ -388,7 +398,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
                           getContext().getResources(),
                           AptoideUtils.StringU.formatBytes(deletedSize, false)));
                 }, throwable -> {
-                  ShowMessage.asSnack(SettingsFragment.this, R.string.error_SYS_1);
+                  ShowMessage.asSnack(SettingsFragment.this, R.string.ws_error_SYS_1);
                   throwable.printStackTrace();
                 }));
             return false;

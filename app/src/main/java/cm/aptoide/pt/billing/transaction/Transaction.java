@@ -1,74 +1,23 @@
 package cm.aptoide.pt.billing.transaction;
 
-public class Transaction {
-  private final String productId;
-  private final String payerId;
-  private final Status status;
-  private final int paymentMethodId;
-  private final String payload;
-  private final String sellerId;
+public interface Transaction {
+  String getCustomerId();
 
-  public Transaction(String productId, String payerId, Status status, int paymentMethodId,
-      String payload, String sellerId) {
-    this.productId = productId;
-    this.payerId = payerId;
-    this.status = status;
-    this.paymentMethodId = paymentMethodId;
-    this.payload = payload;
-    this.sellerId = sellerId;
-  }
+  String getProductId();
 
-  public String getPayload() {
-    return payload;
-  }
+  String getId();
 
-  public String getPayerId() {
-    return payerId;
-  }
+  boolean isNew();
 
-  public String getProductId() {
-    return productId;
-  }
+  boolean isCompleted();
 
-  public Status getStatus() {
-    return status;
-  }
+  boolean isPendingAuthorization();
 
-  public boolean isNew() {
-    return Status.NEW.equals(status);
-  }
+  boolean isProcessing();
 
-  public boolean isCompleted() {
-    return Status.COMPLETED.equals(status);
-  }
-
-  public boolean isPendingAuthorization() {
-    return Status.PENDING_USER_AUTHORIZATION.equals(status);
-  }
-
-  public boolean isPending() {
-    return Status.CREATED.equals(status)
-        || Status.PROCESSING.equals(status)
-        || Status.PENDING.equals(status);
-  }
-
-  public boolean isFailed() {
-    return Status.CANCELED.equals(status) || Status.FAILED.equals(status);
-  }
-
-  public int getPaymentMethodId() {
-    return paymentMethodId;
-  }
-
-  public boolean isUnknown() {
-    return Status.UNKNOWN.equals(status);
-  }
-
-  public String getSellerId() {
-    return sellerId;
-  }
+  boolean isFailed();
 
   public enum Status {
-    UNKNOWN, NEW, CREATED, PENDING_USER_AUTHORIZATION, PROCESSING, PENDING, COMPLETED, FAILED, CANCELED
+    NEW, PENDING_SERVICE_AUTHORIZATION, PROCESSING, COMPLETED, FAILED
   }
 }

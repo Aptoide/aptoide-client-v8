@@ -1,8 +1,8 @@
 package cm.aptoide.pt.social.view.viewholder;
 
 import android.graphics.Typeface;
-import android.os.Build;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.PopupMenu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -11,10 +11,12 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.CardType;
 import cm.aptoide.pt.social.data.Media;
+import cm.aptoide.pt.social.data.Post;
+import cm.aptoide.pt.social.data.PostPopupMenuBuilder;
 import cm.aptoide.pt.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.timeline.view.LikeButtonView;
 import cm.aptoide.pt.util.DateCalculator;
-import cm.aptoide.pt.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.view.spannable.SpannableFactory;
 import rx.subjects.PublishSubject;
 
 /**
@@ -31,13 +33,13 @@ public class MediaViewHolder extends PostViewHolder<Media> {
   private final TextView relatedTo;
   private final SpannableFactory spannableFactory;
   private final DateCalculator dateCalculator;
-  private final ImageView cardIcon;
   private final ImageView playIcon;
   private final LikeButtonView likeButton;
   private final View likeView;
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final TextView commentButton;
   private final TextView shareButton;
+  private final View overflowMenu;
 
   public MediaViewHolder(View itemView, PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
       DateCalculator dateCalculator, SpannableFactory spannableFactory) {
@@ -53,22 +55,20 @@ public class MediaViewHolder extends PostViewHolder<Media> {
     articleThumbnail = (ImageView) itemView.findViewById(R.id.featured_graphic);
     articleHeader = itemView.findViewById(R.id.displayable_social_timeline_article_header);
     relatedTo = (TextView) itemView.findViewById(R.id.app_name);
-    cardIcon = (ImageView) itemView.findViewById(R.id.timeline_header_card_type_icon);
     playIcon = (ImageView) itemView.findViewById(R.id.play_button);
     likeButton = (LikeButtonView) itemView.findViewById(R.id.social_like_button);
     likeView = itemView.findViewById(R.id.social_like);
     commentButton = (TextView) itemView.findViewById(R.id.social_comment);
     shareButton = (TextView) itemView.findViewById(R.id.social_share);
+    overflowMenu = itemView.findViewById(R.id.overflow_menu);
   }
 
   @Override public void setPost(Media media, int position) {
     if (media.getType()
         .equals(CardType.ARTICLE)) {
-      setIcon(R.drawable.appstimeline_article_icon);
       playIcon.setVisibility(View.GONE);
     } else if (media.getType()
         .equals(CardType.VIDEO)) {
-      setIcon(R.drawable.appstimeline_video_play_icon);
       playIcon.setVisibility(View.VISIBLE);
     }
 
@@ -87,19 +87,20 @@ public class MediaViewHolder extends PostViewHolder<Media> {
     ImageLoader.with(itemView.getContext())
         .loadWithCenterCrop(media.getMediaThumbnailUrl(), articleThumbnail);
 
-    handleCommentsInformation(media);
+    setupOverflowMenu(media, position);
+    handleCommentsInformation(media, position);
 
     articleThumbnail.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(media, CardTouchEvent.Type.BODY)));
+        new CardTouchEvent(media, position, CardTouchEvent.Type.BODY)));
     articleTitle.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(media, CardTouchEvent.Type.BODY)));
+        new CardTouchEvent(media, position, CardTouchEvent.Type.BODY)));
     articleHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(media, CardTouchEvent.Type.HEADER)));
+        new CardTouchEvent(media, position, CardTouchEvent.Type.HEADER)));
 
     this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new SocialCardTouchEvent(media, CardTouchEvent.Type.COMMENT, position)));
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(media, CardTouchEvent.Type.SHARE)));
+        new CardTouchEvent(media, position, CardTouchEvent.Type.SHARE)));
 
     if (media.isLiked()) {
       if (media.isLikeFromClick()) {
@@ -116,13 +117,16 @@ public class MediaViewHolder extends PostViewHolder<Media> {
         new SocialCardTouchEvent(media, CardTouchEvent.Type.LIKE, position)));
   }
 
-  private void setIcon(int drawableId) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      cardIcon.setImageDrawable(itemView.getContext()
-          .getDrawable(drawableId));
-    } else {
-      cardIcon.setImageDrawable(itemView.getResources()
-          .getDrawable(drawableId));
-    }
+  private void setupOverflowMenu(Post post, int position) {
+    overflowMenu.setOnClickListener(view -> {
+      PopupMenu popupMenu = new PostPopupMenuBuilder().prepMenu(itemView.getContext(), overflowMenu)
+          .addReportAbuse(menuItem -> {
+            cardTouchEventPublishSubject.onNext(
+                new CardTouchEvent(post, position, CardTouchEvent.Type.REPORT_ABUSE));
+            return false;
+          })
+          .getPopupMenu();
+      popupMenu.show();
+    });
   }
 }

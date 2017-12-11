@@ -13,13 +13,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.AptoideNavigationTracker;
+import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.presenter.SpotSharePreviewPresenter;
 import cm.aptoide.pt.presenter.SpotSharePreviewView;
 import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.view.fragment.FragmentView;
+import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
 
@@ -33,7 +36,8 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
   private Toolbar toolbar;
   private boolean showToolbar;
   private SpotAndShareAnalytics spotAndShareAnalytics;
-  private AptoideNavigationTracker aptoideNavigationTracker;
+  private NavigationTracker navigationTracker;
+  private PageViewsAnalytics pageViewsAnalytics;
 
   public static Fragment newInstance(boolean showToolbar) {
     Bundle args = new Bundle();
@@ -52,10 +56,15 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
     super.onCreate(savedInstanceState);
     showToolbar = getArguments().getBoolean(SHOW_TOOLBAR_KEY);
     spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
-    aptoideNavigationTracker =
-        ((AptoideApplication) getContext().getApplicationContext()).getAptoideNavigationTracker();
-    aptoideNavigationTracker.registerView(this.getClass()
-        .getSimpleName());
+    navigationTracker =
+        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
+    pageViewsAnalytics =
+        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
+            Analytics.getInstance(), navigationTracker);
+    navigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName()));
+    pageViewsAnalytics.sendPageViewedEvent();
+    setHasOptionsMenu(true);
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -68,7 +77,7 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
     startButton = (Button) view.findViewById(R.id.fragment_spot_share_preview_start_button);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     attachPresenter(new SpotSharePreviewPresenter(this, showToolbar, getString(R.string.spot_share),
-        spotAndShareAnalytics), savedInstanceState);
+        spotAndShareAnalytics));
   }
 
   @Override public void onDestroyView() {
@@ -78,7 +87,6 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
   }
 
   private Toolbar setupToolbar(String title) {
-    setHasOptionsMenu(true);
 
     toolbar.setLogo(R.drawable.logo_toolbar);
 

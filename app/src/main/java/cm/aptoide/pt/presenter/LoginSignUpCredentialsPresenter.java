@@ -5,13 +5,12 @@
 
 package cm.aptoide.pt.presenter;
 
-import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.FacebookSignUpException;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.account.view.AccountNavigator;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.view.BackButton;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
@@ -30,14 +29,15 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   private final Collection<String> permissions;
   private final Collection<String> requiredPermissions;
   private final ThrowableToStringMapper errorMapper;
-
+  private final AccountAnalytics accountAnalytics;
   private boolean dismissToNavigateToMainView;
 
   public LoginSignUpCredentialsPresenter(LoginSignUpCredentialsView view,
       AptoideAccountManager accountManager, CrashReport crashReport,
       boolean dismissToNavigateToMainView, boolean navigateToHome,
       AccountNavigator accountNavigator, Collection<String> permissions,
-      Collection<String> requiredPermissions, ThrowableToStringMapper errorMapper) {
+      Collection<String> requiredPermissions, ThrowableToStringMapper errorMapper,
+      AccountAnalytics accountAnalytics) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
@@ -47,6 +47,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
     this.permissions = permissions;
     this.requiredPermissions = requiredPermissions;
     this.errorMapper = errorMapper;
+    this.accountAnalytics = accountAnalytics;
   }
 
   @Override public void present() {
@@ -66,14 +67,6 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
     handleAccountStatusChangeWhileShowingView();
     handleForgotPasswordClick();
     handleTogglePasswordVisibility();
-  }
-
-  @Override public void saveState(Bundle state) {
-    // does nothing
-  }
-
-  @Override public void restoreState(Bundle state) {
-    // does nothing
   }
 
   private void handleTogglePasswordVisibility() {
@@ -102,13 +95,12 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
               view.hideKeyboard();
               view.showLoading();
               lockScreenRotation();
+              accountAnalytics.sendAptoideLoginButtonPressed();
             }).<Void>flatMapCompletable(credentials -> accountManager.login(credentials)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> {
                   unlockScreenRotation();
-                  Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
-                      Analytics.Account.SignUpLoginStatus.SUCCESS,
-                      Analytics.Account.LoginStatusDetail.SUCCESS);
+                  accountAnalytics.loginSuccess();
                   navigateToMainView();
                   view.hideLoading();
                 })
@@ -117,9 +109,8 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
                   view.hideLoading();
                   crashReport.log(throwable);
                   unlockScreenRotation();
-                  Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
-                      Analytics.Account.SignUpLoginStatus.FAILED,
-                      Analytics.Account.LoginStatusDetail.GENERAL_ERROR);
+                  accountAnalytics.sendLoginErrorEvent(AccountAnalytics.LoginMethod.APTOIDE,
+                      throwable);
                 })).retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
@@ -133,21 +124,21 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
               view.hideKeyboard();
               view.showLoading();
               lockScreenRotation();
+              accountAnalytics.sendAptoideSignUpButtonPressed();
             })
             .flatMapCompletable(
                 credentials -> accountManager.signUp(AptoideAccountManager.APTOIDE_SIGN_UP_TYPE,
                     credentials)
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnCompleted(() -> {
-                      Analytics.Account.signInSuccessAptoide(
-                          Analytics.Account.SignUpLoginStatus.SUCCESS);
+                      accountAnalytics.loginSuccess();
                       navigateToCreateProfile();
                       unlockScreenRotation();
                       view.hideLoading();
                     })
                     .doOnError(throwable -> {
-                      Analytics.Account.signInSuccessAptoide(
-                          Analytics.Account.SignUpLoginStatus.FAILED);
+                      accountAnalytics.sendSignUpErrorEvent(AccountAnalytics.LoginMethod.APTOIDE,
+                          throwable);
                       view.showError(errorMapper.map(throwable));
                       crashReport.log(throwable);
                       unlockScreenRotation();
@@ -208,6 +199,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
         .flatMap(__ -> view.googleSignUpEvent())
         .doOnNext(event -> {
           view.showLoading();
+          accountAnalytics.sendGoogleLoginButtonPressed();
         })
         .flatMapSingle(event -> accountNavigator.navigateToGoogleSignUpForResult(
             RESOLVE_GOOGLE_CREDENTIALS_REQUEST_CODE))
@@ -234,19 +226,15 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
             .flatMapCompletable(result -> accountManager.signUp(GoogleSignUpAdapter.TYPE, result)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> {
-                  Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
-                      Analytics.Account.SignUpLoginStatus.SUCCESS,
-                      Analytics.Account.LoginStatusDetail.SUCCESS);
+                  accountAnalytics.loginSuccess();
                   navigateToMainView();
                 })
                 .doOnTerminate(() -> view.hideLoading())
                 .doOnError(throwable -> {
                   view.showError(errorMapper.map(throwable));
                   crashReport.log(throwable);
-
-                  Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
-                      Analytics.Account.SignUpLoginStatus.FAILED,
-                      Analytics.Account.LoginStatusDetail.SDK_ERROR);
+                  accountAnalytics.sendLoginErrorEvent(AccountAnalytics.LoginMethod.GOOGLE,
+                      throwable);
                 }))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -260,6 +248,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
         .flatMap(__ -> view.facebookSignUpEvent())
         .doOnNext(event -> {
           view.showLoading();
+          accountAnalytics.sendFacebookLoginButtonPressed();
           accountNavigator.navigateToFacebookSignUpForResult(permissions);
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -295,49 +284,24 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
             .flatMapCompletable(result -> accountManager.signUp(FacebookSignUpAdapter.TYPE, result)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> {
-                  Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
-                      Analytics.Account.SignUpLoginStatus.SUCCESS,
-                      Analytics.Account.LoginStatusDetail.SUCCESS);
+                  accountAnalytics.loginSuccess();
                   navigateToMainView();
                 })
                 .doOnTerminate(() -> view.hideLoading())
                 .doOnError(throwable -> {
-                  sendFacebookErrorAnalyics(throwable);
-
                   if (throwable instanceof FacebookSignUpException
                       && ((FacebookSignUpException) throwable).getCode()
                       == FacebookSignUpException.MISSING_REQUIRED_PERMISSIONS) {
                     view.showFacebookPermissionsRequiredError(throwable);
-                  } else {
-                    crashReport.log(throwable);
-                    view.showError(errorMapper.map(throwable));
                   }
+                  accountAnalytics.sendLoginErrorEvent(AccountAnalytics.LoginMethod.FACEBOOK,
+                      throwable);
+                  crashReport.log(throwable);
+                  view.showError(errorMapper.map(throwable));
                 }))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
-  }
-
-  private void sendFacebookErrorAnalyics(Throwable throwable) {
-    if (throwable instanceof FacebookSignUpException) {
-      switch (((FacebookSignUpException) throwable).getCode()) {
-        case FacebookSignUpException.MISSING_REQUIRED_PERMISSIONS:
-          Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
-              Analytics.Account.SignUpLoginStatus.FAILED,
-              Analytics.Account.LoginStatusDetail.PERMISSIONS_DENIED);
-          break;
-        case FacebookSignUpException.USER_CANCELLED:
-          Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
-              Analytics.Account.SignUpLoginStatus.FAILED,
-              Analytics.Account.LoginStatusDetail.CANCEL);
-          break;
-        case FacebookSignUpException.ERROR:
-          Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
-              Analytics.Account.SignUpLoginStatus.FAILED,
-              Analytics.Account.LoginStatusDetail.SDK_ERROR);
-          break;
-      }
-    }
   }
 
   private Observable<Void> aptoideShowLoginClick() {

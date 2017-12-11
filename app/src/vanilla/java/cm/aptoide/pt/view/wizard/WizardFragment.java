@@ -14,6 +14,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.LoginBottomSheet;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.custom.AptoideViewPager;
@@ -35,8 +36,8 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class WizardFragment extends UIComponentFragment implements WizardView {
 
+  public static final int LAYOUT = R.layout.fragment_wizard;
   private static final String PAGE_INDEX = "page_index";
-
   private WizardPagerAdapter viewPagerAdapter;
   private AptoideViewPager viewPager;
   private RadioGroup radioGroup;
@@ -63,9 +64,31 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
     }
   }
 
+  @Override public void onDestroy() {
+    if (viewPager != null) {
+      viewPager.removeOnPageChangeListener(null);
+      viewPager = null;
+    }
+    super.onDestroy();
+  }
+
+  @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+    super.onViewStateRestored(savedInstanceState);
+    loadExtras(savedInstanceState);
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putInt(PAGE_INDEX, viewPager.getCurrentItem());
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
+  }
+
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
-
     currentPosition = 0;
     // restore state
     if (args != null) {
@@ -89,21 +112,8 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     WizardPresenter presenter =
         new WizardPresenter(this, accountManager, CrashReport.getInstance());
-    attachPresenter(presenter, null);
+    attachPresenter(presenter);
     viewPager.addOnPageChangeListener(presenter);
-  }
-
-  @Override public void onDestroy() {
-    if (viewPager != null) {
-      viewPager.removeOnPageChangeListener(null);
-      viewPager = null;
-    }
-    super.onDestroy();
-  }
-
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    outState.putInt(PAGE_INDEX, viewPager.getCurrentItem());
   }
 
   @Override public void onDestroyView() {
@@ -120,9 +130,8 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
   @Override public Completable createWizardAdapter(Account account) {
     return Completable.fromAction(() -> {
       viewPagerAdapter = new WizardPagerAdapter(getChildFragmentManager(), account);
-      viewPager.setAdapter(viewPagerAdapter);
-
       createRadioButtons();
+      viewPager.setAdapter(viewPagerAdapter);
       viewPager.setCurrentItem(currentPosition);
       handleSelectedPage(currentPosition);
     });
@@ -210,12 +219,11 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
   }
 
   @Override public int getContentViewId() {
-    return R.layout.fragment_wizard;
+    return LAYOUT;
   }
 
   @Override public void bindViews(@Nullable View view) {
     viewPager = (AptoideViewPager) view.findViewById(R.id.view_pager);
-    viewPager.setAptoideNavigationTracker(navigationTracker);
     skipOrNextLayout = view.findViewById(R.id.skip_next_layout);
     radioGroup = (RadioGroup) view.findViewById(R.id.view_pager_radio_group);
     skipText = view.findViewById(R.id.skip_text);

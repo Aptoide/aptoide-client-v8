@@ -53,6 +53,7 @@
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:layout_weight="1"
           >
 
         <Button
@@ -141,7 +142,6 @@
               />
 
           <TextView
-              android:id="@+id/create_user_take_picture_text"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:layout_centerVertical="true"
@@ -167,7 +167,6 @@
             >
 
           <TextView
-              android:id="@+id/create_user_choose_username"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:text="@string/create_user_choose_username"

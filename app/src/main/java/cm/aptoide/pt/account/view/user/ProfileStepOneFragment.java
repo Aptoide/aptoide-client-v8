@@ -13,11 +13,12 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
-import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Completable;
 import rx.Observable;
@@ -35,6 +36,11 @@ public class ProfileStepOneFragment extends BaseToolbarFragment implements Profi
 
   public static ProfileStepOneFragment newInstance() {
     return new ProfileStepOneFragment();
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,14 +65,14 @@ public class ProfileStepOneFragment extends BaseToolbarFragment implements Profi
     }
   }
 
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    outState.putBoolean(IS_EXTERNAL_LOGIN, externalLogin);
-  }
-
   @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
     super.onViewStateRestored(savedInstanceState);
     loadExtras(savedInstanceState);
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putBoolean(IS_EXTERNAL_LOGIN, externalLogin);
   }
 
   @Override public int getContentViewId() {
@@ -104,7 +110,7 @@ public class ProfileStepOneFragment extends BaseToolbarFragment implements Profi
     final AptoideAccountManager accountManager =
         ((AptoideApplication) applicationContext).getAccountManager();
     attachPresenter(new ProfileStepOnePresenter(this, CrashReport.getInstance(), accountManager,
-        accountNavigator), null);
+        accountNavigator));
   }
 
   @Override protected void setupToolbarDetails(Toolbar toolbar) {

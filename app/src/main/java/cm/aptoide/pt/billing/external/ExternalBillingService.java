@@ -1,6 +1,6 @@
 package cm.aptoide.pt.billing.external;
 
-import cm.aptoide.pt.billing.Purchase;
+import cm.aptoide.pt.billing.purchase.Purchase;
 import java.util.List;
 import rx.Completable;
 import rx.Single;

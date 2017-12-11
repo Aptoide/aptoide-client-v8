@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.InstallManager;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.Analytics;
@@ -27,8 +26,9 @@ import cm.aptoide.pt.install.rollback.RollbackRepository;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.root.RootAvailabilityManager;
+import cm.aptoide.pt.search.ReferrerUtils;
+import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.updates.UpdateRepository;
-import cm.aptoide.pt.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.q.QManager;
 import com.facebook.appevents.AppEventsLogger;
@@ -194,6 +194,7 @@ public class InstalledIntentService extends IntentService {
     if (packageInfo != null) {
       InstallEvent event =
           (InstallEvent) analytics.get(packageName + packageInfo.versionCode, InstallEvent.class);
+      installAnalytics.installCompleted(packageName, packageInfo.versionCode);
       if (event != null) {
         event.setPhoneRooted(rootAvailabilityManager.isRootAvailable()
             .toBlocking()
@@ -279,9 +280,9 @@ public class InstalledIntentService extends IntentService {
   @NonNull private Completable extractReferrer(String packageName) {
     return adsRepository.getAdsFromSecondInstall(packageName)
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, true,
-            adsRepository, httpClient, converterFactory, qManager, getApplicationContext(),
-            sharedPreferences, new MinimalAdMapper()))
+        .doOnNext(minimalAd -> ReferrerUtils.extractReferrer(new SearchAdResult(minimalAd),
+            ReferrerUtils.RETRIES, true, adsRepository, httpClient, converterFactory, qManager,
+            getApplicationContext(), sharedPreferences, new MinimalAdMapper()))
         .toCompletable();
   }
 }

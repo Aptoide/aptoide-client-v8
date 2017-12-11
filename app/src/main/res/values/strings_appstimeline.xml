@@ -1,43 +1,25 @@
 <resources>
   <!-- Timeline Fragment -->
-  <string name="fragment_social_timeline_aptoide_team">Aptoide Team</string>
-  <string name="fragment_social_timeline_no_connection">No network connection</string>
-  <string name="displayable_social_timeline_store_latest_apps_headline">This store has new apps</string>
   <string name="displayable_social_timeline_app_update_name">App %1$s</string>
   <string name="displayable_social_timeline_article_get_app_button">Get app %1$s</string>
-  <string name="displayable_social_timeline_app_update_version">Version %1$s</string>
   <string name="displayable_social_timeline_app_update_button">Update %1$s</string>
   <string name="displayable_social_timeline_app_update_updated">Updated</string>
   <string name="displayable_social_timeline_app_update_updating">Updating</string>
   <string name="displayable_social_timeline_app_update_error">Update Error</string>
-  <string name="displayable_social_timeline_recommendation_similar_to">based on %1$s</string>
-  <string name="displayable_social_timeline_recommendation_similar_and">and</string>
   <string name="displayable_social_timeline_article_related_to">Related to %1$s</string>
   <string name="appstimeline_update_app">app</string>
   <string name="customtabs_open_native_app">Open in app</string>
   <string name="social_timeline_you_will_share">What your followers will see:</string>
   <string name="social_timeline_you_will_share_comment">Your followers will see your comment:</string>
   <string name="social_timeline_you_will_share_like">Your followers will see your like:</string>
-  <string name="social_timeline_share_title">Share card preview</string>
   <string name="social_timeline_share_title_checkbox">Make my user profile private in timeline. Only show/share my store info.</string>
-  <string name="social_timeline_share_title_checkbox_fb">Allow my user profile to be public on timeline</string>
   <string name="social_timeline_share_dialog_title">Thank you for sharing</string>
-  <string name="social_timeline_share_dialog_opt_in_text_1">Your friends will be able to find you and follow you.</string>
-  <string name="social_timeline_share_dialog_opt_in_text_2">If you want your profile to be private on timeline, edit your privacy settings on <b>www.aptoide.com</b>.</string>
-  <string name="social_timeline_share_dialog_opt_out_text_1">If your profile is private, your friends won\'t be able to find and follow you on timeline.</string>
-  <string name="social_timeline_share_dialog_opt_out_text_2">Access <b>www.aptoide.com</b>, login to your account and go to <b>Settings</b> to change privacy settings.</string>
-  <string name="social_timeline_share_dialog_installed_and_recommended">Installed and recommended</string>
-  <string name="social_timeline_share_bar_login">What are your friends installing?</string>
   <string name="social_timeline_share_bar_following">Follow more stores and connect with your friends.</string>
   <string name="social_timeline_share_bar_followers">Improve your store to have more followers.</string>
   <string name="social_timeline_followers_fragment_title">%d follower(s)</string>
   <string name="social_timeline_following_fragment_title">Following %d person(s)</string>
-  <string name="social_timeline_share_soon">The share will be published soon</string>
 
-  <string name="social_timeline_recommends">Recommends</string>
-  <string name="private_profile_create_store">To have a private profile, you need to create a store</string>
   <string name="social_timeline_shared_by">shared by %1$s</string>
-  <string name="social_timeline_who_liked">Who liked</string>
   <string name="social_timeline_users_private">%d are private</string>
   <string name="dont_show_this_again">Don\'t show \n again</string>
 
@@ -79,9 +61,6 @@
   <string name="addressbook_3rd_msg">LEARN MORE</string>
   <string name="address_book_twitter_error">Twitter authorization error</string>
   <string name="follow_my_store">Hello, follow my %1$s store here %2$s</string>
-  <string name="store_meta_apps">Apps</string>
-  <string name="store_meta_following">Following</string>
-  <string name="store_meta_followers">Followers</string>
   <string name="addressbook_about">About address book</string>
   <string name="addressbook_we_werent_able_to_connect_you">We weren\'t able to make a connection</string>
 
@@ -90,7 +69,6 @@
 
   <string name="timeline_short_card_sub_title_share_past_plural">shared</string>
   <string name="timeline_short_plus" translatable="false">%s+</string>
-  <string name="timeline_title_shared_card_preview">Shared Card Preview</string>
 
 
   <string name="timeline_title_likes">Likes</string>
@@ -112,13 +90,10 @@
   <string name="timeline_title_card_title_has_update_present_singular">%s has an update</string>
 
   <string name="timeline_title_card_title_post_past_singular">%s posted</string>
-  <string name="timeline_title_card_title_post_past_plural">%s posted</string>
 
   <string name="timeline_title_card_title_share_past_singular">%s shared</string>
-  <string name="timeline_title_card_title_share_past_plural">%s shared</string>
 
   <string name="timeline_title_card_title_install_past_singular">%s installed</string>
-  <string name="timeline_title_card_title_install_past_plural">%s installed</string>
 
   <string name="timeline_title_card_title_has_new_apps_present_singular">%s store has new apps</string>
 
@@ -141,6 +116,13 @@
   <string name="timeline_title_header_add_friend">Follow Friend</string>
   <string name="timeline_button_get_started">Get started</string>
   <string name="timeline_message_timeline_description">Timeline makes it easy to create posts about apps, learn about your friends activity, and connect with people. All in one place.</string>
+
+  <!--overflow button for card-->
+  <string name="timeline_button_unfollow_user">Unfollow user</string>
+  <string name="timeline_button_unfollow_store">Unfollow store</string>
+  <string name="timeline_button_report_abuse">Report abuse</string>
+  <string name="timeline_button_delete_post">Delete post</string>
+  <string name="timeline_short_unfollow_user">Unfollowing %s</string>
 
 
 </resources>

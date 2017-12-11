@@ -14,14 +14,16 @@ import cm.aptoide.pt.view.Translator;
  * Created by trinkes on 16/12/2016.
  */
 
-public class GridRecyclerSwipeWithToolbarFragment extends GridRecyclerSwipeFragment {
+public abstract class GridRecyclerSwipeWithToolbarFragment extends GridRecyclerSwipeFragment {
   public static final String TITLE_KEY = "TITLE_KEY";
   private String title;
   private String marketName;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    marketName = ((AptoideApplication) getContext().getApplicationContext()).getMarketName();
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    marketName = application.getMarketName();
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
