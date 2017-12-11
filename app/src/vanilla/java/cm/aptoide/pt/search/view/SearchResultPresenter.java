@@ -6,15 +6,16 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.List;
 import rx.Observable;
 import rx.Scheduler;
+import rx.Single;
 
 @SuppressWarnings({ "WeakerAccess", "Convert2MethodRef" }) public class SearchResultPresenter
     implements Presenter {
@@ -84,11 +85,11 @@ import rx.Scheduler;
         .filter(viewModel -> !viewModel.hasReachedBottomOfAllStores())
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showLoadingMore())
-        .flatMap(viewModel -> loadDataForAllNonFollowedStores(viewModel.getCurrentQuery(),
+        .flatMapSingle(viewModel -> loadDataForAllNonFollowedStores(viewModel.getCurrentQuery(),
             viewModel.isOnlyTrustedApps(), viewModel.getAllStoresOffset()).onErrorResumeNext(
             err -> {
               crashReport.log(err);
-              return Observable.just(null);
+              return Single.just(null);
             }))
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.hideLoadingMore())
@@ -115,11 +116,11 @@ import rx.Scheduler;
         .filter(viewModel -> !viewModel.hasReachedBottomOfFollowedStores())
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showLoadingMore())
-        .flatMap(viewModel -> loadDataForAllFollowedStores(viewModel.getCurrentQuery(),
+        .flatMapSingle(viewModel -> loadDataForAllFollowedStores(viewModel.getCurrentQuery(),
             viewModel.isOnlyTrustedApps(), viewModel.getFollowedStoresOffset()).onErrorResumeNext(
             err -> {
               crashReport.log(err);
-              return Observable.just(null);
+              return Single.just(null);
             }))
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.hideLoadingMore())
@@ -266,8 +267,7 @@ import rx.Scheduler;
         }, e -> crashReport.log(e));
   }
 
-  private Observable<List<SearchAppResult>> loadData(String query, String storeName,
-      boolean onlyTrustedApps) {
+  private Single<Integer> loadData(String query, String storeName, boolean onlyTrustedApps) {
 
     if (storeName != null && !storeName.trim()
         .equals("")) {
@@ -275,42 +275,45 @@ import rx.Scheduler;
         view.setViewWithStoreNameAsSingleTab(storeName);
         return null;
       })
-          .flatMap(__ -> loadDataForSpecificStore(query, storeName, 0));
+          .flatMapSingle(__ -> loadDataForSpecificStore(query, storeName, 0))
+          .map(list -> list != null ? list.size() : 0)
+          .toSingle();
     }
     // search every store. followed and not followed
-    return Observable.merge(loadDataForAllFollowedStores(query, onlyTrustedApps, 0),
-        loadDataForAllNonFollowedStores(query, onlyTrustedApps, 0));
+    return Single.zip(loadDataForAllFollowedStores(query, onlyTrustedApps, 0),
+        loadDataForAllNonFollowedStores(query, onlyTrustedApps, 0),
+        (list1, list2) -> (list1 != null ? list1.size() : 0) + (list2 != null ? list2.size() : 0));
   }
 
-  @NonNull private Observable<List<SearchAppResult>> loadDataForAllNonFollowedStores(String query,
+  @NonNull private Single<List<SearchAppResult>> loadDataForAllNonFollowedStores(String query,
       boolean onlyTrustedApps, int offset) {
     return searchManager.searchInNonFollowedStores(query, onlyTrustedApps, offset)
         .observeOn(viewScheduler)
-        .doOnNext(dataList -> view.addAllStoresResult(dataList))
-        .doOnNext(data -> {
+        .doOnSuccess(dataList -> view.addAllStoresResult(dataList))
+        .doOnSuccess(data -> {
           final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.incrementOffsetAndCheckIfReachedBottomOfAllStores(getItemCount(data));
         });
   }
 
-  @NonNull private Observable<List<SearchAppResult>> loadDataForAllFollowedStores(String query,
+  @NonNull private Single<List<SearchAppResult>> loadDataForAllFollowedStores(String query,
       boolean onlyTrustedApps, int offset) {
     return searchManager.searchInFollowedStores(query, onlyTrustedApps, offset)
         .observeOn(viewScheduler)
-        .doOnNext(dataList -> view.addFollowedStoresResult(dataList))
-        .doOnNext(data -> {
+        .doOnSuccess(dataList -> view.addFollowedStoresResult(dataList))
+        .doOnSuccess(data -> {
           final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(getItemCount(data));
         });
   }
 
   @NonNull
-  private Observable<List<SearchAppResult>> loadDataForSpecificStore(String query, String storeName,
+  private Single<List<SearchAppResult>> loadDataForSpecificStore(String query, String storeName,
       int offset) {
     return searchManager.searchInStore(query, storeName, offset)
         .observeOn(viewScheduler)
-        .doOnNext(dataList -> view.addFollowedStoresResult(dataList))
-        .doOnNext(data -> {
+        .doOnSuccess(dataList -> view.addFollowedStoresResult(dataList))
+        .doOnSuccess(data -> {
           final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.setAllStoresSelected(false);
           viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(getItemCount(data));
@@ -326,15 +329,15 @@ import rx.Scheduler;
         .filter(viewModel -> hasValidQuery(viewModel))
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showLoading())
-        .flatMap(viewModel -> loadData(viewModel.getCurrentQuery(), viewModel.getStoreName(),
+        .flatMapSingle(viewModel -> loadData(viewModel.getCurrentQuery(), viewModel.getStoreName(),
             viewModel.isOnlyTrustedApps()).onErrorResumeNext(err -> {
           crashReport.log(err);
-          return Observable.just(null);
+          return Single.just(Integer.valueOf(0));
         })
             .observeOn(viewScheduler)
-            .doOnNext(__2 -> view.hideLoading())
-            .doOnNext(data -> {
-              if (data == null || getItemCount(data) == 0) {
+            .doOnSuccess(__2 -> view.hideLoading())
+            .doOnSuccess(itemCount -> {
+              if (itemCount > 0) {
                 view.showNoResultsView();
                 analytics.searchNoResults(viewModel.getCurrentQuery());
               } else {
