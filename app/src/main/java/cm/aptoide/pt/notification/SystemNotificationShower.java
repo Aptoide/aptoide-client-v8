@@ -257,7 +257,7 @@ public class SystemNotificationShower implements Presenter {
             })
             .map(notification -> notificationInfo))
         .doOnNext(notificationInfo -> callDeepLink(context, notificationInfo))
-        .doOnNext(notificationInfo -> dismissNotificationAfterAction(
+        .flatMapCompletable(notificationInfo -> dismissNotificationAfterAction(
             notificationInfo.getNotificationType()))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
