@@ -89,7 +89,6 @@
 
 
       <LinearLayout
-          android:id="@+id/badges_layout"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_alignParentBottom="true"

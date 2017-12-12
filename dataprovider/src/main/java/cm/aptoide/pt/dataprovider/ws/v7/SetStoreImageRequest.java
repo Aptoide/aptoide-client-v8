@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
@@ -46,34 +47,30 @@ public class SetStoreImageRequest extends V7<BaseV7Response, HashMapNotNull<Stri
       BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, RequestBodyFactory requestBodyFactory,
       ObjectMapper serializer, SharedPreferences sharedPreferences,
-      TokenInvalidator tokenInvalidator, List<SimpleSetStoreRequest.StoreLinks> storeLinksList) {
+      TokenInvalidator tokenInvalidator, List<SimpleSetStoreRequest.StoreLinks> storeLinksList,
+      List<Store.SocialChannelType> storeDeleteLinksList) {
 
     final HashMapNotNull<String, RequestBody> body = new HashMapNotNull<>();
 
     body.put("store_name", requestBodyFactory.createBodyPartFromString(storeName));
     addStoreProperties(storeTheme, storeDescription, requestBodyFactory, serializer, body);
     addStoreLinks(storeLinksList, body, serializer, requestBodyFactory);
+    addStoreDeleteLinks(storeDeleteLinksList, body, serializer, requestBodyFactory);
 
     return new SetStoreImageRequest(body,
         requestBodyFactory.createBodyPartFromFile("store_avatar", new File(storeImagePath)),
         bodyInterceptor, httpClient, converterFactory, sharedPreferences, tokenInvalidator);
   }
 
-  public static SetStoreImageRequest of(long storeId, String storeTheme, String storeDescription,
-      String storeAvatarPath, BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory,
-      RequestBodyFactory requestBodyFactory, ObjectMapper serializer,
-      SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
-      List<SimpleSetStoreRequest.StoreLinks> storeLinksList) {
-    final HashMapNotNull<String, RequestBody> body = new HashMapNotNull<>();
-
-    body.put("store_id", requestBodyFactory.createBodyPartFromLong(storeId));
-    addStoreProperties(storeTheme, storeDescription, requestBodyFactory, serializer, body);
-    addStoreLinks(storeLinksList, body, serializer, requestBodyFactory);
-
-    return new SetStoreImageRequest(body,
-        requestBodyFactory.createBodyPartFromFile("store_avatar", new File(storeAvatarPath)),
-        bodyInterceptor, httpClient, converterFactory, sharedPreferences, tokenInvalidator);
+  private static void addStoreDeleteLinks(List<Store.SocialChannelType> storeDeleteLinksList,
+      HashMapNotNull<String, RequestBody> body, ObjectMapper serializer,
+      RequestBodyFactory requestBodyFactory) {
+    try {
+      body.put("store_del_links", requestBodyFactory.createBodyPartFromString(
+          serializer.writeValueAsString(storeDeleteLinksList)));
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private static void addStoreLinks(List<SimpleSetStoreRequest.StoreLinks> storeLinksList,

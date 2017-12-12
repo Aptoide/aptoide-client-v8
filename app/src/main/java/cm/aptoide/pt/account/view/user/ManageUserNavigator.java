@@ -3,7 +3,7 @@ package cm.aptoide.pt.account.view.user;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.store.view.home.HomeFragment;
 
-class ManageUserNavigator {
+public class ManageUserNavigator {
 
   private final FragmentNavigator navigator;
   private final String defaultStore;

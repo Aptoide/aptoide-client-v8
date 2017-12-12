@@ -10,6 +10,7 @@ import cm.aptoide.pt.account.view.exception.StoreCreationException;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v3.ErrorResponse;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
@@ -17,6 +18,7 @@ import cm.aptoide.pt.dataprovider.ws.v3.CheckUserCredentialsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetStoreImageRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
+import cm.aptoide.pt.store.StoreTheme;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -66,14 +68,14 @@ public class StoreManager {
 
   public Completable createOrUpdate(String storeName, String storeDescription,
       String storeImagePath, boolean hasNewAvatar, String storeThemeName, boolean storeExists,
-      List<SocialLink> storeLinksList) {
+      List<SocialLink> storeLinksList, List<Store.SocialChannelType> storeDeleteLinksList) {
     return Completable.defer(() -> {
       if (storeExists) {
         return updateStore(storeName, storeDescription, storeImagePath, hasNewAvatar,
-            storeThemeName, socialLinkToStoreLink(storeLinksList));
+            storeThemeName, socialLinkToStoreLink(storeLinksList), storeDeleteLinksList);
       }
       return createStore(storeName, storeDescription, storeImagePath, hasNewAvatar, storeThemeName,
-          socialLinkToStoreLink(storeLinksList));
+          socialLinkToStoreLink(storeLinksList), storeDeleteLinksList);
     })
         .onErrorResumeNext(err -> getOnErrorCompletable(err));
   }
@@ -124,7 +126,8 @@ public class StoreManager {
 
   private Completable createStore(String storeName, String storeDescription, String storeImage,
       boolean hasNewAvatar, String storeThemeName,
-      List<SimpleSetStoreRequest.StoreLinks> storeLinksList) {
+      List<SimpleSetStoreRequest.StoreLinks> storeLinksList,
+      List<Store.SocialChannelType> storeDeleteSocialLinksList) {
 
     if (TextUtils.isEmpty(storeName)) {
       return Completable.error(new StoreValidationException(StoreValidationException.EMPTY_NAME));
@@ -158,22 +161,26 @@ public class StoreManager {
             }))
         .flatMapCompletable(data -> {
           final Completable syncAccount = accountManager.updateAccount();
-          if (needToUploadMoreStoreData(storeDescription, storeImage, hasNewAvatar)) {
+          if (needToUploadMoreStoreData(storeDescription, storeImage, hasNewAvatar,
+              storeThemeName)) {
             return updateStore(storeName, storeDescription, storeImage, hasNewAvatar,
-                storeThemeName, storeLinksList).andThen(syncAccount);
+                storeThemeName, storeLinksList, storeDeleteSocialLinksList).andThen(syncAccount);
           }
           return syncAccount;
         });
   }
 
   private boolean needToUploadMoreStoreData(String storeDescription, String storeImage,
-      boolean hasNewAvatar) {
-    return !TextUtils.isEmpty(storeDescription) || (hasNewAvatar && !TextUtils.isEmpty(storeImage));
+      boolean hasNewAvatar, String storeThemeName) {
+    return !TextUtils.isEmpty(storeDescription) || (hasNewAvatar && !TextUtils.isEmpty(storeImage)
+        || !storeThemeName.equals(StoreTheme.DEFAULT.toString()
+        .toLowerCase()));
   }
 
   private Completable updateStore(String storeName, String storeDescription, String storeImage,
       boolean hasNewAvatar, String storeThemeName,
-      List<SimpleSetStoreRequest.StoreLinks> storeLinksList) {
+      List<SimpleSetStoreRequest.StoreLinks> storeLinksList,
+      List<Store.SocialChannelType> socialDeleteLinksList) {
 
     if (TextUtils.isEmpty(storeName)) {
       return Completable.error(new StoreValidationException(StoreValidationException.EMPTY_NAME));
@@ -187,29 +194,34 @@ public class StoreManager {
      */
     if (hasNewAvatar) {
       return updateStoreWithAvatar(storeName, storeDescription, storeThemeName, storeImage,
-          storeLinksList);
+          storeLinksList, socialDeleteLinksList);
     }
 
-    return updateStoreWithoutAvatar(storeName, storeDescription, storeThemeName, storeLinksList);
+    return updateStoreWithoutAvatar(storeName, storeDescription, storeThemeName, storeLinksList,
+        socialDeleteLinksList);
   }
 
   private Completable updateStoreWithoutAvatar(String storeName, String storeDescription,
-      String storeThemeName, List<SimpleSetStoreRequest.StoreLinks> storeLinksList) {
+      String storeThemeName, List<SimpleSetStoreRequest.StoreLinks> storeLinksList,
+      List<Store.SocialChannelType> storeDeleteSocialLinksList) {
     return SimpleSetStoreRequest.of(storeName, storeThemeName, storeDescription, bodyInterceptorV7,
-        httpClient, converterFactory, tokenInvalidator, sharedPreferences, storeLinksList)
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences, storeLinksList,
+        storeDeleteSocialLinksList)
         .observe()
         .toCompletable();
   }
 
   private Completable updateStoreWithAvatar(String storeName, String storeDescription,
       String storeThemeName, String storeImagePath,
-      List<SimpleSetStoreRequest.StoreLinks> storeLinksList) {
+      List<SimpleSetStoreRequest.StoreLinks> storeLinksList,
+      List<Store.SocialChannelType> socialDeleteLinksList) {
     return accountManager.accountStatus()
         .first()
         .toSingle()
         .flatMap(account -> SetStoreImageRequest.of(storeName, storeThemeName, storeDescription,
             storeImagePath, multipartBodyInterceptor, httpClient, converterFactory,
-            requestBodyFactory, objectMapper, sharedPreferences, tokenInvalidator, storeLinksList)
+            requestBodyFactory, objectMapper, sharedPreferences, tokenInvalidator, storeLinksList,
+            socialDeleteLinksList)
             .observe()
             .toSingle())
         .toCompletable();

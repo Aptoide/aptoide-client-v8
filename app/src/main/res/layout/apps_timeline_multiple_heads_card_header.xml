@@ -9,7 +9,6 @@
     >
 
   <RelativeLayout
-      android:id="@+id/displayable_social_timeline_sharers_container"
       android:layout_width="wrap_content"
       android:layout_height="match_parent"
       android:layout_marginLeft="10.7dp"
@@ -35,7 +34,6 @@
         tools:ignore="contentDescription"
         />
     <FrameLayout
-        android:id="@+id/card_header_plus_frame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/card_header_avatar_1"
@@ -43,7 +41,6 @@
         android:layout_marginStart="48dp"
         >
       <ImageView
-          android:id="@+id/card_header_avatar_plus"
           android:layout_width="18dp"
           android:layout_height="18dp"
           android:background="@drawable/grey_circular_placeholder_store"
@@ -86,7 +83,6 @@
         />
 
     <TextView
-        android:id="@+id/timeline_header_aditional_number_of_shares"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/card_title"

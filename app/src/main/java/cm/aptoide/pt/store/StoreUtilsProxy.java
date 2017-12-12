@@ -100,6 +100,10 @@ public class StoreUtilsProxy {
     StoreUtils.unSubscribeStore(storeName, accountManager, storeCredentialsProvider, storeAccessor);
   }
 
+  public void unSubscribeStore(String storeName) {
+    StoreUtils.unSubscribeStore(storeName, accountManager, storeCredentialsProvider, storeAccessor);
+  }
+
   public Completable addDefaultStore(GetStoreMetaRequest getStoreMetaRequest,
       AptoideAccountManager accountManager,
       BaseRequestWithStore.StoreCredentials storeCredentials) {

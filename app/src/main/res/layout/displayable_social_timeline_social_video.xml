@@ -32,7 +32,6 @@
     <include layout="@layout/partial_social_timeline_video_thumbnail"/>
 
     <View
-        android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="0.7dp"
         android:layout_marginEnd="12dp"

@@ -67,7 +67,6 @@ import okhttp3.OkHttpClient;
 import org.parceler.Parcels;
 import retrofit2.Converter;
 import rx.Observable;
-import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.Subscriptions;
 
@@ -104,9 +103,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   private PublishRelay<Pair<SearchAppResult, View>> onOpenPopupMenuClickRelay;
   private PublishRelay<SearchAdResult> onAdClickRelay;
   private SearchManager searchManager;
-  private Scheduler mainThreadScheduler;
   private SearchNavigator searchNavigator;
-  private CrashReport crashReport;
   private SearchAnalytics searchAnalytics;
   private float listItemPadding;
   private MenuItem searchMenuItem;
@@ -115,6 +112,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   private boolean isMultiStoreSearch;
   private String defaultStoreName;
   private IssuesAnalytics issuesAnalytics;
+  private CrashReport crashReport;
 
   public static SearchResultFragment newInstance(String currentQuery, String defaultStoreName) {
     return newInstance(currentQuery, false, defaultStoreName);
@@ -436,8 +434,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     searchNavigator = new SearchNavigator(getFragmentNavigator(), viewModel.getStoreName(),
         viewModel.getDefaultStoreName());
 
-    searchBuilder =
-        new SearchBuilder(searchManagerService, searchNavigator, viewModel.getCurrentQuery());
+    searchBuilder = new SearchBuilder(searchManagerService, searchNavigator);
 
     final AptoideApplication applicationContext =
         (AptoideApplication) getContext().getApplicationContext();
@@ -454,6 +451,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
 
     final Analytics analytics = Analytics.getInstance();
+
     searchAnalytics = new SearchAnalytics(analytics, AppEventsLogger.newLogger(applicationContext));
 
     issuesAnalytics = new IssuesAnalytics(analytics, Answers.getInstance());
@@ -475,8 +473,6 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
         new SearchManager(sharedPreferences, tokenInvalidator, bodyInterceptor, httpClient,
             converterFactory, subscribedStoresAuthMap, subscribedStoresIds, adsRepository);
 
-    mainThreadScheduler = AndroidSchedulers.mainThread();
-
     onItemViewClickRelay = PublishRelay.create();
     onOpenPopupMenuClickRelay = PublishRelay.create();
     onAdClickRelay = PublishRelay.create();
@@ -497,6 +493,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
         new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, onOpenPopupMenuClickRelay,
             searchResultAllStores, searchResultAdsAllStores, crashReport);
     setHasOptionsMenu(true);
+
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -507,7 +504,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     attachToolbar();
     setupTheme();
     attachPresenter(new SearchResultPresenter(this, searchAnalytics, searchNavigator, crashReport,
-        mainThreadScheduler, searchManager, onAdClickRelay, onItemViewClickRelay,
+        AndroidSchedulers.mainThread(), searchManager, onAdClickRelay, onItemViewClickRelay,
         onOpenPopupMenuClickRelay, isMultiStoreSearch, defaultThemeName, defaultStoreName));
   }
 

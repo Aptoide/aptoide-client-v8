@@ -7,6 +7,7 @@ package cm.aptoide.pt.account.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -32,6 +33,7 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -43,7 +45,6 @@ import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.AptoideNotification;
-import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.view.InboxAdapter;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
 import com.facebook.appevents.AppEventsLogger;
@@ -85,6 +86,8 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private CrashReport crashReport;
   private TabNavigator tabNavigator;
+  private TokenInvalidator tokenInvalidator;
+  private SharedPreferences sharedPreferences;
 
   public static Fragment newInstance() {
     return new MyAccountFragment();
@@ -145,11 +148,13 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
         ((AptoideApplication) getActivity().getApplicationContext()).getAccountManager();
     notificationSubject = PublishSubject.create();
     adapter = new InboxAdapter(Collections.emptyList(), notificationSubject);
-    bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+    AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
+    bodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();
+    httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     crashReport = CrashReport.getInstance();
+    tokenInvalidator = application.getTokenInvalidator();
+    sharedPreferences = application.getDefaultSharedPreferences();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -179,12 +184,11 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     moreNotificationsButton = (Button) view.findViewById(R.id.my_account_notifications_header)
         .findViewById(R.id.more);
 
+    AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
     attachPresenter(new MyAccountPresenter(this, accountManager, crashReport,
         ((ActivityResultNavigator) getContext()).getMyAccountNavigator(),
-        ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker(),
-        new NotificationAnalytics(httpClient, Analytics.getInstance()),
+        application.getNotificationCenter(), application.getDefaultSharedPreferences(),
+        application.getNavigationTracker(), application.getNotificationAnalytics(),
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
             Analytics.getInstance(), navigationTracker)));
   }

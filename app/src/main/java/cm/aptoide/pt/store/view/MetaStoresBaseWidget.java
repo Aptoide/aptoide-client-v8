@@ -36,7 +36,8 @@ public abstract class MetaStoresBaseWidget<T extends Displayable> extends Widget
     ImageButton imageButton;
     for (int i = 0; i < socialChannels.size(); i++) {
       Store.SocialChannel socialChannel = socialChannels.get(i);
-      if (socialChannel.getType() != null) {
+      if (socialChannel.getType() != null && !socialChannel.getType()
+          .equals(Store.SocialChannelType.BLOG)) {
         layoutInflater.inflate(R.layout.social_button_layout, socialChannelsLayout);
         imageButton = ((ImageButton) socialChannelsLayout.getChildAt(
             socialChannelsLayout.getChildCount() - 1));

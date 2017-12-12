@@ -10,7 +10,6 @@
     >
 
   <android.support.design.widget.AppBarLayout
-      android:id="@+id/shareAppsAppbar"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       >
@@ -158,7 +157,6 @@
 
 
           <TextView
-              android:id="@+id/share_aptoide_second_instruction"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:text="@string/spotandshare_message_second_share_instruction"
