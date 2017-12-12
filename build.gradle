@@ -120,6 +120,7 @@ ext {
   MOPUB_VERSION = '4.11.0'
 
   TEST_FAIRY_VERSION = '1.5.5'
+  DAGGER_VERSION = '2.12'
 }
 
 // see 'Multi-module reports' in https://developer.android.com/studio/test/command-line.html

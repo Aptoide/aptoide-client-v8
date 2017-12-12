@@ -177,6 +177,7 @@ public abstract class AptoideApplication extends Application {
   @Inject Crashlytics crashlytics;
   @Inject @Named("retrofit-log") Interceptor retrofitLogInterceptor;
   @Inject AccountManager androidAccountManager;
+  @Inject @Named("default") SharedPreferences defaultSharedPreferences;
   @Inject @Named("secureShared") SharedPreferences secureSharedPreferences;
   @Inject SyncScheduler alarmSyncScheduler;
   @Inject @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7;
@@ -219,7 +220,6 @@ public abstract class AptoideApplication extends Application {
   private ApplicationComponent applicationComponent;
   private AppCenter appCenter;
   private ReadPostsPersistence readPostsPersistence;
-  private SystemNotificationShower systemNotificationShower;
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
   private NotificationsCleaner notificationsCleaner;
   @Inject NotificationAnalytics notificationAnalytics;
@@ -361,15 +361,18 @@ public abstract class AptoideApplication extends Application {
     }, throwable -> CrashReport.getInstance()
         .log(throwable));
 
-    systemNotificationShower = getSystemNotificationShower();
-
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
   }
 
   public ApplicationComponent getApplicationComponent() {
     if (applicationComponent == null) {
-      applicationComponent = ComponentFactory.createApplicationComponent(this);
+      applicationComponent = DaggerApplicationComponent.builder()
+          .applicationModule(
+              new ApplicationModule(this, getImageCachePath(), getCachePath(), getAccountType(),
+                  getPartnerId(), getMarketName(), getExtraId(), getAptoidePackage(),
+                  getAptoideMd5sum(), getLoginPreferences()))
+          .build();
     }
     return applicationComponent;
   }
@@ -446,7 +449,6 @@ public abstract class AptoideApplication extends Application {
 
   public NotificationCenter getNotificationCenter() {
     if (notificationCenter == null) {
-
       final NotificationProvider notificationProvider = getNotificationProvider();
       notificationCenter =
           new NotificationCenter(notificationProvider, getNotificationSyncScheduler(),
