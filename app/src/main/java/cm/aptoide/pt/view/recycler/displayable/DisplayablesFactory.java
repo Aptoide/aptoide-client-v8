@@ -6,6 +6,7 @@
 package cm.aptoide.pt.view.recycler.displayable;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.util.Pair;
@@ -21,6 +22,8 @@ import cm.aptoide.pt.app.view.GridAppDisplayable;
 import cm.aptoide.pt.app.view.GridAppListDisplayable;
 import cm.aptoide.pt.app.view.OfficialAppDisplayable;
 import cm.aptoide.pt.database.AccessorFactory;
+import cm.aptoide.pt.database.accessors.StoreAccessor;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.FullReview;
@@ -35,10 +38,13 @@ import cm.aptoide.pt.dataprovider.model.v7.store.GetHomeMeta;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreDisplays;
 import cm.aptoide.pt.dataprovider.model.v7.store.ListStores;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.MyStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.install.InstalledRepository;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.reviews.RowReviewDisplayable;
 import cm.aptoide.pt.store.StoreAnalytics;
@@ -60,6 +66,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -74,7 +82,10 @@ public class DisplayablesFactory {
       AptoideAccountManager accountManager, StoreUtilsProxy storeUtilsProxy,
       WindowManager windowManager, Resources resources, InstalledRepository installedRepository,
       StoreAnalytics storeAnalytics, StoreTabNavigator storeTabNavigator,
-      NavigationTracker navigationTracker, BadgeDialogFactory badgeDialogFactory) {
+      NavigationTracker navigationTracker, BadgeDialogFactory badgeDialogFactory,
+      FragmentNavigator fragmentNavigator, StoreAccessor storeAccessor,
+      BodyInterceptor<BaseBody> bodyInterceptorV7, OkHttpClient client, Converter.Factory converter,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
 
     LinkedList<Displayable> displayables = new LinkedList<>();
 
@@ -125,7 +136,9 @@ public class DisplayablesFactory {
               new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
                   ((AptoideApplication) context.getApplicationContext()
                       .getApplicationContext()).getDatabase(),
-                  cm.aptoide.pt.database.realm.Store.class)), storeAnalytics, badgeDialogFactory));
+                  cm.aptoide.pt.database.realm.Store.class)), storeAnalytics, badgeDialogFactory,
+              fragmentNavigator, storeAccessor, bodyInterceptorV7, client, converter,
+              tokenInvalidator, sharedPreferences));
 
         case REVIEWS_GROUP:
           return Observable.from(

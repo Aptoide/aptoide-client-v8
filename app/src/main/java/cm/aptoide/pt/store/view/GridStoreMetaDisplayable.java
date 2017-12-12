@@ -1,17 +1,29 @@
 package cm.aptoide.pt.store.view;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Build;
+import android.support.annotation.ColorInt;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetHomeMeta;
 import cm.aptoide.pt.dataprovider.model.v7.store.HomeUser;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeMetaRequest;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 import java.util.Collections;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -19,20 +31,38 @@ import rx.Observable;
  */
 public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
 
+  public static final int REQUEST_CODE = 53298475;
   private StoreCredentialsProvider storeCredentialsProvider;
   private StoreAnalytics storeAnalytics;
   private BadgeDialogFactory badgeDialogFactory;
+  private FragmentNavigator fragmentNavigator;
+  private StoreAccessor storeAccessor;
+  private BodyInterceptor<BaseBody> bodyInterceptorV7;
+  private OkHttpClient client;
+  private Converter.Factory converter;
+  private TokenInvalidator tokenInvalidator;
+  private SharedPreferences sharedPreferences;
 
   public GridStoreMetaDisplayable() {
   }
 
   public GridStoreMetaDisplayable(GetHomeMeta pojo,
       StoreCredentialsProvider storeCredentialsProvider, StoreAnalytics storeAnalytics,
-      BadgeDialogFactory badgeDialogFactory) {
+      BadgeDialogFactory badgeDialogFactory, FragmentNavigator fragmentNavigator,
+      StoreAccessor storeAccessor, BodyInterceptor<BaseBody> bodyInterceptorV7, OkHttpClient client,
+      Converter.Factory converter, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     super(pojo);
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.storeAnalytics = storeAnalytics;
     this.badgeDialogFactory = badgeDialogFactory;
+    this.fragmentNavigator = fragmentNavigator;
+    this.storeAccessor = storeAccessor;
+    this.bodyInterceptorV7 = bodyInterceptorV7;
+    this.client = client;
+    this.converter = converter;
+    this.tokenInvalidator = tokenInvalidator;
+    this.sharedPreferences = sharedPreferences;
   }
 
   @Override protected Configs getConfig() {
@@ -184,6 +214,38 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
     }
   }
 
+  public Observable<GridStoreMetaWidget.HomeMeta> getHomeMeta(AptoideAccountManager accountManager,
+      Context context) {
+    return Observable.merge(isFollowingStore(storeAccessor),
+        updateStoreMeta().flatMap(__ -> isFollowingStore(storeAccessor))
+            .first())
+        .flatMap(isFollowing -> isStoreOwner(accountManager).map(
+            isOwner -> new GridStoreMetaWidget.HomeMeta(getMainIcon(), getSecondaryIcon(),
+                getMainName(), getSecondaryName(), isOwner, hasStore(), isFollowing,
+                getSocialLinks(), getAppsCount(), getFollowersCount(), getFollowingsCount(),
+                getDescription(), getColorOrDefault(getStoreTheme(), context), getStoreId(),
+                hasStore(), getBadge())));
+  }
+
+  private Observable<GetHomeMeta> updateStoreMeta() {
+    return fragmentNavigator.results(REQUEST_CODE)
+        .filter(result -> result.getResultCode() == Activity.RESULT_OK)
+        .flatMap(__ -> GetHomeMetaRequest.of(storeCredentialsProvider.get(getStoreId()),
+            bodyInterceptorV7, client, converter, tokenInvalidator, sharedPreferences)
+            .observe(true))
+        .doOnNext(pojo -> setPojo(pojo));
+  }
+
+  private @ColorInt int getColorOrDefault(StoreTheme theme, Context context) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      return context.getResources()
+          .getColor(theme.getPrimaryColor(), context.getTheme());
+    } else {
+      return context.getResources()
+          .getColor(theme.getPrimaryColor());
+    }
+  }
+
   public Observable<Boolean> isFollowingStore(StoreAccessor storeAccessor) {
     if (getStore() != null) {
       return storeAccessor.getAll()
@@ -207,5 +269,9 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
 
   public BadgeDialogFactory getBadgeDialogFactory() {
     return badgeDialogFactory;
+  }
+
+  public int getRequestCode() {
+    return REQUEST_CODE;
   }
 }
