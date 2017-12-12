@@ -149,22 +149,13 @@
             android:visibility="invisible"
             />
 
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+        <View
+            android:id="@+id/answer_separator"
+            android:layout_width="1dp"
+            android:layout_height="20dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="150dp"
-            android:src="@drawable/ad_icon"
-            />
-
-        <TextView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="150dp"
-            android:gravity="center"
-            android:text="OR"
-            style="@style/Aptoide.TextView.Medium.S.Black"
+            android:layout_marginTop="157dp"
+            android:background="@color/medium_gray"
             />
 
       </RelativeLayout>
