@@ -1,10 +1,10 @@
 package cm.aptoide.pt.view;
 
 import cm.aptoide.pt.account.view.LoginSignUpCredentialsFragment;
+import cm.aptoide.pt.account.view.MyAccountFragment;
 import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import cm.aptoide.pt.account.view.user.ManageUserFragment;
 import cm.aptoide.pt.addressbook.view.AddressBookFragment;
-import cm.aptoide.pt.search.view.SearchResultFragment;
 import cm.aptoide.pt.updates.view.rollback.RollbackFragment;
 import dagger.Subcomponent;
 
@@ -25,5 +25,5 @@ public interface FragmentComponentTest extends FragmentComponent{
 
   void inject(ManageStoreFragment manageStoreFragment);
 
-  void inject(SearchResultFragment searchResultFragment);
+  void inject(MyAccountFragment myAccountFragment);
 }

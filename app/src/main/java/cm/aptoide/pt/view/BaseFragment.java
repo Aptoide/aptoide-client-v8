@@ -13,9 +13,9 @@ public abstract class BaseFragment extends RxFragment {
     if (fragmentComponent == null) {
       ActivityComponent activityComponent = ((BaseActivity) getActivity()).getActivityComponent();
       fragmentComponent = ComponentFactory.createFragmentComponent(activityComponent, this, savedInstanceState,
-          getArguments().getBoolean("dismiss_to_navigate_to_main_view"),
-      getArguments().getBoolean("clean_back_stack"),
-      getArguments().getBoolean("go_to_home", true),
+          getArguments() != null && getArguments().getBoolean("dismiss_to_navigate_to_main_view"),
+          getArguments() != null && getArguments().getBoolean("clean_back_stack"),
+          getArguments() != null && getArguments().getBoolean("go_to_home", true),
       getArguments() != null && getArguments().getBoolean("is_edit", false),
       ((AptoideApplication) getContext().getApplicationContext()).isCreateStoreUserPrivacyEnabled(),
       (getActivity().getApplicationContext()).getPackageName());

@@ -1,6 +1,7 @@
 package cm.aptoide.pt.view;
 
 import cm.aptoide.pt.account.view.LoginSignUpCredentialsFragment;
+import cm.aptoide.pt.account.view.MyAccountFragment;
 import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import cm.aptoide.pt.account.view.user.ManageUserFragment;
 import cm.aptoide.pt.addressbook.view.AddressBookFragment;
@@ -19,4 +20,6 @@ public interface FragmentComponent {
   void inject(ManageUserFragment manageUserFragment);
 
   void inject(ManageStoreFragment manageStoreFragment);
+
+  void inject(MyAccountFragment myAccountFragment);
 }

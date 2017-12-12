@@ -61,7 +61,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
     TestType.types = TestType.TestTypes.INVALIDEMAIL;
     goToMyAccount();
     performSignUp("randomemail", PASS);
-    onView(withText(R.string.error_IARG_106)).check(matches(isDisplayed()));
+    onView(withText(R.string.ws_error_IARG_106)).check(matches(isDisplayed()));
   }
 
   @Test public void signUpInvalidPassword() {
@@ -92,7 +92,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
     TestType.types = TestType.TestTypes.USEDEMAIL;
     goToMyAccount();
     performSignUp(LOGINEMAIL, PASS + 5);
-    onView(withText(R.string.error_WOP_9)).check(matches(isDisplayed()));
+    onView(withText(R.string.ws_error_WOP_9)).check(matches(isDisplayed()));
   }
 
   @Test public void signUp() {
@@ -130,7 +130,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   @Test public void signOut() {
-    TestType.types = TestType.TestTypes.LOGGEDIN;
+    TestType.initialization = TestType.TestTypes.LOGGEDIN;
     goToMyAccount();
     onView(withId(R.id.button_logout)).perform(click());
     onView(withId(R.id.action_search)).check(matches(isDisplayed()));

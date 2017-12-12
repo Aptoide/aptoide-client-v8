@@ -177,7 +177,6 @@ public abstract class AptoideApplication extends Application {
   @Inject Crashlytics crashlytics;
   @Inject @Named("retrofit-log") Interceptor retrofitLogInterceptor;
   @Inject AccountManager androidAccountManager;
-  @Inject @Named("default") SharedPreferences defaultSharedPreferences;
   @Inject @Named("secureShared") SharedPreferences secureSharedPreferences;
   @Inject SyncScheduler alarmSyncScheduler;
   @Inject @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7;
@@ -223,7 +222,7 @@ public abstract class AptoideApplication extends Application {
   private SystemNotificationShower systemNotificationShower;
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
   private NotificationsCleaner notificationsCleaner;
-  private NotificationAnalytics notificationAnalytics;
+  @Inject NotificationAnalytics notificationAnalytics;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -985,13 +984,6 @@ public abstract class AptoideApplication extends Application {
   }
 
   public NotificationAnalytics getNotificationAnalytics() {
-    if (notificationAnalytics == null) {
-      notificationAnalytics =
-          new NotificationAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(this),
-              getBodyInterceptorPoolV7(), getDefaultClient(), WebService.getDefaultConverter(),
-              tokenInvalidator, cm.aptoide.pt.dataprovider.BuildConfig.APPLICATION_ID,
-              getDefaultSharedPreferences(), new AptoideInstallParser());
-    }
     return notificationAnalytics;
   }
 }

@@ -5,9 +5,10 @@ package cm.aptoide.pt;
  */
 
 public class TestType {
-  public static TestTypes types = TestTypes.PHOTOSUCCESS;
+  public static TestTypes types = TestTypes.REGULAR;
+  public static TestTypes initialization = TestTypes.REGULAR; //LOGGEDIN / LOGGEDINWITHSTORE
 
   public enum TestTypes {
-    REGULAR, SIGNSIGNUPTESTS, SIGNINWRONG, LOGGEDIN, USEDEMAIL, INVALIDEMAIL, PHOTOMAX, PHOTOMIN, PHOTOSUCCESS, MATURE
+    REGULAR, SIGNSIGNUPTESTS, SIGNINWRONG, LOGGEDIN, USEDEMAIL, INVALIDEMAIL, PHOTOMAX, PHOTOMIN, PHOTOSUCCESS, MATURE, LOGGEDINWITHSTORE
   }
 }

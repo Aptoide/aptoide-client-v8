@@ -13,9 +13,7 @@ import android.view.WindowManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
-import cm.aptoide.pt.account.view.MyAccountNavigator;
 import cm.aptoide.pt.billing.view.BillingNavigator;
-import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.notification.view.InboxNavigator;
 import cm.aptoide.pt.notification.view.NotificationNavigator;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
@@ -36,10 +34,8 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
   @Inject AccountNavigator accountNavigator;
   private BillingNavigator billingNavigator;
   private ScreenOrientationManager screenOrientationManager;
-  private MyAccountNavigator myAccountNavigator;
   private InboxNavigator inboxNavigator;
-  private NotificationNavigator notificationNavigator;
-  private LinksHandlerFactory linksHandlerFactory;
+  @Inject NotificationNavigator notificationNavigator;
 
   public BehaviorRelay<Map<Integer, Result>> getFragmentResultRelay() {
     return fragmentResultRelay;
@@ -177,14 +173,6 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
     return screenOrientationManager;
   }
 
-  public MyAccountNavigator getMyAccountNavigator() {
-    if (myAccountNavigator == null) {
-      myAccountNavigator = new MyAccountNavigator(getFragmentNavigator(), getAccountNavigator(),
-          getNotificationNavigator());
-    }
-    return myAccountNavigator;
-  }
-
   public InboxNavigator getInboxNavigator() {
     if (inboxNavigator == null) {
       inboxNavigator = new InboxNavigator(getNotificationNavigator());
@@ -193,17 +181,6 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
   }
 
   private NotificationNavigator getNotificationNavigator() {
-    if (notificationNavigator == null) {
-      notificationNavigator =
-          new NotificationNavigator((TabNavigator) this, getLinkFactory(), getFragmentNavigator());
-    }
     return notificationNavigator;
-  }
-
-  private LinksHandlerFactory getLinkFactory() {
-    if (linksHandlerFactory == null) {
-      linksHandlerFactory = new LinksHandlerFactory(this);
-    }
-    return linksHandlerFactory;
   }
 }

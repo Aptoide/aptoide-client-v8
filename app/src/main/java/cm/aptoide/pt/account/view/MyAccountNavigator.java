@@ -4,7 +4,6 @@ import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import cm.aptoide.pt.account.view.store.ManageStoreViewModel;
 import cm.aptoide.pt.account.view.user.ManageUserFragment;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.notification.AptoideNotification;
 import cm.aptoide.pt.notification.view.InboxFragment;
@@ -38,7 +37,6 @@ public class MyAccountNavigator {
   }
 
   public void navigateToEditProfileView() {
-    Logger.d("TAG123","oncreateclick");
     fragmentNavigator.navigateTo(ManageUserFragment.newInstanceToEdit(), true);
   }
 

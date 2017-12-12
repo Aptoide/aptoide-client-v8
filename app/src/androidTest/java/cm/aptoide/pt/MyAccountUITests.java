@@ -27,6 +27,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
 
   @Before public void setUp() {
     TestType.types = TestType.TestTypes.SIGNSIGNUPTESTS;
+    TestType.initialization = TestType.TestTypes.LOGGEDIN;
     if (UITests.isFirstTime()) {
       skipWizard();
     }
@@ -61,6 +62,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
 
   @Test public void storePhotoSuccess(){
     TestType.types = TestType.TestTypes.PHOTOSUCCESS;
+    TestType.initialization = TestType.TestTypes.LOGGEDINWITHSTORE;
     goToMyAccount();
     onView(withId(R.id.my_account_edit_user_store)).perform(click());
     onView(withId(R.id.create_store_image)).perform(click());
@@ -74,6 +76,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
 
   @Test public void storePhotoLimitExceed(){
     TestType.types = TestType.TestTypes.PHOTOMIN;
+    TestType.initialization = TestType.TestTypes.LOGGEDINWITHSTORE;
     goToMyAccount();
     onView(withId(R.id.my_account_edit_user_store)).perform(click());
     onView(withId(R.id.create_store_image)).perform(click());

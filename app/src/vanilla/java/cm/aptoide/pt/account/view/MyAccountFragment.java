@@ -7,7 +7,6 @@ package cm.aptoide.pt.account.view;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,13 +26,9 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
-import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -41,16 +36,15 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.AptoideNotification;
 import cm.aptoide.pt.notification.view.InboxAdapter;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
-import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Collections;
 import java.util.List;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -84,10 +78,8 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
   private Converter.Factory converterFactory;
   private OkHttpClient httpClient;
   private BodyInterceptor<BaseBody> bodyInterceptor;
-  private CrashReport crashReport;
   private TabNavigator tabNavigator;
-  private TokenInvalidator tokenInvalidator;
-  private SharedPreferences sharedPreferences;
+  @Inject MyAccountPresenter myAccountPresenter;
 
   public static Fragment newInstance() {
     return new MyAccountFragment();
@@ -143,6 +135,7 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
     setHasOptionsMenu(true);
     accountManager =
         ((AptoideApplication) getActivity().getApplicationContext()).getAccountManager();
@@ -152,14 +145,10 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     bodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();
     httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    crashReport = CrashReport.getInstance();
-    tokenInvalidator = application.getTokenInvalidator();
-    sharedPreferences = application.getDefaultSharedPreferences();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-
     list = (RecyclerView) view.findViewById(R.id.fragment_my_account_notification_list);
     list.setAdapter(adapter);
     list.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -184,13 +173,7 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     moreNotificationsButton = (Button) view.findViewById(R.id.my_account_notifications_header)
         .findViewById(R.id.more);
 
-    AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
-    attachPresenter(new MyAccountPresenter(this, accountManager, crashReport,
-        ((ActivityResultNavigator) getContext()).getMyAccountNavigator(),
-        application.getNotificationCenter(), application.getDefaultSharedPreferences(),
-        application.getNavigationTracker(), application.getNotificationAnalytics(),
-        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), navigationTracker)));
+    attachPresenter(myAccountPresenter);
   }
 
   @Override public int getContentViewId() {
