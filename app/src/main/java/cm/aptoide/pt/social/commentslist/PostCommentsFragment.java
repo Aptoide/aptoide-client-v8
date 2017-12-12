@@ -24,7 +24,6 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
-import cm.aptoide.pt.view.recycler.RecyclerViewPositionHelper;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import java.util.ArrayList;
@@ -45,14 +44,9 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
    * The minimum number of items to have below your current scroll position before loading more.
    */
   private final int visibleThreshold = 5;
-  /**
-   * Flag to control whether or not bottomReached should emit to the presenter.
-   */
-  private boolean bottomAlreadyReached;
   private RecyclerView list;
   private PostCommentsAdapter adapter;
   private FloatingActionButton floatingActionButton;
-  private RecyclerViewPositionHelper helper;
 
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private OkHttpClient httpClient;
@@ -101,7 +95,6 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
     list.addItemDecoration(new ItemDividerDecoration(this));
     layoutManager = new LinearLayoutManager(getContext());
     list.setLayoutManager(layoutManager);
-    helper = RecyclerViewPositionHelper.createHelper(list);
     swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
     floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fabAdd);
     setHasOptionsMenu(true);
@@ -116,14 +109,6 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     return super.onCreateView(inflater, container, savedInstanceState);
-  }
-
-  @Override protected boolean displayHomeUpAsEnabled() {
-    return true;
-  }
-
-  @Override public void setupToolbarDetails(Toolbar toolbar) {
-    toolbar.setTitle(R.string.comments_title_comments);
   }
 
   @Override public Observable<Object> reachesBottom() {
@@ -145,7 +130,6 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
   @Override public void hideLoadMoreProgressIndicator() {
     Logger.d(this.getClass()
         .getName(), "hide indicator called");
-    bottomAlreadyReached = false;
   }
 
   @Override public void showComments(List<Comment> comments) {
@@ -170,6 +154,25 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
     list.setVisibility(View.VISIBLE);
     genericError.setVisibility(View.GONE);
     progressBar.setVisibility(View.GONE);
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    list = null;
+    adapter = null;
+    progressBar = null;
+    genericError = null;
+    layoutManager = null;
+    swipeRefreshLayout = null;
+    floatingActionButton = null;
+  }
+
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
+  }
+
+  @Override public void setupToolbarDetails(Toolbar toolbar) {
+    toolbar.setTitle(R.string.comments_title_comments);
   }
 
   private boolean isEndReached() {
