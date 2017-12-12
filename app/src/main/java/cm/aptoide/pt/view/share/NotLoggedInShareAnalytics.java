@@ -3,6 +3,7 @@ package cm.aptoide.pt.view.share;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.account.AccountAnalytics;
+import cm.aptoide.pt.account.FacebookSignUpException;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
 import com.facebook.appevents.AppEventsLogger;
@@ -47,28 +48,24 @@ public class NotLoggedInShareAnalytics {
   }
 
   public void sendGoogleSignUpFailEvent() {
-    accountAnalytics.sendGoogleSignUpFailEvent();
     analytics.sendEvent(new FacebookEvent(facebook, EVENT_NAME,
         createBundle(LOGIN_GOOGLE_PARAMETER, LOGIN_INCOMPLETE_PARAMETER)));
     loginEventBundle = null;
   }
 
-  public void sendFacebookMissingPermissionsEvent() {
-    accountAnalytics.sendFacebookMissingPermissionsEvent();
+  private void sendFacebookMissingPermissionsEvent() {
     analytics.sendEvent(new FacebookEvent(facebook, EVENT_NAME,
         createBundle(LOGIN_FACEBOOK_PARAMETER, LOGIN_INCOMPLETE_PARAMETER)));
     loginEventBundle = null;
   }
 
-  public void sendFacebookUserCancelledEvent() {
-    accountAnalytics.sendFacebookUserCancelledEvent();
+  private void sendFacebookUserCancelledEvent() {
     analytics.sendEvent(new FacebookEvent(facebook, EVENT_NAME,
         createBundle(LOGIN_FACEBOOK_PARAMETER, LOGIN_INCOMPLETE_PARAMETER)));
     loginEventBundle = null;
   }
 
-  public void sendFacebookErrorEvent() {
-    accountAnalytics.sendFacebookErrorEvent();
+  private void sendFacebookErrorEvent() {
     analytics.sendEvent(new FacebookEvent(facebook, EVENT_NAME,
         createBundle(LOGIN_FACEBOOK_PARAMETER, LOGIN_INCOMPLETE_PARAMETER)));
     loginEventBundle = null;
@@ -120,5 +117,29 @@ public class NotLoggedInShareAnalytics {
 
   public void sendCloseEvent() {
     new FacebookEvent(facebook, EVENT_NAME, createBundle(CLOSE_PARAMETER, NONE_PARAMETER));
+  }
+
+  public void sendSignUpErrorEvent(AccountAnalytics.LoginMethod loginMethod, Throwable throwable) {
+    accountAnalytics.sendLoginErrorEvent(loginMethod, throwable);
+    if (loginMethod.equals(AccountAnalytics.LoginMethod.GOOGLE)) {
+      sendGoogleSignUpFailEvent();
+    }
+    if (throwable instanceof FacebookSignUpException) {
+      sendFacebookErrorAnalytics((FacebookSignUpException) throwable);
+    }
+  }
+
+  private void sendFacebookErrorAnalytics(FacebookSignUpException facebookException) {
+    switch (facebookException.getCode()) {
+      case FacebookSignUpException.MISSING_REQUIRED_PERMISSIONS:
+        sendFacebookMissingPermissionsEvent();
+        break;
+      case FacebookSignUpException.USER_CANCELLED:
+        sendFacebookUserCancelledEvent();
+        break;
+      case FacebookSignUpException.ERROR:
+        sendFacebookErrorEvent();
+        break;
+    }
   }
 }

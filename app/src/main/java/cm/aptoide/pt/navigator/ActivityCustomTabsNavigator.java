@@ -5,11 +5,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.customtabs.CustomTabsIntent;
-import cm.aptoide.pt.view.leak.LeakActivity;
+import cm.aptoide.pt.view.BaseActivity;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
 
-public abstract class ActivityCustomTabsNavigator extends LeakActivity
+public abstract class ActivityCustomTabsNavigator extends BaseActivity
     implements CustomTabsNavigator {
 
   private PublishRelay<Uri> results;
@@ -20,8 +20,8 @@ public abstract class ActivityCustomTabsNavigator extends LeakActivity
   }
 
   @Override protected void onNewIntent(Intent intent) {
-    results.call(intent.getData());
     super.onNewIntent(intent);
+    results.call(intent.getData());
   }
 
   @Override public void navigateToCustomTabs(CustomTabsIntent intent, Uri uri) {

@@ -81,6 +81,7 @@ public class ManageStorePresenter implements Presenter {
         .andThen(saveData(storeModel))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnCompleted(() -> view.dismissWaitProgressBar())
+        .doOnCompleted(() -> view.showSuccessMessage())
         .doOnCompleted(() -> navigate())
         .onErrorResumeNext(err -> Completable.fromAction(() -> {
           view.dismissWaitProgressBar();
@@ -99,7 +100,8 @@ public class ManageStorePresenter implements Presenter {
             mediaStoragePath -> storeManager.createOrUpdate(storeModel.getStoreName(),
                 storeModel.getStoreDescription(), mediaStoragePath, storeModel.hasNewAvatar(),
                 storeModel.getStoreTheme()
-                    .getThemeName(), storeModel.storeExists(), storeModel.getSocialLinks()));
+                    .getThemeName(), storeModel.storeExists(), storeModel.getSocialLinks(),
+                storeModel.getSocialDeleteLinks()));
   }
 
   private void navigate() {
@@ -170,6 +172,7 @@ public class ManageStorePresenter implements Presenter {
             break;
         }
       }
+      return;
     }
 
     crashReport.log(err);

@@ -3,8 +3,10 @@ package cm.aptoide.pt.notification;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -12,36 +14,73 @@ import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.RemoteViews;
+import cm.aptoide.pt.NotificationApplicationView;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.installer.RootInstallErrorNotification;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.presenter.Presenter;
 import com.bumptech.glide.request.target.NotificationTarget;
 import rx.Completable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by trinkes on 09/05/2017.
  */
 
-public class SystemNotificationShower {
+public class SystemNotificationShower implements Presenter {
+
   private Context context;
   private NotificationManager notificationManager;
   private NotificationIdsMapper notificationIdsMapper;
+  private NotificationCenter notificationCenter;
+  private NotificationAnalytics notificationAnalytics;
+  private CrashReport crashReport;
+  private NotificationProvider notificationProvider;
+  private NotificationApplicationView view;
+  private CompositeSubscription subscriptions;
 
   public SystemNotificationShower(Context context, NotificationManager notificationManager,
-      NotificationIdsMapper notificationIdsMapper) {
+      NotificationIdsMapper notificationIdsMapper, NotificationCenter notificationCenter,
+      NotificationAnalytics notificationAnalytics, CrashReport crashReport,
+      NotificationProvider notificationProvider,
+      NotificationApplicationView notificationApplicationView,
+      CompositeSubscription subscriptions) {
     this.context = context;
     this.notificationManager = notificationManager;
     this.notificationIdsMapper = notificationIdsMapper;
+    this.notificationCenter = notificationCenter;
+    this.notificationAnalytics = notificationAnalytics;
+    this.crashReport = crashReport;
+    this.notificationProvider = notificationProvider;
+    this.subscriptions = subscriptions;
+    view = notificationApplicationView;
   }
 
-  public Completable showNotification(AptoideNotification aptoideNotification) {
-    int notificationId = notificationIdsMapper.getNotificationId(aptoideNotification.getType());
-    return mapToAndroidNotification(aptoideNotification, notificationId).doOnSuccess(
-        notification -> notificationManager.notify(notificationId, notification))
-        .toCompletable();
+  @Override public void present() {
+    setNotificationPressSubscribe();
+    setNotificationDismissSubscribe();
+    setNotificationBootCompletedSubscribe();
+    showNewNotification();
+  }
+
+  private void showNewNotification() {
+    subscriptions.add(notificationCenter.getNewNotifications()
+        .flatMapCompletable(aptoideNotification -> {
+          int notificationId =
+              notificationIdsMapper.getNotificationId(aptoideNotification.getType());
+          notificationAnalytics.sendPushNotficationImpressionEvent(aptoideNotification.getType(),
+              aptoideNotification.getAbTestingGroup(), aptoideNotification.getCampaignId(),
+              aptoideNotification.getUrl());
+          return mapToAndroidNotification(aptoideNotification, notificationId).doOnSuccess(
+              notification -> notificationManager.notify(notificationId, notification))
+              .toCompletable();
+        })
+        .subscribe(notification -> {
+        }, throwable -> crashReport.log(throwable)));
   }
 
   private Single<Notification> mapToAndroidNotification(AptoideNotification aptoideNotification,
@@ -163,5 +202,64 @@ public class SystemNotificationShower {
 
   public void dismissNotification(int notificationId) {
     notificationManager.cancel(notificationId);
+  }
+
+  private Completable dismissNotificationAfterAction(int notificationId) {
+    return Completable.defer(() -> {
+      try {
+        return notificationCenter.notificationDismissed(
+            notificationIdsMapper.getNotificationType(notificationId));
+      } catch (RuntimeException e) {
+        return Completable.error(e);
+      }
+    });
+  }
+
+  private void callDeepLink(Context context, NotificationInfo notificationInfo) {
+    String targetUrl = notificationInfo.getNotificationUrl();
+    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(targetUrl));
+    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    try {
+      context.startActivity(i);
+    } catch (ActivityNotFoundException e) {
+      crashReport.log(e);
+    }
+  }
+
+  private void setNotificationBootCompletedSubscribe() {
+    view.getActionBootCompleted()
+        .doOnNext(__ -> notificationCenter.setup())
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
+  private void setNotificationDismissSubscribe() {
+    view.getNotificationDismissed()
+        .filter(notificationInfo -> notificationInfo.getNotificationType() < 7)
+        .doOnNext(notificationInfo -> dismissNotificationAfterAction(
+            notificationInfo.getNotificationType()))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
+  private void setNotificationPressSubscribe() {
+    view.getNotificationClick()
+        .flatMapSingle(notificationInfo -> notificationProvider.getLastShowed(
+            notificationIdsMapper.getNotificationType(notificationInfo.getNotificationType()))
+            .doOnSuccess(notification -> {
+              notificationAnalytics.sendPushNotificationPressedEvent(notification.getType(),
+                  notification.getAbTestingGroup(), notification.getCampaignId(),
+                  notification.getUrl());
+              notificationAnalytics.sendNotificationTouchEvent(
+                  notificationInfo.getNotificationTrackUrl(),
+                  notificationInfo.getNotificationType(), notificationInfo.getNotificationUrl(),
+                  notification.getCampaignId(), notification.getAbTestingGroup());
+            })
+            .map(notification -> notificationInfo))
+        .doOnNext(notificationInfo -> callDeepLink(context, notificationInfo))
+        .doOnNext(notificationInfo -> dismissNotificationAfterAction(
+            notificationInfo.getNotificationType()))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
   }
 }

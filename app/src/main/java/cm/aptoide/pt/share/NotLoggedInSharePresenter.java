@@ -2,6 +2,7 @@ package cm.aptoide.pt.share;
 
 import android.content.SharedPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.FacebookSignUpException;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
@@ -153,7 +154,7 @@ public class NotLoggedInSharePresenter implements Presenter {
                 .doOnError(throwable -> {
                   view.showError(errorMapper.map(throwable));
                   crashReport.log(throwable);
-                  analytics.sendGoogleSignUpFailEvent();
+                  analytics.sendSignUpErrorEvent(AccountAnalytics.LoginMethod.GOOGLE, throwable);
                 }))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -191,8 +192,6 @@ public class NotLoggedInSharePresenter implements Presenter {
                 })
                 .doOnTerminate(() -> view.hideLoading())
                 .doOnError(throwable -> {
-                  sendFacebookErrorAnalyics(throwable);
-
                   if (throwable instanceof FacebookSignUpException
                       && ((FacebookSignUpException) throwable).getCode()
                       == FacebookSignUpException.MISSING_REQUIRED_PERMISSIONS) {
@@ -201,26 +200,11 @@ public class NotLoggedInSharePresenter implements Presenter {
                     crashReport.log(throwable);
                     view.showError(errorMapper.map(throwable));
                   }
+                  analytics.sendSignUpErrorEvent(AccountAnalytics.LoginMethod.FACEBOOK, throwable);
                 }))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
-  }
-
-  private void sendFacebookErrorAnalyics(Throwable throwable) {
-    if (throwable instanceof FacebookSignUpException) {
-      switch (((FacebookSignUpException) throwable).getCode()) {
-        case FacebookSignUpException.MISSING_REQUIRED_PERMISSIONS:
-          analytics.sendFacebookMissingPermissionsEvent();
-          break;
-        case FacebookSignUpException.USER_CANCELLED:
-          analytics.sendFacebookUserCancelledEvent();
-          break;
-        case FacebookSignUpException.ERROR:
-          analytics.sendFacebookErrorEvent();
-          break;
-      }
-    }
   }
 
   private void handleFacebookSignInWithRequiredPermissionsEvent() {

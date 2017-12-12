@@ -10,7 +10,6 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/row_app_download_indicator"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -55,7 +54,6 @@
         />
 
     <RelativeLayout
-        android:id="@+id/download_details_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
@@ -99,7 +97,6 @@
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/app_error"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ellipsize="end"

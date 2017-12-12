@@ -21,7 +21,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 
-public class VanillaApplication extends AptoideApplication {
+public class VanillaApplication extends NotificationApplicationView {
 
   private NotificationSyncScheduler notificationSyncScheduler;
 

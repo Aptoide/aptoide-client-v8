@@ -68,3 +68,6 @@
 -keep class com.testfairy.** { *; }
 -dontwarn com.testfairy.**
 -keepattributes Exceptions, Signature, LineNumberTable
+
+### Adyen ###
+-dontwarn com.adyen.ui.**

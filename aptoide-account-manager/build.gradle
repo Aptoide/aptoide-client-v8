@@ -24,13 +24,17 @@ android {
 
   flavorDimensions "mode"
   productFlavors {
-    internal {
+    uitest {
       dimension "mode"
-      matchingFallbacks = ['prod']
+      matchingFallbacks = ['internal']
     }
     prod {
       dimension "mode"
       matchingFallbacks = ['internal']
+    }
+    internal {
+      dimension "mode"
+      matchingFallbacks = ['prod']
     }
   }
 

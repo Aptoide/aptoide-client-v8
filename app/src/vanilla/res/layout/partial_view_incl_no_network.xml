@@ -32,7 +32,6 @@
         />
 
     <TextView
-        android:id="@+id/no_connextion_text"
         android:layout_width="wrap_content"
         android:layout_height="24dp"
         android:layout_gravity="center_horizontal"
@@ -88,7 +87,6 @@
             android:src="@drawable/spot_and_share_ic_action_spotshare_orange"
             />
         <TextView
-            android:id="@+id/call_to_spot_and_share"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"

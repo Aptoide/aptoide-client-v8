@@ -106,7 +106,6 @@
         >
 
       <ImageView
-          android:id="@+id/empty_review_icon"
           android:layout_width="match_parent"
           android:layout_height="41dp"
           android:src="@drawable/vector_smart_object"
@@ -190,7 +189,6 @@
           >
 
         <ImageView
-            android:id="@+id/users_icon"
             android:layout_width="7.3dp"
             android:layout_height="8.7dp"
             android:layout_gravity="center_vertical"

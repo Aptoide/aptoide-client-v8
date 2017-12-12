@@ -47,7 +47,6 @@
         >
 
       <TextView
-          android:id="@+id/working_well_count_label"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginEnd="12dp"
@@ -96,7 +95,6 @@
         >
 
       <TextView
-          android:id="@+id/needs_licence_count_label"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginEnd="12dp"
@@ -145,7 +143,6 @@
         >
 
       <TextView
-          android:id="@+id/fake_app_count_label"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginEnd="12dp"
@@ -194,7 +191,6 @@
         >
 
       <TextView
-          android:id="@+id/virus_count_label"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginEnd="12dp"
