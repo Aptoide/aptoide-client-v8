@@ -1,10 +1,13 @@
 package cm.aptoide.pt.store.view.home;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -22,26 +25,30 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DrawerAnalytics;
+import cm.aptoide.pt.PartnerApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.firstinstall.FirstInstallFragment;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.navigator.TabNavigation;
+import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.preferences.PartnersSecurePreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.view.SearchBuilder;
 import cm.aptoide.pt.store.StoreTheme;
+import cm.aptoide.pt.store.view.StoreFragment;
+import cm.aptoide.pt.store.view.StorePagerAdapter;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.view.BackButton;
 import cm.aptoide.pt.view.custom.BadgeView;
-import cm.aptoide.pt.view.navigator.ActivityResultNavigator;
-import cm.aptoide.pt.view.navigator.FragmentNavigator;
-import cm.aptoide.pt.view.navigator.TabNavigation;
-import cm.aptoide.pt.view.navigator.TabNavigator;
-import cm.aptoide.pt.view.store.StoreFragment;
-import cm.aptoide.pt.view.store.StorePagerAdapter;
 import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.text.NumberFormat;
@@ -69,7 +76,7 @@ public class HomeFragment extends StoreFragment {
   private TextView userUsername;
   private ImageView userAvatarImage;
   private DrawerAnalytics drawerAnalytics;
-  private ClickHandler backClickHandler;
+  private BackButton.ClickHandler backClickHandler;
   private SearchBuilder searchBuilder;
   private String defaultThemeName;
 
@@ -170,6 +177,7 @@ public class HomeFragment extends StoreFragment {
 
     drawerAnalytics = new DrawerAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    handleFirstInstall(savedInstanceState);
   }
 
   @Nullable @Override
@@ -402,6 +410,33 @@ public class HomeFragment extends StoreFragment {
     drawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
 
     setHasOptionsMenu(true);
+  }
+
+  /**
+   * show first install fragment with animation
+   */
+  @SuppressLint("PrivateResource") private void handleFirstInstall(Bundle savedInstanceState) {
+    ConnectivityManager connectivityManager =
+        (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+    if (connectivityManager != null) {
+      if (savedInstanceState == null
+          && connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+          .isConnected()
+          && ((PartnerApplication) getContext().getApplicationContext()).getBootConfig()
+          .getPartner()
+          .getSwitches()
+          .getOptions()
+          .getFirstInstall()
+          .isEnable()
+          && !PartnersSecurePreferences.isFirstInstallFinished(
+          ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())) {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.abc_slide_in_bottom, R.anim.abc_slide_out_bottom);
+        transaction.add(R.id.fragment_placeholder, FirstInstallFragment.newInstance());
+        transaction.addToBackStack(null);
+        transaction.commit();
+      }
+    }
   }
 
   private enum BundleKeys {

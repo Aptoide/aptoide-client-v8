@@ -26,7 +26,6 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.Authentication;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
@@ -36,6 +35,8 @@ import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.Locale;
 import java.util.Map;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 public class ToolboxContentProvider extends ContentProvider {
 
@@ -49,11 +50,12 @@ public class ToolboxContentProvider extends ContentProvider {
   private static final int CHANGE_PREFERENCE = 6;
   private static final int REFRESH_TOKEN = 7;
 
+  @Inject AuthenticationPersistence authenticationPersistence;
+  @Inject @Named("default") SharedPreferences sharedPreferences;
+  @Inject AptoideAccountManager accountManager;
+
   private UriMatcher uriMatcher;
   private ToolboxSecurityManager securityManager;
-  private AuthenticationPersistence authenticationPersistence;
-  private SharedPreferences sharedPreferences;
-  private AptoideAccountManager accountManager;
 
   @Override public boolean onCreate() {
     securityManager = new ToolboxSecurityManager(getContext().getPackageManager());
@@ -65,12 +67,8 @@ public class ToolboxContentProvider extends ContentProvider {
     uriMatcher.addURI(BuildConfig.CONTENT_AUTHORITY, "passHash", PASSHASH);
     uriMatcher.addURI(BuildConfig.CONTENT_AUTHORITY, "loginName", LOGIN_NAME);
     uriMatcher.addURI(BuildConfig.CONTENT_AUTHORITY, "changePreference", CHANGE_PREFERENCE);
-    authenticationPersistence =
-        ((AptoideApplication) getContext().getApplicationContext()).getAuthenticationPersistence();
-    accountManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-    sharedPreferences =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
+    ((AptoideApplication) getContext().getApplicationContext()).getApplicationComponent()
+        .inject(this);
     return true;
   }
 
@@ -223,16 +221,14 @@ public class ToolboxContentProvider extends ContentProvider {
             return changed;
         }
       }
-    } catch (NullPointerException e) {
-      //it can happen if package manager or context is null
-      CrashReport.getInstance()
-          .log(e);
+    } catch (NullPointerException ignored) {
     }
     return changed;
   }
 
   private MatrixCursor create(String key, String value) {
     final MatrixCursor cursor = new MatrixCursor(new String[] { key }, 1);
+    cursor.addRow(new String[] { value });
     return cursor;
   }
 }

@@ -18,7 +18,9 @@ import android.widget.EditText;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.account.view.GooglePlayServicesFragment;
@@ -97,7 +99,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     crashReport = CrashReport.getInstance();
-    errorMapper = new AccountErrorMapper(getContext());
+    errorMapper = new AccountErrorMapper(getContext(), new ErrorsMapper());
     orientationManager = ((ActivityResultNavigator) getContext()).getScreenOrientationManager();
     setHasOptionsMenu(true);
   }
@@ -163,7 +165,11 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     aptoideJoinToggle = (Button) view.findViewById(R.id.fragment_payment_login_join_button);
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    aptoideJoinToggle.setText(getString(R.string.join_company, application.getMarketName()));
+    if ("vanilla".equalsIgnoreCase(BuildConfig.FLAVOR_product)) {
+      aptoideJoinToggle.setText(getString(R.string.onboarding_button_join_us));
+    } else {
+      aptoideJoinToggle.setText(getString(R.string.join_company, application.getMarketName()));
+    }
     aptoideLoginToggle = (Button) view.findViewById(R.id.fragment_payment_login_small_button);
     recoverPasswordButton = view.findViewById(R.id.fragment_payment_login_recover_password_button);
     aptoideLoginButton = (Button) view.findViewById(R.id.fragment_payment_login_large_login_button);

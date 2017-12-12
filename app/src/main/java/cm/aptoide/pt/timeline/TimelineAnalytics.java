@@ -22,16 +22,20 @@ import cm.aptoide.pt.social.data.PopularApp;
 import cm.aptoide.pt.social.data.PopularAppTouchEvent;
 import cm.aptoide.pt.social.data.Post;
 import cm.aptoide.pt.social.data.RatedRecommendation;
+import cm.aptoide.pt.social.data.ReadPostsPersistence;
 import cm.aptoide.pt.social.data.Recommendation;
 import cm.aptoide.pt.social.data.SocialHeaderCardTouchEvent;
 import cm.aptoide.pt.social.data.StoreAppCardTouchEvent;
 import cm.aptoide.pt.social.data.StoreCardTouchEvent;
 import cm.aptoide.pt.social.data.StoreLatestApps;
+import cm.aptoide.pt.social.data.analytics.EventErrorHandler;
+import cm.aptoide.pt.social.data.share.ShareEvent;
 import com.facebook.appevents.AppEventsLogger;
 import java.util.HashMap;
 import java.util.Map;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
+import rx.Completable;
 
 /**
  * Created by jdandrade on 27/10/2016.
@@ -55,6 +59,7 @@ public class TimelineAnalytics {
   private static final String OPEN_VIDEO = "OPEN_VIDEO";
   private static final String OPEN_CHANNEL = "OPEN_CHANNEL";
   private static final String OPEN_STORE = "OPEN_STORE";
+  private static final String OPEN_STORE_PROFILE = "OPEN_STORE_PROFILE";
   private static final String OPEN_APP = "OPEN_APP";
   private static final String UPDATE_APP = "UPDATE_APP";
   private static final String FOLLOW_FRIENDS = "Apps_Timeline_Follow_Friends";
@@ -78,12 +83,13 @@ public class TimelineAnalytics {
   private final SharedPreferences sharedPreferences;
   private final NotificationAnalytics notificationAnalytics;
   private final NavigationTracker navigationTracker;
+  private final ReadPostsPersistence readPostsPersistence;
 
   public TimelineAnalytics(Analytics analytics, AppEventsLogger facebook,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator, String appId,
       SharedPreferences sharedPreferences, NotificationAnalytics notificationAnalytics,
-      NavigationTracker navigationTracker) {
+      NavigationTracker navigationTracker, ReadPostsPersistence readPostsPersistence) {
     this.analytics = analytics;
     this.facebook = facebook;
     this.bodyInterceptor = bodyInterceptor;
@@ -94,6 +100,7 @@ public class TimelineAnalytics {
     this.sharedPreferences = sharedPreferences;
     this.notificationAnalytics = notificationAnalytics;
     this.navigationTracker = navigationTracker;
+    this.readPostsPersistence = readPostsPersistence;
   }
 
   public void sendSocialCardPreviewActionEvent(String value) {
@@ -107,7 +114,7 @@ public class TimelineAnalytics {
   }
 
   public void notificationShown(String url) {
-    notificationAnalytics.notificationShown(url);
+    notificationAnalytics.sendNotificationTouchEvent(url);
   }
 
   private Bundle createSocialActionEventData(TimelineSocialActionData timelineSocialActionData) {
@@ -402,10 +409,14 @@ public class TimelineAnalytics {
     return createTimelineCardData(cardType, source, specific);
   }
 
-  public void sendLikeEvent(int position, boolean success) {
-    HashMap<String, Object> data = new HashMap<>();
-    data.put("position", position);
-    data.put("status", success ? "success" : "fail");
+  public void sendLikeEvent(CardTouchEvent event) {
+    HashMap<String, Object> data =
+        parseEventData(event, true, EventErrorHandler.GenericErrorEvent.OK);
+    analytics.sendEvent(createEvent(LIKE, data));
+  }
+
+  public void sendErrorLikeEvent(CardTouchEvent event, EventErrorHandler.GenericErrorEvent error) {
+    HashMap<String, Object> data = parseEventData(event, false, error);
     analytics.sendEvent(createEvent(LIKE, data));
   }
 
@@ -444,6 +455,12 @@ public class TimelineAnalytics {
         createEvent(OPEN_STORE, createStoreAppData(cardType, source, packageName, store)));
   }
 
+  public void sendOpenStoreProfileEvent(CardTouchEvent touchEvent) {
+    HashMap<String, Object> data =
+        parseEventData(touchEvent, true, EventErrorHandler.GenericErrorEvent.OK);
+    analytics.sendEvent(createEvent(OPEN_STORE_PROFILE, data));
+  }
+
   public void sendClickOnPostHeaderEvent(CardTouchEvent cardTouchEvent) {
     final Post post = cardTouchEvent.getCard();
     final CardType postType = post.getType();
@@ -455,9 +472,10 @@ public class TimelineAnalytics {
               .getType()
               .name(), Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.BLANK,
           socialHeaderCardTouchEvent.getStoreName(), Analytics.AppsTimeline.OPEN_STORE);
+      sendOpenStoreProfileEvent(socialHeaderCardTouchEvent);
     } else if (postType.equals(CardType.ARTICLE)) {
       Media card = (Media) post;
-      sendOpenBlogEvent(postType.name(), card.getMediaTitle(), card.getPublisherLink()
+      sendOpenBlogEvent(postType.name(), card.getPublisherName(), card.getPublisherLink()
           .getUrl(), card.getRelatedApp()
           .getPackageName());
       sendMediaCardClickEvent(postType.name(), card.getMediaTitle(), card.getPublisherName(),
@@ -467,7 +485,7 @@ public class TimelineAnalytics {
           Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);
     } else if (postType.equals(CardType.VIDEO)) {
       Media card = (Media) post;
-      sendOpenChannelEvent(postType.name(), card.getMediaTitle(), card.getPublisherLink()
+      sendOpenChannelEvent(postType.name(), card.getPublisherName(), card.getPublisherLink()
           .getUrl(), card.getRelatedApp()
           .getPackageName());
       sendMediaCardClickEvent(postType.name(), card.getMediaTitle(), card.getPublisherName(),
@@ -512,7 +530,7 @@ public class TimelineAnalytics {
                 .name(), Analytics.AppsTimeline.BLANK, media.getMediaTitle(), media.getPublisherName(),
             Analytics.AppsTimeline.OPEN_ARTICLE);
         sendOpenArticleEvent(media.getType()
-            .name(), media.getMediaTitle(), media.getMediaLink()
+            .name(), media.getPublisherName(), media.getMediaLink()
             .getUrl(), media.getRelatedApp()
             .getPackageName());
         sendMediaCardClickEvent(media.getType()
@@ -524,7 +542,7 @@ public class TimelineAnalytics {
                 .name(), Analytics.AppsTimeline.BLANK, media.getMediaTitle(), media.getPublisherName(),
             Analytics.AppsTimeline.OPEN_VIDEO);
         sendOpenVideoEvent(media.getType()
-            .name(), media.getMediaTitle(), media.getMediaLink()
+            .name(), media.getPublisherName(), media.getMediaLink()
             .getUrl(), media.getRelatedApp()
             .getPackageName());
         sendMediaCardClickEvent(media.getType()
@@ -550,6 +568,8 @@ public class TimelineAnalytics {
                 .name(), storeAppCardTouchEvent.getPackageName(), Analytics.AppsTimeline.BLANK,
             ((StoreLatestApps) storeAppCardTouchEvent.getCard()).getStoreName(),
             Analytics.AppsTimeline.OPEN_APP_VIEW);
+        sendOpenAppEvent(postType.name(), TimelineAnalytics.SOURCE_APTOIDE,
+            ((StoreAppCardTouchEvent) cardTouchEvent).getPackageName());
       }
       sendStoreLatestAppsClickEvent(postType.name(), Analytics.AppsTimeline.OPEN_APP_VIEW,
           "(blank)", storeAppCardTouchEvent.getPackageName(),
@@ -561,6 +581,8 @@ public class TimelineAnalytics {
             ((StoreAppCardTouchEvent) cardTouchEvent).getPackageName(),
             Analytics.AppsTimeline.BLANK, ((StoreLatestApps) post).getStoreName(),
             Analytics.AppsTimeline.OPEN_APP_VIEW);
+        sendOpenAppEvent(postType.name(), TimelineAnalytics.SOURCE_APTOIDE,
+            ((StoreAppCardTouchEvent) cardTouchEvent).getPackageName());
       } else if (cardTouchEvent instanceof StoreCardTouchEvent) {
         if (post instanceof StoreLatestApps) {
           Analytics.AppsTimeline.clickOnCard(postType.name(), Analytics.AppsTimeline.BLANK,
@@ -627,23 +649,37 @@ public class TimelineAnalytics {
     return eventMap;
   }
 
-  public void sendCommentEvent(int position, boolean success) {
-    HashMap<String, Object> data = new HashMap<>();
-    data.put("position", position);
-    data.put("status", success ? "success" : "fail");
+  public void sendCommentEvent(CardTouchEvent event) {
+    HashMap<String, Object> data =
+        parseEventData(event, true, EventErrorHandler.GenericErrorEvent.OK);
     analytics.sendEvent(createEvent(COMMENT, data));
   }
 
-  public void sendShareEvent(int position, boolean success) {
-    HashMap<String, Object> data = new HashMap<>();
-    data.put("position", position);
-    data.put("status", success ? "success" : "fail");
+  public void sendErrorCommentEvent(CardTouchEvent event,
+      EventErrorHandler.GenericErrorEvent error) {
+    HashMap<String, Object> data = parseEventData(event, false, error);
+    analytics.sendEvent(createEvent(COMMENT, data));
+  }
+
+  public void sendShareEvent(CardTouchEvent event) {
+    HashMap<String, Object> data =
+        parseEventData(event, true, EventErrorHandler.GenericErrorEvent.OK);
     analytics.sendEvent(createEvent(SHARE, data));
   }
 
-  public void sendShareCompleted(boolean success) {
-    HashMap<String, Object> data = new HashMap<>();
-    data.put("status", success ? "success" : "fail");
+  public void sendErrorShareEvent(CardTouchEvent event, EventErrorHandler.GenericErrorEvent error) {
+    HashMap<String, Object> data = parseEventData(event, false, error);
+    analytics.sendEvent(createEvent(SHARE, data));
+  }
+
+  public void sendShareCompleted(ShareEvent event) {
+    HashMap<String, Object> data =
+        parseShareCompletedEventData(event, true, EventErrorHandler.ShareErrorEvent.OK);
+    analytics.sendEvent(createEvent(SHARE_SEND, data));
+  }
+
+  public void sendErrorShareCompleted(ShareEvent event, EventErrorHandler.ShareErrorEvent error) {
+    HashMap<String, Object> data = parseShareCompletedEventData(event, false, error);
     analytics.sendEvent(createEvent(SHARE_SEND, data));
   }
 
@@ -655,6 +691,17 @@ public class TimelineAnalytics {
 
   public void sendFabClicked() {
     HashMap<String, Object> data = new HashMap<>();
+    String previousContext = null;
+    String store = null;
+    if (navigationTracker.getPreviousScreen() != null) {
+      previousContext = navigationTracker.getPreviousScreen()
+          .getFragment();
+      store = navigationTracker.getPreviousScreen()
+          .getStore();
+    }
+    data.put("previous_context", previousContext);
+    data.put("store", store);
+
     analytics.sendEvent(createEvent(FAB, data));
   }
 
@@ -663,5 +710,171 @@ public class TimelineAnalytics {
         new AptoideEvent(createScrollingEventData(position), "SCROLLING", "SCROLL", "TIMELINE",
             bodyInterceptor, httpClient, converterFactory, tokenInvalidator, appId,
             sharedPreferences));
+  }
+
+  public Completable setPostRead(String cardId, String name) {
+    return readPostsPersistence.addPost(cardId, name);
+  }
+
+  public HashMap<String, Object> parseEventData(CardTouchEvent event, boolean status,
+      EventErrorHandler.GenericErrorEvent errorCode) {
+    final Post post = event.getCard();
+    final CardType postType = post.getType();
+    EventErrorHandler errorHandler = new EventErrorHandler();
+    HashMap<String, Object> data = new HashMap<>();
+    HashMap<String, Object> result = new HashMap<>();
+    HashMap<String, Object> error = new HashMap<>();
+    String previousContext = null;
+    String store = null;
+    data.put("card_type", post.getType());
+    data.put("position", event.getPosition());
+    data.put("previous_context", previousContext);
+    data.put("store", store);
+
+    if (navigationTracker.getPreviousScreen() != null) {
+      previousContext = navigationTracker.getPreviousScreen()
+          .getFragment();
+      store = navigationTracker.getPreviousScreen()
+          .getStore();
+    }
+
+    result.put("status", status ? "success" : "fail");
+
+    if (result.get("status")
+        .equals("fail")) {
+      error = errorHandler.handleGenericErrorParsing(errorCode);
+      result.put("error", error);
+    }
+
+    if (postType.isMedia()) {
+      HashMap<String, Object> specific = new HashMap<>();
+      Media card = (Media) post;
+      data.put("source", card.getPublisherName());
+      specific.put("app", card.getRelatedApp()
+          .getPackageName());
+      specific.put("url", card.getMediaLink()
+          .getUrl());
+      data.put("specific", specific);
+    } else if (postType.equals(CardType.RECOMMENDATION)
+        || postType.equals(CardType.SOCIAL_POST_RECOMMENDATION)
+        || postType.equals(CardType.SOCIAL_RECOMMENDATION)
+        || postType.equals(CardType.SIMILAR)
+        || postType.equals(CardType.SOCIAL_INSTALL)
+        || postType.equals(CardType.AGGREGATED_SOCIAL_INSTALL)) {
+      HashMap<String, Object> specific = new HashMap<>();
+      if (post instanceof RatedRecommendation) {
+        RatedRecommendation card = (RatedRecommendation) post;
+        if (card.getPoster()
+            .getStore() != null) {
+          data.put("source", card.getPoster()
+              .getStore()
+              .getName());
+        } else {
+          data.put("source", card.getPoster()
+              .getPrimaryName());
+        }
+        specific.put("app", card.getPackageName());
+        data.put("specific", specific);
+      } else {
+        Recommendation card = (Recommendation) post;
+        data.put("source", card.getPublisherName());
+        specific.put("app", card.getPackageName());
+        data.put("specific", specific);
+      }
+    } else if (postType.equals(CardType.UPDATE)) {
+      HashMap<String, Object> specific = new HashMap<>();
+      AppUpdate card = (AppUpdate) post;
+      data.put("source", SOURCE_APTOIDE);
+      specific.put("app", card.getPackageName());
+      data.put("specific", specific);
+    } else if (postType.equals(CardType.STORE)
+        || postType.equals(CardType.SOCIAL_STORE)
+        || postType.equals(CardType.AGGREGATED_SOCIAL_STORE)) {
+      HashMap<String, Object> specific = new HashMap<>();
+      StoreLatestApps card = (StoreLatestApps) post;
+      data.put("source", SOURCE_APTOIDE);
+    }
+    data.put("result", result);
+    return data;
+  }
+
+  public HashMap<String, Object> parseShareCompletedEventData(ShareEvent event, boolean status,
+      EventErrorHandler.ShareErrorEvent errorCode) {
+    final Post post = event.getPost();
+    final CardType postType = post.getType();
+    HashMap<String, Object> data = new HashMap<>();
+    HashMap<String, Object> error = new HashMap<>();
+    HashMap<String, Object> result = new HashMap<>();
+    HashMap<String, Object> specific = new HashMap<>();
+    EventErrorHandler errorHandler = new EventErrorHandler();
+    String previousContext = null;
+    String store = null;
+    data.put("card_type", post.getType());
+    data.put("previous_context", previousContext);
+    data.put("store", store);
+
+    if (navigationTracker.getPreviousScreen() != null) {
+      previousContext = navigationTracker.getPreviousScreen()
+          .getFragment();
+      store = navigationTracker.getPreviousScreen()
+          .getStore();
+    }
+
+    result.put("status", status ? "success" : "fail");
+
+    if (result.get("status")
+        .equals("fail")) {
+      error = errorHandler.handleShareErrorParsing(errorCode);
+      result.put("error", error);
+    }
+
+    if (postType.isMedia()) {
+      Media card = (Media) post;
+      data.put("source", card.getPublisherName());
+      specific.put("app", card.getRelatedApp()
+          .getPackageName());
+      specific.put("url", card.getMediaLink()
+          .getUrl());
+      data.put("specific", specific);
+    } else if (postType.equals(CardType.RECOMMENDATION)
+        || postType.equals(CardType.SOCIAL_POST_RECOMMENDATION)
+        || postType.equals(CardType.SOCIAL_RECOMMENDATION)
+        || postType.equals(CardType.SIMILAR)
+        || postType.equals(CardType.SOCIAL_INSTALL)
+        || postType.equals(CardType.AGGREGATED_SOCIAL_INSTALL)) {
+      if (post instanceof RatedRecommendation) {
+        RatedRecommendation card = (RatedRecommendation) post;
+        if (card.getPoster()
+            .getStore() != null) {
+          data.put("source", card.getPoster()
+              .getStore()
+              .getName());
+        } else {
+          data.put("source", card.getPoster()
+              .getPrimaryName());
+        }
+        specific.put("app", card.getPackageName());
+        data.put("specific", specific);
+      } else {
+        Recommendation card = (Recommendation) post;
+        data.put("source", card.getPublisherName());
+        data.put("store", store);
+        specific.put("app", card.getPackageName());
+        data.put("specific", specific);
+      }
+    } else if (postType.equals(CardType.UPDATE)) {
+      AppUpdate card = (AppUpdate) post;
+      data.put("source", SOURCE_APTOIDE);
+      specific.put("app", card.getPackageName());
+      data.put("specific", specific);
+      data.put("result", result);
+    } else if (postType.equals(CardType.STORE)
+        || postType.equals(CardType.SOCIAL_STORE)
+        || postType.equals(CardType.AGGREGATED_SOCIAL_STORE)) {
+      StoreLatestApps card = (StoreLatestApps) post;
+      data.put("source", SOURCE_APTOIDE);
+    }
+    data.put("result", result);
+    return data;
   }
 }

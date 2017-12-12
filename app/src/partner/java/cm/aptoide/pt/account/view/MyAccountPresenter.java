@@ -1,7 +1,6 @@
 package cm.aptoide.pt.account.view;
 
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
@@ -56,14 +55,6 @@ public class MyAccountPresenter implements Presenter {
     handleNotificationClick();
     handleUserEditClick();
     markNotificationsRead();
-  }
-
-  @Override public void saveState(Bundle state) {
-    // does nothing
-  }
-
-  @Override public void restoreState(Bundle state) {
-    // does nothing
   }
 
   private void markNotificationsRead() {
@@ -142,8 +133,8 @@ public class MyAccountPresenter implements Presenter {
         .flatMap(notification -> Observable.just(
             linkFactory.get(LinksHandlerFactory.NOTIFICATION_LINK, notification.getUrl()))
             .doOnNext(link -> link.launch())
-            .doOnNext(
-                link -> analytics.notificationShown(notification.getNotificationCenterUrlTrack()))
+            .doOnNext(link -> analytics.sendNotificationTouchEvent(
+                notification.getNotificationCenterUrlTrack()))
             .doOnNext(__ -> navigationTracker.registerScreen(
                 ScreenTagHistory.Builder.build("Notification")))
             .doOnNext(__ -> pageViewsAnalytics.sendPageViewedEvent()))
@@ -169,7 +160,7 @@ public class MyAccountPresenter implements Presenter {
             .observeOn(AndroidSchedulers.mainThread())
             .doOnCompleted(() -> {
               ManagerPreferences.setAddressBookSyncValues(false, sharedPreferences);
-              view.navigateToHome();
+              navigator.navigateToHome();
             })
             .doOnError(throwable -> crashReport.log(throwable)).<Void>toObservable())
         .retry();

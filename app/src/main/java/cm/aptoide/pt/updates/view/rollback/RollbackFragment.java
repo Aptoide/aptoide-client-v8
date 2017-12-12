@@ -12,22 +12,16 @@ import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ads.MinimalAdMapper;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.realm.Rollback;
-import cm.aptoide.pt.install.InstallFabricEvents;
 import cm.aptoide.pt.install.Installer;
-import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.FooterRowDisplayable;
-import com.crashlytics.android.answers.Answers;
-import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -35,6 +29,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+import javax.inject.Inject;
+import javax.inject.Named;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -42,9 +38,11 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
 
   private static final SimpleDateFormat dateFormat =
       new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+
+  @Inject @Named("rollback") Installer installManager;
+  @Inject RollbackAccessor rollbackAccessor;
+
   private TextView emptyData;
-  private Installer installManager;
-  private Analytics analytics;
   private String marketName;
 
   public RollbackFragment() {
@@ -88,15 +86,15 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    analytics = Analytics.getInstance();
     final AptoideApplication application = (AptoideApplication) getContext().getApplicationContext()
         .getApplicationContext();
     marketName = application.getMarketName();
-    installManager = new InstallerFactory(new MinimalAdMapper(),
-        new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance(),
-            AppEventsLogger.newLogger(getContext().getApplicationContext())),
-        application.getImageCachePath()).create(getContext(), InstallerFactory.ROLLBACK);
     setHasOptionsMenu(true);
+  }
+
+  @Override public void onViewCreated() {
+    getFragmentComponent(null).inject(this);
+    super.onViewCreated();
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -119,9 +117,6 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
   }
 
   @UiThread private void fetchRollbacks() {
-    RollbackAccessor rollbackAccessor = AccessorFactory.getAccessorFor(
-        ((AptoideApplication) getContext().getApplicationContext()
-            .getApplicationContext()).getDatabase(), Rollback.class);
     rollbackAccessor.getConfirmedRollbacks()
         .observeOn(Schedulers.computation())
         .map(rollbacks -> createDisplayables(rollbacks))

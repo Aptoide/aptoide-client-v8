@@ -3,7 +3,6 @@
   ~ Modified by Neurophobic Animal on 25/05/2016.
   -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/installedItemFrame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     style="@style/focusableRowBackground"

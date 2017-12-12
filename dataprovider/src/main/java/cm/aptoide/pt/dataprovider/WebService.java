@@ -73,6 +73,10 @@ public abstract class WebService<T, U> {
     return defaultConverterFactory;
   }
 
+  protected OkHttpClient getHttpClient() {
+    return httpClient;
+  }
+
   public Observable<U> observe() {
     return observe(false);
   }

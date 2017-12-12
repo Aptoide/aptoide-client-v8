@@ -1,11 +1,12 @@
 package cm.aptoide.pt.store.view.my;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.v4.app.FragmentActivity;
+import android.text.ParcelableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,7 +17,6 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.StoreAnalytics;
-import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.view.MetaStoresBaseWidget;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowingFragment;
@@ -31,7 +31,6 @@ import com.jakewharton.rxbinding.view.RxView;
 
 public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
 
-  private View storeLayout;
   private ImageView storeIcon;
   private TextView storeName;
   private Button exploreButton;
@@ -47,7 +46,6 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
   }
 
   @Override protected void assignViews(View itemView) {
-    storeLayout = itemView.findViewById(R.id.store_layout);
     storeIcon = (ImageView) itemView.findViewById(R.id.store_icon);
     storeName = (TextView) itemView.findViewById(R.id.store_name);
     suggestionMessage = (TextView) itemView.findViewById(R.id.create_store_text);
@@ -66,21 +64,6 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
     exploreButton.setText(displayable.getExploreButtonText());
     String storeTheme = store.getAppearance()
         .getTheme();
-    @ColorInt int color = getColorOrDefault(StoreTheme.get(storeTheme), context);
-    Drawable exploreButtonBackground = exploreButton.getBackground();
-    exploreButtonBackground.setColorFilter(color, PorterDuff.Mode.SRC_IN);
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      Drawable d = context.getDrawable(R.drawable.my_store_background);
-      d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
-      storeLayout.setBackground(d);
-      exploreButton.setBackground(exploreButtonBackground);
-    } else {
-      Drawable d = context.getResources()
-          .getDrawable(R.drawable.dialog_bg_2);
-      d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
-      storeLayout.setBackgroundDrawable(d);
-      exploreButton.setBackgroundDrawable(exploreButtonBackground);
-    }
     ImageLoader.with(context)
         .loadWithShadowCircleTransform(store.getAvatar(), storeIcon);
 
@@ -93,14 +76,19 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
           storeAnalytics.sendStoreOpenEvent("View Own Store", store.getName());
         }));
 
+    SpannableFactory spannableFactory = new SpannableFactory();
     String followersText = String.format(getContext().getString(R.string.storetab_short_followers),
         String.valueOf(displayable.getFollowers()));
-    followers.setText(new SpannableFactory().createColorSpan(followersText, color,
+
+    ParcelableSpan[] textStyle = {
+        new StyleSpan(android.graphics.Typeface.BOLD), new ForegroundColorSpan(getTextColor())
+    };
+    followers.setText(spannableFactory.createMultiSpan(followersText, textStyle,
         String.valueOf(displayable.getFollowers())));
 
     String followingText = String.format(getContext().getString(R.string.storetab_short_followings),
         String.valueOf(displayable.getFollowings()));
-    following.setText(new SpannableFactory().createColorSpan(followingText, color,
+    following.setText(spannableFactory.createMultiSpan(followingText, textStyle,
         String.valueOf(displayable.getFollowings())));
 
     compositeSubscription.add(RxView.clicks(followers)
@@ -118,13 +106,14 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
                     displayable.getFollowings()), displayable.getStoreContext()), true)));
   }
 
-  private int getColorOrDefault(StoreTheme theme, Context context) {
+  private @ColorInt int getTextColor() {
+    Context context = getContext();
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       return context.getResources()
-          .getColor(theme.getPrimaryColor(), context.getTheme());
+          .getColor(R.color.default_color, context.getTheme());
     } else {
       return context.getResources()
-          .getColor(theme.getPrimaryColor());
+          .getColor(R.color.default_color);
     }
   }
 }

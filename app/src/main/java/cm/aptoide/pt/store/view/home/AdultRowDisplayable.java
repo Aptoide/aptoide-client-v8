@@ -45,4 +45,17 @@ public class AdultRowDisplayable extends Displayable implements ReloadInterface 
       reloader.load(create, refresh, savedInstanceState);
     }
   }
+
+  @Override public int hashCode() {
+    return reloader != null ? reloader.hashCode() : 0;
+  }
+
+  @Override public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    AdultRowDisplayable that = (AdultRowDisplayable) o;
+
+    return reloader != null ? reloader.equals(that.reloader) : that.reloader == null;
+  }
 }

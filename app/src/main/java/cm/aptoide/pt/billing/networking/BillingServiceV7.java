@@ -23,6 +23,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.DeletePurchaseRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetMerchantRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetProductsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.billing.GetPurchaseRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetPurchasesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetServicesRequest;
 import cm.aptoide.pt.install.PackageRepository;
@@ -128,7 +129,7 @@ public class BillingServiceV7 implements BillingService {
   }
 
   @Override public Single<Purchase> getPurchase(String productId) {
-    return GetPurchasesRequest.of(billingIdManager.resolveProductId(productId), bodyInterceptorV7,
+    return GetPurchaseRequest.of(billingIdManager.resolveProductId(productId), bodyInterceptorV7,
         httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe(true)
         .toSingle()

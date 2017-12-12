@@ -13,7 +13,7 @@ import cm.aptoide.pt.view.BackButtonActivity;
 import rx.Observable;
 
 public class PostActivity extends BackButtonActivity
-    implements PostFragment.PostUrlProvider, TabNavigator, LoginBottomSheet {
+    implements PostUrlProvider, TabNavigator, LoginBottomSheet {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

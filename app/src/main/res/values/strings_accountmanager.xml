@@ -1,33 +1,23 @@
 <resources>
 
-  <string name="or">or</string>
   <string name="username">Email</string>
   <string name="register">Sign Up</string>
   <string name="title_successful">Successful</string>
-  <string name="login_successful">Successful login</string>
-  <string name="forgot_passwd"><u>Forgot password?</u></string>
-  <string name="fields_cant_empty">Please check your email and password.</string>
   <string name="unknown_error">Unknown Error</string>
-  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and Content Policy for Developers</string>
   <string name="no_email_and_pass_error_message">Please insert an email and password</string>
   <string name="no_pass_error_message">Please insert a password</string>
   <string name="no_email_error_message">Please insert an email</string>
   <string name="password_validation_text">Password must be at least 8 characters and should have
         at least one letter and one number or special characters (!@#$%*)</string>
-  <string name="logged_as">You are logged as:</string>
-  <string name="default_account_type">cm.aptoide.pt</string>
 
   <string name="facebook_grant_permission_button">Grant permission</string>
   <string name="facebook_email_permission_regected_message">We need your email to create an account</string>
   <string name="user_cancelled">Cancelled by user</string>
 
   <string name="user_upload_photo_failed">It wasn\'t possible to create a profile.</string>
-  <string name="store_upload_photo_failed">It wasn\'t possible to upload the photo, but your store was created.</string>
-  <string name="user_created">User created</string>
 
   <!-- WIZARD -->
   <string name="please_wait_upload">If you\'re uploading, it may take a while…</string>
-  <string name="wizard_title_01">Welcome to Aptoide</string>
 
   <!-- WIZARD PAGE 1 -->
   <string name="wizard_title_viewpager_one">Meet your new social app store!</string>
@@ -49,45 +39,31 @@
   <string name="create_user_header"><b>Create your user profile</b> to rate, comment and share apps with your friends</string>
   <string name="edit_profile_header_message">Add a nice image to your profile</string>
   <string name="create_user_take_picture">Take a picture for your profile</string>
-  <string name="create_user_random_photo">Or use random photo</string>
   <string name="create_user_choose_username">Choose your username</string>
   <string name="create_user_username">Username</string>
   <string name="create_user_hint">Appears when you rate, comment and share apps.</string>
   <string name="create_user_create_button">Create profile</string>
-  <string name="create_user_dialog_camera">Take photo</string>
-  <string name="create_user_dialog_gallery">Choose from gallery</string>
-  <string name="create_user_dialog_cancel">Cancel</string>
-  <string name="nothing_inserted_store">Insert a store\'s name to create your store</string>
   <string name="nothing_inserted_user">Insert a username and a photo (optional) to create your profile</string>
-  <string name="create_user_bad_photo">Use an image with a resolution of at least 300x300</string>
   <string name="no_username_inserted">Add a username to create your profile</string>
-  <string name="no_photo_inserted">Choose a photo to create your profile</string>
 
   <!--User interests fragment -->
-  <string name="user_interests_header"><b>Show us your interests</b> and help us to find the best apps for you</string>
-  <string name="next">Next</string>
 
   <!--Create Store fragment-->
   <string name="create_store_title">Create your store</string>
-  <string name="create_store_header"><b>Create your store</b> and share your apps selection with %s community. <b>Give it a try</b></string>
-  <string name="edit_store_header">Edit your store with a nice image and a cool description</string>
   <string name="create_store_name">Choose a name for your %s store</string>
   <string name="create_store_name_inserted">Your store\'s name</string>
   <string name="create_store_theme">Store theme</string>
   <string name="create_store_create">Create store</string>
-  <string name="create_store_choose_image">Choose an image for your store</string>
-  <string name="create_store_description_title">Your store\'s description</string>
   <string name="create_store_description_hint">Your store description</string>
   <string name="edit_store_title">Edit your store</string>
   <string name="save_edit_store">Save</string>
-  <string name="edit_store_title_social_channels">Social Accounts</string>
+  <string name="edit_store_title_social_networks">Social Networks</string>
   <string name="edit_store_short_enter_username">Enter username</string>
 
 
   <string name="upload_dialog_title">Upload photo</string>
   <string name="upload_dialog_photo">Take new photo</string>
   <string name="upload_dialog_gallery">Select from gallery</string>
-  <string name="create_store_store_created">Store created</string>
 
   <!--Public/Private-->
   <string name="create_profile_pub_pri_suc_login">You\'re successfully logged in</string>
@@ -114,5 +90,9 @@
   <string name="myaccount_edit_store_button">Edit</string>
   <string name="myaccount_log_out_button">Log out</string>
   <string name="myaccount_header_title">Notifications</string>
+  <string name="twitch">Twitch</string>
+  <string name="youtube">Youtube</string>
+  <string name="edit_store_facebook_helper_text">Enter Facebook page</string>
+  <string name="edit_store_youtube_helper_text">Enter Your user or Channel</string>
 
 </resources>

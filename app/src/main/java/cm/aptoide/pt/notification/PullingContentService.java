@@ -46,6 +46,7 @@ public class PullingContentService extends Service {
   private UpdateRepository updateRepository;
   private SharedPreferences sharedPreferences;
   private String marketName;
+  private NotificationAnalytics notificationAnalytics;
 
   public void setAlarm(AlarmManager am, Context context, String action, long time) {
     Intent intent = new Intent(context, PullingContentService.class);
@@ -62,6 +63,7 @@ public class PullingContentService extends Service {
     sharedPreferences = application.getDefaultSharedPreferences();
     updateRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
     installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
+    notificationAnalytics = application.getNotificationAnalytics();
 
     subscriptions = new CompositeSubscription();
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -118,6 +120,7 @@ public class PullingContentService extends Service {
           }
         }))
         .subscribe(updates -> {
+          notificationAnalytics.sendUpdatesNotificationReceivedEvent();
           setUpdatesNotification(updates, startId);
         }, throwable -> {
           throwable.printStackTrace();

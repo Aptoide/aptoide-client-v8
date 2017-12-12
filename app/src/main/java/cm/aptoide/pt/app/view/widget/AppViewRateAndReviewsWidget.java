@@ -138,11 +138,11 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
     storeName = app.getStore()
         .getName();
 
-    usersToVote = stats.getRating()
+    usersToVote = stats.getGlobalRating()
         .getTotal();
     usersVotedTextView.setText(AptoideUtils.StringU.withSuffix(usersToVote));
 
-    float ratingAvg = stats.getRating()
+    float ratingAvg = stats.getGlobalRating()
         .getAvg();
     ratingValue.setText(String.format(Locale.getDefault(), "%.1f", ratingAvg));
     ratingBar.setRating(ratingAvg);

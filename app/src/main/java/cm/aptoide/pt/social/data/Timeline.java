@@ -155,9 +155,16 @@ public class Timeline {
         });
   }
 
+  public Completable setPostRead(List<Post> posts, CardType postType) {
+    return Observable.from(posts)
+        .flatMapCompletable(
+            post -> timelineAnalytics.setPostRead(post.getCardId(), postType.name()))
+        .toCompletable();
+  }
+
   public Completable setPostRead(String markAsReadUrl, String cardId, CardType cardType) {
     if (markAsReadUrl != null && !markAsReadUrl.isEmpty()) {
-      return service.setPostRead(markAsReadUrl, cardId, cardType.name());
+      return timelineAnalytics.setPostRead(cardId, cardType.name());
     }
     return Completable.complete();
   }

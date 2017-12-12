@@ -4,7 +4,6 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/partial_social_timeline_thumbnail"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
@@ -60,7 +59,6 @@
       />
 
   <View
-      android:id="@+id/partial_social_timeline_thumbnail_divider"
       android:layout_width="match_parent"
       android:layout_height="0.7dp"
       android:layout_below="@id/media_layout"

@@ -23,6 +23,11 @@ public class EmptyDisplayable extends Displayable {
     this.spanSize = spanSize;
   }
 
+  @Override public int getDefaultPerLineCount() {
+    // Stub
+    return 1;
+  }
+
   @Override protected Configs getConfig() {
     return new Configs(1, true);
   }
@@ -33,10 +38,5 @@ public class EmptyDisplayable extends Displayable {
 
   @Override public int getSpanSize(WindowManager windowManager, Resources resources) {
     return spanSize;
-  }
-
-  @Override public int getDefaultPerLineCount() {
-    // Stub
-    return 1;
   }
 }

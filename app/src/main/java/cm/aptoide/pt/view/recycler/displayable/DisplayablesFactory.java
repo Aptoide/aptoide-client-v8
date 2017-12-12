@@ -45,6 +45,7 @@ import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtilsProxy;
+import cm.aptoide.pt.store.view.BadgeDialogFactory;
 import cm.aptoide.pt.store.view.GridDisplayDisplayable;
 import cm.aptoide.pt.store.view.GridStoreDisplayable;
 import cm.aptoide.pt.store.view.GridStoreMetaDisplayable;
@@ -73,7 +74,7 @@ public class DisplayablesFactory {
       AptoideAccountManager accountManager, StoreUtilsProxy storeUtilsProxy,
       WindowManager windowManager, Resources resources, InstalledRepository installedRepository,
       StoreAnalytics storeAnalytics, StoreTabNavigator storeTabNavigator,
-      NavigationTracker navigationTracker) {
+      NavigationTracker navigationTracker, BadgeDialogFactory badgeDialogFactory) {
 
     LinkedList<Displayable> displayables = new LinkedList<>();
 
@@ -124,7 +125,7 @@ public class DisplayablesFactory {
               new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
                   ((AptoideApplication) context.getApplicationContext()
                       .getApplicationContext()).getDatabase(),
-                  cm.aptoide.pt.database.realm.Store.class)), storeAnalytics));
+                  cm.aptoide.pt.database.realm.Store.class)), storeAnalytics, badgeDialogFactory));
 
         case REVIEWS_GROUP:
           return Observable.from(

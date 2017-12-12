@@ -4,6 +4,7 @@ import com.adyen.core.PaymentRequest;
 import com.adyen.core.interfaces.PaymentDataCallback;
 import com.adyen.core.interfaces.PaymentDetailsCallback;
 import com.adyen.core.interfaces.PaymentMethodCallback;
+import com.adyen.core.interfaces.UriCallback;
 import com.adyen.core.models.PaymentMethod;
 import com.adyen.core.models.PaymentRequestResult;
 import java.util.List;
@@ -18,11 +19,14 @@ public class AdyenPaymentStatus {
   private final List<PaymentMethod> services;
   private final PaymentDetailsCallback detailsCallback;
   private final PaymentRequest paymentRequest;
+  private final String redirectUrl;
+  private final UriCallback uriCallback;
 
   public AdyenPaymentStatus(String token, PaymentDataCallback dataCallback,
       PaymentRequestResult result, PaymentMethodCallback serviceCallback,
       List<PaymentMethod> recurringServices, List<PaymentMethod> services,
-      PaymentDetailsCallback detailsCallback, PaymentRequest paymentRequest) {
+      PaymentDetailsCallback detailsCallback, PaymentRequest paymentRequest, String redirectUrl,
+      UriCallback uriCallback) {
     this.token = token;
     this.dataCallback = dataCallback;
     this.result = result;
@@ -31,6 +35,8 @@ public class AdyenPaymentStatus {
     this.services = services;
     this.detailsCallback = detailsCallback;
     this.paymentRequest = paymentRequest;
+    this.redirectUrl = redirectUrl;
+    this.uriCallback = uriCallback;
   }
 
   public List<PaymentMethod> getServices() {
@@ -39,6 +45,10 @@ public class AdyenPaymentStatus {
 
   public String getToken() {
     return token;
+  }
+
+  public String getRedirectUrl() {
+    return redirectUrl;
   }
 
   public PaymentDataCallback getDataCallback() {
@@ -63,5 +73,9 @@ public class AdyenPaymentStatus {
 
   public List<PaymentMethod> getRecurringServices() {
     return recurringServices;
+  }
+
+  public UriCallback getUriCallback() {
+    return uriCallback;
   }
 }

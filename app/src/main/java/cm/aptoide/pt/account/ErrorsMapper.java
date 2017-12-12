@@ -15,11 +15,12 @@ import cm.aptoide.pt.R;
 
 public class ErrorsMapper {
 
-  public static @StringRes int getWebServiceErrorMessageFromCode(String errorCode,
-      String packageName, Resources resources) {
-    int error =
-        resources.getIdentifier("ws_error_" + errorCode.replace("-", "_"), "string", packageName);
-
+  public @StringRes int getWebServiceErrorMessageFromCode(String errorCode, String packageName,
+      Resources resources) {
+    //as described here https://developer.android.com/studio/build/shrink-code.html#gradle-shrinker -> Enable strict reference checks
+    //this method prevents shrink resource to remove these strings
+    int error = resources.getIdentifier(String.format("ws_error_%1s", errorCode.replace("-", "_")),
+        "string", packageName);
     return error == 0 ? R.string.unknown_error : error;
   }
 }

@@ -223,4 +223,12 @@ public class ManagerPreferences {
         .putInt(ManagedKeys.NOT_LOGGED_IN_NUMBER_OF_INSTALL_CLICKS, value)
         .apply();
   }
+
+  public static boolean isDebug(SharedPreferences sharedPreferences) {
+    return sharedPreferences.getBoolean(ManagedKeys.DEBUG, false);
+  }
+
+  public static String getNotificationType(SharedPreferences sharedPreferences) {
+    return sharedPreferences.getString(ManagedKeys.NOTIFICATION_TYPE, "");
+  }
 }

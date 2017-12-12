@@ -143,7 +143,6 @@
 
 
       <LinearLayout
-          android:id="@+id/update_layout"
           android:layout_width="70dp"
           android:layout_height="wrap_content"
           android:layout_gravity="center_vertical"

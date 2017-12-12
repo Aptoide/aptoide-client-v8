@@ -8,7 +8,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/other_versions_coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
@@ -140,7 +139,6 @@
             android:layout_marginLeft="@dimen/appview_header_bottom_margin"
             android:layout_marginRight="@dimen/appview_header_bottom_margin"
             android:layout_marginStart="@dimen/appview_header_bottom_margin"
-            app:layout_anchor="@id/app_bar"
             app:layout_anchorGravity="bottom|left|start"
             tools:src="@color/red_700"
             />

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/widgetLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/white_card"
@@ -13,7 +13,6 @@
       android:layout_height="wrap_content"
       android:padding="8dp"
       tools:background="@drawable/my_store_background"
-      tools:backgroundTint="@color/red"
       >
 
     <ImageView
@@ -40,62 +39,68 @@
           android:id="@+id/store_name"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:textColor="@color/white"
           android:textSize="@dimen/text_size_medium_large"
           android:textStyle="bold"
           tools:text="Sameveda store"
+          style="@style/Aptoide.TextView.Medium.S"
           />
       <TextView
           android:id="@+id/create_store_text"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/create_store_displayable_explore_message"
-          android:textColor="@color/white"
           android:textSize="@dimen/text_size_medium"
+          style="@style/Aptoide.TextView.Regular.S"
           />
 
     </LinearLayout>
 
   </RelativeLayout>
-  <RelativeLayout
+  <android.support.constraint.ConstraintLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:gravity="center_vertical"
-      android:padding="8dp"
+      android:paddingBottom="16dp"
       >
-
-    <Button
-        android:id="@+id/explore_button"
-        android:layout_width="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:text="@string/create_store_displayable_explore_button"
-        style="@style/Aptoide.Button.S"
-        />
     <TextView
         android:id="@+id/following"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:gravity="center"
         android:text="@string/storetab_short_followings"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/followers"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/followers"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         />
     <TextView
         android:id="@+id/followers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="24dp"
-        android:layout_marginStart="24dp"
         android:layout_toEndOf="@id/following"
         android:layout_toRightOf="@id/following"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:gravity="center"
         android:text="@string/storetab_short_followers"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/explore_button"
+        app:layout_constraintRight_toLeftOf="@+id/explore_button"
+        app:layout_constraintStart_toEndOf="@id/following"
+        app:layout_constraintTop_toTopOf="parent"
         />
-
-  </RelativeLayout>
+    <Button
+        android:id="@+id/explore_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="@string/create_store_displayable_explore_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/Aptoide.Button.S"
+        />
+  </android.support.constraint.ConstraintLayout>
 </LinearLayout>

@@ -2,6 +2,10 @@ package cm.aptoide.pt;
 
 import android.os.Environment;
 import cm.aptoide.pt.account.LoginPreferences;
+import cm.aptoide.pt.notification.NotificationService;
+import cm.aptoide.pt.notification.NotificationSyncScheduler;
+import cm.aptoide.pt.notification.sync.NotificationSyncFactory;
+import cm.aptoide.pt.notification.sync.PushNotificationSyncManager;
 import cm.aptoide.pt.remotebootconfig.BootConfigJSONUtils;
 import cm.aptoide.pt.remotebootconfig.datamodel.BootConfig;
 import cm.aptoide.pt.remotebootconfig.datamodel.RemoteBootConfig;
@@ -9,22 +13,26 @@ import cm.aptoide.pt.view.ActivityProvider;
 import cm.aptoide.pt.view.FragmentProvider;
 import cm.aptoide.pt.view.configuration.implementation.PartnerActivityProvider;
 import cm.aptoide.pt.view.configuration.implementation.PartnerFragmentProvider;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import rx.Completable;
 import rx.Single;
 
-public class PartnerApplication extends AptoideApplication {
+public class PartnerApplication extends NotificationApplicationView {
 
   private BootConfig bootConfig;
+  private ObjectMapper objectMapper;
+  private NotificationSyncScheduler notificationSyncScheduler;
 
   public void setRemoteBootConfig(RemoteBootConfig remoteBootConfig) {
     BootConfigJSONUtils.saveRemoteBootConfig(getBaseContext(), remoteBootConfig,
-        "support@aptoide.com");
+        "support@aptoide.com", getObjectMapper());
     setBootConfig(remoteBootConfig.getData());
   }
 
   public BootConfig getBootConfig() {
     if (bootConfig == null) {
-      bootConfig = BootConfigJSONUtils.getSavedRemoteBootConfig(getBaseContext())
+      bootConfig = BootConfigJSONUtils.getSavedRemoteBootConfig(getBaseContext(), getObjectMapper())
           .getData();
     }
     return bootConfig;
@@ -32,6 +40,14 @@ public class PartnerApplication extends AptoideApplication {
 
   public void setBootConfig(BootConfig bootConfig) {
     this.bootConfig = bootConfig;
+  }
+
+  private ObjectMapper getObjectMapper() {
+    if (objectMapper == null) {
+      objectMapper =
+          new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
+    return objectMapper;
   }
 
   @Override public String getCachePath() {
@@ -97,8 +113,15 @@ public class PartnerApplication extends AptoideApplication {
     return false;
   }
 
-  @Override public ActivityProvider createActivityProvider() {
-    return new PartnerActivityProvider();
+  @Override public NotificationSyncScheduler getNotificationSyncScheduler() {
+    if (notificationSyncScheduler == null) {
+      notificationSyncScheduler = new PushNotificationSyncManager(getAlarmSyncScheduler(), true,
+          new NotificationSyncFactory(
+              new NotificationService(getExtraId(), getDefaultSharedPreferences(), getResources(),
+                  getBaseContext(), getTokenInvalidator(), getBodyInterceptorV3(),
+                  getAccountManager()), getNotificationProvider(), getDefaultSharedPreferences()));
+    }
+    return notificationSyncScheduler;
   }
 
   @Override public Completable createShortcut() {
@@ -122,5 +145,9 @@ public class PartnerApplication extends AptoideApplication {
   @Override public FragmentProvider createFragmentProvider() {
     return new PartnerFragmentProvider(getDefaultThemeName(), getDefaultStoreName(),
         hasMultiStoreSearch());
+  }
+
+  @Override public ActivityProvider createActivityProvider() {
+    return new PartnerActivityProvider();
   }
 }

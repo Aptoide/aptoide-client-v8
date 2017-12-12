@@ -5,7 +5,9 @@
 
 package cm.aptoide.pt.account.view;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -31,6 +33,7 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -38,11 +41,10 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.AptoideNotification;
-import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.view.InboxAdapter;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
 import com.facebook.appevents.AppEventsLogger;
@@ -83,10 +85,23 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
   private OkHttpClient httpClient;
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private CrashReport crashReport;
-  private AccountNavigator accountNavigator;
+  private TabNavigator tabNavigator;
+  private TokenInvalidator tokenInvalidator;
+  private SharedPreferences sharedPreferences;
 
   public static Fragment newInstance() {
     return new MyAccountFragment();
+  }
+
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+
+    if (activity instanceof TabNavigator) {
+      tabNavigator = (TabNavigator) activity;
+    } else {
+      throw new IllegalStateException(
+          "Activity must implement " + TabNavigator.class.getSimpleName());
+    }
   }
 
   @Override public void onDestroy() {
@@ -129,16 +144,17 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);
-    accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
     accountManager =
         ((AptoideApplication) getActivity().getApplicationContext()).getAccountManager();
     notificationSubject = PublishSubject.create();
     adapter = new InboxAdapter(Collections.emptyList(), notificationSubject);
-    bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+    AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
+    bodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();
+    httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     crashReport = CrashReport.getInstance();
+    tokenInvalidator = application.getTokenInvalidator();
+    sharedPreferences = application.getDefaultSharedPreferences();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -168,13 +184,11 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     moreNotificationsButton = (Button) view.findViewById(R.id.my_account_notifications_header)
         .findViewById(R.id.more);
 
+    AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
     attachPresenter(new MyAccountPresenter(this, accountManager, crashReport,
-        new MyAccountNavigator(getFragmentNavigator()),
-        ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
-        new LinksHandlerFactory(getContext()),
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker(),
-        new NotificationAnalytics(httpClient, Analytics.getInstance()),
+        ((ActivityResultNavigator) getContext()).getMyAccountNavigator(),
+        application.getNotificationCenter(), application.getDefaultSharedPreferences(),
+        application.getNavigationTracker(), application.getNotificationAnalytics(),
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
             Analytics.getInstance(), navigationTracker)));
   }
@@ -242,10 +256,6 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
 
   @Override public Observable<Void> editUserProfileClick() {
     return RxView.clicks(userProfileEditButton);
-  }
-
-  @Override public void navigateToHome() {
-    accountNavigator.navigateToHomeView();
   }
 
   @Override public void showHeader() {

@@ -44,6 +44,7 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.download.DownloadCompleteAnalytics;
 import cm.aptoide.pt.download.DownloadEvent;
 import cm.aptoide.pt.download.DownloadEventConverter;
 import cm.aptoide.pt.download.DownloadFactory;
@@ -56,7 +57,6 @@ import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.install.view.InstallWarningDialog;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
-import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
@@ -115,6 +115,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
   private boolean isCreateStoreUserPrivacyEnabled;
   private boolean isMultiStoreSearch;
   private String defaultStoreName;
+  private int campaignId;
+  private String abTestGroup;
 
   public AppViewInstallWidget(View itemView) {
     super(itemView);
@@ -148,6 +150,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     this.displayable = displayable;
     this.displayable.setInstallButton(actionButton);
     crashReport = CrashReport.getInstance();
+    campaignId = displayable.getCampaignId();
+    abTestGroup = displayable.getAbTestingGroup();
     accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
@@ -183,8 +187,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                 AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
                 httpClient, WebService.getDefaultConverter(), tokenInvalidator,
                 BuildConfig.APPLICATION_ID, sharedPreferences,
-                new NotificationAnalytics(httpClient, analytics),
-                application.getNavigationTracker()), tokenInvalidator, sharedPreferences);
+                application.getNotificationAnalytics(), application.getNavigationTracker(),
+                application.getReadPostsPersistence()), tokenInvalidator, sharedPreferences);
 
     appViewNavigator = getAppViewNavigator();
 
@@ -422,7 +426,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     return view -> {
       final Context context = view.getContext();
       final PermissionService permissionRequest = (PermissionService) getContext();
-
+      displayable.installAppClicked(DownloadCompleteAnalytics.InstallType.DOWNGRADE);
       permissionRequest.requestAccessToExternalFileSystem(() -> {
 
         showMessageOKCancel(getContext().getResources()
@@ -464,12 +468,16 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     DownloadEvent report =
         downloadInstallEventConverter.create(download, DownloadEvent.Action.CLICK,
             DownloadEvent.AppContext.APPVIEW);
+    report.setCampaignId(campaignId);
+    report.setAbTestingGroup(abTestGroup);
 
     analytics.save(report.getPackageName() + report.getVersionCode(), report);
 
     InstallEvent installEvent =
         installConverter.create(download, DownloadInstallBaseEvent.Action.CLICK,
             DownloadInstallBaseEvent.AppContext.APPVIEW);
+    installEvent.setCampaignId(campaignId);
+    installEvent.setAbTestingGroup(abTestGroup);
     analytics.save(download.getPackageName() + download.getVersionCode(), installEvent);
   }
 
@@ -511,8 +519,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
           ManagerPreferences.getNotLoggedInInstallClicks(sharedPreferences) + 1, sharedPreferences);
       if (installOrUpgradeMsg == R.string.installing_msg) {
         Analytics.ClickedOnInstallButton.clicked(app);
-        displayable.installAppClicked();
       }
+      displayable.installAppClicked(isUpdate ? DownloadCompleteAnalytics.InstallType.UPDATE
+          : DownloadCompleteAnalytics.InstallType.INSTALL);
 
       showRootInstallWarningPopup(context);
       compositeSubscription.add(permissionManager.requestDownloadAccess(permissionService)

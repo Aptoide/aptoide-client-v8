@@ -1,7 +1,5 @@
 package cm.aptoide.pt.store.view;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
@@ -22,27 +20,25 @@ public class GetStoreFragment extends StoreTabWidgetsGridRecyclerFragment {
     return new GetStoreFragment();
   }
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-  }
-
   @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {
-    Observable<GetStore> getStoreObservable;
-    if (name == Event.Name.getUser) {
-      getStoreObservable = requestFactoryCdnPool.newGetUser(url)
-          .observe(refresh);
-    } else {
-      getStoreObservable = requestFactoryCdnPool.newStore(url)
-          .observe(refresh);
-    }
-    return getStoreObservable.observeOn(Schedulers.io())
+    return getStoreObservable(refresh, url).observeOn(Schedulers.io())
         .flatMap(getStore -> parseDisplayables(getStore.getNodes()
             .getWidgets()))
         .doOnNext(displayables -> {
-          // We only want Adult Switch in Home Fragment.
+          // We only want one Adult Switch in Home Fragment.
           if (getParentFragment() != null && getParentFragment() instanceof HomeFragment) {
             displayables.add(new AdultRowDisplayable(GetStoreFragment.this));
           }
         });
+  }
+
+  private Observable<GetStore> getStoreObservable(boolean refresh, String url) {
+    if (name == Event.Name.getUser) {
+      return requestFactoryCdnPool.newGetUser(url)
+          .observe(refresh);
+    }
+
+    return requestFactoryCdnPool.newStore(url)
+        .observe(refresh);
   }
 }

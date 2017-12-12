@@ -34,11 +34,11 @@ public class AuthorizationRepository {
             customerId -> authorizationPersistence.getAuthorization(customerId, transactionId));
   }
 
-  public Completable updateAuthorization(String transactionId, String metadata,
+  public Completable updateAuthorization(String authorizationId, String metadata,
       Authorization.Status status) {
     return customer.getId()
         .flatMap(
-            customerId -> authorizationPersistence.updateAuthorization(customerId, transactionId,
+            customerId -> authorizationPersistence.updateAuthorization(customerId, authorizationId,
                 status, metadata))
         .toCompletable();
   }
@@ -49,5 +49,12 @@ public class AuthorizationRepository {
         .flatMap(
             customerId -> authorizationPersistence.createAuthorization(customerId, transactionId,
                 status));
+  }
+
+  public Completable removeAuthorization(String transactionId) {
+    return customer.getId()
+        .doOnSuccess(__ -> syncScheduler.cancelAuthorizationSync(transactionId))
+        .flatMapCompletable(
+            customerId -> authorizationPersistence.removeAuthorizations(customerId, transactionId));
   }
 }

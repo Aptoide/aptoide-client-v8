@@ -4,6 +4,9 @@ buildscript {
 
   repositories {
     maven { url 'https://maven.fabric.io/public' }
+    maven {
+      url "https://maven.google.com"
+    }
   }
 
   dependencies {
@@ -23,6 +26,12 @@ retrolambda {
 
 android {
 
+  configurations.all {
+    resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
+  }
+  // Websockets
+  useLibrary 'org.apache.http.legacy'
+
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
   buildToolsVersion BUILD_TOOLS_VERSION
 
@@ -32,12 +41,13 @@ android {
     targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
     multiDexEnabled true
     versionCode project.PROD_VERSION_CODE.toInteger()
-    versionName "8.5.2.0"
+    versionName "8.6.0.1"
     testProguardFile 'proguard-rules-test.pro'
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunner "cm.aptoide.pt.MultidexAndroidJunitRunner"
   }
 
   lintOptions {
+    disable 'UseSparseArrays'
     abortOnError false
   }
 
@@ -55,7 +65,7 @@ android {
   productFlavors {
     partner {
       dimension "product"
-      applicationId "com.aptoide.partners.apps"
+      applicationId "com.aptoide.partners.dfloureiro"
     }
 
     vanilla {
@@ -66,14 +76,14 @@ android {
     internal {
       dimension "mode"
       applicationIdSuffix "internal"
-      versionName "8.5.1." + getDate()
+      versionName "8.6.0." + getDate()
       versionCode project.INTERNAL_VERSION_CODE.toInteger()
     }
 
     dev {
       dimension "mode"
       applicationIdSuffix "dev"
-      versionName "8.5.1." + getDate()
+      versionName "8.6.0." + getDate()
       versionCode project.DEV_VERSION_CODE.toInteger()
     }
 
@@ -88,7 +98,7 @@ android {
     fairy {
       dimension "mode"
       applicationIdSuffix "testfairy"
-      versionName "8.5.1." + getDate()
+      versionName "8.6.0." + getDate()
       versionCode project.DEV_VERSION_CODE.toInteger()
     }
   }
@@ -263,6 +273,7 @@ android {
     preDexLibraries = project.APTOIDE_PRE_DEX_LIBRARIES
     javaMaxHeapSize = project.APTOIDE_DEX_JAVA_MAX_HEAP_SIZE
   }
+  sourceSets { release { java.srcDirs = ['src/release/java', 'src/release/java/'] } }
 }
 
 dependencies {
@@ -270,6 +281,7 @@ dependencies {
   // Testing-only dependencies
   testCompile "junit:junit:${JUNIT_VERSION}"
   testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+
   // Force usage of support annotations in the test app, since it is internally used by the runner module.
   androidTestCompile("com.android.support.test:runner:${RUNNER_VERSION}") {
     exclude group: "com.android.support", module: "support-annotations"
@@ -308,7 +320,6 @@ dependencies {
   fairyCompile project(path: ':dataprovider', configuration: 'prodRelease')
   fairyCompile project(path: ':aptoide-account-manager', configuration: 'prodRelease')
 
-
   compile project(path: ':utils', configuration: 'release')
   compile project(path: ':crashreports', configuration: 'release')
   compile project(path: ':downloadmanager', configuration: 'release')
@@ -325,6 +336,13 @@ dependencies {
     exclude group: "com.android.support", module: "support-annotations"
   }
   androidTestCompile "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
+  androidTestCompile "com.android.support.test.espresso:espresso-core:${ESPRESSO_VERSION}"
+  androidTestCompile "com.android.support.test.espresso:espresso-contrib:${ESPRESSO_VERSION}"
+  androidTestCompile "com.android.support.test.espresso:espresso-intents:${ESPRESSO_VERSION}"
+  androidTestCompile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
+  androidTestCompile "com.jakewharton.rxrelay:rxrelay:${RX_RELAY}"
+  androidTestCompile "org.mockito:mockito-android:${MOCKITO_CORE_ANDROID_VERSION}"
+  androidTestCompile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VERSION}"
 
   compile "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
 
@@ -416,8 +434,10 @@ dependencies {
 
   compile "com.adyen.checkout:core:${ADYEN_VERSION}"
   compile "com.adyen.checkout:ui:${ADYEN_VERSION}"
-  compile "com.adyen.checkout:utils:${ADYEN_VERSION}"
-  compile "com.adyen.checkout:cardscan:${ADYEN_VERSION}"
+  compile "com.braintreepayments:card-form:${CARD_FORM_VERSION}"
+
+  compile "com.google.dagger:dagger:${DAGGER_VERSION}"
+  annotationProcessor "com.google.dagger:dagger-compiler:${DAGGER_VERSION}"
 
   fairyCompile "testfairy:testfairy-android-sdk:${TEST_FAIRY_VERSION}"
 

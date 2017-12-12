@@ -32,7 +32,6 @@
   <dimen name="navdrawer_profile_image_size">40dp</dimen>
   <dimen name="keyline_1">16dp</dimen>
 
-  <dimen name="row_store_vertical_half_delimiter">4dp</dimen>
   <dimen name="appview_rating_card_bottom_margin">7dp</dimen>
   <dimen name="appview_rating_bars_bottom_margin">2dp</dimen>
   <dimen name="appview_recommended_for_you_image_margin_left">15dp</dimen>
@@ -40,7 +39,6 @@
   <dimen name="appview_header_app_image_size">99dp</dimen>
   <dimen name="appview_store_icon_size">33dp</dimen>
   <dimen name="appview_frags_size">50dp</dimen>
-  <dimen name="excludeUpdatePadding">10dp</dimen>
   <dimen name="separatorMargin">10dp</dimen>
   <dimen name="reviewButtonLayoutPadding">3dp</dimen>
   <dimen name="trusted_badge_size">30dp</dimen>
@@ -49,7 +47,6 @@
   <dimen name="appview_title_left_margin">120dp</dimen>
   <dimen name="appview_title_right_margin">74dp</dimen>
   <dimen name="appview_header_height">257.3dp</dimen>
-  <dimen name="custom_snackbar_height">44dp</dimen>
   <dimen name="appview_description_left">36dp</dimen>
   <dimen name="appview_description_right">20dp</dimen>
   <dimen name="appview_vertical_margin">4dp</dimen>
@@ -68,33 +65,21 @@
   <dimen name="fab_margin">20dp</dimen>
   <dimen format="float" name="appstimeline_card_icon" type="dimen">17.7dp</dimen>
   <dimen name="bottom_skip_bar_height">48dp</dimen>
-  <dimen name="profile_step_one_top_image_margin">100dp</dimen>
-  <dimen name="profile_step_one_middle_margin">20dp</dimen>
   <dimen name="padding_smaller">12dp</dimen>
   <dimen name="padding_small">16dp</dimen>
   <dimen name="padding_medium">32dp</dimen>
-  <dimen name="padding_medium_large">48dp</dimen>
   <dimen name="padding_very_small">8dp</dimen>
   <dimen name="padding_very_very_small">6dp</dimen>
-  <dimen name="button_default_height">46dp</dimen>
-  <dimen name="padding_large">70dp</dimen>
   <dimen name="padding_medium_small">20dp</dimen>
   <dimen name="padding_medium_default">24dp</dimen>
   <dimen name="select_picture_camera_icon_size">34dp</dimen>
   <dimen name="profile_picture_large_size">120dp</dimen>
-  <dimen name="padding_extra_large">120dp</dimen>
+  <dimen name="store_picture_large_size">80dp</dimen>
   <dimen name="padding_login_button">8dp</dimen>
   <dimen name="login_field_height">38dp</dimen>
-  <dimen name="button_big_height">40dp</dimen>
   <dimen name="partial_view_store_theme_checked_size">22dp</dimen>
   <dimen name="partial_view_store_theme_sample_size">44dp</dimen>
   <dimen name="padding_tiny">4dp</dimen>
-  <integer name="min_avatar_height">600</integer>
-  <integer name="max_avatar_height">10240</integer>
-  <integer name="min_avatar_width">600</integer>
-  <integer name="max_avatar_width">10240</integer>
-  <integer name="max_avatar_Size">5242880</integer>
   <dimen name="timeline_post_hint_left_margin">17dp</dimen>
-  <dimen name="timeline_post_post_title_title">28sp</dimen>
 
 </resources>

@@ -40,6 +40,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.billing.DeletePurchaseRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetAuthorizationRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetMerchantRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetProductsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.billing.GetPurchaseRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetPurchasesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetServicesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetTransactionRequest;
@@ -73,12 +74,14 @@ import retrofit2.Converter;
 import retrofit2.Response;
 import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 import retrofit2.http.Url;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -127,11 +130,20 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
     return builder.toString();
   }
 
+  protected TokenInvalidator getTokenInvalidator() {
+    return tokenInvalidator;
+  }
+
   public B getBody() {
     return body;
   }
 
   @Override public Observable<U> observe(boolean bypassCache) {
+
+    if (body == null) {
+      return handleToken(retryOnTicket(super.observe(bypassCache)), bypassCache);
+    }
+
     return bodyInterceptor.intercept(body)
         .flatMapObservable(
             body -> handleToken(retryOnTicket(super.observe(bypassCache)), bypassCache));
@@ -442,9 +454,8 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
         @Body RelatedAppRequest.Body request);
 
-    @POST("{path}") Observable<BaseV7Response> setPostRead(
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Body PostReadRequest.Body body,
-        @Path(encoded = true, value = "path") String path);
+    @POST("user/timeline/markAsRead") Observable<BaseV7Response> setPostRead(
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Body PostReadRequest.Body body);
 
     @POST("apps/getRecommended") Observable<ListApps> getRecommended(
         @Body GetRecommendedRequest.Body body,
@@ -467,14 +478,14 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("inapp/purchase/getMeta")
-    Observable<Response<GetPurchasesRequest.ResponseBody>> getBillingPurchase(
-        @Body GetPurchasesRequest.RequestBody body,
+    Observable<Response<GetPurchaseRequest.ResponseBody>> getBillingPurchase(
+        @Body GetPurchaseRequest.RequestBody body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("inapp/bank/transaction/getMeta")
+    @GET("inapp/bank/transaction/getMeta")
     Observable<Response<GetTransactionRequest.ResponseBody>> getBillingTransaction(
-        @Body GetTransactionRequest.RequestBody body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Query("product_id") long productId, @Header("Authorization") String authorization,
+        @Query("user_id") String customerId);
 
     @POST("inapp/bank/transaction/set")
     Observable<CreateTransactionRequest.ResponseBody> createBillingTransaction(
@@ -494,10 +505,10 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
         @Body UpdateAuthorizationRequest.RequestBody body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("inapp/bank/authorization/getMeta")
+    @GET("inapp/bank/authorization/getMeta")
     Observable<Response<GetAuthorizationRequest.ResponseBody>> getBillingAuthorization(
-        @Body GetAuthorizationRequest.RequestBody body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Query("transaction_id") long transactionId, @Header("Authorization") String authorization,
+        @Query("user_id") String customerId);
 
     @POST("user/timeline/card/del") Observable<BaseV7Response> deletePost(
         @Body PostDeleteRequest.Body body,

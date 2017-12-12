@@ -236,12 +236,14 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
                 getFragmentNavigator(),
                 ((AptoideApplication) getContext().getApplicationContext()).getFragmentProvider()),
             (throwable) -> throwable.printStackTrace());
+
     endlessRecyclerOnScrollListener.addOnEndlessFinishListener(endlessRecyclerOnScrollListener1 -> {
       if (languageFilter.hasMoreCountryCodes()) {
         endlessRecyclerOnScrollListener.reset(createListReviewsRequest(languageFilter.inc()
             .getValue()));
       }
     });
+
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
   }

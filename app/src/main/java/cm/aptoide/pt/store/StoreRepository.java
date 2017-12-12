@@ -12,7 +12,7 @@ import rx.Observable;
 public class StoreRepository {
   private final StoreAccessor storeAccessor;
 
-  StoreRepository(StoreAccessor storeAccessor) {
+  public StoreRepository(StoreAccessor storeAccessor) {
     this.storeAccessor = storeAccessor;
   }
 
@@ -22,8 +22,8 @@ public class StoreRepository {
   }
 
   public Observable<Boolean> isSubscribed(String storeName) {
-    return storeAccessor.get(storeName)
-        .map(store -> store != null);
+    return storeAccessor.getAsList(storeName)
+        .map(stores -> !stores.isEmpty());
   }
 
   public Observable<Long> count() {

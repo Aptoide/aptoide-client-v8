@@ -4,14 +4,12 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.account.view.AccountErrorMapper;
 import cm.aptoide.pt.account.view.ImagePickerErrorHandler;
 import cm.aptoide.pt.account.view.ImagePickerNavigator;
 import cm.aptoide.pt.account.view.ImagePickerPresenter;
@@ -36,7 +30,6 @@ import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
-import cm.aptoide.pt.permission.PermissionProvider;
 import cm.aptoide.pt.presenter.CompositePresenter;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.BackButtonFragment;
@@ -44,13 +37,12 @@ import cm.aptoide.pt.view.dialog.ImagePickerDialog;
 import com.jakewharton.rxbinding.support.design.widget.RxSnackbar;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Arrays;
+import javax.inject.Inject;
 import org.parceler.Parcel;
 import org.parceler.Parcels;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class ManageUserFragment extends BackButtonFragment implements ManageUserView {
 
@@ -69,17 +61,15 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   private Toolbar toolbar;
   private ImagePickerDialog dialogFragment;
   private ImagePickerErrorHandler imagePickerErrorHandler;
-  private ManageUserNavigator navigator;
-  private String fileProviderAuthority;
-  private PhotoFileGenerator photoFileGenerator;
-  private CrashReport crashReport;
-  private UriToPathResolver uriToPathResolver;
-  private AccountPermissionProvider accountPermissionProvider;
-  private ImageValidator imageValidator;
-  private ImagePickerNavigator imagePickerNavigator;
-  private AptoideAccountManager accountManager;
-  private CreateUserErrorMapper errorMapper;
-  private boolean createStoreUserPrivacyEnabled;
+  @Inject ManageUserNavigator navigator;
+  @Inject PhotoFileGenerator photoFileGenerator;
+  @Inject UriToPathResolver uriToPathResolver;
+  @Inject AccountPermissionProvider accountPermissionProvider;
+  @Inject ImageValidator imageValidator;
+  @Inject ImagePickerNavigator imagePickerNavigator;
+  @Inject ImagePickerPresenter imagePickerPresenter;
+  @Inject ManageUserPresenter manageUserPresenter;
+  @Inject CreateUserErrorMapper errorMapper;
 
   public static ManageUserFragment newInstanceToEdit() {
     return newInstance(true);
@@ -102,6 +92,7 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
     super.onCreate(savedInstanceState);
 
     Context context = getContext();
+
     if (savedInstanceState != null && savedInstanceState.containsKey(EXTRA_USER_MODEL)) {
       currentModel = Parcels.unwrap(savedInstanceState.getParcelable(EXTRA_USER_MODEL));
     } else {
@@ -109,25 +100,8 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
     }
 
     Bundle args = getArguments();
+
     isEditProfile = args != null && args.getBoolean(EXTRA_IS_EDIT, false);
-
-    final AptoideApplication application =
-        (AptoideApplication) getContext().getApplicationContext();
-    navigator = new ManageUserNavigator(getFragmentNavigator(), application.getDefaultStoreName(),
-        application.getDefaultThemeName());
-    fileProviderAuthority = BuildConfig.APPLICATION_ID + ".provider";
-    photoFileGenerator = new PhotoFileGenerator(getActivity(),
-        getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileProviderAuthority);
-    crashReport = CrashReport.getInstance();
-    uriToPathResolver = new UriToPathResolver(getActivity().getContentResolver());
-    accountPermissionProvider = new AccountPermissionProvider(((PermissionProvider) getActivity()));
-    imageValidator = new ImageValidator(ImageLoader.with(context), Schedulers.computation());
-    imagePickerNavigator = new ImagePickerNavigator(getActivityNavigator());
-    createStoreUserPrivacyEnabled = application.isCreateStoreUserPrivacyEnabled();
-    accountManager = ((AptoideApplication) getActivity().getApplication()).getAccountManager();
-    errorMapper =
-        new CreateUserErrorMapper(context, new AccountErrorMapper(context), getResources());
-
     imagePickerErrorHandler = new ImagePickerErrorHandler(context);
 
     dialogFragment =
@@ -151,6 +125,13 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
       cancelUserProfile.setVisibility(View.VISIBLE);
       header.setText(getString(R.string.edit_profile_header_message));
     }
+    if (savedInstanceState != null && savedInstanceState.containsKey(EXTRA_USER_MODEL)) {
+      currentModel = Parcels.unwrap(savedInstanceState.getParcelable(EXTRA_USER_MODEL));
+      loadImageStateless(currentModel.getPictureUri());
+      setUserName(currentModel.getName());
+    } else {
+      currentModel = new ViewModel();
+    }
     attachPresenters();
   }
 
@@ -162,6 +143,7 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
+    getFragmentComponent(savedInstanceState).inject(this);
     return inflater.inflate(R.layout.fragment_manage_user, container, false);
   }
 
@@ -193,17 +175,8 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   }
 
   private void attachPresenters() {
-    final ImagePickerPresenter imagePickerPresenter =
-        new ImagePickerPresenter(this, crashReport, accountPermissionProvider, photoFileGenerator,
-            imageValidator, AndroidSchedulers.mainThread(), uriToPathResolver, imagePickerNavigator,
-            getActivity().getContentResolver(), ImageLoader.with(getContext()));
 
-    final ManageUserPresenter manageUserPresenter =
-        new ManageUserPresenter(this, crashReport, accountManager, errorMapper, navigator,
-            currentModel, isEditProfile, uriToPathResolver, createStoreUserPrivacyEnabled);
-
-    attachPresenter(
-        new CompositePresenter(Arrays.asList(manageUserPresenter, imagePickerPresenter)));
+    attachPresenter(new CompositePresenter(Arrays.asList(manageUserPresenter, imagePickerPresenter)));
   }
 
   @Override public void onDestroyView() {
@@ -214,8 +187,8 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   }
 
   @Override public void setUserName(String name) {
-    currentModel.setName(name);
-    userName.setText(name);
+      currentModel.setName(name);
+      userName.setText(name);
   }
 
   @Override public Observable<ViewModel> saveUserDataButtonClick() {
@@ -246,9 +219,9 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   }
 
   @Override public void loadImageStateless(String pictureUri) {
-    currentModel.setPictureUri(pictureUri);
-    ImageLoader.with(getActivity())
-        .loadUsingCircleTransformAndPlaceholder(pictureUri, userPicture, DEFAULT_IMAGE_PLACEHOLDER);
+      currentModel.setPictureUri(pictureUri);
+      ImageLoader.with(getActivity())
+          .loadUsingCircleTransformAndPlaceholder(pictureUri, userPicture, DEFAULT_IMAGE_PLACEHOLDER);
   }
 
   /**
@@ -328,10 +301,6 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
 
     public void setPictureUri(String pictureUri) {
       this.pictureUri = pictureUri;
-    }
-
-    public boolean hasData() {
-      return !TextUtils.isEmpty(getName()) || !TextUtils.isEmpty(getPictureUri());
     }
 
     public void setNewPicture(boolean hasNewPicture) {

@@ -69,4 +69,22 @@ public class SpannableFactory {
     }
     return result;
   }
+
+  @NonNull
+  public Spannable createMultiSpan(String text, ParcelableSpan[] span, String... spanTexts) {
+    Spannable result = new SpannableString(text);
+    for (ParcelableSpan parcelableSpan : span) {
+      for (String spanText : spanTexts) {
+        int spanTextStart = text.indexOf(spanText);
+        if (spanTextStart >= 0
+            && spanTextStart < text.length()
+            && spanText.length() <= text.length()) {
+          result.setSpan(parcelableSpan, spanTextStart, (spanTextStart + spanText.length()),
+              Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+      }
+    }
+
+    return result;
+  }
 }

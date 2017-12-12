@@ -35,11 +35,14 @@ public class FacebookSignUpAdapter implements SignUpAdapter<FacebookLoginResult>
     }
 
     if (result.getState() == FacebookLoginResult.STATE_CANCELLED) {
-      return Single.error(new FacebookSignUpException(FacebookSignUpException.USER_CANCELLED));
+      return Single.error(
+          new FacebookSignUpException(FacebookSignUpException.USER_CANCELLED, "USER_CANCELLED"));
     }
 
     if (result.getState() == FacebookLoginResult.STATE_ERROR) {
-      return Single.error(new FacebookSignUpException(FacebookSignUpException.ERROR));
+      return Single.defer(() -> Single.error(
+          new FacebookSignUpException(FacebookSignUpException.ERROR, result.getError()
+              .getMessage())));
     }
 
     if (!result.getResult()
@@ -47,7 +50,7 @@ public class FacebookSignUpAdapter implements SignUpAdapter<FacebookLoginResult>
         .getPermissions()
         .containsAll(facebookRequiredPermissions)) {
       return Single.error(new FacebookSignUpException(FacebookSignUpException.
-          MISSING_REQUIRED_PERMISSIONS));
+          MISSING_REQUIRED_PERMISSIONS, "MISSING_REQUIRED_PERMISSIONS"));
     }
 
     return getFacebookEmail(result.getResult()
@@ -68,18 +71,25 @@ public class FacebookSignUpAdapter implements SignUpAdapter<FacebookLoginResult>
 
   private Single<String> getFacebookEmail(AccessToken accessToken) {
     return Single.defer(() -> {
-      final GraphResponse response = GraphRequest.newMeRequest(accessToken, null)
-          .executeAndWait();
-      final JSONObject object = response.getJSONObject();
-      if (response.getError() == null && object != null) {
-        try {
-          return Single.just(
-              object.has("email") ? object.getString("email") : object.getString("id"));
-        } catch (JSONException ignored) {
-          return Single.error(new FacebookSignUpException(FacebookSignUpException.ERROR));
+      try {
+        final GraphResponse response = GraphRequest.newMeRequest(accessToken, null)
+            .executeAndWait();
+        final JSONObject object = response.getJSONObject();
+        if (response.getError() == null && object != null) {
+          try {
+            return Single.just(
+                object.has("email") ? object.getString("email") : object.getString("id"));
+          } catch (JSONException ignored) {
+            return Single.error(
+                new FacebookSignUpException(FacebookSignUpException.ERROR, "Error parsing email"));
+          }
+        } else {
+          return Single.error(new FacebookSignUpException(FacebookSignUpException.ERROR,
+              "Unknown error(maybe network error when getting user data)"));
         }
-      } else {
-        return Single.error(new FacebookSignUpException(FacebookSignUpException.ERROR));
+      } catch (RuntimeException exception) {
+        return Single.error(
+            new FacebookSignUpException(FacebookSignUpException.ERROR, exception.getMessage()));
       }
     })
         .subscribeOn(Schedulers.io());

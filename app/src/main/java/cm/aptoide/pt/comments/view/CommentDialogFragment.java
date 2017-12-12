@@ -28,7 +28,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForReview;
 import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForTimelineArticle;
 import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -138,24 +137,21 @@ public class CommentDialogFragment
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    sharedPreferences =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
-    tokenInvalidator =
-        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
-    baseBodyBodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
+    AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
+    sharedPreferences = application.getDefaultSharedPreferences();
+    tokenInvalidator = application.getTokenInvalidator();
+    baseBodyBodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();
+    httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     onEmptyTextError =
-        AptoideUtils.StringU.getResString(R.string.error_MARG_107, getContext().getResources());
+        AptoideUtils.StringU.getResString(R.string.ws_error_MARG_107, getContext().getResources());
     Analytics analytics = Analytics.getInstance();
     timelineAnalytics = new TimelineAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()),
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7(),
-        httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        new NotificationAnalytics(httpClient, analytics),
-        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker());
+        application.getAccountSettingsBodyInterceptorPoolV7(), httpClient, converterFactory,
+        tokenInvalidator, BuildConfig.APPLICATION_ID, application.getDefaultSharedPreferences(),
+        application.getNotificationAnalytics(), application.getNavigationTracker(),
+        application.getReadPostsPersistence());
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,

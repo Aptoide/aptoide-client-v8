@@ -21,24 +21,24 @@ public class ManageUserPresenter implements Presenter {
   private final AptoideAccountManager accountManager;
   private final ThrowableToStringMapper errorMapper;
   private final ManageUserNavigator navigator;
-  private final ManageUserFragment.ViewModel userData;
   private final boolean isEditProfile;
   private final UriToPathResolver uriToPathResolver;
   private final boolean showPrivacyConfigs;
+  private final boolean isFirstTime;
 
   public ManageUserPresenter(ManageUserView view, CrashReport crashReport,
       AptoideAccountManager accountManager, ThrowableToStringMapper errorMapper,
-      ManageUserNavigator navigator, ManageUserFragment.ViewModel userData, boolean isEditProfile,
-      UriToPathResolver uriToPathResolver, boolean showPrivacyConfigs) {
+      ManageUserNavigator navigator, boolean isEditProfile,
+      UriToPathResolver uriToPathResolver, boolean showPrivacyConfigs, boolean isFirstTime) {
     this.view = view;
     this.crashReport = crashReport;
     this.accountManager = accountManager;
     this.errorMapper = errorMapper;
     this.navigator = navigator;
-    this.userData = userData;
     this.isEditProfile = isEditProfile;
     this.uriToPathResolver = uriToPathResolver;
     this.showPrivacyConfigs = showPrivacyConfigs;
+    this.isFirstTime = isFirstTime;
   }
 
   @Override public void present() {
@@ -50,15 +50,11 @@ public class ManageUserPresenter implements Presenter {
   private void onViewCreatedLoadUserData() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
+        .filter(__ -> isFirstTime)
         .flatMapSingle(__ -> accountManager.accountStatus()
             .first()
             .toSingle())
         .map(userAccount -> {
-
-          // in case of configuration changes, after an edition, this is prefered
-          if (userData.hasData()) {
-            return userData;
-          }
 
           // if it is an edition and not after a configuration change event
           // after a configuration change this values could differ

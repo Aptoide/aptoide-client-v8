@@ -13,22 +13,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
-import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.view.ThrowableToStringMapper;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import com.jakewharton.rxbinding.view.RxView;
-import java.util.Arrays;
+import javax.inject.Inject;
 import rx.Observable;
 
 public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
@@ -61,15 +58,10 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   private boolean isPasswordVisible = false;
   private View credentialsEditTextsArea;
   private BottomSheetBehavior<View> bottomSheetBehavior;
-  private ThrowableToStringMapper errorMapper;
-  private AptoideAccountManager accountManager;
-  private LoginSignUpCredentialsPresenter presenter;
-  private boolean dismissToNavigateToMainView;
-  private boolean navigateToHome;
+  @Inject LoginSignUpCredentialsPresenter presenter;
   private View rootView;
-  private CrashReport crashReport;
-  private AccountNavigator accountNavigator;
-  private ScreenOrientationManager orientationManager;
+  @Inject AccountNavigator accountNavigator;
+  @Inject ScreenOrientationManager orientationManager;
   private String marketName;
 
   public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,
@@ -86,16 +78,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
-    marketName = ((AptoideApplication) getApplicationContext()).getMarketName();
-    errorMapper = new AccountErrorMapper(getContext());
-    accountManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-    crashReport = CrashReport.getInstance();
-    dismissToNavigateToMainView = getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW);
-    navigateToHome = getArguments().getBoolean(CLEAN_BACK_STACK);
-    accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
-    orientationManager = ((ActivityResultNavigator) getContext()).getScreenOrientationManager();
+    marketName = ((AptoideApplication) getActivity().getApplication()).getMarketName();
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -111,6 +94,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     super.onCreateView(inflater, container, savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
     return inflater.inflate(R.layout.fragment_login_sign_up_credentials, container, false);
   }
 
@@ -308,8 +292,12 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
     buttonLogin = (Button) view.findViewById(R.id.button_login);
     buttonSignUp = (Button) view.findViewById(R.id.button_sign_up);
-    buttonSignUp.setText(String.format(getString(R.string.join_company), marketName));
 
+    if ("vanilla".equalsIgnoreCase(BuildConfig.FLAVOR_product)) {
+      buttonSignUp.setText(String.format(getString(R.string.onboarding_button_join_us)));
+    } else {
+      buttonSignUp.setText(String.format(getString(R.string.join_company), marketName));
+    }
     aptoideEmailEditText = (EditText) view.findViewById(R.id.username);
     aptoidePasswordEditText = (EditText) view.findViewById(R.id.password);
     hideShowAptoidePasswordButton = (Button) view.findViewById(R.id.btn_show_hide_pass);
@@ -320,7 +308,11 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     credentialsEditTextsArea = view.findViewById(R.id.credentials_edit_texts);
     signUpSelectionButton = (Button) view.findViewById(R.id.show_join_aptoide_area);
     loginSelectionButton = (Button) view.findViewById(R.id.show_login_with_aptoide_area);
-    signUpSelectionButton.setText(String.format(getString(R.string.join_company), marketName));
+    if ("vanilla".equalsIgnoreCase(BuildConfig.FLAVOR_product)) {
+      buttonSignUp.setText(String.format(getString(R.string.onboarding_button_join_us)));
+    } else {
+      signUpSelectionButton.setText(String.format(getString(R.string.join_company), marketName));
+    }
     loginArea = view.findViewById(R.id.login_button_area);
     signUpArea = view.findViewById(R.id.sign_up_button_area);
     termsAndConditions = (TextView) view.findViewById(R.id.terms_and_conditions);
@@ -342,10 +334,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
       // a child of CoordinatorLayout
     }
 
-    presenter = new LoginSignUpCredentialsPresenter(this, accountManager, crashReport,
-        dismissToNavigateToMainView, navigateToHome, accountNavigator,
-        Arrays.asList("email", "user_friends"), Arrays.asList("email"), errorMapper,
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountAnalytics());
     attachPresenter(presenter);
     registerClickHandler(presenter);
   }

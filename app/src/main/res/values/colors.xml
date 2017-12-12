@@ -9,7 +9,6 @@
   <color name="grey_fog_dark">#cccccc</color>
   <color name="grey_medium">#828282</color>
   <color name="black_87_alpha">#de000000</color>
-  <color name="blue_grey_87_alpha">#de607d8b</color>
   <color name="white">#FFF</color>
   <color name="transparent">#0000</color>
 
@@ -18,5 +17,20 @@
   <color name="facebook_highlight">#2f477a</color>
   <color name="google">#cc4a41</color>
   <color name="google_highlight">#cc4a41</color>
+  <color name="twitch">#7243ab</color>
+  <color name="youtube">#db0000</color>
+
+  <!--Badges-->
+  <color name="tin_medal">#66ba69</color>
+  <color name="tin_medal_secodary">#94CE96</color>
+  <color name="bronze_medal">#ee6c08</color>
+  <color name="bronze_medal_secodary">#F39852</color>
+  <color name="silver_medal">#b1b1b1</color>
+  <color name="silver_medal_secodary">#BBBBBB</color>
+  <color name="gold_medal">#f3ab1a</color>
+  <color name="gold_medal_secodary">#F6C45F</color>
+  <color name="platinum_medal">#69bde0</color>
+  <color name="platinum_medal_secodary">#96D0E9</color>
+  <color name="progress_bar_color">#e6e5e6</color>
 
 </resources>

@@ -1,6 +1,5 @@
 package cm.aptoide.pt.navigator;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -9,35 +8,44 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.WindowManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
+import cm.aptoide.pt.account.view.MyAccountNavigator;
 import cm.aptoide.pt.billing.view.BillingNavigator;
+import cm.aptoide.pt.link.LinksHandlerFactory;
+import cm.aptoide.pt.notification.view.InboxNavigator;
+import cm.aptoide.pt.notification.view.NotificationNavigator;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.view.fragment.FragmentView;
-import cm.aptoide.pt.view.leak.LeakActivity;
-import com.facebook.login.LoginManager;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Map;
+import javax.inject.Inject;
 import rx.Observable;
 
-public abstract class ActivityResultNavigator extends LeakActivity implements ActivityNavigator {
+public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigator
+    implements ActivityNavigator {
 
   private PublishRelay<Result> resultRelay;
   private FragmentNavigator fragmentNavigator;
   private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
   private Map<Integer, Result> fragmentResultMap;
-  private AccountNavigator accountNavigator;
+  @Inject AccountNavigator accountNavigator;
   private BillingNavigator billingNavigator;
   private ScreenOrientationManager screenOrientationManager;
+  private MyAccountNavigator myAccountNavigator;
+  private InboxNavigator inboxNavigator;
+  private NotificationNavigator notificationNavigator;
+  private LinksHandlerFactory linksHandlerFactory;
 
   public BehaviorRelay<Map<Integer, Result>> getFragmentResultRelay() {
     return fragmentResultRelay;
   }
 
-  @SuppressLint("UseSparseArrays") @Override
+  @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     fragmentResultRelay = ((AptoideApplication) getApplicationContext()).getFragmentResultRelay();
     fragmentResultMap = ((AptoideApplication) getApplicationContext()).getFragmentResulMap();
@@ -146,15 +154,6 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
 
   public AccountNavigator getAccountNavigator() {
     if (accountNavigator == null) {
-      accountNavigator = new AccountNavigator(getFragmentNavigator(),
-          ((AptoideApplication) getApplicationContext()).getAccountManager(),
-          getActivityNavigator(), LoginManager.getInstance(),
-          ((AptoideApplication) getApplicationContext()).getFacebookCallbackManager(),
-          ((AptoideApplication) getApplicationContext()).getGoogleSignInClient(),
-          ((AptoideApplication) getApplicationContext()).getFacebookLoginResultRelay(),
-          ((AptoideApplication) getApplicationContext()).getDefaultStoreName(),
-          ((AptoideApplication) getApplicationContext()).getDefaultThemeName(),
-          "http://m.aptoide.com/account/password-recovery");
     }
     return accountNavigator;
   }
@@ -164,8 +163,8 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
       billingNavigator = new BillingNavigator(
           ((AptoideApplication) getApplicationContext()).getPurchaseBundleMapper(),
           getActivityNavigator(), getFragmentNavigator(),
-          ((AptoideApplication) getApplicationContext()).getMarketName(),
-          ((AptoideApplication) getApplicationContext()).getAdyen(), PublishRelay.create());
+          ((AptoideApplication) getApplicationContext()).getMarketName(), this,
+          ContextCompat.getColor(this, R.color.aptoide_orange));
     }
     return billingNavigator;
   }
@@ -176,5 +175,35 @@ public abstract class ActivityResultNavigator extends LeakActivity implements Ac
           new ScreenOrientationManager(this, (WindowManager) this.getSystemService(WINDOW_SERVICE));
     }
     return screenOrientationManager;
+  }
+
+  public MyAccountNavigator getMyAccountNavigator() {
+    if (myAccountNavigator == null) {
+      myAccountNavigator = new MyAccountNavigator(getFragmentNavigator(), getAccountNavigator(),
+          getNotificationNavigator());
+    }
+    return myAccountNavigator;
+  }
+
+  public InboxNavigator getInboxNavigator() {
+    if (inboxNavigator == null) {
+      inboxNavigator = new InboxNavigator(getNotificationNavigator());
+    }
+    return inboxNavigator;
+  }
+
+  private NotificationNavigator getNotificationNavigator() {
+    if (notificationNavigator == null) {
+      notificationNavigator =
+          new NotificationNavigator((TabNavigator) this, getLinkFactory(), getFragmentNavigator());
+    }
+    return notificationNavigator;
+  }
+
+  private LinksHandlerFactory getLinkFactory() {
+    if (linksHandlerFactory == null) {
+      linksHandlerFactory = new LinksHandlerFactory(this);
+    }
+    return linksHandlerFactory;
   }
 }
