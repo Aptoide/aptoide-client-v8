@@ -43,7 +43,7 @@ android {
     versionCode project.PROD_VERSION_CODE.toInteger()
     versionName "8.6.0.0"
     testProguardFile 'proguard-rules-test.pro'
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunner "cm.aptoide.pt.MultidexAndroidJunitRunner"
   }
 
   lintOptions {
@@ -85,11 +85,6 @@ android {
       applicationIdSuffix "dev"
       versionName "8.6.0." + getDate()
       versionCode project.DEV_VERSION_CODE.toInteger()
-    }
-
-    uitest {
-      dimension "mode"
-      applicationIdSuffix "uitest"
     }
 
     prod {
@@ -325,9 +320,6 @@ dependencies {
   fairyCompile project(path: ':dataprovider', configuration: 'prodRelease')
   fairyCompile project(path: ':aptoide-account-manager', configuration: 'prodRelease')
 
-  uitestCompile project(path: ':dataprovider', configuration: 'prodRelease')
-  uitestCompile project(path: ':aptoide-account-manager', configuration: 'prodRelease')
-
   compile project(path: ':utils', configuration: 'release')
   compile project(path: ':crashreports', configuration: 'release')
   compile project(path: ':downloadmanager', configuration: 'release')
@@ -444,8 +436,8 @@ dependencies {
   compile "com.adyen.checkout:ui:${ADYEN_VERSION}"
   compile "com.braintreepayments:card-form:${CARD_FORM_VERSION}"
 
-  compile 'com.google.dagger:dagger:2.12'
-  annotationProcessor 'com.google.dagger:dagger-compiler:2.12'
+  compile "com.google.dagger:dagger:${DAGGER_VERSION}"
+  annotationProcessor "com.google.dagger:dagger-compiler:${DAGGER_VERSION}"
 
   fairyCompile "testfairy:testfairy-android-sdk:${TEST_FAIRY_VERSION}"
 }

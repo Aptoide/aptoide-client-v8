@@ -40,8 +40,6 @@ import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
-import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
-import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.database.realm.Store;
@@ -222,7 +220,6 @@ public abstract class AptoideApplication extends Application {
   private ApplicationComponent applicationComponent;
   private AppCenter appCenter;
   private ReadPostsPersistence readPostsPersistence;
-  private SystemNotificationShower systemNotificationShower;
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
   private NotificationsCleaner notificationsCleaner;
   private NotificationAnalytics notificationAnalytics;
@@ -364,15 +361,18 @@ public abstract class AptoideApplication extends Application {
     }, throwable -> CrashReport.getInstance()
         .log(throwable));
 
-    systemNotificationShower = getSystemNotificationShower();
-
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
   }
 
   public ApplicationComponent getApplicationComponent() {
     if (applicationComponent == null) {
-      applicationComponent = ComponentFactory.create(this);
+      applicationComponent = DaggerApplicationComponent.builder()
+          .applicationModule(
+              new ApplicationModule(this, getImageCachePath(), getCachePath(), getAccountType(),
+                  getPartnerId(), getMarketName(), getExtraId(), getAptoidePackage(),
+                  getAptoideMd5sum(), getLoginPreferences()))
+          .build();
     }
     return applicationComponent;
   }
