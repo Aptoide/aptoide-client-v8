@@ -15,7 +15,7 @@
     >
 
   <include
-      layout="@layout/separator_horizontal" />
+      layout="@layout/separator_horizontal"/>
 
   <LinearLayout
       android:id="@+id/store_layout"
@@ -117,6 +117,6 @@
   </LinearLayout>
 
   <include
-      layout="@layout/separator_horizontal" />
+      layout="@layout/separator_horizontal"/>
 
 </LinearLayout>
