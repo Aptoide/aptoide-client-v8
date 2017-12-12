@@ -24,4 +24,8 @@ public interface PostCommentsView extends View {
   void hideRefresh();
 
   void showMoreComments(List<Comment> comments);
+
+  void showLoading();
+
+  void hideLoading();
 }

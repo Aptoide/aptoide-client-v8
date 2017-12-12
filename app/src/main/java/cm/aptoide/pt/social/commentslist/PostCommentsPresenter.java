@@ -30,9 +30,11 @@ public class PostCommentsPresenter implements Presenter {
   @Override public void present() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .doOnNext(created -> view.showLoading())
         .flatMapSingle(created -> comments.getComments(postId))
         .observeOn(viewScheduler)
         .doOnNext(comments -> view.showComments(comments))
+        .doOnNext(comments -> view.hideLoading())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(comments -> {
         }, throwable -> crashReporter.log(throwable));

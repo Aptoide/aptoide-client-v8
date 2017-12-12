@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
@@ -62,6 +63,8 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
   private PublishSubject<String> replyEventPublishSubject;
   private SwipeRefreshLayout swipeRefreshLayout;
   private LinearLayoutManager layoutManager;
+  private ProgressBar progressBar;
+  private View genericError;
 
   public static Fragment newInstance(String postId) {
     Fragment fragment = new PostCommentsFragment();
@@ -92,6 +95,8 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     list = (RecyclerView) view.findViewById(R.id.recycler_view);
+    progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+    genericError = view.findViewById(R.id.generic_error);
     list.setAdapter(adapter);
     list.addItemDecoration(new ItemDividerDecoration(this));
     layoutManager = new LinearLayoutManager(getContext());
@@ -153,6 +158,18 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
 
   @Override public void showMoreComments(List<Comment> comments) {
     adapter.addComments(comments);
+  }
+
+  @Override public void showLoading() {
+    list.setVisibility(View.GONE);
+    genericError.setVisibility(View.GONE);
+    progressBar.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void hideLoading() {
+    list.setVisibility(View.VISIBLE);
+    genericError.setVisibility(View.GONE);
+    progressBar.setVisibility(View.GONE);
   }
 
   private boolean isEndReached() {
