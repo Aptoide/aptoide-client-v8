@@ -100,7 +100,7 @@ public class StoreUtilsProxy {
     StoreUtils.unSubscribeStore(storeName, accountManager, storeCredentialsProvider, storeAccessor);
   }
 
-  public void unSubscribeStore(String storeName){
+  public void unSubscribeStore(String storeName) {
     StoreUtils.unSubscribeStore(storeName, accountManager, storeCredentialsProvider, storeAccessor);
   }
 
