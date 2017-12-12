@@ -349,6 +349,24 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
     allStoresButton.setVisibility(View.GONE);
   }
 
+  @Override public void hideFollowedStoresTab() {
+    allStoresButton.setVisibility(View.VISIBLE);
+    allStoresResultList.setVisibility(View.VISIBLE);
+    followedStoresButton.setVisibility(View.GONE);
+    followedStoresResultList.setVisibility(View.GONE);
+    setAllStoresButtonSelected();
+    viewModel.setAllStoresSelected(true);
+  }
+
+  @Override public void hideNonFollowedStoresTab() {
+    allStoresButton.setVisibility(View.GONE);
+    allStoresResultList.setVisibility(View.GONE);
+    followedStoresButton.setVisibility(View.VISIBLE);
+    followedStoresResultList.setVisibility(View.VISIBLE);
+    setFollowedStoresButtonSelected();
+    viewModel.setAllStoresSelected(false);
+  }
+
   private Observable<Void> recyclerViewReachedBottom(RecyclerView recyclerView) {
     return RxRecyclerView.scrollEvents(recyclerView)
         .filter(event -> event.dy() > 4)
@@ -367,10 +385,14 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
   }
 
   private void setFollowedStoresButtonSelected() {
-    followedStoresButton.setTextColor(getResources().getColor(R.color.white));
-    followedStoresButton.setBackgroundResource(R.drawable.search_button_background);
-    allStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
-    allStoresButton.setBackgroundResource(0);
+    if (followedStoresButton.getVisibility() == View.VISIBLE) {
+      followedStoresButton.setTextColor(getResources().getColor(R.color.white));
+      followedStoresButton.setBackgroundResource(R.drawable.search_button_background);
+    }
+    if (allStoresButton.getVisibility() == View.VISIBLE) {
+      allStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
+      allStoresButton.setBackgroundResource(0);
+    }
     viewModel.setAllStoresSelected(false);
     if (defaultThemeName != null && defaultThemeName.length() > 0) {
       followedStoresButton.getBackground()
@@ -380,10 +402,14 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
   }
 
   private void setAllStoresButtonSelected() {
-    followedStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
-    followedStoresButton.setBackgroundResource(0);
-    allStoresButton.setTextColor(getResources().getColor(R.color.white));
-    allStoresButton.setBackgroundResource(R.drawable.search_button_background);
+    if (followedStoresButton.getVisibility() == View.VISIBLE) {
+      followedStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
+      followedStoresButton.setBackgroundResource(0);
+    }
+    if (allStoresButton.getVisibility() == View.VISIBLE) {
+      allStoresButton.setTextColor(getResources().getColor(R.color.white));
+      allStoresButton.setBackgroundResource(R.drawable.search_button_background);
+    }
     viewModel.setAllStoresSelected(true);
     if (defaultThemeName != null && defaultThemeName.length() > 0) {
       allStoresButton.getBackground()
@@ -605,7 +631,6 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
     final List<SearchAppResult> allStoresSearchAppResults =
         viewModel.getAllStoresSearchAppResults();
     if (allStoresSearchAppResults.size() > 0) {
-      //allStoresResultList.setVis
       allStoresResultAdapter.restoreState(allStoresSearchAppResults,
           viewModel.getAllStoresSearchAdResults());
       allStoresResultAdapter.notifyDataSetChanged();

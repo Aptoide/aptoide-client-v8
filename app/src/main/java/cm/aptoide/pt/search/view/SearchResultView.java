@@ -54,6 +54,10 @@ public interface SearchResultView extends View {
 
   void setViewWithStoreNameAsSingleTab(String storeName);
 
+  void hideFollowedStoresTab();
+
+  void hideNonFollowedStoresTab();
+
   interface Model {
 
     List<SearchAppResult> getFollowedStoresSearchAppResults();

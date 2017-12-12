@@ -55,7 +55,7 @@ import rx.Single;
 
   @Override public void present() {
     stopLoadingMoreOnDestroy();
-    firstSearchDataLoad();
+    doFirstSearch();
     firstAdsDataLoad();
     handleClickFollowedStoresSearchButton();
     handleClickEverywhereSearchButton();
@@ -85,7 +85,7 @@ import rx.Single;
         .filter(viewModel -> !viewModel.hasReachedBottomOfAllStores())
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showLoadingMore())
-        .flatMapSingle(viewModel -> loadDataForAllNonFollowedStores(viewModel.getCurrentQuery(),
+        .flatMapSingle(viewModel -> loadDataFromNonFollowedStores(viewModel.getCurrentQuery(),
             viewModel.isOnlyTrustedApps(), viewModel.getAllStoresOffset()).onErrorResumeNext(
             err -> {
               crashReport.log(err);
@@ -116,7 +116,7 @@ import rx.Single;
         .filter(viewModel -> !viewModel.hasReachedBottomOfFollowedStores())
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showLoadingMore())
-        .flatMapSingle(viewModel -> loadDataForAllFollowedStores(viewModel.getCurrentQuery(),
+        .flatMapSingle(viewModel -> loadDataFromFollowedStores(viewModel.getCurrentQuery(),
             viewModel.isOnlyTrustedApps(), viewModel.getFollowedStoresOffset()).onErrorResumeNext(
             err -> {
               crashReport.log(err);
@@ -276,12 +276,27 @@ import rx.Single;
               list -> list != null ? list.size() : 0));
     }
     // search every store. followed and not followed
-    return Single.zip(loadDataForAllFollowedStores(query, onlyTrustedApps, 0),
-        loadDataForAllNonFollowedStores(query, onlyTrustedApps, 0),
-        (list1, list2) -> (list1 != null ? list1.size() : 0) + (list2 != null ? list2.size() : 0));
+    return Single.zip(loadDataFromFollowedStores(query, onlyTrustedApps, 0),
+        loadDataFromNonFollowedStores(query, onlyTrustedApps, 0),
+        (followedStoresCount, nonFollowedStoresCount) -> {
+          int result = 0;
+          if (followedStoresCount != null && followedStoresCount.size() > 0) {
+            result += followedStoresCount.size();
+          } else {
+            view.hideFollowedStoresTab();
+          }
+
+          if (nonFollowedStoresCount != null && nonFollowedStoresCount.size() > 0) {
+            result += nonFollowedStoresCount.size();
+          } else {
+            view.hideNonFollowedStoresTab();
+          }
+
+          return result;
+        });
   }
 
-  @NonNull private Single<List<SearchAppResult>> loadDataForAllNonFollowedStores(String query,
+  @NonNull private Single<List<SearchAppResult>> loadDataFromNonFollowedStores(String query,
       boolean onlyTrustedApps, int offset) {
     return searchManager.searchInNonFollowedStores(query, onlyTrustedApps, offset)
         .observeOn(viewScheduler)
@@ -292,7 +307,7 @@ import rx.Single;
         });
   }
 
-  @NonNull private Single<List<SearchAppResult>> loadDataForAllFollowedStores(String query,
+  @NonNull private Single<List<SearchAppResult>> loadDataFromFollowedStores(String query,
       boolean onlyTrustedApps, int offset) {
     return searchManager.searchInFollowedStores(query, onlyTrustedApps, offset)
         .observeOn(viewScheduler)
@@ -316,7 +331,7 @@ import rx.Single;
         });
   }
 
-  private void firstSearchDataLoad() {
+  private void doFirstSearch() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .map(__ -> view.getViewModel())
