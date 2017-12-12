@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view;
+package cm.aptoide.pt;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,9 +8,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.PageViewsAnalytics;
-import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.account.view.ImagePickerNavigator;
 import cm.aptoide.pt.account.view.MyAccountNavigator;
@@ -51,6 +48,9 @@ import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.util.ApkFy;
+import cm.aptoide.pt.view.ActivityScope;
+import cm.aptoide.pt.view.ActivityView;
+import cm.aptoide.pt.view.DeepLinkManager;
 import com.facebook.CallbackManager;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.common.api.GoogleApiClient;

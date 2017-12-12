@@ -1,5 +1,6 @@
 package cm.aptoide.pt.view;
 
+import cm.aptoide.pt.ActivityModule;
 import dagger.Subcomponent;
 
 @ActivityScope @Subcomponent(modules = { ActivityModule.class })

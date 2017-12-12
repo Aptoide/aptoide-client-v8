@@ -1,15 +1,16 @@
-package cm.aptoide.pt.view;
+package cm.aptoide.pt;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import cm.aptoide.pt.ActivityModule;
-import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.presenter.View;
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import cm.aptoide.pt.view.ActivityComponent;
+import cm.aptoide.pt.view.BaseActivity;
 
-public abstract class BaseActivity extends RxAppCompatActivity {
+/**
+ * Created by jose_messejana on 12-12-2017.
+ */
 
+public class MockBaseActivity extends BaseActivity {
   private ActivityComponent activityComponent;
   private boolean firstCreated;
 
@@ -18,15 +19,10 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     firstCreated = savedInstanceState == null;
   }
 
-  @Override protected void onDestroy() {
-    activityComponent = null;
-    super.onDestroy();
-  }
-
-  public ActivityComponent getActivityComponent() {
+  @Override public ActivityComponent getActivityComponent() {
     if (activityComponent == null) {
-      activityComponent = ((AptoideApplication) getApplication()).getApplicationComponent()
-          .plus(new ActivityModule(this, getIntent(),
+      activityComponent = ((VanillaApplication) getApplication()).getApplicationComponent()
+          .plus(new MockActivityModule(this, getIntent(),
               ((AptoideApplication) getApplication()).getNotificationSyncScheduler(),
               ((AptoideApplication) getApplication()).getMarketName(),
               ((AptoideApplication) getApplication()).getAutoUpdateUrl(), (View) this,

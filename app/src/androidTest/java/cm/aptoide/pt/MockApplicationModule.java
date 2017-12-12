@@ -30,12 +30,10 @@ import com.facebook.login.LoginManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import dagger.Provides;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.inject.Named;
-import javax.inject.Singleton;
 import okhttp3.OkHttpClient;
 import rx.Completable;
 import rx.Single;
@@ -97,7 +95,8 @@ public class MockApplicationModule extends ApplicationModule {
       }
 
       @Override public boolean isLoggedIn() {
-        if (TestType.types.equals(TestType.TestTypes.LOGGEDIN)) {
+        if (TestType.initialization.equals(TestType.TestTypes.LOGGEDIN)
+            || TestType.initialization.equals(TestType.TestTypes.LOGGEDINWITHSTORE) ){
           return true;
         } else {
           return false;
@@ -109,7 +108,9 @@ public class MockApplicationModule extends ApplicationModule {
       }
 
       @Override public Store getStore() {
-        return null;
+      if(TestType.initialization.equals(TestType.TestTypes.LOGGEDINWITHSTORE))
+          return new Store(0,"",0,"store","DEFAULT","","",true);
+      else return Store.emptyStore();
       }
 
       @Override public boolean hasStore() {

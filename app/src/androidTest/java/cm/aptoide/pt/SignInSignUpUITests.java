@@ -27,6 +27,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
 
   @Before public void setUp() {
     TestType.types = TestType.TestTypes.SIGNSIGNUPTESTS;
+    TestType.initialization = TestType.TestTypes.REGULAR;
     if (UITests.isFirstTime()) {
       skipWizard();
     }
