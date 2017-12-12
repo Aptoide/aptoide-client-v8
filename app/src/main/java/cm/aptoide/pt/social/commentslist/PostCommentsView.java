@@ -11,7 +11,7 @@ import rx.Observable;
 
 public interface PostCommentsView extends View {
 
-  Observable<Void> reachesBottom();
+  Observable<Object> reachesBottom();
 
   Observable<Void> refreshes();
 

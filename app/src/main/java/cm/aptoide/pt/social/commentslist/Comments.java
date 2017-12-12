@@ -23,4 +23,8 @@ class Comments {
   public Single<List<Comment>> getNextComments(String postId) {
     return postCommentsRepository.getNextComments(postId);
   }
+
+  public boolean hasMore() {
+    return postCommentsRepository.hasMoreComments();
+  }
 }

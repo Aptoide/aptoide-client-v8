@@ -52,6 +52,7 @@ public class PostCommentsPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reachesBottom()
+            .filter(__ -> comments.hasMore())
             .observeOn(viewScheduler)
             .doOnNext(__ -> view.showLoadMoreProgressIndicator())
             .flatMapSingle(__ -> comments.getNextComments(postId))

@@ -70,4 +70,8 @@ class PostCommentsRepository {
   public Single<List<Comment>> getComments(String postId) {
     return getComments(postId, initialOffset);
   }
+
+  public Boolean hasMoreComments() {
+    return currentOffset < total;
+  }
 }

@@ -61,6 +61,7 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
 
   private PublishSubject<String> replyEventPublishSubject;
   private SwipeRefreshLayout swipeRefreshLayout;
+  private LinearLayoutManager layoutManager;
 
   public static Fragment newInstance(String postId) {
     Fragment fragment = new PostCommentsFragment();
@@ -93,7 +94,8 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
     list = (RecyclerView) view.findViewById(R.id.recycler_view);
     list.setAdapter(adapter);
     list.addItemDecoration(new ItemDividerDecoration(this));
-    list.setLayoutManager(new LinearLayoutManager(getContext()));
+    layoutManager = new LinearLayoutManager(getContext());
+    list.setLayoutManager(layoutManager);
     helper = RecyclerViewPositionHelper.createHelper(list);
     swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
     floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fabAdd);
@@ -119,19 +121,11 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
     toolbar.setTitle(R.string.comments_title_comments);
   }
 
-  @Override public Observable<Void> reachesBottom() {
+  @Override public Observable<Object> reachesBottom() {
     return RxRecyclerView.scrollEvents(list)
-        .filter(event -> !bottomAlreadyReached
-            && helper.getItemCount() > visibleThreshold
-            && helper != null
-            && event.view()
-            .isAttachedToWindow()
-            && (helper.getItemCount() - event.view()
-            .getChildCount()) <= ((helper.findFirstVisibleItemPosition() == -1 ? 0
-            : helper.findFirstVisibleItemPosition()) + visibleThreshold))
-        .map(event -> null)
-        .doOnNext(__ -> bottomAlreadyReached = true)
-        .cast(Void.class);
+        .distinctUntilChanged()
+        .filter(scroll -> isEndReached())
+        .cast(Object.class);
   }
 
   @Override public Observable<Void> refreshes() {
@@ -159,6 +153,11 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
 
   @Override public void showMoreComments(List<Comment> comments) {
     adapter.addComments(comments);
+  }
+
+  private boolean isEndReached() {
+    return layoutManager.getItemCount() - layoutManager.findLastVisibleItemPosition()
+        <= visibleThreshold;
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
