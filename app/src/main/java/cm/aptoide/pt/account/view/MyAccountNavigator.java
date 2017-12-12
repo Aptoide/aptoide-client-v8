@@ -29,10 +29,10 @@ public class MyAccountNavigator {
   }
 
   public void navigateToEditStoreView(Store store) {
-    ManageStoreViewModel viewModel = new ManageStoreViewModel(store.getId(), StoreTheme.fromName(
-        store.getAppearance()
+    ManageStoreViewModel viewModel =
+        new ManageStoreViewModel(store.getId(), StoreTheme.fromName(store.getAppearance()
             .getTheme()), store.getName(), store.getAppearance()
-        .getDescription(), store.getAvatar(), store.getSocialChannels());
+            .getDescription(), store.getAvatar(), store.getSocialChannels());
     fragmentNavigator.navigateTo(ManageStoreFragment.newInstance(viewModel, false), true);
   }
 

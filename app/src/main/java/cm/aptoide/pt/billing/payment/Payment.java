@@ -49,11 +49,7 @@ public class Payment {
       return true;
     }
 
-    if (transaction.isCompleted() && !purchase.isCompleted()) {
-      return true;
-    }
-
-    return false;
+    return transaction.isCompleted() && !purchase.isCompleted();
   }
 
   public Authorization getAuthorization() {

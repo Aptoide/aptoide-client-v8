@@ -28,8 +28,8 @@ public class CrashlyticsCrashLogger implements CrashLogger {
    * @param throwable exception you want to send
    */
   @Override public void log(Throwable throwable) {
-    crashlytics.setString(LANGUAGE, language);
-    crashlytics.logException(throwable);
+    Crashlytics.setString(LANGUAGE, language);
+    Crashlytics.logException(throwable);
   }
 
   /**
@@ -39,7 +39,7 @@ public class CrashlyticsCrashLogger implements CrashLogger {
    * @param value value you want associated with the key
    */
   @Override public void log(String key, String value) {
-    crashlytics.setString(LANGUAGE, language);
-    crashlytics.setString(key, value);
+    Crashlytics.setString(LANGUAGE, language);
+    Crashlytics.setString(key, value);
   }
 }

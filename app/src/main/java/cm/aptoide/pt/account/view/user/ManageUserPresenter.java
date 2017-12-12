@@ -28,8 +28,8 @@ public class ManageUserPresenter implements Presenter {
 
   public ManageUserPresenter(ManageUserView view, CrashReport crashReport,
       AptoideAccountManager accountManager, ThrowableToStringMapper errorMapper,
-      ManageUserNavigator navigator, boolean isEditProfile,
-      UriToPathResolver uriToPathResolver, boolean showPrivacyConfigs, boolean isFirstTime) {
+      ManageUserNavigator navigator, boolean isEditProfile, UriToPathResolver uriToPathResolver,
+      boolean showPrivacyConfigs, boolean isFirstTime) {
     this.view = view;
     this.crashReport = crashReport;
     this.accountManager = accountManager;

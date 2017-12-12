@@ -74,7 +74,7 @@
       android:layout_height="56dp"
       android:layout_below="@id/looking_for_friends_message"
       android:layout_centerInParent="true"
-      android:background="@drawable/progress_bar"
+      android:background="@drawable/spotandshare_progress_bar"
       />
 
   <TextView

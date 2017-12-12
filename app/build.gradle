@@ -168,9 +168,9 @@ android {
     String applicationId = applicationIdBase
 
     def searchSuggestionProviderAuthority =
-        "${applicationIdBase}.provider.SearchSuggestionProvider";
+        "${applicationIdBase}.provider.SearchSuggestionProvider"
     def storeSuggestionProviderAuthority =
-        "${applicationIdBase}.provider.StoreSearchSuggestionProvider";
+        "${applicationIdBase}.provider.StoreSearchSuggestionProvider"
     def toolboxProviderAuthority = "${applicationIdBase}.StubProvider"
 
     if (applicationIdSuffix != null) {
@@ -397,14 +397,14 @@ dependencies {
 
   // Fabric
   compile("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS_VERSION}@aar") {
-    transitive = true;
+    transitive = true
   }
 
   //lib phone number
   compile "com.googlecode.libphonenumber:libphonenumber:${LIB_PHONE_NUMBER_VERSION}"
 
   compile('com.twitter.sdk.android:twitter-core:2.3.0@aar') {
-    transitive = true;
+    transitive = true
   }
 
   compile("com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}")

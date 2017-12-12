@@ -98,8 +98,8 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     storeAccessor = AccessorFactory.getAccessorFor(
         ((AptoideApplication) getContext().getApplicationContext()).getDatabase(), Store.class);
     storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor,
-        new StoreCredentialsProviderImpl(storeAccessor), AccessorFactory.getAccessorFor(
-        ((AptoideApplication) getContext().getApplicationContext()
+        new StoreCredentialsProviderImpl(storeAccessor),
+        AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class), httpClient,
         WebService.getDefaultConverter(),
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),

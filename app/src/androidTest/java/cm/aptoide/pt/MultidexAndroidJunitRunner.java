@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.support.test.runner.AndroidJUnitRunner;
-import io.realm.Realm;
 
 public class MultidexAndroidJunitRunner extends AndroidJUnitRunner {
 

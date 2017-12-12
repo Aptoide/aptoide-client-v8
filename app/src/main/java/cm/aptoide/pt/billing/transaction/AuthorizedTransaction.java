@@ -29,10 +29,7 @@ public class AuthorizedTransaction implements Transaction {
   }
 
   @Override public boolean isNew() {
-    if (transaction.isNew() && !authorization.isProcessing() && !authorization.isFailed()) {
-      return true;
-    }
-    return false;
+    return transaction.isNew() && !authorization.isProcessing() && !authorization.isFailed();
   }
 
   @Override public boolean isCompleted() {

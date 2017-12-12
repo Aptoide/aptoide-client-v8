@@ -176,7 +176,8 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
 
   private void attachPresenters() {
 
-    attachPresenter(new CompositePresenter(Arrays.asList(manageUserPresenter, imagePickerPresenter)));
+    attachPresenter(
+        new CompositePresenter(Arrays.asList(manageUserPresenter, imagePickerPresenter)));
   }
 
   @Override public void onDestroyView() {
@@ -187,8 +188,8 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   }
 
   @Override public void setUserName(String name) {
-      currentModel.setName(name);
-      userName.setText(name);
+    currentModel.setName(name);
+    userName.setText(name);
   }
 
   @Override public Observable<ViewModel> saveUserDataButtonClick() {
@@ -219,9 +220,9 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   }
 
   @Override public void loadImageStateless(String pictureUri) {
-      currentModel.setPictureUri(pictureUri);
-      ImageLoader.with(getActivity())
-          .loadUsingCircleTransformAndPlaceholder(pictureUri, userPicture, DEFAULT_IMAGE_PLACEHOLDER);
+    currentModel.setPictureUri(pictureUri);
+    ImageLoader.with(getActivity())
+        .loadUsingCircleTransformAndPlaceholder(pictureUri, userPicture, DEFAULT_IMAGE_PLACEHOLDER);
   }
 
   /**

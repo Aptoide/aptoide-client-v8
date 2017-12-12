@@ -9,8 +9,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.BitmapFactory;
-import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;

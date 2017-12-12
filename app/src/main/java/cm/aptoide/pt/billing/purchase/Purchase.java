@@ -32,7 +32,7 @@ public class Purchase {
     return Status.COMPLETED.equals(status);
   }
 
-  public static enum Status {
+  public enum Status {
     COMPLETED, FAILED, NEW
   }
 }

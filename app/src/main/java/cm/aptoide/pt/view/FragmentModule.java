@@ -44,8 +44,8 @@ import rx.schedulers.Schedulers;
   private final boolean isCreateStoreUserPrivacyEnabled;
   private final String packageName;
 
-
-  public FragmentModule(Fragment fragment, Bundle savedInstance, boolean dismissToNavigateToMainView, boolean navigateToHome, boolean goToHome,
+  public FragmentModule(Fragment fragment, Bundle savedInstance,
+      boolean dismissToNavigateToMainView, boolean navigateToHome, boolean goToHome,
       boolean isEditProfile, boolean isCreateStoreUserPrivacyEnabled, String packageName) {
     this.fragment = fragment;
     this.savedInstance = savedInstance;
@@ -57,46 +57,57 @@ import rx.schedulers.Schedulers;
     this.packageName = packageName;
   }
 
-  @Provides @FragmentScope LoginSignUpCredentialsPresenter provideLoginSignUpPresenter(AptoideAccountManager accountManager, AccountNavigator accountNavigator,
-      AccountErrorMapper errorMapper, AccountAnalytics accountAnalytics){
-    return new LoginSignUpCredentialsPresenter((LoginSignUpCredentialsView) fragment, accountManager, CrashReport.getInstance(),
-        dismissToNavigateToMainView, navigateToHome, accountNavigator,
-        Arrays.asList("email", "user_friends"), Arrays.asList("email"), errorMapper,
-        accountAnalytics);
+  @Provides @FragmentScope LoginSignUpCredentialsPresenter provideLoginSignUpPresenter(
+      AptoideAccountManager accountManager, AccountNavigator accountNavigator,
+      AccountErrorMapper errorMapper, AccountAnalytics accountAnalytics) {
+    return new LoginSignUpCredentialsPresenter((LoginSignUpCredentialsView) fragment,
+        accountManager, CrashReport.getInstance(), dismissToNavigateToMainView, navigateToHome,
+        accountNavigator, Arrays.asList("email", "user_friends"), Arrays.asList("email"),
+        errorMapper, accountAnalytics);
   }
 
-  @Provides @FragmentScope ImagePickerPresenter provideImagePickerPresenter(AccountPermissionProvider accountPermissionProvider,
-      PhotoFileGenerator photoFileGenerator, ImageValidator imageValidator, UriToPathResolver uriToPathResolver, ImagePickerNavigator imagePickerNavigator){
-    return new ImagePickerPresenter((ImagePickerView) fragment, CrashReport.getInstance(), accountPermissionProvider, photoFileGenerator,
-        imageValidator, AndroidSchedulers.mainThread(), uriToPathResolver, imagePickerNavigator,
-        fragment.getActivity().getContentResolver(), ImageLoader.with(fragment.getContext()));
+  @Provides @FragmentScope ImagePickerPresenter provideImagePickerPresenter(
+      AccountPermissionProvider accountPermissionProvider, PhotoFileGenerator photoFileGenerator,
+      ImageValidator imageValidator, UriToPathResolver uriToPathResolver,
+      ImagePickerNavigator imagePickerNavigator) {
+    return new ImagePickerPresenter((ImagePickerView) fragment, CrashReport.getInstance(),
+        accountPermissionProvider, photoFileGenerator, imageValidator,
+        AndroidSchedulers.mainThread(), uriToPathResolver, imagePickerNavigator,
+        fragment.getActivity()
+            .getContentResolver(), ImageLoader.with(fragment.getContext()));
   }
 
-  @FragmentScope @Provides ManageStorePresenter provideManageStorePresenter(StoreManager storeManager, UriToPathResolver uriToPathResolver,
-      ManageStoreNavigator manageStoreNavigator, ManageStoreErrorMapper manageStoreErrorMapper){
-    return new ManageStorePresenter((ManageStoreView) fragment, CrashReport.getInstance(), storeManager, uriToPathResolver,
-        packageName, manageStoreNavigator, goToHome, manageStoreErrorMapper);
+  @FragmentScope @Provides ManageStorePresenter provideManageStorePresenter(
+      StoreManager storeManager, UriToPathResolver uriToPathResolver,
+      ManageStoreNavigator manageStoreNavigator, ManageStoreErrorMapper manageStoreErrorMapper) {
+    return new ManageStorePresenter((ManageStoreView) fragment, CrashReport.getInstance(),
+        storeManager, uriToPathResolver, packageName, manageStoreNavigator, goToHome,
+        manageStoreErrorMapper);
   }
 
-  @FragmentScope @Provides ManageUserPresenter provideManageUserPresenter(AptoideAccountManager accountManager, CreateUserErrorMapper errorMapper,
-      ManageUserNavigator manageUserNavigator, UriToPathResolver uriToPathResolver){
-    return new ManageUserPresenter((ManageUserView) fragment, CrashReport.getInstance(), accountManager, errorMapper, manageUserNavigator,
-        isEditProfile, uriToPathResolver, isCreateStoreUserPrivacyEnabled, savedInstance == null);
+  @FragmentScope @Provides ManageUserPresenter provideManageUserPresenter(
+      AptoideAccountManager accountManager, CreateUserErrorMapper errorMapper,
+      ManageUserNavigator manageUserNavigator, UriToPathResolver uriToPathResolver) {
+    return new ManageUserPresenter((ManageUserView) fragment, CrashReport.getInstance(),
+        accountManager, errorMapper, manageUserNavigator, isEditProfile, uriToPathResolver,
+        isCreateStoreUserPrivacyEnabled, savedInstance == null);
   }
 
-  @FragmentScope @Provides ImageValidator provideImageValidator(){
+  @FragmentScope @Provides ImageValidator provideImageValidator() {
     return new ImageValidator(ImageLoader.with(fragment.getContext()), Schedulers.computation());
   }
 
-  @FragmentScope @Provides CreateUserErrorMapper provideCreateUserErrorMapper(AccountErrorMapper accountErrorMapper){
-    return new CreateUserErrorMapper(fragment.getContext(), accountErrorMapper, fragment.getResources());
+  @FragmentScope @Provides CreateUserErrorMapper provideCreateUserErrorMapper(
+      AccountErrorMapper accountErrorMapper) {
+    return new CreateUserErrorMapper(fragment.getContext(), accountErrorMapper,
+        fragment.getResources());
   }
 
-  @FragmentScope @Provides AccountErrorMapper provideAccountErrorMapper(){
+  @FragmentScope @Provides AccountErrorMapper provideAccountErrorMapper() {
     return new AccountErrorMapper(fragment.getContext(), new ErrorsMapper());
   }
 
-  @FragmentScope @Provides ManageStoreErrorMapper provideManageStoreErrorMapper(){
+  @FragmentScope @Provides ManageStoreErrorMapper provideManageStoreErrorMapper() {
     return new ManageStoreErrorMapper(fragment.getResources(), new ErrorsMapper());
   }
 }

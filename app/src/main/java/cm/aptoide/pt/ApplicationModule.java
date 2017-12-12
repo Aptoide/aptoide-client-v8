@@ -284,15 +284,15 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides Answers provideAnswers(Fabric fabric) {
-    return fabric.getKit(Answers.class);
+    return Fabric.getKit(Answers.class);
   }
 
   @Singleton @Provides Crashlytics provideCrashlytics(Fabric fabric) {
-    return fabric.getKit(Crashlytics.class);
+    return Fabric.getKit(Crashlytics.class);
   }
 
   @Singleton @Provides TwitterCore provideTwitter(Fabric fabric) {
-    return fabric.getKit(TwitterCore.class);
+    return Fabric.getKit(TwitterCore.class);
   }
 
   @Singleton @Provides TwitterAuthClient provideTwitterAuthClient() {

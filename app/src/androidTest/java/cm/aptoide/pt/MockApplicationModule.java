@@ -30,12 +30,10 @@ import com.facebook.login.LoginManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import dagger.Provides;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.inject.Named;
-import javax.inject.Singleton;
 import okhttp3.OkHttpClient;
 import rx.Completable;
 import rx.Single;
@@ -97,11 +95,7 @@ public class MockApplicationModule extends ApplicationModule {
       }
 
       @Override public boolean isLoggedIn() {
-        if (TestType.types.equals(TestType.TestTypes.LOGGEDIN)) {
-          return true;
-        } else {
-          return false;
-        }
+        return TestType.types.equals(TestType.TestTypes.LOGGEDIN);
       }
 
       @Override public String getEmail() {
@@ -211,35 +205,41 @@ public class MockApplicationModule extends ApplicationModule {
     return new AptoideAccountManager.Builder().setAccountPersistence(accountPersistence)
         .setAccountService(accountService)
         .registerSignUpAdapter(GoogleSignUpAdapter.TYPE,
-            new GoogleSignUpAdapter(googleApiClient, loginPreferences){
-          @Override public Single<Account>signUp(GoogleSignInResult result, AccountService service){
-            return Single.just(account);
-          }
-          @Override public Completable logout(){
-            return Completable.complete();
-          }
-          @Override public boolean isEnabled(){
-            return true;
-          }
+            new GoogleSignUpAdapter(googleApiClient, loginPreferences) {
+              @Override
+              public Single<Account> signUp(GoogleSignInResult result, AccountService service) {
+                return Single.just(account);
+              }
+
+              @Override public Completable logout() {
+                return Completable.complete();
+              }
+
+              @Override public boolean isEnabled() {
+                return true;
+              }
             })
         .registerSignUpAdapter(FacebookSignUpAdapter.TYPE,
             new FacebookSignUpAdapter(Arrays.asList("email"), LoginManager.getInstance(),
-                loginPreferences){
-              @Override public Single<Account>signUp(FacebookLoginResult result, AccountService service){
+                loginPreferences) {
+              @Override
+              public Single<Account> signUp(FacebookLoginResult result, AccountService service) {
                 return Single.just(account);
               }
-              @Override public Completable logout(){
+
+              @Override public Completable logout() {
                 return Completable.complete();
               }
-              @Override public boolean isEnabled(){
+
+              @Override public boolean isEnabled() {
                 return true;
               }
             })
         .build();
   }
 
-  @Override StoreManager provideStoreManager(
-      AptoideAccountManager accountManager, @Named("default") OkHttpClient okHttpClient,
+  @Override StoreManager provideStoreManager(AptoideAccountManager accountManager,
+      @Named("default") OkHttpClient okHttpClient,
       @Named("multipart") MultipartBodyInterceptor multipartBodyInterceptor,
       @Named("defaulInterceptorV3")
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,

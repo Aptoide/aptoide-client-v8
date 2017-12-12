@@ -17,7 +17,7 @@ public interface Transaction {
 
   boolean isFailed();
 
-  public enum Status {
+  enum Status {
     NEW, PENDING_SERVICE_AUTHORIZATION, PROCESSING, COMPLETED, FAILED
   }
 }
