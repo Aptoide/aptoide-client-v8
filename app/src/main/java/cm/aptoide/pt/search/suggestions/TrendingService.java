@@ -6,6 +6,7 @@ import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
+import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -16,14 +17,14 @@ import rx.Observable;
  */
 
 public class TrendingService {
-  private final StoreCredentialsProviderImpl storeCredentialsProvider;
+  private final StoreCredentialsProvider storeCredentialsProvider;
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
 
-  public TrendingService(StoreCredentialsProviderImpl storeCredentialsProvider,
+  public TrendingService(StoreCredentialsProvider storeCredentialsProvider,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences){

@@ -35,6 +35,7 @@ import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.crashreports.IssuesAnalytics;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
@@ -107,9 +108,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
   private PublishRelay<Pair<SearchAppResult, View>> onOpenPopupMenuClickRelay;
   private PublishRelay<SearchAdResult> onAdClickRelay;
   private SearchManager searchManager;
-  private Scheduler mainThreadScheduler;
   private SearchNavigator searchNavigator;
-  private CrashReport crashReport;
   private SearchAnalytics searchAnalytics;
   private float listItemPadding;
   private String defaultThemeName;
@@ -117,6 +116,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
   private String defaultStoreName;
   private TrendingManager trendingManager;
   private AppSearchSuggestionsView appSearchSuggestionsView;
+  private CrashReport crashReport;
 
   public static SearchResultFragment newInstance(String currentQuery, String defaultStoreName) {
     return newInstance(currentQuery, false, defaultStoreName);
@@ -468,6 +468,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
 
     final Analytics analytics = Analytics.getInstance();
+
     searchAnalytics = new SearchAnalytics(analytics, AppEventsLogger.newLogger(applicationContext));
 
     final AptoideApplication application = (AptoideApplication) getActivity().getApplication();
@@ -492,8 +493,6 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
         new SearchManager(sharedPreferences, tokenInvalidator, bodyInterceptor, httpClient,
             converterFactory, subscribedStoresAuthMap, subscribedStoresIds, adsRepository);
 
-    mainThreadScheduler = AndroidSchedulers.mainThread();
-
     onItemViewClickRelay = PublishRelay.create();
     onOpenPopupMenuClickRelay = PublishRelay.create();
     onAdClickRelay = PublishRelay.create();
@@ -515,6 +514,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
             searchResultAllStores, searchResultAdsAllStores, crashReport);
 
     setHasOptionsMenu(true);
+
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -532,6 +532,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
               FOLLOWED_STORES_SEARCH_LIST_STATE) : null);
     }
 
+    final Scheduler mainThreadScheduler = AndroidSchedulers.mainThread();
     final SearchResultPresenter searchResultPresenter =
         new SearchResultPresenter(this, searchAnalytics, searchNavigator, crashReport,
             mainThreadScheduler, searchManager, onAdClickRelay, onItemViewClickRelay,

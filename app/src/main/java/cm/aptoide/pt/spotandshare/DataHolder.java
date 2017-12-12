@@ -4,7 +4,7 @@ import android.net.Network;
 import android.net.wifi.WifiConfiguration;
 
 /**
- * Singleton without controller.
+ * ApplicationTestScope without controller.
  * <p>Holds references to main stuff used in our webview app
  * </p>
  * Created by FilipeGonçalves on 10-08-2015.

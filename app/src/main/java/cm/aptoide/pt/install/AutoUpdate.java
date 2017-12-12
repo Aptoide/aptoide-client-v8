@@ -163,7 +163,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
               .subscribe(install -> {
                 // TODO: 12/07/2017 this code doesn't run
                 if (install.isFailed()) {
-                  ShowMessage.asSnack(activity, R.string.error_SYS_1);
+                  ShowMessage.asSnack(activity, R.string.ws_error_SYS_1);
                 }
                 dismissDialog();
               }, throwable -> {

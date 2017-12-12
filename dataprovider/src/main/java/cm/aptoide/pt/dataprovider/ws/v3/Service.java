@@ -5,8 +5,6 @@ import cm.aptoide.pt.dataprovider.model.v3.BaseV3Response;
 import cm.aptoide.pt.dataprovider.model.v3.CheckUserCredentialsJson;
 import cm.aptoide.pt.dataprovider.model.v3.OAuth;
 import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
-import cm.aptoide.pt.dataprovider.model.v3.PaymentAuthorizationResponse;
-import cm.aptoide.pt.dataprovider.model.v3.PaymentAuthorizationsResponse;
 import cm.aptoide.pt.dataprovider.model.v3.TransactionResponse;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;

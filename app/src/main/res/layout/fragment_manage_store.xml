@@ -119,6 +119,7 @@
               android:layout_marginTop="20dp"
               android:orientation="vertical"
               android:visibility="gone"
+              tools:visibility="visible"
               >
 
             <TextView
@@ -135,6 +136,7 @@
                 android:layout_marginBottom="16dp"
                 android:layout_marginTop="22dp"
                 android:orientation="horizontal"
+                tools:visibility="gone"
                 >
 
               <ImageView
@@ -207,6 +209,7 @@
                 android:layout_marginBottom="16dp"
                 android:layout_marginTop="16dp"
                 android:orientation="horizontal"
+                tools:visibility="gone"
                 >
 
               <ImageView
@@ -322,7 +325,6 @@
                     />
               </RelativeLayout>
 
-
               <cm.aptoide.pt.view.CustomTextInputLayout
                   android:id="@+id/edit_store_twitter_username_wrapper"
                   android:layout_width="match_parent"
@@ -334,6 +336,7 @@
                   android:layout_toRightOf="@+id/edit_store_twitter_icon"
                   android:visibility="gone"
                   app:helperText="@string/edit_store_short_enter_username"
+                  tools:visibility="visible"
                   >
 
                 <EditText
@@ -354,6 +357,7 @@
                 android:layout_marginBottom="16dp"
                 android:layout_marginTop="16dp"
                 android:orientation="horizontal"
+                tools:visibility="gone"
                 >
 
               <ImageView
@@ -450,6 +454,8 @@
               android:layout_height="wrap_content"
               android:layout_marginBottom="@dimen/padding_very_small"
               android:layout_marginTop="@dimen/padding_very_small"
+              tools:layoutManager="android.support.v7.widget.LinearLayoutManager"
+              tools:orientation="horizontal"
               />
         </LinearLayout>
 
