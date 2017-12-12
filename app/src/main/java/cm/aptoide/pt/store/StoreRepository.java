@@ -12,7 +12,7 @@ import rx.Observable;
 public class StoreRepository {
   private final StoreAccessor storeAccessor;
 
-  StoreRepository(StoreAccessor storeAccessor) {
+  public StoreRepository(StoreAccessor storeAccessor) {
     this.storeAccessor = storeAccessor;
   }
 
