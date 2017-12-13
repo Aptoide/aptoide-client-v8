@@ -138,13 +138,13 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
       } else {
         this.headerSubTitle.setVisibility(View.VISIBLE);
         this.cardsLeftProgress.setVisibility(View.GONE);
-        this.headerSubTitle.setText("No more cards. Come back tomorrow for more!");
+        this.headerSubTitle.setText("No game cards left today!");
       }
     }
     else{
       this.headerSubTitle.setVisibility(View.VISIBLE);
       this.cardsLeftProgress.setVisibility(View.GONE);
-      this.headerSubTitle.setText(String.valueOf(card.getCardsLeft())+" cards left today.");
+      this.headerSubTitle.setText(String.valueOf(card.getCardsLeft()) + " game cards left today.");
       }
 
     LeaderboardTouchEvent event  = new LeaderboardTouchEvent(card, CardTouchEvent.Type.BODY,

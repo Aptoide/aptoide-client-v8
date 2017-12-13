@@ -7,15 +7,6 @@
     android:orientation="vertical"
     android:visibility="visible">
 
-  <ImageView
-      android:id="@+id/game_card_questionIcon"
-      android:layout_width="65dp"
-      android:layout_height="65dp"
-      android:layout_centerHorizontal="true"
-      android:layout_marginTop="75dp"
-      android:src="@mipmap/ic_launcher"
-      />
-
 
   <TextView
       android:id="@+id/game_card_question"
@@ -30,5 +21,16 @@
       android:textAlignment="center"
       style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       />
+
+  <ImageView
+      android:id="@+id/game_card_questionIcon"
+      android:layout_width="65dp"
+      android:layout_height="65dp"
+      android:layout_below="@id/game_card_question"
+      android:layout_centerHorizontal="true"
+      android:layout_marginTop="5dp"
+      android:src="@mipmap/ic_launcher"
+      />
+
 
 </RelativeLayout>

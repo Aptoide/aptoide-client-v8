@@ -94,33 +94,16 @@
             android:id="@+id/question"
             android:visibility="visible"/>
 
-        <TextView
-            android:id="@+id/right_answer"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="30dp"
-            android:layout_marginTop="150dp"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="Right: Answer1"
-            style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
+        <include
+            layout="@layout/timeline_game_answer_element_1"
+            android:id="@+id/answers"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="120dp"
+            android:visibility="visible"
             />
 
-        <TextView
-            android:id="@+id/left_answer"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="150dp"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="Left: Answer2"
-            style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
-            />
 
         <TextView
             android:id="@+id/stamp_left"
@@ -147,15 +130,6 @@
             android:src="@mipmap/ic_launcher"
             android:text="Clash Royal"
             android:visibility="invisible"
-            />
-
-        <View
-            android:id="@+id/answer_separator"
-            android:layout_width="1dp"
-            android:layout_height="20dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="157dp"
-            android:background="@color/medium_gray"
             />
 
       </RelativeLayout>

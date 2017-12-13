@@ -52,12 +52,12 @@
           android:layout_height="wrap_content"
           android:layout_below="@id/displayable_social_timeline_answer_card_title"
           android:layout_marginEnd="48dp"
-          android:layout_marginLeft="72dp"
+          android:layout_marginLeft="70dp"
           android:layout_marginRight="48dp"
-          android:layout_marginStart="72dp"
+          android:layout_marginStart="65dp"
           android:lines="1"
           android:visibility="gone"
-          tools:text="Há duas horas"
+          tools:text="No game cards left today!"
           style="@style/Aptoide.TextView.Regular.XS.Grey"
           />
 

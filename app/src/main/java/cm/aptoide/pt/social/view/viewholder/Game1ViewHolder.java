@@ -43,7 +43,8 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
   private final String marketName;
   private ImageView questionIcon;
   private TextView question;
-  private View wrapper;
+  private View questionWrapper;
+  private View answerWrapper;
   private Game1 card;
 
   private double rand;
@@ -59,8 +60,9 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
 
     this.score = (TextView) itemView.findViewById(R.id.stats_header).findViewById(R.id.displayable_social_timeline_game_card_score);
     leaderboard = (TextView) itemView.findViewById(R.id.stats_header).findViewById(R.id.displayable_social_timeline_game_card_leaderboard);
-    leftAnswer = (TextView) itemView.findViewById(R.id.left_answer);
-    rightAnswer = (TextView) itemView.findViewById(R.id.right_answer);
+    answerWrapper = (View) itemView.findViewById(R.id.answers);
+    leftAnswer = (TextView) answerWrapper.findViewById(R.id.left_answer);
+    rightAnswer = (TextView) answerWrapper.findViewById(R.id.right_answer);
 
     itemView.setOnTouchListener((view, motionEvent) -> {
       itemView.getParent().requestDisallowInterceptTouchEvent(true);
@@ -83,7 +85,6 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
 
   @Override
   public void setPost(Game1 card, int position) {
-    int played;
 
     this.card = card;
     stampLeft.setVisibility(View.GONE);
@@ -96,16 +97,16 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
     this.leaderboard.setText(String.valueOf(card.getgRanking()));
     if(card.getQuestionIcon()==null){
       itemView.findViewById(R.id.icon_question).setVisibility(View.GONE);
-      wrapper = itemView.findViewById(R.id.question);
-      wrapper.setVisibility(View.VISIBLE);
-      question = (TextView) wrapper.findViewById(R.id.game_card_question);
+      questionWrapper = itemView.findViewById(R.id.question);
+      questionWrapper.setVisibility(View.VISIBLE);
+      question = (TextView) questionWrapper.findViewById(R.id.game_card_question);
     }
     else{
       itemView.findViewById(R.id.question).setVisibility(View.GONE);
-      wrapper = itemView.findViewById(R.id.icon_question);
-      wrapper.setVisibility(View.VISIBLE);
-      questionIcon = (ImageView) wrapper.findViewById(R.id.game_card_questionIcon);
-      question = (TextView) wrapper.findViewById(R.id.game_card_question);
+      questionWrapper = itemView.findViewById(R.id.icon_question);
+      questionWrapper.setVisibility(View.VISIBLE);
+      questionIcon = (ImageView) questionWrapper.findViewById(R.id.game_card_questionIcon);
+      question = (TextView) questionWrapper.findViewById(R.id.game_card_question);
       ImageLoader.with(itemView.getContext()).load(card.getQuestionIcon(), questionIcon);
     }
     this.question.setText(card.getQuestion());

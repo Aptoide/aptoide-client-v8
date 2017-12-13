@@ -89,63 +89,24 @@
           >
 
         <include layout="@layout/timeline_icon_question_body"
-            android:id="@+id/icon_question"            android:visibility="visible"/>
+            android:id="@+id/icon_question"
+            android:visibility="gone"
+            />
 
         <include layout="@layout/timeline_question_body"
             android:id="@+id/question"
             android:visibility="gone"/>
 
-
-        <ImageView
-            android:id="@+id/left_answer"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginBottom="30dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="145dp"
-            android:src="@mipmap/ic_launcher"
+        <include
+            layout="@layout/timeline_game_answer_element_2"
+            android:id="@+id/answers"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="120dp"
+            android:visibility="visible"
             />
 
-        <ImageView
-            android:id="@+id/left_arrow"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="155dp"
-            android:src="@drawable/game_arrow_left"
-            android:visibility="gone"
-            />
-
-
-        <ImageView
-            android:id="@+id/right_answer"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="30dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="145dp"
-
-            android:src="@mipmap/ic_launcher"
-            />
-
-        <ImageView
-            android:id="@+id/right_arrow"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="155dp"
-            android:rotation="180"
-            android:src="@drawable/game_arrow_left"
-            android:visibility="gone"
-            />
 
         <ImageView
             android:id="@+id/stamp_left"
@@ -172,14 +133,6 @@
             android:visibility="invisible"
             />
 
-        <View
-            android:id="@+id/answer_separator"
-            android:layout_width="1dp"
-            android:layout_height="25dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="162dp"
-            android:background="@color/medium_gray"
-            />
 
       </RelativeLayout>
     </RelativeLayout>

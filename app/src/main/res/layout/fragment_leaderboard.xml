@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     >
 
   <android.support.design.widget.AppBarLayout
@@ -21,7 +21,7 @@
   </android.support.design.widget.AppBarLayout>
   <RelativeLayout
       android:layout_width="match_parent"
-      android:layout_height="80dp"
+      android:layout_height="60dp"
       >
 
     <ProgressBar
@@ -29,8 +29,8 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_centerVertical="true"
-        android:layout_marginStart="110dp"
         android:layout_marginLeft="110dp"
+        android:layout_marginStart="110dp"
         android:visibility="gone"
         />
 
@@ -38,9 +38,9 @@
         android:id="@+id/current_user_icon"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
         android:src="@drawable/icon_user"
         />
 
@@ -48,13 +48,13 @@
         android:id="@+id/current_user_name"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
-        android:layout_toRightOf="@id/current_user_icon"
-        android:layout_marginTop="10dp"
         android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
-        style="@style/Aptoide.TextView.Medium.M"
-        android:textColor="@color/orange_700"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/current_user_icon"
         android:text="CurrentUser"
+        android:textColor="@color/orange_700"
+        style="@style/Aptoide.TextView.Medium.M"
         />
 
     <TextView
@@ -62,49 +62,49 @@
         android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:layout_below="@id/current_user_name"
-        android:layout_toRightOf="@id/current_user_icon"
-        android:layout_marginTop="5dp"
         android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
-        style="@style/Aptoide.TextView.Regular.S.Grey"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@id/current_user_icon"
         android:text="320"
+        style="@style/Aptoide.TextView.Regular.S.Grey"
         />
 
-    <TextView
-        android:id="@+id/top_box"
-        android:layout_width="140dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:gravity="center_vertical|right"
-        style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
-        android:text="Currently in top 12%"
-        />
+    <!--<TextView-->
+    <!--android:id="@+id/top_box"-->
+    <!--android:layout_width="140dp"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:layout_marginRight="30dp"-->
+    <!--android:layout_marginEnd="30dp"-->
+    <!--android:layout_alignParentEnd="true"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:gravity="center_vertical|right"-->
+    <!--style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"-->
+    <!--android:text="Currently in top 12%"-->
+    <!--/>-->
 
-    <ImageView
-        android:id="@+id/friends_icon"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginTop="18dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="145dp"
-        android:layout_marginEnd="145dp"
-        android:src="@drawable/leaderboard_score"
-        />
+    <!--<ImageView-->
+    <!--android:id="@+id/friends_icon"-->
+    <!--android:layout_width="25dp"-->
+    <!--android:layout_height="25dp"-->
+    <!--android:layout_marginTop="18dp"-->
+    <!--android:layout_alignParentEnd="true"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_marginRight="145dp"-->
+    <!--android:layout_marginEnd="145dp"-->
+    <!--android:src="@drawable/leaderboard_score"-->
+    <!--/>-->
 
     <Spinner
         android:id="@+id/leaderboard_spinner"
         android:layout_width="130dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/top_box"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginEnd="30dp"
         android:layout_marginRight="30dp"
+        android:layout_marginTop="20dp"
         style="@style/Aptoide.TextView.Regular.XS.Grey"
         ></Spinner>
 
@@ -114,15 +114,15 @@
   <RelativeLayout
       android:layout_width="320dp"
       android:layout_height="match_parent"
-      android:layout_marginTop="10dp"
       android:layout_gravity="center"
+      android:layout_marginTop="10dp"
       android:background="@color/grey_fog_lighter"
       >
 
     <include layout="@layout/fragment_leaderboard_top_element"
         android:id="@+id/top_element"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         ></include>
 
     <ProgressBar
