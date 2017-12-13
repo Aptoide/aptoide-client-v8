@@ -58,6 +58,7 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
     // else getFragmentNavigator and getActivityNavigator will return null.
     super.onCreate(savedInstanceState);
     resultRelay = PublishRelay.create();
+    getActivityComponent().inject(this);
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -153,8 +154,6 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
   }
 
   public AccountNavigator getAccountNavigator() {
-    if (accountNavigator == null) {
-    }
     return accountNavigator;
   }
 
