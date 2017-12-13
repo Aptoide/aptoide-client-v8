@@ -49,9 +49,11 @@ import rx.schedulers.Schedulers;
     this.packageName = packageName;
   }
 
-  @Provides @FragmentScope LoginSignUpCredentialsPresenter provideLoginSignUpPresenter(AptoideAccountManager accountManager, AccountNavigator accountNavigator,
-      AccountErrorMapper errorMapper, AccountAnalytics accountAnalytics){
-    return new LoginSignUpCredentialsPresenter((LoginSignUpCredentialsView) fragment, accountManager, CrashReport.getInstance(),
+  @Provides @FragmentScope LoginSignUpCredentialsPresenter provideLoginSignUpPresenter(
+      AptoideAccountManager accountManager, AccountNavigator accountNavigator,
+      AccountErrorMapper errorMapper, AccountAnalytics accountAnalytics) {
+    return new LoginSignUpCredentialsPresenter((LoginSignUpCredentialsView) fragment,
+        accountManager, CrashReport.getInstance(),
         arguments.getBoolean("dismiss_to_navigate_to_main_view"),
         arguments.getBoolean("clean_back_stack"), accountNavigator,
         Arrays.asList("email", "user_friends"), Arrays.asList("email"), errorMapper,
@@ -74,15 +76,15 @@ import rx.schedulers.Schedulers;
       ManageStoreErrorMapper manageStoreErrorMapper, AptoideAccountManager accountManager) {
     return new ManageStorePresenter((ManageStoreView) fragment, CrashReport.getInstance(),
         uriToPathResolver, packageName, manageStoreNavigator,
-        arguments.getBoolean("go_to_home", true), manageStoreErrorMapper,
-        accountManager,394587);
+        arguments.getBoolean("go_to_home", true), manageStoreErrorMapper, accountManager, 394587);
   }
 
-  @FragmentScope @Provides ManageUserPresenter provideManageUserPresenter(AptoideAccountManager accountManager, CreateUserErrorMapper errorMapper,
-      ManageUserNavigator manageUserNavigator, UriToPathResolver uriToPathResolver){
-    return new ManageUserPresenter((ManageUserView) fragment, CrashReport.getInstance(), accountManager, errorMapper, manageUserNavigator,
-        arguments.getBoolean("is_edit", false), uriToPathResolver, isCreateStoreUserPrivacyEnabled,
-        savedInstance == null);
+  @FragmentScope @Provides ManageUserPresenter provideManageUserPresenter(
+      AptoideAccountManager accountManager, CreateUserErrorMapper errorMapper,
+      ManageUserNavigator manageUserNavigator, UriToPathResolver uriToPathResolver) {
+    return new ManageUserPresenter((ManageUserView) fragment, CrashReport.getInstance(),
+        accountManager, errorMapper, manageUserNavigator, arguments.getBoolean("is_edit", false),
+        uriToPathResolver, isCreateStoreUserPrivacyEnabled, savedInstance == null);
   }
 
   @FragmentScope @Provides ImageValidator provideImageValidator() {
