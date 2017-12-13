@@ -471,7 +471,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("multipart") MultipartBodyInterceptor multipartBodyInterceptor,
       AndroidAccountProvider androidAccountProvider, GoogleApiClient googleApiClient,
       @Named("no-authentication-v3") BodyInterceptor<BaseBody> noAuthenticationBodyInterceptorV3,
-      ObjectMapper objectMapper, Converter.Factory converterFactory) {
+      ObjectMapper objectMapper, Converter.Factory converterFactory, StoreManager storeManager) {
     FacebookSdk.sdkInitialize(application);
     final AccountFactory accountFactory = new AccountFactory();
 
@@ -504,6 +504,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .registerSignUpAdapter(FacebookSignUpAdapter.TYPE,
             new FacebookSignUpAdapter(Arrays.asList("email"), LoginManager.getInstance(),
                 loginPreferences))
+        .setStoreManager(storeManager)
         .build();
   }
 
@@ -720,8 +721,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         defaultSharedPreferences, appEventsLogger, navigationTracker, CrashReport.getInstance());
   }
 
-  @Singleton @Provides StoreManager provideStoreManager(AptoideAccountManager accountManager,
-      @Named("default") OkHttpClient okHttpClient,
+  @Singleton @Provides StoreManager provideStoreManager(@Named("default") OkHttpClient okHttpClient,
       @Named("multipart") MultipartBodyInterceptor multipartBodyInterceptor,
       @Named("defaulInterceptorV3")
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
@@ -730,7 +730,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") SharedPreferences defaultSharedPreferences,
       TokenInvalidator tokenInvalidator, RequestBodyFactory requestBodyFactory,
       ObjectMapper nonNullObjectMapper) {
-    return new StoreManager(accountManager, okHttpClient, WebService.getDefaultConverter(),
+    return new StoreManager(okHttpClient, WebService.getDefaultConverter(),
         multipartBodyInterceptor, bodyInterceptorV3, accountSettingsBodyInterceptorPoolV7,
         defaultSharedPreferences, tokenInvalidator, requestBodyFactory, nonNullObjectMapper);
   }

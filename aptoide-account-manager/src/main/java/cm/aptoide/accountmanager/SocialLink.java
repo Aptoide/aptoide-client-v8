@@ -1,4 +1,4 @@
-package cm.aptoide.pt.account.view.store;
+package cm.aptoide.accountmanager;
 
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import org.parceler.Parcel;

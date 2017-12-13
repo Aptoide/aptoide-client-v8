@@ -17,7 +17,6 @@ import cm.aptoide.pt.account.view.store.ManageStoreErrorMapper;
 import cm.aptoide.pt.account.view.store.ManageStoreNavigator;
 import cm.aptoide.pt.account.view.store.ManageStorePresenter;
 import cm.aptoide.pt.account.view.store.ManageStoreView;
-import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.account.view.user.CreateUserErrorMapper;
 import cm.aptoide.pt.account.view.user.ManageUserNavigator;
 import cm.aptoide.pt.account.view.user.ManageUserPresenter;
@@ -37,22 +36,15 @@ import rx.schedulers.Schedulers;
 
   private final Fragment fragment;
   private final Bundle savedInstance;
-  private final boolean dismissToNavigateToMainView;
-  private final boolean navigateToHome;
-  private final boolean goToHome;
-  private final boolean isEditProfile;
+  private final Bundle arguments;
   private final boolean isCreateStoreUserPrivacyEnabled;
   private final String packageName;
 
-
-  public FragmentModule(Fragment fragment, Bundle savedInstance, boolean dismissToNavigateToMainView, boolean navigateToHome, boolean goToHome,
-      boolean isEditProfile, boolean isCreateStoreUserPrivacyEnabled, String packageName) {
+  public FragmentModule(Fragment fragment, Bundle savedInstance, Bundle arguments,
+      boolean isCreateStoreUserPrivacyEnabled, String packageName) {
     this.fragment = fragment;
     this.savedInstance = savedInstance;
-    this.dismissToNavigateToMainView = dismissToNavigateToMainView;
-    this.navigateToHome = navigateToHome;
-    this.goToHome = goToHome;
-    this.isEditProfile = isEditProfile;
+    this.arguments = arguments;
     this.isCreateStoreUserPrivacyEnabled = isCreateStoreUserPrivacyEnabled;
     this.packageName = packageName;
   }
@@ -60,7 +52,8 @@ import rx.schedulers.Schedulers;
   @Provides @FragmentScope LoginSignUpCredentialsPresenter provideLoginSignUpPresenter(AptoideAccountManager accountManager, AccountNavigator accountNavigator,
       AccountErrorMapper errorMapper, AccountAnalytics accountAnalytics){
     return new LoginSignUpCredentialsPresenter((LoginSignUpCredentialsView) fragment, accountManager, CrashReport.getInstance(),
-        dismissToNavigateToMainView, navigateToHome, accountNavigator,
+        arguments.getBoolean("dismiss_to_navigate_to_main_view"),
+        arguments.getBoolean("clean_back_stack"), accountNavigator,
         Arrays.asList("email", "user_friends"), Arrays.asList("email"), errorMapper,
         accountAnalytics);
   }
@@ -72,16 +65,20 @@ import rx.schedulers.Schedulers;
         fragment.getActivity().getContentResolver(), ImageLoader.with(fragment.getContext()));
   }
 
-  @FragmentScope @Provides ManageStorePresenter provideManageStorePresenter(StoreManager storeManager, UriToPathResolver uriToPathResolver,
-      ManageStoreNavigator manageStoreNavigator, ManageStoreErrorMapper manageStoreErrorMapper){
-    return new ManageStorePresenter((ManageStoreView) fragment, CrashReport.getInstance(), storeManager, uriToPathResolver,
-        packageName, manageStoreNavigator, goToHome, manageStoreErrorMapper);
+  @FragmentScope @Provides ManageStorePresenter provideManageStorePresenter(
+      UriToPathResolver uriToPathResolver, ManageStoreNavigator manageStoreNavigator,
+      ManageStoreErrorMapper manageStoreErrorMapper, AptoideAccountManager accountManager) {
+    return new ManageStorePresenter((ManageStoreView) fragment, CrashReport.getInstance(),
+        uriToPathResolver, packageName, manageStoreNavigator,
+        arguments.getBoolean("go_to_home", true), manageStoreErrorMapper,
+        accountManager,394587);
   }
 
   @FragmentScope @Provides ManageUserPresenter provideManageUserPresenter(AptoideAccountManager accountManager, CreateUserErrorMapper errorMapper,
       ManageUserNavigator manageUserNavigator, UriToPathResolver uriToPathResolver){
     return new ManageUserPresenter((ManageUserView) fragment, CrashReport.getInstance(), accountManager, errorMapper, manageUserNavigator,
-        isEditProfile, uriToPathResolver, isCreateStoreUserPrivacyEnabled, savedInstance == null);
+        arguments.getBoolean("is_edit", false), uriToPathResolver, isCreateStoreUserPrivacyEnabled,
+        savedInstance == null);
   }
 
   @FragmentScope @Provides ImageValidator provideImageValidator(){
