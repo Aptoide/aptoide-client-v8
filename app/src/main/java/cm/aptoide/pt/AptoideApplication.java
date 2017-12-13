@@ -212,9 +212,6 @@ public abstract class AptoideApplication extends Application {
   private TimelineRepositoryFactory timelineRepositoryFactory;
   private SpotAndShare spotAndShare;
   private SpotAndShareLocalUserManager spotAndShareUserManager;
-  private AuthenticationPersistence authenticationPersistence;
-  private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody>
-      noAuthorizationBodyInterceptorV3;
   private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
   private Map<Integer, Result> fragmentResulMap;
   private BillingPool billingPool;
