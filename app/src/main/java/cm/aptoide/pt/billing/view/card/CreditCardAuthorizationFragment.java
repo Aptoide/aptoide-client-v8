@@ -106,7 +106,7 @@ public class CreditCardAuthorizationFragment extends PermissionServiceFragment
 
     networkErrorDialog =
         new RxAlertDialog.Builder(getContext()).setMessage(R.string.connection_error)
-            .setPositiveButton(R.string.ok)
+            .setPositiveButton(R.string.settings_button_ok_option)
             .build();
 
     clickHandler = new ClickHandler() {
