@@ -36,7 +36,7 @@ public class MockActivityModule extends ActivityModule {
           imageUri = "content://media/external/images/media/118";
         }
         else if (TestType.types.equals(TestType.TestTypes.PHOTOMAX)){
-          imageUri = "content://media/external/images/media/1344";
+          imageUri = "content://media/external/images/media/1364";
         }
         Uri uri = Uri.parse(imageUri);
         return Observable.just(uri);

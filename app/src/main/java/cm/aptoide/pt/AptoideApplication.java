@@ -14,6 +14,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
+import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
@@ -85,6 +86,7 @@ import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
+import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.social.TimelineRepositoryFactory;
@@ -218,6 +220,7 @@ public abstract class AptoideApplication extends Application {
   private PurchaseFactory purchaseFactory;
   private SparseArray<InstallManager> installManagers;
   private ApplicationComponent applicationComponent;
+  private ActivityComponent activityComponent;
   private AppCenter appCenter;
   private ReadPostsPersistence readPostsPersistence;
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
@@ -375,6 +378,20 @@ public abstract class AptoideApplication extends Application {
           .build();
     }
     return applicationComponent;
+  }
+
+  public ActivityComponent getActivityComponent(AppCompatActivity appCompatActivity, boolean firstCreated){
+    if (activityComponent == null) {
+      activityComponent = getApplicationComponent()
+          .plus(new ActivityModule(appCompatActivity, appCompatActivity.getIntent(), getNotificationSyncScheduler(), getMarketName(),
+              getAutoUpdateUrl(), (View) appCompatActivity, getDefaultThemeName(), getDefaultStoreName(), firstCreated,
+              BuildConfig.APPLICATION_ID + ".provider"));
+    }
+    return activityComponent;
+  }
+
+  public void destroyActivityComponent(){
+    activityComponent = null;
   }
 
   @Override protected void attachBaseContext(Context base) {
