@@ -355,7 +355,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     final AptoideAccountManager accountManager = application.getAccountManager();
     accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
 
-    installManager = application.getRollbackInstallManager();
+    installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
     final BodyInterceptor<BaseBody> bodyInterceptor =
         application.getAccountSettingsBodyInterceptorPoolV7();
     billingAnalytics = application.getBillingAnalytics();

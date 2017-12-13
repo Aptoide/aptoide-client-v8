@@ -469,6 +469,10 @@ public abstract class AptoideApplication extends Application {
     return notificationProvider;
   }
 
+  public StoreManager getStoreManager() {
+    return storeManager;
+  }
+
   public abstract NotificationSyncScheduler getNotificationSyncScheduler();
 
   public SharedPreferences getDefaultSharedPreferences() {
