@@ -46,9 +46,8 @@ public class ScheduledDownloadWidget extends Widget<ScheduledDownloadDisplayable
   }
 
   @Override public void bindView(ScheduledDownloadDisplayable displayable) {
-    installManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
-            InstallerFactory.ROLLBACK);
+    installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
+        InstallerFactory.ROLLBACK);
     Scheduled scheduled = displayable.getPojo();
     final FragmentActivity context = getContext();
     ImageLoader.with(context)

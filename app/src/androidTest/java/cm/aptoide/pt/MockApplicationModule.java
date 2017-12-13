@@ -209,35 +209,41 @@ public class MockApplicationModule extends ApplicationModule {
     return new AptoideAccountManager.Builder().setAccountPersistence(accountPersistence)
         .setAccountService(accountService)
         .registerSignUpAdapter(GoogleSignUpAdapter.TYPE,
-            new GoogleSignUpAdapter(googleApiClient, loginPreferences){
-          @Override public Single<Account>signUp(GoogleSignInResult result, AccountService service){
-            return Single.just(account);
-          }
-          @Override public Completable logout(){
-            return Completable.complete();
-          }
-          @Override public boolean isEnabled(){
-            return true;
-          }
+            new GoogleSignUpAdapter(googleApiClient, loginPreferences) {
+              @Override
+              public Single<Account> signUp(GoogleSignInResult result, AccountService service) {
+                return Single.just(account);
+              }
+
+              @Override public Completable logout() {
+                return Completable.complete();
+              }
+
+              @Override public boolean isEnabled() {
+                return true;
+              }
             })
         .registerSignUpAdapter(FacebookSignUpAdapter.TYPE,
             new FacebookSignUpAdapter(Arrays.asList("email"), LoginManager.getInstance(),
-                loginPreferences){
-              @Override public Single<Account>signUp(FacebookLoginResult result, AccountService service){
+                loginPreferences) {
+              @Override
+              public Single<Account> signUp(FacebookLoginResult result, AccountService service) {
                 return Single.just(account);
               }
-              @Override public Completable logout(){
+
+              @Override public Completable logout() {
                 return Completable.complete();
               }
-              @Override public boolean isEnabled(){
+
+              @Override public boolean isEnabled() {
                 return true;
               }
             })
         .build();
   }
 
-  @Override StoreManager provideStoreManager(
-      AptoideAccountManager accountManager, @Named("default") OkHttpClient okHttpClient,
+  @Override StoreManager provideStoreManager(AptoideAccountManager accountManager,
+      @Named("default") OkHttpClient okHttpClient,
       @Named("multipart") MultipartBodyInterceptor multipartBodyInterceptor,
       @Named("defaulInterceptorV3")
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,

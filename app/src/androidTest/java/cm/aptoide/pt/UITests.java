@@ -31,9 +31,8 @@ public class UITests {
     onView(withId(R.id.skip_text)).perform(click());
   }
 
-  protected static void goToSettings(){
+  protected static void goToSettings() {
     onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
     onView(withText(R.string.drawer_title_settings)).perform(click());
   }
-
 }
