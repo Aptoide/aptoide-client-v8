@@ -1,6 +1,5 @@
-package cm.aptoide.pt.search;
+package cm.aptoide.pt.search.suggestions;
 
-import cm.aptoide.pt.search.suggestions.TrendingService;
 import java.util.List;
 import rx.Single;
 
@@ -10,6 +9,7 @@ import rx.Single;
 
 public class TrendingManager {
   private static final int SUGGESTION_COUNT = 5;
+  private static final int SUGGESTION_STORE_ID = 15;
   private final TrendingService trendingService;
 
   public TrendingManager(TrendingService trendingService) {
@@ -17,12 +17,12 @@ public class TrendingManager {
   }
 
   public Single<List<String>> getTrendingSuggestions() {
-    return trendingService.getTrendingApps(SUGGESTION_COUNT)
+    return trendingService.getTrendingApps(SUGGESTION_COUNT, SUGGESTION_STORE_ID)
         .map(response -> response.getDataList()
             .getList())
-        .flatMapIterable(list -> list)    // Transform list, element by element
+        .flatMapIterable(list -> list)
         .map(app -> app.getName())
-        .toList()                         // Elements' names back to a list
+        .toList()
         .first()
         .toSingle();
   }

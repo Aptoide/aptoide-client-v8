@@ -10,21 +10,35 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
-public class SearchCursorAdapter extends CursorAdapter {
+public class SuggestionCursorAdapter extends CursorAdapter {
 
   private static final int ITEM_LAYOUT = R.layout.simple_dropdown_item;
   private static final String[] COLUMN_NAMES = {
       "_id", android.app.SearchManager.SUGGEST_COLUMN_TEXT_1
   };
 
-  public SearchCursorAdapter(Context context) {
+  private final List<String> suggestions;
+
+  public SuggestionCursorAdapter(Context context, List<String> initialSuggestions) {
     super(context, null, false);
+    this.suggestions = new LinkedList<>();
+    if (initialSuggestions != null && !initialSuggestions.isEmpty()) {
+      setData(initialSuggestions);
+    }
   }
 
-  public void setData(@NonNull List<String> data) {
-    swapCursor(getCursorFor(data));
+  public SuggestionCursorAdapter(Context context) {
+    this(context, Collections.emptyList());
+  }
+
+  public void setData(@NonNull List<String> newSuggestions) {
+    suggestions.clear();
+    suggestions.addAll(newSuggestions);
+    swapCursor(getCursorFor(suggestions));
   }
 
   @NonNull private MatrixCursor getCursorFor(@NonNull List<String> data) {
@@ -45,18 +59,22 @@ public class SearchCursorAdapter extends CursorAdapter {
 
   @Override public void bindView(View view, Context context, Cursor cursor) {
     TextView textView = (TextView) view.findViewById(R.id.dropdown_text);
-    textView.setText(getQueryAtCurrentPosition(cursor));
+    textView.setText(getSuggestionAtCurrentPosition(cursor));
   }
 
-  public CharSequence getQueryAt(int position) {
+  public List<String> getSuggestions() {
+    return suggestions;
+  }
+
+  public CharSequence getSuggestionAt(int position) {
     final Cursor cursor = getCursor();
     if (cursor.moveToPosition(position)) {
-      return getQueryAtCurrentPosition(cursor);
+      return getSuggestionAtCurrentPosition(cursor);
     }
     throw new UnsupportedOperationException("Unable to find query at position " + position);
   }
 
-  private String getQueryAtCurrentPosition(Cursor cursor) {
+  private String getSuggestionAtCurrentPosition(Cursor cursor) {
     return cursor.getString(cursor.getColumnIndex(android.app.SearchManager.SUGGEST_COLUMN_TEXT_1));
   }
 }

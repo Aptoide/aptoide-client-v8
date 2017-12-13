@@ -35,7 +35,6 @@ import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.crashreports.IssuesAnalytics;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
@@ -45,11 +44,10 @@ import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.presenter.CompositePresenter;
-import cm.aptoide.pt.search.SearchCursorAdapter;
-import cm.aptoide.pt.search.SearchFactory;
+import cm.aptoide.pt.search.SuggestionCursorAdapter;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
-import cm.aptoide.pt.search.TrendingManager;
+import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
@@ -538,7 +536,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
             mainThreadScheduler, searchManager, onAdClickRelay, onItemViewClickRelay,
             onOpenPopupMenuClickRelay, isMultiStoreSearch, defaultThemeName, defaultStoreName);
 
-    final SearchCursorAdapter searchCursorAdapter = new SearchCursorAdapter(getContext());
+    final SuggestionCursorAdapter suggestionCursorAdapter = new SuggestionCursorAdapter(getContext());
 
     final Observable<MenuItem> toolbarMenuItemClick = RxToolbar.itemClicks(toolbar)
         .publish()
@@ -547,12 +545,12 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
     if (viewModel != null) {
       appSearchSuggestionsView =
           new AppSearchSuggestionsView(this, RxView.clicks(toolbar), crashReport,
-              viewModel.getCurrentQuery(), searchCursorAdapter, PublishSubject.create(),
+              viewModel.getCurrentQuery(), suggestionCursorAdapter, PublishSubject.create(),
               toolbarMenuItemClick, searchAnalytics);
     } else {
       appSearchSuggestionsView =
           new AppSearchSuggestionsView(this, RxView.clicks(toolbar), crashReport,
-              searchCursorAdapter, PublishSubject.create(), toolbarMenuItemClick, searchAnalytics);
+              suggestionCursorAdapter, PublishSubject.create(), toolbarMenuItemClick, searchAnalytics);
     }
 
     final AptoideApplication application =
@@ -560,9 +558,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
 
     final SearchSuggestionsPresenter searchSuggestionsPresenter =
         new SearchSuggestionsPresenter(appSearchSuggestionsView,
-            new SearchFactory(application.getDefaultWebSocketClient(),
-                application.getNonNullObjectMapper()).createSearchForApps(), mainThreadScheduler,
-            searchCursorAdapter, crashReport, trendingManager, searchNavigator, true,
+            application.getSearchSuggestionManager(), mainThreadScheduler, suggestionCursorAdapter, crashReport, trendingManager, searchNavigator, true,
             searchAnalytics);
 
     attachPresenter(

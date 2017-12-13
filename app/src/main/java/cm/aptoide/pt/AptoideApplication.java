@@ -87,7 +87,8 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.root.RootAvailabilityManager;
-import cm.aptoide.pt.search.TrendingManager;
+import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
+import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.social.TimelineRepositoryFactory;
 import cm.aptoide.pt.social.data.ReadPostsPersistence;
 import cm.aptoide.pt.social.data.TimelinePostsRepository;
@@ -226,6 +227,7 @@ public abstract class AptoideApplication extends Application {
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
   private NotificationsCleaner notificationsCleaner;
   private NotificationAnalytics notificationAnalytics;
+  @Inject SearchSuggestionManager searchSuggestionManager;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -1009,6 +1011,10 @@ public abstract class AptoideApplication extends Application {
 
   public IdsRepository getIdsRepository() {
     return idsRepository;
+  }
+
+  public SearchSuggestionManager getSearchSuggestionManager() {
+    return searchSuggestionManager;
   }
 }
 

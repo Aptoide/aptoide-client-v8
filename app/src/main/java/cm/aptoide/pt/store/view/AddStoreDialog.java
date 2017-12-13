@@ -30,8 +30,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.search.SearchCursorAdapter;
-import cm.aptoide.pt.search.SearchFactory;
+import cm.aptoide.pt.search.SuggestionCursorAdapter;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
@@ -44,12 +43,13 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.dialog.BaseDialog;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
-import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
+import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -122,8 +122,7 @@ public class AddStoreDialog extends BaseDialog {
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    searchSuggestionManager = new SearchFactory(application.getDefaultWebSocketClient(),
-        application.getNonNullObjectMapper()).createSearchForStore();
+    searchSuggestionManager = application.getSearchSuggestionManager();
   }
 
   @Override public void onViewCreated(final View view, Bundle savedInstanceState) {
@@ -224,43 +223,55 @@ public class AddStoreDialog extends BaseDialog {
   }
 
   private void setupSearch() {
-    final SearchCursorAdapter searchCursorAdapter = new SearchCursorAdapter(getContext());
-    searchView.setSuggestionsAdapter(searchCursorAdapter);
+    final SuggestionCursorAdapter suggestionCursorAdapter = new SuggestionCursorAdapter(getContext());
+    searchView.setSuggestionsAdapter(suggestionCursorAdapter);
 
-    AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) searchView.findViewById(
-        android.support.v7.appcompat.R.id.search_src_text);
+    final AutoCompleteTextView autoCompleteTextView =
+        (AutoCompleteTextView) searchView.findViewById(
+            android.support.v7.appcompat.R.id.search_src_text);
     autoCompleteTextView.setThreshold(COMPLETION_THRESHOLD);
 
-    subscriptions.add(RxSearchView.queryTextChangeEvents(searchView)
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(event -> handleQueryEvent(event, searchCursorAdapter))
-        .subscribe());
+    handleEmptyQuery(suggestionCursorAdapter);
+    handleSubmittedQuery();
+    handleStoreRemoteQuery(suggestionCursorAdapter);
+  }
 
-    subscriptions.add(searchSuggestionManager.listenForSuggestions()
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(data -> searchCursorAdapter.setData(data))
+  private void handleStoreRemoteQuery(SuggestionCursorAdapter suggestionCursorAdapter) {
+    subscriptions.add(RxSearchView.queryTextChangeEvents(searchView)
+        .filter(event -> !event.isSubmitted())
+        .map(event -> event.queryText()
+            .toString())
+        .filter(query -> query.length() >= COMPLETION_THRESHOLD)
+        .flatMapSingle(query -> searchSuggestionManager.getSuggestionsForStore(query)
+            .onErrorResumeNext(err -> {
+              if (err instanceof TimeoutException) {
+                Logger.i(TAG, "Timeout reached while waiting for store suggestions");
+                return Single.just(suggestionCursorAdapter.getSuggestions());
+              }
+              return Single.error(err);
+            })
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSuccess(data -> suggestionCursorAdapter.setData(data)))
         .subscribe());
   }
 
-  private void handleQueryEvent(SearchViewQueryTextEvent event,
-      SearchCursorAdapter searchCursorAdapter) {
-    if (event.queryText()
-        .length() == 0) {
-      searchCursorAdapter.setData(Collections.emptyList());
-      return;
-    }
+  private void handleSubmittedQuery() {
+    subscriptions.add(RxSearchView.queryTextChangeEvents(searchView)
+        .observeOn(AndroidSchedulers.mainThread())
+        .filter(event -> event.isSubmitted())
+        .map(event -> event.queryText()
+            .toString())
+        .doOnNext(query -> addStoreAction(query))
+        .subscribe());
+  }
 
-    final String query = event.queryText()
-        .toString();
-
-    if (event.isSubmitted()) {
-      addStoreAction(query);
-      return;
-    }
-
-    if (query.length() >= COMPLETION_THRESHOLD) {
-      searchSuggestionManager.getSuggestionsFor(query);
-    }
+  private void handleEmptyQuery(SuggestionCursorAdapter suggestionCursorAdapter) {
+    subscriptions.add(RxSearchView.queryTextChangeEvents(searchView)
+        .observeOn(AndroidSchedulers.mainThread())
+        .filter(event -> event.queryText()
+            .length() == 0)
+        .doOnNext(__ -> suggestionCursorAdapter.setData(Collections.emptyList()))
+        .subscribe());
   }
 
   private void getStore(String storeName) {

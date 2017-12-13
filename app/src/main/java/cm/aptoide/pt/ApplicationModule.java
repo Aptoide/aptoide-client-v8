@@ -109,7 +109,10 @@ import cm.aptoide.pt.repository.DownloadRepository;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootValueSaver;
-import cm.aptoide.pt.search.TrendingManager;
+import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
+import cm.aptoide.pt.search.suggestions.SearchSuggestionRemoteRepository;
+import cm.aptoide.pt.search.suggestions.SearchSuggestionService;
+import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.suggestions.TrendingService;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
@@ -163,7 +166,10 @@ import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.CallAdapter;
 import retrofit2.Converter;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import rx.Completable;
 import rx.Single;
 import rx.schedulers.Schedulers;
@@ -789,5 +795,34 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptor) {
     return new TrendingService(storeCredentialsProvider, bodyInterceptor, httpClient,
         converterFactory, tokenInvalidator, sharedPreferences);
+  }
+
+  @Singleton @Provides @Named("ws-prod-base-url") String providesBaseWebServiceTestsUrl() {
+    return "http://ws.aptoide.com";
+  }
+
+  @Singleton @Provides @Named("rx") CallAdapter.Factory providesCallAdapterFactory() {
+    return RxJavaCallAdapterFactory.create();
+  }
+
+  @Singleton @Provides SearchSuggestionManager providesSearchSuggestionManager(
+      SearchSuggestionRemoteRepository remoteRepository) {
+    return new SearchSuggestionManager(new SearchSuggestionService(remoteRepository),
+        Schedulers.io());
+  }
+
+  @Singleton @Provides Retrofit providesDefaultRetrofit(@Named("ws-prod-base-url") String baseUrl,
+      @Named("default") OkHttpClient httpClient, Converter.Factory converterFactory,
+      @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
+    return new Retrofit.Builder().baseUrl(baseUrl)
+        .client(httpClient)
+        .addConverterFactory(converterFactory)
+        .addCallAdapterFactory(rxCallAdapterFactory)
+        .build();
+  }
+
+  @Singleton @Provides SearchSuggestionRemoteRepository providesSearchSuggestionRemoteRepository(
+      Retrofit retrofit) {
+    return retrofit.create(SearchSuggestionRemoteRepository.class);
   }
 }

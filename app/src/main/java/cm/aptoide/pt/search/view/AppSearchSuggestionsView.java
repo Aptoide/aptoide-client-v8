@@ -6,7 +6,7 @@ import android.view.MenuItem;
 import android.widget.AutoCompleteTextView;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
-import cm.aptoide.pt.search.SearchCursorAdapter;
+import cm.aptoide.pt.search.SuggestionCursorAdapter;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.analytics.SearchSource;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
@@ -25,7 +25,7 @@ public class AppSearchSuggestionsView implements SearchSuggestionsView {
   private final Observable<Void> toolbarClickObservable;
   private final CrashReport crashReport;
   private final String currentQuery;
-  private final SearchCursorAdapter searchCursorAdapter;
+  private final SuggestionCursorAdapter suggestionCursorAdapter;
   private final PublishSubject<SearchQueryEvent> queryTextChangedPublisher;
   private final SearchAnalytics searchAnalytics;
   private SearchView searchView;
@@ -33,22 +33,22 @@ public class AppSearchSuggestionsView implements SearchSuggestionsView {
   private Observable<MenuItem> toolbarMenuItemClick;
 
   public AppSearchSuggestionsView(FragmentView parentView, Observable<Void> toolbarClickObservable,
-      CrashReport crashReport, SearchCursorAdapter searchCursorAdapter,
+      CrashReport crashReport, SuggestionCursorAdapter suggestionCursorAdapter,
       PublishSubject<SearchQueryEvent> queryTextChangedPublisher,
       Observable<MenuItem> toolbarMenuItemClick, SearchAnalytics searchAnalytics) {
-    this(parentView, toolbarClickObservable, crashReport, "", searchCursorAdapter,
+    this(parentView, toolbarClickObservable, crashReport, "", suggestionCursorAdapter,
         queryTextChangedPublisher, toolbarMenuItemClick, searchAnalytics);
   }
 
   public AppSearchSuggestionsView(FragmentView parentView, Observable<Void> toolbarClickObservable,
-      CrashReport crashReport, String currentQuery, SearchCursorAdapter searchCursorAdapter,
+      CrashReport crashReport, String currentQuery, SuggestionCursorAdapter suggestionCursorAdapter,
       PublishSubject<SearchQueryEvent> queryTextChangedPublisher,
       Observable<MenuItem> toolbarMenuItemClick, SearchAnalytics searchAnalytics) {
     this.parentView = parentView;
     this.toolbarClickObservable = toolbarClickObservable;
     this.crashReport = crashReport;
     this.currentQuery = currentQuery;
-    this.searchCursorAdapter = searchCursorAdapter;
+    this.suggestionCursorAdapter = suggestionCursorAdapter;
     this.queryTextChangedPublisher = queryTextChangedPublisher;
     this.toolbarMenuItemClick = toolbarMenuItemClick;
     this.searchAnalytics = searchAnalytics;
@@ -57,7 +57,7 @@ public class AppSearchSuggestionsView implements SearchSuggestionsView {
   public void initialize(@NonNull MenuItem searchMenuItem) {
     this.searchMenuItem = searchMenuItem;
     searchView = (SearchView) searchMenuItem.getActionView();
-    searchView.setSuggestionsAdapter(searchCursorAdapter);
+    searchView.setSuggestionsAdapter(suggestionCursorAdapter);
     searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
       @Override public boolean onSuggestionSelect(int position) {
         return false;
@@ -65,7 +65,7 @@ public class AppSearchSuggestionsView implements SearchSuggestionsView {
 
       @Override public boolean onSuggestionClick(int position) {
         queryTextChangedPublisher.onNext(new SearchQueryEvent(
-            searchCursorAdapter.getQueryAt(position)
+            suggestionCursorAdapter.getSuggestionAt(position)
                 .toString(), position, true, true));
         return true;
       }
@@ -132,7 +132,7 @@ public class AppSearchSuggestionsView implements SearchSuggestionsView {
   }
 
   @Override public void setTrending(List<String> trending) {
-    searchCursorAdapter.setData(trending);
+    suggestionCursorAdapter.setData(trending);
   }
 
   @NonNull @Override

@@ -46,11 +46,10 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.search.SearchCursorAdapter;
-import cm.aptoide.pt.search.SearchFactory;
+import cm.aptoide.pt.search.SuggestionCursorAdapter;
 import cm.aptoide.pt.search.SearchNavigator;
-import cm.aptoide.pt.search.TrendingManager;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
+import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.view.AppSearchSuggestionsView;
 import cm.aptoide.pt.search.view.SearchSuggestionsPresenter;
 import cm.aptoide.pt.share.ShareStoreHelper;
@@ -359,7 +358,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    final SearchCursorAdapter searchCursorAdapter = new SearchCursorAdapter(getContext());
+    final SuggestionCursorAdapter suggestionCursorAdapter = new SuggestionCursorAdapter(getContext());
 
     if (hasSearchFromStoreFragment()) {
       final Toolbar toolbar = getToolbar();
@@ -369,17 +368,16 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
       appSearchSuggestionsView =
           new AppSearchSuggestionsView(this, RxView.clicks(toolbar), crashReport,
-              searchCursorAdapter, PublishSubject.create(), toolbarMenuItemClick, searchAnalytics);
+              suggestionCursorAdapter, PublishSubject.create(), toolbarMenuItemClick, searchAnalytics);
 
       final AptoideApplication application =
           (AptoideApplication) getContext().getApplicationContext();
 
       final SearchSuggestionsPresenter searchSuggestionsPresenter =
           new SearchSuggestionsPresenter(appSearchSuggestionsView,
-              new SearchFactory(application.getDefaultWebSocketClient(),
-                  application.getNonNullObjectMapper()).createSearchForApps(),
-              AndroidSchedulers.mainThread(), searchCursorAdapter, crashReport, trendingManager,
-              searchNavigator, false, searchAnalytics);
+              application.getSearchSuggestionManager(), AndroidSchedulers.mainThread(),
+              suggestionCursorAdapter, crashReport, trendingManager, searchNavigator, false,
+              searchAnalytics);
 
       attachPresenter(searchSuggestionsPresenter);
 

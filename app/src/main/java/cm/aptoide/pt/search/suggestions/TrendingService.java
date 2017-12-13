@@ -28,7 +28,6 @@ public class TrendingService {
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences){
-
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
@@ -37,11 +36,11 @@ public class TrendingService {
     this.sharedPreferences = sharedPreferences;
   }
 
-  public Observable<ListApps> getTrendingApps(int limit){
+  public Observable<ListApps> getTrendingApps(int limit, int storeId){
     ListAppsRequest.Body body =
-        new ListAppsRequest.Body(storeCredentialsProvider.get(15), limit, sharedPreferences,
+        new ListAppsRequest.Body(storeCredentialsProvider.get(storeId), limit, sharedPreferences,
             ListAppsRequest.Sort.trending30d);
-    body.setStoreId(15);
+    body.setStoreId(storeId);
     return new ListAppsRequest(body, bodyInterceptor, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences).observe(false);
   }

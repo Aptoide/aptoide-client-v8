@@ -2,40 +2,45 @@ package cm.aptoide.pt.search.view;
 
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.search.SearchCursorAdapter;
 import cm.aptoide.pt.search.SearchNavigator;
-import cm.aptoide.pt.search.TrendingManager;
+import cm.aptoide.pt.search.SuggestionCursorAdapter;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
+import cm.aptoide.pt.search.suggestions.TrendingManager;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import rx.Observable;
 import rx.Scheduler;
+import rx.Single;
 
 @SuppressWarnings("Convert2MethodRef") public class SearchSuggestionsPresenter
     implements Presenter {
 
+  private static final String TAG = SearchSuggestionsPresenter.class.getName();
+
   private final SearchSuggestionsView view;
   private final SearchSuggestionManager searchSuggestionManager;
   private final Scheduler viewScheduler;
-  private final SearchCursorAdapter searchCursorAdapter;
+  private final SuggestionCursorAdapter suggestionCursorAdapter;
   private final CrashReport crashReport;
   private final TrendingManager trendingManager;
   private final SearchNavigator navigator;
-  private boolean showSuggestionsOnFirstLoadWithEmptyQuery;
   private final SearchAnalytics searchAnalytics;
+  private boolean showSuggestionsOnFirstLoadWithEmptyQuery;
 
   public SearchSuggestionsPresenter(SearchSuggestionsView view,
       SearchSuggestionManager searchSuggestionManager, Scheduler viewScheduler,
-      SearchCursorAdapter searchCursorAdapter, CrashReport crashReport,
+      SuggestionCursorAdapter suggestionCursorAdapter, CrashReport crashReport,
       TrendingManager trendingManager, SearchNavigator navigator,
       boolean showSuggestionsOnFirstLoadWithEmptyQuery, SearchAnalytics searchAnalytics) {
     this.view = view;
     this.searchSuggestionManager = searchSuggestionManager;
     this.viewScheduler = viewScheduler;
-    this.searchCursorAdapter = searchCursorAdapter;
+    this.suggestionCursorAdapter = suggestionCursorAdapter;
     this.crashReport = crashReport;
     this.trendingManager = trendingManager;
     this.navigator = navigator;
@@ -44,24 +49,12 @@ import rx.Scheduler;
   }
 
   @Override public void present() {
-    handleReceivedSuggestions();
     handleQueryTextSubmitted();
     handleQueryTextCleaned();
     handleQueryTextChanged();
     if (showSuggestionsOnFirstLoadWithEmptyQuery) {
       showSuggestionsIfCurrentQueryIsEmpty();
     }
-  }
-
-  private void handleReceivedSuggestions() {
-    view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> searchSuggestionManager.listenForSuggestions())
-        .observeOn(viewScheduler)
-        .doOnNext(data -> searchCursorAdapter.setData(data))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, e -> crashReport.log(e));
   }
 
   private void handleQueryTextSubmitted() {
@@ -75,7 +68,7 @@ import rx.Scheduler;
         .doOnNext(data -> {
           if (data.isSuggestion()) {
             searchAnalytics.searchFromSuggestion(data.getQuery(), data.getPosition());
-          }else{
+          } else {
             searchAnalytics.search(data.getQuery());
           }
         })
@@ -107,8 +100,18 @@ import rx.Scheduler;
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> getDebouncedQueryChanges())
         .filter(data -> data.hasQuery() && !data.isSubmitted())
-        .doOnNext(data -> searchSuggestionManager.getSuggestionsFor(data.getQuery()
-            .toString()))
+        .map(data -> data.getQuery()
+            .toString())
+        .flatMapSingle(query -> searchSuggestionManager.getSuggestionsForApp(query)
+            .onErrorResumeNext(err -> {
+              if (err instanceof TimeoutException) {
+                Logger.i(TAG, "Timeout reached while waiting for application suggestions");
+                return Single.just(suggestionCursorAdapter.getSuggestions());
+              }
+              return Single.error(err);
+            })
+            .observeOn(viewScheduler)
+            .doOnSuccess(queryResults -> suggestionCursorAdapter.setData(queryResults)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));

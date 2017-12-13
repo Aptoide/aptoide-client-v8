@@ -40,13 +40,12 @@ import cm.aptoide.pt.navigator.TabNavigation;
 import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.repository.RepositoryFactory;
-import cm.aptoide.pt.search.analytics.SearchAnalytics;
-import cm.aptoide.pt.search.SearchCursorAdapter;
-import cm.aptoide.pt.search.SearchFactory;
+import cm.aptoide.pt.search.SuggestionCursorAdapter;
 import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.analytics.SearchAnalytics;
+import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.view.AppSearchSuggestionsView;
 import cm.aptoide.pt.search.view.SearchSuggestionsPresenter;
-import cm.aptoide.pt.search.TrendingManager;
 import cm.aptoide.pt.spotandshare.view.SpotSharePreviewActivity;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.view.StoreFragment;
@@ -315,7 +314,7 @@ public class HomeFragment extends StoreFragment {
     };
     registerClickHandler(backClickHandler);
 
-    final SearchCursorAdapter searchCursorAdapter = new SearchCursorAdapter(getContext());
+    final SuggestionCursorAdapter suggestionCursorAdapter = new SuggestionCursorAdapter(getContext());
 
     final Toolbar toolbar = getToolbar();
     final Observable<MenuItem> toolbarMenuItemClick = RxToolbar.itemClicks(toolbar)
@@ -324,17 +323,17 @@ public class HomeFragment extends StoreFragment {
 
     appSearchSuggestionsView =
         new AppSearchSuggestionsView(this, RxView.clicks(toolbar), crashReport,
-            searchCursorAdapter, PublishSubject.create(), toolbarMenuItemClick, searchAnalytics);
+            suggestionCursorAdapter,
+            PublishSubject.create(), toolbarMenuItemClick, searchAnalytics);
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
 
     final SearchSuggestionsPresenter searchSuggestionsPresenter =
         new SearchSuggestionsPresenter(appSearchSuggestionsView,
-            new SearchFactory(application.getDefaultWebSocketClient(),
-                application.getNonNullObjectMapper()).createSearchForApps(),
-            AndroidSchedulers.mainThread(), searchCursorAdapter, crashReport, trendingManager,
-            searchNavigator, false, searchAnalytics);
+            application.getSearchSuggestionManager(), AndroidSchedulers.mainThread(),
+            suggestionCursorAdapter, crashReport, trendingManager, searchNavigator, false,
+            searchAnalytics);
 
     attachPresenter(searchSuggestionsPresenter);
   }

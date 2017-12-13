@@ -42,7 +42,6 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.preferences.PartnersSecurePreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.search.SearchCursorAdapter;
-import cm.aptoide.pt.search.SearchFactory;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.view.AppSearchSuggestions;
 import cm.aptoide.pt.search.view.SearchSuggestionsPresenter;

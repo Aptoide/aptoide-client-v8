@@ -1,98 +1,41 @@
 package cm.aptoide.pt.search.suggestions;
 
-import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.search.websocket.ReactiveWebSocket;
-import cm.aptoide.pt.search.websocket.SocketEvent;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
-import rx.Observable;
+import java.util.concurrent.TimeUnit;
+import rx.Scheduler;
+import rx.Single;
 
 public class SearchSuggestionManager {
 
-  private static final int SUGGESTION_COUNT = 5;
-  private final ObjectMapper objectMapper;
-  private final ReactiveWebSocket webSocket;
-  private final CrashReport crashReport;
+  private final SearchSuggestionService service;
+  private final Scheduler ioScheduler;
+  private final int timeout;
+  private final TimeUnit timeoutTimeUnit;
 
-  public SearchSuggestionManager(ObjectMapper objectMapper, ReactiveWebSocket webSocket,
-      CrashReport crashReport) {
-    this.objectMapper = objectMapper;
-    this.webSocket = webSocket;
-    this.crashReport = crashReport;
+  public SearchSuggestionManager(SearchSuggestionService service, Scheduler ioScheduler) {
+    this.service = service;
+    this.ioScheduler = ioScheduler;
+    this.timeout = 10;
+    this.timeoutTimeUnit = TimeUnit.SECONDS;
   }
 
-  public void getSuggestionsFor(String query) {
-    if (webSocket != null) {
-      webSocket.send(buildPayload(query));
-    }
+  public SearchSuggestionManager(SearchSuggestionService service, int timeout,
+      TimeUnit timeoutTimeUnit, Scheduler ioScheduler) {
+    this.service = service;
+    this.ioScheduler = ioScheduler;
+    this.timeout = timeout;
+    this.timeoutTimeUnit = timeoutTimeUnit;
   }
 
-  private String buildPayload(String query) {
-    try {
-      return objectMapper.writeValueAsString(new Query(query, SUGGESTION_COUNT));
-    } catch (JsonProcessingException e) {
-      e.printStackTrace();
-    }
-    return "";
+  public Single<List<String>> getSuggestionsForApp(String query) {
+    return service.getAppSuggestionsForQuery(query)
+        .timeout(timeout, timeoutTimeUnit)
+        .subscribeOn(ioScheduler);
   }
 
-  private Observable<List<String>> listenWebSocket() {
-    return webSocket.listen()
-        .flatMap(event -> {
-          if (event.getStatus() == SocketEvent.Status.FAILURE) {
-            return Observable.error(new SearchSuggestionException("Socket failure"));
-          }
-
-          return Observable.just(event);
-        })
-        .filter(event -> event.getStatus() == SocketEvent.Status.MESSAGE)
-        .filter(event -> event.hasData())
-        .flatMap(event -> {
-          try {
-            return Observable.just(getSuggestionsFrom(event.getData()));
-          } catch (IOException e) {
-            return Observable.error(new SearchSuggestionException(e));
-          }
-        });
-  }
-
-  public Observable<List<String>> listenForSuggestions() {
-    return listenWebSocket().doOnError(throwable -> {
-      if (SearchSuggestionException.class.isAssignableFrom(throwable.getClass())) {
-        crashReport.log(throwable);
-      }
-    })
-        .retry((retryCount, throwable) -> {
-          if (SearchSuggestionException.class.isAssignableFrom(throwable.getClass())) {
-            return true;
-          }
-          return false;
-        })
-        .filter(data -> data != null && data.size() > 0);
-  }
-
-  private List<String> getSuggestionsFrom(byte[] data) throws IOException {
-    return Arrays.asList(objectMapper.readValue(data, String[].class));
-  }
-
-  private static final class Query {
-    private final String query;
-    private final int limit;
-
-    private Query(String query, int limit) {
-      this.query = query;
-      this.limit = limit;
-    }
-
-    public String getQuery() {
-      return query;
-    }
-
-    public int getLimit() {
-      return limit;
-    }
+  public Single<List<String>> getSuggestionsForStore(String query) {
+    return service.getStoreSuggestionsForQuery(query)
+        .timeout(timeout, timeoutTimeUnit)
+        .subscribeOn(ioScheduler);
   }
 }
