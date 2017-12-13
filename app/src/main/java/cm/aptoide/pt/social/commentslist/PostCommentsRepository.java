@@ -27,6 +27,7 @@ class PostCommentsRepository {
   private final SharedPreferences sharedPreferences;
   private int currentOffset;
   private int total;
+  private boolean loading;
 
   PostCommentsRepository(int limit, int initialOffset, int initialTotal,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
@@ -43,12 +44,15 @@ class PostCommentsRepository {
   }
 
   public Single<List<Comment>> getComments(String postId, int offset) {
-    if (offset >= total) {
+    if (loading || offset >= total) {
       return Single.just(Collections.emptyList());
     }
     return ListCommentsRequest.ofTimeline("", offset, limit, true, postId, bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe(true)
+        .doOnSubscribe(() -> loading = true)
+        .doOnUnsubscribe(() -> loading = false)
+        .doOnTerminate(() -> loading = false)
         .toSingle()
         .flatMap(listCommentsResponse -> {
           if (listCommentsResponse.isOk()) {

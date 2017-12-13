@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
+import cm.aptoide.pt.dataprovider.model.v7.ProgressComment;
 import java.util.List;
 import rx.subjects.PublishSubject;
 
@@ -16,12 +17,15 @@ public class PostCommentsAdapter extends RecyclerView.Adapter<PostCommentViewHol
 
   private static final int PARENT = R.layout.parent_comment_item;
   private static final int CHILD = R.layout.child_comment_item;
+  private static final int LOADING = R.layout.timeline_progress_item;
   private final PublishSubject<String> replyEventPublishSubject;
+  private final ProgressComment progressComment;
   private List<Comment> comments;
 
-  public PostCommentsAdapter(List<Comment> comments,
+  public PostCommentsAdapter(List<Comment> comments, ProgressComment progressComment,
       PublishSubject<String> replyEventPublishSubject) {
     this.comments = comments;
+    this.progressComment = progressComment;
     this.replyEventPublishSubject = replyEventPublishSubject;
   }
 
@@ -33,6 +37,9 @@ public class PostCommentsAdapter extends RecyclerView.Adapter<PostCommentViewHol
       case CHILD:
         return new ChildCommentViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(CHILD, parent, false));
+      case LOADING:
+        return new LoadingCommentViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(LOADING, parent, false));
       default:
         throw new IllegalStateException("Invalid comment view type");
     }
@@ -44,6 +51,11 @@ public class PostCommentsAdapter extends RecyclerView.Adapter<PostCommentViewHol
 
   @Override public int getItemViewType(int position) {
     Comment comment = comments.get(position);
+
+    if (comment instanceof ProgressComment) {
+      return LOADING;
+    }
+
     if (comment.getParent() == null) {
       return PARENT;
     } else {
@@ -62,6 +74,16 @@ public class PostCommentsAdapter extends RecyclerView.Adapter<PostCommentViewHol
 
   public void addComments(List<Comment> comments) {
     this.comments.addAll(comments);
+    notifyDataSetChanged();
+  }
+
+  void addLoadMoreProgress() {
+    this.comments.add(progressComment);
+    notifyDataSetChanged();
+  }
+
+  void removeLoadMoreProgress() {
+    this.comments.remove(progressComment);
     notifyDataSetChanged();
   }
 }

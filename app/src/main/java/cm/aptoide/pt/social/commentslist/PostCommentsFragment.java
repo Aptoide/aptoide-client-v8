@@ -20,9 +20,9 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
+import cm.aptoide.pt.dataprovider.model.v7.ProgressComment;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
@@ -83,7 +83,8 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
     sharedPreferences =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     replyEventPublishSubject = PublishSubject.create();
-    adapter = new PostCommentsAdapter(new ArrayList<>(), replyEventPublishSubject);
+    adapter =
+        new PostCommentsAdapter(new ArrayList<>(), new ProgressComment(), replyEventPublishSubject);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -123,13 +124,11 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
   }
 
   @Override public void showLoadMoreProgressIndicator() {
-    Logger.d(this.getClass()
-        .getName(), "show indicator called");
+    adapter.addLoadMoreProgress();
   }
 
   @Override public void hideLoadMoreProgressIndicator() {
-    Logger.d(this.getClass()
-        .getName(), "hide indicator called");
+    adapter.removeLoadMoreProgress();
   }
 
   @Override public void showComments(List<Comment> comments) {
