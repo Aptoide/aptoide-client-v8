@@ -92,9 +92,9 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
     setHasOptionsMenu(true);
   }
 
-  @Override public void onViewCreated() {
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     getFragmentComponent(null).inject(this);
-    super.onViewCreated();
+    super.onViewCreated(view, savedInstanceState);
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {

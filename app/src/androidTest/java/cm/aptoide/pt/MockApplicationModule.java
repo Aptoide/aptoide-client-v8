@@ -61,7 +61,7 @@ public class MockApplicationModule extends ApplicationModule {
       MultipartBodyInterceptor multipartBodyInterceptor,
       AndroidAccountProvider androidAccountProvider, GoogleApiClient googleApiClient,
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> noAuthenticationBodyInterceptorV3,
-      ObjectMapper objectMapper) {
+      ObjectMapper objectMapper, cm.aptoide.accountmanager.StoreManager storeManager) {
 
     FacebookSdk.sdkInitialize(application);
 

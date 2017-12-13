@@ -3,7 +3,7 @@ package cm.aptoide.pt.account.view.store;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.SocialLink;
 import cm.aptoide.pt.account.view.exception.InvalidImageException;
 import cm.aptoide.pt.account.view.exception.SocialLinkException;
 import cm.aptoide.pt.account.view.exception.StoreCreationException;
@@ -29,14 +29,13 @@ import retrofit2.Converter;
 import rx.Completable;
 import rx.Single;
 
-public class StoreManager {
+public class StoreManager implements cm.aptoide.accountmanager.StoreManager {
 
   private static final String ERROR_CODE_2 = "WOP-2";
   private static final String ERROR_CODE_3 = "WOP-3";
   private static final String ERROR_API_1 = "API-1";
   private static final String ERROR_STORE_9 = "STORE-9";
 
-  private final AptoideAccountManager accountManager;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
   private final BodyInterceptor<HashMapNotNull<String, RequestBody>> multipartBodyInterceptor;
@@ -47,14 +46,12 @@ public class StoreManager {
   private final RequestBodyFactory requestBodyFactory;
   private final ObjectMapper objectMapper;
 
-  public StoreManager(AptoideAccountManager accountManager, OkHttpClient httpClient,
-      Converter.Factory converterFactory,
+  public StoreManager(OkHttpClient httpClient, Converter.Factory converterFactory,
       BodyInterceptor<HashMapNotNull<String, RequestBody>> multipartBodyInterceptor,
       BodyInterceptor<BaseBody> bodyInterceptorV3,
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorV7,
       SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       RequestBodyFactory requestBodyFactory, ObjectMapper objectMapper) {
-    this.accountManager = accountManager;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.multipartBodyInterceptor = multipartBodyInterceptor;
@@ -141,32 +138,28 @@ public class StoreManager {
      * a store image, or a SetStore without image. This is the edit store use case {@link
      * #updateStore}.
      */
-    return accountManager.accountStatus()
-        .first()
+    return CheckUserCredentialsRequest.toCreateStore(bodyInterceptorV3, httpClient,
+        converterFactory, tokenInvalidator, sharedPreferences, storeName)
+        .observe()
         .toSingle()
-        .flatMap(account -> CheckUserCredentialsRequest.toCreateStore(bodyInterceptorV3, httpClient,
-            converterFactory, tokenInvalidator, sharedPreferences, storeName)
-            .observe()
-            .toSingle()
-            .flatMap(data -> {
-              final List<ErrorResponse> errors = data.getErrors();
-              if (errors != null && !errors.isEmpty() && errors.get(0).code.equals(ERROR_CODE_2)) {
-                return Single.error(new StoreCreationException());
-              } else if (errors != null && errors.size() > 0 && errors.get(0).code.equals(
-                  ERROR_CODE_3)) {
-                return Single.error(new StoreCreationException(errors.get(0).code));
-              }
+        .flatMap(data -> {
+          final List<ErrorResponse> errors = data.getErrors();
+          if (errors != null && !errors.isEmpty() && errors.get(0).code.equals(ERROR_CODE_2)) {
+            return Single.error(new StoreCreationException());
+          } else if (errors != null && errors.size() > 0 && errors.get(0).code.equals(
+              ERROR_CODE_3)) {
+            return Single.error(new StoreCreationException(errors.get(0).code));
+          }
 
-              return Single.just(data);
-            }))
+          return Single.just(data);
+        })
         .flatMapCompletable(data -> {
-          final Completable syncAccount = accountManager.updateAccount();
           if (needToUploadMoreStoreData(storeDescription, storeImage, hasNewAvatar,
               storeThemeName)) {
             return updateStore(storeName, storeDescription, storeImage, hasNewAvatar,
-                storeThemeName, storeLinksList, storeDeleteSocialLinksList).andThen(syncAccount);
+                storeThemeName, storeLinksList, storeDeleteSocialLinksList);
           }
-          return syncAccount;
+          return Completable.complete();
         });
   }
 
@@ -215,15 +208,11 @@ public class StoreManager {
       String storeThemeName, String storeImagePath,
       List<SimpleSetStoreRequest.StoreLinks> storeLinksList,
       List<Store.SocialChannelType> socialDeleteLinksList) {
-    return accountManager.accountStatus()
-        .first()
+    return SetStoreImageRequest.of(storeName, storeThemeName, storeDescription, storeImagePath,
+        multipartBodyInterceptor, httpClient, converterFactory, requestBodyFactory, objectMapper,
+        sharedPreferences, tokenInvalidator, storeLinksList, socialDeleteLinksList)
+        .observe()
         .toSingle()
-        .flatMap(account -> SetStoreImageRequest.of(storeName, storeThemeName, storeDescription,
-            storeImagePath, multipartBodyInterceptor, httpClient, converterFactory,
-            requestBodyFactory, objectMapper, sharedPreferences, tokenInvalidator, storeLinksList,
-            socialDeleteLinksList)
-            .observe()
-            .toSingle())
         .toCompletable();
   }
 }
