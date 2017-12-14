@@ -15,14 +15,14 @@ import rx.subjects.PublishSubject;
 
 class ParentCommentViewHolder extends PostCommentViewHolder {
 
-  private final PublishSubject<String> replyEventPublishSubject;
+  private final PublishSubject<Long> replyEventPublishSubject;
   private final ImageView userIcon;
   private final TextView userName;
   private final TextView date;
   private final TextView comment;
   private final View replyLayout;
 
-  public ParentCommentViewHolder(View view, PublishSubject<String> replyEventPublishSubject) {
+  ParentCommentViewHolder(View view, PublishSubject<Long> replyEventPublishSubject) {
     super(view);
     this.userIcon = (ImageView) view.findViewById(R.id.user_icon);
     this.userName = (TextView) view.findViewById(R.id.user_name);
@@ -47,6 +47,6 @@ class ParentCommentViewHolder extends PostCommentViewHolder {
     replyLayout.setVisibility(View.VISIBLE);
     this.date.setVisibility(View.VISIBLE);
 
-    replyLayout.setOnClickListener(view -> replyEventPublishSubject.onNext(comment.getBody()));
+    replyLayout.setOnClickListener(view -> replyEventPublishSubject.onNext(comment.getId()));
   }
 }

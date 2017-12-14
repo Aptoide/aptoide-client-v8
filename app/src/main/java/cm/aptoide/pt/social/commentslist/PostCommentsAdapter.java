@@ -18,12 +18,12 @@ public class PostCommentsAdapter extends RecyclerView.Adapter<PostCommentViewHol
   private static final int PARENT = R.layout.parent_comment_item;
   private static final int CHILD = R.layout.child_comment_item;
   private static final int LOADING = R.layout.timeline_progress_item;
-  private final PublishSubject<String> replyEventPublishSubject;
+  private final PublishSubject<Long> replyEventPublishSubject;
   private final ProgressComment progressComment;
   private List<Comment> comments;
 
-  public PostCommentsAdapter(List<Comment> comments, ProgressComment progressComment,
-      PublishSubject<String> replyEventPublishSubject) {
+  PostCommentsAdapter(List<Comment> comments, ProgressComment progressComment,
+      PublishSubject<Long> replyEventPublishSubject) {
     this.comments = comments;
     this.progressComment = progressComment;
     this.replyEventPublishSubject = replyEventPublishSubject;

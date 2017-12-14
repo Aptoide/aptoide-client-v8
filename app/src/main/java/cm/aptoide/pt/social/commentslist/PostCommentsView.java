@@ -15,6 +15,8 @@ public interface PostCommentsView extends View {
 
   Observable<Void> refreshes();
 
+  Observable<Long> replies();
+
   void showLoadMoreProgressIndicator();
 
   void hideLoadMoreProgressIndicator();

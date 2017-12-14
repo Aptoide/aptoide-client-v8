@@ -14,14 +14,17 @@ public class PostCommentsPresenter implements Presenter {
 
   private final PostCommentsView view;
   private final Comments comments;
+  private final CommentsNavigator commentsNavigator;
   private final String postId;
   private final Scheduler viewScheduler;
   private final CrashReport crashReporter;
 
   public PostCommentsPresenter(@NonNull PostCommentsView commentsView, Comments comments,
-      Scheduler viewScheduler, CrashReport crashReporter, String postId) {
+      CommentsNavigator commentsNavigator, Scheduler viewScheduler, CrashReport crashReporter,
+      String postId) {
     this.view = commentsView;
     this.comments = comments;
+    this.commentsNavigator = commentsNavigator;
     this.viewScheduler = viewScheduler;
     this.crashReporter = crashReporter;
     this.postId = postId;
@@ -64,6 +67,15 @@ public class PostCommentsPresenter implements Presenter {
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(comments -> {
+        }, throwable -> crashReporter.log(throwable));
+
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.replies()
+            .doOnNext(commentId -> commentsNavigator.showCommentDialog(postId, commentId))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(commentId -> {
         }, throwable -> crashReporter.log(throwable));
   }
 }

@@ -54,7 +54,7 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
 
-  private PublishSubject<String> replyEventPublishSubject;
+  private PublishSubject<Long> replyEventPublishSubject;
   private SwipeRefreshLayout swipeRefreshLayout;
   private LinearLayoutManager layoutManager;
   private ProgressBar progressBar;
@@ -101,8 +101,9 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
     setHasOptionsMenu(true);
     attachPresenter(new PostCommentsPresenter(this, new Comments(
         new PostCommentsRepository(10, 0, Integer.MAX_VALUE, bodyInterceptor, httpClient,
-            converterFactory, tokenInvalidator, sharedPreferences)), AndroidSchedulers.mainThread(),
-        CrashReport.getInstance(),
+            converterFactory, tokenInvalidator, sharedPreferences)),
+        new CommentsNavigator(getFragmentNavigator(), getActivity().getSupportFragmentManager()),
+        AndroidSchedulers.mainThread(), CrashReport.getInstance(),
         getArguments().containsKey(POST_ID_KEY) ? getArguments().getString(POST_ID_KEY) : null));
   }
 
@@ -121,6 +122,10 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
 
   @Override public Observable<Void> refreshes() {
     return RxSwipeRefreshLayout.refreshes(swipeRefreshLayout);
+  }
+
+  @Override public Observable<Long> replies() {
+    return replyEventPublishSubject;
   }
 
   @Override public void showLoadMoreProgressIndicator() {
