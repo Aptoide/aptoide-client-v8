@@ -21,14 +21,14 @@ import cm.aptoide.pt.navigator.FragmentResultNavigator;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.util.ScreenTrackingUtils;
+import cm.aptoide.pt.view.BaseFragment;
 import cm.aptoide.pt.view.MainActivity;
-import cm.aptoide.pt.view.leak.LeakFragment;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import rx.Observable;
 
-public abstract class FragmentView extends LeakFragment implements View {
+public abstract class FragmentView extends BaseFragment implements View {
 
   private static final String TAG = FragmentView.class.getName();
 

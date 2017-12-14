@@ -1,6 +1,7 @@
 package cm.aptoide.pt.account.view.store;
 
 import android.text.TextUtils;
+import cm.aptoide.accountmanager.SocialLink;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.store.StoreTheme;
 import java.util.ArrayList;

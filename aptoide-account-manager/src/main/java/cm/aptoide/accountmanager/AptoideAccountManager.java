@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import cm.aptoide.pt.crashreports.CrashReport;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import rx.Completable;
 import rx.Observable;
@@ -22,15 +23,18 @@ public class AptoideAccountManager {
   private final SignUpAdapterRegistry adapterRegistry;
   private final AccountPersistence accountPersistence;
   private final AccountService accountService;
+  private final StoreManager storeManager;
 
   private AptoideAccountManager(CredentialsValidator credentialsValidator,
       AccountPersistence accountPersistence, AccountService accountService,
-      PublishRelay<Account> accountRelay, SignUpAdapterRegistry adapterRegistry) {
+      PublishRelay<Account> accountRelay, SignUpAdapterRegistry adapterRegistry,
+      StoreManager storeManager) {
     this.credentialsValidator = credentialsValidator;
     this.accountPersistence = accountPersistence;
     this.accountService = accountService;
     this.accountRelay = accountRelay;
     this.adapterRegistry = adapterRegistry;
+    this.storeManager = storeManager;
   }
 
   public Observable<Account> accountStatus() {
@@ -175,6 +179,15 @@ public class AptoideAccountManager {
     return singleAccountStatus().flatMapCompletable(account -> syncAccount());
   }
 
+  public Completable createOrUpdate(String storeName, String storeDescription,
+      String storeImagePath, boolean hasNewAvatar, String storeThemeName, boolean storeExists,
+      List<SocialLink> storeLinksList,
+      List<cm.aptoide.pt.dataprovider.model.v7.store.Store.SocialChannelType> storeDeleteLinksList) {
+    return storeManager.createOrUpdate(storeName, storeDescription, storeImagePath, hasNewAvatar,
+        storeThemeName, storeExists, storeLinksList, storeDeleteLinksList)
+        .andThen(syncAccount());
+  }
+
   public static class Builder {
 
     private final Map<String, SignUpAdapter> adapters;
@@ -182,6 +195,7 @@ public class AptoideAccountManager {
     private AccountService accountService;
     private PublishRelay<Account> accountRelay;
     private AccountPersistence accountPersistence;
+    private StoreManager storeManager;
 
     public Builder() {
       this.adapters = new HashMap<>();
@@ -212,6 +226,11 @@ public class AptoideAccountManager {
       return this;
     }
 
+    public Builder setStoreManager(StoreManager storeManager) {
+      this.storeManager = storeManager;
+      return this;
+    }
+
     public AptoideAccountManager build() {
 
       if (accountPersistence == null) {
@@ -220,6 +239,10 @@ public class AptoideAccountManager {
 
       if (accountService == null) {
         throw new IllegalArgumentException("AccountManagerService is mandatory.");
+      }
+
+      if (storeManager == null) {
+        throw new IllegalArgumentException("StoreManager is mandatory.");
       }
 
       if (credentialsValidator == null) {
@@ -237,7 +260,7 @@ public class AptoideAccountManager {
           new AptoideSignUpAdapter(credentialsValidator));
 
       return new AptoideAccountManager(credentialsValidator, accountPersistence, accountService,
-          accountRelay, adapterRegistry);
+          accountRelay, adapterRegistry, storeManager);
     }
   }
 }

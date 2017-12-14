@@ -1,6 +1,5 @@
 package cm.aptoide.pt.navigator;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -21,20 +20,20 @@ import cm.aptoide.pt.notification.view.InboxNavigator;
 import cm.aptoide.pt.notification.view.NotificationNavigator;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.view.fragment.FragmentView;
-import com.facebook.login.LoginManager;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Map;
+import javax.inject.Inject;
 import rx.Observable;
 
 public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigator
     implements ActivityNavigator {
 
+  @Inject AccountNavigator accountNavigator;
   private PublishRelay<Result> resultRelay;
   private FragmentNavigator fragmentNavigator;
   private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
   private Map<Integer, Result> fragmentResultMap;
-  private AccountNavigator accountNavigator;
   private BillingNavigator billingNavigator;
   private ScreenOrientationManager screenOrientationManager;
   private MyAccountNavigator myAccountNavigator;
@@ -46,8 +45,7 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
     return fragmentResultRelay;
   }
 
-  @SuppressLint("UseSparseArrays") @Override
-  protected void onCreate(@Nullable Bundle savedInstanceState) {
+  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     fragmentResultRelay = ((AptoideApplication) getApplicationContext()).getFragmentResultRelay();
     fragmentResultMap = ((AptoideApplication) getApplicationContext()).getFragmentResulMap();
     fragmentNavigator =
@@ -59,6 +57,7 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
     // else getFragmentNavigator and getActivityNavigator will return null.
     super.onCreate(savedInstanceState);
     resultRelay = PublishRelay.create();
+    getActivityComponent().inject(this);
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -154,17 +153,6 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
   }
 
   public AccountNavigator getAccountNavigator() {
-    if (accountNavigator == null) {
-      accountNavigator = new AccountNavigator(getFragmentNavigator(),
-          ((AptoideApplication) getApplicationContext()).getAccountManager(),
-          getActivityNavigator(), LoginManager.getInstance(),
-          ((AptoideApplication) getApplicationContext()).getFacebookCallbackManager(),
-          ((AptoideApplication) getApplicationContext()).getGoogleSignInClient(),
-          ((AptoideApplication) getApplicationContext()).getFacebookLoginResultRelay(),
-          ((AptoideApplication) getApplicationContext()).getDefaultStoreName(),
-          ((AptoideApplication) getApplicationContext()).getDefaultThemeName(),
-          "http://m.aptoide.com/account/password-recovery");
-    }
     return accountNavigator;
   }
 

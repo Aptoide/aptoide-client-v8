@@ -78,9 +78,11 @@ public class AppViewAnalytics {
     return bundle;
   }
 
-  public void sendAppViewOpenedFromEvent(ScreenTagHistory previousScreen, ScreenTagHistory currentScreen, String packageName, String appPublisher, String badge) {
+  public void sendAppViewOpenedFromEvent(ScreenTagHistory previousScreen,
+      ScreenTagHistory currentScreen, String packageName, String appPublisher, String badge) {
     analytics.sendEvent(new FacebookEvent(facebook, "App_Viewed_Open_From",
-        createAppViewedFromBundle(previousScreen, currentScreen, packageName, appPublisher, badge)));
+        createAppViewedFromBundle(previousScreen, currentScreen, packageName, appPublisher,
+            badge)));
     analytics.sendEvent(new FlurryEvent("App_Viewed_Open_From",
         createAppViewedFromMap(previousScreen, currentScreen, packageName, appPublisher, badge)));
     analytics.sendEvent(new AptoideEvent(

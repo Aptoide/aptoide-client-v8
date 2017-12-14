@@ -19,12 +19,12 @@ import rx.Observable;
 
 public class RollbackInstaller implements Installer {
 
-  private final DefaultInstaller defaultInstaller;
+  private final Installer defaultInstaller;
   private final RollbackRepository repository;
   private final RollbackFactory rollbackFactory;
   private final InstallationProvider installationProvider;
 
-  public RollbackInstaller(DefaultInstaller defaultInstaller, RollbackRepository repository,
+  public RollbackInstaller(Installer defaultInstaller, RollbackRepository repository,
       RollbackFactory rollbackFactory, InstallationProvider installationProvider) {
     this.defaultInstaller = defaultInstaller;
     this.repository = repository;
