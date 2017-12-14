@@ -232,7 +232,7 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
         .filter(result -> result.getResultCode() == Activity.RESULT_OK)
         .flatMap(__ -> GetHomeMetaRequest.of(storeCredentialsProvider.get(getStoreId()),
             bodyInterceptorV7, client, converter, tokenInvalidator, sharedPreferences)
-            .observe(true))
+            .observe(true, true))
         .doOnNext(pojo -> setPojo(pojo));
   }
 

@@ -99,10 +99,6 @@ public class GetMyStoreListRequest extends V7<ListStores, GetMyStoreListRequest.
       this.widgetsArgs = widgetsArgs;
     }
 
-    public boolean isRefresh() {
-      return refresh;
-    }
-
     public void setRefresh(boolean refresh) {
       this.refresh = refresh;
     }

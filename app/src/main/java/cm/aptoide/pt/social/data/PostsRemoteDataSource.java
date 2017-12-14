@@ -70,7 +70,7 @@ public class PostsRemoteDataSource {
         .flatMapSingle(
             __ -> GetUserTimelineRequest.of(url, limit, offset, packages, bodyInterceptor, okhttp,
                 converterFactory, cardIdPriority, tokenInvalidator, sharedPreferences)
-                .observe(true)
+                .observe(true, true)
                 .toSingle())
         .flatMapSingle(timelineResponse -> {
           if (timelineResponse.isOk()) {

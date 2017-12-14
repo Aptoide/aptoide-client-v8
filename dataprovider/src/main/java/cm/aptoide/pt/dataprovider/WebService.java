@@ -117,10 +117,6 @@ public abstract class WebService<T, U> {
     return retrofit;
   }
 
-  @Deprecated public void execute(SuccessRequestListener<U> successRequestListener) {
-    execute(successRequestListener, false);
-  }
-
   @Deprecated
   public void execute(SuccessRequestListener<U> successRequestListener, boolean bypassCache) {
     execute(successRequestListener, defaultErrorRequestListener(), bypassCache);

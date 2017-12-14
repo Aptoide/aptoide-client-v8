@@ -53,4 +53,8 @@ public class BaseBody extends HashMapNotNull<String, Object> {
   public void setMobileCountryCode(String mobileCountryCode) {
     put("mcc", mobileCountryCode);
   }
+
+  public void setRefresh(boolean refresh) {
+    put("refresh", refresh);
+  }
 }

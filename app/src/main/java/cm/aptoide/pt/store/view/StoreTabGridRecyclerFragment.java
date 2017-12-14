@@ -151,7 +151,8 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
       }
 
       // TODO: 28-12-2016 neuro martelo martelo martelo
-      Observable<List<Displayable>> displayablesObservable = buildDisplayables(refresh, url);
+      Observable<List<Displayable>> displayablesObservable =
+          buildDisplayables(refresh, url, refresh);
       if (displayablesObservable != null) {
         DisplayableManager displayableManager = this;
         displayablesObservable.compose(bindUntilEvent(LifecycleEvent.DESTROY))
@@ -168,7 +169,8 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   }
 
   @Nullable
-  protected abstract Observable<List<Displayable>> buildDisplayables(boolean refresh, String url);
+  protected abstract Observable<List<Displayable>> buildDisplayables(boolean refresh, String url,
+      boolean bypassServerCache);
 
   @Override public int getContentViewId() {
     // title flag whether toolbar should be shown or not

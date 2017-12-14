@@ -46,7 +46,7 @@ import rx.schedulers.Schedulers;
       Converter.Factory converterFactory, String q, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
       ConnectivityManager connectivityManager,
-      AdsApplicationVersionCodeProvider versionCodeProvider) {
+      AdsApplicationVersionCodeProvider versionCodeProvider, boolean bypassServerCache) {
 
     if (wsWidget.getType() != null) {
 
@@ -60,7 +60,7 @@ import rx.schedulers.Schedulers;
         case APPS_GROUP:
           return ListAppsRequest.ofAction(url, storeCredentials, bodyInterceptor, httpClient,
               converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager)
-              .observe(bypassCache)
+              .observe(bypassCache, bypassServerCache)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
@@ -69,7 +69,7 @@ import rx.schedulers.Schedulers;
         case STORES_GROUP:
           return ListStoresRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory,
               tokenInvalidator, sharedPreferences)
-              .observe(bypassCache)
+              .observe(bypassCache, bypassServerCache)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
@@ -78,7 +78,7 @@ import rx.schedulers.Schedulers;
         case DISPLAYS:
           return GetStoreDisplaysRequest.ofAction(url, storeCredentials, bodyInterceptor,
               httpClient, converterFactory, tokenInvalidator, sharedPreferences)
-              .observe(bypassCache)
+              .observe(bypassCache, bypassServerCache)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
@@ -97,7 +97,7 @@ import rx.schedulers.Schedulers;
         case HOME_META:
           return GetHomeMetaRequest.ofAction(url, storeCredentials, bodyInterceptor, httpClient,
               converterFactory, tokenInvalidator, sharedPreferences)
-              .observe(bypassCache)
+              .observe(bypassCache, bypassServerCache)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
@@ -106,7 +106,7 @@ import rx.schedulers.Schedulers;
         case COMMENTS_GROUP:
           return ListCommentsRequest.ofStoreAction(url, bypassCache, storeCredentials,
               bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
-              .observe(bypassCache)
+              .observe(bypassCache, bypassServerCache)
               .observeOn(Schedulers.io())
               .doOnNext(listComments -> wsWidget.setViewObject(
                   new Pair<ListComments, BaseRequestWithStore.StoreCredentials>(listComments,
@@ -117,7 +117,7 @@ import rx.schedulers.Schedulers;
         case REVIEWS_GROUP:
           return ListFullReviewsRequest.ofAction(url, bypassCache, storeCredentials,
               bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
-              .observe(bypassCache)
+              .observe(bypassCache, bypassServerCache)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
@@ -127,7 +127,7 @@ import rx.schedulers.Schedulers;
         case STORES_RECOMMENDED:
           return GetMyStoreListRequest.of(url, bodyInterceptor, httpClient, converterFactory,
               tokenInvalidator, sharedPreferences, resources, windowManager)
-              .observe(bypassCache)
+              .observe(bypassCache, bypassServerCache)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .doOnError(throwable -> {
@@ -145,11 +145,11 @@ import rx.schedulers.Schedulers;
           return Observable.zip(
               GetTimelineStatsRequest.of(bodyInterceptor, null, httpClient, converterFactory,
                   tokenInvalidator, sharedPreferences)
-                  .observe(bypassCache)
+                  .observe(bypassCache, bypassServerCache)
                   .onErrorReturn(throwable -> null),
               GetMyStoreMetaRequest.of(bodyInterceptor, httpClient, converterFactory,
                   tokenInvalidator, sharedPreferences)
-                  .observe(bypassCache)
+                  .observe(bypassCache, bypassServerCache)
                   .observeOn(Schedulers.io())
                   .map(getStoreMeta -> {
                     GetHomeMeta.Data data = new GetHomeMeta.Data();
@@ -175,7 +175,7 @@ import rx.schedulers.Schedulers;
         case APP_META:
           return GetAppMetaRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory,
               tokenInvalidator, sharedPreferences)
-              .observe(bypassCache)
+              .observe(bypassCache, bypassServerCache)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())

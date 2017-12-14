@@ -14,6 +14,15 @@ public class GenericResponseV2 {
 
   String status;
   List<ErrorResponse> errors;
+  boolean refresh;
+
+  public boolean isRefresh() {
+    return refresh;
+  }
+
+  public void setRefresh(boolean refresh) {
+    this.refresh = refresh;
+  }
 
   public String getStatus() {
     return status;

@@ -307,14 +307,14 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     if (commentType == CommentType.TIMELINE) {
       timelineAnalytics.sendSocialActionEvent(
           new TimelineSocialActionData(BLANK, BLANK, "Comment", BLANK, BLANK, BLANK));
-      caseListSocialTimelineComments(true);
+      caseListSocialTimelineComments(true, true);
     } else {
       caseListStoreComments(url,
           StoreUtils.getStoreCredentialsFromUrl(url, storeCredentialsProvider), true);
     }
   }
 
-  void caseListSocialTimelineComments(boolean refresh) {
+  void caseListSocialTimelineComments(boolean refresh, boolean bypassServerCache) {
     ListCommentsRequest listCommentsRequest =
         ListCommentsRequest.ofTimeline(url, refresh, elementIdAsString, bodyDecorator, httpClient,
             converterFactory, tokenInvalidator,
@@ -348,10 +348,10 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     getRecyclerView().clearOnScrollListeners();
     EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(getAdapter(), listCommentsRequest, listCommentsAction,
-            err -> err.printStackTrace(), true);
+            err -> err.printStackTrace(), true, false);
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
-    endlessRecyclerOnScrollListener.onLoadMore(refresh);
+    endlessRecyclerOnScrollListener.onLoadMore(refresh, bypassServerCache);
   }
 
   void caseListStoreComments(String url, BaseRequestWithStore.StoreCredentials storeCredentials,
@@ -402,10 +402,10 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     getRecyclerView().clearOnScrollListeners();
     EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(getAdapter(), listCommentsRequest, listCommentsAction,
-            err -> err.printStackTrace(), true);
+            err -> err.printStackTrace(), true, false);
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
-    endlessRecyclerOnScrollListener.onLoadMore(refresh);
+    endlessRecyclerOnScrollListener.onLoadMore(refresh, refresh);
   }
 
   public Completable createNewCommentFragment(final String timelineArticleId,

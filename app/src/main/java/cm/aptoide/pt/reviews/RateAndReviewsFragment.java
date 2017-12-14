@@ -1,5 +1,6 @@
 package cm.aptoide.pt.reviews;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -36,6 +37,7 @@ import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.networking.IdsRepository;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
@@ -49,6 +51,8 @@ import cm.aptoide.pt.view.recycler.displayable.ProgressBarDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.List;
+import javax.inject.Inject;
+import javax.inject.Named;
 import lombok.Getter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -59,9 +63,9 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     implements ItemCommentAdderView<Review, CommentsAdapter> {
 
   private static final String TAG = RateAndReviewsFragment.class.getSimpleName();
+  @Inject @Named("default") SharedPreferences preferences;
   private IdsRepository idsRepository;
   private DialogUtils dialogUtils;
-
   private long appId;
   @Getter private long reviewId;
   private String packageName;
@@ -196,7 +200,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     GetAppRequest.of(packageName, baseBodyInterceptor, appId, httpClient, converterFactory,
         tokenInvalidator,
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())
-        .observe(refresh)
+        .observe(refresh, ManagerPreferences.getAndResetForceServerRefresh(preferences))
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -245,7 +249,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     });
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
-    endlessRecyclerOnScrollListener.onLoadMore(false);
+    endlessRecyclerOnScrollListener.onLoadMore(false, false);
   }
 
   private ListReviewsRequest createListReviewsRequest(String languagesFilterSort) {

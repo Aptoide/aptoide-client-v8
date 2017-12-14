@@ -211,7 +211,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
             .getCountryCodes();
     Subscription subscription =
         createReviewsRequest(storeName, packageName, storeCredentials, countryCodes.get(0)).observe(
-            true)
+            true, true)
             .flatMap(listReviews -> {
               if (listReviews.getDataList()
                   .getList()

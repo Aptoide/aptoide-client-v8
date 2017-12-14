@@ -44,9 +44,10 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment {
     return new MyStoresFragment();
   }
 
-  @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {
+  @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url,
+      boolean bypassServerCache) {
     return requestFactoryCdnPool.newStoreWidgets(url)
-        .observe(refresh)
+        .observe(refresh, bypassServerCache)
         .observeOn(Schedulers.io())
         .flatMap(getStoreWidgets -> parseDisplayables(getStoreWidgets))
         .map(list -> addFollowStoreDisplayable(list));

@@ -106,7 +106,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
       updateReloadSubscription.unsubscribe();
     }
 
-    updateReloadSubscription = updateRepository.sync(true)
+    updateReloadSubscription = updateRepository.sync(true, false)
         .subscribe(() -> finishLoading(), e -> {
           if (e instanceof RepositoryItemNotFoundException) {
             ShowMessage.asSnack(getView(), R.string.add_store);
