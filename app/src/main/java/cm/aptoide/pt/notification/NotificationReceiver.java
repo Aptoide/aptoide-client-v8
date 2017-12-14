@@ -29,6 +29,10 @@ public class NotificationReceiver extends BroadcastReceiver {
     final String action = intent.getAction();
     Bundle intentExtras = intent.getExtras();
     if (intentExtras != null) {
+      Map<String, String> stringStringMap = new HashMap<>();
+      stringStringMap.put("status", "success");
+      Analytics.getInstance()
+          .sendEvent(new FabricEvent(Answers.getInstance(), "NotificationNPE", stringStringMap));
       NotificationInfo notificationInfo =
           new NotificationInfo(intentExtras.getInt(NOTIFICATION_NOTIFICATION_ID),
               intentExtras.getString(NOTIFICATION_TRACK_URL),
@@ -51,6 +55,7 @@ public class NotificationReceiver extends BroadcastReceiver {
       }
     } else {
       Map<String, String> stringStringMap = new HashMap<>();
+      stringStringMap.put("status", "fail");
       stringStringMap.put("Intent", intent.toString());
       Analytics.getInstance()
           .sendEvent(new FabricEvent(Answers.getInstance(), "NotificationNPE", stringStringMap));
