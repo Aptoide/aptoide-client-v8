@@ -20,7 +20,7 @@ public class ManageStoreErrorMapper {
   }
 
   public String getImageError() {
-    return resources.getString(R.string.ws_error_API_1);
+    return resources.getString(R.string.ws_error_IMAGE_ERROR_1);
   }
 
   public String getInvalidStoreError() {
