@@ -21,7 +21,6 @@ import cm.aptoide.pt.reviews.LatestReviewsFragment;
 import cm.aptoide.pt.reviews.ListReviewsFragment;
 import cm.aptoide.pt.reviews.RateAndReviewsFragment;
 import cm.aptoide.pt.search.model.SearchAdResult;
-import cm.aptoide.pt.view.settings.SettingsFragment;
 import cm.aptoide.pt.social.view.TimelineFragment;
 import cm.aptoide.pt.spotandshare.view.SpotSharePreviewFragment;
 import cm.aptoide.pt.store.view.FragmentTopStores;
@@ -44,6 +43,7 @@ import cm.aptoide.pt.updates.view.rollback.RollbackFragment;
 import cm.aptoide.pt.view.FragmentProvider;
 import cm.aptoide.pt.view.feedback.SendFeedbackFragment;
 import cm.aptoide.pt.view.fragment.DescriptionFragment;
+import cm.aptoide.pt.view.settings.SettingsFragment;
 import java.util.List;
 
 /**

@@ -419,7 +419,7 @@ public class PostFragment extends FragmentView implements PostView {
   }
 
   @Override public void showInvalidUrlError() {
-    Snackbar.make(toolbar, R.string.error_IARG_105, Snackbar.LENGTH_LONG)
+    Snackbar.make(toolbar, R.string.ws_error_IARG_105, Snackbar.LENGTH_LONG)
         .show();
   }
 

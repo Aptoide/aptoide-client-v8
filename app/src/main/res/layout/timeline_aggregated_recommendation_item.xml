@@ -44,7 +44,6 @@
     </FrameLayout>
 
     <TextView
-        android:id="@+id/timeline_aggregated_see_more"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -56,7 +55,6 @@
         style="@style/Aptoide.TextView.Regular.XS.GreyFog"
         />
     <View
-        android:id="@+id/partial_social_timeline_thumbnail_divider2"
         android:layout_width="match_parent"
         android:layout_height="0.7dp"
         android:layout_marginEnd="12dp"

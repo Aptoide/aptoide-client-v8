@@ -4,16 +4,13 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationIdsMapper;
 import cm.aptoide.pt.notification.NotificationInfo;
 import cm.aptoide.pt.notification.NotificationReceiver;
 import cm.aptoide.pt.notification.SystemNotificationShower;
 import cm.aptoide.pt.presenter.NotificationView;
 import cm.aptoide.pt.presenter.Presenter;
-import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
 import rx.Observable;
@@ -41,10 +38,8 @@ public abstract class NotificationApplicationView extends AptoideApplication
     if (systemNotificationShower == null) {
       systemNotificationShower = new SystemNotificationShower(this,
           (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE),
-          new NotificationIdsMapper(), getNotificationCenter(),
-          new NotificationAnalytics(getDefaultClient(), Analytics.getInstance(),
-              AppEventsLogger.newLogger(getApplicationContext())), CrashReport.getInstance(),
-          getNotificationProvider(), this, new CompositeSubscription());
+          new NotificationIdsMapper(), getNotificationCenter(), getNotificationAnalytics(),
+          CrashReport.getInstance(), getNotificationProvider(), this, new CompositeSubscription());
     }
     return systemNotificationShower;
   }
