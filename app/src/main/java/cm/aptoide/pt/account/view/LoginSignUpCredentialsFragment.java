@@ -36,7 +36,9 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   private static final String USERNAME_KEY = "username_key";
   private static final String PASSWORD_KEY = "password_key";
-
+  @Inject LoginSignUpCredentialsPresenter presenter;
+  @Inject AccountNavigator accountNavigator;
+  @Inject ScreenOrientationManager orientationManager;
   private ProgressDialog progressDialog;
   private RxAlertDialog facebookEmailRequiredDialog;
   private Button googleLoginButton;
@@ -54,14 +56,10 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   private Button signUpSelectionButton;
   private TextView termsAndConditions;
   private View separator;
-
   private boolean isPasswordVisible = false;
   private View credentialsEditTextsArea;
   private BottomSheetBehavior<View> bottomSheetBehavior;
-  @Inject LoginSignUpCredentialsPresenter presenter;
   private View rootView;
-  @Inject AccountNavigator accountNavigator;
-  @Inject ScreenOrientationManager orientationManager;
   private String marketName;
 
   public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,

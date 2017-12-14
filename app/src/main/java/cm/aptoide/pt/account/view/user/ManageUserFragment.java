@@ -49,6 +49,15 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   private static final String EXTRA_USER_MODEL = "user_model";
   private static final String EXTRA_IS_EDIT = "is_edit";
   @DrawableRes private static final int DEFAULT_IMAGE_PLACEHOLDER = R.drawable.create_user_avatar;
+  @Inject ManageUserNavigator navigator;
+  @Inject PhotoFileGenerator photoFileGenerator;
+  @Inject UriToPathResolver uriToPathResolver;
+  @Inject AccountPermissionProvider accountPermissionProvider;
+  @Inject ImageValidator imageValidator;
+  @Inject ImagePickerNavigator imagePickerNavigator;
+  @Inject ImagePickerPresenter imagePickerPresenter;
+  @Inject ManageUserPresenter manageUserPresenter;
+  @Inject CreateUserErrorMapper errorMapper;
   private ImageView userPicture;
   private RelativeLayout userPictureLayout;
   private EditText userName;
@@ -61,15 +70,6 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   private Toolbar toolbar;
   private ImagePickerDialog dialogFragment;
   private ImagePickerErrorHandler imagePickerErrorHandler;
-  @Inject ManageUserNavigator navigator;
-  @Inject PhotoFileGenerator photoFileGenerator;
-  @Inject UriToPathResolver uriToPathResolver;
-  @Inject AccountPermissionProvider accountPermissionProvider;
-  @Inject ImageValidator imageValidator;
-  @Inject ImagePickerNavigator imagePickerNavigator;
-  @Inject ImagePickerPresenter imagePickerPresenter;
-  @Inject ManageUserPresenter manageUserPresenter;
-  @Inject CreateUserErrorMapper errorMapper;
 
   public static ManageUserFragment newInstanceToEdit() { return newInstance(true);
   }
@@ -175,7 +175,8 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
 
   private void attachPresenters() {
 
-    attachPresenter(new CompositePresenter(Arrays.asList(manageUserPresenter, imagePickerPresenter)));
+    attachPresenter(
+        new CompositePresenter(Arrays.asList(manageUserPresenter, imagePickerPresenter)));
   }
 
   @Override public void onDestroyView() {
@@ -186,8 +187,8 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   }
 
   @Override public void setUserName(String name) {
-      currentModel.setName(name);
-      userName.setText(name);
+    currentModel.setName(name);
+    userName.setText(name);
   }
 
   @Override public Observable<ViewModel> saveUserDataButtonClick() {
@@ -218,9 +219,9 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   }
 
   @Override public void loadImageStateless(String pictureUri) {
-      currentModel.setPictureUri(pictureUri);
-      ImageLoader.with(getActivity())
-          .loadUsingCircleTransformAndPlaceholder(pictureUri, userPicture, DEFAULT_IMAGE_PLACEHOLDER);
+    currentModel.setPictureUri(pictureUri);
+    ImageLoader.with(getActivity())
+        .loadUsingCircleTransformAndPlaceholder(pictureUri, userPicture, DEFAULT_IMAGE_PLACEHOLDER);
   }
 
   /**

@@ -7,13 +7,13 @@ import cm.aptoide.accountmanager.AccountException;
 import cm.aptoide.accountmanager.AccountPersistence;
 import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.SocialLink;
 import cm.aptoide.accountmanager.Store;
 import cm.aptoide.pt.account.AndroidAccountProvider;
 import cm.aptoide.pt.account.FacebookLoginResult;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.account.LoginPreferences;
+import cm.aptoide.pt.account.view.store.SocialLink;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -61,7 +61,7 @@ public class MockApplicationModule extends ApplicationModule {
       MultipartBodyInterceptor multipartBodyInterceptor,
       AndroidAccountProvider androidAccountProvider, GoogleApiClient googleApiClient,
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> noAuthenticationBodyInterceptorV3,
-      ObjectMapper objectMapper, StoreManager storeManager) {
+      ObjectMapper objectMapper, cm.aptoide.accountmanager.StoreManager storeManager) {
 
     FacebookSdk.sdkInitialize(application);
 
@@ -95,8 +95,7 @@ public class MockApplicationModule extends ApplicationModule {
       }
 
       @Override public boolean isLoggedIn() {
-        if (TestType.initialization.equals(TestType.TestTypes.LOGGEDIN)
-            || TestType.initialization.equals(TestType.TestTypes.LOGGEDINWITHSTORE) ){
+        if (TestType.types.equals(TestType.TestTypes.LOGGEDIN)) {
           return true;
         } else {
           return false;
@@ -108,9 +107,7 @@ public class MockApplicationModule extends ApplicationModule {
       }
 
       @Override public Store getStore() {
-      if(TestType.initialization.equals(TestType.TestTypes.LOGGEDINWITHSTORE))
-          return new Store(0,"",0,"store","DEFAULT","","",true);
-      else return Store.emptyStore();
+        return null;
       }
 
       @Override public boolean hasStore() {
@@ -212,34 +209,41 @@ public class MockApplicationModule extends ApplicationModule {
     return new AptoideAccountManager.Builder().setAccountPersistence(accountPersistence)
         .setAccountService(accountService)
         .registerSignUpAdapter(GoogleSignUpAdapter.TYPE,
-            new GoogleSignUpAdapter(googleApiClient, loginPreferences){
-          @Override public Single<Account>signUp(GoogleSignInResult result, AccountService service){
-            return Single.just(account);
-          }
-          @Override public Completable logout(){
-            return Completable.complete();
-          }
-          @Override public boolean isEnabled(){
-            return true;
-          }
+            new GoogleSignUpAdapter(googleApiClient, loginPreferences) {
+              @Override
+              public Single<Account> signUp(GoogleSignInResult result, AccountService service) {
+                return Single.just(account);
+              }
+
+              @Override public Completable logout() {
+                return Completable.complete();
+              }
+
+              @Override public boolean isEnabled() {
+                return true;
+              }
             })
         .registerSignUpAdapter(FacebookSignUpAdapter.TYPE,
             new FacebookSignUpAdapter(Arrays.asList("email"), LoginManager.getInstance(),
-                loginPreferences){
-              @Override public Single<Account>signUp(FacebookLoginResult result, AccountService service){
+                loginPreferences) {
+              @Override
+              public Single<Account> signUp(FacebookLoginResult result, AccountService service) {
                 return Single.just(account);
               }
-              @Override public Completable logout(){
+
+              @Override public Completable logout() {
                 return Completable.complete();
               }
-              @Override public boolean isEnabled(){
+
+              @Override public boolean isEnabled() {
                 return true;
               }
-            }).setStoreManager(storeManager)
+            })
         .build();
   }
 
-  @Override StoreManager provideStoreManager(@Named("default") OkHttpClient okHttpClient,
+  @Override StoreManager provideStoreManager(AptoideAccountManager accountManager,
+      @Named("default") OkHttpClient okHttpClient,
       @Named("multipart") MultipartBodyInterceptor multipartBodyInterceptor,
       @Named("defaulInterceptorV3")
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
@@ -249,7 +253,7 @@ public class MockApplicationModule extends ApplicationModule {
       TokenInvalidator tokenInvalidator, RequestBodyFactory requestBodyFactory,
       ObjectMapper nonNullObjectMapper) {
     final StoreManager storeManager =
-        new StoreManager(okHttpClient, WebService.getDefaultConverter(),
+        new StoreManager(accountManager, okHttpClient, WebService.getDefaultConverter(),
             multipartBodyInterceptor, bodyInterceptorV3, accountSettingsBodyInterceptorPoolV7,
             defaultSharedPreferences, tokenInvalidator, requestBodyFactory, nonNullObjectMapper) {
           @Override

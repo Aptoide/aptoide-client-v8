@@ -92,11 +92,6 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
     setHasOptionsMenu(true);
   }
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    getFragmentComponent(null).inject(this);
-    super.onViewCreated(view, savedInstanceState);
-  }
-
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName());
@@ -109,6 +104,11 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
   @Override public void bindViews(View view) {
     super.bindViews(view);
     emptyData = (TextView) view.findViewById(R.id.empty_data);
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    getFragmentComponent(null).inject(this);
+    super.onViewCreated(view, savedInstanceState);
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {

@@ -27,11 +27,11 @@ import rx.Observable;
 public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigator
     implements ActivityNavigator {
 
+  @Inject AccountNavigator accountNavigator;
   private PublishRelay<Result> resultRelay;
   private FragmentNavigator fragmentNavigator;
   private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
   private Map<Integer, Result> fragmentResultMap;
-  @Inject AccountNavigator accountNavigator;
   private BillingNavigator billingNavigator;
   private ScreenOrientationManager screenOrientationManager;
   private InboxNavigator inboxNavigator;
@@ -41,8 +41,7 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
     return fragmentResultRelay;
   }
 
-  @Override
-  protected void onCreate(@Nullable Bundle savedInstanceState) {
+  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     fragmentResultRelay = ((AptoideApplication) getApplicationContext()).getFragmentResultRelay();
     fragmentResultMap = ((AptoideApplication) getApplicationContext()).getFragmentResulMap();
     fragmentNavigator =
@@ -54,6 +53,7 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
     // else getFragmentNavigator and getActivityNavigator will return null.
     super.onCreate(savedInstanceState);
     resultRelay = PublishRelay.create();
+    getActivityComponent().inject(this);
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -149,8 +149,6 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
   }
 
   public AccountNavigator getAccountNavigator() {
-    if (accountNavigator == null) {
-    }
     return accountNavigator;
   }
 

@@ -1,16 +1,14 @@
-package cm.aptoide.pt;
+package cm.aptoide.pt.view;
 
-import cm.aptoide.pt.ActivityModule;
-import cm.aptoide.pt.view.ActivityScope;
-import cm.aptoide.pt.view.FragmentComponent;
-import cm.aptoide.pt.view.FragmentModule;
-import cm.aptoide.pt.view.MainActivity;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import dagger.Subcomponent;
 
 @ActivityScope @Subcomponent(modules = { ActivityModule.class })
 public interface ActivityComponent {
 
   void inject(MainActivity activity);
+
+  void inject(ActivityResultNavigator activityResultNavigator);
 
   FragmentComponent plus(FragmentModule fragmentModule);
 

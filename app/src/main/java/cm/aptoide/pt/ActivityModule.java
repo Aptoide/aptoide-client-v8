@@ -75,12 +75,13 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   private final View view;
   private final String defaultTheme;
   private final String defaultStoreName;
-  private boolean firstCreated;
   private final String fileProviderAuthority;
+  private boolean firstCreated;
 
-  public ActivityModule(AppCompatActivity activity, Intent intent, NotificationSyncScheduler notificationSyncScheduler, String marketName,
-      String autoUpdateUrl, View view, String defaultTheme, String defaultStoreName,
-      boolean firstCreated, String fileProviderAuthority) {
+  public ActivityModule(AppCompatActivity activity, Intent intent,
+      NotificationSyncScheduler notificationSyncScheduler, String marketName, String autoUpdateUrl,
+      View view, String defaultTheme, String defaultStoreName, boolean firstCreated,
+      String fileProviderAuthority) {
     this.activity = activity;
     this.intent = intent;
     this.notificationSyncScheduler = notificationSyncScheduler;
@@ -102,7 +103,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       PermissionManager permissionManager, Resources resources) {
     final AptoideApplication application = (AptoideApplication) getApplicationContext();
     return new AutoUpdate((ActivityView) activity, downloadFactory, permissionManager,
-        application.getInstallManager(InstallerFactory.ROLLBACK), resources, autoUpdateUrl, R.mipmap.ic_launcher, false, marketName);
+        application.getInstallManager(InstallerFactory.ROLLBACK), resources, autoUpdateUrl,
+        R.mipmap.ic_launcher, false, marketName);
   }
 
   @ActivityScope @Provides FragmentNavigator provideFragmentNavigator(
@@ -125,11 +127,12 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       @Named("default") SharedPreferences defaultSharedPreferences, NotificationAnalytics notificationAnalytics) {
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
         (TabNavigator) activity, (DeepLinkManager.DeepLinkMessages) activity, sharedPreferences,
-        storeAccessor, defaultTheme, defaultStoreName, navigationTracker, pageViewsAnalytics, notificationAnalytics);
+        storeAccessor, defaultTheme, defaultStoreName, navigationTracker, pageViewsAnalytics,
+        notificationAnalytics);
   }
 
-  @ActivityScope @Provides Presenter provideMainPresenter(RootInstallationRetryHandler rootInstallationRetryHandler,
-      ApkFy apkFy, AutoUpdate autoUpdate,
+  @ActivityScope @Provides Presenter provideMainPresenter(
+      RootInstallationRetryHandler rootInstallationRetryHandler, ApkFy apkFy, AutoUpdate autoUpdate,
       @Named("default") SharedPreferences sharedPreferences,
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       FragmentNavigator fragmentNavigator, DeepLinkManager deepLinkManager) {
@@ -143,39 +146,43 @@ import static com.facebook.FacebookSdk.getApplicationContext;
         fragmentNavigator, deepLinkManager, defaultStoreName, defaultTheme, firstCreated);
   }
 
-  @ActivityScope @Provides AccountNavigator provideAccountNavigator(FragmentNavigator fragmentNavigator, AptoideAccountManager accountManager,
-      CallbackManager callbackManager, GoogleApiClient googleApiClient){
-    return new AccountNavigator(fragmentNavigator, accountManager,
-        ((ActivityNavigator) activity), LoginManager.getInstance(), callbackManager, googleApiClient,
-        PublishRelay.create(),defaultStoreName, defaultTheme, "http://m.aptoide.com/account/password-recovery");
+  @ActivityScope @Provides AccountNavigator provideAccountNavigator(
+      FragmentNavigator fragmentNavigator, AptoideAccountManager accountManager,
+      CallbackManager callbackManager, GoogleApiClient googleApiClient) {
+    return new AccountNavigator(fragmentNavigator, accountManager, ((ActivityNavigator) activity),
+        LoginManager.getInstance(), callbackManager, googleApiClient, PublishRelay.create(),
+        defaultStoreName, defaultTheme, "http://m.aptoide.com/account/password-recovery");
   }
 
-  @ActivityScope @Provides ScreenOrientationManager provideScreenOrientationManager(){
-    return new ScreenOrientationManager(activity, (WindowManager) activity.getSystemService(WINDOW_SERVICE));
+  @ActivityScope @Provides ScreenOrientationManager provideScreenOrientationManager() {
+    return new ScreenOrientationManager(activity,
+        (WindowManager) activity.getSystemService(WINDOW_SERVICE));
   }
 
-  @ActivityScope @Provides AccountPermissionProvider provideAccountPermissionProvider(){
+  @ActivityScope @Provides AccountPermissionProvider provideAccountPermissionProvider() {
     return new AccountPermissionProvider(((PermissionProvider) activity));
   }
 
-  @ActivityScope @Provides PhotoFileGenerator providePhotoFileGenerator(){
+  @ActivityScope @Provides PhotoFileGenerator providePhotoFileGenerator() {
     return new PhotoFileGenerator(activity,
         activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileProviderAuthority);
   }
 
-  @ActivityScope @Provides UriToPathResolver provideUriToPathResolver(){
+  @ActivityScope @Provides UriToPathResolver provideUriToPathResolver() {
     return new UriToPathResolver(activity.getContentResolver());
   }
 
-  @ActivityScope @Provides ImagePickerNavigator provideImagePickerNavigator(){
+  @ActivityScope @Provides ImagePickerNavigator provideImagePickerNavigator() {
     return new ImagePickerNavigator((ActivityNavigator) activity);
   }
 
-  @ActivityScope @Provides ManageStoreNavigator provideManageStoreNavigator(FragmentNavigator fragmentNavigator){
+  @ActivityScope @Provides ManageStoreNavigator provideManageStoreNavigator(
+      FragmentNavigator fragmentNavigator) {
     return new ManageStoreNavigator(fragmentNavigator, defaultStoreName, defaultTheme);
   }
 
-  @ActivityScope @Provides ManageUserNavigator provideManageUserNavigator(FragmentNavigator fragmentNavigator){
+  @ActivityScope @Provides ManageUserNavigator provideManageUserNavigator(
+      FragmentNavigator fragmentNavigator) {
     return new ManageUserNavigator(fragmentNavigator, defaultStoreName, defaultTheme);
   }
 

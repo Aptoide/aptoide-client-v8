@@ -27,8 +27,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.SocialLink;
-import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.ImagePickerErrorHandler;
 import cm.aptoide.pt.account.view.ImagePickerNavigator;
@@ -68,7 +66,13 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   private static final String EXTRA_GO_TO_HOME = "go_to_home";
   private static final float STROKE_SIZE = 0.040f;
   private static final float SPACE_BETWEEN = 0.0f;
-
+  @Inject ImageValidator imageValidator;
+  @Inject ImagePickerNavigator imagePickerNavigator;
+  @Inject UriToPathResolver uriToPathResolver;
+  @Inject AccountPermissionProvider accountPermissionProvider;
+  @Inject ImagePickerPresenter imagePickerPresenter;
+  @Inject ManageStorePresenter manageStorePresenter;
+  @Inject PhotoFileGenerator photoFileGenerator;
   private TextView chooseStoreNameTitle;
   private View selectStoreImageButton;
   private ImageView storeImage;
@@ -77,10 +81,8 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   private EditText storeName;
   private EditText storeDescription;
   private ProgressDialog waitDialog;
-
   private RecyclerView themeSelectorView;
   private ThemeSelectorViewAdapter themeSelectorAdapter;
-
   private ManageStoreViewModel currentModel;
   private boolean goToHome;
   private Toolbar toolbar;
@@ -111,13 +113,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   private ImageView twitchEndRowIcon;
   private ImageView twitterEndRowIcon;
   private ImageView youtubeEndRowIcon;
-  @Inject ImageValidator imageValidator;
-  @Inject ImagePickerNavigator imagePickerNavigator;
-  @Inject UriToPathResolver uriToPathResolver;
-  @Inject AccountPermissionProvider accountPermissionProvider;
-  @Inject ImagePickerPresenter imagePickerPresenter;
-  @Inject ManageStorePresenter manageStorePresenter;
-  @Inject PhotoFileGenerator photoFileGenerator;
   private List<Store.SocialChannelType> storeDeleteLinksList;
   private int requestCode;
 
@@ -426,7 +421,8 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
 
   private void attachPresenters() {
 
-    attachPresenter(new CompositePresenter(Arrays.asList(imagePickerPresenter, manageStorePresenter)));
+    attachPresenter(
+        new CompositePresenter(Arrays.asList(imagePickerPresenter, manageStorePresenter)));
   }
 
   public void setupThemeSelector() {
