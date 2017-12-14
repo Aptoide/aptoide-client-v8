@@ -209,30 +209,37 @@ public class MockApplicationModule extends ApplicationModule {
     return new AptoideAccountManager.Builder().setAccountPersistence(accountPersistence)
         .setAccountService(accountService)
         .registerSignUpAdapter(GoogleSignUpAdapter.TYPE,
-            new GoogleSignUpAdapter(googleApiClient, loginPreferences){
-          @Override public Single<Account>signUp(GoogleSignInResult result, AccountService service){
-            return Single.just(account);
-          }
-          @Override public Completable logout(){
-            return Completable.complete();
-          }
-          @Override public boolean isEnabled(){
-            return true;
-          }
+            new GoogleSignUpAdapter(googleApiClient, loginPreferences) {
+              @Override
+              public Single<Account> signUp(GoogleSignInResult result, AccountService service) {
+                return Single.just(account);
+              }
+
+              @Override public Completable logout() {
+                return Completable.complete();
+              }
+
+              @Override public boolean isEnabled() {
+                return true;
+              }
             })
         .registerSignUpAdapter(FacebookSignUpAdapter.TYPE,
             new FacebookSignUpAdapter(Arrays.asList("email"), LoginManager.getInstance(),
-                loginPreferences){
-              @Override public Single<Account>signUp(FacebookLoginResult result, AccountService service){
+                loginPreferences) {
+              @Override
+              public Single<Account> signUp(FacebookLoginResult result, AccountService service) {
                 return Single.just(account);
               }
-              @Override public Completable logout(){
+
+              @Override public Completable logout() {
                 return Completable.complete();
               }
-              @Override public boolean isEnabled(){
+
+              @Override public boolean isEnabled() {
                 return true;
               }
-            }).setStoreManager(storeManager)
+            })
+        .setStoreManager(storeManager)
         .build();
   }
 
@@ -246,9 +253,9 @@ public class MockApplicationModule extends ApplicationModule {
       TokenInvalidator tokenInvalidator, RequestBodyFactory requestBodyFactory,
       ObjectMapper nonNullObjectMapper) {
     final StoreManager storeManager =
-        new StoreManager(okHttpClient, WebService.getDefaultConverter(),
-            multipartBodyInterceptor, bodyInterceptorV3, accountSettingsBodyInterceptorPoolV7,
-            defaultSharedPreferences, tokenInvalidator, requestBodyFactory, nonNullObjectMapper) {
+        new StoreManager(okHttpClient, WebService.getDefaultConverter(), multipartBodyInterceptor,
+            bodyInterceptorV3, accountSettingsBodyInterceptorPoolV7, defaultSharedPreferences,
+            tokenInvalidator, requestBodyFactory, nonNullObjectMapper) {
           @Override
           public Completable createOrUpdate(String a, String b, String c, boolean d, String e,
               boolean f, List<SocialLink> storeLinksList,
