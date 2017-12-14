@@ -147,7 +147,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.username)).perform(click());
     onView(withId(R.id.username)).perform(replaceText(email));
     onView(withId(R.id.password)).perform(click());
-    onView(withId(R.id.password)).perform(replaceText(pass),closeSoftKeyboard());
+    onView(withId(R.id.password)).perform(replaceText(pass), closeSoftKeyboard());
     onView(withId(R.id.button_login)).perform(click());
   }
 
@@ -156,7 +156,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.username)).perform(click());
     onView(withId(R.id.username)).perform(replaceText(email));
     onView(withId(R.id.password)).perform(click());
-    onView(withId(R.id.password)).perform(replaceText(pass),closeSoftKeyboard());
+    onView(withId(R.id.password)).perform(replaceText(pass), closeSoftKeyboard());
     onView(withId(R.id.button_sign_up)).perform(click());
   }
 
