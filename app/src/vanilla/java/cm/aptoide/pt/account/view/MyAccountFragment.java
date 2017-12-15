@@ -5,9 +5,7 @@
 
 package cm.aptoide.pt.account.view;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -33,7 +31,6 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
-import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -42,7 +39,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
-import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.AptoideNotification;
 import cm.aptoide.pt.notification.view.InboxAdapter;
@@ -85,23 +81,9 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
   private OkHttpClient httpClient;
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private CrashReport crashReport;
-  private TabNavigator tabNavigator;
-  private TokenInvalidator tokenInvalidator;
-  private SharedPreferences sharedPreferences;
 
   public static Fragment newInstance() {
     return new MyAccountFragment();
-  }
-
-  @Override public void onAttach(Activity activity) {
-    super.onAttach(activity);
-
-    if (activity instanceof TabNavigator) {
-      tabNavigator = (TabNavigator) activity;
-    } else {
-      throw new IllegalStateException(
-          "Activity must implement " + TabNavigator.class.getSimpleName());
-    }
   }
 
   @Override public void onDestroy() {
@@ -153,8 +135,6 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     crashReport = CrashReport.getInstance();
-    tokenInvalidator = application.getTokenInvalidator();
-    sharedPreferences = application.getDefaultSharedPreferences();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
