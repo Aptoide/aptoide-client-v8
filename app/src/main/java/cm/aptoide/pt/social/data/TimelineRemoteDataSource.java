@@ -63,7 +63,7 @@ public class TimelineRemoteDataSource {
     this.postFilter = postFilter;
   }
 
-  @NonNull private Single<TimelineModel> getTimelineModel(int limit, int offset) {
+  @NonNull private Single<TimelineModel> getTimeline(int limit, int offset) {
     if (loading || (offset >= total)) {
       return Single.just(new TimelineModel("n/a", Collections.emptyList()));
     }
@@ -113,19 +113,19 @@ public class TimelineRemoteDataSource {
         .toSingle();
   }
 
-  public Single<TimelineModel> getNextCards() {
-    return getTimelineModel(limit, currentOffset);
+  public Single<TimelineModel> getNextTimelinePage() {
+    return getTimeline(limit, currentOffset);
   }
 
-  public Single<TimelineModel> getTimelineModel() {
+  public Single<TimelineModel> getTimeline() {
     postFilter.clear();
-    return getTimelineModel(limit, initialOffset);
+    return getTimeline(limit, initialOffset);
   }
 
-  public Single<TimelineModel> getTimelineModel(String cardId) {
+  public Single<TimelineModel> getTimeline(String cardId) {
     postFilter.clear();
     cardIdPriority = cardId;
-    return getTimelineModel(limit, initialOffset);
+    return getTimeline(limit, initialOffset);
   }
 
   public void clearLoading() {

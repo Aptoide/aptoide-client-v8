@@ -50,20 +50,20 @@ public class Timeline {
     this.updateRepository = updateRepository;
   }
 
-  public Single<TimelineModel> getCards() {
-    return timelineRepository.getCards();
+  public Single<TimelineModel> getTimeline() {
+    return timelineRepository.getTimeline();
   }
 
-  public Single<TimelineModel> getFreshCards() {
-    return timelineRepository.getFreshCards();
+  public Single<TimelineModel> getFreshTimeline() {
+    return timelineRepository.getFreshTimeline();
   }
 
-  public Single<TimelineModel> getFreshCards(String postId) {
-    return timelineRepository.getFreshCards(postId);
+  public Single<TimelineModel> getFreshTimeline(String postId) {
+    return timelineRepository.getFreshTimeline(postId);
   }
 
-  public Single<TimelineModel> getNextCards() {
-    return timelineRepository.getNextCards();
+  public Single<TimelineModel> getNextTimelinePage() {
+    return timelineRepository.getNextTimelinePage();
   }
 
   public Observable<Install> updateApp(CardTouchEvent cardTouchEvent) {

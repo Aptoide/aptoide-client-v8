@@ -16,29 +16,29 @@ public class TimelineRepository {
     this.timelineRemoteDataSource = timelineRemoteDataSource;
   }
 
-  public Single<TimelineModel> getCards() {
+  public Single<TimelineModel> getTimeline() {
     if (cachedTimeline != null) {
       return Single.just(
           new TimelineModel(cachedTimeline.getTimelineVersion(), cachedTimeline.getPosts()));
     }
-    return timelineRemoteDataSource.getTimelineModel()
+    return timelineRemoteDataSource.getTimeline()
         .doOnSuccess(timeline -> cachedTimeline = timeline)
         .map(timelineModel -> new TimelineModel(timelineModel.getTimelineVersion(),
             timelineModel.getPosts()));
   }
 
-  public Single<TimelineModel> getFreshCards() {
-    return timelineRemoteDataSource.getTimelineModel()
+  public Single<TimelineModel> getFreshTimeline() {
+    return timelineRemoteDataSource.getTimeline()
         .doOnSuccess(timelineModel -> cachedTimeline = timelineModel);
   }
 
-  public Single<TimelineModel> getFreshCards(String postId) {
-    return timelineRemoteDataSource.getTimelineModel(postId)
+  public Single<TimelineModel> getFreshTimeline(String postId) {
+    return timelineRemoteDataSource.getTimeline(postId)
         .doOnSuccess(timelineModel -> cachedTimeline = timelineModel);
   }
 
-  public Single<TimelineModel> getNextCards() {
-    return timelineRemoteDataSource.getNextCards()
+  public Single<TimelineModel> getNextTimelinePage() {
+    return timelineRemoteDataSource.getNextTimelinePage()
         .doOnSuccess(timelineModel -> cachedTimeline.addPosts(timelineModel.getPosts()));
   }
 
