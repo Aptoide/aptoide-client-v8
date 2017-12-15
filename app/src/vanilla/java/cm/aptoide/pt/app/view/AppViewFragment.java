@@ -358,7 +358,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     purchaseBundleMapper = application.getPurchaseBundleMapper();
     final AptoideAccountManager accountManager = application.getAccountManager();
     accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
-
     installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
     final BodyInterceptor<BaseBody> bodyInterceptor =
         application.getAccountSettingsBodyInterceptorPoolV7();

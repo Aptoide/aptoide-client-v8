@@ -26,7 +26,7 @@ public class SecurePreferencesImplementation implements SharedPreferences {
   private static SharedPreferences sFile;
   private static SecureCoderDecoder secureCoderDecoder;
 
-  private SecurePreferencesImplementation(Context context, SharedPreferences sharedPreferences) {
+  public SecurePreferencesImplementation(Context context, SharedPreferences sharedPreferences) {
     // Proxy design pattern
     if (SecurePreferencesImplementation.sFile == null) {
       SecurePreferencesImplementation.sFile = sharedPreferences;
