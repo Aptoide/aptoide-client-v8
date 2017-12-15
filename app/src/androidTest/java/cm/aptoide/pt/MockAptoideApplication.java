@@ -1,12 +1,15 @@
 package cm.aptoide.pt;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
+import android.os.Bundle;
+import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.view.BaseActivity;
+import cm.aptoide.pt.view.BaseFragment;
 
 public class MockAptoideApplication extends VanillaApplication {
 
   private ApplicationComponent applicationComponent;
-  private ActivityComponent activityComponent;
 
   @Override public ApplicationComponent getApplicationComponent() {
     if (applicationComponent == null) {
@@ -20,18 +23,18 @@ public class MockAptoideApplication extends VanillaApplication {
     return applicationComponent;
   }
 
-  @Override public ActivityComponent getActivityComponent(AppCompatActivity appCompatActivity, boolean firstCreated){
-    if (activityComponent == null) {
-      activityComponent = getApplicationComponent()
-          .plus(new MockActivityModule(appCompatActivity, appCompatActivity.getIntent(), getNotificationSyncScheduler(), getMarketName(),
-              getAutoUpdateUrl(), (View) appCompatActivity, getDefaultThemeName(), getDefaultStoreName(), firstCreated,
-              BuildConfig.APPLICATION_ID + ".provider"));
-    }
-    return activityComponent;
+  @Override public ActivityModule getActivityModule(BaseActivity activity, Intent intent,
+      NotificationSyncScheduler notificationSyncScheduler, String marketName, String autoUpdateUrl,
+      View view, String defaultThemeName, String defaultStoreName, boolean firstCreated, String s){
+
+      return new MockActivityModule(activity, intent, notificationSyncScheduler, marketName,
+        autoUpdateUrl, view, defaultThemeName, defaultStoreName, firstCreated, s);
   }
 
-  @Override public void destroyActivityComponent(){
-    activityComponent = null;
+  @Override public FragmentModule getFragmentModule(BaseFragment baseFragment, Bundle savedInstanceState,
+      Bundle arguments, boolean createStoreUserPrivacyEnabled, String packageName){
+    return new MockFragmentModule(baseFragment, savedInstanceState, arguments,
+        createStoreUserPrivacyEnabled, packageName);
   }
 
 }

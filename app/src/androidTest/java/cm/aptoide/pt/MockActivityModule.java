@@ -28,18 +28,13 @@ public class MockActivityModule extends ActivityModule {
     return new ImagePickerNavigator((ActivityNavigator) activity){
 
       @Override public Observable<Uri> navigateToGalleryForImageUri(int requestCode){
-        String imageUri = "";
-        if (TestType.types.equals(TestType.TestTypes.PHOTOSUCCESS)) {
-          imageUri = "content://media/external/images/media/246";
-        }
-        else if (TestType.types.equals(TestType.TestTypes.PHOTOMIN)){
-          imageUri = "content://media/external/images/media/118";
-        }
-        else if (TestType.types.equals(TestType.TestTypes.PHOTOMAX)){
-          imageUri = "content://media/external/images/media/1364";
-        }
-        Uri uri = Uri.parse(imageUri);
+        Uri uri = Uri.parse("");
         return Observable.just(uri);
+      }
+
+      @Override
+      public Observable<Void> navigateToCameraWithImageUri(int requestCode, Uri fileName) {
+        return Observable.empty();
       }
     };
   }

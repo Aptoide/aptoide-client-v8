@@ -45,16 +45,10 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   @Test public void profilePhotoLimitExceed(){
-    TestType.types = TestType.TestTypes.PHOTOMIN;
+    TestType.types = TestType.TestTypes.ERRORDECONDINGTEST;
     goToMyAccount();
     onView(withId(R.id.my_account_edit_user_profile)).perform(click());
-    onView(withId(R.id.create_user_image_action)).perform(click());
-    onView(withText("Select from gallery")).perform(click());
-    onView(withText("OK")).perform(click());
-    TestType.types = TestType.TestTypes.PHOTOMAX;
-    onView(withId(R.id.create_user_image_action)).perform(click());
-    onView(withText("Select from gallery")).perform(click());
-    onView(withText("OK")).perform(click());
+    displayErrors(true);
     onView(withId(R.id.create_user_username_inserted)).perform(swipeUp());
     onView(withId(R.id.create_user_create_profile)).perform(click());
     onView(withId(R.id.button_logout)).check(matches(isDisplayed()));
@@ -75,17 +69,11 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   @Test public void storePhotoLimitExceed(){
-    TestType.types = TestType.TestTypes.PHOTOMIN;
+    TestType.types = TestType.TestTypes.ERRORDECONDINGTEST;
     TestType.initialization = TestType.TestTypes.LOGGEDINWITHSTORE;
     goToMyAccount();
     onView(withId(R.id.my_account_edit_user_store)).perform(click());
-    onView(withId(R.id.create_store_image)).perform(click());
-    onView(withText("Select from gallery")).perform(click());
-    onView(withText("OK")).perform(click());
-    TestType.types = TestType.TestTypes.PHOTOMAX;
-    onView(withId(R.id.create_store_image_action)).perform(click());
-    onView(withText("Select from gallery")).perform(click());
-    onView(withText("OK")).perform(click());
+    displayErrors(false);
     onView(withId(R.id.create_store_image)).perform(swipeUp());
     onView(withId(R.id.theme_selector)).perform(swipeUp());
     onView(withId(R.id.theme_selector)).perform(swipeUp());
@@ -93,4 +81,26 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.button_logout)).check(matches(isDisplayed()));
   }
 
+  private void uploadImageWithError(boolean isUser){
+    if(isUser)
+      onView(withId(R.id.create_user_image_action)).perform(click());
+    else
+      onView(withId(R.id.create_store_image)).perform(click());
+    onView(withText("Select from gallery")).perform(click());
+    onView(withText("OK")).perform(click());
+  }
+
+  private void displayErrors(boolean isUser){
+    uploadImageWithError(isUser);
+    TestType.types = TestType.TestTypes.MIN_HEIGHTTEST;
+    uploadImageWithError(isUser);
+    TestType.types = TestType.TestTypes.MIN_WIDTHTEST;
+    uploadImageWithError(isUser);
+    TestType.types = TestType.TestTypes.MAX_HEIGHTTEST;
+    uploadImageWithError(isUser);
+    TestType.types = TestType.TestTypes.MAX_WIDTHTEST;
+    uploadImageWithError(isUser);
+    TestType.types = TestType.TestTypes.MAX_IMAGE_SIZETEST;
+    uploadImageWithError(isUser);
+  }
 }

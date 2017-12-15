@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.ActivityComponent;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BuildConfig;
+import cm.aptoide.pt.presenter.View;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 public abstract class BaseActivity extends RxAppCompatActivity {
@@ -17,15 +19,23 @@ public abstract class BaseActivity extends RxAppCompatActivity {
   }
 
   @Override protected void onDestroy() {
-    ((AptoideApplication) getApplication()).destroyActivityComponent();
+    activityComponent = null;
     super.onDestroy();
   }
 
   public ActivityComponent getActivityComponent() {
     if (activityComponent == null) {
       AptoideApplication aptoideApplication = ((AptoideApplication) getApplication());
-      activityComponent  = aptoideApplication.getActivityComponent(this, firstCreated);
+      activityComponent = aptoideApplication.getApplicationComponent()
+          .plus(aptoideApplication.getActivityModule(this, getIntent(),
+              aptoideApplication.getNotificationSyncScheduler(),
+              aptoideApplication.getMarketName(),
+              aptoideApplication.getAutoUpdateUrl(), (View) this,
+              aptoideApplication.getDefaultThemeName(),
+              aptoideApplication.getDefaultStoreName(), firstCreated,
+              BuildConfig.APPLICATION_ID + ".provider"));
     }
     return activityComponent;
   }
+
 }

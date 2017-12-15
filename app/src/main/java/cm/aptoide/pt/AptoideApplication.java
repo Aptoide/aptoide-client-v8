@@ -10,11 +10,11 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
-import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
@@ -107,6 +107,8 @@ import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.view.ActivityProvider;
+import cm.aptoide.pt.view.BaseActivity;
+import cm.aptoide.pt.view.BaseFragment;
 import cm.aptoide.pt.view.FragmentProvider;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.AppCenterRepository;
@@ -220,7 +222,6 @@ public abstract class AptoideApplication extends Application {
   private PurchaseFactory purchaseFactory;
   private SparseArray<InstallManager> installManagers;
   private ApplicationComponent applicationComponent;
-  private ActivityComponent activityComponent;
   private AppCenter appCenter;
   private ReadPostsPersistence readPostsPersistence;
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
@@ -380,18 +381,18 @@ public abstract class AptoideApplication extends Application {
     return applicationComponent;
   }
 
-  public ActivityComponent getActivityComponent(AppCompatActivity appCompatActivity, boolean firstCreated){
-    if (activityComponent == null) {
-      activityComponent = getApplicationComponent()
-          .plus(new ActivityModule(appCompatActivity, appCompatActivity.getIntent(), getNotificationSyncScheduler(), getMarketName(),
-              getAutoUpdateUrl(), (View) appCompatActivity, getDefaultThemeName(), getDefaultStoreName(), firstCreated,
-              BuildConfig.APPLICATION_ID + ".provider"));
-    }
-    return activityComponent;
+  public ActivityModule getActivityModule(BaseActivity activity, Intent intent,
+      NotificationSyncScheduler notificationSyncScheduler, String marketName, String autoUpdateUrl,
+      View view, String defaultThemeName, String defaultStoreName, boolean firstCreated, String s){
+
+    return new ActivityModule(activity, intent, notificationSyncScheduler, marketName,
+        autoUpdateUrl, view, defaultThemeName, defaultStoreName, firstCreated, s);
   }
 
-  public void destroyActivityComponent(){
-    activityComponent = null;
+  public FragmentModule getFragmentModule(BaseFragment baseFragment, Bundle savedInstanceState,
+      Bundle arguments, boolean createStoreUserPrivacyEnabled, String packageName){
+    return new FragmentModule(baseFragment, savedInstanceState, arguments,
+        createStoreUserPrivacyEnabled, packageName);
   }
 
   @Override protected void attachBaseContext(Context base) {
@@ -488,10 +489,6 @@ public abstract class AptoideApplication extends Application {
     return notificationProvider;
   }
 
-  public StoreManager getStoreManager() {
-    return storeManager;
-  }
-
   public abstract NotificationSyncScheduler getNotificationSyncScheduler();
 
   public SharedPreferences getDefaultSharedPreferences() {
@@ -505,10 +502,6 @@ public abstract class AptoideApplication extends Application {
 
   public OkHttpClient getDefaultClient() {
     return defaultClient;
-  }
-
-  public Interceptor getUserAgentInterceptor() {
-    return userAgentInterceptor;
   }
 
   public L2Cache getHttpClientCache() {
@@ -776,10 +769,6 @@ public abstract class AptoideApplication extends Application {
 
   public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getBodyInterceptorV3() {
     return bodyInterceptorV3;
-  }
-
-  public RequestBodyFactory getRequestBodyFactory() {
-    return requestBodyFactory;
   }
 
   public String getAptoideMd5sum() {

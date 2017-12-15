@@ -19,9 +19,6 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
-import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
@@ -60,7 +57,6 @@ import dagger.Module;
 import dagger.Provides;
 import java.util.Map;
 import javax.inject.Named;
-import okhttp3.OkHttpClient;
 
 import static android.content.Context.WINDOW_SERVICE;
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -121,10 +117,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   @ActivityScope @Provides DeepLinkManager provideDeepLinkManager(StoreUtilsProxy storeUtilsProxy,
       StoreRepository storeRepository, FragmentNavigator fragmentNavigator,
       @Named("default") SharedPreferences sharedPreferences, StoreAccessor storeAccessor,
-      @Named("default") OkHttpClient httpClient, @Named("pool-v7")
-      BodyInterceptor<BaseBody> bodyInterceptorV7,
-      NavigationTracker navigationTracker, PageViewsAnalytics pageViewsAnalytics, TokenInvalidator tokenInvalidator,
-      @Named("default") SharedPreferences defaultSharedPreferences, NotificationAnalytics notificationAnalytics) {
+      NavigationTracker navigationTracker, PageViewsAnalytics pageViewsAnalytics, NotificationAnalytics notificationAnalytics) {
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
         (TabNavigator) activity, (DeepLinkManager.DeepLinkMessages) activity, sharedPreferences,
         storeAccessor, defaultTheme, defaultStoreName, navigationTracker, pageViewsAnalytics,
