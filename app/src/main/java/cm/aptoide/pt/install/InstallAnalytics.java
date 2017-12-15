@@ -5,9 +5,11 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
 import cm.aptoide.pt.analytics.events.FlurryEvent;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.view.DeepLinkManager;
 import com.facebook.appevents.AppEventsLogger;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by pedroribeiro on 19/06/17.
@@ -24,12 +26,15 @@ public class InstallAnalytics {
   private static final String TRUSTED_BADGE = "Trusted Badge";
   private static final String INSTALLED = "Installed";
   private static final String REPLACED = "Replaced";
+  private static final String NO_PREVIOUS_SCREEN_ERROR = "No_Previous_Screen";
   private final Analytics analytics;
   private final AppEventsLogger facebook;
+  private CrashReport crashReport;
 
-  public InstallAnalytics(Analytics analytics, AppEventsLogger facebook) {
+  public InstallAnalytics(Analytics analytics, AppEventsLogger facebook, CrashReport crashReport) {
     this.analytics = analytics;
     this.facebook = facebook;
+    this.crashReport = crashReport;
   }
 
   public void sendInstalledEvent(String packageName) {
@@ -73,7 +78,8 @@ public class InstallAnalytics {
   }
 
   public void installStarted(ScreenTagHistory previousScreen, ScreenTagHistory currentScreen,
-      String packageName, int installingVersion, InstallType installType) {
+      String packageName, int installingVersion, InstallType installType,
+      List<String> fragmentNameList) {
     if (currentScreen.getTag() != null && currentScreen.getTag()
         .contains("apps-group-editors-choice")) {
       Bundle data = new Bundle();
@@ -81,16 +87,17 @@ public class InstallAnalytics {
       data.putString("type", installType.name());
       analytics.save(packageName + installingVersion,
           new FacebookEvent(facebook, EDITORS_APPLICATION_INSTALL, data));
-    } else if (previousScreen
-        != null) {  //this if was added due to AN-2187 use case not being found. Should be solved/removed when the source for the issue is found
-      if (currentScreen.getTag() != null && previousScreen.getFragment()
-          .equals(DeepLinkManager.DEEPLINK_KEY)) {
-        Bundle data = new Bundle();
-        data.putString("package_name", packageName);
-        data.putString("type", installType.name());
-        analytics.save(packageName + installingVersion,
-            new FacebookEvent(facebook, NOTIFICATION_APPLICATION_INSTALL, data));
+    } else if (previousScreen == null) {
+      if (!fragmentNameList.isEmpty()) {
+        crashReport.log(NO_PREVIOUS_SCREEN_ERROR, fragmentNameList.toString());
       }
+    } else if (currentScreen.getTag() != null && previousScreen.getFragment()
+        .equals(DeepLinkManager.DEEPLINK_KEY)) {
+      Bundle data = new Bundle();
+      data.putString("package_name", packageName);
+      data.putString("type", installType.name());
+      analytics.save(packageName + installingVersion,
+          new FacebookEvent(facebook, NOTIFICATION_APPLICATION_INSTALL, data));
     }
   }
 

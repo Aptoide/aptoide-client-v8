@@ -369,7 +369,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     issuesAnalytics = new IssuesAnalytics(analytics, Answers.getInstance());
 
     installAnalytics = new InstallAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()));
+        AppEventsLogger.newLogger(getContext().getApplicationContext()), CrashReport.getInstance());
 
     SharedPreferences sharedPreferences = application.getDefaultSharedPreferences();
     timelineAnalytics = new TimelineAnalytics(analytics,
@@ -942,7 +942,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
                 AppEventsLogger.newLogger(getContext().getApplicationContext())), navigationTracker,
             getEditorsBrickPosition(), installAnalytics,
             notificationAnalytics.getCampaignId(app.getPackageName(), app.getId()),
-            notificationAnalytics.getAbTestingGroup(app.getPackageName(), app.getId()));
+            notificationAnalytics.getAbTestingGroup(app.getPackageName(), app.getId()),
+            getFragmentManager().getFragments());
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics, storeAnalytics));
     displayables.add(
