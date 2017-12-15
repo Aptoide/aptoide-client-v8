@@ -81,13 +81,17 @@ public class InstallAnalytics {
       data.putString("type", installType.name());
       analytics.save(packageName + installingVersion,
           new FacebookEvent(facebook, EDITORS_APPLICATION_INSTALL, data));
-    } else if (currentScreen.getTag() != null && previousScreen.getFragment()
-        .equals(DeepLinkManager.DEEPLINK_KEY)) {
-      Bundle data = new Bundle();
-      data.putString("package_name", packageName);
-      data.putString("type", installType.name());
-      analytics.save(packageName + installingVersion,
-          new FacebookEvent(facebook, NOTIFICATION_APPLICATION_INSTALL, data));
+    }
+    if (previousScreen
+        != null) {  //this if was added due to AN-2187 use case not being found. Should be solved/removed when the source for the issue is found
+      if (currentScreen.getTag() != null && previousScreen.getFragment()
+          .equals(DeepLinkManager.DEEPLINK_KEY)) {
+        Bundle data = new Bundle();
+        data.putString("package_name", packageName);
+        data.putString("type", installType.name());
+        analytics.save(packageName + installingVersion,
+            new FacebookEvent(facebook, NOTIFICATION_APPLICATION_INSTALL, data));
+      }
     }
   }
 
