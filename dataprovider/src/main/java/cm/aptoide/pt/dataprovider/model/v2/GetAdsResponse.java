@@ -755,7 +755,9 @@ public class GetAdsResponse {
     public String toString() {
       return "GetAdsResponse.Options(mediation=" + this.getMediation() + ")";
     }
-  }  public boolean equals(Object o) {
+  }
+
+  public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof GetAdsResponse)) return false;
     final GetAdsResponse other = (GetAdsResponse) o;
@@ -770,8 +772,6 @@ public class GetAdsResponse {
     }
     return true;
   }
-
-
 
   public String toString() {
     return "GetAdsResponse(ads=" + this.getAds() + ", options=" + this.getOptions() + ")";

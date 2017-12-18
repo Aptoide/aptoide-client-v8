@@ -396,7 +396,9 @@ public class BaseV7Response {
           + this.getError()
           + ")";
     }
-  }  public boolean equals(Object o) {
+  }
+
+  public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof BaseV7Response)) return false;
     final BaseV7Response other = (BaseV7Response) o;
@@ -411,8 +413,6 @@ public class BaseV7Response {
     }
     return true;
   }
-
-
 
   public String toString() {
     return "BaseV7Response(info=" + this.getInfo() + ", errors=" + this.getErrors() + ")";
