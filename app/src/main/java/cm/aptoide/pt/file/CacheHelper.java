@@ -12,7 +12,6 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import java.io.File;
 import java.util.List;
-import lombok.Data;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -132,7 +131,7 @@ public class CacheHelper implements CacheManager {
     return false;
   }
 
-  @Data public static class FolderToManage {
+  public static class FolderToManage {
     /**
      * Folder to be managed
      */
@@ -141,5 +140,55 @@ public class CacheHelper implements CacheManager {
      * how long the files should be kept
      */
     final long cacheTime;
+
+    @java.beans.ConstructorProperties({ "folder", "cacheTime" })
+    public FolderToManage(File folder, long cacheTime) {
+      this.folder = folder;
+      this.cacheTime = cacheTime;
+    }
+
+    public File getFolder() {
+      return this.folder;
+    }
+
+    public long getCacheTime() {
+      return this.cacheTime;
+    }
+
+    public int hashCode() {
+      final int PRIME = 59;
+      int result = 1;
+      final Object $folder = this.getFolder();
+      result = result * PRIME + ($folder == null ? 43 : $folder.hashCode());
+      final long $cacheTime = this.getCacheTime();
+      result = result * PRIME + (int) ($cacheTime >>> 32 ^ $cacheTime);
+      return result;
+    }
+
+    public boolean equals(Object o) {
+      if (o == this) return true;
+      if (!(o instanceof FolderToManage)) return false;
+      final FolderToManage other = (FolderToManage) o;
+      if (!other.canEqual((Object) this)) return false;
+      final Object this$folder = this.getFolder();
+      final Object other$folder = other.getFolder();
+      if (this$folder == null ? other$folder != null : !this$folder.equals(other$folder)) {
+        return false;
+      }
+      if (this.getCacheTime() != other.getCacheTime()) return false;
+      return true;
+    }
+
+    public String toString() {
+      return "CacheHelper.FolderToManage(folder="
+          + this.getFolder()
+          + ", cacheTime="
+          + this.getCacheTime()
+          + ")";
+    }
+
+    protected boolean canEqual(Object other) {
+      return other instanceof FolderToManage;
+    }
   }
 }

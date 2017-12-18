@@ -2,12 +2,11 @@ package cm.aptoide.pt.dataprovider.model.v7.timeline;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.EqualsAndHashCode;
 
 /**
  * Created by jdandrade on 28/11/2016.
  */
-@EqualsAndHashCode public class SocialVideoTimelineItem implements TimelineItem<TimelineCard> {
+public class SocialVideoTimelineItem implements TimelineItem<TimelineCard> {
 
   private SocialVideo socialVideo;
 
@@ -21,5 +20,31 @@ import lombok.EqualsAndHashCode;
 
   @Override public SocialVideo getData() {
     return socialVideo;
+  }
+
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    final Object $socialVideo = this.socialVideo;
+    result = result * PRIME + ($socialVideo == null ? 43 : $socialVideo.hashCode());
+    return result;
+  }
+
+  public boolean equals(Object o) {
+    if (o == this) return true;
+    if (!(o instanceof SocialVideoTimelineItem)) return false;
+    final SocialVideoTimelineItem other = (SocialVideoTimelineItem) o;
+    if (!other.canEqual((Object) this)) return false;
+    final Object this$socialVideo = this.socialVideo;
+    final Object other$socialVideo = other.socialVideo;
+    if (this$socialVideo == null ? other$socialVideo != null
+        : !this$socialVideo.equals(other$socialVideo)) {
+      return false;
+    }
+    return true;
+  }
+
+  protected boolean canEqual(Object other) {
+    return other instanceof SocialVideoTimelineItem;
   }
 }

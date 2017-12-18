@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
-import lombok.Getter;
 
 /**
  * Created by neuro on 29-01-2017.
@@ -30,10 +29,10 @@ public abstract class AptoideMessageController implements Sender<Message> {
   private ObjectOutputStream objectOutputStream;
   private ObjectInputStream objectInputStream;
   private LinkedBlockingQueue<AckMessage> ackMessages = new LinkedBlockingQueue<>();
-  @Getter private Host host;
-  @Getter private Host localhost;
+  private Host host;
+  private Host localhost;
   private Socket socket;
-  @Getter private boolean connected;
+  private boolean connected;
 
   public AptoideMessageController(List<MessageHandler<? extends Message>> messageHandlers,
       OnError<IOException> onError) {
@@ -184,5 +183,17 @@ public abstract class AptoideMessageController implements Sender<Message> {
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  public Host getHost() {
+    return this.host;
+  }
+
+  public Host getLocalhost() {
+    return this.localhost;
+  }
+
+  public boolean isConnected() {
+    return this.connected;
   }
 }

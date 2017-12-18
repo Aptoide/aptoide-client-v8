@@ -20,7 +20,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
-import lombok.Getter;
 
 // FIXME: 27/2/2017 convert this into a class that extends "BaseDialog"
 public class InstallWarningDialog {
@@ -28,10 +27,9 @@ public class InstallWarningDialog {
   private final boolean trustedVersionAvailable;
   private final Malware.Rank rank;
   private final String marketName;
-  @Getter private AlertDialog dialog;
+  private AlertDialog dialog;
   private Button trustedAppButton;
   private Button proceedButton;
-
   @SuppressLint("InflateParams")
   public InstallWarningDialog(Malware.Rank rank, boolean trustedVersionAvailable, Context ctx,
       View.OnClickListener installHandler, View.OnClickListener searchTrustedHandler,
@@ -59,6 +57,10 @@ public class InstallWarningDialog {
     setTrustedAppButton(contentView);
 
     dialog = builder.create();
+  }
+
+  public AlertDialog getDialog() {
+    return dialog;
   }
 
   public View.OnClickListener onDestroy() {

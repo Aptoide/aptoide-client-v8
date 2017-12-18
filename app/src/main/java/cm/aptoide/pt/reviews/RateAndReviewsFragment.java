@@ -49,7 +49,6 @@ import cm.aptoide.pt.view.recycler.displayable.ProgressBarDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.List;
-import lombok.Getter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
@@ -62,12 +61,12 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private IdsRepository idsRepository;
   private DialogUtils dialogUtils;
 
+  private long reviewId;
+  private String storeName;
+  private String appName;
   private long appId;
-  @Getter private long reviewId;
   private String packageName;
-  @Getter private String storeName;
   private String storeTheme;
-  @Getter private String appName;
   private MenuItem installMenuItem;
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private StoreCredentialsProvider storeCredentialsProvider;
@@ -103,6 +102,18 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     args.putLong(BundleCons.REVIEW_ID, reviewId);
     fragment.setArguments(args);
     return fragment;
+  }
+
+  public long getReviewId() {
+    return reviewId;
+  }
+
+  public String getStoreName() {
+    return storeName;
+  }
+
+  public String getAppName() {
+    return appName;
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
