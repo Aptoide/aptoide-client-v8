@@ -17,6 +17,7 @@ import org.junit.runner.RunWith;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
+import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static cm.aptoide.pt.UITests.goToSettings;
@@ -28,6 +29,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
       new ActivityTestRule<>(MainActivity.class);
 
   @Before public void setUp() {
+    TestType.types = TestType.TestTypes.REGULAR;
     if (UITests.isFirstTime()) {
       skipWizard();
     }
@@ -36,8 +38,9 @@ import static cm.aptoide.pt.UITests.skipWizard;
   @Test public void landscapeHomeTab() {
     Activity activity = mActivityRule.getActivity();
     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-    onView(withText(R.string.stores)).perform(click());
-    onView(withText(R.string.home_title)).perform(click());
+    onView(withId(R.id.toolbar)).perform(swipeUp());
+    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    onView(withId(R.id.toolbar)).perform(swipeUp());
   }
 
   @Test public void landscapeSettings() {

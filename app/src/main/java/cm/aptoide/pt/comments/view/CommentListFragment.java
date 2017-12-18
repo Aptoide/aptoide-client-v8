@@ -23,7 +23,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.analytics.Analytics;
@@ -174,13 +173,10 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
             .getApplicationContext()).getDatabase(), Store.class));
     httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    bodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();
-    final Analytics analytics = Analytics.getInstance();
-    timelineAnalytics = new TimelineAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
-        httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        application.getDefaultSharedPreferences(), application.getNotificationAnalytics(),
-        navigationTracker, application.getReadPostsPersistence());
+    bodyInterceptor =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
+    timelineAnalytics =
+        ((AptoideApplication) getContext().getApplicationContext()).getTimelineAnalytics();
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);
   }

@@ -60,9 +60,8 @@ public class InstallService extends BaseService {
   @Inject AptoideDownloadManager downloadManager;
   @Inject @Named("rollback") Installer rollbackInstaller;
   @Inject @Named("default") Installer defaultInstaller;
-  private InstallManager installManager;
   @Inject InstalledRepository installedRepository;
-
+  private InstallManager installManager;
   private CompositeSubscription subscriptions;
   private Notification notification;
   private Map<String, Integer> installerTypeMap;

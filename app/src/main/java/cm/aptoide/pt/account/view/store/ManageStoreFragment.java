@@ -66,7 +66,13 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   private static final String EXTRA_GO_TO_HOME = "go_to_home";
   private static final float STROKE_SIZE = 0.040f;
   private static final float SPACE_BETWEEN = 0.0f;
-
+  @Inject ImageValidator imageValidator;
+  @Inject ImagePickerNavigator imagePickerNavigator;
+  @Inject UriToPathResolver uriToPathResolver;
+  @Inject AccountPermissionProvider accountPermissionProvider;
+  @Inject ImagePickerPresenter imagePickerPresenter;
+  @Inject ManageStorePresenter manageStorePresenter;
+  @Inject PhotoFileGenerator photoFileGenerator;
   private TextView chooseStoreNameTitle;
   private View selectStoreImageButton;
   private ImageView storeImage;
@@ -75,10 +81,8 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   private EditText storeName;
   private EditText storeDescription;
   private ProgressDialog waitDialog;
-
   private RecyclerView themeSelectorView;
   private ThemeSelectorViewAdapter themeSelectorAdapter;
-
   private ManageStoreViewModel currentModel;
   private boolean goToHome;
   private Toolbar toolbar;
@@ -109,13 +113,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   private ImageView twitchEndRowIcon;
   private ImageView twitterEndRowIcon;
   private ImageView youtubeEndRowIcon;
-  @Inject ImageValidator imageValidator;
-  @Inject ImagePickerNavigator imagePickerNavigator;
-  @Inject UriToPathResolver uriToPathResolver;
-  @Inject AccountPermissionProvider accountPermissionProvider;
-  @Inject ImagePickerPresenter imagePickerPresenter;
-  @Inject ManageStorePresenter manageStorePresenter;
-  @Inject PhotoFileGenerator photoFileGenerator;
   private List<Store.SocialChannelType> storeDeleteLinksList;
   private int requestCode;
 
