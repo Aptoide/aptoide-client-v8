@@ -531,20 +531,6 @@ public class GetAdsResponse {
           + this.getCpdUrl()
           + ")";
     }
-  }  public boolean equals(Object o) {
-    if (o == this) return true;
-    if (!(o instanceof GetAdsResponse)) return false;
-    final GetAdsResponse other = (GetAdsResponse) o;
-    if (!other.canEqual((Object) this)) return false;
-    final Object this$ads = this.getAds();
-    final Object other$ads = other.getAds();
-    if (this$ads == null ? other$ads != null : !this$ads.equals(other$ads)) return false;
-    final Object this$options = this.getOptions();
-    final Object other$options = other.getOptions();
-    if (this$options == null ? other$options != null : !this$options.equals(other$options)) {
-      return false;
-    }
-    return true;
   }
 
   public static class Partner {
@@ -769,6 +755,20 @@ public class GetAdsResponse {
     public String toString() {
       return "GetAdsResponse.Options(mediation=" + this.getMediation() + ")";
     }
+  }  public boolean equals(Object o) {
+    if (o == this) return true;
+    if (!(o instanceof GetAdsResponse)) return false;
+    final GetAdsResponse other = (GetAdsResponse) o;
+    if (!other.canEqual((Object) this)) return false;
+    final Object this$ads = this.getAds();
+    final Object other$ads = other.getAds();
+    if (this$ads == null ? other$ads != null : !this$ads.equals(other$ads)) return false;
+    final Object this$options = this.getOptions();
+    final Object other$options = other.getOptions();
+    if (this$options == null ? other$options != null : !this$options.equals(other$options)) {
+      return false;
+    }
+    return true;
   }
 
 

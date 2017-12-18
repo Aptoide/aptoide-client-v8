@@ -229,7 +229,9 @@ public class Comment {
     public String toString() {
       return "Comment.Parent(id=" + this.getId() + ")";
     }
-  }  public boolean equals(Object o) {
+  }
+
+  public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof Comment)) return false;
     final Comment other = (Comment) o;
@@ -257,8 +259,6 @@ public class Comment {
     }
     return true;
   }
-
-
 
   public String toString() {
     return "Comment(id="

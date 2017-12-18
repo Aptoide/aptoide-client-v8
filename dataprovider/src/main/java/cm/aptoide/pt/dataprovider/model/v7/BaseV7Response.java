@@ -274,20 +274,6 @@ public class BaseV7Response {
           + this.getDetails()
           + ")";
     }
-  }  public boolean equals(Object o) {
-    if (o == this) return true;
-    if (!(o instanceof BaseV7Response)) return false;
-    final BaseV7Response other = (BaseV7Response) o;
-    if (!other.canEqual((Object) this)) return false;
-    final Object this$info = this.getInfo();
-    final Object other$info = other.getInfo();
-    if (this$info == null ? other$info != null : !this$info.equals(other$info)) return false;
-    final Object this$errors = this.getErrors();
-    final Object other$errors = other.getErrors();
-    if (this$errors == null ? other$errors != null : !this$errors.equals(other$errors)) {
-      return false;
-    }
-    return true;
   }
 
   public static class Details {
@@ -410,6 +396,20 @@ public class BaseV7Response {
           + this.getError()
           + ")";
     }
+  }  public boolean equals(Object o) {
+    if (o == this) return true;
+    if (!(o instanceof BaseV7Response)) return false;
+    final BaseV7Response other = (BaseV7Response) o;
+    if (!other.canEqual((Object) this)) return false;
+    final Object this$info = this.getInfo();
+    final Object other$info = other.getInfo();
+    if (this$info == null ? other$info != null : !this$info.equals(other$info)) return false;
+    final Object this$errors = this.getErrors();
+    final Object other$errors = other.getErrors();
+    if (this$errors == null ? other$errors != null : !this$errors.equals(other$errors)) {
+      return false;
+    }
+    return true;
   }
 
 

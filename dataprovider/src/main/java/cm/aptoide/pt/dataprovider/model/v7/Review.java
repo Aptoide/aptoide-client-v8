@@ -350,7 +350,9 @@ public class Review {
     public String toString() {
       return "Review.Comments(total=" + this.getTotal() + ", view=" + this.getView() + ")";
     }
-  }  public boolean equals(Object o) {
+  }
+
+  public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof Review)) return false;
     final Review other = (Review) o;
@@ -389,8 +391,6 @@ public class Review {
     }
     return true;
   }
-
-
 
   public String toString() {
     return "Review(id="

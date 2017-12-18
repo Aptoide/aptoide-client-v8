@@ -308,7 +308,9 @@ public class BiUtmAnalyticsRequestBody extends BaseBody {
           + this.getContent()
           + ")";
     }
-  }  public boolean equals(Object o) {
+  }
+
+  public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof BiUtmAnalyticsRequestBody)) return false;
     final BiUtmAnalyticsRequestBody other = (BiUtmAnalyticsRequestBody) o;
@@ -318,8 +320,6 @@ public class BiUtmAnalyticsRequestBody extends BaseBody {
     if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
     return true;
   }
-
-
 
   public String toString() {
     return "BiUtmAnalyticsRequestBody(data=" + this.getData() + ")";
