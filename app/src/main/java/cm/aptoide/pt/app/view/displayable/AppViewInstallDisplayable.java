@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.app.view.displayable;
 
-import android.support.v4.app.Fragment;
 import android.widget.Button;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.NavigationTracker;
@@ -18,11 +17,9 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
-import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import com.jakewharton.rxrelay.PublishRelay;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -51,17 +48,10 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   private InstallAnalytics installAnalytics;
   private int campaignId;
   private String abTestingGroup;
-  private List<Fragment> fragments;
+  private List<String> fragments;
 
-  public AppViewInstallDisplayable(InstallManager installManager, GetApp getApp,
-      SearchAdResult searchAdResult, boolean shouldInstall, TimelineAnalytics timelineAnalytics,
-      AppViewAnalytics appViewAnalytics, PublishRelay installAppRelay,
-      DownloadFactory downloadFactory, AppViewFragment appViewFragment,
-      DownloadCompleteAnalytics analytics, NavigationTracker navigationTracker,
-      String editorsBrickPosition, InstallAnalytics installAnalytics, int campaignId,
-      String abTestingGroup, List<Fragment> fragments) {
+  public AppViewInstallDisplayable() {
     super();
-    this.fragments = fragments;
     this.installAppRelay = PublishRelay.empty();
   }
 
@@ -71,7 +61,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
       DownloadFactory downloadFactory, AppViewFragment appViewFragment,
       DownloadCompleteAnalytics analytics, NavigationTracker navigationTracker,
       String editorsChoiceBrickPosition, InstallAnalytics installAnalytics, int campaignId,
-      String abTestingGroup) {
+      String abTestingGroup, List<String> fragments) {
     super(getApp, appViewAnalytics);
     this.installManager = installManager;
     this.md5 = getApp.getNodes()
@@ -100,16 +90,16 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
     this.installAnalytics = installAnalytics;
     this.campaignId = campaignId;
     this.abTestingGroup = abTestingGroup;
+    this.fragments = fragments;
   }
 
   public static AppViewInstallDisplayable newInstance(GetApp getApp, InstallManager installManager,
-      SearchAdResult searchAdResult, boolean shouldInstall, InstalledRepository installedRepository,
-      DownloadFactory downloadFactory, TimelineAnalytics timelineAnalytics,
-      AppViewAnalytics appViewAnalytics, PublishRelay installAppRelay,
-      AppViewFragment appViewFragment, DownloadCompleteAnalytics analytics,
-      NavigationTracker navigationTracker, String editorsBrickPosition,
-      InstallAnalytics installAnalytics, int campaignId, String abTestingGroup,
-      List<Fragment> fragments) {
+      SearchAdResult searchAdResult, boolean shouldInstall, DownloadFactory downloadFactory,
+      TimelineAnalytics timelineAnalytics, AppViewAnalytics appViewAnalytics,
+      PublishRelay installAppRelay, AppViewFragment appViewFragment,
+      DownloadCompleteAnalytics analytics, NavigationTracker navigationTracker,
+      String editorsBrickPosition, InstallAnalytics installAnalytics, int campaignId,
+      String abTestingGroup, List<String> fragments) {
     return new AppViewInstallDisplayable(installManager, getApp, searchAdResult, shouldInstall,
         timelineAnalytics, appViewAnalytics, installAppRelay, downloadFactory, appViewFragment,
         analytics, navigationTracker, editorsBrickPosition, installAnalytics, campaignId,
@@ -156,22 +146,12 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
         .getData();
     installAnalytics.installStarted(navigationTracker.getPreviousScreen(),
         navigationTracker.getCurrentScreen(), app.getPackageName(), versionCode,
-        InstallAnalytics.InstallType.valueOf(installType.name()), createFragmentNameList());
+        InstallAnalytics.InstallType.valueOf(installType.name()), fragments);
     analytics.installClicked(navigationTracker.getPreviousScreen(),
         navigationTracker.getCurrentScreen(), app.getMd5(), app.getPackageName(), app.getFile()
             .getMalware()
             .getRank()
             .name(), editorsChoiceBrickPosition, installType);
-  }
-
-  private List<String> createFragmentNameList() {
-    List<String> fragmentNameList = new ArrayList<>();
-    for (int i = fragments.size() - 1; i >= 0; i--) {
-      fragmentNameList.add(fragments.get(i)
-          .getClass()
-          .getSimpleName());
-    }
-    return fragmentNameList;
   }
 
   public int getCampaignId() {

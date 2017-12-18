@@ -97,8 +97,8 @@ public class NotificationAnalytics {
   @NonNull
   private Map<String, Object> createCampaignNotificationMap(String abTestingGroup, int campaignId) {
     Map<String, Object> map = new HashMap<>();
-    map.put("campaign_id", campaignId);
-    map.put("ab_testing_group", abTestingGroup);
+    map.put(CAMPAIGN_ID, campaignId);
+    map.put(AB_TESTING_GROUP, abTestingGroup);
     return map;
   }
 
