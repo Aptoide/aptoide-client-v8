@@ -55,20 +55,6 @@ public class BaseV7Response {
     final Object $errors = this.getErrors();
     result = result * PRIME + ($errors == null ? 43 : $errors.hashCode());
     return result;
-  }  public boolean equals(Object o) {
-    if (o == this) return true;
-    if (!(o instanceof BaseV7Response)) return false;
-    final BaseV7Response other = (BaseV7Response) o;
-    if (!other.canEqual((Object) this)) return false;
-    final Object this$info = this.getInfo();
-    final Object other$info = other.getInfo();
-    if (this$info == null ? other$info != null : !this$info.equals(other$info)) return false;
-    final Object this$errors = this.getErrors();
-    final Object other$errors = other.getErrors();
-    if (this$errors == null ? other$errors != null : !this$errors.equals(other$errors)) {
-      return false;
-    }
-    return true;
   }
 
   protected boolean canEqual(Object other) {
@@ -110,32 +96,10 @@ public class BaseV7Response {
 
     protected boolean canEqual(Object other) {
       return other instanceof Info;
-    }    public boolean equals(Object o) {
-      if (o == this) return true;
-      if (!(o instanceof Info)) return false;
-      final Info other = (Info) o;
-      if (!other.canEqual((Object) this)) return false;
-      final Object this$status = this.getStatus();
-      final Object other$status = other.getStatus();
-      if (this$status == null ? other$status != null : !this$status.equals(other$status)) {
-        return false;
-      }
-      final Object this$time = this.getTime();
-      final Object other$time = other.getTime();
-      if (this$time == null ? other$time != null : !this$time.equals(other$time)) return false;
-      return true;
     }
 
     public enum Status {
       OK, QUEUED, FAIL, Processing
-    }    public int hashCode() {
-      final int PRIME = 59;
-      int result = 1;
-      final Object $status = this.getStatus();
-      result = result * PRIME + ($status == null ? 43 : $status.hashCode());
-      final Object $time = this.getTime();
-      result = result * PRIME + ($time == null ? 43 : $time.hashCode());
-      return result;
     }
 
     public static class Time {
@@ -164,7 +128,9 @@ public class BaseV7Response {
 
       protected boolean canEqual(Object other) {
         return other instanceof Time;
-      }      public boolean equals(Object o) {
+      }
+
+      public boolean equals(Object o) {
         if (o == this) return true;
         if (!(o instanceof Time)) return false;
         final Time other = (Time) o;
@@ -188,8 +154,6 @@ public class BaseV7Response {
         return result;
       }
 
-
-
       public String toString() {
         return "BaseV7Response.Info.Time(seconds="
             + this.getSeconds()
@@ -199,15 +163,35 @@ public class BaseV7Response {
       }
     }
 
+    public boolean equals(Object o) {
+      if (o == this) return true;
+      if (!(o instanceof Info)) return false;
+      final Info other = (Info) o;
+      if (!other.canEqual((Object) this)) return false;
+      final Object this$status = this.getStatus();
+      final Object other$status = other.getStatus();
+      if (this$status == null ? other$status != null : !this$status.equals(other$status)) {
+        return false;
+      }
+      final Object this$time = this.getTime();
+      final Object other$time = other.getTime();
+      if (this$time == null ? other$time != null : !this$time.equals(other$time)) return false;
+      return true;
+    }
+
+    public int hashCode() {
+      final int PRIME = 59;
+      int result = 1;
+      final Object $status = this.getStatus();
+      result = result * PRIME + ($status == null ? 43 : $status.hashCode());
+      final Object $time = this.getTime();
+      result = result * PRIME + ($time == null ? 43 : $time.hashCode());
+      return result;
+    }
+
     public String toString() {
       return "BaseV7Response.Info(status=" + this.getStatus() + ", time=" + this.getTime() + ")";
     }
-
-
-
-
-  }  public String toString() {
-    return "BaseV7Response(info=" + this.getInfo() + ", errors=" + this.getErrors() + ")";
   }
 
   public static class Error {
@@ -245,7 +229,9 @@ public class BaseV7Response {
 
     protected boolean canEqual(Object other) {
       return other instanceof Error;
-    }    public boolean equals(Object o) {
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof Error)) return false;
       final Error other = (Error) o;
@@ -279,8 +265,6 @@ public class BaseV7Response {
       return result;
     }
 
-
-
     public String toString() {
       return "BaseV7Response.Error(code="
           + this.getCode()
@@ -309,7 +293,9 @@ public class BaseV7Response {
 
     protected boolean canEqual(Object other) {
       return other instanceof Details;
-    }    public boolean equals(Object o) {
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof Details)) return false;
       final Details other = (Details) o;
@@ -330,8 +316,6 @@ public class BaseV7Response {
       result = result * PRIME + ($storeLinks == null ? 43 : $storeLinks.hashCode());
       return result;
     }
-
-
 
     public String toString() {
       return "BaseV7Response.Details(storeLinks=" + this.getStoreLinks() + ")";
@@ -372,7 +356,9 @@ public class BaseV7Response {
 
     protected boolean canEqual(Object other) {
       return other instanceof StoreLinks;
-    }    public boolean equals(Object o) {
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof StoreLinks)) return false;
       final StoreLinks other = (StoreLinks) o;
@@ -401,8 +387,6 @@ public class BaseV7Response {
       return result;
     }
 
-
-
     public String toString() {
       return "BaseV7Response.StoreLinks(type="
           + this.getType()
@@ -414,7 +398,23 @@ public class BaseV7Response {
     }
   }
 
+  public boolean equals(Object o) {
+    if (o == this) return true;
+    if (!(o instanceof BaseV7Response)) return false;
+    final BaseV7Response other = (BaseV7Response) o;
+    if (!other.canEqual((Object) this)) return false;
+    final Object this$info = this.getInfo();
+    final Object other$info = other.getInfo();
+    if (this$info == null ? other$info != null : !this$info.equals(other$info)) return false;
+    final Object this$errors = this.getErrors();
+    final Object other$errors = other.getErrors();
+    if (this$errors == null ? other$errors != null : !this$errors.equals(other$errors)) {
+      return false;
+    }
+    return true;
+  }
 
-
-
+  public String toString() {
+    return "BaseV7Response(info=" + this.getInfo() + ", errors=" + this.getErrors() + ")";
+  }
 }

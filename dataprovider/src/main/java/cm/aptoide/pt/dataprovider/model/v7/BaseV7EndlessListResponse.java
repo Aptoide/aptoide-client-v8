@@ -39,6 +39,10 @@ public class BaseV7EndlessListResponse<T> extends BaseV7EndlessResponse {
     return result;
   }
 
+  protected boolean canEqual(Object other) {
+    return other instanceof BaseV7EndlessListResponse;
+  }
+
   public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof BaseV7EndlessListResponse)) return false;
@@ -49,10 +53,6 @@ public class BaseV7EndlessListResponse<T> extends BaseV7EndlessResponse {
     final Object other$list = other.getList();
     if (this$list == null ? other$list != null : !this$list.equals(other$list)) return false;
     return true;
-  }
-
-  protected boolean canEqual(Object other) {
-    return other instanceof BaseV7EndlessListResponse;
   }
 
   public List<T> getList() {

@@ -36,6 +36,10 @@ public class GetStoreTabs extends BaseV7Response {
     return result;
   }
 
+  protected boolean canEqual(Object other) {
+    return other instanceof GetStoreTabs;
+  }
+
   public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof GetStoreTabs)) return false;
@@ -46,10 +50,6 @@ public class GetStoreTabs extends BaseV7Response {
     final Object other$list = other.getList();
     if (this$list == null ? other$list != null : !this$list.equals(other$list)) return false;
     return true;
-  }
-
-  protected boolean canEqual(Object other) {
-    return other instanceof GetStoreTabs;
   }
 
   public String toString() {

@@ -51,6 +51,19 @@ public class PaidApp extends BaseV3Response {
     this.app = app;
   }
 
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + super.hashCode();
+    final Object $path = this.getPath();
+    result = result * PRIME + ($path == null ? 43 : $path.hashCode());
+    final Object $payment = this.getPayment();
+    result = result * PRIME + ($payment == null ? 43 : $payment.hashCode());
+    final Object $app = this.getApp();
+    result = result * PRIME + ($app == null ? 43 : $app.hashCode());
+    return result;
+  }
+
   public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof PaidApp)) return false;
@@ -71,23 +84,6 @@ public class PaidApp extends BaseV3Response {
     return true;
   }
 
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    result = result * PRIME + super.hashCode();
-    final Object $path = this.getPath();
-    result = result * PRIME + ($path == null ? 43 : $path.hashCode());
-    final Object $payment = this.getPayment();
-    result = result * PRIME + ($payment == null ? 43 : $payment.hashCode());
-    final Object $app = this.getApp();
-    result = result * PRIME + ($app == null ? 43 : $app.hashCode());
-    return result;
-  }
-
-  protected boolean canEqual(Object other) {
-    return other instanceof PaidApp;
-  }
-
   public String toString() {
     return "PaidApp(path="
         + this.getPath()
@@ -96,6 +92,10 @@ public class PaidApp extends BaseV3Response {
         + ", app="
         + this.getApp()
         + ")";
+  }
+
+  protected boolean canEqual(Object other) {
+    return other instanceof PaidApp;
   }
 
   public static class Payment {
@@ -171,7 +171,13 @@ public class PaidApp extends BaseV3Response {
       final Object $status = this.getStatus();
       result = result * PRIME + ($status == null ? 43 : $status.hashCode());
       return result;
-    }    public boolean equals(Object o) {
+    }
+
+    protected boolean canEqual(Object other) {
+      return other instanceof Payment;
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof Payment)) return false;
       final Payment other = (Payment) o;
@@ -205,12 +211,6 @@ public class PaidApp extends BaseV3Response {
       return true;
     }
 
-    protected boolean canEqual(Object other) {
-      return other instanceof Payment;
-    }
-
-
-
     public String toString() {
       return "PaidApp.Payment(amount="
           + this.getAmount()
@@ -243,7 +243,9 @@ public class PaidApp extends BaseV3Response {
 
     protected boolean canEqual(Object other) {
       return other instanceof Metadata;
-    }    public boolean equals(Object o) {
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof Metadata)) return false;
       final Metadata other = (Metadata) o;
@@ -258,8 +260,6 @@ public class PaidApp extends BaseV3Response {
       result = result * PRIME + this.getProductId();
       return result;
     }
-
-
 
     public String toString() {
       return "PaidApp.Metadata(productId=" + this.getProductId() + ")";
@@ -328,7 +328,9 @@ public class PaidApp extends BaseV3Response {
 
     protected boolean canEqual(Object other) {
       return other instanceof Path;
-    }    public boolean equals(Object o) {
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof Path)) return false;
       final Path other = (Path) o;
@@ -375,8 +377,6 @@ public class PaidApp extends BaseV3Response {
       return result;
     }
 
-
-
     public String toString() {
       return "PaidApp.Path(stringPath="
           + this.getStringPath()
@@ -420,7 +420,9 @@ public class PaidApp extends BaseV3Response {
 
     protected boolean canEqual(Object other) {
       return other instanceof App;
-    }    public boolean equals(Object o) {
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof App)) return false;
       final App other = (App) o;
@@ -446,8 +448,6 @@ public class PaidApp extends BaseV3Response {
       result = result * PRIME + ($description == null ? 43 : $description.hashCode());
       return result;
     }
-
-
 
     public String toString() {
       return "PaidApp.App(name=" + this.getName() + ", description=" + this.getDescription() + ")";

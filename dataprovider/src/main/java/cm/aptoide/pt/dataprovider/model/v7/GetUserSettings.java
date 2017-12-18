@@ -27,6 +27,10 @@ public class GetUserSettings extends BaseV7Response {
     return result;
   }
 
+  protected boolean canEqual(Object other) {
+    return other instanceof GetUserSettings;
+  }
+
   public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof GetUserSettings)) return false;
@@ -36,10 +40,6 @@ public class GetUserSettings extends BaseV7Response {
     final Object other$data = other.getData();
     if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
     return true;
-  }
-
-  protected boolean canEqual(Object other) {
-    return other instanceof GetUserSettings;
   }
 
   public String toString() {
@@ -76,7 +76,13 @@ public class GetUserSettings extends BaseV7Response {
       final Object $access = this.getAccess();
       result = result * PRIME + ($access == null ? 43 : $access.hashCode());
       return result;
-    }    public boolean equals(Object o) {
+    }
+
+    protected boolean canEqual(Object other) {
+      return other instanceof Data;
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof Data)) return false;
       final Data other = (Data) o;
@@ -89,12 +95,6 @@ public class GetUserSettings extends BaseV7Response {
       }
       return true;
     }
-
-    protected boolean canEqual(Object other) {
-      return other instanceof Data;
-    }
-
-
 
     public String toString() {
       return "GetUserSettings.Data(mature="
@@ -121,7 +121,9 @@ public class GetUserSettings extends BaseV7Response {
 
     protected boolean canEqual(Object other) {
       return other instanceof Access;
-    }    public boolean equals(Object o) {
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof Access)) return false;
       final Access other = (Access) o;
@@ -136,8 +138,6 @@ public class GetUserSettings extends BaseV7Response {
       result = result * PRIME + (this.isConfirmed() ? 79 : 97);
       return result;
     }
-
-
 
     public String toString() {
       return "GetUserSettings.Access(confirmed=" + this.isConfirmed() + ")";

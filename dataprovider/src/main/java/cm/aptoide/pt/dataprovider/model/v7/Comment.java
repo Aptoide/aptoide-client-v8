@@ -87,33 +87,6 @@ public class Comment {
     final Object $parent = this.getParent();
     result = result * PRIME + ($parent == null ? 43 : $parent.hashCode());
     return result;
-  }  public boolean equals(Object o) {
-    if (o == this) return true;
-    if (!(o instanceof Comment)) return false;
-    final Comment other = (Comment) o;
-    if (!other.canEqual((Object) this)) return false;
-    if (this.getId() != other.getId()) return false;
-    final Object this$body = this.getBody();
-    final Object other$body = other.getBody();
-    if (this$body == null ? other$body != null : !this$body.equals(other$body)) return false;
-    final Object this$added = this.getAdded();
-    final Object other$added = other.getAdded();
-    if (this$added == null ? other$added != null : !this$added.equals(other$added)) return false;
-    final Object this$user = this.getUser();
-    final Object other$user = other.getUser();
-    if (this$user == null ? other$user != null : !this$user.equals(other$user)) return false;
-    final Object this$parentReview = this.getParentReview();
-    final Object other$parentReview = other.getParentReview();
-    if (this$parentReview == null ? other$parentReview != null
-        : !this$parentReview.equals(other$parentReview)) {
-      return false;
-    }
-    final Object this$parent = this.getParent();
-    final Object other$parent = other.getParent();
-    if (this$parent == null ? other$parent != null : !this$parent.equals(other$parent)) {
-      return false;
-    }
-    return true;
   }
 
   protected boolean canEqual(Object other) {
@@ -167,7 +140,9 @@ public class Comment {
 
     protected boolean canEqual(Object other) {
       return other instanceof User;
-    }    public boolean equals(Object o) {
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof User)) return false;
       final User other = (User) o;
@@ -203,8 +178,6 @@ public class Comment {
       return result;
     }
 
-
-
     public String toString() {
       return "Comment.User(id="
           + this.getId()
@@ -216,20 +189,6 @@ public class Comment {
           + this.getAccess()
           + ")";
     }
-  }  public String toString() {
-    return "Comment(id="
-        + this.getId()
-        + ", body="
-        + this.getBody()
-        + ", added="
-        + this.getAdded()
-        + ", user="
-        + this.getUser()
-        + ", parentReview="
-        + this.getParentReview()
-        + ", parent="
-        + this.getParent()
-        + ")";
   }
 
   public static class Parent {
@@ -248,7 +207,9 @@ public class Comment {
 
     protected boolean canEqual(Object other) {
       return other instanceof Parent;
-    }    public boolean equals(Object o) {
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof Parent)) return false;
       final Parent other = (Parent) o;
@@ -265,14 +226,53 @@ public class Comment {
       return result;
     }
 
-
-
     public String toString() {
       return "Comment.Parent(id=" + this.getId() + ")";
     }
   }
 
+  public boolean equals(Object o) {
+    if (o == this) return true;
+    if (!(o instanceof Comment)) return false;
+    final Comment other = (Comment) o;
+    if (!other.canEqual((Object) this)) return false;
+    if (this.getId() != other.getId()) return false;
+    final Object this$body = this.getBody();
+    final Object other$body = other.getBody();
+    if (this$body == null ? other$body != null : !this$body.equals(other$body)) return false;
+    final Object this$added = this.getAdded();
+    final Object other$added = other.getAdded();
+    if (this$added == null ? other$added != null : !this$added.equals(other$added)) return false;
+    final Object this$user = this.getUser();
+    final Object other$user = other.getUser();
+    if (this$user == null ? other$user != null : !this$user.equals(other$user)) return false;
+    final Object this$parentReview = this.getParentReview();
+    final Object other$parentReview = other.getParentReview();
+    if (this$parentReview == null ? other$parentReview != null
+        : !this$parentReview.equals(other$parentReview)) {
+      return false;
+    }
+    final Object this$parent = this.getParent();
+    final Object other$parent = other.getParent();
+    if (this$parent == null ? other$parent != null : !this$parent.equals(other$parent)) {
+      return false;
+    }
+    return true;
+  }
 
-
-
+  public String toString() {
+    return "Comment(id="
+        + this.getId()
+        + ", body="
+        + this.getBody()
+        + ", added="
+        + this.getAdded()
+        + ", user="
+        + this.getUser()
+        + ", parentReview="
+        + this.getParentReview()
+        + ", parent="
+        + this.getParent()
+        + ")";
+  }
 }

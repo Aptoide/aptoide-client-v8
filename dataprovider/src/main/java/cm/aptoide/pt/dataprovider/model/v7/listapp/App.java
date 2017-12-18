@@ -178,61 +178,6 @@ public class App {
     final Object $obb = this.getObb();
     result = result * PRIME + ($obb == null ? 43 : $obb.hashCode());
     return result;
-  }  public boolean equals(Object o) {
-    if (o == this) return true;
-    if (!(o instanceof App)) return false;
-    final App other = (App) o;
-    if (!other.canEqual((Object) this)) return false;
-    if (this.getId() != other.getId()) return false;
-    final Object this$name = this.getName();
-    final Object other$name = other.getName();
-    if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
-    final Object this$packageName = this.getPackageName();
-    final Object other$packageName = other.getPackageName();
-    if (this$packageName == null ? other$packageName != null
-        : !this$packageName.equals(other$packageName)) {
-      return false;
-    }
-    if (this.getSize() != other.getSize()) return false;
-    final Object this$icon = this.getIcon();
-    final Object other$icon = other.getIcon();
-    if (this$icon == null ? other$icon != null : !this$icon.equals(other$icon)) return false;
-    final Object this$graphic = this.getGraphic();
-    final Object other$graphic = other.getGraphic();
-    if (this$graphic == null ? other$graphic != null : !this$graphic.equals(other$graphic)) {
-      return false;
-    }
-    final Object this$added = this.getAdded();
-    final Object other$added = other.getAdded();
-    if (this$added == null ? other$added != null : !this$added.equals(other$added)) return false;
-    final Object this$modified = this.getModified();
-    final Object other$modified = other.getModified();
-    if (this$modified == null ? other$modified != null : !this$modified.equals(other$modified)) {
-      return false;
-    }
-    final Object this$updated = this.getUpdated();
-    final Object other$updated = other.getUpdated();
-    if (this$updated == null ? other$updated != null : !this$updated.equals(other$updated)) {
-      return false;
-    }
-    final Object this$uptype = this.getUptype();
-    final Object other$uptype = other.getUptype();
-    if (this$uptype == null ? other$uptype != null : !this$uptype.equals(other$uptype)) {
-      return false;
-    }
-    final Object this$store = this.getStore();
-    final Object other$store = other.getStore();
-    if (this$store == null ? other$store != null : !this$store.equals(other$store)) return false;
-    final Object this$file = this.getFile();
-    final Object other$file = other.getFile();
-    if (this$file == null ? other$file != null : !this$file.equals(other$file)) return false;
-    final Object this$stats = this.getStats();
-    final Object other$stats = other.getStats();
-    if (this$stats == null ? other$stats != null : !this$stats.equals(other$stats)) return false;
-    final Object this$obb = this.getObb();
-    final Object other$obb = other.getObb();
-    if (this$obb == null ? other$obb != null : !this$obb.equals(other$obb)) return false;
-    return true;
   }
 
   protected boolean canEqual(Object other) {
@@ -292,21 +237,6 @@ public class App {
 
     protected boolean canEqual(Object other) {
       return other instanceof Stats;
-    }    public boolean equals(Object o) {
-      if (o == this) return true;
-      if (!(o instanceof Stats)) return false;
-      final Stats other = (Stats) o;
-      if (!other.canEqual((Object) this)) return false;
-      if (this.getApps() != other.getApps()) return false;
-      if (this.getSubscribers() != other.getSubscribers()) return false;
-      if (this.getDownloads() != other.getDownloads()) return false;
-      if (this.getPdownloads() != other.getPdownloads()) return false;
-      final Object this$rating = this.getRating();
-      final Object other$rating = other.getRating();
-      if (this$rating == null ? other$rating != null : !this$rating.equals(other$rating)) {
-        return false;
-      }
-      return true;
     }
 
     public static class Rating {
@@ -335,7 +265,9 @@ public class App {
 
       protected boolean canEqual(Object other) {
         return other instanceof Rating;
-      }      public boolean equals(Object o) {
+      }
+
+      public boolean equals(Object o) {
         if (o == this) return true;
         if (!(o instanceof Rating)) return false;
         final Rating other = (Rating) o;
@@ -353,12 +285,29 @@ public class App {
         return result;
       }
 
-
-
       public String toString() {
         return "App.Stats.Rating(avg=" + this.getAvg() + ", total=" + this.getTotal() + ")";
       }
-    }    public int hashCode() {
+    }
+
+    public boolean equals(Object o) {
+      if (o == this) return true;
+      if (!(o instanceof Stats)) return false;
+      final Stats other = (Stats) o;
+      if (!other.canEqual((Object) this)) return false;
+      if (this.getApps() != other.getApps()) return false;
+      if (this.getSubscribers() != other.getSubscribers()) return false;
+      if (this.getDownloads() != other.getDownloads()) return false;
+      if (this.getPdownloads() != other.getPdownloads()) return false;
+      final Object this$rating = this.getRating();
+      final Object other$rating = other.getRating();
+      if (this$rating == null ? other$rating != null : !this$rating.equals(other$rating)) {
+        return false;
+      }
+      return true;
+    }
+
+    public int hashCode() {
       final int PRIME = 59;
       int result = 1;
       result = result * PRIME + this.getApps();
@@ -369,8 +318,6 @@ public class App {
       result = result * PRIME + ($rating == null ? 43 : $rating.hashCode());
       return result;
     }
-
-
 
     public String toString() {
       return "App.Stats(apps="
@@ -385,8 +332,63 @@ public class App {
           + this.getRating()
           + ")";
     }
+  }
 
-
+  public boolean equals(Object o) {
+    if (o == this) return true;
+    if (!(o instanceof App)) return false;
+    final App other = (App) o;
+    if (!other.canEqual((Object) this)) return false;
+    if (this.getId() != other.getId()) return false;
+    final Object this$name = this.getName();
+    final Object other$name = other.getName();
+    if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
+    final Object this$packageName = this.getPackageName();
+    final Object other$packageName = other.getPackageName();
+    if (this$packageName == null ? other$packageName != null
+        : !this$packageName.equals(other$packageName)) {
+      return false;
+    }
+    if (this.getSize() != other.getSize()) return false;
+    final Object this$icon = this.getIcon();
+    final Object other$icon = other.getIcon();
+    if (this$icon == null ? other$icon != null : !this$icon.equals(other$icon)) return false;
+    final Object this$graphic = this.getGraphic();
+    final Object other$graphic = other.getGraphic();
+    if (this$graphic == null ? other$graphic != null : !this$graphic.equals(other$graphic)) {
+      return false;
+    }
+    final Object this$added = this.getAdded();
+    final Object other$added = other.getAdded();
+    if (this$added == null ? other$added != null : !this$added.equals(other$added)) return false;
+    final Object this$modified = this.getModified();
+    final Object other$modified = other.getModified();
+    if (this$modified == null ? other$modified != null : !this$modified.equals(other$modified)) {
+      return false;
+    }
+    final Object this$updated = this.getUpdated();
+    final Object other$updated = other.getUpdated();
+    if (this$updated == null ? other$updated != null : !this$updated.equals(other$updated)) {
+      return false;
+    }
+    final Object this$uptype = this.getUptype();
+    final Object other$uptype = other.getUptype();
+    if (this$uptype == null ? other$uptype != null : !this$uptype.equals(other$uptype)) {
+      return false;
+    }
+    final Object this$store = this.getStore();
+    final Object other$store = other.getStore();
+    if (this$store == null ? other$store != null : !this$store.equals(other$store)) return false;
+    final Object this$file = this.getFile();
+    final Object other$file = other.getFile();
+    if (this$file == null ? other$file != null : !this$file.equals(other$file)) return false;
+    final Object this$stats = this.getStats();
+    final Object other$stats = other.getStats();
+    if (this$stats == null ? other$stats != null : !this$stats.equals(other$stats)) return false;
+    final Object this$obb = this.getObb();
+    final Object other$obb = other.getObb();
+    if (this$obb == null ? other$obb != null : !this$obb.equals(other$obb)) return false;
+    return true;
   }
 
   public String toString() {
@@ -420,6 +422,4 @@ public class App {
         + this.getObb()
         + ")";
   }
-
-
 }

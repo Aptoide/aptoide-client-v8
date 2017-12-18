@@ -34,10 +34,6 @@ public class Install {
     this.icon = icon;
   }
 
-  @Override public String toString() {
-    return "Install{" + "state=" + state + ", isIndeterminate=" + isIndeterminate + '}';
-  }
-
   public InstallationType getType() {
     return type;
   }
@@ -102,6 +98,10 @@ public class Install {
     if (state != that.state) return false;
     if (!md5.equals(that.md5)) return false;
     return packageName.equals(that.packageName);
+  }
+
+  @Override public String toString() {
+    return "Install{" + "state=" + state + ", isIndeterminate=" + isIndeterminate + '}';
   }
 
   public boolean isFailed() {

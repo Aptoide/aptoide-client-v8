@@ -40,18 +40,6 @@ public class Obb {
     final Object $main = this.getMain();
     result = result * PRIME + ($main == null ? 43 : $main.hashCode());
     return result;
-  }  public boolean equals(Object o) {
-    if (o == this) return true;
-    if (!(o instanceof Obb)) return false;
-    final Obb other = (Obb) o;
-    if (!other.canEqual((Object) this)) return false;
-    final Object this$patch = this.getPatch();
-    final Object other$patch = other.getPatch();
-    if (this$patch == null ? other$patch != null : !this$patch.equals(other$patch)) return false;
-    final Object this$main = this.getMain();
-    final Object other$main = other.getMain();
-    if (this$main == null ? other$main != null : !this$main.equals(other$main)) return false;
-    return true;
   }
 
   protected boolean canEqual(Object other) {
@@ -102,7 +90,9 @@ public class Obb {
 
     protected boolean canEqual(Object other) {
       return other instanceof ObbItem;
-    }    public boolean equals(Object o) {
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof ObbItem)) return false;
       final ObbItem other = (ObbItem) o;
@@ -138,8 +128,6 @@ public class Obb {
       return result;
     }
 
-
-
     public String toString() {
       return "Obb.ObbItem(path="
           + this.getPath()
@@ -153,9 +141,21 @@ public class Obb {
     }
   }
 
+  public boolean equals(Object o) {
+    if (o == this) return true;
+    if (!(o instanceof Obb)) return false;
+    final Obb other = (Obb) o;
+    if (!other.canEqual((Object) this)) return false;
+    final Object this$patch = this.getPatch();
+    final Object other$patch = other.getPatch();
+    if (this$patch == null ? other$patch != null : !this$patch.equals(other$patch)) return false;
+    final Object this$main = this.getMain();
+    final Object other$main = other.getMain();
+    if (this$main == null ? other$main != null : !this$main.equals(other$main)) return false;
+    return true;
+  }
+
   public String toString() {
     return "Obb(patch=" + this.getPatch() + ", main=" + this.getMain() + ")";
   }
-
-
 }

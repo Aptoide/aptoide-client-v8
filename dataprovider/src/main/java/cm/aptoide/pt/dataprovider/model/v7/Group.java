@@ -120,43 +120,6 @@ public class Group {
     final Object $stats = this.getStats();
     result = result * PRIME + ($stats == null ? 43 : $stats.hashCode());
     return result;
-  }  public boolean equals(Object o) {
-    if (o == this) return true;
-    if (!(o instanceof Group)) return false;
-    final Group other = (Group) o;
-    if (!other.canEqual((Object) this)) return false;
-    if (this.getId() != other.getId()) return false;
-    final Object this$name = this.getName();
-    final Object other$name = other.getName();
-    if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
-    final Object this$title = this.getTitle();
-    final Object other$title = other.getTitle();
-    if (this$title == null ? other$title != null : !this$title.equals(other$title)) return false;
-    final Object this$icon = this.getIcon();
-    final Object other$icon = other.getIcon();
-    if (this$icon == null ? other$icon != null : !this$icon.equals(other$icon)) return false;
-    final Object this$graphic = this.getGraphic();
-    final Object other$graphic = other.getGraphic();
-    if (this$graphic == null ? other$graphic != null : !this$graphic.equals(other$graphic)) {
-      return false;
-    }
-    final Object this$added = this.getAdded();
-    final Object other$added = other.getAdded();
-    if (this$added == null ? other$added != null : !this$added.equals(other$added)) return false;
-    final Object this$modified = this.getModified();
-    final Object other$modified = other.getModified();
-    if (this$modified == null ? other$modified != null : !this$modified.equals(other$modified)) {
-      return false;
-    }
-    final Object this$parent = this.getParent();
-    final Object other$parent = other.getParent();
-    if (this$parent == null ? other$parent != null : !this$parent.equals(other$parent)) {
-      return false;
-    }
-    final Object this$stats = this.getStats();
-    final Object other$stats = other.getStats();
-    if (this$stats == null ? other$stats != null : !this$stats.equals(other$stats)) return false;
-    return true;
   }
 
   protected boolean canEqual(Object other) {
@@ -216,7 +179,9 @@ public class Group {
 
     protected boolean canEqual(Object other) {
       return other instanceof Parent;
-    }    public boolean equals(Object o) {
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof Parent)) return false;
       final Parent other = (Parent) o;
@@ -254,8 +219,6 @@ public class Group {
       result = result * PRIME + ($graphic == null ? 43 : $graphic.hashCode());
       return result;
     }
-
-
 
     public String toString() {
       return "Group.Parent(id="
@@ -298,7 +261,9 @@ public class Group {
 
     protected boolean canEqual(Object other) {
       return other instanceof Stats;
-    }    public boolean equals(Object o) {
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof Stats)) return false;
       final Stats other = (Stats) o;
@@ -316,12 +281,51 @@ public class Group {
       return result;
     }
 
-
-
     public String toString() {
       return "Group.Stats(groups=" + this.getGroups() + ", items=" + this.getItems() + ")";
     }
-  }  public String toString() {
+  }
+
+  public boolean equals(Object o) {
+    if (o == this) return true;
+    if (!(o instanceof Group)) return false;
+    final Group other = (Group) o;
+    if (!other.canEqual((Object) this)) return false;
+    if (this.getId() != other.getId()) return false;
+    final Object this$name = this.getName();
+    final Object other$name = other.getName();
+    if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
+    final Object this$title = this.getTitle();
+    final Object other$title = other.getTitle();
+    if (this$title == null ? other$title != null : !this$title.equals(other$title)) return false;
+    final Object this$icon = this.getIcon();
+    final Object other$icon = other.getIcon();
+    if (this$icon == null ? other$icon != null : !this$icon.equals(other$icon)) return false;
+    final Object this$graphic = this.getGraphic();
+    final Object other$graphic = other.getGraphic();
+    if (this$graphic == null ? other$graphic != null : !this$graphic.equals(other$graphic)) {
+      return false;
+    }
+    final Object this$added = this.getAdded();
+    final Object other$added = other.getAdded();
+    if (this$added == null ? other$added != null : !this$added.equals(other$added)) return false;
+    final Object this$modified = this.getModified();
+    final Object other$modified = other.getModified();
+    if (this$modified == null ? other$modified != null : !this$modified.equals(other$modified)) {
+      return false;
+    }
+    final Object this$parent = this.getParent();
+    final Object other$parent = other.getParent();
+    if (this$parent == null ? other$parent != null : !this$parent.equals(other$parent)) {
+      return false;
+    }
+    final Object this$stats = this.getStats();
+    final Object other$stats = other.getStats();
+    if (this$stats == null ? other$stats != null : !this$stats.equals(other$stats)) return false;
+    return true;
+  }
+
+  public String toString() {
     return "Group(id="
         + this.getId()
         + ", name="
@@ -342,8 +346,4 @@ public class Group {
         + this.getStats()
         + ")";
   }
-
-
-
-
 }

@@ -57,6 +57,7 @@ public class DefaultInstaller implements Installer {
   private RootAvailabilityManager rootAvailabilityManager;
   private InstalledRepository installedRepository;
   private InstallerAnalytics installerAnalytics;
+
   public DefaultInstaller(PackageManager packageManager, InstallationProvider installationProvider,
       FileUtils fileUtils, Analytics analytics, boolean debug,
       InstalledRepository installedRepository, int rootTimeout,

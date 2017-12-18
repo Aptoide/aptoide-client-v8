@@ -15,8 +15,15 @@ public class GetStoreWidgets extends BaseV7EndlessDataListResponse<GetStoreWidge
   public GetStoreWidgets() {
   }
 
-  public String toString() {
-    return "GetStoreWidgets()";
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + super.hashCode();
+    return result;
+  }
+
+  protected boolean canEqual(Object other) {
+    return other instanceof GetStoreWidgets;
   }
 
   public boolean equals(Object o) {
@@ -28,15 +35,8 @@ public class GetStoreWidgets extends BaseV7EndlessDataListResponse<GetStoreWidge
     return true;
   }
 
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    result = result * PRIME + super.hashCode();
-    return result;
-  }
-
-  protected boolean canEqual(Object other) {
-    return other instanceof GetStoreWidgets;
+  public String toString() {
+    return "GetStoreWidgets()";
   }
 
   public static class WSWidget {
@@ -158,38 +158,6 @@ public class GetStoreWidgets extends BaseV7EndlessDataListResponse<GetStoreWidge
 
     protected boolean canEqual(Object other) {
       return other instanceof WSWidget;
-    }    public boolean equals(Object o) {
-      if (o == this) return true;
-      if (!(o instanceof WSWidget)) return false;
-      final WSWidget other = (WSWidget) o;
-      if (!other.canEqual((Object) this)) return false;
-      final Object this$type = this.getType();
-      final Object other$type = other.getType();
-      if (this$type == null ? other$type != null : !this$type.equals(other$type)) return false;
-      final Object this$title = this.getTitle();
-      final Object other$title = other.getTitle();
-      if (this$title == null ? other$title != null : !this$title.equals(other$title)) return false;
-      final Object this$tag = this.getTag();
-      final Object other$tag = other.getTag();
-      if (this$tag == null ? other$tag != null : !this$tag.equals(other$tag)) return false;
-      final Object this$view = this.getView();
-      final Object other$view = other.getView();
-      if (this$view == null ? other$view != null : !this$view.equals(other$view)) return false;
-      final Object this$viewObject = this.getViewObject();
-      final Object other$viewObject = other.getViewObject();
-      if (this$viewObject == null ? other$viewObject != null
-          : !this$viewObject.equals(other$viewObject)) {
-        return false;
-      }
-      final Object this$actions = this.getActions();
-      final Object other$actions = other.getActions();
-      if (this$actions == null ? other$actions != null : !this$actions.equals(other$actions)) {
-        return false;
-      }
-      final Object this$data = this.getData();
-      final Object other$data = other.getData();
-      if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
-      return true;
     }
 
     public static class Data {
@@ -420,7 +388,9 @@ public class GetStoreWidgets extends BaseV7EndlessDataListResponse<GetStoreWidge
               + this.getAdsCount()
               + ")";
         }
-      }      public boolean equals(Object o) {
+      }
+
+      public boolean equals(Object o) {
         if (o == this) return true;
         if (!(o instanceof Data)) return false;
         final Data other = (Data) o;
@@ -449,8 +419,6 @@ public class GetStoreWidgets extends BaseV7EndlessDataListResponse<GetStoreWidge
         if (this$user == null ? other$user != null : !this$user.equals(other$user)) return false;
         return true;
       }
-
-
 
       public int hashCode() {
         final int PRIME = 59;
@@ -584,7 +552,39 @@ public class GetStoreWidgets extends BaseV7EndlessDataListResponse<GetStoreWidge
       }
     }
 
-
+    public boolean equals(Object o) {
+      if (o == this) return true;
+      if (!(o instanceof WSWidget)) return false;
+      final WSWidget other = (WSWidget) o;
+      if (!other.canEqual((Object) this)) return false;
+      final Object this$type = this.getType();
+      final Object other$type = other.getType();
+      if (this$type == null ? other$type != null : !this$type.equals(other$type)) return false;
+      final Object this$title = this.getTitle();
+      final Object other$title = other.getTitle();
+      if (this$title == null ? other$title != null : !this$title.equals(other$title)) return false;
+      final Object this$tag = this.getTag();
+      final Object other$tag = other.getTag();
+      if (this$tag == null ? other$tag != null : !this$tag.equals(other$tag)) return false;
+      final Object this$view = this.getView();
+      final Object other$view = other.getView();
+      if (this$view == null ? other$view != null : !this$view.equals(other$view)) return false;
+      final Object this$viewObject = this.getViewObject();
+      final Object other$viewObject = other.getViewObject();
+      if (this$viewObject == null ? other$viewObject != null
+          : !this$viewObject.equals(other$viewObject)) {
+        return false;
+      }
+      final Object this$actions = this.getActions();
+      final Object other$actions = other.getActions();
+      if (this$actions == null ? other$actions != null : !this$actions.equals(other$actions)) {
+        return false;
+      }
+      final Object this$data = this.getData();
+      final Object other$data = other.getData();
+      if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
+      return true;
+    }
 
     public String toString() {
       return "GetStoreWidgets.WSWidget(type="

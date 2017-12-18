@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.view.recycler.displayable;
 
-
 /**
  * Created by neuro on 14-04-2016.
  */

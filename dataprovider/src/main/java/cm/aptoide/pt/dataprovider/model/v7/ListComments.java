@@ -13,8 +13,15 @@ public class ListComments extends BaseV7EndlessDataListResponse<Comment> {
   public ListComments() {
   }
 
-  public String toString() {
-    return "ListComments()";
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + super.hashCode();
+    return result;
+  }
+
+  protected boolean canEqual(Object other) {
+    return other instanceof ListComments;
   }
 
   public boolean equals(Object o) {
@@ -26,14 +33,7 @@ public class ListComments extends BaseV7EndlessDataListResponse<Comment> {
     return true;
   }
 
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    result = result * PRIME + super.hashCode();
-    return result;
-  }
-
-  protected boolean canEqual(Object other) {
-    return other instanceof ListComments;
+  public String toString() {
+    return "ListComments()";
   }
 }

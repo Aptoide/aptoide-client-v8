@@ -22,6 +22,13 @@ public class Article extends Feature {
     this.publisher = publisher;
   }
 
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + super.hashCode();
+    return result;
+  }
+
   public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof Article)) return false;
@@ -29,13 +36,6 @@ public class Article extends Feature {
     if (!other.canEqual((Object) this)) return false;
     if (!super.equals(o)) return false;
     return true;
-  }
-
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    result = result * PRIME + super.hashCode();
-    return result;
   }
 
   protected boolean canEqual(Object other) {

@@ -25,18 +25,6 @@ public class GetApp extends BaseV7Response {
     this.nodes = nodes;
   }
 
-  public boolean equals(Object o) {
-    if (o == this) return true;
-    if (!(o instanceof GetApp)) return false;
-    final GetApp other = (GetApp) o;
-    if (!other.canEqual((Object) this)) return false;
-    if (!super.equals(o)) return false;
-    final Object this$nodes = this.getNodes();
-    final Object other$nodes = other.getNodes();
-    if (this$nodes == null ? other$nodes != null : !this$nodes.equals(other$nodes)) return false;
-    return true;
-  }
-
   public int hashCode() {
     final int PRIME = 59;
     int result = 1;
@@ -48,6 +36,18 @@ public class GetApp extends BaseV7Response {
 
   protected boolean canEqual(Object other) {
     return other instanceof GetApp;
+  }
+
+  public boolean equals(Object o) {
+    if (o == this) return true;
+    if (!(o instanceof GetApp)) return false;
+    final GetApp other = (GetApp) o;
+    if (!other.canEqual((Object) this)) return false;
+    if (!super.equals(o)) return false;
+    final Object this$nodes = this.getNodes();
+    final Object other$nodes = other.getNodes();
+    if (this$nodes == null ? other$nodes != null : !this$nodes.equals(other$nodes)) return false;
+    return true;
   }
 
   public String toString() {

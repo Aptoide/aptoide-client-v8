@@ -28,18 +28,6 @@ public class GetAppMeta extends BaseV7Response {
     this.data = data;
   }
 
-  public boolean equals(Object o) {
-    if (o == this) return true;
-    if (!(o instanceof GetAppMeta)) return false;
-    final GetAppMeta other = (GetAppMeta) o;
-    if (!other.canEqual((Object) this)) return false;
-    if (!super.equals(o)) return false;
-    final Object this$data = this.getData();
-    final Object other$data = other.getData();
-    if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
-    return true;
-  }
-
   public int hashCode() {
     final int PRIME = 59;
     int result = 1;
@@ -51,6 +39,18 @@ public class GetAppMeta extends BaseV7Response {
 
   protected boolean canEqual(Object other) {
     return other instanceof GetAppMeta;
+  }
+
+  public boolean equals(Object o) {
+    if (o == this) return true;
+    if (!(o instanceof GetAppMeta)) return false;
+    final GetAppMeta other = (GetAppMeta) o;
+    if (!other.canEqual((Object) this)) return false;
+    if (!super.equals(o)) return false;
+    final Object this$data = this.getData();
+    final Object other$data = other.getData();
+    if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
+    return true;
   }
 
   public String toString() {
@@ -251,7 +251,13 @@ public class GetAppMeta extends BaseV7Response {
       final Object $pay = this.getPay();
       result = result * PRIME + ($pay == null ? 43 : $pay.hashCode());
       return result;
-    }    public boolean equals(Object o) {
+    }
+
+    protected boolean canEqual(Object other) {
+      return other instanceof App;
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof App)) return false;
       final App other = (App) o;
@@ -312,12 +318,6 @@ public class GetAppMeta extends BaseV7Response {
       if (this$pay == null ? other$pay != null : !this$pay.equals(other$pay)) return false;
       return true;
     }
-
-    protected boolean canEqual(Object other) {
-      return other instanceof App;
-    }
-
-
 
     public String toString() {
       return "GetAppMeta.App(id="
@@ -408,7 +408,9 @@ public class GetAppMeta extends BaseV7Response {
 
     protected boolean canEqual(Object other) {
       return other instanceof Pay;
-    }    public boolean equals(Object o) {
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof Pay)) return false;
       final Pay other = (Pay) o;
@@ -445,8 +447,6 @@ public class GetAppMeta extends BaseV7Response {
       result = result * PRIME + ($status == null ? 43 : $status.hashCode());
       return result;
     }
-
-
 
     public String toString() {
       return "GetAppMeta.Pay(price="
@@ -505,7 +505,9 @@ public class GetAppMeta extends BaseV7Response {
 
     protected boolean canEqual(Object other) {
       return other instanceof Developer;
-    }    public boolean equals(Object o) {
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof Developer)) return false;
       final Developer other = (Developer) o;
@@ -542,8 +544,6 @@ public class GetAppMeta extends BaseV7Response {
       result = result * PRIME + ($privacy == null ? 43 : $privacy.hashCode());
       return result;
     }
-
-
 
     public String toString() {
       return "GetAppMeta.Developer(name="
@@ -600,6 +600,27 @@ public class GetAppMeta extends BaseV7Response {
       this.malware = malware;
     }
 
+    public int hashCode() {
+      final int PRIME = 59;
+      int result = 1;
+      result = result * PRIME + super.hashCode();
+      final Object $signature = this.getSignature();
+      result = result * PRIME + ($signature == null ? 43 : $signature.hashCode());
+      final Object $hardware = this.getHardware();
+      result = result * PRIME + ($hardware == null ? 43 : $hardware.hashCode());
+      final Object $malware = this.getMalware();
+      result = result * PRIME + ($malware == null ? 43 : $malware.hashCode());
+      final Object $flags = this.getFlags();
+      result = result * PRIME + ($flags == null ? 43 : $flags.hashCode());
+      final Object $usedFeatures = this.getUsedFeatures();
+      result = result * PRIME + ($usedFeatures == null ? 43 : $usedFeatures.hashCode());
+      final Object $usedPermissions = this.getUsedPermissions();
+      result = result * PRIME + ($usedPermissions == null ? 43 : $usedPermissions.hashCode());
+      final Object $tags = this.getTags();
+      result = result * PRIME + ($tags == null ? 43 : $tags.hashCode());
+      return result;
+    }
+
     public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof GetAppMetaFile)) return false;
@@ -643,31 +664,6 @@ public class GetAppMeta extends BaseV7Response {
       return true;
     }
 
-    public int hashCode() {
-      final int PRIME = 59;
-      int result = 1;
-      result = result * PRIME + super.hashCode();
-      final Object $signature = this.getSignature();
-      result = result * PRIME + ($signature == null ? 43 : $signature.hashCode());
-      final Object $hardware = this.getHardware();
-      result = result * PRIME + ($hardware == null ? 43 : $hardware.hashCode());
-      final Object $malware = this.getMalware();
-      result = result * PRIME + ($malware == null ? 43 : $malware.hashCode());
-      final Object $flags = this.getFlags();
-      result = result * PRIME + ($flags == null ? 43 : $flags.hashCode());
-      final Object $usedFeatures = this.getUsedFeatures();
-      result = result * PRIME + ($usedFeatures == null ? 43 : $usedFeatures.hashCode());
-      final Object $usedPermissions = this.getUsedPermissions();
-      result = result * PRIME + ($usedPermissions == null ? 43 : $usedPermissions.hashCode());
-      final Object $tags = this.getTags();
-      result = result * PRIME + ($tags == null ? 43 : $tags.hashCode());
-      return result;
-    }
-
-    protected boolean canEqual(Object other) {
-      return other instanceof GetAppMetaFile;
-    }
-
     public String toString() {
       return "GetAppMeta.GetAppMetaFile(signature="
           + this.getSignature()
@@ -684,6 +680,10 @@ public class GetAppMeta extends BaseV7Response {
           + ", tags="
           + this.getTags()
           + ")";
+    }
+
+    protected boolean canEqual(Object other) {
+      return other instanceof GetAppMetaFile;
     }
 
     public Flags getFlags() {
@@ -744,7 +744,9 @@ public class GetAppMeta extends BaseV7Response {
 
       protected boolean canEqual(Object other) {
         return other instanceof Signature;
-      }      public boolean equals(Object o) {
+      }
+
+      public boolean equals(Object o) {
         if (o == this) return true;
         if (!(o instanceof Signature)) return false;
         final Signature other = (Signature) o;
@@ -769,8 +771,6 @@ public class GetAppMeta extends BaseV7Response {
         result = result * PRIME + ($owner == null ? 43 : $owner.hashCode());
         return result;
       }
-
-
 
       public String toString() {
         return "GetAppMeta.GetAppMetaFile.Signature(sha1="
@@ -839,7 +839,9 @@ public class GetAppMeta extends BaseV7Response {
 
       protected boolean canEqual(Object other) {
         return other instanceof Hardware;
-      }      public boolean equals(Object o) {
+      }
+
+      public boolean equals(Object o) {
         if (o == this) return true;
         if (!(o instanceof Hardware)) return false;
         final Hardware other = (Hardware) o;
@@ -876,8 +878,6 @@ public class GetAppMeta extends BaseV7Response {
         result = result * PRIME + ($densities == null ? 43 : $densities.hashCode());
         return result;
       }
-
-
 
       public String toString() {
         return "GetAppMeta.GetAppMetaFile.Hardware(sdk="
@@ -926,22 +926,6 @@ public class GetAppMeta extends BaseV7Response {
 
       protected boolean canEqual(Object other) {
         return other instanceof Flags;
-      }      public boolean equals(Object o) {
-        if (o == this) return true;
-        if (!(o instanceof Flags)) return false;
-        final Flags other = (Flags) o;
-        if (!other.canEqual((Object) this)) return false;
-        final Object this$review = this.getReview();
-        final Object other$review = other.getReview();
-        if (this$review == null ? other$review != null : !this$review.equals(other$review)) {
-          return false;
-        }
-        final Object this$votes = this.getVotes();
-        final Object other$votes = other.getVotes();
-        if (this$votes == null ? other$votes != null : !this$votes.equals(other$votes)) {
-          return false;
-        }
-        return true;
       }
 
       public static class Vote {
@@ -975,7 +959,13 @@ public class GetAppMeta extends BaseV7Response {
 
         protected boolean canEqual(Object other) {
           return other instanceof Vote;
-        }        public boolean equals(Object o) {
+        }
+
+        public enum Type {
+          FAKE, FREEZE, GOOD, LICENSE, VIRUS
+        }
+
+        public boolean equals(Object o) {
           if (o == this) return true;
           if (!(o instanceof Vote)) return false;
           final Vote other = (Vote) o;
@@ -987,9 +977,7 @@ public class GetAppMeta extends BaseV7Response {
           return true;
         }
 
-        public enum Type {
-          FAKE, FREEZE, GOOD, LICENSE, VIRUS
-        }        public int hashCode() {
+        public int hashCode() {
           final int PRIME = 59;
           int result = 1;
           final Object $type = this.getType();
@@ -998,8 +986,6 @@ public class GetAppMeta extends BaseV7Response {
           return result;
         }
 
-
-
         public String toString() {
           return "GetAppMeta.GetAppMetaFile.Flags.Vote(type="
               + this.getType()
@@ -1007,9 +993,27 @@ public class GetAppMeta extends BaseV7Response {
               + this.getCount()
               + ")";
         }
+      }
 
+      public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof Flags)) return false;
+        final Flags other = (Flags) o;
+        if (!other.canEqual((Object) this)) return false;
+        final Object this$review = this.getReview();
+        final Object other$review = other.getReview();
+        if (this$review == null ? other$review != null : !this$review.equals(other$review)) {
+          return false;
+        }
+        final Object this$votes = this.getVotes();
+        final Object other$votes = other.getVotes();
+        if (this$votes == null ? other$votes != null : !this$votes.equals(other$votes)) {
+          return false;
+        }
+        return true;
+      }
 
-      }      public int hashCode() {
+      public int hashCode() {
         final int PRIME = 59;
         int result = 1;
         final Object $review = this.getReview();
@@ -1019,8 +1023,6 @@ public class GetAppMeta extends BaseV7Response {
         return result;
       }
 
-
-
       public String toString() {
         return "GetAppMeta.GetAppMetaFile.Flags(review="
             + this.getReview()
@@ -1028,8 +1030,6 @@ public class GetAppMeta extends BaseV7Response {
             + this.getVotes()
             + ")";
       }
-
-
     }
   }
 
@@ -1086,37 +1086,6 @@ public class GetAppMeta extends BaseV7Response {
 
     protected boolean canEqual(Object other) {
       return other instanceof Media;
-    }    public boolean equals(Object o) {
-      if (o == this) return true;
-      if (!(o instanceof Media)) return false;
-      final Media other = (Media) o;
-      if (!other.canEqual((Object) this)) return false;
-      final Object this$keywords = this.getKeywords();
-      final Object other$keywords = other.getKeywords();
-      if (this$keywords == null ? other$keywords != null : !this$keywords.equals(other$keywords)) {
-        return false;
-      }
-      final Object this$description = this.getDescription();
-      final Object other$description = other.getDescription();
-      if (this$description == null ? other$description != null
-          : !this$description.equals(other$description)) {
-        return false;
-      }
-      final Object this$news = this.getNews();
-      final Object other$news = other.getNews();
-      if (this$news == null ? other$news != null : !this$news.equals(other$news)) return false;
-      final Object this$screenshots = this.getScreenshots();
-      final Object other$screenshots = other.getScreenshots();
-      if (this$screenshots == null ? other$screenshots != null
-          : !this$screenshots.equals(other$screenshots)) {
-        return false;
-      }
-      final Object this$videos = this.getVideos();
-      final Object other$videos = other.getVideos();
-      if (this$videos == null ? other$videos != null : !this$videos.equals(other$videos)) {
-        return false;
-      }
-      return true;
     }
 
     public static class Video {
@@ -1154,7 +1123,9 @@ public class GetAppMeta extends BaseV7Response {
 
       protected boolean canEqual(Object other) {
         return other instanceof Video;
-      }      public boolean equals(Object o) {
+      }
+
+      public boolean equals(Object o) {
         if (o == this) return true;
         if (!(o instanceof Video)) return false;
         final Video other = (Video) o;
@@ -1186,8 +1157,6 @@ public class GetAppMeta extends BaseV7Response {
         return result;
       }
 
-
-
       public String toString() {
         return "GetAppMeta.Media.Video(type="
             + this.getType()
@@ -1197,20 +1166,6 @@ public class GetAppMeta extends BaseV7Response {
             + this.getThumbnail()
             + ")";
       }
-    }    public int hashCode() {
-      final int PRIME = 59;
-      int result = 1;
-      final Object $keywords = this.getKeywords();
-      result = result * PRIME + ($keywords == null ? 43 : $keywords.hashCode());
-      final Object $description = this.getDescription();
-      result = result * PRIME + ($description == null ? 43 : $description.hashCode());
-      final Object $news = this.getNews();
-      result = result * PRIME + ($news == null ? 43 : $news.hashCode());
-      final Object $screenshots = this.getScreenshots();
-      result = result * PRIME + ($screenshots == null ? 43 : $screenshots.hashCode());
-      final Object $videos = this.getVideos();
-      result = result * PRIME + ($videos == null ? 43 : $videos.hashCode());
-      return result;
     }
 
     public static class Screenshot {
@@ -1252,7 +1207,9 @@ public class GetAppMeta extends BaseV7Response {
 
       protected boolean canEqual(Object other) {
         return other instanceof Screenshot;
-      }      public boolean equals(Object o) {
+      }
+
+      public boolean equals(Object o) {
         if (o == this) return true;
         if (!(o instanceof Screenshot)) return false;
         final Screenshot other = (Screenshot) o;
@@ -1275,8 +1232,6 @@ public class GetAppMeta extends BaseV7Response {
         return result;
       }
 
-
-
       public String toString() {
         return "GetAppMeta.Media.Screenshot(url="
             + this.getUrl()
@@ -1286,6 +1241,55 @@ public class GetAppMeta extends BaseV7Response {
             + this.getWidth()
             + ")";
       }
+    }
+
+    public boolean equals(Object o) {
+      if (o == this) return true;
+      if (!(o instanceof Media)) return false;
+      final Media other = (Media) o;
+      if (!other.canEqual((Object) this)) return false;
+      final Object this$keywords = this.getKeywords();
+      final Object other$keywords = other.getKeywords();
+      if (this$keywords == null ? other$keywords != null : !this$keywords.equals(other$keywords)) {
+        return false;
+      }
+      final Object this$description = this.getDescription();
+      final Object other$description = other.getDescription();
+      if (this$description == null ? other$description != null
+          : !this$description.equals(other$description)) {
+        return false;
+      }
+      final Object this$news = this.getNews();
+      final Object other$news = other.getNews();
+      if (this$news == null ? other$news != null : !this$news.equals(other$news)) return false;
+      final Object this$screenshots = this.getScreenshots();
+      final Object other$screenshots = other.getScreenshots();
+      if (this$screenshots == null ? other$screenshots != null
+          : !this$screenshots.equals(other$screenshots)) {
+        return false;
+      }
+      final Object this$videos = this.getVideos();
+      final Object other$videos = other.getVideos();
+      if (this$videos == null ? other$videos != null : !this$videos.equals(other$videos)) {
+        return false;
+      }
+      return true;
+    }
+
+    public int hashCode() {
+      final int PRIME = 59;
+      int result = 1;
+      final Object $keywords = this.getKeywords();
+      result = result * PRIME + ($keywords == null ? 43 : $keywords.hashCode());
+      final Object $description = this.getDescription();
+      result = result * PRIME + ($description == null ? 43 : $description.hashCode());
+      final Object $news = this.getNews();
+      result = result * PRIME + ($news == null ? 43 : $news.hashCode());
+      final Object $screenshots = this.getScreenshots();
+      result = result * PRIME + ($screenshots == null ? 43 : $screenshots.hashCode());
+      final Object $videos = this.getVideos();
+      result = result * PRIME + ($videos == null ? 43 : $videos.hashCode());
+      return result;
     }
 
     public String toString() {
@@ -1301,10 +1305,6 @@ public class GetAppMeta extends BaseV7Response {
           + this.getVideos()
           + ")";
     }
-
-
-
-
   }
 
   public static class Urls {
@@ -1333,7 +1333,9 @@ public class GetAppMeta extends BaseV7Response {
 
     protected boolean canEqual(Object other) {
       return other instanceof Urls;
-    }    public boolean equals(Object o) {
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof Urls)) return false;
       final Urls other = (Urls) o;
@@ -1356,8 +1358,6 @@ public class GetAppMeta extends BaseV7Response {
       result = result * PRIME + ($m == null ? 43 : $m.hashCode());
       return result;
     }
-
-
 
     public String toString() {
       return "GetAppMeta.Urls(w=" + this.getW() + ", m=" + this.getM() + ")";
@@ -1408,25 +1408,6 @@ public class GetAppMeta extends BaseV7Response {
 
     protected boolean canEqual(Object other) {
       return other instanceof Stats;
-    }    public boolean equals(Object o) {
-      if (o == this) return true;
-      if (!(o instanceof Stats)) return false;
-      final Stats other = (Stats) o;
-      if (!other.canEqual((Object) this)) return false;
-      final Object this$rating = this.getRating();
-      final Object other$rating = other.getRating();
-      if (this$rating == null ? other$rating != null : !this$rating.equals(other$rating)) {
-        return false;
-      }
-      final Object this$globalRating = this.getGlobalRating();
-      final Object other$globalRating = other.getGlobalRating();
-      if (this$globalRating == null ? other$globalRating != null
-          : !this$globalRating.equals(other$globalRating)) {
-        return false;
-      }
-      if (this.getDownloads() != other.getDownloads()) return false;
-      if (this.getPdownloads() != other.getPdownloads()) return false;
-      return true;
     }
 
     public static class Rating {
@@ -1464,19 +1445,6 @@ public class GetAppMeta extends BaseV7Response {
 
       protected boolean canEqual(Object other) {
         return other instanceof Rating;
-      }      public boolean equals(Object o) {
-        if (o == this) return true;
-        if (!(o instanceof Rating)) return false;
-        final Rating other = (Rating) o;
-        if (!other.canEqual((Object) this)) return false;
-        if (Float.compare(this.getAvg(), other.getAvg()) != 0) return false;
-        if (this.getTotal() != other.getTotal()) return false;
-        final Object this$votes = this.getVotes();
-        final Object other$votes = other.getVotes();
-        if (this$votes == null ? other$votes != null : !this$votes.equals(other$votes)) {
-          return false;
-        }
-        return true;
       }
 
       public static class Vote {
@@ -1505,7 +1473,9 @@ public class GetAppMeta extends BaseV7Response {
 
         protected boolean canEqual(Object other) {
           return other instanceof Vote;
-        }        public boolean equals(Object o) {
+        }
+
+        public boolean equals(Object o) {
           if (o == this) return true;
           if (!(o instanceof Vote)) return false;
           final Vote other = (Vote) o;
@@ -1523,8 +1493,6 @@ public class GetAppMeta extends BaseV7Response {
           return result;
         }
 
-
-
         public String toString() {
           return "GetAppMeta.Stats.Rating.Vote(value="
               + this.getValue()
@@ -1532,7 +1500,24 @@ public class GetAppMeta extends BaseV7Response {
               + this.getCount()
               + ")";
         }
-      }      public int hashCode() {
+      }
+
+      public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof Rating)) return false;
+        final Rating other = (Rating) o;
+        if (!other.canEqual((Object) this)) return false;
+        if (Float.compare(this.getAvg(), other.getAvg()) != 0) return false;
+        if (this.getTotal() != other.getTotal()) return false;
+        final Object this$votes = this.getVotes();
+        final Object other$votes = other.getVotes();
+        if (this$votes == null ? other$votes != null : !this$votes.equals(other$votes)) {
+          return false;
+        }
+        return true;
+      }
+
+      public int hashCode() {
         final int PRIME = 59;
         int result = 1;
         result = result * PRIME + Float.floatToIntBits(this.getAvg());
@@ -1541,8 +1526,6 @@ public class GetAppMeta extends BaseV7Response {
         result = result * PRIME + ($votes == null ? 43 : $votes.hashCode());
         return result;
       }
-
-
 
       public String toString() {
         return "GetAppMeta.Stats.Rating(avg="
@@ -1553,9 +1536,30 @@ public class GetAppMeta extends BaseV7Response {
             + this.getVotes()
             + ")";
       }
+    }
 
+    public boolean equals(Object o) {
+      if (o == this) return true;
+      if (!(o instanceof Stats)) return false;
+      final Stats other = (Stats) o;
+      if (!other.canEqual((Object) this)) return false;
+      final Object this$rating = this.getRating();
+      final Object other$rating = other.getRating();
+      if (this$rating == null ? other$rating != null : !this$rating.equals(other$rating)) {
+        return false;
+      }
+      final Object this$globalRating = this.getGlobalRating();
+      final Object other$globalRating = other.getGlobalRating();
+      if (this$globalRating == null ? other$globalRating != null
+          : !this$globalRating.equals(other$globalRating)) {
+        return false;
+      }
+      if (this.getDownloads() != other.getDownloads()) return false;
+      if (this.getPdownloads() != other.getPdownloads()) return false;
+      return true;
+    }
 
-    }    public int hashCode() {
+    public int hashCode() {
       final int PRIME = 59;
       int result = 1;
       final Object $rating = this.getRating();
@@ -1566,8 +1570,6 @@ public class GetAppMeta extends BaseV7Response {
       result = result * PRIME + this.getPdownloads();
       return result;
     }
-
-
 
     public String toString() {
       return "GetAppMeta.Stats(rating="
@@ -1580,7 +1582,5 @@ public class GetAppMeta extends BaseV7Response {
           + this.getPdownloads()
           + ")";
     }
-
-
   }
 }

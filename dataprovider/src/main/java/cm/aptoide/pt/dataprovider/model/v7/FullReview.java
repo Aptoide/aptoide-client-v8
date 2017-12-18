@@ -32,6 +32,10 @@ public class FullReview extends Review {
     return result;
   }
 
+  protected boolean canEqual(Object other) {
+    return other instanceof FullReview;
+  }
+
   public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof FullReview)) return false;
@@ -42,10 +46,6 @@ public class FullReview extends Review {
     final Object other$data = other.getData();
     if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
     return true;
-  }
-
-  protected boolean canEqual(Object other) {
-    return other instanceof FullReview;
   }
 
   public String toString() {

@@ -37,6 +37,10 @@ public class AppUpdate extends App implements TimelineCard {
     return result;
   }
 
+  protected boolean canEqual(Object other) {
+    return other instanceof AppUpdate;
+  }
+
   public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof AppUpdate)) return false;
@@ -54,10 +58,6 @@ public class AppUpdate extends App implements TimelineCard {
     final Object other$urls = other.getUrls();
     if (this$urls == null ? other$urls != null : !this$urls.equals(other$urls)) return false;
     return true;
-  }
-
-  protected boolean canEqual(Object other) {
-    return other instanceof AppUpdate;
   }
 
   public String getCardId() {

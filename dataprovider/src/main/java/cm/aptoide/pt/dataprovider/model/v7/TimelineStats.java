@@ -18,18 +18,6 @@ public class TimelineStats extends BaseV7Response {
     this.data = data;
   }
 
-  public boolean equals(Object o) {
-    if (o == this) return true;
-    if (!(o instanceof TimelineStats)) return false;
-    final TimelineStats other = (TimelineStats) o;
-    if (!other.canEqual((Object) this)) return false;
-    if (!super.equals(o)) return false;
-    final Object this$data = this.getData();
-    final Object other$data = other.getData();
-    if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
-    return true;
-  }
-
   public int hashCode() {
     final int PRIME = 59;
     int result = 1;
@@ -41,6 +29,18 @@ public class TimelineStats extends BaseV7Response {
 
   protected boolean canEqual(Object other) {
     return other instanceof TimelineStats;
+  }
+
+  public boolean equals(Object o) {
+    if (o == this) return true;
+    if (!(o instanceof TimelineStats)) return false;
+    final TimelineStats other = (TimelineStats) o;
+    if (!other.canEqual((Object) this)) return false;
+    if (!super.equals(o)) return false;
+    final Object this$data = this.getData();
+    final Object other$data = other.getData();
+    if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
+    return true;
   }
 
   public String toString() {

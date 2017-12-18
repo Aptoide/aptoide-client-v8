@@ -15,8 +15,15 @@ public class ListApps extends BaseV7EndlessDataListResponse<App> {
   public ListApps() {
   }
 
-  public String toString() {
-    return "ListApps()";
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + super.hashCode();
+    return result;
+  }
+
+  protected boolean canEqual(Object other) {
+    return other instanceof ListApps;
   }
 
   public boolean equals(Object o) {
@@ -28,14 +35,7 @@ public class ListApps extends BaseV7EndlessDataListResponse<App> {
     return true;
   }
 
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    result = result * PRIME + super.hashCode();
-    return result;
-  }
-
-  protected boolean canEqual(Object other) {
-    return other instanceof ListApps;
+  public String toString() {
+    return "ListApps()";
   }
 }

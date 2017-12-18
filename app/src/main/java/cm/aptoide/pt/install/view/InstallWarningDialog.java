@@ -30,6 +30,7 @@ public class InstallWarningDialog {
   private AlertDialog dialog;
   private Button trustedAppButton;
   private Button proceedButton;
+
   @SuppressLint("InflateParams")
   public InstallWarningDialog(Malware.Rank rank, boolean trustedVersionAvailable, Context ctx,
       View.OnClickListener installHandler, View.OnClickListener searchTrustedHandler,

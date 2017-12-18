@@ -10,8 +10,15 @@ public class GetStore extends StoreUserAbstraction<GetStoreMeta> {
   public GetStore() {
   }
 
-  public String toString() {
-    return "GetStore()";
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + super.hashCode();
+    return result;
+  }
+
+  protected boolean canEqual(Object other) {
+    return other instanceof GetStore;
   }
 
   public boolean equals(Object o) {
@@ -23,14 +30,7 @@ public class GetStore extends StoreUserAbstraction<GetStoreMeta> {
     return true;
   }
 
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    result = result * PRIME + super.hashCode();
-    return result;
-  }
-
-  protected boolean canEqual(Object other) {
-    return other instanceof GetStore;
+  public String toString() {
+    return "GetStore()";
   }
 }
