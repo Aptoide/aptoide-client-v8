@@ -82,8 +82,6 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
     sharedPreferences =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     replyEventPublishSubject = PublishSubject.create();
-    adapter =
-        new PostCommentsAdapter(new ArrayList<>(), new ProgressComment(), replyEventPublishSubject);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -97,6 +95,8 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
     list.setLayoutManager(layoutManager);
     swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
     floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fabAdd);
+    adapter =
+        new PostCommentsAdapter(new ArrayList<>(), new ProgressComment(), replyEventPublishSubject);
     setHasOptionsMenu(true);
     attachPresenter(new PostCommentsPresenter(this, new Comments(
         new PostCommentsRepository(10, 0, Integer.MAX_VALUE, bodyInterceptor, httpClient,
