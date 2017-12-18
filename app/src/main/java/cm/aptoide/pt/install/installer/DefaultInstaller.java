@@ -36,8 +36,6 @@ import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.FileUtils;
 import java.io.File;
 import java.util.List;
-import lombok.AccessLevel;
-import lombok.Getter;
 import rx.Completable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -51,7 +49,7 @@ public class DefaultInstaller implements Installer {
       .getAbsolutePath() + "/Android/obb/";
   public static final String ROOT_INSTALL_COMMAND = "pm install -r ";
   private static final String TAG = DefaultInstaller.class.getSimpleName();
-  @Getter(AccessLevel.PACKAGE) private final PackageManager packageManager;
+  private final PackageManager packageManager;
   private final InstallationProvider installationProvider;
   private final SharedPreferences sharedPreferences;
   private FileUtils fileUtils;
@@ -59,7 +57,6 @@ public class DefaultInstaller implements Installer {
   private RootAvailabilityManager rootAvailabilityManager;
   private InstalledRepository installedRepository;
   private InstallerAnalytics installerAnalytics;
-
   public DefaultInstaller(PackageManager packageManager, InstallationProvider installationProvider,
       FileUtils fileUtils, Analytics analytics, boolean debug,
       InstalledRepository installedRepository, int rootTimeout,
@@ -75,6 +72,10 @@ public class DefaultInstaller implements Installer {
     RootShell.defaultCommandTimeout = rootTimeout;
     this.rootAvailabilityManager = rootAvailabilityManager;
     this.sharedPreferences = sharedPreferences;
+  }
+
+  public PackageManager getPackageManager() {
+    return packageManager;
   }
 
   public Observable<Boolean> isInstalled(String md5) {

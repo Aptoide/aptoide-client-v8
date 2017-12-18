@@ -11,14 +11,13 @@ import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
-import lombok.Getter;
 
 /**
  * Created by trinkes on 05/12/2016.
  */
 
 public class MyStoreDisplayable extends Displayable {
-  @Getter private GetHomeMeta meta;
+  private GetHomeMeta meta;
   private boolean isLongTime;
   private TimelineStats timelineStats;
   private StoreContext storeContext;
@@ -90,5 +89,9 @@ public class MyStoreDisplayable extends Displayable {
 
   public StoreContext getStoreContext() {
     return storeContext;
+  }
+
+  public GetHomeMeta getMeta() {
+    return this.meta;
   }
 }

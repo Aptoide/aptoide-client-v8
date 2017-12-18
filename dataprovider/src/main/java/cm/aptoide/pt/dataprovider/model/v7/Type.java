@@ -8,7 +8,6 @@ package cm.aptoide.pt.dataprovider.model.v7;
 import android.content.res.Resources;
 import android.view.WindowManager;
 import cm.aptoide.pt.utils.AptoideUtils;
-import lombok.Getter;
 
 /**
  * Created by neuro on 06-05-2016.
@@ -25,8 +24,8 @@ public enum Type {
   MY_STORE_META(1, true), MY_STORES_SUBSCRIBED(3, false), STORES_RECOMMENDED(3, false), MY_STORE(1,
       true), APP_META(1, true);
 
-  @Getter private int defaultPerLineCount;
-  @Getter private boolean fixedPerLineCount;
+  private int defaultPerLineCount;
+  private boolean fixedPerLineCount;
 
   Type(int defaultPerLineCount, boolean fixedPerLineCount) {
     this.defaultPerLineCount = defaultPerLineCount;
@@ -38,5 +37,13 @@ public enum Type {
         : (int) (AptoideUtils.ScreenU.getScreenWidthInDip(windowManager, resources)
             / AptoideUtils.ScreenU.REFERENCE_WIDTH_DPI * getDefaultPerLineCount());
     return n > 0 ? n : 1;
+  }
+
+  public int getDefaultPerLineCount() {
+    return this.defaultPerLineCount;
+  }
+
+  public boolean isFixedPerLineCount() {
+    return this.fixedPerLineCount;
   }
 }

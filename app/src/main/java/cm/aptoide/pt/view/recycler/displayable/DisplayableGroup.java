@@ -4,14 +4,13 @@ import android.content.res.Resources;
 import android.view.WindowManager;
 import cm.aptoide.pt.view.recycler.widget.WidgetFactory;
 import java.util.List;
-import lombok.Getter;
 
 /**
  * Created by neuro on 16-04-2016.
  */
 public class DisplayableGroup extends Displayable {
 
-  @Getter private final List<Displayable> children;
+  private final List<Displayable> children;
   private final WindowManager windowManager;
   private final Resources resources;
 
@@ -59,5 +58,9 @@ public class DisplayableGroup extends Displayable {
   @Override public int getViewLayout() {
     throw new IllegalStateException(
         "getViewLayout() on DisplayableGroup should not be " + "called!");
+  }
+
+  public List<Displayable> getChildren() {
+    return this.children;
   }
 }
