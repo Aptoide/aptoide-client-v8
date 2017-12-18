@@ -25,6 +25,7 @@ android {
   publishNonDefault true
 
   productFlavors {
+    uitest {}
     prod {}
     internal {}
   }
@@ -74,4 +75,7 @@ dependencies {
   compile "io.reactivex:rxjava:${RXJAVA_VERSION}"
   compile "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
   compile "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
+  // Parceler - https://github.com/johncarl81/parceler
+  compile "org.parceler:parceler-api:${PARCELER_VERSION}"
+  annotationProcessor "org.parceler:parceler:${PARCELER_VERSION}"
 }

@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.comments.CommentBeforeSubmissionCallback;
@@ -145,13 +144,8 @@ public class CommentDialogFragment
     converterFactory = WebService.getDefaultConverter();
     onEmptyTextError =
         AptoideUtils.StringU.getResString(R.string.ws_error_MARG_107, getContext().getResources());
-    Analytics analytics = Analytics.getInstance();
-    timelineAnalytics = new TimelineAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()),
-        application.getAccountSettingsBodyInterceptorPoolV7(), httpClient, converterFactory,
-        tokenInvalidator, BuildConfig.APPLICATION_ID, application.getDefaultSharedPreferences(),
-        application.getNotificationAnalytics(), application.getNavigationTracker(),
-        application.getReadPostsPersistence());
+    timelineAnalytics =
+        ((AptoideApplication) getContext().getApplicationContext()).getTimelineAnalytics();
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,

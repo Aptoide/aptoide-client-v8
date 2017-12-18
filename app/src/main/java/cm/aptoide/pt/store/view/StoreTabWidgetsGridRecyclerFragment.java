@@ -20,6 +20,7 @@ import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.install.InstalledRepository;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
@@ -72,11 +73,20 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
   protected Observable<List<Displayable>> parseDisplayables(GetStoreWidgets getStoreWidgets) {
     return Observable.from(getStoreWidgets.getDataList()
         .getList())
-        .concatMapEager(wsWidget -> DisplayablesFactory.parse(wsWidget, storeTheme, storeRepository,
-            storeContext, getContext(), accountManager, storeUtilsProxy,
-            (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
-            getContext().getResources(), installedRepository, storeAnalytics, storeTabNavigator,
-            navigationTracker, new BadgeDialogFactory(getContext())))
+        .concatMapEager(wsWidget -> {
+          AptoideApplication application =
+              (AptoideApplication) getContext().getApplicationContext();
+          return DisplayablesFactory.parse(wsWidget, storeTheme, storeRepository, storeContext,
+              getContext(), accountManager, storeUtilsProxy,
+              (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
+              getContext().getResources(), installedRepository, storeAnalytics, storeTabNavigator,
+              navigationTracker, new BadgeDialogFactory(getContext()),
+              ((ActivityResultNavigator) getContext()).getFragmentNavigator(),
+              AccessorFactory.getAccessorFor(application.getDatabase(), Store.class),
+              application.getBodyInterceptorPoolV7(), application.getDefaultClient(),
+              WebService.getDefaultConverter(), application.getTokenInvalidator(),
+              application.getDefaultSharedPreferences());
+        })
         .toList()
         .first();
   }

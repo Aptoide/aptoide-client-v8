@@ -10,7 +10,7 @@ public class DownloadRepository {
 
   private final DownloadAccessor accessor;
 
-  DownloadRepository(DownloadAccessor downloadAccessor) {
+  public DownloadRepository(DownloadAccessor downloadAccessor) {
     this.accessor = downloadAccessor;
   }
 

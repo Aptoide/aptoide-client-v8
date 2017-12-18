@@ -358,7 +358,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     purchaseBundleMapper = application.getPurchaseBundleMapper();
     final AptoideAccountManager accountManager = application.getAccountManager();
     accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
-
     installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
     final BodyInterceptor<BaseBody> bodyInterceptor =
         application.getAccountSettingsBodyInterceptorPoolV7();
@@ -370,14 +369,12 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     issuesAnalytics = new IssuesAnalytics(analytics, Answers.getInstance());
 
     installAnalytics = new InstallAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()));
+        AppEventsLogger.newLogger(getContext().getApplicationContext()), CrashReport.getInstance());
+
+    timelineAnalytics = application.getTimelineAnalytics();
 
     SharedPreferences sharedPreferences = application.getDefaultSharedPreferences();
-    timelineAnalytics = new TimelineAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
-        httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        sharedPreferences, application.getNotificationAnalytics(), navigationTracker,
-        application.getReadPostsPersistence());
+
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
             timelineAnalytics, tokenInvalidator, sharedPreferences);
@@ -943,7 +940,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
                 AppEventsLogger.newLogger(getContext().getApplicationContext())), navigationTracker,
             getEditorsBrickPosition(), installAnalytics,
             notificationAnalytics.getCampaignId(app.getPackageName(), app.getId()),
-            notificationAnalytics.getAbTestingGroup(app.getPackageName(), app.getId()));
+            notificationAnalytics.getAbTestingGroup(app.getPackageName(), app.getId()),
+            getFragmentManager().getFragments());
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics, storeAnalytics));
     displayables.add(

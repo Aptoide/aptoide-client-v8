@@ -8,6 +8,7 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
+import android.support.annotation.NonNull;
 import android.util.Pair;
 import android.view.WindowManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
@@ -15,6 +16,7 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.model.v7.ListComments;
+import cm.aptoide.pt.dataprovider.model.v7.TimelineStats;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetHomeMeta;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
@@ -146,7 +148,7 @@ import rx.schedulers.Schedulers;
               GetTimelineStatsRequest.of(bodyInterceptor, null, httpClient, converterFactory,
                   tokenInvalidator, sharedPreferences)
                   .observe(bypassCache)
-                  .onErrorReturn(throwable -> null),
+                  .onErrorReturn(throwable -> createErrorTimelineStatus()),
               GetMyStoreMetaRequest.of(bodyInterceptor, httpClient, converterFactory,
                   tokenInvalidator, sharedPreferences)
                   .observe(bypassCache)
@@ -191,6 +193,15 @@ import rx.schedulers.Schedulers;
       // Case we don't have the enum defined we still need to countDown the latch
       return Observable.empty();
     }
+  }
+
+  @NonNull private TimelineStats createErrorTimelineStatus() {
+    TimelineStats timelineStats = new TimelineStats();
+    TimelineStats.StatusData data = new TimelineStats.StatusData();
+    data.setFollowers(0);
+    data.setFollowing(0);
+    timelineStats.setData(data);
+    return timelineStats;
   }
 
   @Deprecated public boolean shouldAddObjectView(List<String> list, Throwable throwable) {
