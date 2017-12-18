@@ -1,6 +1,7 @@
 package cm.aptoide.pt.notification;
 
 import android.support.annotation.NonNull;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.realm.Notification;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import org.junit.Test;
+import org.mockito.Mockito;
 import rx.Completable;
 import rx.Observable;
 import rx.observers.TestSubscriber;
@@ -26,7 +28,6 @@ import static org.junit.Assert.assertTrue;
 public class NotificationsCleanerTest {
 
   @Test public void cleanOtherUsersNotifications() throws Exception {
-
     Map<String, Notification> list = new HashMap<>();
     Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
     long timeStamp = calendar.getTimeInMillis();
@@ -39,6 +40,7 @@ public class NotificationsCleanerTest {
     notification = createNotification(timeStamp + 2000, timeStamp - 2, "me");
     list.put(notification.getKey(), notification);
     NotificationAccessor notificationAccessor = new NotAccessor(list);
+
     NotificationsCleaner notificationsCleaner = new NotificationsCleaner(notificationAccessor,
         Calendar.getInstance(TimeZone.getTimeZone("UTC")), getAptoideAccountManager(),
         getNotificationProvider(), CrashReport.getInstance());
@@ -53,6 +55,14 @@ public class NotificationsCleanerTest {
         .toBlocking()
         .first()
         .size(), 0);
+  }
+
+  private NotificationProvider getNotificationProvider() {
+    return Mockito.mock(NotificationProvider.class);
+  }
+
+  private AptoideAccountManager getAptoideAccountManager() {
+    return Mockito.mock(AptoideAccountManager.class);
   }
 
   @Test public void cleanLimitExceededNotificationsWithAExpiredNotification() throws Exception {

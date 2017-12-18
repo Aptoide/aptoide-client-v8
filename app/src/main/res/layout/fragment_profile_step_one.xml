@@ -39,40 +39,25 @@
         android:paddingStart="@dimen/padding_small"
         >
 
-      <Button
-          android:id="@+id/logged_in_more_info_button"
-          android:layout_width="0dp"
-          android:layout_marginEnd="11dp"
-          android:layout_marginRight="11dp"
-          android:layout_weight="1"
-          android:gravity="center"
-          android:text="@string/more_info"
-          style="@style/Aptoide.Button.Ghost"
+      <ImageView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_horizontal"
+          android:src="@drawable/icon_logged_in"
           />
 
-      <Button
-          android:id="@+id/logged_in_continue"
-          android:layout_width="0dp"
-          android:layout_height="@dimen/button_height"
-          android:layout_marginLeft="11dp"
-          android:layout_marginStart="11dp"
-          android:layout_weight="1"
-          android:text="@string/continue_option"
-          android:theme="@style/Aptoide.Button"
-          style="@style/Widget.AppCompat.Button"
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_horizontal"
+          android:layout_marginTop="@dimen/padding_medium_small"
+          android:gravity="center_horizontal"
+          android:text="@string/create_profile_pub_pri_suc_login"
+          android:textColor="@color/default_color"
+          style="@style/Aptoide.TextView.Medium.L"
           />
 
-    </LinearLayout>
-
-    <ScrollView
-        android:id="@+id/scroll_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/bottom_buttons"
-        android:padding="@dimen/padding_very_small"
-        >
-
-      <LinearLayout
+      <TextView
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:gravity="center"

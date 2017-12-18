@@ -44,7 +44,6 @@
     </FrameLayout>
 
     <TextView
-        android:id="@+id/timeline_aggregated_see_more"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

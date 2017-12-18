@@ -33,7 +33,6 @@
     <include layout="@layout/apps_timeline_store_latest_body"/>
 
     <View
-        android:id="@+id/partial_social_timeline_thumbnail_divider2"
         android:layout_width="match_parent"
         android:layout_height="0.7dp"
         android:layout_marginEnd="12dp"
