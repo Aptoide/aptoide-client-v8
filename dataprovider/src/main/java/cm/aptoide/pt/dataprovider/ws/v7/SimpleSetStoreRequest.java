@@ -23,7 +23,8 @@ public class SimpleSetStoreRequest extends V7<BaseV7Response, SimpleSetStoreRequ
 
   private SimpleSetStoreRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
+      List<Store.SocialChannelType> storeDeleteSocialLinksList) {
     super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
         tokenInvalidator);
   }
@@ -39,10 +40,12 @@ public class SimpleSetStoreRequest extends V7<BaseV7Response, SimpleSetStoreRequ
   public static SimpleSetStoreRequest of(String storeName, String storeTheme,
       String storeDescription, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, List<StoreLinks> storeLinksList) {
-    Body body = new Body(storeName, storeTheme, storeDescription, storeLinksList);
+      SharedPreferences sharedPreferences, List<StoreLinks> storeLinksList,
+      List<Store.SocialChannelType> storeDeleteSocialLinksList) {
+    Body body = new Body(storeName, storeTheme, storeDescription, storeLinksList,
+        storeDeleteSocialLinksList);
     return new SimpleSetStoreRequest(body, bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences);
+        tokenInvalidator, sharedPreferences, storeDeleteSocialLinksList);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
@@ -53,13 +56,16 @@ public class SimpleSetStoreRequest extends V7<BaseV7Response, SimpleSetStoreRequ
   public static class Body extends BaseBody {
 
     @JsonProperty("store_links") private List<StoreLinks> storeLinksList;
+    @JsonProperty("store_del_links") private List<Store.SocialChannelType>
+        storeDeleteSocialLinksList;
     private StoreProperties storeProperties;
     private String storeName;
 
     public Body(String storeName, String storeTheme, String storeDescription,
-        List<StoreLinks> storeLinksList) {
+        List<StoreLinks> storeLinksList, List<Store.SocialChannelType> storeDeleteSocialLinksList) {
       this.storeName = storeName;
       this.storeLinksList = storeLinksList;
+      this.storeDeleteSocialLinksList = storeDeleteSocialLinksList;
       storeProperties = new StoreProperties(storeTheme, storeDescription);
     }
 
@@ -85,6 +91,15 @@ public class SimpleSetStoreRequest extends V7<BaseV7Response, SimpleSetStoreRequ
 
     public void setStoreLinksList(List<StoreLinks> storeLinksList) {
       this.storeLinksList = storeLinksList;
+    }
+
+    public List<Store.SocialChannelType> getStoreDeleteSocialLinksList() {
+      return storeDeleteSocialLinksList;
+    }
+
+    public void setStoreDeleteSocialLinksList(
+        List<Store.SocialChannelType> storeDeleteSocialLinksList) {
+      this.storeDeleteSocialLinksList = storeDeleteSocialLinksList;
     }
   }
 

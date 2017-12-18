@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import rx.Completable;
 import rx.Single;
 
-public class PartnerApplication extends AptoideApplication {
+public class PartnerApplication extends NotificationApplicationView {
 
   private BootConfig bootConfig;
   private ObjectMapper objectMapper;
@@ -113,8 +113,15 @@ public class PartnerApplication extends AptoideApplication {
     return false;
   }
 
-  @Override public ActivityProvider createActivityProvider() {
-    return new PartnerActivityProvider();
+  @Override public NotificationSyncScheduler getNotificationSyncScheduler() {
+    if (notificationSyncScheduler == null) {
+      notificationSyncScheduler = new PushNotificationSyncManager(getAlarmSyncScheduler(), true,
+          new NotificationSyncFactory(
+              new NotificationService(getExtraId(), getDefaultSharedPreferences(), getResources(),
+                  getBaseContext(), getTokenInvalidator(), getBodyInterceptorV3(),
+                  getAccountManager()), getNotificationProvider(), getDefaultSharedPreferences()));
+    }
+    return notificationSyncScheduler;
   }
 
   @Override public Completable createShortcut() {
@@ -140,14 +147,7 @@ public class PartnerApplication extends AptoideApplication {
         hasMultiStoreSearch());
   }
 
-  @Override public NotificationSyncScheduler getNotificationSyncScheduler() {
-    if (notificationSyncScheduler == null) {
-      notificationSyncScheduler = new PushNotificationSyncManager(getAlarmSyncScheduler(), true,
-          new NotificationSyncFactory(
-              new NotificationService(getExtraId(), getDefaultSharedPreferences(), getResources(),
-                  getBaseContext(), getTokenInvalidator(), getBodyInterceptorV3(),
-                  getAccountManager()), getNotificationProvider(), getDefaultSharedPreferences()));
-    }
-    return notificationSyncScheduler;
+  @Override public ActivityProvider createActivityProvider() {
+    return new PartnerActivityProvider();
   }
 }

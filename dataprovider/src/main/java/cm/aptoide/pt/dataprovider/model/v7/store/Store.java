@@ -125,7 +125,7 @@ public class Store {
   }
 
   public enum SocialChannelType {
-    FACEBOOK, TWITTER, YOUTUBE, TWITCH
+    FACEBOOK, TWITTER, YOUTUBE, TWITCH, BLOG
   }
 
   public enum BadgeType {

@@ -20,8 +20,8 @@ public abstract class ActivityCustomTabsNavigator extends LeakActivity
   }
 
   @Override protected void onNewIntent(Intent intent) {
-    results.call(intent.getData());
     super.onNewIntent(intent);
+    results.call(intent.getData());
   }
 
   @Override public void navigateToCustomTabs(CustomTabsIntent intent, Uri uri) {
