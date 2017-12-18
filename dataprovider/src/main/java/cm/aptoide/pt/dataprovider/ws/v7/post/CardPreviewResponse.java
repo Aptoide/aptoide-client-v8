@@ -24,6 +24,10 @@ public final class CardPreviewResponse extends BaseV7Response {
     return result;
   }
 
+  protected boolean canEqual(Object other) {
+    return other instanceof CardPreviewResponse;
+  }
+
   public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof CardPreviewResponse)) return false;
@@ -33,10 +37,6 @@ public final class CardPreviewResponse extends BaseV7Response {
     final Object other$data = other.getData();
     if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
     return true;
-  }
-
-  protected boolean canEqual(Object other) {
-    return other instanceof CardPreviewResponse;
   }
 
   public String toString() {
@@ -74,7 +74,13 @@ public final class CardPreviewResponse extends BaseV7Response {
       final Object $data = this.getData();
       result = result * PRIME + ($data == null ? 43 : $data.hashCode());
       return result;
-    }    public boolean equals(Object o) {
+    }
+
+    protected boolean canEqual(Object other) {
+      return other instanceof CardPreview;
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof CardPreview)) return false;
       final CardPreview other = (CardPreview) o;
@@ -87,12 +93,6 @@ public final class CardPreviewResponse extends BaseV7Response {
       if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
       return true;
     }
-
-    protected boolean canEqual(Object other) {
-      return other instanceof CardPreview;
-    }
-
-
 
     public String toString() {
       return "CardPreviewResponse.CardPreview(type="
@@ -128,7 +128,9 @@ public final class CardPreviewResponse extends BaseV7Response {
 
     protected boolean canEqual(Object other) {
       return other instanceof TitleAndThumbnail;
-    }    public boolean equals(Object o) {
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof TitleAndThumbnail)) return false;
       final TitleAndThumbnail other = (TitleAndThumbnail) o;
@@ -154,8 +156,6 @@ public final class CardPreviewResponse extends BaseV7Response {
       result = result * PRIME + ($thumbnail == null ? 43 : $thumbnail.hashCode());
       return result;
     }
-
-
 
     public String toString() {
       return "CardPreviewResponse.TitleAndThumbnail(title="

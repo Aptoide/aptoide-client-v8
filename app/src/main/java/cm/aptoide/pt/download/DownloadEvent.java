@@ -80,6 +80,14 @@ public class DownloadEvent extends DownloadInstallBaseEvent {
     return super.isReadyToSend() && downloadHadProgress;
   }
 
+  @Override public int hashCode() {
+    int result = (downloadHadProgress ? 1 : 0);
+    result = 31 * result + (getMirrorApk() != null ? getMirrorApk().hashCode() : 0);
+    result = 31 * result + (getMirrorObbMain() != null ? getMirrorObbMain().hashCode() : 0);
+    result = 31 * result + (getMirrorObbPatch() != null ? getMirrorObbPatch().hashCode() : 0);
+    return result;
+  }
+
   @Override public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
@@ -97,13 +105,5 @@ public class DownloadEvent extends DownloadInstallBaseEvent {
     }
     return getMirrorObbPatch() != null ? getMirrorObbPatch().equals(that.getMirrorObbPatch())
         : that.getMirrorObbPatch() == null;
-  }
-
-  @Override public int hashCode() {
-    int result = (downloadHadProgress ? 1 : 0);
-    result = 31 * result + (getMirrorApk() != null ? getMirrorApk().hashCode() : 0);
-    result = 31 * result + (getMirrorObbMain() != null ? getMirrorObbMain().hashCode() : 0);
-    result = 31 * result + (getMirrorObbPatch() != null ? getMirrorObbPatch().hashCode() : 0);
-    return result;
   }
 }

@@ -10,15 +10,6 @@ package cm.aptoide.pt.dataprovider.model.v7;
  */
 public class GroupDatalist extends BaseV7EndlessDataListResponse<Group> {
 
-  public boolean equals(Object o) {
-    if (o == this) return true;
-    if (!(o instanceof GroupDatalist)) return false;
-    final GroupDatalist other = (GroupDatalist) o;
-    if (!other.canEqual((Object) this)) return false;
-    if (!super.equals(o)) return false;
-    return true;
-  }
-
   public int hashCode() {
     final int PRIME = 59;
     int result = 1;
@@ -28,5 +19,14 @@ public class GroupDatalist extends BaseV7EndlessDataListResponse<Group> {
 
   protected boolean canEqual(Object other) {
     return other instanceof GroupDatalist;
+  }
+
+  public boolean equals(Object o) {
+    if (o == this) return true;
+    if (!(o instanceof GroupDatalist)) return false;
+    final GroupDatalist other = (GroupDatalist) o;
+    if (!other.canEqual((Object) this)) return false;
+    if (!super.equals(o)) return false;
+    return true;
   }
 }

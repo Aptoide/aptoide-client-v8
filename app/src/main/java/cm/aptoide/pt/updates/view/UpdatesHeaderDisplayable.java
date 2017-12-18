@@ -21,8 +21,10 @@ public class UpdatesHeaderDisplayable extends Displayable {
   private Analytics analytics;
   private DownloadEventConverter converter;
   private InstallEventConverter installConverter;
+
   public UpdatesHeaderDisplayable() {
   }
+
   public UpdatesHeaderDisplayable(InstallManager installManager, String label, Analytics analytics,
       DownloadEventConverter downloadInstallEventConverter,
       InstallEventConverter installConverter) {

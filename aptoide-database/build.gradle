@@ -3,7 +3,6 @@ apply plugin: 'realm-android'
 apply plugin: 'me.tatarka.retrolambda'
 retrolambda {
   jvmArgs '-noverify'
-
 }
 
 android {

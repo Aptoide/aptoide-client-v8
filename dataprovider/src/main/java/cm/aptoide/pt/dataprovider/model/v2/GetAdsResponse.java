@@ -45,20 +45,6 @@ public class GetAdsResponse {
     final Object $options = this.getOptions();
     result = result * PRIME + ($options == null ? 43 : $options.hashCode());
     return result;
-  }  public boolean equals(Object o) {
-    if (o == this) return true;
-    if (!(o instanceof GetAdsResponse)) return false;
-    final GetAdsResponse other = (GetAdsResponse) o;
-    if (!other.canEqual((Object) this)) return false;
-    final Object this$ads = this.getAds();
-    final Object other$ads = other.getAds();
-    if (this$ads == null ? other$ads != null : !this$ads.equals(other$ads)) return false;
-    final Object this$options = this.getOptions();
-    final Object other$options = other.getOptions();
-    if (this$options == null ? other$options != null : !this$options.equals(other$options)) {
-      return false;
-    }
-    return true;
   }
 
   protected boolean canEqual(Object other) {
@@ -208,7 +194,9 @@ public class GetAdsResponse {
 
     protected boolean canEqual(Object other) {
       return other instanceof Data;
-    }    public boolean equals(Object o) {
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof Data)) return false;
       final Data other = (Data) o;
@@ -298,8 +286,6 @@ public class GetAdsResponse {
       return result;
     }
 
-
-
     public String toString() {
       return "GetAdsResponse.Data(id="
           + this.getId()
@@ -379,7 +365,9 @@ public class GetAdsResponse {
 
     protected boolean canEqual(Object other) {
       return other instanceof Ad;
-    }    public boolean equals(Object o) {
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof Ad)) return false;
       final Ad other = (Ad) o;
@@ -417,8 +405,6 @@ public class GetAdsResponse {
       return result;
     }
 
-
-
     public String toString() {
       return "GetAdsResponse.Ad(data="
           + this.getData()
@@ -430,8 +416,6 @@ public class GetAdsResponse {
           + this.getTracker()
           + ")";
     }
-  }  public String toString() {
-    return "GetAdsResponse(ads=" + this.getAds() + ", options=" + this.getOptions() + ")";
   }
 
   public static class Info {
@@ -487,7 +471,9 @@ public class GetAdsResponse {
 
     protected boolean canEqual(Object other) {
       return other instanceof Info;
-    }    public boolean equals(Object o) {
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof Info)) return false;
       final Info other = (Info) o;
@@ -532,8 +518,6 @@ public class GetAdsResponse {
       return result;
     }
 
-
-
     public String toString() {
       return "GetAdsResponse.Info(adId="
           + this.getAdId()
@@ -547,6 +531,20 @@ public class GetAdsResponse {
           + this.getCpdUrl()
           + ")";
     }
+  }  public boolean equals(Object o) {
+    if (o == this) return true;
+    if (!(o instanceof GetAdsResponse)) return false;
+    final GetAdsResponse other = (GetAdsResponse) o;
+    if (!other.canEqual((Object) this)) return false;
+    final Object this$ads = this.getAds();
+    final Object other$ads = other.getAds();
+    if (this$ads == null ? other$ads != null : !this$ads.equals(other$ads)) return false;
+    final Object this$options = this.getOptions();
+    final Object other$options = other.getOptions();
+    if (this$options == null ? other$options != null : !this$options.equals(other$options)) {
+      return false;
+    }
+    return true;
   }
 
   public static class Partner {
@@ -575,18 +573,6 @@ public class GetAdsResponse {
 
     protected boolean canEqual(Object other) {
       return other instanceof Partner;
-    }    public boolean equals(Object o) {
-      if (o == this) return true;
-      if (!(o instanceof Partner)) return false;
-      final Partner other = (Partner) o;
-      if (!other.canEqual((Object) this)) return false;
-      final Object this$info = this.getInfo();
-      final Object other$info = other.getInfo();
-      if (this$info == null ? other$info != null : !this$info.equals(other$info)) return false;
-      final Object this$data = this.getData();
-      final Object other$data = other.getData();
-      if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
-      return true;
     }
 
     public static class Info {
@@ -615,7 +601,9 @@ public class GetAdsResponse {
 
       protected boolean canEqual(Object other) {
         return other instanceof Info;
-      }      public boolean equals(Object o) {
+      }
+
+      public boolean equals(Object o) {
         if (o == this) return true;
         if (!(o instanceof Info)) return false;
         final Info other = (Info) o;
@@ -636,19 +624,9 @@ public class GetAdsResponse {
         return result;
       }
 
-
-
       public String toString() {
         return "GetAdsResponse.Partner.Info(id=" + this.getId() + ", name=" + this.getName() + ")";
       }
-    }    public int hashCode() {
-      final int PRIME = 59;
-      int result = 1;
-      final Object $info = this.getInfo();
-      result = result * PRIME + ($info == null ? 43 : $info.hashCode());
-      final Object $data = this.getData();
-      result = result * PRIME + ($data == null ? 43 : $data.hashCode());
-      return result;
     }
 
     public static class Data {
@@ -677,7 +655,9 @@ public class GetAdsResponse {
 
       protected boolean canEqual(Object other) {
         return other instanceof Data;
-      }      public boolean equals(Object o) {
+      }
+
+      public boolean equals(Object o) {
         if (o == this) return true;
         if (!(o instanceof Data)) return false;
         final Data other = (Data) o;
@@ -707,8 +687,6 @@ public class GetAdsResponse {
         return result;
       }
 
-
-
       public String toString() {
         return "GetAdsResponse.Partner.Data(clickUrl="
             + this.getClickUrl()
@@ -718,13 +696,33 @@ public class GetAdsResponse {
       }
     }
 
+    public boolean equals(Object o) {
+      if (o == this) return true;
+      if (!(o instanceof Partner)) return false;
+      final Partner other = (Partner) o;
+      if (!other.canEqual((Object) this)) return false;
+      final Object this$info = this.getInfo();
+      final Object other$info = other.getInfo();
+      if (this$info == null ? other$info != null : !this$info.equals(other$info)) return false;
+      final Object this$data = this.getData();
+      final Object other$data = other.getData();
+      if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
+      return true;
+    }
+
+    public int hashCode() {
+      final int PRIME = 59;
+      int result = 1;
+      final Object $info = this.getInfo();
+      result = result * PRIME + ($info == null ? 43 : $info.hashCode());
+      final Object $data = this.getData();
+      result = result * PRIME + ($data == null ? 43 : $data.hashCode());
+      return result;
+    }
+
     public String toString() {
       return "GetAdsResponse.Partner(info=" + this.getInfo() + ", data=" + this.getData() + ")";
     }
-
-
-
-
   }
 
   public static class Options {
@@ -744,7 +742,9 @@ public class GetAdsResponse {
 
     protected boolean canEqual(Object other) {
       return other instanceof Options;
-    }    public boolean equals(Object o) {
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof Options)) return false;
       final Options other = (Options) o;
@@ -766,8 +766,6 @@ public class GetAdsResponse {
       return result;
     }
 
-
-
     public String toString() {
       return "GetAdsResponse.Options(mediation=" + this.getMediation() + ")";
     }
@@ -775,5 +773,7 @@ public class GetAdsResponse {
 
 
 
-
+  public String toString() {
+    return "GetAdsResponse(ads=" + this.getAds() + ", options=" + this.getOptions() + ")";
+  }
 }

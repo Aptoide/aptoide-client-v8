@@ -10,11 +10,11 @@ public class ShareApps {
 
   private static SpotAndShareAnalyticsInterface analytics;
 
-  public static SpotAndShareAnalyticsInterface getAnalytics() {
-    return analytics;
-  }
-
   public ShareApps(SpotAndShareAnalyticsInterface analytics) {
     ShareApps.analytics = analytics;
+  }
+
+  public static SpotAndShareAnalyticsInterface getAnalytics() {
+    return analytics;
   }
 }

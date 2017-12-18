@@ -31,6 +31,10 @@ public abstract class StoreUserAbstraction<T extends BaseV7Response> extends Bas
     return result;
   }
 
+  protected boolean canEqual(Object other) {
+    return other instanceof StoreUserAbstraction;
+  }
+
   public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof StoreUserAbstraction)) return false;
@@ -41,10 +45,6 @@ public abstract class StoreUserAbstraction<T extends BaseV7Response> extends Bas
     final Object other$nodes = other.getNodes();
     if (this$nodes == null ? other$nodes != null : !this$nodes.equals(other$nodes)) return false;
     return true;
-  }
-
-  protected boolean canEqual(Object other) {
-    return other instanceof StoreUserAbstraction;
   }
 
   public String toString() {

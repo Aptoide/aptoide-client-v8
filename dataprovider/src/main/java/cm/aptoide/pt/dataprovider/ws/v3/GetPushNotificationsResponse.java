@@ -23,6 +23,15 @@ public class GetPushNotificationsResponse extends BaseV3Response {
     this.results = results;
   }
 
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + super.hashCode();
+    final Object $results = this.getResults();
+    result = result * PRIME + ($results == null ? 43 : $results.hashCode());
+    return result;
+  }
+
   public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof GetPushNotificationsResponse)) return false;
@@ -37,21 +46,12 @@ public class GetPushNotificationsResponse extends BaseV3Response {
     return true;
   }
 
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    result = result * PRIME + super.hashCode();
-    final Object $results = this.getResults();
-    result = result * PRIME + ($results == null ? 43 : $results.hashCode());
-    return result;
+  public String toString() {
+    return "GetPushNotificationsResponse(results=" + this.getResults() + ")";
   }
 
   protected boolean canEqual(Object other) {
     return other instanceof GetPushNotificationsResponse;
-  }
-
-  public String toString() {
-    return "GetPushNotificationsResponse(results=" + this.getResults() + ")";
   }
 
   public static class Notification {
@@ -134,37 +134,6 @@ public class GetPushNotificationsResponse extends BaseV3Response {
       final Object $images = this.getImages();
       result = result * PRIME + ($images == null ? 43 : $images.hashCode());
       return result;
-    }    public boolean equals(Object o) {
-      if (o == this) return true;
-      if (!(o instanceof Notification)) return false;
-      final Notification other = (Notification) o;
-      if (!other.canEqual((Object) this)) return false;
-      if (this.getId() != other.getId()) return false;
-      final Object this$title = this.getTitle();
-      final Object other$title = other.getTitle();
-      if (this$title == null ? other$title != null : !this$title.equals(other$title)) return false;
-      final Object this$message = this.getMessage();
-      final Object other$message = other.getMessage();
-      if (this$message == null ? other$message != null : !this$message.equals(other$message)) {
-        return false;
-      }
-      final Object this$targetUrl = this.getTargetUrl();
-      final Object other$targetUrl = other.getTargetUrl();
-      if (this$targetUrl == null ? other$targetUrl != null
-          : !this$targetUrl.equals(other$targetUrl)) {
-        return false;
-      }
-      final Object this$trackUrl = this.getTrackUrl();
-      final Object other$trackUrl = other.getTrackUrl();
-      if (this$trackUrl == null ? other$trackUrl != null : !this$trackUrl.equals(other$trackUrl)) {
-        return false;
-      }
-      final Object this$images = this.getImages();
-      final Object other$images = other.getImages();
-      if (this$images == null ? other$images != null : !this$images.equals(other$images)) {
-        return false;
-      }
-      return true;
     }
 
     protected boolean canEqual(Object other) {
@@ -197,7 +166,9 @@ public class GetPushNotificationsResponse extends BaseV3Response {
 
       protected boolean canEqual(Object other) {
         return other instanceof Images;
-      }      public boolean equals(Object o) {
+      }
+
+      public boolean equals(Object o) {
         if (o == this) return true;
         if (!(o instanceof Images)) return false;
         final Images other = (Images) o;
@@ -226,8 +197,6 @@ public class GetPushNotificationsResponse extends BaseV3Response {
         return result;
       }
 
-
-
       public String toString() {
         return "GetPushNotificationsResponse.Notification.Images(bannerUrl="
             + this.getBannerUrl()
@@ -235,6 +204,39 @@ public class GetPushNotificationsResponse extends BaseV3Response {
             + this.getIconUrl()
             + ")";
       }
+    }
+
+    public boolean equals(Object o) {
+      if (o == this) return true;
+      if (!(o instanceof Notification)) return false;
+      final Notification other = (Notification) o;
+      if (!other.canEqual((Object) this)) return false;
+      if (this.getId() != other.getId()) return false;
+      final Object this$title = this.getTitle();
+      final Object other$title = other.getTitle();
+      if (this$title == null ? other$title != null : !this$title.equals(other$title)) return false;
+      final Object this$message = this.getMessage();
+      final Object other$message = other.getMessage();
+      if (this$message == null ? other$message != null : !this$message.equals(other$message)) {
+        return false;
+      }
+      final Object this$targetUrl = this.getTargetUrl();
+      final Object other$targetUrl = other.getTargetUrl();
+      if (this$targetUrl == null ? other$targetUrl != null
+          : !this$targetUrl.equals(other$targetUrl)) {
+        return false;
+      }
+      final Object this$trackUrl = this.getTrackUrl();
+      final Object other$trackUrl = other.getTrackUrl();
+      if (this$trackUrl == null ? other$trackUrl != null : !this$trackUrl.equals(other$trackUrl)) {
+        return false;
+      }
+      final Object this$images = this.getImages();
+      final Object other$images = other.getImages();
+      if (this$images == null ? other$images != null : !this$images.equals(other$images)) {
+        return false;
+      }
+      return true;
     }
 
     public String toString() {
@@ -252,7 +254,5 @@ public class GetPushNotificationsResponse extends BaseV3Response {
           + this.getImages()
           + ")";
     }
-
-
   }
 }

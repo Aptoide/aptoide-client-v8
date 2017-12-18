@@ -130,44 +130,6 @@ public class Review {
     final Object $commentList = this.getCommentList();
     result = result * PRIME + ($commentList == null ? 43 : $commentList.hashCode());
     return result;
-  }  public boolean equals(Object o) {
-    if (o == this) return true;
-    if (!(o instanceof Review)) return false;
-    final Review other = (Review) o;
-    if (!other.canEqual((Object) this)) return false;
-    if (this.getId() != other.getId()) return false;
-    final Object this$title = this.getTitle();
-    final Object other$title = other.getTitle();
-    if (this$title == null ? other$title != null : !this$title.equals(other$title)) return false;
-    final Object this$body = this.getBody();
-    final Object other$body = other.getBody();
-    if (this$body == null ? other$body != null : !this$body.equals(other$body)) return false;
-    final Object this$added = this.getAdded();
-    final Object other$added = other.getAdded();
-    if (this$added == null ? other$added != null : !this$added.equals(other$added)) return false;
-    final Object this$modified = this.getModified();
-    final Object other$modified = other.getModified();
-    if (this$modified == null ? other$modified != null : !this$modified.equals(other$modified)) {
-      return false;
-    }
-    final Object this$user = this.getUser();
-    final Object other$user = other.getUser();
-    if (this$user == null ? other$user != null : !this$user.equals(other$user)) return false;
-    final Object this$stats = this.getStats();
-    final Object other$stats = other.getStats();
-    if (this$stats == null ? other$stats != null : !this$stats.equals(other$stats)) return false;
-    final Object this$comments = this.getComments();
-    final Object other$comments = other.getComments();
-    if (this$comments == null ? other$comments != null : !this$comments.equals(other$comments)) {
-      return false;
-    }
-    final Object this$commentList = this.getCommentList();
-    final Object other$commentList = other.getCommentList();
-    if (this$commentList == null ? other$commentList != null
-        : !this$commentList.equals(other$commentList)) {
-      return false;
-    }
-    return true;
   }
 
   protected boolean canEqual(Object other) {
@@ -209,7 +171,9 @@ public class Review {
 
     protected boolean canEqual(Object other) {
       return other instanceof User;
-    }    public boolean equals(Object o) {
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof User)) return false;
       final User other = (User) o;
@@ -237,8 +201,6 @@ public class Review {
       result = result * PRIME + ($avatar == null ? 43 : $avatar.hashCode());
       return result;
     }
-
-
 
     public String toString() {
       return "Review.User(id="
@@ -295,7 +257,9 @@ public class Review {
 
     protected boolean canEqual(Object other) {
       return other instanceof Stats;
-    }    public boolean equals(Object o) {
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof Stats)) return false;
       final Stats other = (Stats) o;
@@ -320,8 +284,6 @@ public class Review {
       return result;
     }
 
-
-
     public String toString() {
       return "Review.Stats(rating="
           + this.getRating()
@@ -333,26 +295,6 @@ public class Review {
           + this.getComments()
           + ")";
     }
-  }  public String toString() {
-    return "Review(id="
-        + this.getId()
-        + ", title="
-        + this.getTitle()
-        + ", body="
-        + this.getBody()
-        + ", added="
-        + this.getAdded()
-        + ", modified="
-        + this.getModified()
-        + ", user="
-        + this.getUser()
-        + ", stats="
-        + this.getStats()
-        + ", comments="
-        + this.getComments()
-        + ", commentList="
-        + this.getCommentList()
-        + ")";
   }
 
   public static class Comments {
@@ -381,7 +323,9 @@ public class Review {
 
     protected boolean canEqual(Object other) {
       return other instanceof Comments;
-    }    public boolean equals(Object o) {
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof Comments)) return false;
       final Comments other = (Comments) o;
@@ -403,14 +347,70 @@ public class Review {
       return result;
     }
 
-
-
     public String toString() {
       return "Review.Comments(total=" + this.getTotal() + ", view=" + this.getView() + ")";
     }
+  }  public boolean equals(Object o) {
+    if (o == this) return true;
+    if (!(o instanceof Review)) return false;
+    final Review other = (Review) o;
+    if (!other.canEqual((Object) this)) return false;
+    if (this.getId() != other.getId()) return false;
+    final Object this$title = this.getTitle();
+    final Object other$title = other.getTitle();
+    if (this$title == null ? other$title != null : !this$title.equals(other$title)) return false;
+    final Object this$body = this.getBody();
+    final Object other$body = other.getBody();
+    if (this$body == null ? other$body != null : !this$body.equals(other$body)) return false;
+    final Object this$added = this.getAdded();
+    final Object other$added = other.getAdded();
+    if (this$added == null ? other$added != null : !this$added.equals(other$added)) return false;
+    final Object this$modified = this.getModified();
+    final Object other$modified = other.getModified();
+    if (this$modified == null ? other$modified != null : !this$modified.equals(other$modified)) {
+      return false;
+    }
+    final Object this$user = this.getUser();
+    final Object other$user = other.getUser();
+    if (this$user == null ? other$user != null : !this$user.equals(other$user)) return false;
+    final Object this$stats = this.getStats();
+    final Object other$stats = other.getStats();
+    if (this$stats == null ? other$stats != null : !this$stats.equals(other$stats)) return false;
+    final Object this$comments = this.getComments();
+    final Object other$comments = other.getComments();
+    if (this$comments == null ? other$comments != null : !this$comments.equals(other$comments)) {
+      return false;
+    }
+    final Object this$commentList = this.getCommentList();
+    final Object other$commentList = other.getCommentList();
+    if (this$commentList == null ? other$commentList != null
+        : !this$commentList.equals(other$commentList)) {
+      return false;
+    }
+    return true;
   }
 
 
 
-
+  public String toString() {
+    return "Review(id="
+        + this.getId()
+        + ", title="
+        + this.getTitle()
+        + ", body="
+        + this.getBody()
+        + ", added="
+        + this.getAdded()
+        + ", modified="
+        + this.getModified()
+        + ", user="
+        + this.getUser()
+        + ", stats="
+        + this.getStats()
+        + ", comments="
+        + this.getComments()
+        + ", commentList="
+        + this.getCommentList()
+        + ")";
+  }
 }

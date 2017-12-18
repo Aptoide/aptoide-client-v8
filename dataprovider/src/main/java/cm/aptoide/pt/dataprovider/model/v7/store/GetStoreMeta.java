@@ -34,6 +34,10 @@ public class GetStoreMeta extends BaseV7Response {
     return result;
   }
 
+  protected boolean canEqual(Object other) {
+    return other instanceof GetStoreMeta;
+  }
+
   public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof GetStoreMeta)) return false;
@@ -44,10 +48,6 @@ public class GetStoreMeta extends BaseV7Response {
     final Object other$data = other.getData();
     if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
     return true;
-  }
-
-  protected boolean canEqual(Object other) {
-    return other instanceof GetStoreMeta;
   }
 
   public String toString() {

@@ -6,16 +6,16 @@ public final class ReviewWithAppName {
   private final String appName;
   private final Review review;
 
+  public ReviewWithAppName(String appName, Review review) {
+    this.appName = appName;
+    this.review = review;
+  }
+
   public String getAppName() {
     return appName;
   }
 
   public Review getReview() {
     return review;
-  }
-
-  public ReviewWithAppName(String appName, Review review) {
-    this.appName = appName;
-    this.review = review;
   }
 }

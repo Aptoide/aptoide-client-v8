@@ -8,8 +8,15 @@ public class GetHome extends StoreUserAbstraction<GetHomeMeta> {
   public GetHome() {
   }
 
-  public String toString() {
-    return "GetHome()";
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + super.hashCode();
+    return result;
+  }
+
+  protected boolean canEqual(Object other) {
+    return other instanceof GetHome;
   }
 
   public boolean equals(Object o) {
@@ -21,14 +28,7 @@ public class GetHome extends StoreUserAbstraction<GetHomeMeta> {
     return true;
   }
 
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    result = result * PRIME + super.hashCode();
-    return result;
-  }
-
-  protected boolean canEqual(Object other) {
-    return other instanceof GetHome;
+  public String toString() {
+    return "GetHome()";
   }
 }

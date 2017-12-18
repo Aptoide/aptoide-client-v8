@@ -16,6 +16,10 @@ public class GetUserTimeline extends BaseV7EndlessDataListResponse<TimelineItem<
     return result;
   }
 
+  protected boolean canEqual(Object other) {
+    return other instanceof GetUserTimeline;
+  }
+
   public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof GetUserTimeline)) return false;
@@ -23,9 +27,5 @@ public class GetUserTimeline extends BaseV7EndlessDataListResponse<TimelineItem<
     if (!other.canEqual((Object) this)) return false;
     if (!super.equals(o)) return false;
     return true;
-  }
-
-  protected boolean canEqual(Object other) {
-    return other instanceof GetUserTimeline;
   }
 }

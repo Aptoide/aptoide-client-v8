@@ -37,6 +37,10 @@ public class BaseV7EndlessDataListResponse<T> extends BaseV7EndlessResponse {
     return result;
   }
 
+  protected boolean canEqual(Object other) {
+    return other instanceof BaseV7EndlessDataListResponse;
+  }
+
   public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof BaseV7EndlessDataListResponse)) return false;
@@ -49,10 +53,6 @@ public class BaseV7EndlessDataListResponse<T> extends BaseV7EndlessResponse {
       return false;
     }
     return true;
-  }
-
-  protected boolean canEqual(Object other) {
-    return other instanceof BaseV7EndlessDataListResponse;
   }
 
   public DataList<T> getDataList() {

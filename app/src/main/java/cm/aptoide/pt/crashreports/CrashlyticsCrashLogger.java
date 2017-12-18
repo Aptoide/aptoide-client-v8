@@ -37,6 +37,10 @@ public class CrashlyticsCrashLogger implements CrashLogger {
     return language;
   }
 
+  public void setLanguage(String language) {
+    this.language = language;
+  }
+
   /**
    * Log crash exception to fabric.io
    *
@@ -60,9 +64,5 @@ public class CrashlyticsCrashLogger implements CrashLogger {
       Crashlytics.setString(LANGUAGE, language);
       Crashlytics.setString(key, value);
     }
-  }
-
-  public void setLanguage(String language) {
-    this.language = language;
   }
 }

@@ -24,15 +24,6 @@ public class BiUtmAnalyticsRequestBody extends BaseBody {
     final Object $data = this.getData();
     result = result * PRIME + ($data == null ? 43 : $data.hashCode());
     return result;
-  }  public boolean equals(Object o) {
-    if (o == this) return true;
-    if (!(o instanceof BiUtmAnalyticsRequestBody)) return false;
-    final BiUtmAnalyticsRequestBody other = (BiUtmAnalyticsRequestBody) o;
-    if (!other.canEqual((Object) this)) return false;
-    final Object this$data = this.getData();
-    final Object other$data = other.getData();
-    if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
-    return true;
   }
 
   protected boolean canEqual(Object other) {
@@ -91,7 +82,9 @@ public class BiUtmAnalyticsRequestBody extends BaseBody {
 
     protected boolean canEqual(Object other) {
       return other instanceof Data;
-    }    public boolean equals(Object o) {
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof Data)) return false;
       final Data other = (Data) o;
@@ -139,8 +132,6 @@ public class BiUtmAnalyticsRequestBody extends BaseBody {
       return result;
     }
 
-
-
     public String toString() {
       return "BiUtmAnalyticsRequestBody.Data(entryPoint="
           + this.getEntryPoint()
@@ -181,7 +172,9 @@ public class BiUtmAnalyticsRequestBody extends BaseBody {
 
     protected boolean canEqual(Object other) {
       return other instanceof App;
-    }    public boolean equals(Object o) {
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof App)) return false;
       final App other = (App) o;
@@ -208,8 +201,6 @@ public class BiUtmAnalyticsRequestBody extends BaseBody {
       return result;
     }
 
-
-
     public String toString() {
       return "BiUtmAnalyticsRequestBody.App(url="
           + this.getUrl()
@@ -217,8 +208,6 @@ public class BiUtmAnalyticsRequestBody extends BaseBody {
           + this.getPackageName()
           + ")";
     }
-  }  public String toString() {
-    return "BiUtmAnalyticsRequestBody(data=" + this.getData() + ")";
   }
 
   public static class UTM {
@@ -264,7 +253,9 @@ public class BiUtmAnalyticsRequestBody extends BaseBody {
 
     protected boolean canEqual(Object other) {
       return other instanceof UTM;
-    }    public boolean equals(Object o) {
+    }
+
+    public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof UTM)) return false;
       final UTM other = (UTM) o;
@@ -306,8 +297,6 @@ public class BiUtmAnalyticsRequestBody extends BaseBody {
       return result;
     }
 
-
-
     public String toString() {
       return "BiUtmAnalyticsRequestBody.UTM(source="
           + this.getSource()
@@ -319,9 +308,20 @@ public class BiUtmAnalyticsRequestBody extends BaseBody {
           + this.getContent()
           + ")";
     }
+  }  public boolean equals(Object o) {
+    if (o == this) return true;
+    if (!(o instanceof BiUtmAnalyticsRequestBody)) return false;
+    final BiUtmAnalyticsRequestBody other = (BiUtmAnalyticsRequestBody) o;
+    if (!other.canEqual((Object) this)) return false;
+    final Object this$data = this.getData();
+    final Object other$data = other.getData();
+    if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
+    return true;
   }
 
 
 
-
+  public String toString() {
+    return "BiUtmAnalyticsRequestBody(data=" + this.getData() + ")";
+  }
 }

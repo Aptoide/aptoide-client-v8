@@ -41,6 +41,10 @@ public abstract class BaseV7EndlessResponse extends BaseV7Response {
     return result;
   }
 
+  protected boolean canEqual(Object other) {
+    return other instanceof BaseV7EndlessResponse;
+  }
+
   public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof BaseV7EndlessResponse)) return false;
@@ -49,9 +53,5 @@ public abstract class BaseV7EndlessResponse extends BaseV7Response {
     if (!super.equals(o)) return false;
     if (this.stableTotal != other.stableTotal) return false;
     return true;
-  }
-
-  protected boolean canEqual(Object other) {
-    return other instanceof BaseV7EndlessResponse;
   }
 }

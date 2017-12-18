@@ -21,6 +21,7 @@ public class RateAndReviewCommentDisplayable extends DisplayablePojo<ReviewWithA
 
   public RateAndReviewCommentDisplayable() {
   }
+
   public RateAndReviewCommentDisplayable(ReviewWithAppName pojo) {
     super(pojo);
   }

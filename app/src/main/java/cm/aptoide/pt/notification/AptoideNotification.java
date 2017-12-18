@@ -35,6 +35,7 @@ public class AptoideNotification {
   private long timeStamp;
   private String notificationCenterUrlTrack;
   private boolean processed;
+
   public AptoideNotification(String body, String img, String title, String url, int type,
       long timeStamp, String appName, String graphic, long dismissed, String ownerId,
       String urlTrack, String notificationCenterUrlTrack, boolean processed, Long expireSecsUtc) {

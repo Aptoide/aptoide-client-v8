@@ -19,6 +19,10 @@ public class ListAppVersions extends BaseV7EndlessListResponse<App> {
     return result;
   }
 
+  protected boolean canEqual(Object other) {
+    return other instanceof ListAppVersions;
+  }
+
   public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof ListAppVersions)) return false;
@@ -26,9 +30,5 @@ public class ListAppVersions extends BaseV7EndlessListResponse<App> {
     if (!other.canEqual((Object) this)) return false;
     if (!super.equals(o)) return false;
     return true;
-  }
-
-  protected boolean canEqual(Object other) {
-    return other instanceof ListAppVersions;
   }
 }

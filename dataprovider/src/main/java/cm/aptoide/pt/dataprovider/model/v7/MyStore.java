@@ -19,6 +19,19 @@ public class MyStore extends BaseV7Response {
     this.widgets = widgets;
   }
 
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + super.hashCode();
+    final Object $widgets = this.getWidgets();
+    result = result * PRIME + ($widgets == null ? 43 : $widgets.hashCode());
+    return result;
+  }
+
+  protected boolean canEqual(Object other) {
+    return other instanceof MyStore;
+  }
+
   public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof MyStore)) return false;
@@ -31,19 +44,6 @@ public class MyStore extends BaseV7Response {
       return false;
     }
     return true;
-  }
-
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    result = result * PRIME + super.hashCode();
-    final Object $widgets = this.getWidgets();
-    result = result * PRIME + ($widgets == null ? 43 : $widgets.hashCode());
-    return result;
-  }
-
-  protected boolean canEqual(Object other) {
-    return other instanceof MyStore;
   }
 
   public String toString() {

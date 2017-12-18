@@ -10,8 +10,13 @@ public class GetFollowers extends BaseV7EndlessDataListResponse<GetFollowers.Tim
   public GetFollowers() {
   }
 
-  public String toString() {
-    return "GetFollowers()";
+  public int hashCode() {
+    int result = 1;
+    return result;
+  }
+
+  protected boolean canEqual(Object other) {
+    return other instanceof GetFollowers;
   }
 
   public boolean equals(Object o) {
@@ -22,13 +27,8 @@ public class GetFollowers extends BaseV7EndlessDataListResponse<GetFollowers.Tim
     return true;
   }
 
-  public int hashCode() {
-    int result = 1;
-    return result;
-  }
-
-  protected boolean canEqual(Object other) {
-    return other instanceof GetFollowers;
+  public String toString() {
+    return "GetFollowers()";
   }
 
   public static class TimelineUser {

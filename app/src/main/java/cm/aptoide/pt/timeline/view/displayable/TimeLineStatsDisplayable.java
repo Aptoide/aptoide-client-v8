@@ -29,6 +29,7 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
   private long storeId;
   private Resources resources;
   private StoreContext storeContext;
+
   public TimeLineStatsDisplayable() {
   }
 

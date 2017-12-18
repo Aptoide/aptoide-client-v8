@@ -19,6 +19,10 @@ public class ListStores extends BaseV7EndlessDataListResponse<Store> {
     return result;
   }
 
+  protected boolean canEqual(Object other) {
+    return other instanceof ListStores;
+  }
+
   public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof ListStores)) return false;
@@ -26,9 +30,5 @@ public class ListStores extends BaseV7EndlessDataListResponse<Store> {
     if (!other.canEqual((Object) this)) return false;
     if (!super.equals(o)) return false;
     return true;
-  }
-
-  protected boolean canEqual(Object other) {
-    return other instanceof ListStores;
   }
 }
