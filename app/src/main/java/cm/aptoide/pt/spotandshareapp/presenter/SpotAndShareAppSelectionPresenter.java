@@ -1,6 +1,7 @@
 package cm.aptoide.pt.spotandshareapp.presenter;
 
 import android.os.Build;
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -17,6 +18,7 @@ import com.jakewharton.rxrelay.BehaviorRelay;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import rx.Completable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -55,7 +57,7 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
   }
 
   @Override public void present() {
-    createGroup();
+    startGroupCreation();
 
     buildInstalledAppsList();
 
@@ -117,7 +119,7 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
     return isGroupCreatedBehaviour;
   }
 
-  private void createGroup() {
+  private void startGroupCreation() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .delay(1, TimeUnit.SECONDS)
@@ -135,10 +137,7 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
           }
         })
         .doOnNext(__ -> listenToSelectedApp())
-        .flatMapCompletable(lifecycleEvent -> spotAndShare.createGroup(uuid -> {
-        }, throwable -> handleError(throwable), null)
-            .doOnCompleted(() -> isGroupCreatedBehaviour.call(true))
-            .timeout(15, TimeUnit.SECONDS))
+        .flatMapCompletable(lifecycleEvent -> createGroup())
         .doOnError(throwable -> {
           handleError(throwable);
           isGroupCreatedBehaviour.call(false);
@@ -146,6 +145,15 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));
+  }
+
+  @NonNull private Completable createGroup() {
+    return spotAndShare.createGroup(uuid -> {
+    }, throwable -> handleError(throwable), null)
+        .doOnCompleted(() -> {
+          isGroupCreatedBehaviour.call(true);
+        })
+        .timeout(15, TimeUnit.SECONDS);
   }
 
   private void listenToSelectedApp() {
@@ -183,6 +191,7 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
   }
 
   private void handleError(Throwable throwable) {
+    throwable.printStackTrace();
     spotAndShare.leaveGroup(err -> view.onLeaveGroupError());
     if (throwable instanceof TimeoutException) {
       view.showTimeoutCreateGroupError();
