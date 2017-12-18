@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
-import cm.aptoide.pt.dataprovider.model.v7.ProgressComment;
 import java.util.List;
 import rx.subjects.PublishSubject;
 
