@@ -7,6 +7,7 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.spotandshare.socket.Log;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShare;
 import cm.aptoide.pt.spotandshareapp.AppModel;
@@ -38,6 +39,8 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
   private final PermissionService permissionService;
   private final CrashReport crashReport;
   private final BehaviorRelay<Boolean> isGroupCreatedBehaviour;
+  private final String TAG = this.getClass()
+      .getSimpleName();
 
   public SpotAndShareAppSelectionPresenter(SpotAndShareAppSelectionView view,
       SpotAndShare spotAndShare, boolean shouldCreateGroup,
@@ -153,7 +156,7 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
         .doOnCompleted(() -> {
           isGroupCreatedBehaviour.call(true);
         })
-        .timeout(15, TimeUnit.SECONDS);
+        .timeout(20, TimeUnit.SECONDS);
   }
 
   private void listenToSelectedApp() {
@@ -195,6 +198,7 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
     spotAndShare.leaveGroup(err -> view.onLeaveGroupError());
     if (throwable instanceof TimeoutException) {
       view.showTimeoutCreateGroupError();
+      Log.d(TAG, "Timed out while creating hotspot");
     } else {
       view.showGeneralCreateGroupError();
     }
