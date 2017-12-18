@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -142,7 +143,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.username)).perform(click());
     onView(withId(R.id.username)).perform(replaceText(email));
     onView(withId(R.id.password)).perform(click());
-    onView(withId(R.id.password)).perform(replaceText(pass));
+    onView(withId(R.id.password)).perform(replaceText(pass), closeSoftKeyboard());
     onView(withId(R.id.button_login)).perform(click());
   }
 
@@ -151,7 +152,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.username)).perform(click());
     onView(withId(R.id.username)).perform(replaceText(email));
     onView(withId(R.id.password)).perform(click());
-    onView(withId(R.id.password)).perform(replaceText(pass));
+    onView(withId(R.id.password)).perform(replaceText(pass), closeSoftKeyboard());
     onView(withId(R.id.button_sign_up)).perform(click());
   }
 

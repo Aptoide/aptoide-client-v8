@@ -241,7 +241,8 @@ public class MockApplicationModule extends ApplicationModule {
               @Override public boolean isEnabled() {
                 return true;
               }
-            }).setStoreManager(storeManager)
+            })
+        .setStoreManager(storeManager)
         .build();
   }
 
@@ -255,9 +256,9 @@ public class MockApplicationModule extends ApplicationModule {
       TokenInvalidator tokenInvalidator, RequestBodyFactory requestBodyFactory,
       ObjectMapper nonNullObjectMapper) {
     final StoreManager storeManager =
-        new StoreManager(okHttpClient, WebService.getDefaultConverter(),
-            multipartBodyInterceptor, bodyInterceptorV3, accountSettingsBodyInterceptorPoolV7,
-            defaultSharedPreferences, tokenInvalidator, requestBodyFactory, nonNullObjectMapper) {
+        new StoreManager(okHttpClient, WebService.getDefaultConverter(), multipartBodyInterceptor,
+            bodyInterceptorV3, accountSettingsBodyInterceptorPoolV7, defaultSharedPreferences,
+            tokenInvalidator, requestBodyFactory, nonNullObjectMapper) {
           @Override
           public Completable createOrUpdate(String a, String b, String c, boolean d, String e,
               boolean f, List<SocialLink> storeLinksList,
