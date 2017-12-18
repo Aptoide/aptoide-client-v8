@@ -15,6 +15,13 @@ public interface Account {
   List<Store> getSubscribedStores();
 
   /**
+   * Returns the users which this account has subscribed to.
+   *
+   * @see User
+   */
+  List<User> getSubscribedUsers();
+
+  /**
    * Returns the id of the account.
    */
   String getId();

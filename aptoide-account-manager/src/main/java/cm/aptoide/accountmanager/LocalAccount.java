@@ -7,12 +7,19 @@ import java.util.List;
 public class LocalAccount implements Account {
 
   private final Store store;
+  private final User user;
 
-  public LocalAccount(Store store) {
+  public LocalAccount(Store store, User user) {
+
     this.store = store;
+    this.user = user;
   }
 
   @Override public List<Store> getSubscribedStores() {
+    return Collections.emptyList();
+  }
+
+  @Override public List<User> getSubscribedUsers() {
     return Collections.emptyList();
   }
 

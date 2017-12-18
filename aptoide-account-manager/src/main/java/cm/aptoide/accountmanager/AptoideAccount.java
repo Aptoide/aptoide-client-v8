@@ -19,10 +19,11 @@ public final class AptoideAccount implements Account {
   private final Access access;
   private final boolean accessConfirmed;
   private final List<Store> subscribedStores;
+  private final List<User> subscribedUsers;
 
   public AptoideAccount(String id, String email, String nickname, String avatar, Store store,
       boolean adultContentEnabled, Access access, boolean accessConfirmed,
-      List<Store> subscribedStores) {
+      List<Store> subscribedStores, List<User> subscribedUsers) {
     this.id = id;
     this.email = email;
     this.nickname = nickname;
@@ -32,10 +33,15 @@ public final class AptoideAccount implements Account {
     this.access = access;
     this.accessConfirmed = accessConfirmed;
     this.subscribedStores = subscribedStores;
+    this.subscribedUsers = subscribedUsers;
   }
 
   @Override public List<Store> getSubscribedStores() {
     return subscribedStores;
+  }
+
+  @Override public List<User> getSubscribedUsers() {
+    return subscribedUsers;
   }
 
   @Override public String getId() {

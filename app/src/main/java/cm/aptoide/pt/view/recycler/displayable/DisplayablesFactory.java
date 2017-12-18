@@ -23,6 +23,7 @@ import cm.aptoide.pt.app.view.GridAppListDisplayable;
 import cm.aptoide.pt.app.view.OfficialAppDisplayable;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
+import cm.aptoide.pt.database.accessors.UserAccessor;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
@@ -83,7 +84,7 @@ public class DisplayablesFactory {
       WindowManager windowManager, Resources resources, InstalledRepository installedRepository,
       StoreAnalytics storeAnalytics, StoreTabNavigator storeTabNavigator,
       NavigationTracker navigationTracker, BadgeDialogFactory badgeDialogFactory,
-      FragmentNavigator fragmentNavigator, StoreAccessor storeAccessor,
+      FragmentNavigator fragmentNavigator, StoreAccessor storeAccessor, UserAccessor userAccessor,
       BodyInterceptor<BaseBody> bodyInterceptorV7, OkHttpClient client, Converter.Factory converter,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
 
@@ -137,7 +138,7 @@ public class DisplayablesFactory {
                   ((AptoideApplication) context.getApplicationContext()
                       .getApplicationContext()).getDatabase(),
                   cm.aptoide.pt.database.realm.Store.class)), storeAnalytics, badgeDialogFactory,
-              fragmentNavigator, storeAccessor, bodyInterceptorV7, client, converter,
+              fragmentNavigator, storeAccessor, userAccessor, bodyInterceptorV7, client, converter,
               tokenInvalidator, sharedPreferences));
 
         case REVIEWS_GROUP:

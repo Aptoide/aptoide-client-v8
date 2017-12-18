@@ -49,7 +49,7 @@ public class AptoideAccountManager {
   }
 
   private Account createLocalAccount() {
-    return new LocalAccount(Store.emptyStore());
+    return new LocalAccount(Store.emptyStore(), User.emptyUser());
   }
 
   /**

@@ -33,6 +33,7 @@ public class AndroidAccountManagerPersistence implements AccountPersistence {
 
   private final AccountManager androidAccountManager;
   private final DatabaseStoreDataPersist storePersist;
+  private final DatabaseUserDataPersist userPersist;
   private final AccountFactory accountFactory;
   private final AndroidAccountDataMigration accountDataMigration;
   private final AndroidAccountProvider androidAccountProvider;
@@ -42,12 +43,14 @@ public class AndroidAccountManagerPersistence implements AccountPersistence {
   private Account accountCache;
 
   public AndroidAccountManagerPersistence(AccountManager androidAccountManager,
-      DatabaseStoreDataPersist storePersist, AccountFactory accountFactory,
+      DatabaseStoreDataPersist storePersist, DatabaseUserDataPersist userPersist,
+      AccountFactory accountFactory,
       AndroidAccountDataMigration accountDataMigration,
       AndroidAccountProvider androidAccountProvider,
       AuthenticationPersistence authenticationPersistence, Scheduler scheduler) {
     this.androidAccountManager = androidAccountManager;
     this.storePersist = storePersist;
+    this.userPersist = userPersist;
     this.accountFactory = accountFactory;
     this.accountDataMigration = accountDataMigration;
     this.androidAccountProvider = androidAccountProvider;
@@ -93,9 +96,10 @@ public class AndroidAccountManagerPersistence implements AccountPersistence {
                   .getPassword());
 
           return storePersist.persist(account.getSubscribedStores())
-              .doOnCompleted(() -> {
-                accountCache = account;
-              });
+              .andThen(userPersist.persist(account.getSubscribedUsers())
+                  .doOnCompleted(() -> {
+                    accountCache = account;
+                  }));
         })
         .subscribeOn(scheduler);
   }
@@ -114,29 +118,28 @@ public class AndroidAccountManagerPersistence implements AccountPersistence {
               return storePersist.get()
                   .doOnError(err -> CrashReport.getInstance()
                       .log(err))
-                  .flatMap(stores -> {
+                  .flatMap(stores -> userPersist.get()
+                      .flatMap(users -> authenticationPersistence.getAuthentication()
+                          .flatMap(authentication -> {
 
-                    return authenticationPersistence.getAuthentication()
-                        .flatMap(authentication -> {
+                            if (authentication.isAuthenticated()) {
 
-                          if (authentication.isAuthenticated()) {
+                              return Single.just(accountFactory.createAccount(access, stores,
+                                  androidAccountManager.getUserData(androidAccount, ACCOUNT_ID),
+                                  androidAccount.name,
+                                  androidAccountManager.getUserData(androidAccount,
+                                      ACCOUNT_NICKNAME),
+                                  androidAccountManager.getUserData(androidAccount,
+                                      ACCOUNT_AVATAR_URL), createStore(androidAccount),
+                                  Boolean.valueOf(androidAccountManager.getUserData(androidAccount,
+                                      ACCOUNT_ADULT_CONTENT_ENABLED)), Boolean.valueOf(
+                                      androidAccountManager.getUserData(androidAccount,
+                                          ACCOUNT_ACCESS_CONFIRMED)), users));
+                            }
 
-                            return Single.just(accountFactory.createAccount(access, stores,
-                                androidAccountManager.getUserData(androidAccount, ACCOUNT_ID),
-                                androidAccount.name,
-                                androidAccountManager.getUserData(androidAccount, ACCOUNT_NICKNAME),
-                                androidAccountManager.getUserData(androidAccount,
-                                    ACCOUNT_AVATAR_URL), createStore(androidAccount),
-                                Boolean.valueOf(androidAccountManager.getUserData(androidAccount,
-                                    ACCOUNT_ADULT_CONTENT_ENABLED)), Boolean.valueOf(
-                                    androidAccountManager.getUserData(androidAccount,
-                                        ACCOUNT_ACCESS_CONFIRMED))));
-                          }
-
-                          return Single.error(
-                              new IllegalStateException("Account not authenticated"));
-                        });
-                  });
+                            return Single.error(
+                                new IllegalStateException("Account not authenticated"));
+                          })));
             }));
   }
 

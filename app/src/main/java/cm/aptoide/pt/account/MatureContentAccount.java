@@ -2,6 +2,7 @@ package cm.aptoide.pt.account;
 
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.Store;
+import cm.aptoide.accountmanager.User;
 import cm.aptoide.pt.preferences.AdultContent;
 import java.util.List;
 
@@ -17,6 +18,10 @@ public class MatureContentAccount implements Account {
 
   @Override public List<Store> getSubscribedStores() {
     return wrappedAccount.getSubscribedStores();
+  }
+
+  @Override public List<User> getSubscribedUsers() {
+    return wrappedAccount.getSubscribedUsers();
   }
 
   @Override public String getId() {

@@ -39,7 +39,6 @@ import cm.aptoide.pt.view.spannable.SpannableFactory;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -137,10 +136,10 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
           showMainName(homeMeta.getMainName());
           showSecondaryName(homeMeta.getSecondaryName());
           setupActionButton(homeMeta.isShowButton(), homeMeta.isOwner(), homeMeta.getStoreId(),
-              StoreTheme.get(homeMeta.getThemeColor())
+              homeMeta.getUserId(), StoreTheme.get(homeMeta.getThemeColor())
                   .getThemeName(), homeMeta.getMainName(), homeMeta.getDescription(),
               homeMeta.getMainIcon(), homeMeta.isFollowingStore(), homeMeta.getSocialChannels(),
-              displayable.getRequestCode());
+              displayable.getRequestCode(), homeMeta.isShowApps());
           showSocialChannels(homeMeta.getSocialChannels());
           showAppsCount(homeMeta.getAppsCount(), textStyle, homeMeta.isShowApps(),
               homeMeta.getStoreId());
@@ -272,41 +271,50 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     }
   }
 
-  private void setupActionButton(boolean shouldShow, boolean owner, long storeId,
+  private void setupActionButton(boolean shouldShow, boolean owner, long storeId, long userId,
       String storeThemeName, String storeName, String storeDescription, String storeImagePath,
       boolean isFollowed,
       List<cm.aptoide.pt.dataprovider.model.v7.store.Store.SocialChannel> socialChannels,
-      int requestCode) {
+      int requestCode, boolean hasStore) {
     if (shouldShow) {
       buttonsLayout.setVisibility(View.VISIBLE);
       if (owner) {
         setupEditButton(storeId, storeThemeName, storeName, storeDescription, storeImagePath,
             socialChannels, requestCode);
       } else {
-        setupFollowButton(storeName, isFollowed);
+        setupFollowButton(storeName, userId, isFollowed, hasStore);
       }
     } else {
       buttonsLayout.setVisibility(View.GONE);
     }
   }
 
-  private void setupFollowButton(String storeName, boolean isFollowed) {
+  private void setupFollowButton(String storeName, long userId, boolean isFollowed,
+      boolean hasStore) {
     editStoreButton.setVisibility(View.GONE);
     followStoreButton.setVisibility(View.VISIBLE);
-    if (isFollowed) {
-      setupUnfollowButton(storeName);
+    if (hasStore) {
+      setupFollowStoreButton(storeName, isFollowed);
     } else {
-      setupFollowButton(storeName);
+      setupFollowUserButton(userId, isFollowed);
     }
   }
 
-  private void setupUnfollowButton(String storeName) {
+  private void setupFollowStoreButton(String storeName, boolean isFollowed) {
+    if (isFollowed) {
+      setupUnfollowStoreButton(storeName);
+    } else {
+      setupFollowStoreButton(storeName);
+    }
+  }
+
+  private void setupUnfollowStoreButton(String storeName) {
     followStoreButton.setOnClickListener(
         v -> storeUtilsProxy.unSubscribeStore(storeName, storeCredentialsProvider));
     followStoreButton.setText(R.string.unfollow);
   }
 
-  private void setupFollowButton(String storeName) {
+  private void setupFollowStoreButton(String storeName) {
     followStoreButton.setText(R.string.follow);
     followStoreButton.setOnClickListener(v -> storeUtilsProxy.subscribeStoreObservable(storeName)
         .observeOn(AndroidSchedulers.mainThread())
@@ -333,8 +341,6 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
   }
 
   private void setupFollowUserButton(Long userId, boolean isFollowed) {
-    editStoreButton.setVisibility(View.GONE);
-    followStoreButton.setVisibility(View.VISIBLE);
     if (isFollowed) {
       setupUnfollowUserButton(userId);
     } else {
@@ -450,6 +456,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     private final String description;
     private final int themeColor;
     private final long storeId;
+    private final long userId;
     private final boolean showApps;
     private final Badge badge;
 
@@ -457,7 +464,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
         boolean owner, boolean showButton, boolean followingStore,
         List<cm.aptoide.pt.dataprovider.model.v7.store.Store.SocialChannel> socialChannels,
         long appsCount, long followersCount, long followingCount, String description,
-        int themeColor, long storeId, boolean showApps, Badge badge) {
+        int themeColor, long storeId, long userId, boolean showApps, Badge badge) {
       this.mainIcon = mainIcon;
       this.secondaryIcon = secondaryIcon;
       this.mainName = mainName;
@@ -472,6 +479,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
       this.description = description;
       this.themeColor = themeColor;
       this.storeId = storeId;
+      this.userId = userId;
       this.showApps = showApps;
       this.badge = badge;
     }
@@ -538,6 +546,10 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
 
     public boolean isShowApps() {
       return showApps;
+    }
+
+    public long getUserId() {
+      return userId;
     }
 
     /**

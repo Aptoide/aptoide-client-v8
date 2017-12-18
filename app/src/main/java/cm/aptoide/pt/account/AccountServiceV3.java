@@ -7,10 +7,12 @@ import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.Store;
+import cm.aptoide.accountmanager.User;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
+import cm.aptoide.pt.dataprovider.model.v7.GetFollowers;
 import cm.aptoide.pt.dataprovider.model.v7.GetUserInfo;
 import cm.aptoide.pt.dataprovider.model.v7.GetUserMeta;
 import cm.aptoide.pt.dataprovider.model.v7.GetUserSettings;
@@ -20,6 +22,7 @@ import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.CreateUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.OAuth2AuthenticationRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ChangeStoreSubscriptionResponse;
+import cm.aptoide.pt.dataprovider.ws.v7.GetFollowingRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetMySubscribedStoresRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserInfoRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserMultipartRequest;
@@ -129,8 +132,14 @@ public class AccountServiceV3 implements AccountService {
   }
 
   @Override public Single<Account> getAccount() {
-    return Single.zip(getServerAccount(), getSubscribedStores(),
-        (response, stores) -> mapServerAccountToAccount(response, stores));
+    return getServerAccount().flatMap(info -> Single.zip(getSubscribedStores(), getSubscribedUsers(
+        info.getNodes()
+            .getMeta()
+            .getData()
+            .getId()), (stores, users) -> mapServerAccountToAccount(info, stores, users)));
+
+    //Single.zip(getServerAccount(), getSubscribedStores(),
+    //(response, stores) -> mapServerAccountToAccount(response, stores, users));
   }
 
   @Override public Completable updateAccount(String nickname, String avatarPath) {
@@ -230,7 +239,8 @@ public class AccountServiceV3 implements AccountService {
         .flatMap(observable -> observable);
   }
 
-  private Account mapServerAccountToAccount(GetUserInfo userInfo, List<Store> subscribedStores) {
+  private Account mapServerAccountToAccount(GetUserInfo userInfo, List<Store> subscribedStores,
+      List<User> subscribedUsers) {
     final GetUserMeta.Data userData = userInfo.getNodes()
         .getMeta()
         .getData();
@@ -241,7 +251,7 @@ public class AccountServiceV3 implements AccountService {
         String.valueOf(userData.getId()), userData.getIdentity()
             .getEmail(), userData.getName(), userData.getAvatar(), mapToStore(userData.getStore()),
         userSettings.isMature(), userSettings.getAccess()
-            .isConfirmed());
+            .isConfirmed(), subscribedUsers);
   }
 
   private Completable changeSubscription(String storeName, String storeUserName,
@@ -264,6 +274,18 @@ public class AccountServiceV3 implements AccountService {
         .toSingle();
   }
 
+  private Single<List<User>> getSubscribedUsers(long userId) {
+    return GetFollowingRequest.of(bodyInterceptorPoolV7, userId, null, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences)
+        .observe()
+        .map(response -> response.getDataList()
+            .getList())
+        .flatMapIterable(list -> list)
+        .map(user -> mapToUser(user))
+        .toList()
+        .toSingle();
+  }
+
   private Store mapToStore(cm.aptoide.pt.dataprovider.model.v7.store.Store store) {
     if (store == null) {
       return Store.emptyStore();
@@ -274,6 +296,13 @@ public class AccountServiceV3 implements AccountService {
         .getDownloads(), store.getAvatar(), store.getId(), store.getName(),
         store.getAppearance() == null ? "DEFAULT" : store.getAppearance()
             .getTheme(), null, null, publicAccessConstant.equalsIgnoreCase(store.getAccess()));
+  }
+
+  private User mapToUser(GetFollowers.TimelineUser user) {
+    if (user == null) {
+      return User.emptyUser();
+    }
+    return new User(user.getId(), user.getAvatar(), user.getName());
   }
 
   private Single<GetUserInfo> getServerAccount() {

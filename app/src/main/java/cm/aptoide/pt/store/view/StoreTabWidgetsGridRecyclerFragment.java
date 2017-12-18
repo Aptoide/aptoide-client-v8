@@ -14,6 +14,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.database.realm.User;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
@@ -83,6 +84,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
               navigationTracker, new BadgeDialogFactory(getContext()),
               ((ActivityResultNavigator) getContext()).getFragmentNavigator(),
               AccessorFactory.getAccessorFor(application.getDatabase(), Store.class),
+              AccessorFactory.getAccessorFor(application.getDatabase(), User.class),
               application.getBodyInterceptorPoolV7(), application.getDefaultClient(),
               WebService.getDefaultConverter(), application.getTokenInvalidator(),
               application.getDefaultSharedPreferences());

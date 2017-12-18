@@ -30,6 +30,7 @@ import cm.aptoide.pt.account.AndroidAccountDataMigration;
 import cm.aptoide.pt.account.AndroidAccountManagerPersistence;
 import cm.aptoide.pt.account.AndroidAccountProvider;
 import cm.aptoide.pt.account.DatabaseStoreDataPersist;
+import cm.aptoide.pt.account.DatabaseUserDataPersist;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.account.LoginPreferences;
@@ -51,6 +52,7 @@ import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
+import cm.aptoide.pt.database.accessors.UserAccessor;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -450,7 +452,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AptoideAccountManager provideAptoideAccountManager(AdultContent adultContent,
-      StoreAccessor storeAccessor, @Named("default") OkHttpClient httpClient,
+      StoreAccessor storeAccessor, UserAccessor userAccessor,
+      @Named("default") OkHttpClient httpClient,
       @Named("long-timeout") OkHttpClient longTimeoutHttpClient, AccountManager accountManager,
       @Named("default") SharedPreferences defaultSharedPreferences,
       AuthenticationPersistence authenticationPersistence, TokenInvalidator tokenInvalidator,
@@ -482,7 +485,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     final AccountPersistence accountPersistence =
         new AndroidAccountManagerPersistence(accountManager,
             new DatabaseStoreDataPersist(storeAccessor,
-                new DatabaseStoreDataPersist.DatabaseStoreMapper()), accountFactory,
+                new DatabaseStoreDataPersist.DatabaseStoreMapper()),
+            new DatabaseUserDataPersist(userAccessor,
+                new DatabaseUserDataPersist.DatabaseUserMapper()), accountFactory,
             accountDataMigration, androidAccountProvider, authenticationPersistence,
             Schedulers.io());
 
@@ -647,6 +652,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides StoreAccessor provideStoreAccessor(Database database) {
     return new StoreAccessor(database);
+  }
+
+  @Singleton @Provides UserAccessor providesUserAccessor(Database database) {
+    return new UserAccessor(database);
   }
 
   @Singleton @Provides SecureCoderDecoder provideSecureCoderDecoder(

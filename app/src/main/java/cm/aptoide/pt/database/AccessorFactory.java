@@ -11,6 +11,7 @@ import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
+import cm.aptoide.pt.database.accessors.UserAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Notification;
@@ -19,6 +20,7 @@ import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.database.realm.User;
 import io.realm.RealmObject;
 
 /**
@@ -46,6 +48,8 @@ import io.realm.RealmObject;
       return (A) new StoredMinimalAdAccessor(database);
     } else if (clazz.equals(Notification.class)) {
       return (A) new NotificationAccessor(database);
+    } else if (clazz.equals(User.class)) {
+      return (A) new UserAccessor(database);
     }
 
     throw new RuntimeException("Create accessor for class " + clazz.getName());

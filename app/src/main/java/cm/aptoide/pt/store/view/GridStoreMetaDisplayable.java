@@ -8,6 +8,8 @@ import android.support.annotation.ColorInt;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
+import cm.aptoide.pt.database.accessors.UserAccessor;
+import cm.aptoide.pt.database.realm.User;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetHomeMeta;
 import cm.aptoide.pt.dataprovider.model.v7.store.HomeUser;
@@ -37,6 +39,7 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
   private BadgeDialogFactory badgeDialogFactory;
   private FragmentNavigator fragmentNavigator;
   private StoreAccessor storeAccessor;
+  private UserAccessor userAccessor;
   private BodyInterceptor<BaseBody> bodyInterceptorV7;
   private OkHttpClient client;
   private Converter.Factory converter;
@@ -49,7 +52,8 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
   public GridStoreMetaDisplayable(GetHomeMeta pojo,
       StoreCredentialsProvider storeCredentialsProvider, StoreAnalytics storeAnalytics,
       BadgeDialogFactory badgeDialogFactory, FragmentNavigator fragmentNavigator,
-      StoreAccessor storeAccessor, BodyInterceptor<BaseBody> bodyInterceptorV7, OkHttpClient client,
+      StoreAccessor storeAccessor, UserAccessor userAccessor,
+      BodyInterceptor<BaseBody> bodyInterceptorV7, OkHttpClient client,
       Converter.Factory converter, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
     super(pojo);
@@ -58,6 +62,7 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
     this.badgeDialogFactory = badgeDialogFactory;
     this.fragmentNavigator = fragmentNavigator;
     this.storeAccessor = storeAccessor;
+    this.userAccessor = userAccessor;
     this.bodyInterceptorV7 = bodyInterceptorV7;
     this.client = client;
     this.converter = converter;
@@ -190,6 +195,10 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
     return getStore() != null;
   }
 
+  public boolean showFollowButton() {
+    return getStore() != null || getUser() != null;
+  }
+
   public GridStoreMetaWidget.HomeMeta.Badge getBadge() {
     if (hasStore()) {
       switch (getPojo().getData()
@@ -216,15 +225,16 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
 
   public Observable<GridStoreMetaWidget.HomeMeta> getHomeMeta(AptoideAccountManager accountManager,
       Context context) {
-    return Observable.merge(isFollowingStore(storeAccessor),
-        updateStoreMeta().flatMap(__ -> isFollowingStore(storeAccessor))
+
+    return Observable.merge(isFollowing(userAccessor, storeAccessor),
+        updateStoreMeta().flatMap(__ -> isFollowing(userAccessor, storeAccessor))
             .first())
         .flatMap(isFollowing -> isStoreOwner(accountManager).map(
             isOwner -> new GridStoreMetaWidget.HomeMeta(getMainIcon(), getSecondaryIcon(),
-                getMainName(), getSecondaryName(), isOwner, hasStore(), isFollowing,
+                getMainName(), getSecondaryName(), isOwner, showFollowButton(), isFollowing,
                 getSocialLinks(), getAppsCount(), getFollowersCount(), getFollowingsCount(),
                 getDescription(), getColorOrDefault(getStoreTheme(), context), getStoreId(),
-                hasStore(), getBadge())));
+                getUserId(), hasStore(), getBadge())));
   }
 
   private Observable<GetHomeMeta> updateStoreMeta() {
@@ -263,8 +273,34 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
     return Observable.just(false);
   }
 
+  public Observable<Boolean> isFollowingUser(UserAccessor userAccessor) {
+    if (getUser() != null) {
+      return userAccessor.getAll()
+          .map(users -> {
+            for (User user : users) {
+              if (user.getUsername()
+                  .equals(getUserName())) {
+                return true;
+              }
+            }
+            return false;
+          })
+          .distinctUntilChanged();
+    }
+    return Observable.just(false);
+  }
+
+  public Observable<Boolean> isFollowing(UserAccessor userAccessor, StoreAccessor storeAccessor) {
+    return Observable.zip(isFollowingStore(storeAccessor), isFollowingUser(userAccessor),
+        (stores, users) -> stores || users);
+  }
+
   public long getUserId() {
-    return getUser().getId();
+    if (getUser() != null) {
+      return getUser().getId();
+    } else {
+      return 0;
+    }
   }
 
   public BadgeDialogFactory getBadgeDialogFactory() {
