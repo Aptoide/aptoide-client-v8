@@ -5,12 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.events.FabricEvent;
-import com.crashlytics.android.answers.Answers;
 import com.jakewharton.rxrelay.PublishRelay;
-import java.util.HashMap;
-import java.util.Map;
 
 public class NotificationReceiver extends BroadcastReceiver {
 
@@ -26,39 +21,27 @@ public class NotificationReceiver extends BroadcastReceiver {
   @Override public void onReceive(Context context, Intent intent) {
     notificationPublishRelay =
         ((AptoideApplication) context.getApplicationContext()).getNotificationsPublishRelay();
-    final String action = intent.getAction();
     Bundle intentExtras = intent.getExtras();
-    if (intentExtras != null) {
-      Map<String, String> stringStringMap = new HashMap<>();
-      stringStringMap.put("status", "success");
-      Analytics.getInstance()
-          .sendEvent(new FabricEvent(Answers.getInstance(), "NotificationNPE", stringStringMap));
-      NotificationInfo notificationInfo =
-          new NotificationInfo(intentExtras.getInt(NOTIFICATION_NOTIFICATION_ID),
-              intentExtras.getString(NOTIFICATION_TRACK_URL),
-              intentExtras.getString(NOTIFICATION_TARGET_URL));
-      if (action != null) {
-        switch (action) {
-          case Intent.ACTION_BOOT_COMPLETED:
-            notificationInfo.setAction(Intent.ACTION_BOOT_COMPLETED);
-            notificationPublishRelay.call(notificationInfo);
-            break;
-          case NOTIFICATION_PRESSED_ACTION:
-            notificationInfo.setAction(NOTIFICATION_PRESSED_ACTION);
-            notificationPublishRelay.call(notificationInfo);
-            break;
-          case NOTIFICATION_DISMISSED_ACTION:
-            notificationInfo.setAction(NOTIFICATION_DISMISSED_ACTION);
-            notificationPublishRelay.call(notificationInfo);
-            break;
-        }
-      }
-    } else {
-      Map<String, String> stringStringMap = new HashMap<>();
-      stringStringMap.put("status", "fail");
-      stringStringMap.put("Intent", intent.toString());
-      Analytics.getInstance()
-          .sendEvent(new FabricEvent(Answers.getInstance(), "NotificationNPE", stringStringMap));
+    NotificationInfo notificationInfo;
+    switch (intent.getAction()) {
+      case Intent.ACTION_BOOT_COMPLETED:
+        notificationInfo = new NotificationInfo(Intent.ACTION_BOOT_COMPLETED);
+        notificationPublishRelay.call(notificationInfo);
+        break;
+      case NOTIFICATION_PRESSED_ACTION:
+        notificationInfo = new NotificationInfo(NOTIFICATION_PRESSED_ACTION,
+            intentExtras.getInt(NOTIFICATION_NOTIFICATION_ID),
+            intentExtras.getString(NOTIFICATION_TRACK_URL),
+            intentExtras.getString(NOTIFICATION_TARGET_URL));
+        notificationPublishRelay.call(notificationInfo);
+        break;
+      case NOTIFICATION_DISMISSED_ACTION:
+        notificationInfo = new NotificationInfo(NOTIFICATION_DISMISSED_ACTION,
+            intentExtras.getInt(NOTIFICATION_NOTIFICATION_ID),
+            intentExtras.getString(NOTIFICATION_TRACK_URL),
+            intentExtras.getString(NOTIFICATION_TARGET_URL));
+        notificationPublishRelay.call(notificationInfo);
+        break;
     }
   }
 }
