@@ -35,6 +35,17 @@ public class GetUserInfoRequest extends V7<GetUserInfo, GetUserInfoRequest.Body>
         tokenInvalidator);
   }
 
+  public static GetUserInfoRequest of(long userId, OkHttpClient httpClient,
+      Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
+      TokenInvalidator tokenInvalidator) {
+    final List<String> nodes = new ArrayList<>();
+    nodes.add("meta");
+    nodes.add("settings");
+    final Body body = new Body(nodes, userId);
+    return new GetUserInfoRequest(body, getHost(), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
+  }
+
   @Override protected Observable<GetUserInfo> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
     body.setRefresh(bypassCache);
@@ -45,9 +56,15 @@ public class GetUserInfoRequest extends V7<GetUserInfo, GetUserInfoRequest.Body>
 
     private List<String> nodes;
     private boolean refresh;
+    private Long userId;
 
     public Body(List<String> nodes) {
       this.nodes = nodes;
+    }
+
+    public Body(List<String> nodes, long userId) {
+      this.nodes = nodes;
+      this.userId = userId;
     }
 
     public List<String> getNodes() {

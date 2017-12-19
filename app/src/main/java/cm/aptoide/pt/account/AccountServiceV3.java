@@ -28,6 +28,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.GetUserInfoRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserMultipartRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserSettings;
+import cm.aptoide.pt.dataprovider.ws.v7.UserFollowingRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ChangeStoreSubscriptionRequest;
 import cm.aptoide.pt.logger.Logger;
@@ -196,6 +197,21 @@ public class AccountServiceV3 implements AccountService {
         ChangeStoreSubscriptionResponse.StoreSubscriptionState.SUBSCRIBED);
   }
 
+  @Override public Completable subscribeUser(long userId) {
+    return UserFollowingRequest.getFollowRequest(userId, bodyInterceptorPoolV7, httpClient,
+        converterFactory, tokenInvalidator, sharedPreferences)
+        .observe()
+        .toSingle()
+        .toCompletable();
+  }
+
+  @Override public Completable unsubscribeUser(long userId) {
+    return UserFollowingRequest.getUnfollowRequest(userId, bodyInterceptorPoolV7, httpClient,
+        converterFactory, tokenInvalidator, sharedPreferences)
+        .observe()
+        .toCompletable();
+  }
+
   @Override public Completable updateAccount(boolean adultContentEnabled) {
     return SetUserSettings.of(adultContentEnabled, httpClient, converterFactory,
         bodyInterceptorPoolV7, tokenInvalidator)
@@ -212,6 +228,14 @@ public class AccountServiceV3 implements AccountService {
 
   @Override public Completable removeAccount() {
     return authenticationPersistence.removeAuthentication();
+  }
+
+  public Observable<GetUserMeta> getUserInfo(long userId) {
+    return GetUserInfoRequest.of(userId, httpClient, converterFactory, bodyInterceptorPoolV7,
+        tokenInvalidator)
+        .observe()
+        .map(info -> info.getNodes()
+            .getMeta());
   }
 
   /**

@@ -7,6 +7,7 @@ package cm.aptoide.accountmanager;
 
 import android.text.TextUtils;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.model.v7.GetUserMeta;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.HashMap;
 import java.util.List;
@@ -116,6 +117,17 @@ public class AptoideAccountManager {
     return accountService.subscribeStore(storeName, storeUserName, storePassword);
   }
 
+  public Completable unsubscribeUser(Long userId) {
+    return accountService.unsubscribeUser(userId);
+  }
+
+  public Completable subscribeUser(Long userId) {
+    return accountService.subscribeUser(userId);
+  }
+
+  public Observable<GetUserMeta> getUserInfo(long userId) {
+    return accountService.getUserInfo(userId);
+  }
   /**
    * Use {@link Account#isAdultContentEnabled()} instead.
    *

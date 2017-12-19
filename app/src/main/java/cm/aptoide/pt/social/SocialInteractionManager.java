@@ -1,13 +1,11 @@
 package cm.aptoide.pt.social;
 
-import android.content.SharedPreferences;
-import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.UserFollowingRequest;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
-import rx.Completable;
+import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.database.accessors.UserAccessor;
+import cm.aptoide.pt.database.realm.User;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
+import cm.aptoide.pt.dataprovider.model.v7.GetUserMeta;
+import rx.Observable;
 
 /**
  * Created by franciscocalado on 11/30/17.
@@ -15,33 +13,72 @@ import rx.Completable;
 
 public class SocialInteractionManager {
 
-  private final OkHttpClient okhttp;
-  private final Converter.Factory converterFactory;
-  private final BodyInterceptor<BaseBody> bodyInterceptor;
-  private final TokenInvalidator tokenInvalidator;
-  private final SharedPreferences sharedPreference;
+  private final UserAccessor userAccessor;
+  private final AptoideAccountManager accountManager;
 
-  public SocialInteractionManager(OkHttpClient okhttp, Converter.Factory converterFactory,
-      BodyInterceptor<BaseBody> bodyInterceptor, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreference) {
-    this.okhttp = okhttp;
-    this.converterFactory = converterFactory;
-    this.bodyInterceptor = bodyInterceptor;
-    this.tokenInvalidator = tokenInvalidator;
-    this.sharedPreference = sharedPreference;
+  public SocialInteractionManager(UserAccessor userAccessor, AptoideAccountManager accountManager) {
+
+    this.userAccessor = userAccessor;
+    this.accountManager = accountManager;
   }
 
-  public Completable followUser(Long userId) {
-    return UserFollowingRequest.getFollowRequest(userId, bodyInterceptor, okhttp, converterFactory,
-        tokenInvalidator, sharedPreference)
-        .observe()
-        .toCompletable();
+  private static void saveUser(GetUserMeta userMeta, UserAccessor userAccessor) {
+
+    User user = new User();
+
+    user.setUsername(userMeta.getData()
+        .getName());
+    user.setUserId(userMeta.getData()
+        .getId());
+    user.setAvatar(userMeta.getData()
+        .getAvatar());
+
+    userAccessor.save(user);
   }
 
-  public Completable unfollowUser(Long userId) {
-    return UserFollowingRequest.getUnfollowRequest(userId, bodyInterceptor, okhttp,
-        converterFactory, tokenInvalidator, sharedPreference)
-        .observe()
-        .toCompletable();
+  public void followUser(Long userId, String username, String userIcon) {
+    accountManager.accountStatus()
+        .map(account -> account.isLoggedIn())
+        .first()
+        .subscribe(isLoggedIn -> {
+          if (isLoggedIn) accountManager.subscribeUser(userId);
+          User user = new User();
+          user.setUserId(userId);
+          user.setUsername(username);
+          user.setAvatar(userIcon);
+          userAccessor.save(user);
+        });
+  }
+
+  public Observable<GetUserMeta> subscribeUserObservable(long userId) {
+    return accountManager.getUserInfo(userId)
+        .flatMap(userMeta -> accountManager.accountStatus()
+            .first()
+            .toSingle()
+            .flatMapObservable(account -> {
+              if (BaseV7Response.Info.Status.OK.equals(userMeta.getInfo()
+                  .getStatus())) {
+                if (account.isLoggedIn()) {
+                  return accountManager.subscribeUser(userId)
+                      .andThen(Observable.just(userMeta));
+                } else {
+                  return Observable.just(userMeta);
+                }
+              } else {
+                return Observable.error(
+                    new Exception("Something went wrong while getting user meta"));
+              }
+            }))
+        .doOnNext(userMeta -> saveUser(userMeta, userAccessor));
+  }
+
+  public void unfollowUser(Long userId) {
+    accountManager.accountStatus()
+        .map(account -> account.isLoggedIn())
+        .first()
+        .subscribe(isLoggedIn -> {
+          if (isLoggedIn) accountManager.unsubscribeUser(userId);
+          userAccessor.remove(userId);
+        });
   }
 }

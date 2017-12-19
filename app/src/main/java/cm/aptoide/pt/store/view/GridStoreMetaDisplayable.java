@@ -278,7 +278,7 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
       return userAccessor.getAll()
           .map(users -> {
             for (User user : users) {
-              if (user.getUsername()
+              if (user.getUsername() != null && user.getUsername()
                   .equals(getUserName())) {
                 return true;
               }
