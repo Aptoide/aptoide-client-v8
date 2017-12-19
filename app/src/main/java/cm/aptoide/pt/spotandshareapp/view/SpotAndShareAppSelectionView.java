@@ -40,4 +40,6 @@ public interface SpotAndShareAppSelectionView extends View {
   Observable<AppModel> selectedApp();
 
   void openTransferRecord();
+
+  void hideLoading();
 }
