@@ -1,15 +1,7 @@
 package cm.aptoide.pt.social.commentslist;
 
-import android.content.SharedPreferences;
-import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
-import java.util.Collections;
 import java.util.List;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
 import rx.Single;
 
 /**
@@ -18,64 +10,39 @@ import rx.Single;
 
 class PostCommentsRepository {
 
-  private final int limit;
-  private final int initialOffset;
-  private final BodyInterceptor<BaseBody> bodyInterceptor;
-  private final OkHttpClient httpClient;
-  private final Converter.Factory converterFactory;
-  private final TokenInvalidator tokenInvalidator;
-  private final SharedPreferences sharedPreferences;
-  private int currentOffset;
-  private int total;
-  private boolean loading;
+  private final PostCommentsService postCommentsService;
+  private final CommentsSorter commentsSorter;
+  private List<Comment> cache;
 
-  PostCommentsRepository(int limit, int initialOffset, int initialTotal,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
-    this.limit = limit;
-    this.initialOffset = initialOffset;
-    this.bodyInterceptor = bodyInterceptor;
-    this.httpClient = httpClient;
-    this.converterFactory = converterFactory;
-    this.tokenInvalidator = tokenInvalidator;
-    this.sharedPreferences = sharedPreferences;
-    this.total = initialTotal;
+  PostCommentsRepository(PostCommentsService postCommentsService, CommentsSorter commentsSorter,
+      List<Comment> cache) {
+    this.postCommentsService = postCommentsService;
+    this.commentsSorter = commentsSorter;
+    this.cache = cache;
   }
 
-  public Single<List<Comment>> getComments(String postId, int offset) {
-    if (loading || offset >= total) {
-      return Single.just(Collections.emptyList());
+  Single<List<Comment>> getComments(String postId) {
+    if (!cache.isEmpty()) {
+      return Single.just(commentsSorter.sort(cache));
     }
-    return ListCommentsRequest.ofTimeline("", offset, limit, true, postId, bodyInterceptor,
-        httpClient, converterFactory, tokenInvalidator, sharedPreferences)
-        .observe(true)
-        .doOnSubscribe(() -> loading = true)
-        .doOnUnsubscribe(() -> loading = false)
-        .doOnTerminate(() -> loading = false)
-        .toSingle()
-        .flatMap(listCommentsResponse -> {
-          if (listCommentsResponse.isOk()) {
-            this.currentOffset = listCommentsResponse.getNextSize();
-            this.total = listCommentsResponse.getTotal();
-            return Single.just(listCommentsResponse.getDataList()
-                .getList());
-          } else {
-            return Single.error(
-                new IllegalStateException("Could not obtain Comments list from server"));
-          }
-        });
+    return postCommentsService.getComments(postId)
+        .doOnSuccess(comments -> cache = comments)
+        .map(comments -> commentsSorter.sort(cache));
   }
 
-  public Single<List<Comment>> getNextComments(String postId) {
-    return getComments(postId, currentOffset);
+  Single<List<Comment>> getFreshComments(String postId) {
+    return postCommentsService.getComments(postId)
+        .doOnSuccess(comments -> cache = comments)
+        .map(comments -> commentsSorter.sort(cache));
   }
 
-  public Single<List<Comment>> getComments(String postId) {
-    return getComments(postId, initialOffset);
+  Single<List<Comment>> getNextComments(String postId) {
+    return postCommentsService.getNextComments(postId)
+        .doOnSuccess(comments -> cache.addAll(comments))
+        .map(comments -> commentsSorter.sort(comments));
   }
 
-  public Boolean hasMoreComments() {
-    return currentOffset < total;
+  boolean hasMore() {
+    return postCommentsService.hasMoreComments();
   }
 }

@@ -5,26 +5,30 @@ import java.util.List;
 import rx.Single;
 
 /**
- * Created by jdandrade on 28/09/2017.
+ * Created by jdandrade on 19/12/2017.
  */
 
 class Comments {
 
   private final PostCommentsRepository postCommentsRepository;
 
-  Comments(PostCommentsRepository postCommentsRepository) {
+  public Comments(PostCommentsRepository postCommentsRepository) {
     this.postCommentsRepository = postCommentsRepository;
   }
 
-  public Single<List<Comment>> getComments(String postId) {
+  Single<List<Comment>> getComments(String postId) {
     return postCommentsRepository.getComments(postId);
   }
 
-  public Single<List<Comment>> getNextComments(String postId) {
+  Single<List<Comment>> getFreshComments(String postId) {
+    return postCommentsRepository.getFreshComments(postId);
+  }
+
+  Single<List<Comment>> getNextComments(String postId) {
     return postCommentsRepository.getNextComments(postId);
   }
 
-  public boolean hasMore() {
-    return postCommentsRepository.hasMoreComments();
+  boolean hasMore() {
+    return postCommentsRepository.hasMore();
   }
 }

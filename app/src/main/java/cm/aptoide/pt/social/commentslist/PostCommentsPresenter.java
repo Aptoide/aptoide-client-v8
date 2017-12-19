@@ -45,7 +45,7 @@ public class PostCommentsPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.refreshes()
-            .flatMapSingle(__ -> comments.getComments(postId))
+            .flatMapSingle(__ -> comments.getFreshComments(postId))
             .observeOn(viewScheduler)
             .doOnNext(comments -> view.showComments(comments))
             .doOnNext(comments -> view.hideRefresh())
