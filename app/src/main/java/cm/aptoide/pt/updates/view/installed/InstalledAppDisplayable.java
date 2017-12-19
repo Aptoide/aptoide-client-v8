@@ -10,7 +10,6 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
-import lombok.Getter;
 
 /**
  * Created by neuro on 17-05-2016.
@@ -18,7 +17,7 @@ import lombok.Getter;
 public class InstalledAppDisplayable extends DisplayablePojo<Installed> {
 
   private TimelineAnalytics timelineAnalytics;
-  @Getter private InstalledRepository installedRepository;
+  private InstalledRepository installedRepository;
 
   public InstalledAppDisplayable() {
   }
@@ -28,6 +27,10 @@ public class InstalledAppDisplayable extends DisplayablePojo<Installed> {
     super(pojo);
     this.timelineAnalytics = timelineAnalytics;
     this.installedRepository = installedRepository;
+  }
+
+  public InstalledRepository getInstalledRepository() {
+    return installedRepository;
   }
 
   @Override protected Configs getConfig() {

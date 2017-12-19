@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import lombok.Cleanup;
 import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
@@ -145,33 +144,46 @@ public class RealmAuthorizationPersistence implements AuthorizationPersistence {
   }
 
   private void removeLocalAuthorization(String authorizationId) {
-    @Cleanup Realm realm = database.get();
+    Realm realm = database.get();
 
-    final RealmAuthorization realmAuthorization = realm.where(RealmAuthorization.class)
-        .contains(RealmAuthorization.ID, authorizationId)
-        .findFirst();
+    try {
+      final RealmAuthorization realmAuthorization = realm.where(RealmAuthorization.class)
+          .contains(RealmAuthorization.ID, authorizationId)
+          .findFirst();
 
-    if (realmAuthorization != null) {
-      realm.beginTransaction();
-      realmAuthorization.deleteFromRealm();
-      realm.commitTransaction();
+      if (realmAuthorization != null) {
+        realm.beginTransaction();
+        realmAuthorization.deleteFromRealm();
+        realm.commitTransaction();
+      }
+    } finally {
+      if (realm != null) {
+        realm.close();
+      }
     }
   }
 
   private List<Authorization> getLocalAuthorization() {
-    @Cleanup Realm realm = database.get();
+    Realm realm = database.get();
 
-    final RealmResults<RealmAuthorization> realmAuthorizations =
-        realm.where(RealmAuthorization.class)
-            .findAll();
+    try {
 
-    final List<Authorization> pendingSyncAuthorizations =
-        new ArrayList<>(realmAuthorizations.size());
+      final RealmResults<RealmAuthorization> realmAuthorizations =
+          realm.where(RealmAuthorization.class)
+              .findAll();
 
-    for (RealmAuthorization realmAuthorization : realmAuthorizations) {
-      pendingSyncAuthorizations.add(authorizationMapper.map(realmAuthorization));
+      final List<Authorization> pendingSyncAuthorizations =
+          new ArrayList<>(realmAuthorizations.size());
+
+      for (RealmAuthorization realmAuthorization : realmAuthorizations) {
+        pendingSyncAuthorizations.add(authorizationMapper.map(realmAuthorization));
+      }
+
+      return pendingSyncAuthorizations;
+    } finally {
+      if (realm != null) {
+        realm.close();
+      }
     }
-
-    return pendingSyncAuthorizations;
   }
 }

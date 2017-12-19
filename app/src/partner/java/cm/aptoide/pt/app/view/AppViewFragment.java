@@ -119,6 +119,7 @@ import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -899,6 +900,16 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     showHideOptionsMenu(uninstallMenuItem, unInstallAction != null);
   }
 
+  private List<String> createFragmentNameList(List<Fragment> fragments) {
+    List<String> fragmentNameList = new ArrayList<>();
+    for (int i = fragments.size() - 1; i >= 0; i--) {
+      fragmentNameList.add(fragments.get(i)
+          .getClass()
+          .getSimpleName());
+    }
+    return fragmentNameList;
+  }
+
   protected LinkedList<Displayable> setupDisplayables(GetApp getApp) {
     LinkedList<Displayable> displayables = new LinkedList<>();
 
@@ -912,21 +923,24 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       setOpenType(null);
     }
     final Context applicationContext = getContext().getApplicationContext();
-    final InstallAnalytics installAnalytics = new InstallAnalytics(Analytics.getInstance(),
-        AppEventsLogger.newLogger(applicationContext));
+    final InstallAnalytics installAnalytics =
+        new InstallAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(applicationContext),
+            crashReport);
 
     final NotificationAnalytics notificationAnalytics =
         ((AptoideApplication) applicationContext).getNotificationAnalytics();
 
+    List<String> fragmentNames = createFragmentNameList(getFragmentManager().getFragments());
+
     installDisplayable =
         AppViewInstallDisplayable.newInstance(getApp, installManager, getSearchAdResult(),
-            shouldInstall, installedRepository, downloadFactory, timelineAnalytics,
-            appViewAnalytics, installAppRelay, this,
-            new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
+            shouldInstall, downloadFactory, timelineAnalytics, appViewAnalytics, installAppRelay,
+            this, new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
                 AppEventsLogger.newLogger(applicationContext)), navigationTracker,
             getEditorsBrickPosition(), installAnalytics,
             notificationAnalytics.getCampaignId(app.getPackageName(), app.getId()),
-            notificationAnalytics.getAbTestingGroup(app.getPackageName(), app.getId()));
+            notificationAnalytics.getAbTestingGroup(app.getPackageName(), app.getId()),
+            fragmentNames);
 
     displayables.add(installDisplayable);
     displayables.add(

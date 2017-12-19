@@ -7,13 +7,10 @@ package cm.aptoide.pt.dataprovider.model.v7;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Created on 18/08/16.
- */
-public class BaseV7EndlessDataListResponse<T> extends BaseV7EndlessResponse {
-  @JsonProperty("datalist") private DataList<T> dataList;
+public class BaseV7EndlessTimelineDataListResponse<T> extends BaseV7EndlessResponse {
+  @JsonProperty("datalist") private TimelineDataList<T> dataList;
 
-  public BaseV7EndlessDataListResponse() {
+  public BaseV7EndlessTimelineDataListResponse() {
   }
 
   @Override public int getTotal() {
@@ -37,10 +34,6 @@ public class BaseV7EndlessDataListResponse<T> extends BaseV7EndlessResponse {
     return result;
   }
 
-  protected boolean canEqual(Object other) {
-    return other instanceof BaseV7EndlessDataListResponse;
-  }
-
   public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof BaseV7EndlessDataListResponse)) return false;
@@ -55,15 +48,19 @@ public class BaseV7EndlessDataListResponse<T> extends BaseV7EndlessResponse {
     return true;
   }
 
-  public DataList<T> getDataList() {
+  protected boolean canEqual(Object other) {
+    return other instanceof BaseV7EndlessDataListResponse;
+  }
+
+  public TimelineDataList<T> getDataList() {
     return this.dataList;
   }
 
-  public void setDataList(DataList<T> dataList) {
+  public void setDataList(TimelineDataList<T> dataList) {
     this.dataList = dataList;
   }
 
   public String toString() {
-    return "BaseV7EndlessDataListResponse(dataList=" + this.getDataList() + ")";
+    return "BaseV7EndlessTimelineDataListResponse(dataList=" + this.getDataList() + ")";
   }
 }

@@ -1,13 +1,7 @@
-/*
- * Copyright (c) 2016.
- * Modified on 08/07/2016.
- */
-
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
 retrolambda {
   jvmArgs '-noverify'
-  //defaultMethods true
 }
 
 android {
@@ -76,8 +70,4 @@ dependencies {
 
   debugCompile project(path: ':utils', configuration: 'debug')
   releaseCompile project(path: ':utils', configuration: 'release')
-
-  provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
-  // Just for lombok not to complain
-  provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
 }
