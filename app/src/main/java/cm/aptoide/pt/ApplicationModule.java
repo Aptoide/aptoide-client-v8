@@ -51,6 +51,7 @@ import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
+import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -99,6 +100,7 @@ import cm.aptoide.pt.networking.NoOpTokenInvalidator;
 import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
 import cm.aptoide.pt.notification.NotificationAnalytics;
+import cm.aptoide.pt.notification.NotificationProvider;
 import cm.aptoide.pt.preferences.AdultContent;
 import cm.aptoide.pt.preferences.LocalPersistenceAdultContent;
 import cm.aptoide.pt.preferences.Preferences;
@@ -754,4 +756,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         tokenInvalidator, cm.aptoide.pt.dataprovider.BuildConfig.APPLICATION_ID,
         defaultSharedPreferences, new AptoideInstallParser());
   }
+
+  @Singleton @Provides NotificationProvider providesNotificationProvider() {
+    return new NotificationProvider(AccessorFactory.getAccessorFor(application.getDatabase(), Notification.class),
+        Schedulers.io());
+    }
 }

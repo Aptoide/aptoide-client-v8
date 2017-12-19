@@ -212,7 +212,7 @@ public abstract class AptoideApplication extends Application {
   private NotificationCenter notificationCenter;
   private EntryPointChooser entryPointChooser;
   private FileManager fileManager;
-  private NotificationProvider notificationProvider;
+  @Inject NotificationProvider notificationProvider;
   private TimelineRepositoryFactory timelineRepositoryFactory;
   private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
   private Map<Integer, Result> fragmentResulMap;
@@ -483,11 +483,6 @@ public abstract class AptoideApplication extends Application {
   }
 
   public NotificationProvider getNotificationProvider() {
-    if (notificationProvider == null) {
-      notificationProvider = new NotificationProvider(AccessorFactory.getAccessorFor(
-          ((AptoideApplication) this.getApplicationContext()).getDatabase(), Notification.class),
-          Schedulers.io());
-    }
     return notificationProvider;
   }
 

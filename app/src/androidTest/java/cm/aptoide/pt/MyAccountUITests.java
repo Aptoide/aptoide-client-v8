@@ -24,6 +24,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
 @RunWith(AndroidJUnit4.class) public class MyAccountUITests {
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
+  //@Rule public GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
   @Before public void setUp() {
     TestType.types = TestType.TestTypes.SIGNSIGNUPTESTS;

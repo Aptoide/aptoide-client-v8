@@ -1,7 +1,10 @@
 package cm.aptoide.pt;
 
 import android.accounts.AccountManager;
+import android.content.ContentResolver;
 import android.content.SharedPreferences;
+import android.provider.Settings;
+import android.support.annotation.WorkerThread;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AccountException;
 import cm.aptoide.accountmanager.AccountPersistence;
@@ -23,8 +26,10 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
+import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.networking.MultipartBodyInterceptor;
 import cm.aptoide.pt.preferences.AdultContent;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -267,5 +272,17 @@ public class MockApplicationModule extends ApplicationModule {
           }
         };
     return storeManager;
+  }
+
+  @Override IdsRepository provideIdsRepository(SharedPreferences defaultSharedPreferences,
+      ContentResolver contentResolver) {
+    return new IdsRepository(
+        SecurePreferencesImplementation.getInstance(application.getApplicationContext(),
+            defaultSharedPreferences), application,
+        Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)){
+      @Override @WorkerThread public synchronized String getGoogleAdvertisingId() {
+        return "";
+      }
+    };
   }
 }
