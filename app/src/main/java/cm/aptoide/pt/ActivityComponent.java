@@ -13,5 +13,4 @@ public interface ActivityComponent {
   void inject(ActivityResultNavigator activityResultNavigator);
 
   FragmentComponent plus(FragmentModule fragmentModule);
-
 }

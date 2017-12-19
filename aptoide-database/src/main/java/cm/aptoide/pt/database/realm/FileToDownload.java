@@ -7,14 +7,11 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 
 /**
  * Created by trinkes on 5/16/16.
  */
-
-@EqualsAndHashCode(callSuper = false) public class FileToDownload extends RealmObject {
+public class FileToDownload extends RealmObject {
 
   public static final int APK = 0;
   public static final int OBB = 1;
@@ -32,8 +29,8 @@ import lombok.Getter;
   private int progress;
   private @Download.DownloadState int status;
   private String fileName;
-  @Getter private int versionCode;
-  @Getter private String versionName;
+  private int versionCode;
+  private String versionName;
 
   public static FileToDownload createFileToDownload(String link, String altLink, String md5,
       String fileName, @FileType int fileType, String packageName, int versionCode,
@@ -54,6 +51,64 @@ import lombok.Getter;
     }
     fileToDownload.setPackageName(packageName);
     return fileToDownload;
+  }
+
+  public int getVersionCode() {
+    return versionCode;
+  }
+
+  public String getVersionName() {
+    return versionName;
+  }
+
+  @Override public int hashCode() {
+    int result = getMd5().hashCode();
+    result = 31 * result + getDownloadId();
+    result = 31 * result + (getAltLink() != null ? getAltLink().hashCode() : 0);
+    result = 31 * result + (getLink() != null ? getLink().hashCode() : 0);
+    result = 31 * result + (getPackageName() != null ? getPackageName().hashCode() : 0);
+    result = 31 * result + (getPath() != null ? getPath().hashCode() : 0);
+    result = 31 * result + getFileType();
+    result = 31 * result + getProgress();
+    result = 31 * result + getStatus();
+    result = 31 * result + (getFileName() != null ? getFileName().hashCode() : 0);
+    result = 31 * result + getVersionCode();
+    result = 31 * result + (getVersionName() != null ? getVersionName().hashCode() : 0);
+    return result;
+  }
+
+  @Override public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    FileToDownload that = (FileToDownload) o;
+
+    if (getDownloadId() != that.getDownloadId()) return false;
+    if (getFileType() != that.getFileType()) return false;
+    if (getProgress() != that.getProgress()) return false;
+    if (getStatus() != that.getStatus()) return false;
+    if (getVersionCode() != that.getVersionCode()) return false;
+    if (!getMd5().equals(that.getMd5())) return false;
+    if (getAltLink() != null ? !getAltLink().equals(that.getAltLink())
+        : that.getAltLink() != null) {
+      return false;
+    }
+    if (getLink() != null ? !getLink().equals(that.getLink()) : that.getLink() != null) {
+      return false;
+    }
+    if (getPackageName() != null ? !getPackageName().equals(that.getPackageName())
+        : that.getPackageName() != null) {
+      return false;
+    }
+    if (getPath() != null ? !getPath().equals(that.getPath()) : that.getPath() != null) {
+      return false;
+    }
+    if (getFileName() != null ? !getFileName().equals(that.getFileName())
+        : that.getFileName() != null) {
+      return false;
+    }
+    return getVersionName() != null ? getVersionName().equals(that.getVersionName())
+        : that.getVersionName() == null;
   }
 
   public String getAltLink() {
