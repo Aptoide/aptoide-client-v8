@@ -31,39 +31,39 @@ public class Timeline {
   private final InstallManager installManager;
   private final DownloadFactory downloadFactory;
   private final TimelineAnalytics timelineAnalytics;
-  private final TimelinePostsRepository timelinePostsRepository;
+  private final TimelineRepository timelineRepository;
   private final String marketName;
   private final TimelineUserProvider timelineUserProvider;
   private final UpdateRepository updateRepository;
 
   public Timeline(TimelineService service, InstallManager installManager,
       DownloadFactory downloadFactory, TimelineAnalytics timelineAnalytics,
-      TimelinePostsRepository timelinePostsRepository, String marketName,
+      TimelineRepository timelineRepository, String marketName,
       TimelineUserProvider timelineUserProvider, UpdateRepository updateRepository) {
     this.service = service;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.timelineAnalytics = timelineAnalytics;
-    this.timelinePostsRepository = timelinePostsRepository;
+    this.timelineRepository = timelineRepository;
     this.marketName = marketName;
     this.timelineUserProvider = timelineUserProvider;
     this.updateRepository = updateRepository;
   }
 
-  public Single<List<Post>> getCards() {
-    return timelinePostsRepository.getCards();
+  public Single<TimelineModel> getTimeline() {
+    return timelineRepository.getTimeline();
   }
 
-  public Single<List<Post>> getFreshCards() {
-    return timelinePostsRepository.getFreshCards();
+  public Single<TimelineModel> getFreshTimeline() {
+    return timelineRepository.getFreshTimeline();
   }
 
-  public Single<List<Post>> getFreshCards(String postId) {
-    return timelinePostsRepository.getFreshCards(postId);
+  public Single<TimelineModel> getFreshTimeline(String postId) {
+    return timelineRepository.getFreshTimeline(postId);
   }
 
-  public Single<List<Post>> getNextCards() {
-    return timelinePostsRepository.getNextCards();
+  public Single<TimelineModel> getNextTimelinePage() {
+    return timelineRepository.getNextTimelinePage();
   }
 
   public Observable<Install> updateApp(CardTouchEvent cardTouchEvent) {

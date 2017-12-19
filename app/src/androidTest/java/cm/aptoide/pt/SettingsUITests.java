@@ -34,6 +34,7 @@ import static org.hamcrest.Matchers.allOf;
       new ActivityTestRule<>(MainActivity.class);
 
   @Before public void setUp() {
+    TestType.types = TestType.TestTypes.REGULAR;
     if (UITests.isFirstTime()) {
       skipWizard();
     }

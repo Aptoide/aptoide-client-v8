@@ -41,7 +41,7 @@ android {
     targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
     multiDexEnabled true
     versionCode project.PROD_VERSION_CODE.toInteger()
-    versionName "8.6.0.1"
+    versionName "8.6.0.2"
     testProguardFile 'proguard-rules-test.pro'
     testInstrumentationRunner "cm.aptoide.pt.MultidexAndroidJunitRunner"
   }
@@ -361,9 +361,6 @@ dependencies {
   compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
   compile "com.android.support:cardview-v7:${SUPPORT_LIB_VERSION}"
   compile "com.android.support:customtabs:${SUPPORT_LIB_VERSION}"
-  //compile "com.android.support:percent:${SUPPORT_LIB_VERSION}"
-
-  provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
 
   compile "com.jpardogo.materialtabstrip:library:${MATERIAL_TAB_STRIP_VERSION}"
 

@@ -1,7 +1,10 @@
 package cm.aptoide.pt.crashreports;
 
 import com.crashlytics.android.Crashlytics;
-import lombok.Setter;
+import com.crashlytics.android.core.CrashlyticsCore;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterCore;
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by neuro on 09-12-2016.
@@ -16,10 +19,18 @@ public class CrashlyticsCrashLogger implements CrashLogger {
   private final Crashlytics crashlytics;
 
   //var with the language the app is set to
-  @Setter private String language;
+  private String language;
 
   public CrashlyticsCrashLogger(Crashlytics crashlytics) {
     this.crashlytics = crashlytics;
+  }
+
+  public String getLanguage() {
+    return language;
+  }
+
+  public void setLanguage(String language) {
+    this.language = language;
   }
 
   /**

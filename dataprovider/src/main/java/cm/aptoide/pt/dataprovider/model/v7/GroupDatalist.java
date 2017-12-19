@@ -5,11 +5,28 @@
 
 package cm.aptoide.pt.dataprovider.model.v7;
 
-import lombok.EqualsAndHashCode;
-
 /**
  * Created by neuro on 22-04-2016.
  */
-@EqualsAndHashCode(callSuper = true) public class GroupDatalist
-    extends BaseV7EndlessDataListResponse<Group> {
+public class GroupDatalist extends BaseV7EndlessDataListResponse<Group> {
+
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + super.hashCode();
+    return result;
+  }
+
+  protected boolean canEqual(Object other) {
+    return other instanceof GroupDatalist;
+  }
+
+  public boolean equals(Object o) {
+    if (o == this) return true;
+    if (!(o instanceof GroupDatalist)) return false;
+    final GroupDatalist other = (GroupDatalist) o;
+    if (!other.canEqual((Object) this)) return false;
+    if (!super.equals(o)) return false;
+    return true;
+  }
 }

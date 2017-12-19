@@ -8,15 +8,14 @@ package cm.aptoide.pt.view.recycler.displayable;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import lombok.Getter;
 
 /**
  * Created on 29/04/16.
  */
 public class FooterDisplayable extends DisplayablePojo<GetStoreWidgets.WSWidget> {
 
-  @Getter private String tag;
-  @Getter private StoreContext storeContext;
+  private String tag;
+  private StoreContext storeContext;
 
   public FooterDisplayable() {
   }
@@ -33,5 +32,13 @@ public class FooterDisplayable extends DisplayablePojo<GetStoreWidgets.WSWidget>
 
   @Override public int getViewLayout() {
     return R.layout.displayable_grid_footer;
+  }
+
+  public String getTag() {
+    return this.tag;
+  }
+
+  public StoreContext getStoreContext() {
+    return this.storeContext;
   }
 }

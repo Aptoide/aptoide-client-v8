@@ -28,7 +28,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
@@ -183,11 +182,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     Analytics analytics = Analytics.getInstance();
     issuesAnalytics = new IssuesAnalytics(analytics, Answers.getInstance());
     sharedPreferences = application.getDefaultSharedPreferences();
-    timelineAnalytics = new TimelineAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
-        httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        sharedPreferences, application.getNotificationAnalytics(), navigationTracker,
-        application.getReadPostsPersistence());
+    timelineAnalytics = application.getTimelineAnalytics();
     storeAnalytics = new StoreAnalytics(AppEventsLogger.newLogger(getContext()), analytics);
     marketName = application.getMarketName();
     shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);

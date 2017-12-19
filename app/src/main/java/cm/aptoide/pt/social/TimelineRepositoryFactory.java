@@ -6,9 +6,9 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.link.LinksHandlerFactory;
-import cm.aptoide.pt.social.data.PostsRemoteDataSource;
 import cm.aptoide.pt.social.data.TimelineCardFilter;
-import cm.aptoide.pt.social.data.TimelinePostsRepository;
+import cm.aptoide.pt.social.data.TimelineRemoteDataSource;
+import cm.aptoide.pt.social.data.TimelineRepository;
 import cm.aptoide.pt.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.updates.UpdateRepository;
 import java.util.HashSet;
@@ -22,7 +22,7 @@ import retrofit2.Converter;
 
 public class TimelineRepositoryFactory {
 
-  private final Map<String, TimelinePostsRepository> repositories;
+  private final Map<String, TimelineRepository> repositories;
 
   private BodyInterceptor<BaseBody> baseBodyInterceptorV7;
   private OkHttpClient defaultClient;
@@ -34,7 +34,7 @@ public class TimelineRepositoryFactory {
   private TimelineResponseCardMapper mapper;
   private UpdateRepository updateRepository;
 
-  public TimelineRepositoryFactory(Map<String, TimelinePostsRepository> repositories,
+  public TimelineRepositoryFactory(Map<String, TimelineRepository> repositories,
       BodyInterceptor<BaseBody> baseBodyInterceptorV7, OkHttpClient defaultClient,
       SharedPreferences defaultSharedPreferences, TokenInvalidator tokenInvalidator,
       LinksHandlerFactory linksHandlerFactory, PackageRepository packageRepository,
@@ -52,7 +52,7 @@ public class TimelineRepositoryFactory {
     this.updateRepository = updateRepository;
   }
 
-  public TimelinePostsRepository create(String action) {
+  public TimelineRepository create(String action) {
     if (!repositories.containsKey(action)) {
 
       final TimelineCardFilter.TimelineCardDuplicateFilter duplicateFilter =
@@ -60,10 +60,10 @@ public class TimelineRepositoryFactory {
       final TimelineCardFilter postFilter =
           new TimelineCardFilter(duplicateFilter, packageRepository, updateRepository);
 
-      repositories.put(action, new TimelinePostsRepository(
-          new PostsRemoteDataSource(action, baseBodyInterceptorV7, defaultClient, defaultConverter,
-              packageRepository, 20, 10, mapper, linksHandlerFactory, 20, 0, Integer.MAX_VALUE,
-              tokenInvalidator, defaultSharedPreferences, postFilter)));
+      repositories.put(action, new TimelineRepository(
+          new TimelineRemoteDataSource(action, baseBodyInterceptorV7, defaultClient,
+              defaultConverter, packageRepository, 20, 10, mapper, linksHandlerFactory, 20, 0,
+              Integer.MAX_VALUE, tokenInvalidator, defaultSharedPreferences, postFilter)));
     }
     return repositories.get(action);
   }

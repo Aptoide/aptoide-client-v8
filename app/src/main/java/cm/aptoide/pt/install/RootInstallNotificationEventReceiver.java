@@ -15,8 +15,8 @@ public class RootInstallNotificationEventReceiver extends BroadcastReceiver {
   private InstallManager installManager;
 
   @Override public void onReceive(Context context, Intent intent) {
-    installManager =
-        ((AptoideApplication) context.getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
+    installManager = ((AptoideApplication) context.getApplicationContext()).getInstallManager(
+        InstallerFactory.ROLLBACK);
 
     crashReport = CrashReport.getInstance();
 

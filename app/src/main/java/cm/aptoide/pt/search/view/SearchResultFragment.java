@@ -493,7 +493,6 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
         new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, onOpenPopupMenuClickRelay,
             searchResultAllStores, searchResultAdsAllStores, crashReport);
     setHasOptionsMenu(true);
-
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

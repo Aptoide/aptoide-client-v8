@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import lombok.Setter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
@@ -14,8 +13,8 @@ import retrofit2.Converter;
 
 public class InstallEvent extends DownloadInstallBaseEvent {
   private static final String EVENT_NAME = "INSTALL";
-  @Setter private boolean aptoideSettings;
-  @Setter private boolean isPhoneRooted;
+  private boolean aptoideSettings;
+  private boolean isPhoneRooted;
 
   public InstallEvent(Action action, Origin origin, String packageName, String url, String obbUrl,
       String patchObbUrl, AppContext context, int versionCode,
@@ -29,8 +28,16 @@ public class InstallEvent extends DownloadInstallBaseEvent {
         tokenInvalidator, sharedPreferences, previousContext, screenHistoryStore, screenHistoryTag);
   }
 
+  public void setPhoneRooted(boolean phoneRooted) {
+    isPhoneRooted = phoneRooted;
+  }
+
   public boolean getAptoideSettings() {
     return aptoideSettings;
+  }
+
+  public void setAptoideSettings(boolean aptoideSettings) {
+    this.aptoideSettings = aptoideSettings;
   }
 
   public boolean getIsPhoneRooted() {
