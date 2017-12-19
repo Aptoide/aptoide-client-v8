@@ -14,6 +14,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.GetApkInfoRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.exception.RepositoryItemNotFoundException;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
@@ -51,7 +52,7 @@ public class AppRepository {
   }
 
   public Observable<GetApp> getApp(long appId, boolean refresh, boolean sponsored, String storeName,
-      String packageName) {
+      String packageName, boolean bypassServerCache) {
     //Only pass the storeName if this is partners
     //If vanilla, don't pass the store name.
     //store name is already in appId
@@ -59,7 +60,7 @@ public class AppRepository {
     return GetAppRequest.of(appId, partnerId == null ? null : storeName,
         StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName,
         bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
-        .observe(refresh)
+        .observe(refresh, bypassServerCache)
         .flatMap(response -> {
           if (response != null && response.isOk()) {
             if (response.getNodes()
@@ -122,10 +123,10 @@ public class AppRepository {
   }
 
   public Observable<GetApp> getApp(String packageName, boolean refresh, boolean sponsored,
-      String storeName) {
+      String storeName, boolean bypassServerCache) {
     return GetAppRequest.of(packageName, storeName, bodyInterceptorV7, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences)
-        .observe(refresh)
+        .observe(refresh, bypassServerCache)
         .flatMap(response -> {
           if (response != null && response.isOk()) {
             if (response.getNodes()
@@ -146,7 +147,7 @@ public class AppRepository {
   public Observable<GetApp> getAppFromMd5(String md5, boolean refresh, boolean sponsored) {
     return GetAppRequest.ofMd5(md5, bodyInterceptorV7, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences)
-        .observe(refresh)
+        .observe(refresh, ManagerPreferences.getAndResetForceServerRefresh(sharedPreferences))
         .flatMap(response -> {
           if (response != null && response.isOk()) {
             if (response.getNodes()
@@ -164,10 +165,11 @@ public class AppRepository {
         });
   }
 
-  public Observable<GetApp> getAppFromUname(String uname, boolean refresh, boolean sponsored) {
+  public Observable<GetApp> getAppFromUname(String uname, boolean refresh, boolean sponsored,
+      boolean bypassServerCache) {
     return GetAppRequest.ofUname(uname, bodyInterceptorV7, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences)
-        .observe(refresh)
+        .observe(refresh, bypassServerCache)
         .flatMap(response -> {
           if (response != null && response.isOk()) {
             if (response.getNodes()

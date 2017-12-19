@@ -231,7 +231,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create || tabs == null) {
-      loadData(refresh, openType).observeOn(AndroidSchedulers.mainThread())
+      loadData(refresh, openType, refresh).observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(title -> {
             this.title = title;
@@ -391,7 +391,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
   /**
    * @return an observable with the title that should be displayed
    */
-  private Observable<String> loadData(boolean refresh, OpenType openType) {
+  private Observable<String> loadData(boolean refresh, OpenType openType,
+      boolean bypassServerCache) {
     switch (openType) {
       case GetHome:
         return GetHomeRequest.of(
@@ -399,7 +400,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
             storeContext, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
             sharedPreferences, getContext().getResources(),
             (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
-            .observe(refresh)
+            .observe(refresh, bypassServerCache)
             .map(getHome -> {
               Store store = getHome.getNodes()
                   .getMeta()
@@ -422,7 +423,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
             bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
             getContext().getResources(),
             (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
-            .observe(refresh)
+            .observe(refresh, bypassServerCache)
             .map(getStore -> {
               setupVariables(parseTabs(getStore), getStore.getNodes()
                   .getMeta()

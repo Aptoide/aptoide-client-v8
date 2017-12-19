@@ -487,7 +487,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     if (getAppId() >= 0) {
       Logger.d(TAG, "loading app info using app ID");
       subscription =
-          appRepository.getApp(getAppId(), refresh, isSponsored(), getStoreName(), getPackageName())
+          appRepository.getApp(getAppId(), refresh, isSponsored(), getStoreName(), getPackageName(),
+              refresh)
               .map(getApp -> getApp)
               .flatMap(getApp -> manageOrganicAds(getApp))
               .flatMap(getApp -> setKeywords(getApp).onErrorReturn(throwable -> getApp))
@@ -509,7 +510,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             finishLoading(throwable);
           });
     } else if (!TextUtils.isEmpty(getUname())) {
-      subscription = appRepository.getAppFromUname(getUname(), refresh, isSponsored())
+      subscription = appRepository.getAppFromUname(getUname(), refresh, isSponsored(), refresh)
           .map(getApp -> getApp)
           .flatMap(getApp -> manageOrganicAds(getApp))
           .flatMap(getApp -> setKeywords(getApp).onErrorReturn(throwable -> getApp))
@@ -528,16 +529,17 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           });
     } else {
       Logger.d(TAG, "loading app info using app package name");
-      subscription = appRepository.getApp(getPackageName(), refresh, isSponsored(), getStoreName())
-          .map(getApp -> getApp)
-          .flatMap(getApp -> manageOrganicAds(getApp))
-          .observeOn(AndroidSchedulers.mainThread())
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-          .subscribe(getApp -> {
-            setupAppView(getApp);
-          }, throwable -> {
-            finishLoading(throwable);
-          });
+      subscription =
+          appRepository.getApp(getPackageName(), refresh, isSponsored(), getStoreName(), refresh)
+              .map(getApp -> getApp)
+              .flatMap(getApp -> manageOrganicAds(getApp))
+              .observeOn(AndroidSchedulers.mainThread())
+              .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+              .subscribe(getApp -> {
+                setupAppView(getApp);
+              }, throwable -> {
+                finishLoading(throwable);
+              });
     }
   }
 

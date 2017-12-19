@@ -37,7 +37,8 @@ public abstract class GetStoreEndlessFragment<T extends BaseV7EndlessResponse>
     }
   }
 
-  @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {
+  @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url,
+      boolean bypassServerCache) {
     v7request = buildRequest(refresh, url);
     setupEndless(v7request, buildAction(), refresh);
 
@@ -57,7 +58,7 @@ public abstract class GetStoreEndlessFragment<T extends BaseV7EndlessResponse>
             getErrorRequestListener());
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
-    endlessRecyclerOnScrollListener.onLoadMore(refresh);
+    endlessRecyclerOnScrollListener.onLoadMore(refresh, refresh);
   }
 
   protected abstract V7<T, ? extends Endless> buildRequest(boolean refresh, String url);
