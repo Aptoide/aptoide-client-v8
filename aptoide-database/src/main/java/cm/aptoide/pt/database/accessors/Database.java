@@ -7,7 +7,6 @@ import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import java.util.List;
-import lombok.Cleanup;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -112,11 +111,17 @@ public final class Database {
   }
 
   public <E extends RealmObject> void delete(Class<E> clazz, String key, String value) {
-    @Cleanup Realm realm = get();
-    E obj = realm.where(clazz)
-        .equalTo(key, value)
-        .findFirst();
-    deleteObject(realm, obj);
+    Realm realm = get();
+    try {
+      E obj = realm.where(clazz)
+          .equalTo(key, value)
+          .findFirst();
+      deleteObject(realm, obj);
+    } finally {
+      if (realm != null) {
+        realm.close();
+      }
+    }
   }
 
   public <E extends RealmObject> void deleteObject(Realm realm, E obj) {
@@ -136,63 +141,105 @@ public final class Database {
   }
 
   public <E extends RealmObject> void delete(Class<E> clazz, String key, Integer value) {
-    @Cleanup Realm realm = get();
-    E obj = realm.where(clazz)
-        .equalTo(key, value)
-        .findFirst();
-    deleteObject(realm, obj);
+    Realm realm = get();
+    try {
+      E obj = realm.where(clazz)
+          .equalTo(key, value)
+          .findFirst();
+      deleteObject(realm, obj);
+    } finally {
+      if (realm != null) {
+        realm.close();
+      }
+    }
   }
 
   public <E extends RealmObject> void delete(Class<E> clazz, String key, Long value) {
-    @Cleanup Realm realm = get();
-    E obj = realm.where(clazz)
-        .equalTo(key, value)
-        .findFirst();
-    deleteObject(realm, obj);
+    Realm realm = get();
+    try {
+      E obj = realm.where(clazz)
+          .equalTo(key, value)
+          .findFirst();
+      deleteObject(realm, obj);
+    } finally {
+      if (realm != null) {
+        realm.close();
+      }
+    }
   }
 
   public <E extends RealmObject> void deleteAll(Class<E> clazz) {
-    @Cleanup Realm realm = get();
-    realm.beginTransaction();
-    realm.delete(clazz);
-    realm.commitTransaction();
+    Realm realm = get();
+    try {
+      realm.beginTransaction();
+      realm.delete(clazz);
+      realm.commitTransaction();
+    } finally {
+      if (realm != null) {
+        realm.close();
+      }
+    }
   }
 
   public <E extends RealmObject> void insertAll(List<E> objects) {
-    @Cleanup Realm realm = get();
-    realm.beginTransaction();
-    realm.insertOrUpdate(objects);
-    realm.commitTransaction();
+    Realm realm = get();
+    try {
+      realm.beginTransaction();
+      realm.insertOrUpdate(objects);
+      realm.commitTransaction();
+    } finally {
+      if (realm != null) {
+        realm.close();
+      }
+    }
   }
 
   public <E extends RealmObject> void insert(E object) {
-    @Cleanup Realm realm = get();
-    realm.beginTransaction();
-    realm.insertOrUpdate(object);
-    realm.commitTransaction();
+    Realm realm = get();
+    try {
+      realm.beginTransaction();
+      realm.insertOrUpdate(object);
+      realm.commitTransaction();
+    } finally {
+      if (realm != null) {
+        realm.close();
+      }
+    }
   }
 
   public <E extends RealmObject> void deleteAllIn(Class<E> classType, String classField,
       String[] fieldsIn) {
-    @Cleanup Realm realm = get();
-    realm.beginTransaction();
-    realm.where(classType)
-        .in(classField, fieldsIn)
-        .findAll()
-        .deleteAllFromRealm();
-    realm.commitTransaction();
+    Realm realm = get();
+    try {
+      realm.beginTransaction();
+      realm.where(classType)
+          .in(classField, fieldsIn)
+          .findAll()
+          .deleteAllFromRealm();
+      realm.commitTransaction();
+    } finally {
+      if (realm != null) {
+        realm.close();
+      }
+    }
   }
 
   public <E extends RealmObject> void deleteAllExcluding(Class<E> classType, String classField,
       List<String> fieldsIn) {
-    @Cleanup Realm realm = get();
-    realm.beginTransaction();
-    RealmQuery<E> query = realm.where(classType);
-    for (String field : fieldsIn) {
-      query.notEqualTo(classField, field);
+    Realm realm = get();
+    try {
+      realm.beginTransaction();
+      RealmQuery<E> query = realm.where(classType);
+      for (String field : fieldsIn) {
+        query.notEqualTo(classField, field);
+      }
+      query.findAll()
+          .deleteAllFromRealm();
+      realm.commitTransaction();
+    } finally {
+      if (realm != null) {
+        realm.close();
+      }
     }
-    query.findAll()
-        .deleteAllFromRealm();
-    realm.commitTransaction();
   }
 }

@@ -42,7 +42,8 @@ public class AppService {
     this.sharedPreferences = sharedPreferences;
   }
 
-  public Single<AppsList> loadApps(long storeId, boolean bypassCache, int offset, int limit) {
+  public Single<AppsList> loadApps(long storeId, boolean bypassCache, int offset, int limit,
+      boolean bypassServerCache) {
     if (loading) {
       return Single.just(new AppsList(true));
     }
@@ -51,7 +52,7 @@ public class AppService {
     body.setOffset(offset);
     body.setStoreId(storeId);
     return new ListAppsRequest(body, bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences).observe(bypassCache)
+        tokenInvalidator, sharedPreferences).observe(bypassCache, bypassServerCache)
         .doOnSubscribe(() -> loading = true)
         .doOnUnsubscribe(() -> loading = false)
         .doOnTerminate(() -> loading = false)
@@ -78,11 +79,11 @@ public class AppService {
   }
 
   public Single<AppsList> loadFreshApps(long storeId, int limit) {
-    return loadApps(storeId, true, 0, limit);
+    return loadApps(storeId, true, 0, limit, false);
   }
 
   public Single<AppsList> loadApps(long storeId, int offset, int limit) {
-    return loadApps(storeId, false, offset, limit);
+    return loadApps(storeId, false, offset, limit, false);
   }
 
   @NonNull private AppsList createErrorAppsList(Throwable throwable) {

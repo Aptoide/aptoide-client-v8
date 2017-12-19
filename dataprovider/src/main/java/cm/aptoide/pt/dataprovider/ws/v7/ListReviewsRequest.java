@@ -121,22 +121,6 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
       this.languagesFilterSort = languagesFilterSort;
     }
 
-    @Override public String getLang() {
-      return lang;
-    }
-
-    @Override public void setLang(String lang) {
-      this.lang = lang;
-    }
-
-    @Override public boolean isMature() {
-      return mature;
-    }
-
-    @Override public void setMature(boolean mature) {
-      this.mature = mature;
-    }
-
     public Order getOrder() {
       return order;
     }
@@ -193,12 +177,24 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
       this.subLimit = subLimit;
     }
 
-    public boolean isRefresh() {
-      return refresh;
-    }
-
     public void setRefresh(boolean refresh) {
       this.refresh = refresh;
+    }
+
+    @Override public String getLang() {
+      return lang;
+    }
+
+    @Override public void setLang(String lang) {
+      this.lang = lang;
+    }
+
+    @Override public boolean isMature() {
+      return mature;
+    }
+
+    @Override public void setMature(boolean mature) {
+      this.mature = mature;
     }
 
     @Override public int getOffset() {

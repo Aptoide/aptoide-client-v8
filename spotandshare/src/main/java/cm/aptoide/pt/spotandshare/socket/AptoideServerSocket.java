@@ -16,8 +16,6 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Created by neuro on 27-01-2017.
@@ -28,15 +26,15 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
   private static final String TAG = AptoideServerSocket.class.getSimpleName();
   private final int port;
   private final int timeout;
-  @Getter private boolean shutdown = false;
+  private boolean shutdown = false;
   private ServerSocketTimeoutManager serverSocketTimeoutManager;
   private List<Socket> connectedSockets = new CopyOnWriteArrayList<>();
   private ServerSocket ss;
   private boolean serving = false;
   private LinkedBlockingQueue<ServerAction> queuedServerActions = new LinkedBlockingQueue<>();
-  @Getter private Host host;
+  private Host host;
   private int serverSocketTimeout;
-  @Setter private HostsChangedCallback hostsChangedCallbackCallback;
+  private HostsChangedCallback hostsChangedCallbackCallback;
 
   public AptoideServerSocket(int port, int serverSocketTimeout, int timeout) {
     this.port = port;
@@ -226,5 +224,17 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
         Print.d(TAG, "removeHost: AptoideServerSocket: Host " + host + " removed from the server.");
       }
     }
+  }
+
+  public boolean isShutdown() {
+    return this.shutdown;
+  }
+
+  public Host getHost() {
+    return this.host;
+  }
+
+  public void setHostsChangedCallbackCallback(HostsChangedCallback hostsChangedCallbackCallback) {
+    this.hostsChangedCallbackCallback = hostsChangedCallbackCallback;
   }
 }

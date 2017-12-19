@@ -230,7 +230,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
       updateAccessor.removeAll();
       UpdateRepository repository = RepositoryFactory.getUpdateRepository(getContext(),
           ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
-      repository.sync(true)
+      repository.sync(true, false)
           .andThen(repository.getAll(false))
           .first()
           .subscribe(updates -> Logger.d(TAG, "updates refreshed"),

@@ -40,6 +40,7 @@ public class GetUserRequest extends V7<GetStore, GetUserRequest.Body> {
   private final ConnectivityManager connectivityManager;
   private final AdsApplicationVersionCodeProvider versionCodeProvider;
   private String url;
+  private boolean bypassServerCache;
 
   public GetUserRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
@@ -90,6 +91,11 @@ public class GetUserRequest extends V7<GetStore, GetUserRequest.Body> {
         .flatMap(getStore -> loadGetStoreWidgets(getStore).map(wsWidgets -> getStore));
   }
 
+  @Override public Observable<GetStore> observe(boolean bypassCache, boolean bypassServerCache) {
+    this.bypassServerCache = bypassServerCache;
+    return super.observe(bypassCache, bypassServerCache);
+  }
+
   protected Observable<List<GetStoreWidgets.WSWidget>> loadGetStoreWidgets(
       GetStore getStoreWidgets) {
     return Observable.from(getStoreWidgets.getNodes()
@@ -103,7 +109,7 @@ public class GetUserRequest extends V7<GetStore, GetUserRequest.Body> {
               isGooglePlayServicesAvailable, partnerId, accountMature,
               ((BodyInterceptor<BaseBody>) bodyInterceptor), httpClient, converterFactory, filters,
               tokenInvalidator, sharedPreferences, resources, windowManager, connectivityManager,
-              versionCodeProvider);
+              versionCodeProvider, bypassServerCache);
         })
         .toList()
         .flatMapIterable(wsWidgets -> getStoreWidgets.getNodes()

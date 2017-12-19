@@ -8,17 +8,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import lombok.Getter;
 
 /**
  * Created by neuro on 28-08-2017.
  */
-@Getter public class LanguageFilterHelper {
+public class LanguageFilterHelper {
 
   private final LanguageFilter all;
   private final LanguageFilter currentLanguageFirst;
   private final LanguageFilter english;
-
   private final String currentCountryCode;
 
   public LanguageFilterHelper(Resources resources) {
@@ -40,6 +38,22 @@ import lombok.Getter;
         LanguageCode.en_GB.toString());
   }
 
+  public LanguageFilter getAll() {
+    return all;
+  }
+
+  public LanguageFilter getCurrentLanguageFirst() {
+    return currentLanguageFirst;
+  }
+
+  public LanguageFilter getEnglish() {
+    return english;
+  }
+
+  public String getCurrentCountryCode() {
+    return currentCountryCode;
+  }
+
   List<LanguageFilter> getLanguageFilterList() {
     List<LanguageFilter> languageFilterList = new LinkedList<>();
 
@@ -57,7 +71,7 @@ import lombok.Getter;
     en_GB,
   }
 
-  @Getter public static class LanguageFilter {
+  public static class LanguageFilter {
 
     @StringRes private final int stringId;
     private final List<String> countryCodes;
@@ -76,13 +90,25 @@ import lombok.Getter;
       this(filter.getStringId(), filter.getCountryCodes());
     }
 
-    public LanguageFilter inc() {
-      position++;
-      return this;
+    public int getStringId() {
+      return stringId;
+    }
+
+    public List<String> getCountryCodes() {
+      return countryCodes;
+    }
+
+    public int getPosition() {
+      return position;
     }
 
     public void setPosition(int position) {
       this.position = position;
+    }
+
+    public LanguageFilter inc() {
+      position++;
+      return this;
     }
 
     public String getValue() {

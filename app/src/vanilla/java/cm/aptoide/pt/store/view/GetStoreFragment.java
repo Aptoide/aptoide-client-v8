@@ -20,8 +20,9 @@ public class GetStoreFragment extends StoreTabWidgetsGridRecyclerFragment {
     return new GetStoreFragment();
   }
 
-  @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {
-    return getStoreObservable(refresh, url).observeOn(Schedulers.io())
+  @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url,
+      boolean bypassServerCache) {
+    return getStoreObservable(refresh, url, bypassServerCache).observeOn(Schedulers.io())
         .flatMap(getStore -> parseDisplayables(getStore.getNodes()
             .getWidgets()))
         .doOnNext(displayables -> {
@@ -32,13 +33,14 @@ public class GetStoreFragment extends StoreTabWidgetsGridRecyclerFragment {
         });
   }
 
-  private Observable<GetStore> getStoreObservable(boolean refresh, String url) {
+  private Observable<GetStore> getStoreObservable(boolean refresh, String url,
+      boolean bypassServerCache) {
     if (name == Event.Name.getUser) {
       return requestFactoryCdnPool.newGetUser(url)
-          .observe(refresh);
+          .observe(refresh, bypassServerCache);
     }
 
     return requestFactoryCdnPool.newStore(url)
-        .observe(refresh);
+        .observe(refresh, bypassServerCache);
   }
 }

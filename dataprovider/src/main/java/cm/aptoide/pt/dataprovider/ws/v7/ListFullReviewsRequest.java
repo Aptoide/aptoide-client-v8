@@ -113,10 +113,6 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
       this.refresh = refresh;
     }
 
-    public boolean isRefresh() {
-      return refresh;
-    }
-
     @Override public int getOffset() {
       return offset;
     }
