@@ -25,6 +25,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
+import com.jakewharton.rxbinding.view.RxView;
 import java.util.ArrayList;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -97,6 +98,7 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
     list.setLayoutManager(layoutManager);
     swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
     floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fabAdd);
+    floatingActionButton.setVisibility(View.VISIBLE);
     setHasOptionsMenu(true);
     attachPresenter(new PostCommentsPresenter(this, new Comments(new PostCommentsRepository(
         new PostCommentsService(10, 0, Integer.MAX_VALUE, bodyInterceptor, httpClient,
@@ -124,8 +126,12 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
     return RxSwipeRefreshLayout.refreshes(swipeRefreshLayout);
   }
 
-  @Override public Observable<Long> replies() {
+  @Override public Observable<Long> repliesComment() {
     return replyEventPublishSubject;
+  }
+
+  @Override public Observable<Void> repliesPost() {
+    return RxView.clicks(floatingActionButton);
   }
 
   @Override public void showLoadMoreProgressIndicator() {

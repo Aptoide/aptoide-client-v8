@@ -19,7 +19,7 @@ public class PostCommentsPresenter implements Presenter {
   private final Scheduler viewScheduler;
   private final CrashReport crashReporter;
 
-  public PostCommentsPresenter(@NonNull PostCommentsView commentsView, Comments comments,
+  PostCommentsPresenter(@NonNull PostCommentsView commentsView, Comments comments,
       CommentsNavigator commentsNavigator, Scheduler viewScheduler, CrashReport crashReporter,
       String postId) {
     this.view = commentsView;
@@ -71,11 +71,20 @@ public class PostCommentsPresenter implements Presenter {
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.replies()
+        .flatMap(created -> view.repliesComment()
             .doOnNext(commentId -> commentsNavigator.showCommentDialog(postId, commentId))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(commentId -> {
+        }, throwable -> crashReporter.log(throwable));
+
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.repliesPost()
+            .doOnNext(__ -> commentsNavigator.showCommentDialog(postId))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
         }, throwable -> crashReporter.log(throwable));
   }
 }
