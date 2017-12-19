@@ -184,7 +184,7 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
 
   @Override public void buildInstalledAppsList(List<AppModel> installedApps) {
     pickAppsAdapter.setInstalledAppsList(installedApps);
-    hideLoading();
+    //hideLoading();
   }
 
   @Override public void onLeaveGroupError() {
@@ -232,8 +232,13 @@ public class SpotAndShareAppSelectionFragment extends BackButtonFragment
     pickAppsRecyclerView.setLayoutManager(gridLayoutManager);
   }
 
-  private void hideLoading() {
-    progressBarContainer.setVisibility(View.GONE);
+  @Override public void hideLoading() {
+    if (pickAppsAdapter.getItemCount() > 0) {
+      System.out.println("there are items on the adapter");
+      progressBarContainer.setVisibility(View.GONE);
+    } else {
+      System.out.println("there are not items on the adapter");
+    }
   }
 
   @Override public void showLoading() {

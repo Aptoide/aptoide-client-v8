@@ -62,13 +62,13 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
   @Override public void present() {
     startGroupCreation();
 
-    buildInstalledAppsList();
-
     handleBackButtonClick();
 
     handleExitEvent();
 
     handleSkipClick();
+
+    buildInstalledAppsList();
   }
 
   private void handleExitEvent() {
@@ -100,6 +100,13 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
         .map(lifecycleEvent -> spotandShareAppProvider.getInstalledApps())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(installedApps -> view.buildInstalledAppsList(installedApps))
+        .flatMap(__ -> isGroupCreated())
+        .flatMapCompletable(isGroupCreated -> {
+          if (isGroupCreated) {
+            return hideLoading();
+          }
+          return Completable.complete();
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));
@@ -151,12 +158,16 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
   }
 
   @NonNull private Completable createGroup() {
-    return spotAndShare.createGroup(uuid -> {
+    return hideLoading().andThen(spotAndShare.createGroup(uuid -> {
     }, throwable -> handleError(throwable), null)
         .doOnCompleted(() -> {
           isGroupCreatedBehaviour.call(true);
         })
-        .timeout(20, TimeUnit.SECONDS);
+        .timeout(20, TimeUnit.SECONDS));
+  }
+
+  private Completable hideLoading() {
+    return Completable.fromAction(() -> view.hideLoading());
   }
 
   private void listenToSelectedApp() {
