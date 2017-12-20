@@ -16,6 +16,8 @@ import android.view.View;
 import android.widget.RemoteViews;
 import cm.aptoide.pt.NotificationApplicationView;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.installer.RootInstallErrorNotification;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -33,6 +35,7 @@ import rx.subscriptions.CompositeSubscription;
 
 public class SystemNotificationShower implements Presenter {
 
+  private final NavigationTracker navigationTracker;
   private Context context;
   private NotificationManager notificationManager;
   private NotificationIdsMapper notificationIdsMapper;
@@ -47,8 +50,8 @@ public class SystemNotificationShower implements Presenter {
       NotificationIdsMapper notificationIdsMapper, NotificationCenter notificationCenter,
       NotificationAnalytics notificationAnalytics, CrashReport crashReport,
       NotificationProvider notificationProvider,
-      NotificationApplicationView notificationApplicationView,
-      CompositeSubscription subscriptions) {
+      NotificationApplicationView notificationApplicationView, CompositeSubscription subscriptions,
+      NavigationTracker navigationTracker) {
     this.context = context;
     this.notificationManager = notificationManager;
     this.notificationIdsMapper = notificationIdsMapper;
@@ -58,6 +61,7 @@ public class SystemNotificationShower implements Presenter {
     this.notificationProvider = notificationProvider;
     this.subscriptions = subscriptions;
     view = notificationApplicationView;
+    this.navigationTracker = navigationTracker;
   }
 
   @Override public void present() {
@@ -255,6 +259,8 @@ public class SystemNotificationShower implements Presenter {
                   notificationInfo.getNotificationType(), notificationInfo.getNotificationUrl(),
                   notification.getCampaignId(), notification.getAbTestingGroup());
             })
+            .doOnSuccess(notification -> navigationTracker.registerScreen(
+                ScreenTagHistory.Builder.build("Notification")))
             .map(notification -> notificationInfo))
         .doOnNext(notificationInfo -> callDeepLink(context, notificationInfo))
         .flatMapCompletable(notificationInfo -> dismissNotificationAfterAction(

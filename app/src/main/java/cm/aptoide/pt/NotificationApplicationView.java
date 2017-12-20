@@ -39,7 +39,8 @@ public abstract class NotificationApplicationView extends AptoideApplication
       systemNotificationShower = new SystemNotificationShower(this,
           (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE),
           new NotificationIdsMapper(), getNotificationCenter(), getNotificationAnalytics(),
-          CrashReport.getInstance(), getNotificationProvider(), this, new CompositeSubscription());
+          CrashReport.getInstance(), getNotificationProvider(), this, new CompositeSubscription(),
+          getNavigationTracker());
     }
     return systemNotificationShower;
   }
