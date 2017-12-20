@@ -207,12 +207,15 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
   private void handleError(Throwable throwable) {
     throwable.printStackTrace();
     spotAndShare.leaveGroup(err -> view.onLeaveGroupError());
-    if (throwable instanceof TimeoutException) {
-      view.showTimeoutCreateGroupError();
-      Log.d(TAG, "Timed out while creating hotspot");
-    } else {
-      view.showGeneralCreateGroupError();
-    }
-    view.navigateBack();
+
+    AptoideUtils.ThreadU.runOnUiThread(() -> {
+      if (throwable instanceof TimeoutException) {
+        view.showTimeoutCreateGroupError();
+        Log.d(TAG, "Timed out while creating hotspot");
+      } else {
+        view.showGeneralCreateGroupError();
+      }
+      view.navigateBack();
+    });
   }
 }
