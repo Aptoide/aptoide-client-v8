@@ -93,7 +93,7 @@ public class AuthorizationServiceV7 implements AuthorizationService {
     return UpdateAuthorizationRequest.of(billingIdManager.resolveTransactionId(transactionId),
         metadata, sharedPreferences, httpClient, converterFactory, bodyInterceptorV7,
         tokenInvalidator)
-        .observe(true)
+        .observe(true, false)
         .toSingle()
         .flatMap(response -> {
           if (response != null && response.isOk()) {

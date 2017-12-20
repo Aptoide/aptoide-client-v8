@@ -70,7 +70,7 @@ public class BillingServiceV7 implements BillingService {
   @Override public Single<List<PaymentService>> getPaymentServices() {
     return GetServicesRequest.of(sharedPreferences, httpClient, converterFactory, bodyInterceptorV7,
         tokenInvalidator)
-        .observe(false)
+        .observe(false, false)
         .toSingle()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -84,7 +84,7 @@ public class BillingServiceV7 implements BillingService {
   @Override public Single<Merchant> getMerchant(String merchantName) {
     return GetMerchantRequest.of(merchantName, bodyInterceptorV7, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences)
-        .observe(false)
+        .observe(false, false)
         .toSingle()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -100,7 +100,7 @@ public class BillingServiceV7 implements BillingService {
   @Override public Completable deletePurchase(String purchaseId) {
     return DeletePurchaseRequest.of(billingIdManager.resolvePurchaseId(purchaseId), httpClient,
         converterFactory, bodyInterceptorV7, tokenInvalidator, sharedPreferences)
-        .observe(true)
+        .observe(true, false)
         .first()
         .toSingle()
         .flatMapCompletable(response -> {
@@ -114,7 +114,7 @@ public class BillingServiceV7 implements BillingService {
   @Override public Single<List<Purchase>> getPurchases(String merchantName) {
     return GetPurchasesRequest.of(merchantName, bodyInterceptorV7, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences)
-        .observe(true)
+        .observe(true, false)
         .toSingle()
         .flatMap(response -> {
 
@@ -131,7 +131,7 @@ public class BillingServiceV7 implements BillingService {
   @Override public Single<Purchase> getPurchase(String productId) {
     return GetPurchaseRequest.of(billingIdManager.resolveProductId(productId), bodyInterceptorV7,
         httpClient, converterFactory, tokenInvalidator, sharedPreferences)
-        .observe(true)
+        .observe(true, false)
         .toSingle()
         .flatMap(response -> {
 
@@ -155,7 +155,7 @@ public class BillingServiceV7 implements BillingService {
   @Override public Single<List<Product>> getProducts(String merchantName, List<String> skus) {
     return GetProductsRequest.of(merchantName, skus, bodyInterceptorV7, httpClient,
         converterFactory, tokenInvalidator, sharedPreferences)
-        .observe(false)
+        .observe(false, false)
         .first()
         .toSingle()
         .flatMap(response -> {
@@ -170,7 +170,7 @@ public class BillingServiceV7 implements BillingService {
   @Override public Single<Product> getProduct(String sku, String merchantName) {
     return GetProductsRequest.of(merchantName, sku, bodyInterceptorV7, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences)
-        .observe(false)
+        .observe(false, false)
         .first()
         .toSingle()
         .flatMap(response -> {

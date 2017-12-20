@@ -52,7 +52,7 @@ public class SearchManager {
       boolean onlyTrustedApps, int offset) {
     return ListSearchAppsRequest.of(query, offset, false, onlyTrustedApps, subscribedStoresIds,
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
-        .observe(true)
+        .observe(true, false)
         .filter(this::hasResults)
         .map(data -> data.getDataList()
             .getList())
@@ -65,7 +65,7 @@ public class SearchManager {
       boolean onlyTrustedApps, int offset) {
     return ListSearchAppsRequest.of(query, offset, true, onlyTrustedApps, subscribedStoresIds,
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
-        .observe(true)
+        .observe(true, false)
         .filter(this::hasResults)
         .map(data -> data.getDataList()
             .getList())
@@ -78,7 +78,7 @@ public class SearchManager {
       int offset) {
     return ListSearchAppsRequest.of(query, storeName, offset, subscribedStoresAuthMap,
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
-        .observe(true)
+        .observe(true, false)
         .filter(this::hasResults)
         .map(data -> data.getDataList()
             .getList())

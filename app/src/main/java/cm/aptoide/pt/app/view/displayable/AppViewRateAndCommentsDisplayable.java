@@ -11,7 +11,6 @@ import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
-import lombok.Getter;
 
 /**
  * Created on 30/06/16.
@@ -19,7 +18,7 @@ import lombok.Getter;
 public class AppViewRateAndCommentsDisplayable extends AppViewDisplayable {
 
   private StoreCredentialsProvider storeCredentialsProvider;
-  @Getter private InstalledRepository installedRepository;
+  private InstalledRepository installedRepository;
 
   public AppViewRateAndCommentsDisplayable() {
   }
@@ -46,5 +45,9 @@ public class AppViewRateAndCommentsDisplayable extends AppViewDisplayable {
         .getData()
         .getStore()
         .getName());
+  }
+
+  public InstalledRepository getInstalledRepository() {
+    return this.installedRepository;
   }
 }

@@ -5,15 +5,11 @@ buildscript {
   }
   dependencies {
     classpath 'com.android.tools.build:gradle:2.3.3'
-    classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
     classpath 'me.tatarka:gradle-retrolambda:3.3.0'
     classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.1'
     classpath 'io.realm:realm-gradle-plugin:3.5.0'
     //classpath 'com.novoda:gradle-android-command-plugin:1.5.0'
   }
-
-  // Exclude the version that the android plugin depends on.
-  configurations.classpath.exclude group: 'com.android.tools.external.lombok'
 }
 
 allprojects {
@@ -77,9 +73,6 @@ ext {
   ESPRESSO_VERSION = '3.0.1'
   RUNNER_VERSION = '1.0.1'
   RULES_VERSION = '1.0.1'
-
-  // Lombok plugin
-  LOMBOK_VERSION = '1.16.8'
 
   JACKSON_VERSION = '2.8.5'
 

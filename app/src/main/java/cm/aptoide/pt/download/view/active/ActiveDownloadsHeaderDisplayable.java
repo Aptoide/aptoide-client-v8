@@ -4,14 +4,13 @@ import android.content.Context;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
-import lombok.Getter;
 
 /**
  * Created by trinkes on 8/17/16.
  */
 public class ActiveDownloadsHeaderDisplayable extends Displayable {
 
-  @Getter private String label;
+  private String label;
   private InstallManager installManager;
 
   public ActiveDownloadsHeaderDisplayable() {
@@ -20,6 +19,10 @@ public class ActiveDownloadsHeaderDisplayable extends Displayable {
   public ActiveDownloadsHeaderDisplayable(String label, InstallManager installManager) {
     this.label = label;
     this.installManager = installManager;
+  }
+
+  public String getLabel() {
+    return label;
   }
 
   @Override protected Configs getConfig() {

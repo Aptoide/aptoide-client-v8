@@ -21,7 +21,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import lombok.Getter;
 
 /**
  * Created by neuro on 29-01-2017.
@@ -30,8 +29,8 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
 
   private static final String TAG = AptoideMessageServerSocket.class.getSimpleName();
 
-  @Getter private final ConcurrentLinkedQueue<AptoideMessageServerController>
-      aptoideMessageControllers = new ConcurrentLinkedQueue<>();
+  private final ConcurrentLinkedQueue<AptoideMessageServerController> aptoideMessageControllers =
+      new ConcurrentLinkedQueue<>();
   private final FriendsManager friendsManager;
   private AptoideMessageServerController aptoideMessageServerController;
   private int availablePort = 10000;
@@ -195,5 +194,9 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
       //Friend friend = iterator.next();
       send(host, new NewFriendMessage(entry.getKey(), entry.getValue()));
     }
+  }
+
+  public ConcurrentLinkedQueue<AptoideMessageServerController> getAptoideMessageControllers() {
+    return this.aptoideMessageControllers;
   }
 }
