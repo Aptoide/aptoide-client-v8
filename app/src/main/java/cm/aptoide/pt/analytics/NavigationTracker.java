@@ -30,6 +30,10 @@ public class NavigationTracker {
     return historyList.get(historyList.size() - 1);
   }
 
+  public List<ScreenTagHistory> getHistoryList() {
+    return historyList;
+  }
+
   public @Nullable ScreenTagHistory getPreviousScreen() {
     if (historyList.size() < 2) {
       return null;
