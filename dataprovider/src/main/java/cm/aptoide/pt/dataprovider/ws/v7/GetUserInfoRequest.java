@@ -82,5 +82,13 @@ public class GetUserInfoRequest extends V7<GetUserInfo, GetUserInfoRequest.Body>
     public void setRefresh(boolean refresh) {
       this.refresh = refresh;
     }
+
+    public Long getUserId() {
+      return userId;
+    }
+
+    public void setUserId(Long userId) {
+      this.userId = userId;
+    }
   }
 }

@@ -72,6 +72,28 @@ public class SocialInteractionManager {
         .doOnNext(userMeta -> saveUser(userMeta, userAccessor));
   }
 
+  public Observable<GetUserMeta> unsubscribeUserObservable(long userId) {
+    return accountManager.getUserInfo(userId)
+        .flatMap(userMeta -> accountManager.accountStatus()
+            .first()
+            .toSingle()
+            .flatMapObservable(account -> {
+              if (BaseV7Response.Info.Status.OK.equals(userMeta.getInfo()
+                  .getStatus())) {
+                if (account.isLoggedIn()) {
+                  return accountManager.unsubscribeUser(userId)
+                      .andThen(Observable.just(userMeta));
+                } else {
+                  return Observable.just(userMeta);
+                }
+              } else {
+                return Observable.error(
+                    new Exception("Something went wrong while getting user meta"));
+              }
+            }))
+        .doOnNext(userMeta -> userAccessor.remove(userId));
+  }
+
   public void unfollowUser(Long userId) {
     accountManager.accountStatus()
         .map(account -> account.isLoggedIn())

@@ -209,6 +209,7 @@ public class AccountServiceV3 implements AccountService {
     return UserFollowingRequest.getUnfollowRequest(userId, bodyInterceptorPoolV7, httpClient,
         converterFactory, tokenInvalidator, sharedPreferences)
         .observe()
+        .toSingle()
         .toCompletable();
   }
 
