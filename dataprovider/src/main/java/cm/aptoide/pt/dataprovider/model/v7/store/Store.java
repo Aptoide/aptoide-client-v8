@@ -257,13 +257,10 @@ public class Store {
       if (o == this) return true;
       if (!(o instanceof Urls)) return false;
       final Urls other = (Urls) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       final Object this$mobile = this.getMobile();
       final Object other$mobile = other.getMobile();
-      if (this$mobile == null ? other$mobile != null : !this$mobile.equals(other$mobile)) {
-        return false;
-      }
-      return true;
+      return this$mobile == null ? other$mobile == null : this$mobile.equals(other$mobile);
     }
 
     public String toString() {

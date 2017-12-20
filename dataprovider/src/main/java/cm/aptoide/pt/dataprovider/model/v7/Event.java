@@ -72,7 +72,7 @@ public class Event {
     if (o == this) return true;
     if (!(o instanceof Event)) return false;
     final Event other = (Event) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$type = this.getType();
     final Object other$type = other.getType();
     if (this$type == null ? other$type != null : !this$type.equals(other$type)) return false;
@@ -86,8 +86,7 @@ public class Event {
     }
     final Object this$data = this.getData();
     final Object other$data = other.getData();
-    if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
-    return true;
+    return this$data == null ? other$data == null : this$data.equals(other$data);
   }
 
   public String toString() {

@@ -34,14 +34,11 @@ public class SocialArticleTimelineItem implements TimelineItem<TimelineCard> {
     if (o == this) return true;
     if (!(o instanceof SocialArticleTimelineItem)) return false;
     final SocialArticleTimelineItem other = (SocialArticleTimelineItem) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$socialArticle = this.socialArticle;
     final Object other$socialArticle = other.socialArticle;
-    if (this$socialArticle == null ? other$socialArticle != null
-        : !this$socialArticle.equals(other$socialArticle)) {
-      return false;
-    }
-    return true;
+    return this$socialArticle == null ? other$socialArticle == null
+        : this$socialArticle.equals(other$socialArticle);
   }
 
   protected boolean canEqual(Object other) {

@@ -226,7 +226,7 @@ public class ListAppVersionsRequest extends V7<ListAppVersions, ListAppVersionsR
       if (o == this) return true;
       if (!(o instanceof Body)) return false;
       final Body other = (Body) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       if (!super.equals(o)) return false;
       final Object this$apkId = this.getApkId();
       final Object other$apkId = other.getApkId();
@@ -272,11 +272,8 @@ public class ListAppVersionsRequest extends V7<ListAppVersions, ListAppVersionsR
       if (this.getOffset() != other.getOffset()) return false;
       final Object this$storesAuthMap = this.getStoresAuthMap();
       final Object other$storesAuthMap = other.getStoresAuthMap();
-      if (this$storesAuthMap == null ? other$storesAuthMap != null
-          : !this$storesAuthMap.equals(other$storesAuthMap)) {
-        return false;
-      }
-      return true;
+      return this$storesAuthMap == null ? other$storesAuthMap == null
+          : this$storesAuthMap.equals(other$storesAuthMap);
     }
 
     public String toString() {

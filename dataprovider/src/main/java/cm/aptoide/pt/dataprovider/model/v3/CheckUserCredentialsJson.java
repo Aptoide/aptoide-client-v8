@@ -135,7 +135,7 @@ public class CheckUserCredentialsJson extends BaseV3Response {
     if (o == this) return true;
     if (!(o instanceof CheckUserCredentialsJson)) return false;
     final CheckUserCredentialsJson other = (CheckUserCredentialsJson) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     if (!super.equals(o)) return false;
     if (this.getId() != other.getId()) return false;
     final Object this$token = this.getToken();
@@ -170,11 +170,8 @@ public class CheckUserCredentialsJson extends BaseV3Response {
     if (this.isAccessConfirmed() != other.isAccessConfirmed()) return false;
     final Object this$ravatarHd = this.getRavatarHd();
     final Object other$ravatarHd = other.getRavatarHd();
-    if (this$ravatarHd == null ? other$ravatarHd != null
-        : !this$ravatarHd.equals(other$ravatarHd)) {
-      return false;
-    }
-    return true;
+    return this$ravatarHd == null ? other$ravatarHd == null
+        : this$ravatarHd.equals(other$ravatarHd);
   }
 
   public String toString() {
@@ -231,14 +228,11 @@ public class CheckUserCredentialsJson extends BaseV3Response {
       if (o == this) return true;
       if (!(o instanceof Settings)) return false;
       final Settings other = (Settings) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       final Object this$matureswitch = this.getMatureswitch();
       final Object other$matureswitch = other.getMatureswitch();
-      if (this$matureswitch == null ? other$matureswitch != null
-          : !this$matureswitch.equals(other$matureswitch)) {
-        return false;
-      }
-      return true;
+      return this$matureswitch == null ? other$matureswitch == null
+          : this$matureswitch.equals(other$matureswitch);
     }
 
     public String toString() {

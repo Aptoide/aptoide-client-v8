@@ -51,7 +51,7 @@ public class UserTimeline {
     if (o == this) return true;
     if (!(o instanceof UserTimeline)) return false;
     final UserTimeline other = (UserTimeline) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$name = this.getName();
     final Object other$name = other.getName();
     if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
@@ -62,8 +62,7 @@ public class UserTimeline {
     }
     final Object this$store = this.getStore();
     final Object other$store = other.getStore();
-    if (this$store == null ? other$store != null : !this$store.equals(other$store)) return false;
-    return true;
+    return this$store == null ? other$store == null : this$store.equals(other$store);
   }
 
   public String toString() {

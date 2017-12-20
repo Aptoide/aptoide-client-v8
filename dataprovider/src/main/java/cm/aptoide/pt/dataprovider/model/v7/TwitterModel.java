@@ -55,17 +55,14 @@ public class TwitterModel {
     if (o == this) return true;
     if (!(o instanceof TwitterModel)) return false;
     final TwitterModel other = (TwitterModel) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     if (this.getId() != other.getId()) return false;
     final Object this$token = this.getToken();
     final Object other$token = other.getToken();
     if (this$token == null ? other$token != null : !this$token.equals(other$token)) return false;
     final Object this$secret = this.getSecret();
     final Object other$secret = other.getSecret();
-    if (this$secret == null ? other$secret != null : !this$secret.equals(other$secret)) {
-      return false;
-    }
-    return true;
+    return this$secret == null ? other$secret == null : this$secret.equals(other$secret);
   }
 
   public String toString() {

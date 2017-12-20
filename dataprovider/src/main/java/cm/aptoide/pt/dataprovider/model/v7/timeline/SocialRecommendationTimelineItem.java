@@ -36,14 +36,11 @@ public class SocialRecommendationTimelineItem implements TimelineItem<TimelineCa
     if (o == this) return true;
     if (!(o instanceof SocialRecommendationTimelineItem)) return false;
     final SocialRecommendationTimelineItem other = (SocialRecommendationTimelineItem) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$socialRecommendation = this.socialRecommendation;
     final Object other$socialRecommendation = other.socialRecommendation;
-    if (this$socialRecommendation == null ? other$socialRecommendation != null
-        : !this$socialRecommendation.equals(other$socialRecommendation)) {
-      return false;
-    }
-    return true;
+    return this$socialRecommendation == null ? other$socialRecommendation == null
+        : this$socialRecommendation.equals(other$socialRecommendation);
   }
 
   protected boolean canEqual(Object other) {

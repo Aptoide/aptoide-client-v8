@@ -35,12 +35,11 @@ public class TimelineStats extends BaseV7Response {
     if (o == this) return true;
     if (!(o instanceof TimelineStats)) return false;
     final TimelineStats other = (TimelineStats) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     if (!super.equals(o)) return false;
     final Object this$data = this.getData();
     final Object other$data = other.getData();
-    if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
-    return true;
+    return this$data == null ? other$data == null : this$data.equals(other$data);
   }
 
   public String toString() {
@@ -84,10 +83,9 @@ public class TimelineStats extends BaseV7Response {
       if (o == this) return true;
       if (!(o instanceof StatusData)) return false;
       final StatusData other = (StatusData) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       if (this.getFollowers() != other.getFollowers()) return false;
-      if (this.getFollowing() != other.getFollowing()) return false;
-      return true;
+      return this.getFollowing() == other.getFollowing();
     }
 
     public String toString() {

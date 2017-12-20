@@ -8,7 +8,6 @@ import java.io.OutputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import lombok.Setter;
 
 public abstract class AptoideSocket {
 
@@ -16,7 +15,7 @@ public abstract class AptoideSocket {
   private static final String TAG = AptoideSocket.class.getSimpleName();
   protected final ExecutorService executorService;
   protected final int bufferSize;
-  @Setter protected OnError<IOException> onError = Throwable::printStackTrace;
+  protected OnError<IOException> onError = Throwable::printStackTrace;
 
   public AptoideSocket() {
     this(Executors.newCachedThreadPool(), BUFFER_SIZE);
@@ -96,5 +95,9 @@ public abstract class AptoideSocket {
     Print.d(TAG, "shutdown() called");
     onError = null;
     executorService.shutdown();
+  }
+
+  public void setOnError(OnError<IOException> onError) {
+    this.onError = onError;
   }
 }

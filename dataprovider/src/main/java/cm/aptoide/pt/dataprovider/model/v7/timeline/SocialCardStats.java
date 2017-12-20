@@ -40,10 +40,9 @@ public class SocialCardStats {
     if (o == this) return true;
     if (!(o instanceof SocialCardStats)) return false;
     final SocialCardStats other = (SocialCardStats) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     if (this.getLikes() != other.getLikes()) return false;
-    if (this.getComments() != other.getComments()) return false;
-    return true;
+    return this.getComments() == other.getComments();
   }
 
   public String toString() {

@@ -36,12 +36,11 @@ public class SetComment extends BaseV7Response {
     if (o == this) return true;
     if (!(o instanceof SetComment)) return false;
     final SetComment other = (SetComment) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     if (!super.equals(o)) return false;
     final Object this$data = this.getData();
     final Object other$data = other.getData();
-    if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
-    return true;
+    return this$data == null ? other$data == null : this$data.equals(other$data);
   }
 
   public String toString() {
@@ -118,7 +117,7 @@ public class SetComment extends BaseV7Response {
       if (o == this) return true;
       if (!(o instanceof Data)) return false;
       final Data other = (Data) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       if (this.getId() != other.getId()) return false;
       final Object this$body = this.getBody();
       final Object other$body = other.getBody();
@@ -133,8 +132,7 @@ public class SetComment extends BaseV7Response {
       }
       final Object this$mode = this.getMode();
       final Object other$mode = other.getMode();
-      if (this$mode == null ? other$mode != null : !this$mode.equals(other$mode)) return false;
-      return true;
+      return this$mode == null ? other$mode == null : this$mode.equals(other$mode);
     }
 
     public String toString() {

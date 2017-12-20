@@ -99,7 +99,7 @@ public class AppViewSuggestedAppsDisplayable extends Displayable {
     if (o == this) return true;
     if (!(o instanceof AppViewSuggestedAppsDisplayable)) return false;
     final AppViewSuggestedAppsDisplayable other = (AppViewSuggestedAppsDisplayable) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     if (!super.equals(o)) return false;
     final Object this$minimalAds = this.getMinimalAds();
     final Object other$minimalAds = other.getMinimalAds();
@@ -126,11 +126,8 @@ public class AppViewSuggestedAppsDisplayable extends Displayable {
     }
     final Object this$storeContext = this.getStoreContext();
     final Object other$storeContext = other.getStoreContext();
-    if (this$storeContext == null ? other$storeContext != null
-        : !this$storeContext.equals(other$storeContext)) {
-      return false;
-    }
-    return true;
+    return this$storeContext == null ? other$storeContext == null
+        : this$storeContext.equals(other$storeContext);
   }
 
   public String toString() {

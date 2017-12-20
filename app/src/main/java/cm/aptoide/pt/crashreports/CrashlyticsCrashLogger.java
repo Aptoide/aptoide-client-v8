@@ -1,10 +1,6 @@
 package cm.aptoide.pt.crashreports;
 
 import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.core.CrashlyticsCore;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
-import com.twitter.sdk.android.core.TwitterCore;
-import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by neuro on 09-12-2016.

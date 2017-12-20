@@ -25,9 +25,8 @@ public class GetStore extends StoreUserAbstraction<GetStoreMeta> {
     if (o == this) return true;
     if (!(o instanceof GetStore)) return false;
     final GetStore other = (GetStore) o;
-    if (!other.canEqual((Object) this)) return false;
-    if (!super.equals(o)) return false;
-    return true;
+    if (!other.canEqual(this)) return false;
+    return super.equals(o);
   }
 
   public String toString() {

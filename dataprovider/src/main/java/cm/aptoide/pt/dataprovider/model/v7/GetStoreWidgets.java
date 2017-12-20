@@ -30,9 +30,8 @@ public class GetStoreWidgets extends BaseV7EndlessDataListResponse<GetStoreWidge
     if (o == this) return true;
     if (!(o instanceof GetStoreWidgets)) return false;
     final GetStoreWidgets other = (GetStoreWidgets) o;
-    if (!other.canEqual((Object) this)) return false;
-    if (!super.equals(o)) return false;
-    return true;
+    if (!other.canEqual(this)) return false;
+    return super.equals(o);
   }
 
   public String toString() {
@@ -314,7 +313,7 @@ public class GetStoreWidgets extends BaseV7EndlessDataListResponse<GetStoreWidge
           if (o == this) return true;
           if (!(o instanceof Categories)) return false;
           final Categories other = (Categories) o;
-          if (!other.canEqual((Object) this)) return false;
+          if (!other.canEqual(this)) return false;
           if (this.getId() != other.getId()) return false;
           final Object this$refId = this.getRefId();
           final Object other$refId = other.getRefId();
@@ -344,8 +343,7 @@ public class GetStoreWidgets extends BaseV7EndlessDataListResponse<GetStoreWidge
           final Object this$icon = this.getIcon();
           final Object other$icon = other.getIcon();
           if (this$icon == null ? other$icon != null : !this$icon.equals(other$icon)) return false;
-          if (this.getAdsCount() != other.getAdsCount()) return false;
-          return true;
+          return this.getAdsCount() == other.getAdsCount();
         }
 
         public int hashCode() {
@@ -394,7 +392,7 @@ public class GetStoreWidgets extends BaseV7EndlessDataListResponse<GetStoreWidge
         if (o == this) return true;
         if (!(o instanceof Data)) return false;
         final Data other = (Data) o;
-        if (!other.canEqual((Object) this)) return false;
+        if (!other.canEqual(this)) return false;
         final Object this$layout = this.getLayout();
         final Object other$layout = other.getLayout();
         if (this$layout == null ? other$layout != null : !this$layout.equals(other$layout)) {
@@ -416,8 +414,7 @@ public class GetStoreWidgets extends BaseV7EndlessDataListResponse<GetStoreWidge
         }
         final Object this$user = this.getUser();
         final Object other$user = other.getUser();
-        if (this$user == null ? other$user != null : !this$user.equals(other$user)) return false;
-        return true;
+        return this$user == null ? other$user == null : this$user.equals(other$user);
       }
 
       public int hashCode() {
@@ -505,7 +502,7 @@ public class GetStoreWidgets extends BaseV7EndlessDataListResponse<GetStoreWidge
         if (o == this) return true;
         if (!(o instanceof Action)) return false;
         final Action other = (Action) o;
-        if (!other.canEqual((Object) this)) return false;
+        if (!other.canEqual(this)) return false;
         final Object this$type = this.getType();
         final Object other$type = other.getType();
         if (this$type == null ? other$type != null : !this$type.equals(other$type)) return false;
@@ -519,10 +516,7 @@ public class GetStoreWidgets extends BaseV7EndlessDataListResponse<GetStoreWidge
         if (this$tag == null ? other$tag != null : !this$tag.equals(other$tag)) return false;
         final Object this$event = this.getEvent();
         final Object other$event = other.getEvent();
-        if (this$event == null ? other$event != null : !this$event.equals(other$event)) {
-          return false;
-        }
-        return true;
+        return this$event == null ? other$event == null : this$event.equals(other$event);
       }
 
       public int hashCode() {
@@ -556,7 +550,7 @@ public class GetStoreWidgets extends BaseV7EndlessDataListResponse<GetStoreWidge
       if (o == this) return true;
       if (!(o instanceof WSWidget)) return false;
       final WSWidget other = (WSWidget) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       final Object this$type = this.getType();
       final Object other$type = other.getType();
       if (this$type == null ? other$type != null : !this$type.equals(other$type)) return false;
@@ -582,8 +576,7 @@ public class GetStoreWidgets extends BaseV7EndlessDataListResponse<GetStoreWidge
       }
       final Object this$data = this.getData();
       final Object other$data = other.getData();
-      if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
-      return true;
+      return this$data == null ? other$data == null : this$data.equals(other$data);
     }
 
     public String toString() {

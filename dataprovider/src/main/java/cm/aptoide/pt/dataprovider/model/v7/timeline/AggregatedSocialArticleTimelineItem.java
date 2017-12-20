@@ -36,14 +36,11 @@ public class AggregatedSocialArticleTimelineItem implements TimelineItem<Timelin
     if (o == this) return true;
     if (!(o instanceof AggregatedSocialArticleTimelineItem)) return false;
     final AggregatedSocialArticleTimelineItem other = (AggregatedSocialArticleTimelineItem) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$aggregatedSocialArticle = this.aggregatedSocialArticle;
     final Object other$aggregatedSocialArticle = other.aggregatedSocialArticle;
-    if (this$aggregatedSocialArticle == null ? other$aggregatedSocialArticle != null
-        : !this$aggregatedSocialArticle.equals(other$aggregatedSocialArticle)) {
-      return false;
-    }
-    return true;
+    return this$aggregatedSocialArticle == null ? other$aggregatedSocialArticle == null
+        : this$aggregatedSocialArticle.equals(other$aggregatedSocialArticle);
   }
 
   protected boolean canEqual(Object other) {

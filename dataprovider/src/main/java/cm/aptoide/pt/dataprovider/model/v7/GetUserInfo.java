@@ -39,11 +39,10 @@ public class GetUserInfo extends BaseV7Response {
     if (o == this) return true;
     if (!(o instanceof GetUserInfo)) return false;
     final GetUserInfo other = (GetUserInfo) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$nodes = this.getNodes();
     final Object other$nodes = other.getNodes();
-    if (this$nodes == null ? other$nodes != null : !this$nodes.equals(other$nodes)) return false;
-    return true;
+    return this$nodes == null ? other$nodes == null : this$nodes.equals(other$nodes);
   }
 
   public String toString() {
@@ -87,16 +86,13 @@ public class GetUserInfo extends BaseV7Response {
       if (o == this) return true;
       if (!(o instanceof Nodes)) return false;
       final Nodes other = (Nodes) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       final Object this$meta = this.getMeta();
       final Object other$meta = other.getMeta();
       if (this$meta == null ? other$meta != null : !this$meta.equals(other$meta)) return false;
       final Object this$settings = this.getSettings();
       final Object other$settings = other.getSettings();
-      if (this$settings == null ? other$settings != null : !this$settings.equals(other$settings)) {
-        return false;
-      }
-      return true;
+      return this$settings == null ? other$settings == null : this$settings.equals(other$settings);
     }
 
     public String toString() {

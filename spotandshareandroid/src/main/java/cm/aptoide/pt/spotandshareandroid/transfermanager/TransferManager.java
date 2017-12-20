@@ -12,7 +12,6 @@ import cm.aptoide.pt.spotandshareandroid.SpotAndShareMessageServer;
 import cm.aptoide.pt.spotandshareandroid.util.MessageServerConfiguration;
 import java.io.IOException;
 import java.util.List;
-import lombok.Getter;
 import rx.Observable;
 
 /**
@@ -22,7 +21,7 @@ public class TransferManager {
 
   private final TransferListRelay transferListRelay;
   private final SpotAndShareMessageServer spotAndShareMessageServer;
-  @Getter private final AndroidAppInfoAccepter androidAppInfoAccepter;
+  private final AndroidAppInfoAccepter androidAppInfoAccepter;
 
   public TransferManager(SpotAndShareMessageServer spotAndShareMessageServer) {
     this.spotAndShareMessageServer = spotAndShareMessageServer;
@@ -91,5 +90,9 @@ public class TransferManager {
 
   public void clearTransfers() {
     transferListRelay.clearTransfers();
+  }
+
+  public AndroidAppInfoAccepter getAndroidAppInfoAccepter() {
+    return this.androidAppInfoAccepter;
   }
 }

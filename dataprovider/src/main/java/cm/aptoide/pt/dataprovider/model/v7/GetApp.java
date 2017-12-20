@@ -42,12 +42,11 @@ public class GetApp extends BaseV7Response {
     if (o == this) return true;
     if (!(o instanceof GetApp)) return false;
     final GetApp other = (GetApp) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     if (!super.equals(o)) return false;
     final Object this$nodes = this.getNodes();
     final Object other$nodes = other.getNodes();
-    if (this$nodes == null ? other$nodes != null : !this$nodes.equals(other$nodes)) return false;
-    return true;
+    return this$nodes == null ? other$nodes == null : this$nodes.equals(other$nodes);
   }
 
   public String toString() {
@@ -103,7 +102,7 @@ public class GetApp extends BaseV7Response {
       if (o == this) return true;
       if (!(o instanceof Nodes)) return false;
       final Nodes other = (Nodes) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       final Object this$meta = this.getMeta();
       final Object other$meta = other.getMeta();
       if (this$meta == null ? other$meta != null : !this$meta.equals(other$meta)) return false;
@@ -114,10 +113,7 @@ public class GetApp extends BaseV7Response {
       }
       final Object this$groups = this.getGroups();
       final Object other$groups = other.getGroups();
-      if (this$groups == null ? other$groups != null : !this$groups.equals(other$groups)) {
-        return false;
-      }
-      return true;
+      return this$groups == null ? other$groups == null : this$groups.equals(other$groups);
     }
 
     public String toString() {

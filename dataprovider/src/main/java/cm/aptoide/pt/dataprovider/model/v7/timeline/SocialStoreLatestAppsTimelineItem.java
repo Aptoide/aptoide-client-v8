@@ -34,14 +34,11 @@ public class SocialStoreLatestAppsTimelineItem implements TimelineItem<TimelineC
     if (o == this) return true;
     if (!(o instanceof SocialStoreLatestAppsTimelineItem)) return false;
     final SocialStoreLatestAppsTimelineItem other = (SocialStoreLatestAppsTimelineItem) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$latestApps = this.latestApps;
     final Object other$latestApps = other.latestApps;
-    if (this$latestApps == null ? other$latestApps != null
-        : !this$latestApps.equals(other$latestApps)) {
-      return false;
-    }
-    return true;
+    return this$latestApps == null ? other$latestApps == null
+        : this$latestApps.equals(other$latestApps);
   }
 
   protected boolean canEqual(Object other) {

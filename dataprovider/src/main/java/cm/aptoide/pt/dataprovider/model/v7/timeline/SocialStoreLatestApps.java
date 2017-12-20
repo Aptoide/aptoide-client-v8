@@ -70,7 +70,7 @@ public class SocialStoreLatestApps extends SocialCard implements TimelineCard {
     if (o == this) return true;
     if (!(o instanceof SocialStoreLatestApps)) return false;
     final SocialStoreLatestApps other = (SocialStoreLatestApps) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$cardId = this.cardId;
     final Object other$cardId = other.cardId;
     if (this$cardId == null ? other$cardId != null : !this$cardId.equals(other$cardId)) {
@@ -99,8 +99,7 @@ public class SocialStoreLatestApps extends SocialCard implements TimelineCard {
     }
     final Object this$date = this.date;
     final Object other$date = other.date;
-    if (this$date == null ? other$date != null : !this$date.equals(other$date)) return false;
-    return true;
+    return this$date == null ? other$date == null : this$date.equals(other$date);
   }
 
   protected boolean canEqual(Object other) {

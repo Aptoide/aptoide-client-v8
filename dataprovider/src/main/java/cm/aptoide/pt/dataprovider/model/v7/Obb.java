@@ -96,7 +96,7 @@ public class Obb {
       if (o == this) return true;
       if (!(o instanceof ObbItem)) return false;
       final ObbItem other = (ObbItem) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       final Object this$path = this.getPath();
       final Object other$path = other.getPath();
       if (this$path == null ? other$path != null : !this$path.equals(other$path)) return false;
@@ -108,10 +108,7 @@ public class Obb {
       if (this.getFilesize() != other.getFilesize()) return false;
       final Object this$filename = this.getFilename();
       final Object other$filename = other.getFilename();
-      if (this$filename == null ? other$filename != null : !this$filename.equals(other$filename)) {
-        return false;
-      }
-      return true;
+      return this$filename == null ? other$filename == null : this$filename.equals(other$filename);
     }
 
     public int hashCode() {
@@ -145,14 +142,13 @@ public class Obb {
     if (o == this) return true;
     if (!(o instanceof Obb)) return false;
     final Obb other = (Obb) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$patch = this.getPatch();
     final Object other$patch = other.getPatch();
     if (this$patch == null ? other$patch != null : !this$patch.equals(other$patch)) return false;
     final Object this$main = this.getMain();
     final Object other$main = other.getMain();
-    if (this$main == null ? other$main != null : !this$main.equals(other$main)) return false;
-    return true;
+    return this$main == null ? other$main == null : this$main.equals(other$main);
   }
 
   public String toString() {

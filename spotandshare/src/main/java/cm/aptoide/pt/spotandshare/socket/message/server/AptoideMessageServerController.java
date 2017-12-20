@@ -7,6 +7,7 @@ import cm.aptoide.pt.spotandshare.socket.message.Message;
 import cm.aptoide.pt.spotandshare.socket.message.handlers.v1.DefaultServerHandlersListV1;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.Sender;
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Created by neuro on 29-01-2017.

@@ -40,12 +40,11 @@ public class FullReview extends Review {
     if (o == this) return true;
     if (!(o instanceof FullReview)) return false;
     final FullReview other = (FullReview) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     if (!super.equals(o)) return false;
     final Object this$data = this.getData();
     final Object other$data = other.getData();
-    if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
-    return true;
+    return this$data == null ? other$data == null : this$data.equals(other$data);
   }
 
   public String toString() {
@@ -79,11 +78,10 @@ public class FullReview extends Review {
       if (o == this) return true;
       if (!(o instanceof AppData)) return false;
       final AppData other = (AppData) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       final Object this$app = this.getApp();
       final Object other$app = other.getApp();
-      if (this$app == null ? other$app != null : !this$app.equals(other$app)) return false;
-      return true;
+      return this$app == null ? other$app == null : this$app.equals(other$app);
     }
 
     public String toString() {

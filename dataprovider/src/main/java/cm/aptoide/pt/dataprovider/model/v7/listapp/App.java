@@ -271,10 +271,9 @@ public class App {
         if (o == this) return true;
         if (!(o instanceof Rating)) return false;
         final Rating other = (Rating) o;
-        if (!other.canEqual((Object) this)) return false;
+        if (!other.canEqual(this)) return false;
         if (Float.compare(this.getAvg(), other.getAvg()) != 0) return false;
-        if (this.getTotal() != other.getTotal()) return false;
-        return true;
+        return this.getTotal() == other.getTotal();
       }
 
       public int hashCode() {
@@ -294,17 +293,14 @@ public class App {
       if (o == this) return true;
       if (!(o instanceof Stats)) return false;
       final Stats other = (Stats) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       if (this.getApps() != other.getApps()) return false;
       if (this.getSubscribers() != other.getSubscribers()) return false;
       if (this.getDownloads() != other.getDownloads()) return false;
       if (this.getPdownloads() != other.getPdownloads()) return false;
       final Object this$rating = this.getRating();
       final Object other$rating = other.getRating();
-      if (this$rating == null ? other$rating != null : !this$rating.equals(other$rating)) {
-        return false;
-      }
-      return true;
+      return this$rating == null ? other$rating == null : this$rating.equals(other$rating);
     }
 
     public int hashCode() {
@@ -338,7 +334,7 @@ public class App {
     if (o == this) return true;
     if (!(o instanceof App)) return false;
     final App other = (App) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     if (this.getId() != other.getId()) return false;
     final Object this$name = this.getName();
     final Object other$name = other.getName();
@@ -387,8 +383,7 @@ public class App {
     if (this$stats == null ? other$stats != null : !this$stats.equals(other$stats)) return false;
     final Object this$obb = this.getObb();
     final Object other$obb = other.getObb();
-    if (this$obb == null ? other$obb != null : !this$obb.equals(other$obb)) return false;
-    return true;
+    return this$obb == null ? other$obb == null : this$obb.equals(other$obb);
   }
 
   public String toString() {

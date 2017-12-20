@@ -134,14 +134,11 @@ public class BaseV7Response {
         if (o == this) return true;
         if (!(o instanceof Time)) return false;
         final Time other = (Time) o;
-        if (!other.canEqual((Object) this)) return false;
+        if (!other.canEqual(this)) return false;
         if (Double.compare(this.getSeconds(), other.getSeconds()) != 0) return false;
         final Object this$human = this.getHuman();
         final Object other$human = other.getHuman();
-        if (this$human == null ? other$human != null : !this$human.equals(other$human)) {
-          return false;
-        }
-        return true;
+        return this$human == null ? other$human == null : this$human.equals(other$human);
       }
 
       public int hashCode() {
@@ -167,7 +164,7 @@ public class BaseV7Response {
       if (o == this) return true;
       if (!(o instanceof Info)) return false;
       final Info other = (Info) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       final Object this$status = this.getStatus();
       final Object other$status = other.getStatus();
       if (this$status == null ? other$status != null : !this$status.equals(other$status)) {
@@ -175,8 +172,7 @@ public class BaseV7Response {
       }
       final Object this$time = this.getTime();
       final Object other$time = other.getTime();
-      if (this$time == null ? other$time != null : !this$time.equals(other$time)) return false;
-      return true;
+      return this$time == null ? other$time == null : this$time.equals(other$time);
     }
 
     public int hashCode() {
@@ -235,7 +231,7 @@ public class BaseV7Response {
       if (o == this) return true;
       if (!(o instanceof Error)) return false;
       final Error other = (Error) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       final Object this$code = this.getCode();
       final Object other$code = other.getCode();
       if (this$code == null ? other$code != null : !this$code.equals(other$code)) return false;
@@ -247,10 +243,7 @@ public class BaseV7Response {
       }
       final Object this$details = this.getDetails();
       final Object other$details = other.getDetails();
-      if (this$details == null ? other$details != null : !this$details.equals(other$details)) {
-        return false;
-      }
-      return true;
+      return this$details == null ? other$details == null : this$details.equals(other$details);
     }
 
     public int hashCode() {
@@ -299,14 +292,11 @@ public class BaseV7Response {
       if (o == this) return true;
       if (!(o instanceof Details)) return false;
       final Details other = (Details) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       final Object this$storeLinks = this.getStoreLinks();
       final Object other$storeLinks = other.getStoreLinks();
-      if (this$storeLinks == null ? other$storeLinks != null
-          : !this$storeLinks.equals(other$storeLinks)) {
-        return false;
-      }
-      return true;
+      return this$storeLinks == null ? other$storeLinks == null
+          : this$storeLinks.equals(other$storeLinks);
     }
 
     public int hashCode() {
@@ -362,7 +352,7 @@ public class BaseV7Response {
       if (o == this) return true;
       if (!(o instanceof StoreLinks)) return false;
       final StoreLinks other = (StoreLinks) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       final Object this$type = this.getType();
       final Object other$type = other.getType();
       if (this$type == null ? other$type != null : !this$type.equals(other$type)) return false;
@@ -371,8 +361,7 @@ public class BaseV7Response {
       if (this$url == null ? other$url != null : !this$url.equals(other$url)) return false;
       final Object this$error = this.getError();
       final Object other$error = other.getError();
-      if (this$error == null ? other$error != null : !this$error.equals(other$error)) return false;
-      return true;
+      return this$error == null ? other$error == null : this$error.equals(other$error);
     }
 
     public int hashCode() {
@@ -402,16 +391,13 @@ public class BaseV7Response {
     if (o == this) return true;
     if (!(o instanceof BaseV7Response)) return false;
     final BaseV7Response other = (BaseV7Response) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$info = this.getInfo();
     final Object other$info = other.getInfo();
     if (this$info == null ? other$info != null : !this$info.equals(other$info)) return false;
     final Object this$errors = this.getErrors();
     final Object other$errors = other.getErrors();
-    if (this$errors == null ? other$errors != null : !this$errors.equals(other$errors)) {
-      return false;
-    }
-    return true;
+    return this$errors == null ? other$errors == null : this$errors.equals(other$errors);
   }
 
   public String toString() {

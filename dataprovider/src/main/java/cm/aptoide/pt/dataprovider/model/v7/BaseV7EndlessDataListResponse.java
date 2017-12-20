@@ -45,14 +45,11 @@ public class BaseV7EndlessDataListResponse<T> extends BaseV7EndlessResponse {
     if (o == this) return true;
     if (!(o instanceof BaseV7EndlessDataListResponse)) return false;
     final BaseV7EndlessDataListResponse other = (BaseV7EndlessDataListResponse) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     if (!super.equals(o)) return false;
     final Object this$dataList = this.getDataList();
     final Object other$dataList = other.getDataList();
-    if (this$dataList == null ? other$dataList != null : !this$dataList.equals(other$dataList)) {
-      return false;
-    }
-    return true;
+    return this$dataList == null ? other$dataList == null : this$dataList.equals(other$dataList);
   }
 
   public DataList<T> getDataList() {

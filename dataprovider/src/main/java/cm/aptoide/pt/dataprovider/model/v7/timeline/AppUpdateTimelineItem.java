@@ -39,14 +39,11 @@ public class AppUpdateTimelineItem implements TimelineItem<TimelineCard> {
     if (o == this) return true;
     if (!(o instanceof AppUpdateTimelineItem)) return false;
     final AppUpdateTimelineItem other = (AppUpdateTimelineItem) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$appUpdate = this.appUpdate;
     final Object other$appUpdate = other.appUpdate;
-    if (this$appUpdate == null ? other$appUpdate != null
-        : !this$appUpdate.equals(other$appUpdate)) {
-      return false;
-    }
-    return true;
+    return this$appUpdate == null ? other$appUpdate == null
+        : this$appUpdate.equals(other$appUpdate);
   }
 
   protected boolean canEqual(Object other) {

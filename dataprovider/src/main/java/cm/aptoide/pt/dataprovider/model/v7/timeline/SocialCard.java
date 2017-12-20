@@ -45,7 +45,7 @@ public abstract class SocialCard implements TimelineCard {
     if (o == this) return true;
     if (!(o instanceof SocialCard)) return false;
     final SocialCard other = (SocialCard) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$likes = this.likes;
     final Object other$likes = other.likes;
     if (this$likes == null ? other$likes != null : !this$likes.equals(other$likes)) return false;
@@ -59,8 +59,7 @@ public abstract class SocialCard implements TimelineCard {
     if (this$my == null ? other$my != null : !this$my.equals(other$my)) return false;
     final Object this$urls = this.getUrls();
     final Object other$urls = other.getUrls();
-    if (this$urls == null ? other$urls != null : !this$urls.equals(other$urls)) return false;
-    return true;
+    return this$urls == null ? other$urls == null : this$urls.equals(other$urls);
   }
 
   protected boolean canEqual(Object other) {

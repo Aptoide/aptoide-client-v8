@@ -81,7 +81,7 @@ public class HomeUser {
     if (o == this) return true;
     if (!(o instanceof HomeUser)) return false;
     final HomeUser other = (HomeUser) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     if (this.getId() != other.getId()) return false;
     final Object this$name = this.getName();
     final Object other$name = other.getName();
@@ -96,10 +96,7 @@ public class HomeUser {
     if (this$added == null ? other$added != null : !this$added.equals(other$added)) return false;
     final Object this$modified = this.getModified();
     final Object other$modified = other.getModified();
-    if (this$modified == null ? other$modified != null : !this$modified.equals(other$modified)) {
-      return false;
-    }
-    return true;
+    return this$modified == null ? other$modified == null : this$modified.equals(other$modified);
   }
 
   public String toString() {

@@ -39,12 +39,11 @@ public abstract class StoreUserAbstraction<T extends BaseV7Response> extends Bas
     if (o == this) return true;
     if (!(o instanceof StoreUserAbstraction)) return false;
     final StoreUserAbstraction other = (StoreUserAbstraction) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     if (!super.equals(o)) return false;
     final Object this$nodes = this.getNodes();
     final Object other$nodes = other.getNodes();
-    if (this$nodes == null ? other$nodes != null : !this$nodes.equals(other$nodes)) return false;
-    return true;
+    return this$nodes == null ? other$nodes == null : this$nodes.equals(other$nodes);
   }
 
   public String toString() {
@@ -99,7 +98,7 @@ public abstract class StoreUserAbstraction<T extends BaseV7Response> extends Bas
       if (o == this) return true;
       if (!(o instanceof StoreUserAbstraction.Nodes)) return false;
       final Nodes other = (Nodes) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       final Object this$meta = this.getMeta();
       final Object other$meta = other.getMeta();
       if (this$meta == null ? other$meta != null : !this$meta.equals(other$meta)) return false;
@@ -108,10 +107,7 @@ public abstract class StoreUserAbstraction<T extends BaseV7Response> extends Bas
       if (this$tabs == null ? other$tabs != null : !this$tabs.equals(other$tabs)) return false;
       final Object this$widgets = this.getWidgets();
       final Object other$widgets = other.getWidgets();
-      if (this$widgets == null ? other$widgets != null : !this$widgets.equals(other$widgets)) {
-        return false;
-      }
-      return true;
+      return this$widgets == null ? other$widgets == null : this$widgets.equals(other$widgets);
     }
 
     public String toString() {

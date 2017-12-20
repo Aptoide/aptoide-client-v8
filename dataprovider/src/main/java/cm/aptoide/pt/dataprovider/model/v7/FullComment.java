@@ -40,11 +40,10 @@ public class FullComment {
       if (o == this) return true;
       if (!(o instanceof AppData)) return false;
       final AppData other = (AppData) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       final Object this$app = this.getApp();
       final Object other$app = other.getApp();
-      if (this$app == null ? other$app != null : !this$app.equals(other$app)) return false;
-      return true;
+      return this$app == null ? other$app == null : this$app.equals(other$app);
     }
 
     public String toString() {

@@ -35,11 +35,10 @@ public class GetUserSettings extends BaseV7Response {
     if (o == this) return true;
     if (!(o instanceof GetUserSettings)) return false;
     final GetUserSettings other = (GetUserSettings) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$data = this.getData();
     final Object other$data = other.getData();
-    if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
-    return true;
+    return this$data == null ? other$data == null : this$data.equals(other$data);
   }
 
   public String toString() {
@@ -86,14 +85,11 @@ public class GetUserSettings extends BaseV7Response {
       if (o == this) return true;
       if (!(o instanceof Data)) return false;
       final Data other = (Data) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       if (this.isMature() != other.isMature()) return false;
       final Object this$access = this.getAccess();
       final Object other$access = other.getAccess();
-      if (this$access == null ? other$access != null : !this$access.equals(other$access)) {
-        return false;
-      }
-      return true;
+      return this$access == null ? other$access == null : this$access.equals(other$access);
     }
 
     public String toString() {
@@ -127,9 +123,8 @@ public class GetUserSettings extends BaseV7Response {
       if (o == this) return true;
       if (!(o instanceof Access)) return false;
       final Access other = (Access) o;
-      if (!other.canEqual((Object) this)) return false;
-      if (this.isConfirmed() != other.isConfirmed()) return false;
-      return true;
+      if (!other.canEqual(this)) return false;
+      return this.isConfirmed() == other.isConfirmed();
     }
 
     public int hashCode() {

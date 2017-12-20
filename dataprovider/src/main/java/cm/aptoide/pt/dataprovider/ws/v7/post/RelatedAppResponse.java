@@ -65,7 +65,7 @@ public final class RelatedAppResponse
       if (o == this) return true;
       if (!(o instanceof RelatedApp)) return false;
       final RelatedApp other = (RelatedApp) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       if (this.getId() != other.getId()) return false;
       final Object this$name = this.getName();
       final Object other$name = other.getName();
@@ -78,8 +78,7 @@ public final class RelatedAppResponse
       }
       final Object this$icon = this.getIcon();
       final Object other$icon = other.getIcon();
-      if (this$icon == null ? other$icon != null : !this$icon.equals(other$icon)) return false;
-      return true;
+      return this$icon == null ? other$icon == null : this$icon.equals(other$icon);
     }
 
     public String toString() {

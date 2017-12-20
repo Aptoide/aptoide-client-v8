@@ -90,7 +90,7 @@ public class SocialVideo extends SocialCard implements TimelineCard {
     if (o == this) return true;
     if (!(o instanceof SocialVideo)) return false;
     final SocialVideo other = (SocialVideo) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$cardId = this.cardId;
     final Object other$cardId = other.cardId;
     if (this$cardId == null ? other$cardId != null : !this$cardId.equals(other$cardId)) {
@@ -136,8 +136,7 @@ public class SocialVideo extends SocialCard implements TimelineCard {
     if (this$apps == null ? other$apps != null : !this$apps.equals(other$apps)) return false;
     final Object this$ab = this.ab;
     final Object other$ab = other.ab;
-    if (this$ab == null ? other$ab != null : !this$ab.equals(other$ab)) return false;
-    return true;
+    return this$ab == null ? other$ab == null : this$ab.equals(other$ab);
   }
 
   protected boolean canEqual(Object other) {

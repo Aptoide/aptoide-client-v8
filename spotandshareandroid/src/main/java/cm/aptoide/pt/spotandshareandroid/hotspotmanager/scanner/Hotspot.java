@@ -1,9 +1,8 @@
 package cm.aptoide.pt.spotandshareandroid.hotspotmanager.scanner;
 
 import android.net.wifi.ScanResult;
-import lombok.Data;
 
-@Data public class Hotspot {
+public class Hotspot {
 
   private final String ssid;
 
@@ -27,5 +26,13 @@ import lombok.Data;
     String ssid = scanResult.SSID;
 
     return new Hotspot(ssid);
+  }
+
+  public String getSsid() {
+    return this.ssid;
+  }
+
+  public String toString() {
+    return "Hotspot(ssid=" + this.getSsid() + ")";
   }
 }

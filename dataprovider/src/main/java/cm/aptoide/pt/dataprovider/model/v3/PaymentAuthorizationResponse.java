@@ -62,7 +62,7 @@ public class PaymentAuthorizationResponse extends BaseV3Response {
     if (o == this) return true;
     if (!(o instanceof PaymentAuthorizationResponse)) return false;
     final PaymentAuthorizationResponse other = (PaymentAuthorizationResponse) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     if (!super.equals(o)) return false;
     if (this.getPaymentId() != other.getPaymentId()) return false;
     final Object this$url = this.getUrl();
@@ -76,11 +76,8 @@ public class PaymentAuthorizationResponse extends BaseV3Response {
     }
     final Object this$authorizationStatus = this.getAuthorizationStatus();
     final Object other$authorizationStatus = other.getAuthorizationStatus();
-    if (this$authorizationStatus == null ? other$authorizationStatus != null
-        : !this$authorizationStatus.equals(other$authorizationStatus)) {
-      return false;
-    }
-    return true;
+    return this$authorizationStatus == null ? other$authorizationStatus == null
+        : this$authorizationStatus.equals(other$authorizationStatus);
   }
 
   public String toString() {

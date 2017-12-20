@@ -37,14 +37,11 @@ public class StoreLatestAppsTimelineItem implements TimelineItem<TimelineCard> {
     if (o == this) return true;
     if (!(o instanceof StoreLatestAppsTimelineItem)) return false;
     final StoreLatestAppsTimelineItem other = (StoreLatestAppsTimelineItem) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$latestApps = this.latestApps;
     final Object other$latestApps = other.latestApps;
-    if (this$latestApps == null ? other$latestApps != null
-        : !this$latestApps.equals(other$latestApps)) {
-      return false;
-    }
-    return true;
+    return this$latestApps == null ? other$latestApps == null
+        : this$latestApps.equals(other$latestApps);
   }
 
   protected boolean canEqual(Object other) {

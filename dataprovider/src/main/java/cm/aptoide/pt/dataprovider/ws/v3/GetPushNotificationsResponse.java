@@ -36,14 +36,11 @@ public class GetPushNotificationsResponse extends BaseV3Response {
     if (o == this) return true;
     if (!(o instanceof GetPushNotificationsResponse)) return false;
     final GetPushNotificationsResponse other = (GetPushNotificationsResponse) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     if (!super.equals(o)) return false;
     final Object this$results = this.getResults();
     final Object other$results = other.getResults();
-    if (this$results == null ? other$results != null : !this$results.equals(other$results)) {
-      return false;
-    }
-    return true;
+    return this$results == null ? other$results == null : this$results.equals(other$results);
   }
 
   public String toString() {
@@ -172,7 +169,7 @@ public class GetPushNotificationsResponse extends BaseV3Response {
         if (o == this) return true;
         if (!(o instanceof Images)) return false;
         final Images other = (Images) o;
-        if (!other.canEqual((Object) this)) return false;
+        if (!other.canEqual(this)) return false;
         final Object this$bannerUrl = this.getBannerUrl();
         final Object other$bannerUrl = other.getBannerUrl();
         if (this$bannerUrl == null ? other$bannerUrl != null
@@ -181,10 +178,7 @@ public class GetPushNotificationsResponse extends BaseV3Response {
         }
         final Object this$iconUrl = this.getIconUrl();
         final Object other$iconUrl = other.getIconUrl();
-        if (this$iconUrl == null ? other$iconUrl != null : !this$iconUrl.equals(other$iconUrl)) {
-          return false;
-        }
-        return true;
+        return this$iconUrl == null ? other$iconUrl == null : this$iconUrl.equals(other$iconUrl);
       }
 
       public int hashCode() {
@@ -210,7 +204,7 @@ public class GetPushNotificationsResponse extends BaseV3Response {
       if (o == this) return true;
       if (!(o instanceof Notification)) return false;
       final Notification other = (Notification) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       if (this.getId() != other.getId()) return false;
       final Object this$title = this.getTitle();
       final Object other$title = other.getTitle();
@@ -233,10 +227,7 @@ public class GetPushNotificationsResponse extends BaseV3Response {
       }
       final Object this$images = this.getImages();
       final Object other$images = other.getImages();
-      if (this$images == null ? other$images != null : !this$images.equals(other$images)) {
-        return false;
-      }
-      return true;
+      return this$images == null ? other$images == null : this$images.equals(other$images);
     }
 
     public String toString() {

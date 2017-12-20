@@ -123,7 +123,7 @@ public class Subscription {
     if (o == this) return true;
     if (!(o instanceof Subscription)) return false;
     final Subscription other = (Subscription) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$id = this.getId();
     final Object other$id = other.getId();
     if (this$id == null ? other$id != null : !this$id.equals(other$id)) return false;
@@ -158,10 +158,7 @@ public class Subscription {
     if (this$view == null ? other$view != null : !this$view.equals(other$view)) return false;
     final Object this$avatarHd = this.getAvatarHd();
     final Object other$avatarHd = other.getAvatarHd();
-    if (this$avatarHd == null ? other$avatarHd != null : !this$avatarHd.equals(other$avatarHd)) {
-      return false;
-    }
-    return true;
+    return this$avatarHd == null ? other$avatarHd == null : this$avatarHd.equals(other$avatarHd);
   }
 
   public String toString() {

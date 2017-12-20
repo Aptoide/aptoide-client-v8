@@ -108,7 +108,7 @@ public class DataList<T> {
     if (o == this) return true;
     if (!(o instanceof DataList)) return false;
     final DataList other = (DataList) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     if (this.getTotal() != other.getTotal()) return false;
     if (this.getCount() != other.getCount()) return false;
     if (this.getOffset() != other.getOffset()) return false;
@@ -120,8 +120,7 @@ public class DataList<T> {
     if (this.isLoaded() != other.isLoaded()) return false;
     final Object this$list = this.getList();
     final Object other$list = other.getList();
-    if (this$list == null ? other$list != null : !this$list.equals(other$list)) return false;
-    return true;
+    return this$list == null ? other$list == null : this$list.equals(other$list);
   }
 
   public String toString() {

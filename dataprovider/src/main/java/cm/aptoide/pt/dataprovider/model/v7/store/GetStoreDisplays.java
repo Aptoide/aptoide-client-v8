@@ -44,12 +44,11 @@ public class GetStoreDisplays extends BaseV7Response {
     if (o == this) return true;
     if (!(o instanceof GetStoreDisplays)) return false;
     final GetStoreDisplays other = (GetStoreDisplays) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     if (!super.equals(o)) return false;
     final Object this$list = this.getList();
     final Object other$list = other.getList();
-    if (this$list == null ? other$list != null : !this$list.equals(other$list)) return false;
-    return true;
+    return this$list == null ? other$list == null : this$list.equals(other$list);
   }
 
   public String toString() {
@@ -105,7 +104,7 @@ public class GetStoreDisplays extends BaseV7Response {
       if (o == this) return true;
       if (!(o instanceof EventImage)) return false;
       final EventImage other = (EventImage) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       final Object this$label = this.getLabel();
       final Object other$label = other.getLabel();
       if (this$label == null ? other$label != null : !this$label.equals(other$label)) return false;
@@ -116,8 +115,7 @@ public class GetStoreDisplays extends BaseV7Response {
       }
       final Object this$event = this.getEvent();
       final Object other$event = other.getEvent();
-      if (this$event == null ? other$event != null : !this$event.equals(other$event)) return false;
-      return true;
+      return this$event == null ? other$event == null : this$event.equals(other$event);
     }
 
     public String toString() {

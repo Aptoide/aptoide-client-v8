@@ -42,17 +42,14 @@ public class FacebookModel {
     if (o == this) return true;
     if (!(o instanceof FacebookModel)) return false;
     final FacebookModel other = (FacebookModel) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$id = this.getId();
     final Object other$id = other.getId();
     if (this$id == null ? other$id != null : !this$id.equals(other$id)) return false;
     final Object this$accessToken = this.getAccessToken();
     final Object other$accessToken = other.getAccessToken();
-    if (this$accessToken == null ? other$accessToken != null
-        : !this$accessToken.equals(other$accessToken)) {
-      return false;
-    }
-    return true;
+    return this$accessToken == null ? other$accessToken == null
+        : this$accessToken.equals(other$accessToken);
   }
 
   public String toString() {

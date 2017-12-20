@@ -116,7 +116,7 @@ public class PaymentServiceResponse {
     if (o == this) return true;
     if (!(o instanceof PaymentServiceResponse)) return false;
     final PaymentServiceResponse other = (PaymentServiceResponse) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     if (this.getId() != other.getId()) return false;
     final Object this$name = this.getName();
     final Object other$name = other.getName();
@@ -137,8 +137,7 @@ public class PaymentServiceResponse {
     final Object this$sign = this.getSign();
     final Object other$sign = other.getSign();
     if (this$sign == null ? other$sign != null : !this$sign.equals(other$sign)) return false;
-    if (this.isAuthorizationRequired() != other.isAuthorizationRequired()) return false;
-    return true;
+    return this.isAuthorizationRequired() == other.isAuthorizationRequired();
   }
 
   public String toString() {

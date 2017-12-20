@@ -35,14 +35,11 @@ public class SocialInstallTimelineItem implements TimelineItem<TimelineCard> {
     if (o == this) return true;
     if (!(o instanceof SocialInstallTimelineItem)) return false;
     final SocialInstallTimelineItem other = (SocialInstallTimelineItem) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$socialInstall = this.socialInstall;
     final Object other$socialInstall = other.socialInstall;
-    if (this$socialInstall == null ? other$socialInstall != null
-        : !this$socialInstall.equals(other$socialInstall)) {
-      return false;
-    }
-    return true;
+    return this$socialInstall == null ? other$socialInstall == null
+        : this$socialInstall.equals(other$socialInstall);
   }
 
   protected boolean canEqual(Object other) {

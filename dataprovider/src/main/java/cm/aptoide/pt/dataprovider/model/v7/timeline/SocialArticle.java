@@ -87,7 +87,7 @@ public class SocialArticle extends SocialCard {
     if (o == this) return true;
     if (!(o instanceof SocialArticle)) return false;
     final SocialArticle other = (SocialArticle) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$user = this.user;
     final Object other$user = other.user;
     if (this$user == null ? other$user != null : !this$user.equals(other$user)) return false;
@@ -133,8 +133,7 @@ public class SocialArticle extends SocialCard {
     if (this$apps == null ? other$apps != null : !this$apps.equals(other$apps)) return false;
     final Object this$ab = this.ab;
     final Object other$ab = other.ab;
-    if (this$ab == null ? other$ab != null : !this$ab.equals(other$ab)) return false;
-    return true;
+    return this$ab == null ? other$ab == null : this$ab.equals(other$ab);
   }
 
   protected boolean canEqual(Object other) {

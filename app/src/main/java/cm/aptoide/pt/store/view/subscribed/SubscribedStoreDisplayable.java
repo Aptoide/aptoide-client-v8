@@ -41,9 +41,8 @@ public class SubscribedStoreDisplayable extends DisplayablePojo<Store> {
     if (o == this) return true;
     if (!(o instanceof SubscribedStoreDisplayable)) return false;
     final SubscribedStoreDisplayable other = (SubscribedStoreDisplayable) o;
-    if (!other.canEqual((Object) this)) return false;
-    if (!super.equals(o)) return false;
-    return true;
+    if (!other.canEqual(this)) return false;
+    return super.equals(o);
   }
 
   public String toString() {

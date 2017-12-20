@@ -36,14 +36,11 @@ public class AggregatedSocialInstallTimelineItem implements TimelineItem<Timelin
     if (o == this) return true;
     if (!(o instanceof AggregatedSocialInstallTimelineItem)) return false;
     final AggregatedSocialInstallTimelineItem other = (AggregatedSocialInstallTimelineItem) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$aggregatedSocialInstall = this.aggregatedSocialInstall;
     final Object other$aggregatedSocialInstall = other.aggregatedSocialInstall;
-    if (this$aggregatedSocialInstall == null ? other$aggregatedSocialInstall != null
-        : !this$aggregatedSocialInstall.equals(other$aggregatedSocialInstall)) {
-      return false;
-    }
-    return true;
+    return this$aggregatedSocialInstall == null ? other$aggregatedSocialInstall == null
+        : this$aggregatedSocialInstall.equals(other$aggregatedSocialInstall);
   }
 
   protected boolean canEqual(Object other) {

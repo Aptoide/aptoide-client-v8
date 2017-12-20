@@ -32,9 +32,8 @@ public class Video extends Feature {
     if (o == this) return true;
     if (!(o instanceof Video)) return false;
     final Video other = (Video) o;
-    if (!other.canEqual((Object) this)) return false;
-    if (!super.equals(o)) return false;
-    return true;
+    if (!other.canEqual(this)) return false;
+    return super.equals(o);
   }
 
   protected boolean canEqual(Object other) {

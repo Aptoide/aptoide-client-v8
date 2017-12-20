@@ -76,7 +76,7 @@ public class FileInfo implements Serializable {
     if (o == this) return true;
     if (!(o instanceof FileInfo)) return false;
     final FileInfo other = (FileInfo) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$filePath = this.getFilePath();
     final Object other$filePath = other.getFilePath();
     if (this$filePath == null ? other$filePath != null : !this$filePath.equals(other$filePath)) {
@@ -87,8 +87,7 @@ public class FileInfo implements Serializable {
     if (this$fileName == null ? other$fileName != null : !this$fileName.equals(other$fileName)) {
       return false;
     }
-    if (this.getSize() != other.getSize()) return false;
-    return true;
+    return this.getSize() == other.getSize();
   }
 
   public String toString() {

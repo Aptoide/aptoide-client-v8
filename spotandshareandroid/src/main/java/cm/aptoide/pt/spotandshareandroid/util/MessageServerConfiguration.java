@@ -13,12 +13,11 @@ import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.AndroidAppInfoAccepter;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
 import java.io.IOException;
-import lombok.Getter;
 
 /**
  * Created by neuro on 10-07-2017.
  */
-@Getter public class MessageServerConfiguration {
+public class MessageServerConfiguration {
 
   private final Context context;
   private final String externalStoragepath;
@@ -70,5 +69,33 @@ import lombok.Getter;
       availableSpace = (long) stat.getAvailableBlocks() * (long) stat.getBlockSize();
       return availableSpace > bytes;
     };
+  }
+
+  public Context getContext() {
+    return this.context;
+  }
+
+  public String getExternalStoragepath() {
+    return this.externalStoragepath;
+  }
+
+  public StorageCapacity getStorageCapacity() {
+    return this.storageCapacity;
+  }
+
+  public SocketBinder getSocketBinder() {
+    return this.socketBinder;
+  }
+
+  public OnError<IOException> getOnError() {
+    return this.onError;
+  }
+
+  public AndroidAppInfoAccepter getAndroidAppInfoAccepter() {
+    return this.androidAppInfoAccepter;
+  }
+
+  public ConnectivityManager getConnectivityManager() {
+    return this.connectivityManager;
   }
 }

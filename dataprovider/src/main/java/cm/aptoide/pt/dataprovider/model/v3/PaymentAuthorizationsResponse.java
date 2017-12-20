@@ -36,15 +36,12 @@ public class PaymentAuthorizationsResponse extends BaseV3Response {
     if (o == this) return true;
     if (!(o instanceof PaymentAuthorizationsResponse)) return false;
     final PaymentAuthorizationsResponse other = (PaymentAuthorizationsResponse) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     if (!super.equals(o)) return false;
     final Object this$authorizations = this.getAuthorizations();
     final Object other$authorizations = other.getAuthorizations();
-    if (this$authorizations == null ? other$authorizations != null
-        : !this$authorizations.equals(other$authorizations)) {
-      return false;
-    }
-    return true;
+    return this$authorizations == null ? other$authorizations == null
+        : this$authorizations.equals(other$authorizations);
   }
 
   public String toString() {

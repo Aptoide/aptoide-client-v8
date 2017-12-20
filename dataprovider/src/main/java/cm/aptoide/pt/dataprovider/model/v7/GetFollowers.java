@@ -23,8 +23,7 @@ public class GetFollowers extends BaseV7EndlessDataListResponse<GetFollowers.Tim
     if (o == this) return true;
     if (!(o instanceof GetFollowers)) return false;
     final GetFollowers other = (GetFollowers) o;
-    if (!other.canEqual((Object) this)) return false;
-    return true;
+    return other.canEqual(this);
   }
 
   public String toString() {
@@ -101,7 +100,7 @@ public class GetFollowers extends BaseV7EndlessDataListResponse<GetFollowers.Tim
       if (o == this) return true;
       if (!(o instanceof TimelineUser)) return false;
       final TimelineUser other = (TimelineUser) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       if (this.getId() != other.getId()) return false;
       final Object this$name = this.getName();
       final Object other$name = other.getName();
@@ -116,8 +115,7 @@ public class GetFollowers extends BaseV7EndlessDataListResponse<GetFollowers.Tim
       if (this$store == null ? other$store != null : !this$store.equals(other$store)) return false;
       final Object this$stats = this.getStats();
       final Object other$stats = other.getStats();
-      if (this$stats == null ? other$stats != null : !this$stats.equals(other$stats)) return false;
-      return true;
+      return this$stats == null ? other$stats == null : this$stats.equals(other$stats);
     }
 
     public String toString() {

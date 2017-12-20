@@ -49,9 +49,8 @@ public abstract class BaseV7EndlessResponse extends BaseV7Response {
     if (o == this) return true;
     if (!(o instanceof BaseV7EndlessResponse)) return false;
     final BaseV7EndlessResponse other = (BaseV7EndlessResponse) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     if (!super.equals(o)) return false;
-    if (this.stableTotal != other.stableTotal) return false;
-    return true;
+    return this.stableTotal == other.stableTotal;
   }
 }

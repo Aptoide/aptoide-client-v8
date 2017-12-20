@@ -200,7 +200,7 @@ public class GetAdsResponse {
       if (o == this) return true;
       if (!(o instanceof Data)) return false;
       final Data other = (Data) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       if (this.getId() != other.getId()) return false;
       final Object this$name = this.getName();
       final Object other$name = other.getName();
@@ -247,10 +247,7 @@ public class GetAdsResponse {
       }
       final Object this$updated = this.getUpdated();
       final Object other$updated = other.getUpdated();
-      if (this$updated == null ? other$updated != null : !this$updated.equals(other$updated)) {
-        return false;
-      }
-      return true;
+      return this$updated == null ? other$updated == null : this$updated.equals(other$updated);
     }
 
     public int hashCode() {
@@ -371,7 +368,7 @@ public class GetAdsResponse {
       if (o == this) return true;
       if (!(o instanceof Ad)) return false;
       final Ad other = (Ad) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       final Object this$data = this.getData();
       final Object other$data = other.getData();
       if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
@@ -385,10 +382,7 @@ public class GetAdsResponse {
       }
       final Object this$tracker = this.getTracker();
       final Object other$tracker = other.getTracker();
-      if (this$tracker == null ? other$tracker != null : !this$tracker.equals(other$tracker)) {
-        return false;
-      }
-      return true;
+      return this$tracker == null ? other$tracker == null : this$tracker.equals(other$tracker);
     }
 
     public int hashCode() {
@@ -477,7 +471,7 @@ public class GetAdsResponse {
       if (o == this) return true;
       if (!(o instanceof Info)) return false;
       final Info other = (Info) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       if (this.getAdId() != other.getAdId()) return false;
       final Object this$adType = this.getAdType();
       final Object other$adType = other.getAdType();
@@ -496,10 +490,7 @@ public class GetAdsResponse {
       }
       final Object this$cpdUrl = this.getCpdUrl();
       final Object other$cpdUrl = other.getCpdUrl();
-      if (this$cpdUrl == null ? other$cpdUrl != null : !this$cpdUrl.equals(other$cpdUrl)) {
-        return false;
-      }
-      return true;
+      return this$cpdUrl == null ? other$cpdUrl == null : this$cpdUrl.equals(other$cpdUrl);
     }
 
     public int hashCode() {
@@ -593,12 +584,11 @@ public class GetAdsResponse {
         if (o == this) return true;
         if (!(o instanceof Info)) return false;
         final Info other = (Info) o;
-        if (!other.canEqual((Object) this)) return false;
+        if (!other.canEqual(this)) return false;
         if (this.getId() != other.getId()) return false;
         final Object this$name = this.getName();
         final Object other$name = other.getName();
-        if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
-        return true;
+        return this$name == null ? other$name == null : this$name.equals(other$name);
       }
 
       public int hashCode() {
@@ -647,7 +637,7 @@ public class GetAdsResponse {
         if (o == this) return true;
         if (!(o instanceof Data)) return false;
         final Data other = (Data) o;
-        if (!other.canEqual((Object) this)) return false;
+        if (!other.canEqual(this)) return false;
         final Object this$clickUrl = this.getClickUrl();
         final Object other$clickUrl = other.getClickUrl();
         if (this$clickUrl == null ? other$clickUrl != null
@@ -656,11 +646,8 @@ public class GetAdsResponse {
         }
         final Object this$impressionUrl = this.getImpressionUrl();
         final Object other$impressionUrl = other.getImpressionUrl();
-        if (this$impressionUrl == null ? other$impressionUrl != null
-            : !this$impressionUrl.equals(other$impressionUrl)) {
-          return false;
-        }
-        return true;
+        return this$impressionUrl == null ? other$impressionUrl == null
+            : this$impressionUrl.equals(other$impressionUrl);
       }
 
       public int hashCode() {
@@ -686,14 +673,13 @@ public class GetAdsResponse {
       if (o == this) return true;
       if (!(o instanceof Partner)) return false;
       final Partner other = (Partner) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       final Object this$info = this.getInfo();
       final Object other$info = other.getInfo();
       if (this$info == null ? other$info != null : !this$info.equals(other$info)) return false;
       final Object this$data = this.getData();
       final Object other$data = other.getData();
-      if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
-      return true;
+      return this$data == null ? other$data == null : this$data.equals(other$data);
     }
 
     public int hashCode() {
@@ -734,14 +720,11 @@ public class GetAdsResponse {
       if (o == this) return true;
       if (!(o instanceof Options)) return false;
       final Options other = (Options) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       final Object this$mediation = this.getMediation();
       final Object other$mediation = other.getMediation();
-      if (this$mediation == null ? other$mediation != null
-          : !this$mediation.equals(other$mediation)) {
-        return false;
-      }
-      return true;
+      return this$mediation == null ? other$mediation == null
+          : this$mediation.equals(other$mediation);
     }
 
     public int hashCode() {
@@ -761,16 +744,13 @@ public class GetAdsResponse {
     if (o == this) return true;
     if (!(o instanceof GetAdsResponse)) return false;
     final GetAdsResponse other = (GetAdsResponse) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$ads = this.getAds();
     final Object other$ads = other.getAds();
     if (this$ads == null ? other$ads != null : !this$ads.equals(other$ads)) return false;
     final Object this$options = this.getOptions();
     final Object other$options = other.getOptions();
-    if (this$options == null ? other$options != null : !this$options.equals(other$options)) {
-      return false;
-    }
-    return true;
+    return this$options == null ? other$options == null : this$options.equals(other$options);
   }
 
   public String toString() {

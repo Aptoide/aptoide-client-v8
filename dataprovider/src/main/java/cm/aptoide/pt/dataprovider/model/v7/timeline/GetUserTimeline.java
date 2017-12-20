@@ -28,8 +28,7 @@ public class GetUserTimeline
     if (o == this) return true;
     if (!(o instanceof GetUserTimeline)) return false;
     final GetUserTimeline other = (GetUserTimeline) o;
-    if (!other.canEqual((Object) this)) return false;
-    if (!super.equals(o)) return false;
-    return true;
+    if (!other.canEqual(this)) return false;
+    return super.equals(o);
   }
 }

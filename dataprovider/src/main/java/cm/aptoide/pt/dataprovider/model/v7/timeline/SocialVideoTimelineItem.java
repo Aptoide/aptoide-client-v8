@@ -34,14 +34,11 @@ public class SocialVideoTimelineItem implements TimelineItem<TimelineCard> {
     if (o == this) return true;
     if (!(o instanceof SocialVideoTimelineItem)) return false;
     final SocialVideoTimelineItem other = (SocialVideoTimelineItem) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$socialVideo = this.socialVideo;
     final Object other$socialVideo = other.socialVideo;
-    if (this$socialVideo == null ? other$socialVideo != null
-        : !this$socialVideo.equals(other$socialVideo)) {
-      return false;
-    }
-    return true;
+    return this$socialVideo == null ? other$socialVideo == null
+        : this$socialVideo.equals(other$socialVideo);
   }
 
   protected boolean canEqual(Object other) {

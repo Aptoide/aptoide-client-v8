@@ -77,7 +77,7 @@ public class SocialRecommendation extends SocialCard implements TimelineCard {
     if (o == this) return true;
     if (!(o instanceof SocialRecommendation)) return false;
     final SocialRecommendation other = (SocialRecommendation) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$cardId = this.cardId;
     final Object other$cardId = other.cardId;
     if (this$cardId == null ? other$cardId != null : !this$cardId.equals(other$cardId)) {
@@ -111,8 +111,7 @@ public class SocialRecommendation extends SocialCard implements TimelineCard {
     if (this$date == null ? other$date != null : !this$date.equals(other$date)) return false;
     final Object this$user = this.user;
     final Object other$user = other.user;
-    if (this$user == null ? other$user != null : !this$user.equals(other$user)) return false;
-    return true;
+    return this$user == null ? other$user == null : this$user.equals(other$user);
   }
 
   protected boolean canEqual(Object other) {

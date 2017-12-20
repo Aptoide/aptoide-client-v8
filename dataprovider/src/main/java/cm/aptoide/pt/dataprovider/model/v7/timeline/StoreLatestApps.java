@@ -57,7 +57,7 @@ public class StoreLatestApps implements TimelineCard {
     if (o == this) return true;
     if (!(o instanceof StoreLatestApps)) return false;
     final StoreLatestApps other = (StoreLatestApps) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$cardId = this.cardId;
     final Object other$cardId = other.cardId;
     if (this$cardId == null ? other$cardId != null : !this$cardId.equals(other$cardId)) {
@@ -68,8 +68,7 @@ public class StoreLatestApps implements TimelineCard {
     if (this$ab == null ? other$ab != null : !this$ab.equals(other$ab)) return false;
     final Object this$urls = this.getUrls();
     final Object other$urls = other.getUrls();
-    if (this$urls == null ? other$urls != null : !this$urls.equals(other$urls)) return false;
-    return true;
+    return this$urls == null ? other$urls == null : this$urls.equals(other$urls);
   }
 
   protected boolean canEqual(Object other) {

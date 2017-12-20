@@ -136,6 +136,22 @@ public class AndroidAppInfo implements Serializable {
     this.fileInfos = fileInfos;
   }
 
+  public byte[] getIcon() {
+    return icon;
+  }
+
+  public void setIcon(byte[] icon) {
+    this.icon = icon;
+  }
+
+  public Friend getFriend() {
+    return friend;
+  }
+
+  public void setFriend(Friend friend) {
+    this.friend = friend;
+  }
+
   public int hashCode() {
     final int PRIME = 59;
     int result = 1;
@@ -158,7 +174,7 @@ public class AndroidAppInfo implements Serializable {
     if (o == this) return true;
     if (!(o instanceof AndroidAppInfo)) return false;
     final AndroidAppInfo other = (AndroidAppInfo) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$apk = this.getApk();
     final Object other$apk = other.getApk();
     if (this$apk == null ? other$apk != null : !this$apk.equals(other$apk)) return false;
@@ -185,11 +201,8 @@ public class AndroidAppInfo implements Serializable {
     }
     final Object this$fileInfos = this.getFileInfos();
     final Object other$fileInfos = other.getFileInfos();
-    if (this$fileInfos == null ? other$fileInfos != null
-        : !this$fileInfos.equals(other$fileInfos)) {
-      return false;
-    }
-    return true;
+    return this$fileInfos == null ? other$fileInfos == null
+        : this$fileInfos.equals(other$fileInfos);
   }
 
   public String toString() {

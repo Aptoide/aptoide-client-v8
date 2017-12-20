@@ -168,14 +168,13 @@ public class CacheHelper implements CacheManager {
       if (o == this) return true;
       if (!(o instanceof FolderToManage)) return false;
       final FolderToManage other = (FolderToManage) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       final Object this$folder = this.getFolder();
       final Object other$folder = other.getFolder();
       if (this$folder == null ? other$folder != null : !this$folder.equals(other$folder)) {
         return false;
       }
-      if (this.getCacheTime() != other.getCacheTime()) return false;
-      return true;
+      return this.getCacheTime() == other.getCacheTime();
     }
 
     public String toString() {

@@ -32,11 +32,10 @@ public final class CardPreviewResponse extends BaseV7Response {
     if (o == this) return true;
     if (!(o instanceof CardPreviewResponse)) return false;
     final CardPreviewResponse other = (CardPreviewResponse) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$data = this.getData();
     final Object other$data = other.getData();
-    if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
-    return true;
+    return this$data == null ? other$data == null : this$data.equals(other$data);
   }
 
   public String toString() {
@@ -84,14 +83,13 @@ public final class CardPreviewResponse extends BaseV7Response {
       if (o == this) return true;
       if (!(o instanceof CardPreview)) return false;
       final CardPreview other = (CardPreview) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       final Object this$type = this.getType();
       final Object other$type = other.getType();
       if (this$type == null ? other$type != null : !this$type.equals(other$type)) return false;
       final Object this$data = this.getData();
       final Object other$data = other.getData();
-      if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
-      return true;
+      return this$data == null ? other$data == null : this$data.equals(other$data);
     }
 
     public String toString() {
@@ -134,17 +132,14 @@ public final class CardPreviewResponse extends BaseV7Response {
       if (o == this) return true;
       if (!(o instanceof TitleAndThumbnail)) return false;
       final TitleAndThumbnail other = (TitleAndThumbnail) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       final Object this$title = this.getTitle();
       final Object other$title = other.getTitle();
       if (this$title == null ? other$title != null : !this$title.equals(other$title)) return false;
       final Object this$thumbnail = this.getThumbnail();
       final Object other$thumbnail = other.getThumbnail();
-      if (this$thumbnail == null ? other$thumbnail != null
-          : !this$thumbnail.equals(other$thumbnail)) {
-        return false;
-      }
-      return true;
+      return this$thumbnail == null ? other$thumbnail == null
+          : this$thumbnail.equals(other$thumbnail);
     }
 
     public int hashCode() {

@@ -177,17 +177,14 @@ public class Review {
       if (o == this) return true;
       if (!(o instanceof User)) return false;
       final User other = (User) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       if (this.getId() != other.getId()) return false;
       final Object this$name = this.getName();
       final Object other$name = other.getName();
       if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
       final Object this$avatar = this.getAvatar();
       final Object other$avatar = other.getAvatar();
-      if (this$avatar == null ? other$avatar != null : !this$avatar.equals(other$avatar)) {
-        return false;
-      }
-      return true;
+      return this$avatar == null ? other$avatar == null : this$avatar.equals(other$avatar);
     }
 
     public int hashCode() {
@@ -263,12 +260,11 @@ public class Review {
       if (o == this) return true;
       if (!(o instanceof Stats)) return false;
       final Stats other = (Stats) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       if (Float.compare(this.getRating(), other.getRating()) != 0) return false;
       if (this.getPoints() != other.getPoints()) return false;
       if (this.getLikes() != other.getLikes()) return false;
-      if (this.getComments() != other.getComments()) return false;
-      return true;
+      return this.getComments() == other.getComments();
     }
 
     public int hashCode() {
@@ -329,12 +325,11 @@ public class Review {
       if (o == this) return true;
       if (!(o instanceof Comments)) return false;
       final Comments other = (Comments) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       if (this.getTotal() != other.getTotal()) return false;
       final Object this$view = this.getView();
       final Object other$view = other.getView();
-      if (this$view == null ? other$view != null : !this$view.equals(other$view)) return false;
-      return true;
+      return this$view == null ? other$view == null : this$view.equals(other$view);
     }
 
     public int hashCode() {
@@ -356,7 +351,7 @@ public class Review {
     if (o == this) return true;
     if (!(o instanceof Review)) return false;
     final Review other = (Review) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     if (this.getId() != other.getId()) return false;
     final Object this$title = this.getTitle();
     final Object other$title = other.getTitle();
@@ -385,11 +380,8 @@ public class Review {
     }
     final Object this$commentList = this.getCommentList();
     final Object other$commentList = other.getCommentList();
-    if (this$commentList == null ? other$commentList != null
-        : !this$commentList.equals(other$commentList)) {
-      return false;
-    }
-    return true;
+    return this$commentList == null ? other$commentList == null
+        : this$commentList.equals(other$commentList);
   }
 
   public String toString() {

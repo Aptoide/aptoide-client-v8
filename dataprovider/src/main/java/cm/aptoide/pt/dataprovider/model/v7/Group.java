@@ -185,7 +185,7 @@ public class Group {
       if (o == this) return true;
       if (!(o instanceof Parent)) return false;
       final Parent other = (Parent) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       if (this.getId() != other.getId()) return false;
       final Object this$name = this.getName();
       final Object other$name = other.getName();
@@ -198,10 +198,7 @@ public class Group {
       if (this$icon == null ? other$icon != null : !this$icon.equals(other$icon)) return false;
       final Object this$graphic = this.getGraphic();
       final Object other$graphic = other.getGraphic();
-      if (this$graphic == null ? other$graphic != null : !this$graphic.equals(other$graphic)) {
-        return false;
-      }
-      return true;
+      return this$graphic == null ? other$graphic == null : this$graphic.equals(other$graphic);
     }
 
     public int hashCode() {
@@ -267,10 +264,9 @@ public class Group {
       if (o == this) return true;
       if (!(o instanceof Stats)) return false;
       final Stats other = (Stats) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       if (this.getGroups() != other.getGroups()) return false;
-      if (this.getItems() != other.getItems()) return false;
-      return true;
+      return this.getItems() == other.getItems();
     }
 
     public int hashCode() {
@@ -290,7 +286,7 @@ public class Group {
     if (o == this) return true;
     if (!(o instanceof Group)) return false;
     final Group other = (Group) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     if (this.getId() != other.getId()) return false;
     final Object this$name = this.getName();
     final Object other$name = other.getName();
@@ -321,8 +317,7 @@ public class Group {
     }
     final Object this$stats = this.getStats();
     final Object other$stats = other.getStats();
-    if (this$stats == null ? other$stats != null : !this$stats.equals(other$stats)) return false;
-    return true;
+    return this$stats == null ? other$stats == null : this$stats.equals(other$stats);
   }
 
   public String toString() {

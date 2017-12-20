@@ -30,9 +30,8 @@ public class ListApps extends BaseV7EndlessDataListResponse<App> {
     if (o == this) return true;
     if (!(o instanceof ListApps)) return false;
     final ListApps other = (ListApps) o;
-    if (!other.canEqual((Object) this)) return false;
-    if (!super.equals(o)) return false;
-    return true;
+    if (!other.canEqual(this)) return false;
+    return super.equals(o);
   }
 
   public String toString() {

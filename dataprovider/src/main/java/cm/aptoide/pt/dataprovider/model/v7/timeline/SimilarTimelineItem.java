@@ -35,14 +35,11 @@ public class SimilarTimelineItem implements TimelineItem<TimelineCard> {
     if (o == this) return true;
     if (!(o instanceof SimilarTimelineItem)) return false;
     final SimilarTimelineItem other = (SimilarTimelineItem) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$recommendation = this.recommendation;
     final Object other$recommendation = other.recommendation;
-    if (this$recommendation == null ? other$recommendation != null
-        : !this$recommendation.equals(other$recommendation)) {
-      return false;
-    }
-    return true;
+    return this$recommendation == null ? other$recommendation == null
+        : this$recommendation.equals(other$recommendation);
   }
 
   protected boolean canEqual(Object other) {

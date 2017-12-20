@@ -102,7 +102,7 @@ public class File {
     if (o == this) return true;
     if (!(o instanceof File)) return false;
     final File other = (File) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$vername = this.getVername();
     final Object other$vername = other.getVername();
     if (this$vername == null ? other$vername != null : !this$vername.equals(other$vername)) {
@@ -125,10 +125,7 @@ public class File {
     if (this.getFilesize() != other.getFilesize()) return false;
     final Object this$malware = this.getMalware();
     final Object other$malware = other.getMalware();
-    if (this$malware == null ? other$malware != null : !this$malware.equals(other$malware)) {
-      return false;
-    }
-    return true;
+    return this$malware == null ? other$malware == null : this$malware.equals(other$malware);
   }
 
   public String toString() {

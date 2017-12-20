@@ -68,7 +68,7 @@ public class PaidApp extends BaseV3Response {
     if (o == this) return true;
     if (!(o instanceof PaidApp)) return false;
     final PaidApp other = (PaidApp) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     if (!super.equals(o)) return false;
     final Object this$path = this.getPath();
     final Object other$path = other.getPath();
@@ -80,8 +80,7 @@ public class PaidApp extends BaseV3Response {
     }
     final Object this$app = this.getApp();
     final Object other$app = other.getApp();
-    if (this$app == null ? other$app != null : !this$app.equals(other$app)) return false;
-    return true;
+    return this$app == null ? other$app == null : this$app.equals(other$app);
   }
 
   public String toString() {
@@ -181,7 +180,7 @@ public class PaidApp extends BaseV3Response {
       if (o == this) return true;
       if (!(o instanceof Payment)) return false;
       final Payment other = (Payment) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       final Object this$amount = this.getAmount();
       final Object other$amount = other.getAmount();
       if (this$amount == null ? other$amount != null : !this$amount.equals(other$amount)) {
@@ -205,10 +204,7 @@ public class PaidApp extends BaseV3Response {
       }
       final Object this$status = this.getStatus();
       final Object other$status = other.getStatus();
-      if (this$status == null ? other$status != null : !this$status.equals(other$status)) {
-        return false;
-      }
-      return true;
+      return this$status == null ? other$status == null : this$status.equals(other$status);
     }
 
     public String toString() {
@@ -249,9 +245,8 @@ public class PaidApp extends BaseV3Response {
       if (o == this) return true;
       if (!(o instanceof Metadata)) return false;
       final Metadata other = (Metadata) o;
-      if (!other.canEqual((Object) this)) return false;
-      if (this.getProductId() != other.getProductId()) return false;
-      return true;
+      if (!other.canEqual(this)) return false;
+      return this.getProductId() == other.getProductId();
     }
 
     public int hashCode() {
@@ -334,7 +329,7 @@ public class PaidApp extends BaseV3Response {
       if (o == this) return true;
       if (!(o instanceof Path)) return false;
       final Path other = (Path) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       final Object this$stringPath = this.getStringPath();
       final Object other$stringPath = other.getStringPath();
       if (this$stringPath == null ? other$stringPath != null
@@ -354,11 +349,8 @@ public class PaidApp extends BaseV3Response {
       if (this.getVersionCode() != other.getVersionCode()) return false;
       final Object this$alternativeIcon = this.getAlternativeIcon();
       final Object other$alternativeIcon = other.getAlternativeIcon();
-      if (this$alternativeIcon == null ? other$alternativeIcon != null
-          : !this$alternativeIcon.equals(other$alternativeIcon)) {
-        return false;
-      }
-      return true;
+      return this$alternativeIcon == null ? other$alternativeIcon == null
+          : this$alternativeIcon.equals(other$alternativeIcon);
     }
 
     public int hashCode() {
@@ -426,17 +418,14 @@ public class PaidApp extends BaseV3Response {
       if (o == this) return true;
       if (!(o instanceof App)) return false;
       final App other = (App) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       final Object this$name = this.getName();
       final Object other$name = other.getName();
       if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
       final Object this$description = this.getDescription();
       final Object other$description = other.getDescription();
-      if (this$description == null ? other$description != null
-          : !this$description.equals(other$description)) {
-        return false;
-      }
-      return true;
+      return this$description == null ? other$description == null
+          : this$description.equals(other$description);
     }
 
     public int hashCode() {

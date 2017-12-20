@@ -51,12 +51,11 @@ public class ListAppsUpdates extends BaseV7Response {
     if (o == this) return true;
     if (!(o instanceof ListAppsUpdates)) return false;
     final ListAppsUpdates other = (ListAppsUpdates) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     if (!super.equals(o)) return false;
     final Object this$list = this.getList();
     final Object other$list = other.getList();
-    if (this$list == null ? other$list != null : !this$list.equals(other$list)) return false;
-    return true;
+    return this$list == null ? other$list == null : this$list.equals(other$list);
   }
 
   public String toString() {

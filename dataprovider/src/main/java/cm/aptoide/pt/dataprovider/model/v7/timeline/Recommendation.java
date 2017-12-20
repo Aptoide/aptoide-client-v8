@@ -54,7 +54,7 @@ public class Recommendation implements TimelineCard {
     if (o == this) return true;
     if (!(o instanceof Recommendation)) return false;
     final Recommendation other = (Recommendation) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$cardId = this.cardId;
     final Object other$cardId = other.cardId;
     if (this$cardId == null ? other$cardId != null : !this$cardId.equals(other$cardId)) {
@@ -68,11 +68,8 @@ public class Recommendation implements TimelineCard {
     if (this$ab == null ? other$ab != null : !this$ab.equals(other$ab)) return false;
     final Object this$timestamp = this.timestamp;
     final Object other$timestamp = other.timestamp;
-    if (this$timestamp == null ? other$timestamp != null
-        : !this$timestamp.equals(other$timestamp)) {
-      return false;
-    }
-    return true;
+    return this$timestamp == null ? other$timestamp == null
+        : this$timestamp.equals(other$timestamp);
   }
 
   protected boolean canEqual(Object other) {

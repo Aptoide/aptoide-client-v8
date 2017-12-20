@@ -36,11 +36,10 @@ public class VideoTimelineItem implements TimelineItem<TimelineCard> {
     if (o == this) return true;
     if (!(o instanceof VideoTimelineItem)) return false;
     final VideoTimelineItem other = (VideoTimelineItem) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$video = this.video;
     final Object other$video = other.video;
-    if (this$video == null ? other$video != null : !this$video.equals(other$video)) return false;
-    return true;
+    return this$video == null ? other$video == null : this$video.equals(other$video);
   }
 
   protected boolean canEqual(Object other) {

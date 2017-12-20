@@ -53,7 +53,7 @@ public class BaseV3Response {
     if (o == this) return true;
     if (!(o instanceof BaseV3Response)) return false;
     final BaseV3Response other = (BaseV3Response) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$status = this.getStatus();
     final Object other$status = other.getStatus();
     if (this$status == null ? other$status != null : !this$status.equals(other$status)) {
@@ -61,10 +61,7 @@ public class BaseV3Response {
     }
     final Object this$errors = this.getErrors();
     final Object other$errors = other.getErrors();
-    if (this$errors == null ? other$errors != null : !this$errors.equals(other$errors)) {
-      return false;
-    }
-    return true;
+    return this$errors == null ? other$errors == null : this$errors.equals(other$errors);
   }
 
   public String toString() {

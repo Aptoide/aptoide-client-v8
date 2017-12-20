@@ -47,12 +47,11 @@ public class BaseV7EndlessListResponse<T> extends BaseV7EndlessResponse {
     if (o == this) return true;
     if (!(o instanceof BaseV7EndlessListResponse)) return false;
     final BaseV7EndlessListResponse other = (BaseV7EndlessListResponse) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     if (!super.equals(o)) return false;
     final Object this$list = this.getList();
     final Object other$list = other.getList();
-    if (this$list == null ? other$list != null : !this$list.equals(other$list)) return false;
-    return true;
+    return this$list == null ? other$list == null : this$list.equals(other$list);
   }
 
   public List<T> getList() {

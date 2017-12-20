@@ -36,14 +36,11 @@ public class MyStore extends BaseV7Response {
     if (o == this) return true;
     if (!(o instanceof MyStore)) return false;
     final MyStore other = (MyStore) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     if (!super.equals(o)) return false;
     final Object this$widgets = this.getWidgets();
     final Object other$widgets = other.getWidgets();
-    if (this$widgets == null ? other$widgets != null : !this$widgets.equals(other$widgets)) {
-      return false;
-    }
-    return true;
+    return this$widgets == null ? other$widgets == null : this$widgets.equals(other$widgets);
   }
 
   public String toString() {

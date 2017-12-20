@@ -60,7 +60,6 @@ class CreateHotspotManager {
 
       boolean setWifiApEnabledResult = wifiManagerReflect.setWifiApEnabled(wifiConfiguration, true);
 
-      // TODO: 12-07-2017 filipe wtf ?????? testar!
       while (!wifiManagerReflect.isWifiApEnabled()) {
       }
 

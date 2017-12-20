@@ -146,7 +146,7 @@ public class Comment {
       if (o == this) return true;
       if (!(o instanceof User)) return false;
       final User other = (User) o;
-      if (!other.canEqual((Object) this)) return false;
+      if (!other.canEqual(this)) return false;
       if (this.getId() != other.getId()) return false;
       final Object this$name = this.getName();
       final Object other$name = other.getName();
@@ -158,10 +158,7 @@ public class Comment {
       }
       final Object this$access = this.getAccess();
       final Object other$access = other.getAccess();
-      if (this$access == null ? other$access != null : !this$access.equals(other$access)) {
-        return false;
-      }
-      return true;
+      return this$access == null ? other$access == null : this$access.equals(other$access);
     }
 
     public int hashCode() {
@@ -213,9 +210,8 @@ public class Comment {
       if (o == this) return true;
       if (!(o instanceof Parent)) return false;
       final Parent other = (Parent) o;
-      if (!other.canEqual((Object) this)) return false;
-      if (this.getId() != other.getId()) return false;
-      return true;
+      if (!other.canEqual(this)) return false;
+      return this.getId() == other.getId();
     }
 
     public int hashCode() {
@@ -235,7 +231,7 @@ public class Comment {
     if (o == this) return true;
     if (!(o instanceof Comment)) return false;
     final Comment other = (Comment) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     if (this.getId() != other.getId()) return false;
     final Object this$body = this.getBody();
     final Object other$body = other.getBody();
@@ -254,10 +250,7 @@ public class Comment {
     }
     final Object this$parent = this.getParent();
     final Object other$parent = other.getParent();
-    if (this$parent == null ? other$parent != null : !this$parent.equals(other$parent)) {
-      return false;
-    }
-    return true;
+    return this$parent == null ? other$parent == null : this$parent.equals(other$parent);
   }
 
   public String toString() {

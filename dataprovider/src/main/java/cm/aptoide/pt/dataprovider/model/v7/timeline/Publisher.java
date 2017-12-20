@@ -36,7 +36,7 @@ public class Publisher {
     if (o == this) return true;
     if (!(o instanceof Publisher)) return false;
     final Publisher other = (Publisher) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$name = this.name;
     final Object other$name = other.name;
     if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
@@ -47,10 +47,7 @@ public class Publisher {
     }
     final Object this$baseUrl = this.baseUrl;
     final Object other$baseUrl = other.baseUrl;
-    if (this$baseUrl == null ? other$baseUrl != null : !this$baseUrl.equals(other$baseUrl)) {
-      return false;
-    }
-    return true;
+    return this$baseUrl == null ? other$baseUrl == null : this$baseUrl.equals(other$baseUrl);
   }
 
   protected boolean canEqual(Object other) {

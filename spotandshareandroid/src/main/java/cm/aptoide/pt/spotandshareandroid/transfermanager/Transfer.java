@@ -2,7 +2,6 @@ package cm.aptoide.pt.spotandshareandroid.transfermanager;
 
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import com.jakewharton.rxrelay.BehaviorRelay;
-import lombok.Getter;
 
 /**
  * Created by neuro on 11-07-2017.
@@ -11,8 +10,8 @@ public abstract class Transfer<T extends Transfer> {
 
   protected final BehaviorRelay<T> behaviorRelay;
 
-  @Getter protected State state;
-  @Getter protected float progress;
+  protected State state;
+  protected float progress;
   TransferManager transferManager;
 
   protected Transfer(State state, TransferManager transferManager) {
@@ -23,6 +22,14 @@ public abstract class Transfer<T extends Transfer> {
   }
 
   public abstract AndroidAppInfo getAndroidAppInfo();
+
+  public State getState() {
+    return this.state;
+  }
+
+  public float getProgress() {
+    return this.progress;
+  }
 
   public enum State {
     PENDING_ACCEPTION, PENDING, RECEIVING, RECEIVED, ERROR, SERVING,

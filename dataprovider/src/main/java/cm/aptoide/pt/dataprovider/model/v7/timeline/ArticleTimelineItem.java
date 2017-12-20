@@ -36,13 +36,10 @@ public class ArticleTimelineItem implements TimelineItem<TimelineCard> {
     if (o == this) return true;
     if (!(o instanceof ArticleTimelineItem)) return false;
     final ArticleTimelineItem other = (ArticleTimelineItem) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$article = this.article;
     final Object other$article = other.article;
-    if (this$article == null ? other$article != null : !this$article.equals(other$article)) {
-      return false;
-    }
-    return true;
+    return this$article == null ? other$article == null : this$article.equals(other$article);
   }
 
   protected boolean canEqual(Object other) {

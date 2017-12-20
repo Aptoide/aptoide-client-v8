@@ -36,13 +36,10 @@ public class FeatureTimelineItem implements TimelineItem<TimelineCard> {
     if (o == this) return true;
     if (!(o instanceof FeatureTimelineItem)) return false;
     final FeatureTimelineItem other = (FeatureTimelineItem) o;
-    if (!other.canEqual((Object) this)) return false;
+    if (!other.canEqual(this)) return false;
     final Object this$feature = this.feature;
     final Object other$feature = other.feature;
-    if (this$feature == null ? other$feature != null : !this$feature.equals(other$feature)) {
-      return false;
-    }
-    return true;
+    return this$feature == null ? other$feature == null : this$feature.equals(other$feature);
   }
 
   protected boolean canEqual(Object other) {

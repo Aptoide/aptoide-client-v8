@@ -20,9 +20,8 @@ public class My {
     if (o == this) return true;
     if (!(o instanceof My)) return false;
     final My other = (My) o;
-    if (!other.canEqual((Object) this)) return false;
-    if (this.isLiked() != other.isLiked()) return false;
-    return true;
+    if (!other.canEqual(this)) return false;
+    return this.isLiked() == other.isLiked();
   }
 
   public String toString() {
