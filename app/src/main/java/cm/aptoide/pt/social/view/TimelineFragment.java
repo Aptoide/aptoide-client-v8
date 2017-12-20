@@ -293,31 +293,30 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         baseBodyInterceptorV7, storeCredentialsProvider, storeAccessor, defaultClient,
         defaultConverter, tokenInvalidator, sharedPreferences);
 
-    attachPresenter(
-        new TimelinePresenter(this, timeline, CrashReport.getInstance(), timelineNavigation,
-            new PermissionManager(), (PermissionService) getContext(), installManager,
-            storeRepository, storeUtilsProxy, storeCredentialsProvider, accountManager,
-            timelineAnalytics, userId, storeId, storeContext, getContext().getResources(),
-            new LinksHandlerFactory(getContext())));
+    attachPresenter(new TimelinePresenter(this, timeline, AndroidSchedulers.mainThread(),
+        CrashReport.getInstance(), timelineNavigation, new PermissionManager(),
+        (PermissionService) getContext(), installManager, storeRepository, storeUtilsProxy,
+        storeCredentialsProvider, accountManager, timelineAnalytics, userId, storeId, storeContext,
+        getContext().getResources(), new LinksHandlerFactory(getContext())));
   }
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    progressBar = null;
     listState = list.getLayoutManager()
         .onSaveInstanceState();
     adapter.clearPosts();
-    adapter = null;
-    genericError = null;
     list = null;
-    swipeRefreshLayout = null;
-    coordinatorLayout = null;
     helper = null;
+    adapter = null;
     retryButton = null;
+    progressBar = null;
+    genericError = null;
+    layoutManager = null;
+    layoutManager = null;
+    coordinatorLayout = null;
+    swipeRefreshLayout = null;
     floatingActionButton = null;
-    layoutManager = null;
     bottomAlreadyReached = false;
-    layoutManager = null;
     timelineRepository.clearLoading();
   }
 
@@ -361,23 +360,15 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     }
   }
 
-  @Override public rx.Observable<Void> refreshes() {
+  @Override public Observable<Void> refreshes() {
     return RxSwipeRefreshLayout.refreshes(swipeRefreshLayout);
   }
 
-  @Override public Observable<Void> reachesBottom() {
+  @Override public Observable<Object> reachesBottom() {
     return RxRecyclerView.scrollEvents(list)
-        .filter(event -> !bottomAlreadyReached
-            && helper.getItemCount() > visibleThreshold
-            && helper != null
-            && event.view()
-            .isAttachedToWindow()
-            && (helper.getItemCount() - event.view()
-            .getChildCount()) <= ((helper.findFirstVisibleItemPosition() == -1 ? 0
-            : helper.findFirstVisibleItemPosition()) + visibleThreshold))
-        .map(event -> null)
-        .doOnNext(__ -> bottomAlreadyReached = true)
-        .cast(Void.class);
+        .distinctUntilChanged()
+        .filter(scroll -> isEndReached())
+        .cast(Object.class);
   }
 
   @Override public Observable<CardTouchEvent> postClicked() {
@@ -608,9 +599,12 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         .show();
   }
 
-  private void handleSharePreviewAnswer() {
+  private boolean isEndReached() {
+    return layoutManager.getItemCount() - layoutManager.findLastVisibleItemPosition()
+        <= visibleThreshold;
+  }
 
-    final ShareEvent[] share = new ShareEvent[1];
+  private void handleSharePreviewAnswer() {
     shareDialog.cancels()
         .doOnNext(shareEvent -> timelineAnalytics.sendErrorShareCompleted(shareEvent,
             EventErrorHandler.ShareErrorEvent.CANCELLED))
@@ -629,9 +623,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         })
         .compose(bindUntilEvent(LifecycleEvent.PAUSE))
         .subscribe(shareEvent -> {
-        }, throwable -> {
-          crashReport.log(throwable);
-        });
+        }, throwable -> crashReport.log(throwable));
     shareDialog.show();
   }
 

@@ -33,7 +33,7 @@ public interface TimelineView extends View {
 
   Observable<Void> refreshes();
 
-  Observable<Void> reachesBottom();
+  Observable<Object> reachesBottom();
 
   Observable<CardTouchEvent> postClicked();
 

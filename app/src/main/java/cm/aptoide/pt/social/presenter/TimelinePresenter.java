@@ -56,7 +56,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
+import rx.Scheduler;
 import rx.schedulers.Schedulers;
 
 /**
@@ -82,9 +82,10 @@ public class TimelinePresenter implements Presenter {
   private final StoreContext storeContext;
   private final Resources resources;
   private final LinksHandlerFactory linksNavigator;
+  private final Scheduler viewScheduler;
 
   public TimelinePresenter(@NonNull TimelineView cardsView, @NonNull Timeline timeline,
-      CrashReport crashReport, TimelineNavigator timelineNavigation,
+      Scheduler viewScheduler, CrashReport crashReport, TimelineNavigator timelineNavigation,
       PermissionManager permissionManager, PermissionService permissionRequest,
       InstallManager installManager, StoreRepository storeRepository,
       StoreUtilsProxy storeUtilsProxy, StoreCredentialsProviderImpl storeCredentialsProvider,
@@ -93,6 +94,7 @@ public class TimelinePresenter implements Presenter {
       LinksHandlerFactory linksNavigator) {
     this.view = cardsView;
     this.timeline = timeline;
+    this.viewScheduler = viewScheduler;
     this.crashReport = crashReport;
     this.timelineNavigation = timelineNavigation;
     this.permissionManager = permissionManager;
@@ -211,7 +213,7 @@ public class TimelinePresenter implements Presenter {
                 .equals(CardTouchEvent.Type.IGNORE_UPDATE))
             .flatMapCompletable(cardTouchEvent -> timeline.ignoreUpdate(
                 ((AppUpdate) cardTouchEvent.getCard()).getPackageName())
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(viewScheduler)
                 .andThen(Completable.fromAction(() -> view.removePost(cardTouchEvent.getCard()))))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -228,7 +230,7 @@ public class TimelinePresenter implements Presenter {
             .doOnNext(cardTouchEvent -> storeUtilsProxy.unSubscribeStore(
                 ((StoreLatestApps) cardTouchEvent.getCard()).getStoreName(),
                 storeCredentialsProvider))
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(viewScheduler)
             .doOnNext(cardTouchEvent -> view.showUserUnsubscribedMessage(
                 ((StoreLatestApps) cardTouchEvent.getCard()).getStoreName()))
             .retry())
@@ -246,7 +248,7 @@ public class TimelinePresenter implements Presenter {
             .flatMapCompletable(cardTouchEvent -> {
               if (cardTouchEvent instanceof UserUnfollowCardTouchEvent) {
                 return timeline.unfollowUser(((UserUnfollowCardTouchEvent) cardTouchEvent).getId())
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .observeOn(viewScheduler)
                     .andThen(Completable.fromAction(() -> view.showUserUnsubscribedMessage(
                         ((UserUnfollowCardTouchEvent) cardTouchEvent).getName())));
               }
@@ -267,12 +269,12 @@ public class TimelinePresenter implements Presenter {
                 .equals(CardTouchEvent.Type.DELETE_POST))
             .flatMapCompletable(cardTouchEvent -> timeline.deletePost(cardTouchEvent.getCard()
                 .getCardId())
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(viewScheduler)
                 .andThen(Completable.fromAction(() -> {
                   view.removePost(cardTouchEvent.getCard());
                 })))
             .retry())
-        .observeOn(AndroidSchedulers.mainThread())
+        .observeOn(viewScheduler)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
         }, throwable -> {
@@ -308,11 +310,11 @@ public class TimelinePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> timeline.getUser(false, false)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(viewScheduler)
             .doOnSubscribe(() -> view.showUserLoading())
             .doOnNext(user -> view.showUser(convertUser(user))))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .observeOn(AndroidSchedulers.mainThread())
+        .observeOn(viewScheduler)
         .subscribe(cardTouchEvent -> {
         }, throwable -> {
           crashReport.log(throwable);
@@ -360,10 +362,10 @@ public class TimelinePresenter implements Presenter {
                 Uri.parse(((TimelineUser) cardTouchEvent.getCard()).getNotificationUrlAction())
                     .getQueryParameter("cardId"))
                 .filter(postId -> postId != null)
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(viewScheduler)
                 .doOnNext(__ -> view.showPostProgressIndicator())
                 .flatMapSingle(cardId -> timeline.getFreshTimeline(cardId))
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(viewScheduler)
                 .doOnNext(timelineModel -> {
                   if (timelineModel != null
                       && timelineModel.getPosts()
@@ -414,7 +416,7 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
                 .equals(CardTouchEvent.Type.ERROR))
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(viewScheduler)
             .doOnNext(cardTouchEvent -> view.removePost(cardTouchEvent.getCard()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -479,10 +481,10 @@ public class TimelinePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> timelineNavigation.postNavigation()
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(viewScheduler)
             .doOnNext(__ -> view.showPostProgressIndicator())
             .flatMapSingle(cardId -> timeline.getFreshTimeline(cardId))
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(viewScheduler)
             .doOnNext(timelineModel -> {
               if (timelineModel.getPosts() != null
                   && timelineModel.getPosts()
@@ -508,7 +510,7 @@ public class TimelinePresenter implements Presenter {
         .flatMap(__ -> view.scrolled()
             .throttleLast(1, TimeUnit.SECONDS)
             .filter(direction -> direction.top())
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(viewScheduler)
             .flatMap(__2 -> view.showFloatingActionButton()
                 .toObservable()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -522,7 +524,7 @@ public class TimelinePresenter implements Presenter {
         .flatMap(__ -> view.scrolled()
             .throttleLast(1, TimeUnit.SECONDS)
             .filter(direction -> direction.bottom())
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(viewScheduler)
             .flatMap(__2 -> view.hideFloatingActionButton()
                 .toObservable()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -533,7 +535,7 @@ public class TimelinePresenter implements Presenter {
   private void handleFabClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .observeOn(AndroidSchedulers.mainThread())
+        .observeOn(viewScheduler)
         .flatMap(__ -> view.floatingActionButtonClicked()
             .doOnNext(click -> timelineAnalytics.sendFabClicked())
             .doOnNext(__2 -> timelineNavigation.navigateToCreatePost()))
@@ -551,7 +553,7 @@ public class TimelinePresenter implements Presenter {
             .toSingle())
         .observeOn(Schedulers.io())
         .flatMapSingle(account -> timeline.getTimeline())
-        .observeOn(AndroidSchedulers.mainThread())
+        .observeOn(viewScheduler)
         .doOnNext(timelineModel -> {
           if (timelineModel.getPosts() != null
               && timelineModel.getPosts()
@@ -591,7 +593,7 @@ public class TimelinePresenter implements Presenter {
                 .toSingle())
             .observeOn(Schedulers.io())
             .flatMapSingle(account -> timeline.getFreshTimeline())
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(viewScheduler)
             .doOnNext(timelineModel -> {
               if (timelineModel.getPosts() != null
                   && timelineModel.getPosts()
@@ -606,7 +608,7 @@ public class TimelinePresenter implements Presenter {
               }
             })
             .flatMap(posts -> timeline.getUser(true, true))
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(viewScheduler)
             .doOnNext(user -> view.showUser(convertUser(user)))
             .doOnError(throwable -> {
               crashReport.log(throwable);
@@ -622,10 +624,11 @@ public class TimelinePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(create -> view.reachesBottom()
-            .observeOn(AndroidSchedulers.mainThread())
+            .filter(__ -> timeline.hasMore())
+            .observeOn(viewScheduler)
             .doOnNext(created -> view.showLoadMoreProgressIndicator())
             .flatMapSingle(bottomReached -> timeline.getNextTimelinePage())
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(viewScheduler)
             .doOnNext(
                 timelineModel -> showMoreCardsAndHideLoadMoreProgress(timelineModel.getPosts()))
             .doOnError(throwable -> {
@@ -643,7 +646,7 @@ public class TimelinePresenter implements Presenter {
   private void onRetryShowPosts() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .observeOn(AndroidSchedulers.mainThread())
+        .observeOn(viewScheduler)
         .flatMap(__ -> view.retry()
             .doOnNext(__2 -> view.showGeneralProgressIndicator())
             .flatMapSingle(__3 -> accountManager.accountStatus()
@@ -651,7 +654,7 @@ public class TimelinePresenter implements Presenter {
                 .toSingle())
             .observeOn(Schedulers.io())
             .flatMapSingle(account -> timeline.getTimeline())
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(viewScheduler)
             .doOnNext(timelineModel -> {
               if (timelineModel.getPosts() != null
                   && timelineModel.getPosts()
@@ -763,7 +766,7 @@ public class TimelinePresenter implements Presenter {
                           }
                           return timeline.updateApp(cardTouchEvent);
                         })
-                        .observeOn(AndroidSchedulers.mainThread())
+                        .observeOn(viewScheduler)
                         .distinctUntilChanged(install -> install.getState())
                         .doOnNext(install -> {
                           // TODO: 26/06/2017 get this logic out of here?  this is not working properly yet
@@ -817,7 +820,7 @@ public class TimelinePresenter implements Presenter {
             .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
                 .first()
                 .toSingle()
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(viewScheduler)
                 .doOnSuccess(account -> {
                   if (!account.isLoggedIn()) {
                     view.showLoginPromptWithAction();
@@ -869,7 +872,7 @@ public class TimelinePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.loginActionClick())
-        .observeOn(AndroidSchedulers.mainThread())
+        .observeOn(viewScheduler)
         .doOnNext(__ -> timelineNavigation.navigateToLoginView())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -889,7 +892,7 @@ public class TimelinePresenter implements Presenter {
             .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
                 .first()
                 .toSingle()
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(viewScheduler)
                 .doOnSuccess(account -> {
                   if (!account.isLoggedIn()) {
                     view.showLoginPromptWithAction();
@@ -941,7 +944,7 @@ public class TimelinePresenter implements Presenter {
         .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
             .first()
             .toSingle()
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(viewScheduler)
             .flatMapCompletable(account -> {
               if (account.isLoggedIn()) {
                 if (showCreateStore(account)) {
@@ -981,7 +984,7 @@ public class TimelinePresenter implements Presenter {
         .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
             .first()
             .toSingle()
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(viewScheduler)
             .flatMapCompletable(account -> {
               if (account.isLoggedIn()) {
                 if (showCreateStore(account)) {
@@ -1027,7 +1030,7 @@ public class TimelinePresenter implements Presenter {
         .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
             .first()
             .toSingle()
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(viewScheduler)
             .flatMapCompletable(account -> {
               if (account.isLoggedIn()) {
                 return Completable.fromAction(() -> timelineNavigation.navigateToComments(
@@ -1053,7 +1056,7 @@ public class TimelinePresenter implements Presenter {
         .flatMapCompletable(cardTouchEvent -> accountManager.accountStatus()
             .first()
             .toSingle()
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(viewScheduler)
             .flatMapCompletable(account -> {
               if (account.isLoggedIn()) {
                 if (showCreateStore(account)) {
@@ -1107,7 +1110,7 @@ public class TimelinePresenter implements Presenter {
             .flatMapCompletable(responseCardId -> accountManager.accountStatus()
                 .first()
                 .toSingle()
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(viewScheduler)
                 .flatMapCompletable(account -> {
                   comment.getPost()
                       .addComment(new SocialCard.CardComment(-1, comment.getCommentText(),
@@ -1287,7 +1290,7 @@ public class TimelinePresenter implements Presenter {
   private void followStore(long storeId, String storeName) {
     storeRepository.isSubscribed(storeId)
         .first()
-        .observeOn(AndroidSchedulers.mainThread())
+        .observeOn(viewScheduler)
         .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE))
         .subscribe(isSubscribed -> {
           if (isSubscribed) {

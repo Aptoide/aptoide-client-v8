@@ -131,4 +131,8 @@ public class TimelineRemoteDataSource {
   public void clearLoading() {
     loading = false;
   }
+
+  public boolean hasMorePosts() {
+    return currentOffset < total && !loading;
+  }
 }
