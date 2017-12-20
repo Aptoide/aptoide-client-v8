@@ -1,6 +1,8 @@
 package cm.aptoide.pt;
 
+import android.Manifest;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
 import cm.aptoide.pt.view.MainActivity;
 import org.junit.Before;
@@ -24,7 +26,9 @@ import static cm.aptoide.pt.UITests.skipWizard;
 @RunWith(AndroidJUnit4.class) public class MyAccountUITests {
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
-  //@Rule public GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+  @Rule public GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
 
   @Before public void setUp() {
     TestType.types = TestType.TestTypes.SIGNSIGNUPTESTS;
@@ -40,7 +44,6 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.my_account_edit_user_profile)).perform(click());
     onView(withId(R.id.create_user_image_action)).perform(click());
     onView(withText("Select from gallery")).perform(click());
-    onView(withId(R.id.create_user_username_inserted)).perform(swipeUp());
     onView(withId(R.id.create_user_create_profile)).perform(click());
     onView(withId(R.id.button_logout)).check(matches(isDisplayed()));
   }
@@ -50,34 +53,53 @@ import static cm.aptoide.pt.UITests.skipWizard;
     goToMyAccount();
     onView(withId(R.id.my_account_edit_user_profile)).perform(click());
     displayErrors(true);
-    onView(withId(R.id.create_user_username_inserted)).perform(swipeUp());
     onView(withId(R.id.create_user_create_profile)).perform(click());
     onView(withId(R.id.button_logout)).check(matches(isDisplayed()));
   }
 
-  @Test public void storePhotoSuccess(){
+  @Test public void storePhotoSuccess(){ //Fails on screen resolution 480x720
     TestType.types = TestType.TestTypes.PHOTOSUCCESS;
     TestType.initialization = TestType.TestTypes.LOGGEDINWITHSTORE;
     goToMyAccount();
     onView(withId(R.id.my_account_edit_user_store)).perform(click());
     onView(withId(R.id.create_store_image)).perform(click());
     onView(withText("Select from gallery")).perform(click());
-    onView(withId(R.id.create_store_image)).perform(swipeUp());
-    onView(withId(R.id.theme_selector)).perform(swipeUp());
-    onView(withId(R.id.theme_selector)).perform(swipeUp());
+    onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
+    onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
+    try {
+      onView(withId(R.id.theme_selector)).perform(swipeUp());
+      onView(withId(R.id.theme_selector)).perform(swipeUp());
+      onView(withId(R.id.theme_selector)).perform(swipeUp());
+      onView(withId(R.id.theme_selector)).perform(swipeUp());
+    }catch(Exception e){
+      onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
+      onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
+      onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
+      onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
+    }
     onView(withId(R.id.create_store_action)).perform(click());
     onView(withId(R.id.button_logout)).check(matches(isDisplayed()));
   }
 
-  @Test public void storePhotoLimitExceed(){
+  @Test public void storePhotoLimitExceed(){ //Fails on screen resolution 480x720
     TestType.types = TestType.TestTypes.ERRORDECONDINGTEST;
     TestType.initialization = TestType.TestTypes.LOGGEDINWITHSTORE;
     goToMyAccount();
     onView(withId(R.id.my_account_edit_user_store)).perform(click());
     displayErrors(false);
-    onView(withId(R.id.create_store_image)).perform(swipeUp());
-    onView(withId(R.id.theme_selector)).perform(swipeUp());
-    onView(withId(R.id.theme_selector)).perform(swipeUp());
+    onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
+    onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
+    try {
+      onView(withId(R.id.theme_selector)).perform(swipeUp());
+      onView(withId(R.id.theme_selector)).perform(swipeUp());
+      onView(withId(R.id.theme_selector)).perform(swipeUp());
+      onView(withId(R.id.theme_selector)).perform(swipeUp());
+    }catch(Exception e){
+      onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
+      onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
+      onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
+      onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
+    }
     onView(withId(R.id.create_store_action)).perform(click());
     onView(withId(R.id.button_logout)).check(matches(isDisplayed()));
   }

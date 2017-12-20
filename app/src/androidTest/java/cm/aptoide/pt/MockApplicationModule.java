@@ -281,7 +281,7 @@ public class MockApplicationModule extends ApplicationModule {
             defaultSharedPreferences), application,
         Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)){
       @Override @WorkerThread public synchronized String getGoogleAdvertisingId() {
-        return "";
+        return defaultSharedPreferences.getString("googleAdvertisingId", null);
       }
     };
   }
