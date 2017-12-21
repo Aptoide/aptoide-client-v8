@@ -1,7 +1,11 @@
 package cm.aptoide.pt;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v7.preference.PreferenceManager;
 import cm.aptoide.pt.view.MainActivity;
 import org.junit.Before;
 import org.junit.Rule;
@@ -13,6 +17,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
+import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -138,6 +143,34 @@ import static cm.aptoide.pt.UITests.skipWizard;
     TestType.initialization = TestType.TestTypes.LOGGEDIN;
     goToMyAccount();
     onView(withId(R.id.button_logout)).perform(click());
+    onView(withId(R.id.action_search)).check(matches(isDisplayed()));
+  }
+
+  @Test public void signInFromWizard() {
+    Activity activity1 = mActivityRule.getActivity();
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity1);
+    preferences.edit()
+        .clear()
+        .apply();
+    activity1.finish();
+    mActivityRule.launchActivity(new Intent());
+    onView(withId(R.id.next_icon)).perform(swipeLeft());
+    onView(withId(R.id.next_icon)).perform(swipeLeft());
+    performLogin(LOGINEMAIL, PASS);
+  }
+
+  @Test public void signUpFromWizard() {
+    Activity activity1 = mActivityRule.getActivity();
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity1);
+    preferences.edit()
+        .clear()
+        .apply();
+    activity1.finish();
+    mActivityRule.launchActivity(new Intent());
+    onView(withId(R.id.next_icon)).perform(swipeLeft());
+    onView(withId(R.id.next_icon)).perform(swipeLeft());
+    performSignUp(LOGINEMAIL, PASS);
+    completeSignUp();
     onView(withId(R.id.action_search)).check(matches(isDisplayed()));
   }
 
