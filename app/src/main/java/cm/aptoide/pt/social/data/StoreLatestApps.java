@@ -25,6 +25,7 @@ public class StoreLatestApps implements Post {
   private final Long storeId;
   private boolean isLiked;
   private boolean likedFromClick;
+  private boolean overflowStatus;
   private List<SocialCard.CardComment> comments;
 
   public StoreLatestApps(String cardId, Long storeId, String storeName, String storeAvatar,
@@ -44,6 +45,7 @@ public class StoreLatestApps implements Post {
     this.cardType = cardType;
     this.markAsReadUrl = markAsReadUrl;
     this.comments = new ArrayList<>();
+    this.overflowStatus = true;
   }
 
   public String getStoreTheme() {
@@ -121,5 +123,13 @@ public class StoreLatestApps implements Post {
 
   public void setLikedFromClick(boolean likedFromClick) {
     this.likedFromClick = likedFromClick;
+  }
+
+  public boolean getOverflowStatus() {
+    return overflowStatus;
+  }
+
+  public void setOverflowStatus(boolean overflowStatus) {
+    this.overflowStatus = overflowStatus;
   }
 }

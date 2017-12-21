@@ -21,6 +21,7 @@ public class SocialMedia extends Media {
   private final List<SocialCard.CardComment> comments;
   private final String content;
   private String sharedByName;
+  private boolean overflowStatus;
 
   public SocialMedia(String cardId, Poster poster, String mediaTitle, String mediaThumbnailUrl,
       Date date, App app, String abTestURL, Publisher publisher, Link publisherLink, Link mediaLink,
@@ -36,6 +37,7 @@ public class SocialMedia extends Media {
     this.comments = comments;
     this.sharedByName = sharedByName;
     this.content = content;
+    this.overflowStatus = true;
   }
 
   public String getContent() {
@@ -64,5 +66,13 @@ public class SocialMedia extends Media {
 
   public String getSharedByName() {
     return sharedByName;
+  }
+
+  public boolean getOverflowStatus() {
+    return overflowStatus;
+  }
+
+  public void setOverflowStatus(boolean overflowStatus) {
+    this.overflowStatus = overflowStatus;
   }
 }

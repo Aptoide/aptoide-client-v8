@@ -3,7 +3,6 @@ package cm.aptoide.pt.social.view.viewholder;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.LongSparseArray;
-import android.support.v7.widget.PopupMenu;
 import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,7 +86,7 @@ public class StoreLatestAppsViewHolder extends PostViewHolder<StoreLatestApps> {
       likeButton.setHeartState(false);
     }
 
-    setupOverflowMenu(post, position);
+    setupOverflowMenu(post, position, post.getOverflowStatus());
     handleCommentsInformation(post, position);
 
     this.like.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
@@ -140,21 +139,24 @@ public class StoreLatestAppsViewHolder extends PostViewHolder<StoreLatestApps> {
     }
   }
 
-  private void setupOverflowMenu(Post post, int position) {
+  private void setupOverflowMenu(Post post, int position, boolean overflowStatus) {
     overflowMenu.setOnClickListener(view -> {
-      PopupMenu popupMenu = new PostPopupMenuBuilder().prepMenu(itemView.getContext(), overflowMenu)
+      PostPopupMenuBuilder popupMenu = new PostPopupMenuBuilder();
+      popupMenu.prepMenu(itemView.getContext(), overflowMenu)
           .addReportAbuse(menuItem -> {
             cardTouchEventPublishSubject.onNext(
                 new CardTouchEvent(post, position, CardTouchEvent.Type.REPORT_ABUSE));
             return false;
-          })
-          .addUnfollowStore(menuItem -> {
+          });
+      if (overflowStatus) {
+        popupMenu.addUnfollowStore(menuItem -> {
             cardTouchEventPublishSubject.onNext(
                 new CardTouchEvent(post, position, CardTouchEvent.Type.UNFOLLOW_STORE));
             return false;
-          })
-          .getPopupMenu();
-      popupMenu.show();
+        });
+      }
+      popupMenu.getPopupMenu()
+          .show();
     });
   }
 }

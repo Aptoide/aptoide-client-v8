@@ -2,9 +2,14 @@ package cm.aptoide.pt.social.view;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+import cm.aptoide.pt.social.data.AggregatedStore;
 import cm.aptoide.pt.social.data.CardType;
 import cm.aptoide.pt.social.data.CardViewHolderFactory;
 import cm.aptoide.pt.social.data.Post;
+import cm.aptoide.pt.social.data.RatedRecommendation;
+import cm.aptoide.pt.social.data.SocialMedia;
+import cm.aptoide.pt.social.data.SocialStore;
+import cm.aptoide.pt.social.data.StoreLatestApps;
 import cm.aptoide.pt.social.view.viewholder.PostViewHolder;
 import java.util.List;
 
@@ -127,5 +132,24 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
 
   public void removePost(Post post) {
     if (posts.remove(post)) notifyDataSetChanged();
+  }
+
+  public void removeOverflowOption(int position) {
+    Post post = getPost(position);
+    if (post instanceof SocialStore
+        || post instanceof AggregatedStore
+        || post instanceof StoreLatestApps) {
+      StoreLatestApps card = (StoreLatestApps) post;
+      card.setOverflowStatus(false);
+      notifyItemChanged(position);
+    } else if (post instanceof SocialMedia) {
+      SocialMedia card = (SocialMedia) post;
+      card.setOverflowStatus(false);
+      notifyItemChanged(position);
+    } else if (post instanceof RatedRecommendation) {
+      RatedRecommendation card = (RatedRecommendation) post;
+      card.setOverflowStatus(false);
+      notifyItemChanged(position);
+    }
   }
 }

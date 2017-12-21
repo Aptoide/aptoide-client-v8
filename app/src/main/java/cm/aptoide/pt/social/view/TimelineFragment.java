@@ -616,6 +616,10 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         .show();
   }
 
+  @Override public void removeOverflowOption(int position) {
+    adapter.removeOverflowOption(position);
+  }
+
   private void handleSharePreviewAnswer() {
 
     final ShareEvent[] share = new ShareEvent[1];

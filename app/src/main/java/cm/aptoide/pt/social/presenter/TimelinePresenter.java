@@ -225,9 +225,12 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
                 .equals(CardTouchEvent.Type.UNFOLLOW_STORE))
-            .doOnNext(cardTouchEvent -> storeUtilsProxy.unSubscribeStore(
-                ((StoreLatestApps) cardTouchEvent.getCard()).getStoreName(),
-                storeCredentialsProvider))
+            .doOnNext(cardTouchEvent -> {
+              storeUtilsProxy.unSubscribeStore(
+                  ((StoreLatestApps) cardTouchEvent.getCard()).getStoreName(),
+                  storeCredentialsProvider);
+              view.removeOverflowOption(cardTouchEvent.getPosition());
+            })
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(cardTouchEvent -> view.showUserUnsubscribedMessage(
                 ((StoreLatestApps) cardTouchEvent.getCard()).getStoreName()))
@@ -245,6 +248,7 @@ public class TimelinePresenter implements Presenter {
                 .equals(CardTouchEvent.Type.UNFOLLOW_USER))
             .flatMapCompletable(cardTouchEvent -> {
               if (cardTouchEvent instanceof UserUnfollowCardTouchEvent) {
+                view.removeOverflowOption(cardTouchEvent.getPosition());
                 return timeline.unfollowUser(((UserUnfollowCardTouchEvent) cardTouchEvent).getId())
                     .observeOn(AndroidSchedulers.mainThread())
                     .andThen(Completable.fromAction(() -> view.showUserUnsubscribedMessage(
@@ -253,6 +257,7 @@ public class TimelinePresenter implements Presenter {
               return Completable.error(new IllegalStateException(
                   "Trying to unfollow user without using the UserUnfollowCardTouchEvent "));
             })
+            .doOnNext(event -> view.removeOverflowOption(event.getPosition()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {

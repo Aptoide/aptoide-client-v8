@@ -143,7 +143,7 @@ public class SocialPostRecommendationViewHolder extends SocialPostViewHolder<Rat
     } else {
       likeButton.setHeartState(false);
     }
-    setupOverflowMenu(post, position);
+    setupOverflowMenu(post, position, post.getOverflowStatus());
     /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
     showSocialInformationBar(post, position);
     showLikesPreview(post);
@@ -293,7 +293,7 @@ public class SocialPostRecommendationViewHolder extends SocialPostViewHolder<Rat
     numberLikesOneLike.setVisibility(View.INVISIBLE);
   }
 
-  private void setupOverflowMenu(RatedRecommendation post, int position) {
+  private void setupOverflowMenu(RatedRecommendation post, int position, boolean overflowStatus) {
     overflowMenu.setOnClickListener(view -> {
       PostPopupMenuBuilder postPopupMenuBuilder = new PostPopupMenuBuilder();
       postPopupMenuBuilder.prepMenu(itemView.getContext(), overflowMenu)

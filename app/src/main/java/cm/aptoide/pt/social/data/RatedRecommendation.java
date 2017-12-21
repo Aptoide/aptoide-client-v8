@@ -20,6 +20,7 @@ public class RatedRecommendation extends AppPost {
   private final List<SocialCard.CardComment> comments;
   private final String content;
   private final String sharedByName;
+  private boolean overflowStatus;
 
   public RatedRecommendation(String cardId, Poster poster, long appId, String packageName,
       String appName, String appIcon, Long storeId, float ratingAverage, Date timestamp,
@@ -35,6 +36,7 @@ public class RatedRecommendation extends AppPost {
     this.comments = comments;
     this.sharedByName = sharedByName;
     this.content = content;
+    this.overflowStatus = true;
   }
 
   public String getContent() {
@@ -63,5 +65,13 @@ public class RatedRecommendation extends AppPost {
 
   public String getSharedByName() {
     return sharedByName;
+  }
+
+  public boolean getOverflowStatus() {
+    return overflowStatus;
+  }
+
+  public void setOverflowStatus(boolean overflowStatus) {
+    this.overflowStatus = overflowStatus;
   }
 }

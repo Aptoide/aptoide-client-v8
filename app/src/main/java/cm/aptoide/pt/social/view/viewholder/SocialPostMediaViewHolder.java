@@ -168,7 +168,7 @@ public class SocialPostMediaViewHolder extends SocialPostViewHolder<SocialMedia>
       likeButton.setHeartState(false);
     }
 
-    setupOverflowMenu(post, position);
+    setupOverflowMenu(post, position, post.getOverflowStatus());
     /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
     showSocialInformationBar(post, position);
     showLikesPreview(post);
@@ -318,7 +318,7 @@ public class SocialPostMediaViewHolder extends SocialPostViewHolder<SocialMedia>
     numberLikesOneLike.setVisibility(View.INVISIBLE);
   }
 
-  private void setupOverflowMenu(SocialMedia post, int position) {
+  private void setupOverflowMenu(SocialMedia post, int position, boolean overflowStatus) {
     overflowMenu.setOnClickListener(view -> {
       PostPopupMenuBuilder postPopupMenuBuilder = new PostPopupMenuBuilder();
       postPopupMenuBuilder.prepMenu(itemView.getContext(), overflowMenu)
@@ -338,7 +338,7 @@ public class SocialPostMediaViewHolder extends SocialPostViewHolder<SocialMedia>
       if (post.getPoster() != null) {
         if (post.getPoster()
             .getUser() != null && !post.getPoster()
-            .isMe()) {
+            .isMe() && overflowStatus) {
           postPopupMenuBuilder.addUnfollowUser(menuItem -> {
             cardTouchEventPublishSubject.onNext(new UserUnfollowCardTouchEvent(post.getPoster()
                 .getUser()

@@ -195,8 +195,9 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
     return getStore() != null;
   }
 
-  public boolean showFollowButton() {
-    return getStore() != null || getUser() != null;
+  public boolean showFollowButton(String username) {
+    Boolean name = !getMainName().equals(username);
+    return getStore() != null || getUser() != null && !getMainName().equals(username);
   }
 
   public GridStoreMetaWidget.HomeMeta.Badge getBadge() {
@@ -231,7 +232,9 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
             .first())
         .flatMap(isFollowing -> isStoreOwner(accountManager).map(
             isOwner -> new GridStoreMetaWidget.HomeMeta(getMainIcon(), getSecondaryIcon(),
-                getMainName(), getSecondaryName(), isOwner, showFollowButton(), isFollowing,
+                getMainName(), getSecondaryName(), isOwner, showFollowButton(
+                accountManager.getAccount()
+                    .getNickname()), isFollowing,
                 getSocialLinks(), getAppsCount(), getFollowersCount(), getFollowingsCount(),
                 getDescription(), getColorOrDefault(getStoreTheme(), context), getStoreId(),
                 getUserId(), hasStore(), getBadge())));

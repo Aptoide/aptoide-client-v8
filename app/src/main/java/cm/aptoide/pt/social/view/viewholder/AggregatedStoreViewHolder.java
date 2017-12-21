@@ -1,7 +1,6 @@
 package cm.aptoide.pt.social.view.viewholder;
 
 import android.support.v4.util.LongSparseArray;
-import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -109,7 +108,7 @@ public class AggregatedStoreViewHolder extends PostViewHolder<AggregatedStore> {
     this.storeNameFollow.setText(post.getStoreName());
     this.storeNumberFollowers.setText(String.valueOf(post.getSubscribers()));
     this.storeNumberApps.setText(String.valueOf(post.getAppsNumber()));
-    setupOverflowMenu(post, position);
+    setupOverflowMenu(post, position, post.getOverflowStatus());
     showStoreLatestApps(post);
     showMorePostersLabel(post);
     minimalCardContainer.removeAllViews();
@@ -196,21 +195,24 @@ public class AggregatedStoreViewHolder extends PostViewHolder<AggregatedStore> {
     }
   }
 
-  private void setupOverflowMenu(Post post, int position) {
+  private void setupOverflowMenu(Post post, int position, boolean overflowStatus) {
     overflowMenu.setOnClickListener(view -> {
-      PopupMenu popupMenu = new PostPopupMenuBuilder().prepMenu(itemView.getContext(), overflowMenu)
+      PostPopupMenuBuilder popupMenu = new PostPopupMenuBuilder();
+      popupMenu.prepMenu(itemView.getContext(), overflowMenu)
           .addReportAbuse(menuItem -> {
             cardTouchEventPublishSubject.onNext(
                 new CardTouchEvent(post, position, CardTouchEvent.Type.REPORT_ABUSE));
             return false;
-          })
-          .addUnfollowStore(menuItem -> {
-            cardTouchEventPublishSubject.onNext(
-                new CardTouchEvent(post, position, CardTouchEvent.Type.UNFOLLOW_STORE));
-            return false;
-          })
-          .getPopupMenu();
-      popupMenu.show();
+          });
+      if (overflowStatus) {
+        popupMenu.addUnfollowStore(menuItem -> {
+          cardTouchEventPublishSubject.onNext(
+              new CardTouchEvent(post, position, CardTouchEvent.Type.UNFOLLOW_STORE));
+          return false;
+        });
+      }
+      popupMenu.getPopupMenu()
+          .show();
     });
   }
 }

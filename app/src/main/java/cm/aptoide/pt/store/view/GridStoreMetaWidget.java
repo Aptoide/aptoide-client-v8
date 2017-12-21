@@ -324,12 +324,12 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(() -> {
           followStoreButton.setText(R.string.unfollow);
-          followStoreButton.setEnabled(false);
+          followStoreButton.setVisibility(View.INVISIBLE);
         })
         .subscribe(getStoreMeta -> {
           if (getStoreMeta.isOk()) {
             followStoreButton.setText(R.string.unfollow);
-            followStoreButton.setEnabled(true);
+            followStoreButton.setVisibility(View.VISIBLE);
             setupUnfollowStoreButton(storeName);
           } else {
             showFollowStoreError();
@@ -360,18 +360,21 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe(() -> {
               followStoreButton.setText(R.string.follow);
-              followStoreButton.setEnabled(false);
+              followStoreButton.setVisibility(View.INVISIBLE);
             })
             .subscribe(getUserMeta -> {
               if (getUserMeta.isOk()) {
                 followStoreButton.setText(R.string.follow);
-                followStoreButton.setEnabled(true);
+                followStoreButton.setVisibility(View.VISIBLE);
+                Snackbar.make(itemView, R.string.unfollowing_store_message,
+                    BaseTransientBottomBar.LENGTH_LONG)
+                    .show();
                 setupFollowUserButton(userId);
               } else {
                 showUnfollowUserError();
               }
             }, throwable -> showUnfollowUserError()));
-  } //15784250
+  }
 
   private void setupFollowUserButton(Long userId) {
     followStoreButton.setText(R.string.follow);
@@ -380,12 +383,14 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
         .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe(() -> {
           followStoreButton.setText(R.string.unfollow);
-          followStoreButton.setEnabled(false);
+              followStoreButton.setVisibility(View.INVISIBLE);
         })
             .subscribe(getUserMeta -> {
               if (getUserMeta.isOk()) {
                 followStoreButton.setText(R.string.unfollow);
-                followStoreButton.setEnabled(true);
+                followStoreButton.setVisibility(View.VISIBLE);
+                Snackbar.make(itemView, R.string.followed, BaseTransientBottomBar.LENGTH_LONG)
+                    .show();
                 setupUnfollowUserButton(userId);
               } else {
                 showFollowUserError();

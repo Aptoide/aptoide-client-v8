@@ -154,7 +154,7 @@ public class SocialRecommendationViewHolder extends SocialPostViewHolder<RatedRe
       sharedBy.setVisibility(View.GONE);
     }
 
-    setupOverflowMenu(post, position);
+    setupOverflowMenu(post, position, post.getOverflowStatus());
     /* START - SOCIAL INFO COMMON TO ALL SOCIAL CARDS */
     showSocialInformationBar(post, position);
     showLikesPreview(post);
@@ -302,7 +302,7 @@ public class SocialRecommendationViewHolder extends SocialPostViewHolder<RatedRe
     numberLikesOneLike.setVisibility(View.INVISIBLE);
   }
 
-  private void setupOverflowMenu(RatedRecommendation post, int position) {
+  private void setupOverflowMenu(RatedRecommendation post, int position, boolean overflowStatus) {
     overflowMenu.setOnClickListener(view -> {
       PostPopupMenuBuilder postPopupMenuBuilder = new PostPopupMenuBuilder();
       postPopupMenuBuilder.prepMenu(itemView.getContext(), overflowMenu)
@@ -322,7 +322,7 @@ public class SocialRecommendationViewHolder extends SocialPostViewHolder<RatedRe
       if (post.getPoster() != null) {
         if (post.getPoster()
             .getUser() != null && !post.getPoster()
-            .isMe()) {
+            .isMe() && overflowStatus) {
           postPopupMenuBuilder.addUnfollowUser(menuItem -> {
             cardTouchEventPublishSubject.onNext(new UserUnfollowCardTouchEvent(post.getPoster()
                 .getUser()
