@@ -48,7 +48,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.button_logout)).check(matches(isDisplayed()));
   }
 
-  @Test public void profilePhotoLimitExceed() {
+  @Test public void profilePhotoErrors() {
     TestType.types = TestType.TestTypes.ERRORDECONDINGTEST;
     goToMyAccount();
     onView(withId(R.id.my_account_edit_user_profile)).perform(click());
@@ -69,7 +69,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.button_logout)).check(matches(isDisplayed()));
   }
 
-  @Test public void storePhotoLimitExceed() {
+  @Test public void storePhotoErrors() {
     TestType.types = TestType.TestTypes.ERRORDECONDINGTEST;
     TestType.initialization = TestType.TestTypes.LOGGEDINWITHSTORE;
     goToMyAccount();

@@ -16,10 +16,14 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.action.ViewActions.swipeUp;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static cm.aptoide.pt.UITests.goToMyAccount;
 import static cm.aptoide.pt.UITests.goToSettings;
 import static cm.aptoide.pt.UITests.skipWizard;
 
@@ -30,6 +34,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
 
   @Before public void setUp() {
     TestType.types = TestType.TestTypes.REGULAR;
+    TestType.initialization = TestType.TestTypes.REGULAR;
     if (UITests.isFirstTime()) {
       skipWizard();
     }
@@ -87,5 +92,28 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.next_icon)).perform(swipeLeft());
     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     onView(withId(R.id.skip_text)).perform(click());
+  }
+
+  @Test public void landscapeEditProfileName(){
+    TestType.initialization = TestType.TestTypes.LOGGEDIN;
+    goToMyAccount();
+    onView(withId(R.id.my_account_edit_user_profile)).perform(click());
+    Activity activity = mActivityRule.getActivity();
+    onView(withId(R.id.create_user_username_inserted)).perform(click());
+    onView(withId(R.id.create_user_username_inserted)).perform(replaceText("D011"),closeSoftKeyboard());
+    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    onView(withId(R.id.create_user_username_inserted)).check(matches(withText("D011")));
+  }
+
+
+  @Test public void landscapeEditStoreDescription() {
+    TestType.initialization = TestType.TestTypes.LOGGEDINWITHSTORE;
+    goToMyAccount();
+    onView(withId(R.id.my_account_edit_user_store)).perform(click());
+    Activity activity = mActivityRule.getActivity();
+    onView(withId(R.id.edit_store_description)).perform(click());
+    onView(withId(R.id.edit_store_description)).perform(replaceText("D011"),closeSoftKeyboard());
+    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    onView(withId(R.id.edit_store_description)).check(matches(withText("D011")));
   }
 }
