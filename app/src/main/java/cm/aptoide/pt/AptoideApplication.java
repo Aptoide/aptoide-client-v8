@@ -203,7 +203,6 @@ public abstract class AptoideApplication extends Application {
   @Inject PageViewsAnalytics pageViewsAnalytics;
   @Inject @Named("account-settings-pool-v7") BodyInterceptor<BaseBody>
       accountSettingsBodyInterceptorPoolV7;
-  @Inject NotificationAnalytics notificationAnalytics;
   private LeakTool leakTool;
   private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
@@ -228,6 +227,7 @@ public abstract class AptoideApplication extends Application {
   private ReadPostsPersistence readPostsPersistence;
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
   private NotificationsCleaner notificationsCleaner;
+  private NotificationAnalytics notificationAnalytics;
   private TimelineAnalytics timelineAnalytics;
 
   public static FragmentProvider getFragmentProvider() {
@@ -998,6 +998,13 @@ public abstract class AptoideApplication extends Application {
   }
 
   public NotificationAnalytics getNotificationAnalytics() {
+    if (notificationAnalytics == null) {
+      notificationAnalytics =
+          new NotificationAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(this),
+              getBodyInterceptorPoolV7(), getDefaultClient(), WebService.getDefaultConverter(),
+              tokenInvalidator, cm.aptoide.pt.dataprovider.BuildConfig.APPLICATION_ID,
+              getDefaultSharedPreferences(), new AptoideInstallParser());
+    }
     return notificationAnalytics;
   }
 
