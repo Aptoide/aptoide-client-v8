@@ -57,14 +57,14 @@ public class UpdateRepository {
     this.packageManager = packageManager;
   }
 
-  public @NonNull Completable sync(boolean bypassCache) {
+  public @NonNull Completable sync(boolean bypassCache, boolean bypassServerCache) {
     return storeAccessor.getAll()
         .first()
         .observeOn(Schedulers.io())
         .flatMap(stores -> Observable.from(stores)
             .map(store -> store.getStoreId())
             .toList())
-        .flatMap(storeIds -> getNetworkUpdates(storeIds, bypassCache))
+        .flatMap(storeIds -> getNetworkUpdates(storeIds, bypassCache, bypassServerCache))
         .toSingle()
         .flatMapCompletable(updates -> {
           // remove local non-excluded updates
@@ -75,11 +75,12 @@ public class UpdateRepository {
         });
   }
 
-  private Observable<List<App>> getNetworkUpdates(List<Long> storeIds, boolean bypassCache) {
+  private Observable<List<App>> getNetworkUpdates(List<Long> storeIds, boolean bypassCache,
+      boolean bypassServerCache) {
     Logger.d(TAG, String.format("getNetworkUpdates() -> using %d stores", storeIds.size()));
     return ListAppsUpdatesRequest.of(storeIds, idsRepository.getUniqueIdentifier(), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, sharedPreferences, packageManager)
-        .observe(bypassCache)
+        .observe(bypassCache, bypassServerCache)
         .map(result -> {
           if (result != null && result.isOk()) {
             return result.getList();

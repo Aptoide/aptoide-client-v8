@@ -88,7 +88,7 @@ public class TransactionServiceV7 implements TransactionService {
     return CreateTransactionRequest.of(billingIdManager.resolveProductId(productId),
         billingIdManager.resolveServiceId(serviceId), payload, bodyInterceptorV7, httpClient,
         converterFactory, tokenInvalidator, sharedPreferences)
-        .observe(true)
+        .observe(true, false)
         .toSingle()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -105,7 +105,7 @@ public class TransactionServiceV7 implements TransactionService {
     return CreateTransactionRequest.of(billingIdManager.resolveProductId(productId),
         billingIdManager.resolveServiceId(serviceId), payload, token, bodyInterceptorV7, httpClient,
         converterFactory, tokenInvalidator, sharedPreferences)
-        .observe(true)
+        .observe(true, false)
         .toSingle()
         .flatMap(response -> {
           if (response != null && response.isOk()) {

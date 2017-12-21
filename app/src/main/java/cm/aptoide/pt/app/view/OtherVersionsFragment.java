@@ -182,7 +182,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
         err -> err.printStackTrace());
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
-    endlessRecyclerOnScrollListener.onLoadMore(false);
+    endlessRecyclerOnScrollListener.onLoadMore(false, false);
   }
 
   protected void setHeader() {

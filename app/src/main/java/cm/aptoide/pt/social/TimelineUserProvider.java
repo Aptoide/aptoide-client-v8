@@ -12,7 +12,7 @@ public interface TimelineUserProvider {
 
   Completable notificationRead(int notificationId);
 
-  Observable<User> getUser(boolean refresh);
+  Observable<User> getUser(boolean refresh, boolean bypassServerCache);
 
   class TimelineNotification {
     private final String body;

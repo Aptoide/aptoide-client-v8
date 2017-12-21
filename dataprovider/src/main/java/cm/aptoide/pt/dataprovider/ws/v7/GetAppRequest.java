@@ -42,11 +42,9 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
   public static GetAppRequest of(String packageName, BodyInterceptor<BaseBody> bodyInterceptor,
       long appId, OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    boolean forceServerRefresh =
-        ManagerPreferences.getAndResetForceServerRefresh(sharedPreferences);
 
     return new GetAppRequest(getHost(sharedPreferences),
-        new Body(appId, forceServerRefresh, packageName, sharedPreferences), bodyInterceptor,
+        new Body(appId, packageName, sharedPreferences), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator);
   }
 
@@ -64,11 +62,9 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
   public static GetAppRequest ofMd5(String md5, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    boolean forceServerRefresh =
-        ManagerPreferences.getAndResetForceServerRefresh(sharedPreferences);
 
-    return new GetAppRequest(getHost(sharedPreferences),
-        new Body(forceServerRefresh, md5, sharedPreferences), bodyInterceptor, httpClient,
+    return new GetAppRequest(getHost(sharedPreferences), new Body(md5, sharedPreferences),
+        bodyInterceptor, httpClient,
         converterFactory, tokenInvalidator);
   }
 
@@ -86,10 +82,7 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
 
-    boolean forceServerRefresh =
-        ManagerPreferences.getAndResetForceServerRefresh(sharedPreferences);
-
-    Body body = new Body(appId, storeName, forceServerRefresh, packageName, sharedPreferences);
+    Body body = new Body(appId, storeName, packageName, sharedPreferences);
     body.setStoreUser(storeCredentials.getUsername());
     body.setStorePassSha1(storeCredentials.getPasswordSha1());
 
@@ -106,23 +99,20 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 
     private Long appId;
     private String packageName;
-    private boolean refresh;
     @JsonProperty("package_uname") private String uname;
     @JsonProperty("apk_md5sum") private String md5;
     @JsonProperty("store_name") private String storeName;
     private Node nodes;
 
-    public Body(Long appId, Boolean refresh, String packageName,
+    public Body(Long appId, String packageName,
         SharedPreferences sharedPreferences) {
       this(appId, sharedPreferences);
-      this.refresh = refresh;
       this.nodes = new Node(appId, packageName);
     }
 
-    public Body(Long appId, String storeName, Boolean refresh, String packageName,
+    public Body(Long appId, String storeName, String packageName,
         SharedPreferences sharedPreferences) {
       this(appId, sharedPreferences);
-      this.refresh = refresh;
       this.storeName = storeName;
       this.nodes = new Node(appId, packageName);
     }
@@ -137,14 +127,12 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
     public Body(String packageName, Boolean refresh, SharedPreferences sharedPreferences) {
       super(sharedPreferences);
       this.packageName = packageName;
-      this.refresh = refresh;
       this.nodes = new Node(packageName);
     }
 
     public Body(Boolean refresh, String md5, SharedPreferences sharedPreferences) {
       super(sharedPreferences);
       this.md5 = md5;
-      this.refresh = refresh;
       this.nodes = new Node();
     }
 
@@ -167,10 +155,6 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 
     public String getPackageName() {
       return packageName;
-    }
-
-    public boolean isRefresh() {
-      return refresh;
     }
 
     public String getUname() {

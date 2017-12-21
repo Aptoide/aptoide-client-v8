@@ -68,10 +68,6 @@ public class GetMySubscribedStoresRequest
       this.order = order;
     }
 
-    public boolean isRefresh() {
-      return refresh;
-    }
-
     public void setRefresh(boolean refresh) {
       this.refresh = refresh;
     }

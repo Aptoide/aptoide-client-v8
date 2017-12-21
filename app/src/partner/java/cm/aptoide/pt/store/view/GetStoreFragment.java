@@ -27,7 +27,8 @@ public class GetStoreFragment extends StoreTabWidgetsGridRecyclerFragment {
     super.onCreate(savedInstanceState);
   }
 
-  @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {
+  @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url,
+      boolean bypassServerCache) {
     Observable<GetStore> getStoreObservable;
     if (name == Event.Name.getUser) {
       getStoreObservable = requestFactoryCdnPool.newGetUser(url)

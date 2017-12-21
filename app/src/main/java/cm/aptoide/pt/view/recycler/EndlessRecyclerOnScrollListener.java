@@ -27,6 +27,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
   private final MultiLangPatch multiLangPatch;
   private final List<OnEndlessFinish> onEndlessFinishList;
   private final ErrorRequestListener errorRequestListener;
+  private final boolean bypassServerCache;
   private Action1 successRequestListener;
   private Action0 onEndOfListReachedListener;
   private int offset;
@@ -59,6 +60,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
     this.firstCallbackCalled = false;
     this.multiLangPatch = new MultiLangPatch();
     this.onEndlessFinishList = new LinkedList<>();
+    bypassServerCache = false;
   }
 
   public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter,
@@ -77,15 +79,17 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
     this.onEndOfListReachedListener = onEndOfListReachedListener;
     this.endCallbackCalled = false;
     this.firstCallbackCalled = false;
+    bypassServerCache = false;
   }
 
   public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter,
       V7<T, ? extends Endless> v7request, Action1<T> successRequestListener,
-      ErrorRequestListener errorRequestListener, boolean bypassCache) {
+      ErrorRequestListener errorRequestListener, boolean bypassCache, boolean bypassServerCache) {
     this.adapter = baseAdapter;
     this.v7request = v7request;
     this.successRequestListener = successRequestListener;
     this.errorRequestListener = errorRequestListener;
+    this.bypassServerCache = bypassServerCache;
     this.visibleThreshold = 6;
     this.bypassCache = bypassCache;
     this.onFirstLoadListener = null;
@@ -109,6 +113,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
     this.firstCallbackCalled = false;
     this.multiLangPatch = new MultiLangPatch();
     this.onEndlessFinishList = new LinkedList<>();
+    bypassServerCache = false;
   }
 
   public BaseAdapter getAdapter() {
@@ -131,7 +136,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
     firstVisibleItem = (firstVisibleItemPosition == -1 ? 0 : firstVisibleItemPosition);
 
     if (shouldLoadMore()) {
-      onLoadMore(bypassCache);
+      onLoadMore(bypassCache, bypassServerCache);
     }
   }
 
@@ -147,12 +152,12 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
     return (totalItemCount - visibleItemCount) < (firstVisibleItem + visibleThreshold - 1);
   }
 
-  public void onLoadMore(boolean bypassCache) {
+  public void onLoadMore(boolean bypassCache, boolean bypassServerCache) {
     if (!loading) {
       loading = true;
       adapter.addDisplayable(new ProgressBarDisplayable());
       if (v7request != null) {
-        subscription = v7request.observe(bypassCache)
+        subscription = v7request.observe(bypassCache, bypassServerCache)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(response -> {
               popProgressBarDisplayable();
@@ -218,7 +223,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
     }
 
     if (shouldLoadMore()) {
-      onLoadMore(bypassCache);
+      onLoadMore(bypassCache, bypassServerCache);
     }
   }
 

@@ -863,7 +863,7 @@ public abstract class AptoideApplication extends Application {
 
   private Completable refreshUpdates() {
     return RepositoryFactory.getUpdateRepository(this, getDefaultSharedPreferences())
-        .sync(true);
+        .sync(true, false);
   }
 
   private void createAppShortcut() {
