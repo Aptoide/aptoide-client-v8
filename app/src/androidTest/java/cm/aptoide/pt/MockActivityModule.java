@@ -17,17 +17,19 @@ public class MockActivityModule extends ActivityModule {
 
   private final AppCompatActivity activity;
 
-  public MockActivityModule(AppCompatActivity activity, Intent intent, NotificationSyncScheduler notificationSyncScheduler, String marketName,
-      String autoUpdateUrl, View view, String defaultTheme, String defaultStoreName,
-      boolean firstCreated, String fileProviderAuthority){
-    super(activity,intent,notificationSyncScheduler,marketName,autoUpdateUrl,view,defaultTheme,defaultStoreName,firstCreated,fileProviderAuthority);
+  public MockActivityModule(AppCompatActivity activity, Intent intent,
+      NotificationSyncScheduler notificationSyncScheduler, String marketName, String autoUpdateUrl,
+      View view, String defaultTheme, String defaultStoreName, boolean firstCreated,
+      String fileProviderAuthority) {
+    super(activity, intent, notificationSyncScheduler, marketName, autoUpdateUrl, view,
+        defaultTheme, defaultStoreName, firstCreated, fileProviderAuthority);
     this.activity = activity;
   }
 
   @Override ImagePickerNavigator provideImagePickerNavigator() {
-    return new ImagePickerNavigator((ActivityNavigator) activity){
+    return new ImagePickerNavigator((ActivityNavigator) activity) {
 
-      @Override public Observable<Uri> navigateToGalleryForImageUri(int requestCode){
+      @Override public Observable<Uri> navigateToGalleryForImageUri(int requestCode) {
         Uri uri = Uri.parse("");
         return Observable.just(uri);
       }

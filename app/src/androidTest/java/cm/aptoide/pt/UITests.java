@@ -40,5 +40,4 @@ public class UITests {
     onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
     onView(withText(R.string.drawer_title_my_account)).perform(click());
   }
-
 }

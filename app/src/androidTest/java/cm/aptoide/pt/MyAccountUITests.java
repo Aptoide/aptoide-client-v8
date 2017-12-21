@@ -12,7 +12,7 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.swipeUp;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -27,8 +27,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
 
-  @Rule public GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
+  @Rule public GrantPermissionRule grantPermissionRule =
+      GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
   @Before public void setUp() {
     TestType.types = TestType.TestTypes.SIGNSIGNUPTESTS;
@@ -38,7 +38,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
     }
   }
 
-  @Test public void profilePhotoSuccess(){
+  @Test public void profilePhotoSuccess() {
     TestType.types = TestType.TestTypes.PHOTOSUCCESS;
     goToMyAccount();
     onView(withId(R.id.my_account_edit_user_profile)).perform(click());
@@ -48,7 +48,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.button_logout)).check(matches(isDisplayed()));
   }
 
-  @Test public void profilePhotoLimitExceed(){
+  @Test public void profilePhotoLimitExceed() {
     TestType.types = TestType.TestTypes.ERRORDECONDINGTEST;
     goToMyAccount();
     onView(withId(R.id.my_account_edit_user_profile)).perform(click());
@@ -57,63 +57,40 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.button_logout)).check(matches(isDisplayed()));
   }
 
-  @Test public void storePhotoSuccess(){ //Fails on screen resolution 480x720
+  @Test public void storePhotoSuccess() {
     TestType.types = TestType.TestTypes.PHOTOSUCCESS;
     TestType.initialization = TestType.TestTypes.LOGGEDINWITHSTORE;
     goToMyAccount();
     onView(withId(R.id.my_account_edit_user_store)).perform(click());
     onView(withId(R.id.create_store_image)).perform(click());
     onView(withText("Select from gallery")).perform(click());
-    onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
-    onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
-    try {
-      onView(withId(R.id.theme_selector)).perform(swipeUp());
-      onView(withId(R.id.theme_selector)).perform(swipeUp());
-      onView(withId(R.id.theme_selector)).perform(swipeUp());
-      onView(withId(R.id.theme_selector)).perform(swipeUp());
-    }catch(Exception e){
-      onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
-      onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
-      onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
-      onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
-    }
+    onView(withId(R.id.create_store_action)).perform(scrollTo());
     onView(withId(R.id.create_store_action)).perform(click());
     onView(withId(R.id.button_logout)).check(matches(isDisplayed()));
   }
 
-  @Test public void storePhotoLimitExceed(){ //Fails on screen resolution 480x720
+  @Test public void storePhotoLimitExceed() {
     TestType.types = TestType.TestTypes.ERRORDECONDINGTEST;
     TestType.initialization = TestType.TestTypes.LOGGEDINWITHSTORE;
     goToMyAccount();
     onView(withId(R.id.my_account_edit_user_store)).perform(click());
     displayErrors(false);
-    onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
-    onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
-    try {
-      onView(withId(R.id.theme_selector)).perform(swipeUp());
-      onView(withId(R.id.theme_selector)).perform(swipeUp());
-      onView(withId(R.id.theme_selector)).perform(swipeUp());
-      onView(withId(R.id.theme_selector)).perform(swipeUp());
-    }catch(Exception e){
-      onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
-      onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
-      onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
-      onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
-    }
+    onView(withId(R.id.create_store_action)).perform(scrollTo());
     onView(withId(R.id.create_store_action)).perform(click());
     onView(withId(R.id.button_logout)).check(matches(isDisplayed()));
   }
 
-  private void uploadImageWithError(boolean isUser){
-    if(isUser)
+  private void uploadImageWithError(boolean isUser) {
+    if (isUser) {
       onView(withId(R.id.create_user_image_action)).perform(click());
-    else
+    } else {
       onView(withId(R.id.create_store_image)).perform(click());
+    }
     onView(withText("Select from gallery")).perform(click());
     onView(withText("OK")).perform(click());
   }
 
-  private void displayErrors(boolean isUser){
+  private void displayErrors(boolean isUser) {
     uploadImageWithError(isUser);
     TestType.types = TestType.TestTypes.MIN_HEIGHTTEST;
     uploadImageWithError(isUser);

@@ -25,16 +25,16 @@ public class MockAptoideApplication extends VanillaApplication {
 
   @Override public ActivityModule getActivityModule(BaseActivity activity, Intent intent,
       NotificationSyncScheduler notificationSyncScheduler, String marketName, String autoUpdateUrl,
-      View view, String defaultThemeName, String defaultStoreName, boolean firstCreated, String s){
+      View view, String defaultThemeName, String defaultStoreName, boolean firstCreated, String s) {
 
-      return new MockActivityModule(activity, intent, notificationSyncScheduler, marketName,
+    return new MockActivityModule(activity, intent, notificationSyncScheduler, marketName,
         autoUpdateUrl, view, defaultThemeName, defaultStoreName, firstCreated, s);
   }
 
-  @Override public FragmentModule getFragmentModule(BaseFragment baseFragment, Bundle savedInstanceState,
-      Bundle arguments, boolean createStoreUserPrivacyEnabled, String packageName){
+  @Override
+  public FragmentModule getFragmentModule(BaseFragment baseFragment, Bundle savedInstanceState,
+      Bundle arguments, boolean createStoreUserPrivacyEnabled, String packageName) {
     return new MockFragmentModule(baseFragment, savedInstanceState, arguments,
         createStoreUserPrivacyEnabled, packageName);
   }
-
 }

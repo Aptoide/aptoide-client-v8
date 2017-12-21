@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
+import cm.aptoide.pt.account.view.MyAccountNavigator;
 import cm.aptoide.pt.billing.view.BillingNavigator;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.notification.view.InboxNavigator;
@@ -35,6 +36,7 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
   private Map<Integer, Result> fragmentResultMap;
   private BillingNavigator billingNavigator;
   private ScreenOrientationManager screenOrientationManager;
+  private MyAccountNavigator myAccountNavigator;
   private InboxNavigator inboxNavigator;
   private NotificationNavigator notificationNavigator;
   private LinksHandlerFactory linksHandlerFactory;
@@ -171,6 +173,14 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
           new ScreenOrientationManager(this, (WindowManager) this.getSystemService(WINDOW_SERVICE));
     }
     return screenOrientationManager;
+  }
+
+  public MyAccountNavigator getMyAccountNavigator() {
+    if (myAccountNavigator == null) {
+      myAccountNavigator = new MyAccountNavigator(getFragmentNavigator(), getAccountNavigator(),
+          getNotificationNavigator());
+    }
+    return myAccountNavigator;
   }
 
   public InboxNavigator getInboxNavigator() {

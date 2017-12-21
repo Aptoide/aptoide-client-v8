@@ -749,16 +749,20 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         (TelephonyManager) application.getSystemService(Context.TELEPHONY_SERVICE));
   }
 
-  @Singleton @Provides NotificationAnalytics providesNotificationAnalytics(@Named("pool-v7") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
-      @Named("default") OkHttpClient defaultClient, TokenInvalidator tokenInvalidator,  @Named("default") SharedPreferences defaultSharedPreferences ){
-    return new NotificationAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(application),
-        bodyInterceptorPoolV7, defaultClient, WebService.getDefaultConverter(),
-        tokenInvalidator, cm.aptoide.pt.dataprovider.BuildConfig.APPLICATION_ID,
-        defaultSharedPreferences, new AptoideInstallParser());
+  @Singleton @Provides NotificationAnalytics providesNotificationAnalytics(@Named("pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient defaultClient, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences defaultSharedPreferences) {
+    return new NotificationAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(application), bodyInterceptorPoolV7, defaultClient,
+        WebService.getDefaultConverter(), tokenInvalidator,
+        cm.aptoide.pt.dataprovider.BuildConfig.APPLICATION_ID, defaultSharedPreferences,
+        new AptoideInstallParser());
   }
 
   @Singleton @Provides NotificationProvider providesNotificationProvider() {
-    return new NotificationProvider(AccessorFactory.getAccessorFor(application.getDatabase(), Notification.class),
+    return new NotificationProvider(
+        AccessorFactory.getAccessorFor(application.getDatabase(), Notification.class),
         Schedulers.io());
-    }
+  }
 }

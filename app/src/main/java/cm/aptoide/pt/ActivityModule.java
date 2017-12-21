@@ -117,7 +117,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   @ActivityScope @Provides DeepLinkManager provideDeepLinkManager(StoreUtilsProxy storeUtilsProxy,
       StoreRepository storeRepository, FragmentNavigator fragmentNavigator,
       @Named("default") SharedPreferences sharedPreferences, StoreAccessor storeAccessor,
-      NavigationTracker navigationTracker, PageViewsAnalytics pageViewsAnalytics, NotificationAnalytics notificationAnalytics) {
+      NavigationTracker navigationTracker, PageViewsAnalytics pageViewsAnalytics,
+      NotificationAnalytics notificationAnalytics) {
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
         (TabNavigator) activity, (DeepLinkManager.DeepLinkMessages) activity, sharedPreferences,
         storeAccessor, defaultTheme, defaultStoreName, navigationTracker, pageViewsAnalytics,
@@ -179,17 +180,19 @@ import static com.facebook.FacebookSdk.getApplicationContext;
     return new ManageUserNavigator(fragmentNavigator, defaultStoreName, defaultTheme);
   }
 
-  @ActivityScope @Provides MyAccountNavigator provideMyAccountNavigator(FragmentNavigator fragmentNavigator, AccountNavigator accountNavigator,
-      NotificationNavigator notificationNavigator){
-    return new MyAccountNavigator(fragmentNavigator, accountNavigator,
-        notificationNavigator);
+  @ActivityScope @Provides MyAccountNavigator provideMyAccountNavigator(
+      FragmentNavigator fragmentNavigator, AccountNavigator accountNavigator,
+      NotificationNavigator notificationNavigator) {
+    return new MyAccountNavigator(fragmentNavigator, accountNavigator, notificationNavigator);
   }
 
-  @ActivityScope @Provides NotificationNavigator provideNotificationNavigator(LinksHandlerFactory linksHandlerFactory, FragmentNavigator fragmentNavigator) {
-    return new NotificationNavigator((TabNavigator) activity, linksHandlerFactory, fragmentNavigator);
+  @ActivityScope @Provides NotificationNavigator provideNotificationNavigator(
+      LinksHandlerFactory linksHandlerFactory, FragmentNavigator fragmentNavigator) {
+    return new NotificationNavigator((TabNavigator) activity, linksHandlerFactory,
+        fragmentNavigator);
   }
 
-  @ActivityScope @Provides LinksHandlerFactory provideLinksHandlerFactory(){
+  @ActivityScope @Provides LinksHandlerFactory provideLinksHandlerFactory() {
     return new LinksHandlerFactory(activity);
   }
 }

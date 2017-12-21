@@ -12,6 +12,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -58,7 +59,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
     performLogin(LOGINEMAIL, "wrongpass");
     onView(withText(R.string.ws_error_invalid_grant)).check(matches(isDisplayed()));
   }
-//
+
+  //
   @Test public void signUpInvalidEmail() {
     TestType.types = TestType.TestTypes.INVALIDEMAIL;
     goToMyAccount();
@@ -89,7 +91,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
     performSignUp("", "");
     onView(withText(R.string.no_email_and_pass_error_message)).check(matches(isDisplayed()));
   }
-//
+
+  //
   @Test public void signUpEmailExists() {
     TestType.types = TestType.TestTypes.USEDEMAIL;
     goToMyAccount();
@@ -161,8 +164,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.create_user_create_profile)).perform(click());
     onView(withId(R.id.logged_in_continue)).perform(click());
     onView(withId(R.id.create_store_name)).perform(replaceText("somethingdoenstmatter"));
-    onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
-    onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
+    onView(withId(R.id.create_store_skip)).perform(scrollTo());
     onView(withId(R.id.create_store_skip)).perform(click());
   }
 
@@ -171,8 +173,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.create_user_create_profile)).perform(click());
     onView(withId(R.id.logged_in_more_info_button)).perform(click());
     onView(withId(R.id.logged_in_private_button)).perform(click());
-    onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
-    onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
+    onView(withId(R.id.create_store_skip)).perform(scrollTo());
     onView(withId(R.id.create_store_skip)).perform(click());
   }
 
@@ -181,8 +182,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.create_user_create_profile)).perform(click());
     onView(withId(R.id.logged_in_more_info_button)).perform(click());
     onView(withId(R.id.logged_in_continue)).perform(click());
-    onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
-    onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
+    onView(withId(R.id.create_store_skip)).perform(scrollTo());
     onView(withId(R.id.create_store_skip)).perform(click());
   }
 
@@ -197,8 +197,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
 
   private void createStore() {
     onView(withId(R.id.create_store_name)).perform(replaceText("a name"));
-    onView(withId(R.id.create_store_choose_name_title)).perform(swipeUp());
-    onView(withId(R.id.theme_selector)).perform(swipeUp());
+    onView(withId(R.id.create_store_skip)).perform(scrollTo());
     onView(withId(R.id.create_store_action)).perform(click());
   }
 }

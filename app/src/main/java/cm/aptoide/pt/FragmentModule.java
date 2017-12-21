@@ -1,6 +1,5 @@
 package cm.aptoide.pt;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -12,9 +11,6 @@ import cm.aptoide.pt.account.view.ImagePickerNavigator;
 import cm.aptoide.pt.account.view.ImagePickerPresenter;
 import cm.aptoide.pt.account.view.ImagePickerView;
 import cm.aptoide.pt.account.view.ImageValidator;
-import cm.aptoide.pt.account.view.MyAccountNavigator;
-import cm.aptoide.pt.account.view.MyAccountPresenter;
-import cm.aptoide.pt.account.view.MyAccountView;
 import cm.aptoide.pt.account.view.PhotoFileGenerator;
 import cm.aptoide.pt.account.view.UriToPathResolver;
 import cm.aptoide.pt.account.view.store.ManageStoreErrorMapper;
@@ -25,20 +21,15 @@ import cm.aptoide.pt.account.view.user.CreateUserErrorMapper;
 import cm.aptoide.pt.account.view.user.ManageUserNavigator;
 import cm.aptoide.pt.account.view.user.ManageUserPresenter;
 import cm.aptoide.pt.account.view.user.ManageUserView;
-import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
 import cm.aptoide.pt.view.FragmentScope;
-import com.facebook.appevents.AppEventsLogger;
 import dagger.Module;
 import dagger.Provides;
 import java.util.Arrays;
-import javax.inject.Named;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -97,17 +88,7 @@ import rx.schedulers.Schedulers;
         uriToPathResolver, isCreateStoreUserPrivacyEnabled, savedInstance == null);
   }
 
-  @FragmentScope @Provides MyAccountPresenter provideMyAccountPresenter(AptoideAccountManager accountManager,MyAccountNavigator myAccountNavigator,
-      @Named("default") SharedPreferences defaultSharedPreferences, NavigationTracker navigationTracker, NotificationAnalytics notificationAnalytics){
-    AptoideApplication aptoideApplication = (AptoideApplication) fragment.getContext().getApplicationContext();
-    return new MyAccountPresenter((MyAccountView) fragment, accountManager, CrashReport.getInstance(),
-        myAccountNavigator, aptoideApplication.getNotificationCenter(), defaultSharedPreferences,
-        navigationTracker, notificationAnalytics,
-        new PageViewsAnalytics(AppEventsLogger.newLogger(fragment.getContext().getApplicationContext()),
-            Analytics.getInstance(), navigationTracker));
-  }
-
-  @FragmentScope @Provides ImageValidator provideImageValidator(){
+  @FragmentScope @Provides ImageValidator provideImageValidator() {
     return new ImageValidator(ImageLoader.with(fragment.getContext()), Schedulers.computation());
   }
 

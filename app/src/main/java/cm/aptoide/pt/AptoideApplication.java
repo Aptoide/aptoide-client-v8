@@ -203,6 +203,7 @@ public abstract class AptoideApplication extends Application {
   @Inject PageViewsAnalytics pageViewsAnalytics;
   @Inject @Named("account-settings-pool-v7") BodyInterceptor<BaseBody>
       accountSettingsBodyInterceptorPoolV7;
+  @Inject NotificationAnalytics notificationAnalytics;
   private LeakTool leakTool;
   private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
@@ -228,7 +229,6 @@ public abstract class AptoideApplication extends Application {
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
   private NotificationsCleaner notificationsCleaner;
   private TimelineAnalytics timelineAnalytics;
-  @Inject NotificationAnalytics notificationAnalytics;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -385,14 +385,14 @@ public abstract class AptoideApplication extends Application {
 
   public ActivityModule getActivityModule(BaseActivity activity, Intent intent,
       NotificationSyncScheduler notificationSyncScheduler, String marketName, String autoUpdateUrl,
-      View view, String defaultThemeName, String defaultStoreName, boolean firstCreated, String s){
+      View view, String defaultThemeName, String defaultStoreName, boolean firstCreated, String s) {
 
     return new ActivityModule(activity, intent, notificationSyncScheduler, marketName,
         autoUpdateUrl, view, defaultThemeName, defaultStoreName, firstCreated, s);
   }
 
   public FragmentModule getFragmentModule(BaseFragment baseFragment, Bundle savedInstanceState,
-      Bundle arguments, boolean createStoreUserPrivacyEnabled, String packageName){
+      Bundle arguments, boolean createStoreUserPrivacyEnabled, String packageName) {
     return new FragmentModule(baseFragment, savedInstanceState, arguments,
         createStoreUserPrivacyEnabled, packageName);
   }

@@ -57,6 +57,18 @@ public class MockApplicationModule extends ApplicationModule {
     this.loginPreferences = loginPreferences;
   }
 
+  @Override IdsRepository provideIdsRepository(SharedPreferences defaultSharedPreferences,
+      ContentResolver contentResolver) {
+    return new IdsRepository(
+        SecurePreferencesImplementation.getInstance(application.getApplicationContext(),
+            defaultSharedPreferences), application,
+        Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)) {
+      @Override @WorkerThread public synchronized String getGoogleAdvertisingId() {
+        return defaultSharedPreferences.getString("googleAdvertisingId", null);
+      }
+    };
+  }
+
   @Override AptoideAccountManager provideAptoideAccountManager(AdultContent adultContent,
       StoreAccessor storeAccessor, OkHttpClient httpClient, OkHttpClient longTimeoutHttpClient,
       AccountManager accountManager, SharedPreferences defaultSharedPreferences,
@@ -101,7 +113,7 @@ public class MockApplicationModule extends ApplicationModule {
 
       @Override public boolean isLoggedIn() {
         if (TestType.initialization.equals(TestType.TestTypes.LOGGEDIN)
-            || TestType.initialization.equals(TestType.TestTypes.LOGGEDINWITHSTORE) ){
+            || TestType.initialization.equals(TestType.TestTypes.LOGGEDINWITHSTORE)) {
           return true;
         } else {
           return false;
@@ -113,9 +125,11 @@ public class MockApplicationModule extends ApplicationModule {
       }
 
       @Override public Store getStore() {
-      if(TestType.initialization.equals(TestType.TestTypes.LOGGEDINWITHSTORE))
-          return new Store(0,"",0,"store","DEFAULT","","",true);
-      else return Store.emptyStore();
+        if (TestType.initialization.equals(TestType.TestTypes.LOGGEDINWITHSTORE)) {
+          return new Store(0, "", 0, "store", "DEFAULT", "", "", true);
+        } else {
+          return Store.emptyStore();
+        }
       }
 
       @Override public boolean hasStore() {
@@ -272,17 +286,5 @@ public class MockApplicationModule extends ApplicationModule {
           }
         };
     return storeManager;
-  }
-
-  @Override IdsRepository provideIdsRepository(SharedPreferences defaultSharedPreferences,
-      ContentResolver contentResolver) {
-    return new IdsRepository(
-        SecurePreferencesImplementation.getInstance(application.getApplicationContext(),
-            defaultSharedPreferences), application,
-        Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)){
-      @Override @WorkerThread public synchronized String getGoogleAdvertisingId() {
-        return defaultSharedPreferences.getString("googleAdvertisingId", null);
-      }
-    };
   }
 }

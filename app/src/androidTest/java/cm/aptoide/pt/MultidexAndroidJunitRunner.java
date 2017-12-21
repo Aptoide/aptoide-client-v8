@@ -17,6 +17,4 @@ public class MultidexAndroidJunitRunner extends AndroidJUnitRunner {
       throws InstantiationException, IllegalAccessException, ClassNotFoundException {
     return super.newApplication(cl, MockAptoideApplication.class.getName(), context);
   }
-
-
 }
