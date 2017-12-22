@@ -94,17 +94,17 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.skip_text)).perform(click());
   }
 
-  @Test public void landscapeEditProfileName(){
+  @Test public void landscapeEditProfileName() {
     TestType.initialization = TestType.TestTypes.LOGGEDIN;
     goToMyAccount();
     onView(withId(R.id.my_account_edit_user_profile)).perform(click());
     Activity activity = mActivityRule.getActivity();
     onView(withId(R.id.create_user_username_inserted)).perform(click());
-    onView(withId(R.id.create_user_username_inserted)).perform(replaceText("D011"),closeSoftKeyboard());
+    onView(withId(R.id.create_user_username_inserted)).perform(replaceText("D011"),
+        closeSoftKeyboard());
     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     onView(withId(R.id.create_user_username_inserted)).check(matches(withText("D011")));
   }
-
 
   @Test public void landscapeEditStoreDescription() {
     TestType.initialization = TestType.TestTypes.LOGGEDINWITHSTORE;
@@ -112,7 +112,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.my_account_edit_user_store)).perform(click());
     Activity activity = mActivityRule.getActivity();
     onView(withId(R.id.edit_store_description)).perform(click());
-    onView(withId(R.id.edit_store_description)).perform(replaceText("D011"),closeSoftKeyboard());
+    onView(withId(R.id.edit_store_description)).perform(replaceText("D011"), closeSoftKeyboard());
     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     onView(withId(R.id.edit_store_description)).check(matches(withText("D011")));
   }
