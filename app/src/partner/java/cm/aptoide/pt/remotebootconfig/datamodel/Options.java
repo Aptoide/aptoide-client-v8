@@ -1,6 +1,6 @@
 package cm.aptoide.pt.remotebootconfig.datamodel;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by diogoloureiro on 18/01/2017.
@@ -12,7 +12,7 @@ public class Options {
 
   private boolean shortcut;
   private Multistore multistore;
-  @JsonProperty("first_install") private FirstInstall firstInstall;
+  @SerializedName("first_install") private FirstInstall firstInstall;
 
   public boolean isShortcut() {
     return shortcut;
