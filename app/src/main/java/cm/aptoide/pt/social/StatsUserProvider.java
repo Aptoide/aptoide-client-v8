@@ -24,10 +24,10 @@ public class StatsUserProvider implements TimelineUserProvider {
     return Completable.complete();
   }
 
-  @Override public Observable<User> getUser(boolean refresh) {
+  @Override public Observable<User> getUser(boolean refresh, boolean bypassServerCache) {
     return accountManager.accountStatus()
         .map(account -> account.isLoggedIn())
-        .flatMap(isLogged -> service.getTimelineStats(refresh)
+        .flatMap(isLogged -> service.getTimelineStats(refresh, bypassServerCache)
             .toObservable()
             .map(timelineStats -> new User(timelineStats.getFollowers(),
                 timelineStats.getFollowings(), isLogged)));

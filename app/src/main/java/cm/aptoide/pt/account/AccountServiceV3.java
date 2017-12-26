@@ -146,7 +146,7 @@ public class AccountServiceV3 implements AccountService {
   @Override public Completable updateAccount(String nickname, String avatarPath) {
     return SetUserMultipartRequest.of(nickname, avatarPath, multipartBodyInterceptorV7,
         longTimeoutHttpClient, converterFactory, serializer, tokenInvalidator)
-        .observe(true)
+        .observe(true, false)
         .toSingle()
         .flatMapCompletable(response -> {
           if (response.isOk()) {
@@ -160,7 +160,7 @@ public class AccountServiceV3 implements AccountService {
   @Override public Completable updateAccount(String accessLevel) {
     return SetUserRequest.of(accessLevel, bodyInterceptorPoolV7, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences)
-        .observe(true)
+        .observe(true, false)
         .toSingle()
         .flatMapCompletable(response -> {
           if (response.isOk()) {
@@ -174,7 +174,7 @@ public class AccountServiceV3 implements AccountService {
   @Override public Completable updateAccountUsername(String username) {
     return SetUserRequest.ofWithName(username, bodyInterceptorPoolV7, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences)
-        .observe(true)
+        .observe(true, false)
         .toSingle()
         .flatMapCompletable(response -> {
           if (response.isOk()) {
@@ -216,7 +216,7 @@ public class AccountServiceV3 implements AccountService {
   @Override public Completable updateAccount(boolean adultContentEnabled) {
     return SetUserSettings.of(adultContentEnabled, httpClient, converterFactory,
         bodyInterceptorPoolV7, tokenInvalidator)
-        .observe(true)
+        .observe(true, false)
         .toSingle()
         .flatMapCompletable(response -> {
           if (response.isOk()) {
@@ -333,7 +333,7 @@ public class AccountServiceV3 implements AccountService {
   private Single<GetUserInfo> getServerAccount() {
     return GetUserInfoRequest.of(httpClient, converterFactory, bodyInterceptorWebV7,
         tokenInvalidator)
-        .observe(true)
+        .observe(true, false)
         .toSingle()
         .flatMap(response -> {
           if (response.isOk()) {

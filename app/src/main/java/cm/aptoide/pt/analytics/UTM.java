@@ -1,12 +1,10 @@
 package cm.aptoide.pt.analytics;
 
-import lombok.Data;
-
 /**
  * Created by pedroribeiro on 29/06/17.
  */
 
-@Data public class UTM {
+public class UTM {
 
   private final String utmSource;
   private final String utmMedium;
@@ -21,5 +19,25 @@ import lombok.Data;
     this.utmCampaign = utmCampaign;
     this.utmContent = utmContent;
     this.entryPoint = entryPoint;
+  }
+
+  public String getUtmSource() {
+    return utmSource;
+  }
+
+  public String getUtmMedium() {
+    return utmMedium;
+  }
+
+  public String getUtmCampaign() {
+    return utmCampaign;
+  }
+
+  public String getUtmContent() {
+    return utmContent;
+  }
+
+  public String getEntryPoint() {
+    return entryPoint;
   }
 }

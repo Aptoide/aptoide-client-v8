@@ -75,10 +75,6 @@ public class GetUserInfoRequest extends V7<GetUserInfo, GetUserInfoRequest.Body>
       this.nodes = nodes;
     }
 
-    public boolean isRefresh() {
-      return refresh;
-    }
-
     public void setRefresh(boolean refresh) {
       this.refresh = refresh;
     }

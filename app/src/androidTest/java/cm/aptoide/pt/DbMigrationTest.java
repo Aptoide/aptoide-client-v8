@@ -137,7 +137,8 @@ import static org.junit.Assert.fail;
 
     // trigger migration
     ManagerPreferences.setNeedsSqliteDbMigration(true,
-        ((AptoideApplication) InstrumentationRegistry.getTargetContext()).getDefaultSharedPreferences());
+        ((AptoideApplication) InstrumentationRegistry.getTargetContext()
+            .getApplicationContext()).getDefaultSharedPreferences());
     int newVersion = dbVersion.incrementAndGet();
     dbHelper.onUpgrade(db, newVersion - 1, newVersion);
 
@@ -239,7 +240,8 @@ import static org.junit.Assert.fail;
 
     // trigger migration
     ManagerPreferences.setNeedsSqliteDbMigration(true,
-        ((AptoideApplication) InstrumentationRegistry.getTargetContext()).getDefaultSharedPreferences());
+        ((AptoideApplication) InstrumentationRegistry.getTargetContext()
+            .getApplicationContext()).getDefaultSharedPreferences());
     int newVersion = dbVersion.incrementAndGet();
     dbHelper.onUpgrade(db, newVersion - 1, newVersion);
 

@@ -2,13 +2,12 @@ package cm.aptoide.pt.install;
 
 import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
-import lombok.ToString;
 
 /**
  * Created by trinkes on 10/04/2017.
  */
 
-public @ToString(of = { "state", "isIndeterminate" }) class Install {
+public class Install {
   private final int progress;
   private final InstallationStatus state;
   private final InstallationType type;
@@ -99,6 +98,10 @@ public @ToString(of = { "state", "isIndeterminate" }) class Install {
     if (state != that.state) return false;
     if (!md5.equals(that.md5)) return false;
     return packageName.equals(that.packageName);
+  }
+
+  @Override public String toString() {
+    return "Install{" + "state=" + state + ", isIndeterminate=" + isIndeterminate + '}';
   }
 
   public boolean isFailed() {

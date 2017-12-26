@@ -43,7 +43,8 @@ public class GetAdsFragment extends StoreTabGridRecyclerFragment {
     adsRepository = ((AptoideApplication) getContext().getApplicationContext()).getAdsRepository();
   }
 
-  @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {
+  @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url,
+      boolean bypassServerCache) {
     return adsRepository.getAdsFromHomepageMore(refresh)
         .map(minimalAds -> {
           List<Displayable> displayables = new LinkedList<>();

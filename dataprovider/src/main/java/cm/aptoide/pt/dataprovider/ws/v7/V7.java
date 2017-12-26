@@ -34,6 +34,7 @@ import cm.aptoide.pt.dataprovider.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.util.ToRetryThrowable;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.RefreshBody;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.CreateTransactionRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.DeletePurchaseRequest;
@@ -89,7 +90,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by neuro on 19-04-2016.
  */
-public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
+public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfaces, U> {
 
   protected final B body;
   protected final BodyInterceptor bodyInterceptor;
@@ -136,6 +137,13 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
 
   public B getBody() {
     return body;
+  }
+
+  public Observable<U> observe(boolean bypassCache, boolean bypassServerCache) {
+    if (body != null) {
+      body.setRefresh(bypassServerCache);
+    }
+    return observe(bypassCache);
   }
 
   @Override public Observable<U> observe(boolean bypassCache) {

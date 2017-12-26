@@ -10,16 +10,15 @@ import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreDisplays;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
-import lombok.Getter;
 
 /**
  * Created on 02/05/16.
  */
 public class GridDisplayDisplayable extends DisplayablePojo<GetStoreDisplays.EventImage> {
 
-  @Getter private String storeTheme;
-  @Getter private String tag;
-  @Getter private StoreContext storeContext;
+  private String storeTheme;
+  private String tag;
+  private StoreContext storeContext;
   private InstalledRepository installedRepository;
   private String storeName;
 
@@ -49,5 +48,17 @@ public class GridDisplayDisplayable extends DisplayablePojo<GetStoreDisplays.Eve
 
   public String getStoreName() {
     return storeName;
+  }
+
+  public String getStoreTheme() {
+    return this.storeTheme;
+  }
+
+  public String getTag() {
+    return this.tag;
+  }
+
+  public StoreContext getStoreContext() {
+    return this.storeContext;
   }
 }

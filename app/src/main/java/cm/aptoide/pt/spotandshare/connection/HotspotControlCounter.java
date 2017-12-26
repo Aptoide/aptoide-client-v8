@@ -1,7 +1,6 @@
 package cm.aptoide.pt.spotandshare.connection;
 
 import android.content.SharedPreferences;
-import lombok.Getter;
 
 /**
  * Created by filipe on 29-03-2017.
@@ -21,7 +20,7 @@ public class HotspotControlCounter {
   private final HotspotSSIDCodeMapper hotspotSSIDCodeMapper;
 
   private long currentTimestamp;
-  @Getter private int currentControlCounter = 0;
+  private int currentControlCounter = 0;
 
   public HotspotControlCounter(SharedPreferences prefs,
       HotspotSSIDCodeMapper hotspotSSIDCodeMapper) {
@@ -29,6 +28,10 @@ public class HotspotControlCounter {
     this.hotspotSSIDCodeMapper = hotspotSSIDCodeMapper;
 
     init();
+  }
+
+  public int getCurrentControlCounter() {
+    return currentControlCounter;
   }
 
   public void init() {

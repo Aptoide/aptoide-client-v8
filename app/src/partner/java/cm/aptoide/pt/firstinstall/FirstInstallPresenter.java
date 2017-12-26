@@ -289,7 +289,7 @@ public class FirstInstallPresenter implements Presenter {
                     .getId(), true, false, firstInstallAppDisplayable.getPojo()
                     .getStore()
                     .getName(), firstInstallAppDisplayable.getPojo()
-                    .getPackageName())
+                    .getPackageName(), false)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(app -> new DownloadFactory(app.getNodes()
@@ -314,7 +314,7 @@ public class FirstInstallPresenter implements Presenter {
             .map(firstInstallAdDisplayable -> appRepository.getApp(
                 firstInstallAdDisplayable.getPojo()
                     .getAppId(), true, true, null, firstInstallAdDisplayable.getPojo()
-                    .getPackageName())
+                    .getPackageName(), false)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(app -> new DownloadFactory(app.getNodes()
