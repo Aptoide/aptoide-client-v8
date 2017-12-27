@@ -81,6 +81,7 @@ import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -597,8 +598,9 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   @Override public Single<String> takeFeedbackScreenShot() {
     String screenshotFileName = getActivity().getClass()
         .getSimpleName() + ".jpg";
-    AptoideUtils.ScreenU.takeScreenshot(getActivity(), cacheDirectoryPath, screenshotFileName);
-    return Single.just(cacheDirectoryPath + screenshotFileName);
+    File screenshot =
+        AptoideUtils.ScreenU.takeScreenshot(getActivity(), cacheDirectoryPath, screenshotFileName);
+    return Single.just(screenshot.getAbsolutePath());
   }
 
   @Override public void showUserUnsubscribedMessage(String userName) {
