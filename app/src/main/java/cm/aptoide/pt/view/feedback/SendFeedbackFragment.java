@@ -190,6 +190,11 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
               emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
             }
             try {
+              //holy moly
+              getActivity().getSupportFragmentManager()
+                  .beginTransaction()
+                  .remove(this)
+                  .commit();
               startActivity(emailIntent);
               getActivity().onBackPressed();
               //				Analytics.SendFeedback.sendFeedback();
