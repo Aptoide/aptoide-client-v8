@@ -92,6 +92,7 @@ public class HomeFragment extends StoreFragment {
   private SearchBuilder searchBuilder;
   private String defaultThemeName;
   private IssuesAnalytics issuesAnalytics;
+  private String cacheDirectoryPath;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -178,7 +179,9 @@ public class HomeFragment extends StoreFragment {
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-
+    cacheDirectoryPath = getContext().getApplicationContext()
+        .getCacheDir()
+        .getPath();
     defaultThemeName = application.getDefaultThemeName();
     final SearchManager searchManager =
         (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
@@ -466,14 +469,11 @@ public class HomeFragment extends StoreFragment {
   }
 
   private void startFeedbackFragment() {
-    String downloadFolderPath = getContext().getApplicationContext()
-        .getCacheDir()
-        .getPath();
     String screenshotFileName = getActivity().getClass()
         .getSimpleName() + ".jpg";
-    AptoideUtils.ScreenU.takeScreenshot(getActivity(), downloadFolderPath, screenshotFileName);
+    AptoideUtils.ScreenU.takeScreenshot(getActivity(), cacheDirectoryPath, screenshotFileName);
     getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-        .newSendFeedbackFragment(downloadFolderPath + screenshotFileName), true);
+        .newSendFeedbackFragment(cacheDirectoryPath + screenshotFileName), true);
   }
 
   private void openSocialLink(String packageName, String socialUrl, String pageTitle,

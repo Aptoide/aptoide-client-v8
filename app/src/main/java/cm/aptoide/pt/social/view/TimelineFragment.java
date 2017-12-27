@@ -146,6 +146,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private OkHttpClient defaultClient;
   private String marketName;
   private CrashReport crashReport;
+  private String cacheDirectoryPath;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -188,6 +189,9 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     baseBodyInterceptorV7 = application.getAccountSettingsBodyInterceptorPoolV7();
     defaultConverter = WebService.getDefaultConverter();
     defaultClient = application.getDefaultClient();
+    cacheDirectoryPath = getContext().getApplicationContext()
+        .getCacheDir()
+        .getPath();
     accountManager =
         ((AptoideApplication) getActivity().getApplicationContext()).getAccountManager();
     tokenInvalidator = application.getTokenInvalidator();
@@ -591,13 +595,10 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   @Override public Single<String> takeFeedbackScreenShot() {
-    String downloadFolderPath = getContext().getApplicationContext()
-        .getCacheDir()
-        .getPath();
     String screenshotFileName = getActivity().getClass()
         .getSimpleName() + ".jpg";
-    AptoideUtils.ScreenU.takeScreenshot(getActivity(), downloadFolderPath, screenshotFileName);
-    return Single.just(downloadFolderPath + screenshotFileName);
+    AptoideUtils.ScreenU.takeScreenshot(getActivity(), cacheDirectoryPath, screenshotFileName);
+    return Single.just(cacheDirectoryPath + screenshotFileName);
   }
 
   @Override public void showUserUnsubscribedMessage(String userName) {

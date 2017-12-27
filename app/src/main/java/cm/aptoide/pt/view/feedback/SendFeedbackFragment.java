@@ -45,6 +45,7 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
   public static final String LOGS_FILE_NAME = "logs.txt";
   private static final String CARD_ID = "card_id";
   private final String KEY_SCREENSHOT_PATH = "screenShotPath";
+  private CrashReport crashReport;
   private Button sendFeedbackBtn;
   private CheckBox logsAndScreenshotsCb;
   private String screenShotPath;
@@ -107,6 +108,7 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     aptoideNavigationTracker =
         ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
+    crashReport = CrashReport.getInstance();
     setHasOptionsMenu(true);
   }
 
@@ -128,8 +130,7 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
     super.setupViews();
     RxView.clicks(sendFeedbackBtn)
         .subscribe(aVoid -> sendFeedback(), err -> {
-          CrashReport.getInstance()
-              .log(err);
+          crashReport.log(err);
         });
   }
 
@@ -155,7 +156,9 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
       emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {
           application.getFeedbackEmail()
       });
-      final String cachePath = application.getCachePath();
+      final String cachePath = getContext().getApplicationContext()
+          .getCacheDir()
+          .getPath();
       unManagedSubscription = installedRepository.getInstalled(getContext().getPackageName())
           .first()
           .observeOn(AndroidSchedulers.mainThread())
@@ -193,7 +196,7 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
             } catch (ActivityNotFoundException ex) {
               ShowMessage.asSnack(getView(), R.string.feedback_no_email);
             }
-          });
+          }, throwable -> crashReport.log(throwable));
     } else {
       ShowMessage.asSnack(getView(), R.string.feedback_not_valid);
     }
