@@ -86,10 +86,8 @@ public class TimelineRemoteDataSource {
         .doOnSuccess(timelineResponse -> {
           loading = false;
           cardIdPriority = null;
-          if (timelineResponse.getDataList()
-              .getData() != null) {
-            timelineVersion = timelineResponse.getDataList()
-                .getData()
+          if (timelineResponse.getData() != null) {
+            timelineVersion = timelineResponse.getData()
                 .getVersion();
           } else {
             timelineVersion = "unknown";
