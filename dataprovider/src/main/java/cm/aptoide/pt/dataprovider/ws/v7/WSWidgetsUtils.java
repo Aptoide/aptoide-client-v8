@@ -169,7 +169,14 @@ import rx.schedulers.Schedulers;
                     } else {
                       return Observable.error(throwable);
                     }
-                  }), (timelineStats, getHomeMeta) -> new MyStore(timelineStats, getHomeMeta))
+                  }), (timelineStats, getHomeMeta) -> {
+                if (timelineStats.getData() == null) { // this happens when server returns SYS-1
+                  TimelineStats defaultTimelineStats = createErrorTimelineStatus();
+                  return new MyStore(defaultTimelineStats, getHomeMeta);
+                } else {
+                  return new MyStore(timelineStats, getHomeMeta);
+                }
+              })
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(myStore -> wsWidget);
