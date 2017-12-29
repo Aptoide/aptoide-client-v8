@@ -21,14 +21,14 @@ import rx.Observable;
  */
 public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineRequest.Body> {
 
-  private String url;
+  private String url = "http://192.168.1.137:5000/getTimeline";
 
   GetUserTimelineRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
         tokenInvalidator);
-    this.url = url;
+    //this.url = url;
   }
 
   public static GetUserTimelineRequest of(String url, Integer limit, int offset,

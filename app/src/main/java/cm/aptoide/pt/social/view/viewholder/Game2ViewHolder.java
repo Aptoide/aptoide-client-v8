@@ -2,14 +2,15 @@ package cm.aptoide.pt.social.view.viewholder;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -29,10 +30,11 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class Game2ViewHolder extends PostViewHolder<Game2> {
 
-  private final TextView score;
-  private final TextView leaderboard;
-  private final ImageView scoreIcon;
-  private final ImageView rankIcon;
+  //private final TextView score;
+  //private final TextView leaderboard;
+  //private final ImageView scoreIcon;
+  //private final ImageView rankIcon;
+  @DrawableRes private static final int DEFAULT_IMAGE_PLACEHOLDER = R.drawable.create_user_avatar;
   private final ImageView answerLeft;
   private final ImageView answerRight;
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
@@ -44,7 +46,7 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
   private final ImageView stampLeft;
   private final ImageView stampRight;
   private final String marketName;
-  private final View headerStats;
+  // private final View headerStats;
   private View wrapper;
   private ImageView questionIcon;
   private TextView question;
@@ -59,8 +61,8 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
     this.spannableFactory = spannableFactory;
     this.marketName = marketName;
 
-    this.score = (TextView) itemView.findViewById(R.id.stats_header).findViewById(R.id.displayable_social_timeline_game_card_score);
-    leaderboard = (TextView) itemView.findViewById(R.id.stats_header).findViewById(R.id.displayable_social_timeline_game_card_leaderboard);
+    //this.score = (TextView) itemView.findViewById(R.id.stats_header).findViewById(R.id.displayable_social_timeline_game_card_score);
+    //leaderboard = (TextView) itemView.findViewById(R.id.stats_header).findViewById(R.id.displayable_social_timeline_game_card_leaderboard);
     answerLeft = (ImageView) itemView.findViewById(R.id.left_answer);
     answerRight = (ImageView) itemView.findViewById(R.id.right_answer);
 
@@ -74,10 +76,10 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
     this.stampLeft = (ImageView) itemView.findViewById(R.id.stamp_left);
     this.stampRight = (ImageView) itemView.findViewById(R.id.stamp_right);
 
-    this.scoreIcon = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_game_card_score_icon) ;
-    this.rankIcon = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_game_card_leaderboard_icon);
+    //this.scoreIcon = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_game_card_score_icon) ;
+    //this.rankIcon = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_game_card_leaderboard_icon);
 
-    this.headerStats = itemView.findViewById(R.id.stats_header);
+    //this.headerStats = itemView.findViewById(R.id.stats_header);
 
     itemView.setOnTouchListener((view, motionEvent) -> {
       itemView.getParent().requestDisallowInterceptTouchEvent(true);
@@ -100,12 +102,11 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
     answerRight.setVisibility(View.VISIBLE);
     itemView.setVisibility(View.VISIBLE);
 
-
-    this.score.setText(String.valueOf(card.getScore()));
-    this.leaderboard.setText(String.valueOf(card.getgRanking()));
+    //this.score.setText(String.valueOf(card.getScore()));
+    //this.leaderboard.setText(String.valueOf(card.getgRanking()));
 
     //ImageLoader.with(itemView.getContext()).load("http://pool.img.aptoide.com/dfl/783ac07187647799c87c4e1d5cde6b8b_icon.png", this.headerIcon);
-    headerIcon.setImageResource(R.drawable.aptoide_quiz_icon);
+    headerIcon.setImageResource(R.mipmap.aptoide_quiz_icon);
     this.headerTitle.setText(getStyledTitle(itemView.getContext(), getTitle(itemView.getContext()
         .getResources()), marketName));
 
@@ -114,10 +115,10 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
       wrapper = itemView.findViewById(R.id.question);
       wrapper.setVisibility(View.VISIBLE);
       question = (TextView) wrapper.findViewById(R.id.game_card_question);
-      RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)stampLeft.getLayoutParams();
+      LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) stampLeft.getLayoutParams();
       params.setMargins(25,10,0,0);
       stampLeft.setLayoutParams(params);
-      params = (RelativeLayout.LayoutParams)stampRight.getLayoutParams();
+      params = (LinearLayout.LayoutParams) stampRight.getLayoutParams();
       params.setMargins(0,10,25,0);
       stampRight.setLayoutParams(params);
       String test = card.getQuestion();
@@ -139,21 +140,37 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
     }
     //Randomize right answer to left or right side (if 0<rand<0.5, right answer is on the left side)
     if(rand < 0.5){
-      ImageLoader.with(itemView.getContext()).load(card.getApp().getIcon(), answerLeft);
-      ImageLoader.with(itemView.getContext()).load(card.getApp().getIcon(), stampRight);
+      ImageLoader.with(itemView.getContext())
+          .loadUsingCircleTransformAndPlaceholder(card.getApp()
+              .getIcon(), answerLeft, DEFAULT_IMAGE_PLACEHOLDER);
+      ImageLoader.with(itemView.getContext())
+          .loadUsingCircleTransformAndPlaceholder(card.getApp()
+              .getIcon(), stampRight, DEFAULT_IMAGE_PLACEHOLDER);
 
-      ImageLoader.with(itemView.getContext()).load(card.getWrongIcon(), answerRight);
-      ImageLoader.with(itemView.getContext()).load(card.getWrongIcon(), stampLeft);
+      ImageLoader.with(itemView.getContext())
+          .loadUsingCircleTransformAndPlaceholder(card.getWrongIcon(), answerRight,
+              DEFAULT_IMAGE_PLACEHOLDER);
+      ImageLoader.with(itemView.getContext())
+          .loadUsingCircleTransformAndPlaceholder(card.getWrongIcon(), stampLeft,
+              DEFAULT_IMAGE_PLACEHOLDER);
 
       answerLeft.setOnClickListener(click -> onClickLeft(position, String.valueOf(card.getApp().getIcon())));
       answerRight.setOnClickListener(click -> onClickRight(position, String.valueOf(card.getWrongIcon())));
     }
     else{
-      ImageLoader.with(itemView.getContext()).load(card.getWrongIcon(), answerLeft);
-      ImageLoader.with(itemView.getContext()).load(card.getWrongIcon(), stampRight);
+      ImageLoader.with(itemView.getContext())
+          .loadUsingCircleTransformAndPlaceholder(card.getWrongIcon(), answerLeft,
+              DEFAULT_IMAGE_PLACEHOLDER);
+      ImageLoader.with(itemView.getContext())
+          .loadUsingCircleTransformAndPlaceholder(card.getWrongIcon(), stampRight,
+              DEFAULT_IMAGE_PLACEHOLDER);
 
-      ImageLoader.with(itemView.getContext()).load(card.getApp().getIcon(), answerRight);
-      ImageLoader.with(itemView.getContext()).load(card.getApp().getIcon(), stampLeft);
+      ImageLoader.with(itemView.getContext())
+          .loadUsingCircleTransformAndPlaceholder(card.getApp()
+              .getIcon(), answerRight, DEFAULT_IMAGE_PLACEHOLDER);
+      ImageLoader.with(itemView.getContext())
+          .loadUsingCircleTransformAndPlaceholder(card.getApp()
+              .getIcon(), stampLeft, DEFAULT_IMAGE_PLACEHOLDER);
 
       answerLeft.setOnClickListener(click -> onClickLeft(position, String.valueOf(card.getWrongIcon())));
       answerRight.setOnClickListener(click -> onClickRight(position, String.valueOf(card.getApp().getIcon())));
@@ -162,20 +179,20 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
     LeaderboardTouchEvent event = new LeaderboardTouchEvent(card, CardTouchEvent.Type.BODY,
         position);
 
-    headerStats.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
+    //headerStats.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
 
 
     if(card.getScore()==-1){
       //scoreProgress.setVisibility(View.VISIBLE);
-      leaderboardProgress.setVisibility(View.VISIBLE);
-      score.setVisibility(View.INVISIBLE);
-      leaderboard.setVisibility(View.INVISIBLE);
+      //leaderboardProgress.setVisibility(View.VISIBLE);
+      //score.setVisibility(View.INVISIBLE);
+      //leaderboard.setVisibility(View.INVISIBLE);
     }
     else{
       //scoreProgress.setVisibility(View.INVISIBLE);
-      leaderboardProgress.setVisibility(View.INVISIBLE);
-      score.setVisibility(View.VISIBLE);
-      leaderboard.setVisibility(View.VISIBLE);
+      //leaderboardProgress.setVisibility(View.INVISIBLE);
+      //score.setVisibility(View.VISIBLE);
+      //leaderboard.setVisibility(View.VISIBLE);
     }
 
   }

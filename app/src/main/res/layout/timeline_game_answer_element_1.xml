@@ -6,11 +6,12 @@
 
   <TextView
       android:id="@+id/left_answer"
-      android:layout_width="120dp"
-      android:layout_height="wrap_content"
+      android:layout_width="92dp"
+      android:layout_height="60dp"
       android:layout_centerVertical="true"
-      android:layout_marginLeft="10dp"
-      android:layout_marginStart="10dp"
+      android:layout_marginLeft="42dp"
+      android:layout_marginStart="42dp"
+      android:background="@drawable/game_answer_square_border_element"
       android:gravity="center"
       android:padding="5dp"
       android:text="Left: Answer2"
@@ -19,25 +20,19 @@
 
   <TextView
       android:id="@+id/right_answer"
-      android:layout_width="120dp"
-      android:layout_height="wrap_content"
+      android:layout_width="92dp"
+      android:layout_height="60dp"
       android:layout_alignParentEnd="true"
       android:layout_alignParentRight="true"
       android:layout_centerVertical="true"
-      android:layout_marginEnd="10dp"
-      android:layout_marginRight="10dp"
+      android:layout_marginEnd="42dp"
+      android:layout_marginRight="42dp"
+      android:background="@drawable/game_answer_square_border_element"
       android:gravity="center"
       android:padding="5dp"
       android:text="Right: Answer1"
       style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
       />
 
-  <View
-      android:id="@+id/answer_separator"
-      android:layout_width="1dp"
-      android:layout_height="40dp"
-      android:layout_centerInParent="true"
-      android:background="@color/medium_gray"
-      />
 
 </RelativeLayout>

@@ -2,13 +2,13 @@ package cm.aptoide.pt.social.view.viewholder;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -28,16 +28,17 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class Game1ViewHolder extends  PostViewHolder<Game1> {
 
-  private final TextView score;
-  private final TextView leaderboard;
-  private final View statsHeader;
+  //private final TextView score;
+  //private final TextView leaderboard;
+  // private final View statsHeader;
+  @DrawableRes private static final int DEFAULT_IMAGE_PLACEHOLDER = R.drawable.create_user_avatar;
   private final TextView leftAnswer;
   private final TextView rightAnswer;
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final SpannableFactory spannableFactory;
   private final ImageView headerIcon;
   private final TextView headerTitle;
-  private final ProgressBar leaderboardProgress;
+  // private final ProgressBar leaderboardProgress;
   private final TextView stampLeft;
   private final TextView stampRight;
   private final String marketName;
@@ -58,8 +59,8 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
     this.spannableFactory = spannableFactory;
     this.marketName = marketName;
 
-    this.score = (TextView) itemView.findViewById(R.id.stats_header).findViewById(R.id.displayable_social_timeline_game_card_score);
-    leaderboard = (TextView) itemView.findViewById(R.id.stats_header).findViewById(R.id.displayable_social_timeline_game_card_leaderboard);
+    //this.score = (TextView) itemView.findViewById(R.id.stats_header).findViewById(R.id.displayable_social_timeline_game_card_score);
+    //leaderboard = (TextView) itemView.findViewById(R.id.stats_header).findViewById(R.id.displayable_social_timeline_game_card_leaderboard);
     answerWrapper = (View) itemView.findViewById(R.id.answers);
     leftAnswer = (TextView) answerWrapper.findViewById(R.id.left_answer);
     rightAnswer = (TextView) answerWrapper.findViewById(R.id.right_answer);
@@ -74,12 +75,12 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
     this.headerTitle =
         (TextView) itemView.findViewById(R.id.displayable_social_timeline_game_card_title);
 
-    this.leaderboardProgress = (ProgressBar) itemView.findViewById(R.id.rank_progress);
+    //this.leaderboardProgress = (ProgressBar) itemView.findViewById(R.id.rank_progress);
 
     this.stampLeft = (TextView) itemView.findViewById(R.id.stamp_left);
     this.stampRight = (TextView) itemView.findViewById(R.id.stamp_right);
 
-    this.statsHeader = itemView.findViewById(R.id.stats_header);
+    //this.statsHeader = itemView.findViewById(R.id.stats_header);
     rand = Math.random();
   }
 
@@ -93,8 +94,8 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
     leftAnswer.setVisibility(View.VISIBLE);
     itemView.setVisibility(View.VISIBLE);
 
-    this.score.setText(String.valueOf(card.getScore()));
-    this.leaderboard.setText(String.valueOf(card.getgRanking()));
+    //this.score.setText(String.valueOf(card.getScore()));
+    //this.leaderboard.setText(String.valueOf(card.getgRanking()));
     if(card.getQuestionIcon()==null){
       itemView.findViewById(R.id.icon_question).setVisibility(View.GONE);
       questionWrapper = itemView.findViewById(R.id.question);
@@ -107,15 +108,17 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
       questionWrapper.setVisibility(View.VISIBLE);
       questionIcon = (ImageView) questionWrapper.findViewById(R.id.game_card_questionIcon);
       question = (TextView) questionWrapper.findViewById(R.id.game_card_question);
-      ImageLoader.with(itemView.getContext()).load(card.getQuestionIcon(), questionIcon);
+      ImageLoader.with(itemView.getContext())
+          .loadUsingCircleTransformAndPlaceholder(card.getQuestionIcon(), questionIcon,
+              DEFAULT_IMAGE_PLACEHOLDER);
     }
     this.question.setText(card.getQuestion());
 
     //ImageLoader.with(itemView.getContext()).load("http://pool.img.aptoide.com/dfl/783ac07187647799c87c4e1d5cde6b8b_icon.png", this.headerIcon);
-    headerIcon.setImageResource(R.drawable.aptoide_quiz_icon);
-    this.headerTitle.setText(getStyledTitle(itemView.getContext(), getTitle(itemView.getContext()
-        .getResources()), marketName));
-
+    headerIcon.setImageResource(R.mipmap.aptoide_quiz_icon);
+    //this.headerTitle.setText(getStyledTitle(itemView.getContext(), getTitle(itemView.getContext()
+    //   .getResources()), marketName));
+    headerTitle.setText("App Quiz");
     //Randomize right answer to left or right side (if 0<rand<0.5, right answer is on the left side)
     if(rand<0.5){
       this.leftAnswer.setText(card.getApp().getName());
@@ -140,20 +143,20 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
 
     //score.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
     //leaderboard.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
-    statsHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
+    //statsHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(event));
 
 
     if(card.getScore()==-1){
       //scoreProgress.setVisibility(View.VISIBLE);
-      leaderboardProgress.setVisibility(View.VISIBLE);
-      score.setVisibility(View.INVISIBLE);
-      leaderboard.setVisibility(View.INVISIBLE);
+      //leaderboardProgress.setVisibility(View.VISIBLE);
+      //score.setVisibility(View.INVISIBLE);
+      //leaderboard.setVisibility(View.INVISIBLE);
     }
     else{
       //scoreProgress.setVisibility(View.INVISIBLE);
-      leaderboardProgress.setVisibility(View.INVISIBLE);
-      score.setVisibility(View.VISIBLE);
-      leaderboard.setVisibility(View.VISIBLE);
+      //leaderboardProgress.setVisibility(View.INVISIBLE);
+      //score.setVisibility(View.VISIBLE);
+      //leaderboard.setVisibility(View.VISIBLE);
     }
   }
 

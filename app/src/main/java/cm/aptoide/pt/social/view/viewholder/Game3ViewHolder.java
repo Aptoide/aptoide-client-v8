@@ -103,7 +103,7 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
     this.leaderboard.setText(String.valueOf(card.getgRanking()));
 
     //ImageLoader.with(itemView.getContext()).load("http://pool.img.aptoide.com/dfl/783ac07187647799c87c4e1d5cde6b8b_icon.png", this.headerIcon);
-    headerIcon.setImageResource(R.drawable.aptoide_quiz_icon);
+    headerIcon.setImageResource(R.mipmap.aptoide_quiz_icon);
     this.headerTitle.setText(getStyledTitle(itemView.getContext(), getTitle(itemView.getContext()
         .getResources()), marketName));
 

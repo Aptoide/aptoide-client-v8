@@ -10,7 +10,7 @@
       android:id="@+id/game_card_question"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_centerHorizontal="true"
+      android:layout_centerInParent="true"
       android:layout_marginTop="40dp"
       android:text="Testing question type 2"
       android:textAlignment="center"
