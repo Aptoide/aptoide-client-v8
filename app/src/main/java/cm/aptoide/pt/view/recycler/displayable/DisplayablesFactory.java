@@ -147,7 +147,8 @@ public class DisplayablesFactory {
 
         case MY_STORE_META:
           return Observable.from(
-              createMyStoreDisplayables(widget.getViewObject(), storeAnalytics, storeContext));
+              createMyStoreDisplayables(widget.getViewObject(), storeAnalytics, storeContext,
+                  accountManager));
 
         case STORES_RECOMMENDED:
           return Observable.just(
@@ -377,14 +378,15 @@ public class DisplayablesFactory {
   }
 
   private static List<Displayable> createMyStoreDisplayables(Object viewObject,
-      StoreAnalytics storeAnalytics, StoreContext storeContext) {
+      StoreAnalytics storeAnalytics, StoreContext storeContext,
+      AptoideAccountManager accountManager) {
     LinkedList<Displayable> displayables = new LinkedList<>();
 
     if (viewObject instanceof MyStore) {
       MyStore store = (MyStore) viewObject;
       if (!store.isCreateStore()) {
         displayables.add(new MyStoreDisplayable(store, storeContext));
-      } else if (store.isLogged()) {
+      } else if (accountManager.isLoggedIn()) {
         displayables.add(new CreateStoreDisplayable(storeAnalytics, store.getTimelineStats()));
       } else {
         displayables.add(new LoginDisplayable());
