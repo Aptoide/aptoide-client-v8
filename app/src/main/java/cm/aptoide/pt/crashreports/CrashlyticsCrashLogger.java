@@ -1,14 +1,10 @@
 package cm.aptoide.pt.crashreports;
 
-import android.content.Context;
-import cm.aptoide.pt.BuildConfig;
-import cm.aptoide.pt.logger.Logger;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterCore;
 import io.fabric.sdk.android.Fabric;
-import lombok.Setter;
 
 /**
  * Created by neuro on 09-12-2016.
@@ -20,18 +16,21 @@ public class CrashlyticsCrashLogger implements CrashLogger {
 
   private static final String LANGUAGE = "Language";
 
+  private final Crashlytics crashlytics;
+
   //var with the language the app is set to
-  @Setter private String language;
+  private String language;
 
-  public CrashlyticsCrashLogger(Context context, boolean isDisabled) {
+  public CrashlyticsCrashLogger(Crashlytics crashlytics) {
+    this.crashlytics = crashlytics;
+  }
 
-    Fabric.with(context, new Crashlytics.Builder().core(
-        new CrashlyticsCore.Builder().disabled(isDisabled)
-            .build())
-        .build(), new TwitterCore(
-        new TwitterAuthConfig(BuildConfig.TWITTER_KEY, BuildConfig.TWITTER_SECRET)));
-    Logger.d(TAG, "Setup of " + this.getClass()
-        .getSimpleName() + " complete.");
+  public String getLanguage() {
+    return language;
+  }
+
+  public void setLanguage(String language) {
+    this.language = language;
   }
 
   /**
@@ -40,10 +39,8 @@ public class CrashlyticsCrashLogger implements CrashLogger {
    * @param throwable exception you want to send
    */
   @Override public void log(Throwable throwable) {
-    if (Fabric.isInitialized()) {
-      Crashlytics.setString(LANGUAGE, language);
-    }
-    Crashlytics.logException(throwable);
+    crashlytics.setString(LANGUAGE, language);
+    crashlytics.logException(throwable);
   }
 
   /**
@@ -53,9 +50,7 @@ public class CrashlyticsCrashLogger implements CrashLogger {
    * @param value value you want associated with the key
    */
   @Override public void log(String key, String value) {
-    if (Fabric.isInitialized()) {
-      Crashlytics.setString(LANGUAGE, language);
-      Crashlytics.setString(key, value);
-    }
+    crashlytics.setString(LANGUAGE, language);
+    crashlytics.setString(key, value);
   }
 }

@@ -89,7 +89,7 @@ public class FragmentTopStores extends AptoideBaseFragment<BaseAdapter> implemen
         new EndlessRecyclerOnScrollListener(this.getAdapter(), listStoresRequest, listener,
             err -> err.printStackTrace());
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
-    endlessRecyclerOnScrollListener.onLoadMore(false);
+    endlessRecyclerOnScrollListener.onLoadMore(false, false);
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {

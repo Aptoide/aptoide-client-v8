@@ -8,6 +8,7 @@ package cm.aptoide.pt.app.view;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -118,6 +119,7 @@ import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -334,8 +336,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
     handleSavedInstance(savedInstanceState);
 
-    final AptoideApplication application =
-        (AptoideApplication) getContext().getApplicationContext();
+    final Context applicationContext = getContext().getApplicationContext();
+    final AptoideApplication application = (AptoideApplication) applicationContext;
     this.appViewModel.setDefaultTheme(application.getDefaultThemeName());
     this.appViewModel.setMarketName(application.getMarketName());
 
@@ -364,32 +366,33 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     Analytics analytics = Analytics.getInstance();
     issuesAnalytics = new IssuesAnalytics(analytics, Answers.getInstance());
     ReadPostsPersistence readPostsPersistence =
-        ((AptoideApplication) getContext().getApplicationContext()).getReadPostsPersistence();
-    timelineAnalytics = new TimelineAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
-        httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        application.getDefaultSharedPreferences(),
-        new NotificationAnalytics(httpClient, analytics, AppEventsLogger.newLogger(getContext())),
-        navigationTracker, readPostsPersistence);
+        ((AptoideApplication) applicationContext).getReadPostsPersistence();
+    timelineAnalytics =
+        new TimelineAnalytics(analytics, AppEventsLogger.newLogger(applicationContext),
+            bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+            BuildConfig.APPLICATION_ID, application.getDefaultSharedPreferences(),
+            application.getNotificationAnalytics(), navigationTracker, readPostsPersistence);
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
             timelineAnalytics, tokenInvalidator, application.getDefaultSharedPreferences());
     appRepository =
         RepositoryFactory.getAppRepository(getContext(), application.getDefaultSharedPreferences());
     adsRepository = application.getAdsRepository();
-    installedRepository =
-        RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
+    installedRepository = RepositoryFactory.getInstalledRepository(applicationContext);
     storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-        ((AptoideApplication) getContext().getApplicationContext()
-            .getApplicationContext()).getDatabase(), Store.class));
+        ((AptoideApplication) applicationContext.getApplicationContext()).getDatabase(),
+        Store.class));
     storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
-        ((AptoideApplication) getContext().getApplicationContext()
-            .getApplicationContext()).getDatabase(), StoredMinimalAd.class);
+        ((AptoideApplication) applicationContext.getApplicationContext()).getDatabase(),
+        StoredMinimalAd.class);
     final SpotAndShareAnalytics spotAndShareAnalytics = new SpotAndShareAnalytics(analytics);
-    appViewAnalytics = new AppViewAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()));
-    appViewSimilarAppAnalytics = new AppViewSimilarAppAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    final SharedPreferences sharedPreferences = application.getDefaultSharedPreferences();
+    appViewAnalytics =
+        new AppViewAnalytics(analytics, AppEventsLogger.newLogger(applicationContext),
+            bodyInterceptor, httpClient, tokenInvalidator, converterFactory, sharedPreferences);
+
+    appViewSimilarAppAnalytics =
+        new AppViewSimilarAppAnalytics(analytics, AppEventsLogger.newLogger(applicationContext));
 
     installAppRelay = PublishRelay.create();
     shareAppHelper =
@@ -398,11 +401,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             application.getDefaultSharedPreferences(),
             application.isCreateStoreUserPrivacyEnabled());
     downloadFactory = new DownloadFactory(getMarketName());
-    appViewAnalytics = new AppViewAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()));
-    storeAnalytics =
-        new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            analytics);
+
+    storeAnalytics = new StoreAnalytics(AppEventsLogger.newLogger(applicationContext), analytics);
     notLoggedInShareAnalytics = application.getNotLoggedInShareAnalytics();
     navigationTracker = application.getNavigationTracker();
     setHasOptionsMenu(true);
@@ -485,7 +485,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     if (getAppId() >= 0) {
       Logger.d(TAG, "loading app info using app ID");
       subscription =
-          appRepository.getApp(getAppId(), refresh, isSponsored(), getStoreName(), getPackageName())
+          appRepository.getApp(getAppId(), refresh, isSponsored(), getStoreName(), getPackageName(),
+              refresh)
               .map(getApp -> getApp)
               .flatMap(getApp -> manageOrganicAds(getApp))
               .flatMap(getApp -> setKeywords(getApp).onErrorReturn(throwable -> getApp))
@@ -507,7 +508,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             finishLoading(throwable);
           });
     } else if (!TextUtils.isEmpty(getUname())) {
-      subscription = appRepository.getAppFromUname(getUname(), refresh, isSponsored())
+      subscription = appRepository.getAppFromUname(getUname(), refresh, isSponsored(), refresh)
           .map(getApp -> getApp)
           .flatMap(getApp -> manageOrganicAds(getApp))
           .flatMap(getApp -> setKeywords(getApp).onErrorReturn(throwable -> getApp))
@@ -526,16 +527,17 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           });
     } else {
       Logger.d(TAG, "loading app info using app package name");
-      subscription = appRepository.getApp(getPackageName(), refresh, isSponsored(), getStoreName())
-          .map(getApp -> getApp)
-          .flatMap(getApp -> manageOrganicAds(getApp))
-          .observeOn(AndroidSchedulers.mainThread())
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-          .subscribe(getApp -> {
-            setupAppView(getApp);
-          }, throwable -> {
-            finishLoading(throwable);
-          });
+      subscription =
+          appRepository.getApp(getPackageName(), refresh, isSponsored(), getStoreName(), refresh)
+              .map(getApp -> getApp)
+              .flatMap(getApp -> manageOrganicAds(getApp))
+              .observeOn(AndroidSchedulers.mainThread())
+              .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+              .subscribe(getApp -> {
+                setupAppView(getApp);
+              }, throwable -> {
+                finishLoading(throwable);
+              });
     }
   }
 
@@ -900,6 +902,16 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     showHideOptionsMenu(uninstallMenuItem, unInstallAction != null);
   }
 
+  private List<String> createFragmentNameList(List<Fragment> fragments) {
+    List<String> fragmentNameList = new ArrayList<>();
+    for (int i = fragments.size() - 1; i >= 0; i--) {
+      fragmentNameList.add(fragments.get(i)
+          .getClass()
+          .getSimpleName());
+    }
+    return fragmentNameList;
+  }
+
   protected LinkedList<Displayable> setupDisplayables(GetApp getApp) {
     LinkedList<Displayable> displayables = new LinkedList<>();
 
@@ -912,14 +924,26 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     if (getOpenType() == OpenType.OPEN_AND_INSTALL) {
       setOpenType(null);
     }
+    final Context applicationContext = getContext().getApplicationContext();
+    final InstallAnalytics installAnalytics =
+        new InstallAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(applicationContext),
+            crashReport);
+
+    final NotificationAnalytics notificationAnalytics =
+        ((AptoideApplication) applicationContext).getNotificationAnalytics();
+
+    List<String> fragmentNames = createFragmentNameList(getFragmentManager().getFragments());
+
     installDisplayable =
         AppViewInstallDisplayable.newInstance(getApp, installManager, getSearchAdResult(),
-            shouldInstall, installedRepository, downloadFactory, timelineAnalytics,
-            appViewAnalytics, installAppRelay, this,
-            new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
-                AppEventsLogger.newLogger(getContext().getApplicationContext())), navigationTracker,
-            getEditorsBrickPosition(), new InstallAnalytics(Analytics.getInstance(),
-                AppEventsLogger.newLogger(getContext().getApplicationContext())));
+            shouldInstall, downloadFactory, timelineAnalytics, appViewAnalytics, installAppRelay,
+            this, new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
+                AppEventsLogger.newLogger(applicationContext)), navigationTracker,
+            getEditorsBrickPosition(), installAnalytics,
+            notificationAnalytics.getCampaignId(app.getPackageName(), app.getId()),
+            notificationAnalytics.getAbTestingGroup(app.getPackageName(), app.getId()),
+            fragmentNames);
+
     displayables.add(installDisplayable);
     displayables.add(
         new AppViewRateAndCommentsDisplayable(getApp, storeCredentialsProvider, appViewAnalytics,

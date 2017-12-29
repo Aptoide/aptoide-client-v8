@@ -4,7 +4,6 @@ import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import lombok.Setter;
 
 /**
  * Created by neuro on 27-01-2017.
@@ -17,9 +16,9 @@ public abstract class AptoideClientSocket extends AptoideSocket {
   private final int port;
   private final int timeout;
   private String fallbackHostName;
-  @Setter private int retries;
+  private int retries;
   private Socket socket;
-  @Setter private SocketBinder socketBinder;
+  private SocketBinder socketBinder;
 
   public AptoideClientSocket(String hostName, String fallbackHostName, int port, int timeout) {
     this(hostName, port, timeout);
@@ -121,4 +120,12 @@ public abstract class AptoideClientSocket extends AptoideSocket {
   }
 
   protected abstract void onConnected(Socket socket) throws IOException;
+
+  public void setRetries(int retries) {
+    this.retries = retries;
+  }
+
+  public void setSocketBinder(SocketBinder socketBinder) {
+    this.socketBinder = socketBinder;
+  }
 }

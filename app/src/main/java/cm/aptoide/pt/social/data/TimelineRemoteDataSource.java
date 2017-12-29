@@ -19,7 +19,7 @@ import rx.Single;
  * Created by jdandrade on 01/08/2017.
  */
 
-public class PostsRemoteDataSource {
+public class TimelineRemoteDataSource {
   private final String url;
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final OkHttpClient okhttp;
@@ -38,8 +38,9 @@ public class PostsRemoteDataSource {
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
   private String cardIdPriority;
+  private String timelineVersion;
 
-  public PostsRemoteDataSource(String url, BodyInterceptor<BaseBody> bodyInterceptor,
+  public TimelineRemoteDataSource(String url, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient okhttp, Converter.Factory converterFactory, PackageRepository packageRepository,
       int latestPackagesCount, int randomPackagesCount, TimelineResponseCardMapper mapper,
       LinksHandlerFactory linksHandlerFactory, int limit, int initialOffset, int initialTotal,
@@ -62,15 +63,15 @@ public class PostsRemoteDataSource {
     this.postFilter = postFilter;
   }
 
-  @NonNull private Single<List<Post>> getCards(int limit, int offset) {
+  @NonNull private Single<TimelineModel> getTimeline(int limit, int offset) {
     if (loading || (offset >= total)) {
-      return Single.just(Collections.emptyList());
+      return Single.just(new TimelineModel("n/a", Collections.emptyList()));
     }
     return getPackages().flatMap(packages -> Observable.fromCallable(() -> loading = true)
         .flatMapSingle(
             __ -> GetUserTimelineRequest.of(url, limit, offset, packages, bodyInterceptor, okhttp,
                 converterFactory, cardIdPriority, tokenInvalidator, sharedPreferences)
-                .observe(true)
+                .observe(true, true)
                 .toSingle())
         .flatMapSingle(timelineResponse -> {
           if (timelineResponse.isOk()) {
@@ -82,9 +83,15 @@ public class PostsRemoteDataSource {
         })
         .toSingle())
         .doOnError(__ -> loading = false)
-        .doOnSuccess(__ -> {
+        .doOnSuccess(timelineResponse -> {
           loading = false;
           cardIdPriority = null;
+          if (timelineResponse.getData() != null) {
+            timelineVersion = timelineResponse.getData()
+                .getVersion();
+          } else {
+            timelineVersion = "unknown";
+          }
         })
         .map(timelineResponse -> timelineResponse.getDataList()
             .getList())
@@ -93,7 +100,8 @@ public class PostsRemoteDataSource {
         .flatMap(element -> postFilter.filter(element))
         .toList()
         .toSingle()
-        .flatMap(timelineResponse -> mapper.map(timelineResponse, linksHandlerFactory));
+        .flatMap(timelineResponse -> mapper.map(timelineResponse, linksHandlerFactory))
+        .flatMap(posts -> Single.just(new TimelineModel(timelineVersion, posts)));
   }
 
   private Single<List<String>> getPackages() {
@@ -103,19 +111,19 @@ public class PostsRemoteDataSource {
         .toSingle();
   }
 
-  public Single<List<Post>> getNextCards() {
-    return getCards(limit, currentOffset);
+  public Single<TimelineModel> getNextTimelinePage() {
+    return getTimeline(limit, currentOffset);
   }
 
-  public Single<List<Post>> getCards() {
+  public Single<TimelineModel> getTimeline() {
     postFilter.clear();
-    return getCards(limit, initialOffset);
+    return getTimeline(limit, initialOffset);
   }
 
-  public Single<List<Post>> getCards(String cardId) {
+  public Single<TimelineModel> getTimeline(String cardId) {
     postFilter.clear();
     cardIdPriority = cardId;
-    return getCards(limit, initialOffset);
+    return getTimeline(limit, initialOffset);
   }
 
   public void clearLoading() {

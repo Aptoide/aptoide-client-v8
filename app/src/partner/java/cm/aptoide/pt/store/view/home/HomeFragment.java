@@ -412,10 +412,6 @@ public class HomeFragment extends StoreFragment {
     setHasOptionsMenu(true);
   }
 
-  private enum BundleKeys {
-    STORE_NAME, STORE_CONTEXT, STORE_THEME
-  }
-
   /**
    * show first install fragment with animation
    */
@@ -441,5 +437,9 @@ public class HomeFragment extends StoreFragment {
         transaction.commit();
       }
     }
+  }
+
+  private enum BundleKeys {
+    STORE_NAME, STORE_CONTEXT, STORE_THEME
   }
 }

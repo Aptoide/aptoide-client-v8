@@ -1,6 +1,6 @@
 package cm.aptoide.pt.remotebootconfig.datamodel;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by diogoloureiro on 18/01/2017.
@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 
 public class Partner {
-  @JsonProperty("config_id") private int configId;
+  @SerializedName("config_id") private int configId;
   private String uid;
   private String type;
   private Feedback feedback;

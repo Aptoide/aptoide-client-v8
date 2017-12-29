@@ -230,7 +230,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
       updateAccessor.removeAll();
       UpdateRepository repository = RepositoryFactory.getUpdateRepository(getContext(),
           ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
-      repository.sync(true)
+      repository.sync(true, false)
           .andThen(repository.getAll(false))
           .first()
           .subscribe(updates -> Logger.d(TAG, "updates refreshed"),
@@ -412,7 +412,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
                           getContext().getResources(),
                           AptoideUtils.StringU.formatBytes(deletedSize, false)));
                 }, throwable -> {
-                  ShowMessage.asSnack(SettingsFragment.this, R.string.error_SYS_1);
+                  ShowMessage.asSnack(SettingsFragment.this, R.string.ws_error_SYS_1);
                   throwable.printStackTrace();
                 }));
             return false;

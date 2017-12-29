@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
@@ -27,7 +28,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
@@ -48,7 +48,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.view.SearchBuilder;
 import cm.aptoide.pt.share.ShareStoreHelper;
@@ -118,6 +117,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private Runnable registerViewpagerCurrentItem;
   private SearchBuilder searchBuilder;
   private IssuesAnalytics issuesAnalytics;
+  private SharedPreferences sharedPreferences;
 
   public static StoreFragment newInstance(long userId, String storeTheme, OpenType openType) {
     return newInstance(userId, storeTheme, null, openType);
@@ -181,12 +181,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
     converterFactory = WebService.getDefaultConverter();
     Analytics analytics = Analytics.getInstance();
     issuesAnalytics = new IssuesAnalytics(analytics, Answers.getInstance());
-    timelineAnalytics = new TimelineAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
-        httpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        application.getDefaultSharedPreferences(),
-        new NotificationAnalytics(httpClient, analytics, AppEventsLogger.newLogger(getContext())),
-        navigationTracker, application.getReadPostsPersistence());
+    sharedPreferences = application.getDefaultSharedPreferences();
+    timelineAnalytics = application.getTimelineAnalytics();
     storeAnalytics = new StoreAnalytics(AppEventsLogger.newLogger(getContext()), analytics);
     marketName = application.getMarketName();
     shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);
@@ -235,7 +231,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create || tabs == null) {
-      loadData(refresh, openType).observeOn(AndroidSchedulers.mainThread())
+      loadData(refresh, openType, refresh).observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(title -> {
             this.title = title;
@@ -395,16 +391,16 @@ public class StoreFragment extends BasePagerToolbarFragment {
   /**
    * @return an observable with the title that should be displayed
    */
-  private Observable<String> loadData(boolean refresh, OpenType openType) {
+  private Observable<String> loadData(boolean refresh, OpenType openType,
+      boolean bypassServerCache) {
     switch (openType) {
       case GetHome:
         return GetHomeRequest.of(
             StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), userId,
             storeContext, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-            getContext().getResources(),
+            sharedPreferences, getContext().getResources(),
             (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
-            .observe(refresh)
+            .observe(refresh, bypassServerCache)
             .map(getHome -> {
               Store store = getHome.getNodes()
                   .getMeta()
@@ -424,11 +420,10 @@ public class StoreFragment extends BasePagerToolbarFragment {
       default:
         return GetStoreRequest.of(
             StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), storeContext,
-            bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
             getContext().getResources(),
             (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
-            .observe(refresh)
+            .observe(refresh, bypassServerCache)
             .map(getStore -> {
               setupVariables(parseTabs(getStore), getStore.getNodes()
                   .getMeta()

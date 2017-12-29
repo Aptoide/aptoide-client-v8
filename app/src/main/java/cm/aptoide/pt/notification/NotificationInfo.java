@@ -10,11 +10,15 @@ public class NotificationInfo {
   private String notificationUrl;
   private String action;
 
-  public NotificationInfo(int notificationType, String notificationTrackUrl,
-      String notificationUrl) {
+  public NotificationInfo(String action, int notificationType, String notificationTrackUrl, String notificationUrl) {
+    this.action = action;
     this.notificationType = notificationType;
     this.notificationTrackUrl = notificationTrackUrl;
     this.notificationUrl = notificationUrl;
+  }
+
+  public NotificationInfo(String action) {
+    this.action = action;
   }
 
   public int getNotificationType() {
@@ -31,9 +35,5 @@ public class NotificationInfo {
 
   public String getAction() {
     return action;
-  }
-
-  public void setAction(String action) {
-    this.action = action;
   }
 }

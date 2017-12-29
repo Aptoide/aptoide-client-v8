@@ -11,14 +11,13 @@ import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
 import cm.aptoide.pt.app.view.GridAppDisplayable;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import lombok.Getter;
 
 /**
  * Created on 04/05/16.
  */
 public class AppViewSuggestedAppDisplayable extends GridAppDisplayable {
 
-  @Getter private AppViewSimilarAppAnalytics appViewSimilarAppAnalytics;
+  private AppViewSimilarAppAnalytics appViewSimilarAppAnalytics;
 
   public AppViewSuggestedAppDisplayable() {
   }
@@ -38,5 +37,9 @@ public class AppViewSuggestedAppDisplayable extends GridAppDisplayable {
 
   @Override public int getViewLayout() {
     return R.layout.displayable_app_view_suggested_app;
+  }
+
+  public AppViewSimilarAppAnalytics getAppViewSimilarAppAnalytics() {
+    return this.appViewSimilarAppAnalytics;
   }
 }

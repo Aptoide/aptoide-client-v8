@@ -9,12 +9,11 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.TimelineStats;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 import cm.aptoide.pt.view.spannable.SpannableFactory;
-import lombok.Getter;
 
 /**
  * Created by trinkes on 15/12/2016.
@@ -25,7 +24,7 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
   private Long userId;
   private SpannableFactory spannableFactory;
   private String storeTheme;
-  @Getter private boolean shouldShowAddFriends;
+  private boolean shouldShowAddFriends;
   private TimelineAnalytics timelineAnalytics;
   private long storeId;
   private Resources resources;
@@ -45,6 +44,10 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
     this.timelineAnalytics = timelineAnalytics;
     this.storeId = storeId;
     this.resources = resources;
+  }
+
+  public boolean isShouldShowAddFriends() {
+    return shouldShowAddFriends;
   }
 
   @Override protected Configs getConfig() {

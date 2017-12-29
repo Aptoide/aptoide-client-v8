@@ -1,5 +1,6 @@
 package cm.aptoide.pt.reviews;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -36,6 +37,7 @@ import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.networking.IdsRepository;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
@@ -49,7 +51,6 @@ import cm.aptoide.pt.view.recycler.displayable.ProgressBarDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.List;
-import lombok.Getter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
@@ -59,15 +60,16 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     implements ItemCommentAdderView<Review, CommentsAdapter> {
 
   private static final String TAG = RateAndReviewsFragment.class.getSimpleName();
+  private SharedPreferences preferences;
   private IdsRepository idsRepository;
   private DialogUtils dialogUtils;
 
+  private long reviewId;
+  private String storeName;
+  private String appName;
   private long appId;
-  @Getter private long reviewId;
   private String packageName;
-  @Getter private String storeName;
   private String storeTheme;
-  @Getter private String appName;
   private MenuItem installMenuItem;
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private StoreCredentialsProvider storeCredentialsProvider;
@@ -103,6 +105,18 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     args.putLong(BundleCons.REVIEW_ID, reviewId);
     fragment.setArguments(args);
     return fragment;
+  }
+
+  public long getReviewId() {
+    return reviewId;
+  }
+
+  public String getStoreName() {
+    return storeName;
+  }
+
+  public String getAppName() {
+    return appName;
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
@@ -196,7 +210,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     GetAppRequest.of(packageName, baseBodyInterceptor, appId, httpClient, converterFactory,
         tokenInvalidator,
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())
-        .observe(refresh)
+        .observe(refresh, ManagerPreferences.getAndResetForceServerRefresh(preferences))
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -245,7 +259,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     });
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
-    endlessRecyclerOnScrollListener.onLoadMore(false);
+    endlessRecyclerOnScrollListener.onLoadMore(false, false);
   }
 
   private ListReviewsRequest createListReviewsRequest(String languagesFilterSort) {
@@ -268,6 +282,8 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    preferences =
+        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     tokenInvalidator =
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     accountManager =

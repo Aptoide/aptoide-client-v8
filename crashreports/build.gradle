@@ -3,7 +3,6 @@ apply plugin: 'me.tatarka.retrolambda'
 
 retrolambda {
   jvmArgs '-noverify'
-  //defaultMethods true
 }
 
 android {
@@ -50,6 +49,4 @@ dependencies {
 
   debugCompile project(path: ':utils', configuration: 'debug')
   releaseCompile project(path: ':utils', configuration: 'release')
-
-  provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
 }

@@ -5,13 +5,14 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import cm.aptoide.pt.dataprovider.ws.RefreshBody;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Base body that every request should use. If more information should be provided this class
  * should be extended.
  */
-public class BaseBody {
+public class BaseBody implements RefreshBody {
   @JsonProperty("aptoide_uid") private String aptoideId;
   private String accessToken;
   private int aptoideVercode;
@@ -20,8 +21,17 @@ public class BaseBody {
   private String cdn;
   private String lang;
   private boolean mature;
+  private boolean refresh;
   private String q;
   private String country;
+
+  public boolean isRefresh() {
+    return refresh;
+  }
+
+  public void setRefresh(boolean refresh) {
+    this.refresh = refresh;
+  }
 
   public String getAptoideId() {
     return aptoideId;

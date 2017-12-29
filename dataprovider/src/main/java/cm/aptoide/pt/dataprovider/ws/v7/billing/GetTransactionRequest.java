@@ -13,16 +13,18 @@ import retrofit2.Converter;
 import retrofit2.Response;
 import rx.Observable;
 
-public class GetTransactionRequest extends V7<Response<GetTransactionRequest.ResponseBody>, Void> {
+public class GetTransactionRequest
+    extends V7<Response<GetTransactionRequest.ResponseBody>, BaseBody> {
 
   private final long productId;
   private final String accessToken;
   private final String customerId;
 
-  private GetTransactionRequest(Void body, String baseHost, OkHttpClient httpClient,
+  private GetTransactionRequest(String baseHost, OkHttpClient httpClient,
       Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
       TokenInvalidator tokenInvalidator, long productId, String accessToken, String customerId) {
-    super(body, baseHost, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+    super(new BaseBody(), baseHost, httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
     this.productId = productId;
     this.accessToken = accessToken;
     this.customerId = customerId;
@@ -40,7 +42,7 @@ public class GetTransactionRequest extends V7<Response<GetTransactionRequest.Res
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, long productId,
       String accessToken, String customerId) {
-    return new GetTransactionRequest(null, getHost(sharedPreferences), httpClient, converterFactory,
+    return new GetTransactionRequest(getHost(sharedPreferences), httpClient, converterFactory,
         bodyInterceptor, tokenInvalidator, productId, accessToken, customerId);
   }
 

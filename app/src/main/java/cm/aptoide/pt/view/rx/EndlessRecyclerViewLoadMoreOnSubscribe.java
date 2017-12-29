@@ -26,7 +26,7 @@ public class EndlessRecyclerViewLoadMoreOnSubscribe implements Observable.OnSubs
     verifyMainThread();
 
     final EndlessRecyclerOnScrollListener listener = new EndlessRecyclerOnScrollListener(adapter) {
-      @Override public void onLoadMore(boolean bypassCache) {
+      @Override public void onLoadMore(boolean bypassCache, boolean bypassServerCache) {
         if (!subscriber.isUnsubscribed()) {
           subscriber.onNext(getAdapter().getItemCount());
         }

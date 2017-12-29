@@ -7,9 +7,6 @@ import android.os.Bundle;
 import cm.aptoide.pt.AptoideApplication;
 import com.jakewharton.rxrelay.PublishRelay;
 
-/**
- * Created by trinkes on 7/13/16.
- */
 public class NotificationReceiver extends BroadcastReceiver {
 
   public static final String NOTIFICATION_PRESSED_ACTION = "NOTIFICATION_PRESSED_ACTION";
@@ -24,27 +21,27 @@ public class NotificationReceiver extends BroadcastReceiver {
   @Override public void onReceive(Context context, Intent intent) {
     notificationPublishRelay =
         ((AptoideApplication) context.getApplicationContext()).getNotificationsPublishRelay();
-    final String action = intent.getAction();
     Bundle intentExtras = intent.getExtras();
-    NotificationInfo notificationInfo =
-        new NotificationInfo(intentExtras.getInt(NOTIFICATION_NOTIFICATION_ID),
+    NotificationInfo notificationInfo;
+    switch (intent.getAction()) {
+      case Intent.ACTION_BOOT_COMPLETED:
+        notificationInfo = new NotificationInfo(Intent.ACTION_BOOT_COMPLETED);
+        notificationPublishRelay.call(notificationInfo);
+        break;
+      case NOTIFICATION_PRESSED_ACTION:
+        notificationInfo = new NotificationInfo(NOTIFICATION_PRESSED_ACTION,
+            intentExtras.getInt(NOTIFICATION_NOTIFICATION_ID),
             intentExtras.getString(NOTIFICATION_TRACK_URL),
             intentExtras.getString(NOTIFICATION_TARGET_URL));
-    if (action != null) {
-      switch (action) {
-        case Intent.ACTION_BOOT_COMPLETED:
-          notificationInfo.setAction(Intent.ACTION_BOOT_COMPLETED);
-          notificationPublishRelay.call(notificationInfo);
-          break;
-        case NOTIFICATION_PRESSED_ACTION:
-          notificationInfo.setAction(NOTIFICATION_PRESSED_ACTION);
-          notificationPublishRelay.call(notificationInfo);
-          break;
-        case NOTIFICATION_DISMISSED_ACTION:
-          notificationInfo.setAction(NOTIFICATION_DISMISSED_ACTION);
-          notificationPublishRelay.call(notificationInfo);
-          break;
-      }
+        notificationPublishRelay.call(notificationInfo);
+        break;
+      case NOTIFICATION_DISMISSED_ACTION:
+        notificationInfo = new NotificationInfo(NOTIFICATION_DISMISSED_ACTION,
+            intentExtras.getInt(NOTIFICATION_NOTIFICATION_ID),
+            intentExtras.getString(NOTIFICATION_TRACK_URL),
+            intentExtras.getString(NOTIFICATION_TARGET_URL));
+        notificationPublishRelay.call(notificationInfo);
+        break;
     }
   }
 }
