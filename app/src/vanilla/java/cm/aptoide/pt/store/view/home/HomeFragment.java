@@ -56,6 +56,7 @@ import cm.aptoide.pt.view.custom.BadgeView;
 import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
+import java.io.File;
 import java.text.NumberFormat;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -92,6 +93,7 @@ public class HomeFragment extends StoreFragment {
   private SearchBuilder searchBuilder;
   private String defaultThemeName;
   private IssuesAnalytics issuesAnalytics;
+  private String cacheDirectoryPath;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -178,7 +180,9 @@ public class HomeFragment extends StoreFragment {
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-
+    cacheDirectoryPath = getContext().getApplicationContext()
+        .getCacheDir()
+        .getPath();
     defaultThemeName = application.getDefaultThemeName();
     final SearchManager searchManager =
         (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
@@ -466,14 +470,12 @@ public class HomeFragment extends StoreFragment {
   }
 
   private void startFeedbackFragment() {
-    String downloadFolderPath = getContext().getApplicationContext()
-        .getCacheDir()
-        .getPath();
     String screenshotFileName = getActivity().getClass()
         .getSimpleName() + ".jpg";
-    AptoideUtils.ScreenU.takeScreenshot(getActivity(), downloadFolderPath, screenshotFileName);
+    File screenshot =
+        AptoideUtils.ScreenU.takeScreenshot(getActivity(), cacheDirectoryPath, screenshotFileName);
     getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-        .newSendFeedbackFragment(downloadFolderPath + screenshotFileName), true);
+        .newSendFeedbackFragment(screenshot.getAbsolutePath()), true);
   }
 
   private void openSocialLink(String packageName, String socialUrl, String pageTitle,

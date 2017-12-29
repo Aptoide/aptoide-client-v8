@@ -63,7 +63,7 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
 
-    return new GetAppRequest(getHost(sharedPreferences), new Body(md5, sharedPreferences),
+    return new GetAppRequest(getHost(sharedPreferences), new Body(sharedPreferences, md5),
         bodyInterceptor, httpClient,
         converterFactory, tokenInvalidator);
   }
@@ -130,15 +130,15 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
       this.nodes = new Node(packageName);
     }
 
-    public Body(Boolean refresh, String md5, SharedPreferences sharedPreferences) {
-      super(sharedPreferences);
-      this.md5 = md5;
-      this.nodes = new Node();
-    }
-
     public Body(String uname, SharedPreferences sharedPreferences) {
       super(sharedPreferences);
       this.uname = uname;
+      this.nodes = new Node();
+    }
+
+    public Body(SharedPreferences sharedPreferences, String md5) {
+      super(sharedPreferences);
+      this.md5 = md5;
       this.nodes = new Node();
     }
 

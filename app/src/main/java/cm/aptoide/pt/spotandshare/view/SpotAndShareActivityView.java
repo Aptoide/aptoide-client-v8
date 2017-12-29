@@ -1,8 +1,8 @@
 package cm.aptoide.pt.spotandshare.view;
 
-import cm.aptoide.pt.analytics.view.AnalyticsActivity;
+import cm.aptoide.pt.view.ActivityView;
 
-public abstract class SpotAndShareActivityView extends AnalyticsActivity {
+public abstract class SpotAndShareActivityView extends ActivityView {
 
   private Presenter presenter;
 
