@@ -12,7 +12,7 @@ public class SearchSuggestionService {
   }
 
   public Single<List<String>> getAppSuggestionsForQuery(String query) {
-    return repository.getSuggestion(query)
+    return repository.getSuggestionForApp(query)
         .map(model -> model.getData());
   }
 

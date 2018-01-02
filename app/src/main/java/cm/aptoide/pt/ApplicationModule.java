@@ -798,7 +798,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("ws-prod-base-url") String providesBaseWebServiceTestsUrl() {
-    return "http://ws.aptoide.com";
+    return "http://"
+        + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_PRODUCTION_SEARCH_HOST
+        + "/api/7/";
   }
 
   @Singleton @Provides @Named("rx") CallAdapter.Factory providesCallAdapterFactory() {

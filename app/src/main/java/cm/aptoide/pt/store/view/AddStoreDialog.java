@@ -58,7 +58,7 @@ public class AddStoreDialog extends BaseDialog {
   public static final int PRIVATE_STORE_INVALID_CREDENTIALS_CODE = 21;
   public static final int PRIVATE_STORE_ERROR_CODE = 22;
 
-  private static final int COMPLETION_THRESHOLD = 3;
+  private static final int COMPLETION_THRESHOLD = 1;
 
   private static final String TAG = AddStoreDialog.class.getName();
 
@@ -223,7 +223,18 @@ public class AddStoreDialog extends BaseDialog {
   }
 
   private void setupSearch() {
-    final SuggestionCursorAdapter suggestionCursorAdapter = new SuggestionCursorAdapter(getContext());
+    final SuggestionCursorAdapter suggestionCursorAdapter =
+        new SuggestionCursorAdapter(getContext());
+    searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+      @Override public boolean onSuggestionSelect(int position) {
+        return false;
+      }
+
+      @Override public boolean onSuggestionClick(int position) {
+        searchView.setQuery(suggestionCursorAdapter.getSuggestionAt(position), false);
+        return true;
+      }
+    });
     searchView.setSuggestionsAdapter(suggestionCursorAdapter);
 
     final AutoCompleteTextView autoCompleteTextView =
@@ -241,7 +252,7 @@ public class AddStoreDialog extends BaseDialog {
         .filter(event -> !event.isSubmitted())
         .map(event -> event.queryText()
             .toString())
-        .filter(query -> query.length() >= COMPLETION_THRESHOLD)
+        .filter(query -> query != null && query.length() >= COMPLETION_THRESHOLD)
         .flatMapSingle(query -> searchSuggestionManager.getSuggestionsForStore(query)
             .onErrorResumeNext(err -> {
               if (err instanceof TimeoutException) {
