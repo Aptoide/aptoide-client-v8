@@ -69,23 +69,36 @@
         android:textSize="14sp"
         tools:text="fabio.dias@aptoide.com"
         />
-
-    <TextView
-        android:id="@+id/privacy_policy_label"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_locked_appview"
-        android:drawablePadding="8dp"
-        android:drawableStart="@drawable/ic_locked_appview"
-        android:ellipsize="end"
-        android:gravity="center_vertical"
-        android:maxLines="1"
-        android:padding="@dimen/appview_developer_padding"
-        android:textColor="?android:attr/textColorSecondary"
-        android:textSize="14sp"
-        tools:text="N.A."
-        />
+        android:orientation="horizontal"
+        >
 
+      <ImageView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:layout_marginLeft="6dp"
+          android:layout_marginStart="6dp"
+          android:src="@drawable/ic_locked_appview"
+          />
+      <TextView
+          android:id="@+id/privacy_policy_label"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:ellipsize="end"
+          android:gravity="center_vertical"
+          android:maxLines="1"
+          android:paddingBottom="@dimen/appview_developer_padding"
+          android:paddingLeft="5dp"
+          android:paddingStart="5dp"
+          android:paddingTop="@dimen/appview_developer_padding"
+          android:textColor="?android:attr/textColorSecondary"
+          android:textSize="14sp"
+          tools:text="N.A."
+          />
+    </LinearLayout>
     <TextView
         android:id="@+id/permissions_label"
         android:layout_width="match_parent"
