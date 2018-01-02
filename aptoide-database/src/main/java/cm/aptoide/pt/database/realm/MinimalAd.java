@@ -8,8 +8,6 @@ package cm.aptoide.pt.database.realm;
 import android.os.Parcel;
 import android.os.Parcelable;
 import io.realm.RealmObject;
-import lombok.Getter;
-import lombok.Setter;
 
 public class MinimalAd extends RealmObject implements Parcelable {
 
@@ -23,20 +21,20 @@ public class MinimalAd extends RealmObject implements Parcelable {
     }
   };
 
-  @Getter private String description;
-  @Getter private String packageName;
-  @Getter private Long networkId;
-  @Getter private String clickUrl;
-  @Getter private String cpcUrl;
-  @Getter @Setter private String cpdUrl;
-  @Getter private Long appId;
-  @Getter private Long adId;
-  @Getter private String cpiUrl;
-  @Getter private String name;
-  @Getter private String iconPath;
-  @Getter private Integer downloads;
-  @Getter private Integer stars;
-  @Getter private Long modified;
+  private String cpdUrl;
+  private String description;
+  private String packageName;
+  private Long networkId;
+  private String clickUrl;
+  private String cpcUrl;
+  private Long appId;
+  private Long adId;
+  private String cpiUrl;
+  private String name;
+  private String iconPath;
+  private Integer downloads;
+  private Integer stars;
+  private Long modified;
 
   public MinimalAd() {
   }
@@ -75,6 +73,66 @@ public class MinimalAd extends RealmObject implements Parcelable {
     this.downloads = in.readInt();
     this.stars = in.readInt();
     this.modified = in.readLong();
+  }
+
+  public String getCpdUrl() {
+    return cpdUrl;
+  }
+
+  public void setCpdUrl(String cpdUrl) {
+    this.cpdUrl = cpdUrl;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public String getPackageName() {
+    return packageName;
+  }
+
+  public Long getNetworkId() {
+    return networkId;
+  }
+
+  public String getClickUrl() {
+    return clickUrl;
+  }
+
+  public String getCpcUrl() {
+    return cpcUrl;
+  }
+
+  public Long getAppId() {
+    return appId;
+  }
+
+  public Long getAdId() {
+    return adId;
+  }
+
+  public String getCpiUrl() {
+    return cpiUrl;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public String getIconPath() {
+    return iconPath;
+  }
+
+  public Integer getDownloads() {
+    return downloads;
+  }
+
+  public Integer getStars() {
+    return stars;
+  }
+
+  public Long getModified() {
+    return modified;
   }
 
   @Override public int describeContents() {

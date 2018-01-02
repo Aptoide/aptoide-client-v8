@@ -3,7 +3,6 @@ package cm.aptoide.pt.reviews;
 import android.widget.Spinner;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
-import lombok.Getter;
 
 /**
  * Created by neuro on 04-09-2017.
@@ -11,7 +10,7 @@ import lombok.Getter;
 
 public class ReviewsLanguageFilterDisplayable extends Displayable {
 
-  @Getter private LanguageFilterSpinnerHelper.OnItemSelected onItemSelected;
+  private LanguageFilterSpinnerHelper.OnItemSelected onItemSelected;
   private LanguageFilterSpinnerHelper languageFilterSpinnerHelper;
 
   public ReviewsLanguageFilterDisplayable() {
@@ -20,6 +19,10 @@ public class ReviewsLanguageFilterDisplayable extends Displayable {
   public ReviewsLanguageFilterDisplayable(
       LanguageFilterSpinnerHelper.OnItemSelected onItemSelected) {
     this.onItemSelected = onItemSelected;
+  }
+
+  public LanguageFilterSpinnerHelper.OnItemSelected getOnItemSelected() {
+    return onItemSelected;
   }
 
   @Override protected Configs getConfig() {

@@ -7,9 +7,8 @@ package cm.aptoide.pt.dataprovider.model.v7.timeline;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode public class FeatureTimelineItem implements TimelineItem<TimelineCard> {
+public class FeatureTimelineItem implements TimelineItem<TimelineCard> {
 
   private final Feature feature;
 
@@ -23,5 +22,30 @@ import lombok.EqualsAndHashCode;
 
   @Override public Feature getData() {
     return feature;
+  }
+
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    final Object $feature = this.feature;
+    result = result * PRIME + ($feature == null ? 43 : $feature.hashCode());
+    return result;
+  }
+
+  public boolean equals(Object o) {
+    if (o == this) return true;
+    if (!(o instanceof FeatureTimelineItem)) return false;
+    final FeatureTimelineItem other = (FeatureTimelineItem) o;
+    if (!other.canEqual((Object) this)) return false;
+    final Object this$feature = this.feature;
+    final Object other$feature = other.feature;
+    if (this$feature == null ? other$feature != null : !this$feature.equals(other$feature)) {
+      return false;
+    }
+    return true;
+  }
+
+  protected boolean canEqual(Object other) {
+    return other instanceof FeatureTimelineItem;
   }
 }

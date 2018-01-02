@@ -8,14 +8,13 @@ package cm.aptoide.pt.view.recycler.displayable;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.database.realm.MinimalAd;
-import lombok.Getter;
 
 /**
  * Created by neuro on 20-06-2016.
  */
 public class GridAdDisplayable extends DisplayablePojo<MinimalAd> {
 
-  @Getter private String tag;
+  private String tag;
   private NavigationTracker navigationTracker;
 
   public GridAdDisplayable() {
@@ -37,5 +36,9 @@ public class GridAdDisplayable extends DisplayablePojo<MinimalAd> {
 
   public NavigationTracker getNavigationTracker() {
     return navigationTracker;
+  }
+
+  public String getTag() {
+    return this.tag;
   }
 }

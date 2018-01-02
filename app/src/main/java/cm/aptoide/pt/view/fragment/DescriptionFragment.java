@@ -30,7 +30,6 @@ import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.ThemeUtils;
-import lombok.Getter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
@@ -38,12 +37,12 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
 
   private static final String TAG = DescriptionFragment.class.getSimpleName();
 
-  @Getter private static final String APP_ID = "app_id";
-  @Getter private static final String PACKAGE_NAME = "packageName";
-  @Getter private static final String STORE_NAME = "store_name";
-  @Getter private static final String STORE_THEME = "store_theme";
-  @Getter private static final String DESCRIPTION = "description";
-  @Getter private static final String APP_NAME = "APP_NAME";
+  private static final String APP_ID = "app_id";
+  private static final String PACKAGE_NAME = "packageName";
+  private static final String STORE_NAME = "store_name";
+  private static final String STORE_THEME = "store_theme";
+  private static final String DESCRIPTION = "description";
+  private static final String APP_NAME = "APP_NAME";
   private boolean hasAppId = false;
   private long appId;
   private String packageName;
@@ -80,6 +79,30 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
     args.putString(STORE_THEME, storeTheme);
     fragment.setArguments(args);
     return fragment;
+  }
+
+  public static String getAPP_ID() {
+    return DescriptionFragment.APP_ID;
+  }
+
+  public static String getPACKAGE_NAME() {
+    return DescriptionFragment.PACKAGE_NAME;
+  }
+
+  public static String getSTORE_NAME() {
+    return DescriptionFragment.STORE_NAME;
+  }
+
+  public static String getSTORE_THEME() {
+    return DescriptionFragment.STORE_THEME;
+  }
+
+  public static String getDESCRIPTION() {
+    return DescriptionFragment.DESCRIPTION;
+  }
+
+  public static String getAPP_NAME() {
+    return DescriptionFragment.APP_NAME;
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {

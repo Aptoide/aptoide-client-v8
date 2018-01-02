@@ -4,13 +4,12 @@ import android.support.annotation.IntDef;
 import cm.aptoide.pt.database.realm.Notification;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import lombok.ToString;
 
 /**
  * Created by trinkes on 03/05/2017.
  */
 
-@ToString(of = { "title" }) public class AptoideNotification {
+public class AptoideNotification {
   public static final int CAMPAIGN = 0;
   public static final int COMMENT = 1;
   public static final int LIKE = 2;
@@ -76,6 +75,10 @@ import lombok.ToString;
     this.campaignId = campaignId;
     this.timeStamp = timeStamp;
     this.ownerId = ownerId;
+  }
+
+  @Override public String toString() {
+    return "AptoideNotification{" + "title='" + title + '\'' + '}';
   }
 
   public boolean isProcessed() {

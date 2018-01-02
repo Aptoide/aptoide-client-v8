@@ -1,7 +1,6 @@
 package cm.aptoide.pt.spotandshare;
 
 import cm.aptoide.pt.spotandshare.analytics.SpotAndShareAnalyticsInterface;
-import lombok.Getter;
 
 /**
  * Created by pedroribeiro on 03/03/17.
@@ -9,9 +8,13 @@ import lombok.Getter;
 
 public class ShareApps {
 
-  @Getter private static SpotAndShareAnalyticsInterface analytics;
+  private static SpotAndShareAnalyticsInterface analytics;
 
   public ShareApps(SpotAndShareAnalyticsInterface analytics) {
     ShareApps.analytics = analytics;
+  }
+
+  public static SpotAndShareAnalyticsInterface getAnalytics() {
+    return analytics;
   }
 }

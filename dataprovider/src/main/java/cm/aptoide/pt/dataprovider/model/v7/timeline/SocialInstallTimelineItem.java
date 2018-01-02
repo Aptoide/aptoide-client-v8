@@ -2,13 +2,12 @@ package cm.aptoide.pt.dataprovider.model.v7.timeline;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.EqualsAndHashCode;
 
 /**
  * Created by jdandrade on 15/12/2016.
  */
 
-@EqualsAndHashCode public class SocialInstallTimelineItem implements TimelineItem<TimelineCard> {
+public class SocialInstallTimelineItem implements TimelineItem<TimelineCard> {
 
   private final SocialInstall socialInstall;
 
@@ -22,5 +21,31 @@ import lombok.EqualsAndHashCode;
 
   @Override public SocialInstall getData() {
     return socialInstall;
+  }
+
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    final Object $socialInstall = this.socialInstall;
+    result = result * PRIME + ($socialInstall == null ? 43 : $socialInstall.hashCode());
+    return result;
+  }
+
+  public boolean equals(Object o) {
+    if (o == this) return true;
+    if (!(o instanceof SocialInstallTimelineItem)) return false;
+    final SocialInstallTimelineItem other = (SocialInstallTimelineItem) o;
+    if (!other.canEqual((Object) this)) return false;
+    final Object this$socialInstall = this.socialInstall;
+    final Object other$socialInstall = other.socialInstall;
+    if (this$socialInstall == null ? other$socialInstall != null
+        : !this$socialInstall.equals(other$socialInstall)) {
+      return false;
+    }
+    return true;
+  }
+
+  protected boolean canEqual(Object other) {
+    return other instanceof SocialInstallTimelineItem;
   }
 }

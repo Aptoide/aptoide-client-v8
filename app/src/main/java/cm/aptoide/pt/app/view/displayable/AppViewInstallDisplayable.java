@@ -21,8 +21,6 @@ import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import com.jakewharton.rxrelay.PublishRelay;
-import lombok.Getter;
-import lombok.Setter;
 import rx.Observable;
 
 /**
@@ -32,8 +30,8 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 
   private final Observable<Void> installAppRelay;
   private int versionCode;
-  @Getter @Setter private boolean shouldInstall;
-  @Getter private SearchAdResult searchAdResult;
+  private boolean shouldInstall;
+  private SearchAdResult searchAdResult;
 
   private InstallManager installManager;
   private String md5;
@@ -41,7 +39,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   private Button installButton;
   private DownloadFactory downloadFactory;
   private TimelineAnalytics timelineAnalytics;
-  @Getter private AppViewFragment appViewFragment;
+  private AppViewFragment appViewFragment;
   private DownloadCompleteAnalytics analytics;
   private NavigationTracker navigationTracker;
   private String editorsChoiceBrickPosition;
@@ -158,5 +156,21 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 
   public String getAbTestingGroup() {
     return abTestingGroup;
+  }
+
+  public boolean isShouldInstall() {
+    return this.shouldInstall;
+  }
+
+  public void setShouldInstall(boolean shouldInstall) {
+    this.shouldInstall = shouldInstall;
+  }
+
+  public SearchAdResult getSearchAdResult() {
+    return this.searchAdResult;
+  }
+
+  public AppViewFragment getAppViewFragment() {
+    return this.appViewFragment;
   }
 }
