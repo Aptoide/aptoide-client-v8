@@ -799,7 +799,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides @Named("ws-prod-base-url") String providesBaseWebServiceTestsUrl() {
     return "http://"
-        + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_PRODUCTION_SEARCH_HOST
+        + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SEARCH_HOST
         + "/api/7/";
   }
 
