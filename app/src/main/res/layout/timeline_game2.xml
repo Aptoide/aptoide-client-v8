@@ -55,6 +55,7 @@
           tools:text="App Quiz"
           style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
           />
+
     </LinearLayout>
 
     <LinearLayout
@@ -84,6 +85,8 @@
         android:id="@+id/stamp_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/header_layout"
+        android:orientation="horizontal"
         >
 
       <ImageView
@@ -91,9 +94,9 @@
           android:layout_width="40dp"
           android:layout_height="40dp"
           android:layout_marginLeft="25dp"
-          android:layout_marginTop="60dp"
+          android:layout_marginStart="25dp"
+          android:layout_marginTop="5dp"
           android:alpha="0.0"
-          android:rotation="-35"
           android:src="@mipmap/ic_launcher"
           android:visibility="invisible"
           />
@@ -102,11 +105,10 @@
           android:id="@+id/stamp_right"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:layout_alignParentRight="true"
-          android:layout_marginRight="25dp"
-          android:layout_marginTop="60dp"
+          android:layout_marginLeft="240dp"
+          android:layout_marginStart="240dp"
+          android:layout_marginTop="5dp"
           android:alpha="0.0"
-          android:rotation="35"
           android:src="@mipmap/ic_launcher"
           android:visibility="invisible"
           />

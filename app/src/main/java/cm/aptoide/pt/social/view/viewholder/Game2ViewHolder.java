@@ -37,6 +37,8 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
   @DrawableRes private static final int DEFAULT_IMAGE_PLACEHOLDER = R.drawable.create_user_avatar;
   private final ImageView answerLeft;
   private final ImageView answerRight;
+  private final ImageView borderRight;
+  private final ImageView borderLeft;
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final SpannableFactory spannableFactory;
   private final ImageView headerIcon;
@@ -65,6 +67,9 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
     //leaderboard = (TextView) itemView.findViewById(R.id.stats_header).findViewById(R.id.displayable_social_timeline_game_card_leaderboard);
     answerLeft = (ImageView) itemView.findViewById(R.id.left_answer);
     answerRight = (ImageView) itemView.findViewById(R.id.right_answer);
+
+    borderLeft = (ImageView) itemView.findViewById(R.id.left_border);
+    borderRight = (ImageView) itemView.findViewById(R.id.right_border);
 
     this.headerIcon =
         (ImageView) itemView.findViewById(R.id.displayable_social_timeline_game_card_icon);
@@ -107,8 +112,7 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
 
     //ImageLoader.with(itemView.getContext()).load("http://pool.img.aptoide.com/dfl/783ac07187647799c87c4e1d5cde6b8b_icon.png", this.headerIcon);
     headerIcon.setImageResource(R.mipmap.aptoide_quiz_icon);
-    this.headerTitle.setText(getStyledTitle(itemView.getContext(), getTitle(itemView.getContext()
-        .getResources()), marketName));
+    headerTitle.setText("App Quiz");
 
     if (card.getQuestionIcon() == null){
       itemView.findViewById(R.id.icon_question).setVisibility(View.GONE);
@@ -135,7 +139,9 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
       wrapper.setVisibility(View.VISIBLE);
       questionIcon = (ImageView) wrapper.findViewById(R.id.game_card_questionIcon);
       question = (TextView) wrapper.findViewById(R.id.game_card_question);
-      ImageLoader.with(itemView.getContext()).load(card.getQuestionIcon(), questionIcon);
+      ImageLoader.with(itemView.getContext())
+          .loadUsingCircleTransformAndPlaceholder(card.getQuestionIcon(), questionIcon,
+              DEFAULT_IMAGE_PLACEHOLDER);
       this.question.setText(card.getQuestion());
     }
     //Randomize right answer to left or right side (if 0<rand<0.5, right answer is on the left side)
@@ -247,6 +253,8 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
         answerRight.setVisibility(View.INVISIBLE);
         stampRight.setAlpha(1f);
         stampRight.setVisibility(View.VISIBLE);
+        borderLeft.setVisibility(View.INVISIBLE);
+        borderRight.setVisibility(View.INVISIBLE);
       }
 
       @Override public void onAnimationEnd(Animation animation) {
@@ -271,6 +279,8 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
       @Override public void onAnimationStart(Animation animation) {
         answerLeft.setVisibility(View.INVISIBLE);
         answerRight.setVisibility(View.INVISIBLE);
+        borderLeft.setVisibility(View.INVISIBLE);
+        borderRight.setVisibility(View.INVISIBLE);
         stampLeft.setAlpha(1f);
         stampLeft.setVisibility(View.VISIBLE);
       }

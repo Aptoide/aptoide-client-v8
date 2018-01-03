@@ -21,7 +21,7 @@ import rx.Observable;
  */
 public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineRequest.Body> {
 
-  private String url = "http://192.168.1.137:5000/getTimeline";
+  private String url = "http://192.168.1.100:5000/getTimeline";
 
   GetUserTimelineRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,

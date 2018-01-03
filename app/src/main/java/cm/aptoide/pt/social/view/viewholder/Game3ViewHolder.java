@@ -2,21 +2,21 @@ package cm.aptoide.pt.social.view.viewholder;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.social.data.Game3;
 import cm.aptoide.pt.social.data.GameCardTouchEvent;
-import cm.aptoide.pt.social.data.LeaderboardTouchEvent;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.spannable.SpannableFactory;
 import rx.subjects.PublishSubject;
@@ -29,12 +29,15 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class Game3ViewHolder extends PostViewHolder<Game3> {
 
-  private final TextView score;
-  private final TextView leaderboard;
+  //private final TextView score;
+  //private final TextView leaderboard;
+  @DrawableRes private static final int DEFAULT_IMAGE_PLACEHOLDER = R.drawable.create_user_avatar;
   private final TextView answerLeft;
   private final TextView answerRight;
   private final ImageView answerLeftIcon;
   private final ImageView answerRightIcon;
+  private final ImageView borderRight;
+  private final ImageView borderLeft;
   private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
   private final SpannableFactory spannableFactory;
   private final ImageView headerIcon;
@@ -43,7 +46,7 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
   private final ImageView stampLeft;
   private final ImageView stampRight;
   private final String marketName;
-  private final View headerStats;
+  //private final View headerStats;
   private View wrapper;
   private ImageView questionIcon;
   private TextView question;
@@ -58,12 +61,16 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
     this.spannableFactory = spannableFactory;
     this.marketName = marketName;
 
-    this.score = (TextView) itemView.findViewById(R.id.stats_header).findViewById(R.id.displayable_social_timeline_game_card_score);
-    leaderboard = (TextView) itemView.findViewById(R.id.stats_header).findViewById(R.id.displayable_social_timeline_game_card_leaderboard);
+    //this.score = (TextView) itemView.findViewById(R.id.stats_header).findViewById(R.id.displayable_social_timeline_game_card_score);
+    //leaderboard = (TextView) itemView.findViewById(R.id.stats_header).findViewById(R.id.displayable_social_timeline_game_card_leaderboard);
     answerLeft = (TextView) itemView.findViewById(R.id.game_card_question3_answer_left);
     answerRight = (TextView) itemView.findViewById(R.id.game_card_question3_answer_right);
     answerLeftIcon = (ImageView) itemView.findViewById(R.id.game_card_question3_icon_left);
     answerRightIcon = (ImageView) itemView.findViewById(R.id.game_card_question3_icon_right);
+
+    borderLeft = (ImageView) itemView.findViewById(R.id.left_border3);
+    borderRight = (ImageView) itemView.findViewById(R.id.right_border3);
+
 
     this.headerIcon =
         (ImageView) itemView.findViewById(R.id.displayable_social_timeline_game_card_icon);
@@ -75,7 +82,7 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
 
     this.leaderboardProgress = (ProgressBar) itemView.findViewById(R.id.rank_progress);
 
-    this.headerStats = itemView.findViewById(R.id.stats_header);
+    //this.headerStats = itemView.findViewById(R.id.stats_header);
 
     itemView.setOnTouchListener((view, motionEvent) -> {
       itemView.getParent().requestDisallowInterceptTouchEvent(true);
@@ -98,24 +105,22 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
     answerRightIcon.setVisibility(View.VISIBLE);
     itemView.setVisibility(View.VISIBLE);
 
-
-    this.score.setText(String.valueOf(card.getScore()));
-    this.leaderboard.setText(String.valueOf(card.getgRanking()));
+    //this.score.setText(String.valueOf(card.getScore()));
+    //this.leaderboard.setText(String.valueOf(card.getgRanking()));
 
     //ImageLoader.with(itemView.getContext()).load("http://pool.img.aptoide.com/dfl/783ac07187647799c87c4e1d5cde6b8b_icon.png", this.headerIcon);
     headerIcon.setImageResource(R.mipmap.aptoide_quiz_icon);
-    this.headerTitle.setText(getStyledTitle(itemView.getContext(), getTitle(itemView.getContext()
-        .getResources()), marketName));
+    headerTitle.setText("App Quiz");
 
     if (card.getQuestionIcon() == null){
       itemView.findViewById(R.id.icon_question).setVisibility(View.GONE);
       wrapper = itemView.findViewById(R.id.question);
       wrapper.setVisibility(View.VISIBLE);
       question = (TextView) wrapper.findViewById(R.id.game_card_question);
-      RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)stampLeft.getLayoutParams();
+      LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) stampLeft.getLayoutParams();
       params.setMargins(25,10,0,0);
       stampLeft.setLayoutParams(params);
-      params = (RelativeLayout.LayoutParams)stampRight.getLayoutParams();
+      params = (LinearLayout.LayoutParams) stampRight.getLayoutParams();
       params.setMargins(0,10,25,0);
       stampRight.setLayoutParams(params);
 
@@ -126,26 +131,44 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
       wrapper.setVisibility(View.VISIBLE);
       questionIcon = (ImageView) wrapper.findViewById(R.id.game_card_questionIcon);
       question = (TextView) wrapper.findViewById(R.id.game_card_question);
-      ImageLoader.with(itemView.getContext()).load(card.getQuestionIcon(), questionIcon);
+      ImageLoader.with(itemView.getContext())
+          .loadUsingCircleTransformAndPlaceholder(card.getQuestionIcon(), questionIcon,
+              DEFAULT_IMAGE_PLACEHOLDER);
     }
     this.question.setText(card.getQuestion());
 
     //Randomize right answer to left or right side (if 0<rand<0.5, right answer is on the left side)
     if(rand<0.5){
-      ImageLoader.with(itemView.getContext()).load(card.getApp().getIcon(), answerLeftIcon);
-      ImageLoader.with(itemView.getContext()).load(card.getApp().getIcon(), stampRight);
+      ImageLoader.with(itemView.getContext())
+          .loadUsingCircleTransformAndPlaceholder(card.getApp()
+              .getIcon(), answerLeftIcon, DEFAULT_IMAGE_PLACEHOLDER);
+      ImageLoader.with(itemView.getContext())
+          .loadUsingCircleTransformAndPlaceholder(card.getApp()
+              .getIcon(), stampRight, DEFAULT_IMAGE_PLACEHOLDER);
       this.answerLeft.setText(card.getApp().getName());
 
-      ImageLoader.with(itemView.getContext()).load(card.getWrongIcon(), answerRightIcon);
-      ImageLoader.with(itemView.getContext()).load(card.getWrongIcon(), stampLeft);
+      ImageLoader.with(itemView.getContext())
+          .loadUsingCircleTransformAndPlaceholder(card.getWrongIcon(), answerRightIcon,
+              DEFAULT_IMAGE_PLACEHOLDER);
+      ImageLoader.with(itemView.getContext())
+          .loadUsingCircleTransformAndPlaceholder(card.getWrongIcon(), stampLeft,
+              DEFAULT_IMAGE_PLACEHOLDER);
       this.answerRight.setText(card.getWrongName());
     }
     else{
-      ImageLoader.with(itemView.getContext()).load(card.getWrongIcon(), answerLeftIcon);
-      ImageLoader.with(itemView.getContext()).load(card.getWrongIcon(), stampRight);
+      ImageLoader.with(itemView.getContext())
+          .loadUsingCircleTransformAndPlaceholder(card.getWrongIcon(), answerLeftIcon,
+              DEFAULT_IMAGE_PLACEHOLDER);
+      ImageLoader.with(itemView.getContext())
+          .loadUsingCircleTransformAndPlaceholder(card.getWrongIcon(), stampRight,
+              DEFAULT_IMAGE_PLACEHOLDER);
       this.answerLeft.setText(card.getWrongName());
-      ImageLoader.with(itemView.getContext()).load(card.getApp().getIcon(), answerRightIcon);
-      ImageLoader.with(itemView.getContext()).load(card.getApp().getIcon(), stampLeft);
+      ImageLoader.with(itemView.getContext())
+          .loadUsingCircleTransformAndPlaceholder(card.getApp()
+              .getIcon(), answerRightIcon, DEFAULT_IMAGE_PLACEHOLDER);
+      ImageLoader.with(itemView.getContext())
+          .loadUsingCircleTransformAndPlaceholder(card.getApp()
+              .getIcon(), stampLeft, DEFAULT_IMAGE_PLACEHOLDER);
       this.answerRight.setText(card.getApp().getName());
     }
 
@@ -154,24 +177,21 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
     answerRight.setOnClickListener(click -> onClickLeft(position));
     answerLeft.setOnClickListener(click -> onClickLeft(position));
 
-    headerStats.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(new LeaderboardTouchEvent(card, CardTouchEvent.Type.BODY,
-        position)));
+    //headerStats.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(new LeaderboardTouchEvent(card, CardTouchEvent.Type.BODY,
+    //    position)));
 
-
-
-
-    if(card.getScore()==-1){
-      //scoreProgress.setVisibility(View.VISIBLE);
-      leaderboardProgress.setVisibility(View.VISIBLE);
-      score.setVisibility(View.INVISIBLE);
-      leaderboard.setVisibility(View.INVISIBLE);
-    }
-    else{
-      //scoreProgress.setVisibility(View.INVISIBLE);
-      leaderboardProgress.setVisibility(View.INVISIBLE);
-      score.setVisibility(View.VISIBLE);
-      leaderboard.setVisibility(View.VISIBLE);
-    }
+    //if(card.getScore()==-1){
+    //  //scoreProgress.setVisibility(View.VISIBLE);
+    //  leaderboardProgress.setVisibility(View.VISIBLE);
+    //  score.setVisibility(View.INVISIBLE);
+    //  leaderboard.setVisibility(View.INVISIBLE);
+    //}
+    //else{
+    //  //scoreProgress.setVisibility(View.INVISIBLE);
+    //  leaderboardProgress.setVisibility(View.INVISIBLE);
+    //  score.setVisibility(View.VISIBLE);
+    //  leaderboard.setVisibility(View.VISIBLE);
+    //}
   }
 
   private Spannable getStyledTitle(Context context, String title, String coloredTextPart) {
@@ -211,6 +231,8 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
         answerRight.setVisibility(View.INVISIBLE);
         answerLeftIcon.setVisibility(View.INVISIBLE);
         answerRightIcon.setVisibility(View.INVISIBLE);
+        borderLeft.setVisibility(View.INVISIBLE);
+        borderRight.setVisibility(View.INVISIBLE);
         stampRight.setAlpha(1f);
         stampRight.setVisibility(View.VISIBLE);
       }
@@ -240,6 +262,8 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
         answerRight.setVisibility(View.INVISIBLE);
         answerLeftIcon.setVisibility(View.INVISIBLE);
         answerRightIcon.setVisibility(View.INVISIBLE);
+        borderLeft.setVisibility(View.INVISIBLE);
+        borderRight.setVisibility(View.INVISIBLE);
         stampLeft.setAlpha(1f);
         stampLeft.setVisibility(View.VISIBLE);
       }

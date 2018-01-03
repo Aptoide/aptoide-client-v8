@@ -10,13 +10,23 @@
     style="@style/Widget.Aptoide.Card"
     >
 
-  <LinearLayout
+  <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical"
       >
 
-    <RelativeLayout
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="51dp"
+        android:src="@drawable/quiz_card1_background"
+        />
+
+    <LinearLayout
+        android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="63.3dp"
         android:orientation="horizontal"
@@ -24,112 +34,96 @@
 
       <ImageView
           android:id="@+id/displayable_social_timeline_game_card_icon"
-          android:layout_width="40dp"
-          android:layout_height="40dp"
-          android:layout_marginLeft="12.7dp"
-          android:layout_marginStart="12.7dp"
-          android:layout_marginTop="10dp"
+          android:layout_width="32dp"
+          android:layout_height="32dp"
+          android:layout_marginLeft="16dp"
+          android:layout_marginStart="16dp"
+          android:layout_marginTop="16dp"
           tools:ignore="contentDescription"
-          tools:src="@drawable/aptoide_quiz_icon"
+          tools:src="@mipmap/aptoide_quiz_icon"
           />
 
       <TextView
           android:id="@+id/displayable_social_timeline_game_card_title"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginEnd="48dp"
-          android:layout_marginLeft="65dp"
-          android:layout_marginRight="48dp"
-          android:layout_marginStart="65dp"
-          android:layout_marginTop="14.7dp"
-          android:lines="1"
-          tools:text="Aptoide Timeline Quiz"
-          style="@style/Aptoide.TextView.Regular.S.Grey"
-          />
-
-      <include layout="@layout/game_stats_header"
-          android:id="@+id/stats_header"
-          android:layout_width="120dp"
+          android:layout_width="56dp"
           android:layout_height="20dp"
-          android:layout_alignParentRight = "true"
-          android:layout_marginTop="18dp"
+          android:layout_marginLeft="16dp"
+          android:layout_marginStart="16dp"
+          android:layout_marginTop="16dp"
+          android:lines="1"
+          tools:text="App Quiz"
+          style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
           />
 
-      <View
-          android:id="@+id/card_custom_view_line_separator"
-          android:layout_width="match_parent"
-          android:layout_height="0.7dp"
-          android:layout_alignParentBottom="true"
-          android:layout_marginEnd="12dp"
-          android:layout_marginLeft="12dp"
-          android:layout_marginRight="12dp"
-          android:layout_marginStart="12dp"
-          android:background="@color/timeline_separator"
-          />
-    </RelativeLayout>
+    </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/displayable_social_timeline_game_card_content"
+
+    <LinearLayout
+        android:id="@+id/question_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/header_layout"
+        android:layout_marginTop="24dp"
         android:orientation="vertical"
         >
 
-      <RelativeLayout
-          android:id="@+id/displayable_social_timeline_game_card_question3"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_alignParentLeft="true"
-          android:layout_alignParentTop="true"
-          android:background="@color/tw__solid_white"
-          android:orientation="vertical"
-          android:visibility="visible"
-          >
-
         <include layout="@layout/timeline_icon_question_body"
             android:id="@+id/icon_question"
-            android:visibility="gone"/>
+            android:visibility="visible"
+            />
 
         <include layout="@layout/timeline_question_body"
             android:id="@+id/question"
             android:visibility="gone"/>
+    </LinearLayout>
 
-        <include
-            layout="@layout/timeline_game_answer_element_3"
-            android:id="@+id/answers"
-            android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="120dp"
-            android:visibility="visible"
-            />
+    <LinearLayout
+        android:id="@+id/stamp_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header_layout"
+        >
 
-        <ImageView
-            android:id="@+id/stamp_left"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="60dp"
-            android:alpha="0.0"
-            android:rotation="-35"
-            android:src="@mipmap/ic_launcher"
-            android:visibility="invisible"
-            />
+      <ImageView
+          android:id="@+id/stamp_left"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:layout_marginLeft="25dp"
+          android:layout_marginStart="25dp"
+          android:layout_marginTop="5dp"
+          android:alpha="0.0"
+          android:src="@mipmap/ic_launcher"
+          android:visibility="invisible"
+          />
 
-        <ImageView
-            android:id="@+id/stamp_right"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="25dp"
-            android:layout_marginTop="60dp"
-            android:alpha="0.0"
-            android:rotation="35"
-            android:src="@mipmap/ic_launcher"
-            android:visibility="invisible"
-            />
-
-      </RelativeLayout>
-    </RelativeLayout>
+      <ImageView
+          android:id="@+id/stamp_right"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:layout_marginLeft="240dp"
+          android:layout_marginStart="240dp"
+          android:layout_marginTop="5dp"
+          android:alpha="0.0"
+          android:src="@mipmap/ic_launcher"
+          android:visibility="invisible"
+          />
       </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/answers_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/question_layout"
+        android:layout_marginTop="7dp"
+        >
+      <include
+          layout="@layout/timeline_game_answer_element_3"
+          android:id="@+id/answers"
+          android:layout_width="match_parent"
+          android:layout_height="100dp"
+          android:layout_marginBottom="20dp"
+          android:visibility="visible"
+          />
+    </LinearLayout>
+  </RelativeLayout>
 </android.support.v7.widget.CardView>

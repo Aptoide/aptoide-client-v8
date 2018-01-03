@@ -7,6 +7,7 @@
 
 
   <ImageView
+      android:id="@+id/left_border"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_centerVertical="true"
@@ -28,6 +29,7 @@
       />
 
   <ImageView
+      android:id="@+id/right_border"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_alignParentEnd="true"

@@ -5,74 +5,83 @@
     android:layout_height="100dp"
     >
 
+  <ImageView
+      android:id="@+id/left_border3"
+      android:layout_width="120dp"
+      android:layout_height="104dp"
+      android:layout_marginLeft="26dp"
+      android:layout_marginStart="26dp"
+      android:layout_marginTop="5dp"
+      android:src="@drawable/game_answer_square_border_element"
+      />
 
   <ImageView
       android:id="@+id/game_card_question3_icon_left"
-      android:layout_width="40dp"
-      android:layout_height="40dp"
-      android:layout_marginBottom="5dp"
-      android:layout_marginLeft="45dp"
-      android:layout_marginStart="45dp"
-      android:layout_marginTop="15dp"
+      android:layout_width="64dp"
+      android:layout_height="64dp"
+      android:layout_marginLeft="56dp"
+      android:layout_marginStart="56dp"
+      android:layout_marginTop="13dp"
       tools:src="@mipmap/ic_launcher"
       />
 
   <TextView
       android:id="@+id/game_card_question3_answer_left"
-      android:layout_width="120dp"
-      android:layout_height="wrap_content"
+      android:layout_width="104dp"
+      android:layout_height="16dp"
       android:layout_alignParentLeft="true"
       android:layout_alignParentStart="true"
       android:layout_below="@id/game_card_question3_icon_left"
-      android:layout_marginLeft="6dp"
-      android:layout_marginStart="6dp"
+      android:layout_marginLeft="34dp"
+      android:layout_marginStart="34dp"
       android:ellipsize="end"
       android:gravity="center"
-      android:maxLines="2"
-      android:padding="5dp"
-      android:singleLine="false"
+      android:maxLines="1"
+      android:singleLine="true"
       android:text="Left: Answer2"
       style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
       />
 
   <ImageView
-      android:id="@+id/game_card_question3_icon_right"
-      android:layout_width="40dp"
-      android:layout_height="40dp"
+      android:id="@+id/right_border3"
+      android:layout_width="120dp"
+      android:layout_height="104dp"
       android:layout_alignParentEnd="true"
       android:layout_alignParentRight="true"
-      android:layout_marginBottom="5dp"
-      android:layout_marginEnd="50dp"
-      android:layout_marginRight="50dp"
-      android:layout_marginTop="15dp"
+      android:layout_marginEnd="30dp"
+      android:layout_marginRight="30dp"
+      android:layout_marginTop="5dp"
+      android:src="@drawable/game_answer_square_border_element"
+      />
+
+  <ImageView
+      android:id="@+id/game_card_question3_icon_right"
+      android:layout_width="64dp"
+      android:layout_height="64dp"
+      android:layout_alignParentEnd="true"
+      android:layout_alignParentRight="true"
+      android:layout_marginEnd="58dp"
+      android:layout_marginRight="58dp"
+      android:layout_marginTop="13dp"
       tools:src="@mipmap/ic_launcher"
       />
 
   <TextView
       android:id="@+id/game_card_question3_answer_right"
-      android:layout_width="120dp"
-      android:layout_height="wrap_content"
+      android:layout_width="104dp"
+      android:layout_height="16dp"
       android:layout_alignParentEnd="true"
       android:layout_alignParentRight="true"
       android:layout_below="@id/game_card_question3_icon_right"
       android:layout_centerVertical="true"
-      android:layout_marginEnd="10dp"
-      android:layout_marginRight="10dp"
+      android:layout_marginEnd="38dp"
+      android:layout_marginRight="38dp"
       android:ellipsize="end"
       android:gravity="center"
-      android:maxLines="2"
-      android:padding="5dp"
-      android:singleLine="false"
+      android:maxLines="1"
+      android:singleLine="true"
       android:text="Right: Answer1"
       style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
-      />
-
-  <View
-      android:id="@+id/answer_separator"
-      android:layout_width="1dp"
-      android:layout_height="50dp"
-      android:layout_centerInParent="true"
-      android:background="@color/medium_gray"
       />
 
 </RelativeLayout>
