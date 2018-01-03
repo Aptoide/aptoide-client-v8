@@ -418,8 +418,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   /**
    * @return an observable with the title that should be displayed
    */
-  private Observable<String> loadData(boolean refresh, OpenType openType,
-      boolean bypassServerCache) {
+  private Observable<String> loadData(boolean refresh, OpenType openType) {
     switch (openType) {
       case GetHome:
         return GetHomeRequest.of(
@@ -427,7 +426,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
             storeContext, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
             sharedPreferences, getContext().getResources(),
             (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
-            .observe(refresh, bypassServerCache)
+            .observe(refresh)
             .map(getHome -> {
               Store store = getHome.getNodes()
                   .getMeta()
@@ -450,7 +449,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
             bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
             getContext().getResources(),
             (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
-            .observe(refresh, bypassServerCache)
+            .observe(refresh)
             .map(getStore -> {
               setupVariables(parseTabs(getStore), getStore.getNodes()
                   .getMeta()

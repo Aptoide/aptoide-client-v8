@@ -40,8 +40,8 @@ import cm.aptoide.pt.navigator.TabNavigation;
 import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.repository.RepositoryFactory;
-import cm.aptoide.pt.search.SuggestionCursorAdapter;
 import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.SuggestionCursorAdapter;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.view.AppSearchSuggestionsView;
@@ -93,7 +93,6 @@ public class HomeFragment extends StoreFragment {
   private ClickHandler backClickHandler;
   private PageViewsAnalytics pageViewsAnalytics;
   private String defaultThemeName;
-  private IssuesAnalytics issuesAnalytics;
   private String cacheDirectoryPath;
   private AppSearchSuggestionsView appSearchSuggestionsView;
   private CrashReport crashReport;
@@ -319,7 +318,8 @@ public class HomeFragment extends StoreFragment {
     };
     registerClickHandler(backClickHandler);
 
-    final SuggestionCursorAdapter suggestionCursorAdapter = new SuggestionCursorAdapter(getContext());
+    final SuggestionCursorAdapter suggestionCursorAdapter =
+        new SuggestionCursorAdapter(getContext());
 
     final Toolbar toolbar = getToolbar();
     final Observable<MenuItem> toolbarMenuItemClick = RxToolbar.itemClicks(toolbar)
@@ -328,8 +328,8 @@ public class HomeFragment extends StoreFragment {
 
     appSearchSuggestionsView =
         new AppSearchSuggestionsView(this, RxView.clicks(toolbar), crashReport,
-            suggestionCursorAdapter,
-            PublishSubject.create(), toolbarMenuItemClick, searchAnalytics);
+            suggestionCursorAdapter, PublishSubject.create(), toolbarMenuItemClick,
+            searchAnalytics);
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
