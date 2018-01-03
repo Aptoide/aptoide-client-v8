@@ -28,10 +28,8 @@ public class MainActivity extends TabNavigatorActivity
     implements MainView, DeepLinkManager.DeepLinkMessages {
 
   private static final int LAYOUT = R.layout.frame_layout;
-
-  private InstallManager installManager;
   @Inject Presenter presenter;
-
+  private InstallManager installManager;
   private View snackBarLayout;
   private PublishRelay<Void> installErrorsDismissEvent;
   private Snackbar snackbar;

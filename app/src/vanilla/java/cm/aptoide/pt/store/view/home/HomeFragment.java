@@ -57,6 +57,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
+import java.io.File;
 import java.text.NumberFormat;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -92,6 +93,8 @@ public class HomeFragment extends StoreFragment {
   private ClickHandler backClickHandler;
   private PageViewsAnalytics pageViewsAnalytics;
   private String defaultThemeName;
+  private IssuesAnalytics issuesAnalytics;
+  private String cacheDirectoryPath;
   private AppSearchSuggestionsView appSearchSuggestionsView;
   private CrashReport crashReport;
   private SearchNavigator searchNavigator;
@@ -183,7 +186,9 @@ public class HomeFragment extends StoreFragment {
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-
+    cacheDirectoryPath = getContext().getApplicationContext()
+        .getCacheDir()
+        .getPath();
     defaultThemeName = application.getDefaultThemeName();
 
     searchNavigator = new SearchNavigator(getFragmentNavigator(), defaultThemeName);
@@ -485,14 +490,12 @@ public class HomeFragment extends StoreFragment {
   }
 
   private void startFeedbackFragment() {
-    String downloadFolderPath = getContext().getApplicationContext()
-        .getCacheDir()
-        .getPath();
     String screenshotFileName = getActivity().getClass()
         .getSimpleName() + ".jpg";
-    AptoideUtils.ScreenU.takeScreenshot(getActivity(), downloadFolderPath, screenshotFileName);
+    File screenshot =
+        AptoideUtils.ScreenU.takeScreenshot(getActivity(), cacheDirectoryPath, screenshotFileName);
     getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-        .newSendFeedbackFragment(downloadFolderPath + screenshotFileName), true);
+        .newSendFeedbackFragment(screenshot.getAbsolutePath()), true);
   }
 
   private void openSocialLink(String packageName, String socialUrl, String pageTitle,

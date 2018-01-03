@@ -78,11 +78,13 @@ public class InstalledIntentService extends IntentService {
 
     subscriptions = new CompositeSubscription();
     analytics = Analytics.getInstance();
-    installManager = ((AptoideApplication) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
+    installManager =
+        ((AptoideApplication) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
     rootAvailabilityManager =
         ((AptoideApplication) getApplicationContext()).getRootAvailabilityManager();
     installAnalytics =
-        new InstallAnalytics(analytics, AppEventsLogger.newLogger(getApplicationContext()));
+        new InstallAnalytics(analytics, AppEventsLogger.newLogger(getApplicationContext()),
+            CrashReport.getInstance());
     packageManager = getPackageManager();
   }
 

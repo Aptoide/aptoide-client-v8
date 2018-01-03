@@ -78,8 +78,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   private final View view;
   private final String defaultTheme;
   private final String defaultStoreName;
-  private final String fileProviderAuthority;
   private boolean firstCreated;
+  private final String fileProviderAuthority;
 
   public ActivityModule(AppCompatActivity activity, Intent intent,
       NotificationSyncScheduler notificationSyncScheduler, String marketName, String autoUpdateUrl,

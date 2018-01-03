@@ -42,7 +42,7 @@ public class GetHomeMetaRequest extends BaseRequestWithStore<GetHomeMeta, GetHom
   public static GetHomeMetaRequest of(StoreCredentials storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptorV7, OkHttpClient client, Converter.Factory converter,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    return new GetHomeMetaRequest(new Body(storeCredentials, true), null, bodyInterceptorV7, client,
+    return new GetHomeMetaRequest(new Body(storeCredentials), null, bodyInterceptorV7, client,
         converter, tokenInvalidator, sharedPreferences);
   }
 
@@ -57,19 +57,9 @@ public class GetHomeMetaRequest extends BaseRequestWithStore<GetHomeMeta, GetHom
 
   public static class Body extends BaseBodyWithStore {
 
-    private boolean refresh;
-
     public Body(StoreCredentials storeCredentials) {
       super(storeCredentials);
     }
 
-    public Body(StoreCredentials storeCredentials, boolean refresh) {
-      super(storeCredentials);
-      this.refresh = refresh;
-    }
-
-    public boolean isRefresh() {
-      return refresh;
-    }
   }
 }

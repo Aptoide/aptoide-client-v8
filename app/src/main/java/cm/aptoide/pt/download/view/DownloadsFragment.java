@@ -72,9 +72,8 @@ public class DownloadsFragment extends NavigationTrackFragment implements Downlo
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
             ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker());
-    installManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
-            InstallerFactory.ROLLBACK);
+    installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
+        InstallerFactory.ROLLBACK);
     analytics = Analytics.getInstance();
 
     storeTabNavigator = new StoreTabNavigator(getFragmentNavigator());

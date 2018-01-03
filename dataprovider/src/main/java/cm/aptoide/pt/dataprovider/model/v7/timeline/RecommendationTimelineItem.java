@@ -7,12 +7,11 @@ package cm.aptoide.pt.dataprovider.model.v7.timeline;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.EqualsAndHashCode;
 
 /**
  * Created by marcelobenites on 7/8/16.
  */
-@EqualsAndHashCode public class RecommendationTimelineItem implements TimelineItem<TimelineCard> {
+public class RecommendationTimelineItem implements TimelineItem<TimelineCard> {
 
   private final Recommendation recommendation;
 
@@ -27,5 +26,31 @@ import lombok.EqualsAndHashCode;
 
   @Override public Recommendation getData() {
     return recommendation;
+  }
+
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    final Object $recommendation = this.recommendation;
+    result = result * PRIME + ($recommendation == null ? 43 : $recommendation.hashCode());
+    return result;
+  }
+
+  public boolean equals(Object o) {
+    if (o == this) return true;
+    if (!(o instanceof RecommendationTimelineItem)) return false;
+    final RecommendationTimelineItem other = (RecommendationTimelineItem) o;
+    if (!other.canEqual((Object) this)) return false;
+    final Object this$recommendation = this.recommendation;
+    final Object other$recommendation = other.recommendation;
+    if (this$recommendation == null ? other$recommendation != null
+        : !this$recommendation.equals(other$recommendation)) {
+      return false;
+    }
+    return true;
+  }
+
+  protected boolean canEqual(Object other) {
+    return other instanceof RecommendationTimelineItem;
   }
 }

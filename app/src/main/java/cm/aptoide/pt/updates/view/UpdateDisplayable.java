@@ -25,7 +25,6 @@ import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
-import lombok.Getter;
 import rx.Completable;
 import rx.Observable;
 
@@ -36,25 +35,25 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
  */
 public class UpdateDisplayable extends Displayable {
 
-  @Getter private String packageName;
-  @Getter private long appId;
-  @Getter private String label;
-  @Getter private String icon;
-  @Getter private int versionCode;
-  @Getter private String md5;
-  @Getter private String apkPath;
-  @Getter private String alternativeApkPath;
-  @Getter private String updateVersionName;
+  private String packageName;
+  private long appId;
+  private String label;
+  private String icon;
+  private int versionCode;
+  private String md5;
+  private String apkPath;
+  private String alternativeApkPath;
+  private String updateVersionName;
   // Obb
-  @Getter private String mainObbName;
-  @Getter private String mainObbPath;
-  @Getter private String mainObbMd5;
-  @Getter private String patchObbName;
-  @Getter private String patchObbPath;
-  @Getter private String patchObbMd5;
+  private String mainObbName;
+  private String mainObbPath;
+  private String mainObbMd5;
+  private String patchObbName;
+  private String patchObbPath;
+  private String patchObbMd5;
 
-  @Getter private Download download;
-  @Getter private InstallManager installManager;
+  private Download download;
+  private InstallManager installManager;
   private Analytics analytics;
   private DownloadEventConverter converter;
   private InstallEventConverter installConverter;
@@ -110,6 +109,74 @@ public class UpdateDisplayable extends Displayable {
         update.getPatchObbPath(), update.getPatchObbMd5(), downloadFactory.create(update),
         installManager, analytics, downloadInstallEventConverter, installConverter,
         update.getUpdateVersionCode(), installedRepository, permissionManager);
+  }
+
+  public String getPackageName() {
+    return packageName;
+  }
+
+  public long getAppId() {
+    return appId;
+  }
+
+  public String getLabel() {
+    return label;
+  }
+
+  public String getIcon() {
+    return icon;
+  }
+
+  public int getVersionCode() {
+    return versionCode;
+  }
+
+  public String getMd5() {
+    return md5;
+  }
+
+  public String getApkPath() {
+    return apkPath;
+  }
+
+  public String getAlternativeApkPath() {
+    return alternativeApkPath;
+  }
+
+  public String getUpdateVersionName() {
+    return updateVersionName;
+  }
+
+  public String getMainObbName() {
+    return mainObbName;
+  }
+
+  public String getMainObbPath() {
+    return mainObbPath;
+  }
+
+  public String getMainObbMd5() {
+    return mainObbMd5;
+  }
+
+  public String getPatchObbName() {
+    return patchObbName;
+  }
+
+  public String getPatchObbPath() {
+    return patchObbPath;
+  }
+
+  public String getPatchObbMd5() {
+    return patchObbMd5;
+  }
+
+  public Download getDownload() {
+    return download;
+  }
+
+  public InstallManager getInstallManager() {
+    return installManager;
   }
 
   public Completable downloadAndInstall(Context context, PermissionService permissionRequest,

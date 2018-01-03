@@ -44,6 +44,7 @@ public class GetStoreWidgetsRequest
   private final AdsApplicationVersionCodeProvider versionCodeProvider;
   private final SharedPreferences sharedPreferences;
   private final WSWidgetsUtils widgetsUtils;
+  private boolean bypassServerCache;
 
   private GetStoreWidgetsRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
@@ -118,6 +119,12 @@ public class GetStoreWidgetsRequest
             wsWidgets -> getStoreWidgets));
   }
 
+  @Override
+  public Observable<GetStoreWidgets> observe(boolean bypassCache, boolean bypassServerCache) {
+    this.bypassServerCache = bypassServerCache;
+    return super.observe(bypassCache, bypassServerCache);
+  }
+
   private Observable<List<GetStoreWidgets.WSWidget>> loadGetStoreWidgets(
       GetStoreWidgets getStoreWidgets, boolean bypassCache) {
     return Observable.from(getStoreWidgets.getDataList()
@@ -127,7 +134,7 @@ public class GetStoreWidgetsRequest
             clientUniqueId, isGooglePlayServicesAvailable, partnerId, accountMature,
             ((BodyInterceptor<BaseBody>) bodyInterceptor), getHttpClient(), converterFactory,
             filters, getTokenInvalidator(), sharedPreferences, resources, windowManager,
-            connectivityManager, versionCodeProvider))
+            connectivityManager, versionCodeProvider, bypassServerCache))
         .toList()
         .flatMapIterable(wsWidgets -> getStoreWidgets.getDataList()
             .getList())

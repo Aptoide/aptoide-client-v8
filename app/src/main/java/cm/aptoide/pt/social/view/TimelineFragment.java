@@ -21,11 +21,9 @@ import android.widget.ProgressBar;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.comments.view.CommentDialogFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -58,7 +56,7 @@ import cm.aptoide.pt.social.data.SocialAction;
 import cm.aptoide.pt.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.social.data.Timeline;
 import cm.aptoide.pt.social.data.TimelineAdsRepository;
-import cm.aptoide.pt.social.data.TimelinePostsRepository;
+import cm.aptoide.pt.social.data.TimelineRepository;
 import cm.aptoide.pt.social.data.TimelineService;
 import cm.aptoide.pt.social.data.analytics.EventErrorHandler;
 import cm.aptoide.pt.social.data.share.ShareDialogFactory;
@@ -78,12 +76,12 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import cm.aptoide.pt.view.recycler.RecyclerViewPositionHelper;
 import cm.aptoide.pt.view.spannable.SpannableFactory;
-import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -140,7 +138,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private PublishSubject<ShareEvent> sharePostPublishSubject;
   private PublishRelay<View> loginPrompt;
   private TimelineService timelineService;
-  private TimelinePostsRepository timelinePostsRepository;
+  private TimelineRepository timelineRepository;
   private DateCalculator dateCalculator;
   private boolean postIndicator;
   private boolean progressIndicator;
@@ -149,6 +147,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private OkHttpClient defaultClient;
   private String marketName;
   private CrashReport crashReport;
+  private String cacheDirectoryPath;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -191,6 +190,9 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     baseBodyInterceptorV7 = application.getAccountSettingsBodyInterceptorPoolV7();
     defaultConverter = WebService.getDefaultConverter();
     defaultClient = application.getDefaultClient();
+    cacheDirectoryPath = getContext().getApplicationContext()
+        .getCacheDir()
+        .getPath();
     accountManager =
         ((AptoideApplication) getActivity().getApplicationContext()).getAccountManager();
     tokenInvalidator = application.getTokenInvalidator();
@@ -205,15 +207,10 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         new ShareDialogFactory(getContext(), new SharePostViewSetup(dateCalculator));
     installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
 
-    timelinePostsRepository =
+    timelineRepository =
         application.getTimelineRepository(getArguments().getString(ACTION_KEY), getContext());
 
-    timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
-        AppEventsLogger.newLogger(getContext().getApplicationContext()), baseBodyInterceptorV7,
-        defaultClient, defaultConverter, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        sharedPreferences, application.getNotificationAnalytics(),
-        application.getNavigationTracker(),
-        ((AptoideApplication) getContext().getApplicationContext()).getReadPostsPersistence());
+    timelineAnalytics = application.getTimelineAnalytics();
 
     timelineService =
         new TimelineService(userId, baseBodyInterceptorV7, defaultClient, defaultConverter,
@@ -290,7 +287,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
     Timeline timeline =
         new Timeline(timelineService, installManager, new DownloadFactory(marketName),
-            timelineAnalytics, timelinePostsRepository, marketName, timelineUserProvider,
+            timelineAnalytics, timelineRepository, marketName, timelineUserProvider,
             updateRepository);
 
     TimelineNavigator timelineNavigation = new TimelineNavigator(getFragmentNavigator(),
@@ -326,7 +323,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     layoutManager = null;
     bottomAlreadyReached = false;
     layoutManager = null;
-    timelinePostsRepository.clearLoading();
+    timelineRepository.clearLoading();
   }
 
   @Override public void showCards(List<Post> cards) {
@@ -599,13 +596,11 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   @Override public Single<String> takeFeedbackScreenShot() {
-    String downloadFolderPath = getContext().getApplicationContext()
-        .getCacheDir()
-        .getPath();
     String screenshotFileName = getActivity().getClass()
         .getSimpleName() + ".jpg";
-    AptoideUtils.ScreenU.takeScreenshot(getActivity(), downloadFolderPath, screenshotFileName);
-    return Single.just(downloadFolderPath + screenshotFileName);
+    File screenshot =
+        AptoideUtils.ScreenU.takeScreenshot(getActivity(), cacheDirectoryPath, screenshotFileName);
+    return Single.just(screenshot.getAbsolutePath());
   }
 
   @Override public void showUserUnsubscribedMessage(String userName) {

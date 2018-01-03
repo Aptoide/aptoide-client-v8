@@ -108,7 +108,8 @@
   <string name="ws_error_SYS_4">This call is not supported by the current API version</string>
   <string name="ws_error_SYS_Billing">In-App Billing not supported in this device.</string>
 
-  <string name="ws_error_API_1">The image is not valid.</string>
+  <string name="ws_error_API_1">Invalid input.</string>
+  <string name="ws_error_IMAGE_ERROR_1">The image is not valid.</string>
 
   <string name="ws_error_410">Sorry, we couldn\'t find the app you\'re looking for.</string>
 

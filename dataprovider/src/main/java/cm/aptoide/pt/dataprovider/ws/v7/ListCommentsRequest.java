@@ -176,10 +176,6 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
       return limit;
     }
 
-    public boolean isRefresh() {
-      return refresh;
-    }
-
     public void setRefresh(boolean refresh) {
       this.refresh = refresh;
     }

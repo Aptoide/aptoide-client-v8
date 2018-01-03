@@ -2,7 +2,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
 retrolambda {
   jvmArgs '-noverify'
-  //defaultMethods true
 }
 
 android {
@@ -106,10 +105,6 @@ dependencies {
   //
   // from remote repos
   //
-
-  provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
-  // Just for lombok not to complain
-  provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
 
   testCompile "com.squareup.okhttp3:mockwebserver:${MOCK_WEB_SERVER_VERSION}"
   testCompile "junit:junit:${JUNIT_VERSION}"

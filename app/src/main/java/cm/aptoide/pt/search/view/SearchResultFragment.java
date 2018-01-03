@@ -512,7 +512,6 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
             searchResultAllStores, searchResultAdsAllStores, crashReport);
 
     setHasOptionsMenu(true);
-
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

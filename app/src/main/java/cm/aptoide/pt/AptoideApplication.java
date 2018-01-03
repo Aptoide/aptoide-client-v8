@@ -91,7 +91,7 @@ import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.social.TimelineRepositoryFactory;
 import cm.aptoide.pt.social.data.ReadPostsPersistence;
-import cm.aptoide.pt.social.data.TimelinePostsRepository;
+import cm.aptoide.pt.social.data.TimelineRepository;
 import cm.aptoide.pt.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.spotandshare.AccountGroupNameProvider;
 import cm.aptoide.pt.spotandshare.ShareApps;
@@ -102,6 +102,7 @@ import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
 import cm.aptoide.pt.sync.rx.RxSyncScheduler;
+import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
@@ -226,6 +227,7 @@ public abstract class AptoideApplication extends Application {
   private ReadPostsPersistence readPostsPersistence;
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
   private NotificationsCleaner notificationsCleaner;
+  private TimelineAnalytics timelineAnalytics;
   private NotificationAnalytics notificationAnalytics;
   @Inject SearchSuggestionManager searchSuggestionManager;
 
@@ -860,7 +862,7 @@ public abstract class AptoideApplication extends Application {
 
   private Completable refreshUpdates() {
     return RepositoryFactory.getUpdateRepository(this, getDefaultSharedPreferences())
-        .sync(true);
+        .sync(true, false);
   }
 
   private void createAppShortcut() {
@@ -891,7 +893,7 @@ public abstract class AptoideApplication extends Application {
     return syncStorage;
   }
 
-  public TimelinePostsRepository getTimelineRepository(String action, Context context) {
+  public TimelineRepository getTimelineRepository(String action, Context context) {
     if (timelineRepositoryFactory == null) {
       timelineRepositoryFactory =
           new TimelineRepositoryFactory(new HashMap<>(), getAccountSettingsBodyInterceptorPoolV7(),
@@ -1019,6 +1021,17 @@ public abstract class AptoideApplication extends Application {
 
   public SearchSuggestionManager getSearchSuggestionManager() {
     return searchSuggestionManager;
+  }
+
+  public TimelineAnalytics getTimelineAnalytics() {
+    if (timelineAnalytics == null) {
+      timelineAnalytics =
+          new TimelineAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(this),
+              getBodyInterceptorPoolV7(), getDefaultClient(), WebService.getDefaultConverter(),
+              getTokenInvalidator(), BuildConfig.APPLICATION_ID, getDefaultSharedPreferences(),
+              getNotificationAnalytics(), getNavigationTracker(), getReadPostsPersistence());
+    }
+    return timelineAnalytics;
   }
 }
 

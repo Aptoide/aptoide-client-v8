@@ -23,7 +23,6 @@ import com.liulishuo.filedownloader.exception.FileDownloadOutOfSpaceException;
 import io.realm.RealmList;
 import java.io.File;
 import java.util.concurrent.TimeUnit;
-import lombok.Setter;
 import rx.Observable;
 import rx.observables.ConnectableObservable;
 import rx.schedulers.Schedulers;
@@ -48,7 +47,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
    * default value is
    * true
    */
-  @Setter boolean isSerial = true;
+  boolean isSerial = true;
   private ConnectableObservable<Download> observable;
   private Analytics analytics;
   private String apkPath;
@@ -375,5 +374,9 @@ class DownloadTask extends FileDownloadLargeFileListener {
         break;
     }
     return path;
+  }
+
+  public void setSerial(boolean isSerial) {
+    this.isSerial = isSerial;
   }
 }

@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.util.Base64;
 import android.view.WindowManager;
-import lombok.Getter;
 
 import static cm.aptoide.pt.utils.AptoideUtils.ScreenU;
 import static cm.aptoide.pt.utils.AptoideUtils.SystemU;
@@ -15,15 +14,15 @@ import static cm.aptoide.pt.utils.AptoideUtils.SystemU;
  */
 public class QManager {
 
-  @Getter(lazy = true) private final int minSdk = computeMinSdk();
-  @Getter(lazy = true) private final String cpuAbi = computeCpuAbi();
   private final GlExtensionsManager glExtensionsManager;
   private final Resources resources;
-  @Getter(lazy = true) private final String screenSize = computeScreenSize();
   private final ActivityManager activityManager;
-  @Getter(lazy = true) private final String glEs = computeGlEs();
   private final WindowManager windowManager;
-  @Getter(lazy = true) private final int densityDpi = computeDensityDpi();
+  private Integer minSdk;
+  private String cpuAbi;
+  private String screenSize;
+  private String glEs;
+  private Integer densityDpi;
   private String cachedFilters;
 
   public QManager(SharedPreferences sharedPreferences, Resources resources,
@@ -32,6 +31,41 @@ public class QManager {
     this.resources = resources;
     this.activityManager = activityManager;
     this.windowManager = windowManager;
+  }
+
+  public Integer getMinSdk() {
+    if (minSdk == null) {
+      minSdk = computeMinSdk();
+    }
+    return minSdk;
+  }
+
+  public String getCpuAbi() {
+    if (cpuAbi == null) {
+      cpuAbi = computeCpuAbi();
+    }
+    return cpuAbi;
+  }
+
+  public String getScreenSize() {
+    if (screenSize == null) {
+      screenSize = computeScreenSize();
+    }
+    return screenSize;
+  }
+
+  public String getGlEs() {
+    if (glEs == null) {
+      glEs = computeGlEs();
+    }
+    return glEs;
+  }
+
+  public Integer getDensityDpi() {
+    if (densityDpi == null) {
+      densityDpi = computeDensityDpi();
+    }
+    return densityDpi;
   }
 
   private int computeMinSdk() {
