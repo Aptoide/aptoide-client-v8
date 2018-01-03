@@ -105,6 +105,7 @@ android {
 
   buildTypes {
     release {
+      testCoverageEnabled = true
       buildConfigField "boolean", "CRASH_REPORTS_DISABLED", "false"
       buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_KEY + "\""
       zipAlignEnabled true
@@ -115,6 +116,7 @@ android {
     }
 
     debug {
+      testCoverageEnabled = true
       buildConfigField "boolean", "CRASH_REPORTS_DISABLED", "true"
       buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_DEBUG_KEY + "\""
       ext.enableCrashlytics = false
