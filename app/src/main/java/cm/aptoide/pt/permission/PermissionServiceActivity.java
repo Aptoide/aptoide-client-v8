@@ -22,12 +22,14 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import com.facebook.FacebookSdk;
+import javax.inject.Inject;
 import rx.functions.Action0;
 
 @Deprecated public abstract class PermissionServiceActivity extends ActivityResultNavigator
@@ -39,19 +41,19 @@ import rx.functions.Action0;
 
   private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
   private static final int PERMISSIONS_REQUEST_ACCESS_CAMERA = 101;
-
+  @Inject FragmentNavigator fragmentNavigator;
   @Nullable private Action0 toRunWhenAccessToFileSystemIsGranted;
   @Nullable private Action0 toRunWhenAccessToFileSystemIsDenied;
   @Nullable private Action0 toRunWhenAccessToAccountsIsGranted;
   @Nullable private Action0 toRunWhenAccessToAccountsIsDenied;
   @Nullable private Action0 toRunWhenAccessToContactsIsGranted;
   @Nullable private Action0 toRunWhenAccessToContactsIsDenied;
-
   private SharedPreferences sharedPreferences;
   private ConnectivityManager connectivityManager;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getActivityComponent().inject(this);
     connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
     sharedPreferences =
         ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences();
@@ -179,7 +181,7 @@ import rx.functions.Action0;
         @Override public void onNext(GenericDialogs.EResponse eResponse) {
           super.onNext(eResponse);
           if (eResponse == GenericDialogs.EResponse.YES) {
-            getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
+            fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
                 .newSettingsFragment(), true);
           } else {
             if (toRunWhenAccessIsDenied != null) {

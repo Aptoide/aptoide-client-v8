@@ -10,18 +10,23 @@ import android.widget.Button;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
+import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.Translator;
 import cm.aptoide.pt.view.recycler.displayable.FooterDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
+import javax.inject.Inject;
 import rx.functions.Action1;
 
 public class FooterWidget extends Widget<FooterDisplayable> {
-
+  @Inject FragmentNavigator fragmentNavigator;
   private Button button;
 
   public FooterWidget(View itemView) {
     super(itemView);
+    ((BaseActivity) getContext()).getActivityComponent()
+        .inject(this);
   }
 
   @Override protected void assignViews(View itemView) {
@@ -43,7 +48,7 @@ public class FooterWidget extends Widget<FooterDisplayable> {
           .getActions()
           .get(0)
           .getEvent();
-      getFragmentNavigator().navigateTo(StoreTabGridRecyclerFragment.newInstance(event,
+      fragmentNavigator.navigateTo(StoreTabGridRecyclerFragment.newInstance(event,
           Translator.translate(displayable.getPojo()
               .getTitle(), getContext().getApplicationContext(), marketName), null,
           displayable.getTag(), displayable.getStoreContext(), false), true);

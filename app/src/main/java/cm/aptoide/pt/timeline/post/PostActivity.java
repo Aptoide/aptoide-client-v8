@@ -7,20 +7,25 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.LoginBottomSheet;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.TabNavigation;
 import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.view.BackButtonActivity;
+import javax.inject.Inject;
 import rx.Observable;
 
 public class PostActivity extends BackButtonActivity
     implements PostUrlProvider, TabNavigator, LoginBottomSheet {
 
+  @Inject FragmentNavigator fragmentNavigator;
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getActivityComponent().inject(this);
     setContentView(getLayoutId());
     if (savedInstanceState == null) {
       final Fragment fragment = PostFragment.newInstanceFromExternalSource();
-      getFragmentNavigator().navigateToWithoutBackSave(fragment, true);
+      fragmentNavigator.navigateToWithoutBackSave(fragment, true);
     }
   }
 

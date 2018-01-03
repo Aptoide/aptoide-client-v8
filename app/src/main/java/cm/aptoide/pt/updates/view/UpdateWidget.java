@@ -25,14 +25,17 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
+import javax.inject.Inject;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -43,6 +46,7 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 
   private static final String TAG = UpdateWidget.class.getSimpleName();
 
+  @Inject FragmentNavigator fragmentNavigator;
   private View updateRowLayout;
   private TextView labelTextView;
   private ImageView icon;
@@ -60,6 +64,8 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
     super(itemView);
     updatesAnalytics = new UpdatesAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    ((BaseActivity) getContext()).getActivityComponent()
+        .inject(this);
   }
 
   @Override protected void assignViews(View itemView) {
@@ -148,7 +154,7 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
           final Fragment fragment = AptoideApplication.getFragmentProvider()
               .newAppViewFragment(updateDisplayable.getAppId(), updateDisplayable.getPackageName(),
                   "");
-          getFragmentNavigator().navigateTo(fragment, true);
+          fragmentNavigator.navigateTo(fragment, true);
         });
   }
 

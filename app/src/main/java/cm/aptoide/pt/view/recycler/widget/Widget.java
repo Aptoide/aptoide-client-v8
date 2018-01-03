@@ -13,7 +13,6 @@ import android.view.View;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
-import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import rx.subscriptions.CompositeSubscription;
 
@@ -22,13 +21,11 @@ import rx.subscriptions.CompositeSubscription;
  */
 public abstract class Widget<T extends Displayable> extends RecyclerView.ViewHolder {
 
-  private final FragmentNavigator fragmentNavigator;
   protected CompositeSubscription compositeSubscription;
   private ActivityNavigator activityNavigator;
 
   public Widget(@NonNull View itemView) {
     super(itemView);
-    fragmentNavigator = ((ActivityResultNavigator) getContext()).getFragmentNavigator();
     activityNavigator = ((ActivityResultNavigator) getContext()).getActivityNavigator();
 
     try {
@@ -60,15 +57,6 @@ public abstract class Widget<T extends Displayable> extends RecyclerView.ViewHol
   }
 
   public abstract void bindView(T displayable);
-
-  public View getRootView() {
-    return getFragmentNavigator().peekLast()
-        .getView();
-  }
-
-  protected FragmentNavigator getFragmentNavigator() {
-    return fragmentNavigator;
-  }
 
   protected ActivityNavigator getActivityNavigator() {
     return activityNavigator;

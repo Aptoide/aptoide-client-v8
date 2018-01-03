@@ -14,11 +14,14 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Date;
+import javax.inject.Inject;
 
 /**
  * Created by neuro on 29-06-2016.
@@ -27,11 +30,14 @@ public class GridAppListWidget extends Widget<GridAppListDisplayable> {
 
   public TextView name;
   public ImageView icon;
+  @Inject FragmentNavigator fragmentNavigator;
   private TextView tvTimeSinceModified;
   private TextView tvStoreName;
 
   public GridAppListWidget(View itemView) {
     super(itemView);
+    ((BaseActivity) getContext()).getActivityComponent()
+        .inject(this);
   }
 
   @Override protected void assignViews(View itemView) {
@@ -62,7 +68,7 @@ public class GridAppListWidget extends Widget<GridAppListDisplayable> {
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(v -> {
           // FIXME
-          getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
+          fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
               .newAppViewFragment(app.getId(), app.getPackageName(), displayable.getTag()), true);
         }, throwable -> CrashReport.getInstance()
             .log(throwable)));

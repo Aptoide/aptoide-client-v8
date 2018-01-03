@@ -19,6 +19,7 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.repository.StoreRepository;
@@ -26,8 +27,10 @@ import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.timeline.view.displayable.FollowUserDisplayable;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -37,6 +40,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class FollowUserWidget extends Widget<FollowUserDisplayable> {
 
+  @Inject FragmentNavigator fragmentNavigator;
   private TextView userNameTv;
   private TextView storeNameTv;
   private TextView followingNumber;
@@ -53,6 +57,8 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
 
   public FollowUserWidget(View itemView) {
     super(itemView);
+    ((BaseActivity) getContext()).getActivityComponent()
+        .inject(this);
   }
 
   @Override protected void assignViews(View itemView) {
@@ -181,7 +187,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     followingTv.setTextColor(displayable.getStoreColor(getContext().getApplicationContext()));
 
     compositeSubscription.add(RxView.clicks(itemView)
-        .subscribe(click -> displayable.viewClicked(getFragmentNavigator()),
+        .subscribe(click -> displayable.viewClicked(fragmentNavigator),
             err -> CrashReport.getInstance()
                 .log(err)));
   }

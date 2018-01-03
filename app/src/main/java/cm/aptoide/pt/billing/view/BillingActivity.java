@@ -13,7 +13,9 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.view.payment.PaymentFragment;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.BackButtonActivity;
+import javax.inject.Inject;
 
 public class BillingActivity extends BackButtonActivity {
 
@@ -24,7 +26,7 @@ public class BillingActivity extends BackButtonActivity {
       "cm.aptoide.pt.view.payment.intent.extra.MERCHANT_NAME";
   public static final String EXTRA_SERVICE_NAME =
       "cm.aptoide.pt.view.payment.intent.extra.SERVICE_NAME";
-
+  @Inject FragmentNavigator fragmentNavigator;
   private Billing billing;
 
   public static Intent getIntent(Context context, String sku, String merchantName,
@@ -45,11 +47,12 @@ public class BillingActivity extends BackButtonActivity {
 
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getActivityComponent().inject(this);
     setContentView(R.layout.empty_frame);
 
     if (savedInstanceState == null) {
-      getFragmentNavigator().navigateToWithoutBackSave(
-          PaymentFragment.create(getIntent().getExtras()), true);
+      fragmentNavigator.navigateToWithoutBackSave(PaymentFragment.create(getIntent().getExtras()),
+          true);
     }
 
     billing = ((AptoideApplication) getApplication()).getBilling(

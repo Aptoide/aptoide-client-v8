@@ -26,19 +26,20 @@ import cm.aptoide.pt.view.MainActivity;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.android.FragmentEvent;
+import javax.inject.Inject;
 import rx.Observable;
 
 public abstract class FragmentView extends BaseFragment implements View {
 
   private static final String TAG = FragmentView.class.getName();
-
+  @Inject FragmentNavigator fragmentNavigator;
   private boolean startActivityForResultCalled;
   private NavigationTracker navigationTracker;
   private ActivityResultNavigator activityResultNavigator;
   private String defaultThemeName;
 
   public FragmentNavigator getFragmentNavigator() {
-    return activityResultNavigator.getFragmentNavigator();
+    return fragmentNavigator;
   }
 
   public ActivityNavigator getActivityNavigator() {
@@ -64,6 +65,7 @@ public abstract class FragmentView extends BaseFragment implements View {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
     defaultThemeName =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultThemeName();
     ScreenTrackingUtils.getInstance()

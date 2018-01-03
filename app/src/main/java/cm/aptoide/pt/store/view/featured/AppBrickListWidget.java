@@ -13,21 +13,27 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
+import javax.inject.Inject;
 
 /**
  * Created by neuro on 09-05-2016.
  */
 public class AppBrickListWidget extends Widget<AppBrickListDisplayable> {
 
+  @Inject FragmentNavigator fragmentNavigator;
   private TextView name;
   private ImageView graphic;
   private RatingBar ratingBar;
 
   public AppBrickListWidget(View itemView) {
     super(itemView);
+    ((BaseActivity) getContext()).getActivityComponent()
+        .inject(this);
   }
 
   @Override protected void assignViews(View itemView) {
@@ -47,7 +53,7 @@ public class AppBrickListWidget extends Widget<AppBrickListDisplayable> {
         .getAvg());
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(v -> {
-          getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
+          fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
               .newAppViewFragment(app.getId(), app.getPackageName(), app.getStore()
                   .getAppearance()
                   .getTheme(), app.getStore()

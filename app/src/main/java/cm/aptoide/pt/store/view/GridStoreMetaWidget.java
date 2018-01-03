@@ -31,9 +31,11 @@ import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowingFragment;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.app.ListStoreAppsFragment;
 import cm.aptoide.pt.view.spannable.SpannableFactory;
 import java.util.List;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -42,6 +44,7 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDisplayable> {
 
+  @Inject FragmentNavigator fragmentNavigator;
   private AptoideAccountManager accountManager;
   private LinearLayout socialChannelsLayout;
   private ImageView mainIcon;
@@ -65,6 +68,8 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
 
   public GridStoreMetaWidget(View itemView) {
     super(itemView);
+    ((BaseActivity) getContext()).getActivityComponent()
+        .inject(this);
   }
 
   @Override protected void assignViews(View itemView) {
@@ -103,7 +108,6 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
     spannableFactory = new SpannableFactory();
     storeCredentialsProvider = new StoreCredentialsProviderImpl(storeAccessor);
-    FragmentNavigator fragmentNavigator = getFragmentNavigator();
     Resources resources = getContext().getResources();
     followersCountTv.setOnClickListener(v -> {
       navigateToFollowersScreen(displayable, resources, fragmentNavigator);
@@ -243,7 +247,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
   }
 
   private void navigateToAppsListScreen(long storeName) {
-    getFragmentNavigator().navigateTo(ListStoreAppsFragment.newInstance(storeName), true);
+    fragmentNavigator.navigateTo(ListStoreAppsFragment.newInstance(storeName), true);
   }
 
   private void showSocialChannels(
@@ -336,7 +340,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     ManageStoreViewModel viewModel =
         new ManageStoreViewModel(storeId, StoreTheme.fromName(storeThemeName), storeName,
             storeDescription, storeImagePath, socialChannels);
-    getFragmentNavigator().navigateForResult(ManageStoreFragment.newInstance(viewModel, false),
+    fragmentNavigator.navigateForResult(ManageStoreFragment.newInstance(viewModel, false),
         requestCode, true);
   }
 

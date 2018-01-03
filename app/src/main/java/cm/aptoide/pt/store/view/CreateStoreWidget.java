@@ -8,8 +8,11 @@ import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import cm.aptoide.pt.account.view.store.ManageStoreViewModel;
 import cm.aptoide.pt.account.view.user.CreateStoreDisplayable;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
+import javax.inject.Inject;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -19,6 +22,7 @@ import rx.android.schedulers.AndroidSchedulers;
 public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
 
   private final CrashReport crashReport;
+  @Inject FragmentNavigator fragmentNavigator;
   private Button button;
   private TextView followers;
   private TextView followings;
@@ -26,6 +30,8 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
   public CreateStoreWidget(View itemView) {
     super(itemView);
     crashReport = CrashReport.getInstance();
+    ((BaseActivity) getContext()).getActivityComponent()
+        .inject(this);
   }
 
   @Override protected void assignViews(View itemView) {
@@ -44,7 +50,7 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
 
     compositeSubscription.add(RxView.clicks(button)
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(click -> getFragmentNavigator().navigateTo(
+        .doOnNext(click -> fragmentNavigator.navigateTo(
             ManageStoreFragment.newInstance(new ManageStoreViewModel(), false), true))
         .doOnNext(__ -> displayable.getStoreAnalytics()
             .sendStoreTabInteractEvent("Login"))

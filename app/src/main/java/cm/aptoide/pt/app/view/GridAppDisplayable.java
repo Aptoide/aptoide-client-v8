@@ -11,6 +11,7 @@ import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 
 /**
@@ -24,17 +25,20 @@ public class GridAppDisplayable extends DisplayablePojo<App> {
   private boolean totalDownloads;
   private NavigationTracker navigationTracker;
   private StoreContext storeContext;
+  private FragmentNavigator fragmentNavigator;
 
   public GridAppDisplayable() {
   }
 
   public GridAppDisplayable(App pojo, String tag, boolean totalDownloads,
-      NavigationTracker navigationTracker, StoreContext storeContext) {
+      NavigationTracker navigationTracker, StoreContext storeContext,
+      FragmentNavigator fragmentNavigator) {
     super(pojo);
     this.tag = tag;
     this.totalDownloads = totalDownloads;
     this.navigationTracker = navigationTracker;
     this.storeContext = storeContext;
+    this.fragmentNavigator = fragmentNavigator;
   }
 
   @Override protected Configs getConfig() {
@@ -60,5 +64,9 @@ public class GridAppDisplayable extends DisplayablePojo<App> {
 
   public boolean isTotalDownloads() {
     return this.totalDownloads;
+  }
+
+  public FragmentNavigator getFragmentNavigator() {
+    return fragmentNavigator;
   }
 }

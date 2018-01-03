@@ -1,5 +1,7 @@
 package cm.aptoide.pt.app.view;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
@@ -7,11 +9,13 @@ import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.store.view.GetStoreEndlessFragment;
 import cm.aptoide.pt.store.view.featured.AppBrickListDisplayable;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import java.util.LinkedList;
 import java.util.List;
+import javax.inject.Inject;
 import rx.functions.Action1;
 
 /**
@@ -20,8 +24,15 @@ import rx.functions.Action1;
 
 public class ListAppsFragment extends GetStoreEndlessFragment<ListApps> {
 
+  @Inject FragmentNavigator fragmentNavigator;
+
   public static Fragment newInstance() {
     return new ListAppsFragment();
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
   }
 
   @Override protected V7<ListApps, ? extends Endless> buildRequest(boolean refresh, String url) {
@@ -51,7 +62,7 @@ public class ListAppsFragment extends GetStoreEndlessFragment<ListApps> {
               app.getStore()
                   .setAppearance(new Store.Appearance(storeTheme, null));
               displayables.add(new GridAppDisplayable(app, tag, storeContext == StoreContext.home,
-                  navigationTracker, storeContext));
+                  navigationTracker, storeContext, fragmentNavigator));
             }
             break;
         }
@@ -61,7 +72,7 @@ public class ListAppsFragment extends GetStoreEndlessFragment<ListApps> {
               .setAppearance(new Store.Appearance(storeTheme, null));
           displayables.add(
               new GridAppDisplayable(app, tag, storeContext == StoreContext.home, navigationTracker,
-                  storeContext));
+                  storeContext, fragmentNavigator));
         }
       }
 

@@ -15,20 +15,26 @@ import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.StoreTheme;
+import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
+import javax.inject.Inject;
 import rx.functions.Action1;
 
 public class GridStoreWidget extends Widget<GridStoreDisplayable> {
 
+  @Inject FragmentNavigator fragmentNavigator;
   private ImageView storeAvatar;
   private TextView storeName;
   private LinearLayout storeLayout;
 
   public GridStoreWidget(View itemView) {
     super(itemView);
+    ((BaseActivity) getContext()).getActivityComponent()
+        .inject(this);
   }
 
   @Override protected void assignViews(View itemView) {
@@ -54,7 +60,7 @@ public class GridStoreWidget extends Widget<GridStoreDisplayable> {
             .sendStoreOpenEvent(origin, gridStoreDisplayable.getPojo()
                 .getName());
       }
-      getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
+      fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
           .newStoreFragment(gridStoreDisplayable.getPojo()
               .getName(), store.getAppearance()
               .getTheme()), true);

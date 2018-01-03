@@ -9,17 +9,21 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.recycler.displayable.GridAdDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
+import javax.inject.Inject;
 
 /**
  * Created by neuro on 20-06-2016.
  */
 public class GridAdWidget extends Widget<GridAdDisplayable> {
 
+  @Inject FragmentNavigator fragmentNavigator;
   private TextView name;
   private ImageView icon;
   private TextView downloadsNumber;
@@ -27,6 +31,8 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
 
   public GridAdWidget(View itemView) {
     super(itemView);
+    ((BaseActivity) getContext()).getActivityComponent()
+        .inject(this);
   }
 
   @Override protected void assignViews(View itemView) {
@@ -46,7 +52,7 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
 
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(v -> {
-          getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
+          fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
               .newAppViewFragment(new SearchAdResult(pojo), displayable.getTag()), true);
         }, throwable -> CrashReport.getInstance()
             .log(throwable)));

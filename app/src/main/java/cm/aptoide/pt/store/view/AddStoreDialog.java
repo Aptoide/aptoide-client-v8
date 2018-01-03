@@ -46,11 +46,12 @@ import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.view.MainActivity;
+import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.dialog.BaseDialog;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
@@ -67,9 +68,8 @@ public class AddStoreDialog extends BaseDialog {
   private static StoreAutoCompleteWebSocket storeAutoCompleteWebSocket;
 
   private final int PRIVATE_STORE_REQUEST_CODE = 20;
-
+  @Inject FragmentNavigator navigator;
   private AptoideAccountManager accountManager;
-  private FragmentNavigator navigator;
   private String storeName;
   private Dialog loadingDialog;
   private SearchView searchView;
@@ -87,18 +87,10 @@ public class AddStoreDialog extends BaseDialog {
   private TokenInvalidator tokenInvalidator;
   private StoreAnalytics storeAnalytics;
 
-  @Override public void onAttach(Activity activity) {
-    super.onAttach(activity);
-    if (activity instanceof MainActivity) {
-      navigator = ((MainActivity) activity).getFragmentNavigator();
-    } else {
-      Logger.e(TAG, "Launched AddStoreDialog from invalid Activity");
-      throw new IllegalStateException();
-    }
-  }
-
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    ((BaseActivity) getActivity()).getActivityComponent()
+        .inject(this);
     tokenInvalidator =
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     converterFactory = WebService.getDefaultConverter();

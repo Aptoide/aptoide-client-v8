@@ -23,11 +23,14 @@ import cm.aptoide.pt.dataprovider.ws.v3.AddApkFlagRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Map;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -39,7 +42,7 @@ public class AppViewFlagThisWidget extends Widget<AppViewFlagThisDisplayable> {
   private static final String TAG = AppViewFlagThisWidget.class.getSimpleName();
 
   private final Map<Integer, GetAppMeta.GetAppMetaFile.Flags.Vote.Type> viewIdTypeMap;
-
+  @Inject FragmentNavigator fragmentNavigator;
   private View goodAppLayoutWrapper;
   private View flagsLayoutWrapper;
 
@@ -64,6 +67,8 @@ public class AppViewFlagThisWidget extends Widget<AppViewFlagThisDisplayable> {
     viewIdTypeMap.put(R.id.needs_licence_layout, GetAppMeta.GetAppMetaFile.Flags.Vote.Type.LICENSE);
     viewIdTypeMap.put(R.id.fake_app_layout, GetAppMeta.GetAppMetaFile.Flags.Vote.Type.FAKE);
     viewIdTypeMap.put(R.id.virus_layout, GetAppMeta.GetAppMetaFile.Flags.Vote.Type.VIRUS);
+    ((BaseActivity) getContext()).getActivityComponent()
+        .inject(this);
   }
 
   @Override protected void assignViews(View itemView) {
@@ -225,7 +230,8 @@ public class AppViewFlagThisWidget extends Widget<AppViewFlagThisDisplayable> {
               }
 
               if (voteSubmitted) {
-                ShowMessage.asSnack(getRootView(), R.string.vote_submitted);
+                ShowMessage.asSnack(fragmentNavigator.peekLast()
+                    .getView(), R.string.vote_submitted);
                 return;
               }
             }
@@ -237,12 +243,14 @@ public class AppViewFlagThisWidget extends Widget<AppViewFlagThisDisplayable> {
             }
 
             setAllButtonsUnPressed(v);
-            ShowMessage.asSnack(getRootView(), R.string.unknown_error);
+            ShowMessage.asSnack(fragmentNavigator.peekLast()
+                .getView(), R.string.unknown_error);
           }, error -> {
             CrashReport.getInstance()
                 .log(error);
             setAllButtonsUnPressed(v);
-            ShowMessage.asSnack(getRootView(), R.string.unknown_error);
+            ShowMessage.asSnack(fragmentNavigator.peekLast()
+                .getView(), R.string.unknown_error);
           }));
     };
   }

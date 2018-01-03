@@ -12,20 +12,25 @@ import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.reviews.RowReviewDisplayable;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.view.BaseActivity;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Locale;
+import javax.inject.Inject;
 
 public class RowReviewWidget extends Widget<RowReviewDisplayable> {
 
   public ImageView appIcon;
   public TextView rating;
   public TextView appName;
+  @Inject FragmentNavigator fragmentNavigator;
   private ImageView avatar;
   private TextView reviewer;
   private TextView reviewBody;
 
   public RowReviewWidget(View itemView) {
     super(itemView);
+    ((BaseActivity) getContext()).getActivityComponent()
+        .inject(this);
   }
 
   @Override protected void assignViews(View itemView) {
@@ -65,7 +70,6 @@ public class RowReviewWidget extends Widget<RowReviewDisplayable> {
         .loadWithCircleTransformAndPlaceHolderAvatarSize(review.getUser()
             .getAvatar(), avatar, R.drawable.layer_1);
 
-    final FragmentNavigator navigator = getFragmentNavigator();
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(aVoid -> {
           if (displayable.getStoreAnalytics() != null) {
@@ -76,7 +80,7 @@ public class RowReviewWidget extends Widget<RowReviewDisplayable> {
                     .getStore()
                     .getName());
           }
-          navigator.navigateTo(AptoideApplication.getFragmentProvider()
+          fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
               .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore()
                   .getName(), app.getPackageName(), review.getId()), true);
         }));

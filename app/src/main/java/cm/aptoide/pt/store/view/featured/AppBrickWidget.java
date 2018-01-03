@@ -11,19 +11,25 @@ import android.widget.ImageView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
+import javax.inject.Inject;
 
 /**
  * Created by neuro on 09-05-2016.
  */
 public class AppBrickWidget extends Widget<AppBrickDisplayable> {
 
+  @Inject FragmentNavigator fragmentNavigator;
   private ImageView graphic;
 
   public AppBrickWidget(View itemView) {
     super(itemView);
+    ((BaseActivity) getContext()).getActivityComponent()
+        .inject(this);
   }
 
   @Override protected void assignViews(View itemView) {
@@ -38,7 +44,7 @@ public class AppBrickWidget extends Widget<AppBrickDisplayable> {
 
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(v -> {
-          getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
+          fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
               .newAppViewFragment(displayable.getPojo()
                   .getId(), displayable.getPojo()
                   .getPackageName(), displayable.getPojo()

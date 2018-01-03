@@ -14,13 +14,16 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreDisplays;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.view.GridDisplayDisplayable;
 import cm.aptoide.pt.store.view.StoreTabFragmentChooser;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.store.view.home.HomeFragment;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.view.BaseActivity;
 import com.jakewharton.rxbinding.view.RxView;
+import javax.inject.Inject;
 import rx.functions.Action1;
 
 /**
@@ -30,10 +33,13 @@ public class GridDisplayWidget extends Widget<GridDisplayDisplayable> {
 
   private static final String TAG = GridDisplayWidget.class.getName();
 
+  @Inject FragmentNavigator fragmentNavigator;
   private ImageView imageView;
 
   public GridDisplayWidget(View itemView) {
     super(itemView);
+    ((BaseActivity) getContext()).getActivityComponent()
+        .inject(this);
   }
 
   @Override protected void assignViews(View itemView) {
@@ -50,7 +56,7 @@ public class GridDisplayWidget extends Widget<GridDisplayDisplayable> {
       Event event = pojo.getEvent();
       Event.Name name = event.getName();
       if (StoreTabFragmentChooser.validateAcceptedName(name)) {
-        getFragmentNavigator().navigateTo(
+        fragmentNavigator.navigateTo(
             StoreTabGridRecyclerFragment.newInstance(event, pojo.getLabel(),
                 displayable.getStoreTheme(), displayable.getTag(), displayable.getStoreContext(),
                 false), true);
