@@ -337,6 +337,7 @@ dependencies {
   androidTestCompile("com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}") {
     exclude group: "com.android.support", module: "support-annotations"
   }
+  //dependencies needed for UITests
   androidTestCompile "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
   androidTestCompile "com.android.support.test.espresso:espresso-core:${ESPRESSO_VERSION}"
   androidTestCompile "com.android.support.test.espresso:espresso-contrib:${ESPRESSO_VERSION}"
@@ -345,6 +346,8 @@ dependencies {
   androidTestCompile "com.jakewharton.rxrelay:rxrelay:${RX_RELAY}"
   androidTestCompile "org.mockito:mockito-android:${MOCKITO_CORE_ANDROID_VERSION}"
   androidTestCompile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VERSION}"
+  androidTestCompile "com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}"
+  androidTestCompile "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
 
   compile "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
 
