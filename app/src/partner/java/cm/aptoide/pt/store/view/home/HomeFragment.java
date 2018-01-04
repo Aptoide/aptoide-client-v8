@@ -41,11 +41,12 @@ import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.preferences.PartnersSecurePreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
-import cm.aptoide.pt.search.SearchCursorAdapter;
 import cm.aptoide.pt.search.SearchNavigator;
-import cm.aptoide.pt.search.view.AppSearchSuggestions;
+import cm.aptoide.pt.search.SuggestionCursorAdapter;
+import cm.aptoide.pt.search.analytics.SearchAnalytics;
+import cm.aptoide.pt.search.suggestions.TrendingManager;
+import cm.aptoide.pt.search.view.AppSearchSuggestionsView;
 import cm.aptoide.pt.search.view.SearchSuggestionsPresenter;
-import cm.aptoide.pt.search.view.TrendingManager;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.store.view.StorePagerAdapter;
@@ -87,10 +88,11 @@ public class HomeFragment extends StoreFragment {
   private BackButton.ClickHandler backClickHandler;
   private String defaultThemeName;
 
-  private AppSearchSuggestions appSearchSuggestions;
+  private AppSearchSuggestionsView appSearchSuggestionsView;
   private CrashReport crashReport;
   private SearchNavigator searchNavigator;
   private TrendingManager trendingManager;
+  private SearchAnalytics searchAnalytics;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -193,6 +195,12 @@ public class HomeFragment extends StoreFragment {
 
     trendingManager = application.getTrendingManager();
     crashReport = CrashReport.getInstance();
+    final Analytics analytics = Analytics.getInstance();
+    searchAnalytics = new SearchAnalytics(analytics,
+        AppEventsLogger.newLogger(getContext().getApplicationContext()));
+
+    setRegisterFragment(false);
+    setHasOptionsMenu(true);
   }
 
   @Override public void onDestroyView() {
@@ -264,8 +272,8 @@ public class HomeFragment extends StoreFragment {
     inflater.inflate(R.menu.fragment_home, menu);
 
     final MenuItem menuItem = menu.findItem(R.id.menu_item_search);
-    if (appSearchSuggestions != null && menuItem != null) {
-      appSearchSuggestions.initialize(menuItem);
+    if (appSearchSuggestionsView != null && menuItem != null) {
+      appSearchSuggestionsView.initialize(menuItem);
     } else if (menuItem != null) {
       menuItem.setVisible(false);
     } else {
@@ -285,23 +293,27 @@ public class HomeFragment extends StoreFragment {
     };
     registerClickHandler(backClickHandler);
 
+    final SuggestionCursorAdapter suggestionCursorAdapter =
+        new SuggestionCursorAdapter(getContext());
+
     final Toolbar toolbar = getToolbar();
     final Observable<MenuItem> toolbarMenuItemClick = RxToolbar.itemClicks(toolbar)
         .publish()
         .autoConnect();
 
-    final SearchCursorAdapter searchCursorAdapter = new SearchCursorAdapter(getContext());
-    appSearchSuggestions =
-        new AppSearchSuggestions(this, RxView.clicks(toolbar), crashReport, "", searchCursorAdapter,
-            PublishSubject.create(), toolbarMenuItemClick);
+    appSearchSuggestionsView =
+        new AppSearchSuggestionsView(this, RxView.clicks(toolbar), crashReport,
+            suggestionCursorAdapter, PublishSubject.create(), toolbarMenuItemClick,
+            searchAnalytics);
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
 
     final SearchSuggestionsPresenter searchSuggestionsPresenter =
-        new SearchSuggestionsPresenter(appSearchSuggestions,
-            new SearchFactory(application.getDefaultWebSocketClient(), application.getNonNullObjectMapper()).createSearchForApps(), AndroidSchedulers.mainThread(),
-            searchCursorAdapter, crashReport, trendingManager, searchNavigator, false);
+        new SearchSuggestionsPresenter(appSearchSuggestionsView,
+            application.getSearchSuggestionManager(), AndroidSchedulers.mainThread(),
+            suggestionCursorAdapter, crashReport, trendingManager, searchNavigator, false,
+            searchAnalytics);
 
     attachPresenter(searchSuggestionsPresenter);
   }

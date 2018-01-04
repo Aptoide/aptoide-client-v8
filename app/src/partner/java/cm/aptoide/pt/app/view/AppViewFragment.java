@@ -90,13 +90,13 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
-import cm.aptoide.pt.search.ReferrerUtils;
-import cm.aptoide.pt.search.SearchCursorAdapter;
 import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.SuggestionCursorAdapter;
+import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.model.SearchAdResult;
-import cm.aptoide.pt.search.view.AppSearchSuggestions;
+import cm.aptoide.pt.search.suggestions.TrendingManager;
+import cm.aptoide.pt.search.view.AppSearchSuggestionsView;
 import cm.aptoide.pt.search.view.SearchSuggestionsPresenter;
-import cm.aptoide.pt.search.view.TrendingManager;
 import cm.aptoide.pt.share.ShareAppHelper;
 import cm.aptoide.pt.social.data.ReadPostsPersistence;
 import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
@@ -105,6 +105,7 @@ import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
+import cm.aptoide.pt.util.ReferrerUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
@@ -180,10 +181,11 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
   private NavigationTracker navigationTracker;
 
-  private AppSearchSuggestions appSearchSuggestions;
   private CrashReport crashReport;
   private SearchNavigator searchNavigator;
   private TrendingManager trendingManager;
+  private SearchAnalytics searchAnalytics;
+  private AppSearchSuggestionsView appSearchSuggestionsView;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -344,9 +346,13 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     final AptoideApplication application = (AptoideApplication) applicationContext;
     this.appViewModel.setDefaultTheme(application.getDefaultThemeName());
     this.appViewModel.setMarketName(application.getMarketName());
+    Analytics analytics = Analytics.getInstance();
 
     searchNavigator =
         new SearchNavigator(getFragmentNavigator(), application.getDefaultStoreName());
+
+    searchAnalytics = new SearchAnalytics(analytics,
+        AppEventsLogger.newLogger(getContext().getApplicationContext()));
 
     adMapper = new MinimalAdMapper();
 
@@ -362,8 +368,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     final TokenInvalidator tokenInvalidator = application.getTokenInvalidator();
     httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    Analytics analytics = Analytics.getInstance();
-    issuesAnalytics = new IssuesAnalytics(analytics, Answers.getInstance());
     ReadPostsPersistence readPostsPersistence =
         ((AptoideApplication) applicationContext).getReadPostsPersistence();
     timelineAnalytics =
@@ -401,10 +405,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             application.isCreateStoreUserPrivacyEnabled());
     downloadFactory = new DownloadFactory(getMarketName());
 
-    storeAnalytics = new StoreAnalytics(AppEventsLogger.newLogger(applicationContext), analytics);
-
     appViewAnalytics = new AppViewAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()));
+        AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
+        httpClient, tokenInvalidator, converterFactory, sharedPreferences);
 
     notLoggedInShareAnalytics = application.getNotLoggedInShareAnalytics();
     navigationTracker = application.getNavigationTracker();
@@ -481,26 +484,26 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           crashReport.log(throwable);
         });
 
-    final SearchCursorAdapter searchCursorAdapter = new SearchCursorAdapter(getContext());
+    SuggestionCursorAdapter suggestionCursorAdapter = new SuggestionCursorAdapter(getContext());
 
     final Toolbar toolbar = getToolbar();
     final Observable<MenuItem> toolbarMenuItemClick = RxToolbar.itemClicks(toolbar)
         .publish()
         .autoConnect();
 
-    appSearchSuggestions =
-        new AppSearchSuggestions(this, RxView.clicks(toolbar), crashReport, "", searchCursorAdapter,
-            PublishSubject.create(), toolbarMenuItemClick);
+    appSearchSuggestionsView =
+        new AppSearchSuggestionsView(this, RxView.clicks(toolbar), crashReport,
+            suggestionCursorAdapter, PublishSubject.create(), toolbarMenuItemClick,
+            searchAnalytics);
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
 
     final SearchSuggestionsPresenter searchSuggestionsPresenter =
-        new SearchSuggestionsPresenter(appSearchSuggestions,
-            new SearchFactory(application.getDefaultWebSocketClient(),
-                application.getNonNullObjectMapper()).createSearchForApps(),
-            AndroidSchedulers.mainThread(), searchCursorAdapter, crashReport, trendingManager,
-            searchNavigator, false);
+        new SearchSuggestionsPresenter(appSearchSuggestionsView,
+            application.getSearchSuggestionManager(), AndroidSchedulers.mainThread(),
+            suggestionCursorAdapter, crashReport, trendingManager, searchNavigator, false,
+            searchAnalytics);
 
     attachPresenter(searchSuggestionsPresenter);
   }
@@ -637,8 +640,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     inflater.inflate(R.menu.menu_appview_fragment, menu);
 
     final MenuItem menuItem = menu.findItem(R.id.menu_item_search);
-    if (appSearchSuggestions != null && menuItem != null) {
-      appSearchSuggestions.initialize(menuItem);
+    if (appSearchSuggestionsView != null && menuItem != null) {
+      appSearchSuggestionsView.initialize(menuItem);
     } else if (menuItem != null) {
       menuItem.setVisible(false);
     } else {
