@@ -1,6 +1,7 @@
 package cm.aptoide.pt.store;
 
 import android.support.annotation.Nullable;
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -140,7 +141,7 @@ public class StoreUtils {
 
   public static ArrayList<String> split(List<String> repoUrl) {
 
-    ArrayList<String> res = new ArrayList<String>();
+    ArrayList<String> res = new ArrayList<>();
 
     if (repoUrl != null) {
       for (String s : repoUrl) {
@@ -207,7 +208,7 @@ public class StoreUtils {
   public static void unSubscribeStore(String name, AptoideAccountManager accountManager,
       StoreCredentialsProvider storeCredentialsProvider, StoreAccessor storeAccessor) {
     accountManager.accountStatus()
-        .map(account -> account.isLoggedIn())
+        .map(Account::isLoggedIn)
         .first()
         .subscribe(isLoggedIn -> {
           if (isLoggedIn) {
@@ -235,9 +236,5 @@ public class StoreUtils {
         error = StoreError.GENERIC_ERROR;
     }
     return error;
-  }
-
-  public enum StoreError {
-    PRIVATE_STORE_ERROR, PRIVATE_STORE_WRONG_CREDENTIALS, GENERIC_ERROR, STORE_SUSPENDED
   }
 }

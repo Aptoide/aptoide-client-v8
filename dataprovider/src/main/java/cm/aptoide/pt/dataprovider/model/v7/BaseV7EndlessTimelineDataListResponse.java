@@ -8,9 +8,18 @@ package cm.aptoide.pt.dataprovider.model.v7;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class BaseV7EndlessTimelineDataListResponse<T> extends BaseV7EndlessResponse {
-  @JsonProperty("datalist") private TimelineDataList<T> dataList;
+  @JsonProperty("datalist") private DataList<T> dataList;
+  @JsonProperty("data") private TimelineData data;
 
   public BaseV7EndlessTimelineDataListResponse() {
+  }
+
+  public TimelineData getData() {
+    return data;
+  }
+
+  public void setData(TimelineData data) {
+    this.data = data;
   }
 
   @Override public int getTotal() {
@@ -34,6 +43,10 @@ public class BaseV7EndlessTimelineDataListResponse<T> extends BaseV7EndlessRespo
     return result;
   }
 
+  protected boolean canEqual(Object other) {
+    return other instanceof BaseV7EndlessDataListResponse;
+  }
+
   public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof BaseV7EndlessDataListResponse)) return false;
@@ -45,15 +58,11 @@ public class BaseV7EndlessTimelineDataListResponse<T> extends BaseV7EndlessRespo
     return this$dataList == null ? other$dataList == null : this$dataList.equals(other$dataList);
   }
 
-  protected boolean canEqual(Object other) {
-    return other instanceof BaseV7EndlessDataListResponse;
-  }
-
-  public TimelineDataList<T> getDataList() {
+  public DataList<T> getDataList() {
     return this.dataList;
   }
 
-  public void setDataList(TimelineDataList<T> dataList) {
+  public void setDataList(DataList<T> dataList) {
     this.dataList = dataList;
   }
 

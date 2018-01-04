@@ -34,6 +34,8 @@ android {
           "\"" + project.APTOIDE_WEB_SERVICES_NOTIFICATION_HOST + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_READ_V7_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_READ_V7_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_SEARCH_HOST",
+          "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_SEARCH_HOST + "\""
     }
     prod {
       buildConfigField "String", "APTOIDE_WEB_SERVICES_SCHEME",
@@ -50,6 +52,8 @@ android {
           "\"" + project.APTOIDE_WEB_SERVICES_NOTIFICATION_HOST + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_READ_V7_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_READ_V7_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_SEARCH_HOST",
+          "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_SEARCH_HOST + "\""
     }
   }
 

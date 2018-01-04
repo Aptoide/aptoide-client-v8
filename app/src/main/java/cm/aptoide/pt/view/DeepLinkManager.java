@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
@@ -30,7 +29,9 @@ import cm.aptoide.pt.navigator.TabNavigation;
 import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.repository.StoreRepository;
-import cm.aptoide.pt.search.view.SearchResultFragment;
+import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.analytics.SearchAnalytics;
+import cm.aptoide.pt.search.analytics.SearchSource;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.StoreFragment;
@@ -55,17 +56,18 @@ public class DeepLinkManager {
   private final SharedPreferences sharedPreferences;
   private final StoreAccessor storeAccessor;
   private final String defaultTheme;
-  private final String defaultStoreName;
-  private NavigationTracker navigationTracker;
-  private PageViewsAnalytics pageViewsAnalytics;
-  private NotificationAnalytics notificationAnalytics;
+  private final SearchNavigator searchNavigator;
+  private final NavigationTracker navigationTracker;
+  private final PageViewsAnalytics pageViewsAnalytics;
+  private final NotificationAnalytics notificationAnalytics;
+  private final SearchAnalytics searchAnalytics;
 
   public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, StoreRepository storeRepository,
       FragmentNavigator fragmentNavigator, TabNavigator tabNavigator,
       DeepLinkMessages deepLinkMessages, SharedPreferences sharedPreferences,
-      StoreAccessor storeAccessor, String defaultTheme, String defaultStoreName,
+      StoreAccessor storeAccessor, String defaultTheme, NotificationAnalytics notificationAnalytics,
       NavigationTracker navigationTracker, PageViewsAnalytics pageViewsAnalytics,
-      NotificationAnalytics notificationAnalytics) {
+      SearchNavigator searchNavigator, SearchAnalytics searchAnalytics) {
     this.storeUtilsProxy = storeUtilsProxy;
     this.storeRepository = storeRepository;
     this.fragmentNavigator = fragmentNavigator;
@@ -74,10 +76,11 @@ public class DeepLinkManager {
     this.sharedPreferences = sharedPreferences;
     this.storeAccessor = storeAccessor;
     this.defaultTheme = defaultTheme;
-    this.defaultStoreName = defaultStoreName;
     this.navigationTracker = navigationTracker;
     this.pageViewsAnalytics = pageViewsAnalytics;
     this.notificationAnalytics = notificationAnalytics;
+    this.searchNavigator = searchNavigator;
+    this.searchAnalytics = searchAnalytics;
   }
 
   public boolean showDeepLink(Intent intent) {
@@ -155,8 +158,12 @@ public class DeepLinkManager {
   }
 
   private void searchDeepLink(String query) {
-    final Fragment fragment = SearchResultFragment.newInstance(query, defaultStoreName);
-    fragmentNavigator.navigateTo(fragment, true);
+    searchNavigator.navigate(query);
+    if (query == null || query.isEmpty()) {
+      searchAnalytics.searchStart(SearchSource.WIDGET);
+    } else {
+      searchAnalytics.searchStart(SearchSource.DEEP_LINK);
+    }
   }
 
   private void newrepoDeepLink(Intent intent, ArrayList<String> repos,

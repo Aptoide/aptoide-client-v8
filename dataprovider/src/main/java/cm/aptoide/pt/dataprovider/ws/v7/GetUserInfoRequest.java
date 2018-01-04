@@ -44,7 +44,6 @@ public class GetUserInfoRequest extends V7<GetUserInfo, GetUserInfoRequest.Body>
   public static class Body extends BaseBody {
 
     private List<String> nodes;
-    private boolean refresh;
 
     public Body(List<String> nodes) {
       this.nodes = nodes;
@@ -56,10 +55,6 @@ public class GetUserInfoRequest extends V7<GetUserInfo, GetUserInfoRequest.Body>
 
     public void setNodes(List<String> nodes) {
       this.nodes = nodes;
-    }
-
-    public void setRefresh(boolean refresh) {
-      this.refresh = refresh;
     }
   }
 }

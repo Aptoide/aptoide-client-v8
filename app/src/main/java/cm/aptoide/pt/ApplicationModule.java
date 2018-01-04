@@ -109,6 +109,12 @@ import cm.aptoide.pt.repository.DownloadRepository;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootValueSaver;
+import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
+import cm.aptoide.pt.search.suggestions.SearchSuggestionRemoteRepository;
+import cm.aptoide.pt.search.suggestions.SearchSuggestionService;
+import cm.aptoide.pt.search.suggestions.TrendingManager;
+import cm.aptoide.pt.search.suggestions.TrendingService;
+import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
@@ -160,6 +166,10 @@ import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.CallAdapter;
+import retrofit2.Converter;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import rx.Completable;
 import rx.Single;
 import rx.schedulers.Schedulers;
@@ -247,8 +257,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides RollbackRepository provideRollbackRepository(
-      RollbackAccessor rollbackAcessor) {
-    return new RollbackRepository(rollbackAcessor);
+      RollbackAccessor rollbackAccessor) {
+    return new RollbackRepository(rollbackAccessor);
   }
 
   @Singleton @Provides RollbackAccessor provideRollbackAccessor(Database database) {
@@ -461,15 +471,15 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("multipart") MultipartBodyInterceptor multipartBodyInterceptor,
       AndroidAccountProvider androidAccountProvider, GoogleApiClient googleApiClient,
       @Named("no-authentication-v3") BodyInterceptor<BaseBody> noAuthenticationBodyInterceptorV3,
-      ObjectMapper objectMapper, StoreManager storeManager) {
+      ObjectMapper objectMapper, Converter.Factory converterFactory, StoreManager storeManager) {
     FacebookSdk.sdkInitialize(application);
     final AccountFactory accountFactory = new AccountFactory();
 
     final AccountService accountService =
-        new AccountServiceV3(accountFactory, httpClient, longTimeoutHttpClient,
-            WebService.getDefaultConverter(), objectMapper, defaultSharedPreferences, extraId,
-            tokenInvalidator, authenticationPersistence, noAuthenticationBodyInterceptorV3,
-            multipartBodyInterceptor, bodyInterceptorWebV7, bodyInterceptorPoolV7);
+        new AccountServiceV3(accountFactory, httpClient, longTimeoutHttpClient, converterFactory,
+            objectMapper, defaultSharedPreferences, extraId, tokenInvalidator,
+            authenticationPersistence, noAuthenticationBodyInterceptorV3, multipartBodyInterceptor,
+            bodyInterceptorWebV7, bodyInterceptorPoolV7);
 
     final AndroidAccountDataMigration accountDataMigration = new AndroidAccountDataMigration(
         SecurePreferencesImplementation.getInstance(application, defaultSharedPreferences),
@@ -535,6 +545,25 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     okHttpClientBuilder.connectTimeout(2, TimeUnit.MINUTES);
     okHttpClientBuilder.readTimeout(2, TimeUnit.MINUTES);
     okHttpClientBuilder.writeTimeout(2, TimeUnit.MINUTES);
+
+    if (ToolboxManager.isToolboxEnableRetrofitLogs(sharedPreferences)) {
+      okHttpClientBuilder.addInterceptor(retrofitLogInterceptor);
+    }
+
+    return okHttpClientBuilder.build();
+  }
+
+  @Singleton @Provides @Named("web-socket") OkHttpClient provideWebSocketOkHttpClient(
+      @Named("user-agent") Interceptor userAgentInterceptor,
+      @Named("default") SharedPreferences sharedPreferences,
+      @Named("retrofit-log") Interceptor retrofitLogInterceptor) {
+    final OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+    okHttpClientBuilder.addInterceptor(userAgentInterceptor);
+    okHttpClientBuilder.addInterceptor(retrofitLogInterceptor);
+    okHttpClientBuilder.connectTimeout(2, TimeUnit.MINUTES);
+    okHttpClientBuilder.readTimeout(1, TimeUnit.MINUTES);
+    okHttpClientBuilder.writeTimeout(1, TimeUnit.MINUTES);
+    okHttpClientBuilder.pingInterval(10, TimeUnit.SECONDS);
 
     if (ToolboxManager.isToolboxEnableRetrofitLogs(sharedPreferences)) {
       okHttpClientBuilder.addInterceptor(retrofitLogInterceptor);
@@ -743,5 +772,59 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides NetworkOperatorManager providesNetworkOperatorManager() {
     return new NetworkOperatorManager(
         (TelephonyManager) application.getSystemService(Context.TELEPHONY_SERVICE));
+  }
+
+  @Singleton @Provides TrendingManager providesTrendingManager(TrendingService trendingService) {
+    return new TrendingManager(trendingService);
+  }
+
+  @Singleton @Provides Converter.Factory providesConverterFactory() {
+    return WebService.getDefaultConverter();
+  }
+
+  @Singleton @Provides StoreCredentialsProvider providesStoreCredentialsProvider(
+      StoreAccessor storeAccessor) {
+    return new StoreCredentialsProviderImpl(storeAccessor);
+  }
+
+  @Singleton @Provides TrendingService providesTrendingService(
+      StoreCredentialsProvider storeCredentialsProvider,
+      @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
+      Converter.Factory converterFactory, @Named("default") OkHttpClient httpClient,
+      @Named("account-settings-pool-v7")
+          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptor) {
+    return new TrendingService(storeCredentialsProvider, bodyInterceptor, httpClient,
+        converterFactory, tokenInvalidator, sharedPreferences);
+  }
+
+  @Singleton @Provides @Named("ws-prod-base-url") String providesBaseWebServiceTestsUrl() {
+    return "http://"
+        + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SEARCH_HOST
+        + "/api/7/";
+  }
+
+  @Singleton @Provides @Named("rx") CallAdapter.Factory providesCallAdapterFactory() {
+    return RxJavaCallAdapterFactory.create();
+  }
+
+  @Singleton @Provides SearchSuggestionManager providesSearchSuggestionManager(
+      SearchSuggestionRemoteRepository remoteRepository) {
+    return new SearchSuggestionManager(new SearchSuggestionService(remoteRepository),
+        Schedulers.io());
+  }
+
+  @Singleton @Provides Retrofit providesDefaultRetrofit(@Named("ws-prod-base-url") String baseUrl,
+      @Named("default") OkHttpClient httpClient, Converter.Factory converterFactory,
+      @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
+    return new Retrofit.Builder().baseUrl(baseUrl)
+        .client(httpClient)
+        .addConverterFactory(converterFactory)
+        .addCallAdapterFactory(rxCallAdapterFactory)
+        .build();
+  }
+
+  @Singleton @Provides SearchSuggestionRemoteRepository providesSearchSuggestionRemoteRepository(
+      Retrofit retrofit) {
+    return retrofit.create(SearchSuggestionRemoteRepository.class);
   }
 }
