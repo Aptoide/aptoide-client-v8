@@ -263,6 +263,7 @@ public class AddStoreDialog extends BaseDialog {
             })
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSuccess(data -> suggestionCursorAdapter.setData(data)))
+        .retry()
         .subscribe());
   }
 

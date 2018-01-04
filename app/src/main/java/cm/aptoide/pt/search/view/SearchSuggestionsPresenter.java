@@ -60,12 +60,12 @@ import rx.Single;
   private void handleQueryTextSubmitted() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> getDebouncedQueryChanges())
-        .filter(data -> data.hasQuery() && data.isSubmitted())
+        .flatMap(
+            __ -> getDebouncedQueryChanges().filter(data -> data.hasQuery() && data.isSubmitted()))
         .observeOn(viewScheduler)
-        .doOnNext(__ -> view.collapseSearchBar())
-        .doOnNext(data -> navigator.navigate(data.getQuery()))
         .doOnNext(data -> {
+          view.collapseSearchBar();
+          navigator.navigate(data.getQuery());
           if (data.isSuggestion()) {
             searchAnalytics.searchFromSuggestion(data.getQuery(), data.getPosition());
           } else {
@@ -85,11 +85,11 @@ import rx.Single;
   private void handleQueryTextCleaned() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> getDebouncedQueryChanges())
-        .filter(data -> !data.hasQuery())
-        .flatMapSingle(data -> trendingManager.getTrendingSuggestions()
-            .observeOn(viewScheduler)
-            .doOnSuccess(trendingList -> view.setTrending(trendingList)))
+        .flatMap(__ -> getDebouncedQueryChanges().filter(data -> !data.hasQuery())
+            .flatMapSingle(data -> trendingManager.getTrendingSuggestions()
+                .observeOn(viewScheduler)
+                .doOnSuccess(trendingList -> view.setTrending(trendingList)))
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
@@ -98,20 +98,21 @@ import rx.Single;
   private void handleQueryTextChanged() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> getDebouncedQueryChanges())
-        .filter(data -> data.hasQuery() && !data.isSubmitted())
-        .map(data -> data.getQuery()
-            .toString())
-        .flatMapSingle(query -> searchSuggestionManager.getSuggestionsForApp(query)
-            .onErrorResumeNext(err -> {
-              if (err instanceof TimeoutException) {
-                Logger.i(TAG, "Timeout reached while waiting for application suggestions");
-                return Single.just(suggestionCursorAdapter.getSuggestions());
-              }
-              return Single.error(err);
-            })
-            .observeOn(viewScheduler)
-            .doOnSuccess(queryResults -> suggestionCursorAdapter.setData(queryResults)))
+        .flatMap(
+            __ -> getDebouncedQueryChanges().filter(data -> data.hasQuery() && !data.isSubmitted())
+                .map(data -> data.getQuery()
+                    .toString())
+                .flatMapSingle(query -> searchSuggestionManager.getSuggestionsForApp(query)
+                    .onErrorResumeNext(err -> {
+                      if (err instanceof TimeoutException) {
+                        Logger.i(TAG, "Timeout reached while waiting for application suggestions");
+                        return Single.just(suggestionCursorAdapter.getSuggestions());
+                      }
+                      return Single.error(err);
+                    })
+                    .observeOn(viewScheduler)
+                    .doOnSuccess(queryResults -> suggestionCursorAdapter.setData(queryResults)))
+                .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
