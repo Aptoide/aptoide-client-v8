@@ -282,10 +282,12 @@ public class DeepLinkIntentReceiver extends ActivityView {
         finish();
         return;
       }
-      if("search".equals(parse.getQueryParameter("name"))){
+      if ("search".equals(parse.getQueryParameter("name"))) {
         String query = "";
-        if(parse.getQueryParameterNames().contains("keyword"))
-          query=parse.getQueryParameter("keyword");
+        if (parse.getQueryParameterNames()
+            .contains("keyword")) {
+          query = parse.getQueryParameter("keyword");
+        }
         startFromSearch(query);
         finish();
         return;
@@ -365,8 +367,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
 
   public void aptoidevoiceSearch(String param) {
     // TODO: voiceSearch was used by a foreign app, dunno if still used.
-    
-
 
     //        Cursor c = new AptoideDatabase(Aptoide.getDb()).getSearchResults(param, StoreActivity.Sort.DOWNLOADS);
     //

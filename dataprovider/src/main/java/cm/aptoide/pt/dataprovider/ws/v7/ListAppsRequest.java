@@ -101,7 +101,7 @@ public class ListAppsRequest extends V7<ListApps, ListAppsRequest.Body> {
       this.storeUser = storeCredentials.getUsername();
       this.storePassSha1 = storeCredentials.getPasswordSha1();
       this.limit = limit;
-      this.sort=sort;
+      this.sort = sort;
       setNotApkTags(sharedPreferences);
     }
 

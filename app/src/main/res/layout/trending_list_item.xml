@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="wrap_content"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
     android:padding="15dp"
     android:layout_height="wrap_content"
-    android:background="@color/black">
+    android:background="@color/black"
+    >
 
   <ImageView
       android:id="@+id/app_image"
@@ -14,16 +16,16 @@
       android:layout_marginLeft="10dp"
       android:src="@mipmap/ic_launcher"
       />
-    <TextView
-        android:id="@+id/app_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/app_image"
-        android:layout_toRightOf="@id/app_image"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:textColor="@color/white"
-        android:text="Hello"
-        />
+  <TextView
+      android:id="@+id/app_name"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_toEndOf="@id/app_image"
+      android:layout_toRightOf="@id/app_image"
+      android:layout_marginTop="5dp"
+      android:layout_marginStart="10dp"
+      android:layout_marginLeft="10dp"
+      android:textColor="@color/white"
+      android:text="Hello"
+      />
 </RelativeLayout>

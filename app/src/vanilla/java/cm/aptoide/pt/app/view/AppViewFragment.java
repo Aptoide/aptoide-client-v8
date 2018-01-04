@@ -94,14 +94,13 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
-import cm.aptoide.pt.util.ReferrerUtils;
-import cm.aptoide.pt.search.analytics.SearchAnalytics;
-import cm.aptoide.pt.search.SuggestionCursorAdapter;
 import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.SuggestionCursorAdapter;
+import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.model.SearchAdResult;
+import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.view.AppSearchSuggestionsView;
 import cm.aptoide.pt.search.view.SearchSuggestionsPresenter;
-import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.share.ShareAppHelper;
 import cm.aptoide.pt.spotandshareapp.SpotAndShareAppProvider;
 import cm.aptoide.pt.store.StoreAnalytics;
@@ -110,6 +109,7 @@ import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
+import cm.aptoide.pt.util.ReferrerUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
@@ -496,16 +496,17 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
     appSearchSuggestionsView =
         new AppSearchSuggestionsView(this, RxView.clicks(toolbar), crashReport,
-            suggestionCursorAdapter, PublishSubject.create(), toolbarMenuItemClick, searchAnalytics);
+            suggestionCursorAdapter, PublishSubject.create(), toolbarMenuItemClick,
+            searchAnalytics);
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
 
     final SearchSuggestionsPresenter searchSuggestionsPresenter =
         new SearchSuggestionsPresenter(appSearchSuggestionsView,
-            application.getSearchSuggestionManager(),
-            AndroidSchedulers.mainThread(), suggestionCursorAdapter, crashReport, trendingManager,
-            searchNavigator, false, searchAnalytics);
+            application.getSearchSuggestionManager(), AndroidSchedulers.mainThread(),
+            suggestionCursorAdapter, crashReport, trendingManager, searchNavigator, false,
+            searchAnalytics);
 
     attachPresenter(searchSuggestionsPresenter);
 
