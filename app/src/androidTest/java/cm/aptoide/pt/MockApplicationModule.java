@@ -35,6 +35,7 @@ import java.util.Arrays;
 import java.util.List;
 import javax.inject.Named;
 import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Completable;
 import rx.Single;
 
@@ -61,7 +62,7 @@ public class MockApplicationModule extends ApplicationModule {
       MultipartBodyInterceptor multipartBodyInterceptor,
       AndroidAccountProvider androidAccountProvider, GoogleApiClient googleApiClient,
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> noAuthenticationBodyInterceptorV3,
-      ObjectMapper objectMapper, StoreManager storeManager) {
+      ObjectMapper objectMapper, Converter.Factory converterFactory, StoreManager storeManager) {
 
     FacebookSdk.sdkInitialize(application);
 
