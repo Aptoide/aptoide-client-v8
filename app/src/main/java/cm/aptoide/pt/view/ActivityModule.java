@@ -49,6 +49,8 @@ import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.repository.StoreRepository;
+import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.util.ApkFy;
 import com.facebook.CallbackManager;
@@ -76,8 +78,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   private final View view;
   private final String defaultTheme;
   private final String defaultStoreName;
-  private final String fileProviderAuthority;
   private boolean firstCreated;
+  private final String fileProviderAuthority;
 
   public ActivityModule(AppCompatActivity activity, Intent intent,
       NotificationSyncScheduler notificationSyncScheduler, String marketName, String autoUpdateUrl,
@@ -119,23 +121,38 @@ import static com.facebook.FacebookSdk.getApplicationContext;
     return activity.getSupportFragmentManager();
   }
 
-  @ActivityScope @Provides DeepLinkManager provideDeepLinkManager(StoreUtilsProxy storeUtilsProxy,
-      StoreRepository storeRepository, FragmentNavigator fragmentNavigator,
-      @Named("default") SharedPreferences sharedPreferences, StoreAccessor storeAccessor,
+  @ActivityScope @Provides NotificationAnalytics provideNotificationAnalytics(
       @Named("default") OkHttpClient httpClient,
       @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptorV7,
-      NavigationTracker navigationTracker, PageViewsAnalytics pageViewsAnalytics,
       TokenInvalidator tokenInvalidator,
       @Named("default") SharedPreferences defaultSharedPreferences) {
-    NotificationAnalytics notificationAnalytics = new NotificationAnalytics(Analytics.getInstance(),
+    return new NotificationAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(activity.getApplicationContext()), bodyInterceptorV7, httpClient,
         WebService.getDefaultConverter(), tokenInvalidator,
         cm.aptoide.pt.dataprovider.BuildConfig.APPLICATION_ID, defaultSharedPreferences,
         new AptoideInstallParser());
+  }
+
+  @ActivityScope @Provides SearchAnalytics providesSearchAnalytics() {
+    return new SearchAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(activity.getApplicationContext()));
+  }
+
+  @ActivityScope @Provides SearchNavigator providesSearchNavigator(
+      FragmentNavigator fragmentNavigator) {
+    return new SearchNavigator(fragmentNavigator, defaultStoreName);
+  }
+
+  @ActivityScope @Provides DeepLinkManager provideDeepLinkManager(
+      NotificationAnalytics notificationAnalytics, StoreUtilsProxy storeUtilsProxy,
+      StoreRepository storeRepository, FragmentNavigator fragmentNavigator,
+      @Named("default") SharedPreferences sharedPreferences, StoreAccessor storeAccessor,
+      NavigationTracker navigationTracker, PageViewsAnalytics pageViewsAnalytics,
+      SearchNavigator searchNavigator, SearchAnalytics searchAnalytics) {
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
         (TabNavigator) activity, (DeepLinkManager.DeepLinkMessages) activity, sharedPreferences,
-        storeAccessor, defaultTheme, defaultStoreName, navigationTracker, pageViewsAnalytics,
-        notificationAnalytics);
+        storeAccessor, defaultTheme, notificationAnalytics, navigationTracker, pageViewsAnalytics,
+        searchNavigator, searchAnalytics);
   }
 
   @ActivityScope @Provides Presenter provideMainPresenter(

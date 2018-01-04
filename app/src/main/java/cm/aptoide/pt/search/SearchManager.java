@@ -16,8 +16,9 @@ import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
+import rx.Single;
 
-public class SearchManager {
+@SuppressWarnings("Convert2MethodRef") public class SearchManager {
 
   private final SharedPreferences sharedPreferences;
   private final TokenInvalidator tokenInvalidator;
@@ -45,46 +46,51 @@ public class SearchManager {
 
   public Observable<SearchAdResult> getAdsForQuery(String query) {
     return adsRepository.getAdsFromSearch(query)
-        .map(SearchAdResult::new);
+        .map(minimalAd -> new SearchAdResult(minimalAd));
   }
 
-  public Observable<List<SearchAppResult>> searchInNonFollowedStores(String query,
+  public Single<List<SearchAppResult>> searchInNonFollowedStores(String query,
       boolean onlyTrustedApps, int offset) {
     return ListSearchAppsRequest.of(query, offset, false, onlyTrustedApps, subscribedStoresIds,
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
-        .observe(true, false)
-        .filter(this::hasResults)
+        .observe(true)
+        .filter(listSearchApps -> hasResults(listSearchApps))
         .map(data -> data.getDataList()
             .getList())
         .flatMapIterable(list -> list)
-        .map(SearchAppResult::new)
-        .toList();
+        .map(searchApp -> new SearchAppResult(searchApp))
+        .toList()
+        .first()
+        .toSingle();
   }
 
-  public Observable<List<SearchAppResult>> searchInFollowedStores(String query,
-      boolean onlyTrustedApps, int offset) {
+  public Single<List<SearchAppResult>> searchInFollowedStores(String query, boolean onlyTrustedApps,
+      int offset) {
     return ListSearchAppsRequest.of(query, offset, true, onlyTrustedApps, subscribedStoresIds,
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
-        .observe(true, false)
-        .filter(this::hasResults)
+        .observe(true)
+        .filter(listSearchApps -> hasResults(listSearchApps))
         .map(data -> data.getDataList()
             .getList())
         .flatMapIterable(list -> list)
-        .map(SearchAppResult::new)
-        .toList();
+        .map(searchApp -> new SearchAppResult(searchApp))
+        .toList()
+        .first()
+        .toSingle();
   }
 
-  public Observable<List<SearchAppResult>> searchInStore(String query, String storeName,
-      int offset) {
+  public Single<List<SearchAppResult>> searchInStore(String query, String storeName, int offset) {
     return ListSearchAppsRequest.of(query, storeName, offset, subscribedStoresAuthMap,
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
-        .observe(true, false)
-        .filter(this::hasResults)
+        .observe(true)
+        .filter(listSearchApps -> hasResults(listSearchApps))
         .map(data -> data.getDataList()
             .getList())
         .flatMapIterable(list -> list)
-        .map(SearchAppResult::new)
-        .toList();
+        .map(searchApp -> new SearchAppResult(searchApp))
+        .toList()
+        .first()
+        .toSingle();
   }
 
   private boolean hasResults(ListSearchApps listSearchApps) {

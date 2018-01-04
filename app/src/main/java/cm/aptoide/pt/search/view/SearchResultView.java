@@ -6,8 +6,7 @@ import cm.aptoide.pt.search.model.SearchAppResult;
 import java.util.List;
 import rx.Observable;
 
-public interface SearchView extends View {
-  Observable<Void> clickTitleBar();
+public interface SearchResultView extends View {
 
   void showFollowedStoresResult();
 
@@ -55,9 +54,15 @@ public interface SearchView extends View {
 
   void setViewWithStoreNameAsSingleTab(String storeName);
 
-  void setFocusInSearchView();
+  void hideFollowedStoresTab();
+
+  void hideNonFollowedStoresTab();
 
   interface Model {
+
+    List<SearchAppResult> getFollowedStoresSearchAppResults();
+
+    List<SearchAdResult> getFollowedStoresSearchAdResults();
 
     String getCurrentQuery();
 
@@ -86,5 +91,11 @@ public interface SearchView extends View {
     boolean hasLoadedAds();
 
     void setHasLoadedAds();
+
+    List<SearchAppResult> getAllStoresSearchAppResults();
+
+    List<SearchAdResult> getAllStoresSearchAdResults();
+
+    boolean hasData();
   }
 }

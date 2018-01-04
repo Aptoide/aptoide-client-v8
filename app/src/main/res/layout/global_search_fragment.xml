@@ -23,15 +23,36 @@
       tools:visibility="gone"
       />
 
-  <RelativeLayout
-      android:id="@+id/search_results_layout"
+  <include
+      layout="@layout/incl_no_search_results_layout"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_marginTop="?attr/actionBarSize"
+      tools:visibility="gone"
+      />
+
+  <android.support.v7.widget.RecyclerView
+      android:id="@+id/trending_suggestions"
+      android:layout_width="300dp"
+      android:layout_height="320dp"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginTop="60dp"
+      android:visibility="gone"
+      />
+
+
+  <RelativeLayout
+      android:id="@+id/fragment_search_result_layout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginTop="?attr/actionBarSize"
+      android:visibility="gone"
+      tools:visibility="visible"
       >
 
+
     <LinearLayout
-        android:id="@+id/buttons_layout"
+        android:id="@+id/fragment_search_result_all_followed_stores_buttons_layout"
         android:layout_width="262dp"
         android:layout_height="29dp"
         android:layout_centerHorizontal="true"
@@ -42,7 +63,7 @@
         >
 
       <Button
-          android:id="@+id/subscribed"
+          android:id="@+id/fragment_search_result_followed_stores_button"
           android:layout_width="128dp"
           android:layout_height="match_parent"
           android:background="@null"
@@ -52,7 +73,7 @@
           />
 
       <Button
-          android:id="@+id/everywhere"
+          android:id="@+id/fragment_search_result_all_stores_button"
           android:layout_width="128dp"
           android:layout_height="match_parent"
           android:background="@drawable/search_button_background"
@@ -64,18 +85,18 @@
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/followed_stores_result_list"
+        android:id="@+id/fragment_search_result_followed_stores_app_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/buttons_layout"
+        android:layout_below="@id/fragment_search_result_all_followed_stores_buttons_layout"
         android:visibility="invisible"
         />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/all_stores_result_list"
+        android:id="@+id/fragment_search_result_all_stores_app_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/buttons_layout"
+        android:layout_below="@id/fragment_search_result_all_followed_stores_buttons_layout"
         android:visibility="visible"
         />
 

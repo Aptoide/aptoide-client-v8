@@ -16,6 +16,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -40,8 +41,11 @@ import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.preferences.PartnersSecurePreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.search.SearchCursorAdapter;
 import cm.aptoide.pt.search.SearchNavigator;
-import cm.aptoide.pt.search.view.SearchBuilder;
+import cm.aptoide.pt.search.view.AppSearchSuggestions;
+import cm.aptoide.pt.search.view.SearchSuggestionsPresenter;
+import cm.aptoide.pt.search.view.TrendingManager;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.store.view.StorePagerAdapter;
@@ -50,10 +54,14 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.BackButton;
 import cm.aptoide.pt.view.custom.BadgeView;
 import com.facebook.appevents.AppEventsLogger;
+import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
+import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.text.NumberFormat;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by neuro on 09-05-2016.
@@ -77,8 +85,12 @@ public class HomeFragment extends StoreFragment {
   private ImageView userAvatarImage;
   private DrawerAnalytics drawerAnalytics;
   private BackButton.ClickHandler backClickHandler;
-  private SearchBuilder searchBuilder;
   private String defaultThemeName;
+
+  private AppSearchSuggestions appSearchSuggestions;
+  private CrashReport crashReport;
+  private SearchNavigator searchNavigator;
+  private TrendingManager trendingManager;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -96,6 +108,10 @@ public class HomeFragment extends StoreFragment {
    */
   public static HomeFragment newInstance(String defaultStore, String defaultTheme) {
     return newInstance(defaultStore, StoreContext.home, defaultTheme);
+  }
+
+  @Override protected boolean hasSearchFromStoreFragment() {
+    return false;
   }
 
   @Override public void onAttach(Activity activity) {
@@ -163,27 +179,20 @@ public class HomeFragment extends StoreFragment {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    final android.app.SearchManager searchManagerService =
-        (android.app.SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
-
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
 
-    final SearchNavigator searchNavigator =
+    searchNavigator =
         new SearchNavigator(getFragmentNavigator(), application.getDefaultStoreName());
 
     defaultThemeName = application.getDefaultThemeName();
-    searchBuilder = new SearchBuilder(searchManagerService, searchNavigator);
 
     drawerAnalytics = new DrawerAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
     handleFirstInstall(savedInstanceState);
-  }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    return super.onCreateView(inflater, container, savedInstanceState);
+    trendingManager = application.getTrendingManager();
+    crashReport = CrashReport.getInstance();
   }
 
   @Override public void onDestroyView() {
@@ -252,20 +261,55 @@ public class HomeFragment extends StoreFragment {
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
-    if (searchBuilder != null && searchBuilder.isValid()) {
-      searchBuilder.attachSearch(getContext(), menu.findItem(R.id.action_search));
+    inflater.inflate(R.menu.fragment_home, menu);
+
+    final MenuItem menuItem = menu.findItem(R.id.menu_item_search);
+    if (appSearchSuggestions != null && menuItem != null) {
+      appSearchSuggestions.initialize(menuItem);
+    } else if (menuItem != null) {
+      menuItem.setVisible(false);
     } else {
-      menu.removeItem(R.id.action_search);
+      menu.removeItem(R.id.menu_item_search);
     }
-    menu.removeItem(R.id.menu_share);
   }
 
-  @Override public void setupViews() {
-    super.setupViews();
-    accountManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-    accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
-    setupNavigationView();
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    backClickHandler = () -> {
+      if (isDrawerOpened()) {
+        closeDrawer();
+        return true;
+      }
+
+      return false;
+    };
+    registerClickHandler(backClickHandler);
+
+    final Toolbar toolbar = getToolbar();
+    final Observable<MenuItem> toolbarMenuItemClick = RxToolbar.itemClicks(toolbar)
+        .publish()
+        .autoConnect();
+
+    final SearchCursorAdapter searchCursorAdapter = new SearchCursorAdapter(getContext());
+    appSearchSuggestions =
+        new AppSearchSuggestions(this, RxView.clicks(toolbar), crashReport, "", searchCursorAdapter,
+            PublishSubject.create(), toolbarMenuItemClick);
+
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+
+    final SearchSuggestionsPresenter searchSuggestionsPresenter =
+        new SearchSuggestionsPresenter(appSearchSuggestions,
+            new SearchFactory(application.getDefaultWebSocketClient(), application.getNonNullObjectMapper()).createSearchForApps(), AndroidSchedulers.mainThread(),
+            searchCursorAdapter, crashReport, trendingManager, searchNavigator, false);
+
+    attachPresenter(searchSuggestionsPresenter);
+  }
+
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    return super.onCreateView(inflater, container, savedInstanceState);
   }
 
   protected boolean displayHomeUpAsEnabled() {
@@ -281,6 +325,14 @@ public class HomeFragment extends StoreFragment {
     });
   }
 
+  @Override public void setupViews() {
+    super.setupViews();
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
+    setupNavigationView();
+  }
+
   private View getTabLayout(StorePagerAdapter adapter, Event.Name tab) {
     for (int i = 0; i < adapter.getCount(); i++) {
       if (tab.equals(adapter.getEventName(i))) {
@@ -288,21 +340,6 @@ public class HomeFragment extends StoreFragment {
       }
     }
     return null;
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    backClickHandler = new ClickHandler() {
-      @Override public boolean handle() {
-        if (isDrawerOpened()) {
-          closeDrawer();
-          return true;
-        }
-
-        return false;
-      }
-    };
-    registerClickHandler(backClickHandler);
   }
 
   private void setupNavigationView() {

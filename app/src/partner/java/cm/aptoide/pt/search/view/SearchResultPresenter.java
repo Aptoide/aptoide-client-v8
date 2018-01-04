@@ -18,7 +18,7 @@ import rx.Scheduler;
 
 public class SearchResultPresenter implements Presenter {
 
-  private final SearchView view;
+  private final SearchResultView view;
   private final SearchAnalytics analytics;
   private final SearchNavigator navigator;
   private final CrashReport crashReport;
@@ -31,7 +31,7 @@ public class SearchResultPresenter implements Presenter {
   private String defaultStoreName;
   private String defaultThemeName;
 
-  public SearchResultPresenter(SearchView view, SearchAnalytics analytics,
+  public SearchResultPresenter(SearchResultView view, SearchAnalytics analytics,
       SearchNavigator navigator, CrashReport crashReport, Scheduler viewScheduler,
       SearchManager searchManager, PublishRelay<SearchAdResult> onAdClickRelay,
       PublishRelay<SearchAppResult> onItemViewClickRelay,
@@ -63,7 +63,6 @@ public class SearchResultPresenter implements Presenter {
     handleClickOnNoResultsImage();
     handleAllStoresListReachedBottom();
     handleFollowedStoresListReachedBottom();
-    handleTitleBarClick();
     restoreSelectedTab();
   }
 
@@ -81,17 +80,6 @@ public class SearchResultPresenter implements Presenter {
               view.showFollowedStoresResult();
             }
           }
-        }, crashReport::log);
-  }
-
-  private void handleTitleBarClick() {
-    view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .observeOn(viewScheduler)
-        .flatMap(__ -> view.clickTitleBar())
-        .doOnNext(__ -> view.setFocusInSearchView())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
         }, crashReport::log);
   }
 
@@ -123,7 +111,7 @@ public class SearchResultPresenter implements Presenter {
         .doOnNext(__ -> view.hideLoadingMore())
         .filter(data -> data != null)
         .doOnNext(data -> {
-          final SearchView.Model viewModel = view.getViewModel();
+          final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(getItemCount(data));
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -154,7 +142,7 @@ public class SearchResultPresenter implements Presenter {
         .doOnNext(__ -> view.hideLoadingMore())
         .filter(data -> data != null)
         .doOnNext(data -> {
-          final SearchView.Model viewModel = view.getViewModel();
+          final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(getItemCount(data));
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -322,7 +310,7 @@ public class SearchResultPresenter implements Presenter {
         .observeOn(viewScheduler)
         .doOnNext(view::addAllStoresResult)
         .doOnNext(data -> {
-          final SearchView.Model viewModel = view.getViewModel();
+          final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.incrementOffsetAndCheckIfReachedBottomOfAllStores(getItemCount(data));
         });
   }
@@ -333,7 +321,7 @@ public class SearchResultPresenter implements Presenter {
         .observeOn(viewScheduler)
         .doOnNext(view::addFollowedStoresResult)
         .doOnNext(data -> {
-          final SearchView.Model viewModel = view.getViewModel();
+          final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(getItemCount(data));
         });
   }
@@ -345,7 +333,7 @@ public class SearchResultPresenter implements Presenter {
         .observeOn(viewScheduler)
         .doOnNext(view::addFollowedStoresResult)
         .doOnNext(data -> {
-          final SearchView.Model viewModel = view.getViewModel();
+          final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.setAllStoresSelected(false);
           viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(getItemCount(data));
         });

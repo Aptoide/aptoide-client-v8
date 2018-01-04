@@ -6,9 +6,9 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.ActionBar;
@@ -35,7 +35,6 @@ import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.crashreports.IssuesAnalytics;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
@@ -44,35 +43,39 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.search.SearchAnalytics;
+import cm.aptoide.pt.presenter.CompositePresenter;
+import cm.aptoide.pt.search.SuggestionCursorAdapter;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.suggestions.TrendingManager;
+import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
+import cm.aptoide.pt.search.model.SearchViewModel;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
-import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
+import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import org.parceler.Parcels;
 import retrofit2.Converter;
+import rx.Emitter;
 import rx.Observable;
+import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.Subscriptions;
+import rx.subjects.PublishSubject;
 
-public class SearchResultFragment extends BackButtonFragment implements SearchView {
-
-  private static final String TAG = SearchResultFragment.class.getName();
+public class SearchResultFragment extends BackButtonFragment implements SearchResultView {
 
   private static final int LAYOUT = R.layout.global_search_fragment;
   private static final String VIEW_MODEL = "view_model";
@@ -88,7 +91,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   private ImageView noResultsSearchButton;
   private View searchResultsLayout;
   private ProgressBar progressBar;
-  private LinearLayout buttonsLayout;
+  private LinearLayout allAndFollowedStoresButtonsLayout;
   private Button followedStoresButton;
   private Button allStoresButton;
 
@@ -106,12 +109,11 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   private SearchNavigator searchNavigator;
   private SearchAnalytics searchAnalytics;
   private float listItemPadding;
-  private MenuItem searchMenuItem;
-  private SearchBuilder searchBuilder;
   private String defaultThemeName;
   private boolean isMultiStoreSearch;
   private String defaultStoreName;
-  private IssuesAnalytics issuesAnalytics;
+  private TrendingManager trendingManager;
+  private AppSearchSuggestionsView appSearchSuggestionsView;
   private CrashReport crashReport;
 
   public static SearchResultFragment newInstance(String currentQuery, String defaultStoreName) {
@@ -140,21 +142,24 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   }
 
   private void findChildViews(View view) {
-    followedStoresResultList = (RecyclerView) view.findViewById(R.id.followed_stores_result_list);
-    allStoresResultList = (RecyclerView) view.findViewById(R.id.all_stores_result_list);
-    followedStoresButton = (Button) view.findViewById(R.id.subscribed);
-    allStoresButton = (Button) view.findViewById(R.id.everywhere);
-    buttonsLayout = (LinearLayout) view.findViewById(R.id.buttons_layout);
+    allAndFollowedStoresButtonsLayout = (LinearLayout) view.findViewById(
+        R.id.fragment_search_result_all_followed_stores_buttons_layout);
+    allStoresResultList =
+        (RecyclerView) view.findViewById(R.id.fragment_search_result_all_stores_app_list);
+
+    followedStoresResultList =
+        (RecyclerView) view.findViewById(R.id.fragment_search_result_followed_stores_app_list);
+    allStoresButton = (Button) view.findViewById(R.id.fragment_search_result_all_stores_button);
+    followedStoresButton =
+        (Button) view.findViewById(R.id.fragment_search_result_followed_stores_button);
+
+    searchResultsLayout = view.findViewById(R.id.fragment_search_result_layout);
+
     noSearchLayout = view.findViewById(R.id.no_search_results_layout);
     noSearchLayoutSearchQuery = (EditText) view.findViewById(R.id.search_text);
     noResultsSearchButton = (ImageView) view.findViewById(R.id.ic_search_button);
-    searchResultsLayout = view.findViewById(R.id.search_results_layout);
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-  }
-
-  @Override public Observable<Void> clickTitleBar() {
-    return RxView.clicks(toolbar);
   }
 
   @Override public void showFollowedStoresResult() {
@@ -234,7 +239,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   @Override public void showNoResultsView() {
     noSearchLayout.setVisibility(View.VISIBLE);
     searchResultsLayout.setVisibility(View.GONE);
-    buttonsLayout.setVisibility(View.GONE);
+    allAndFollowedStoresButtonsLayout.setVisibility(View.GONE);
     followedStoresResultList.setVisibility(View.GONE);
     allStoresResultList.setVisibility(View.GONE);
   }
@@ -256,10 +261,12 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
 
   @Override public void addFollowedStoresResult(List<SearchAppResult> dataList) {
     followedStoresResultAdapter.addResultForSearch(dataList);
+    viewModel.addFollowedStoresSearchAppResults(dataList);
   }
 
   @Override public void addAllStoresResult(List<SearchAppResult> dataList) {
     allStoresResultAdapter.addResultForSearch(dataList);
+    viewModel.addAllStoresSearchAppResults(dataList);
   }
 
   @Override public Model getViewModel() {
@@ -268,10 +275,12 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
 
   @Override public void setFollowedStoresAdsResult(SearchAdResult ad) {
     followedStoresResultAdapter.setResultForAd(ad);
+    viewModel.addFollowedStoresSearchAdResults(Arrays.asList(ad));
   }
 
   @Override public void setAllStoresAdsResult(SearchAdResult ad) {
     allStoresResultAdapter.setResultForAd(ad);
+    viewModel.addAllStoresSearchAdResults(Arrays.asList(ad));
   }
 
   @Override public void setFollowedStoresAdsEmpty() {
@@ -283,7 +292,9 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   }
 
   @Override public Observable<Integer> showPopup(boolean hasVersions, View anchor) {
-    return Observable.create(subscriber -> {
+
+    return Observable.create(emitter -> {
+
       final Context context = getContext();
       final PopupMenu popupMenu = new PopupMenu(context, anchor);
 
@@ -297,20 +308,20 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
       }
 
       popupMenu.setOnMenuItemClickListener(item -> {
-        subscriber.onNext(item.getItemId());
-        subscriber.onCompleted();
+        emitter.onNext(item.getItemId());
+        emitter.onCompleted();
         return true;
       });
 
-      popupMenu.setOnDismissListener(__ -> subscriber.onCompleted());
+      popupMenu.setOnDismissListener(__ -> emitter.onCompleted());
 
-      subscriber.add(Subscriptions.create(() -> {
+      emitter.setCancellation(() -> {
         popupMenu.setOnMenuItemClickListener(null);
         popupMenu.dismiss();
-      }));
+      });
 
       popupMenu.show();
-    });
+    }, Emitter.BackpressureMode.ERROR);
   }
 
   @Override public Observable<Void> followedStoresResultReachedBottom() {
@@ -336,10 +347,22 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     allStoresButton.setVisibility(View.GONE);
   }
 
-  @Override public void setFocusInSearchView() {
-    if (searchMenuItem != null) {
-      searchMenuItem.expandActionView();
-    }
+  @Override public void hideFollowedStoresTab() {
+    allStoresButton.setVisibility(View.VISIBLE);
+    allStoresResultList.setVisibility(View.VISIBLE);
+    followedStoresButton.setVisibility(View.GONE);
+    followedStoresResultList.setVisibility(View.GONE);
+    setAllStoresButtonSelected();
+    viewModel.setAllStoresSelected(true);
+  }
+
+  @Override public void hideNonFollowedStoresTab() {
+    allStoresButton.setVisibility(View.GONE);
+    allStoresResultList.setVisibility(View.GONE);
+    followedStoresButton.setVisibility(View.VISIBLE);
+    followedStoresResultList.setVisibility(View.VISIBLE);
+    setFollowedStoresButtonSelected();
+    viewModel.setAllStoresSelected(false);
   }
 
   private Observable<Void> recyclerViewReachedBottom(RecyclerView recyclerView) {
@@ -360,10 +383,14 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   }
 
   private void setFollowedStoresButtonSelected() {
-    followedStoresButton.setTextColor(getResources().getColor(R.color.white));
-    followedStoresButton.setBackgroundResource(R.drawable.search_button_background);
-    allStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
-    allStoresButton.setBackgroundResource(0);
+    if (followedStoresButton.getVisibility() == View.VISIBLE) {
+      followedStoresButton.setTextColor(getResources().getColor(R.color.white));
+      followedStoresButton.setBackgroundResource(R.drawable.search_button_background);
+    }
+    if (allStoresButton.getVisibility() == View.VISIBLE) {
+      allStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
+      allStoresButton.setBackgroundResource(0);
+    }
     viewModel.setAllStoresSelected(false);
     if (defaultThemeName != null && defaultThemeName.length() > 0) {
       followedStoresButton.getBackground()
@@ -373,10 +400,14 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
   }
 
   private void setAllStoresButtonSelected() {
-    followedStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
-    followedStoresButton.setBackgroundResource(0);
-    allStoresButton.setTextColor(getResources().getColor(R.color.white));
-    allStoresButton.setBackgroundResource(R.drawable.search_button_background);
+    if (followedStoresButton.getVisibility() == View.VISIBLE) {
+      followedStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
+      followedStoresButton.setBackgroundResource(0);
+    }
+    if (allStoresButton.getVisibility() == View.VISIBLE) {
+      allStoresButton.setTextColor(getResources().getColor(R.color.white));
+      allStoresButton.setBackgroundResource(R.drawable.search_button_background);
+    }
     viewModel.setAllStoresSelected(true);
     if (defaultThemeName != null && defaultThemeName.length() > 0) {
       allStoresButton.getBackground()
@@ -387,34 +418,18 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.menu_search_results, menu);
-    if (searchBuilder != null && searchBuilder.isValid()) {
-      final FragmentActivity activity = getActivity();
-      // from getActivity() "May return null if the fragment is associated with a Context instead."
-      final Context context = getContext();
+    inflater.inflate(R.menu.fragment_search_result, menu);
 
-      if (activity != null) {
-        searchMenuItem = menu.findItem(R.id.action_search);
-        searchBuilder.attachSearch(activity, searchMenuItem);
-        issuesAnalytics.attachSearchSuccess(false);
-        return;
-      } else if (context != null) {
-        searchMenuItem = menu.findItem(R.id.action_search);
-        searchBuilder.attachSearch(context, searchMenuItem);
-        issuesAnalytics.attachSearchSuccess(true);
-        return;
-      } else {
-        issuesAnalytics.attachSearchFailed(true);
-        Logger.e(TAG, new IllegalStateException(
-            "Unable to attach search to this fragment due to null parent"));
-      }
+    final MenuItem menuItem = menu.findItem(R.id.menu_item_search);
+    if (appSearchSuggestionsView != null && menuItem != null) {
+      appSearchSuggestionsView.initialize(menuItem);
+    } else if (menuItem != null) {
+      menuItem.setVisible(false);
+      crashReport.log(new IllegalStateException("Search Suggestions not properly initialized"));
     } else {
-      issuesAnalytics.attachSearchFailed(false);
-      Logger.e(TAG, new IllegalStateException(
-          "Unable to attach search to this fragment due to invalid search builder"));
+      menu.removeItem(R.id.menu_item_search);
+      crashReport.log(new IllegalStateException("Search Suggestions not properly initialized"));
     }
-
-    menu.removeItem(R.id.action_search);
   }
 
   @Override public String getDefaultTheme() {
@@ -426,15 +441,15 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
 
     crashReport = CrashReport.getInstance();
 
-    viewModel = loadViewModel(getArguments());
-
-    final android.app.SearchManager searchManagerService =
-        (android.app.SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
+    if (viewModel == null && savedInstanceState != null && savedInstanceState.containsKey(
+        VIEW_MODEL)) {
+      viewModel = Parcels.unwrap(savedInstanceState.getParcelable(VIEW_MODEL));
+    } else if (viewModel == null && getArguments().containsKey(VIEW_MODEL)) {
+      viewModel = Parcels.unwrap(getArguments().getParcelable(VIEW_MODEL));
+    }
 
     searchNavigator = new SearchNavigator(getFragmentNavigator(), viewModel.getStoreName(),
         viewModel.getDefaultStoreName());
-
-    searchBuilder = new SearchBuilder(searchManagerService, searchNavigator);
 
     final AptoideApplication applicationContext =
         (AptoideApplication) getContext().getApplicationContext();
@@ -454,15 +469,18 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
 
     searchAnalytics = new SearchAnalytics(analytics, AppEventsLogger.newLogger(applicationContext));
 
-    issuesAnalytics = new IssuesAnalytics(analytics, Answers.getInstance());
-
     final AptoideApplication application = (AptoideApplication) getActivity().getApplication();
 
     final StoreAccessor storeAccessor =
         AccessorFactory.getAccessorFor(applicationContext.getDatabase(), Store.class);
+
+    trendingManager = application.getTrendingManager();
+
     final HashMapNotNull<String, List<String>> subscribedStoresAuthMap =
         StoreUtils.getSubscribedStoresAuthMap(storeAccessor);
+
     final List<Long> subscribedStoresIds = StoreUtils.getSubscribedStoresIds(storeAccessor);
+
     final AdsRepository adsRepository = application.getAdsRepository();
 
     defaultThemeName = application.getDefaultThemeName();
@@ -492,6 +510,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     allStoresResultAdapter =
         new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, onOpenPopupMenuClickRelay,
             searchResultAllStores, searchResultAdsAllStores, crashReport);
+
     setHasOptionsMenu(true);
   }
 
@@ -500,11 +519,49 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     findChildViews(view);
     attachFollowedStoresResultListDependencies();
     attachAllStoresResultListDependencies();
-    attachToolbar();
+    setupToolbar();
     setupTheme();
-    attachPresenter(new SearchResultPresenter(this, searchAnalytics, searchNavigator, crashReport,
-        AndroidSchedulers.mainThread(), searchManager, onAdClickRelay, onItemViewClickRelay,
-        onOpenPopupMenuClickRelay, isMultiStoreSearch, defaultThemeName, defaultStoreName));
+
+    if (viewModel != null && viewModel.hasData()) {
+      restoreViewState(savedInstanceState != null ? savedInstanceState.getParcelable(
+          ALL_STORES_SEARCH_LIST_STATE) : null,
+          savedInstanceState != null ? savedInstanceState.getParcelable(
+              FOLLOWED_STORES_SEARCH_LIST_STATE) : null);
+    }
+
+    final Scheduler mainThreadScheduler = AndroidSchedulers.mainThread();
+    final SearchResultPresenter searchResultPresenter =
+        new SearchResultPresenter(this, searchAnalytics, searchNavigator, crashReport,
+            mainThreadScheduler, searchManager, onAdClickRelay, onItemViewClickRelay,
+            onOpenPopupMenuClickRelay, isMultiStoreSearch, defaultThemeName, defaultStoreName);
+
+    final SuggestionCursorAdapter suggestionCursorAdapter = new SuggestionCursorAdapter(getContext());
+
+    final Observable<MenuItem> toolbarMenuItemClick = RxToolbar.itemClicks(toolbar)
+        .publish()
+        .autoConnect();
+
+    if (viewModel != null) {
+      appSearchSuggestionsView =
+          new AppSearchSuggestionsView(this, RxView.clicks(toolbar), crashReport,
+              viewModel.getCurrentQuery(), suggestionCursorAdapter, PublishSubject.create(),
+              toolbarMenuItemClick, searchAnalytics);
+    } else {
+      appSearchSuggestionsView =
+          new AppSearchSuggestionsView(this, RxView.clicks(toolbar), crashReport,
+              suggestionCursorAdapter, PublishSubject.create(), toolbarMenuItemClick, searchAnalytics);
+    }
+
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+
+    final SearchSuggestionsPresenter searchSuggestionsPresenter =
+        new SearchSuggestionsPresenter(appSearchSuggestionsView,
+            application.getSearchSuggestionManager(), mainThreadScheduler, suggestionCursorAdapter, crashReport, trendingManager, searchNavigator, true,
+            searchAnalytics);
+
+    attachPresenter(
+        new CompositePresenter(Arrays.asList(searchResultPresenter, searchSuggestionsPresenter)));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -545,83 +602,70 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     return new LinearLayoutManager(getContext(), LinearLayout.VERTICAL, false);
   }
 
-  @NonNull private SearchViewModel loadViewModel(Bundle arguments) {
-    return Parcels.unwrap(arguments.getParcelable(VIEW_MODEL));
-  }
-
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     return inflater.inflate(LAYOUT, container, false);
   }
 
-  @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-    super.onViewStateRestored(savedInstanceState);
-    if (savedInstanceState != null) {
-      if (savedInstanceState.containsKey(VIEW_MODEL)) {
-        viewModel = loadViewModel(savedInstanceState);
-      }
-
-      if (allStoresResultAdapter != null) {
-        allStoresResultAdapter.restoreState(viewModel.allStoresSearchAppResults,
-            viewModel.allStoresSearchAdResults);
-        allStoresResultAdapter.notifyDataSetChanged();
-      }
-
-      if (savedInstanceState.containsKey(ALL_STORES_SEARCH_LIST_STATE)
-          && allStoresResultList != null) {
-
-        RecyclerView.LayoutManager layoutManager = allStoresResultList.getLayoutManager();
-        if (layoutManager == null) {
-          layoutManager = getDefaultLayoutManager();
-          allStoresResultList.setLayoutManager(layoutManager);
-        }
-        layoutManager.onRestoreInstanceState(
-            savedInstanceState.getParcelable(ALL_STORES_SEARCH_LIST_STATE));
-      }
-
-      if (followedStoresResultAdapter != null) {
-        followedStoresResultAdapter.restoreState(viewModel.followedStoresSearchAppResults,
-            viewModel.followedStoresSearchAdResults);
-        followedStoresResultAdapter.notifyDataSetChanged();
-      }
-
-      if (savedInstanceState.containsKey(FOLLOWED_STORES_SEARCH_LIST_STATE)
-          && followedStoresResultList != null) {
-        RecyclerView.LayoutManager layoutManager = followedStoresResultList.getLayoutManager();
-        if (layoutManager == null) {
-          layoutManager = getDefaultLayoutManager();
-          followedStoresResultList.setLayoutManager(layoutManager);
-        }
-        layoutManager.onRestoreInstanceState(
-            savedInstanceState.getParcelable(FOLLOWED_STORES_SEARCH_LIST_STATE));
-      }
-    }
-  }
-
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
 
-    if (allStoresResultAdapter != null) {
-      final Pair<List<SearchAppResult>, List<SearchAdResult>> allStoresState =
-          allStoresResultAdapter.getState();
-      viewModel.setAllStoresSearchAppResults(allStoresState.first);
-      viewModel.setAllStoresSearchAdResults(allStoresState.second);
-    }
-
-    if (followedStoresResultAdapter != null) {
-      final Pair<List<SearchAppResult>, List<SearchAdResult>> followedStoresState =
-          followedStoresResultAdapter.getState();
-      viewModel.setFollowedStoresSearchAppResults(followedStoresState.first);
-      viewModel.setFollowedStoresSearchAdResults(followedStoresState.second);
-    }
-
     outState.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
+
     outState.putParcelable(ALL_STORES_SEARCH_LIST_STATE, allStoresResultList.getLayoutManager()
         .onSaveInstanceState());
+
     outState.putParcelable(FOLLOWED_STORES_SEARCH_LIST_STATE,
         followedStoresResultList.getLayoutManager()
             .onSaveInstanceState());
+  }
+
+  private void restoreViewState(@Nullable Parcelable allStoresSearchListState,
+      @Nullable Parcelable followedStoresSearchListState) {
+
+    final List<SearchAppResult> allStoresSearchAppResults =
+        viewModel.getAllStoresSearchAppResults();
+    if (allStoresSearchAppResults.size() > 0) {
+      allStoresResultAdapter.restoreState(allStoresSearchAppResults,
+          viewModel.getAllStoresSearchAdResults());
+      allStoresResultAdapter.notifyDataSetChanged();
+    }
+
+    if (allStoresSearchListState != null) {
+
+      RecyclerView.LayoutManager layoutManager = allStoresResultList.getLayoutManager();
+      if (layoutManager == null) {
+        layoutManager = getDefaultLayoutManager();
+        allStoresResultList.setLayoutManager(layoutManager);
+      }
+      layoutManager.onRestoreInstanceState(allStoresSearchListState);
+    }
+
+    final List<SearchAppResult> followedStoresSearchAppResults =
+        viewModel.getFollowedStoresSearchAppResults();
+    if (followedStoresSearchAppResults.size() > 0) {
+      followedStoresResultAdapter.restoreState(followedStoresSearchAppResults,
+          viewModel.getFollowedStoresSearchAdResults());
+      followedStoresResultAdapter.notifyDataSetChanged();
+    }
+
+    if (followedStoresSearchListState != null) {
+      RecyclerView.LayoutManager layoutManager = followedStoresResultList.getLayoutManager();
+      if (layoutManager == null) {
+        layoutManager = getDefaultLayoutManager();
+        followedStoresResultList.setLayoutManager(layoutManager);
+      }
+      layoutManager.onRestoreInstanceState(followedStoresSearchListState);
+    }
+
+    showResultsView();
+
+    if (viewModel.isAllStoresSelected()) {
+      showAllStoresResult();
+    } else {
+      showFollowedStoresResult();
+    }
   }
 
   private void attachFollowedStoresResultListDependencies() {
@@ -636,11 +680,15 @@ public class SearchResultFragment extends BackButtonFragment implements SearchVi
     allStoresResultList.addItemDecoration(getDefaultItemDecoration());
   }
 
-  private void attachToolbar() {
-    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-    actionBar.setDisplayHomeAsUpEnabled(true);
+  private void setupToolbar() {
     toolbar.setTitle(viewModel.getCurrentQuery());
-    actionBar.setTitle(toolbar.getTitle());
+
+    final AppCompatActivity activity = (AppCompatActivity) getActivity();
+    activity.setSupportActionBar(toolbar);
+    ActionBar actionBar = activity.getSupportActionBar();
+    if (actionBar != null) {
+      actionBar.setDisplayHomeAsUpEnabled(true);
+      actionBar.setTitle(toolbar.getTitle());
+    }
   }
 }
