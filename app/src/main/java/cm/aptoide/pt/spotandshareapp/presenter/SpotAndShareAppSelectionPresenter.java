@@ -101,6 +101,7 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(installedApps -> view.buildInstalledAppsList(installedApps))
         .flatMap(__ -> isGroupCreated())
+        .observeOn(AndroidSchedulers.mainThread())
         .flatMapCompletable(isGroupCreated -> {
           if (isGroupCreated) {
             return hideLoading();
