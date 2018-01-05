@@ -74,8 +74,8 @@ public class SpotAndSharePickAppsPresenter implements Presenter {
   }
 
   private boolean canSend() {
-    if (shouldCreateGroup) {
-      return false;
+    if (!shouldCreateGroup) {
+      return true;
     }
     return spotAndShare.canSend();
   }

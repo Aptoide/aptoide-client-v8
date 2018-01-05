@@ -35,9 +35,10 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
   private AptoideMessageServerController aptoideMessageServerController;
   private int availablePort = 10000;
 
-  public AptoideMessageServerSocket(int port, int serverSocketTimeout, int timeout) {
+  public AptoideMessageServerSocket(int port, int serverSocketTimeout, int timeout,
+      FriendsManager friendsManager) {
     super(port, serverSocketTimeout, timeout, null);
-    this.friendsManager = new FriendsManager();
+    this.friendsManager = friendsManager;
   }
 
   @Override public void shutdown() {

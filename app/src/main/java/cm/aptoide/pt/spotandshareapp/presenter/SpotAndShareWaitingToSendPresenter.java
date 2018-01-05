@@ -108,7 +108,7 @@ public class SpotAndShareWaitingToSendPresenter implements Presenter {
 
   private void startListeningToFriends() {
     spotAndShare.observeFriends()
-        .filter(friendsList -> friendsList.size() > 0)
+        .filter(friendsList -> friendsList.size() > 1)
         .doOnNext(friendsList -> sendApp())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -140,14 +140,7 @@ public class SpotAndShareWaitingToSendPresenter implements Presenter {
     view.openTransferRecord();
   }
 
-  private void canSend() {
-    if (spotAndShare.canSend()) {
-      sendApp();
-    }
-  }
-
   private void leaveGroup() {
     spotAndShare.leaveGroup(err -> view.onLeaveGroupError());
   }
-
 }

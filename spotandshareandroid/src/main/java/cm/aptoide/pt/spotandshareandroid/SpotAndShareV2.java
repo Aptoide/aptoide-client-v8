@@ -191,11 +191,11 @@ class SpotAndShareV2 {
   }
 
   public boolean canSend() {
-    if (!isHotspot) {
-      return true;
-    }
+    //if (!isHotspot) {
+    //  return true;
+    //}
     return friendsManager.observe()
-        .map(friends -> friends.size() > 0)
+        .map(friends -> friends.size() > 1)
         .toBlocking()
         .first();
   }

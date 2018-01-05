@@ -193,15 +193,17 @@ public class SpotAndShareAppSelectionPresenter implements Presenter {
           () -> spotAndShare.sendApps(Collections.singletonList(androidAppInfo)));
 
       view.openTransferRecord();
+      System.out.println("could send !! ");
     } else {
+      System.out.println("teste:  could not send");
       view.openWaitingToSendScreen(appModel);
     }
   }
 
   private boolean canSend() {
-    if (shouldCreateGroup) {
-      return false;
-    }
+    //if (shouldCreateGroup) {
+    //  return false;
+    //}
     return spotAndShare.canSend();
   }
 
