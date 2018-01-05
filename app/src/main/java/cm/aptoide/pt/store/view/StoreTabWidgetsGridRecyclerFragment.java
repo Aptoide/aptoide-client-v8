@@ -20,7 +20,7 @@ import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.install.InstalledRepository;
-import cm.aptoide.pt.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
@@ -30,6 +30,7 @@ import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablesFactory;
 import com.facebook.appevents.AppEventsLogger;
 import java.util.List;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import rx.Observable;
 
@@ -42,10 +43,12 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
   protected StoreUtilsProxy storeUtilsProxy;
   protected InstalledRepository installedRepository;
   protected StoreAnalytics storeAnalytics;
+  @Inject FragmentNavigator fragmentNavigator;
   private StoreTabNavigator storeTabNavigator;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
     final StoreCredentialsProvider storeCredentialsProvider = new StoreCredentialsProviderImpl(
         AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class));
@@ -80,8 +83,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
               getContext(), accountManager, storeUtilsProxy,
               (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
               getContext().getResources(), installedRepository, storeAnalytics, storeTabNavigator,
-              navigationTracker, new BadgeDialogFactory(getContext()),
-              ((ActivityResultNavigator) getContext()).getFragmentNavigator(),
+              navigationTracker, new BadgeDialogFactory(getContext()), fragmentNavigator,
               AccessorFactory.getAccessorFor(application.getDatabase(), Store.class),
               application.getBodyInterceptorPoolV7(), application.getDefaultClient(),
               WebService.getDefaultConverter(), application.getTokenInvalidator(),

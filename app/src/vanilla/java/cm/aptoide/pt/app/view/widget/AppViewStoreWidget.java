@@ -19,6 +19,7 @@ import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.repository.StoreRepository;
@@ -27,15 +28,18 @@ import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Locale;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
 public class AppViewStoreWidget extends Widget<AppViewStoreDisplayable> {
 
+  @Inject FragmentNavigator fragmentNavigator;
   private ImageView storeAvatarView;
   private TextView storeNameView;
   private TextView storeNumberUsersView;
@@ -47,6 +51,8 @@ public class AppViewStoreWidget extends Widget<AppViewStoreDisplayable> {
   public AppViewStoreWidget(View itemView) {
     super(itemView);
     storeRepository = RepositoryFactory.getStoreRepository(getContext().getApplicationContext());
+    ((BaseActivity) getContext()).getActivityComponent()
+        .inject(this);
   }
 
   @Override protected void assignViews(View itemView) {
@@ -118,7 +124,7 @@ public class AppViewStoreWidget extends Widget<AppViewStoreDisplayable> {
           .sendOpenStoreEvent();
       displayable.getStoreAnalytics()
           .sendStoreOpenEvent("App View", storeName);
-      getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
+      fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
           .newStoreFragment(storeName, storeTheme), true);
     };
 

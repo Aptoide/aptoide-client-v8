@@ -12,20 +12,26 @@ import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAppsDisplayable;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
+import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import javax.inject.Inject;
 
 public class AppViewSuggestedAppsWidget extends Widget<AppViewSuggestedAppsDisplayable> {
 
+  @Inject FragmentNavigator fragmentNavigator;
   private RecyclerView recyclerView;
   private TextView similarAppsToTextView;
 
   public AppViewSuggestedAppsWidget(View itemView) {
     super(itemView);
+    ((BaseActivity) getContext()).getActivityComponent()
+        .inject(this);
   }
 
   @Override protected void assignViews(View itemView) {
@@ -49,7 +55,8 @@ public class AppViewSuggestedAppsWidget extends Widget<AppViewSuggestedAppsDispl
           .setAppearance(new Store.Appearance());
       displayables.add(
           new AppViewSuggestedAppDisplayable(app, displayable.getAppViewSimilarAppAnalytics(),
-              displayable.getNavigationTracker(), displayable.getStoreContext()));
+              displayable.getNavigationTracker(), displayable.getStoreContext(),
+              fragmentNavigator));
     }
 
     BaseAdapter adapter = new BaseAdapter(displayables) {

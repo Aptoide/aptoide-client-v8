@@ -96,7 +96,8 @@ public class DisplayablesFactory {
         case APPS_GROUP:
           return Observable.just(getApps(widget, storeTheme, storeContext,
               context.getApplicationContext()
-                  .getResources(), windowManager, storeTabNavigator, navigationTracker));
+                  .getResources(), windowManager, storeTabNavigator, navigationTracker,
+              fragmentNavigator));
 
         case MY_STORES_SUBSCRIBED:
           return getMyStores(widget, storeRepository, storeTheme, storeContext, windowManager,
@@ -171,7 +172,8 @@ public class DisplayablesFactory {
 
   private static Displayable getApps(GetStoreWidgets.WSWidget wsWidget, String storeTheme,
       StoreContext storeContext, Resources resources, WindowManager windowManager,
-      StoreTabNavigator storeTabNavigator, NavigationTracker navigationTracker) {
+      StoreTabNavigator storeTabNavigator, NavigationTracker navigationTracker,
+      FragmentNavigator fragmentNavigator) {
     ListApps listApps = (ListApps) wsWidget.getViewObject();
     if (listApps == null) {
       return new EmptyDisplayable();
@@ -238,7 +240,7 @@ public class DisplayablesFactory {
       for (App app : apps) {
         DisplayablePojo<App> diplayable =
             new GridAppDisplayable(app, wsWidget.getTag(), storeContext == StoreContext.home,
-                navigationTracker, storeContext);
+                navigationTracker, storeContext, fragmentNavigator);
         displayables.add(diplayable);
       }
     }

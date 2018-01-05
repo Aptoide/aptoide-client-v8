@@ -9,11 +9,14 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import java.text.DateFormat;
+import javax.inject.Inject;
 
 import static android.text.format.DateFormat.getTimeFormat;
 
@@ -21,6 +24,7 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
 
   private static final String TAG = RollbackWidget.class.getSimpleName();
 
+  @Inject FragmentNavigator fragmentNavigator;
   private ImageView appIcon;
   private TextView appName;
   private TextView appUpdateVersion;
@@ -29,6 +33,8 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
 
   public RollbackWidget(View itemView) {
     super(itemView);
+    ((BaseActivity) getContext()).getActivityComponent()
+        .inject(this);
   }
 
   @Override protected void assignViews(View itemView) {
@@ -82,7 +88,7 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
             Rollback.Action action = Rollback.Action.valueOf(pojo.getAction());
             switch (action) {
               case DOWNGRADE:
-                displayable.update(getFragmentNavigator());
+                displayable.update(fragmentNavigator);
                 break;
               case INSTALL:
                 //only if the app is installed
@@ -95,11 +101,11 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
                 break;
 
               case UNINSTALL:
-                displayable.install(getFragmentNavigator());
+                displayable.install(fragmentNavigator);
                 break;
 
               case UPDATE:
-                displayable.update(getFragmentNavigator());
+                displayable.update(fragmentNavigator);
                 break;
             }
           }, () -> {

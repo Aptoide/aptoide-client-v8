@@ -30,8 +30,8 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
     implements ActivityNavigator {
 
   @Inject AccountNavigator accountNavigator;
+  @Inject FragmentNavigator fragmentNavigator;
   private PublishRelay<Result> resultRelay;
-  private FragmentNavigator fragmentNavigator;
   private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
   private Map<Integer, Result> fragmentResultMap;
   private BillingNavigator billingNavigator;
@@ -48,10 +48,6 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     fragmentResultRelay = ((AptoideApplication) getApplicationContext()).getFragmentResultRelay();
     fragmentResultMap = ((AptoideApplication) getApplicationContext()).getFragmentResulMap();
-    fragmentNavigator =
-        new FragmentResultNavigator(getSupportFragmentManager(), R.id.fragment_placeholder,
-            android.R.anim.fade_in, android.R.anim.fade_out, fragmentResultMap,
-            fragmentResultRelay);
     // super.onCreate handles fragment creation using FragmentManager.
     // Make sure navigator instances are already created when fragments are created,
     // else getFragmentNavigator and getActivityNavigator will return null.

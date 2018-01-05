@@ -9,14 +9,17 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
+import javax.inject.Inject;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -26,6 +29,7 @@ import rx.schedulers.Schedulers;
 
 public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> {
 
+  @Inject FragmentNavigator fragmentNavigator;
   private TextView storeName;
   private TextView followingUsers;
   private TextView numberStoreApps;
@@ -38,6 +42,8 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
     storeAnalytics =
         new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
             Analytics.getInstance());
+    ((BaseActivity) getContext()).getActivityComponent()
+        .inject(this);
   }
 
   @Override protected void assignViews(View itemView) {
@@ -63,7 +69,7 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
     setButtonText(displayable);
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(click -> {
-          displayable.openStoreFragment(getFragmentNavigator());
+          displayable.openStoreFragment(fragmentNavigator);
           if (!displayable.getOrigin()
               .isEmpty()) {
             storeAnalytics.sendStoreOpenEvent(displayable.getOrigin(), store.getName());

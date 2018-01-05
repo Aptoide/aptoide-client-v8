@@ -21,17 +21,21 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.install.InstalledRepository;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.Translator;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
+import javax.inject.Inject;
 
 public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
 
   private static final String TAG = OfficialAppWidget.class.getName();
 
+  @Inject FragmentNavigator fragmentNavigator;
   private ImageView appImage;
   private Button installButton;
   private TextView installMessage;
@@ -44,6 +48,8 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
 
   public OfficialAppWidget(View itemView) {
     super(itemView);
+    ((BaseActivity) getContext()).getActivityComponent()
+        .inject(this);
   }
 
   @Override protected void assignViews(View itemView) {
@@ -145,7 +151,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
             Fragment appView = AptoideApplication.getFragmentProvider()
                 .newAppViewFragment(appData.getPackageName(),
                     AppViewFragment.OpenType.OPEN_AND_INSTALL);
-            getFragmentNavigator().navigateTo(appView, true);
+            fragmentNavigator.navigateTo(appView, true);
           }
         }, err -> {
           CrashReport.getInstance()

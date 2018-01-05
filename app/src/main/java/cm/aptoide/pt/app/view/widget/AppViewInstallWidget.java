@@ -57,15 +57,18 @@ import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.install.view.InstallWarningDialog;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
@@ -76,23 +79,20 @@ import rx.android.schedulers.AndroidSchedulers;
 public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
   private static final String TAG = AppViewInstallWidget.class.getSimpleName();
-
+  @Inject FragmentNavigator fragmentNavigator;
   private RelativeLayout downloadProgressLayout;
   private RelativeLayout installAndLatestVersionLayout;
-
   private ProgressBar downloadProgress;
   private TextView textProgress;
   private ImageView actionResume;
   private ImageView actionPause;
   private ImageView actionCancel;
   private Button actionButton;
-
   private TextView versionName;
   private View latestAvailableLayout;
   private View latestAvailableTrustedSeal;
   private View notLatestAvailableText;
   private TextView otherVersions;
-
   private App trustedVersion;
   private InstallManager installManager;
   private boolean isUpdate;
@@ -118,6 +118,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
   public AppViewInstallWidget(View itemView) {
     super(itemView);
+    ((BaseActivity) getContext()).getActivityComponent()
+        .inject(this);
   }
 
   @Override protected void assignViews(View itemView) {
@@ -725,7 +727,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
   }
 
   private AppViewNavigator getAppViewNavigator() {
-    return new AppViewNavigator(getFragmentNavigator(), getActivityNavigator(), isMultiStoreSearch,
+    return new AppViewNavigator(fragmentNavigator, getActivityNavigator(), isMultiStoreSearch,
         defaultStoreName);
   }
 

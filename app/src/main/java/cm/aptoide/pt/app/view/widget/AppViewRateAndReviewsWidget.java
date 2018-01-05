@@ -36,10 +36,12 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.reviews.LanguageFilterHelper;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.recycler.LinearLayoutManagerWithSmoothScroller;
 import cm.aptoide.pt.view.recycler.widget.Widget;
@@ -49,6 +51,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -64,23 +67,20 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
   public static final long TIME_BETWEEN_SCROLL = 2 * DateUtils.SECOND_IN_MILLIS;
   private static final String TAG = AppViewRateAndReviewsWidget.class.getSimpleName();
   private static final int MAX_COMMENTS = 3;
+  @Inject FragmentNavigator fragmentNavigator;
   private DialogUtils dialogUtils;
   private AptoideAccountManager accountManager;
   private View emptyReviewsLayout;
   private View ratingLayout;
   private View commentsLayout;
-
   private TextView usersVotedTextView;
   private TextView ratingValue;
   private RatingBar ratingBar;
-
   private Button rateThisButton;
   private Button rateThisButtonLarge;
   private Button readAllButton;
-
   private RecyclerView topReviewsList;
   private ContentLoadingProgressBar topReviewsProgress;
-
   private String appName;
   private String packageName;
   private String storeName;
@@ -93,6 +93,8 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
   public AppViewRateAndReviewsWidget(@NonNull View itemView) {
     super(itemView);
+    ((BaseActivity) getContext()).getActivityComponent()
+        .inject(this);
   }
 
   @Override protected void assignViews(View itemView) {
@@ -179,7 +181,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
               .getName(), app.getPackageName(), app.getStore()
               .getAppearance()
               .getTheme());
-      getFragmentNavigator().navigateTo(fragment, true);
+      fragmentNavigator.navigateTo(fragment, true);
     };
 
     compositeSubscription.add(RxView.clicks(readAllButton)

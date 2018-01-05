@@ -11,22 +11,28 @@ import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.StoreTheme;
+import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
+import javax.inject.Inject;
 
 /**
  * Created by neuro on 11-05-2016. //todo: código duplicado, se cair a reflexão, deixa de o ser.
  */
 public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 
+  @Inject FragmentNavigator fragmentNavigator;
   private ImageView storeAvatar;
   private TextView storeName;
   private LinearLayout storeLayout;
 
   public SubscribedStoreWidget(View itemView) {
     super(itemView);
+    ((BaseActivity) getContext()).getActivityComponent()
+        .inject(this);
   }
 
   @Override protected void assignViews(View itemView) {
@@ -48,7 +54,7 @@ public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
               .newStoreFragment(displayable.getPojo()
                   .getStoreName(), displayable.getPojo()
                   .getTheme());
-          getFragmentNavigator().navigateTo(fragment, true);
+          fragmentNavigator.navigateTo(fragment, true);
         }));
 
     final Context context = getContext();

@@ -14,15 +14,19 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.view.displayable.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
+import javax.inject.Inject;
 
 /**
  * Created on 10/05/16.
  */
 public class AppViewDescriptionWidget extends Widget<AppViewDescriptionDisplayable> {
 
+  @Inject FragmentNavigator fragmentNavigator;
   private TextView descriptionTextView;
   private Button readMoreBtn;
   private String storeName;
@@ -32,6 +36,8 @@ public class AppViewDescriptionWidget extends Widget<AppViewDescriptionDisplayab
 
   public AppViewDescriptionWidget(View itemView) {
     super(itemView);
+    ((BaseActivity) getContext()).getActivityComponent()
+        .inject(this);
   }
 
   @Override protected void assignViews(View itemView) {
@@ -59,7 +65,7 @@ public class AppViewDescriptionWidget extends Widget<AppViewDescriptionDisplayab
                 .sendReadMoreEvent();
             Fragment fragment = AptoideApplication.getFragmentProvider()
                 .newDescriptionFragment(app.getName(), media.getDescription(), storeTheme);
-            getFragmentNavigator().navigateTo(fragment, true);
+            fragmentNavigator.navigateTo(fragment, true);
           }));
     } else {
       // only show "default" description if the app doesn't have one

@@ -15,15 +15,18 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.view.MetaStoresBaseWidget;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowingFragment;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.spannable.SpannableFactory;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
+import javax.inject.Inject;
 
 /**
  * Created by trinkes on 05/12/2016.
@@ -31,6 +34,7 @@ import com.jakewharton.rxbinding.view.RxView;
 
 public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
 
+  @Inject FragmentNavigator fragmentNavigator;
   private ImageView storeIcon;
   private TextView storeName;
   private Button exploreButton;
@@ -43,6 +47,8 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
     super(itemView);
     storeAnalytics =
         new StoreAnalytics(AppEventsLogger.newLogger(getContext()), Analytics.getInstance());
+    ((BaseActivity) getContext()).getActivityComponent()
+        .inject(this);
   }
 
   @Override protected void assignViews(View itemView) {
@@ -70,7 +76,7 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
     storeName.setText(store.getName());
     compositeSubscription.add(RxView.clicks(exploreButton)
         .subscribe(click -> {
-          getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
+          fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
               .newStoreFragment(store.getName(), storeTheme), true);
           storeAnalytics.sendStoreTabInteractEvent("View Store");
           storeAnalytics.sendStoreOpenEvent("View Own Store", store.getName());
@@ -92,14 +98,14 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
         String.valueOf(displayable.getFollowings())));
 
     compositeSubscription.add(RxView.clicks(followers)
-        .subscribe(click -> getFragmentNavigator().navigateTo(
+        .subscribe(click -> fragmentNavigator.navigateTo(
             TimeLineFollowersFragment.newInstanceUsingUser(storeTheme,
                 AptoideUtils.StringU.getFormattedString(
                     R.string.social_timeline_followers_fragment_title, getContext().getResources(),
                     displayable.getFollowers()), displayable.getStoreContext()), true)));
 
     compositeSubscription.add(RxView.clicks(following)
-        .subscribe(click -> getFragmentNavigator().navigateTo(
+        .subscribe(click -> fragmentNavigator.navigateTo(
             TimeLineFollowingFragment.newInstanceUsingUser(storeTheme,
                 AptoideUtils.StringU.getFormattedString(
                     R.string.social_timeline_following_fragment_title, getContext().getResources(),

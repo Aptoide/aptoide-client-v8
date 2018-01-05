@@ -16,19 +16,25 @@ import cm.aptoide.pt.app.view.displayable.AppViewScreenshotsDisplayable;
 import cm.aptoide.pt.app.view.screenshots.ScreenshotsAdapter;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
+import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.recycler.widget.Widget;
+import javax.inject.Inject;
 
 /**
  * Created on 11/05/16.
  */
 public class AppViewScreenshotsWidget extends Widget<AppViewScreenshotsDisplayable> {
 
+  @Inject FragmentNavigator fragmentNavigator;
   private RecyclerView mediaList;
   private boolean isMultiStoreSearch;
   private String defaultStoreName;
 
   public AppViewScreenshotsWidget(View itemView) {
     super(itemView);
+    ((BaseActivity) getContext()).getActivityComponent()
+        .inject(this);
   }
 
   @Override protected void assignViews(View itemView) {
@@ -78,7 +84,7 @@ public class AppViewScreenshotsWidget extends Widget<AppViewScreenshotsDisplayab
   }
 
   private AppViewNavigator getAppViewNavigator() {
-    return new AppViewNavigator(getFragmentNavigator(), getActivityNavigator(), isMultiStoreSearch,
+    return new AppViewNavigator(fragmentNavigator, getActivityNavigator(), isMultiStoreSearch,
         defaultStoreName);
   }
 }

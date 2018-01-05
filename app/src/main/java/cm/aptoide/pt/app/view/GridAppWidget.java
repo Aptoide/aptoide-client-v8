@@ -75,7 +75,8 @@ public class GridAppWidget<T extends GridAppDisplayable> extends Widget<T> {
   @NonNull protected Action1<Void> newOnClickListener(T displayable, App pojo, long appId) {
     return v -> {
       // FIXME
-      getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
+      displayable.getFragmentNavigator()
+          .navigateTo(AptoideApplication.getFragmentProvider()
           .newAppViewFragment(appId, pojo.getPackageName(), pojo.getStore()
               .getAppearance()
               .getTheme(), tvStoreName.getText()

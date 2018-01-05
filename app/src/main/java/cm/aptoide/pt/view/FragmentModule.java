@@ -26,6 +26,7 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
+import cm.aptoide.pt.store.view.GridStoreMetaDisplayable;
 import dagger.Module;
 import dagger.Provides;
 import java.util.Arrays;
@@ -76,7 +77,8 @@ import rx.schedulers.Schedulers;
       ManageStoreErrorMapper manageStoreErrorMapper, AptoideAccountManager accountManager) {
     return new ManageStorePresenter((ManageStoreView) fragment, CrashReport.getInstance(),
         uriToPathResolver, packageName, manageStoreNavigator,
-        arguments.getBoolean("go_to_home", true), manageStoreErrorMapper, accountManager, 394587);
+        arguments.getBoolean("go_to_home", true), manageStoreErrorMapper, accountManager,
+        GridStoreMetaDisplayable.REQUEST_CODE);
   }
 
   @FragmentScope @Provides ManageUserPresenter provideManageUserPresenter(

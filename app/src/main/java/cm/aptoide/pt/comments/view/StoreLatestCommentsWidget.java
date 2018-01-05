@@ -25,6 +25,7 @@ import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.store.view.StoreLatestCommentsDisplayable;
 import cm.aptoide.pt.util.CommentOperations;
+import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.FragmentProvider;
 import cm.aptoide.pt.view.custom.HorizontalDividerItemDecoration;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
@@ -33,6 +34,7 @@ import cm.aptoide.pt.view.recycler.widget.Widget;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
@@ -42,8 +44,8 @@ import rx.schedulers.Schedulers;
 
 public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplayable> {
 
+  @Inject FragmentNavigator fragmentNavigator;
   private RecyclerView recyclerView;
-
   private long storeId;
   private String storeName;
   private AptoideAccountManager accountManager;
@@ -55,6 +57,8 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
 
   public StoreLatestCommentsWidget(View itemView) {
     super(itemView);
+    ((BaseActivity) getContext()).getActivityComponent()
+        .inject(this);
   }
 
   @Override protected void assignViews(View itemView) {
@@ -88,7 +92,7 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
     recyclerView.setAdapter(new CommentListAdapter(storeId, storeName, comments,
         getContext().getSupportFragmentManager(), recyclerView,
         Observable.fromCallable(() -> reloadComments()), accountManager, accountNavigator,
-        getFragmentNavigator(),
+        fragmentNavigator,
         ((AptoideApplication) getContext().getApplicationContext()).getFragmentProvider()));
   }
 

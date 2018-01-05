@@ -13,17 +13,20 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import java.util.Locale;
+import javax.inject.Inject;
 
 public class OtherVersionWidget extends Widget<OtherVersionDisplayable>
     implements View.OnClickListener {
 
   private static final String TAG = OtherVersionWidget.class.getSimpleName();
   private static final Locale DEFAULT_LOCALE = Locale.getDefault();
-
+  @Inject FragmentNavigator fragmentNavigator;
   // left side
   //private ImageView versionBadge;
   private TextView version;
@@ -34,14 +37,14 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable>
   private ImageView storeIcon;
   private TextView storeNameView;
   private TextView followers;
-
   private long appId;
   private String packageName;
   private String storeName;
-  private OtherVersionDisplayable displayable;
 
   public OtherVersionWidget(View itemView) {
     super(itemView);
+    ((BaseActivity) getContext()).getActivityComponent()
+        .inject(this);
   }
 
   @Override protected void assignViews(View itemView) {
@@ -62,7 +65,6 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable>
   @Override public void bindView(OtherVersionDisplayable displayable) {
     setItemBackgroundColor(itemView);
     try {
-      this.displayable = displayable;
       final App app = displayable.getPojo();
       appId = app.getId();
       storeName = app.getStore()
@@ -154,7 +156,7 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable>
 
   @Override public void onClick(View v) {
     Logger.d(TAG, "showing other version for app with id = " + appId);
-    getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
+    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
         .newAppViewFragment(appId, packageName, null, storeName, ""), true);
   }
 }
