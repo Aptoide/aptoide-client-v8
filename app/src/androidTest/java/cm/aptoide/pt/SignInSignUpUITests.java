@@ -171,7 +171,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.next_icon)).perform(swipeLeft());
     performSignUp(LOGINEMAIL, PASS);
     completeSignUp();
-    onView(withId(R.id.action_search)).check(matches(isDisplayed()));
+    onView(withId(R.id.menu_item_search)).check(matches(isDisplayed()));
   }
 
   private void performLogin(String email, String pass) {
