@@ -89,6 +89,8 @@ import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.root.RootAvailabilityManager;
+import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
+import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.social.TimelineRepositoryFactory;
 import cm.aptoide.pt.social.data.ReadPostsPersistence;
 import cm.aptoide.pt.social.data.TimelineRepository;
@@ -169,6 +171,7 @@ public abstract class AptoideApplication extends Application {
   @Inject IdsRepository idsRepository;
   @Inject GoogleApiClient googleSignInClient;
   @Inject @Named("default") OkHttpClient defaultClient;
+  @Inject @Named("web-socket") OkHttpClient webSocketClient;
   @Inject @Named("user-agent") Interceptor userAgentInterceptor;
   @Inject AndroidAccountProvider androidAccountProvider;
   @Inject ObjectMapper nonNullObjectMapper;
@@ -203,6 +206,7 @@ public abstract class AptoideApplication extends Application {
   @Inject PageViewsAnalytics pageViewsAnalytics;
   @Inject @Named("account-settings-pool-v7") BodyInterceptor<BaseBody>
       accountSettingsBodyInterceptorPoolV7;
+  @Inject TrendingManager trendingManager;
   private LeakTool leakTool;
   private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
@@ -229,6 +233,7 @@ public abstract class AptoideApplication extends Application {
   private NotificationsCleaner notificationsCleaner;
   private NotificationAnalytics notificationAnalytics;
   private TimelineAnalytics timelineAnalytics;
+  @Inject SearchSuggestionManager searchSuggestionManager;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -993,8 +998,8 @@ public abstract class AptoideApplication extends Application {
     return alarmSyncScheduler;
   }
 
-  public IdsRepository getIdsRepository() {
-    return idsRepository;
+  public TrendingManager getTrendingManager() {
+    return trendingManager;
   }
 
   public NotificationAnalytics getNotificationAnalytics() {
@@ -1006,6 +1011,22 @@ public abstract class AptoideApplication extends Application {
               getDefaultSharedPreferences(), new AptoideInstallParser());
     }
     return notificationAnalytics;
+  }
+
+  public ObjectMapper getNonNullObjectMapper() {
+    return nonNullObjectMapper;
+  }
+
+  public OkHttpClient getDefaultWebSocketClient() {
+    return webSocketClient;
+  }
+
+  public IdsRepository getIdsRepository() {
+    return idsRepository;
+  }
+
+  public SearchSuggestionManager getSearchSuggestionManager() {
+    return searchSuggestionManager;
   }
 
   public TimelineAnalytics getTimelineAnalytics() {

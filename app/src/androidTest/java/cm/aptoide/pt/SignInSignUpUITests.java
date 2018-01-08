@@ -109,41 +109,41 @@ import static cm.aptoide.pt.UITests.skipWizard;
     goToMyAccount();
     performSignUp(LOGINEMAIL, PASS);
     completeSignUp();
-    onView(withId(R.id.action_search)).check(matches(isDisplayed()));
+    onView(withId(R.id.menu_item_search)).check(matches(isDisplayed()));
   }
 
   @Test public void signUpPrivateUser() {
     goToMyAccount();
     performSignUp(LOGINEMAIL, PASS);
     completeSignUpPrivate();
-    onView(withId(R.id.action_search)).check(matches(isDisplayed()));
+    onView(withId(R.id.menu_item_search)).check(matches(isDisplayed()));
   }
 
   @Test public void signUpMoreInfoPublicUser() {
     goToMyAccount();
     performSignUp(LOGINEMAIL, PASS);
     completeSignUpMoreInfoPublic();
-    onView(withId(R.id.action_search)).check(matches(isDisplayed()));
+    onView(withId(R.id.menu_item_search)).check(matches(isDisplayed()));
   }
 
   @Test public void signUpWithCreateStore() {
     goToMyAccount();
     performSignUp(LOGINEMAIL, PASS);
     completeSignUpWithStore();
-    onView(withId(R.id.action_search)).check(matches(isDisplayed()));
+    onView(withId(R.id.menu_item_search)).check(matches(isDisplayed()));
   }
 
   @Test public void signIn() {
     goToMyAccount();
     performLogin(LOGINEMAIL, PASS);
-    onView(withId(R.id.action_search)).check(matches(isDisplayed()));
+    onView(withId(R.id.menu_item_search)).check(matches(isDisplayed()));
   }
 
   @Test public void signOut() {
     TestType.initialization = TestType.TestTypes.LOGGEDIN;
     goToMyAccount();
     onView(withId(R.id.button_logout)).perform(click());
-    onView(withId(R.id.action_search)).check(matches(isDisplayed()));
+    onView(withId(R.id.menu_item_search)).check(matches(isDisplayed()));
   }
 
   @Test public void signInFromWizard() {

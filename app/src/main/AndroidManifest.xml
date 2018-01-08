@@ -100,18 +100,6 @@
         />
 
     <provider
-        android:name="cm.aptoide.pt.search.SearchSuggestionProvider"
-        android:authorities="${suggestionProviderAuthority}"
-        android:exported="false"
-        />
-
-    <provider
-        android:name="cm.aptoide.pt.search.StoreSearchSuggestionProvider"
-        android:authorities="${storeSuggestionProviderAuthority}"
-        android:exported="false"
-        />
-
-    <provider
         android:name="android.support.v4.content.FileProvider"
         android:authorities="${applicationId}.provider"
         android:exported="false"
@@ -143,24 +131,6 @@
         <category android:name="android.intent.category.DEFAULT"/>
         <data android:mimeType="text/plain"/>
       </intent-filter>
-    </activity>
-
-    <activity android:name=".search.view.SearchActivity">
-      <intent-filter>
-        <action android:name="android.intent.action.SEARCH"/>
-      </intent-filter>
-      <meta-data
-          android:name="android.app.searchable"
-          android:resource="@xml/searchable"/>
-    </activity>
-
-    <activity android:name=".search.view.StoreSearchActivity">
-      <intent-filter>
-        <action android:name="android.intent.action.SEARCH"/>
-      </intent-filter>
-      <meta-data
-          android:name="android.app.searchable"
-          android:resource="@xml/store_searchable"/>
     </activity>
 
     <activity
@@ -404,6 +374,16 @@
     <activity
         android:name="com.mopub.common.MoPubBrowser"
         android:configChanges="keyboardHidden|orientation|screenSize"/>
+
+    <receiver android:name=".widget.SearchWidgetProvider"
+              android:label="Aptoide Search">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+        <action android:name="android.appwidget.action.ACTION_WIDGET_RECEIVER"/>
+      </intent-filter>
+      <meta-data android:name="android.appwidget.provider"
+          android:resource="@xml/widget_search_app" />
+    </receiver>
 
   </application>
 

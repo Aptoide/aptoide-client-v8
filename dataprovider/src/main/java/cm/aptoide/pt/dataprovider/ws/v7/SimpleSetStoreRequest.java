@@ -132,8 +132,8 @@ public class SimpleSetStoreRequest extends V7<BaseV7Response, SimpleSetStoreRequ
 
   @Parcel public static class StoreLinks {
 
-    private Store.SocialChannelType type;
-    private String url;
+    Store.SocialChannelType type;
+    String url;
 
     public StoreLinks() {
     }

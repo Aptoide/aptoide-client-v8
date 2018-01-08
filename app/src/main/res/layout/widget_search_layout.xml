@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/widget_search_bar"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/button_height"
+    android:layout_marginEnd="@dimen/padding_very_small"
+    android:layout_marginLeft="@dimen/padding_very_small"
+    android:layout_marginRight="@dimen/padding_very_small"
+    android:layout_marginStart="@dimen/padding_very_small"
+    android:background="@drawable/widget_search_background"
+    android:translationZ="2dp"
+    >
+
+  <ImageView
+      android:id="@+id/icon"
+      android:layout_width="34dp"
+      android:layout_height="34dp"
+      android:layout_centerVertical="true"
+      android:layout_marginLeft="@dimen/padding_very_small"
+      android:layout_marginStart="@dimen/padding_very_small"
+      android:background="@mipmap/ic_launcher"
+      />
+
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_marginLeft="@dimen/padding_small"
+      android:layout_marginStart="@dimen/padding_small"
+      android:layout_toEndOf="@id/icon"
+      android:layout_toRightOf="@id/icon"
+      android:gravity="center"
+      android:lines="1"
+      android:maxLines="1"
+      android:text="@string/srch_hint"
+      android:textColor="@color/grey_700"
+      style="@style/Aptoide.TextView.Regular.S"
+      />
+
+  <ImageView
+      android:layout_width="28dp"
+      android:layout_height="28dp"
+      android:layout_alignParentEnd="true"
+      android:layout_alignParentRight="true"
+      android:layout_centerVertical="true"
+      android:layout_marginEnd="16dp"
+      android:layout_marginRight="16dp"
+      android:background="@drawable/voice_search_icon"
+      android:visibility="gone"
+      tools:visibility="visible"
+      />
+</RelativeLayout>

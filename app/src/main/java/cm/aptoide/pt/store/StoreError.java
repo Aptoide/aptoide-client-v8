@@ -1,0 +1,5 @@
+package cm.aptoide.pt.store;
+
+public enum StoreError {
+  PRIVATE_STORE_ERROR, PRIVATE_STORE_WRONG_CREDENTIALS, GENERIC_ERROR, STORE_SUSPENDED
+}
