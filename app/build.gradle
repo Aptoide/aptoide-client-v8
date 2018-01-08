@@ -40,7 +40,7 @@ android {
     minSdkVersion project.MINIMUM_SDK_VERSION
     targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
     multiDexEnabled true
-    versionCode project.PROD_VERSION_CODE.toInteger()
+    versionCode project.VERSION_CODE_VANILLA_PROD.toInteger()
     versionName "8.6.2.0"
     testProguardFile 'proguard-rules-test.pro'
     testInstrumentationRunner "cm.aptoide.pt.MultidexAndroidJunitRunner"
@@ -53,10 +53,10 @@ android {
 
   signingConfigs {
     release {
-      storeFile = file(project.STORE_FILE)
-      storePassword = project.STORE_PASSWORD
-      keyAlias = project.KEY_ALIAS
-      keyPassword = project.KEY_PASSWORD
+      storeFile = file(project.STORE_FILE_VANILLA)
+      storePassword = project.STORE_PASSWORD_VANILLA
+      keyAlias = project.KEY_ALIAS_VANILLA
+      keyPassword = project.KEY_PASSWORD_VANILLA
       v2SigningEnabled = false
     }
   }
@@ -77,14 +77,14 @@ android {
       dimension "mode"
       applicationIdSuffix "internal"
       versionName "8.6.2." + getDate()
-      versionCode project.INTERNAL_VERSION_CODE.toInteger()
+      versionCode project.VERSION_CODE_VANILLA_INTERNAL.toInteger()
     }
 
     dev {
       dimension "mode"
       applicationIdSuffix "dev"
       versionName "8.6.2." + getDate()
-      versionCode project.DEV_VERSION_CODE.toInteger()
+      versionCode project.VERSION_CODE_VANILLA_DEV.toInteger()
     }
 
     prod {
@@ -99,7 +99,7 @@ android {
       dimension "mode"
       applicationIdSuffix "testfairy"
       versionName "8.6.2." + getDate()
-      versionCode project.DEV_VERSION_CODE.toInteger()
+      versionCode project.VERSION_CODE_VANILLA_DEV.toInteger()
     }
   }
 
@@ -194,16 +194,16 @@ android {
     variant.resValue "string", "store_suggestion_provider_authority",
         storeSuggestionProviderAuthority
 
-    variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID + "\""
+    variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_VANILLA + "\""
 
     variant.buildConfigField "String", "APTOIDE_WEBSOCKETS_SCHEME",
         "\"" + project.APTOIDE_WEBSOCKETS_SCHEME + "\""
     variant.buildConfigField "String", "APTOIDE_WEBSOCKETS_HOST",
         "\"" + project.APTOIDE_WEBSOCKETS_HOST + "\""
     variant.buildConfigField "String", "CONTENT_AUTHORITY", "\"" + toolboxProviderAuthority + "\""
-    variant.buildConfigField "String", "BACKUP_SIGNATURE", "\"" + project.BACKUP_SIGNATURE + "\""
-    variant.buildConfigField "String", "UPLOADER_SIGNATURE",
-        "\"" + project.UPLOADER_SIGNATURE + "\""
+    variant.buildConfigField "String", "SIGNATURE_BACKUP", "\"" + project.SIGNATURE_BACKUP + "\""
+    variant.buildConfigField "String", "SIGNATURE_UPLOADER",
+        "\"" + project.SIGNATURE_UPLOADER + "\""
     variant.buildConfigField "String", "SIXPACK_USER", "\"" + project.SIXPACK_USER + "\""
     variant.buildConfigField "String", "SIXPACK_PASSWORD", "\"" + project.SIXPACK_PASSWORD + "\""
     variant.buildConfigField "String", "APTOIDE_WEB_SERVICES_SIXPACK_HOST",
