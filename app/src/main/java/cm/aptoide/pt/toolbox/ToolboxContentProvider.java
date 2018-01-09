@@ -75,9 +75,9 @@ public class ToolboxContentProvider extends ContentProvider {
   @Nullable @Override
   public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
       String sortOrder) {
-    if (securityManager.checkSignature(Binder.getCallingUid(), BuildConfig.BACKUP_SIGNATURE,
+    if (securityManager.checkSignature(Binder.getCallingUid(), BuildConfig.SIGNATURE_BACKUP,
         BACKUP_PACKAGE) || securityManager.checkSignature(Binder.getCallingUid(),
-        BuildConfig.UPLOADER_SIGNATURE, UPLOADER_PACKAGE)) {
+        BuildConfig.SIGNATURE_UPLOADER, UPLOADER_PACKAGE)) {
 
       final Authentication authentication = authenticationPersistence.getAuthentication()
           .onErrorReturn(null)
