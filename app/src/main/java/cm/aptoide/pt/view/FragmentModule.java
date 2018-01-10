@@ -1,4 +1,4 @@
-package cm.aptoide.pt;
+package cm.aptoide.pt.view;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -26,7 +26,6 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
-import cm.aptoide.pt.view.FragmentScope;
 import dagger.Module;
 import dagger.Provides;
 import java.util.Arrays;

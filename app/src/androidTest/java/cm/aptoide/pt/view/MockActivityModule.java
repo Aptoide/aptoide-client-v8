@@ -1,4 +1,4 @@
-package cm.aptoide.pt;
+package cm.aptoide.pt.view;
 
 import android.content.Intent;
 import android.net.Uri;

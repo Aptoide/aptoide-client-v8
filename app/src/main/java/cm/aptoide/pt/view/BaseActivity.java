@@ -2,7 +2,6 @@ package cm.aptoide.pt.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import cm.aptoide.pt.ActivityComponent;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.presenter.View;
@@ -28,14 +27,11 @@ public abstract class BaseActivity extends RxAppCompatActivity {
       AptoideApplication aptoideApplication = ((AptoideApplication) getApplication());
       activityComponent = aptoideApplication.getApplicationComponent()
           .plus(aptoideApplication.getActivityModule(this, getIntent(),
-              aptoideApplication.getNotificationSyncScheduler(),
-              aptoideApplication.getMarketName(),
+              aptoideApplication.getNotificationSyncScheduler(), aptoideApplication.getMarketName(),
               aptoideApplication.getAutoUpdateUrl(), (View) this,
-              aptoideApplication.getDefaultThemeName(),
-              aptoideApplication.getDefaultStoreName(), firstCreated,
-              BuildConfig.APPLICATION_ID + ".provider"));
+              aptoideApplication.getDefaultThemeName(), aptoideApplication.getDefaultStoreName(),
+              firstCreated, BuildConfig.APPLICATION_ID + ".provider"));
     }
     return activityComponent;
   }
-
 }

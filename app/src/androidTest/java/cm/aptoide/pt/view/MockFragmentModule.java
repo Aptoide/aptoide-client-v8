@@ -1,4 +1,4 @@
-package cm.aptoide.pt;
+package cm.aptoide.pt.view;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

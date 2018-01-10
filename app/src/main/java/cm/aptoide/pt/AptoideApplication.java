@@ -109,9 +109,11 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.utils.q.QManager;
+import cm.aptoide.pt.view.ActivityModule;
 import cm.aptoide.pt.view.ActivityProvider;
 import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.BaseFragment;
+import cm.aptoide.pt.view.FragmentModule;
 import cm.aptoide.pt.view.FragmentProvider;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.AppCenterRepository;
@@ -207,6 +209,7 @@ public abstract class AptoideApplication extends Application {
   @Inject @Named("account-settings-pool-v7") BodyInterceptor<BaseBody>
       accountSettingsBodyInterceptorPoolV7;
   @Inject TrendingManager trendingManager;
+  @Inject SearchSuggestionManager searchSuggestionManager;
   private LeakTool leakTool;
   private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
@@ -233,7 +236,6 @@ public abstract class AptoideApplication extends Application {
   private NotificationsCleaner notificationsCleaner;
   private NotificationAnalytics notificationAnalytics;
   private TimelineAnalytics timelineAnalytics;
-  @Inject SearchSuggestionManager searchSuggestionManager;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;

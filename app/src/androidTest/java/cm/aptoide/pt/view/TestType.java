@@ -1,4 +1,4 @@
-package cm.aptoide.pt;
+package cm.aptoide.pt.view;
 
 /**
  * Created by jose_messejana on 15-11-2017.

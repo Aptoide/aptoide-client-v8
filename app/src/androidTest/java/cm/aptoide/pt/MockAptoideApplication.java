@@ -4,8 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.view.ActivityModule;
 import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.BaseFragment;
+import cm.aptoide.pt.view.FragmentModule;
+import cm.aptoide.pt.view.MockActivityModule;
+import cm.aptoide.pt.view.MockFragmentModule;
 
 public class MockAptoideApplication extends VanillaApplication {
 

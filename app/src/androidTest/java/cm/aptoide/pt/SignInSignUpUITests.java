@@ -7,6 +7,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.preference.PreferenceManager;
 import cm.aptoide.pt.view.MainActivity;
+import cm.aptoide.pt.view.TestType;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -65,7 +66,6 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withText(R.string.ws_error_invalid_grant)).check(matches(isDisplayed()));
   }
 
-  //
   @Test public void signUpInvalidEmail() {
     TestType.types = TestType.TestTypes.INVALIDEMAIL;
     goToMyAccount();
@@ -97,7 +97,6 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withText(R.string.no_email_and_pass_error_message)).check(matches(isDisplayed()));
   }
 
-  //
   @Test public void signUpEmailExists() {
     TestType.types = TestType.TestTypes.USEDEMAIL;
     goToMyAccount();

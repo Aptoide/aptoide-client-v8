@@ -30,6 +30,7 @@ import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.networking.MultipartBodyInterceptor;
 import cm.aptoide.pt.preferences.AdultContent;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.view.TestType;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.fasterxml.jackson.databind.ObjectMapper;

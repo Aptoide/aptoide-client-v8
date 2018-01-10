@@ -5,6 +5,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
 import cm.aptoide.pt.view.MainActivity;
+import cm.aptoide.pt.view.TestType;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

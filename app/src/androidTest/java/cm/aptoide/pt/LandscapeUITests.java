@@ -9,6 +9,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.preference.PreferenceManager;
 import cm.aptoide.pt.view.MainActivity;
+import cm.aptoide.pt.view.TestType;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
