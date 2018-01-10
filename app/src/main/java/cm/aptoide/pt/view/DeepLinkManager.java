@@ -40,6 +40,7 @@ import cm.aptoide.pt.timeline.view.navigation.AppsTimelineTabNavigation;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.List;
 import rx.Completable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -84,7 +85,6 @@ public class DeepLinkManager {
   }
 
   public boolean showDeepLink(Intent intent) {
-    String deeplinkOrNotification = DEEPLINK_KEY;
     if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT)) {
       if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY)) {
         appViewDeepLink(intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY));
@@ -110,7 +110,6 @@ public class DeepLinkManager {
       downloadNotificationDeepLink();
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.TIMELINE_DEEPLINK)) {
       fromTimelineDeepLink(intent);
-      deeplinkOrNotification = "Notification";
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES)) {
       newUpdatesDeepLink();
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.GENERIC_DEEPLINK)) {
@@ -125,7 +124,14 @@ public class DeepLinkManager {
       Analytics.ApplicationLaunch.launcher();
       return false;
     }
-    navigationTracker.registerScreen(ScreenTagHistory.Builder.build(deeplinkOrNotification));
+    List<ScreenTagHistory> screenHistory = navigationTracker.getHistoryList();
+    if (screenHistory.get(screenHistory.size() - 1)
+        .getFragment()
+        .equals("Notification")) {
+      navigationTracker.registerScreen(ScreenTagHistory.Builder.build("Notification"));
+    } else {
+      navigationTracker.registerScreen(ScreenTagHistory.Builder.build(DEEPLINK_KEY));
+    }
     pageViewsAnalytics.sendPageViewedEvent();
     return true;
   }
