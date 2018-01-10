@@ -16,12 +16,16 @@ import android.widget.ProgressBar;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.comments.CommentDialogCallbackContract;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
@@ -38,8 +42,10 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 28/09/2017.
  */
 
-public class PostCommentsFragment extends BaseToolbarFragment implements PostCommentsView {
+public class PostCommentsFragment extends BaseToolbarFragment
+    implements PostCommentsView, CommentDialogCallbackContract {
   public static final String POST_ID_KEY = "POST_ID_KEY";
+  public static final String SHOW_COMMENT_DIALOG = "SHOW_COMMENT_DIALOG";
   /**
    * The minimum number of items to have below your current scroll position before loading more.
    */
@@ -55,6 +61,7 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
   private SharedPreferences sharedPreferences;
 
   private PublishSubject<Long> replyEventPublishSubject;
+  private PublishSubject<Boolean> showCommentDialogOnStartPublishSubject;
   private SwipeRefreshLayout swipeRefreshLayout;
   private LinearLayoutManager layoutManager;
   private ProgressBar progressBar;
@@ -64,6 +71,15 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
     Fragment fragment = new PostCommentsFragment();
     final Bundle args = new Bundle();
     args.putString(POST_ID_KEY, postId);
+    fragment.setArguments(args);
+    return fragment;
+  }
+
+  public static Fragment newInstanceWithCommentDialog(String postId) {
+    Fragment fragment = new PostCommentsFragment();
+    final Bundle args = new Bundle();
+    args.putString(POST_ID_KEY, postId);
+    args.putBoolean(SHOW_COMMENT_DIALOG, true);
     fragment.setArguments(args);
     return fragment;
   }
@@ -83,6 +99,7 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
     sharedPreferences =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     replyEventPublishSubject = PublishSubject.create();
+    showCommentDialogOnStartPublishSubject = PublishSubject.create();
     adapter =
         new PostCommentsAdapter(new ArrayList<>(), new ProgressComment(), replyEventPublishSubject);
   }
@@ -107,6 +124,10 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
         new CommentsNavigator(getFragmentNavigator(), getActivity().getSupportFragmentManager()),
         AndroidSchedulers.mainThread(), CrashReport.getInstance(),
         getArguments().containsKey(POST_ID_KEY) ? getArguments().getString(POST_ID_KEY) : null));
+    if (getArguments().containsKey(SHOW_COMMENT_DIALOG) && getArguments().getBoolean(
+        SHOW_COMMENT_DIALOG)) {
+      createNewCommentDialog();
+    }
   }
 
   @Nullable @Override
@@ -166,6 +187,14 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
     progressBar.setVisibility(View.GONE);
   }
 
+  @Override public Observable<Boolean> showCommentDialog() {
+    return showCommentDialogOnStartPublishSubject;
+  }
+
+  @Override public PostCommentsFragment getDialogCallback() {
+    return this;
+  }
+
   @Override public void onDestroyView() {
     super.onDestroyView();
     list = null;
@@ -193,5 +222,16 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName());
+  }
+
+  private void createNewCommentDialog() {
+    showCommentDialogOnStartPublishSubject.onNext(true);
+  }
+
+  @Override public void okSelected(BaseV7Response response, long longAsId, Long previousCommentId,
+      String idAsString) {
+
+    ManagerPreferences.setForceServerRefreshFlag(true, sharedPreferences);
+    ShowMessage.asSnack(this.getActivity(), R.string.comment_submitted);
   }
 }

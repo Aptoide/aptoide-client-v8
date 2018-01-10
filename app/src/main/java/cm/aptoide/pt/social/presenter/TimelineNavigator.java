@@ -4,9 +4,7 @@ import cm.aptoide.pt.account.view.LoginSignUpFragment;
 import cm.aptoide.pt.account.view.MyAccountFragment;
 import cm.aptoide.pt.addressbook.view.AddressBookFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
-import cm.aptoide.pt.comments.view.CommentListFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
-import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.TabNavigation;
@@ -81,9 +79,10 @@ public class TimelineNavigator {
   }
 
   public void navigateToCommentsWithCommentDialogOpen(String cardId) {
-    fragmentNavigator.navigateTo(
-        CommentListFragment.newInstanceWithCommentDialogOpen(CommentType.TIMELINE, cardId,
-            storeContext), true);
+    //fragmentNavigator.navigateTo(
+    //    CommentListFragment.newInstanceWithCommentDialogOpen(CommentType.TIMELINE, cardId,
+    //        storeContext), true);
+    fragmentNavigator.navigateTo(PostCommentsFragment.newInstanceWithCommentDialog(cardId), true);
   }
 
   // FIXME what should happen if storeId <= 0 ?

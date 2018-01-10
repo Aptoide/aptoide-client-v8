@@ -32,4 +32,8 @@ public interface PostCommentsView extends View {
   void showLoading();
 
   void hideLoading();
+
+  Observable<Boolean> showCommentDialog();
+
+  PostCommentsFragment getDialogCallback();
 }

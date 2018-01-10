@@ -44,6 +44,16 @@ public class PostCommentsPresenter implements Presenter {
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.showCommentDialog()
+            //.filter(show -> show)
+            .doOnNext(__ -> commentsNavigator.showCommentDialog(postId, view.getDialogCallback()))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReporter.log(throwable));
+
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.refreshes()
             .flatMapSingle(__ -> comments.getFreshComments(postId))
             .observeOn(viewScheduler)

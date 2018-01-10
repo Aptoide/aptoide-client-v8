@@ -28,4 +28,11 @@ class CommentsNavigator {
         CommentDialogFragment.newInstanceTimelineArticleComment(postId);
     commentDialog.show(fragmentManager, "fragment_comment_dialog");
   }
+
+  void showCommentDialog(String postId, PostCommentsFragment view) {
+    CommentDialogFragment commentDialog =
+        CommentDialogFragment.newInstanceTimelineArticleComment(postId);
+    commentDialog.setCommentDialogCallbackContract(view);
+    commentDialog.show(fragmentManager, "fragment_comment_dialog");
+  }
 }
