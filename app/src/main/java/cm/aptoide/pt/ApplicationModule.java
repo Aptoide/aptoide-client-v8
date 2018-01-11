@@ -42,6 +42,14 @@ import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.TrackerFilter;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.pt.analytics.analytics.AptoideBiAnalytics;
+import cm.aptoide.pt.analytics.analytics.AptoideBiEventLogger;
+import cm.aptoide.pt.analytics.analytics.EventLogger;
+import cm.aptoide.pt.analytics.analytics.FabricEventLogger;
+import cm.aptoide.pt.analytics.analytics.FacebookEventLogger;
+import cm.aptoide.pt.analytics.analytics.FlurryEventLogger;
+import cm.aptoide.pt.analytics.analytics.KnockEventLogger;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
@@ -121,6 +129,7 @@ import cm.aptoide.pt.sync.SyncScheduler;
 import cm.aptoide.pt.sync.alarm.AlarmSyncScheduler;
 import cm.aptoide.pt.sync.alarm.AlarmSyncService;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
+import cm.aptoide.pt.timeline.post.PostAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.q.QManager;
@@ -155,6 +164,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -826,5 +836,39 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides SearchSuggestionRemoteRepository providesSearchSuggestionRemoteRepository(
       Retrofit retrofit) {
     return retrofit.create(SearchSuggestionRemoteRepository.class);
+  }
+
+  @Singleton @Provides @Named("Aptoide") EventLogger providesAptoideEventLogger() {
+    return new AptoideBiEventLogger(new AptoideBiAnalytics());
+  }
+
+  @Singleton @Provides @Named("Facebook") EventLogger providesFacebookEventLogger() {
+    return new FacebookEventLogger();
+  }
+
+  @Singleton @Provides @Named("Flurry") EventLogger providesFlurryEventLogger() {
+    return new FlurryEventLogger();
+  }
+
+  @Singleton @Provides @Named("Fabric") EventLogger providesFabricEventLogger() {
+    return new FabricEventLogger();
+  }
+
+  @Singleton @Provides @Named("Knock") EventLogger providesKnockEventLogger() {
+    return new KnockEventLogger();
+  }
+
+  @Singleton @Provides AnalyticsManager providesAnalyticsManager(
+      @Named("Aptoide") EventLogger aptoideBiEventLogger,
+      @Named("Facebook") EventLogger facebookEventLogger,
+      @Named("Fabric") EventLogger fabricEventLogger, @Named("Knock") EventLogger knockEventLogger,
+      @Named("Flurry") EventLogger flurryEventLogger) {
+    return new AnalyticsManager.Builder().addLogger(aptoideBiEventLogger,
+        Arrays.asList(PostAnalytics.OPEN_EVENT_NAME))
+        .addLogger(facebookEventLogger, Arrays.asList(PostAnalytics.OPEN_EVENT_NAME))
+        .addLogger(fabricEventLogger, Collections.emptyList())
+        .addLogger(knockEventLogger, Collections.emptyList())
+        .addLogger(flurryEventLogger, Collections.emptyList())
+        .build();
   }
 }
