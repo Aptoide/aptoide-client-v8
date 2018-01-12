@@ -11,6 +11,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
@@ -26,12 +27,12 @@ import cm.aptoide.pt.install.rollback.RollbackRepository;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.root.RootAvailabilityManager;
-import cm.aptoide.pt.util.ReferrerUtils;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.updates.UpdateRepository;
+import cm.aptoide.pt.util.ReferrerUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.q.QManager;
-import com.facebook.appevents.AppEventsLogger;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
@@ -57,6 +58,7 @@ public class InstalledIntentService extends IntentService {
   private MinimalAdMapper adMapper;
   private InstallAnalytics installAnalytics;
   private PackageManager packageManager;
+  @Inject AnalyticsManager analyticsManager;
 
   public InstalledIntentService() {
     super("InstalledIntentService");
@@ -64,6 +66,7 @@ public class InstalledIntentService extends IntentService {
 
   @Override public void onCreate() {
     super.onCreate();
+    ((AptoideApplication) getApplicationContext()).getApplicationComponent().inject(this);
     adMapper = new MinimalAdMapper();
     sharedPreferences =
         ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences();
@@ -75,7 +78,6 @@ public class InstalledIntentService extends IntentService {
     adsRepository = ((AptoideApplication) getApplicationContext()).getAdsRepository();
     repository = RepositoryFactory.getRollbackRepository(getApplicationContext());
     updatesRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
-
     subscriptions = new CompositeSubscription();
     analytics = Analytics.getInstance();
     installManager =
@@ -83,8 +85,8 @@ public class InstalledIntentService extends IntentService {
     rootAvailabilityManager =
         ((AptoideApplication) getApplicationContext()).getRootAvailabilityManager();
     installAnalytics =
-        new InstallAnalytics(analytics, AppEventsLogger.newLogger(getApplicationContext()),
-            CrashReport.getInstance());
+        new InstallAnalytics(
+            CrashReport.getInstance(), analyticsManager);
     packageManager = getPackageManager();
   }
 
@@ -227,7 +229,7 @@ public class InstalledIntentService extends IntentService {
         .first();
 
     if (update != null && update.getPackageName() != null && update.getTrustedBadge() != null) {
-      installAnalytics.sendRepalcedEvent(packageName);
+      installAnalytics.sendReplacedEvent(packageName, this.getClass().getSimpleName());
     }
 
     PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName, getPackageManager());

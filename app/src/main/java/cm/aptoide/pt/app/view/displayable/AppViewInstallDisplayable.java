@@ -144,12 +144,12 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
         .getData();
     installAnalytics.installStarted(navigationTracker.getPreviousScreen(),
         navigationTracker.getCurrentScreen(), app.getPackageName(), versionCode,
-        InstallAnalytics.InstallType.valueOf(installType.name()), fragments);
+        InstallAnalytics.InstallType.valueOf(installType.name()), fragments,this.getClass().getSimpleName());
     analytics.installClicked(navigationTracker.getPreviousScreen(),
         navigationTracker.getCurrentScreen(), app.getMd5(), app.getPackageName(), app.getFile()
             .getMalware()
             .getRank()
-            .name(), editorsChoiceBrickPosition, installType);
+            .name(), editorsChoiceBrickPosition, installType, this.getClass().getSimpleName());
   }
 
   public int getCampaignId() {

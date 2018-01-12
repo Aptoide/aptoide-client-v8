@@ -1,5 +1,7 @@
 package cm.aptoide.pt.analytics.analytics;
 
+import android.support.annotation.NonNull;
+import cm.aptoide.pt.analytics.*;
 import cm.aptoide.pt.logger.Logger;
 import java.util.Collection;
 import java.util.HashMap;
@@ -8,9 +10,12 @@ import java.util.Map;
 public class AnalyticsManager {
   private static final String TAG = AnalyticsManager.class.getSimpleName();
   private Map<EventLogger, Collection<String>> eventSenders;
+  private AnalyticsDataSaver analyticsDataSaver;
 
-  private AnalyticsManager(Map<EventLogger, Collection<String>> eventSenders) {
+  private AnalyticsManager(Map<EventLogger, Collection<String>> eventSenders,
+      AnalyticsDataSaver analyticsDataSaver) {
     this.eventSenders = eventSenders;
+    this.analyticsDataSaver = analyticsDataSaver;
   }
 
   public void logEvent(Map<String, Object> data, String eventName, Action action, String context) {
@@ -29,12 +34,21 @@ public class AnalyticsManager {
     }
   }
 
+  public void save(@NonNull String key, @NonNull Event event){
+    analyticsDataSaver.save(key,event);
+  }
+
+  public Event getEvent(String key){
+    return analyticsDataSaver.get(key);
+  }
+
   public enum Action {
     CLICK, SCROLL, INPUT, AUTO, ROOT, VIEW, INSTALL, OPEN, IMPRESSION, DISMISS
   }
 
   public static class Builder {
     private final Map<EventLogger, Collection<String>> eventSenders;
+    private AnalyticsDataSaver analyticsDataSaver;
 
     public Builder() {
       eventSenders = new HashMap<>();
@@ -45,8 +59,13 @@ public class AnalyticsManager {
       return this;
     }
 
+    public Builder addDataSaver(AnalyticsDataSaver analyticsDataSaver) {
+      this.analyticsDataSaver=analyticsDataSaver;
+      return this;
+    }
+
     public AnalyticsManager build() {
-      return new AnalyticsManager(eventSenders);
+      return new AnalyticsManager(eventSenders, analyticsDataSaver);
     }
   }
 }

@@ -20,6 +20,7 @@ import cm.aptoide.pt.account.view.user.ManageUserNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -133,9 +134,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
         new AptoideInstallParser());
   }
 
-  @ActivityScope @Provides SearchAnalytics providesSearchAnalytics() {
-    return new SearchAnalytics(Analytics.getInstance(),
-        AppEventsLogger.newLogger(activity.getApplicationContext()));
+  @ActivityScope @Provides SearchAnalytics providesSearchAnalytics(AnalyticsManager analyticsManager) {
+    return new SearchAnalytics(analyticsManager);
   }
 
   @ActivityScope @Provides SearchNavigator providesSearchNavigator(

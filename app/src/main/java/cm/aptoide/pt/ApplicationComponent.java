@@ -1,6 +1,7 @@
 package cm.aptoide.pt;
 
 import cm.aptoide.pt.install.InstallService;
+import cm.aptoide.pt.install.InstalledIntentService;
 import cm.aptoide.pt.toolbox.ToolboxContentProvider;
 import cm.aptoide.pt.view.ActivityComponent;
 import cm.aptoide.pt.view.ActivityModule;
@@ -16,4 +17,6 @@ import javax.inject.Singleton;
   void inject(ToolboxContentProvider toolboxContentProvider);
 
   void inject(InstallService installService);
+
+  void inject(InstalledIntentService installedIntentService);
 }

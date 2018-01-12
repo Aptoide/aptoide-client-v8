@@ -41,6 +41,7 @@ import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.app.AppBoughtReceiver;
 import cm.aptoide.pt.app.AppRepository;
 import cm.aptoide.pt.app.AppViewAnalytics;
@@ -94,14 +95,13 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
-import cm.aptoide.pt.util.ReferrerUtils;
-import cm.aptoide.pt.search.analytics.SearchAnalytics;
-import cm.aptoide.pt.search.SuggestionCursorAdapter;
 import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.SuggestionCursorAdapter;
+import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.model.SearchAdResult;
+import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.view.AppSearchSuggestionsView;
 import cm.aptoide.pt.search.view.SearchSuggestionsPresenter;
-import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.share.ShareAppHelper;
 import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
@@ -110,6 +110,7 @@ import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
+import cm.aptoide.pt.util.ReferrerUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
@@ -120,7 +121,6 @@ import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
-import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.view.RxView;
@@ -131,6 +131,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import org.parceler.Parcels;
 import retrofit2.Converter;
@@ -191,6 +192,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private SearchNavigator searchNavigator;
   private TrendingManager trendingManager;
   private SearchAnalytics searchAnalytics;
+  @Inject AnalyticsManager analyticsManager;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -342,9 +344,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     appViewModel = new AppViewModel();
-
     super.onCreate(savedInstanceState);
-
+    getFragmentComponent(savedInstanceState).inject(this);
     handleSavedInstance(savedInstanceState);
 
     final AptoideApplication application =
@@ -367,8 +368,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     converterFactory = WebService.getDefaultConverter();
     Analytics analytics = Analytics.getInstance();
 
-    installAnalytics = new InstallAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()), CrashReport.getInstance());
+    installAnalytics = new InstallAnalytics(CrashReport.getInstance(), analyticsManager);
 
     timelineAnalytics = application.getTimelineAnalytics();
 
@@ -406,8 +406,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     notLoggedInShareAnalytics = application.getNotLoggedInShareAnalytics();
     navigationTracker = application.getNavigationTracker();
 
-    searchAnalytics = new SearchAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    searchAnalytics = new SearchAnalytics(analyticsManager);
 
     searchNavigator =
         new SearchNavigator(getFragmentNavigator(), application.getDefaultStoreName());
@@ -989,8 +988,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installDisplayable =
         AppViewInstallDisplayable.newInstance(getApp, installManager, getSearchAdResult(),
             shouldInstall, downloadFactory, timelineAnalytics, appViewAnalytics, installAppRelay,
-            this, new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
-                AppEventsLogger.newLogger(getContext().getApplicationContext())), navigationTracker,
+            this, new DownloadCompleteAnalytics(analyticsManager), navigationTracker,
             getEditorsBrickPosition(), installAnalytics,
             notificationAnalytics.getCampaignId(app.getPackageName(), app.getId()),
             notificationAnalytics.getAbTestingGroup(app.getPackageName(), app.getId()),

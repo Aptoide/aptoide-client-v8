@@ -6,13 +6,13 @@ import java.util.Map;
  * Created by trinkes on 10/01/2018.
  */
 
-class Event {
+public class Event {
   private final String eventName;
   private final Map<String, Object> data;
-  private final String action;
+  private final AnalyticsManager.Action action;
   private final String context;
 
-  public Event(String eventName, Map<String, Object> data, String action, String context) {
+  public Event(String eventName, Map<String, Object> data, AnalyticsManager.Action action, String context) {
     this.eventName = eventName;
     this.data = data;
     this.action = action;
@@ -27,7 +27,7 @@ class Event {
     return data;
   }
 
-  public String getAction() {
+  public AnalyticsManager.Action getAction() {
     return action;
   }
 

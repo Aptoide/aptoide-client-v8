@@ -36,10 +36,12 @@ import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.account.MatureContentPersistence;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.AnalyticsDataSaver;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.TrackerFilter;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
@@ -80,6 +82,7 @@ import cm.aptoide.pt.download.DownloadMirrorEventInterceptor;
 import cm.aptoide.pt.download.PaidAppsDownloadInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
+import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallFabricEvents;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
@@ -117,6 +120,7 @@ import cm.aptoide.pt.repository.DownloadRepository;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootValueSaver;
+import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionRemoteRepository;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionService;
@@ -221,10 +225,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new InstallFabricEvents(Analytics.getInstance(), answers, appEventsLogger);
   }
 
-  @Singleton @Provides AptoideDownloadManager provideAptoideDownloadManager(
-      AppEventsLogger appEventsLogger, DownloadAccessor downloadAccessor,
+  @Singleton @Provides AptoideDownloadManager provideAptoideDownloadManager(DownloadAccessor downloadAccessor,
       @Named("user-agent") Interceptor userAgentInterceptor, CacheHelper cacheHelper,
-      AuthenticationPersistence authenticationPersistence, Answers answers) {
+      AuthenticationPersistence authenticationPersistence,AnalyticsManager analyticsManager) {
     final String apkPath = cachePath + "apks/";
     final String obbPath = cachePath + "obb/";
     final OkHttpClient.Builder httpClientBuilder =
@@ -244,7 +247,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AptoideDownloadManager(downloadAccessor, cacheHelper,
         new FileUtils(action -> Analytics.File.moveFile(action)),
         new DownloadAnalytics(Analytics.getInstance(),
-            new DownloadCompleteAnalytics(Analytics.getInstance(), answers, appEventsLogger)),
+            new DownloadCompleteAnalytics(analyticsManager)),
         FileDownloader.getImpl(), cachePath, apkPath, obbPath);
   }
 
@@ -864,11 +867,19 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("Fabric") EventLogger fabricEventLogger, @Named("Knock") EventLogger knockEventLogger,
       @Named("Flurry") EventLogger flurryEventLogger) {
     return new AnalyticsManager.Builder().addLogger(aptoideBiEventLogger,
-        Arrays.asList(PostAnalytics.OPEN_EVENT_NAME))
-        .addLogger(facebookEventLogger, Arrays.asList(PostAnalytics.OPEN_EVENT_NAME))
-        .addLogger(fabricEventLogger, Collections.emptyList())
+        Arrays.asList(PostAnalytics.OPEN_EVENT_NAME,PostAnalytics.POST))
+        .addLogger(facebookEventLogger, Arrays.asList(PostAnalytics.OPEN_EVENT_NAME,PostAnalytics.NEW_POST_EVENT_NAME,PostAnalytics.POST_COMPLETE,
+            InstallAnalytics.APPLICATION_INSTALL, InstallAnalytics.NOTIFICATION_APPLICATION_INSTALL, InstallAnalytics.EDITORS_APPLICATION_INSTALL,
+            AddressBookAnalytics.FOLLOW_FRIENDS_CHOOSE_NETWORK, AddressBookAnalytics.FOLLOW_FRIENDS_HOW_TO,
+            AddressBookAnalytics.FOLLOW_FRIENDS_APTOIDE_ACCESS, AddressBookAnalytics.FOLLOW_FRIENDS_NEW_CONNECTIONS,
+            AddressBookAnalytics.FOLLOW_FRIENDS_SET_MY_PHONENUMBER, DownloadCompleteAnalytics.PARTIAL_EVENT_NAME,
+            DownloadCompleteAnalytics.NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME, DownloadCompleteAnalytics.EVENT_NAME,
+            SearchAnalytics.SEARCH,SearchAnalytics.NO_RESULTS,SearchAnalytics.APP_CLICK,SearchAnalytics.SEARCH_START))
+        .addLogger(fabricEventLogger, Arrays.asList(DownloadCompleteAnalytics.EVENT_NAME))
         .addLogger(knockEventLogger, Collections.emptyList())
-        .addLogger(flurryEventLogger, Collections.emptyList())
+        .addLogger(flurryEventLogger,  Arrays.asList(InstallAnalytics.APPLICATION_INSTALL,DownloadCompleteAnalytics.PARTIAL_EVENT_NAME,
+            DownloadCompleteAnalytics.EVENT_NAME))
+        .addDataSaver(new AnalyticsDataSaver())
         .build();
   }
 }

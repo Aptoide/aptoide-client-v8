@@ -29,6 +29,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
@@ -59,6 +60,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.io.File;
 import java.text.NumberFormat;
+import javax.inject.Inject;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -99,6 +101,7 @@ public class HomeFragment extends StoreFragment {
   private SearchNavigator searchNavigator;
   private TrendingManager trendingManager;
   private SearchAnalytics searchAnalytics;
+  @Inject AnalyticsManager analyticsManager;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -182,7 +185,7 @@ public class HomeFragment extends StoreFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
+    getFragmentComponent(savedInstanceState).inject(this);
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     cacheDirectoryPath = getContext().getApplicationContext()
@@ -208,8 +211,7 @@ public class HomeFragment extends StoreFragment {
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
             analytics, navigationTracker);
 
-    searchAnalytics = new SearchAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    searchAnalytics = new SearchAnalytics(analyticsManager);
 
     setRegisterFragment(false);
     setHasOptionsMenu(true);

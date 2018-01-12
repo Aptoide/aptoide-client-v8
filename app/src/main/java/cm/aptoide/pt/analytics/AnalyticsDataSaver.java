@@ -8,17 +8,17 @@ import java.util.Map;
  * Created by trinkes on 30/12/2016.
  */
 public class AnalyticsDataSaver {
-  private final Map<String, Event> map;
+  private final Map<String, cm.aptoide.pt.analytics.analytics.Event> map;
 
   public AnalyticsDataSaver() {
     map = new HashMap<>();
   }
 
-  public void save(String key, Event event) {
+  public void save(String key, cm.aptoide.pt.analytics.analytics.Event event) {
     map.put(key, event);
   }
 
-  public Event get(String key) {
+  public cm.aptoide.pt.analytics.analytics.Event get(String key) {
     return map.get(key);
   }
 

@@ -15,7 +15,7 @@ public class AnalyticsManagerTest {
     EventLogger eventLogger = mock(EventLogger.class);
 
     AnalyticsManager analyticsManager =
-        new AnalyticsManager.Builder().addLogger(eventLogger, Arrays.asList(eventName))
+        new AnalyticsManager.Builder(analyticsDataSaver).addLogger(eventLogger, Arrays.asList(eventName))
             .build();
 
     Map<String, Object> data = new HashMap<>();
@@ -30,7 +30,7 @@ public class AnalyticsManagerTest {
     EventLogger eventLogger = mock(EventLogger.class);
 
     AnalyticsManager analyticsManager =
-        new AnalyticsManager.Builder().addLogger(eventLogger, Arrays.asList(eventName))
+        new AnalyticsManager.Builder(analyticsDataSaver).addLogger(eventLogger, Arrays.asList(eventName))
             .build();
 
     Map<String, Object> data = new HashMap<>();

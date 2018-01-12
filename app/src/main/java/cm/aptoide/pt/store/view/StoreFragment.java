@@ -29,6 +29,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -70,6 +71,7 @@ import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.List;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -125,6 +127,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private SearchNavigator searchNavigator;
   private TrendingManager trendingManager;
   private SearchAnalytics searchAnalytics;
+  @Inject AnalyticsManager analyticsManager;
 
   public static StoreFragment newInstance(long userId, String storeTheme, OpenType openType) {
     return newInstance(userId, storeTheme, null, openType);
@@ -174,7 +177,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
+    getFragmentComponent(savedInstanceState).inject(this);
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     defaultTheme = application.getDefaultThemeName();
@@ -194,7 +197,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);
 
     if (hasSearchFromStoreFragment()) {
-      searchAnalytics = new SearchAnalytics(analytics, AppEventsLogger.newLogger(getContext()));
+      searchAnalytics = new SearchAnalytics(analyticsManager);
       searchNavigator =
           new SearchNavigator(getFragmentNavigator(), storeName, application.getDefaultStoreName());
       trendingManager = application.getTrendingManager();
