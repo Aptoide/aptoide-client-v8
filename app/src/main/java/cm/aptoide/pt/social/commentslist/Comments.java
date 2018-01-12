@@ -11,9 +11,11 @@ import rx.Single;
 class Comments {
 
   private final PostCommentsRepository postCommentsRepository;
+  private final CommentMapper mapper;
 
-  public Comments(PostCommentsRepository postCommentsRepository) {
+  public Comments(PostCommentsRepository postCommentsRepository, CommentMapper mapper) {
     this.postCommentsRepository = postCommentsRepository;
+    this.mapper = mapper;
   }
 
   Single<List<Comment>> getComments(String postId) {
@@ -30,5 +32,9 @@ class Comments {
 
   boolean hasMore() {
     return postCommentsRepository.hasMore();
+  }
+
+  Comment mapToComment(CommentDataWrapper data) {
+    return mapper.mapToComment(data);
   }
 }
