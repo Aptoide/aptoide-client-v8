@@ -693,9 +693,27 @@ public class TimelineAnalytics {
     analytics.sendEvent(createEvent(SHARE_SEND, data));
   }
 
-  public void sendCommentCompleted(boolean success) {
+  public void sendCommentCompleted(boolean success, int position, String type, String source,
+      String app, String url) {
     HashMap<String, Object> data = new HashMap<>();
-    data.put("status", success ? "success" : "fail");
+    HashMap<String, Object> specific = new HashMap<>();
+    HashMap<String, Object> result = new HashMap<>();
+    data.put("position", position);
+    data.put("card_type", type);
+    data.put("source", source);
+    if (app != null) specific.put("app", app);
+    if (url != null) specific.put("url", url);
+    result.put("status", success ? "success" : "fail");
+    if (!specific.isEmpty()) data.put("specific", specific);
+    data.put("result", result);
+    analytics.sendEvent(createEvent(COMMENT_SEND, data));
+  }
+
+  public void sendCommentCompletedError() {
+    HashMap<String, Object> data = new HashMap<>();
+    HashMap<String, Object> result = new HashMap<>();
+    result.put("status", "fail");
+    data.put("result", result);
     analytics.sendEvent(createEvent(COMMENT_SEND, data));
   }
 
@@ -738,8 +756,6 @@ public class TimelineAnalytics {
     String store = null;
     data.put("card_type", post.getType());
     data.put("position", event.getPosition());
-    data.put("previous_context", previousContext);
-    data.put("store", store);
 
     if (navigationTracker.getPreviousScreen() != null) {
       previousContext = navigationTracker.getPreviousScreen()
@@ -747,6 +763,9 @@ public class TimelineAnalytics {
       store = navigationTracker.getPreviousScreen()
           .getStore();
     }
+
+    data.put("previous_context", previousContext);
+    data.put("store", store);
 
     result.put("status", status ? "success" : "fail");
 
