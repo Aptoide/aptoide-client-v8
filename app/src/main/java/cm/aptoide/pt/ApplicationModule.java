@@ -723,7 +723,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides StoreManager provideStoreManager(@Named("default") OkHttpClient okHttpClient,
       @Named("multipart") MultipartBodyInterceptor multipartBodyInterceptor,
-      @Named("defaulInterceptorV3")
+      @Named("defaultInterceptorV3")
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
       @Named("account-settings-pool-v7")
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> accountSettingsBodyInterceptorPoolV7,
@@ -758,7 +758,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new PackageRepository(application.getPackageManager());
   }
 
-  @Singleton @Provides @Named("defaulInterceptorV3")
+  @Singleton @Provides @Named("defaultInterceptorV3")
   BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> providesBodyInterceptorV3(
       IdsRepository idsRepository, QManager qManager,
       @Named("default") SharedPreferences defaultSharedPreferences,
@@ -797,10 +797,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         converterFactory, tokenInvalidator, sharedPreferences);
   }
 
-  @Singleton @Provides @Named("ws-prod-base-url") String providesBaseWebServiceTestsUrl() {
+  @Singleton @Provides @Named("ws-prod-suggestions-base-url") String provideSearchBaseUrl() {
     return "http://"
         + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SEARCH_HOST
-        + "/api/7/";
+        + "/v1/";
   }
 
   @Singleton @Provides @Named("rx") CallAdapter.Factory providesCallAdapterFactory() {
@@ -813,7 +813,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         Schedulers.io());
   }
 
-  @Singleton @Provides Retrofit providesDefaultRetrofit(@Named("ws-prod-base-url") String baseUrl,
+  @Singleton @Provides Retrofit providesSearchSuggestionsRetrofit(
+      @Named("ws-prod-suggestions-base-url") String baseUrl,
       @Named("default") OkHttpClient httpClient, Converter.Factory converterFactory,
       @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
     return new Retrofit.Builder().baseUrl(baseUrl)

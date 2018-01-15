@@ -186,7 +186,7 @@ public abstract class AptoideApplication extends Application {
   @Inject SyncScheduler alarmSyncScheduler;
   @Inject @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7;
   @Inject @Named("web-v7") BodyInterceptor<BaseBody> bodyInterceptorWebV7;
-  @Inject @Named("defaulInterceptorV3") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody>
+  @Inject @Named("defaultInterceptorV3") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody>
       bodyInterceptorV3;
   @Inject L2Cache httpClientCache;
   @Inject QManager qManager;
