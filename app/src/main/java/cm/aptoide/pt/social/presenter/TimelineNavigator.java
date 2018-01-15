@@ -127,8 +127,6 @@ public class TimelineNavigator {
   }
 
   public void navigateToComments(String cardId) {
-    //fragmentNavigator.navigateTo(
-    //    CommentListFragment.newInstance(CommentType.TIMELINE, cardId, storeContext), true);
     fragmentNavigator.navigateTo(PostCommentsFragment.newInstance(cardId), true);
   }
 
