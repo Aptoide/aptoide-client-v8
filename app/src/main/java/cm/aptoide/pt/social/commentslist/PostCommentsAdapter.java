@@ -86,13 +86,13 @@ public class PostCommentsAdapter extends RecyclerView.Adapter<PostCommentViewHol
     notifyDataSetChanged();
   }
 
-  void showNewComment(Comment comment) {
+  void addNewComment(Comment comment) {
     int position = 0;
     Comment.Parent parent = comment.getParent();
     if (parent != null) {
-      for (Comment temp : comments) {
-        if (parent.getId() == temp.getId()) {
-          position = comments.indexOf(temp) + 1;
+      for (Comment testComment : comments) {
+        if (parent.getId() == testComment.getId()) {
+          position = comments.indexOf(testComment) + 1;
           break;
         }
       }

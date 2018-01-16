@@ -79,9 +79,6 @@ public class TimelineNavigator {
   }
 
   public void navigateToCommentsWithCommentDialogOpen(String cardId) {
-    //fragmentNavigator.navigateTo(
-    //    CommentListFragment.newInstanceWithCommentDialogOpen(CommentType.TIMELINE, cardId,
-    //        storeContext), true);
     fragmentNavigator.navigateTo(PostCommentsFragment.newInstanceWithCommentDialog(cardId), true);
   }
 

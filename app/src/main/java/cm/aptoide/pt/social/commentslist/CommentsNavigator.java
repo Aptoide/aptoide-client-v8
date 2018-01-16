@@ -13,20 +13,20 @@ import rx.subjects.PublishSubject;
 class CommentsNavigator {
   private final FragmentNavigator fragmentNavigator;
   private final FragmentManager fragmentManager;
-  private final PublishSubject<CommentDataWrapper> subject;
+  private final PublishSubject<CommentDataWrapper> commentResultPublishSubject;
 
   CommentsNavigator(FragmentNavigator fragmentNavigator, FragmentManager fragmentManager,
       PublishSubject<CommentDataWrapper> subject) {
     this.fragmentNavigator = fragmentNavigator;
     this.fragmentManager = fragmentManager;
-    this.subject = subject;
+    this.commentResultPublishSubject = subject;
   }
 
   void showCommentDialog(String postId, Long commentId) {
     CommentDialogFragment commentDialog =
         CommentDialogFragment.newInstanceTimelineArticleComment(postId, commentId);
     commentDialog.setCommentDialogCallbackContract(
-        (inputText, longAsId, previousCommentId, idAsString) -> subject.onNext(
+        (inputText, longAsId, previousCommentId, idAsString) -> commentResultPublishSubject.onNext(
             new CommentDataWrapper(inputText, longAsId, commentId, postId)));
     commentDialog.show(fragmentManager, "fragment_comment_dialog");
   }
@@ -35,12 +35,12 @@ class CommentsNavigator {
     CommentDialogFragment commentDialog =
         CommentDialogFragment.newInstanceTimelineArticleComment(postId);
     commentDialog.setCommentDialogCallbackContract(
-        (inputText, longAsId, previousCommentId, idAsString) -> subject.onNext(
+        (inputText, longAsId, previousCommentId, idAsString) -> commentResultPublishSubject.onNext(
             new CommentDataWrapper(inputText, longAsId, previousCommentId, postId)));
     commentDialog.show(fragmentManager, "fragment_comment_dialog");
   }
 
   Observable<CommentDataWrapper> commentDialogResult() {
-    return subject;
+    return commentResultPublishSubject;
   }
 }

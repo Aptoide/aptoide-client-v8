@@ -35,4 +35,5 @@ public interface PostCommentsView extends View {
 
   void showNewComment(Comment comment);
 
+  void showCommentSubmitedMessage();
 }

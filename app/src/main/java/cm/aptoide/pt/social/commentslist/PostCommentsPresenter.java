@@ -19,7 +19,7 @@ public class PostCommentsPresenter implements Presenter {
   private final String postId;
   private final Scheduler viewScheduler;
   private final CrashReport crashReporter;
-  private final boolean shouldShow;
+  private boolean shouldShowCommentDialog;
 
   PostCommentsPresenter(@NonNull PostCommentsView commentsView, Comments comments,
       CommentsNavigator commentsNavigator, Scheduler viewScheduler, CrashReport crashReporter,
@@ -30,19 +30,21 @@ public class PostCommentsPresenter implements Presenter {
     this.viewScheduler = viewScheduler;
     this.crashReporter = crashReporter;
     this.postId = postId;
-    this.shouldShow = shouldShow;
+    this.shouldShowCommentDialog = shouldShow;
   }
 
   @Override public void present() {
 
-    if (shouldShow) {
-      view.getLifecycle()
-          .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-          .doOnNext(__ -> commentsNavigator.showCommentDialog(postId))
-          .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-          .subscribe(__ -> {
-          }, throwable -> crashReporter.log(throwable));
-    }
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .filter(__ -> shouldShowCommentDialog)
+        .doOnNext(__ -> {
+          shouldShowCommentDialog = false;
+          commentsNavigator.showCommentDialog(postId);
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReporter.log(throwable));
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -54,7 +56,7 @@ public class PostCommentsPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(comments -> {
         }, throwable -> crashReporter.log(throwable));
-    
+
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.refreshes()
@@ -108,7 +110,10 @@ public class PostCommentsPresenter implements Presenter {
         .flatMap(__ -> commentsNavigator.commentDialogResult())
         .map(wrapper -> comments.mapToComment(wrapper))
         .observeOn(viewScheduler)
-        .doOnNext(comment -> view.showNewComment(comment))
+        .doOnNext(comment -> {
+          view.showCommentSubmitedMessage();
+          view.showNewComment(comment);
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {
