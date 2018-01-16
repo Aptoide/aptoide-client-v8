@@ -388,7 +388,6 @@
   <string name="dialog_button_comment">Comment</string>
   <string name="comment_submitted">Your comment was successfully submitted</string>
   <string name="write_your_comment">Write your comment</string>
-  <string name="empty_comment">Your comment cannot be empty</string>
 
   <!-- Dialogs -->
   <string name="installapp_alrt">Do you want to install: \n\n %s?</string>

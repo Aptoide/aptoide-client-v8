@@ -111,7 +111,7 @@ public class PostCommentsPresenter implements Presenter {
         .map(wrapper -> comments.mapToComment(wrapper))
         .observeOn(viewScheduler)
         .doOnNext(comment -> {
-          view.showCommentSubmitedMessage();
+          view.showCommentSubmittedMessage();
           view.showNewComment(comment);
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

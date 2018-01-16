@@ -111,12 +111,14 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
     floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fabAdd);
     floatingActionButton.setVisibility(View.VISIBLE);
     setHasOptionsMenu(true);
+
     Boolean shouldShowCommentDialog;
     if (savedInstanceState != null && savedInstanceState.containsKey(SHOW_COMMENT_DIALOG)) {
       shouldShowCommentDialog = savedInstanceState.getBoolean(SHOW_COMMENT_DIALOG);
     } else {
       shouldShowCommentDialog = getArguments().getBoolean(SHOW_COMMENT_DIALOG);
     }
+
     attachPresenter(new PostCommentsPresenter(this, new Comments(new PostCommentsRepository(
         new PostCommentsService(10, 0, Integer.MAX_VALUE, bodyInterceptor, httpClient,
             converterFactory, tokenInvalidator, sharedPreferences), new CommentsSorter(),
@@ -188,7 +190,7 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
     adapter.addNewComment(comment);
   }
 
-  @Override public void showCommentSubmitedMessage() {
+  @Override public void showCommentSubmittedMessage() {
     Snackbar.make(getView(), R.string.comment_submitted, Snackbar.LENGTH_LONG)
         .show();
   }

@@ -230,7 +230,6 @@ public class CommentDialogFragment
         .filter(inputText -> {
           if (TextUtils.isEmpty(inputText)) {
             enableError(onEmptyTextError);
-            ShowMessage.asSnack(this, R.string.empty_comment);
             logAnalytics(false);
             return false;
           }
@@ -269,7 +268,6 @@ public class CommentDialogFragment
             logAnalytics(false);
           }
         }, throwable -> {
-          ShowMessage.asSnack(this, R.string.error_occured);
           logAnalytics(false);
           CrashReport.getInstance()
               .log(throwable);
