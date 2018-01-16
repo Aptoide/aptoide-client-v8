@@ -21,17 +21,23 @@ public class AptoideAccountManagerTest {
   private AccountService serviceMock;
   private AptoideAccountManager accountManager;
   private PublishRelay accountRelayMock;
+  private AdultContent adultContent;
+  private StoreManager storeManager;
 
   @Before public void before() {
     credentialsValidatorMock = mock(CredentialsValidator.class);
     dataPersistMock = mock(AccountPersistence.class);
     serviceMock = mock(AccountService.class);
+    storeManager = mock(StoreManager.class);
     accountRelayMock = mock(PublishRelay.class);
+    adultContent = mock(AdultContent.class);
     accountManager =
         new AptoideAccountManager.Builder().setCredentialsValidator(credentialsValidatorMock)
             .setAccountPersistence(dataPersistMock)
             .setAccountService(serviceMock)
             .setAccountRelay(accountRelayMock)
+            .setAdultService(adultContent)
+            .setStoreManager(storeManager)
             .build();
   }
 

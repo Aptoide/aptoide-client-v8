@@ -2,7 +2,7 @@ package cm.aptoide.pt.account;
 
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AccountPersistence;
-import cm.aptoide.pt.preferences.AdultContent;
+import cm.aptoide.accountmanager.AdultContent;
 import rx.Completable;
 import rx.Single;
 
@@ -17,7 +17,8 @@ public class MatureContentPersistence implements AccountPersistence {
 
   @Override public Completable saveAccount(Account account) {
     final Completable saveAdultSwitch =
-        account.isAdultContentEnabled() ? adultContent.enable() : adultContent.disable();
+        account.isAdultContentEnabled() ? adultContent.enable(account.isLoggedIn())
+            : adultContent.disable(account.isLoggedIn());
     return wrappedAccountPersistence.saveAccount(account)
         .andThen(saveAdultSwitch)
         .onErrorResumeNext(err -> saveAdultSwitch);
@@ -30,6 +31,6 @@ public class MatureContentPersistence implements AccountPersistence {
 
   @Override public Completable removeAccount() {
     return wrappedAccountPersistence.removeAccount()
-        .andThen(adultContent.disable());
+        .andThen(adultContent.disable(false));
   }
 }
