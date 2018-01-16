@@ -243,6 +243,7 @@ public class CommentDialogFragment
             this.dismiss();
             return Observable.empty();
           }
+
           return submitComment(inputText, idAsLong, previousCommentId, idAsString).observeOn(
               AndroidSchedulers.mainThread())
               .doOnError(e -> {
@@ -303,7 +304,7 @@ public class CommentDialogFragment
         // new comment on a review
         return PostCommentForReview.of(idAsLong, inputText, baseBodyBodyInterceptor, httpClient,
             converterFactory, tokenInvalidator, sharedPreferences)
-            .observe();
+            .observe(true, true);
 
       case STORE:
         // check if this is a new comment on a store or a reply to a previous one
@@ -311,25 +312,25 @@ public class CommentDialogFragment
           storeAnalytics.sendStoreInteractEvent("Write a Comment", "Home", appOrStoreName);
           return PostCommentForStore.of(idAsLong, inputText, baseBodyBodyInterceptor, httpClient,
               converterFactory, tokenInvalidator, sharedPreferences)
-              .observe();
+              .observe(true, true);
         }
         storeAnalytics.sendStoreInteractEvent("Reply to Comment", "Home", appOrStoreName);
         return PostCommentForStore.of(idAsLong, previousCommentId, inputText,
             baseBodyBodyInterceptor, httpClient, converterFactory, tokenInvalidator,
             sharedPreferences)
-            .observe();
+            .observe(true, true);
 
       case TIMELINE:
         // check if this is a new comment on a article or a reply to a previous one
         if (previousCommentId == null) {
           return PostCommentForTimelineArticle.of(idAsString, inputText, baseBodyBodyInterceptor,
               httpClient, converterFactory, tokenInvalidator, sharedPreferences)
-              .observe();
+              .observe(true, true);
         }
         return PostCommentForTimelineArticle.of(idAsString, previousCommentId, inputText,
             baseBodyBodyInterceptor, httpClient, converterFactory, tokenInvalidator,
             sharedPreferences)
-            .observe();
+            .observe(true, true);
     }
     // default case
     Logger.e(this.getTag(), "Unable to create reply due to missing comment type");

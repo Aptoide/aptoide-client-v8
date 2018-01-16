@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -40,6 +41,7 @@ import rx.subjects.PublishSubject;
 
 public class PostCommentsFragment extends BaseToolbarFragment implements PostCommentsView {
   public static final String POST_ID_KEY = "POST_ID_KEY";
+  public static final String SHOW_COMMENT_DIALOG = "SHOW_COMMENT_DIALOG";
   /**
    * The minimum number of items to have below your current scroll position before loading more.
    */
@@ -60,10 +62,19 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
   private ProgressBar progressBar;
   private View genericError;
 
-  public static Fragment newInstance(String postId) {
+  public static PostCommentsFragment newInstance(String postId) {
+    PostCommentsFragment fragment = new PostCommentsFragment();
+    final Bundle args = new Bundle();
+    args.putString(POST_ID_KEY, postId);
+    fragment.setArguments(args);
+    return fragment;
+  }
+
+  public static Fragment newInstanceWithCommentDialog(String postId) {
     Fragment fragment = new PostCommentsFragment();
     final Bundle args = new Bundle();
     args.putString(POST_ID_KEY, postId);
+    args.putBoolean(SHOW_COMMENT_DIALOG, true);
     fragment.setArguments(args);
     return fragment;
   }
@@ -100,13 +111,22 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
     floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fabAdd);
     floatingActionButton.setVisibility(View.VISIBLE);
     setHasOptionsMenu(true);
+
+    Boolean shouldShowCommentDialog;
+    if (savedInstanceState != null && savedInstanceState.containsKey(SHOW_COMMENT_DIALOG)) {
+      shouldShowCommentDialog = savedInstanceState.getBoolean(SHOW_COMMENT_DIALOG);
+    } else {
+      shouldShowCommentDialog = getArguments().getBoolean(SHOW_COMMENT_DIALOG);
+    }
+
     attachPresenter(new PostCommentsPresenter(this, new Comments(new PostCommentsRepository(
         new PostCommentsService(10, 0, Integer.MAX_VALUE, bodyInterceptor, httpClient,
             converterFactory, tokenInvalidator, sharedPreferences), new CommentsSorter(),
-        new ArrayList<>())),
-        new CommentsNavigator(getFragmentNavigator(), getActivity().getSupportFragmentManager()),
-        AndroidSchedulers.mainThread(), CrashReport.getInstance(),
-        getArguments().containsKey(POST_ID_KEY) ? getArguments().getString(POST_ID_KEY) : null));
+        new ArrayList<>()), new CommentMapper(
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager())),
+        new CommentsNavigator(getFragmentNavigator(), getActivity().getSupportFragmentManager(),
+            PublishSubject.create()), AndroidSchedulers.mainThread(), CrashReport.getInstance(),
+        getArguments().getString(POST_ID_KEY), shouldShowCommentDialog));
   }
 
   @Nullable @Override
@@ -164,6 +184,20 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
     list.setVisibility(View.VISIBLE);
     genericError.setVisibility(View.GONE);
     progressBar.setVisibility(View.GONE);
+  }
+
+  @Override public void showNewComment(Comment comment) {
+    adapter.addNewComment(comment);
+  }
+
+  @Override public void showCommentSubmittedMessage() {
+    Snackbar.make(getView(), R.string.comment_submitted, Snackbar.LENGTH_LONG)
+        .show();
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putBoolean(SHOW_COMMENT_DIALOG, false);
   }
 
   @Override public void onDestroyView() {

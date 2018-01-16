@@ -5,6 +5,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import rx.Scheduler;
+import rx.exceptions.OnErrorNotImplementedException;
 
 /**
  * Created by jdandrade on 28/09/2017.
@@ -18,19 +19,33 @@ public class PostCommentsPresenter implements Presenter {
   private final String postId;
   private final Scheduler viewScheduler;
   private final CrashReport crashReporter;
+  private boolean shouldShowCommentDialog;
 
   PostCommentsPresenter(@NonNull PostCommentsView commentsView, Comments comments,
       CommentsNavigator commentsNavigator, Scheduler viewScheduler, CrashReport crashReporter,
-      String postId) {
+      String postId, boolean shouldShow) {
     this.view = commentsView;
     this.comments = comments;
     this.commentsNavigator = commentsNavigator;
     this.viewScheduler = viewScheduler;
     this.crashReporter = crashReporter;
     this.postId = postId;
+    this.shouldShowCommentDialog = shouldShow;
   }
 
   @Override public void present() {
+
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .filter(__ -> shouldShowCommentDialog)
+        .doOnNext(__ -> {
+          shouldShowCommentDialog = false;
+          commentsNavigator.showCommentDialog(postId);
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReporter.log(throwable));
+
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .doOnNext(created -> view.showLoading())
@@ -76,15 +91,33 @@ public class PostCommentsPresenter implements Presenter {
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(commentId -> {
-        }, throwable -> crashReporter.log(throwable));
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.repliesPost()
-            .doOnNext(__ -> commentsNavigator.showCommentDialog(postId))
-            .retry())
+        .flatMap(created -> view.repliesPost())
+        .doOnNext(__ -> commentsNavigator.showCommentDialog(postId))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> crashReporter.log(throwable));
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> commentsNavigator.commentDialogResult())
+        .map(wrapper -> comments.mapToComment(wrapper))
+        .observeOn(viewScheduler)
+        .doOnNext(comment -> {
+          view.showCommentSubmittedMessage();
+          view.showNewComment(comment);
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
   }
 }
