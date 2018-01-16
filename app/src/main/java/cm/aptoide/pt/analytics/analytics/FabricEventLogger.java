@@ -24,4 +24,8 @@ public class FabricEventLogger implements EventLogger {
         + context
         + "]");
   }
+
+  @Override public void setup() {
+
+  }
 }

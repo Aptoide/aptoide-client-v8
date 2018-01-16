@@ -45,11 +45,16 @@ import cm.aptoide.pt.analytics.TrackerFilter;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.analytics.analytics.AptoideBiAnalytics;
 import cm.aptoide.pt.analytics.analytics.AptoideBiEventLogger;
+import cm.aptoide.pt.analytics.analytics.AptoideBiEventService;
 import cm.aptoide.pt.analytics.analytics.EventLogger;
+import cm.aptoide.pt.analytics.analytics.EventsPersistence;
 import cm.aptoide.pt.analytics.analytics.FabricEventLogger;
 import cm.aptoide.pt.analytics.analytics.FacebookEventLogger;
 import cm.aptoide.pt.analytics.analytics.FlurryEventLogger;
 import cm.aptoide.pt.analytics.analytics.KnockEventLogger;
+import cm.aptoide.pt.analytics.analytics.RealmEventMapper;
+import cm.aptoide.pt.analytics.analytics.RealmEventPersistence;
+import cm.aptoide.pt.analytics.analytics.RetrofitAptoideBiService;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
@@ -183,6 +188,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import rx.Completable;
 import rx.Single;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 import static android.content.Context.ALARM_SERVICE;
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -834,13 +840,53 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .build();
   }
 
+  @Singleton @Provides @Named("base-host") String providesBaseHost(
+      @Named("default") SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
+        + "/api/7/";
+  }
+
+  @Singleton @Provides @Named("retrofit-v7") Retrofit providesV7Retrofit(
+      @Named("base-host") String baseHost, @Named("default") OkHttpClient httpClient,
+      Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
+    return new Retrofit.Builder().baseUrl(baseHost)
+        .client(httpClient)
+        .addCallAdapterFactory(rxCallAdapterFactory)
+        .addConverterFactory(converterFactory)
+        .build();
+  }
+
   @Singleton @Provides SearchSuggestionRemoteRepository providesSearchSuggestionRemoteRepository(
       Retrofit retrofit) {
     return retrofit.create(SearchSuggestionRemoteRepository.class);
   }
 
-  @Singleton @Provides @Named("Aptoide") EventLogger providesAptoideEventLogger() {
-    return new AptoideBiEventLogger(new AptoideBiAnalytics());
+  @Singleton @Provides CrashReport providesCrashReports() {
+    return CrashReport.getInstance();
+  }
+
+  @Singleton @Provides RealmEventMapper providesRealmEventMapper(ObjectMapper objectMapper) {
+    return new RealmEventMapper(objectMapper);
+  }
+
+  @Singleton @Provides EventsPersistence providesEventsPersistence(Database database,
+      RealmEventMapper mapper) {
+    return new RealmEventPersistence(database, mapper);
+  }
+
+  @Singleton @Provides AptoideBiEventService providesRetrofitAptoideBiService(
+      @Named("retrofit-v7") Retrofit retrofit) {
+    return new RetrofitAptoideBiService(retrofit.create(RetrofitAptoideBiService.Service.class));
+  }
+
+  @Singleton @Provides @Named("Aptoide") EventLogger providesAptoideEventLogger(
+      CrashReport crashReport, EventsPersistence persistence, AptoideBiEventService service) {
+    return new AptoideBiEventLogger(
+        new AptoideBiAnalytics(persistence, service, new CompositeSubscription(), crashReport,
+            Schedulers.computation(), 20, DateUtils.MINUTE_IN_MILLIS));
   }
 
   @Singleton @Provides @Named("Facebook") EventLogger providesFacebookEventLogger() {
@@ -865,7 +911,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("Fabric") EventLogger fabricEventLogger, @Named("Knock") EventLogger knockEventLogger,
       @Named("Flurry") EventLogger flurryEventLogger) {
     return new AnalyticsManager.Builder().addLogger(aptoideBiEventLogger,
-        Arrays.asList(PostAnalytics.OPEN_EVENT_NAME))
+        Arrays.asList(PostAnalytics.OPEN_EVENT_NAME, "event name"))
         .addLogger(facebookEventLogger, Arrays.asList(PostAnalytics.OPEN_EVENT_NAME))
         .addLogger(fabricEventLogger, Collections.emptyList())
         .addLogger(knockEventLogger, Collections.emptyList())

@@ -29,6 +29,13 @@ public class AnalyticsManager {
     }
   }
 
+  public void setup() {
+    for (Map.Entry<EventLogger, Collection<String>> senderEntry : eventSenders.entrySet()) {
+      senderEntry.getKey()
+          .setup();
+    }
+  }
+
   public enum Action {
     CLICK, SCROLL, INPUT, AUTO, ROOT, VIEW, INSTALL, OPEN, IMPRESSION, DISMISS
   }

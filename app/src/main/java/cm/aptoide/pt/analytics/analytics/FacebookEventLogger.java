@@ -24,4 +24,8 @@ public class FacebookEventLogger implements EventLogger {
         + context
         + "]");
   }
+
+  @Override public void setup() {
+
+  }
 }

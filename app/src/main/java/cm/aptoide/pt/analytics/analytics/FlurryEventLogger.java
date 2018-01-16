@@ -24,4 +24,8 @@ public class FlurryEventLogger implements EventLogger {
         + context
         + "]");
   }
+
+  @Override public void setup() {
+
+  }
 }

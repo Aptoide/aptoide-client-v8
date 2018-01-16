@@ -24,4 +24,8 @@ public class KnockEventLogger implements EventLogger {
         + context
         + "]");
   }
+
+  @Override public void setup() {
+
+  }
 }
