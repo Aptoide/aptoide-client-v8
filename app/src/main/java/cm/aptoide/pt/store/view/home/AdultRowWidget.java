@@ -2,10 +2,10 @@ package cm.aptoide.pt.store.view.home;
 
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.preferences.AdultContent;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.ReloadInterface;
 import cm.aptoide.pt.view.dialog.EditableTextDialog;
@@ -21,7 +21,7 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
   private SwitchCompat adultSwitch;
   private SwitchCompat adultPinSwitch;
   private boolean trackAnalytics = true;
-  private AdultContent adultContent;
+  private AptoideAccountManager accountManager;
   private RxAlertDialog adultContentConfirmationDialog;
   private EditableTextDialog enableAdultContentPinDialog;
   private boolean ignoreCheck;
@@ -50,11 +50,12 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
             .build();
 
     trackAnalytics = true;
-    adultContent = ((AptoideApplication) getContext().getApplicationContext()).getAdultContent();
+    accountManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
   }
 
   @Override public void bindView(final AdultRowDisplayable displayable) {
-    compositeSubscription.add(adultContent.pinRequired()
+    compositeSubscription.add(accountManager.pinRequired()
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(pinRequired -> {
           if (pinRequired) {
@@ -77,7 +78,7 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
             return Observable.empty();
           } else {
             adultSwitch.setEnabled(false);
-            return adultContent.disable()
+            return accountManager.disable()
                 .doOnCompleted(this::trackLock)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnTerminate(() -> adultSwitch.setEnabled(true))
@@ -97,7 +98,7 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
             return Observable.empty();
           } else {
             adultPinSwitch.setEnabled(false);
-            return adultContent.disable()
+            return accountManager.disable()
                 .doOnCompleted(this::trackLock)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnTerminate(() -> adultPinSwitch.setEnabled(true))
@@ -110,7 +111,7 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
 
     compositeSubscription.add(adultContentConfirmationDialog.positiveClicks()
         .doOnNext(click -> adultSwitch.setEnabled(false))
-        .flatMap(click -> adultContent.enable()
+        .flatMap(click -> accountManager.enable()
             .doOnCompleted(this::trackUnlock)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnTerminate(() -> adultSwitch.setEnabled(true))
@@ -121,7 +122,7 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
 
     compositeSubscription.add(enableAdultContentPinDialog.positiveClicks()
         .doOnNext(clock -> adultPinSwitch.setEnabled(false))
-        .flatMap(pin -> adultContent.enable(Integer.valueOf(pin.toString()))
+        .flatMap(pin -> accountManager.enable(Integer.valueOf(pin.toString()))
             .doOnCompleted(this::trackUnlock)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError(throwable -> {
@@ -135,7 +136,7 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
         .retry()
         .subscribe());
 
-    compositeSubscription.add(adultContent.enabled()
+    compositeSubscription.add(accountManager.enabled()
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(enabled -> {
 

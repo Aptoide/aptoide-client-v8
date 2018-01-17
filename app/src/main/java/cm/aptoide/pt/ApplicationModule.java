@@ -22,6 +22,7 @@ import android.view.WindowManager;
 import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountPersistence;
 import cm.aptoide.accountmanager.AccountService;
+import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
@@ -97,7 +98,7 @@ import cm.aptoide.pt.networking.NoAuthenticationBodyInterceptorV3;
 import cm.aptoide.pt.networking.NoOpTokenInvalidator;
 import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
-import cm.aptoide.pt.preferences.AdultContent;
+import cm.aptoide.pt.preferences.AdultContentManager;
 import cm.aptoide.pt.preferences.LocalPersistenceAdultContent;
 import cm.aptoide.pt.preferences.Preferences;
 import cm.aptoide.pt.preferences.SecurePreferences;
@@ -460,26 +461,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AptoideAccountManager provideAptoideAccountManager(AdultContent adultContent,
-      StoreAccessor storeAccessor, @Named("default") OkHttpClient httpClient,
-      @Named("long-timeout") OkHttpClient longTimeoutHttpClient, AccountManager accountManager,
+      StoreAccessor storeAccessor, AccountManager accountManager,
       @Named("default") SharedPreferences defaultSharedPreferences,
-      AuthenticationPersistence authenticationPersistence, TokenInvalidator tokenInvalidator,
-      @Named("pool-v7")
-          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
-      @Named("web-v7")
-          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorWebV7,
-      @Named("multipart") MultipartBodyInterceptor multipartBodyInterceptor,
+      AuthenticationPersistence authenticationPersistence,
       AndroidAccountProvider androidAccountProvider, GoogleApiClient googleApiClient,
-      @Named("no-authentication-v3") BodyInterceptor<BaseBody> noAuthenticationBodyInterceptorV3,
-      ObjectMapper objectMapper, Converter.Factory converterFactory, StoreManager storeManager) {
+      StoreManager storeManager, AccountService accountService, AccountFactory accountFactory) {
     FacebookSdk.sdkInitialize(application);
-    final AccountFactory accountFactory = new AccountFactory();
-
-    final AccountService accountService =
-        new AccountServiceV3(accountFactory, httpClient, longTimeoutHttpClient, converterFactory,
-            objectMapper, defaultSharedPreferences, extraId, tokenInvalidator,
-            authenticationPersistence, noAuthenticationBodyInterceptorV3, multipartBodyInterceptor,
-            bodyInterceptorWebV7, bodyInterceptorPoolV7);
 
     final AndroidAccountDataMigration accountDataMigration = new AndroidAccountDataMigration(
         SecurePreferencesImplementation.getInstance(application, defaultSharedPreferences),
@@ -499,6 +486,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AptoideAccountManager.Builder().setAccountPersistence(
         new MatureContentPersistence(accountPersistence, adultContent))
         .setAccountService(accountService)
+        .setAdultService(adultContent)
         .registerSignUpAdapter(GoogleSignUpAdapter.TYPE,
             new GoogleSignUpAdapter(googleApiClient, loginPreferences))
         .registerSignUpAdapter(FacebookSignUpAdapter.TYPE,
@@ -506,6 +494,29 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
                 loginPreferences))
         .setStoreManager(storeManager)
         .build();
+  }
+
+  @Singleton @Provides AccountFactory provideAccountFactory() {
+    return new AccountFactory();
+  }
+
+  @Singleton @Provides AccountService provideAccountService(
+      @Named("default") OkHttpClient httpClient,
+      @Named("long-timeout") OkHttpClient longTimeoutHttpClient,
+      @Named("default") SharedPreferences defaultSharedPreferences,
+      AuthenticationPersistence authenticationPersistence, TokenInvalidator tokenInvalidator,
+      @Named("pool-v7")
+          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("web-v7")
+          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorWebV7,
+      @Named("multipart") MultipartBodyInterceptor multipartBodyInterceptor,
+      @Named("no-authentication-v3") BodyInterceptor<BaseBody> noAuthenticationBodyInterceptorV3,
+      ObjectMapper objectMapper, Converter.Factory converterFactory,
+      AccountFactory accountFactory) {
+    return new AccountServiceV3(accountFactory, httpClient, longTimeoutHttpClient, converterFactory,
+        objectMapper, defaultSharedPreferences, extraId, tokenInvalidator,
+        authenticationPersistence, noAuthenticationBodyInterceptorV3, multipartBodyInterceptor,
+        bodyInterceptorWebV7, bodyInterceptorPoolV7);
   }
 
   @Singleton @Provides @Named("default") OkHttpClient provideOkHttpClient(L2Cache httpClientCache,
@@ -664,9 +675,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         ((WindowManager) application.getSystemService(Context.WINDOW_SERVICE)));
   }
 
-  @Singleton @Provides AdultContent provideLocalAdultContent(Preferences preferences,
-      @Named("secure") SecurePreferences securePreferences) {
+  @Singleton @Provides LocalPersistenceAdultContent provideLocalAdultContent(
+      Preferences preferences, @Named("secure") SecurePreferences securePreferences) {
     return new LocalPersistenceAdultContent(preferences, securePreferences);
+  }
+
+  @Singleton @Provides AdultContent provideAdultContent(
+      LocalPersistenceAdultContent localAdultContent, AccountService accountService) {
+    return new AdultContentManager(localAdultContent, accountService);
   }
 
   @Singleton @Provides Preferences provideDefaultPreferences(
