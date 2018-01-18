@@ -2,7 +2,9 @@ package cm.aptoide.pt.social.commentslist;
 
 import android.support.v4.app.FragmentManager;
 import cm.aptoide.pt.comments.view.CommentDialogFragment;
+import cm.aptoide.pt.navigator.CommentsTimelineTabNavigation;
 import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.navigator.TabNavigator;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -14,12 +16,18 @@ class CommentsNavigator {
   private final FragmentNavigator fragmentNavigator;
   private final FragmentManager fragmentManager;
   private final PublishSubject<CommentDataWrapper> commentDialogSubject;
+  private final TabNavigator tabNavigator;
 
   CommentsNavigator(FragmentNavigator fragmentNavigator, FragmentManager fragmentManager,
-      PublishSubject<CommentDataWrapper> subject) {
+      PublishSubject<CommentDataWrapper> subject, TabNavigator tabNavigator) {
     this.fragmentNavigator = fragmentNavigator;
     this.fragmentManager = fragmentManager;
     this.commentDialogSubject = subject;
+    this.tabNavigator = tabNavigator;
+  }
+
+  void navigateToPostCommentInTimeline(String comment) {
+    tabNavigator.navigate(new CommentsTimelineTabNavigation(comment));
   }
 
   void showCommentDialog(String postId, Long commentId) {

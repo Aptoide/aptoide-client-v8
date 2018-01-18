@@ -1,5 +1,6 @@
 package cm.aptoide.pt.social.commentslist;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,6 +24,7 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
@@ -62,6 +64,8 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
   private ProgressBar progressBar;
   private View genericError;
 
+  private TabNavigator tabNavigator;
+
   public static PostCommentsFragment newInstance(String postId) {
     PostCommentsFragment fragment = new PostCommentsFragment();
     final Bundle args = new Bundle();
@@ -77,6 +81,17 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
     args.putBoolean(SHOW_COMMENT_DIALOG, true);
     fragment.setArguments(args);
     return fragment;
+  }
+
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+
+    if (activity instanceof TabNavigator) {
+      tabNavigator = (TabNavigator) activity;
+    } else {
+      throw new IllegalStateException(
+          "Activity must implement " + TabNavigator.class.getSimpleName());
+    }
   }
 
   @Override public int getContentViewId() {
@@ -125,8 +140,8 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
         new ArrayList<>()), new CommentMapper(
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager())),
         new CommentsNavigator(getFragmentNavigator(), getActivity().getSupportFragmentManager(),
-            PublishSubject.create()), AndroidSchedulers.mainThread(), CrashReport.getInstance(),
-        getArguments().getString(POST_ID_KEY), shouldShowCommentDialog));
+            PublishSubject.create(), tabNavigator), AndroidSchedulers.mainThread(),
+        CrashReport.getInstance(), getArguments().getString(POST_ID_KEY), shouldShowCommentDialog));
   }
 
   @Nullable @Override

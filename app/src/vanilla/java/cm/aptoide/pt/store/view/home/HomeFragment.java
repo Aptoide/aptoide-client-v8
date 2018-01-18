@@ -525,6 +525,7 @@ public class HomeFragment extends StoreFragment {
       case TabNavigation.STORES:
         return Event.Name.myStores;
       case TabNavigation.TIMELINE:
+      case TabNavigation.COMMENTS:
         return Event.Name.getUserTimeline;
       case TabNavigation.UPDATES:
         return Event.Name.myUpdates;

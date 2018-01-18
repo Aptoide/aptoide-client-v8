@@ -104,4 +104,6 @@ public interface TimelineView extends View {
   Single<String> takeFeedbackScreenShot();
 
   void showUserUnsubscribedMessage(String userName);
+
+  void showLastComment(String comment);
 }

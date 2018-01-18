@@ -52,6 +52,7 @@ import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
+import io.reactivex.exceptions.OnErrorNotImplementedException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.Completable;
@@ -1102,6 +1103,7 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void commentPostResponse() {
+    //local comment dialog
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.commentPosted())
@@ -1125,6 +1127,21 @@ public class TimelinePresenter implements Presenter {
           crashReport.log(throwable);
           view.showGenericError();
           timelineAnalytics.sendCommentCompleted(false);
+        });
+
+    //comment from comments fragment
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> timelineNavigation.commentNavigation()
+            .doOnNext(comment -> {
+
+              view.showLastComment(comment);
+            })
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(comment -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
         });
   }
 
