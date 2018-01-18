@@ -1,7 +1,6 @@
 package cm.aptoide.pt.analytics.analytics;
 
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.crashreports.CrashReport;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +27,6 @@ public class AptoideBiAnalyticsTest {
 
   @Test public void logReachingThreshHold() throws Exception {
     AptoideBiEventService aptoideBiEventService = mock(AptoideBiEventService.class);
-    CrashReport crashReport = mock(CrashReport.class);
     EventsPersistence eventPersistenceMock = mock(EventsPersistence.class);
     String eventName = "test event";
     String context = "test context";
@@ -36,7 +34,7 @@ public class AptoideBiAnalyticsTest {
     Event event = new Event(eventName, data, AnalyticsManager.Action.OPEN, context, 0);
     AptoideBiAnalytics analytics =
         new AptoideBiAnalytics(eventPersistenceMock, aptoideBiEventService,
-            new CompositeSubscription(), crashReport, Schedulers.test(), 1, Integer.MAX_VALUE);
+            new CompositeSubscription(), Schedulers.test(), 1, Integer.MAX_VALUE);
     when(aptoideBiEventService.send(any())).thenReturn(Completable.complete());
     List<Event> eventList = setupPersistence(eventPersistenceMock);
 
@@ -50,7 +48,6 @@ public class AptoideBiAnalyticsTest {
 
   @Test public void logReachingThreshHoldMultipleTimes() throws Exception {
     AptoideBiEventService aptoideBiEventService = mock(AptoideBiEventService.class);
-    CrashReport crashReport = mock(CrashReport.class);
     EventsPersistence eventPersistenceMock = mock(EventsPersistence.class);
     String eventName = "test event";
     String context = "test context";
@@ -58,7 +55,7 @@ public class AptoideBiAnalyticsTest {
     Event event = new Event(eventName, data, AnalyticsManager.Action.OPEN, context, 0);
     AptoideBiAnalytics analytics =
         new AptoideBiAnalytics(eventPersistenceMock, aptoideBiEventService,
-            new CompositeSubscription(), crashReport, Schedulers.test(), 2, Integer.MAX_VALUE);
+            new CompositeSubscription(), Schedulers.test(), 2, Integer.MAX_VALUE);
     when(aptoideBiEventService.send(any())).thenReturn(Completable.complete());
     List<Event> eventList = setupPersistence(eventPersistenceMock);
 
@@ -69,14 +66,13 @@ public class AptoideBiAnalyticsTest {
 
     analytics.log(event.getEventName(), event.getData(), event.getAction(), event.getContext());
 
-    verify(aptoideBiEventService, times(2)).send(any());
+    verify(aptoideBiEventService, times(4)).send(any());
     verify(eventPersistenceMock, times(4)).save(Matchers.<Event>any());
     Assert.assertEquals(0, eventList.size());
   }
 
   @Test public void logNotReachingThreshHold() throws Exception {
     AptoideBiEventService aptoideBiEventService = mock(AptoideBiEventService.class);
-    CrashReport crashReport = mock(CrashReport.class);
     EventsPersistence eventPersistenceMock = mock(EventsPersistence.class);
     String eventName = "test event";
     String context = "test context";
@@ -84,21 +80,20 @@ public class AptoideBiAnalyticsTest {
     Event event = new Event(eventName, data, AnalyticsManager.Action.OPEN, context, 0);
     AptoideBiAnalytics analytics =
         new AptoideBiAnalytics(eventPersistenceMock, aptoideBiEventService,
-            new CompositeSubscription(), crashReport, Schedulers.test(), 2, Integer.MAX_VALUE);
+            new CompositeSubscription(), Schedulers.test(), 2, Integer.MAX_VALUE);
     when(aptoideBiEventService.send(any())).thenReturn(Completable.complete());
     List<Event> eventList = setupPersistence(eventPersistenceMock);
 
     analytics.setup();
     analytics.log(event.getEventName(), event.getData(), event.getAction(), event.getContext());
 
-    verify(aptoideBiEventService, times(0)).send(eventList);
+    verify(aptoideBiEventService, times(0)).send(any());
     verify(eventPersistenceMock, times(1)).save(any(Event.class));
     Assert.assertEquals(1, eventList.size());
   }
 
   @Test public void logTimeReached() throws Exception {
     AptoideBiEventService aptoideBiEventService = mock(AptoideBiEventService.class);
-    CrashReport crashReport = mock(CrashReport.class);
     EventsPersistence eventPersistenceMock = mock(EventsPersistence.class);
     String eventName = "test event";
     String context = "test context";
@@ -107,7 +102,7 @@ public class AptoideBiAnalyticsTest {
     TestScheduler scheduler = Schedulers.test();
     AptoideBiAnalytics analytics =
         new AptoideBiAnalytics(eventPersistenceMock, aptoideBiEventService,
-            new CompositeSubscription(), crashReport, scheduler, Integer.MAX_VALUE, 2);
+            new CompositeSubscription(), scheduler, Integer.MAX_VALUE, 2);
     when(aptoideBiEventService.send(any())).thenReturn(Completable.complete());
     List<Event> eventList = setupPersistence(eventPersistenceMock);
     analytics.setup();
@@ -121,7 +116,6 @@ public class AptoideBiAnalyticsTest {
 
   @Test public void logNotTimeReached() throws Exception {
     AptoideBiEventService aptoideBiEventService = mock(AptoideBiEventService.class);
-    CrashReport crashReport = mock(CrashReport.class);
     EventsPersistence eventPersistenceMock = mock(EventsPersistence.class);
     String eventName = "test event";
     String context = "test context";
@@ -130,7 +124,7 @@ public class AptoideBiAnalyticsTest {
     TestScheduler scheduler = Schedulers.test();
     AptoideBiAnalytics analytics =
         new AptoideBiAnalytics(eventPersistenceMock, aptoideBiEventService,
-            new CompositeSubscription(), crashReport, scheduler, Integer.MAX_VALUE, 20000);
+            new CompositeSubscription(), scheduler, Integer.MAX_VALUE, 20000);
     when(aptoideBiEventService.send(any())).thenReturn(Completable.complete());
     List<Event> eventList = setupPersistence(eventPersistenceMock);
     analytics.setup();

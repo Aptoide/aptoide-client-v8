@@ -1,8 +1,8 @@
 package cm.aptoide.pt.analytics.analytics;
 
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +18,6 @@ public class AptoideBiAnalytics {
   private final EventsPersistence persistence;
   private final AptoideBiEventService service;
   private final CompositeSubscription subscriptions;
-  private final CrashReport crashReport;
   private final int threshHoldSize;
   private final long sendInterval;
   private final Scheduler timerScheduler;
@@ -28,12 +27,11 @@ public class AptoideBiAnalytics {
    * @param sendInterval max time(in milliseconds) interval between event sends
    */
   public AptoideBiAnalytics(EventsPersistence persistence, AptoideBiEventService service,
-      CompositeSubscription subscriptions, CrashReport crashReport, Scheduler timerScheduler,
-      int threshHoldSize, long sendInterval) {
+      CompositeSubscription subscriptions, Scheduler timerScheduler, int threshHoldSize,
+      long sendInterval) {
     this.persistence = persistence;
     this.service = service;
     this.subscriptions = subscriptions;
-    this.crashReport = crashReport;
     this.timerScheduler = timerScheduler;
     this.threshHoldSize = threshHoldSize;
     this.sendInterval = sendInterval;
@@ -58,7 +56,7 @@ public class AptoideBiAnalytics {
         .flatMap(time -> persistence.getAll()
             .first())
         .filter(events -> events.size() > 0)
-        .flatMapCompletable(events -> sendEvents(events))
+        .flatMapCompletable(events -> sendEvents(new ArrayList<>(events)))
         .retry()
         .subscribe());
   }

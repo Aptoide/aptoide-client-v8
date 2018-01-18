@@ -899,9 +899,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("Aptoide") EventLogger providesAptoideEventLogger(
-      CrashReport crashReport, EventsPersistence persistence, AptoideBiEventService service) {
+      EventsPersistence persistence, AptoideBiEventService service) {
     return new AptoideBiEventLogger(
-        new AptoideBiAnalytics(persistence, service, new CompositeSubscription(), crashReport,
+        new AptoideBiAnalytics(persistence, service, new CompositeSubscription(),
             Schedulers.computation(), 2, DateUtils.MINUTE_IN_MILLIS));
   }
 
