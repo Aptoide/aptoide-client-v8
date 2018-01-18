@@ -1,6 +1,5 @@
 package cm.aptoide.pt.analytics.analytics;
 
-import java.util.List;
 import rx.Completable;
 
 /**
@@ -8,5 +7,5 @@ import rx.Completable;
  */
 
 public interface AptoideBiEventService {
-  Completable send(List<Event> events);
+  Completable send(Event event);
 }

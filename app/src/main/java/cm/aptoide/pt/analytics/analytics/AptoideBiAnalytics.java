@@ -1,11 +1,13 @@
 package cm.aptoide.pt.analytics.analytics;
 
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
 import rx.subscriptions.CompositeSubscription;
@@ -48,12 +50,7 @@ public class AptoideBiAnalytics {
   public void setup() {
     subscriptions.add(persistence.getAll()
         .filter(this::shouldSendEvents)
-        .flatMapCompletable(events -> persistence.remove(events)
-            .andThen(service.send(events))
-            .onErrorResumeNext(throwable -> {
-              crashReport.log(throwable);
-              return persistence.save(events);
-            }))
+        .flatMapCompletable(events -> sendEvents(events))
         .retry()
         .subscribe());
 
@@ -61,13 +58,25 @@ public class AptoideBiAnalytics {
         .flatMap(time -> persistence.getAll()
             .first())
         .filter(events -> events.size() > 0)
-
-        .flatMapCompletable(events -> persistence.remove(events)
-            .andThen(service.send(events))
-            .onErrorResumeNext(throwable -> persistence.save(events)))
-        .doOnError(throwable -> crashReport.log(throwable))
+        .flatMapCompletable(events -> sendEvents(events))
         .retry()
         .subscribe());
+  }
+
+  @NonNull private Completable sendEvents(List<Event> events) {
+    return persistence.remove(events)
+        .toSingleDefault(events)
+        .toObservable()
+        .flatMapIterable(__ -> events)
+        .flatMap(event -> service.send(event)
+            .toObservable()
+            .flatMap(o -> Observable.empty())
+            .cast(Event.class)
+            .onErrorResumeNext(throwable -> Observable.just(event)))
+        .toList()
+        .filter(failedEvents -> !failedEvents.isEmpty())
+        .flatMapCompletable(failedEvents -> persistence.save(failedEvents))
+        .toCompletable();
   }
 
   private boolean shouldSendEvents(List<Event> events) {

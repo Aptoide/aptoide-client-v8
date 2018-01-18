@@ -1,7 +1,7 @@
 package cm.aptoide.pt.analytics.analytics;
 
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
-import java.util.List;
+import java.net.UnknownHostException;
 import java.util.Map;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
@@ -20,13 +20,15 @@ public class RetrofitAptoideBiService implements AptoideBiEventService {
     this.service = service;
   }
 
-  @Override public Completable send(List<Event> events) {
-    return Observable.from(events)
-        .map(event -> service.addEvent(event.getEventName(), event.getAction()
-            .name(), event.getContext(), event.getData()))
-        .toList()
-        .flatMap(observables -> Observable.merge(observables)
-            .doOnNext(baseV7Response -> System.out.println(baseV7Response)))
+  @Override public Completable send(Event event) {
+    return service.addEvent(event.getEventName(), event.getAction()
+        .name(), event.getContext(), event.getData())
+        .onErrorResumeNext(throwable -> {
+          if (throwable instanceof UnknownHostException) {
+            return Observable.error(throwable);
+          }
+          return Observable.empty();
+        })
         .toCompletable();
   }
 

@@ -902,7 +902,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       CrashReport crashReport, EventsPersistence persistence, AptoideBiEventService service) {
     return new AptoideBiEventLogger(
         new AptoideBiAnalytics(persistence, service, new CompositeSubscription(), crashReport,
-            Schedulers.computation(), 20, DateUtils.MINUTE_IN_MILLIS));
+            Schedulers.computation(), 2, DateUtils.MINUTE_IN_MILLIS));
   }
 
   @Singleton @Provides @Named("Facebook") EventLogger providesFacebookEventLogger(
