@@ -6,6 +6,7 @@ import cm.aptoide.pt.addressbook.view.AddressBookFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.navigator.CommentsTimelineTabNavigation;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.TabNavigation;
 import cm.aptoide.pt.navigator.TabNavigator;
@@ -133,6 +134,14 @@ public class TimelineNavigator {
         .doOnNext(tabNavigation -> tabNavigator.clearNavigation())
         .map(tabNavigation -> tabNavigation.getBundle()
             .getString(AppsTimelineTabNavigation.CARD_ID_KEY));
+  }
+
+  public Observable<String> commentNavigation() {
+    return tabNavigator.navigation()
+        .filter(tabNavigation -> tabNavigation.getTab() == TabNavigation.COMMENTS)
+        .doOnNext(tabNavigation -> tabNavigator.clearNavigation())
+        .map(tabNavigation -> tabNavigation.getBundle()
+            .getString(CommentsTimelineTabNavigation.COMMENT_KEY));
   }
 
   public void navigateToNotificationCenter() {

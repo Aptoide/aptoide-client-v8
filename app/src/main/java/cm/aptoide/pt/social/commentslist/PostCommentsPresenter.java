@@ -113,6 +113,7 @@ public class PostCommentsPresenter implements Presenter {
         .doOnNext(comment -> {
           view.showCommentSubmittedMessage();
           view.showNewComment(comment);
+          commentsNavigator.navigateToPostCommentInTimeline(comment.getBody());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

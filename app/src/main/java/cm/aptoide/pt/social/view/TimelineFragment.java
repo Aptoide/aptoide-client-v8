@@ -599,6 +599,10 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         .show();
   }
 
+  @Override public void showLastComment(String comment) {
+    Snackbar.make(getView(), comment, Snackbar.LENGTH_LONG).show();
+  }
+
   private boolean isEndReached() {
     return layoutManager.getItemCount() - layoutManager.findLastVisibleItemPosition()
         <= visibleThreshold;
