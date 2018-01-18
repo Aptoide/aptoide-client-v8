@@ -15,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
 import android.util.SparseArray;
+import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
@@ -78,10 +79,8 @@ import cm.aptoide.pt.notification.NotificationProvider;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.notification.NotificationsCleaner;
 import cm.aptoide.pt.notification.SystemNotificationShower;
-import cm.aptoide.pt.preferences.AdultContent;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.Preferences;
-import cm.aptoide.pt.preferences.RemotePersistenceAdultContent;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -204,8 +203,8 @@ public abstract class AptoideApplication extends Application {
   @Inject @Named("account-settings-pool-v7") BodyInterceptor<BaseBody>
       accountSettingsBodyInterceptorPoolV7;
   @Inject TrendingManager trendingManager;
-  @Inject SearchSuggestionManager searchSuggestionManager;
   @Inject AnalyticsManager analytics;
+  @Inject SearchSuggestionManager searchSuggestionManager;
   private LeakTool leakTool;
   private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
@@ -762,7 +761,7 @@ public abstract class AptoideApplication extends Application {
   public BodyInterceptor<BaseBody> getAccountSettingsBodyInterceptorWebV7() {
     if (accountSettingsBodyInterceptorWebV7 == null) {
       accountSettingsBodyInterceptorWebV7 =
-          new AccountSettingsBodyInterceptorV7(getBodyInterceptorWebV7(), getLocalAdultContent());
+          new AccountSettingsBodyInterceptorV7(getBodyInterceptorWebV7(), getAdultContent());
     }
     return accountSettingsBodyInterceptorWebV7;
   }
@@ -801,10 +800,6 @@ public abstract class AptoideApplication extends Application {
   }
 
   public AdultContent getAdultContent() {
-    return new RemotePersistenceAdultContent(getLocalAdultContent(), getAccountManager());
-  }
-
-  private AdultContent getLocalAdultContent() {
     return adultContent;
   }
 
