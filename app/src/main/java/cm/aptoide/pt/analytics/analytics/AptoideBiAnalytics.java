@@ -48,9 +48,12 @@ public class AptoideBiAnalytics {
   public void setup() {
     subscriptions.add(persistence.getAll()
         .filter(this::shouldSendEvents)
-        .flatMapCompletable(events -> service.send(events)
-            .andThen(persistence.remove(events)))
-        .doOnError(throwable -> crashReport.log(throwable))
+        .flatMapCompletable(events -> persistence.remove(events)
+            .andThen(service.send(events))
+            .onErrorResumeNext(throwable -> {
+              crashReport.log(throwable);
+              return persistence.save(events);
+            }))
         .retry()
         .subscribe());
 
@@ -58,8 +61,10 @@ public class AptoideBiAnalytics {
         .flatMap(time -> persistence.getAll()
             .first())
         .filter(events -> events.size() > 0)
-        .flatMapCompletable(events -> service.send(events)
-            .andThen(persistence.remove(events)))
+
+        .flatMapCompletable(events -> persistence.remove(events)
+            .andThen(service.send(events))
+            .onErrorResumeNext(throwable -> persistence.save(events)))
         .doOnError(throwable -> crashReport.log(throwable))
         .retry()
         .subscribe());

@@ -32,6 +32,13 @@ public class RealmEventPersistence implements EventsPersistence {
     });
   }
 
+  @Override public Completable save(List<Event> events) {
+    return Observable.from(events)
+        .flatMapCompletable(event -> save(event))
+        .toList()
+        .toCompletable();
+  }
+
   @Override public Observable<List<Event>> getAll() {
     return database.getAll(RealmEvent.class)
         .flatMap(realmEvents -> {

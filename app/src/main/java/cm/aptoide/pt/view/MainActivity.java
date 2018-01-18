@@ -21,7 +21,6 @@ import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import com.jakewharton.rxrelay.PublishRelay;
-import java.util.HashMap;
 import javax.inject.Inject;
 import rx.Observable;
 
@@ -35,13 +34,6 @@ public class MainActivity extends TabNavigatorActivity
   private View snackBarLayout;
   private PublishRelay<Void> installErrorsDismissEvent;
   private Snackbar snackbar;
-
-  @Override protected void onResume() {
-    super.onResume();
-    HashMap<String, Object> data = new HashMap<>();
-    data.put("cenas", "cenas");
-    analytics.logEvent(data, "event name", AnalyticsManager.Action.OPEN, "context");
-  }
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

@@ -13,9 +13,11 @@ public class AnalyticsManagerTest {
   @Test public void sendSupportedEvent() throws Exception {
     String eventName = "TestEvent";
     EventLogger eventLogger = mock(EventLogger.class);
+    HttpKnockEventLogger knockEventLogger = mock(HttpKnockEventLogger.class);
 
     AnalyticsManager analyticsManager =
         new AnalyticsManager.Builder().addLogger(eventLogger, Arrays.asList(eventName))
+            .setKnockLogger(knockEventLogger)
             .build();
 
     Map<String, Object> data = new HashMap<>();
@@ -28,9 +30,11 @@ public class AnalyticsManagerTest {
   @Test public void sendUnsupportedEvent() throws Exception {
     String eventName = "TestEvent";
     EventLogger eventLogger = mock(EventLogger.class);
+    HttpKnockEventLogger knockEventLogger = mock(HttpKnockEventLogger.class);
 
     AnalyticsManager analyticsManager =
         new AnalyticsManager.Builder().addLogger(eventLogger, Arrays.asList(eventName))
+            .setKnockLogger(knockEventLogger)
             .build();
 
     Map<String, Object> data = new HashMap<>();

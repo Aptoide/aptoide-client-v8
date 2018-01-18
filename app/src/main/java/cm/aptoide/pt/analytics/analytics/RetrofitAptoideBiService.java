@@ -21,13 +21,9 @@ public class RetrofitAptoideBiService implements AptoideBiEventService {
   }
 
   @Override public Completable send(List<Event> events) {
-    System.out.println(events);
     return Observable.from(events)
-        .map(event -> {
-          System.out.println(event.getData());
-          return service.addEvent(event.getEventName(), event.getAction()
-              .name(), event.getContext(), event.getData());
-        })
+        .map(event -> service.addEvent(event.getEventName(), event.getAction()
+            .name(), event.getContext(), event.getData()))
         .toList()
         .flatMap(observables -> Observable.merge(observables)
             .doOnNext(baseV7Response -> System.out.println(baseV7Response)))

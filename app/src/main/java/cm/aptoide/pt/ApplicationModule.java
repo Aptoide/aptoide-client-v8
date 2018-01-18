@@ -51,7 +51,7 @@ import cm.aptoide.pt.analytics.analytics.EventsPersistence;
 import cm.aptoide.pt.analytics.analytics.FabricEventLogger;
 import cm.aptoide.pt.analytics.analytics.FacebookEventLogger;
 import cm.aptoide.pt.analytics.analytics.FlurryEventLogger;
-import cm.aptoide.pt.analytics.analytics.KnockEventLogger;
+import cm.aptoide.pt.analytics.analytics.HttpKnockEventLogger;
 import cm.aptoide.pt.analytics.analytics.RealmEventMapper;
 import cm.aptoide.pt.analytics.analytics.RealmEventPersistence;
 import cm.aptoide.pt.analytics.analytics.RetrofitAptoideBiService;
@@ -889,33 +889,35 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
             Schedulers.computation(), 20, DateUtils.MINUTE_IN_MILLIS));
   }
 
-  @Singleton @Provides @Named("Facebook") EventLogger providesFacebookEventLogger() {
-    return new FacebookEventLogger();
+  @Singleton @Provides @Named("Facebook") EventLogger providesFacebookEventLogger(
+      AppEventsLogger facebook) {
+    return new FacebookEventLogger(facebook);
   }
 
   @Singleton @Provides @Named("Flurry") EventLogger providesFlurryEventLogger() {
     return new FlurryEventLogger();
   }
 
-  @Singleton @Provides @Named("Fabric") EventLogger providesFabricEventLogger() {
-    return new FabricEventLogger();
+  @Singleton @Provides @Named("Fabric") EventLogger providesFabricEventLogger(Answers fabric) {
+    return new FabricEventLogger(fabric);
   }
 
-  @Singleton @Provides @Named("Knock") EventLogger providesKnockEventLogger() {
-    return new KnockEventLogger();
+  @Singleton @Provides HttpKnockEventLogger providesknockEventLogger(
+      @Named("default") OkHttpClient client) {
+    return new HttpKnockEventLogger(client);
   }
 
   @Singleton @Provides AnalyticsManager providesAnalyticsManager(
       @Named("Aptoide") EventLogger aptoideBiEventLogger,
       @Named("Facebook") EventLogger facebookEventLogger,
-      @Named("Fabric") EventLogger fabricEventLogger, @Named("Knock") EventLogger knockEventLogger,
-      @Named("Flurry") EventLogger flurryEventLogger) {
+      @Named("Fabric") EventLogger fabricEventLogger,
+      @Named("Flurry") EventLogger flurryEventLogger, HttpKnockEventLogger knockEventLogger) {
     return new AnalyticsManager.Builder().addLogger(aptoideBiEventLogger,
         Arrays.asList(PostAnalytics.OPEN_EVENT_NAME, "event name"))
         .addLogger(facebookEventLogger, Arrays.asList(PostAnalytics.OPEN_EVENT_NAME))
         .addLogger(fabricEventLogger, Collections.emptyList())
-        .addLogger(knockEventLogger, Collections.emptyList())
         .addLogger(flurryEventLogger, Collections.emptyList())
+        .setKnockLogger(knockEventLogger)
         .build();
   }
 }

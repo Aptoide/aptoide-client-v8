@@ -10,6 +10,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Matchers;
 import rx.Completable;
 import rx.schedulers.Schedulers;
 import rx.schedulers.TestScheduler;
@@ -43,7 +44,7 @@ public class AptoideBiAnalyticsTest {
     analytics.log(event.getEventName(), event.getData(), event.getAction(), event.getContext());
 
     verify(aptoideBiEventService).send(any());
-    verify(eventPersistenceMock).save(any());
+    verify(eventPersistenceMock).save(Matchers.<Event>any());
     Assert.assertEquals(0, eventList.size());
   }
 
@@ -69,7 +70,7 @@ public class AptoideBiAnalyticsTest {
     analytics.log(event.getEventName(), event.getData(), event.getAction(), event.getContext());
 
     verify(aptoideBiEventService, times(2)).send(any());
-    verify(eventPersistenceMock, times(4)).save(any());
+    verify(eventPersistenceMock, times(4)).save(Matchers.<Event>any());
     Assert.assertEquals(0, eventList.size());
   }
 
@@ -91,7 +92,7 @@ public class AptoideBiAnalyticsTest {
     analytics.log(event.getEventName(), event.getData(), event.getAction(), event.getContext());
 
     verify(aptoideBiEventService, times(0)).send(eventList);
-    verify(eventPersistenceMock, times(1)).save(any());
+    verify(eventPersistenceMock, times(1)).save(any(Event.class));
     Assert.assertEquals(1, eventList.size());
   }
 
@@ -114,7 +115,7 @@ public class AptoideBiAnalyticsTest {
     scheduler.advanceTimeBy(2, TimeUnit.SECONDS);
 
     verify(aptoideBiEventService).send(any());
-    verify(eventPersistenceMock).save(any());
+    verify(eventPersistenceMock).save(Matchers.<Event>any());
     Assert.assertEquals(0, eventList.size());
   }
 
@@ -137,7 +138,7 @@ public class AptoideBiAnalyticsTest {
     scheduler.advanceTimeBy(1, TimeUnit.SECONDS);
 
     verify(aptoideBiEventService, times(0)).send(any());
-    verify(eventPersistenceMock, times(1)).save(any());
+    verify(eventPersistenceMock, times(1)).save(Matchers.<Event>any());
     Assert.assertEquals(1, eventList.size());
   }
 
@@ -155,7 +156,7 @@ public class AptoideBiAnalyticsTest {
       }
       subject.onNext(new ArrayList<>(eventList));
     })).when(eventPersistenceMock)
-        .save(any());
+        .save(Matchers.<Event>any());
 
     doAnswer(invocation -> Completable.fromAction(() -> {
       Object[] arguments = invocation.getArguments();
