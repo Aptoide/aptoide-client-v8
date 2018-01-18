@@ -738,8 +738,6 @@ public class TimelineAnalytics {
     String store = null;
     data.put("card_type", post.getType());
     data.put("position", event.getPosition());
-    data.put("previous_context", previousContext);
-    data.put("store", store);
 
     if (navigationTracker.getPreviousScreen() != null) {
       previousContext = navigationTracker.getPreviousScreen()
@@ -747,6 +745,9 @@ public class TimelineAnalytics {
       store = navigationTracker.getPreviousScreen()
           .getStore();
     }
+
+    data.put("previous_context", previousContext);
+    data.put("store", store);
 
     result.put("status", status ? "success" : "fail");
 
@@ -820,8 +821,6 @@ public class TimelineAnalytics {
     String previousContext = null;
     String store = null;
     data.put("card_type", post.getType());
-    data.put("previous_context", previousContext);
-    data.put("store", store);
 
     if (navigationTracker.getPreviousScreen() != null) {
       previousContext = navigationTracker.getPreviousScreen()
@@ -829,6 +828,9 @@ public class TimelineAnalytics {
       store = navigationTracker.getPreviousScreen()
           .getStore();
     }
+
+    data.put("previous_context", previousContext);
+    data.put("store", store);
 
     result.put("status", status ? "success" : "fail");
 
