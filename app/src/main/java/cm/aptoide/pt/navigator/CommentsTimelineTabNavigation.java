@@ -8,17 +8,30 @@ import android.os.Bundle;
 
 public class CommentsTimelineTabNavigation implements TabNavigation {
   public static final String COMMENT_KEY = "comment_key";
-  private String commentBody;
+  public static final String POST_ID = "post_id";
+  public static final String ERROR_STATUS = "error_status";
 
-  public CommentsTimelineTabNavigation(String commentBody) {
+  private String commentBody;
+  private String postId;
+  private boolean error;
+
+  public CommentsTimelineTabNavigation(String commentBody, String postId, boolean error) {
     this.commentBody = commentBody;
+    this.postId = postId;
+    this.error = error;
+  }
+
+  public CommentsTimelineTabNavigation(String postId, boolean error) {
+    this.postId = postId;
+    this.error = error;
+    this.commentBody = "";
   }
 
   @Override public Bundle getBundle() {
     Bundle bundle = new Bundle();
     bundle.putString(COMMENT_KEY, commentBody);
-
-
+    bundle.putString(POST_ID, postId);
+    bundle.putBoolean(ERROR_STATUS, error);
 
 
     return bundle;

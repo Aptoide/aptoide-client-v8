@@ -106,4 +106,8 @@ public interface TimelineView extends View {
   void showUserUnsubscribedMessage(String userName);
 
   void showLastComment(String comment);
+
+  void sendCommentSuccessAnalytics(String postId);
+
+  void sendCommentErrorAnalytics(String postId);
 }

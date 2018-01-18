@@ -1126,16 +1126,21 @@ public class TimelinePresenter implements Presenter {
         }, throwable -> {
           crashReport.log(throwable);
           view.showGenericError();
-          timelineAnalytics.sendCommentCompleted(false);
+          //timelineAnalytics.sendCommentCompleted(false);
         });
 
     //comment from comments fragment
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> timelineNavigation.commentNavigation()
-            .doOnNext(comment -> {
-
-              view.showLastComment(comment);
+            .observeOn(viewScheduler)
+            .doOnNext(commentWrapper -> {
+              if (commentWrapper.getError()) {
+                view.sendCommentErrorAnalytics(commentWrapper.getPostId());
+              } else {
+                view.sendCommentSuccessAnalytics(commentWrapper.getPostId());
+                view.showLastComment(commentWrapper.getCommentText());
+              }
             })
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

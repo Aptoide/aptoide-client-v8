@@ -140,7 +140,8 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
         new ArrayList<>()), new CommentMapper(
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager())),
         new CommentsNavigator(getFragmentNavigator(), getActivity().getSupportFragmentManager(),
-            PublishSubject.create(), tabNavigator), AndroidSchedulers.mainThread(),
+            PublishSubject.create(), PublishSubject.create(), tabNavigator),
+        AndroidSchedulers.mainThread(),
         CrashReport.getInstance(), getArguments().getString(POST_ID_KEY), shouldShowCommentDialog));
   }
 

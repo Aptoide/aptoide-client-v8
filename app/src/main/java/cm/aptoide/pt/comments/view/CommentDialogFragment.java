@@ -16,6 +16,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.comments.CommentBeforeSubmissionCallback;
 import cm.aptoide.pt.comments.CommentDialogCallbackContract;
+import cm.aptoide.pt.comments.CommentOnErrorCallbackContract;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -60,6 +61,7 @@ public class CommentDialogFragment
   private boolean reply;
   private CommentDialogCallbackContract commentDialogCallbackContract;
   private CommentBeforeSubmissionCallback commentBeforeSubmissionCallback;
+  private CommentOnErrorCallbackContract commentOnErrorCallbackContract;
   private BodyInterceptor<BaseBody> baseBodyBodyInterceptor;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
@@ -174,7 +176,9 @@ public class CommentDialogFragment
 
     Button cancelButton = (Button) view.findViewById(R.id.cancel_button);
     cancelButton.setOnClickListener(a -> {
-      logAnalytics(false);
+      if (commentOnErrorCallbackContract != null) {
+        commentOnErrorCallbackContract.onError(idAsString);
+      }
       CommentDialogFragment.this.dismiss();
     });
 
@@ -230,7 +234,10 @@ public class CommentDialogFragment
         .filter(inputText -> {
           if (TextUtils.isEmpty(inputText)) {
             enableError(onEmptyTextError);
-            logAnalytics(false);
+            if (commentOnErrorCallbackContract != null) {
+              commentOnErrorCallbackContract.onError(idAsString);
+            }
+            //logAnalytics(false);
             return false;
           }
           disableError();
@@ -239,7 +246,7 @@ public class CommentDialogFragment
         .flatMap(inputText -> {
           if (commentBeforeSubmissionCallback != null) {
             commentBeforeSubmissionCallback.onCommentBeforeSubmission(inputText);
-            logAnalytics(true);
+            //logAnalytics(true);
             this.dismiss();
             return Observable.empty();
           }
@@ -249,7 +256,10 @@ public class CommentDialogFragment
               .doOnError(e -> {
                 CrashReport.getInstance()
                     .log(e);
-                logAnalytics(false);
+                if (commentOnErrorCallbackContract != null) {
+                  commentOnErrorCallbackContract.onError(idAsString);
+                }
+                //logAnalytics(false);
                 ShowMessage.asSnack(this, R.string.error_occured);
               })
               .retry()
@@ -258,27 +268,33 @@ public class CommentDialogFragment
         .subscribe(resp -> {
           if (resp.isOk()) {
             this.dismiss();
-            logAnalytics(true);
+            //logAnalytics(true);
             if (commentDialogCallbackContract != null) {
               commentDialogCallbackContract.okSelected(resp, idAsLong, previousCommentId,
                   idAsString);
             }
           } else {
             ShowMessage.asSnack(this, R.string.error_occured);
-            logAnalytics(false);
+            if (commentOnErrorCallbackContract != null) {
+              commentOnErrorCallbackContract.onError(idAsString);
+            }
+            //logAnalytics(false);
           }
         }, throwable -> {
-          logAnalytics(false);
+          if (commentOnErrorCallbackContract != null) {
+            commentOnErrorCallbackContract.onError(idAsString);
+          }
+          //logAnalytics(false);
           CrashReport.getInstance()
               .log(throwable);
         });
   }
 
-  private void logAnalytics(boolean success) {
-    if (commentType.equals(CommentType.TIMELINE)) {
-      timelineAnalytics.sendCommentCompleted(success);
-    }
-  }
+  //private void logAnalytics(boolean success) {
+  //  if (commentType.equals(CommentType.TIMELINE)) {
+  //    timelineAnalytics.sendCommentCompleted(success);
+  //  }
+  //}
 
   private void disableError() {
     textInputLayout.setErrorEnabled(false);
@@ -344,5 +360,9 @@ public class CommentDialogFragment
 
   public void setCommentBeforeSubmissionCallbackContract(CommentBeforeSubmissionCallback callback) {
     this.commentBeforeSubmissionCallback = callback;
+  }
+
+  public void setCommentOnErrorCallbackContract(CommentOnErrorCallbackContract callback) {
+    this.commentOnErrorCallbackContract = callback;
   }
 }

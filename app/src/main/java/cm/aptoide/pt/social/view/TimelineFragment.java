@@ -603,6 +603,16 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     Snackbar.make(getView(), comment, Snackbar.LENGTH_LONG).show();
   }
 
+  @Override public void sendCommentSuccessAnalytics(String postId) {
+    timelineAnalytics.sendCommentCompletedSuccess(adapter.getPostById(postId),
+        adapter.getPostPosition(postId));
+  }
+
+  @Override public void sendCommentErrorAnalytics(String postId) {
+    timelineAnalytics.sendCommentCompletedError(adapter.getPostById(postId),
+        adapter.getPostPosition(postId));
+  }
+
   private boolean isEndReached() {
     return layoutManager.getItemCount() - layoutManager.findLastVisibleItemPosition()
         <= visibleThreshold;

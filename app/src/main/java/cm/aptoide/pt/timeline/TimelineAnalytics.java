@@ -699,6 +699,16 @@ public class TimelineAnalytics {
     analytics.sendEvent(createEvent(COMMENT_SEND, data));
   }
 
+  public void sendCommentCompletedSuccess(Post post, int position) {
+    HashMap<String, Object> data = parseCommentCompleted(post, position, true);
+    analytics.sendEvent(createEvent(COMMENT_SEND, data));
+  }
+
+  public void sendCommentCompletedError(Post post, int position) {
+    HashMap<String, Object> data = parseCommentCompleted(post, position, false);
+    analytics.sendEvent(createEvent(COMMENT_SEND, data));
+  }
+
   public void sendFabClicked() {
     HashMap<String, Object> data = new HashMap<>();
     String previousContext = null;
@@ -725,6 +735,37 @@ public class TimelineAnalytics {
   public Completable setPostRead(String cardId, String name) {
     return readPostsPersistence.addPost(cardId, name);
   }
+
+  public HashMap<String, Object> parseCommentCompleted(Post post, int position, boolean status) {
+
+    final CardType postType = post.getType();
+
+    HashMap<String, Object> data = new HashMap<>();
+    HashMap<String, Object> result = new HashMap<>();
+    HashMap<String, Object> error = new HashMap<>();
+    String previousContext = null;
+    String store = null;
+    data.put("card_type", post.getType());
+    data.put("position", position);
+
+    if (navigationTracker.getPreviousScreen() != null) {
+      previousContext = navigationTracker.getPreviousScreen()
+          .getFragment();
+      store = navigationTracker.getPreviousScreen()
+          .getStore();
+    }
+
+    data.put("previous_context", previousContext);
+    data.put("store", store);
+
+    result.put("status", status ? "success" : "fail");
+
+    data = handleCardType(postType, data, post);
+    data.put("result", result);
+
+    return data;
+  }
+
 
   public HashMap<String, Object> parseEventData(CardTouchEvent event, boolean status,
       EventErrorHandler.GenericErrorEvent errorCode) {
@@ -757,54 +798,7 @@ public class TimelineAnalytics {
       result.put("error", error);
     }
 
-    if (postType.isMedia()) {
-      HashMap<String, Object> specific = new HashMap<>();
-      Media card = (Media) post;
-      data.put("source", card.getPublisherName());
-      specific.put("app", card.getRelatedApp()
-          .getPackageName());
-      specific.put("url", card.getMediaLink()
-          .getUrl());
-      data.put("specific", specific);
-    } else if (postType.equals(CardType.RECOMMENDATION)
-        || postType.equals(CardType.SOCIAL_POST_RECOMMENDATION)
-        || postType.equals(CardType.SOCIAL_RECOMMENDATION)
-        || postType.equals(CardType.SIMILAR)
-        || postType.equals(CardType.SOCIAL_INSTALL)
-        || postType.equals(CardType.AGGREGATED_SOCIAL_INSTALL)) {
-      HashMap<String, Object> specific = new HashMap<>();
-      if (post instanceof RatedRecommendation) {
-        RatedRecommendation card = (RatedRecommendation) post;
-        if (card.getPoster()
-            .getStore() != null) {
-          data.put("source", card.getPoster()
-              .getStore()
-              .getName());
-        } else {
-          data.put("source", card.getPoster()
-              .getPrimaryName());
-        }
-        specific.put("app", card.getPackageName());
-        data.put("specific", specific);
-      } else {
-        Recommendation card = (Recommendation) post;
-        data.put("source", card.getPublisherName());
-        specific.put("app", card.getPackageName());
-        data.put("specific", specific);
-      }
-    } else if (postType.equals(CardType.UPDATE)) {
-      HashMap<String, Object> specific = new HashMap<>();
-      AppUpdate card = (AppUpdate) post;
-      data.put("source", SOURCE_APTOIDE);
-      specific.put("app", card.getPackageName());
-      data.put("specific", specific);
-    } else if (postType.equals(CardType.STORE)
-        || postType.equals(CardType.SOCIAL_STORE)
-        || postType.equals(CardType.AGGREGATED_SOCIAL_STORE)) {
-      HashMap<String, Object> specific = new HashMap<>();
-      StoreLatestApps card = (StoreLatestApps) post;
-      data.put("source", SOURCE_APTOIDE);
-    }
+    data = handleCardType(postType, data, post);
     data.put("result", result);
     return data;
   }
@@ -816,7 +810,6 @@ public class TimelineAnalytics {
     HashMap<String, Object> data = new HashMap<>();
     HashMap<String, Object> error = new HashMap<>();
     HashMap<String, Object> result = new HashMap<>();
-    HashMap<String, Object> specific = new HashMap<>();
     EventErrorHandler errorHandler = new EventErrorHandler();
     String previousContext = null;
     String store = null;
@@ -840,6 +833,16 @@ public class TimelineAnalytics {
       result.put("error", error);
     }
 
+    data = handleCardType(postType, data, post);
+
+    data.put("result", result);
+    return data;
+  }
+
+  public HashMap<String, Object> handleCardType(CardType postType, HashMap<String, Object> data,
+      Post post) {
+
+    HashMap<String, Object> specific = new HashMap<>();
     if (postType.isMedia()) {
       Media card = (Media) post;
       data.put("source", card.getPublisherName());
@@ -870,7 +873,6 @@ public class TimelineAnalytics {
       } else {
         Recommendation card = (Recommendation) post;
         data.put("source", card.getPublisherName());
-        data.put("store", store);
         specific.put("app", card.getPackageName());
         data.put("specific", specific);
       }
@@ -879,14 +881,9 @@ public class TimelineAnalytics {
       data.put("source", SOURCE_APTOIDE);
       specific.put("app", card.getPackageName());
       data.put("specific", specific);
-      data.put("result", result);
-    } else if (postType.equals(CardType.STORE)
-        || postType.equals(CardType.SOCIAL_STORE)
-        || postType.equals(CardType.AGGREGATED_SOCIAL_STORE)) {
-      StoreLatestApps card = (StoreLatestApps) post;
+    } else if (postType.equals(CardType.STORE) || postType.equals(CardType.SOCIAL_STORE) || postType.equals(CardType.AGGREGATED_SOCIAL_STORE)) {
       data.put("source", SOURCE_APTOIDE);
     }
-    data.put("result", result);
     return data;
   }
 

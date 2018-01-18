@@ -2,6 +2,7 @@ package cm.aptoide.pt.social.commentslist;
 
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import rx.Scheduler;
@@ -108,13 +109,25 @@ public class PostCommentsPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> commentsNavigator.commentDialogResult())
-        .map(wrapper -> comments.mapToComment(wrapper))
         .observeOn(viewScheduler)
-        .doOnNext(comment -> {
+        .doOnNext(wrapper -> {
+          Comment comment = comments.mapToComment(wrapper);
           view.showCommentSubmittedMessage();
           view.showNewComment(comment);
-          commentsNavigator.navigateToPostCommentInTimeline(comment.getBody());
+          commentsNavigator.navigateToPostCommentInTimeline(wrapper.getStringAsId(),
+              comment.getBody());
         })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> commentsNavigator.commentDialogOnError())
+        .observeOn(viewScheduler)
+        .doOnNext(postId -> commentsNavigator.navigateToPostCommentInTimelineError(postId))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {

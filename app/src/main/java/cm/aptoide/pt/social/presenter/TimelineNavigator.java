@@ -12,6 +12,7 @@ import cm.aptoide.pt.navigator.TabNavigation;
 import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.notification.view.InboxFragment;
 import cm.aptoide.pt.social.commentslist.PostCommentsFragment;
+import cm.aptoide.pt.social.data.PostCommentDataWrapper;
 import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.timeline.post.PostFragment;
 import cm.aptoide.pt.timeline.view.TimeLineLikesFragment;
@@ -136,12 +137,14 @@ public class TimelineNavigator {
             .getString(AppsTimelineTabNavigation.CARD_ID_KEY));
   }
 
-  public Observable<String> commentNavigation() {
+  public Observable<PostCommentDataWrapper> commentNavigation() {
     return tabNavigator.navigation()
         .filter(tabNavigation -> tabNavigation.getTab() == TabNavigation.COMMENTS)
         .doOnNext(tabNavigation -> tabNavigator.clearNavigation())
-        .map(tabNavigation -> tabNavigation.getBundle()
-            .getString(CommentsTimelineTabNavigation.COMMENT_KEY));
+        .map(tabNavigation -> new PostCommentDataWrapper(tabNavigation.getBundle()
+            .getString(CommentsTimelineTabNavigation.POST_ID), tabNavigation.getBundle()
+            .getString(CommentsTimelineTabNavigation.COMMENT_KEY), tabNavigation.getBundle()
+            .getBoolean(CommentsTimelineTabNavigation.ERROR_STATUS)));
   }
 
   public void navigateToNotificationCenter() {
