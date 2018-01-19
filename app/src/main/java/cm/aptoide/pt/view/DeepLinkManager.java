@@ -166,11 +166,9 @@ public class DeepLinkManager {
   private void searchDeepLink(String query) {
     searchNavigator.navigate(query);
     if (query == null || query.isEmpty()) {
-      searchAnalytics.searchStart(SearchSource.WIDGET, this.getClass()
-          .getSimpleName());
+      searchAnalytics.searchStart(SearchSource.WIDGET,false);
     } else {
-      searchAnalytics.searchStart(SearchSource.DEEP_LINK, this.getClass()
-          .getSimpleName());
+      searchAnalytics.searchStart(SearchSource.DEEP_LINK, false);
     }
   }
 

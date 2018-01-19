@@ -42,6 +42,7 @@ import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.AnalyticsDataSaver;
+import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.TrackerFilter;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
@@ -52,6 +53,8 @@ import cm.aptoide.pt.analytics.analytics.FabricEventLogger;
 import cm.aptoide.pt.analytics.analytics.FacebookEventLogger;
 import cm.aptoide.pt.analytics.analytics.FlurryEventLogger;
 import cm.aptoide.pt.analytics.analytics.KnockEventLogger;
+import cm.aptoide.pt.app.AppViewAnalytics;
+import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
@@ -108,6 +111,7 @@ import cm.aptoide.pt.networking.NoAuthenticationBodyInterceptorV3;
 import cm.aptoide.pt.networking.NoOpTokenInvalidator;
 import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
+import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.AdultContent;
 import cm.aptoide.pt.preferences.LocalPersistenceAdultContent;
 import cm.aptoide.pt.preferences.Preferences;
@@ -126,6 +130,9 @@ import cm.aptoide.pt.search.suggestions.SearchSuggestionRemoteRepository;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionService;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.suggestions.TrendingService;
+import cm.aptoide.pt.social.data.CardType;
+import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
+import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
@@ -133,10 +140,13 @@ import cm.aptoide.pt.sync.SyncScheduler;
 import cm.aptoide.pt.sync.alarm.AlarmSyncScheduler;
 import cm.aptoide.pt.sync.alarm.AlarmSyncService;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
+import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.timeline.post.PostAnalytics;
+import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.q.QManager;
+import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
@@ -168,7 +178,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -221,13 +230,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides InstallerAnalytics provideInstallerAnalytics(Answers answers,
-      AppEventsLogger appEventsLogger) {
-    return new InstallFabricEvents(Analytics.getInstance(), answers, appEventsLogger);
+      AppEventsLogger appEventsLogger, AnalyticsManager analyticsManager) {
+    return new InstallFabricEvents(analyticsManager);
   }
 
   @Singleton @Provides AptoideDownloadManager provideAptoideDownloadManager(DownloadAccessor downloadAccessor,
       @Named("user-agent") Interceptor userAgentInterceptor, CacheHelper cacheHelper,
-      AuthenticationPersistence authenticationPersistence,AnalyticsManager analyticsManager) {
+      AuthenticationPersistence authenticationPersistence,AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
     final String apkPath = cachePath + "apks/";
     final String obbPath = cachePath + "obb/";
     final OkHttpClient.Builder httpClientBuilder =
@@ -247,7 +256,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AptoideDownloadManager(downloadAccessor, cacheHelper,
         new FileUtils(action -> Analytics.File.moveFile(action)),
         new DownloadAnalytics(Analytics.getInstance(),
-            new DownloadCompleteAnalytics(analyticsManager)),
+            new DownloadCompleteAnalytics(analyticsManager, navigationTracker)),
         FileDownloader.getImpl(), cachePath, apkPath, obbPath);
   }
 
@@ -701,8 +710,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides PageViewsAnalytics providePageViewsAnalytics(AppEventsLogger appEventsLogger,
-      NavigationTracker navigationTracker) {
-    return new PageViewsAnalytics(appEventsLogger, Analytics.getInstance(), navigationTracker);
+      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
+    return new PageViewsAnalytics(analyticsManager,
+        navigationTracker);
   }
 
   @Singleton @Provides NavigationTracker provideNavigationTracker() {
@@ -724,14 +734,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new CallbackManagerImpl();
   }
 
-  @Singleton @Provides AccountAnalytics provideAccountAnalytics(@Named("pool-v7")
-      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
-      @Named("default") OkHttpClient defaulClient, TokenInvalidator tokenInvalidator,
-      @Named("default") SharedPreferences defaultSharedPreferences, AppEventsLogger appEventsLogger,
-      NavigationTracker navigationTracker) {
-    return new AccountAnalytics(Analytics.getInstance(), bodyInterceptorPoolV7, defaulClient,
-        WebService.getDefaultConverter(), tokenInvalidator, BuildConfig.APPLICATION_ID,
-        defaultSharedPreferences, appEventsLogger, navigationTracker, CrashReport.getInstance());
+  @Singleton @Provides AccountAnalytics provideAccountAnalytics(NavigationTracker navigationTracker, AnalyticsManager analyticsManager) {
+    return new AccountAnalytics(navigationTracker, CrashReport.getInstance(),
+        analyticsManager);
   }
 
   @Singleton @Provides StoreManager provideStoreManager(@Named("default") OkHttpClient okHttpClient,
@@ -866,19 +871,41 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("Facebook") EventLogger facebookEventLogger,
       @Named("Fabric") EventLogger fabricEventLogger, @Named("Knock") EventLogger knockEventLogger,
       @Named("Flurry") EventLogger flurryEventLogger) {
+    List<String> flurryEvents = Arrays.asList(InstallAnalytics.APPLICATION_INSTALL,DownloadCompleteAnalytics.PARTIAL_EVENT_NAME,
+        DownloadCompleteAnalytics.EVENT_NAME, AppViewAnalytics.HOME_PAGE_EDITORS_CHOICE_FLURRY,AppViewAnalytics.APP_VIEW_OPEN_FROM, StoreAnalytics.STORES_TAB_OPEN,
+        StoreAnalytics.STORES_TAB_INTERACT, StoreAnalytics.STORES_OPEN,StoreAnalytics.STORES_INTERACT, AccountAnalytics.SIGN_UP_EVENT_NAME,AccountAnalytics.LOGIN_EVENT_NAME,
+        FirstLaunchAnalytics.FIRST_LAUNCH,AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN, AccountAnalytics.CREATE_USER_PROFILE, AccountAnalytics.PROFILE_SETTINGS);
+    for(CardType cardType : CardType.values()){
+      flurryEvents.add(cardType.name() + "_" + TimelineAnalytics.APPS_TIMELINE_EVENT);
+    }
     return new AnalyticsManager.Builder().addLogger(aptoideBiEventLogger,
-        Arrays.asList(PostAnalytics.OPEN_EVENT_NAME,PostAnalytics.POST))
+        Arrays.asList(PostAnalytics.OPEN_EVENT_NAME,PostAnalytics.POST,AppViewAnalytics.OPEN_APP_VIEW,NotificationAnalytics.NOTIFICATION_EVENT_NAME,
+            TimelineAnalytics.OPEN_APP,TimelineAnalytics.UPDATE_APP, TimelineAnalytics.OPEN_STORE, TimelineAnalytics.OPEN_ARTICLE,TimelineAnalytics.LIKE,
+            TimelineAnalytics.OPEN_BLOG, TimelineAnalytics.OPEN_VIDEO, TimelineAnalytics.OPEN_CHANNEL, TimelineAnalytics.OPEN_STORE_PROFILE, TimelineAnalytics.COMMENT,
+            TimelineAnalytics.SHARE, TimelineAnalytics.SHARE_SEND, TimelineAnalytics.COMMENT_SEND,TimelineAnalytics.FAB,TimelineAnalytics.SCROLLING_EVENT,TimelineAnalytics.OPEN_TIMELINE_EVENT,
+            AccountAnalytics.APTOIDE_EVENT_NAME))
         .addLogger(facebookEventLogger, Arrays.asList(PostAnalytics.OPEN_EVENT_NAME,PostAnalytics.NEW_POST_EVENT_NAME,PostAnalytics.POST_COMPLETE,
             InstallAnalytics.APPLICATION_INSTALL, InstallAnalytics.NOTIFICATION_APPLICATION_INSTALL, InstallAnalytics.EDITORS_APPLICATION_INSTALL,
             AddressBookAnalytics.FOLLOW_FRIENDS_CHOOSE_NETWORK, AddressBookAnalytics.FOLLOW_FRIENDS_HOW_TO,
             AddressBookAnalytics.FOLLOW_FRIENDS_APTOIDE_ACCESS, AddressBookAnalytics.FOLLOW_FRIENDS_NEW_CONNECTIONS,
             AddressBookAnalytics.FOLLOW_FRIENDS_SET_MY_PHONENUMBER, DownloadCompleteAnalytics.PARTIAL_EVENT_NAME,
             DownloadCompleteAnalytics.NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME, DownloadCompleteAnalytics.EVENT_NAME,
-            SearchAnalytics.SEARCH,SearchAnalytics.NO_RESULTS,SearchAnalytics.APP_CLICK,SearchAnalytics.SEARCH_START))
-        .addLogger(fabricEventLogger, Arrays.asList(DownloadCompleteAnalytics.EVENT_NAME))
-        .addLogger(knockEventLogger, Collections.emptyList())
-        .addLogger(flurryEventLogger,  Arrays.asList(InstallAnalytics.APPLICATION_INSTALL,DownloadCompleteAnalytics.PARTIAL_EVENT_NAME,
-            DownloadCompleteAnalytics.EVENT_NAME))
+            SearchAnalytics.SEARCH,SearchAnalytics.NO_RESULTS,SearchAnalytics.APP_CLICK,SearchAnalytics.SEARCH_START,
+            AppViewAnalytics.EDITORS_CHOICE_CLICKS,AppViewAnalytics.APP_VIEW_OPEN_FROM, AppViewAnalytics.APP_VIEW_INTERACT, NotificationAnalytics.NOTIFICATION_RECEIVED,
+            NotificationAnalytics.NOTIFICATION_PRESSED,NotificationAnalytics.NOTIFICATION_RECEIVED,
+            SpotAndShareAnalytics.EVENT_NAME_SPOT_SHARE,SpotAndShareAnalytics.EVENT_NAME_SPOT_SHARE_JOIN,SpotAndShareAnalytics.EVENT_NAME_SPOT_SHARE_CREATE,
+            SpotAndShareAnalytics.EVENT_NAME_SPOT_SHARE_SEND_APP, SpotAndShareAnalytics.EVENT_NAME_SPOT_SHARE_RECEIVE_APP,
+            TimelineAnalytics.SOCIAL_CARD_PREVIEW, TimelineAnalytics.CARD_ACTION, TimelineAnalytics.TIMELINE_OPENED,TimelineAnalytics.FOLLOW_FRIENDS,
+            StoreAnalytics.STORES_TAB_OPEN, StoreAnalytics.STORES_TAB_INTERACT, StoreAnalytics.STORES_OPEN, StoreAnalytics.STORES_INTERACT,AccountAnalytics.SIGN_UP_EVENT_NAME,
+            AccountAnalytics.LOGIN_EVENT_NAME, UpdatesAnalytics.UPDATE_EVENT, PageViewsAnalytics.PAGE_VIEW_EVENT, DrawerAnalytics.DRAWER_OPEN_EVENT,
+            DrawerAnalytics.DRAWER_INTERACT_EVENT, FirstLaunchAnalytics.FIRST_LAUNCH, InstallFabricEvents.ROOT_V2_COMPLETE, InstallFabricEvents.ROOT_V2_START,
+            AppViewSimilarAppAnalytics.APP_VIEW_SIMILAR_APP_SLIDE_IN,AppViewSimilarAppAnalytics.SIMILAR_APP_INTERACT,
+            NotLoggedInShareAnalytics.EVENT_NAME, AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN, AccountAnalytics.CREATE_USER_PROFILE, AccountAnalytics.PROFILE_SETTINGS,
+            AccountAnalytics.ENTRY))
+        .addLogger(fabricEventLogger, Arrays.asList(DownloadCompleteAnalytics.EVENT_NAME, SpotAndShareAnalytics.EVENT_NAME_SPOT_SHARE_PERMISSIONS,
+            InstallFabricEvents.ROOT_V2_COMPLETE, InstallFabricEvents.ROOT_V2_START))
+        .addLogger(knockEventLogger, Arrays.asList(NotificationAnalytics.NOTIFICATION_TOUCH))
+        .addLogger(flurryEventLogger, flurryEvents)
         .addDataSaver(new AnalyticsDataSaver())
         .build();
   }

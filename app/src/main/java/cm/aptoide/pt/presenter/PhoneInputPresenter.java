@@ -33,7 +33,7 @@ public class PhoneInputPresenter implements PhoneInputContract.UserActionsListen
         .subscribeOn(AndroidSchedulers.mainThread())
         .subscribe(success1 -> {
           if (success) {
-            analytics.sendShareYourPhoneSuccessEvent(this.getClass().getSimpleName());
+            analytics.sendShareYourPhoneSuccessEvent();
             addressBookNavigation.navigateToThankYouConnectingFragment();
             mPhoneInputView.hideVirtualKeyboard();
           } else {

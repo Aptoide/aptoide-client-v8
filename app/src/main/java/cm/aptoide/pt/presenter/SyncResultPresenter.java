@@ -21,12 +21,12 @@ public class SyncResultPresenter implements SyncResultContract.UserActionsListen
 
   @Override public void allowFindClicked() {
     analytics.sendNewConnectionsAllowFriendsToFindYouEvent(
-        AddressBookAnalytics.HAS_NEW_CONNECTIONS_SCREEN, this.getClass().getSimpleName());
+        AddressBookAnalytics.HAS_NEW_CONNECTIONS_SCREEN);
     this.addressBookNavigation.navigateToPhoneInputView();
   }
 
   @Override public void doneClicked() {
-    analytics.sendNewConnectionsDoneEvent(AddressBookAnalytics.HAS_NEW_CONNECTIONS_SCREEN, this.getClass().getSimpleName());
+    analytics.sendNewConnectionsDoneEvent(AddressBookAnalytics.HAS_NEW_CONNECTIONS_SCREEN);
     this.addressBookNavigation.leaveAddressBook();
   }
 }

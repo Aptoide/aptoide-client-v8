@@ -26,8 +26,9 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DrawerAnalytics;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.app.view.AppViewFragment;
@@ -54,7 +55,6 @@ import cm.aptoide.pt.store.view.StorePagerAdapter;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.custom.BadgeView;
-import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -102,6 +102,7 @@ public class HomeFragment extends StoreFragment {
   private TrendingManager trendingManager;
   private SearchAnalytics searchAnalytics;
   @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -199,19 +200,16 @@ public class HomeFragment extends StoreFragment {
 
     crashReport = CrashReport.getInstance();
 
-    final Analytics analytics = Analytics.getInstance();
-
-    drawerAnalytics = new DrawerAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    drawerAnalytics = new DrawerAnalytics(analyticsManager,
+        navigationTracker);
 
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
 
     pageViewsAnalytics =
-        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            analytics, navigationTracker);
+        new PageViewsAnalytics(analyticsManager, navigationTracker);
 
-    searchAnalytics = new SearchAnalytics(analyticsManager);
+    searchAnalytics = new SearchAnalytics(analyticsManager, navigationTracker);
 
     setRegisterFragment(false);
     setHasOptionsMenu(true);
@@ -401,7 +399,7 @@ public class HomeFragment extends StoreFragment {
         int itemId = menuItem.getItemId();
         if (itemId == R.id.navigation_item_my_account) {
           drawerAnalytics.drawerInteract("My Account");
-          accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.MY_ACCOUNT);
+          accountNavigator.navigateToAccountView(AccountAnalytics.AccountOrigins.MY_ACCOUNT);
         } else {
           final FragmentNavigator navigator = getFragmentNavigator();
           if (itemId == R.id.shareapps) {

@@ -67,9 +67,9 @@ import rx.Single;
           view.collapseSearchBar();
           navigator.navigate(data.getQuery());
           if (data.isSuggestion()) {
-            searchAnalytics.searchFromSuggestion(data.getQuery(), data.getPosition(), this.getClass().getSimpleName());
+            searchAnalytics.searchFromSuggestion(data.getQuery(), data.getPosition());
           } else {
-            searchAnalytics.search(data.getQuery(), this.getClass().getSimpleName());
+            searchAnalytics.search(data.getQuery());
           }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

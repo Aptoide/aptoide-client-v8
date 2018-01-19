@@ -1,8 +1,8 @@
 package cm.aptoide.pt.timeline.view.login;
 
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 
 /**
@@ -25,7 +25,7 @@ public class TimelineLoginDisplayable extends Displayable {
   }
 
   public void login() {
-    accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.TIMELINE);
+    accountNavigator.navigateToAccountView(AccountAnalytics.AccountOrigins.TIMELINE);
   }
 
   public TimelineLoginDisplayable setAccountNavigator(AccountNavigator accountNavigator) {

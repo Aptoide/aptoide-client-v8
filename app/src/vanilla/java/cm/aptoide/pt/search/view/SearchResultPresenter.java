@@ -184,7 +184,7 @@ import rx.Single;
         .flatMap(__ -> onAdClickRelay)
         .doOnNext(data -> {
           analytics.searchAppClick(view.getViewModel()
-              .getCurrentQuery(), data.getPackageName(), this.getClass().getSimpleName());
+              .getCurrentQuery(), data.getPackageName());
           navigator.goToAppView(data);
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -241,7 +241,7 @@ import rx.Single;
     final long appId = searchApp.getAppId();
     final String storeName = searchApp.getStoreName();
     analytics.searchAppClick(view.getViewModel()
-        .getCurrentQuery(), packageName, this.getClass().getSimpleName());
+        .getCurrentQuery(), packageName);
     navigator.goToAppView(appId, packageName, defaultThemeName, storeName);
   }
 
@@ -350,7 +350,7 @@ import rx.Single;
             .doOnSuccess(itemCount -> {
               if (itemCount == 0) {
                 view.showNoResultsView();
-                analytics.searchNoResults(viewModel.getCurrentQuery(), this.getClass().getSimpleName());
+                analytics.searchNoResults(viewModel.getCurrentQuery());
               } else {
                 view.showResultsView();
                 if (viewModel.isAllStoresSelected()) {

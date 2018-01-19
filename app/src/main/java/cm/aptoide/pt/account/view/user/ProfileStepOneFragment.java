@@ -12,6 +12,7 @@ import android.widget.Button;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -20,6 +21,7 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
 import com.jakewharton.rxbinding.view.RxView;
+import javax.inject.Inject;
 import rx.Completable;
 import rx.Observable;
 
@@ -33,6 +35,7 @@ public class ProfileStepOneFragment extends BaseToolbarFragment implements Profi
   private ProgressDialog waitDialog;
   private boolean externalLogin;
   private AccountNavigator accountNavigator;
+  @Inject AccountAnalytics accountAnalytics;
 
   public static ProfileStepOneFragment newInstance() {
     return new ProfileStepOneFragment();
@@ -45,6 +48,7 @@ public class ProfileStepOneFragment extends BaseToolbarFragment implements Profi
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
     final Context context = getContext();
     accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
     waitDialog = GenericDialogs.createGenericPleaseWaitDialog(context,
@@ -110,7 +114,7 @@ public class ProfileStepOneFragment extends BaseToolbarFragment implements Profi
     final AptoideAccountManager accountManager =
         ((AptoideApplication) applicationContext).getAccountManager();
     attachPresenter(new ProfileStepOnePresenter(this, CrashReport.getInstance(), accountManager,
-        accountNavigator));
+        accountNavigator, accountAnalytics));
   }
 
   @Override protected void setupToolbarDetails(Toolbar toolbar) {

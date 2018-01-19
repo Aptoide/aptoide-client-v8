@@ -34,12 +34,12 @@ public class InviteFriendsPresenter implements InviteFriendsContract.UserActions
   }
 
   @Override public void doneClicked() {
-    analytics.sendNewConnectionsDoneEvent(screen, this.getClass().getSimpleName());
+    analytics.sendNewConnectionsDoneEvent(screen);
     this.addressBookNavigationManager.leaveAddressBook();
   }
 
   @Override public void shareClicked(Context context) {
-    analytics.sendNewConnectionsShareEvent(screen, this.getClass().getSimpleName());
+    analytics.sendNewConnectionsShareEvent(screen);
     AptoideAccountManager accountManager =
         ((AptoideApplication) context.getApplicationContext()).getAccountManager();
 

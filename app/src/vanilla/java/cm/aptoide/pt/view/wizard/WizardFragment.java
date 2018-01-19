@@ -13,6 +13,7 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.LoginBottomSheet;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -110,8 +111,9 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
 
     final AptoideAccountManager accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    final AccountAnalytics accountAnalytics = ((AptoideApplication) getContext().getApplicationContext()).getAccountAnalytics();
     WizardPresenter presenter =
-        new WizardPresenter(this, accountManager, CrashReport.getInstance());
+        new WizardPresenter(this, accountManager, CrashReport.getInstance(), accountAnalytics);
     attachPresenter(presenter);
     viewPager.addOnPageChangeListener(presenter);
   }

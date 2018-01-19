@@ -1,10 +1,10 @@
 package cm.aptoide.pt.app;
 
-import android.os.Bundle;
-import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.events.FacebookEvent;
+import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.logger.Logger;
-import com.facebook.appevents.AppEventsLogger;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by pedroribeiro on 10/05/17.
@@ -15,39 +15,46 @@ import com.facebook.appevents.AppEventsLogger;
 public class AppViewSimilarAppAnalytics {
 
   private static final String TAG = AppViewSimilarAppAnalytics.class.getSimpleName();
-
+  public static final String APP_VIEW_SIMILAR_APP_SLIDE_IN = "App_View_Similar_App_Slide_In";
+  public static final String SIMILAR_APP_INTERACT = "Similar_App_Interact";
   private static final String ACTION = "Action";
-  private Analytics analytics;
-  private AppEventsLogger facebook;
+  private AnalyticsManager analyticsManager;
+  private NavigationTracker navigationTracker;
 
-  public AppViewSimilarAppAnalytics(Analytics analytics, AppEventsLogger facebook) {
-    this.analytics = analytics;
-    this.facebook = facebook;
+  public AppViewSimilarAppAnalytics(AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
+    this.analyticsManager = analyticsManager;
+    this.navigationTracker = navigationTracker;
   }
 
   public void similarAppsIsShown() {
-    String eventName = EventNames.APP_VIEW_SIMILAR_APP_SLIDE_IN;
 
-    analytics.sendEvent(new FacebookEvent(facebook, eventName));
-    Logger.w(TAG, "Facebook Event: " + eventName);
+    analyticsManager.logEvent(new HashMap<>(),APP_VIEW_SIMILAR_APP_SLIDE_IN, AnalyticsManager.Action.CLICK, getViewName(true));
+    Logger.w(TAG, "Facebook Event: " + APP_VIEW_SIMILAR_APP_SLIDE_IN);
   }
 
   public void openSimilarApp() {
-    String eventName = EventNames.SIMILAR_APP_INTERACT;
-    Bundle parameters = createBundleData(ACTION, "Open App View");
-
-    analytics.sendEvent(new FacebookEvent(facebook, eventName, parameters));
-    Logger.w(TAG, "Facebook Event: " + eventName + " : " + parameters.toString());
+    Map<String, Object> parameters = createMapData(ACTION, "Open App View");
+    analyticsManager.logEvent(parameters,SIMILAR_APP_INTERACT, AnalyticsManager.Action.CLICK,getViewName(true));
+    Logger.w(TAG, "Facebook Event: " + SIMILAR_APP_INTERACT + " : " + parameters.toString());
   }
 
-  private Bundle createBundleData(String key, String value) {
-    final Bundle data = new Bundle();
-    data.putString(key, value);
+  private Map<String, Object> createMapData(String key, String value) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(key, value);
     return data;
   }
 
-  private static final class EventNames {
-    private static final String APP_VIEW_SIMILAR_APP_SLIDE_IN = "App_View_Similar_App_Slide_In";
-    private static final String SIMILAR_APP_INTERACT = "Similar_App_Interact";
+  private String getViewName(boolean isCurrent){
+    String viewName = "";
+    if(isCurrent){
+      viewName = navigationTracker.getCurrentViewName();
+    }
+    else{
+      viewName = navigationTracker.getPreviousViewName();
+    }
+    if(viewName.equals("")) {
+      return "AppViewSimilarAppAnalytics"; //Default value, shouldn't get here
+    }
+    return viewName;
   }
 }

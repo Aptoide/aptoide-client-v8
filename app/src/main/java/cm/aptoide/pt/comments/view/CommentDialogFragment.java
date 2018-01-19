@@ -13,7 +13,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.comments.CommentBeforeSubmissionCallback;
 import cm.aptoide.pt.comments.CommentDialogCallbackContract;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -31,7 +32,6 @@ import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import okhttp3.OkHttpClient;
@@ -67,6 +67,8 @@ public class CommentDialogFragment
   private SharedPreferences sharedPreferences;
   private StoreAnalytics storeAnalytics;
   private TimelineAnalytics timelineAnalytics;
+  private AnalyticsManager analyticsManager;
+  private NavigationTracker navigationTracker;
 
   public static CommentDialogFragment newInstanceStoreCommentReply(long storeId,
       long previousCommentId, String storeName) {
@@ -146,6 +148,8 @@ public class CommentDialogFragment
         AptoideUtils.StringU.getResString(R.string.ws_error_MARG_107, getContext().getResources());
     timelineAnalytics =
         ((AptoideApplication) getContext().getApplicationContext()).getTimelineAnalytics();
+    analyticsManager = application.getAnalyticsManager();
+    navigationTracker = application.getNavigationTracker();
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -183,8 +187,7 @@ public class CommentDialogFragment
 
     setupLogic();
     storeAnalytics =
-        new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance());
+        new StoreAnalytics(analyticsManager, navigationTracker);
 
     return view;
   }

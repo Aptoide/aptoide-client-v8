@@ -11,7 +11,6 @@ import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Download;
@@ -23,7 +22,6 @@ import cm.aptoide.pt.navigator.TabNavigation;
 import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.view.recycler.widget.Widget;
-import com.facebook.appevents.AppEventsLogger;
 import java.util.ArrayList;
 import rx.schedulers.Schedulers;
 
@@ -40,8 +38,8 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
 
   public UpdatesHeaderWidget(View itemView) {
     super(itemView);
-    updatesAnalytics = new UpdatesAnalytics(Analytics.getInstance(),
-        AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    updatesAnalytics = new UpdatesAnalytics(analyticsManager,
+        navigationTracker);
   }
 
   @Override protected void assignViews(View itemView) {

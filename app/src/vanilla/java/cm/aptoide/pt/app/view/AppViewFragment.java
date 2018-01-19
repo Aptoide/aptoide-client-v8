@@ -121,7 +121,6 @@ import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
-import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -186,13 +185,13 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private AccountNavigator accountNavigator;
   private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
   private CrashReport crashReport;
-  private NavigationTracker navigationTracker;
   private InstallAnalytics installAnalytics;
   private AppSearchSuggestionsView appSearchSuggestionsView;
   private SearchNavigator searchNavigator;
   private TrendingManager trendingManager;
   private SearchAnalytics searchAnalytics;
   @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -368,7 +367,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     converterFactory = WebService.getDefaultConverter();
     Analytics analytics = Analytics.getInstance();
 
-    installAnalytics = new InstallAnalytics(CrashReport.getInstance(), analyticsManager);
+    installAnalytics = new InstallAnalytics(CrashReport.getInstance(), analyticsManager,navigationTracker);
 
     timelineAnalytics = application.getTimelineAnalytics();
 
@@ -387,26 +386,22 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
         ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), StoredMinimalAd.class);
-    final SpotAndShareAnalytics spotAndShareAnalytics = new SpotAndShareAnalytics(analytics);
-    appViewAnalytics = new AppViewAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
-        httpClient, tokenInvalidator, converterFactory, sharedPreferences);
-    appViewSimilarAppAnalytics = new AppViewSimilarAppAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    final SpotAndShareAnalytics spotAndShareAnalytics = new SpotAndShareAnalytics(analyticsManager,
+        navigationTracker);
+    appViewAnalytics = new AppViewAnalytics(analyticsManager, navigationTracker);
+    appViewSimilarAppAnalytics = new AppViewSimilarAppAnalytics(analyticsManager, navigationTracker);
 
     installAppRelay = PublishRelay.create();
     shareAppHelper =
         new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
             spotAndShareAnalytics, timelineAnalytics, installAppRelay, sharedPreferences,
-            application.isCreateStoreUserPrivacyEnabled());
+            application.isCreateStoreUserPrivacyEnabled(),navigationTracker);
     downloadFactory = new DownloadFactory(getMarketName());
     storeAnalytics =
-        new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            analytics);
+        new StoreAnalytics(analyticsManager, navigationTracker);
     notLoggedInShareAnalytics = application.getNotLoggedInShareAnalytics();
-    navigationTracker = application.getNavigationTracker();
 
-    searchAnalytics = new SearchAnalytics(analyticsManager);
+    searchAnalytics = new SearchAnalytics(analyticsManager, navigationTracker);
 
     searchNavigator =
         new SearchNavigator(getFragmentNavigator(), application.getDefaultStoreName());
@@ -988,7 +983,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installDisplayable =
         AppViewInstallDisplayable.newInstance(getApp, installManager, getSearchAdResult(),
             shouldInstall, downloadFactory, timelineAnalytics, appViewAnalytics, installAppRelay,
-            this, new DownloadCompleteAnalytics(analyticsManager), navigationTracker,
+            this, new DownloadCompleteAnalytics(analyticsManager, navigationTracker), navigationTracker,
             getEditorsBrickPosition(), installAnalytics,
             notificationAnalytics.getCampaignId(app.getPackageName(), app.getId()),
             notificationAnalytics.getAbTestingGroup(app.getPackageName(), app.getId()),

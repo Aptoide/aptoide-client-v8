@@ -469,7 +469,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
 
     final Analytics analytics = Analytics.getInstance();
 
-    searchAnalytics = new SearchAnalytics(analyticsManager);
+    searchAnalytics = new SearchAnalytics(analyticsManager, navigationTracker);
 
     final AptoideApplication application = (AptoideApplication) getActivity().getApplication();
 

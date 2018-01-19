@@ -17,7 +17,8 @@ import android.widget.LinearLayout;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -41,7 +42,6 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.dialog.BaseDialog;
-import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Collections;
@@ -77,6 +77,8 @@ public class AddStoreDialog extends BaseDialog {
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
   private StoreAnalytics storeAnalytics;
+  private AnalyticsManager analyticsManager;
+  private NavigationTracker navigationTracker;
 
   private SearchSuggestionManager searchSuggestionManager;
   private CompositeSubscription subscriptions;
@@ -98,7 +100,6 @@ public class AddStoreDialog extends BaseDialog {
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
     subscriptions = new CompositeSubscription();
 
     tokenInvalidator =
@@ -116,12 +117,13 @@ public class AddStoreDialog extends BaseDialog {
     if (savedInstanceState != null) {
       storeName = savedInstanceState.getString(BundleArgs.STORE_NAME.name());
     }
-    storeAnalytics =
-        new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance());
-
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
+    analyticsManager = application.getAnalyticsManager();
+    navigationTracker = application.getNavigationTracker();
+    storeAnalytics =
+        new StoreAnalytics(analyticsManager, navigationTracker);
+
     searchSuggestionManager = application.getSearchSuggestionManager();
   }
 
@@ -156,7 +158,7 @@ public class AddStoreDialog extends BaseDialog {
     subscriptions.add(RxView.clicks(addStoreButton)
         .subscribe(click -> {
           addStoreAction();
-          storeAnalytics.sendStoreTabInteractEvent("Add Store");
+          storeAnalytics.sendStoreTabInteractEvent("Add Store", true);
         }));
 
     subscriptions.add(RxView.clicks(topStoresButton)

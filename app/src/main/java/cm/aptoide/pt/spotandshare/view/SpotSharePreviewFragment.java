@@ -15,15 +15,15 @@ import android.widget.Button;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.presenter.SpotSharePreviewPresenter;
 import cm.aptoide.pt.presenter.SpotSharePreviewView;
 import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.view.fragment.FragmentView;
-import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
+import javax.inject.Inject;
 import rx.Observable;
 
 /**
@@ -38,6 +38,7 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
   private SpotAndShareAnalytics spotAndShareAnalytics;
   private NavigationTracker navigationTracker;
   private PageViewsAnalytics pageViewsAnalytics;
+  @Inject AnalyticsManager analyticsManager;
 
   public static Fragment newInstance(boolean showToolbar) {
     Bundle args = new Bundle();
@@ -54,13 +55,13 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
     showToolbar = getArguments().getBoolean(SHOW_TOOLBAR_KEY);
-    spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
+    spotAndShareAnalytics = new SpotAndShareAnalytics(analyticsManager, navigationTracker);
     navigationTracker =
         ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
     pageViewsAnalytics =
-        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), navigationTracker);
+        new PageViewsAnalytics(analyticsManager, navigationTracker);
     navigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName()));
     pageViewsAnalytics.sendPageViewedEvent();

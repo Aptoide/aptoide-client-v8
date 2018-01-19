@@ -1,54 +1,55 @@
 package cm.aptoide.pt.billing;
 
-import android.os.Bundle;
-import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.Event;
-import cm.aptoide.pt.analytics.events.FacebookEvent;
+import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.pt.analytics.analytics.Event;
 import cm.aptoide.pt.billing.payment.Payment;
 import cm.aptoide.pt.billing.product.InAppProduct;
 import cm.aptoide.pt.billing.product.Product;
-import com.facebook.appevents.AppEventsLogger;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BillingAnalytics {
 
-  private final Analytics analytics;
-  private final AppEventsLogger facebook;
   private final String aptoidePackageName;
+  private final AnalyticsManager analyticsManager;
+  private final NavigationTracker navigationTracker;
 
-  public BillingAnalytics(Analytics analytics, AppEventsLogger facebook,
-      String aptoidePackageName) {
-    this.analytics = analytics;
-    this.facebook = facebook;
+  public BillingAnalytics(String aptoidePackageName, AnalyticsManager analyticsManager,
+      NavigationTracker navigationTracker) {
     this.aptoidePackageName = aptoidePackageName;
+    this.analyticsManager = analyticsManager;
+    this.navigationTracker = navigationTracker;
   }
 
   public void sendPaymentViewShowEvent() {
-    analytics.sendEvent(getFacebookPaymentEvent("Payment_Pop_Up", "Show", new Bundle()));
+    analyticsManager.logEvent(getFacebookPaymentEvent("Payment_Pop_Up", "Show", new HashMap<>(),true));
   }
 
   public void sendPaymentViewCancelEvent(Payment payment) {
-    analytics.sendEvent(getFacebookPaymentEvent("Payment_Pop_Up", "Cancel",
-        getProductBundle(payment.getProduct())));
+    analyticsManager.logEvent(getFacebookPaymentEvent("Payment_Pop_Up", "Cancel",
+        getProductMap(payment.getProduct()),true));
+
   }
 
   public void sendPaymentViewBuyEvent(Payment payment) {
-    final Bundle bundle = getProductBundle(payment.getProduct());
-    bundle.putString("payment_method", payment.getSelectedPaymentService()
+    final Map<String,Object> map = getProductMap(payment.getProduct());
+    map.put("payment_method", payment.getSelectedPaymentService()
         .getType());
-    analytics.sendEvent(getFacebookPaymentEvent("Payment_Pop_Up", "Buy", bundle));
+    analyticsManager.logEvent(getFacebookPaymentEvent("Payment_Pop_Up", "Buy", map,true));
   }
 
   public void sendPaymentSuccessEvent() {
-    analytics.sendEvent(getFacebookPaymentEvent("Payment_Pop_Up", "Success", new Bundle()));
+    analyticsManager.logEvent(getFacebookPaymentEvent("Payment_Pop_Up", "Success", new HashMap<>(), true));
   }
 
   public void sendPaymentErrorEvent() {
-    analytics.sendEvent(getFacebookPaymentEvent("Payment_Pop_Up", "Error", new Bundle()));
+    analyticsManager.logEvent(getFacebookPaymentEvent("Payment_Pop_Up", "Error", new HashMap<>(),true));
   }
 
   public void sendCustomerAuthenticatedEvent(boolean customerAuthenticated) {
     if (customerAuthenticated) {
-      analytics.sendEvent(getFacebookPaymentEvent("Payment_Login", "Success", new Bundle()));
+      analyticsManager.logEvent(getFacebookPaymentEvent("Payment_Login", "Success", new HashMap<>(),true));
     }
   }
 
@@ -59,34 +60,34 @@ public class BillingAnalytics {
     } else {
       action = "Cancel";
     }
-    analytics.sendEvent(getFacebookPaymentEvent("Payment_Login", action, new Bundle()));
+    analyticsManager.logEvent(getFacebookPaymentEvent("Payment_Login", action, new HashMap<>(),true));
   }
 
   public void sendAuthorizationSuccessEvent(Payment payment) {
-    final Bundle bundle = new Bundle();
-    bundle.putString("payment_method", payment.getSelectedPaymentService()
+    final Map<String,Object> map = new HashMap<>();
+    map.put("payment_method", payment.getSelectedPaymentService()
         .getType());
-    analytics.sendEvent(getFacebookPaymentEvent("Payment_Authorization_Page", "Success", bundle));
+    analyticsManager.logEvent(getFacebookPaymentEvent("Payment_Authorization_Page", "Success", map,true));
   }
 
   public void sendAuthorizationCancelEvent(String serviceName) {
-    final Bundle bundle = new Bundle();
-    bundle.putString("payment_method", serviceName);
-    analytics.sendEvent(getFacebookPaymentEvent("Payment_Authorization_Page", "Cancel", bundle));
+    final Map<String, Object> map = new HashMap<>();
+    map.put("payment_method", serviceName);
+    analyticsManager.logEvent(getFacebookPaymentEvent("Payment_Authorization_Page", "Cancel", map,true));
   }
 
   public void sendAuthorizationErrorEvent(String serviceName) {
-    final Bundle bundle = new Bundle();
-    bundle.putString("payment_method", serviceName);
-    analytics.sendEvent(getFacebookPaymentEvent("Payment_Authorization_Page", "Error", bundle));
+    final Map<String, Object> map = new HashMap<>();
+    map.put("payment_method", serviceName);
+    analyticsManager.logEvent(getFacebookPaymentEvent("Payment_Authorization_Page", "Error", map,true));
   }
 
-  private Event getFacebookPaymentEvent(String eventName, String action, Bundle bundle) {
-    bundle.putString("action", action);
-    return new FacebookEvent(facebook, eventName, bundle);
+  private Event getFacebookPaymentEvent(String eventName, String action, Map<String, Object> map, boolean isCurrent) {
+    map.put("action", action);
+    return new Event(eventName, map, AnalyticsManager.Action.CLICK, getViewName(isCurrent));
   }
 
-  private Bundle getProductBundle(Product product) {
+  private Map<String, Object> getProductMap(Product product) {
 
     final String packageName;
     if (product instanceof InAppProduct) {
@@ -95,13 +96,27 @@ public class BillingAnalytics {
       packageName = aptoidePackageName;
     }
 
-    final Bundle bundle = new Bundle();
-    bundle.putDouble("purchase_value", product.getPrice()
-        .getAmount());
-    bundle.putString("purchase_currency", product.getPrice()
+    final Map<String, Object> map = new HashMap<>();
+    map.put("purchase_value", String.valueOf(product.getPrice()
+        .getAmount()));
+    map.put("purchase_currency", product.getPrice()
         .getCurrency());
-    bundle.putString("package_name_seller", packageName);
-    bundle.putInt("package_version_code_seller", ((Product) product).getPackageVersionCode());
-    return bundle;
+    map.put("package_name_seller", packageName);
+    map.put("package_version_code_seller", String.valueOf(((Product) product).getPackageVersionCode()));
+    return map;
+  }
+
+  private String getViewName(boolean isCurrent){
+    String viewName = "";
+    if(isCurrent){
+      viewName = navigationTracker.getCurrentViewName();
+    }
+    else{
+      viewName = navigationTracker.getPreviousViewName();
+    }
+    if(viewName.equals("")) {
+      return "BillingAnalytics"; //Default value, shouldn't get here
+    }
+    return viewName;
   }
 }

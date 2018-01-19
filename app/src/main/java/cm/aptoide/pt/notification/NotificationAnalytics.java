@@ -1,22 +1,12 @@
 package cm.aptoide.pt.notification;
 
-import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.events.AptoideEvent;
-import cm.aptoide.pt.analytics.events.FacebookEvent;
-import cm.aptoide.pt.analytics.events.KnockEvent;
-import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.link.AptoideInstall;
 import cm.aptoide.pt.link.AptoideInstallParser;
-import com.facebook.appevents.AppEventsLogger;
 import java.util.HashMap;
 import java.util.Map;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
 
 /**
  * Created by trinkes on 18/09/2017.
@@ -24,75 +14,57 @@ import retrofit2.Converter;
 
 public class NotificationAnalytics {
 
-  public static final String IMPRESSION_ACTION = "IMPRESSION";
-  public static final String NOTIFICATION_BAR_CONTEXT = "NOTIFICATION_BAR";
-  private static final String OPEN_ACTION = "OPEN";
-  private static final String NOTIFICATION_RECEIVED = "Aptoide_Push_Notification_Received";
+  public static final String NOTIFICATION_TOUCH = "NOTIFICATION_TOUCH";
+  public static final String NOTIFICATION_RECEIVED = "Aptoide_Push_Notification_Received";
   private static final String NOTIFICATION_IMPRESSION = "Aptoide_Push_Notification_Impression";
-  private static final String NOTIFICATION_PRESSED = "Aptoide_Push_Notification_Click";
-  private static final String NOTIFICATION_EVENT_NAME = "NOTIFICATION";
+  public static final String NOTIFICATION_PRESSED = "Aptoide_Push_Notification_Click";
+  public static final String NOTIFICATION_EVENT_NAME = "NOTIFICATION";
   private static final String TYPE = "type";
   private static final String AB_TESTING_GROUP = "ab_testing_group";
   private static final String PACKAGE_NAME = "package_name";
   private static final String CAMPAIGN_ID = "campaign_id";
-  private final Analytics analytics;
-  private final OkHttpClient httpClient;
-  private final Converter.Factory converterFactory;
-  private final TokenInvalidator tokenInvalidator;
-  private final String appId;
-  private final SharedPreferences sharedPreferences;
-  private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final AptoideInstallParser aptoideInstallParser;
-  private final AppEventsLogger facebook;
   private AptoideInstall aptoideInstall;
   private int campaignId;
   private String abTestingGroup;
+  private final AnalyticsManager analyticsManager;
+  private final NavigationTracker navigationTracker;
 
-  public NotificationAnalytics(Analytics analytics, AppEventsLogger facebook,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator, String appId,
-      SharedPreferences sharedPreferences, AptoideInstallParser aptoideInstallParser) {
-    this.analytics = analytics;
-    this.facebook = facebook;
-    this.bodyInterceptor = bodyInterceptor;
-    this.httpClient = httpClient;
-    this.converterFactory = converterFactory;
-    this.tokenInvalidator = tokenInvalidator;
-    this.appId = appId;
-    this.sharedPreferences = sharedPreferences;
+  public NotificationAnalytics(AptoideInstallParser aptoideInstallParser,
+      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
     this.aptoideInstallParser = aptoideInstallParser;
+    this.analyticsManager = analyticsManager;
+    this.navigationTracker = navigationTracker;
   }
 
   public void sendNotificationTouchEvent(String url) {
-    analytics.sendEvent(new KnockEvent(url, httpClient));
+    analyticsManager.logEvent(url);
   }
 
   public void sendUpdatesNotificationReceivedEvent() {
-    analytics.sendEvent(
-        new FacebookEvent(facebook, NOTIFICATION_RECEIVED, createUpdateNotificationEventsBundle()));
+    analyticsManager.logEvent(createUpdateNotificationEventsMap(),NOTIFICATION_RECEIVED,
+        AnalyticsManager.Action.AUTO,getViewName(true));
   }
 
   public void sendUpdatesNotificationClickEvent() {
-    analytics.sendEvent(
-        new FacebookEvent(facebook, NOTIFICATION_PRESSED, createUpdateNotificationEventsBundle()));
+    analyticsManager.logEvent(createUpdateNotificationEventsMap(),NOTIFICATION_PRESSED,
+        AnalyticsManager.Action.CLICK,getViewName(true));
   }
 
   public void sendPushNotificationReceivedEvent(@AptoideNotification.NotificationType int type,
       String abTestingGroup, int campaignId, String url) {
-    analytics.sendEvent(new FacebookEvent(facebook, NOTIFICATION_RECEIVED,
-        createPushNotificationEventBundle(type, abTestingGroup, campaignId, url)));
+    analyticsManager.logEvent(createPushNotificationEventMap(type, abTestingGroup, campaignId, url),NOTIFICATION_RECEIVED,
+        AnalyticsManager.Action.VIEW,getViewName(true));
   }
 
   public void sendPushNotficationImpressionEvent(@AptoideNotification.NotificationType int type,
       String abTestingGroup, int campaignId, String url) {
     if (type == AptoideNotification.CAMPAIGN) {
-      analytics.sendEvent(
-          new AptoideEvent(createCampaignNotificationMap(abTestingGroup, campaignId),
-              NOTIFICATION_EVENT_NAME, IMPRESSION_ACTION, NOTIFICATION_BAR_CONTEXT, bodyInterceptor,
-              httpClient, converterFactory, tokenInvalidator, appId, sharedPreferences));
+      analyticsManager.logEvent(createCampaignNotificationMap(abTestingGroup, campaignId),NOTIFICATION_EVENT_NAME,
+          AnalyticsManager.Action.IMPRESSION,getViewName(true));
     }
-    analytics.sendEvent(new FacebookEvent(facebook, NOTIFICATION_IMPRESSION,
-        createPushNotificationEventBundle(type, abTestingGroup, campaignId, url)));
+    analyticsManager.logEvent(createPushNotificationEventMap(type,abTestingGroup,campaignId,url),NOTIFICATION_IMPRESSION,
+        AnalyticsManager.Action.IMPRESSION,getViewName(true));
   }
 
   @NonNull
@@ -106,40 +78,38 @@ public class NotificationAnalytics {
   public void sendPushNotificationPressedEvent(@AptoideNotification.NotificationType int type,
       String abTestingGroup, int campaignId, String url) {
     if (type == AptoideNotification.CAMPAIGN) {
-      analytics.sendEvent(
-          new AptoideEvent(createCampaignNotificationMap(abTestingGroup, campaignId),
-              NOTIFICATION_EVENT_NAME, OPEN_ACTION, NOTIFICATION_BAR_CONTEXT, bodyInterceptor,
-              httpClient, converterFactory, tokenInvalidator, appId, sharedPreferences));
+      analyticsManager.logEvent(createCampaignNotificationMap(abTestingGroup,campaignId),NOTIFICATION_EVENT_NAME,
+          AnalyticsManager.Action.OPEN,getViewName(true));
     }
-    analytics.sendEvent(new FacebookEvent(facebook, NOTIFICATION_PRESSED,
-        createPushNotificationEventBundle(type, abTestingGroup, campaignId, url)));
+    analyticsManager.logEvent(createPushNotificationEventMap(type, abTestingGroup, campaignId, url),NOTIFICATION_PRESSED,
+        AnalyticsManager.Action.OPEN,getViewName(true));
   }
 
-  private Bundle createUpdateNotificationEventsBundle() {
-    Bundle bundle = new Bundle();
-    bundle.putString(TYPE, NotificationTypes.UPDATES.toString()
+  private Map<String, Object> createUpdateNotificationEventsMap() {
+    Map<String, Object> map = new HashMap<>();
+    map.put(TYPE, NotificationTypes.UPDATES.toString()
         .toLowerCase());
-    return bundle;
+    return map;
   }
 
-  private Bundle createPushNotificationEventBundle(@AptoideNotification.NotificationType int type,
+  private Map<String, Object> createPushNotificationEventMap(@AptoideNotification.NotificationType int type,
       String abTestingGroup, int campaignId, String url) {
-    Bundle bundle = new Bundle();
-    bundle.putInt(CAMPAIGN_ID, campaignId);
-    bundle.putString(TYPE, matchNotificationTypeToString(type).toString()
+    Map<String,Object> map = new HashMap<>();
+    map.put(CAMPAIGN_ID, String.valueOf(campaignId));
+    map.put(TYPE, matchNotificationTypeToString(type).toString()
         .toLowerCase());
-    bundle = addToBundleIfNotNull(bundle, abTestingGroup, getPackageNameFromUrl(url));
-    return bundle;
+    map = addToMapIfNotNull(map, abTestingGroup, getPackageNameFromUrl(url));
+    return map;
   }
 
-  private Bundle addToBundleIfNotNull(Bundle bundle, String abTestingGroup, String url) {
+  private Map<String, Object> addToMapIfNotNull(Map<String, Object> map, String abTestingGroup, String url) {
     if (abTestingGroup != null && !abTestingGroup.isEmpty()) {
-      bundle.putString(AB_TESTING_GROUP, abTestingGroup);
+      map.put(AB_TESTING_GROUP, abTestingGroup);
     }
     if (url != null && !url.isEmpty()) {
-      bundle.putString(PACKAGE_NAME, getPackageNameFromUrl(url));
+      map.put(PACKAGE_NAME, getPackageNameFromUrl(url));
     }
-    return bundle;
+    return map;
   }
 
   private NotificationTypes matchNotificationTypeToString(int type) {
@@ -211,6 +181,20 @@ public class NotificationAnalytics {
     } else {
       return "";
     }
+  }
+
+  private String getViewName(boolean isCurrent){
+    String viewName = "";
+    if(isCurrent){
+      viewName = navigationTracker.getCurrentViewName();
+    }
+    else{
+      viewName = navigationTracker.getPreviousViewName();
+    }
+    if(viewName.equals("")) {
+      return "NotificationAnalytics"; //Default value, shouldn't get here
+    }
+    return viewName;
   }
 
   private enum NotificationTypes {

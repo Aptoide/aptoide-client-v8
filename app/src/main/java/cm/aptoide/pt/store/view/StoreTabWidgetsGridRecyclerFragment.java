@@ -11,7 +11,8 @@ import android.support.annotation.Nullable;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -28,8 +29,8 @@ import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablesFactory;
-import com.facebook.appevents.AppEventsLogger;
 import java.util.List;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import rx.Observable;
 
@@ -43,9 +44,12 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
   protected InstalledRepository installedRepository;
   protected StoreAnalytics storeAnalytics;
   private StoreTabNavigator storeTabNavigator;
+  @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
     final StoreCredentialsProvider storeCredentialsProvider = new StoreCredentialsProviderImpl(
         AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class));
@@ -65,8 +69,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     storeAnalytics =
-        new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance());
+        new StoreAnalytics(analyticsManager, navigationTracker);
     storeTabNavigator = new StoreTabNavigator(getFragmentNavigator());
   }
 

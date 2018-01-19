@@ -1,5 +1,6 @@
 package cm.aptoide.pt.install;
 
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.analytics.analytics.Event;
@@ -25,30 +26,32 @@ public class InstallAnalytics {
   private static final String NO_PREVIOUS_SCREEN_ERROR = "No_Previous_Screen";
   private CrashReport crashReport;
   private AnalyticsManager analyticsManager;
+  private NavigationTracker navigationTracker;
 
   public InstallAnalytics(CrashReport crashReport,
-      AnalyticsManager analyticsManager) {
+      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
     this.crashReport = crashReport;
     this.analyticsManager = analyticsManager;
+    this.navigationTracker = navigationTracker;
   }
 
-  public void sendReplacedEvent(String packageName, String context) {
+  public void sendReplacedEvent(String packageName) {
     Map<String, Object> data = new HashMap<>();
     data.put(TYPE,REPLACED);
     data.put(PACKAGE_NAME,packageName);
-    analyticsManager.logEvent(data, APPLICATION_INSTALL,AnalyticsManager.Action.INSTALL, context);
+    analyticsManager.logEvent(data, APPLICATION_INSTALL,AnalyticsManager.Action.AUTO, getViewName(true));
   }
 
   public void installStarted(ScreenTagHistory previousScreen, ScreenTagHistory currentScreen,
       String packageName, int installingVersion, InstallType installType,
-      List<String> fragmentNameList, String context) {
+      List<String> fragmentNameList) {
     if (currentScreen.getTag() != null && currentScreen.getTag()
         .contains("apps-group-editors-choice")) {
       Map<String, Object> data = new HashMap<>();
       data.put("package_name", packageName);
       data.put("type", installType.name());
       analyticsManager.save(packageName + installingVersion,
-          new Event(EDITORS_APPLICATION_INSTALL, data, AnalyticsManager.Action.INSTALL,context));
+          new Event(EDITORS_APPLICATION_INSTALL, data, AnalyticsManager.Action.INSTALL,getViewName(true)));
     } else if (previousScreen == null) {
       if (!fragmentNameList.isEmpty()) {
         crashReport.log(NO_PREVIOUS_SCREEN_ERROR, fragmentNameList.toString());
@@ -59,7 +62,7 @@ public class InstallAnalytics {
       data.put("package_name", packageName);
       data.put("type", installType.name());
       analyticsManager.save(packageName + installingVersion,
-          new Event(NOTIFICATION_APPLICATION_INSTALL, data, AnalyticsManager.Action.INSTALL,context));
+          new Event(NOTIFICATION_APPLICATION_INSTALL, data, AnalyticsManager.Action.INSTALL,getViewName(true)));
     }
   }
 
@@ -72,5 +75,19 @@ public class InstallAnalytics {
 
   public enum InstallType {
     INSTALL, UPDATE, DOWNGRADE
+  }
+
+  private String getViewName(boolean isCurrent){
+    String viewName = "";
+    if(isCurrent){
+      viewName = navigationTracker.getCurrentViewName();
+    }
+    else{
+      viewName = navigationTracker.getPreviousViewName();
+    }
+    if(viewName.equals("")) {
+      return "InstallAnalytics"; //Default value, shouldn't get here
+    }
+    return viewName;
   }
 }

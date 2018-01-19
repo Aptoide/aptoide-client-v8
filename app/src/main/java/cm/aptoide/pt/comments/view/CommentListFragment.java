@@ -24,9 +24,11 @@ import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.comments.CommentDialogCallbackContract;
 import cm.aptoide.pt.comments.CommentNode;
 import cm.aptoide.pt.comments.ComplexComment;
@@ -60,12 +62,12 @@ import cm.aptoide.pt.view.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.view.recycler.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.DisplayableGroup;
-import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
@@ -124,6 +126,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private String storeAnalyticsAction;
   private StoreAnalytics storeAnalytics;
   private StoreContext storeContext;
+  @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
 
   public static Fragment newInstance(CommentType commentType, String timelineArticleId,
       StoreContext storeContext) {
@@ -165,6 +169,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     //this object is used in loadExtras and loadExtras is called in the super
+    getFragmentComponent(savedInstanceState).inject(this);
     AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
     sharedPreferences = application.getDefaultSharedPreferences();
     tokenInvalidator = application.getTokenInvalidator();
@@ -191,8 +196,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
         ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
     storeAnalytics =
-        new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance());
+        new StoreAnalytics(analyticsManager, navigationTracker);
     return v;
   }
 
@@ -468,7 +472,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
         .flatMapCompletable(view -> Completable.fromAction(() -> {
           Snackbar.make(view, R.string.you_need_to_be_logged_in, Snackbar.LENGTH_LONG)
               .setAction(R.string.login, snackView -> accountNavigator.navigateToAccountView(
-                  Analytics.Account.AccountOrigins.COMMENT_LIST))
+                  AccountAnalytics.AccountOrigins.COMMENT_LIST))
               .show();
         }));
   }

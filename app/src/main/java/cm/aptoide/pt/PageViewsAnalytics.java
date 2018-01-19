@@ -1,32 +1,29 @@
 package cm.aptoide.pt;
 
-import android.os.Bundle;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
-import cm.aptoide.pt.analytics.events.FacebookEvent;
-import com.facebook.appevents.AppEventsLogger;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PageViewsAnalytics {
 
-  private final AppEventsLogger facebook;
-  private final Analytics analytics;
+  private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
+  public final static String PAGE_VIEW_EVENT = "Page_View";
 
-  public PageViewsAnalytics(AppEventsLogger facebook, Analytics analytics,
-      NavigationTracker navigationTracker) {
-    this.facebook = facebook;
-    this.analytics = analytics;
+  public PageViewsAnalytics(AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
+    this.analyticsManager = analyticsManager;
     this.navigationTracker = navigationTracker;
   }
 
   public void sendPageViewedEvent() {
-    analytics.sendEvent(new FacebookEvent(facebook, "Page_View",
-        createEventBundle(navigationTracker.getCurrentViewName())));
+    analyticsManager.logEvent(createEventMap(navigationTracker.getCurrentViewName()),PAGE_VIEW_EVENT,
+        AnalyticsManager.Action.CLICK,navigationTracker.getCurrentViewName());
   }
 
-  private Bundle createEventBundle(String currentViewName) {
-    Bundle bundle = new Bundle();
-    bundle.putString("fragment", currentViewName);
-    return bundle;
+  private Map<String, Object> createEventMap(String currentViewName) {
+    Map<String, Object> map = new HashMap<>();
+    map.put("fragment", currentViewName);
+    return map;
   }
 }

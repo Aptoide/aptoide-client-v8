@@ -11,6 +11,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -59,6 +60,7 @@ public class InstalledIntentService extends IntentService {
   private InstallAnalytics installAnalytics;
   private PackageManager packageManager;
   @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
 
   public InstalledIntentService() {
     super("InstalledIntentService");
@@ -86,7 +88,7 @@ public class InstalledIntentService extends IntentService {
         ((AptoideApplication) getApplicationContext()).getRootAvailabilityManager();
     installAnalytics =
         new InstallAnalytics(
-            CrashReport.getInstance(), analyticsManager);
+            CrashReport.getInstance(), analyticsManager, navigationTracker);
     packageManager = getPackageManager();
   }
 
@@ -229,7 +231,7 @@ public class InstalledIntentService extends IntentService {
         .first();
 
     if (update != null && update.getPackageName() != null && update.getTrustedBadge() != null) {
-      installAnalytics.sendReplacedEvent(packageName, this.getClass().getSimpleName());
+      installAnalytics.sendReplacedEvent(packageName);
     }
 
     PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName, getPackageManager());

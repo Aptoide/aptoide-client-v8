@@ -18,6 +18,7 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.addressbook.data.ContactsRepository;
 import cm.aptoide.pt.addressbook.utils.ContactUtils;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -72,6 +73,7 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
   private AddressBookAnalytics analytics;
   private String marketName;
   @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
 
   public static AddressBookFragment newInstance() {
     AddressBookFragment addressBookFragment = new AddressBookFragment();
@@ -86,7 +88,7 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     marketName = application.getMarketName();
-    analytics = new AddressBookAnalytics(analyticsManager);
+    analytics = new AddressBookAnalytics(analyticsManager, navigationTracker);
     final BodyInterceptor<BaseBody> baseBodyBodyInterceptor =
         application.getAccountSettingsBodyInterceptorPoolV7();
     final OkHttpClient httpClient = application.getDefaultClient();
@@ -127,7 +129,7 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
 
     RxView.clicks(addressBookSyncButton)
         .flatMap(click -> {
-          analytics.sendSyncAddressBookEvent(this.getClass().getSimpleName());
+          analytics.sendSyncAddressBookEvent();
           PermissionManager permissionManager = new PermissionManager();
           final PermissionService permissionService = (PermissionService) getContext();
           return permissionManager.requestContactsAccess(permissionService);
@@ -136,10 +138,10 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(permissionGranted -> {
           if (permissionGranted) {
-            analytics.sendAllowAptoideAccessToContactsEvent(this.getClass().getSimpleName());
+            analytics.sendAllowAptoideAccessToContactsEvent();
             mActionsListener.syncAddressBook();
           } else {
-            analytics.sendDenyAptoideAccessToContactsEvent(this.getClass().getSimpleName());
+            analytics.sendDenyAptoideAccessToContactsEvent();
             mActionsListener.contactsPermissionDenied();
           }
         });

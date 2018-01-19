@@ -1,7 +1,8 @@
 package cm.aptoide.pt.analytics.analytics;
 
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.analytics.*;
+import android.util.Log;
+import cm.aptoide.pt.analytics.AnalyticsDataSaver;
 import cm.aptoide.pt.logger.Logger;
 import java.util.Collection;
 import java.util.HashMap;
@@ -34,12 +35,25 @@ public class AnalyticsManager {
     }
   }
 
+  public void logEvent(Event event){
+    logEvent(event.getData(),event.getEventName(), event.getAction(),event.getContext());
+  }
+
+  public void logEvent(String url){
+    Log.d("TAG",url);
+  }
+
   public void save(@NonNull String key, @NonNull Event event){
     analyticsDataSaver.save(key,event);
   }
 
+  public void sendAndRemoveEvent(String eventName){
+    Event event = analyticsDataSaver.newGet(eventName);
+    logEvent(event.getData(),event.getEventName(), event.getAction(), event.getContext());
+  }
+
   public Event getEvent(String key){
-    return analyticsDataSaver.get(key);
+    return analyticsDataSaver.newGet(key);
   }
 
   public enum Action {

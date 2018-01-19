@@ -55,7 +55,7 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
   }
 
   @Override public void syncTwitter(TwitterModel twitterModel) {
-    analytics.sendSyncTwitterEvent(this.getClass().getSimpleName());
+    analytics.sendSyncTwitterEvent();
     contactsRepository.getTwitterContacts(twitterModel,
         (contacts, success) -> Observable.just(contacts)
             .subscribeOn(AndroidSchedulers.mainThread())
@@ -78,7 +78,7 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
   }
 
   @Override public void syncFacebook(FacebookModel facebookModel) {
-    analytics.sendSyncFacebookEvent(this.getClass().getSimpleName());
+    analytics.sendSyncFacebookEvent();
     contactsRepository.getFacebookContacts(facebookModel,
         (contacts, success) -> Observable.just(contacts)
             .subscribeOn(AndroidSchedulers.mainThread())
@@ -111,7 +111,7 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
   }
 
   @Override public void aboutClick() {
-    analytics.sendHowAptoideUsesYourDataEvent(this.getClass().getSimpleName());
+    analytics.sendHowAptoideUsesYourDataEvent();
     navigationManager.showAboutFragment();
   }
 

@@ -25,6 +25,7 @@ import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.BillingIdManager;
@@ -117,7 +118,6 @@ import cm.aptoide.pt.view.entry.EntryPointChooser;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
 import com.facebook.CallbackManager;
 import com.facebook.appevents.AppEventsLogger;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -230,6 +230,7 @@ public abstract class AptoideApplication extends Application {
   private TimelineAnalytics timelineAnalytics;
   private NotificationAnalytics notificationAnalytics;
   @Inject SearchSuggestionManager searchSuggestionManager;
+  @Inject AnalyticsManager analyticsManager;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -298,7 +299,7 @@ public abstract class AptoideApplication extends Application {
     fragmentProvider = createFragmentProvider();
     activityProvider = createActivityProvider();
     displayableWidgetMapping = createDisplayableWidgetMapping();
-    shareApps = new ShareApps(new SpotAndShareAnalytics(Analytics.getInstance()));
+    shareApps = new ShareApps(new SpotAndShareAnalytics(analyticsManager, navigationTracker));
 
     //
     // do not erase this code. it is useful to figure out when someone forgot to attach an error handler when subscribing and the app
@@ -460,11 +461,8 @@ public abstract class AptoideApplication extends Application {
       notificationCenter =
           new NotificationCenter(notificationProvider, getNotificationSyncScheduler(),
               new NotificationPolicyFactory(notificationProvider),
-              new NotificationAnalytics(Analytics.getInstance(),
-                  AppEventsLogger.newLogger(getApplicationContext()), bodyInterceptorPoolV7,
-                  getDefaultClient(), WebService.getDefaultConverter(), tokenInvalidator,
-                  cm.aptoide.pt.dataprovider.BuildConfig.APPLICATION_ID,
-                  getDefaultSharedPreferences(), new AptoideInstallParser()));
+              new NotificationAnalytics(new AptoideInstallParser(),analyticsManager,
+                  navigationTracker));
     }
     return notificationCenter;
   }
@@ -520,8 +518,7 @@ public abstract class AptoideApplication extends Application {
 
       installManager = new InstallManager(getApplicationContext(), getDownloadManager(),
           new InstallerFactory(new MinimalAdMapper(),
-              new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance(),
-                  AppEventsLogger.newLogger(this)), getImageCachePath()).create(this,
+              new InstallFabricEvents(analyticsManager), getImageCachePath()).create(this,
               installerType), getRootAvailabilityManager(), getDefaultSharedPreferences(),
           SecurePreferencesImplementation.getInstance(getApplicationContext(),
               getDefaultSharedPreferences()),
@@ -564,8 +561,7 @@ public abstract class AptoideApplication extends Application {
   public BillingAnalytics getBillingAnalytics() {
     if (billingAnalytics == null) {
       billingAnalytics =
-          new BillingAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(this),
-              getAptoidePackage());
+          new BillingAnalytics(getAptoidePackage(), analyticsManager, navigationTracker);
     }
     return billingAnalytics;
   }
@@ -660,10 +656,11 @@ public abstract class AptoideApplication extends Application {
   }
 
   private Completable sendAppStartToAnalytics() {
+
     return Analytics.Lifecycle.Application.onCreate(this, WebService.getDefaultConverter(),
         getDefaultClient(), getAccountSettingsBodyInterceptorPoolV7(),
         SecurePreferencesImplementation.getInstance(getApplicationContext(),
-            getDefaultSharedPreferences()), getTokenInvalidator());
+            getDefaultSharedPreferences()), getTokenInvalidator(), analyticsManager);
   }
 
   private Completable checkAppSecurity() {
@@ -938,8 +935,7 @@ public abstract class AptoideApplication extends Application {
   public NotLoggedInShareAnalytics getNotLoggedInShareAnalytics() {
     if (notLoggedInShareAnalytics == null) {
       notLoggedInShareAnalytics =
-          new NotLoggedInShareAnalytics(getAccountAnalytics(), AppEventsLogger.newLogger(this),
-              Analytics.getInstance());
+          new NotLoggedInShareAnalytics(analyticsManager, navigationTracker, getAccountAnalytics());
     }
     return notLoggedInShareAnalytics;
   }
@@ -999,10 +995,7 @@ public abstract class AptoideApplication extends Application {
   public NotificationAnalytics getNotificationAnalytics() {
     if (notificationAnalytics == null) {
       notificationAnalytics =
-          new NotificationAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(this),
-              getBodyInterceptorPoolV7(), getDefaultClient(), WebService.getDefaultConverter(),
-              tokenInvalidator, cm.aptoide.pt.dataprovider.BuildConfig.APPLICATION_ID,
-              getDefaultSharedPreferences(), new AptoideInstallParser());
+          new NotificationAnalytics(new AptoideInstallParser(),analyticsManager, navigationTracker);
     }
     return notificationAnalytics;
   }
@@ -1026,12 +1019,13 @@ public abstract class AptoideApplication extends Application {
   public TimelineAnalytics getTimelineAnalytics() {
     if (timelineAnalytics == null) {
       timelineAnalytics =
-          new TimelineAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(this),
-              getBodyInterceptorPoolV7(), getDefaultClient(), WebService.getDefaultConverter(),
-              getTokenInvalidator(), BuildConfig.APPLICATION_ID, getDefaultSharedPreferences(),
-              getNotificationAnalytics(), getNavigationTracker(), getReadPostsPersistence());
+          new TimelineAnalytics(getNotificationAnalytics(), getNavigationTracker(), getReadPostsPersistence(),analyticsManager);
     }
     return timelineAnalytics;
+  }
+
+  public AnalyticsManager getAnalyticsManager(){
+    return analyticsManager;
   }
 }
 

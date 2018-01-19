@@ -2,8 +2,8 @@ package cm.aptoide.pt.account.view.user;
 
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -17,13 +17,16 @@ public class ProfileStepOnePresenter implements Presenter {
   private final CrashReport crashReport;
   private final AptoideAccountManager accountManager;
   private final AccountNavigator accountNavigator;
+  private final AccountAnalytics accountAnalytics;
 
   public ProfileStepOnePresenter(ProfileStepOneView view, CrashReport crashReport,
-      AptoideAccountManager accountManager, AccountNavigator accountNavigator) {
+      AptoideAccountManager accountManager, AccountNavigator accountNavigator,
+      AccountAnalytics accountAnalytics) {
     this.view = view;
     this.crashReport = crashReport;
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
+    this.accountAnalytics = accountAnalytics;
   }
 
   @Override public void present() {
@@ -32,8 +35,8 @@ public class ProfileStepOnePresenter implements Presenter {
         .doOnNext(__ -> view.showWaitDialog())
         .flatMap(
             isExternalLogin -> makeUserProfilePublic().observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(() -> Analytics.Account.accountProfileAction(1,
-                    Analytics.Account.ProfileAction.CONTINUE))
+                .doOnCompleted(() ->accountAnalytics.accountProfileAction(1,
+                    AccountAnalytics.ProfileAction.CONTINUE))
                 .doOnCompleted(() -> view.dismissWaitDialog())
                 .doOnCompleted(() -> {
                   if (isExternalLogin) {
@@ -47,8 +50,8 @@ public class ProfileStepOnePresenter implements Presenter {
         .map(__ -> null);
 
     Observable<Void> handleMoreInfoClick = view.moreInfoButtonClick()
-        .doOnNext(__ -> Analytics.Account.accountProfileAction(1,
-            Analytics.Account.ProfileAction.MORE_INFO))
+        .doOnNext(__ -> accountAnalytics.accountProfileAction(1,
+            AccountAnalytics.ProfileAction.MORE_INFO))
         .doOnNext(__ -> accountNavigator.navigateToProfileStepTwoView());
 
     view.getLifecycle()

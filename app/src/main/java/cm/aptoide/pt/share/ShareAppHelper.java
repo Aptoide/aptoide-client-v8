@@ -11,8 +11,9 @@ import android.text.TextUtils;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.repository.RepositoryFactory;
@@ -40,12 +41,13 @@ public class ShareAppHelper {
   private final SharedPreferences sharedPreferences;
   private final PublishRelay installAppRelay;
   private final boolean createStoreUserPrivacyEnabled;
+  private final NavigationTracker navigationTracker;
 
   public ShareAppHelper(InstalledRepository installedRepository,
       AptoideAccountManager accountManager, AccountNavigator accountNavigator, Activity activity,
       SpotAndShareAnalytics spotAndShareAnalytics, TimelineAnalytics timelineAnalytics,
       PublishRelay installAppRelay, SharedPreferences sharedPreferences,
-      boolean createStoreUserPrivacyEnabled) {
+      boolean createStoreUserPrivacyEnabled, NavigationTracker navigationTracker) {
     this.installedRepository = installedRepository;
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
@@ -55,6 +57,7 @@ public class ShareAppHelper {
     this.sharedPreferences = sharedPreferences;
     this.installAppRelay = installAppRelay;
     this.createStoreUserPrivacyEnabled = createStoreUserPrivacyEnabled;
+    this.navigationTracker = navigationTracker;
   }
 
   private boolean isInstalled(String packageName) {
@@ -122,7 +125,7 @@ public class ShareAppHelper {
     if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> accountNavigator.navigateToAccountView(
-              Analytics.Account.AccountOrigins.APP_VIEW_SHARE), Snackbar.LENGTH_SHORT);
+              AccountAnalytics.AccountOrigins.APP_VIEW_SHARE), Snackbar.LENGTH_SHORT);
       return;
     }
     if (createStoreUserPrivacyEnabled) {

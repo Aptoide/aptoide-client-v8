@@ -37,6 +37,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
@@ -59,7 +60,6 @@ import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.dialog.EditableTextDialog;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import cm.aptoide.pt.view.rx.RxPreference;
-import com.facebook.appevents.AppEventsLogger;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -105,6 +105,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private UpdateRepository repository;
   private PageViewsAnalytics pageViewsAnalytics;
   private String defaultThemeName;
+  private AnalyticsManager analyticsManager;
 
   public static Fragment newInstance() {
     return new SettingsFragment();
@@ -150,12 +151,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
         ((AptoideApplication) getContext().getApplicationContext()).getNotificationSyncScheduler();
     navigationTracker =
         ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
-
+    analyticsManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAnalyticsManager();
     repository = RepositoryFactory.getUpdateRepository(getContext(),
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
     pageViewsAnalytics =
-        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), navigationTracker);
+        new PageViewsAnalytics(analyticsManager, navigationTracker);
     navigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName()));
     pageViewsAnalytics.sendPageViewedEvent();

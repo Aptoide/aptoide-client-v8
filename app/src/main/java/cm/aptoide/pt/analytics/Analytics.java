@@ -7,9 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
-import cm.aptoide.pt.analytics.events.FabricEvent;
-import cm.aptoide.pt.analytics.events.FacebookEvent;
-import cm.aptoide.pt.analytics.events.FlurryEvent;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -43,7 +41,6 @@ public class Analytics {
 
   // Constantes globais a todos os eventos.
   public static final String ACTION = "Action";
-  private static final String METHOD = "Method";
   private static final String TAG = Analytics.class.getSimpleName();
   private static final boolean ACTIVATE_FLURRY = true;
   private static final int ALL = Integer.MAX_VALUE;
@@ -122,29 +119,10 @@ public class Analytics {
     }
   }
 
-  private static void logFacebookEvents(String eventName) {
-    if (BuildConfig.BUILD_TYPE.equals("debug")) {
-      return;
-    }
-    facebookLogger.logEvent(eventName);
-  }
-
   private static void logFacebookEvents(String eventName, String key, String value) {
     Bundle bundle = new Bundle();
     bundle.putString(key, value);
     facebookLogger.logEvent(eventName, bundle);
-  }
-
-  private static void track(String event, int flags) {
-
-    try {
-      if (checkAcceptability(flags, FLURRY)) {
-        FlurryAgent.logEvent(event);
-        Logger.d(TAG, "Flurry Event: " + event);
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
   }
 
   private static void logFabricEvent(String event, Map<String, String> map, int flags) {
@@ -189,18 +167,6 @@ public class Analytics {
     return saver.get(key + clazz.getName());
   }
 
-  public FacebookEvent getFacebookEvent(String key) {
-    return (FacebookEvent) get(key, FacebookEvent.class);
-  }
-
-  public FlurryEvent getFlurryEvent(String key) {
-    return (FlurryEvent) get(key, FlurryEvent.class);
-  }
-
-  public FabricEvent getFabricEvent(String key) {
-    return (FabricEvent) get(key, FabricEvent.class);
-  }
-
   public void sendEvent(Event event) {
     event.send();
     saver.remove(event);
@@ -210,14 +176,6 @@ public class Analytics {
    * This method is dealing with spot and share events only and should be refactored in case
    * one would want to send the same event to fabric AND any other analytics platform
    */
-  public void sendSpotAndShareEvents(String eventName, Map<String, String> attributes,
-      boolean fabric) {
-    if (fabric) {
-      logFabricEvent(eventName, attributes, FABRIC);
-    } else {
-      logFacebookEvents(eventName, attributes);
-    }
-  }
 
   public static class Lifecycle {
 
@@ -248,14 +206,14 @@ public class Analytics {
       public static Completable onCreate(android.app.Application application,
           Converter.Factory converterFactory, OkHttpClient okHttpClient,
           BodyInterceptor bodyInterceptor, SharedPreferences sharedPreferences,
-          TokenInvalidator tokenInvalidator) {
+          TokenInvalidator tokenInvalidator,AnalyticsManager analyticsManager) {
 
         //Integrate FacebookSDK
         FacebookSdk.sdkInitialize(application);
         AppEventsLogger.activateApp(application);
         facebookLogger = AppEventsLogger.newLogger(application);
         FirstLaunchAnalytics firstLaunchAnalytics =
-            new FirstLaunchAnalytics(facebookLogger, Analytics.getInstance());
+            new FirstLaunchAnalytics(analyticsManager);
         return Observable.fromCallable(() -> {
           AppEventsLogger.setUserID(((AptoideApplication) application).getIdsRepository()
               .getUniqueIdentifier());
@@ -417,37 +375,13 @@ public class Analytics {
 
   public static class Account {
 
-    private static final String LOGIN_SIGN_UP_START_SCREEN = "Account_Login_Signup_Start_Screen";
     private static final String CREATE_USER_PROFILE = "Account_Create_A_User_Profile_Screen";
     private static final String PROFILE_SETTINGS = "Account_Profile_Settings_Screen";
     private static final String CREATE_YOUR_STORE = "Account_Create_Your_Store_Screen";
     private static final String HAS_PICTURE = "has_picture";
-    private static final String SCREEN = "Screen";
     private static final String ENTRY = "Account_Entry";
     private static final String SOURCE = "Source";
 
-    public static void clickIn(StartupClick clickEvent, StartupClickOrigin startupClickOrigin) {
-      track(LOGIN_SIGN_UP_START_SCREEN, ACTION, clickEvent.getClickEvent(), ALL);
-      Map<String, String> map = new HashMap<>();
-      map.put(ACTION, clickEvent.getClickEvent());
-      map.put(SCREEN, startupClickOrigin.getClickOrigin());
-      logFacebookEvents(LOGIN_SIGN_UP_START_SCREEN, map);
-    }
-
-    public static void createdUserProfile(boolean hasPicture) {
-      track(CREATE_USER_PROFILE, HAS_PICTURE, hasPicture ? "True" : "False", ALL);
-      Map<String, String> map = new HashMap<>();
-      map.put(HAS_PICTURE, hasPicture ? "True" : "False");
-      logFacebookEvents(CREATE_USER_PROFILE, map);
-    }
-
-    public static void accountProfileAction(int screen, ProfileAction action) {
-      HashMap<String, String> map = new HashMap<>();
-      map.put(ACTION, action.getAction());
-      map.put("screen", Integer.toString(screen));
-      track(PROFILE_SETTINGS, map, ALL);
-      logFacebookEvents(PROFILE_SETTINGS, map);
-    }
 
     public static void createStore(boolean hasPicture, CreateStoreAction action) {
       HashMap<String, String> map = new HashMap<>();
@@ -457,68 +391,6 @@ public class Analytics {
       logFacebookEvents(CREATE_YOUR_STORE, map);
     }
 
-    public static void enterAccountScreen(AccountOrigins sourceValue) {
-      logFacebookEvents(ENTRY, SOURCE, sourceValue.getOrigin());
-    }
-
-    public enum StartupClick {
-      JOIN_APTOIDE("Join Aptoide"), LOGIN("Login"), CONNECT_FACEBOOK(
-          "Connect with FB"), CONNECT_GOOGLE("Connect with Google");
-
-      private final String clickEvent;
-
-      StartupClick(String clickEvent) {
-        this.clickEvent = clickEvent;
-      }
-
-      public String getClickEvent() {
-        return clickEvent;
-      }
-    }
-
-    public enum StartupClickOrigin {
-      MAIN("Main"), JOIN_UP("Join Aptoide Slide Up"), LOGIN_UP(
-          "Login Slide Up"), NOT_LOGGED_IN_DIALOG("Not logged in Dialog");
-
-      private String clickOrigin;
-
-      StartupClickOrigin(String clickOrigin) {
-        this.clickOrigin = clickOrigin;
-      }
-
-      public String getClickOrigin() {
-        return clickOrigin;
-      }
-    }
-
-    public enum LoginMethod {
-      APTOIDE("Aptoide"), FACEBOOK("FB"), GOOGLE("Google");
-
-      private final String method;
-
-      LoginMethod(String method) {
-        this.method = method;
-      }
-
-      public String getMethod() {
-        return method;
-      }
-    }
-
-    public enum ProfileAction {
-      MORE_INFO("More info"), CONTINUE("Continue"), PRIVATE_PROFILE(
-          "Make my profile private"), PUBLIC_PROFILE("Make my profile public");
-
-      private final String action;
-
-      ProfileAction(String action) {
-        this.action = action;
-      }
-
-      public String getAction() {
-        return action;
-      }
-    }
 
     public enum CreateStoreAction {
       SKIP("Skip"), CREATE("Create store");
@@ -541,7 +413,7 @@ public class Analytics {
           "Like Card"), COMMENT_LIST("Comment List"), RATE_DIALOG("Reviews FAB"), REPLY_REVIEW(
           "Reply Review"), REVIEW_FEEDBACK("Review Feedback"), SOCIAL_LIKE(
           "Like Social Card"), STORE_COMMENT("Store Comment"), LATEST_COMMENTS_STORE(
-          "Comment on Latest Store Comments"), POST_ON_TIMELINE("Post on Timeline"),;
+          "Comment on Latest Store Comments"), POST_ON_TIMELINE("Post on Timeline");
 
       private final String origin;
 
@@ -554,34 +426,7 @@ public class Analytics {
       }
     }
 
-    public enum SignUpLoginStatus {
-      SUCCESS("Success"), FAILED("Failed");
 
-      private final String status;
-
-      SignUpLoginStatus(String result) {
-        this.status = result;
-      }
-
-      public String getStatus() {
-        return status;
-      }
-    }
-
-    public enum LoginStatusDetail {
-      PERMISSIONS_DENIED("Permissions Denied"), SDK_ERROR("SDK Error"), CANCEL(
-          "User canceled"), GENERAL_ERROR("General Error"), SUCCESS("Success");
-
-      private final String loginStatusDetail;
-
-      LoginStatusDetail(String statusDetail) {
-        this.loginStatusDetail = statusDetail;
-      }
-
-      public String getLoginStatusDetail() {
-        return loginStatusDetail;
-      }
-    }
   }
 
   public static class AdultContent {
@@ -683,50 +528,10 @@ public class Analytics {
 
   public static class AppsTimeline {
 
-    public static final String EVENT_NAME = "Apps Timeline";
     public static final String ACTION = "Action";
     public static final String PACKAGE_NAME = "Package Name";
-    public static final String TITLE = "Title";
-    public static final String PUBLISHER = "Publisher";
-    public static final String CARD_TYPE = "Card Type";
 
     public static final String BLANK = "(blank)";
-    public static final String OPEN_ARTICLE = "Open Article";
-    public static final String OPEN_ARTICLE_HEADER = "Open Article Header";
-    public static final String OPEN_VIDEO = "Open Video";
-    public static final String OPEN_VIDEO_HEADER = "Open Video Header";
-    public static final String OPEN_STORE = "Open Store";
-    public static final String OPEN_APP_VIEW = "Open App View";
-    public static final String UPDATE_APP = "Update Application";
-
-    public static void clickOnCard(String cardType, String packageName, String title,
-        String publisher, String action) {
-      HashMap<String, String> map = new HashMap<>();
-
-      map.put(ACTION, action);
-      map.put(PACKAGE_NAME, packageName);
-      map.put(TITLE, title);
-      map.put(PUBLISHER, publisher);
-
-      flurryTrack(map, cardType);
-    }
-
-    private static void flurryTrack(HashMap<String, String> map, String cardType) {
-      String eventName = cardType + "_" + EVENT_NAME;
-      track(eventName, map, FLURRY);
-    }
-
-    public static void pullToRefresh() {
-      track("Pull-to-refresh_Apps Timeline", FLURRY);
-    }
-
-    public static void endlessScrollLoadMore() {
-      track("Endless-scroll_Apps Timeline", FLURRY);
-    }
-
-    public static void openTimeline() {
-      track("Open Apps Timeline", FLURRY);
-    }
   }
 
   public static class Dimensions {
@@ -805,9 +610,6 @@ public class Analytics {
 
   public static class RootInstall {
 
-    private static final String ROOT_INSTALL_EVENT_NAME = "ROOT_INSTALL";
-    private static final String EXIT_CODE = "EXIT_CODE";
-    private static final String IS_INSTALLED = "IS_INSTALLED";
     private static final String CONCAT = "CONCAT";
     private static final String IS_ROOT = "IS_ROOT";
     private static final String SETTING_ROOT = "SETTING_ROOT";
