@@ -395,7 +395,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     shareAppHelper =
         new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
             spotAndShareAnalytics, timelineAnalytics, installAppRelay, sharedPreferences,
-            application.isCreateStoreUserPrivacyEnabled(),navigationTracker);
+            application.isCreateStoreUserPrivacyEnabled());
     downloadFactory = new DownloadFactory(getMarketName());
     storeAnalytics =
         new StoreAnalytics(analyticsManager, navigationTracker);

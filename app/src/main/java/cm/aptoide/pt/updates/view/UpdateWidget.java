@@ -21,6 +21,8 @@ import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.logger.Logger;
@@ -56,6 +58,8 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 
   public UpdateWidget(View itemView) {
     super(itemView);
+    final AnalyticsManager analyticsManager = ((AptoideApplication) getContext().getApplicationContext()).getAnalyticsManager();
+    final NavigationTracker navigationTracker = ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
     updatesAnalytics = new UpdatesAnalytics(analyticsManager,
         navigationTracker);
   }

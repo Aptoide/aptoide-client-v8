@@ -19,6 +19,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -95,6 +96,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     marketName = application.getMarketName();
+    final NavigationTracker navigationTracker = application.getNavigationTracker();
     final OkHttpClient httpClient = application.getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     bodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();

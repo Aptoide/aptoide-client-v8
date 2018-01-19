@@ -13,6 +13,7 @@ import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Installed;
@@ -79,6 +80,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   private String marketName;
   private StoreTabNavigator storeTabNavigator;
   private SharedPreferences sharedPreferences;
+  private NavigationTracker navigationTracker;
 
   @NonNull public static UpdatesFragment newInstance() {
     return new UpdatesFragment();
@@ -171,6 +173,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     analytics = Analytics.getInstance();
     tokenInvalidator = application.getTokenInvalidator();
     sharedPreferences = application.getDefaultSharedPreferences();
+    navigationTracker = application.getNavigationTracker();
     downloadInstallEventConverter =
         new DownloadEventConverter(bodyInterceptorV7, httpClient, converterFactory,
             tokenInvalidator, BuildConfig.APPLICATION_ID, sharedPreferences,

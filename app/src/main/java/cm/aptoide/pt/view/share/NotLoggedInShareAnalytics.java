@@ -13,7 +13,7 @@ import java.util.Map;
  */
 
 public class NotLoggedInShareAnalytics {
-  public static final String EVENT_NAME = "Pop_Up_Share_On_Timeline_Interact";
+  public static final String POP_UP_SHARE_TIMELINE = "Pop_Up_Share_On_Timeline_Interact";
   public static final String NONE_PARAMETER = "None";
   public static final String CLOSE_PARAMETER = "Close";
   public static final String APP_VIEW_PARAMETER = "app_view";
@@ -48,25 +48,25 @@ public class NotLoggedInShareAnalytics {
   }
 
   public void sendGoogleSignUpFailEvent() {
-    analyticsManager.logEvent(createMap(LOGIN_GOOGLE_PARAMETER,LOGIN_INCOMPLETE_PARAMETER),EVENT_NAME,
+    analyticsManager.logEvent(createMap(LOGIN_GOOGLE_PARAMETER,LOGIN_INCOMPLETE_PARAMETER),POP_UP_SHARE_TIMELINE,
         AnalyticsManager.Action.CLICK,getViewName(true));
     loginEventMap = null;
   }
 
   private void sendFacebookMissingPermissionsEvent() {
-    analyticsManager.logEvent(createMap(LOGIN_FACEBOOK_PARAMETER,LOGIN_INCOMPLETE_PARAMETER),EVENT_NAME,
+    analyticsManager.logEvent(createMap(LOGIN_FACEBOOK_PARAMETER,LOGIN_INCOMPLETE_PARAMETER),POP_UP_SHARE_TIMELINE,
         AnalyticsManager.Action.CLICK,getViewName(true));
     loginEventMap = null;
   }
 
   private void sendFacebookUserCancelledEvent() {
-    analyticsManager.logEvent(createMap(LOGIN_FACEBOOK_PARAMETER,LOGIN_INCOMPLETE_PARAMETER),EVENT_NAME,
+    analyticsManager.logEvent(createMap(LOGIN_FACEBOOK_PARAMETER,LOGIN_INCOMPLETE_PARAMETER),POP_UP_SHARE_TIMELINE,
         AnalyticsManager.Action.CLICK,getViewName(true));
     loginEventMap = null;
   }
 
   private void sendFacebookErrorEvent() {
-    analyticsManager.logEvent(createMap(LOGIN_FACEBOOK_PARAMETER,LOGIN_INCOMPLETE_PARAMETER),EVENT_NAME,
+    analyticsManager.logEvent(createMap(LOGIN_FACEBOOK_PARAMETER,LOGIN_INCOMPLETE_PARAMETER),POP_UP_SHARE_TIMELINE,
         AnalyticsManager.Action.CLICK,getViewName(true));
     loginEventMap = null;
   }
@@ -76,33 +76,33 @@ public class NotLoggedInShareAnalytics {
   }
 
   public void sendBackButtonPressed() {
-    analyticsManager.logEvent(createMap("Tap on Back Button", NONE_PARAMETER),EVENT_NAME,
+    analyticsManager.logEvent(createMap("Tap on Back Button", NONE_PARAMETER),POP_UP_SHARE_TIMELINE,
         AnalyticsManager.Action.CLICK,getViewName(true));
   }
 
   public void sendTapOutside() {
-    analyticsManager.logEvent(createMap("Tap Outside", NONE_PARAMETER),EVENT_NAME,
+    analyticsManager.logEvent(createMap("Tap Outside", NONE_PARAMETER),POP_UP_SHARE_TIMELINE,
         AnalyticsManager.Action.CLICK,getViewName(true));
   }
 
   public void sendTapOnFakeToolbar() {
-    analyticsManager.logEvent(createMap("Tap on Install - Login - Share image", NONE_PARAMETER), EVENT_NAME, AnalyticsManager.Action.CLICK, getViewName(true));
+    analyticsManager.logEvent(createMap("Tap on Install - Login - Share image", NONE_PARAMETER), POP_UP_SHARE_TIMELINE, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendTapOnFakeTimeline() {
-    analyticsManager.logEvent(createMap("Tap on Timeline image", NONE_PARAMETER),EVENT_NAME,
+    analyticsManager.logEvent(createMap("Tap on Timeline image", NONE_PARAMETER),POP_UP_SHARE_TIMELINE,
         AnalyticsManager.Action.CLICK,getViewName(true));
   }
 
   public void sendShareSuccess() {
     loginEventMap.put(STATUS_PARAMETER_NAME, SHARE_SUCCESS_PARAMETER);
-    analyticsManager.logEvent(loginEventMap,EVENT_NAME, AnalyticsManager.Action.CLICK,getViewName(false));
+    analyticsManager.logEvent(loginEventMap,POP_UP_SHARE_TIMELINE, AnalyticsManager.Action.CLICK,getViewName(false));
     loginEventMap = null;
   }
 
   public void sendShareFail() {
     loginEventMap.put(STATUS_PARAMETER_NAME, SHARE_FAILED_PARAMETER);
-    analyticsManager.logEvent(loginEventMap,EVENT_NAME, AnalyticsManager.Action.CLICK,getViewName(false));
+    analyticsManager.logEvent(loginEventMap,POP_UP_SHARE_TIMELINE, AnalyticsManager.Action.CLICK,getViewName(false));
     loginEventMap = null;
   }
 
@@ -116,7 +116,7 @@ public class NotLoggedInShareAnalytics {
 
 
   public void sendCloseEvent() {
-    analyticsManager.logEvent(createMap(CLOSE_PARAMETER,NONE_PARAMETER),EVENT_NAME,
+    analyticsManager.logEvent(createMap(CLOSE_PARAMETER,NONE_PARAMETER),POP_UP_SHARE_TIMELINE,
         AnalyticsManager.Action.CLICK,getViewName(true));
   }
 

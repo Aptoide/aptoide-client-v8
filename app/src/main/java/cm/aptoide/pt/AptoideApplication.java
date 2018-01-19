@@ -18,6 +18,7 @@ import android.util.SparseArray;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
+import cm.aptoide.pt.account.AdultContentAnalytics;
 import cm.aptoide.pt.account.AndroidAccountProvider;
 import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.account.view.store.StoreManager;
@@ -203,6 +204,7 @@ public abstract class AptoideApplication extends Application {
   @Inject @Named("account-settings-pool-v7") BodyInterceptor<BaseBody>
       accountSettingsBodyInterceptorPoolV7;
   @Inject TrendingManager trendingManager;
+  @Inject AdultContentAnalytics adultContentAnalytics;
   private LeakTool leakTool;
   private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
@@ -1027,5 +1029,7 @@ public abstract class AptoideApplication extends Application {
   public AnalyticsManager getAnalyticsManager(){
     return analyticsManager;
   }
+
+  public AdultContentAnalytics getAdultContentAnalytics(){ return adultContentAnalytics; }
 }
 

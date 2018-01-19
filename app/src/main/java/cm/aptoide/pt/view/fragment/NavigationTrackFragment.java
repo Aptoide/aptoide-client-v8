@@ -16,7 +16,7 @@ import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 public abstract class NavigationTrackFragment extends FragmentView {
 
   public static final String SHOULD_REGISTER_VIEW = "should_register_view";
-  private NavigationTracker navigationTracker;
+  protected NavigationTracker navigationTracker;
   private AnalyticsManager analyticsManager;
   protected PageViewsAnalytics pageViewsAnalytics;
   protected boolean shouldRegister = true;

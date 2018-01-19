@@ -15,6 +15,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -44,6 +45,7 @@ public class DownloadsFragment extends NavigationTrackFragment implements Downlo
   private InstallManager installManager;
   private Analytics analytics;
   private StoreTabNavigator storeTabNavigator;
+  private NavigationTracker navigationTracker;
 
   public static DownloadsFragment newInstance() {
     return new DownloadsFragment();
@@ -58,6 +60,7 @@ public class DownloadsFragment extends NavigationTrackFragment implements Downlo
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     final TokenInvalidator tokenInvalidator =
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
+    navigationTracker = ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
     installConverter =
         new InstallEventConverter(baseBodyInterceptorV7, httpClient, converterFactory,
             tokenInvalidator, BuildConfig.APPLICATION_ID,

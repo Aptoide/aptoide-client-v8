@@ -26,6 +26,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
+import cm.aptoide.pt.account.AdultContentAnalytics;
 import cm.aptoide.pt.account.AndroidAccountDataMigration;
 import cm.aptoide.pt.account.AndroidAccountManagerPersistence;
 import cm.aptoide.pt.account.AndroidAccountProvider;
@@ -739,6 +740,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         analyticsManager);
   }
 
+  @Singleton @Provides AdultContentAnalytics provideAdultContentAnalytics(AnalyticsManager analyticsManager, NavigationTracker navigationTracker){
+      return new AdultContentAnalytics(analyticsManager,navigationTracker);
+  }
+
   @Singleton @Provides StoreManager provideStoreManager(@Named("default") OkHttpClient okHttpClient,
       @Named("multipart") MultipartBodyInterceptor multipartBodyInterceptor,
       @Named("defaulInterceptorV3")
@@ -874,7 +879,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     List<String> flurryEvents = Arrays.asList(InstallAnalytics.APPLICATION_INSTALL,DownloadCompleteAnalytics.PARTIAL_EVENT_NAME,
         DownloadCompleteAnalytics.EVENT_NAME, AppViewAnalytics.HOME_PAGE_EDITORS_CHOICE_FLURRY,AppViewAnalytics.APP_VIEW_OPEN_FROM, StoreAnalytics.STORES_TAB_OPEN,
         StoreAnalytics.STORES_TAB_INTERACT, StoreAnalytics.STORES_OPEN,StoreAnalytics.STORES_INTERACT, AccountAnalytics.SIGN_UP_EVENT_NAME,AccountAnalytics.LOGIN_EVENT_NAME,
-        FirstLaunchAnalytics.FIRST_LAUNCH,AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN, AccountAnalytics.CREATE_USER_PROFILE, AccountAnalytics.PROFILE_SETTINGS);
+        FirstLaunchAnalytics.FIRST_LAUNCH,AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN, AccountAnalytics.CREATE_USER_PROFILE, AccountAnalytics.PROFILE_SETTINGS,
+        AdultContentAnalytics.ADULT_CONTENT);
     for(CardType cardType : CardType.values()){
       flurryEvents.add(cardType.name() + "_" + TimelineAnalytics.APPS_TIMELINE_EVENT);
     }
@@ -900,7 +906,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
             AccountAnalytics.LOGIN_EVENT_NAME, UpdatesAnalytics.UPDATE_EVENT, PageViewsAnalytics.PAGE_VIEW_EVENT, DrawerAnalytics.DRAWER_OPEN_EVENT,
             DrawerAnalytics.DRAWER_INTERACT_EVENT, FirstLaunchAnalytics.FIRST_LAUNCH, InstallFabricEvents.ROOT_V2_COMPLETE, InstallFabricEvents.ROOT_V2_START,
             AppViewSimilarAppAnalytics.APP_VIEW_SIMILAR_APP_SLIDE_IN,AppViewSimilarAppAnalytics.SIMILAR_APP_INTERACT,
-            NotLoggedInShareAnalytics.EVENT_NAME, AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN, AccountAnalytics.CREATE_USER_PROFILE, AccountAnalytics.PROFILE_SETTINGS,
+            NotLoggedInShareAnalytics.POP_UP_SHARE_TIMELINE, AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN, AccountAnalytics.CREATE_USER_PROFILE, AccountAnalytics.PROFILE_SETTINGS,
             AccountAnalytics.ENTRY))
         .addLogger(fabricEventLogger, Arrays.asList(DownloadCompleteAnalytics.EVENT_NAME, SpotAndShareAnalytics.EVENT_NAME_SPOT_SHARE_PERMISSIONS,
             InstallFabricEvents.ROOT_V2_COMPLETE, InstallFabricEvents.ROOT_V2_START))

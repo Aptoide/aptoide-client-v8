@@ -41,13 +41,12 @@ public class ShareAppHelper {
   private final SharedPreferences sharedPreferences;
   private final PublishRelay installAppRelay;
   private final boolean createStoreUserPrivacyEnabled;
-  private final NavigationTracker navigationTracker;
 
   public ShareAppHelper(InstalledRepository installedRepository,
       AptoideAccountManager accountManager, AccountNavigator accountNavigator, Activity activity,
       SpotAndShareAnalytics spotAndShareAnalytics, TimelineAnalytics timelineAnalytics,
       PublishRelay installAppRelay, SharedPreferences sharedPreferences,
-      boolean createStoreUserPrivacyEnabled, NavigationTracker navigationTracker) {
+      boolean createStoreUserPrivacyEnabled) {
     this.installedRepository = installedRepository;
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
@@ -57,7 +56,6 @@ public class ShareAppHelper {
     this.sharedPreferences = sharedPreferences;
     this.installAppRelay = installAppRelay;
     this.createStoreUserPrivacyEnabled = createStoreUserPrivacyEnabled;
-    this.navigationTracker = navigationTracker;
   }
 
   private boolean isInstalled(String packageName) {

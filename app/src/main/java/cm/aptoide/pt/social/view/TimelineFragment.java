@@ -24,7 +24,6 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.comments.view.CommentDialogFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -86,7 +85,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
@@ -150,7 +148,6 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private String marketName;
   private CrashReport crashReport;
   private String cacheDirectoryPath;
-  @Inject NavigationTracker navigationTracker;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -307,7 +304,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             new PermissionManager(), (PermissionService) getContext(), installManager,
             storeRepository, storeUtilsProxy, storeCredentialsProvider, accountManager,
             timelineAnalytics, userId, storeId, storeContext, getContext().getResources(),
-            new LinksHandlerFactory(getContext()), navigationTracker));
+            new LinksHandlerFactory(getContext())));
   }
 
   @Override public void onDestroyView() {

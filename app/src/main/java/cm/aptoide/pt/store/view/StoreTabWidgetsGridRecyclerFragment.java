@@ -45,11 +45,12 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
   protected StoreAnalytics storeAnalytics;
   private StoreTabNavigator storeTabNavigator;
   @Inject AnalyticsManager analyticsManager;
-  @Inject NavigationTracker navigationTracker;
+  protected NavigationTracker navigationTracker;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
+    navigationTracker = ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
     final StoreCredentialsProvider storeCredentialsProvider = new StoreCredentialsProviderImpl(
         AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class));
