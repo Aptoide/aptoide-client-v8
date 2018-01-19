@@ -3,7 +3,6 @@ package cm.aptoide.pt.analytics.analytics;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.logger.Logger;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -18,29 +17,28 @@ public class AptoideBiAnalytics {
   private final EventsPersistence persistence;
   private final AptoideBiEventService service;
   private final CompositeSubscription subscriptions;
-  private final int threshHoldSize;
+  private final int thresholdSize;
   private final long sendInterval;
   private final Scheduler timerScheduler;
 
   /**
-   * @param threshHoldSize max number of events to batch before send
+   * @param thresholdSize max number of events to batch before send
    * @param sendInterval max time(in milliseconds) interval between event sends
    */
   public AptoideBiAnalytics(EventsPersistence persistence, AptoideBiEventService service,
-      CompositeSubscription subscriptions, Scheduler timerScheduler, int threshHoldSize,
+      CompositeSubscription subscriptions, Scheduler timerScheduler, int thresholdSize,
       long sendInterval) {
     this.persistence = persistence;
     this.service = service;
     this.subscriptions = subscriptions;
     this.timerScheduler = timerScheduler;
-    this.threshHoldSize = threshHoldSize;
+    this.thresholdSize = thresholdSize;
     this.sendInterval = sendInterval;
   }
 
   public void log(String eventName, Map<String, Object> data, AnalyticsManager.Action action,
       String context) {
-    persistence.save(new Event(eventName, data, action, context, Calendar.getInstance()
-        .getTimeInMillis()))
+    persistence.save(new Event(eventName, data, action, context, System.currentTimeMillis()))
         .subscribe(() -> {
         }, throwable -> Logger.w(TAG, "cannot save the event due to " + throwable.getMessage()));
   }
@@ -78,6 +76,6 @@ public class AptoideBiAnalytics {
   }
 
   private boolean shouldSendEvents(List<Event> events) {
-    return events.size() > 0 && events.size() >= threshHoldSize;
+    return events.size() > 0 && events.size() >= thresholdSize;
   }
 }

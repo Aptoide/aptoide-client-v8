@@ -35,7 +35,15 @@ public class AnalyticsEventRequest extends V7<BaseV7Response, AnalyticsEventRequ
       Map<String, Object> data, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator, String appId,
       SharedPreferences sharedPreferences) {
-    final AnalyticsEventRequest.Body body = new AnalyticsEventRequest.Body(appId, data);
+    return of(eventName, context, action, data, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator, appId, sharedPreferences, null);
+  }
+
+  public static AnalyticsEventRequest of(String eventName, String context, String action,
+      Map<String, Object> data, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator, String appId,
+      SharedPreferences sharedPreferences, String timestamp) {
+    final AnalyticsEventRequest.Body body = new AnalyticsEventRequest.Body(appId, data, timestamp);
 
     return new AnalyticsEventRequest(body, action, eventName, context, bodyInterceptor, httpClient,
         converterFactory, tokenInvalidator, sharedPreferences);
@@ -49,10 +57,16 @@ public class AnalyticsEventRequest extends V7<BaseV7Response, AnalyticsEventRequ
   static class Body extends AnalyticsBaseBody {
 
     private final Map<String, Object> data;
+    private final String timestamp;
 
-    public Body(String aptoidePackage, Map<String, Object> data) {
+    public Body(String aptoidePackage, Map<String, Object> data, String timestamp) {
       super(aptoidePackage);
       this.data = data;
+      this.timestamp = timestamp;
+    }
+
+    public String getTimestamp() {
+      return timestamp;
     }
 
     public Map<String, Object> getData() {

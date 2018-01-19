@@ -168,13 +168,17 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -893,16 +897,23 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new RealmEventPersistence(database, mapper);
   }
 
-  @Singleton @Provides AptoideBiEventService providesRetrofitAptoideBiService(
-      @Named("retrofit-v7") Retrofit retrofit) {
-    return new RetrofitAptoideBiService(retrofit.create(RetrofitAptoideBiService.Service.class));
+  @Singleton @Provides AptoideBiEventService providesRetrofitAptoideBiService(@Named("pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient defaultClient, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences defaultSharedPreferences,
+      Converter.Factory converterFactory) {
+    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+    dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+    return new RetrofitAptoideBiService(dateFormat, bodyInterceptorPoolV7, defaultClient,
+        converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID, defaultSharedPreferences);
   }
 
   @Singleton @Provides @Named("Aptoide") EventLogger providesAptoideEventLogger(
       EventsPersistence persistence, AptoideBiEventService service) {
     return new AptoideBiEventLogger(
         new AptoideBiAnalytics(persistence, service, new CompositeSubscription(),
-            Schedulers.computation(), 2, DateUtils.MINUTE_IN_MILLIS));
+            Schedulers.computation(), BuildConfig.ANALYTICS_EVENTS_NUMBER_THRESHOLD,
+            BuildConfig.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS));
   }
 
   @Singleton @Provides @Named("Facebook") EventLogger providesFacebookEventLogger(
