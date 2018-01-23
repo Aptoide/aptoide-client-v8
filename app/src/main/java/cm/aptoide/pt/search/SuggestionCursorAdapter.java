@@ -38,7 +38,7 @@ public class SuggestionCursorAdapter extends CursorAdapter {
   public void setData(@NonNull List<String> newSuggestions) {
     suggestions.clear();
     suggestions.addAll(newSuggestions);
-    swapCursor(getCursorFor(suggestions));
+    changeCursor(getCursorFor(suggestions));
   }
 
   @NonNull private MatrixCursor getCursorFor(@NonNull List<String> data) {
