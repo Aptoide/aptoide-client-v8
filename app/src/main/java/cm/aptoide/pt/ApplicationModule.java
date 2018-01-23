@@ -22,6 +22,7 @@ import android.view.WindowManager;
 import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountPersistence;
 import cm.aptoide.accountmanager.AccountService;
+import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
@@ -49,10 +50,16 @@ import cm.aptoide.pt.analytics.TrackerFilter;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.analytics.analytics.AptoideBiAnalytics;
 import cm.aptoide.pt.analytics.analytics.AptoideBiEventLogger;
+import cm.aptoide.pt.analytics.analytics.AptoideBiEventService;
 import cm.aptoide.pt.analytics.analytics.EventLogger;
+import cm.aptoide.pt.analytics.analytics.EventsPersistence;
 import cm.aptoide.pt.analytics.analytics.FabricEventLogger;
 import cm.aptoide.pt.analytics.analytics.FacebookEventLogger;
 import cm.aptoide.pt.analytics.analytics.FlurryEventLogger;
+import cm.aptoide.pt.analytics.analytics.HttpKnockEventLogger;
+import cm.aptoide.pt.analytics.analytics.RealmEventMapper;
+import cm.aptoide.pt.analytics.analytics.RealmEventPersistence;
+import cm.aptoide.pt.analytics.analytics.RetrofitAptoideBiService;
 import cm.aptoide.pt.analytics.analytics.KnockEventLogger;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
@@ -113,8 +120,8 @@ import cm.aptoide.pt.networking.NoAuthenticationBodyInterceptorV3;
 import cm.aptoide.pt.networking.NoOpTokenInvalidator;
 import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
+import cm.aptoide.pt.preferences.AdultContentManager;
 import cm.aptoide.pt.notification.NotificationAnalytics;
-import cm.aptoide.pt.preferences.AdultContent;
 import cm.aptoide.pt.preferences.LocalPersistenceAdultContent;
 import cm.aptoide.pt.preferences.Preferences;
 import cm.aptoide.pt.preferences.SecurePreferences;
@@ -178,12 +185,16 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -198,6 +209,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import rx.Completable;
 import rx.Single;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 import static android.content.Context.ALARM_SERVICE;
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -495,26 +507,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AptoideAccountManager provideAptoideAccountManager(AdultContent adultContent,
-      StoreAccessor storeAccessor, @Named("default") OkHttpClient httpClient,
-      @Named("long-timeout") OkHttpClient longTimeoutHttpClient, AccountManager accountManager,
+      StoreAccessor storeAccessor, AccountManager accountManager,
       @Named("default") SharedPreferences defaultSharedPreferences,
-      AuthenticationPersistence authenticationPersistence, TokenInvalidator tokenInvalidator,
-      @Named("pool-v7")
-          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
-      @Named("web-v7")
-          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorWebV7,
-      @Named("multipart") MultipartBodyInterceptor multipartBodyInterceptor,
+      AuthenticationPersistence authenticationPersistence,
       AndroidAccountProvider androidAccountProvider, GoogleApiClient googleApiClient,
-      @Named("no-authentication-v3") BodyInterceptor<BaseBody> noAuthenticationBodyInterceptorV3,
-      ObjectMapper objectMapper, Converter.Factory converterFactory, StoreManager storeManager) {
+      StoreManager storeManager, AccountService accountService, AccountFactory accountFactory) {
     FacebookSdk.sdkInitialize(application);
-    final AccountFactory accountFactory = new AccountFactory();
-
-    final AccountService accountService =
-        new AccountServiceV3(accountFactory, httpClient, longTimeoutHttpClient, converterFactory,
-            objectMapper, defaultSharedPreferences, extraId, tokenInvalidator,
-            authenticationPersistence, noAuthenticationBodyInterceptorV3, multipartBodyInterceptor,
-            bodyInterceptorWebV7, bodyInterceptorPoolV7);
 
     final AndroidAccountDataMigration accountDataMigration = new AndroidAccountDataMigration(
         SecurePreferencesImplementation.getInstance(application, defaultSharedPreferences),
@@ -534,6 +532,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AptoideAccountManager.Builder().setAccountPersistence(
         new MatureContentPersistence(accountPersistence, adultContent))
         .setAccountService(accountService)
+        .setAdultService(adultContent)
         .registerSignUpAdapter(GoogleSignUpAdapter.TYPE,
             new GoogleSignUpAdapter(googleApiClient, loginPreferences))
         .registerSignUpAdapter(FacebookSignUpAdapter.TYPE,
@@ -541,6 +540,29 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
                 loginPreferences))
         .setStoreManager(storeManager)
         .build();
+  }
+
+  @Singleton @Provides AccountFactory provideAccountFactory() {
+    return new AccountFactory();
+  }
+
+  @Singleton @Provides AccountService provideAccountService(
+      @Named("default") OkHttpClient httpClient,
+      @Named("long-timeout") OkHttpClient longTimeoutHttpClient,
+      @Named("default") SharedPreferences defaultSharedPreferences,
+      AuthenticationPersistence authenticationPersistence, TokenInvalidator tokenInvalidator,
+      @Named("pool-v7")
+          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("web-v7")
+          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorWebV7,
+      @Named("multipart") MultipartBodyInterceptor multipartBodyInterceptor,
+      @Named("no-authentication-v3") BodyInterceptor<BaseBody> noAuthenticationBodyInterceptorV3,
+      ObjectMapper objectMapper, Converter.Factory converterFactory,
+      AccountFactory accountFactory) {
+    return new AccountServiceV3(accountFactory, httpClient, longTimeoutHttpClient, converterFactory,
+        objectMapper, defaultSharedPreferences, extraId, tokenInvalidator,
+        authenticationPersistence, noAuthenticationBodyInterceptorV3, multipartBodyInterceptor,
+        bodyInterceptorWebV7, bodyInterceptorPoolV7);
   }
 
   @Singleton @Provides @Named("default") OkHttpClient provideOkHttpClient(L2Cache httpClientCache,
@@ -699,9 +721,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         ((WindowManager) application.getSystemService(Context.WINDOW_SERVICE)));
   }
 
-  @Singleton @Provides AdultContent provideLocalAdultContent(Preferences preferences,
-      @Named("secure") SecurePreferences securePreferences) {
+  @Singleton @Provides LocalPersistenceAdultContent provideLocalAdultContent(
+      Preferences preferences, @Named("secure") SecurePreferences securePreferences) {
     return new LocalPersistenceAdultContent(preferences, securePreferences);
+  }
+
+  @Singleton @Provides AdultContent provideAdultContent(
+      LocalPersistenceAdultContent localAdultContent, AccountService accountService) {
+    return new AdultContentManager(localAdultContent, accountService);
   }
 
   @Singleton @Provides Preferences provideDefaultPreferences(
@@ -774,7 +801,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides StoreManager provideStoreManager(@Named("default") OkHttpClient okHttpClient,
       @Named("multipart") MultipartBodyInterceptor multipartBodyInterceptor,
-      @Named("defaulInterceptorV3")
+      @Named("defaultInterceptorV3")
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
       @Named("account-settings-pool-v7")
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> accountSettingsBodyInterceptorPoolV7,
@@ -809,7 +836,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new PackageRepository(application.getPackageManager());
   }
 
-  @Singleton @Provides @Named("defaulInterceptorV3")
+  @Singleton @Provides @Named("defaultInterceptorV3")
   BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> providesBodyInterceptorV3(
       IdsRepository idsRepository, QManager qManager,
       @Named("default") SharedPreferences defaultSharedPreferences,
@@ -848,10 +875,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         converterFactory, tokenInvalidator, sharedPreferences);
   }
 
-  @Singleton @Provides @Named("ws-prod-base-url") String providesBaseWebServiceTestsUrl() {
+  @Singleton @Provides @Named("ws-prod-suggestions-base-url") String provideSearchBaseUrl() {
     return "http://"
         + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SEARCH_HOST
-        + "/api/7/";
+        + "/v1/";
   }
 
   @Singleton @Provides @Named("rx") CallAdapter.Factory providesCallAdapterFactory() {
@@ -864,7 +891,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         Schedulers.io());
   }
 
-  @Singleton @Provides Retrofit providesDefaultRetrofit(@Named("ws-prod-base-url") String baseUrl,
+  @Singleton @Provides Retrofit providesSearchSuggestionsRetrofit(
+      @Named("ws-prod-suggestions-base-url") String baseUrl,
       @Named("default") OkHttpClient httpClient, Converter.Factory converterFactory,
       @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
     return new Retrofit.Builder().baseUrl(baseUrl)
@@ -874,36 +902,85 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .build();
   }
 
+  @Singleton @Provides @Named("base-host") String providesBaseHost(
+      @Named("default") SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
+        + "/api/7/";
+  }
+
+  @Singleton @Provides @Named("retrofit-v7") Retrofit providesV7Retrofit(
+      @Named("base-host") String baseHost, @Named("default") OkHttpClient httpClient,
+      Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
+    return new Retrofit.Builder().baseUrl(baseHost)
+        .client(httpClient)
+        .addCallAdapterFactory(rxCallAdapterFactory)
+        .addConverterFactory(converterFactory)
+        .build();
+  }
+
   @Singleton @Provides SearchSuggestionRemoteRepository providesSearchSuggestionRemoteRepository(
       Retrofit retrofit) {
     return retrofit.create(SearchSuggestionRemoteRepository.class);
   }
 
-  @Singleton @Provides @Named("Aptoide") EventLogger providesAptoideEventLogger() {
-    return new AptoideBiEventLogger(new AptoideBiAnalytics());
+  @Singleton @Provides CrashReport providesCrashReports() {
+    return CrashReport.getInstance();
   }
 
-  @Singleton @Provides @Named("Facebook") EventLogger providesFacebookEventLogger() {
-    return new FacebookEventLogger();
+  @Singleton @Provides RealmEventMapper providesRealmEventMapper(ObjectMapper objectMapper) {
+    return new RealmEventMapper(objectMapper);
+  }
+
+  @Singleton @Provides EventsPersistence providesEventsPersistence(Database database,
+      RealmEventMapper mapper) {
+    return new RealmEventPersistence(database, mapper);
+  }
+
+  @Singleton @Provides AptoideBiEventService providesRetrofitAptoideBiService(@Named("pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient defaultClient, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences defaultSharedPreferences,
+      Converter.Factory converterFactory) {
+    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+    dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+    return new RetrofitAptoideBiService(dateFormat, bodyInterceptorPoolV7, defaultClient,
+        converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID, defaultSharedPreferences);
+  }
+
+  @Singleton @Provides @Named("Aptoide") EventLogger providesAptoideEventLogger(
+      EventsPersistence persistence, AptoideBiEventService service) {
+    return new AptoideBiEventLogger(
+        new AptoideBiAnalytics(persistence, service, new CompositeSubscription(),
+            Schedulers.computation(), BuildConfig.ANALYTICS_EVENTS_NUMBER_THRESHOLD,
+            BuildConfig.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS));
+  }
+
+  @Singleton @Provides @Named("Facebook") EventLogger providesFacebookEventLogger(
+      AppEventsLogger facebook) {
+    return new FacebookEventLogger(facebook);
   }
 
   @Singleton @Provides @Named("Flurry") EventLogger providesFlurryEventLogger() {
     return new FlurryEventLogger();
   }
 
-  @Singleton @Provides @Named("Fabric") EventLogger providesFabricEventLogger() {
-    return new FabricEventLogger();
+  @Singleton @Provides @Named("Fabric") EventLogger providesFabricEventLogger(Answers fabric) {
+    return new FabricEventLogger(fabric);
   }
 
-  @Singleton @Provides @Named("Knock") EventLogger providesKnockEventLogger() {
-    return new KnockEventLogger();
+  @Singleton @Provides HttpKnockEventLogger providesknockEventLogger(
+      @Named("default") OkHttpClient client) {
+    return new HttpKnockEventLogger(client);
   }
 
   @Singleton @Provides AnalyticsManager providesAnalyticsManager(
       @Named("Aptoide") EventLogger aptoideBiEventLogger,
       @Named("Facebook") EventLogger facebookEventLogger,
-      @Named("Fabric") EventLogger fabricEventLogger, @Named("Knock") EventLogger knockEventLogger,
-      @Named("Flurry") EventLogger flurryEventLogger) {
+      @Named("Fabric") EventLogger fabricEventLogger,
+      @Named("Flurry") EventLogger flurryEventLogger, HttpKnockEventLogger knockEventLogger) {
     List<String> flurryEvents = new LinkedList<>(Arrays.asList(InstallAnalytics.APPLICATION_INSTALL,
         DownloadCompleteAnalytics.PARTIAL_EVENT_NAME, DownloadCompleteAnalytics.EVENT_NAME,
         AppViewAnalytics.HOME_PAGE_EDITORS_CHOICE_FLURRY, AppViewAnalytics.APP_VIEW_OPEN_FROM,
@@ -971,8 +1048,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
             SpotAndShareAnalytics.EVENT_NAME_SPOT_SHARE_PERMISSIONS,
             InstallFabricEvents.ROOT_V2_COMPLETE, InstallFabricEvents.ROOT_V2_START,
             InstallFabricEvents.IS_INSTALLATION_TYPE_EVENT_NAME))
-        .addLogger(knockEventLogger, Arrays.asList(NotificationAnalytics.NOTIFICATION_TOUCH))
         .addLogger(flurryEventLogger, flurryEvents)
+        .setKnockLogger(knockEventLogger)
         .addDataSaver(new AnalyticsDataSaver())
         .build();
   }

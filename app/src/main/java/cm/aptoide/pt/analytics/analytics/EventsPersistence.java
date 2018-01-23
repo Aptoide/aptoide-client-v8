@@ -1,11 +1,15 @@
 package cm.aptoide.pt.analytics.analytics;
 
-/**
- * Created by trinkes on 10/01/2018.
- */
+import java.util.List;
+import rx.Completable;
+import rx.Observable;
 
-class EventsPersistence {
-  public void save(Event event) {
+public interface EventsPersistence {
+  Completable save(Event event);
 
-  }
+  Completable save(List<Event> events);
+
+  Observable<List<Event>> getAll();
+
+  Completable remove(List<Event> events);
 }

@@ -19,4 +19,8 @@ public class AptoideBiEventLogger implements EventLogger {
       String context) {
     service.log(eventName, data, action, context);
   }
+
+  @Override public void setup() {
+    service.setup();
+  }
 }

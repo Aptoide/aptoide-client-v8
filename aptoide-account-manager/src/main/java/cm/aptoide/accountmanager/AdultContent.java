@@ -1,4 +1,4 @@
-package cm.aptoide.pt.preferences;
+package cm.aptoide.accountmanager;
 
 import rx.Completable;
 import rx.Observable;
@@ -10,9 +10,9 @@ public interface AdultContent {
 
   Completable removePin(int pin);
 
-  Completable enable();
+  Completable enable(boolean isLogged);
 
-  Completable disable();
+  Completable disable(boolean isLogged);
 
   Observable<Boolean> enabled();
 
