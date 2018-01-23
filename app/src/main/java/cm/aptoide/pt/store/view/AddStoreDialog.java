@@ -30,6 +30,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.search.SuggestionCursorAdapter;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.store.StoreAnalytics;
@@ -77,6 +78,7 @@ public class AddStoreDialog extends BaseDialog {
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
   private StoreAnalytics storeAnalytics;
+  private ScreenOrientationManager orientationManager;
 
   private SearchSuggestionManager searchSuggestionManager;
   private CompositeSubscription subscriptions;
@@ -94,6 +96,7 @@ public class AddStoreDialog extends BaseDialog {
       Logger.e(TAG, exception);
       throw exception;
     }
+    orientationManager = new ScreenOrientationManager(activity, activity.getWindowManager());
   }
 
   @Override public void onCreate(Bundle savedInstanceState) {
@@ -259,6 +262,7 @@ public class AddStoreDialog extends BaseDialog {
                 Logger.i(TAG, "Timeout reached while waiting for store suggestions");
                 return Single.just(suggestionCursorAdapter.getSuggestions());
               }
+              Logger.w(TAG, "handleStoreRemoteQuery: ", err);
               return Single.error(err);
             })
             .observeOn(AndroidSchedulers.mainThread())
@@ -295,7 +299,7 @@ public class AddStoreDialog extends BaseDialog {
     if (loadingDialog == null) {
       loadingDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity());
     }
-
+    orientationManager.lock();
     loadingDialog.show();
   }
 
@@ -351,6 +355,7 @@ public class AddStoreDialog extends BaseDialog {
   }
 
   void dismissLoadingDialog() {
+    orientationManager.unlock();
     loadingDialog.dismiss();
   }
 
