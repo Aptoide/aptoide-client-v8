@@ -9,6 +9,7 @@ import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.UriMatcher;
+import android.content.pm.ShortcutManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -84,15 +85,46 @@ public class DeepLinkIntentReceiver extends ActivityView {
     String uri = getIntent().getDataString();
     Analytics.ApplicationLaunch.website(uri);
 
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
+
+      ShortcutManager shortcutManager =
+          getApplicationContext().getSystemService(ShortcutManager.class);
+      Intent fromShortcut = getIntent();
+
+      if (fromShortcut != null) {
+        if (fromShortcut.hasExtra("search")) {
+          if (fromShortcut.getBooleanExtra("search", false)) {
+            Logger.v(TAG, "the search shortcut was used to reach this!");
+            if (shortcutManager != null) {
+              shortcutManager.reportShortcutUsed("search");
+            }
+          }
+        } else if (fromShortcut.hasExtra("timeline")) {
+          if (fromShortcut.getBooleanExtra("timeline", false)) {
+            Logger.w(TAG, "the timeline shortcut was used to reach this!");
+            if (shortcutManager != null) {
+              shortcutManager.reportShortcutUsed("timeline");
+            }
+          }
+        }
+      }
+    }
+
     Logger.v(TAG, "uri: " + uri);
 
     Uri u = null;
-    try {
+    try
+
+    {
       u = Uri.parse(uri);
-    } catch (Exception e) {
+    } catch (Exception e)
+
+    {
     }
     //Loogin for url from the new site
-    if (u != null && u.getHost() != null) {
+    if (u != null && u.getHost() != null)
+
+    {
 
       if (u.getHost()
           .contains("webservices.aptoide.com")) {
@@ -167,23 +199,35 @@ public class DeepLinkIntentReceiver extends ActivityView {
         }
       }
     }
-    if (uri.startsWith("aptoiderepo")) {
+    if (uri.startsWith("aptoiderepo"))
+
+    {
 
       ArrayList<String> repo = new ArrayList<>();
       repo.add(uri.substring(14));
       startWithRepo(StoreUtils.split(repo));
-    } else if (uri.startsWith("aptoidexml")) {
+    } else if (uri.startsWith("aptoidexml"))
+
+    {
 
       String repo = uri.substring(13);
       parseXmlString(repo);
       Intent i = new Intent(DeepLinkIntentReceiver.this, startClass);
       i.putExtra(DeepLinksTargets.NEW_REPO, StoreUtils.split(repo));
       startActivity(i);
-    } else if (uri.startsWith("aptoidesearch://")) {
+    } else if (uri.startsWith("aptoidesearch://"))
+
+    {
       startFromPackageName(uri.split("aptoidesearch://")[1]);
-    } else if (uri.startsWith("aptoidevoicesearch://")) {
+    } else if (uri.startsWith("aptoidevoicesearch://"))
+
+    {
       aptoidevoiceSearch(uri.split("aptoidevoicesearch://")[1]);
-    } else if (u != null && "market".equalsIgnoreCase(u.getScheme())) {
+    } else if (u != null && "market".
+
+        equalsIgnoreCase(u.getScheme()))
+
+    {
       /*
        * market schema:
        * could come from a search or a to open an app
@@ -205,14 +249,20 @@ public class DeepLinkIntentReceiver extends ActivityView {
         }
       }
       startFromPackageName(packageName);
-    } else if (uri.startsWith("http://market.android.com/details?id=")) {
+    } else if (uri.startsWith("http://market.android.com/details?id="))
+
+    {
       String param = uri.split("=")[1];
       startFromPackageName(param);
-    } else if (uri.startsWith("https://market.android.com/details?id=")) {
+    } else if (uri.startsWith("https://market.android.com/details?id="))
+
+    {
       String param = uri.split("=")[1];
       startFromPackageName(param);
     } else if (uri.startsWith("https://play.google.com/store/apps/details?id=") || uri.startsWith(
-        "http://play.google.com/store/apps/details?id=")) {
+        "http://play.google.com/store/apps/details?id="))
+
+    {
       String params = uri.split("&")[0];
       String param = params.split("=")[1];
       if (param.contains("pname:")) {
@@ -229,7 +279,9 @@ public class DeepLinkIntentReceiver extends ActivityView {
         }
       }
       startFromPackageName(param);
-    } else if (uri.contains("aptword://")) {
+    } else if (uri.contains("aptword://"))
+
+    {
 
       // TODO: 12-08-2016 neuro aptword Seems discontinued???
       String param = uri.substring("aptword://".length());
@@ -259,22 +311,36 @@ public class DeepLinkIntentReceiver extends ActivityView {
           finish();
         }
       }
-    } else if (uri.startsWith("file://")) {
+    } else if (uri.startsWith("file://"))
+
+    {
 
       downloadMyApp();
-    } else if (uri.startsWith("aptoideinstall://")) {
+    } else if (uri.startsWith("aptoideinstall://"))
+
+    {
       parseAptoideInstallUri(uri.substring("aptoideinstall://".length()));
     } else if (u.getHost()
-        .equals("cm.aptoide.pt") && u.getPath()
-        .equals("/deeplink") && u.getQueryParameter("name")
-        .equals("getHome")) {
+        .
+
+            equals("cm.aptoide.pt") && u.getPath()
+        .
+
+            equals("/deeplink") && u.getQueryParameter("name")
+        .
+
+            equals("getHome"))
+
+    {
       String id = u.getQueryParameter("user_id");
       if (id != null) {
         openUserScreen(Long.valueOf(id));
       }
       finish();
       return;
-    } else if (uri.startsWith("aptoide://")) {
+    } else if (uri.startsWith("aptoide://"))
+
+    {
       Uri parse = Uri.parse(uri);
       if ("getUserTimeline".equals(parse.getQueryParameter("name"))) {
         String cardId = parse.getQueryParameter("cardId");
@@ -282,10 +348,12 @@ public class DeepLinkIntentReceiver extends ActivityView {
         finish();
         return;
       }
-      if("search".equals(parse.getQueryParameter("name"))){
+      if ("search".equals(parse.getQueryParameter("name"))) {
         String query = "";
-        if(parse.getQueryParameterNames().contains("keyword"))
-          query=parse.getQueryParameter("keyword");
+        if (parse.getQueryParameterNames()
+            .contains("keyword")) {
+          query = parse.getQueryParameter("keyword");
+        }
         startFromSearch(query);
         finish();
         return;
@@ -299,7 +367,9 @@ public class DeepLinkIntentReceiver extends ActivityView {
           break;
       }
       finish();
-    } else {
+    } else
+
+    {
       finish();
     }
   }
@@ -365,8 +435,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
 
   public void aptoidevoiceSearch(String param) {
     // TODO: voiceSearch was used by a foreign app, dunno if still used.
-    
-
 
     //        Cursor c = new AptoideDatabase(Aptoide.getDb()).getSearchResults(param, StoreActivity.Sort.DOWNLOADS);
     //
