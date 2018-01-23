@@ -93,7 +93,8 @@ public class BillingAnalytics {
   private Event getFacebookPaymentEvent(String eventName, String action, Map<String, Object> map,
       boolean isCurrent) {
     map.put("action", action);
-    return new Event(eventName, map, AnalyticsManager.Action.CLICK, getViewName(isCurrent));
+    return new Event(eventName, map, AnalyticsManager.Action.CLICK, getViewName(isCurrent),
+        System.currentTimeMillis());
   }
 
   private Map<String, Object> getProductMap(Product product) {

@@ -91,7 +91,8 @@ public class AccountAnalytics {
     Map<String, Object> map = new HashMap<>();
     map.put(STATUS, SignUpLoginStatus.SUCCESS.getStatus());
     signUpEvent =
-        new Event(SIGN_UP_EVENT_NAME, map, AnalyticsManager.Action.CLICK, getViewName(true));
+        new Event(SIGN_UP_EVENT_NAME, map, AnalyticsManager.Action.CLICK, getViewName(true),
+            System.currentTimeMillis());
     clearLoginEvents();
   }
 
@@ -137,7 +138,8 @@ public class AccountAnalytics {
     if (statusDescription != null) {
       map.put(STATUS_DESCRIPTION, statusDescription);
     }
-    return new Event(eventName, map, AnalyticsManager.Action.CLICK, getViewName(true));
+    return new Event(eventName, map, AnalyticsManager.Action.CLICK, getViewName(true),
+        System.currentTimeMillis());
   }
 
   private void sendEvents(String eventName, LoginMethod loginMethod, SignUpLoginStatus loginStatus,
@@ -158,7 +160,8 @@ public class AccountAnalytics {
     }
     map.put(PREVIOUS_CONTEXT, navigationTracker.getPreviousViewName());
     Event aptoideEvent =
-        new Event(APTOIDE_EVENT_NAME, map, AnalyticsManager.Action.CLICK, getViewName(true));
+        new Event(APTOIDE_EVENT_NAME, map, AnalyticsManager.Action.CLICK, getViewName(true),
+            System.currentTimeMillis());
     return aptoideEvent;
   }
 

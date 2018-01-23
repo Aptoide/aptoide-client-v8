@@ -67,7 +67,7 @@ public class InstallAnalytics {
           new FacebookEvent(facebook, EDITORS_APPLICATION_INSTALL, bundle)); //TO REMOVE
       analyticsManager.save(packageName + installingVersion,
           new Event(EDITORS_APPLICATION_INSTALL, data, AnalyticsManager.Action.INSTALL,
-              getViewName(true)));
+              getViewName(true), System.currentTimeMillis()));
     } else if (previousScreen == null) {
       if (!fragmentNameList.isEmpty()) {
         crashReport.log(NO_PREVIOUS_SCREEN_ERROR, fragmentNameList.toString());
@@ -84,7 +84,7 @@ public class InstallAnalytics {
           new FacebookEvent(facebook, NOTIFICATION_APPLICATION_INSTALL, bundle)); //TO REMOVE
       analyticsManager.save(packageName + installingVersion,
           new Event(NOTIFICATION_APPLICATION_INSTALL, data, AnalyticsManager.Action.INSTALL,
-              getViewName(true)));
+              getViewName(true), System.currentTimeMillis()));
     }
   }
 

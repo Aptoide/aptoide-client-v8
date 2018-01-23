@@ -5,6 +5,7 @@ import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.AdultContentAnalytics;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.ReloadInterface;
 import cm.aptoide.pt.view.dialog.EditableTextDialog;
@@ -34,7 +35,8 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
   @Override protected void assignViews(View itemView) {
     adultSwitch = (SwitchCompat) itemView.findViewById(R.id.adult_content);
     adultPinSwitch = (SwitchCompat) itemView.findViewById(R.id.pin_adult_content);
-    adultContentAnalytics = ((AptoideApplication) getContext().getApplicationContext()).getAdultContentAnalytics();
+    adultContentAnalytics =
+        ((AptoideApplication) getContext().getApplicationContext()).getAdultContentAnalytics();
     adultContentConfirmationDialog =
         new RxAlertDialog.Builder(getContext()).setMessage(R.string.are_you_adult)
             .setPositiveButton(R.string.yes)

@@ -1,7 +1,6 @@
 package cm.aptoide.pt.analytics.analytics;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 import cm.aptoide.pt.analytics.AnalyticsDataSaver;
 import cm.aptoide.pt.logger.Logger;
 import java.util.Collection;
@@ -15,8 +14,8 @@ public class AnalyticsManager {
   private Map<EventLogger, Collection<String>> eventSenders;
   private AnalyticsDataSaver analyticsDataSaver;
 
-  private AnalyticsManager(HttpKnockEventLogger knockLogger, Map<EventLogger, Collection<String>> eventSenders,
-      AnalyticsDataSaver analyticsDataSaver) {
+  private AnalyticsManager(HttpKnockEventLogger knockLogger,
+      Map<EventLogger, Collection<String>> eventSenders, AnalyticsDataSaver analyticsDataSaver) {
     this.knockEventLogger = knockLogger;
     this.eventSenders = eventSenders;
     this.analyticsDataSaver = analyticsDataSaver;
@@ -38,10 +37,9 @@ public class AnalyticsManager {
     }
   }
 
-  public void logEvent(Event event){
-    logEvent(event.getData(),event.getEventName(), event.getAction(),event.getContext());
+  public void logEvent(Event event) {
+    logEvent(event.getData(), event.getEventName(), event.getAction(), event.getContext());
   }
-
 
   public void logEvent(@NonNull String url) {
     knockEventLogger.log(url);
@@ -54,16 +52,16 @@ public class AnalyticsManager {
     }
   }
 
-  public void save(@NonNull String key, @NonNull Event event){
-    analyticsDataSaver.save(key,event);
+  public void save(@NonNull String key, @NonNull Event event) {
+    analyticsDataSaver.save(key, event);
   }
 
-  public void sendAndRemoveEvent(String eventName){
+  public void sendAndRemoveEvent(String eventName) {
     Event event = analyticsDataSaver.newGet(eventName);
-    logEvent(event.getData(),event.getEventName(), event.getAction(), event.getContext());
+    logEvent(event.getData(), event.getEventName(), event.getAction(), event.getContext());
   }
 
-  public Event getEvent(String key){
+  public Event getEvent(String key) {
     return analyticsDataSaver.newGet(key);
   }
 
@@ -91,7 +89,7 @@ public class AnalyticsManager {
     }
 
     public Builder addDataSaver(AnalyticsDataSaver analyticsDataSaver) {
-      this.analyticsDataSaver=analyticsDataSaver;
+      this.analyticsDataSaver = analyticsDataSaver;
       return this;
     }
 

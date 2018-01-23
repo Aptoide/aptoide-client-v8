@@ -39,7 +39,8 @@ public class DownloadCompleteAnalytics {
       map.put("position", editorsBrickPosition);
       map.put(INSTALL_TYPE_KEY, installType.name());
       Event event =
-          new Event(PARTIAL_EVENT_NAME, map, AnalyticsManager.Action.CLICK, getViewName(false));
+          new Event(PARTIAL_EVENT_NAME, map, AnalyticsManager.Action.CLICK, getViewName(false),
+              System.currentTimeMillis());
       analyticsManager.save(id + PARTIAL_EVENT_NAME, event);
     }
 
@@ -55,7 +56,7 @@ public class DownloadCompleteAnalytics {
         data.put(INSTALL_TYPE_KEY, installType.name());
         notificationDownloadComplete =
             new Event(NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME, data, AnalyticsManager.Action.AUTO,
-                getViewName(true));
+                getViewName(true), System.currentTimeMillis());
       }
       if (previousScreen.getFragment() != null) {
         downloadMap.put("fragment", previousScreen.getFragment());
@@ -71,7 +72,8 @@ public class DownloadCompleteAnalytics {
     }
 
     Event downloadEvent =
-        new Event(EVENT_NAME, downloadMap, AnalyticsManager.Action.AUTO, getViewName(false));
+        new Event(EVENT_NAME, downloadMap, AnalyticsManager.Action.AUTO, getViewName(false),
+            System.currentTimeMillis());
 
     analyticsManager.save(id + EVENT_NAME, downloadEvent);
     if (notificationDownloadComplete != null) {
