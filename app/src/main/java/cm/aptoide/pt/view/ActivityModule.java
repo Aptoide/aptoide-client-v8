@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.DeepLinkAnalytics;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;
@@ -20,7 +21,6 @@ import cm.aptoide.pt.account.view.store.ManageStoreNavigator;
 import cm.aptoide.pt.account.view.user.ManageUserNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.analytics.NavigationTracker;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.download.DownloadFactory;
@@ -29,7 +29,6 @@ import cm.aptoide.pt.install.InstallCompletedNotifier;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
-import cm.aptoide.pt.link.AptoideInstallParser;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.FragmentResultNavigator;
@@ -73,8 +72,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   private final View view;
   private final String defaultTheme;
   private final String defaultStoreName;
-  private boolean firstCreated;
   private final String fileProviderAuthority;
+  private boolean firstCreated;
 
   public ActivityModule(AppCompatActivity activity, Intent intent,
       NotificationSyncScheduler notificationSyncScheduler, String marketName, String autoUpdateUrl,
@@ -116,15 +115,6 @@ import static com.facebook.FacebookSdk.getApplicationContext;
     return activity.getSupportFragmentManager();
   }
 
-  @ActivityScope @Provides NotificationAnalytics provideNotificationAnalytics(AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
-    return new NotificationAnalytics(new AptoideInstallParser(), analyticsManager,
-        navigationTracker);
-  }
-
-  @ActivityScope @Provides SearchAnalytics providesSearchAnalytics(AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
-    return new SearchAnalytics(analyticsManager, navigationTracker);
-  }
-
   @ActivityScope @Provides SearchNavigator providesSearchNavigator(
       FragmentNavigator fragmentNavigator) {
     return new SearchNavigator(fragmentNavigator, defaultStoreName);
@@ -135,11 +125,12 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       StoreRepository storeRepository, FragmentNavigator fragmentNavigator,
       @Named("default") SharedPreferences sharedPreferences, StoreAccessor storeAccessor,
       NavigationTracker navigationTracker, PageViewsAnalytics pageViewsAnalytics,
-      SearchNavigator searchNavigator, SearchAnalytics searchAnalytics) {
+      SearchNavigator searchNavigator, SearchAnalytics searchAnalytics,
+      DeepLinkAnalytics deepLinkAnalytics) {
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
         (TabNavigator) activity, (DeepLinkManager.DeepLinkMessages) activity, sharedPreferences,
         storeAccessor, defaultTheme, notificationAnalytics, navigationTracker, pageViewsAnalytics,
-        searchNavigator, searchAnalytics);
+        searchNavigator, searchAnalytics, deepLinkAnalytics);
   }
 
   @ActivityScope @Provides Presenter provideMainPresenter(
@@ -159,10 +150,12 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
   @ActivityScope @Provides AccountNavigator provideAccountNavigator(
       FragmentNavigator fragmentNavigator, AptoideAccountManager accountManager,
-      CallbackManager callbackManager, GoogleApiClient googleApiClient, AccountAnalytics accountAnalytics) {
+      CallbackManager callbackManager, GoogleApiClient googleApiClient,
+      AccountAnalytics accountAnalytics) {
     return new AccountNavigator(fragmentNavigator, accountManager, ((ActivityNavigator) activity),
         LoginManager.getInstance(), callbackManager, googleApiClient, PublishRelay.create(),
-        defaultStoreName, defaultTheme, "http://m.aptoide.com/account/password-recovery", accountAnalytics);
+        defaultStoreName, defaultTheme, "http://m.aptoide.com/account/password-recovery",
+        accountAnalytics);
   }
 
   @ActivityScope @Provides ScreenOrientationManager provideScreenOrientationManager() {

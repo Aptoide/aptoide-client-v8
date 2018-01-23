@@ -16,19 +16,20 @@ public class NotificationAnalytics {
 
   public static final String NOTIFICATION_TOUCH = "NOTIFICATION_TOUCH";
   public static final String NOTIFICATION_RECEIVED = "Aptoide_Push_Notification_Received";
-  private static final String NOTIFICATION_IMPRESSION = "Aptoide_Push_Notification_Impression";
   public static final String NOTIFICATION_PRESSED = "Aptoide_Push_Notification_Click";
   public static final String NOTIFICATION_EVENT_NAME = "NOTIFICATION";
+  private static final String NOTIFICATION_IMPRESSION = "Aptoide_Push_Notification_Impression";
   private static final String TYPE = "type";
   private static final String AB_TESTING_GROUP = "ab_testing_group";
   private static final String PACKAGE_NAME = "package_name";
   private static final String CAMPAIGN_ID = "campaign_id";
+  private static final String DEFAULT_CONTEXT = "Notification";
   private final AptoideInstallParser aptoideInstallParser;
+  private final AnalyticsManager analyticsManager;
+  private final NavigationTracker navigationTracker;
   private AptoideInstall aptoideInstall;
   private int campaignId;
   private String abTestingGroup;
-  private final AnalyticsManager analyticsManager;
-  private final NavigationTracker navigationTracker;
 
   public NotificationAnalytics(AptoideInstallParser aptoideInstallParser,
       AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
@@ -42,29 +43,29 @@ public class NotificationAnalytics {
   }
 
   public void sendUpdatesNotificationReceivedEvent() {
-    analyticsManager.logEvent(createUpdateNotificationEventsMap(),NOTIFICATION_RECEIVED,
-        AnalyticsManager.Action.AUTO,getViewName(true));
+    analyticsManager.logEvent(createUpdateNotificationEventsMap(), NOTIFICATION_RECEIVED,
+        AnalyticsManager.Action.AUTO, getViewName(true));
   }
 
   public void sendUpdatesNotificationClickEvent() {
-    analyticsManager.logEvent(createUpdateNotificationEventsMap(),NOTIFICATION_PRESSED,
-        AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(createUpdateNotificationEventsMap(), NOTIFICATION_PRESSED,
+        AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendPushNotificationReceivedEvent(@AptoideNotification.NotificationType int type,
       String abTestingGroup, int campaignId, String url) {
-    analyticsManager.logEvent(createPushNotificationEventMap(type, abTestingGroup, campaignId, url),NOTIFICATION_RECEIVED,
-        AnalyticsManager.Action.VIEW,getViewName(true));
+    analyticsManager.logEvent(createPushNotificationEventMap(type, abTestingGroup, campaignId, url),
+        NOTIFICATION_RECEIVED, AnalyticsManager.Action.VIEW, getViewName(true));
   }
 
   public void sendPushNotficationImpressionEvent(@AptoideNotification.NotificationType int type,
       String abTestingGroup, int campaignId, String url) {
     if (type == AptoideNotification.CAMPAIGN) {
-      analyticsManager.logEvent(createCampaignNotificationMap(abTestingGroup, campaignId),NOTIFICATION_EVENT_NAME,
-          AnalyticsManager.Action.IMPRESSION,getViewName(true));
+      analyticsManager.logEvent(createCampaignNotificationMap(abTestingGroup, campaignId),
+          NOTIFICATION_EVENT_NAME, AnalyticsManager.Action.IMPRESSION, getViewName(true));
     }
-    analyticsManager.logEvent(createPushNotificationEventMap(type,abTestingGroup,campaignId,url),NOTIFICATION_IMPRESSION,
-        AnalyticsManager.Action.IMPRESSION,getViewName(true));
+    analyticsManager.logEvent(createPushNotificationEventMap(type, abTestingGroup, campaignId, url),
+        NOTIFICATION_IMPRESSION, AnalyticsManager.Action.IMPRESSION, getViewName(true));
   }
 
   @NonNull
@@ -78,11 +79,11 @@ public class NotificationAnalytics {
   public void sendPushNotificationPressedEvent(@AptoideNotification.NotificationType int type,
       String abTestingGroup, int campaignId, String url) {
     if (type == AptoideNotification.CAMPAIGN) {
-      analyticsManager.logEvent(createCampaignNotificationMap(abTestingGroup,campaignId),NOTIFICATION_EVENT_NAME,
-          AnalyticsManager.Action.OPEN,getViewName(true));
+      analyticsManager.logEvent(createCampaignNotificationMap(abTestingGroup, campaignId),
+          NOTIFICATION_EVENT_NAME, AnalyticsManager.Action.OPEN, getViewName(true));
     }
-    analyticsManager.logEvent(createPushNotificationEventMap(type, abTestingGroup, campaignId, url),NOTIFICATION_PRESSED,
-        AnalyticsManager.Action.OPEN,getViewName(true));
+    analyticsManager.logEvent(createPushNotificationEventMap(type, abTestingGroup, campaignId, url),
+        NOTIFICATION_PRESSED, AnalyticsManager.Action.OPEN, getViewName(true));
   }
 
   private Map<String, Object> createUpdateNotificationEventsMap() {
@@ -92,9 +93,10 @@ public class NotificationAnalytics {
     return map;
   }
 
-  private Map<String, Object> createPushNotificationEventMap(@AptoideNotification.NotificationType int type,
-      String abTestingGroup, int campaignId, String url) {
-    Map<String,Object> map = new HashMap<>();
+  private Map<String, Object> createPushNotificationEventMap(
+      @AptoideNotification.NotificationType int type, String abTestingGroup, int campaignId,
+      String url) {
+    Map<String, Object> map = new HashMap<>();
     map.put(CAMPAIGN_ID, String.valueOf(campaignId));
     map.put(TYPE, matchNotificationTypeToString(type).toString()
         .toLowerCase());
@@ -102,7 +104,8 @@ public class NotificationAnalytics {
     return map;
   }
 
-  private Map<String, Object> addToMapIfNotNull(Map<String, Object> map, String abTestingGroup, String url) {
+  private Map<String, Object> addToMapIfNotNull(Map<String, Object> map, String abTestingGroup,
+      String url) {
     if (abTestingGroup != null && !abTestingGroup.isEmpty()) {
       map.put(AB_TESTING_GROUP, abTestingGroup);
     }
@@ -183,18 +186,8 @@ public class NotificationAnalytics {
     }
   }
 
-  private String getViewName(boolean isCurrent){
-    String viewName = "";
-    if(isCurrent){
-      viewName = navigationTracker.getCurrentViewName();
-    }
-    else{
-      viewName = navigationTracker.getPreviousViewName();
-    }
-    if(viewName.equals("")) {
-      return "NotificationAnalytics"; //Default value, shouldn't get here
-    }
-    return viewName;
+  private String getViewName(boolean isCurrent) {
+    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
   }
 
   private enum NotificationTypes {

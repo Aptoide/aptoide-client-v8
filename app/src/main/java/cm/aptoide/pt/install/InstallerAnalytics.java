@@ -14,4 +14,6 @@ public interface InstallerAnalytics {
   void rootInstallCancelled();
 
   void rootInstallStart();
+
+  void installationType(boolean isRootAllowed, boolean isRoot);
 }

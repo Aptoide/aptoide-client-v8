@@ -121,6 +121,7 @@ import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
+import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -140,6 +141,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.subjects.PublishSubject;
 
+import static com.facebook.FacebookSdk.getApplicationContext;
+
 /**
  * Created on 04/05/16.
  */
@@ -154,9 +157,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private final String key_appId = "appId";
   private final String key_packageName = "packageName";
   private final String key_uname = "uname";
-
+  @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
   private AppViewModel appViewModel;
-
   private AppViewHeader header;
   private InstallManager installManager;
   private Action0 unInstallAction;
@@ -190,8 +193,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private SearchNavigator searchNavigator;
   private TrendingManager trendingManager;
   private SearchAnalytics searchAnalytics;
-  @Inject AnalyticsManager analyticsManager;
-  @Inject NavigationTracker navigationTracker;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -367,7 +368,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     converterFactory = WebService.getDefaultConverter();
     Analytics analytics = Analytics.getInstance();
 
-    installAnalytics = new InstallAnalytics(CrashReport.getInstance(), analyticsManager,navigationTracker);
+    installAnalytics =
+        new InstallAnalytics(analytics, AppEventsLogger.newLogger(getApplicationContext()),
+            CrashReport.getInstance(), analyticsManager, navigationTracker);
 
     timelineAnalytics = application.getTimelineAnalytics();
 
@@ -386,10 +389,11 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
         ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), StoredMinimalAd.class);
-    final SpotAndShareAnalytics spotAndShareAnalytics = new SpotAndShareAnalytics(analyticsManager,
-        navigationTracker);
+    final SpotAndShareAnalytics spotAndShareAnalytics =
+        new SpotAndShareAnalytics(analyticsManager, navigationTracker);
     appViewAnalytics = new AppViewAnalytics(analyticsManager, navigationTracker);
-    appViewSimilarAppAnalytics = new AppViewSimilarAppAnalytics(analyticsManager, navigationTracker);
+    appViewSimilarAppAnalytics =
+        new AppViewSimilarAppAnalytics(analyticsManager, navigationTracker);
 
     installAppRelay = PublishRelay.create();
     shareAppHelper =
@@ -397,8 +401,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             spotAndShareAnalytics, timelineAnalytics, installAppRelay, sharedPreferences,
             application.isCreateStoreUserPrivacyEnabled());
     downloadFactory = new DownloadFactory(getMarketName());
-    storeAnalytics =
-        new StoreAnalytics(analyticsManager, navigationTracker);
+    storeAnalytics = new StoreAnalytics(analyticsManager, navigationTracker);
     notLoggedInShareAnalytics = application.getNotLoggedInShareAnalytics();
 
     searchAnalytics = new SearchAnalytics(analyticsManager, navigationTracker);
@@ -488,16 +491,17 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
     appSearchSuggestionsView =
         new AppSearchSuggestionsView(this, RxView.clicks(toolbar), crashReport,
-            suggestionCursorAdapter, PublishSubject.create(), toolbarMenuItemClick, searchAnalytics);
+            suggestionCursorAdapter, PublishSubject.create(), toolbarMenuItemClick,
+            searchAnalytics);
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
 
     final SearchSuggestionsPresenter searchSuggestionsPresenter =
         new SearchSuggestionsPresenter(appSearchSuggestionsView,
-            application.getSearchSuggestionManager(),
-            AndroidSchedulers.mainThread(), suggestionCursorAdapter, crashReport, trendingManager,
-            searchNavigator, false, searchAnalytics);
+            application.getSearchSuggestionManager(), AndroidSchedulers.mainThread(),
+            suggestionCursorAdapter, crashReport, trendingManager, searchNavigator, false,
+            searchAnalytics);
 
     attachPresenter(searchSuggestionsPresenter);
 
@@ -983,8 +987,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installDisplayable =
         AppViewInstallDisplayable.newInstance(getApp, installManager, getSearchAdResult(),
             shouldInstall, downloadFactory, timelineAnalytics, appViewAnalytics, installAppRelay,
-            this, new DownloadCompleteAnalytics(analyticsManager, navigationTracker), navigationTracker,
-            getEditorsBrickPosition(), installAnalytics,
+            this, new DownloadCompleteAnalytics(analyticsManager, navigationTracker),
+            navigationTracker, getEditorsBrickPosition(), installAnalytics,
             notificationAnalytics.getCampaignId(app.getPackageName(), app.getId()),
             notificationAnalytics.getAbTestingGroup(app.getPackageName(), app.getId()),
             fragmentNames);

@@ -3,6 +3,7 @@ package cm.aptoide.pt.app;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,8 +17,13 @@ public class AppViewAnalytics {
   public static final String HOME_PAGE_EDITORS_CHOICE_FLURRY = "Home_Page_Editors_Choice";
   public static final String APP_VIEW_OPEN_FROM = "App_Viewed_Open_From";
   public static final String OPEN_APP_VIEW = "OPEN_APP_VIEW";
-  private static final String ACTION = "Action";
   public static final String APP_VIEW_INTERACT = "App_View_Interact";
+  public static final String DOWNGRADE_DIALOG = "Downgrade_Dialog";
+  public static final String CLICK_INSTALL = "Clicked on install button";
+  private static final String APPLICATION_NAME = "Application Name";
+  private static final String APPLICATION_PUBLISHER = "Application Publisher";
+  private static final String ACTION = "Action";
+  private static final String DEFAULT_CONTEXT = "AppView";
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
 
@@ -30,7 +36,7 @@ public class AppViewAnalytics {
       String editorsBrickPosition) {
     analyticsManager.logEvent(
         createEditorsChoiceClickEventMap(previousScreen, packageName, editorsBrickPosition),
-        EDITORS_CHOICE_CLICKS, AnalyticsManager.Action.CLICK,getViewName(false));
+        EDITORS_CHOICE_CLICKS, AnalyticsManager.Action.CLICK, getViewName(false));
     analyticsManager.logEvent(
         createEditorsClickEventMap(previousScreen, packageName, editorsBrickPosition),
         HOME_PAGE_EDITORS_CHOICE_FLURRY, AnalyticsManager.Action.CLICK, getViewName(false));
@@ -147,7 +153,7 @@ public class AppViewAnalytics {
   }
 
   private Map<String, Object> createFlagAppEventData(String action, String flagDetail) {
-    Map<String,Object> map = new HashMap<>();
+    Map<String, Object> map = new HashMap<>();
     map.put(ACTION, action);
     map.put("flag_details", flagDetail);
     return map;
@@ -173,23 +179,38 @@ public class AppViewAnalytics {
         AnalyticsManager.Action.INSTALL, getViewName(true));
   }
 
+  public void downgradeDialogContinue() {
+    analyticsManager.logEvent(createMapData(ACTION, "Continue"), DOWNGRADE_DIALOG,
+        AnalyticsManager.Action.CLICK, getViewName(true));
+  }
+
+  public void downgradeDialogCancel() {
+    analyticsManager.logEvent(createMapData(ACTION, "Cancel"), DOWNGRADE_DIALOG,
+        AnalyticsManager.Action.CLICK, getViewName(true));
+  }
+
+  public void clickOnInstallButton(GetAppMeta.App app) {
+    try {
+      HashMap<String, Object> map = new HashMap<>();
+
+      map.put(APPLICATION_NAME, app.getPackageName());
+      map.put(APPLICATION_PUBLISHER, app.getDeveloper()
+          .getName());
+
+      analyticsManager.logEvent(map, CLICK_INSTALL, AnalyticsManager.Action.CLICK,
+          getViewName(true));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
   private Map<String, Object> createMapData(String key, String value) {
     final Map<String, Object> data = new HashMap<>();
     data.put(key, value);
     return data;
   }
 
-  private String getViewName(boolean isCurrent){
-    String viewName = "";
-    if(isCurrent){
-      viewName = navigationTracker.getCurrentViewName();
-    }
-    else{
-      viewName = navigationTracker.getPreviousViewName();
-    }
-    if(viewName.equals("")) {
-      return "AppViewAnalytics"; //Default value, shouldn't get here
-    }
-    return viewName;
+  private String getViewName(boolean isCurrent) {
+    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
   }
 }

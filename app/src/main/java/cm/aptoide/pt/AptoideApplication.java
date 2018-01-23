@@ -205,6 +205,9 @@ public abstract class AptoideApplication extends Application {
       accountSettingsBodyInterceptorPoolV7;
   @Inject TrendingManager trendingManager;
   @Inject AdultContentAnalytics adultContentAnalytics;
+  @Inject NotificationAnalytics notificationAnalytics;
+  @Inject SearchSuggestionManager searchSuggestionManager;
+  @Inject AnalyticsManager analyticsManager;
   private LeakTool leakTool;
   private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
@@ -230,9 +233,6 @@ public abstract class AptoideApplication extends Application {
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
   private NotificationsCleaner notificationsCleaner;
   private TimelineAnalytics timelineAnalytics;
-  private NotificationAnalytics notificationAnalytics;
-  @Inject SearchSuggestionManager searchSuggestionManager;
-  @Inject AnalyticsManager analyticsManager;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -463,7 +463,7 @@ public abstract class AptoideApplication extends Application {
       notificationCenter =
           new NotificationCenter(notificationProvider, getNotificationSyncScheduler(),
               new NotificationPolicyFactory(notificationProvider),
-              new NotificationAnalytics(new AptoideInstallParser(),analyticsManager,
+              new NotificationAnalytics(new AptoideInstallParser(), analyticsManager,
                   navigationTracker));
     }
     return notificationCenter;
@@ -519,9 +519,9 @@ public abstract class AptoideApplication extends Application {
     if (installManager == null) {
 
       installManager = new InstallManager(getApplicationContext(), getDownloadManager(),
-          new InstallerFactory(new MinimalAdMapper(),
-              new InstallFabricEvents(analyticsManager), getImageCachePath()).create(this,
-              installerType), getRootAvailabilityManager(), getDefaultSharedPreferences(),
+          new InstallerFactory(new MinimalAdMapper(), new InstallFabricEvents(analyticsManager),
+              getImageCachePath()).create(this, installerType), getRootAvailabilityManager(),
+          getDefaultSharedPreferences(),
           SecurePreferencesImplementation.getInstance(getApplicationContext(),
               getDefaultSharedPreferences()),
           RepositoryFactory.getDownloadRepository(getApplicationContext().getApplicationContext()),
@@ -995,10 +995,6 @@ public abstract class AptoideApplication extends Application {
   }
 
   public NotificationAnalytics getNotificationAnalytics() {
-    if (notificationAnalytics == null) {
-      notificationAnalytics =
-          new NotificationAnalytics(new AptoideInstallParser(),analyticsManager, navigationTracker);
-    }
     return notificationAnalytics;
   }
 
@@ -1020,16 +1016,18 @@ public abstract class AptoideApplication extends Application {
 
   public TimelineAnalytics getTimelineAnalytics() {
     if (timelineAnalytics == null) {
-      timelineAnalytics =
-          new TimelineAnalytics(getNotificationAnalytics(), getNavigationTracker(), getReadPostsPersistence(),analyticsManager);
+      timelineAnalytics = new TimelineAnalytics(getNotificationAnalytics(), getNavigationTracker(),
+          getReadPostsPersistence(), analyticsManager);
     }
     return timelineAnalytics;
   }
 
-  public AnalyticsManager getAnalyticsManager(){
+  public AnalyticsManager getAnalyticsManager() {
     return analyticsManager;
   }
 
-  public AdultContentAnalytics getAdultContentAnalytics(){ return adultContentAnalytics; }
+  public AdultContentAnalytics getAdultContentAnalytics() {
+    return adultContentAnalytics;
+  }
 }
 

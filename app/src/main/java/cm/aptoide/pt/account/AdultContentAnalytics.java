@@ -5,19 +5,17 @@ import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by jose_messejana on 19-01-2018.
- */
-
 public class AdultContentAnalytics {
   public static final String ADULT_CONTENT = "Adult Content";
-
   public static final String UNLOCK = "false";
   public static final String LOCK = "true";
+  private static final String DEFAULT_CONTEXT = "AdultContent";
+
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
 
-  public AdultContentAnalytics(AnalyticsManager analyticsManager, NavigationTracker navigationTracker){
+  public AdultContentAnalytics(AnalyticsManager analyticsManager,
+      NavigationTracker navigationTracker) {
     this.analyticsManager = analyticsManager;
     this.navigationTracker = navigationTracker;
   }
@@ -25,12 +23,16 @@ public class AdultContentAnalytics {
   public void lock() {
     Map<String, Object> map = new HashMap<>();
     map.put("Action", LOCK);
-    analyticsManager.logEvent(map, ADULT_CONTENT, AnalyticsManager.Action.CLICK,navigationTracker.getCurrentViewName());
+    analyticsManager.logEvent(map, ADULT_CONTENT, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void unlock() {
     Map<String, Object> map = new HashMap<>();
     map.put("Action", UNLOCK);
-    analyticsManager.logEvent(map, ADULT_CONTENT, AnalyticsManager.Action.CLICK,navigationTracker.getCurrentViewName());
+    analyticsManager.logEvent(map, ADULT_CONTENT, AnalyticsManager.Action.CLICK, getViewName(true));
+  }
+
+  private String getViewName(boolean isCurrent) {
+    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
   }
 }

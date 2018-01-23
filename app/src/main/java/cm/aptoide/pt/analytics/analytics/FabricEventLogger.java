@@ -13,7 +13,7 @@ public class FabricEventLogger implements EventLogger {
   @Override
   public void log(String eventName, Map<String, Object> data, AnalyticsManager.Action action,
       String context) {
-    Logger.d(TAG, "log() called with: "
+    Logger.d("TAG123fabric", "log() called with: "
         + "eventName = ["
         + eventName
         + "], data = ["

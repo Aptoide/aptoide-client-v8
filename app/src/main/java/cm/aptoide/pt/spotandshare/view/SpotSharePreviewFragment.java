@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.NavigationTracker;
@@ -32,13 +31,13 @@ import rx.Observable;
 public class SpotSharePreviewFragment extends FragmentView implements SpotSharePreviewView {
 
   private static String SHOW_TOOLBAR_KEY = "SHOW_TOOLBAR_KEY";
+  @Inject NavigationTracker navigationTracker;
+  @Inject AnalyticsManager analyticsManager;
   private Button startButton;
   private Toolbar toolbar;
   private boolean showToolbar;
   private SpotAndShareAnalytics spotAndShareAnalytics;
-  private NavigationTracker navigationTracker;
   private PageViewsAnalytics pageViewsAnalytics;
-  @Inject AnalyticsManager analyticsManager;
 
   public static Fragment newInstance(boolean showToolbar) {
     Bundle args = new Bundle();
@@ -58,10 +57,7 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
     getFragmentComponent(savedInstanceState).inject(this);
     showToolbar = getArguments().getBoolean(SHOW_TOOLBAR_KEY);
     spotAndShareAnalytics = new SpotAndShareAnalytics(analyticsManager, navigationTracker);
-    navigationTracker =
-        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
-    pageViewsAnalytics =
-        new PageViewsAnalytics(analyticsManager, navigationTracker);
+    pageViewsAnalytics = new PageViewsAnalytics(analyticsManager, navigationTracker);
     navigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName()));
     pageViewsAnalytics.sendPageViewedEvent();

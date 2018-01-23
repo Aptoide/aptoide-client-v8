@@ -13,7 +13,7 @@ public class FlurryEventLogger implements EventLogger {
   @Override
   public void log(String eventName, Map<String, Object> data, AnalyticsManager.Action action,
       String context) {
-    Logger.d(TAG, "log() called with: "
+    Logger.d("TAG123flurry", "log() called with: "
         + "eventName = ["
         + eventName
         + "], data = ["

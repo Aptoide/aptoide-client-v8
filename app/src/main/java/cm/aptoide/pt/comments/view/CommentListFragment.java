@@ -75,8 +75,6 @@ import rx.Observable;
 import rx.Single;
 import rx.functions.Action1;
 
-import static cm.aptoide.pt.analytics.Analytics.AppsTimeline.BLANK;
-
 // TODO: 21/12/2016 refactor and split in multiple classes to list comments
 // for each type: store and timeline card
 public class CommentListFragment extends GridRecyclerSwipeFragment
@@ -91,10 +89,12 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private static final String URL_VAL = "url_val";
   private static final String SHOW_INPUT_DIALOG_FIRST_RUN = "show_input_dialog_first_run";
   private static final String STORE_ANALYTICS_ACTION = "store_analytics_action";
-  private static final String STORE_ANALYTICS = "store_analytics";
   private static final String STORE_CONTEXT = "store_context";
+  private static final String BLANK = "(blank)";
   // control setComment retry
   protected long lastTotal;
+  @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
   //
   // vars
   //
@@ -119,15 +119,12 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private boolean showCommentInputDialogOnFirstRun;
-  private BodyInterceptor<BaseBody> bodyInterceptor;
   private TimelineAnalytics timelineAnalytics;
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
   private String storeAnalyticsAction;
   private StoreAnalytics storeAnalytics;
   private StoreContext storeContext;
-  @Inject AnalyticsManager analyticsManager;
-  @Inject NavigationTracker navigationTracker;
 
   public static Fragment newInstance(CommentType commentType, String timelineArticleId,
       StoreContext storeContext) {
@@ -178,8 +175,6 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
             .getApplicationContext()).getDatabase(), Store.class));
     httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     timelineAnalytics =
         ((AptoideApplication) getContext().getApplicationContext()).getTimelineAnalytics();
     super.onCreate(savedInstanceState);
@@ -195,8 +190,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     bodyDecorator =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
-    storeAnalytics =
-        new StoreAnalytics(analyticsManager, navigationTracker);
+    storeAnalytics = new StoreAnalytics(analyticsManager, navigationTracker);
     return v;
   }
 

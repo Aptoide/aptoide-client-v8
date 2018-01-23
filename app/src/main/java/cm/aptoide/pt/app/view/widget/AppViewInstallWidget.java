@@ -29,7 +29,10 @@ import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.app.AppBoughtReceiver;
+import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.displayable.AppViewInstallDisplayable;
@@ -115,6 +118,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
   private String defaultStoreName;
   private int campaignId;
   private String abTestGroup;
+  private AppViewAnalytics appViewAnalytics;
 
   public AppViewInstallWidget(View itemView) {
     super(itemView);
@@ -153,6 +157,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
+
     isCreateStoreUserPrivacyEnabled = application.isCreateStoreUserPrivacyEnabled();
     marketName = application.getMarketName();
     sharedPreferences = application.getDefaultSharedPreferences();
@@ -177,7 +182,10 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
             application.getNavigationTracker());
+    AnalyticsManager analyticsManager = application.getAnalyticsManager();
+    NavigationTracker navigationTracker = application.getNavigationTracker();
     analytics = Analytics.getInstance();
+    appViewAnalytics = new AppViewAnalytics(analyticsManager, navigationTracker);
     downloadFactory = displayable.getDownloadFactory();
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
@@ -445,9 +453,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                             // TODO: 12/07/2017 this code doesnt run
                             Logger.d(TAG, "Installing");
                           }, throwable -> crashReport.log(throwable)));
-                  Analytics.Rollback.downgradeDialogContinue();
+                  appViewAnalytics.downgradeDialogContinue();
                 } else {
-                  Analytics.Rollback.downgradeDialogCancel();
+                  appViewAnalytics.downgradeDialogCancel();
                 }
               }
             });
@@ -511,7 +519,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
       ManagerPreferences.setNotLoggedInInstallClicks(
           ManagerPreferences.getNotLoggedInInstallClicks(sharedPreferences) + 1, sharedPreferences);
       if (installOrUpgradeMsg == R.string.installing_msg) {
-        Analytics.ClickedOnInstallButton.clicked(app);
+        appViewAnalytics.clickOnInstallButton(app);
       }
       displayable.installAppClicked(isUpdate ? DownloadCompleteAnalytics.InstallType.UPDATE
           : DownloadCompleteAnalytics.InstallType.INSTALL);

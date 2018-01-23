@@ -25,6 +25,7 @@ public class NotLoggedInShareAnalytics {
   public static final String LOGIN_INCOMPLETE_PARAMETER = "Login incomplete";
   public static final String LOGIN_GOOGLE_PARAMETER = "Login Google";
   public static final String LOGIN_FACEBOOK_PARAMETER = "Login Facebook";
+  private static final String DEFAULT_CONTEXT = "NotLoggedInShare";
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
   private final AccountAnalytics accountAnalytics;
@@ -48,26 +49,26 @@ public class NotLoggedInShareAnalytics {
   }
 
   public void sendGoogleSignUpFailEvent() {
-    analyticsManager.logEvent(createMap(LOGIN_GOOGLE_PARAMETER,LOGIN_INCOMPLETE_PARAMETER),POP_UP_SHARE_TIMELINE,
-        AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(createMap(LOGIN_GOOGLE_PARAMETER, LOGIN_INCOMPLETE_PARAMETER),
+        POP_UP_SHARE_TIMELINE, AnalyticsManager.Action.CLICK, getViewName(true));
     loginEventMap = null;
   }
 
   private void sendFacebookMissingPermissionsEvent() {
-    analyticsManager.logEvent(createMap(LOGIN_FACEBOOK_PARAMETER,LOGIN_INCOMPLETE_PARAMETER),POP_UP_SHARE_TIMELINE,
-        AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(createMap(LOGIN_FACEBOOK_PARAMETER, LOGIN_INCOMPLETE_PARAMETER),
+        POP_UP_SHARE_TIMELINE, AnalyticsManager.Action.CLICK, getViewName(true));
     loginEventMap = null;
   }
 
   private void sendFacebookUserCancelledEvent() {
-    analyticsManager.logEvent(createMap(LOGIN_FACEBOOK_PARAMETER,LOGIN_INCOMPLETE_PARAMETER),POP_UP_SHARE_TIMELINE,
-        AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(createMap(LOGIN_FACEBOOK_PARAMETER, LOGIN_INCOMPLETE_PARAMETER),
+        POP_UP_SHARE_TIMELINE, AnalyticsManager.Action.CLICK, getViewName(true));
     loginEventMap = null;
   }
 
   private void sendFacebookErrorEvent() {
-    analyticsManager.logEvent(createMap(LOGIN_FACEBOOK_PARAMETER,LOGIN_INCOMPLETE_PARAMETER),POP_UP_SHARE_TIMELINE,
-        AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(createMap(LOGIN_FACEBOOK_PARAMETER, LOGIN_INCOMPLETE_PARAMETER),
+        POP_UP_SHARE_TIMELINE, AnalyticsManager.Action.CLICK, getViewName(true));
     loginEventMap = null;
   }
 
@@ -76,37 +77,40 @@ public class NotLoggedInShareAnalytics {
   }
 
   public void sendBackButtonPressed() {
-    analyticsManager.logEvent(createMap("Tap on Back Button", NONE_PARAMETER),POP_UP_SHARE_TIMELINE,
-        AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(createMap("Tap on Back Button", NONE_PARAMETER),
+        POP_UP_SHARE_TIMELINE, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendTapOutside() {
-    analyticsManager.logEvent(createMap("Tap Outside", NONE_PARAMETER),POP_UP_SHARE_TIMELINE,
-        AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(createMap("Tap Outside", NONE_PARAMETER), POP_UP_SHARE_TIMELINE,
+        AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendTapOnFakeToolbar() {
-    analyticsManager.logEvent(createMap("Tap on Install - Login - Share image", NONE_PARAMETER), POP_UP_SHARE_TIMELINE, AnalyticsManager.Action.CLICK, getViewName(true));
+    analyticsManager.logEvent(createMap("Tap on Install - Login - Share image", NONE_PARAMETER),
+        POP_UP_SHARE_TIMELINE, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendTapOnFakeTimeline() {
-    analyticsManager.logEvent(createMap("Tap on Timeline image", NONE_PARAMETER),POP_UP_SHARE_TIMELINE,
-        AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(createMap("Tap on Timeline image", NONE_PARAMETER),
+        POP_UP_SHARE_TIMELINE, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendShareSuccess() {
     loginEventMap.put(STATUS_PARAMETER_NAME, SHARE_SUCCESS_PARAMETER);
-    analyticsManager.logEvent(loginEventMap,POP_UP_SHARE_TIMELINE, AnalyticsManager.Action.CLICK,getViewName(false));
+    analyticsManager.logEvent(loginEventMap, POP_UP_SHARE_TIMELINE, AnalyticsManager.Action.CLICK,
+        getViewName(false));
     loginEventMap = null;
   }
 
   public void sendShareFail() {
     loginEventMap.put(STATUS_PARAMETER_NAME, SHARE_FAILED_PARAMETER);
-    analyticsManager.logEvent(loginEventMap,POP_UP_SHARE_TIMELINE, AnalyticsManager.Action.CLICK,getViewName(false));
+    analyticsManager.logEvent(loginEventMap, POP_UP_SHARE_TIMELINE, AnalyticsManager.Action.CLICK,
+        getViewName(false));
     loginEventMap = null;
   }
 
-  @NonNull private Map<String,Object> createMap(String action, String status) {
+  @NonNull private Map<String, Object> createMap(String action, String status) {
     Map<String, Object> map = new HashMap<>();
     map.put(SOURCE_PARAMETER_NAME, APP_VIEW_PARAMETER);
     map.put(ACTION_PARAMETER_NAME, action);
@@ -114,10 +118,9 @@ public class NotLoggedInShareAnalytics {
     return map;
   }
 
-
   public void sendCloseEvent() {
-    analyticsManager.logEvent(createMap(CLOSE_PARAMETER,NONE_PARAMETER),POP_UP_SHARE_TIMELINE,
-        AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(createMap(CLOSE_PARAMETER, NONE_PARAMETER), POP_UP_SHARE_TIMELINE,
+        AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendSignUpErrorEvent(AccountAnalytics.LoginMethod loginMethod, Throwable throwable) {
@@ -144,17 +147,7 @@ public class NotLoggedInShareAnalytics {
     }
   }
 
-  private String getViewName(boolean isCurrent){
-    String viewName = "";
-    if(isCurrent){
-      viewName = navigationTracker.getCurrentViewName();
-    }
-    else{
-      viewName = navigationTracker.getPreviousViewName();
-    }
-    if(viewName.equals("")) {
-      return "NotLoggedInShareAnalytics"; //Default value, shouldn't get here
-    }
-    return viewName;
+  private String getViewName(boolean isCurrent) {
+    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
   }
 }

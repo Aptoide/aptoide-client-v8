@@ -9,7 +9,6 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BiUtmAnalyticsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BiUtmAnalyticsRequestBody;
@@ -206,14 +205,13 @@ public class Analytics {
       public static Completable onCreate(android.app.Application application,
           Converter.Factory converterFactory, OkHttpClient okHttpClient,
           BodyInterceptor bodyInterceptor, SharedPreferences sharedPreferences,
-          TokenInvalidator tokenInvalidator,AnalyticsManager analyticsManager) {
+          TokenInvalidator tokenInvalidator, AnalyticsManager analyticsManager) {
 
         //Integrate FacebookSDK
         FacebookSdk.sdkInitialize(application);
         AppEventsLogger.activateApp(application);
         facebookLogger = AppEventsLogger.newLogger(application);
-        FirstLaunchAnalytics firstLaunchAnalytics =
-            new FirstLaunchAnalytics(analyticsManager);
+        FirstLaunchAnalytics firstLaunchAnalytics = new FirstLaunchAnalytics(analyticsManager);
         return Observable.fromCallable(() -> {
           AppEventsLogger.setUserID(((AptoideApplication) application).getIdsRepository()
               .getUniqueIdentifier());
@@ -325,7 +323,7 @@ public class Analytics {
       }
     }
 
-    public static class Activity {
+    public static class Activity { //TO DISCUSS
 
       public static void onCreate(android.app.Activity activity) {
 
@@ -358,108 +356,6 @@ public class Analytics {
         FlurryAgent.onEndSession(activity);
       }
     }
-  }
-
-  public static class Rollback {
-
-    private static final String EVENT_NAME_DOWNGRADE_DIALOG = "Downgrade_Dialog";
-
-    public static void downgradeDialogContinue() {
-      track(EVENT_NAME_DOWNGRADE_DIALOG, ACTION, "Continue", FLURRY);
-    }
-
-    public static void downgradeDialogCancel() {
-      track(EVENT_NAME_DOWNGRADE_DIALOG, ACTION, "Cancel", FLURRY);
-    }
-  }
-
-  public static class ApplicationLaunch {
-
-    public static final String EVENT_NAME = "Application Launch";
-    public static final String FACEBOOK_APP_LAUNCH = "Aptoide Launch";
-    public static final String SOURCE = "Source";
-    public static final String LAUNCHER = "Launcher";
-    public static final String WEBSITE = "Website";
-    public static final String NEW_UPDATES_NOTIFICATION = "New Updates Available";
-    public static final String DOWNLOADING_UPDATES = "Downloading Updates";
-    public static final String TIMELINE_NOTIFICATION = "Timeline Notification";
-    public static final String NEW_REPO = "New Repository";
-    public static final String URI = "Uri";
-
-    public static void launcher() {
-      logFacebookEvents(FACEBOOK_APP_LAUNCH, SOURCE, LAUNCHER);
-    }
-
-    public static void website(String uri) {
-      Logger.d(TAG, "website: " + uri);
-      HashMap<String, String> map = new HashMap<>();
-      map.put(SOURCE, WEBSITE);
-
-      if (uri != null) {
-        map.put(URI, uri.substring(0, uri.indexOf(":")));
-      }
-
-      track(EVENT_NAME, map, ALL);
-      logFacebookEvents(FACEBOOK_APP_LAUNCH, map);
-    }
-
-    public static void newUpdatesNotification() {
-      track(EVENT_NAME, SOURCE, NEW_UPDATES_NOTIFICATION, ALL);
-      logFacebookEvents(EVENT_NAME, SOURCE, NEW_UPDATES_NOTIFICATION);
-    }
-
-    public static void downloadingUpdates() {
-      track(EVENT_NAME, SOURCE, DOWNLOADING_UPDATES, ALL);
-      logFacebookEvents(EVENT_NAME, SOURCE, DOWNLOADING_UPDATES);
-    }
-
-    public static void timelineNotification() {
-      track(EVENT_NAME, SOURCE, TIMELINE_NOTIFICATION, ALL);
-      logFacebookEvents(EVENT_NAME, SOURCE, TIMELINE_NOTIFICATION);
-    }
-
-    public static void newRepo() {
-      track(EVENT_NAME, SOURCE, NEW_REPO, ALL);
-      logFacebookEvents(EVENT_NAME, SOURCE, NEW_REPO);
-    }
-  }
-
-  public static class ClickedOnInstallButton {
-
-    private static final String EVENT_NAME = "Clicked on install button";
-
-    //attributes
-    private static final String APPLICATION_NAME = "Application Name";
-    private static final String WARNING = "Warning";
-    private static final String APPLICATION_PUBLISHER = "Application Publisher";
-
-    public static void clicked(GetAppMeta.App app) {
-      try {
-        HashMap<String, String> map = new HashMap<>();
-
-        map.put(APPLICATION_NAME, app.getPackageName());
-        map.put(APPLICATION_PUBLISHER, app.getDeveloper()
-            .getName());
-
-        track(EVENT_NAME, map, ALL);
-
-        Bundle parameters = new Bundle();
-        parameters.putString(APPLICATION_NAME, app.getPackageName());
-        parameters.putString(APPLICATION_PUBLISHER, app.getDeveloper()
-            .getName());
-        logFacebookEvents(EVENT_NAME, parameters);
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
-  }
-
-  public static class AppsTimeline {
-
-    public static final String ACTION = "Action";
-    public static final String PACKAGE_NAME = "Package Name";
-
-    public static final String BLANK = "(blank)";
   }
 
   public static class Dimensions {
@@ -523,33 +419,6 @@ public class Analytics {
       data.putString(UTM_CONTENT, UNKNOWN);
       data.putString(ENTRY_POINT, UNKNOWN);
       setUserPropertiesWithBundle(data);
-    }
-  }
-
-  public static class File {
-
-    private static final String EVENT_NAME = "Download_99percent";
-    private static final String ATTRIBUTE = "APK";
-
-    public static void moveFile(String moveType) {
-      track(EVENT_NAME, ATTRIBUTE, moveType, FLURRY);
-    }
-  }
-
-  public static class RootInstall {
-
-    private static final String CONCAT = "CONCAT";
-    private static final String IS_ROOT = "IS_ROOT";
-    private static final String SETTING_ROOT = "SETTING_ROOT";
-    private static final String IS_INSTALLATION_TYPE_EVENT_NAME = "INSTALLATION_TYPE";
-
-    public static void installationType(boolean isRootAllowed, boolean isRoot) {
-      Map<String, String> map = new HashMap<>();
-      map.put(IS_ROOT, String.valueOf(isRoot));
-      map.put(SETTING_ROOT, String.valueOf(isRootAllowed));
-      map.put(CONCAT, String.valueOf(isRootAllowed) + "_" + String.valueOf(isRoot));
-
-      logFabricEvent(IS_INSTALLATION_TYPE_EVENT_NAME, map, FABRIC);
     }
   }
 }

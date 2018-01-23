@@ -41,12 +41,6 @@ public class TimelineAnalytics {
   public static final String PREVIOUS_CONTEXT = "previous_context";
   public static final String STORE = "store";
   public static final String APPS_TIMELINE_EVENT = "Apps Timeline";
-  private static final String CARD_TYPE = "card_type";
-  private static final String ACTION = "action";
-  private static final String SOCIAL_ACTION = "social_action";
-  private static final String PACKAGE = "package_name";
-  private static final String PUBLISHER = "publisher";
-  private static final String TITLE = "title";
   public static final String OPEN_ARTICLE = "OPEN_ARTICLE";
   public static final String OPEN_ARTICLE_HEADER = "OPEN_ARTICLE_HEADER";
   public static final String OPEN_BLOG = "OPEN_BLOG";
@@ -70,17 +64,25 @@ public class TimelineAnalytics {
   public static final String TIMELINE_OPENED = "Apps_Timeline_Open";
   public static final String SOCIAL_CARD_PREVIEW = "Apps_Timeline_Social_Card_Preview";
   public static final String CARD_ACTION = "Apps_Timeline_Card_Action";
+  private static final String CARD_TYPE = "card_type";
+  private static final String ACTION = "action";
+  private static final String SOCIAL_ACTION = "social_action";
+  private static final String PACKAGE = "package_name";
+  private static final String PUBLISHER = "publisher";
+  private static final String TITLE = "title";
+  private static final String DEFAULT_CONTEXT = "Timeline";
   private static final String BLANK = "(blank)";
   private static final String TIMELINE_VERSION = "timeline_version";
   private final NotificationAnalytics notificationAnalytics;
   private final NavigationTracker navigationTracker;
   private final ReadPostsPersistence readPostsPersistence;
   private final List<Map<String, Object>> openTimelineEventsData;
-  private String version;
   private final AnalyticsManager analyticsManager;
+  private String version;
 
-  public TimelineAnalytics(NotificationAnalytics notificationAnalytics, NavigationTracker navigationTracker,
-      ReadPostsPersistence readPostsPersistence, AnalyticsManager analyticsManager) {
+  public TimelineAnalytics(NotificationAnalytics notificationAnalytics,
+      NavigationTracker navigationTracker, ReadPostsPersistence readPostsPersistence,
+      AnalyticsManager analyticsManager) {
     this.notificationAnalytics = notificationAnalytics;
     this.navigationTracker = navigationTracker;
     this.readPostsPersistence = readPostsPersistence;
@@ -89,20 +91,21 @@ public class TimelineAnalytics {
   }
 
   public void sendSocialCardPreviewActionEvent(String value) {
-    analyticsManager.logEvent(createMapData(ACTION,value),SOCIAL_CARD_PREVIEW,
-        AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(createMapData(ACTION, value), SOCIAL_CARD_PREVIEW,
+        AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendSocialActionEvent(TimelineSocialActionData timelineSocialActionData) {
-    analyticsManager.logEvent(createSocialActionEventData(timelineSocialActionData),CARD_ACTION,
-        AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(createSocialActionEventData(timelineSocialActionData), CARD_ACTION,
+        AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void notificationShown(String url) {
     notificationAnalytics.sendNotificationTouchEvent(url);
   }
 
-  private Map<String, Object> createSocialActionEventData(TimelineSocialActionData timelineSocialActionData) {
+  private Map<String, Object> createSocialActionEventData(
+      TimelineSocialActionData timelineSocialActionData) {
     Map<String, Object> data = new HashMap<>();
     data.put(CARD_TYPE, timelineSocialActionData.getCardType());
     data.put(ACTION, timelineSocialActionData.getAction());
@@ -115,13 +118,13 @@ public class TimelineAnalytics {
 
   public void sendAppUpdateCardClickEvent(String cardType, String action, String socialAction,
       String packageName, String publisher) {
-    analyticsManager.logEvent(createAppUpdateCardData(cardType, action, socialAction, packageName, publisher),CARD_ACTION,
-        AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(
+        createAppUpdateCardData(cardType, action, socialAction, packageName, publisher),
+        CARD_ACTION, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
-  @NonNull
-  private Map<String, Object> createAppUpdateCardData(String cardType, String action, String socialAction,
-      String packageName, String publisher) {
+  @NonNull private Map<String, Object> createAppUpdateCardData(String cardType, String action,
+      String socialAction, String packageName, String publisher) {
     Map<String, Object> data = new HashMap<>();
     data.put(CARD_TYPE, cardType);
     data.put(ACTION, action);
@@ -134,13 +137,15 @@ public class TimelineAnalytics {
 
   public void sendMediaCardClickEvent(String cardType, String title, String publisher,
       String action, String socialAction) {
-    analyticsManager.logEvent(createArticleCardData(cardType, title, publisher, action, socialAction),CARD_ACTION,
-        AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(
+        createArticleCardData(cardType, title, publisher, action, socialAction), CARD_ACTION,
+        AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
-  @NonNull private Map<String, Object> createArticleCardData(String cardType, String title, String publisher,
+  @NonNull
+  private Map<String, Object> createArticleCardData(String cardType, String title, String publisher,
       String action, String socialAction) {
-    Map<String,Object> data = new HashMap<>();
+    Map<String, Object> data = new HashMap<>();
     data.put(CARD_TYPE, cardType);
     data.put(ACTION, action);
     data.put(SOCIAL_ACTION, socialAction);
@@ -152,13 +157,13 @@ public class TimelineAnalytics {
 
   public void sendRecommendationCardClickEvent(String cardType, String action, String socialAction,
       String packageName, String publisher) {
-    analyticsManager.logEvent(createRecommendationCardData(cardType, action, socialAction, packageName, publisher),CARD_ACTION,
-        AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(
+        createRecommendationCardData(cardType, action, socialAction, packageName, publisher),
+        CARD_ACTION, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
-  @NonNull
-  private Map<String, Object> createRecommendationCardData(String cardType, String action, String socialAction,
-      String packageName, String publisher) {
+  @NonNull private Map<String, Object> createRecommendationCardData(String cardType, String action,
+      String socialAction, String packageName, String publisher) {
     Map<String, Object> data = new HashMap<>();
     data.put(CARD_TYPE, cardType);
     data.put(ACTION, action);
@@ -169,9 +174,9 @@ public class TimelineAnalytics {
     return data;
   }
 
-  @NonNull private Map<String,Object> createNoTitleCardData(String cardType, String action, String socialAction,
-      String packageName, String publisher) {
-    Map<String,Object> data = new HashMap<>();
+  @NonNull private Map<String, Object> createNoTitleCardData(String cardType, String action,
+      String socialAction, String packageName, String publisher) {
+    Map<String, Object> data = new HashMap<>();
     data.put(CARD_TYPE, cardType);
     data.put(ACTION, action);
     data.put(SOCIAL_ACTION, socialAction);
@@ -183,18 +188,20 @@ public class TimelineAnalytics {
 
   public void sendSocialRecommendationClickEvent(String cardType, String action,
       String socialAction, String packageName, String publisher) {
-    analyticsManager.logEvent(createNoTitleCardData(cardType, action, socialAction, packageName, publisher),CARD_ACTION,
-        AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(
+        createNoTitleCardData(cardType, action, socialAction, packageName, publisher), CARD_ACTION,
+        AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendStoreLatestAppsClickEvent(String cardType, String action, String socialAction,
       String packageName, String publisher) {
-    analyticsManager.logEvent(createStoreLatestAppsData(cardType, action, socialAction, packageName, publisher),CARD_ACTION,
-        AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(
+        createStoreLatestAppsData(cardType, action, socialAction, packageName, publisher),
+        CARD_ACTION, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
-  private Map<String, Object> createStoreLatestAppsData(String cardType, String action, String socialAction,
-      String packageName, String publisher) {
+  private Map<String, Object> createStoreLatestAppsData(String cardType, String action,
+      String socialAction, String packageName, String publisher) {
     Map<String, Object> data = new HashMap<>();
     data.put(CARD_TYPE, cardType);
     data.put(ACTION, action);
@@ -207,7 +214,7 @@ public class TimelineAnalytics {
 
   public void sendTimelineTabOpened() {
     Map<String, Object> map = new HashMap<>();
-    analyticsManager.logEvent(map,TIMELINE_OPENED, AnalyticsManager.Action.CLICK,"STORE");
+    analyticsManager.logEvent(map, TIMELINE_OPENED, AnalyticsManager.Action.CLICK, "STORE");
     map.put(PREVIOUS_CONTEXT, getViewName(false));
     if (version != null) {
       map.put(TIMELINE_VERSION, version);
@@ -218,13 +225,14 @@ public class TimelineAnalytics {
   }
 
   public void sendFollowFriendsEvent() {
-    analyticsManager.logEvent(new HashMap<>(),FOLLOW_FRIENDS, AnalyticsManager.Action.CLICK, getViewName(true));
+    analyticsManager.logEvent(new HashMap<>(), FOLLOW_FRIENDS, AnalyticsManager.Action.CLICK,
+        getViewName(true));
   }
 
   public void sendOpenAppEvent(String cardType, String source, String packageName) {
     Map<String, Object> data = createAppData(cardType, source, packageName);
     data.put(TIMELINE_VERSION, version);
-    analyticsManager.logEvent(data,OPEN_APP, AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(data, OPEN_APP, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   private Map<String, Object> createAppData(String cardType, String source, String packageName) {
@@ -262,9 +270,10 @@ public class TimelineAnalytics {
 
   public void sendRecommendedOpenAppEvent(String cardType, String source, String basedOnPackageName,
       String packageName) {
-    Map<String, Object> data = createBasedOnAppData(cardType, source, packageName, basedOnPackageName);
+    Map<String, Object> data =
+        createBasedOnAppData(cardType, source, packageName, basedOnPackageName);
     data.put(TIMELINE_VERSION, version);
-    analyticsManager.logEvent(data,OPEN_APP, AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(data, OPEN_APP, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   private Map<String, Object> createBasedOnAppData(String cardType, String source,
@@ -278,20 +287,20 @@ public class TimelineAnalytics {
   public void sendUpdateAppEvent(String cardType, String source, String packageName) {
     Map<String, Object> data = createAppData(cardType, source, packageName);
     data.put(TIMELINE_VERSION, version);
-    analyticsManager.logEvent(data,UPDATE_APP, AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(data, UPDATE_APP, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendAppUpdateOpenStoreEvent(String cardType, String source, String packageName,
       String store) {
-    Map<String, Object> data = createStoreAppData(cardType, source, packageName,store);
+    Map<String, Object> data = createStoreAppData(cardType, source, packageName, store);
     data.put(TIMELINE_VERSION, version);
-    analyticsManager.logEvent(data,OPEN_STORE, AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(data, OPEN_STORE, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendOpenStoreEvent(String cardType, String source, String store) {
     Map<String, Object> data = createStoreData(cardType, source, store);
     data.put(TIMELINE_VERSION, version);
-    analyticsManager.logEvent(data,OPEN_STORE, AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(data, OPEN_STORE, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   private Map<String, Object> createStoreData(String cardType, String source, String store) {
@@ -303,7 +312,7 @@ public class TimelineAnalytics {
   public void sendOpenArticleEvent(String cardType, String source, String url, String packageName) {
     Map<String, Object> data = createArticleData(cardType, source, url, packageName);
     data.put(TIMELINE_VERSION, version);
-    analyticsManager.logEvent(data,OPEN_ARTICLE, AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(data, OPEN_ARTICLE, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   private Map<String, Object> createArticleData(String cardType, String source, String url,
@@ -318,25 +327,25 @@ public class TimelineAnalytics {
     HashMap<String, Object> data =
         parseEventData(event, true, EventErrorHandler.GenericErrorEvent.OK);
     data.put(TIMELINE_VERSION, version);
-    analyticsManager.logEvent(data,LIKE, AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(data, LIKE, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendErrorLikeEvent(CardTouchEvent event, EventErrorHandler.GenericErrorEvent error) {
     HashMap<String, Object> data = parseEventData(event, false, error);
     data.put(TIMELINE_VERSION, version);
-    analyticsManager.logEvent(data,LIKE, AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(data, LIKE, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendOpenBlogEvent(String cardType, String source, String url, String packageName) {
     Map<String, Object> data = createArticleData(cardType, source, url, packageName);
     data.put(TIMELINE_VERSION, version);
-    analyticsManager.logEvent(data,OPEN_BLOG, AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(data, OPEN_BLOG, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendOpenVideoEvent(String cardType, String source, String url, String packageName) {
     Map<String, Object> data = createVideoAppData(cardType, source, url, packageName);
     data.put(TIMELINE_VERSION, version);
-    analyticsManager.logEvent(data,OPEN_VIDEO, AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(data, OPEN_VIDEO, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   private Map<String, Object> createVideoAppData(String cardType, String source, String url,
@@ -350,7 +359,7 @@ public class TimelineAnalytics {
   public void sendOpenChannelEvent(String cardType, String source, String url, String packageName) {
     Map<String, Object> data = createVideoAppData(cardType, source, url, packageName);
     data.put(TIMELINE_VERSION, version);
-    analyticsManager.logEvent(data,OPEN_CHANNEL, AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(data, OPEN_CHANNEL, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   private Map<String, Object> createMapData(String key, String value) {
@@ -361,7 +370,7 @@ public class TimelineAnalytics {
 
   public void sendPopularAppOpenUserStoreEvent(String cardType, String source, String packageName,
       String store) {
-    Map<String, Object> data = createStoreAppData(cardType, source,packageName, store);
+    Map<String, Object> data = createStoreAppData(cardType, source, packageName, store);
     data.put(TIMELINE_VERSION, version);
     analyticsManager.logEvent(data, OPEN_STORE, AnalyticsManager.Action.CLICK, getViewName(true));
   }
@@ -370,7 +379,8 @@ public class TimelineAnalytics {
     HashMap<String, Object> data =
         parseEventData(touchEvent, true, EventErrorHandler.GenericErrorEvent.OK);
     data.put(TIMELINE_VERSION, version);
-    analyticsManager.logEvent(data,OPEN_STORE_PROFILE, AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(data, OPEN_STORE_PROFILE, AnalyticsManager.Action.CLICK,
+        getViewName(true));
   }
 
   public void sendClickOnPostHeaderEvent(CardTouchEvent cardTouchEvent) {
@@ -381,9 +391,8 @@ public class TimelineAnalytics {
       SocialHeaderCardTouchEvent socialHeaderCardTouchEvent =
           ((SocialHeaderCardTouchEvent) cardTouchEvent);
       logFlurryEvent(socialHeaderCardTouchEvent.getCard()
-              .getType()
-              .name(), BLANK, BLANK,
-          socialHeaderCardTouchEvent.getStoreName(), OPEN_STORE);
+          .getType()
+          .name(), BLANK, BLANK, socialHeaderCardTouchEvent.getStoreName(), OPEN_STORE);
       sendOpenStoreProfileEvent(socialHeaderCardTouchEvent);
     } else if (postType.equals(CardType.ARTICLE)) {
       Media card = (Media) post;
@@ -392,8 +401,7 @@ public class TimelineAnalytics {
           .getPackageName());
       sendMediaCardClickEvent(postType.name(), card.getMediaTitle(), card.getPublisherName(),
           OPEN_ARTICLE_HEADER, "(blank)");
-      logFlurryEvent(postType.name(), BLANK,
-          card.getMediaTitle(), card.getPublisherName(),
+      logFlurryEvent(postType.name(), BLANK, card.getMediaTitle(), card.getPublisherName(),
           OPEN_ARTICLE_HEADER);
     } else if (postType.equals(CardType.VIDEO)) {
       Media card = (Media) post;
@@ -402,36 +410,34 @@ public class TimelineAnalytics {
           .getPackageName());
       sendMediaCardClickEvent(postType.name(), card.getMediaTitle(), card.getPublisherName(),
           OPEN_VIDEO_HEADER, BLANK);
-      logFlurryEvent(postType.name(), BLANK,
-          card.getMediaTitle(), card.getPublisherName(), OPEN_VIDEO_HEADER);
+      logFlurryEvent(postType.name(), BLANK, card.getMediaTitle(), card.getPublisherName(),
+          OPEN_VIDEO_HEADER);
     } else if (postType.equals(CardType.STORE)) {
       StoreLatestApps card = ((StoreLatestApps) post);
-      logFlurryEvent(postType.name(), BLANK,
-          BLANK, card.getStoreName(), OPEN_STORE);
-      sendStoreLatestAppsClickEvent(postType.name(), OPEN_STORE, BLANK,
-          BLANK, card.getStoreName());
+      logFlurryEvent(postType.name(), BLANK, BLANK, card.getStoreName(), OPEN_STORE);
+      sendStoreLatestAppsClickEvent(postType.name(), OPEN_STORE, BLANK, BLANK, card.getStoreName());
     } else if (postType.equals(CardType.UPDATE)) {
       AppUpdate card = ((AppUpdate) post);
-      logFlurryEvent(postType.name(), card.getPackageName(),
-          BLANK, card.getStoreName(), OPEN_STORE);
-      sendAppUpdateCardClickEvent(postType.name(), OPEN_STORE, BLANK,
-          card.getPackageName(), card.getStoreName());
-      sendAppUpdateOpenStoreEvent(postType.name(), SOURCE_APTOIDE,
-          card.getPackageName(), card.getStoreName());
+      logFlurryEvent(postType.name(), card.getPackageName(), BLANK, card.getStoreName(),
+          OPEN_STORE);
+      sendAppUpdateCardClickEvent(postType.name(), OPEN_STORE, BLANK, card.getPackageName(),
+          card.getStoreName());
+      sendAppUpdateOpenStoreEvent(postType.name(), SOURCE_APTOIDE, card.getPackageName(),
+          card.getStoreName());
     } else if (postType.equals(CardType.POPULAR_APP)) {
       PopularAppTouchEvent popularAppTouchEvent = (PopularAppTouchEvent) cardTouchEvent;
       logFlurryEvent(popularAppTouchEvent.getCard()
               .getType()
-              .name(), ((PopularApp) popularAppTouchEvent.getCard()).getPackageName(),
-          BLANK, String.valueOf(popularAppTouchEvent.getUserId()), OPEN_STORE);
+              .name(), ((PopularApp) popularAppTouchEvent.getCard()).getPackageName(), BLANK,
+          String.valueOf(popularAppTouchEvent.getUserId()), OPEN_STORE);
       sendPopularAppOpenUserStoreEvent(postType.name(), SOURCE_APTOIDE,
           ((PopularApp) popularAppTouchEvent.getCard()).getPackageName(),
           String.valueOf(popularAppTouchEvent.getUserId()));
     }
   }
 
-  public void logFlurryEvent(String cardType, String packageName, String title,
-      String publisher, String action) {
+  public void logFlurryEvent(String cardType, String packageName, String title, String publisher,
+      String action) {
     HashMap<String, Object> map = new HashMap<>();
 
     map.put(ACTION, action);
@@ -439,7 +445,7 @@ public class TimelineAnalytics {
     map.put(TITLE, title);
     map.put(PUBLISHER, publisher);
     String eventName = cardType + "_" + APPS_TIMELINE_EVENT;
-    analyticsManager.logEvent(map,eventName, AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(map, eventName, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendClickOnPostBodyEvent(CardTouchEvent cardTouchEvent) {
@@ -450,64 +456,54 @@ public class TimelineAnalytics {
       if (postType.isArticle()) {
         Media media = (Media) post;
         logFlurryEvent(media.getType()
-                .name(), BLANK, media.getMediaTitle(), media.getPublisherName(), OPEN_ARTICLE);
+            .name(), BLANK, media.getMediaTitle(), media.getPublisherName(), OPEN_ARTICLE);
         sendOpenArticleEvent(media.getType()
             .name(), media.getPublisherName(), media.getMediaLink()
             .getUrl(), media.getRelatedApp()
             .getPackageName());
         sendMediaCardClickEvent(media.getType()
-                .name(), media.getMediaTitle(), media.getPublisherName(),
-            OPEN_ARTICLE, BLANK);
+            .name(), media.getMediaTitle(), media.getPublisherName(), OPEN_ARTICLE, BLANK);
       } else if (postType.isVideo()) {
         Media media = (Media) post;
         logFlurryEvent(media.getType()
-                .name(), BLANK, media.getMediaTitle(), media.getPublisherName(), OPEN_VIDEO);
+            .name(), BLANK, media.getMediaTitle(), media.getPublisherName(), OPEN_VIDEO);
         sendOpenVideoEvent(media.getType()
             .name(), media.getPublisherName(), media.getMediaLink()
             .getUrl(), media.getRelatedApp()
             .getPackageName());
         sendMediaCardClickEvent(media.getType()
-                .name(), media.getMediaTitle(), media.getPublisherName(),
-            OPEN_VIDEO, BLANK);
+            .name(), media.getMediaTitle(), media.getPublisherName(), OPEN_VIDEO, BLANK);
       }
     } else if (postType.equals(CardType.RECOMMENDATION) || postType.equals(CardType.SIMILAR)) {
       Recommendation card = (Recommendation) post;
       logFlurryEvent(card.getType()
-              .name(), card.getPackageName(), BLANK, card.getPublisherName(),
-          OPEN_APP_VIEW);
+          .name(), card.getPackageName(), BLANK, card.getPublisherName(), OPEN_APP_VIEW);
       sendRecommendationCardClickEvent(card.getType()
-              .name(), OPEN_APP_VIEW, BLANK, card.getPackageName(),
-          card.getPublisherName());
+          .name(), OPEN_APP_VIEW, BLANK, card.getPackageName(), card.getPublisherName());
       sendRecommendedOpenAppEvent(card.getType()
-              .name(), SOURCE_APTOIDE, card.getRelatedToPackageName(),
-          card.getPackageName());
+          .name(), SOURCE_APTOIDE, card.getRelatedToPackageName(), card.getPackageName());
     } else if (postType.equals(CardType.STORE)) {
       StoreAppCardTouchEvent storeAppCardTouchEvent = (StoreAppCardTouchEvent) cardTouchEvent;
       if (storeAppCardTouchEvent.getCard() instanceof StoreLatestApps) {
         logFlurryEvent(storeAppCardTouchEvent.getCard()
                 .getType()
                 .name(), storeAppCardTouchEvent.getPackageName(), BLANK,
-            ((StoreLatestApps) storeAppCardTouchEvent.getCard()).getStoreName(),
-            OPEN_APP_VIEW);
-        sendOpenAppEvent(postType.name(),SOURCE_APTOIDE,
+            ((StoreLatestApps) storeAppCardTouchEvent.getCard()).getStoreName(), OPEN_APP_VIEW);
+        sendOpenAppEvent(postType.name(), SOURCE_APTOIDE,
             ((StoreAppCardTouchEvent) cardTouchEvent).getPackageName());
       }
-      sendStoreLatestAppsClickEvent(postType.name(), OPEN_APP_VIEW,
-          BLANK, storeAppCardTouchEvent.getPackageName(),
-          ((StoreLatestApps) post).getStoreName());
+      sendStoreLatestAppsClickEvent(postType.name(), OPEN_APP_VIEW, BLANK,
+          storeAppCardTouchEvent.getPackageName(), ((StoreLatestApps) post).getStoreName());
     } else if (postType.equals(CardType.SOCIAL_STORE) || postType.equals(
         CardType.AGGREGATED_SOCIAL_STORE)) {
       if (cardTouchEvent instanceof StoreAppCardTouchEvent) {
-        logFlurryEvent(postType.name(),
-            ((StoreAppCardTouchEvent) cardTouchEvent).getPackageName(),
-            BLANK, ((StoreLatestApps) post).getStoreName(),
-            OPEN_APP_VIEW);
+        logFlurryEvent(postType.name(), ((StoreAppCardTouchEvent) cardTouchEvent).getPackageName(),
+            BLANK, ((StoreLatestApps) post).getStoreName(), OPEN_APP_VIEW);
         sendOpenAppEvent(postType.name(), SOURCE_APTOIDE,
             ((StoreAppCardTouchEvent) cardTouchEvent).getPackageName());
       } else if (cardTouchEvent instanceof StoreCardTouchEvent) {
         if (post instanceof StoreLatestApps) {
-          logFlurryEvent(postType.name(), BLANK,
-              BLANK, ((StoreLatestApps) post).getStoreName(),
+          logFlurryEvent(postType.name(), BLANK, BLANK, ((StoreLatestApps) post).getStoreName(),
               OPEN_STORE);
           sendOpenStoreEvent(postType.name(), SOURCE_APTOIDE,
               ((StoreLatestApps) post).getStoreName());
@@ -516,46 +512,38 @@ public class TimelineAnalytics {
     } else if (postType.equals(CardType.UPDATE)) {
       AppUpdate card = (AppUpdate) post;
       if (cardTouchEvent instanceof AppUpdateCardTouchEvent) {
-        logFlurryEvent(postType.name(), card.getPackageName(),
-            BLANK, card.getStoreName(), UPDATE_APP);
+        logFlurryEvent(postType.name(), card.getPackageName(), BLANK, card.getStoreName(),
+            UPDATE_APP);
         sendAppUpdateCardClickEvent(card.getType()
-                .name(), UPDATE_APP, BLANK, card.getPackageName(),
-            card.getStoreName());
+            .name(), UPDATE_APP, BLANK, card.getPackageName(), card.getStoreName());
         sendUpdateAppEvent(card.getType()
             .name(), SOURCE_APTOIDE, card.getPackageName());
       } else {
         logFlurryEvent(card.getType()
-                .name(), card.getPackageName(), BLANK, card.getStoreName(),
-            OPEN_APP_VIEW);
+            .name(), card.getPackageName(), BLANK, card.getStoreName(), OPEN_APP_VIEW);
         sendRecommendationCardClickEvent(card.getType()
-                .name(), OPEN_APP_VIEW, BLANK,
-            card.getPackageName(), card.getStoreName());
+            .name(), OPEN_APP_VIEW, BLANK, card.getPackageName(), card.getStoreName());
         sendRecommendedOpenAppEvent(card.getType()
-                .name(), SOURCE_APTOIDE, BLANK,
-            card.getPackageName());
+            .name(), SOURCE_APTOIDE, BLANK, card.getPackageName());
       }
     } else if (postType.equals(CardType.POPULAR_APP)) {
       PopularApp card = (PopularApp) post;
-      logFlurryEvent(postType.name(), card.getPackageName(),
-          BLANK, BLANK, OPEN_APP_VIEW);
+      logFlurryEvent(postType.name(), card.getPackageName(), BLANK, BLANK, OPEN_APP_VIEW);
       sendOpenAppEvent(card.getType()
           .name(), SOURCE_APTOIDE, card.getPackageName());
     } else if (postType.equals(CardType.SOCIAL_RECOMMENDATION) || postType.equals(
         CardType.SOCIAL_INSTALL) || postType.equals(CardType.SOCIAL_POST_RECOMMENDATION)) {
       RatedRecommendation card = (RatedRecommendation) post;
-      logFlurryEvent(postType.name(), card.getPackageName(),
-          BLANK, BLANK, OPEN_APP_VIEW);
+      logFlurryEvent(postType.name(), card.getPackageName(), BLANK, BLANK, OPEN_APP_VIEW);
       sendSocialRecommendationClickEvent(card.getType()
-              .name(),OPEN_APP_VIEW, BLANK, card.getPackageName(),
-          card.getPoster()
-              .getPrimaryName());
+          .name(), OPEN_APP_VIEW, BLANK, card.getPackageName(), card.getPoster()
+          .getPrimaryName());
       sendOpenAppEvent(card.getType()
           .name(), SOURCE_APTOIDE, card.getPackageName());
     } else if (postType.equals(CardType.AGGREGATED_SOCIAL_INSTALL) || postType.equals(
         CardType.AGGREGATED_SOCIAL_APP)) {
       AggregatedRecommendation card = (AggregatedRecommendation) post;
-      logFlurryEvent(postType.name(), card.getPackageName(),
-          BLANK, BLANK, OPEN_APP_VIEW);
+      logFlurryEvent(postType.name(), card.getPackageName(), BLANK, BLANK, OPEN_APP_VIEW);
       sendOpenAppEvent(card.getType()
           .name(), SOURCE_APTOIDE, card.getPackageName());
     }
@@ -572,47 +560,47 @@ public class TimelineAnalytics {
     HashMap<String, Object> data =
         parseEventData(event, true, EventErrorHandler.GenericErrorEvent.OK);
     data.put(TIMELINE_VERSION, version);
-    analyticsManager.logEvent(data,COMMENT, AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(data, COMMENT, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendErrorCommentEvent(CardTouchEvent event,
       EventErrorHandler.GenericErrorEvent error) {
     HashMap<String, Object> data = parseEventData(event, false, error);
     data.put(TIMELINE_VERSION, version);
-    analyticsManager.logEvent(data,COMMENT, AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(data, COMMENT, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendShareEvent(CardTouchEvent event) {
     HashMap<String, Object> data =
         parseEventData(event, true, EventErrorHandler.GenericErrorEvent.OK);
     data.put(TIMELINE_VERSION, version);
-    analyticsManager.logEvent(data,SHARE, AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(data, SHARE, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendErrorShareEvent(CardTouchEvent event, EventErrorHandler.GenericErrorEvent error) {
     HashMap<String, Object> data = parseEventData(event, false, error);
     data.put(TIMELINE_VERSION, version);
-    analyticsManager.logEvent(data,SHARE, AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(data, SHARE, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendShareCompleted(ShareEvent event) {
     HashMap<String, Object> data =
         parseShareCompletedEventData(event, true, EventErrorHandler.ShareErrorEvent.OK);
     data.put(TIMELINE_VERSION, version);
-    analyticsManager.logEvent(data,SHARE_SEND, AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(data, SHARE_SEND, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendErrorShareCompleted(ShareEvent event, EventErrorHandler.ShareErrorEvent error) {
     HashMap<String, Object> data = parseShareCompletedEventData(event, false, error);
     data.put(TIMELINE_VERSION, version);
-    analyticsManager.logEvent(data,SHARE_SEND, AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(data, SHARE_SEND, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendCommentCompleted(boolean success) {
     HashMap<String, Object> data = new HashMap<>();
     data.put("status", success ? "success" : "fail");
     data.put(TIMELINE_VERSION, version);
-    analyticsManager.logEvent(data,COMMENT_SEND, AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(data, COMMENT_SEND, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendFabClicked() {
@@ -628,12 +616,12 @@ public class TimelineAnalytics {
     data.put("previous_context", previousContext);
     data.put("store", store);
     data.put(TIMELINE_VERSION, version);
-    analyticsManager.logEvent(data,FAB, AnalyticsManager.Action.CLICK,getViewName(false));
+    analyticsManager.logEvent(data, FAB, AnalyticsManager.Action.CLICK, getViewName(false));
   }
 
   public void scrollToPosition(int position) {
-    analyticsManager.logEvent(createScrollingEventData(position),SCROLLING_EVENT,
-        AnalyticsManager.Action.SCROLL,getViewName(true));
+    analyticsManager.logEvent(createScrollingEventData(position), SCROLLING_EVENT,
+        AnalyticsManager.Action.SCROLL, getViewName(true));
   }
 
   public Completable setPostRead(String cardId, String name) {
@@ -801,21 +789,11 @@ public class TimelineAnalytics {
   }
 
   private void flushTimelineTabOpenEvents(Map<String, Object> data) {
-    analyticsManager.logEvent(decorateWithScreenHistory(data),OPEN_TIMELINE_EVENT,
-        AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(decorateWithScreenHistory(data), OPEN_TIMELINE_EVENT,
+        AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
-  private String getViewName(boolean isCurrent){
-    String viewName = "";
-    if(isCurrent){
-      viewName = navigationTracker.getCurrentViewName();
-    }
-    else{
-      viewName = navigationTracker.getPreviousViewName();
-    }
-    if(viewName.equals("")) {
-      return "TimeLineAnalytics"; //Default value, shouldn't get here
-    }
-    return viewName;
+  private String getViewName(boolean isCurrent) {
+    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
   }
 }

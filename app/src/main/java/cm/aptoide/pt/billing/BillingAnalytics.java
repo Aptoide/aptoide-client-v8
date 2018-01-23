@@ -23,33 +23,37 @@ public class BillingAnalytics {
   }
 
   public void sendPaymentViewShowEvent() {
-    analyticsManager.logEvent(getFacebookPaymentEvent("Payment_Pop_Up", "Show", new HashMap<>(),true));
+    analyticsManager.logEvent(
+        getFacebookPaymentEvent("Payment_Pop_Up", "Show", new HashMap<>(), true));
   }
 
   public void sendPaymentViewCancelEvent(Payment payment) {
-    analyticsManager.logEvent(getFacebookPaymentEvent("Payment_Pop_Up", "Cancel",
-        getProductMap(payment.getProduct()),true));
-
+    analyticsManager.logEvent(
+        getFacebookPaymentEvent("Payment_Pop_Up", "Cancel", getProductMap(payment.getProduct()),
+            true));
   }
 
   public void sendPaymentViewBuyEvent(Payment payment) {
-    final Map<String,Object> map = getProductMap(payment.getProduct());
+    final Map<String, Object> map = getProductMap(payment.getProduct());
     map.put("payment_method", payment.getSelectedPaymentService()
         .getType());
-    analyticsManager.logEvent(getFacebookPaymentEvent("Payment_Pop_Up", "Buy", map,true));
+    analyticsManager.logEvent(getFacebookPaymentEvent("Payment_Pop_Up", "Buy", map, true));
   }
 
   public void sendPaymentSuccessEvent() {
-    analyticsManager.logEvent(getFacebookPaymentEvent("Payment_Pop_Up", "Success", new HashMap<>(), true));
+    analyticsManager.logEvent(
+        getFacebookPaymentEvent("Payment_Pop_Up", "Success", new HashMap<>(), true));
   }
 
   public void sendPaymentErrorEvent() {
-    analyticsManager.logEvent(getFacebookPaymentEvent("Payment_Pop_Up", "Error", new HashMap<>(),true));
+    analyticsManager.logEvent(
+        getFacebookPaymentEvent("Payment_Pop_Up", "Error", new HashMap<>(), true));
   }
 
   public void sendCustomerAuthenticatedEvent(boolean customerAuthenticated) {
     if (customerAuthenticated) {
-      analyticsManager.logEvent(getFacebookPaymentEvent("Payment_Login", "Success", new HashMap<>(),true));
+      analyticsManager.logEvent(
+          getFacebookPaymentEvent("Payment_Login", "Success", new HashMap<>(), true));
     }
   }
 
@@ -60,29 +64,34 @@ public class BillingAnalytics {
     } else {
       action = "Cancel";
     }
-    analyticsManager.logEvent(getFacebookPaymentEvent("Payment_Login", action, new HashMap<>(),true));
+    analyticsManager.logEvent(
+        getFacebookPaymentEvent("Payment_Login", action, new HashMap<>(), true));
   }
 
   public void sendAuthorizationSuccessEvent(Payment payment) {
-    final Map<String,Object> map = new HashMap<>();
+    final Map<String, Object> map = new HashMap<>();
     map.put("payment_method", payment.getSelectedPaymentService()
         .getType());
-    analyticsManager.logEvent(getFacebookPaymentEvent("Payment_Authorization_Page", "Success", map,true));
+    analyticsManager.logEvent(
+        getFacebookPaymentEvent("Payment_Authorization_Page", "Success", map, true));
   }
 
   public void sendAuthorizationCancelEvent(String serviceName) {
     final Map<String, Object> map = new HashMap<>();
     map.put("payment_method", serviceName);
-    analyticsManager.logEvent(getFacebookPaymentEvent("Payment_Authorization_Page", "Cancel", map,true));
+    analyticsManager.logEvent(
+        getFacebookPaymentEvent("Payment_Authorization_Page", "Cancel", map, true));
   }
 
   public void sendAuthorizationErrorEvent(String serviceName) {
     final Map<String, Object> map = new HashMap<>();
     map.put("payment_method", serviceName);
-    analyticsManager.logEvent(getFacebookPaymentEvent("Payment_Authorization_Page", "Error", map,true));
+    analyticsManager.logEvent(
+        getFacebookPaymentEvent("Payment_Authorization_Page", "Error", map, true));
   }
 
-  private Event getFacebookPaymentEvent(String eventName, String action, Map<String, Object> map, boolean isCurrent) {
+  private Event getFacebookPaymentEvent(String eventName, String action, Map<String, Object> map,
+      boolean isCurrent) {
     map.put("action", action);
     return new Event(eventName, map, AnalyticsManager.Action.CLICK, getViewName(isCurrent));
   }
@@ -102,20 +111,21 @@ public class BillingAnalytics {
     map.put("purchase_currency", product.getPrice()
         .getCurrency());
     map.put("package_name_seller", packageName);
-    map.put("package_version_code_seller", String.valueOf(((Product) product).getPackageVersionCode()));
+    map.put("package_version_code_seller",
+        String.valueOf(((Product) product).getPackageVersionCode()));
     return map;
   }
 
-  private String getViewName(boolean isCurrent){
+  private String getViewName(boolean isCurrent) {
     String viewName = "";
-    if(isCurrent){
-      viewName = navigationTracker.getCurrentViewName();
-    }
-    else{
-      viewName = navigationTracker.getPreviousViewName();
-    }
-    if(viewName.equals("")) {
-      return "BillingAnalytics"; //Default value, shouldn't get here
+    try {
+      if (isCurrent) {
+        viewName = navigationTracker.getCurrentViewName();
+      } else {
+        viewName = navigationTracker.getPreviousViewName();
+      }
+    } catch (NullPointerException exception) {
+      viewName = "Billing"; //Default value, shouldn't get here
     }
     return viewName;
   }

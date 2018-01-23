@@ -16,6 +16,7 @@ public class DownloadCompleteAnalytics {
       "Aptoide_Push_Notification_Download_Complete";
   private static final String PACKAGE_NAME = "Package Name";
   private static final String TRUSTED_BADGE = "Trusted Badge";
+  private static final String DEFAULT_CONTEXT = "DownloadComplete";
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
 
@@ -37,7 +38,8 @@ public class DownloadCompleteAnalytics {
       }
       map.put("position", editorsBrickPosition);
       map.put(INSTALL_TYPE_KEY, installType.name());
-      Event event = new Event(PARTIAL_EVENT_NAME, map, AnalyticsManager.Action.CLICK, getViewName(false));
+      Event event =
+          new Event(PARTIAL_EVENT_NAME, map, AnalyticsManager.Action.CLICK, getViewName(false));
       analyticsManager.save(id + PARTIAL_EVENT_NAME, event);
     }
 
@@ -52,7 +54,8 @@ public class DownloadCompleteAnalytics {
         data.put(PACKAGE_NAME, packageName);
         data.put(INSTALL_TYPE_KEY, installType.name());
         notificationDownloadComplete =
-            new Event(NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME, data, AnalyticsManager.Action.AUTO, getViewName(true));
+            new Event(NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME, data, AnalyticsManager.Action.AUTO,
+                getViewName(true));
       }
       if (previousScreen.getFragment() != null) {
         downloadMap.put("fragment", previousScreen.getFragment());
@@ -68,12 +71,12 @@ public class DownloadCompleteAnalytics {
     }
 
     Event downloadEvent =
-        new Event(EVENT_NAME, downloadMap, AnalyticsManager.Action.AUTO,getViewName(false));
-
+        new Event(EVENT_NAME, downloadMap, AnalyticsManager.Action.AUTO, getViewName(false));
 
     analyticsManager.save(id + EVENT_NAME, downloadEvent);
     if (notificationDownloadComplete != null) {
-      analyticsManager.save(id + NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME, notificationDownloadComplete);
+      analyticsManager.save(id + NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME,
+          notificationDownloadComplete);
     }
   }
 
@@ -85,25 +88,16 @@ public class DownloadCompleteAnalytics {
 
   private void sendEvent(Event event) {
     if (event != null) {
-      analyticsManager.logEvent(event.getData(),event.getEventName(),event.getAction(),event.getContext());
+      analyticsManager.logEvent(event.getData(), event.getEventName(), event.getAction(),
+          event.getContext());
     }
+  }
+
+  private String getViewName(boolean isCurrent) {
+    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
   }
 
   public enum InstallType {
     INSTALL, UPDATE, DOWNGRADE,
-  }
-
-  private String getViewName(boolean isCurrent){
-    String viewName = "";
-    if(isCurrent){
-      viewName = navigationTracker.getCurrentViewName();
-    }
-    else{
-      viewName = navigationTracker.getPreviousViewName();
-    }
-    if(viewName.equals("")) {
-      return "DownloadCompleteAnalytics"; //Default value, shouldn't get here
-    }
-    return viewName;
   }
 }

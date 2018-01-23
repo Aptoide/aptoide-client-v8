@@ -11,9 +11,9 @@ import java.util.Map;
 
 public class UpdatesAnalytics {
 
+  public final static String UPDATE_EVENT = "Updates";
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
-  public final static String UPDATE_EVENT = "Updates";
 
   public UpdatesAnalytics(AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
     this.analyticsManager = analyticsManager;
@@ -21,7 +21,8 @@ public class UpdatesAnalytics {
   }
 
   public void updates(String action) {
-    analyticsManager.logEvent(createMapData("action",action),UPDATE_EVENT, AnalyticsManager.Action.AUTO,navigationTracker.getCurrentViewName());
+    analyticsManager.logEvent(createMapData("action", action), UPDATE_EVENT,
+        AnalyticsManager.Action.AUTO, navigationTracker.getViewName(true, "Update"));
   }
 
   private Map<String, Object> createMapData(String key, String value) {

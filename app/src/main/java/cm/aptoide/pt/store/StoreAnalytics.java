@@ -22,6 +22,7 @@ public class StoreAnalytics {
   private static final String FOLLOW_STORE_APPS = "follow_store_apps";
   private static final String FOLLOW_STORE_FOLLOWERS = "follow_store_followers";
   private static final String TAB = "tab_name";
+  private static final String DEFAULT_CONTEXT = "Store";
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
 
@@ -31,29 +32,31 @@ public class StoreAnalytics {
   }
 
   public void sendStoreTabOpenedEvent() {
-    analyticsManager.logEvent(new HashMap<>(),STORES_TAB_OPEN, AnalyticsManager.Action.CLICK, getViewName(true));
+    analyticsManager.logEvent(new HashMap<>(), STORES_TAB_OPEN, AnalyticsManager.Action.CLICK,
+        getViewName(true));
   }
 
   /// "add store" event implemented (according to sunil the information about how many apps/subscribers only needs to be sent when comming from a "follow a recommended store" event
   public void sendStoreTabInteractEvent(String action, boolean isCurrent) {
-    analyticsManager.logEvent(createStoreInteractMap(action),STORES_TAB_INTERACT,
-        AnalyticsManager.Action.CLICK,getViewName(isCurrent));
+    analyticsManager.logEvent(createStoreInteractMap(action), STORES_TAB_INTERACT,
+        AnalyticsManager.Action.CLICK, getViewName(isCurrent));
   }
 
   //Only for "follow a recommended store event"
   public void sendStoreTabInteractEvent(String action, int storeAppsNumber, int storeFollowers) {
-    analyticsManager.logEvent(createStoreTabInteractDataMap(action, storeAppsNumber, storeFollowers),STORES_TAB_INTERACT,
-        AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(
+        createStoreTabInteractDataMap(action, storeAppsNumber, storeFollowers), STORES_TAB_INTERACT,
+        AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendStoreOpenEvent(String source, String storeName, boolean isCurrent) {
-    analyticsManager.logEvent( createStoreOpenDataMap(source, storeName),STORES_OPEN,
-        AnalyticsManager.Action.CLICK,getViewName(isCurrent));
+    analyticsManager.logEvent(createStoreOpenDataMap(source, storeName), STORES_OPEN,
+        AnalyticsManager.Action.CLICK, getViewName(isCurrent));
   }
 
   public void sendStoreInteractEvent(String action, String tab, String storeName) {
-    analyticsManager.logEvent(createStoreInteractDataMap(action, tab, storeName),STORES_INTERACT,
-        AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(createStoreInteractDataMap(action, tab, storeName), STORES_INTERACT,
+        AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   private Map<String, Object> createStoreInteractDataMap(String action, String tab,
@@ -78,8 +81,8 @@ public class StoreAnalytics {
     return map;
   }
 
-  private Map<String, Object> createStoreTabInteractDataMap(String action,
-      int storeAppsNumber, int storeFollowers) {
+  private Map<String, Object> createStoreTabInteractDataMap(String action, int storeAppsNumber,
+      int storeFollowers) {
     Map<String, Object> map = new HashMap<>();
     map.put(ACTION, action);
     map.put(FOLLOW_STORE_APPS, AptoideUtils.StringU.toString(storeAppsNumber));
@@ -87,17 +90,7 @@ public class StoreAnalytics {
     return map;
   }
 
-  private String getViewName(boolean isCurrent){
-    String viewName = "";
-    if(isCurrent){
-      viewName = navigationTracker.getCurrentViewName();
-    }
-    else{
-      viewName = navigationTracker.getPreviousViewName();
-    }
-    if(viewName.equals("")) {
-      return "StoreAnalytics"; //Default value, shouldn't get here
-    }
-    return viewName;
+  private String getViewName(boolean isCurrent) {
+    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
   }
 }

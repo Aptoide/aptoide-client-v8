@@ -33,6 +33,7 @@ import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.util.ReferrerUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.q.QManager;
+import com.facebook.appevents.AppEventsLogger;
 import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -44,8 +45,9 @@ import rx.subscriptions.CompositeSubscription;
 public class InstalledIntentService extends IntentService {
 
   private static final String TAG = InstalledIntentService.class.getName();
+  @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
   private SharedPreferences sharedPreferences;
-
   private AdsRepository adsRepository;
   private RollbackRepository repository;
   private UpdateRepository updatesRepository;
@@ -59,8 +61,6 @@ public class InstalledIntentService extends IntentService {
   private MinimalAdMapper adMapper;
   private InstallAnalytics installAnalytics;
   private PackageManager packageManager;
-  @Inject AnalyticsManager analyticsManager;
-  @Inject NavigationTracker navigationTracker;
 
   public InstalledIntentService() {
     super("InstalledIntentService");
@@ -68,7 +68,8 @@ public class InstalledIntentService extends IntentService {
 
   @Override public void onCreate() {
     super.onCreate();
-    ((AptoideApplication) getApplicationContext()).getApplicationComponent().inject(this);
+    ((AptoideApplication) getApplicationContext()).getApplicationComponent()
+        .inject(this);
     adMapper = new MinimalAdMapper();
     sharedPreferences =
         ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences();
@@ -87,7 +88,7 @@ public class InstalledIntentService extends IntentService {
     rootAvailabilityManager =
         ((AptoideApplication) getApplicationContext()).getRootAvailabilityManager();
     installAnalytics =
-        new InstallAnalytics(
+        new InstallAnalytics(analytics, AppEventsLogger.newLogger(getApplicationContext()),
             CrashReport.getInstance(), analyticsManager, navigationTracker);
     packageManager = getPackageManager();
   }

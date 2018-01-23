@@ -13,7 +13,7 @@ public class FacebookEventLogger implements EventLogger {
   @Override
   public void log(String eventName, Map<String, Object> data, AnalyticsManager.Action action,
       String context) {
-    Logger.d(TAG, "log() called with: "
+    Logger.d("TAG123face", "log() called with: "
         + "eventName = ["
         + eventName
         + "], data = ["

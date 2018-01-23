@@ -29,7 +29,9 @@ public class SpotAndShareAnalytics implements SpotAndShareAnalyticsInterface {
   public static final String SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW = "AppView";
   public static final String SPOT_AND_SHARE_START_CLICK_ORIGIN_DRAWER = "Drawer";
   public static final String EVENT_NAME_SPOT_SHARE = "Share_Apps_Click_On_Share_Apps";
-  public static final String EVENT_NAME_SPOT_SHARE_PERMISSIONS = "Spot_Share_Write_Permissions_Problem";
+  public static final String EVENT_NAME_SPOT_SHARE_PERMISSIONS =
+      "Spot_Share_Write_Permissions_Problem";
+  private static final String DEFAULT_CONTEXT = "SpotAndShare";
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
 
@@ -47,11 +49,13 @@ public class SpotAndShareAnalytics implements SpotAndShareAnalyticsInterface {
   }
 
   private void trackEvent(String eventName, Map<String, Object> attributes) {
-    analyticsManager.logEvent(attributes,eventName, AnalyticsManager.Action.CLICK, getViewName(true));
+    analyticsManager.logEvent(attributes, eventName, AnalyticsManager.Action.CLICK,
+        getViewName(true));
   }
 
   /**
    * Method to register the transfer events.
+   *
    * @param eventName should be either "Send App" or "Receive App"
    * @param action In case the event is a Send App, this action can be "Send app", "Successful
    * send", "Unsuccessful send".
@@ -65,8 +69,10 @@ public class SpotAndShareAnalytics implements SpotAndShareAnalyticsInterface {
 
   /**
    * Method to register the clicks that represent interactions with group creation or join group.
+   *
    * @param eventName Should be either "Join Group" or "Create Group"
-   * @param result In both cases should be Success or Unsuccessful */
+   * @param result In both cases should be Success or Unsuccessful
+   */
   private void groupClick(String eventName, String result) {
     Map<String, Object> attributes = new HashMap<>();
     attributes.put("results", result);
@@ -119,17 +125,7 @@ public class SpotAndShareAnalytics implements SpotAndShareAnalyticsInterface {
     groupClick(EVENT_NAME_SPOT_SHARE_PERMISSIONS, ACTION_SPOT_SHARE_PERM_GRANTED);
   }
 
-  private String getViewName(boolean isCurrent){
-    String viewName = "";
-    if(isCurrent){
-      viewName = navigationTracker.getCurrentViewName();
-    }
-    else{
-      viewName = navigationTracker.getPreviousViewName();
-    }
-    if(viewName.equals("")) {
-      return "SpotAndShareAnalytics"; //Default value, shouldn't get here
-    }
-    return viewName;
+  private String getViewName(boolean isCurrent) {
+    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
   }
 }

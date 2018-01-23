@@ -88,7 +88,7 @@ public class DefaultInstaller implements Installer {
 
   @Override public Completable install(Context context, String md5, boolean forceDefaultInstall) {
     return rootAvailabilityManager.isRootAvailable()
-        .doOnSuccess(isRoot -> Analytics.RootInstall.installationType(
+        .doOnSuccess(isRoot -> installerAnalytics.installationType(
             ManagerPreferences.allowRootInstallation(sharedPreferences), isRoot))
         .flatMapObservable(isRoot -> installationProvider.getInstallation(md5)
             .first())

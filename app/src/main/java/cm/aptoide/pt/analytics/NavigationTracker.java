@@ -75,4 +75,20 @@ public class NavigationTracker {
     }
     return sb.toString();
   }
+
+  public String getViewName(boolean isCurrent, String defaultValue) {
+    String viewName = "";
+    try {
+      if (isCurrent) {
+        viewName = getCurrentViewName();
+      } else {
+        viewName = getPreviousViewName();
+      }
+    } catch (NullPointerException exception) {
+      if (viewName.equals("")) {
+        viewName = defaultValue; //Default value, shouldn't get here
+      }
+    }
+    return viewName;
+  }
 }

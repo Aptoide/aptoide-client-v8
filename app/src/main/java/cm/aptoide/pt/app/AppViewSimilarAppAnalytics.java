@@ -14,27 +14,31 @@ import java.util.Map;
 
 public class AppViewSimilarAppAnalytics {
 
-  private static final String TAG = AppViewSimilarAppAnalytics.class.getSimpleName();
   public static final String APP_VIEW_SIMILAR_APP_SLIDE_IN = "App_View_Similar_App_Slide_In";
   public static final String SIMILAR_APP_INTERACT = "Similar_App_Interact";
+  private static final String TAG = AppViewSimilarAppAnalytics.class.getSimpleName();
   private static final String ACTION = "Action";
+  private static final String DEFAULT_CONTEXT = "AppViewSimilarApp";
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
 
-  public AppViewSimilarAppAnalytics(AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
+  public AppViewSimilarAppAnalytics(AnalyticsManager analyticsManager,
+      NavigationTracker navigationTracker) {
     this.analyticsManager = analyticsManager;
     this.navigationTracker = navigationTracker;
   }
 
   public void similarAppsIsShown() {
 
-    analyticsManager.logEvent(new HashMap<>(),APP_VIEW_SIMILAR_APP_SLIDE_IN, AnalyticsManager.Action.CLICK, getViewName(true));
+    analyticsManager.logEvent(new HashMap<>(), APP_VIEW_SIMILAR_APP_SLIDE_IN,
+        AnalyticsManager.Action.CLICK, getViewName(true));
     Logger.w(TAG, "Facebook Event: " + APP_VIEW_SIMILAR_APP_SLIDE_IN);
   }
 
   public void openSimilarApp() {
     Map<String, Object> parameters = createMapData(ACTION, "Open App View");
-    analyticsManager.logEvent(parameters,SIMILAR_APP_INTERACT, AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(parameters, SIMILAR_APP_INTERACT, AnalyticsManager.Action.CLICK,
+        getViewName(true));
     Logger.w(TAG, "Facebook Event: " + SIMILAR_APP_INTERACT + " : " + parameters.toString());
   }
 
@@ -44,17 +48,7 @@ public class AppViewSimilarAppAnalytics {
     return data;
   }
 
-  private String getViewName(boolean isCurrent){
-    String viewName = "";
-    if(isCurrent){
-      viewName = navigationTracker.getCurrentViewName();
-    }
-    else{
-      viewName = navigationTracker.getPreviousViewName();
-    }
-    if(viewName.equals("")) {
-      return "AppViewSimilarAppAnalytics"; //Default value, shouldn't get here
-    }
-    return viewName;
+  private String getViewName(boolean isCurrent) {
+    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
   }
 }

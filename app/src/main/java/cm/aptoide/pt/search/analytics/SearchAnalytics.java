@@ -15,6 +15,7 @@ public class SearchAnalytics {
   public static final String NO_RESULTS = "Search_No_Results";
   public static final String APP_CLICK = "Search_Results_App_View_Click";
   public static final String SEARCH_START = "Search_Start";
+  public static final String DEFAULT_CONTEXT = "Search";
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
 
@@ -39,11 +40,10 @@ public class SearchAnalytics {
       map.put(AttributeKey.SUGGESTION_POSITION, Integer.toString(suggestionPosition));
     }
     analyticsManager.logEvent(map, SEARCH, AnalyticsManager.Action.CLICK, getViewName(false));
-
   }
 
   public void searchNoResults(String query) {
-    analyticsManager.logEvent(createMapData(AttributeKey.QUERY,query), NO_RESULTS,
+    analyticsManager.logEvent(createMapData(AttributeKey.QUERY, query), NO_RESULTS,
         AnalyticsManager.Action.CLICK, getViewName(false));
   }
 
@@ -51,12 +51,12 @@ public class SearchAnalytics {
     Map<String, Object> map = new HashMap<>();
     map.put(AttributeKey.QUERY, query);
     map.put(AttributeKey.PACKAGE_NAME, packageName);
-    analyticsManager.logEvent(map,APP_CLICK, AnalyticsManager.Action.CLICK, getViewName(true));
+    analyticsManager.logEvent(map, APP_CLICK, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void searchStart(@NonNull SearchSource source, boolean isCurrent) {
-    analyticsManager.logEvent(createMapData(AttributeKey.SOURCE,source.getIdentifier()),SEARCH_START,
-        AnalyticsManager.Action.CLICK, getViewName(isCurrent));
+    analyticsManager.logEvent(createMapData(AttributeKey.SOURCE, source.getIdentifier()),
+        SEARCH_START, AnalyticsManager.Action.CLICK, getViewName(isCurrent));
   }
 
   private Map<String, Object> createMapData(String key, String value) {
@@ -65,18 +65,8 @@ public class SearchAnalytics {
     return data;
   }
 
-  private String getViewName(boolean isCurrent){
-    String viewName = "";
-    if(isCurrent){
-      viewName = navigationTracker.getCurrentViewName();
-    }
-    else{
-      viewName = navigationTracker.getPreviousViewName();
-    }
-    if(viewName.equals("")) {
-      return "SearchAnalytics"; //Default value, shouldn't get here
-    }
-    return viewName;
+  private String getViewName(boolean isCurrent) {
+    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
   }
 
   private static final class AttributeKey {

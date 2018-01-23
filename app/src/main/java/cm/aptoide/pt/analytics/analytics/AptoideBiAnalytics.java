@@ -9,7 +9,7 @@ public class AptoideBiAnalytics {
 
   public void log(String eventName, Map<String, Object> data, AnalyticsManager.Action action,
       String context) {
-    Logger.d(TAG, "log() called with: "
+    Logger.d("TAG123", "log() called with: "
         + "eventName = ["
         + eventName
         + "], data = ["

@@ -7,18 +7,20 @@ import java.util.Map;
 
 public class PageViewsAnalytics {
 
+  public final static String PAGE_VIEW_EVENT = "Page_View";
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
-  public final static String PAGE_VIEW_EVENT = "Page_View";
 
-  public PageViewsAnalytics(AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
+  public PageViewsAnalytics(AnalyticsManager analyticsManager,
+      NavigationTracker navigationTracker) {
     this.analyticsManager = analyticsManager;
     this.navigationTracker = navigationTracker;
   }
 
   public void sendPageViewedEvent() {
-    analyticsManager.logEvent(createEventMap(navigationTracker.getCurrentViewName()),PAGE_VIEW_EVENT,
-        AnalyticsManager.Action.CLICK,navigationTracker.getCurrentViewName());
+    analyticsManager.logEvent(createEventMap(navigationTracker.getCurrentViewName()),
+        PAGE_VIEW_EVENT, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true, "PageView"));
   }
 
   private Map<String, Object> createEventMap(String currentViewName) {

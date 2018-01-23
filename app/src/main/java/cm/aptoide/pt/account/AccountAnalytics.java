@@ -28,25 +28,25 @@ public class AccountAnalytics {
   public static final String LOGIN_SIGN_UP_START_SCREEN = "Account_Login_Signup_Start_Screen";
   public static final String CREATE_USER_PROFILE = "Account_Create_A_User_Profile_Screen";
   public static final String PROFILE_SETTINGS = "Account_Profile_Settings_Screen";
-  public static final String CREATE_YOUR_STORE = "Account_Create_Your_Store_Screen";
   public static final String HAS_PICTURE = "has_picture";
   public static final String SCREEN = "Screen";
   public static final String ENTRY = "Account_Entry";
   public static final String SOURCE = "Source";
-  private static final String STATUS = "Status";
   public static final String LOGIN_EVENT_NAME = "Account_Login_Screen";
   public static final String SIGN_UP_EVENT_NAME = "Account_Signup_Screen";
+  private static final String STATUS = "Status";
   private static final String LOGIN_METHOD = "Method";
   private static final String PREVIOUS_CONTEXT = "previous_context";
   private static final String STATUS_DETAIL = "Status Detail";
   private static final String STATUS_DESCRIPTION = "Status Description";
   private static final String STATUS_CODE = "Status Code";
+  private static final String DEFAULT_CONTEXT = "Account";
   private final NavigationTracker navigationTracker;
   private final CrashReport crashReport;
+  private final AnalyticsManager analyticsManager;
   private Event aptoideSuccessLoginEvent;
   private Event facebookAndFlurrySuccessLoginEvent;
   private Event signUpEvent;
-  private final AnalyticsManager analyticsManager;
 
   public AccountAnalytics(NavigationTracker navigationTracker, CrashReport crashReport,
       AnalyticsManager analyticsManager) {
@@ -86,9 +86,10 @@ public class AccountAnalytics {
   }
 
   public void sendAptoideSignUpButtonPressed() {
-    Map<String,Object> map = new HashMap<>();
+    Map<String, Object> map = new HashMap<>();
     map.put(STATUS, SignUpLoginStatus.SUCCESS.getStatus());
-    signUpEvent = new Event(SIGN_UP_EVENT_NAME, map, AnalyticsManager.Action.CLICK, getViewName(true));
+    signUpEvent =
+        new Event(SIGN_UP_EVENT_NAME, map, AnalyticsManager.Action.CLICK, getViewName(true));
     clearLoginEvents();
   }
 
@@ -113,8 +114,8 @@ public class AccountAnalytics {
   private void setupLoginEvents(LoginMethod aptoide) {
     aptoideSuccessLoginEvent = createAptoideLoginEvent();
     facebookAndFlurrySuccessLoginEvent =
-        createFacebookAndFlurryEvent(LOGIN_EVENT_NAME, aptoide, SignUpLoginStatus.SUCCESS, SUCCESS, null,
-            null);
+        createFacebookAndFlurryEvent(LOGIN_EVENT_NAME, aptoide, SignUpLoginStatus.SUCCESS, SUCCESS,
+            null, null);
   }
 
   private Event createFacebookAndFlurryEvent(String eventName, LoginMethod loginMethod,
@@ -133,9 +134,11 @@ public class AccountAnalytics {
 
   private void sendEvents(String eventName, LoginMethod loginMethod, SignUpLoginStatus loginStatus,
       String statusDetail, String statusCode, String statusDescription) {
-    Event event = createFacebookAndFlurryEvent(eventName, loginMethod, loginStatus, statusDetail, statusCode,
-        statusDescription);
-    analyticsManager.logEvent(event.getData(),event.getEventName(),event.getAction(),event.getContext());
+    Event event =
+        createFacebookAndFlurryEvent(eventName, loginMethod, loginStatus, statusDetail, statusCode,
+            statusDescription);
+    analyticsManager.logEvent(event.getData(), event.getEventName(), event.getAction(),
+        event.getContext());
   }
 
   @NonNull private Event createAptoideLoginEvent() {
@@ -146,7 +149,8 @@ public class AccountAnalytics {
       map.put(STORE, previousScreen.getStore());
     }
     map.put(PREVIOUS_CONTEXT, navigationTracker.getPreviousViewName());
-    Event aptoideEvent = new Event(APTOIDE_EVENT_NAME, map, AnalyticsManager.Action.CLICK, getViewName(true));
+    Event aptoideEvent =
+        new Event(APTOIDE_EVENT_NAME, map, AnalyticsManager.Action.CLICK, getViewName(true));
     return aptoideEvent;
   }
 
@@ -265,27 +269,33 @@ public class AccountAnalytics {
     Map<String, Object> map = new HashMap<>();
     map.put("Action", connectGoogle.getClickEvent());
     map.put(SCREEN, startupClickOrigin.getClickOrigin());
-    analyticsManager.logEvent(map, LOGIN_SIGN_UP_START_SCREEN, AnalyticsManager.Action.CLICK, getViewName(true));
-
+    analyticsManager.logEvent(map, LOGIN_SIGN_UP_START_SCREEN, AnalyticsManager.Action.CLICK,
+        getViewName(true));
   }
 
   public void createdUserProfile(boolean hasPicture) {
     Map<String, Object> map = new HashMap<>();
     map.put(HAS_PICTURE, hasPicture ? "True" : "False");
-    analyticsManager.logEvent(map,CREATE_USER_PROFILE, AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(map, CREATE_USER_PROFILE, AnalyticsManager.Action.CLICK,
+        getViewName(true));
   }
 
   public void accountProfileAction(int screen, ProfileAction action) {
     HashMap<String, Object> map = new HashMap<>();
     map.put("Action", action.getAction());
     map.put("screen", Integer.toString(screen));
-    analyticsManager.logEvent(map,PROFILE_SETTINGS, AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(map, PROFILE_SETTINGS, AnalyticsManager.Action.CLICK,
+        getViewName(true));
   }
 
   public void enterAccountScreen(AccountOrigins sourceValue) {
     Map<String, Object> map = new HashMap<>();
     map.put(SOURCE, sourceValue.getOrigin());
-    analyticsManager.logEvent(map,ENTRY, AnalyticsManager.Action.CLICK,getViewName(true));
+    analyticsManager.logEvent(map, ENTRY, AnalyticsManager.Action.CLICK, getViewName(true));
+  }
+
+  private String getViewName(boolean isCurrent) {
+    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
   }
 
   public enum LoginMethod {
@@ -361,27 +371,13 @@ public class AccountAnalytics {
     }
   }
 
-  public enum CreateStoreAction {
-    SKIP("Skip"), CREATE("Create store");
-
-    private final String action;
-
-    CreateStoreAction(String action) {
-      this.action = action;
-    }
-
-    public String getAction() {
-      return action;
-    }
-  }
-
   public enum AccountOrigins {
-    WIZARD("Wizard"), MY_ACCOUNT("My Account"), TIMELINE("Timeline"), STORE(
-        "Store"), APP_VIEW_FLAG("App View Flag"), APP_VIEW_SHARE(
-        "App View Share on Timeline"), SHARE_CARD("Share Card"), LIKE_CARD(
-        "Like Card"), COMMENT_LIST("Comment List"), RATE_DIALOG("Reviews FAB"), REPLY_REVIEW(
-        "Reply Review"), REVIEW_FEEDBACK("Review Feedback"), SOCIAL_LIKE(
-        "Like Social Card"), STORE_COMMENT("Store Comment"), LATEST_COMMENTS_STORE(
+    WIZARD("Wizard"), MY_ACCOUNT("My Account"), TIMELINE("Timeline"), STORE("Store"), APP_VIEW_FLAG(
+        "App View Flag"), APP_VIEW_SHARE("App View Share on Timeline"), SHARE_CARD(
+        "Share Card"), LIKE_CARD("Like Card"), COMMENT_LIST("Comment List"), RATE_DIALOG(
+        "Reviews FAB"), REPLY_REVIEW("Reply Review"), REVIEW_FEEDBACK(
+        "Review Feedback"), SOCIAL_LIKE("Like Social Card"), STORE_COMMENT(
+        "Store Comment"), LATEST_COMMENTS_STORE(
         "Comment on Latest Store Comments"), POST_ON_TIMELINE("Post on Timeline");
 
     private final String origin;
@@ -393,34 +389,5 @@ public class AccountAnalytics {
     public String getOrigin() {
       return origin;
     }
-  }
-
-  public enum LoginStatusDetail {
-    PERMISSIONS_DENIED("Permissions Denied"), SDK_ERROR("SDK Error"), CANCEL(
-        "User canceled"), GENERAL_ERROR("General Error"), SUCCESS("Success");
-
-    private final String loginStatusDetail;
-
-    LoginStatusDetail(String statusDetail) {
-      this.loginStatusDetail = statusDetail;
-    }
-
-    public String getLoginStatusDetail() {
-      return loginStatusDetail;
-    }
-  }
-
-  private String getViewName(boolean isCurrent){
-    String viewName = "";
-    if(isCurrent){
-      viewName = navigationTracker.getCurrentViewName();
-    }
-    else{
-      viewName = navigationTracker.getPreviousViewName();
-    }
-    if(viewName.equals("")) {
-      return "AccountAnalytics"; //Default value, shouldn't get here
-    }
-    return viewName;
   }
 }
