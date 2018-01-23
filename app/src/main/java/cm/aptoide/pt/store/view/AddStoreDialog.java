@@ -259,6 +259,7 @@ public class AddStoreDialog extends BaseDialog {
                 Logger.i(TAG, "Timeout reached while waiting for store suggestions");
                 return Single.just(suggestionCursorAdapter.getSuggestions());
               }
+              Logger.w(TAG, "handleStoreRemoteQuery: ", err);
               return Single.error(err);
             })
             .observeOn(AndroidSchedulers.mainThread())
