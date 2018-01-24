@@ -39,77 +39,35 @@ public class PostCommentsPresenter implements Presenter {
 
   @Override public void present() {
 
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .filter(__ -> shouldShowCommentDialog)
-        .doOnNext(__ -> {
-          shouldShowCommentDialog = false;
-          commentsNavigator.showCommentDialog(postId);
-        })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> crashReporter.log(throwable));
+    onCreateShowComments();
 
+    onPullRefreshShowComments();
+
+    onBottomReachedShowMoreComments();
+
+    onCommentReplyShowDialog();
+
+    onPostReplyShowDialog();
+
+    onDialogResultShowComment();
+
+    onDialogResultErrorNavigate();
+  }
+
+  private void onDialogResultErrorNavigate() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .doOnNext(created -> view.showLoading())
-        .flatMapSingle(created -> comments.getComments(postId))
+        .flatMap(__ -> commentsNavigator.commentDialogOnError())
         .observeOn(viewScheduler)
-        .doOnNext(comments -> view.showComments(comments))
-        .doOnNext(comments -> view.hideLoading())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(comments -> {
-        }, throwable -> crashReporter.log(throwable));
-
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.refreshes()
-            .flatMapSingle(__ -> comments.getFreshComments(postId))
-            .observeOn(viewScheduler)
-            .doOnNext(comments -> view.showComments(comments))
-            .doOnNext(comments -> view.hideRefresh())
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(comments -> {
-        }, throwable -> crashReporter.log(throwable));
-
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.reachesBottom()
-            .filter(__ -> comments.hasMore())
-            .observeOn(viewScheduler)
-            .doOnNext(__ -> view.showLoadMoreProgressIndicator())
-            .flatMapSingle(__ -> comments.getNextComments(postId))
-            .filter(comments -> !comments.isEmpty())
-            .observeOn(viewScheduler)
-            .doOnNext(comments -> view.showMoreComments(comments))
-            .doOnNext(__ -> view.hideLoadMoreProgressIndicator())
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(comments -> {
-        }, throwable -> crashReporter.log(throwable));
-
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.repliesComment()
-            .doOnNext(commentId -> commentsNavigator.showCommentDialog(postId, commentId))
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(commentId -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
-
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.repliesPost())
-        .doOnNext(__ -> commentsNavigator.showCommentDialog(postId))
+        .doOnNext(postId -> commentsNavigator.navigateToPostCommentInTimelineError(postId))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);
         });
+  }
 
+  private void onDialogResultShowComment() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> commentsNavigator.commentDialogResult()
@@ -131,16 +89,86 @@ public class PostCommentsPresenter implements Presenter {
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);
         });
+  }
 
+  private void onPostReplyShowDialog() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> commentsNavigator.commentDialogOnError())
-        .observeOn(viewScheduler)
-        .doOnNext(postId -> commentsNavigator.navigateToPostCommentInTimelineError(postId))
+        .flatMap(created -> view.repliesPost())
+        .doOnNext(__ -> commentsNavigator.showCommentDialog(postId))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);
         });
+  }
+
+  private void onCommentReplyShowDialog() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.repliesComment()
+            .doOnNext(commentId -> commentsNavigator.showCommentDialog(postId, commentId))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(commentId -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void onBottomReachedShowMoreComments() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reachesBottom()
+            .filter(__ -> comments.hasMore())
+            .observeOn(viewScheduler)
+            .doOnNext(__ -> view.showLoadMoreProgressIndicator())
+            .flatMapSingle(__ -> comments.getNextComments(postId))
+            .filter(comments -> !comments.isEmpty())
+            .observeOn(viewScheduler)
+            .doOnNext(comments -> view.showMoreComments(comments))
+            .doOnNext(__ -> view.hideLoadMoreProgressIndicator())
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(comments -> {
+        }, throwable -> crashReporter.log(throwable));
+  }
+
+  private void onPullRefreshShowComments() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.refreshes()
+            .flatMapSingle(__ -> comments.getFreshComments(postId))
+            .observeOn(viewScheduler)
+            .doOnNext(comments -> view.showComments(comments))
+            .doOnNext(comments -> view.hideRefresh())
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(comments -> {
+        }, throwable -> crashReporter.log(throwable));
+  }
+
+  private void onCreateShowComments() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .filter(__ -> shouldShowCommentDialog)
+        .doOnNext(__ -> {
+          shouldShowCommentDialog = false;
+          commentsNavigator.showCommentDialog(postId);
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReporter.log(throwable));
+
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .doOnNext(created -> view.showLoading())
+        .flatMapSingle(created -> comments.getComments(postId))
+        .observeOn(viewScheduler)
+        .doOnNext(comments -> view.showComments(comments))
+        .doOnNext(comments -> view.hideLoading())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(comments -> {
+        }, throwable -> crashReporter.log(throwable));
   }
 }
