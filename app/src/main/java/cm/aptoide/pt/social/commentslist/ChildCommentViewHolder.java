@@ -15,16 +15,16 @@ import cm.aptoide.pt.utils.AptoideUtils;
 class ChildCommentViewHolder extends PostCommentViewHolder {
   private final ImageView userIcon;
   private final TextView userName;
-  private final TextView date;
-  private final TextView comment;
+  private final TextView dateView;
+  private final TextView commentView;
   private final View replyLayout;
 
   public ChildCommentViewHolder(View view) {
     super(view);
     userIcon = (ImageView) view.findViewById(R.id.user_icon);
     userName = (TextView) view.findViewById(R.id.user_name);
-    date = (TextView) itemView.findViewById(R.id.added_date_pos2);
-    comment = (TextView) itemView.findViewById(R.id.comment);
+    dateView = (TextView) itemView.findViewById(R.id.added_date_pos2);
+    commentView = (TextView) itemView.findViewById(R.id.comment);
     replyLayout = itemView.findViewById(R.id.reply_layout);
   }
 
@@ -32,15 +32,14 @@ class ChildCommentViewHolder extends PostCommentViewHolder {
     ImageLoader.with(itemView.getContext())
         .loadWithCircleTransformAndPlaceHolderAvatarSize(comment.getUser()
             .getAvatar(), userIcon, R.drawable.layer_1);
-    userName.setText(comment.getUser()
+    this.userName.setText(comment.getUser()
         .getName());
-    String date = AptoideUtils.DateTimeU.getInstance(itemView.getContext())
+    this.dateView.setText(AptoideUtils.DateTimeU.getInstance(itemView.getContext())
         .getTimeDiffString(itemView.getContext(), comment.getAdded()
             .getTime(), itemView.getContext()
-            .getResources());
-    this.date.setText(date);
-    this.comment.setText(comment.getBody());
-    replyLayout.setVisibility(View.GONE);
-    this.date.setVisibility(View.VISIBLE);
+            .getResources()));
+    this.commentView.setText(comment.getBody());
+    this.replyLayout.setVisibility(View.GONE);
+    this.dateView.setVisibility(View.VISIBLE);
   }
 }
