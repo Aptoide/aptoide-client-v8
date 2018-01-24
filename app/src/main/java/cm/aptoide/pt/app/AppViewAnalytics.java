@@ -68,10 +68,10 @@ public class AppViewAnalytics {
       ScreenTagHistory currentScreen, String packageName, String appPublisher, String badge) {
     analyticsManager.logEvent(
         createAppViewedFromMap(previousScreen, currentScreen, packageName, appPublisher, badge),
-        APP_VIEW_OPEN_FROM, AnalyticsManager.Action.OPEN, getViewName(false));
+        APP_VIEW_OPEN_FROM, AnalyticsManager.Action.CLICK, getViewName(false));
     analyticsManager.logEvent(
         createAppViewDataMap(previousScreen.getStore(), currentScreen.getTag(), packageName),
-        OPEN_APP_VIEW, AnalyticsManager.Action.OPEN, getViewName(false));
+        OPEN_APP_VIEW, AnalyticsManager.Action.CLICK, getViewName(false));
   }
 
   private Map<String, Object> createAppViewDataMap(String store, String tag, String packageName) {
@@ -109,12 +109,12 @@ public class AppViewAnalytics {
 
   public void sendOpenScreenshotEvent() {
     analyticsManager.logEvent(createMapData(ACTION, "Open Screenshot"), APP_VIEW_INTERACT,
-        AnalyticsManager.Action.OPEN, getViewName(true));
+        AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendOpenVideoEvent() {
     analyticsManager.logEvent(createMapData(ACTION, "Open Video"), APP_VIEW_INTERACT,
-        AnalyticsManager.Action.OPEN, getViewName(true));
+        AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendRateThisAppEvent() {

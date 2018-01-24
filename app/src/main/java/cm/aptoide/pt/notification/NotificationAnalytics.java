@@ -80,10 +80,10 @@ public class NotificationAnalytics {
       String abTestingGroup, int campaignId, String url) {
     if (type == AptoideNotification.CAMPAIGN) {
       analyticsManager.logEvent(createCampaignNotificationMap(abTestingGroup, campaignId),
-          NOTIFICATION_EVENT_NAME, AnalyticsManager.Action.OPEN, getViewName(true));
+          NOTIFICATION_EVENT_NAME, AnalyticsManager.Action.CLICK, getViewName(true));
     }
     analyticsManager.logEvent(createPushNotificationEventMap(type, abTestingGroup, campaignId, url),
-        NOTIFICATION_PRESSED, AnalyticsManager.Action.OPEN, getViewName(true));
+        NOTIFICATION_PRESSED, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   private Map<String, Object> createUpdateNotificationEventsMap() {

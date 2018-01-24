@@ -46,7 +46,7 @@ public class AddressBookAnalytics {
   }
 
   public void sendHowAptoideUsesYourDataEvent() {
-    analyticsManager.logEvent(new HashMap<>(), FOLLOW_FRIENDS_HOW_TO, AnalyticsManager.Action.OPEN,
+    analyticsManager.logEvent(new HashMap<>(), FOLLOW_FRIENDS_HOW_TO, AnalyticsManager.Action.CLICK,
         getViewName(true));
   }
 

@@ -42,17 +42,8 @@ public class Analytics {
   public static final String ACTION = "Action";
   private static final String TAG = Analytics.class.getSimpleName();
   private static final boolean ACTIVATE_FLURRY = true;
-  private static final int ALL = Integer.MAX_VALUE;
   private static final int FLURRY = 1 << 1;
   private static final int FABRIC = 1 << 2;
-  private static final String[] unwantedValuesList = {
-      "ads-highlighted", "apps-group-trending", "apps-group-local-top-apps",
-      "timeline-your-friends-installs", "apps-group-latest-applications",
-      "apps-group-top-apps-in-this-store", "apps-group-aptoide-publishers",
-      "stores-group-top-stores", "stores-group-featured-stores", "reviews-group-reviews",
-      "apps-group-top-games", "apps-group-top-stores", "apps-group-featured-stores",
-      "apps-group-editors-choice"
-  };
 
   private static Analytics instance;
 

@@ -84,10 +84,11 @@ public class NavigationTracker {
       } else {
         viewName = getPreviousViewName();
       }
-    } catch (NullPointerException exception) {
       if (viewName.equals("")) {
-        viewName = defaultValue; //Default value, shouldn't get here
+        viewName = defaultValue;
       }
+    } catch (NullPointerException exception) {
+        viewName = defaultValue; //Default value, shouldn't get here
     }
     return viewName;
   }
