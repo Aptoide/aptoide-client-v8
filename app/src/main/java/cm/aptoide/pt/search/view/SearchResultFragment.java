@@ -44,14 +44,14 @@ import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.presenter.CompositePresenter;
-import cm.aptoide.pt.search.SuggestionCursorAdapter;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
-import cm.aptoide.pt.search.suggestions.TrendingManager;
+import cm.aptoide.pt.search.SuggestionCursorAdapter;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchViewModel;
+import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.view.BackButtonFragment;
@@ -535,7 +535,8 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
             mainThreadScheduler, searchManager, onAdClickRelay, onItemViewClickRelay,
             onOpenPopupMenuClickRelay, isMultiStoreSearch, defaultThemeName, defaultStoreName);
 
-    final SuggestionCursorAdapter suggestionCursorAdapter = new SuggestionCursorAdapter(getContext());
+    final SuggestionCursorAdapter suggestionCursorAdapter =
+        new SuggestionCursorAdapter(getContext());
 
     final Observable<MenuItem> toolbarMenuItemClick = RxToolbar.itemClicks(toolbar)
         .publish()
@@ -549,7 +550,8 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
     } else {
       appSearchSuggestionsView =
           new AppSearchSuggestionsView(this, RxView.clicks(toolbar), crashReport,
-              suggestionCursorAdapter, PublishSubject.create(), toolbarMenuItemClick, searchAnalytics);
+              suggestionCursorAdapter, PublishSubject.create(), toolbarMenuItemClick,
+              searchAnalytics);
     }
 
     final AptoideApplication application =
@@ -557,8 +559,8 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
 
     final SearchSuggestionsPresenter searchSuggestionsPresenter =
         new SearchSuggestionsPresenter(appSearchSuggestionsView,
-            application.getSearchSuggestionManager(), mainThreadScheduler, suggestionCursorAdapter, crashReport, trendingManager, searchNavigator, true,
-            searchAnalytics);
+            application.getSearchSuggestionManager(), mainThreadScheduler, suggestionCursorAdapter,
+            crashReport, trendingManager, searchNavigator, true, searchAnalytics);
 
     attachPresenter(
         new CompositePresenter(Arrays.asList(searchResultPresenter, searchSuggestionsPresenter)));

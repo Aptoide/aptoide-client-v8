@@ -43,9 +43,8 @@ public class GetAuthorizationRequest
       OkHttpClient httpClient, Converter.Factory converterFactory,
       BodyInterceptor<BaseBody> bodyInterceptor, TokenInvalidator tokenInvalidator,
       String accessToken, String customerId) {
-    return new GetAuthorizationRequest(getHost(sharedPreferences), httpClient,
-        converterFactory, bodyInterceptor, tokenInvalidator, transactionId, accessToken,
-        customerId);
+    return new GetAuthorizationRequest(getHost(sharedPreferences), httpClient, converterFactory,
+        bodyInterceptor, tokenInvalidator, transactionId, accessToken, customerId);
   }
 
   @Override

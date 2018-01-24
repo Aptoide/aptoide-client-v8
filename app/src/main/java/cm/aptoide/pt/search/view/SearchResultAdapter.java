@@ -147,5 +147,4 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
     adsLoaded = true;
     isLoadingMore = false;
   }
-
 }

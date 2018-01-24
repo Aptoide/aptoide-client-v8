@@ -16,8 +16,8 @@ public class PageViewsAnalytics {
   }
 
   public void sendPageViewedEvent(String currentViewName, String store) {
-    analytics.sendEvent(new FacebookEvent(facebook, "Page_View",
-        createEventBundle(currentViewName, store)));
+    analytics.sendEvent(
+        new FacebookEvent(facebook, "Page_View", createEventBundle(currentViewName, store)));
   }
 
   private Bundle createEventBundle(String currentViewName, String store) {
