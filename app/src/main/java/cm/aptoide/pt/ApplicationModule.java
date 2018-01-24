@@ -990,7 +990,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AccountAnalytics.CREATE_USER_PROFILE, AccountAnalytics.PROFILE_SETTINGS,
         AdultContentAnalytics.ADULT_CONTENT, AppViewAnalytics.DOWNGRADE_DIALOG,
         DeepLinkAnalytics.APP_LAUNCH, DeepLinkAnalytics.FACEBOOK_APP_LAUNCH,
-        AppViewAnalytics.CLICK_INSTALL));
+        AppViewAnalytics.CLICK_INSTALL, AnalyticsManager.FIRST_INSTALL_POP_UP,
+        AnalyticsManager.FIRST_INSTALL_CLOSE_WINDOW,
+        AnalyticsManager.FIRST_INSTALL_START_DOWNLOAD));
     for (CardType cardType : CardType.values()) {
       flurryEvents.add(cardType.name() + "_" + TimelineAnalytics.APPS_TIMELINE_EVENT);
     }
@@ -1042,7 +1044,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
                 NotLoggedInShareAnalytics.POP_UP_SHARE_TIMELINE,
                 AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN, AccountAnalytics.CREATE_USER_PROFILE,
                 AccountAnalytics.PROFILE_SETTINGS, AccountAnalytics.ENTRY,
-                DeepLinkAnalytics.FACEBOOK_APP_LAUNCH, AppViewAnalytics.CLICK_INSTALL))
+                DeepLinkAnalytics.FACEBOOK_APP_LAUNCH, AppViewAnalytics.CLICK_INSTALL,
+                AnalyticsManager.FIRST_INSTALL_POP_UP, AnalyticsManager.FIRST_INSTALL_CLOSE_WINDOW,
+                AnalyticsManager.FIRST_INSTALL_START_DOWNLOAD))
         .addLogger(fabricEventLogger, Arrays.asList(DownloadCompleteAnalytics.EVENT_NAME,
             SpotAndShareAnalytics.EVENT_NAME_SPOT_SHARE_PERMISSIONS,
             InstallFabricEvents.ROOT_V2_COMPLETE, InstallFabricEvents.ROOT_V2_START,

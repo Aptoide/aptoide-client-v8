@@ -1,10 +1,7 @@
 package cm.aptoide.pt.app;
 
-import android.os.Bundle;
-import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.events.FacebookEvent;
-import cm.aptoide.pt.analytics.events.FlurryEvent;
-import com.facebook.appevents.AppEventsLogger;
+import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,48 +13,43 @@ import java.util.Map;
 
 public class FirstInstallAnalytics {
 
-  private static final String FIRST_INSTALL_POP_UP = "First_Install_Pop_up";
-  private static final String FIRST_INSTALL_CLOSE_WINDOW = "First_Install_Close_Window";
-  private static final String FIRST_INSTALL_START_DOWNLOAD = "First_Install_Start_Download";
   private static final String FIRST_INSTALL_SPONSORED_APPS_SELECTED = "sponsored_apps_selected";
   private static final String FIRST_INSTALL_NORMAL_APPS_SELECTED = "normal_apps_selected";
+  private static final String DEFAULT_CONTEXT = "FirstInstall";
 
-  private Analytics analytics;
-  private AppEventsLogger facebook;
+  private AnalyticsManager analyticsManager;
+  private NavigationTracker navigationTracker;
 
-  public FirstInstallAnalytics(Analytics analytics, AppEventsLogger facebook) {
-    this.analytics = analytics;
-    this.facebook = facebook;
+  public FirstInstallAnalytics(AnalyticsManager analyticsManager,
+      NavigationTracker navigationTracker) {
+    this.analyticsManager = analyticsManager;
+    this.navigationTracker = navigationTracker;
   }
 
   public void sendPopupEvent() {
-    analytics.sendEvent(new FacebookEvent(facebook, FIRST_INSTALL_POP_UP));
-    analytics.sendEvent(new FlurryEvent(FIRST_INSTALL_POP_UP));
+    analyticsManager.logEvent(new HashMap<>(), AnalyticsManager.FIRST_INSTALL_POP_UP,
+        AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendCloseWindowsEvent() {
-    analytics.sendEvent(new FacebookEvent(facebook, FIRST_INSTALL_CLOSE_WINDOW));
-    analytics.sendEvent(new FlurryEvent(FIRST_INSTALL_CLOSE_WINDOW));
+    analyticsManager.logEvent(new HashMap<>(), AnalyticsManager.FIRST_INSTALL_CLOSE_WINDOW,
+        AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendStartDownloadEvent(String sponsored, String normal) {
-    analytics.sendEvent(new FacebookEvent(facebook, FIRST_INSTALL_START_DOWNLOAD,
-        createStartDownloadBundle(sponsored, normal)));
-    analytics.sendEvent(
-        new FlurryEvent(FIRST_INSTALL_START_DOWNLOAD, createStartDownloadMap(sponsored, normal)));
+    analyticsManager.logEvent(createStartDownloadMap(sponsored, normal),
+        AnalyticsManager.FIRST_INSTALL_START_DOWNLOAD, AnalyticsManager.Action.CLICK,
+        getViewName(true));
   }
 
-  private Bundle createStartDownloadBundle(String sponsored, String normal) {
-    Bundle bundle = new Bundle();
-    bundle.putString(FIRST_INSTALL_SPONSORED_APPS_SELECTED, sponsored);
-    bundle.putString(FIRST_INSTALL_NORMAL_APPS_SELECTED, normal);
-    return bundle;
-  }
-
-  private Map<String, String> createStartDownloadMap(String sponsored, String normal) {
-    HashMap<String, String> map = new HashMap<>();
+  private Map<String, Object> createStartDownloadMap(String sponsored, String normal) {
+    HashMap<String, Object> map = new HashMap<>();
     map.put(FIRST_INSTALL_SPONSORED_APPS_SELECTED, sponsored);
     map.put(FIRST_INSTALL_NORMAL_APPS_SELECTED, normal);
     return map;
+  }
+
+  private String getViewName(boolean isCurrent) {
+    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
   }
 }

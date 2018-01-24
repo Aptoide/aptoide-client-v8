@@ -14,23 +14,17 @@ import cm.aptoide.pt.dataprovider.ws.v7.BiUtmAnalyticsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BiUtmAnalyticsRequestBody;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.zip.ZipFile;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
-
-import static cm.aptoide.pt.analytics.Analytics.Lifecycle.Application.facebookLogger;
 
 /**
  * Created by neuro on 07-05-2015.f
@@ -42,8 +36,6 @@ public class Analytics {
   public static final String ACTION = "Action";
   private static final String TAG = Analytics.class.getSimpleName();
   private static final boolean ACTIVATE_FLURRY = true;
-  private static final int FLURRY = 1 << 1;
-  private static final int FABRIC = 1 << 2;
 
   private static Analytics instance;
 
@@ -58,94 +50,6 @@ public class Analytics {
       instance = new Analytics(new AnalyticsDataSaver());
     }
     return instance;
-  }
-
-  private static void track(String event, String key, String attr, int flags) {
-
-    try {
-      if (!ACTIVATE_FLURRY) {
-        return;
-      }
-
-      HashMap stringObjectHashMap = new HashMap<>();
-
-      stringObjectHashMap.put(key, attr);
-
-      track(event, stringObjectHashMap, flags);
-
-      Logger.d(TAG, "Event: " + event + ", Key: " + key + ", attr: " + attr);
-    } catch (Exception e) {
-      Logger.d(TAG, e.getStackTrace()
-          .toString());
-    }
-  }
-
-  private static void track(String event, HashMap map, int flags) {
-    try {
-      if (checkAcceptability(flags, FLURRY)) {
-        FlurryAgent.logEvent(event, map);
-        Logger.d(TAG, "Flurry Event: " + event + ", Map: " + map);
-      }
-    } catch (Exception e) {
-      Logger.d(TAG, e.getStackTrace()
-          .toString());
-    }
-  }
-
-  /**
-   * Verifica se as flags fornecidas constam em accepted.
-   *
-   * @param flag flags fornecidas
-   * @param accepted flags aceitáveis
-   *
-   * @return true caso as flags fornecidas constem em accepted.
-   */
-  private static boolean checkAcceptability(int flag, int accepted) {
-    if (accepted == FLURRY && !ACTIVATE_FLURRY) {
-      Logger.d(TAG, "Flurry Disabled");
-      return false;
-    } else {
-      return (flag & accepted) == accepted;
-    }
-  }
-
-  private static void logFacebookEvents(String eventName, String key, String value) {
-    Bundle bundle = new Bundle();
-    bundle.putString(key, value);
-    facebookLogger.logEvent(eventName, bundle);
-  }
-
-  private static void logFabricEvent(String event, Map<String, String> map, int flags) {
-    if (checkAcceptability(flags, FABRIC)) {
-      CustomEvent customEvent = new CustomEvent(event);
-      for (Map.Entry<String, String> entry : map.entrySet()) {
-        customEvent.putCustomAttribute(entry.getKey(), entry.getValue());
-      }
-      Answers.getInstance()
-          .logCustom(customEvent);
-      Logger.d(TAG, "Fabric Event: " + event + ", Map: " + map);
-    }
-  }
-
-  private static void logFacebookEvents(String eventName, Map<String, String> map) {
-    if (BuildConfig.BUILD_TYPE.equals("debug") && map == null) {
-      return;
-    }
-    Bundle parameters = new Bundle();
-    if (map != null) {
-      for (String s : map.keySet()) {
-        parameters.putString(s, map.get(s));
-      }
-    }
-    logFacebookEvents(eventName, parameters);
-  }
-
-  private static void logFacebookEvents(String eventName, Bundle parameters) {
-    if (BuildConfig.BUILD_TYPE.equals("debug")) {
-      return;
-    }
-    Logger.w(TAG, "Facebook Event: " + eventName + " : " + parameters.toString());
-    facebookLogger.logEvent(eventName, parameters);
   }
 
   public void save(@NonNull String key, @NonNull Event event) {

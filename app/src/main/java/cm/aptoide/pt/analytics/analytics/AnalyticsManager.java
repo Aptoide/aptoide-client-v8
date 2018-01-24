@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AnalyticsManager {
+  public static final String FIRST_INSTALL_POP_UP = "First_Install_Pop_up";
+  public static final String FIRST_INSTALL_CLOSE_WINDOW = "First_Install_Close_Window";
+  public static final String FIRST_INSTALL_START_DOWNLOAD = "First_Install_Start_Download";
   private static final String TAG = AnalyticsManager.class.getSimpleName();
   private final HttpKnockEventLogger knockEventLogger;
 
@@ -54,11 +57,6 @@ public class AnalyticsManager {
 
   public void save(@NonNull String key, @NonNull Event event) {
     analyticsDataSaver.save(key, event);
-  }
-
-  public void sendAndRemoveEvent(String eventName) {
-    Event event = analyticsDataSaver.newGet(eventName);
-    logEvent(event.getData(), event.getEventName(), event.getAction(), event.getContext());
   }
 
   public Event getEvent(String key) {
