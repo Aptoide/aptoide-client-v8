@@ -1,7 +1,7 @@
 package cm.aptoide.pt.social.commentslist;
 
 import android.text.TextUtils;
-import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import cm.aptoide.pt.dataprovider.model.v7.SetComment;
 import cm.aptoide.pt.logger.Logger;
@@ -12,33 +12,21 @@ import java.util.Date;
  */
 
 public class CommentMapper {
-  private final AptoideAccountManager accountManager;
-
-  public CommentMapper(AptoideAccountManager manager) {
-    accountManager = manager;
-  }
-
-  public Comment mapToComment(CommentDataWrapper data) {
-
+  public Comment mapToComment(CommentDataWrapper data, Account account) {
     Comment comment = new Comment();
     Comment.User user = new Comment.User();
     Comment.Parent parent = new Comment.Parent();
 
-    if (!TextUtils.isEmpty(accountManager.getAccount()
-        .getAvatar())) {
-      user.setAvatar(accountManager.getAccount()
-          .getAvatar());
+    if (!TextUtils.isEmpty(account.getAvatar())) {
+      user.setAvatar(account.getAvatar());
     } else {
-      if (!TextUtils.isEmpty(accountManager.getAccount()
-          .getStore()
+      if (!TextUtils.isEmpty(account.getStore()
           .getAvatar())) {
-        user.setAvatar(accountManager.getAccount()
-            .getStore()
+        user.setAvatar(account.getStore()
             .getAvatar());
       }
     }
-    user.setName(accountManager.getAccount()
-        .getNickname());
+    user.setName(account.getNickname());
 
     comment.setUser(user);
     if (data.getResponse() instanceof SetComment) {

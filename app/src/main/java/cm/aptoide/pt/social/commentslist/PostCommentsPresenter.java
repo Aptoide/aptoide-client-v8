@@ -1,8 +1,9 @@
 package cm.aptoide.pt.social.commentslist;
 
 import android.support.annotation.NonNull;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.model.v7.Comment;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import rx.Scheduler;
@@ -20,17 +21,19 @@ public class PostCommentsPresenter implements Presenter {
   private final String postId;
   private final Scheduler viewScheduler;
   private final CrashReport crashReporter;
+  private final AptoideAccountManager accountManager;
   private boolean shouldShowCommentDialog;
 
   PostCommentsPresenter(@NonNull PostCommentsView commentsView, Comments comments,
       CommentsNavigator commentsNavigator, Scheduler viewScheduler, CrashReport crashReporter,
-      String postId, boolean shouldShow) {
+      String postId, AptoideAccountManager accountManager, boolean shouldShow) {
     this.view = commentsView;
     this.comments = comments;
     this.commentsNavigator = commentsNavigator;
     this.viewScheduler = viewScheduler;
     this.crashReporter = crashReporter;
     this.postId = postId;
+    this.accountManager = accountManager;
     this.shouldShowCommentDialog = shouldShow;
   }
 
@@ -108,15 +111,20 @@ public class PostCommentsPresenter implements Presenter {
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> commentsNavigator.commentDialogResult())
-        .observeOn(viewScheduler)
-        .doOnNext(wrapper -> {
-          Comment comment = comments.mapToComment(wrapper);
-          view.showCommentSubmittedMessage();
-          view.showNewComment(comment);
-          commentsNavigator.navigateToPostCommentInTimeline(wrapper.getStringAsId(),
-              comment.getBody());
-        })
+        .flatMap(__ -> commentsNavigator.commentDialogResult()
+            .flatMapSingle(commentDataWrapper -> accountManager.accountStatus()
+                .first()
+                .toSingle()
+                .map(account -> comments.mapToComment(commentDataWrapper, account)))
+            .observeOn(viewScheduler)
+            .doOnNext(comment -> {
+              view.showCommentSubmittedMessage();
+              view.showNewComment(comment);
+              commentsNavigator.navigateToPostCommentInTimeline(postId, comment.getBody());
+            })
+            .doOnError(throwable -> Logger.w(this.getClass()
+                .getSimpleName(), "present: ", throwable))
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {

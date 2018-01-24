@@ -1,5 +1,6 @@
 package cm.aptoide.pt.social.commentslist;
 
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import java.util.List;
 import rx.Single;
@@ -34,7 +35,7 @@ class Comments {
     return postCommentsRepository.hasMore();
   }
 
-  Comment mapToComment(CommentDataWrapper data) {
-    return mapper.mapToComment(data);
+  Comment mapToComment(CommentDataWrapper data, Account account) {
+    return mapper.mapToComment(data, account);
   }
 }

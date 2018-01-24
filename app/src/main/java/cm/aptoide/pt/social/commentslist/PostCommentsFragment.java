@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
@@ -31,6 +32,7 @@ import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -48,22 +50,21 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
    * The minimum number of items to have below your current scroll position before loading more.
    */
   private final int visibleThreshold = 5;
+  @Inject AptoideAccountManager accountManager;
   private RecyclerView list;
   private PostCommentsAdapter adapter;
   private FloatingActionButton floatingActionButton;
-
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
-
   private PublishSubject<Long> replyEventPublishSubject;
   private SwipeRefreshLayout swipeRefreshLayout;
   private LinearLayoutManager layoutManager;
   private ProgressBar progressBar;
-  private View genericError;
 
+  private View genericError;
   private TabNavigator tabNavigator;
 
   public static PostCommentsFragment newInstance(String postId) {
@@ -137,17 +138,17 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
     attachPresenter(new PostCommentsPresenter(this, new Comments(new PostCommentsRepository(
         new PostCommentsService(10, 0, Integer.MAX_VALUE, bodyInterceptor, httpClient,
             converterFactory, tokenInvalidator, sharedPreferences), new CommentsSorter(),
-        new ArrayList<>()), new CommentMapper(
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager())),
+        new ArrayList<>()), new CommentMapper()),
         new CommentsNavigator(getFragmentNavigator(), getActivity().getSupportFragmentManager(),
             PublishSubject.create(), PublishSubject.create(), tabNavigator),
-        AndroidSchedulers.mainThread(),
-        CrashReport.getInstance(), getArguments().getString(POST_ID_KEY), shouldShowCommentDialog));
+        AndroidSchedulers.mainThread(), CrashReport.getInstance(),
+        getArguments().getString(POST_ID_KEY), accountManager, shouldShowCommentDialog));
   }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
+    getFragmentComponent(savedInstanceState).inject(this);
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
