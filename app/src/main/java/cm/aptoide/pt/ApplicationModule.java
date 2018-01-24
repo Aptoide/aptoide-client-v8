@@ -912,7 +912,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       EventsPersistence persistence, AptoideBiEventService service) {
     return new AptoideBiEventLogger(
         new AptoideBiAnalytics(persistence, service, new CompositeSubscription(),
-            Schedulers.computation(), BuildConfig.ANALYTICS_EVENTS_NUMBER_THRESHOLD,
+            Schedulers.computation(), BuildConfig.ANALYTICS_EVENTS_INITIAL_DELAY_IN_MILLIS,
             BuildConfig.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS));
   }
 
@@ -940,7 +940,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("Fabric") EventLogger fabricEventLogger,
       @Named("Flurry") EventLogger flurryEventLogger, HttpKnockEventLogger knockEventLogger) {
     return new AnalyticsManager.Builder().addLogger(aptoideBiEventLogger,
-        Arrays.asList(PostAnalytics.OPEN_EVENT_NAME, "event name"))
+        Arrays.asList(PostAnalytics.OPEN_EVENT_NAME))
         .addLogger(facebookEventLogger, Arrays.asList(PostAnalytics.OPEN_EVENT_NAME))
         .addLogger(fabricEventLogger, Collections.emptyList())
         .addLogger(flurryEventLogger, Collections.emptyList())

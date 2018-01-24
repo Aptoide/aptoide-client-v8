@@ -17,23 +17,22 @@ public class AptoideBiAnalytics {
   private final EventsPersistence persistence;
   private final AptoideBiEventService service;
   private final CompositeSubscription subscriptions;
-  private final int thresholdSize;
   private final long sendInterval;
   private final Scheduler timerScheduler;
+  private final long initialDelay;
 
   /**
-   * @param thresholdSize max number of events to batch before send
    * @param sendInterval max time(in milliseconds) interval between event sends
    */
   public AptoideBiAnalytics(EventsPersistence persistence, AptoideBiEventService service,
-      CompositeSubscription subscriptions, Scheduler timerScheduler, int thresholdSize,
+      CompositeSubscription subscriptions, Scheduler timerScheduler, long initialDelay,
       long sendInterval) {
     this.persistence = persistence;
     this.service = service;
     this.subscriptions = subscriptions;
     this.timerScheduler = timerScheduler;
-    this.thresholdSize = thresholdSize;
     this.sendInterval = sendInterval;
+    this.initialDelay = initialDelay;
   }
 
   public void log(String eventName, Map<String, Object> data, AnalyticsManager.Action action,
@@ -44,13 +43,8 @@ public class AptoideBiAnalytics {
   }
 
   public void setup() {
-    subscriptions.add(persistence.getAll()
-        .filter(this::shouldSendEvents)
-        .flatMapCompletable(events -> sendEvents(events))
-        .retry()
-        .subscribe());
-
-    subscriptions.add(Observable.interval(sendInterval, TimeUnit.MILLISECONDS, timerScheduler)
+    subscriptions.add(
+        Observable.interval(initialDelay, sendInterval, TimeUnit.MILLISECONDS, timerScheduler)
         .flatMap(time -> persistence.getAll()
             .first())
         .filter(events -> events.size() > 0)
@@ -64,18 +58,16 @@ public class AptoideBiAnalytics {
         .toSingleDefault(events)
         .toObservable()
         .flatMapIterable(__ -> events)
-        .flatMap(event -> service.send(event)
+        .map(event -> service.send(event)
             .toObservable()
             .flatMap(o -> Observable.empty())
             .cast(Event.class)
             .onErrorResumeNext(throwable -> Observable.just(event)))
         .toList()
+        .flatMap(observables -> Observable.merge(observables))
+        .toList()
         .filter(failedEvents -> !failedEvents.isEmpty())
         .flatMapCompletable(failedEvents -> persistence.save(failedEvents))
         .toCompletable();
-  }
-
-  private boolean shouldSendEvents(List<Event> events) {
-    return events.size() > 0 && events.size() >= thresholdSize;
   }
 }
