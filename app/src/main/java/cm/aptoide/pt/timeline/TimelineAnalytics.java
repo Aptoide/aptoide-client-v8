@@ -76,6 +76,8 @@ public class TimelineAnalytics {
   private static final String CARD_ACTION = "Apps_Timeline_Card_Action";
   private static final String BLANK = "(blank)";
   private static final String TIMELINE_VERSION = "timeline_version";
+  private static final String SOURCE = "source";
+  private static final String APPS_SHORTCUTS = "apps_shortcuts";
   private final Analytics analytics;
   private final AppEventsLogger facebook;
   private final BodyInterceptor<BaseBody> bodyInterceptor;
@@ -293,9 +295,26 @@ public class TimelineAnalytics {
   }
 
   public void sendTimelineTabOpened() {
-    analytics.sendEvent(new FacebookEvent(facebook, TIMELINE_OPENED));
+    Bundle bundle = new Bundle();
+    String previousView = navigationTracker.getPreviousViewName();
+    bundle.putString(SOURCE, previousView);
+    analytics.sendEvent(new FacebookEvent(facebook, TIMELINE_OPENED, bundle));
     Map<String, Object> map = new HashMap<>();
-    map.put(PREVIOUS_CONTEXT, navigationTracker.getPreviousViewName());
+    map.put(PREVIOUS_CONTEXT, previousView);
+    if (version != null) {
+      map.put(TIMELINE_VERSION, version);
+      flushTimelineTabOpenEvents(map);
+    } else {
+      openTimelineEventsData.add(map);
+    }
+  }
+
+  public void sendTimelineTabOpenedFromShortcut() {
+    Bundle bundle = new Bundle();
+    bundle.putString(SOURCE, APPS_SHORTCUTS);
+    analytics.sendEvent(new FacebookEvent(facebook, TIMELINE_OPENED, bundle));
+    Map<String, Object> map = new HashMap<>();
+    map.put(PREVIOUS_CONTEXT, APPS_SHORTCUTS);
     if (version != null) {
       map.put(TIMELINE_VERSION, version);
       flushTimelineTabOpenEvents(map);

@@ -59,6 +59,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
   public static final int SCHEDULE_DOWNLOADS_ID = 2;
   public static final String DEEP_LINK = "deeplink";
   public static final String SCHEDULE_DOWNLOADS = "schedule_downloads";
+  public static final String FROM_SHORTCUT = "from_shortcut";
   private static final String TAG = DeepLinkIntentReceiver.class.getSimpleName();
   private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
@@ -75,6 +76,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
   private AsyncTask<String, Void, Void> asyncTask;
   private InstalledRepository installedRepository;
   private MinimalAdMapper adMapper;
+  private boolean shortcutNavigation;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -84,6 +86,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     TMP_MYAPP_FILE = getCacheDir() + "/myapp.myapp";
     String uri = getIntent().getDataString();
     Analytics.ApplicationLaunch.website(uri);
+    shortcutNavigation = false;
 
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
 
@@ -94,6 +97,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
       if (fromShortcut != null) {
         if (fromShortcut.hasExtra("search")) {
           if (fromShortcut.getBooleanExtra("search", false)) {
+            shortcutNavigation = true;
             Logger.v(TAG, "the search shortcut was used to reach this!");
             if (shortcutManager != null) {
               shortcutManager.reportShortcutUsed("search");
@@ -101,6 +105,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
           }
         } else if (fromShortcut.hasExtra("timeline")) {
           if (fromShortcut.getBooleanExtra("timeline", false)) {
+            shortcutNavigation = true;
             Logger.w(TAG, "the timeline shortcut was used to reach this!");
             if (shortcutManager != null) {
               shortcutManager.reportShortcutUsed("timeline");
@@ -479,6 +484,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     Intent i = new Intent(this, startClass);
     i.putExtra(DeepLinksTargets.TIMELINE_DEEPLINK, true);
     i.putExtra(DeepLinksKeys.CARD_ID, cardId);
+    if (shortcutNavigation) i.putExtra(FROM_SHORTCUT, shortcutNavigation);
 
     startActivity(i);
   }
@@ -526,6 +532,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
 
     i.putExtra(DeepLinksTargets.SEARCH_FRAGMENT, true);
     i.putExtra(SearchManager.QUERY, query);
+    i.putExtra(FROM_SHORTCUT, shortcutNavigation);
 
     startActivity(i);
   }

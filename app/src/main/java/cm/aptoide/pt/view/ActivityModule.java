@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AppShortcutsAnalytics;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
@@ -78,8 +79,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   private final View view;
   private final String defaultTheme;
   private final String defaultStoreName;
-  private boolean firstCreated;
   private final String fileProviderAuthority;
+  private boolean firstCreated;
 
   public ActivityModule(AppCompatActivity activity, Intent intent,
       NotificationSyncScheduler notificationSyncScheduler, String marketName, String autoUpdateUrl,
@@ -148,11 +149,12 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       StoreRepository storeRepository, FragmentNavigator fragmentNavigator,
       @Named("default") SharedPreferences sharedPreferences, StoreAccessor storeAccessor,
       NavigationTracker navigationTracker, PageViewsAnalytics pageViewsAnalytics,
-      SearchNavigator searchNavigator, SearchAnalytics searchAnalytics) {
+      SearchNavigator searchNavigator, SearchAnalytics searchAnalytics,
+      AppShortcutsAnalytics appShortcutsAnalytics) {
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
         (TabNavigator) activity, (DeepLinkManager.DeepLinkMessages) activity, sharedPreferences,
         storeAccessor, defaultTheme, notificationAnalytics, navigationTracker, pageViewsAnalytics,
-        searchNavigator, searchAnalytics);
+        searchNavigator, searchAnalytics, appShortcutsAnalytics);
   }
 
   @ActivityScope @Provides Presenter provideMainPresenter(

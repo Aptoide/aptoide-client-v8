@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import cm.aptoide.pt.AppShortcutsAnalytics;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.PageViewsAnalytics;
@@ -45,6 +46,8 @@ import rx.Completable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
+import static cm.aptoide.pt.DeepLinkIntentReceiver.FROM_SHORTCUT;
+
 public class DeepLinkManager {
 
   public static final String DEEPLINK_KEY = "Deeplink";
@@ -62,13 +65,15 @@ public class DeepLinkManager {
   private final PageViewsAnalytics pageViewsAnalytics;
   private final NotificationAnalytics notificationAnalytics;
   private final SearchAnalytics searchAnalytics;
+  private final AppShortcutsAnalytics appShortcutsAnalytics;
 
   public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, StoreRepository storeRepository,
       FragmentNavigator fragmentNavigator, TabNavigator tabNavigator,
       DeepLinkMessages deepLinkMessages, SharedPreferences sharedPreferences,
       StoreAccessor storeAccessor, String defaultTheme, NotificationAnalytics notificationAnalytics,
       NavigationTracker navigationTracker, PageViewsAnalytics pageViewsAnalytics,
-      SearchNavigator searchNavigator, SearchAnalytics searchAnalytics) {
+      SearchNavigator searchNavigator, SearchAnalytics searchAnalytics,
+      AppShortcutsAnalytics appShortcutsAnalytics) {
     this.storeUtilsProxy = storeUtilsProxy;
     this.storeRepository = storeRepository;
     this.fragmentNavigator = fragmentNavigator;
@@ -82,6 +87,7 @@ public class DeepLinkManager {
     this.notificationAnalytics = notificationAnalytics;
     this.searchNavigator = searchNavigator;
     this.searchAnalytics = searchAnalytics;
+    this.appShortcutsAnalytics = appShortcutsAnalytics;
   }
 
   public boolean showDeepLink(Intent intent) {
@@ -101,7 +107,8 @@ public class DeepLinkManager {
         appViewDeepLinkUname(intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.UNAME));
       }
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.SEARCH_FRAGMENT)) {
-      searchDeepLink(intent.getStringExtra(SearchManager.QUERY));
+      searchDeepLink(intent.getStringExtra(SearchManager.QUERY),
+          intent.getBooleanExtra(FROM_SHORTCUT, false));
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO)) {
       newrepoDeepLink(intent, intent.getExtras()
           .getStringArrayList(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO), storeAccessor);
@@ -163,10 +170,15 @@ public class DeepLinkManager {
         .newAppViewFragment(packageName, storeName, openType), true);
   }
 
-  private void searchDeepLink(String query) {
+  private void searchDeepLink(String query, boolean shortcutNavigation) {
     searchNavigator.navigate(query);
     if (query == null || query.isEmpty()) {
-      searchAnalytics.searchStart(SearchSource.WIDGET);
+      if (shortcutNavigation) {
+        searchAnalytics.searchStart(SearchSource.SHORTCUT);
+        appShortcutsAnalytics.shortcutNavigation(ShortcutDestinations.SEARCH);
+      } else {
+        searchAnalytics.searchStart(SearchSource.WIDGET);
+      }
     } else {
       searchAnalytics.searchStart(SearchSource.DEEP_LINK);
     }
@@ -230,7 +242,12 @@ public class DeepLinkManager {
   private void fromTimelineDeepLink(Intent intent) {
     Analytics.ApplicationLaunch.timelineNotification();
     String cardId = intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.CARD_ID);
-    tabNavigator.navigate(new AppsTimelineTabNavigation(cardId));
+    if (intent.hasExtra(FROM_SHORTCUT)) {
+      appShortcutsAnalytics.shortcutNavigation(ShortcutDestinations.TIMELINE);
+      tabNavigator.navigate(new AppsTimelineTabNavigation(cardId));
+    } else {
+      tabNavigator.navigate(new AppsTimelineTabNavigation(cardId));
+    }
   }
 
   private void newUpdatesDeepLink() {
@@ -290,5 +307,10 @@ public class DeepLinkManager {
     void showStoreAlreadyAdded();
 
     void showStoreFollowed(String storeName);
+  }
+
+  private static final class ShortcutDestinations {
+    private static final String TIMELINE = "timeline";
+    private static final String SEARCH = "search";
   }
 }

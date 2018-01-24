@@ -122,6 +122,7 @@ import cm.aptoide.pt.sync.SyncScheduler;
 import cm.aptoide.pt.sync.alarm.AlarmSyncScheduler;
 import cm.aptoide.pt.sync.alarm.AlarmSyncService;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
+import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.q.QManager;
@@ -843,5 +844,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides SearchSuggestionRemoteRepository providesSearchSuggestionRemoteRepository(
       Retrofit retrofit) {
     return retrofit.create(SearchSuggestionRemoteRepository.class);
+  }
+
+  @Singleton @Provides AppShortcutsAnalytics providesAppShortcutsAnalytics(AppEventsLogger logger) {
+    return new AppShortcutsAnalytics(logger, Analytics.getInstance());
+  }
+
+  @Singleton @Provides TimelineAnalytics providesTimelineAnalytics() {
+    return application.getTimelineAnalytics();
   }
 }
