@@ -360,7 +360,6 @@ public class HomeFragment extends StoreFragment {
       drawerLayout.openDrawer(GravityCompat.START);
       drawerAnalytics.drawerOpen();
       navigationTracker.registerScreen(ScreenTagHistory.Builder.build("Drawer"));
-      pageViewsAnalytics.sendPageViewedEvent();
     });
   }
 

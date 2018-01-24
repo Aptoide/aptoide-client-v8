@@ -764,8 +764,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new SearchAnalytics(analyticsManager, navigationTracker);
   }
 
-  @Singleton @Provides NavigationTracker provideNavigationTracker() {
-    return new NavigationTracker(new ArrayList<>(), new TrackerFilter());
+  @Singleton @Provides NavigationTracker provideNavigationTracker(
+      PageViewsAnalytics pageViewsAnalytics) {
+    return new NavigationTracker(new ArrayList<>(), new TrackerFilter(), pageViewsAnalytics);
   }
 
   @Singleton @Provides Database provideDatabase() {

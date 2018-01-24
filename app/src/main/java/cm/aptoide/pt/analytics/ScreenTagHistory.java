@@ -53,6 +53,9 @@ public class ScreenTagHistory {
   }
 
   public static class Builder {
+
+    public static final String APTOIDE_MAIN_HISTORY_STORE = "aptoide_main";
+
     private Builder() {
     }
 
@@ -69,7 +72,7 @@ public class ScreenTagHistory {
       if (storeContext == null) {
         store = "";
       } else if (storeContext.equals(StoreContext.home)) {
-        store = "aptoide_main";
+        store = APTOIDE_MAIN_HISTORY_STORE;
       } else {
         store = storeContext.name();
       }

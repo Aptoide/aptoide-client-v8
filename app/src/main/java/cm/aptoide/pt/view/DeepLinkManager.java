@@ -135,7 +135,6 @@ public class DeepLinkManager {
     } else {
       navigationTracker.registerScreen(ScreenTagHistory.Builder.build(DEEPLINK_KEY));
     }
-    pageViewsAnalytics.sendPageViewedEvent();
     return true;
   }
 

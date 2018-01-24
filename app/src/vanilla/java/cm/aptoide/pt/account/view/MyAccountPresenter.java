@@ -163,7 +163,6 @@ public class MyAccountPresenter implements Presenter {
           navigator.navigateToNotification(notification);
           analytics.sendNotificationTouchEvent(notification.getNotificationCenterUrlTrack());
           navigationTracker.registerScreen(ScreenTagHistory.Builder.build("Notification"));
-          pageViewsAnalytics.sendPageViewedEvent();
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {

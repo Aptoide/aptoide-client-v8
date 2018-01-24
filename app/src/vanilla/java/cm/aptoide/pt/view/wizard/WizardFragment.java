@@ -39,6 +39,15 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
 
   public static final int LAYOUT = R.layout.fragment_wizard;
   private static final String PAGE_INDEX = "page_index";
+  AptoideViewPager.SimpleOnPageChangeListener pageChangeListener =
+      new AptoideViewPager.SimpleOnPageChangeListener() {
+        @Override public void onPageSelected(int position) {
+          if (position == 0) {
+            navigationTracker.registerScreen(
+                ScreenTagHistory.Builder.build(WizardPageOneFragment.class.getSimpleName(), "0"));
+          }
+        }
+      };
   private WizardPagerAdapter viewPagerAdapter;
   private AptoideViewPager viewPager;
   private RadioGroup radioGroup;
@@ -47,9 +56,9 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
   private List<RadioButton> wizardButtons;
   private View skipOrNextLayout;
   private LoginBottomSheet loginBottomSheet;
-
   private boolean isInPortraitMode;
   private int currentPosition;
+  private Runnable registerViewpagerCurrentItem;
 
   public static WizardFragment newInstance() {
     return new WizardFragment();
@@ -116,9 +125,14 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
         new WizardPresenter(this, accountManager, CrashReport.getInstance(), accountAnalytics);
     attachPresenter(presenter);
     viewPager.addOnPageChangeListener(presenter);
+    viewPager.addOnPageChangeListener(pageChangeListener);
+    registerViewpagerCurrentItem =
+        () -> pageChangeListener.onPageSelected(viewPager.getCurrentItem());
+    viewPager.post(registerViewpagerCurrentItem);
   }
 
   @Override public void onDestroyView() {
+    viewPager.removeCallbacks(registerViewpagerCurrentItem);
     skipOrNextLayout = null;
     wizardButtons = null;
     radioGroup = null;
