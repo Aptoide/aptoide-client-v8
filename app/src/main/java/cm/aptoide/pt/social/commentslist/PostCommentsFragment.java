@@ -139,10 +139,10 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
         new PostCommentsService(10, 0, Integer.MAX_VALUE, bodyInterceptor, httpClient,
             converterFactory, tokenInvalidator, sharedPreferences), new CommentsSorter(),
         new ArrayList<>()), new CommentMapper()),
-        new CommentsNavigator(getFragmentNavigator(), getActivity().getSupportFragmentManager(),
-            PublishSubject.create(), PublishSubject.create(), tabNavigator),
-        AndroidSchedulers.mainThread(), CrashReport.getInstance(),
-        getArguments().getString(POST_ID_KEY), accountManager, shouldShowCommentDialog));
+        new CommentsNavigator(getActivity().getSupportFragmentManager(), PublishSubject.create(),
+            PublishSubject.create(), tabNavigator), AndroidSchedulers.mainThread(),
+        CrashReport.getInstance(), getArguments().getString(POST_ID_KEY), accountManager,
+        shouldShowCommentDialog));
   }
 
   @Nullable @Override
