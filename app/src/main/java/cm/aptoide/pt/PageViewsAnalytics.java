@@ -2,7 +2,6 @@ package cm.aptoide.pt;
 
 import android.os.Bundle;
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
 import com.facebook.appevents.AppEventsLogger;
 
@@ -10,23 +9,21 @@ public class PageViewsAnalytics {
 
   private final AppEventsLogger facebook;
   private final Analytics analytics;
-  private final NavigationTracker navigationTracker;
 
-  public PageViewsAnalytics(AppEventsLogger facebook, Analytics analytics,
-      NavigationTracker navigationTracker) {
+  public PageViewsAnalytics(AppEventsLogger facebook, Analytics analytics) {
     this.facebook = facebook;
     this.analytics = analytics;
-    this.navigationTracker = navigationTracker;
   }
 
-  public void sendPageViewedEvent() {
+  public void sendPageViewedEvent(String currentViewName, String store) {
     analytics.sendEvent(new FacebookEvent(facebook, "Page_View",
-        createEventBundle(navigationTracker.getCurrentViewName())));
+        createEventBundle(currentViewName, store)));
   }
 
-  private Bundle createEventBundle(String currentViewName) {
+  private Bundle createEventBundle(String currentViewName, String store) {
     Bundle bundle = new Bundle();
     bundle.putString("fragment", currentViewName);
+    bundle.putString("store", store);
     return bundle;
   }
 }

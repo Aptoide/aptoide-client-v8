@@ -703,13 +703,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new StoreRepository(storeAccessor);
   }
 
-  @Singleton @Provides PageViewsAnalytics providePageViewsAnalytics(AppEventsLogger appEventsLogger,
-      NavigationTracker navigationTracker) {
-    return new PageViewsAnalytics(appEventsLogger, Analytics.getInstance(), navigationTracker);
+  @Singleton @Provides PageViewsAnalytics providePageViewsAnalytics(
+      AppEventsLogger appEventsLogger) {
+    return new PageViewsAnalytics(appEventsLogger, Analytics.getInstance());
   }
 
-  @Singleton @Provides NavigationTracker provideNavigationTracker() {
-    return new NavigationTracker(new ArrayList<>(), new TrackerFilter());
+  @Singleton @Provides NavigationTracker provideNavigationTracker(
+      PageViewsAnalytics pageViewsAnalytics) {
+    return new NavigationTracker(new ArrayList<>(), new TrackerFilter(), pageViewsAnalytics);
   }
 
   @Singleton @Provides Database provideDatabase() {

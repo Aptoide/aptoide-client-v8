@@ -55,7 +55,6 @@ public class InboxPresenter implements Presenter {
           analytics.sendNotificationTouchEvent(notification.getNotificationCenterUrlTrack());
           navigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
               .getSimpleName()));
-          pageViewsAnalytics.sendPageViewedEvent();
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
