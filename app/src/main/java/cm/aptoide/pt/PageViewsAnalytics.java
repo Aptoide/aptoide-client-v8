@@ -15,14 +15,15 @@ public class PageViewsAnalytics {
     this.analytics = analytics;
   }
 
-  public void sendPageViewedEvent(String currentViewName) {
+  public void sendPageViewedEvent(String currentViewName, String store) {
     analytics.sendEvent(new FacebookEvent(facebook, "Page_View",
-        createEventBundle(currentViewName)));
+        createEventBundle(currentViewName, store)));
   }
 
-  private Bundle createEventBundle(String currentViewName) {
+  private Bundle createEventBundle(String currentViewName, String store) {
     Bundle bundle = new Bundle();
     bundle.putString("fragment", currentViewName);
+    bundle.putString("store", store);
     return bundle;
   }
 }

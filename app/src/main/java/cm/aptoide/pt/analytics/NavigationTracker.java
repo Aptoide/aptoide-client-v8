@@ -3,7 +3,6 @@ package cm.aptoide.pt.analytics;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.store.view.home.HomeFragment;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,13 +23,8 @@ public class NavigationTracker {
   public void registerScreen(ScreenTagHistory screenTagHistory) {
     if (screenTagHistory != null && filter(screenTagHistory)) {
       historyList.add(screenTagHistory);
-      if (screenTagHistory.getFragment()
-          .equals(HomeFragment.class.getSimpleName()) && screenTagHistory.getStore()
-          .equals(ScreenTagHistory.Builder.APTOIDE_MAIN_HISTORY_STORE)) {
-        pageViewsAnalytics.sendPageViewedEvent("Store_Fragment");
-      } else {
-        pageViewsAnalytics.sendPageViewedEvent(screenTagHistory.getFragment());
-      }
+      pageViewsAnalytics.sendPageViewedEvent(screenTagHistory.getFragment(),
+          screenTagHistory.getStore());
       Logger.d(TAG, "VIEW - " + screenTagHistory);
     }
   }
