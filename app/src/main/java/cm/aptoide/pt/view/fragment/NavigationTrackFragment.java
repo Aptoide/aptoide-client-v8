@@ -32,7 +32,7 @@ public abstract class NavigationTrackFragment extends FragmentView {
           ((AptoideApplication) getContext().getApplicationContext()).getAnalyticsManager();
     }
     pageViewsAnalytics =
-        new PageViewsAnalytics(analyticsManager, navigationTracker);
+        new PageViewsAnalytics(analyticsManager);
     getFragmentExtras();
   }
 

@@ -158,10 +158,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
         ((AptoideApplication) getContext().getApplicationContext()).getAnalyticsManager();
     repository = RepositoryFactory.getUpdateRepository(getContext(),
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
-    pageViewsAnalytics = new PageViewsAnalytics(analyticsManager, navigationTracker);
+    pageViewsAnalytics = new PageViewsAnalytics(analyticsManager);
     navigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName()));
-    pageViewsAnalytics.sendPageViewedEvent();
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {

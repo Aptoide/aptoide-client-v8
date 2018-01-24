@@ -23,7 +23,7 @@ public class NavigationTracker {
   public void registerScreen(ScreenTagHistory screenTagHistory) {
     if (screenTagHistory != null && filter(screenTagHistory)) {
       historyList.add(screenTagHistory);
-      pageViewsAnalytics.sendPageViewedEvent(screenTagHistory.getFragment(),
+      pageViewsAnalytics.sendPageViewedEvent(getViewName(true,"PageView"),
           screenTagHistory.getStore());
       Logger.d(TAG, "NavigationTracker size: "
           + historyList.size()

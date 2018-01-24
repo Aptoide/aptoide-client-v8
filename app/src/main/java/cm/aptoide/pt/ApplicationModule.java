@@ -750,7 +750,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides PageViewsAnalytics providePageViewsAnalytics(
       AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
-    return new PageViewsAnalytics(analyticsManager, navigationTracker);
+    return new PageViewsAnalytics(analyticsManager);
   }
 
   @Singleton @Provides NotificationAnalytics provideNotificationAnalytics(

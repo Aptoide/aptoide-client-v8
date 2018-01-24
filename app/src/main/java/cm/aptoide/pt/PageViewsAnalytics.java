@@ -1,6 +1,5 @@
 package cm.aptoide.pt;
 
-import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,18 +8,15 @@ public class PageViewsAnalytics {
 
   public final static String PAGE_VIEW_EVENT = "Page_View";
   private final AnalyticsManager analyticsManager;
-  private final NavigationTracker navigationTracker;
 
-  public PageViewsAnalytics(AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker) {
+  public PageViewsAnalytics(AnalyticsManager analyticsManager) {
     this.analyticsManager = analyticsManager;
-    this.navigationTracker = navigationTracker;
   }
 
-  public void sendPageViewedEvent(String store) {
-    analyticsManager.logEvent(createEventMap(navigationTracker.getCurrentViewName(), store),
+  public void sendPageViewedEvent(String currentViewName, String store) {
+    analyticsManager.logEvent(createEventMap(currentViewName, store),
         PAGE_VIEW_EVENT, AnalyticsManager.Action.CLICK,
-        navigationTracker.getViewName(false, "PageView"));
+        currentViewName);
   }
 
   private Map<String, Object> createEventMap(String currentViewName, String store) {

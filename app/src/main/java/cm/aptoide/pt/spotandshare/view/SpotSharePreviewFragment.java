@@ -57,10 +57,9 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
     getFragmentComponent(savedInstanceState).inject(this);
     showToolbar = getArguments().getBoolean(SHOW_TOOLBAR_KEY);
     spotAndShareAnalytics = new SpotAndShareAnalytics(analyticsManager, navigationTracker);
-    pageViewsAnalytics = new PageViewsAnalytics(analyticsManager, navigationTracker);
+    pageViewsAnalytics = new PageViewsAnalytics(analyticsManager);
     navigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName()));
-    pageViewsAnalytics.sendPageViewedEvent();
     setHasOptionsMenu(true);
   }
 

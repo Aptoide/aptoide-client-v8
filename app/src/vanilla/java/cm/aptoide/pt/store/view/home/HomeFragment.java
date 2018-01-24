@@ -207,7 +207,7 @@ public class HomeFragment extends StoreFragment {
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
 
     pageViewsAnalytics =
-        new PageViewsAnalytics(analyticsManager, navigationTracker);
+        new PageViewsAnalytics(analyticsManager);
 
     searchAnalytics = new SearchAnalytics(analyticsManager, navigationTracker);
 

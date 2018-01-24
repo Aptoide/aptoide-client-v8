@@ -173,7 +173,7 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
         ((ActivityResultNavigator) getContext()).getMyAccountNavigator(),
         application.getNotificationCenter(), application.getDefaultSharedPreferences(),
         application.getNavigationTracker(), application.getNotificationAnalytics(),
-        new PageViewsAnalytics(analyticsManager, navigationTracker)));
+        new PageViewsAnalytics(analyticsManager)));
   }
 
   @Override public int getContentViewId() {
