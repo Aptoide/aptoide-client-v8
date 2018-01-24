@@ -206,7 +206,7 @@ public class HomeFragment extends StoreFragment {
 
     pageViewsAnalytics =
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            analytics, navigationTracker);
+            analytics);
 
     searchAnalytics = new SearchAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
@@ -360,7 +360,6 @@ public class HomeFragment extends StoreFragment {
       drawerLayout.openDrawer(GravityCompat.START);
       drawerAnalytics.drawerOpen();
       navigationTracker.registerScreen(ScreenTagHistory.Builder.build("Drawer"));
-      pageViewsAnalytics.sendPageViewedEvent();
     });
   }
 
