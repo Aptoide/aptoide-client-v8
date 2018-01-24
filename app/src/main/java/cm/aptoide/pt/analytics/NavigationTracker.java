@@ -19,7 +19,10 @@ public class NavigationTracker {
   public void registerScreen(ScreenTagHistory screenTagHistory) {
     if (screenTagHistory != null && filter(screenTagHistory)) {
       historyList.add(screenTagHistory);
-      Logger.d(TAG, "VIEW - " + screenTagHistory);
+      Logger.d(TAG, "NavigationTracker size: "
+          + historyList.size()
+          + "   Registering screen: "
+          + screenTagHistory);
     }
   }
 

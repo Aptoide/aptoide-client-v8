@@ -953,7 +953,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       EventsPersistence persistence, AptoideBiEventService service) {
     return new AptoideBiEventLogger(
         new AptoideBiAnalytics(persistence, service, new CompositeSubscription(),
-            Schedulers.computation(), BuildConfig.ANALYTICS_EVENTS_NUMBER_THRESHOLD,
+            Schedulers.computation(), BuildConfig.ANALYTICS_EVENTS_INITIAL_DELAY_IN_MILLIS,
             BuildConfig.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS));
   }
 

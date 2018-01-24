@@ -16,7 +16,7 @@ import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
@@ -30,12 +30,13 @@ public class ProfileStepOneFragment extends BaseToolbarFragment implements Profi
   public static final String IS_EXTERNAL_LOGIN = "facebook_google";
   @LayoutRes private static final int LAYOUT = R.layout.fragment_profile_step_one;
 
+  @Inject ScreenOrientationManager orientationManager;
+  @Inject AccountNavigator accountNavigator;
+  @Inject AccountAnalytics accountAnalytics;
   private Button continueBtn;
   private Button moreInfoBtn;
   private ProgressDialog waitDialog;
   private boolean externalLogin;
-  private AccountNavigator accountNavigator;
-  @Inject AccountAnalytics accountAnalytics;
 
   public static ProfileStepOneFragment newInstance() {
     return new ProfileStepOneFragment();
@@ -49,10 +50,8 @@ public class ProfileStepOneFragment extends BaseToolbarFragment implements Profi
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
-    final Context context = getContext();
-    accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
-    waitDialog = GenericDialogs.createGenericPleaseWaitDialog(context,
-        context.getString(R.string.please_wait));
+    waitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext(),
+        getContext().getString(R.string.please_wait));
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -93,12 +92,14 @@ public class ProfileStepOneFragment extends BaseToolbarFragment implements Profi
   }
 
   @Override public void showWaitDialog() {
+    orientationManager.lock();
     if (waitDialog != null && !waitDialog.isShowing()) {
       waitDialog.show();
     }
   }
 
   @Override public void dismissWaitDialog() {
+    orientationManager.unlock();
     if (waitDialog != null && waitDialog.isShowing()) {
       waitDialog.dismiss();
     }

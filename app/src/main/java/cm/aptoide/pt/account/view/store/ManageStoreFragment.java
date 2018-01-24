@@ -40,6 +40,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.CompositePresenter;
 import cm.aptoide.pt.store.StoreTheme;
@@ -73,6 +74,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   @Inject ImagePickerPresenter imagePickerPresenter;
   @Inject ManageStorePresenter manageStorePresenter;
   @Inject PhotoFileGenerator photoFileGenerator;
+  @Inject ScreenOrientationManager orientationManager;
   private TextView chooseStoreNameTitle;
   private View selectStoreImageButton;
   private ImageView storeImage;
@@ -252,12 +254,14 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   }
 
   @Override public void showWaitProgressBar() {
+    orientationManager.lock();
     if (waitDialog != null && !waitDialog.isShowing()) {
       waitDialog.show();
     }
   }
 
   @Override public void dismissWaitProgressBar() {
+    orientationManager.unlock();
     if (waitDialog != null && waitDialog.isShowing()) {
       waitDialog.dismiss();
     }
