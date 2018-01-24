@@ -6,7 +6,7 @@ import java.util.List;
 
 class CommentsSorter {
   List<Comment> sort(List<Comment> comments) {
-    List<Comment> sortedComments = new ArrayList<Comment>();
+    List<Comment> sortedComments = new ArrayList<>(comments.size());
     for (Comment comment : comments) {
       Comment.Parent parent = comment.getParent();
       if (parent != null) { // is child
