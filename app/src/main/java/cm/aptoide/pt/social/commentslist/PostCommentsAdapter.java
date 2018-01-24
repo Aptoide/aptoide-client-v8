@@ -71,14 +71,17 @@ public class PostCommentsAdapter extends RecyclerView.Adapter<PostCommentViewHol
     notifyDataSetChanged();
   }
 
-  public void addComments(List<Comment> comments) {
-    this.comments.addAll(comments);
-    notifyDataSetChanged();
+  public void addComments(List<Comment> newComments) {
+    int commentsSize = this.comments.size();
+    this.comments.addAll(newComments);
+    notifyItemRangeInserted(commentsSize, newComments.size());
   }
 
   void addLoadMoreProgress() {
-    this.comments.add(progressComment);
-    notifyDataSetChanged();
+    if (!comments.contains(progressComment)) {
+      this.comments.add(progressComment);
+      notifyItemInserted(comments.size() - 1);
+    }
   }
 
   void removeLoadMoreProgress() {
@@ -98,6 +101,6 @@ public class PostCommentsAdapter extends RecyclerView.Adapter<PostCommentViewHol
       }
     }
     this.comments.add(position, newComment);
-    notifyDataSetChanged();
+    notifyItemInserted(position);
   }
 }

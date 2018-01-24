@@ -80,6 +80,7 @@ public class PostCommentsPresenter implements Presenter {
             .observeOn(viewScheduler)
             .doOnNext(__ -> view.showLoadMoreProgressIndicator())
             .flatMapSingle(__ -> comments.getNextComments(postId))
+            .filter(comments -> !comments.isEmpty())
             .observeOn(viewScheduler)
             .doOnNext(comments -> view.showMoreComments(comments))
             .doOnNext(__ -> view.hideLoadMoreProgressIndicator())
