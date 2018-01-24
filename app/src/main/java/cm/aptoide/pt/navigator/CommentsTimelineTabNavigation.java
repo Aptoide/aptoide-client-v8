@@ -22,9 +22,7 @@ public class CommentsTimelineTabNavigation implements TabNavigation {
   }
 
   public CommentsTimelineTabNavigation(String postId, boolean error) {
-    this.postId = postId;
-    this.error = error;
-    this.commentBody = "";
+    this("", postId, error);
   }
 
   @Override public Bundle getBundle() {
@@ -32,7 +30,6 @@ public class CommentsTimelineTabNavigation implements TabNavigation {
     bundle.putString(COMMENT_KEY, commentBody);
     bundle.putString(POST_ID, postId);
     bundle.putBoolean(ERROR_STATUS, error);
-
 
     return bundle;
   }
