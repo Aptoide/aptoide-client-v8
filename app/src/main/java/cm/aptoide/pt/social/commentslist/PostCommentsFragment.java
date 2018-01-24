@@ -120,7 +120,8 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
     genericError = view.findViewById(R.id.generic_error);
     list.setAdapter(adapter);
-    list.addItemDecoration(new ItemDividerDecoration(this));
+    list.addItemDecoration(new ItemDividerDecoration(getContext().getResources()
+        .getDisplayMetrics()));
     layoutManager = new LinearLayoutManager(getContext());
     list.setLayoutManager(layoutManager);
     swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
