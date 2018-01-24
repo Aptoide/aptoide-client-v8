@@ -38,7 +38,7 @@ public class AccountAnalytics {
   public static final String GENERAL_ERROR = "General Error";
   public static final String SUCCESS = "Success";
   public static final String WEB_ERROR = "Web";
-  public static final String UNKNOWN_STATUS_CODE = "12501";
+  public static final int UNKNOWN_STATUS_CODE = 12501;
   private static final String STATUS = "Status";
   private static final String LOGIN_EVENT_NAME = "Account_Login_Screen";
   private static final String SIGN_UP_EVENT_NAME = "Account_Signup_Screen";
@@ -139,7 +139,7 @@ public class AccountAnalytics {
   private void sendGoogleLoginFailEvent(Throwable exception) {
     if (exception instanceof GoogleSignUpException) {
       GoogleSignUpException googleSignUpException = (GoogleSignUpException) exception;
-      if (googleSignUpException.getStatusCode() == 12501) {
+      if (googleSignUpException.getStatusCode() == UNKNOWN_STATUS_CODE) {
         sendEvents(LOGIN_EVENT_NAME, LoginMethod.GOOGLE, SignUpLoginStatus.INVALID, SDK_ERROR,
             LoginMethod.GOOGLE.toString(), googleSignUpException.getError());
       } else {
