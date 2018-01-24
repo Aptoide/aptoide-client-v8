@@ -110,8 +110,6 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
     sharedPreferences =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     replyEventPublishSubject = PublishSubject.create();
-    adapter =
-        new PostCommentsAdapter(new ArrayList<>(), new ProgressComment(), replyEventPublishSubject);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -119,6 +117,8 @@ public class PostCommentsFragment extends BaseToolbarFragment implements PostCom
     list = (RecyclerView) view.findViewById(R.id.recycler_view);
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
     genericError = view.findViewById(R.id.generic_error);
+    adapter =
+        new PostCommentsAdapter(new ArrayList<>(), new ProgressComment(), replyEventPublishSubject);
     list.setAdapter(adapter);
     list.addItemDecoration(new ItemDividerDecoration(getContext().getResources()
         .getDisplayMetrics()));
