@@ -51,9 +51,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 
             ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker()
                 .registerScreen(ScreenTagHistory.Builder.build(currentView, tag, storeContext));
-
-            ((AptoideApplication) getContext().getApplicationContext()).getPageViewsAnalytics()
-                .sendPageViewedEvent();
           }
         }
       }
