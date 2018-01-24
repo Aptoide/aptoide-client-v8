@@ -237,7 +237,6 @@ public class CommentDialogFragment
             if (commentOnErrorCallbackContract != null) {
               commentOnErrorCallbackContract.onError(idAsString);
             }
-            //logAnalytics(false);
             return false;
           }
           disableError();
@@ -246,7 +245,6 @@ public class CommentDialogFragment
         .flatMap(inputText -> {
           if (commentBeforeSubmissionCallback != null) {
             commentBeforeSubmissionCallback.onCommentBeforeSubmission(inputText);
-            //logAnalytics(true);
             this.dismiss();
             return Observable.empty();
           }
@@ -259,7 +257,6 @@ public class CommentDialogFragment
                 if (commentOnErrorCallbackContract != null) {
                   commentOnErrorCallbackContract.onError(idAsString);
                 }
-                //logAnalytics(false);
                 ShowMessage.asSnack(this, R.string.error_occured);
               })
               .retry()
@@ -268,7 +265,6 @@ public class CommentDialogFragment
         .subscribe(resp -> {
           if (resp.isOk()) {
             this.dismiss();
-            //logAnalytics(true);
             if (commentDialogCallbackContract != null) {
               commentDialogCallbackContract.okSelected(resp, idAsLong, previousCommentId,
                   idAsString);
@@ -278,23 +274,15 @@ public class CommentDialogFragment
             if (commentOnErrorCallbackContract != null) {
               commentOnErrorCallbackContract.onError(idAsString);
             }
-            //logAnalytics(false);
           }
         }, throwable -> {
           if (commentOnErrorCallbackContract != null) {
             commentOnErrorCallbackContract.onError(idAsString);
           }
-          //logAnalytics(false);
           CrashReport.getInstance()
               .log(throwable);
         });
   }
-
-  //private void logAnalytics(boolean success) {
-  //  if (commentType.equals(CommentType.TIMELINE)) {
-  //    timelineAnalytics.sendCommentCompleted(success);
-  //  }
-  //}
 
   private void disableError() {
     textInputLayout.setErrorEnabled(false);
