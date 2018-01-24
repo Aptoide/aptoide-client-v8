@@ -20,7 +20,7 @@ public class PageViewsAnalytics {
   public void sendPageViewedEvent() {
     analyticsManager.logEvent(createEventMap(navigationTracker.getCurrentViewName()),
         PAGE_VIEW_EVENT, AnalyticsManager.Action.CLICK,
-        navigationTracker.getViewName(true, "PageView"));
+        navigationTracker.getViewName(false, "PageView"));
   }
 
   private Map<String, Object> createEventMap(String currentViewName) {

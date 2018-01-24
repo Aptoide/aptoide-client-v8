@@ -134,7 +134,9 @@ public class AccountAnalytics {
     map.put(LOGIN_METHOD, loginMethod.getMethod());
     map.put(STATUS, loginStatus.getStatus());
     map.put(STATUS_DETAIL, statusDetail);
-    map.put(STATUS_CODE, statusCode);
+    if(statusCode != null){
+      map.put(STATUS_CODE, statusCode);
+    }
     if (statusDescription != null) {
       map.put(STATUS_DESCRIPTION, statusDescription);
     }

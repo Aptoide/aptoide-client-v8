@@ -214,7 +214,7 @@ public class TimelineAnalytics {
 
   public void sendTimelineTabOpened() {
     Map<String, Object> map = new HashMap<>();
-    analyticsManager.logEvent(map, TIMELINE_OPENED, AnalyticsManager.Action.CLICK, "STORE");
+    analyticsManager.logEvent(map, TIMELINE_OPENED, AnalyticsManager.Action.CLICK, getViewName(false));
     map.put(PREVIOUS_CONTEXT, getViewName(false));
     if (version != null) {
       map.put(TIMELINE_VERSION, version);
@@ -790,7 +790,7 @@ public class TimelineAnalytics {
 
   private void flushTimelineTabOpenEvents(Map<String, Object> data) {
     analyticsManager.logEvent(decorateWithScreenHistory(data), OPEN_TIMELINE_EVENT,
-        AnalyticsManager.Action.CLICK, getViewName(true));
+        AnalyticsManager.Action.CLICK, getViewName(false));
   }
 
   private String getViewName(boolean isCurrent) {

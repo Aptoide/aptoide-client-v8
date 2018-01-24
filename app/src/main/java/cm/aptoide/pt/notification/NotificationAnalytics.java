@@ -14,7 +14,6 @@ import java.util.Map;
 
 public class NotificationAnalytics {
 
-  public static final String NOTIFICATION_TOUCH = "NOTIFICATION_TOUCH";
   public static final String NOTIFICATION_RECEIVED = "Aptoide_Push_Notification_Received";
   public static final String NOTIFICATION_PRESSED = "Aptoide_Push_Notification_Click";
   public static final String NOTIFICATION_EVENT_NAME = "NOTIFICATION";
