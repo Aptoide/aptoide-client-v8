@@ -3,7 +3,10 @@ package cm.aptoide.pt.app;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
+import cm.aptoide.pt.download.DownloadAnalytics;
+import cm.aptoide.pt.install.InstallAnalytics;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,10 +27,15 @@ public class AppViewAnalytics {
   private static final String APPLICATION_PUBLISHER = "Application Publisher";
   private static final String ACTION = "Action";
   private static final String DEFAULT_CONTEXT = "AppView";
+  private final DownloadAnalytics downloadAnalytics;
+  private final InstallAnalytics installAnalytics;
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
 
-  public AppViewAnalytics(AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
+  public AppViewAnalytics(DownloadAnalytics downloadAnalytics, InstallAnalytics installAnalytics,
+      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
+    this.downloadAnalytics = downloadAnalytics;
+    this.installAnalytics = installAnalytics;
     this.analyticsManager = analyticsManager;
     this.navigationTracker = navigationTracker;
   }
@@ -212,5 +220,11 @@ public class AppViewAnalytics {
 
   private String getViewName(boolean isCurrent) {
     return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
+  }
+
+  public void setupDownloadEvents(Download download, int campaignId, String abTestGroup,
+      AnalyticsManager.Action action) {
+    downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
+        DownloadAnalytics.AppContext.APPVIEW, action);
   }
 }

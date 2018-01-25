@@ -29,7 +29,6 @@ import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.app.AppBoughtReceiver;
 import cm.aptoide.pt.app.AppViewAnalytics;
@@ -48,8 +47,6 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.download.DownloadCompleteAnalytics;
-import cm.aptoide.pt.download.DownloadEvent;
-import cm.aptoide.pt.download.DownloadEventConverter;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.DownloadInstallBaseEvent;
 import cm.aptoide.pt.download.InstallEvent;
@@ -99,7 +96,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
   private App trustedVersion;
   private InstallManager installManager;
   private boolean isUpdate;
-  private DownloadEventConverter downloadInstallEventConverter;
   private Analytics analytics;
   private InstallEventConverter installConverter;
   private AptoideAccountManager accountManager;
@@ -170,22 +166,14 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     BodyInterceptor<BaseBody> bodyInterceptor =
         application.getAccountSettingsBodyInterceptorPoolV7();
     final TokenInvalidator tokenInvalidator = application.getTokenInvalidator();
-    downloadInstallEventConverter =
-        new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            BuildConfig.APPLICATION_ID, sharedPreferences,
-            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
-            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-            application.getNavigationTracker());
     installConverter =
         new InstallEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
             BuildConfig.APPLICATION_ID, sharedPreferences,
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
             application.getNavigationTracker());
-    AnalyticsManager analyticsManager = application.getAnalyticsManager();
-    NavigationTracker navigationTracker = application.getNavigationTracker();
     analytics = Analytics.getInstance();
-    appViewAnalytics = new AppViewAnalytics(analyticsManager, navigationTracker);
+    appViewAnalytics = displayable.getAppViewAnalytics();
     downloadFactory = displayable.getDownloadFactory();
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
@@ -466,13 +454,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
   }
 
   private void setupEvents(Download download) {
-    DownloadEvent report =
-        downloadInstallEventConverter.create(download, DownloadEvent.Action.CLICK,
-            DownloadEvent.AppContext.APPVIEW);
-    report.setCampaignId(campaignId);
-    report.setAbTestingGroup(abTestGroup);
-
-    analytics.save(report.getPackageName() + report.getVersionCode(), report);
+    appViewAnalytics.setupDownloadEvents(download, campaignId, abTestGroup,
+        AnalyticsManager.Action.CLICK);
 
     InstallEvent installEvent =
         installConverter.create(download, DownloadInstallBaseEvent.Action.CLICK,

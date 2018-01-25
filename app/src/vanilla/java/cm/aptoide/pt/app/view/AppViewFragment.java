@@ -81,6 +81,7 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadCompleteAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.AppAction;
@@ -159,6 +160,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private final String key_uname = "uname";
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
+  @Inject DownloadAnalytics downloadAnalytics;
   private AppViewModel appViewModel;
   private AppViewHeader header;
   private InstallManager installManager;
@@ -391,7 +393,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             .getApplicationContext()).getDatabase(), StoredMinimalAd.class);
     final SpotAndShareAnalytics spotAndShareAnalytics =
         new SpotAndShareAnalytics(analyticsManager, navigationTracker);
-    appViewAnalytics = new AppViewAnalytics(analyticsManager, navigationTracker);
+    appViewAnalytics = new AppViewAnalytics(downloadAnalytics, installAnalytics, analyticsManager,
+        navigationTracker);
     appViewSimilarAppAnalytics =
         new AppViewSimilarAppAnalytics(analyticsManager, navigationTracker);
 

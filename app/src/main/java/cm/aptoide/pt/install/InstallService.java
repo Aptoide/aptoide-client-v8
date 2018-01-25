@@ -26,6 +26,7 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.Result;
+import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadEvent;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
@@ -67,6 +68,7 @@ public class InstallService extends BaseService {
   private Map<String, Integer> installerTypeMap;
   private Analytics analytics;
   private String marketName;
+  @Inject DownloadAnalytics downloadAnalytics;
 
   @Override public void onCreate() {
     super.onCreate();
@@ -147,16 +149,13 @@ public class InstallService extends BaseService {
     return downloadManager.getDownload(md5)
         .first()
         .doOnNext(download -> initInstallationProgress(download))
-        .flatMap(download -> downloadManager.startDownload(download))
+        .flatMap(download -> downloadManager.startDownload(download)
+            .first())
+        .flatMap(download -> downloadManager.getDownload(download.getMd5()))
         .doOnNext(download -> {
           stopOnDownloadError(download.getOverallDownloadStatus());
           if (download.getOverallDownloadStatus() == Download.PROGRESS) {
-            DownloadEvent report =
-                (DownloadEvent) analytics.get(download.getPackageName() + download.getVersionCode(),
-                    DownloadEvent.class);
-            if (report != null) {
-              report.setDownloadHadProgress(true);
-            }
+            downloadAnalytics.startProgress(download);
           }
         })
         .first(download -> download.getOverallDownloadStatus() == Download.COMPLETED)

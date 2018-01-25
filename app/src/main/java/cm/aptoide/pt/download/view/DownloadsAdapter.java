@@ -9,7 +9,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
-import cm.aptoide.pt.download.DownloadEventConverter;
+import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.InstallEventConverter;
 import cm.aptoide.pt.download.view.active.ActiveDownloadDisplayable;
 import cm.aptoide.pt.download.view.active.ActiveDownloadWidget;
@@ -33,7 +33,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
   private final InstallManager installManager;
   private final Analytics analytics;
   private final InstallEventConverter installConverter;
-  private final DownloadEventConverter downloadConverter;
+  private final DownloadAnalytics downloadAnalytics;
   private final List<Install> activeDownloads;
   private final List<Install> standByDownloads;
   private final List<Install> completedDownloads;
@@ -42,7 +42,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
   private final NavigationTracker navigationTracker;
 
   public DownloadsAdapter(InstallEventConverter installConverter,
-      DownloadEventConverter downloadConverter, InstallManager installManager, Analytics analytics,
+      DownloadAnalytics downloadAnalytics, InstallManager installManager, Analytics analytics,
       Resources resources, StoreTabNavigator storeTabNavigator,
       NavigationTracker navigationTracker) {
     this.storeTabNavigator = storeTabNavigator;
@@ -53,7 +53,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
     this.installManager = installManager;
     this.analytics = analytics;
     this.installConverter = installConverter;
-    this.downloadConverter = downloadConverter;
+    this.downloadAnalytics = downloadAnalytics;
     this.resources = resources;
   }
 
@@ -238,13 +238,13 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
 
   private void bindStandByDownload(Widget holder, Install installation) {
     holder.internalBindView(
-        new CompletedDownloadDisplayable(installation, installManager, downloadConverter, analytics,
+        new CompletedDownloadDisplayable(installation, installManager, downloadAnalytics, analytics,
             installConverter));
   }
 
   private void bindCompletedDownload(Widget holder, Install installation) {
     holder.internalBindView(
-        new CompletedDownloadDisplayable(installation, installManager, downloadConverter, analytics,
+        new CompletedDownloadDisplayable(installation, installManager, downloadAnalytics, analytics,
             installConverter));
   }
 

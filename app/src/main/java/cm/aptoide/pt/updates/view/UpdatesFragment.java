@@ -23,7 +23,7 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.download.DownloadEventConverter;
+import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.InstallEventConverter;
 import cm.aptoide.pt.install.InstallManager;
@@ -44,6 +44,7 @@ import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
@@ -63,7 +64,6 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
   private InstallManager installManager;
   private Analytics analytics;
-  private DownloadEventConverter downloadInstallEventConverter;
   private InstallEventConverter installConverter;
 
   private InstalledRepository installedRepository;
@@ -81,6 +81,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   private StoreTabNavigator storeTabNavigator;
   private SharedPreferences sharedPreferences;
   private NavigationTracker navigationTracker;
+  @Inject DownloadAnalytics downloadAnalytics;
 
   @NonNull public static UpdatesFragment newInstance() {
     return new UpdatesFragment();
@@ -162,6 +163,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     marketName = application.getMarketName();
@@ -174,12 +176,6 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     tokenInvalidator = application.getTokenInvalidator();
     sharedPreferences = application.getDefaultSharedPreferences();
     navigationTracker = application.getNavigationTracker();
-    downloadInstallEventConverter =
-        new DownloadEventConverter(bodyInterceptorV7, httpClient, converterFactory,
-            tokenInvalidator, BuildConfig.APPLICATION_ID, sharedPreferences,
-            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
-            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-            application.getNavigationTracker());
     installConverter =
         new InstallEventConverter(bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator,
             BuildConfig.APPLICATION_ID, application.getDefaultSharedPreferences(),
@@ -199,12 +195,12 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     if (updateList.size() > 0) {
       updatesDisplayablesList.add(new UpdatesHeaderDisplayable(installManager,
           AptoideUtils.StringU.getResString(R.string.updates, getContext().getResources()),
-          analytics, downloadInstallEventConverter, installConverter));
+          analytics, downloadAnalytics, installConverter));
 
       for (Update update : updateList) {
         updatesDisplayablesList.add(
             UpdateDisplayable.newInstance(update, installManager, new DownloadFactory(marketName),
-                analytics, downloadInstallEventConverter, installConverter, installedRepository,
+                analytics, downloadAnalytics, installConverter, installedRepository,
                 new PermissionManager()));
       }
     }

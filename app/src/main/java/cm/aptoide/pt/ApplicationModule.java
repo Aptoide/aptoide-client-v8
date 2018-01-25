@@ -250,8 +250,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides DownloadAnalytics provideDownloadAnalytics(
       DownloadCompleteAnalytics downloadCompleteAnalytics, AnalyticsManager analyticsManager,
       NavigationTracker navigationTracker) {
-    return new DownloadAnalytics(Analytics.getInstance(), downloadCompleteAnalytics,
-        navigationTracker, analyticsManager);
+    return new DownloadAnalytics(
+        ((ConnectivityManager) application.getSystemService(Context.CONNECTIVITY_SERVICE)),
+        ((TelephonyManager) application.getSystemService(Context.TELEPHONY_SERVICE)),
+        downloadCompleteAnalytics, navigationTracker, analyticsManager);
   }
 
   @Singleton @Provides DownloadCompleteAnalytics provideDownloadCompleteAnalytics(
@@ -268,7 +270,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     final OkHttpClient.Builder httpClientBuilder =
         new OkHttpClient.Builder().addInterceptor(userAgentInterceptor)
             .addInterceptor(new PaidAppsDownloadInterceptor(authenticationPersistence))
-            .addInterceptor(new DownloadMirrorEventInterceptor(Analytics.getInstance()))
+            .addInterceptor(new DownloadMirrorEventInterceptor(downloadAnalytics))
             .connectTimeout(20, TimeUnit.SECONDS)
             .writeTimeout(20, TimeUnit.SECONDS)
             .readTimeout(20, TimeUnit.SECONDS);
@@ -1007,7 +1009,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
             TimelineAnalytics.SHARE, TimelineAnalytics.SHARE_SEND, TimelineAnalytics.COMMENT_SEND,
             TimelineAnalytics.FAB, TimelineAnalytics.SCROLLING_EVENT,
             TimelineAnalytics.OPEN_TIMELINE_EVENT, AccountAnalytics.APTOIDE_EVENT_NAME,
-            DownloadAnalytics.DOWNLOAD_EVENT))
+            DownloadAnalytics.DOWNLOAD_EVENT, DownloadAnalytics.DOWNLOAD_EVENT_NAME))
         .addLogger(facebookEventLogger,
             Arrays.asList(PostAnalytics.OPEN_EVENT_NAME, PostAnalytics.NEW_POST_EVENT_NAME,
                 PostAnalytics.POST_COMPLETE, InstallAnalytics.APPLICATION_INSTALL,

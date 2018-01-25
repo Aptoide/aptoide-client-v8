@@ -21,7 +21,7 @@ import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.download.DownloadEventConverter;
+import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.InstallEventConverter;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallManager;
@@ -33,15 +33,16 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import java.util.List;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
 public class DownloadsFragment extends NavigationTrackFragment implements DownloadsView {
 
+  @Inject DownloadAnalytics downloadAnalytics;
   private DownloadsAdapter adapter;
   private View noDownloadsView;
   private InstallEventConverter installConverter;
-  private DownloadEventConverter downloadConverter;
   private InstallManager installManager;
   private Analytics analytics;
   private StoreTabNavigator storeTabNavigator;
@@ -53,6 +54,7 @@ public class DownloadsFragment extends NavigationTrackFragment implements Downlo
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
     final OkHttpClient httpClient =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     final BodyInterceptor<BaseBody> baseBodyInterceptorV7 =
@@ -60,16 +62,10 @@ public class DownloadsFragment extends NavigationTrackFragment implements Downlo
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     final TokenInvalidator tokenInvalidator =
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
-    navigationTracker = ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
+    navigationTracker =
+        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
     installConverter =
         new InstallEventConverter(baseBodyInterceptorV7, httpClient, converterFactory,
-            tokenInvalidator, BuildConfig.APPLICATION_ID,
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
-            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-            ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker());
-    downloadConverter =
-        new DownloadEventConverter(baseBodyInterceptorV7, httpClient, converterFactory,
             tokenInvalidator, BuildConfig.APPLICATION_ID,
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
@@ -106,7 +102,7 @@ public class DownloadsFragment extends NavigationTrackFragment implements Downlo
         new DividerItemDecoration(getContext(), pixelDimen, DividerItemDecoration.ALL);
     downloadsRecyclerView.addItemDecoration(decor);
 
-    adapter = new DownloadsAdapter(installConverter, downloadConverter, installManager, analytics,
+    adapter = new DownloadsAdapter(installConverter, downloadAnalytics, installManager, analytics,
         getContext().getResources(), storeTabNavigator, navigationTracker);
     downloadsRecyclerView.setAdapter(adapter);
     noDownloadsView = view.findViewById(R.id.no_apps_downloaded);

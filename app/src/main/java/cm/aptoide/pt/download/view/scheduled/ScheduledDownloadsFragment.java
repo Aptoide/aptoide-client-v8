@@ -21,6 +21,7 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
@@ -30,8 +31,7 @@ import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.download.DownloadEvent;
-import cm.aptoide.pt.download.DownloadEventConverter;
+import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.DownloadInstallBaseEvent;
 import cm.aptoide.pt.download.InstallEvent;
@@ -49,6 +49,7 @@ import cm.aptoide.pt.view.recycler.BaseAdapter;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
@@ -61,11 +62,11 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
       "aptoide://cm.aptoide.pt/" + SCHEDULE_DOWNLOADS + "?openMode=AskInstallAll";
   public static final String OPEN_MODE = "openMode";
   private static final String TAG = ScheduledDownloadsFragment.class.getSimpleName();
+  @Inject DownloadAnalytics downloadAnalytics;
   private InstallManager installManager;
   private TextView emptyData;
   private ScheduledDownloadRepository scheduledDownloadRepository;
   private OpenMode openMode = OpenMode.normal;
-  private DownloadEventConverter downloadConverter;
   private Analytics analytics;
   private InstallEventConverter installConverter;
   private BodyInterceptor<BaseBody> bodyInterceptor;
@@ -93,6 +94,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     marketName = application.getMarketName();
@@ -102,12 +104,6 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
     bodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();
     installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
     final TokenInvalidator tokenInvalidator = application.getTokenInvalidator();
-    downloadConverter =
-        new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            BuildConfig.APPLICATION_ID, application.getDefaultSharedPreferences(),
-            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
-            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-            application.getNavigationTracker());
     installConverter =
         new InstallEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
             BuildConfig.APPLICATION_ID, application.getDefaultSharedPreferences(),
@@ -190,8 +186,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
             .toObservable()
             .flatMap(downloadProgress -> installManager.getInstall(downloadItem.getMd5(),
                 downloadItem.getPackageName(), downloadItem.getVersionCode()))
-            .doOnSubscribe(() -> setupEvents(downloadItem,
-                isStartedAutomatic ? DownloadEvent.Action.AUTO : DownloadEvent.Action.CLICK))
+            .doOnSubscribe(() -> setupEvents(downloadItem, isStartedAutomatic))
             .filter(installationProgress -> installationProgress.getState()
                 == Install.InstallationStatus.INSTALLED)
             .doOnNext(success -> scheduledDownloadRepository.deleteScheduledDownload(
@@ -233,10 +228,10 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
     //compositeSubscription.add(subscription);
   }
 
-  public void setupEvents(Download download, DownloadEvent.Action action) {
-    DownloadEvent report =
-        downloadConverter.create(download, action, DownloadEvent.AppContext.SCHEDULED);
-    analytics.save(download.getPackageName() + download.getVersionCode(), report);
+  public void setupEvents(Download download, boolean action) {
+    downloadAnalytics.downloadStartEvent(download,
+        action ? AnalyticsManager.Action.AUTO : AnalyticsManager.Action.CLICK,
+        DownloadAnalytics.AppContext.SCHEDULED);
 
     InstallEvent installEvent =
         installConverter.create(download, DownloadInstallBaseEvent.Action.CLICK,
