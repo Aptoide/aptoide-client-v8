@@ -1135,7 +1135,7 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> timelineNavigation.commentNavigation()
             .observeOn(viewScheduler)
             .doOnNext(commentWrapper -> {
-              if (commentWrapper.getError()) {
+              if (commentWrapper.hasError()) {
                 view.sendCommentErrorAnalytics(commentWrapper.getPostId());
               } else {
                 view.sendCommentSuccessAnalytics(commentWrapper.getPostId());

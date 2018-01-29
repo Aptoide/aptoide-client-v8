@@ -23,7 +23,7 @@ public class PostCommentDataWrapper {
     return postId;
   }
 
-  public boolean getError() {
+  public boolean hasError() {
     return error;
   }
 }
