@@ -592,6 +592,8 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
   }
 
   @Override public void onDestroyView() {
+    allStoresResultList.clearAnimation();
+    followedStoresResultList.clearAnimation();
     setupTheme();
     super.onDestroyView();
   }
