@@ -742,7 +742,6 @@ public class TimelineAnalytics {
 
     HashMap<String, Object> data = new HashMap<>();
     HashMap<String, Object> result = new HashMap<>();
-    HashMap<String, Object> error = new HashMap<>();
     String previousContext = null;
     String store = null;
     data.put("card_type", post.getType());
@@ -765,7 +764,6 @@ public class TimelineAnalytics {
 
     return data;
   }
-
 
   public HashMap<String, Object> parseEventData(CardTouchEvent event, boolean status,
       EventErrorHandler.GenericErrorEvent errorCode) {
@@ -881,7 +879,9 @@ public class TimelineAnalytics {
       data.put("source", SOURCE_APTOIDE);
       specific.put("app", card.getPackageName());
       data.put("specific", specific);
-    } else if (postType.equals(CardType.STORE) || postType.equals(CardType.SOCIAL_STORE) || postType.equals(CardType.AGGREGATED_SOCIAL_STORE)) {
+    } else if (postType.equals(CardType.STORE)
+        || postType.equals(CardType.SOCIAL_STORE)
+        || postType.equals(CardType.AGGREGATED_SOCIAL_STORE)) {
       data.put("source", SOURCE_APTOIDE);
     }
     return data;

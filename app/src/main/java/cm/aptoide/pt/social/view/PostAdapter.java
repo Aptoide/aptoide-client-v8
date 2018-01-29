@@ -134,7 +134,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
     for (Post testPost : posts) {
       if (testPost.getCardId()
           .equals(postId)) {
-        result = posts.indexOf(testPost);
+        return posts.indexOf(testPost);
       }
     }
     return result;
