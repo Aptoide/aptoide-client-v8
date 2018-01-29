@@ -1,5 +1,6 @@
 package cm.aptoide.pt.analytics.analytics;
 
+import cm.aptoide.pt.logger.Logger;
 import com.flurry.android.FlurryAgent;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +20,16 @@ public class FlurryEventLogger implements EventLogger {
     } else {
       FlurryAgent.logEvent(eventName);
     }
+    Logger.d(TAG, "log() called with: "
+        + "eventName = ["
+        + eventName
+        + "], data = ["
+        + data
+        + "], action = ["
+        + action
+        + "], context = ["
+        + context
+        + "]");
   }
 
   @Override public void setup() {

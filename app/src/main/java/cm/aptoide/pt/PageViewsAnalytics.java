@@ -13,10 +13,9 @@ public class PageViewsAnalytics {
     this.analyticsManager = analyticsManager;
   }
 
-  public void sendPageViewedEvent(String currentViewName, String store) {
-    analyticsManager.logEvent(createEventMap(currentViewName, store),
-        PAGE_VIEW_EVENT, AnalyticsManager.Action.CLICK,
-        currentViewName);
+  public void sendPageViewedEvent(String currentViewName, String previousViewName, String store) {
+    analyticsManager.logEvent(createEventMap(currentViewName, store), PAGE_VIEW_EVENT,
+        AnalyticsManager.Action.CLICK, previousViewName);
   }
 
   private Map<String, Object> createEventMap(String currentViewName, String store) {

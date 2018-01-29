@@ -1,6 +1,7 @@
 package cm.aptoide.pt.analytics.analytics;
 
 import android.os.Bundle;
+import cm.aptoide.pt.logger.Logger;
 import com.facebook.appevents.AppEventsLogger;
 import java.util.Map;
 
@@ -24,6 +25,16 @@ public class FacebookEventLogger implements EventLogger {
     } else {
       facebook.logEvent(eventName);
     }
+    Logger.d(TAG, "log() called with: "
+        + "eventName = ["
+        + eventName
+        + "], data = ["
+        + data
+        + "], action = ["
+        + action
+        + "], context = ["
+        + context
+        + "]");
   }
 
   @Override public void setup() {
