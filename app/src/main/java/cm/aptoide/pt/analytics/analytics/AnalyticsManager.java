@@ -40,10 +40,6 @@ public class AnalyticsManager {
     }
   }
 
-  public void logEvent(Event event) {
-    logEvent(event.getData(), event.getEventName(), event.getAction(), event.getContext());
-  }
-
   public void logEvent(@NonNull String url) {
     knockEventLogger.log(url);
   }

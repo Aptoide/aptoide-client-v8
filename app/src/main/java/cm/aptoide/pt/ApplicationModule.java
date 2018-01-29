@@ -62,6 +62,7 @@ import cm.aptoide.pt.analytics.analytics.RealmEventPersistence;
 import cm.aptoide.pt.analytics.analytics.RetrofitAptoideBiService;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
+import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
@@ -1047,7 +1048,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
                 AccountAnalytics.PROFILE_SETTINGS, AccountAnalytics.ENTRY,
                 DeepLinkAnalytics.FACEBOOK_APP_LAUNCH, AppViewAnalytics.CLICK_INSTALL,
                 AnalyticsManager.FIRST_INSTALL_POP_UP, AnalyticsManager.FIRST_INSTALL_CLOSE_WINDOW,
-                AnalyticsManager.FIRST_INSTALL_START_DOWNLOAD))
+                AnalyticsManager.FIRST_INSTALL_START_DOWNLOAD, BillingAnalytics.PAYMENT_AUTH,
+                BillingAnalytics.PAYMENT_LOGIN, BillingAnalytics.PAYMENT_POPUP))
         .addLogger(fabricEventLogger, Arrays.asList(DownloadCompleteAnalytics.EVENT_NAME,
             SpotAndShareAnalytics.EVENT_NAME_SPOT_SHARE_PERMISSIONS,
             InstallFabricEvents.ROOT_V2_COMPLETE, InstallFabricEvents.ROOT_V2_START,
