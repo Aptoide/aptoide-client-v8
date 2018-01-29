@@ -234,6 +234,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
       pagerSlidingTabStrip = null;
     }
     viewPager.removeCallbacks(registerViewpagerCurrentItem);
+    viewPager.removeOnPageChangeListener(pageChangeListener);
     super.onDestroyView();
   }
 
