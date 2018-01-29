@@ -46,7 +46,7 @@ public class AddressBookAnalytics {
   }
 
   public void sendHowAptoideUsesYourDataEvent() {
-    analyticsManager.logEvent(new HashMap<>(), FOLLOW_FRIENDS_HOW_TO, AnalyticsManager.Action.CLICK,
+    analyticsManager.logEvent(null, FOLLOW_FRIENDS_HOW_TO, AnalyticsManager.Action.CLICK,
         getViewName(true));
   }
 
@@ -82,7 +82,7 @@ public class AddressBookAnalytics {
   }
 
   public void sendShareYourPhoneSuccessEvent() {
-    analyticsManager.logEvent(new HashMap<>(), FOLLOW_FRIENDS_SET_MY_PHONENUMBER,
+    analyticsManager.logEvent(null, FOLLOW_FRIENDS_SET_MY_PHONENUMBER,
         AnalyticsManager.Action.CLICK, getViewName(true));
   }
 

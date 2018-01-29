@@ -30,7 +30,7 @@ public class AppViewSimilarAppAnalytics {
 
   public void similarAppsIsShown() {
 
-    analyticsManager.logEvent(new HashMap<>(), APP_VIEW_SIMILAR_APP_SLIDE_IN,
+    analyticsManager.logEvent(null, APP_VIEW_SIMILAR_APP_SLIDE_IN,
         AnalyticsManager.Action.CLICK, getViewName(true));
     Logger.w(TAG, "Facebook Event: " + APP_VIEW_SIMILAR_APP_SLIDE_IN);
   }

@@ -23,7 +23,7 @@ public class DrawerAnalytics {
   }
 
   public void drawerOpen() {
-    analyticsManager.logEvent(new HashMap<>(), DRAWER_OPEN_EVENT, AnalyticsManager.Action.CLICK,
+    analyticsManager.logEvent(null, DRAWER_OPEN_EVENT, AnalyticsManager.Action.CLICK,
         getViewName(true));
   }
 

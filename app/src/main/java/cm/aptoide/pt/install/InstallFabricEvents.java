@@ -53,7 +53,7 @@ public class InstallFabricEvents implements InstallerAnalytics {
   }
 
   @Override public void rootInstallStart() {
-    analyticsManager.logEvent(new HashMap<>(), ROOT_V2_START, AnalyticsManager.Action.ROOT,
+    analyticsManager.logEvent(null, ROOT_V2_START, AnalyticsManager.Action.ROOT,
         INSTALLFABRICCONTEXT);
   }
 

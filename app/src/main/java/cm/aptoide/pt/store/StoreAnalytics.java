@@ -32,7 +32,7 @@ public class StoreAnalytics {
   }
 
   public void sendStoreTabOpenedEvent() {
-    analyticsManager.logEvent(new HashMap<>(), STORES_TAB_OPEN, AnalyticsManager.Action.CLICK,
+    analyticsManager.logEvent(null, STORES_TAB_OPEN, AnalyticsManager.Action.CLICK,
         getViewName(true));
   }
 

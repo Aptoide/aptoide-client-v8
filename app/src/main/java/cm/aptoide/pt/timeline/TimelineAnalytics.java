@@ -225,7 +225,7 @@ public class TimelineAnalytics {
   }
 
   public void sendFollowFriendsEvent() {
-    analyticsManager.logEvent(new HashMap<>(), FOLLOW_FRIENDS, AnalyticsManager.Action.CLICK,
+    analyticsManager.logEvent(null, FOLLOW_FRIENDS, AnalyticsManager.Action.CLICK,
         getViewName(true));
   }
 
