@@ -14,6 +14,8 @@ import javax.inject.Singleton;
 
   void inject(AptoideApplication application);
 
+  void inject(NotificationApplicationView notificationApplicationView);
+
   void inject(ToolboxContentProvider toolboxContentProvider);
 
   void inject(InstallService installService);

@@ -4,9 +4,11 @@ import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.telephony.TelephonyManager;
 import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.view.DeepLinkManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,20 +17,23 @@ import java.util.Map;
 public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytics {
   public static final String DOWNLOAD_EVENT = "Download_99percent";
   public static final String DOWNLOAD_EVENT_NAME = "DOWNLOAD";
+  public static final String NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME =
+      "Aptoide_Push_Notification_Download_Complete";
+  public static final String DOWNLOAD_COMPLETE_EVENT = "Download Complete";
+  public static final String EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME =
+      "Editors Choice_Download_Complete";
   private final Map<String, DownloadEvent> cache;
   private final ConnectivityManager connectivityManager;
   private final TelephonyManager telephonyManager;
-  private final DownloadCompleteAnalytics downloadCompleteAnalytics;
   private NavigationTracker navigationTracker;
   private AnalyticsManager analyticsManager;
 
   public DownloadAnalytics(ConnectivityManager connectivityManager,
-      TelephonyManager telephonyManager, DownloadCompleteAnalytics downloadCompleteAnalytics,
-      NavigationTracker navigationTracker, AnalyticsManager analyticsManager) {
+      TelephonyManager telephonyManager, NavigationTracker navigationTracker,
+      AnalyticsManager analyticsManager) {
     this.cache = new HashMap<>();
     this.connectivityManager = connectivityManager;
     this.telephonyManager = telephonyManager;
-    this.downloadCompleteAnalytics = downloadCompleteAnalytics;
     this.navigationTracker = navigationTracker;
     this.analyticsManager = analyticsManager;
   }
@@ -49,13 +54,19 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
       result.put("error", error);
       data.put("result", result);
       analyticsManager.logEvent(data, downloadEvent.getEventName(), downloadEvent.getAction(),
-          downloadEvent.getContext()
-              .name());
+          downloadEvent.getContext());
       cache.remove(key);
     }
   }
 
   @Override public void onDownloadComplete(Download download) {
+    sendDownloadCompletedEvent(download);
+    sendDownloadEvent(download.getMd5() + EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME);
+    sendDownloadEvent(download.getMd5() + DOWNLOAD_COMPLETE_EVENT);
+    sendDownloadEvent(download.getMd5() + NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME);
+  }
+
+  private void sendDownloadCompletedEvent(Download download) {
     String key = download.getPackageName() + download.getVersionCode() + DOWNLOAD_EVENT_NAME;
     DownloadEvent downloadEvent = cache.get(key);
     if (downloadEvent.isHadProgress()) {
@@ -64,11 +75,18 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
       result.put("status", "SUCC");
       data.put("result", result);
       analyticsManager.logEvent(data, downloadEvent.getEventName(), downloadEvent.getAction(),
-          downloadEvent.getContext()
-              .name());
+          downloadEvent.getContext());
       cache.remove(key);
     }
-    downloadCompleteAnalytics.downloadCompleted(download.getMd5());
+  }
+
+  private void sendDownloadEvent(String downloadCacheKey) {
+    DownloadEvent downloadEvent = cache.get(downloadCacheKey);
+    if (downloadEvent != null) {
+      analyticsManager.logEvent(downloadEvent.getData(), downloadEvent.getEventName(),
+          downloadEvent.getAction(), downloadEvent.getContext());
+      cache.remove(downloadCacheKey);
+    }
   }
 
   public void moveFile(String movetype) {
@@ -169,6 +187,71 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
         .setHadProgress(true);
   }
 
+  public void installClicked(ScreenTagHistory previousScreen, ScreenTagHistory currentScreen,
+      String id, String packageName, String trustedValue, String editorsBrickPosition,
+      InstallType installType, AnalyticsManager.Action action, String previousContext,
+      String currentContext) {
+    editorsChoiceDownloadCompletedEvent(previousScreen, id, packageName, editorsBrickPosition,
+        installType, currentContext, action);
+    pushNotificationDownloadEvent(previousScreen, id, packageName, installType, action,
+        currentContext);
+    downloadCompleteEvent(previousScreen, currentScreen, id, packageName, trustedValue, action,
+        previousContext);
+  }
+
+  private void downloadCompleteEvent(ScreenTagHistory previousScreen,
+      ScreenTagHistory currentScreen, String id, String packageName, String trustedValue,
+      AnalyticsManager.Action action, String previousContext) {
+    HashMap<String, Object> downloadMap = new HashMap<>();
+    downloadMap.put("Package Name", packageName);
+    downloadMap.put("Trusted Badge", trustedValue);
+    if (previousScreen != null) {
+      downloadMap.put("tag", currentScreen.getTag());
+      if (previousScreen.getFragment() != null) {
+        downloadMap.put("fragment", previousScreen.getFragment());
+      }
+      if (previousScreen.getStore() != null) {
+        downloadMap.put("store", previousScreen.getStore());
+      }
+    }
+    DownloadEvent downloadEvent =
+        new DownloadEvent(DOWNLOAD_COMPLETE_EVENT, downloadMap, previousContext, action);
+    cache.put(id + DOWNLOAD_COMPLETE_EVENT, downloadEvent);
+  }
+
+  private void pushNotificationDownloadEvent(ScreenTagHistory previousScreen, String id,
+      String packageName, InstallType installType, AnalyticsManager.Action action,
+      String currentContext) {
+    if (previousScreen != null && previousScreen.getFragment()
+        .equals(DeepLinkManager.DEEPLINK_KEY)) {
+      HashMap<String, Object> data = new HashMap();
+      data.put("Package Name", packageName);
+      data.put("type", installType.name());
+
+      DownloadEvent downloadEvent =
+          new DownloadEvent(NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME, data, currentContext,
+              action);
+      cache.put(id + NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME, downloadEvent);
+    }
+  }
+
+  private void editorsChoiceDownloadCompletedEvent(ScreenTagHistory previousScreen, String id,
+      String packageName, String editorsBrickPosition, InstallType installType, String context,
+      AnalyticsManager.Action action) {
+    if (editorsBrickPosition != null) {
+      HashMap<String, Object> map = new HashMap<>();
+      map.put("Package Name", packageName);
+      if (previousScreen.getFragment() != null) {
+        map.put("fragment", previousScreen.getFragment());
+      }
+      map.put("position", editorsBrickPosition);
+      map.put("type", installType.name());
+      DownloadEvent downloadEvent =
+          new DownloadEvent(EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME, map, context, action);
+      cache.put(id + EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME, downloadEvent);
+    }
+  }
+
   public enum AppContext {
     TIMELINE, APPVIEW, UPDATE_TAB, SCHEDULED, DOWNLOADS
   }
@@ -181,10 +264,19 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
     private final Map<String, Object> data;
     private final String eventName;
     private final AnalyticsManager.Action action;
-    private final AppContext context;
+    private final String context;
     private boolean hadProgress;
 
     private DownloadEvent(String eventName, Map<String, Object> data, AppContext context,
+        AnalyticsManager.Action action) {
+      this.data = data;
+      this.eventName = eventName;
+      this.action = action;
+      this.context = context.name();
+      hadProgress = false;
+    }
+
+    public DownloadEvent(String eventName, HashMap<String, Object> data, String context,
         AnalyticsManager.Action action) {
       this.data = data;
       this.eventName = eventName;
@@ -213,7 +305,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
       return action;
     }
 
-    public AppContext getContext() {
+    public String getContext() {
       return context;
     }
   }

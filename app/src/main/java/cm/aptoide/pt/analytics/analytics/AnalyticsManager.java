@@ -25,6 +25,16 @@ public class AnalyticsManager {
   }
 
   public void logEvent(Map<String, Object> data, String eventName, Action action, String context) {
+    Logger.d(TAG, "logEvent() called with: "
+        + "data = ["
+        + data
+        + "], eventName = ["
+        + eventName
+        + "], action = ["
+        + action
+        + "], context = ["
+        + context
+        + "]");
     int eventsSent = 0;
     for (Map.Entry<EventLogger, Collection<String>> senderEntry : eventSenders.entrySet()) {
       if (senderEntry.getValue()

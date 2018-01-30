@@ -28,8 +28,10 @@ public class FlurryEventLogger implements EventLogger {
   private Map<String, String> map(Map<String, Object> data) {
     Map<String, String> map = new HashMap<>();
     for (Map.Entry<String, Object> entry : data.entrySet()) {
-      map.put(entry.getKey(), entry.getValue()
-          .toString());
+      if (entry.getValue() != null) {
+        map.put(entry.getKey(), entry.getValue()
+            .toString());
+      }
     }
     return map;
   }

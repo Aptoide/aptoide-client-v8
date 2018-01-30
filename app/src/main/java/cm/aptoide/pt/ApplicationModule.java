@@ -85,7 +85,6 @@ import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.download.DownloadAnalytics;
-import cm.aptoide.pt.download.DownloadCompleteAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.DownloadInstallationProvider;
 import cm.aptoide.pt.download.DownloadMirrorEventInterceptor;
@@ -247,18 +246,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new InstallFabricEvents(analyticsManager);
   }
 
-  @Singleton @Provides DownloadAnalytics provideDownloadAnalytics(
-      DownloadCompleteAnalytics downloadCompleteAnalytics, AnalyticsManager analyticsManager,
+  @Singleton @Provides DownloadAnalytics provideDownloadAnalytics(AnalyticsManager analyticsManager,
       NavigationTracker navigationTracker) {
     return new DownloadAnalytics(
         ((ConnectivityManager) application.getSystemService(Context.CONNECTIVITY_SERVICE)),
         ((TelephonyManager) application.getSystemService(Context.TELEPHONY_SERVICE)),
-        downloadCompleteAnalytics, navigationTracker, analyticsManager);
-  }
-
-  @Singleton @Provides DownloadCompleteAnalytics provideDownloadCompleteAnalytics(
-      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
-    return new DownloadCompleteAnalytics(analyticsManager, navigationTracker);
+        navigationTracker, analyticsManager);
   }
 
   @Singleton @Provides AptoideDownloadManager provideAptoideDownloadManager(
@@ -984,17 +977,17 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("Fabric") EventLogger fabricEventLogger,
       @Named("Flurry") EventLogger flurryEventLogger, HttpKnockEventLogger knockEventLogger) {
     List<String> flurryEvents = new LinkedList<>(Arrays.asList(InstallAnalytics.APPLICATION_INSTALL,
-        DownloadCompleteAnalytics.PARTIAL_EVENT_NAME, DownloadCompleteAnalytics.EVENT_NAME,
-        AppViewAnalytics.HOME_PAGE_EDITORS_CHOICE_FLURRY, AppViewAnalytics.APP_VIEW_OPEN_FROM,
-        StoreAnalytics.STORES_TAB_OPEN, StoreAnalytics.STORES_TAB_INTERACT,
-        StoreAnalytics.STORES_OPEN, StoreAnalytics.STORES_INTERACT,
-        AccountAnalytics.SIGN_UP_EVENT_NAME, AccountAnalytics.LOGIN_EVENT_NAME,
-        FirstLaunchAnalytics.FIRST_LAUNCH, AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN,
-        AccountAnalytics.CREATE_USER_PROFILE, AccountAnalytics.PROFILE_SETTINGS,
-        AdultContentAnalytics.ADULT_CONTENT, AppViewAnalytics.DOWNGRADE_DIALOG,
-        DeepLinkAnalytics.APP_LAUNCH, DeepLinkAnalytics.FACEBOOK_APP_LAUNCH,
-        AppViewAnalytics.CLICK_INSTALL, AnalyticsManager.FIRST_INSTALL_POP_UP,
-        AnalyticsManager.FIRST_INSTALL_CLOSE_WINDOW,
+        DownloadAnalytics.EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME,
+        DownloadAnalytics.DOWNLOAD_COMPLETE_EVENT, AppViewAnalytics.HOME_PAGE_EDITORS_CHOICE_FLURRY,
+        AppViewAnalytics.APP_VIEW_OPEN_FROM, StoreAnalytics.STORES_TAB_OPEN,
+        StoreAnalytics.STORES_TAB_INTERACT, StoreAnalytics.STORES_OPEN,
+        StoreAnalytics.STORES_INTERACT, AccountAnalytics.SIGN_UP_EVENT_NAME,
+        AccountAnalytics.LOGIN_EVENT_NAME, FirstLaunchAnalytics.FIRST_LAUNCH,
+        AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN, AccountAnalytics.CREATE_USER_PROFILE,
+        AccountAnalytics.PROFILE_SETTINGS, AdultContentAnalytics.ADULT_CONTENT,
+        AppViewAnalytics.DOWNGRADE_DIALOG, DeepLinkAnalytics.APP_LAUNCH,
+        DeepLinkAnalytics.FACEBOOK_APP_LAUNCH, AppViewAnalytics.CLICK_INSTALL,
+        AnalyticsManager.FIRST_INSTALL_POP_UP, AnalyticsManager.FIRST_INSTALL_CLOSE_WINDOW,
         AnalyticsManager.FIRST_INSTALL_START_DOWNLOAD));
     for (CardType cardType : CardType.values()) {
       flurryEvents.add(cardType.name() + "_" + TimelineAnalytics.APPS_TIMELINE_EVENT);
@@ -1020,9 +1013,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
                 AddressBookAnalytics.FOLLOW_FRIENDS_APTOIDE_ACCESS,
                 AddressBookAnalytics.FOLLOW_FRIENDS_NEW_CONNECTIONS,
                 AddressBookAnalytics.FOLLOW_FRIENDS_SET_MY_PHONENUMBER,
-                DownloadCompleteAnalytics.PARTIAL_EVENT_NAME,
-                DownloadCompleteAnalytics.NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME,
-                DownloadCompleteAnalytics.EVENT_NAME, SearchAnalytics.SEARCH,
+                DownloadAnalytics.EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME,
+                DownloadAnalytics.NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME,
+                DownloadAnalytics.DOWNLOAD_COMPLETE_EVENT, SearchAnalytics.SEARCH,
                 SearchAnalytics.NO_RESULTS, SearchAnalytics.APP_CLICK, SearchAnalytics.SEARCH_START,
                 AppViewAnalytics.EDITORS_CHOICE_CLICKS, AppViewAnalytics.APP_VIEW_OPEN_FROM,
                 AppViewAnalytics.APP_VIEW_INTERACT, NotificationAnalytics.NOTIFICATION_RECEIVED,
@@ -1050,7 +1043,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
                 DeepLinkAnalytics.FACEBOOK_APP_LAUNCH, AppViewAnalytics.CLICK_INSTALL,
                 AnalyticsManager.FIRST_INSTALL_POP_UP, AnalyticsManager.FIRST_INSTALL_CLOSE_WINDOW,
                 AnalyticsManager.FIRST_INSTALL_START_DOWNLOAD))
-        .addLogger(fabricEventLogger, Arrays.asList(DownloadCompleteAnalytics.EVENT_NAME,
+        .addLogger(fabricEventLogger, Arrays.asList(DownloadAnalytics.DOWNLOAD_COMPLETE_EVENT,
             SpotAndShareAnalytics.EVENT_NAME_SPOT_SHARE_PERMISSIONS,
             InstallFabricEvents.ROOT_V2_COMPLETE, InstallFabricEvents.ROOT_V2_START,
             InstallFabricEvents.IS_INSTALLATION_TYPE_EVENT_NAME))

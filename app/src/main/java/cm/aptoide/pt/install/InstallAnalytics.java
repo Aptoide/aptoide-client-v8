@@ -8,6 +8,7 @@ import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.analytics.analytics.Event;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.download.InstallType;
 import cm.aptoide.pt.view.DeepLinkManager;
 import com.facebook.appevents.AppEventsLogger;
 import java.util.HashMap;
@@ -100,7 +101,4 @@ public class InstallAnalytics {
     return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
   }
 
-  public enum InstallType {
-    INSTALL, UPDATE, DOWNGRADE
-  }
 }

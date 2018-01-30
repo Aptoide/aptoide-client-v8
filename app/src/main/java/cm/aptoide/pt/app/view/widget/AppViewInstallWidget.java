@@ -46,11 +46,11 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.download.DownloadCompleteAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.DownloadInstallBaseEvent;
 import cm.aptoide.pt.download.InstallEvent;
 import cm.aptoide.pt.download.InstallEventConverter;
+import cm.aptoide.pt.download.InstallType;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstallerFactory;
@@ -415,7 +415,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     return view -> {
       final Context context = view.getContext();
       final PermissionService permissionRequest = (PermissionService) getContext();
-      displayable.installAppClicked(DownloadCompleteAnalytics.InstallType.DOWNGRADE);
+      displayable.installAppClicked(InstallType.DOWNGRADE);
       permissionRequest.requestAccessToExternalFileSystem(() -> {
 
         showMessageOKCancel(getContext().getResources()
@@ -504,8 +504,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
       if (installOrUpgradeMsg == R.string.installing_msg) {
         appViewAnalytics.clickOnInstallButton(app);
       }
-      displayable.installAppClicked(isUpdate ? DownloadCompleteAnalytics.InstallType.UPDATE
-          : DownloadCompleteAnalytics.InstallType.INSTALL);
+      displayable.installAppClicked(isUpdate ? InstallType.UPDATE
+          : InstallType.INSTALL);
 
       showRootInstallWarningPopup(context);
       compositeSubscription.add(permissionManager.requestDownloadAccess(permissionService)
