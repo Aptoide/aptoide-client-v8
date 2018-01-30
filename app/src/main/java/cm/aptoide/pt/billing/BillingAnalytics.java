@@ -120,6 +120,6 @@ public class BillingAnalytics {
   }
 
   private String getViewName(boolean isCurrent) {
-    return navigationTracker.getViewName(isCurrent, "Billing");
+    return navigationTracker.getViewName(isCurrent);
   }
 }

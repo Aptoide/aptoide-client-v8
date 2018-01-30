@@ -25,7 +25,6 @@ public class NotLoggedInShareAnalytics {
   public static final String LOGIN_INCOMPLETE_PARAMETER = "Login incomplete";
   public static final String LOGIN_GOOGLE_PARAMETER = "Login Google";
   public static final String LOGIN_FACEBOOK_PARAMETER = "Login Facebook";
-  private static final String DEFAULT_CONTEXT = "NotLoggedInShare";
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
   private final AccountAnalytics accountAnalytics;
@@ -148,6 +147,6 @@ public class NotLoggedInShareAnalytics {
   }
 
   private String getViewName(boolean isCurrent) {
-    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
+    return navigationTracker.getViewName(isCurrent);
   }
 }

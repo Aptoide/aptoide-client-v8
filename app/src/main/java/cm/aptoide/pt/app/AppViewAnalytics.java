@@ -23,7 +23,6 @@ public class AppViewAnalytics {
   private static final String APPLICATION_NAME = "Application Name";
   private static final String APPLICATION_PUBLISHER = "Application Publisher";
   private static final String ACTION = "Action";
-  private static final String DEFAULT_CONTEXT = "AppView";
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
 
@@ -211,6 +210,6 @@ public class AppViewAnalytics {
   }
 
   private String getViewName(boolean isCurrent) {
-    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
+    return navigationTracker.getViewName(isCurrent);
   }
 }

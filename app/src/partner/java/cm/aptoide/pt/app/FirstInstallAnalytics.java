@@ -13,9 +13,11 @@ import java.util.Map;
 
 public class FirstInstallAnalytics {
 
+  public static final String FIRST_INSTALL_POP_UP = "First_Install_Pop_up";
+  public static final String FIRST_INSTALL_CLOSE_WINDOW = "First_Install_Close_Window";
+  public static final String FIRST_INSTALL_START_DOWNLOAD = "First_Install_Start_Download";
   private static final String FIRST_INSTALL_SPONSORED_APPS_SELECTED = "sponsored_apps_selected";
   private static final String FIRST_INSTALL_NORMAL_APPS_SELECTED = "normal_apps_selected";
-  private static final String DEFAULT_CONTEXT = "FirstInstall";
 
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
@@ -27,19 +29,18 @@ public class FirstInstallAnalytics {
   }
 
   public void sendPopupEvent() {
-    analyticsManager.logEvent(new HashMap<>(), AnalyticsManager.FIRST_INSTALL_POP_UP,
-        AnalyticsManager.Action.CLICK, getViewName(true));
+    analyticsManager.logEvent(new HashMap<>(), FIRST_INSTALL_POP_UP, AnalyticsManager.Action.CLICK,
+        getViewName(true));
   }
 
   public void sendCloseWindowsEvent() {
-    analyticsManager.logEvent(new HashMap<>(), AnalyticsManager.FIRST_INSTALL_CLOSE_WINDOW,
+    analyticsManager.logEvent(new HashMap<>(), FIRST_INSTALL_CLOSE_WINDOW,
         AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendStartDownloadEvent(String sponsored, String normal) {
     analyticsManager.logEvent(createStartDownloadMap(sponsored, normal),
-        AnalyticsManager.FIRST_INSTALL_START_DOWNLOAD, AnalyticsManager.Action.CLICK,
-        getViewName(true));
+        FIRST_INSTALL_START_DOWNLOAD, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   private Map<String, Object> createStartDownloadMap(String sponsored, String normal) {
@@ -50,6 +51,6 @@ public class FirstInstallAnalytics {
   }
 
   private String getViewName(boolean isCurrent) {
-    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
+    return navigationTracker.getViewName(isCurrent);
   }
 }

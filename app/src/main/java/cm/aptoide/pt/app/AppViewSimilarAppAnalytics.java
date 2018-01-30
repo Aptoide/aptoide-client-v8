@@ -18,7 +18,6 @@ public class AppViewSimilarAppAnalytics {
   public static final String SIMILAR_APP_INTERACT = "Similar_App_Interact";
   private static final String TAG = AppViewSimilarAppAnalytics.class.getSimpleName();
   private static final String ACTION = "Action";
-  private static final String DEFAULT_CONTEXT = "AppViewSimilarApp";
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
 
@@ -30,8 +29,8 @@ public class AppViewSimilarAppAnalytics {
 
   public void similarAppsIsShown() {
 
-    analyticsManager.logEvent(null, APP_VIEW_SIMILAR_APP_SLIDE_IN,
-        AnalyticsManager.Action.CLICK, getViewName(true));
+    analyticsManager.logEvent(null, APP_VIEW_SIMILAR_APP_SLIDE_IN, AnalyticsManager.Action.CLICK,
+        getViewName(true));
     Logger.w(TAG, "Facebook Event: " + APP_VIEW_SIMILAR_APP_SLIDE_IN);
   }
 
@@ -49,6 +48,6 @@ public class AppViewSimilarAppAnalytics {
   }
 
   private String getViewName(boolean isCurrent) {
-    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
+    return navigationTracker.getViewName(isCurrent);
   }
 }

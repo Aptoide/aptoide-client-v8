@@ -13,7 +13,6 @@ public class DrawerAnalytics {
 
   public static final String DRAWER_OPEN_EVENT = "Drawer_Opened";
   public static final String DRAWER_INTERACT_EVENT = "Drawer_Interact";
-  private static final String DEFAULT_CONTEXT = "Drawer";
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
 
@@ -39,6 +38,6 @@ public class DrawerAnalytics {
   }
 
   private String getViewName(boolean isCurrent) {
-    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
+    return navigationTracker.getViewName(isCurrent);
   }
 }

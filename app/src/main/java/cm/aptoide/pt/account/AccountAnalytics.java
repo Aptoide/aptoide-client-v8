@@ -41,7 +41,6 @@ public class AccountAnalytics {
   private static final String STATUS_DETAIL = "Status Detail";
   private static final String STATUS_DESCRIPTION = "Status Description";
   private static final String STATUS_CODE = "Status Code";
-  private static final String DEFAULT_CONTEXT = "Account";
   private final NavigationTracker navigationTracker;
   private final CrashReport crashReport;
   private final AnalyticsManager analyticsManager;
@@ -313,7 +312,7 @@ public class AccountAnalytics {
   }
 
   private String getViewName(boolean isCurrent) {
-    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
+    return navigationTracker.getViewName(isCurrent);
   }
 
   public enum LoginMethod {

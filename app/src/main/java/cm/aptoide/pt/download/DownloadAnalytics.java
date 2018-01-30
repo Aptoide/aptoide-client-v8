@@ -47,6 +47,6 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
     Map<String, Object> map = new HashMap<>();
     map.put(ATTRIBUTE, movetype);
     analyticsManager.logEvent(map, DOWNLOAD_EVENT, AnalyticsManager.Action.AUTO,
-        navigationTracker.getViewName(false, "Download"));
+        navigationTracker.getViewName(false));
   }
 }

@@ -22,7 +22,6 @@ public class StoreAnalytics {
   private static final String FOLLOW_STORE_APPS = "follow_store_apps";
   private static final String FOLLOW_STORE_FOLLOWERS = "follow_store_followers";
   private static final String TAB = "tab_name";
-  private static final String DEFAULT_CONTEXT = "Store";
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
 
@@ -91,6 +90,6 @@ public class StoreAnalytics {
   }
 
   private String getViewName(boolean isCurrent) {
-    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
+    return navigationTracker.getViewName(isCurrent);
   }
 }

@@ -8,9 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AnalyticsManager {
-  public static final String FIRST_INSTALL_POP_UP = "First_Install_Pop_up";
-  public static final String FIRST_INSTALL_CLOSE_WINDOW = "First_Install_Close_Window";
-  public static final String FIRST_INSTALL_START_DOWNLOAD = "First_Install_Start_Download";
   private static final String TAG = AnalyticsManager.class.getSimpleName();
   private final HttpKnockEventLogger knockEventLogger;
 

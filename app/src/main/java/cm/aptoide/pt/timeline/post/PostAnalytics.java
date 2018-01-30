@@ -27,7 +27,6 @@ public class PostAnalytics {
   private static final String ERROR_TYPE = "error_type";
   private static final String WEB_CODE = "web_code";
   private static final String EXTERNAL = "EXTERNAL";
-  private static final String DEFAULT_CONTEXT = "Post";
   private final NavigationTracker navigationTracker;
   private final AnalyticsManager analyticsManager;
 
@@ -169,7 +168,7 @@ public class PostAnalytics {
   }
 
   private String getViewName(boolean isCurrent) {
-    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
+    return navigationTracker.getViewName(isCurrent);
   }
 
   @NonNull private HashMap<String, Object> createAptoideDataMap(boolean success) {

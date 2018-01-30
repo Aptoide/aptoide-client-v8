@@ -16,7 +16,6 @@ public class DownloadCompleteAnalytics {
       "Aptoide_Push_Notification_Download_Complete";
   private static final String PACKAGE_NAME = "Package Name";
   private static final String TRUSTED_BADGE = "Trusted Badge";
-  private static final String DEFAULT_CONTEXT = "DownloadComplete";
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
 
@@ -96,7 +95,7 @@ public class DownloadCompleteAnalytics {
   }
 
   private String getViewName(boolean isCurrent) {
-    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
+    return navigationTracker.getViewName(isCurrent);
   }
 
   public enum InstallType {

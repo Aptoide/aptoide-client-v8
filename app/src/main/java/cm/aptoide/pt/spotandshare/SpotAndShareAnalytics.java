@@ -31,7 +31,6 @@ public class SpotAndShareAnalytics implements SpotAndShareAnalyticsInterface {
   public static final String EVENT_NAME_SPOT_SHARE = "Share_Apps_Click_On_Share_Apps";
   public static final String EVENT_NAME_SPOT_SHARE_PERMISSIONS =
       "Spot_Share_Write_Permissions_Problem";
-  private static final String DEFAULT_CONTEXT = "SpotAndShare";
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
 
@@ -126,6 +125,6 @@ public class SpotAndShareAnalytics implements SpotAndShareAnalyticsInterface {
   }
 
   private String getViewName(boolean isCurrent) {
-    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
+    return navigationTracker.getViewName(isCurrent);
   }
 }

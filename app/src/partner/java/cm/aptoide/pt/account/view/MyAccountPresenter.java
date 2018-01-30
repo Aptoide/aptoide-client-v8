@@ -136,8 +136,7 @@ public class MyAccountPresenter implements Presenter {
             .doOnNext(link -> analytics.sendNotificationTouchEvent(
                 notification.getNotificationCenterUrlTrack()))
             .doOnNext(__ -> navigationTracker.registerScreen(
-                ScreenTagHistory.Builder.build("Notification")))
-            .doOnNext(__ -> pageViewsAnalytics.sendPageViewedEvent()))
+                ScreenTagHistory.Builder.build("Notification"))))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, throwable -> crashReport.log(throwable));

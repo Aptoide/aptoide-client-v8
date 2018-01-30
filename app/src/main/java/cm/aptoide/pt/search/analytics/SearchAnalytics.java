@@ -15,7 +15,6 @@ public class SearchAnalytics {
   public static final String NO_RESULTS = "Search_No_Results";
   public static final String APP_CLICK = "Search_Results_App_View_Click";
   public static final String SEARCH_START = "Search_Start";
-  public static final String DEFAULT_CONTEXT = "Search";
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
 
@@ -66,7 +65,7 @@ public class SearchAnalytics {
   }
 
   private String getViewName(boolean isCurrent) {
-    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
+    return navigationTracker.getViewName(isCurrent);
   }
 
   private static final class AttributeKey {

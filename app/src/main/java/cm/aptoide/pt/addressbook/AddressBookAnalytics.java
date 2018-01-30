@@ -18,7 +18,6 @@ public class AddressBookAnalytics {
   public static final String FOLLOW_FRIENDS_NEW_CONNECTIONS = "Follow_Friends_New_Connections";
   public static final String FOLLOW_FRIENDS_SET_MY_PHONENUMBER =
       "Follow_Friends_Set_My_Phonenumber";
-  private static final String DEFAULT_CONTEXT = "AdressBook";
   private static final String CHOOSE_NETWORK_ACTION = "choose_network_action";
   private static final String ACTION = "action";
   private final AnalyticsManager analyticsManager;
@@ -93,6 +92,6 @@ public class AddressBookAnalytics {
   }
 
   private String getViewName(boolean isCurrent) {
-    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
+    return navigationTracker.getViewName(isCurrent);
   }
 }
