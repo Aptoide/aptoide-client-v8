@@ -219,7 +219,7 @@ public class AppViewAnalytics {
   }
 
   private String getViewName(boolean isCurrent) {
-    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
+    return navigationTracker.getViewName(isCurrent);
   }
 
   public void setupDownloadEvents(Download download, int campaignId, String abTestGroup,

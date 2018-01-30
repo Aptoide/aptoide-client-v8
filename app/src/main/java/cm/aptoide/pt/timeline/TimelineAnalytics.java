@@ -70,7 +70,6 @@ public class TimelineAnalytics {
   private static final String PACKAGE = "package_name";
   private static final String PUBLISHER = "publisher";
   private static final String TITLE = "title";
-  private static final String DEFAULT_CONTEXT = "Timeline";
   private static final String BLANK = "(blank)";
   private static final String TIMELINE_VERSION = "timeline_version";
   private final NotificationAnalytics notificationAnalytics;
@@ -214,7 +213,8 @@ public class TimelineAnalytics {
 
   public void sendTimelineTabOpened() {
     Map<String, Object> map = new HashMap<>();
-    analyticsManager.logEvent(map, TIMELINE_OPENED, AnalyticsManager.Action.CLICK, getViewName(false));
+    analyticsManager.logEvent(map, TIMELINE_OPENED, AnalyticsManager.Action.CLICK,
+        getViewName(false));
     map.put(PREVIOUS_CONTEXT, getViewName(false));
     if (version != null) {
       map.put(TIMELINE_VERSION, version);
@@ -225,7 +225,7 @@ public class TimelineAnalytics {
   }
 
   public void sendFollowFriendsEvent() {
-    analyticsManager.logEvent(new HashMap<>(), FOLLOW_FRIENDS, AnalyticsManager.Action.CLICK,
+    analyticsManager.logEvent(null, FOLLOW_FRIENDS, AnalyticsManager.Action.CLICK,
         getViewName(true));
   }
 
@@ -794,6 +794,6 @@ public class TimelineAnalytics {
   }
 
   private String getViewName(boolean isCurrent) {
-    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
+    return navigationTracker.getViewName(isCurrent);
   }
 }

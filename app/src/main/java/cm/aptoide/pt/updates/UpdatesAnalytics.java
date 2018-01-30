@@ -22,7 +22,7 @@ public class UpdatesAnalytics {
 
   public void updates(String action) {
     analyticsManager.logEvent(createMapData("action", action), UPDATE_EVENT,
-        AnalyticsManager.Action.AUTO, navigationTracker.getViewName(true, "Update"));
+        AnalyticsManager.Action.AUTO, navigationTracker.getViewName(true));
   }
 
   private Map<String, Object> createMapData(String key, String value) {

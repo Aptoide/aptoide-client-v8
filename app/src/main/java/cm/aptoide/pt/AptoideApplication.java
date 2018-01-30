@@ -170,7 +170,7 @@ public abstract class AptoideApplication extends Application {
   @Inject @Named("web-socket") OkHttpClient webSocketClient;
   @Inject @Named("user-agent") Interceptor userAgentInterceptor;
   @Inject AndroidAccountProvider androidAccountProvider;
-  @Inject ObjectMapper nonNullObjectMapper;
+  @Inject @Named("default") ObjectMapper nonNullObjectMapper;
   @Inject RequestBodyFactory requestBodyFactory;
   @Inject RootAvailabilityManager rootAvailabilityManager;
   @Inject StoreManager storeManager;
@@ -378,10 +378,8 @@ public abstract class AptoideApplication extends Application {
   public ApplicationComponent getApplicationComponent() {
     if (applicationComponent == null) {
       applicationComponent = DaggerApplicationComponent.builder()
-          .applicationModule(
-              new ApplicationModule(this, getImageCachePath(), getCachePath(), getAccountType(),
-                  getPartnerId(), getMarketName(), getExtraId(), getAptoidePackage(),
-                  getAptoideMd5sum(), getLoginPreferences()))
+          .applicationModule(new ApplicationModule(this, getAptoideMd5sum()))
+          .flavourApplicationModule(new FlavourApplicationModule(this))
           .build();
     }
     return applicationComponent;

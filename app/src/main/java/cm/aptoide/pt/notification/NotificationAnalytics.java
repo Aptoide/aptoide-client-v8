@@ -22,7 +22,6 @@ public class NotificationAnalytics {
   private static final String AB_TESTING_GROUP = "ab_testing_group";
   private static final String PACKAGE_NAME = "package_name";
   private static final String CAMPAIGN_ID = "campaign_id";
-  private static final String DEFAULT_CONTEXT = "Notification";
   private final AptoideInstallParser aptoideInstallParser;
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
@@ -186,7 +185,7 @@ public class NotificationAnalytics {
   }
 
   private String getViewName(boolean isCurrent) {
-    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
+    return navigationTracker.getViewName(isCurrent);
   }
 
   private enum NotificationTypes {

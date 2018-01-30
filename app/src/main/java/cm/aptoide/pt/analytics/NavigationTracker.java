@@ -23,7 +23,7 @@ public class NavigationTracker {
   public void registerScreen(ScreenTagHistory screenTagHistory) {
     if (screenTagHistory != null && filter(screenTagHistory)) {
       historyList.add(screenTagHistory);
-      pageViewsAnalytics.sendPageViewedEvent(getViewName(true,"PageView"),
+      pageViewsAnalytics.sendPageViewedEvent(getViewName(true), getViewName(false),
           screenTagHistory.getStore());
       Logger.d(TAG, "NavigationTracker size: "
           + historyList.size()
@@ -85,25 +85,21 @@ public class NavigationTracker {
     return sb.toString();
   }
 
-  public String getViewName(boolean isCurrent, String defaultValue) {
+  public String getViewName(boolean isCurrent) {
     String viewName = "";
     try {
       if (isCurrent) {
         viewName = getCurrentViewName();
-          if (viewName.equals("")){
-            getPreviousViewName();
-          }
+        if (viewName.equals("")) {
+          viewName = getPreviousViewName();
+        }
       } else {
         viewName = getPreviousViewName();
-        if(viewName.equals("")){
-          getCurrentViewName();
+        if (viewName.equals("")) {
+          viewName = getCurrentViewName();
         }
       }
-      if (viewName.equals("")) {
-        viewName = defaultValue;
-      }
     } catch (NullPointerException exception) {
-        viewName = defaultValue; //Default value, shouldn't get here
     }
     return viewName;
   }

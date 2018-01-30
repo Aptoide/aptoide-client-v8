@@ -93,7 +93,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
     Map<String, Object> map = new HashMap<>();
     map.put("APK", movetype);
     analyticsManager.logEvent(map, DOWNLOAD_EVENT, AnalyticsManager.Action.AUTO,
-        navigationTracker.getViewName(false, "Download"));
+        navigationTracker.getViewName(false));
   }
 
   public void downloadStartEvent(Download download, AnalyticsManager.Action action,

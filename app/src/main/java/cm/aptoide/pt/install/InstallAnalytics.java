@@ -29,7 +29,6 @@ public class InstallAnalytics {
   private static final String PACKAGE_NAME = "Package Name";
   private static final String REPLACED = "Replaced";
   private static final String NO_PREVIOUS_SCREEN_ERROR = "No_Previous_Screen";
-  private static final String DEFAULT_CONTEXT = "Install";
   private final Analytics analytics;
   private final AppEventsLogger facebook;
   private CrashReport crashReport;
@@ -98,7 +97,7 @@ public class InstallAnalytics {
   }
 
   private String getViewName(boolean isCurrent) {
-    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
+    return navigationTracker.getViewName(isCurrent);
   }
 
 }

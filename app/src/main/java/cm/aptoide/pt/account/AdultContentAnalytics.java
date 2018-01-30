@@ -9,7 +9,6 @@ public class AdultContentAnalytics {
   public static final String ADULT_CONTENT = "Adult Content";
   public static final String UNLOCK = "false";
   public static final String LOCK = "true";
-  private static final String DEFAULT_CONTEXT = "AdultContent";
 
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
@@ -33,6 +32,6 @@ public class AdultContentAnalytics {
   }
 
   private String getViewName(boolean isCurrent) {
-    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
+    return navigationTracker.getViewName(isCurrent);
   }
 }

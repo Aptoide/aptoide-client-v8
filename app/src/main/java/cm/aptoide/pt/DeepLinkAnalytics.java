@@ -20,7 +20,6 @@ public class DeepLinkAnalytics {
   private static final String URI = "Uri";
   private static final String SOURCE = "Source";
   private static final String LAUNCHER = "Launcher";
-  private static final String DEFAULT_CONTEXT = "DeepLink";
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
 
@@ -73,6 +72,6 @@ public class DeepLinkAnalytics {
   }
 
   private String getViewName(boolean isCurrent) {
-    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
+    return navigationTracker.getViewName(isCurrent);
   }
 }

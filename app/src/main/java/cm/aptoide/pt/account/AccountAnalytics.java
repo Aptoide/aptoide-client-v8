@@ -6,7 +6,6 @@ import cm.aptoide.accountmanager.AccountValidationException;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
-import cm.aptoide.pt.analytics.analytics.Event;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
@@ -42,13 +41,12 @@ public class AccountAnalytics {
   private static final String STATUS_DETAIL = "Status Detail";
   private static final String STATUS_DESCRIPTION = "Status Description";
   private static final String STATUS_CODE = "Status Code";
-  private static final String DEFAULT_CONTEXT = "Account";
   private final NavigationTracker navigationTracker;
   private final CrashReport crashReport;
   private final AnalyticsManager analyticsManager;
-  private Event aptoideSuccessLoginEvent;
-  private Event facebookAndFlurrySuccessLoginEvent;
-  private Event signUpEvent;
+  private AccountEvent aptoideSuccessLoginEvent;
+  private AccountEvent facebookAndFlurrySuccessLoginEvent;
+  private AccountEvent signUpEvent;
 
   public AccountAnalytics(NavigationTracker navigationTracker, CrashReport crashReport,
       AnalyticsManager analyticsManager) {
@@ -59,15 +57,21 @@ public class AccountAnalytics {
 
   public void loginSuccess() {
     if (aptoideSuccessLoginEvent != null) {
-      analyticsManager.logEvent(aptoideSuccessLoginEvent);
+      analyticsManager.logEvent(aptoideSuccessLoginEvent.getMap(),
+          aptoideSuccessLoginEvent.getEventName(), aptoideSuccessLoginEvent.getAction(),
+          aptoideSuccessLoginEvent.getContext());
       aptoideSuccessLoginEvent = null;
     }
     if (facebookAndFlurrySuccessLoginEvent != null) {
-      analyticsManager.logEvent(facebookAndFlurrySuccessLoginEvent);
+      analyticsManager.logEvent(facebookAndFlurrySuccessLoginEvent.getMap(),
+          facebookAndFlurrySuccessLoginEvent.getEventName(),
+          facebookAndFlurrySuccessLoginEvent.getAction(),
+          facebookAndFlurrySuccessLoginEvent.getContext());
       facebookAndFlurrySuccessLoginEvent = null;
     }
     if (signUpEvent != null) {
-      analyticsManager.logEvent(signUpEvent);
+      analyticsManager.logEvent(signUpEvent.getMap(), signUpEvent.getEventName(),
+          signUpEvent.getAction(), signUpEvent.getContext());
       signUpEvent = null;
     }
   }
@@ -91,8 +95,7 @@ public class AccountAnalytics {
     Map<String, Object> map = new HashMap<>();
     map.put(STATUS, SignUpLoginStatus.SUCCESS.getStatus());
     signUpEvent =
-        new Event(SIGN_UP_EVENT_NAME, map, AnalyticsManager.Action.CLICK, getViewName(true),
-            System.currentTimeMillis());
+        new AccountEvent(map, SIGN_UP_EVENT_NAME, AnalyticsManager.Action.CLICK, getViewName(true));
     clearLoginEvents();
   }
 
@@ -127,33 +130,32 @@ public class AccountAnalytics {
             null, null);
   }
 
-  private Event createFacebookAndFlurryEvent(String eventName, LoginMethod loginMethod,
+  private AccountEvent createFacebookAndFlurryEvent(String eventName, LoginMethod loginMethod,
       SignUpLoginStatus loginStatus, String statusDetail, String statusCode,
       String statusDescription) {
     Map<String, Object> map = new HashMap<>();
     map.put(LOGIN_METHOD, loginMethod.getMethod());
     map.put(STATUS, loginStatus.getStatus());
     map.put(STATUS_DETAIL, statusDetail);
-    if(statusCode != null){
+    if (statusCode != null) {
       map.put(STATUS_CODE, statusCode);
     }
     if (statusDescription != null) {
       map.put(STATUS_DESCRIPTION, statusDescription);
     }
-    return new Event(eventName, map, AnalyticsManager.Action.CLICK, getViewName(true),
-        System.currentTimeMillis());
+    return new AccountEvent(map, eventName, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   private void sendEvents(String eventName, LoginMethod loginMethod, SignUpLoginStatus loginStatus,
       String statusDetail, String statusCode, String statusDescription) {
-    Event event =
+    AccountEvent event =
         createFacebookAndFlurryEvent(eventName, loginMethod, loginStatus, statusDetail, statusCode,
             statusDescription);
-    analyticsManager.logEvent(event.getData(), event.getEventName(), event.getAction(),
+    analyticsManager.logEvent(event.getMap(), event.getEventName(), event.getAction(),
         event.getContext());
   }
 
-  @NonNull private Event createAptoideLoginEvent() {
+  @NonNull private AccountEvent createAptoideLoginEvent() {
     Map<String, Object> map = new HashMap<>();
     map.put(PREVIOUS_CONTEXT, navigationTracker.getPreviousViewName());
     ScreenTagHistory previousScreen = navigationTracker.getPreviousScreen();
@@ -161,9 +163,8 @@ public class AccountAnalytics {
       map.put(STORE, previousScreen.getStore());
     }
     map.put(PREVIOUS_CONTEXT, navigationTracker.getPreviousViewName());
-    Event aptoideEvent =
-        new Event(APTOIDE_EVENT_NAME, map, AnalyticsManager.Action.CLICK, getViewName(true),
-            System.currentTimeMillis());
+    AccountEvent aptoideEvent =
+        new AccountEvent(map, APTOIDE_EVENT_NAME, AnalyticsManager.Action.CLICK, getViewName(true));
     return aptoideEvent;
   }
 
@@ -311,7 +312,7 @@ public class AccountAnalytics {
   }
 
   private String getViewName(boolean isCurrent) {
-    return navigationTracker.getViewName(isCurrent, DEFAULT_CONTEXT);
+    return navigationTracker.getViewName(isCurrent);
   }
 
   public enum LoginMethod {
@@ -404,6 +405,37 @@ public class AccountAnalytics {
 
     public String getOrigin() {
       return origin;
+    }
+  }
+
+  private class AccountEvent {
+    private Map<String, Object> map;
+    private String eventName;
+    private AnalyticsManager.Action action;
+    private String context;
+
+    public AccountEvent(Map<String, Object> map, String eventName, AnalyticsManager.Action action,
+        String context) {
+      this.map = map;
+      this.eventName = eventName;
+      this.action = action;
+      this.context = context;
+    }
+
+    public Map<String, Object> getMap() {
+      return map;
+    }
+
+    public String getEventName() {
+      return eventName;
+    }
+
+    public AnalyticsManager.Action getAction() {
+      return action;
+    }
+
+    public String getContext() {
+      return context;
     }
   }
 }
