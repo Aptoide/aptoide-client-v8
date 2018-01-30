@@ -42,13 +42,10 @@ import rx.Single;
 public class MockApplicationModule extends ApplicationModule {
 
   private final AptoideApplication application;
-  private final LoginPreferences loginPreferences;
 
-  public MockApplicationModule(AptoideApplication application, String aptoideMd5sum,
-      LoginPreferences loginPreferences) {
+  public MockApplicationModule(AptoideApplication application, String aptoideMd5sum) {
     super(application, aptoideMd5sum);
     this.application = application;
-    this.loginPreferences = loginPreferences;
   }
 
   @Override AptoideAccountManager provideAptoideAccountManager(AdultContent adultContent,
