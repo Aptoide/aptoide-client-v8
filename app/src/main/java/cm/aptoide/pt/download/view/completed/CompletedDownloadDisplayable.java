@@ -4,14 +4,13 @@ import android.content.Context;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadInstallBaseEvent;
-import cm.aptoide.pt.download.InstallEvent;
-import cm.aptoide.pt.download.InstallEventConverter;
+import cm.aptoide.pt.download.InstallType;
 import cm.aptoide.pt.install.Install;
+import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
@@ -23,27 +22,21 @@ import rx.Observable;
 public class CompletedDownloadDisplayable extends Displayable {
 
   private final InstallManager installManager;
-  private final Analytics analytics;
-  private final InstallEventConverter installConverter;
-  private DownloadAnalytics downloadAnalytics;
-
   private final Install installation;
+  private DownloadAnalytics downloadAnalytics;
+  private InstallAnalytics installAnalytics;
 
   public CompletedDownloadDisplayable() {
     this.installManager = null;
-    this.analytics = null;
-    this.installConverter = null;
     this.installation = null;
   }
 
   public CompletedDownloadDisplayable(Install installation, InstallManager installManager,
-      DownloadAnalytics downloadAnalytics, Analytics analytics,
-      InstallEventConverter installConverter) {
+      DownloadAnalytics downloadAnalytics, InstallAnalytics installAnalytics) {
     this.installation = installation;
     this.installManager = installManager;
     this.downloadAnalytics = downloadAnalytics;
-    this.analytics = analytics;
-    this.installConverter = installConverter;
+    this.installAnalytics = installAnalytics;
   }
 
   @Override protected Configs getConfig() {
@@ -96,11 +89,33 @@ public class CompletedDownloadDisplayable extends Displayable {
   private void setupEvents(Download download) {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
         DownloadAnalytics.AppContext.DOWNLOADS);
+    installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
+        getInstallType(download.getAction()), AnalyticsManager.Action.INSTALL,
+        DownloadInstallBaseEvent.AppContext.DOWNLOADS, getOrigin(download.getAction()));
+  }
 
-    InstallEvent installEvent =
-        installConverter.create(download, DownloadInstallBaseEvent.Action.CLICK,
-            DownloadInstallBaseEvent.AppContext.DOWNLOADS);
-    analytics.save(download.getPackageName() + download.getVersionCode(), installEvent);
+  private DownloadInstallBaseEvent.Origin getOrigin(int action) {
+    switch (action) {
+      default:
+      case Download.ACTION_INSTALL:
+        return DownloadInstallBaseEvent.Origin.INSTALL;
+      case Download.ACTION_UPDATE:
+        return DownloadInstallBaseEvent.Origin.UPDATE;
+      case Download.ACTION_DOWNGRADE:
+        return DownloadInstallBaseEvent.Origin.DOWNGRADE;
+    }
+  }
+
+  private InstallType getInstallType(int action) {
+    switch (action) {
+      default:
+      case Download.ACTION_INSTALL:
+        return InstallType.INSTALL;
+      case Download.ACTION_UPDATE:
+        return InstallType.UPDATE;
+      case Download.ACTION_DOWNGRADE:
+        return InstallType.DOWNGRADE;
+    }
   }
 
   public Install getInstallation() {

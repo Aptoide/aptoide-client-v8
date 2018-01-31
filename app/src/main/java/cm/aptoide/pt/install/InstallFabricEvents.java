@@ -1,6 +1,9 @@
 package cm.aptoide.pt.install;
 
+import android.content.SharedPreferences;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.root.RootAvailabilityManager;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,10 +19,17 @@ public class InstallFabricEvents implements InstallerAnalytics {
   private static final String IS_ROOT = "IS_ROOT";
   private static final String SETTING_ROOT = "SETTING_ROOT";
   private static final String INSTALLFABRICCONTEXT = "Install_Fabric_Event";
-  private AnalyticsManager analyticsManager;
+  private final InstallAnalytics installAnalytics;
+  private final AnalyticsManager analyticsManager;
+  private final SharedPreferences sharedPreferences;
+  private final RootAvailabilityManager rootAvailabilityManager;
 
-  public InstallFabricEvents(AnalyticsManager analyticsManager) {
+  public InstallFabricEvents(AnalyticsManager analyticsManager, InstallAnalytics installAnalytics,
+      SharedPreferences sharedPreferences, RootAvailabilityManager rootAvailabilityManager) {
     this.analyticsManager = analyticsManager;
+    this.installAnalytics = installAnalytics;
+    this.sharedPreferences = sharedPreferences;
+    this.rootAvailabilityManager = rootAvailabilityManager;
   }
 
   @Override public void rootInstallCompleted(int exitcode) {
@@ -64,5 +74,12 @@ public class InstallFabricEvents implements InstallerAnalytics {
     map.put(CONCAT, String.valueOf(isRootAllowed) + "_" + String.valueOf(isRoot));
     analyticsManager.logEvent(map, IS_INSTALLATION_TYPE_EVENT_NAME, AnalyticsManager.Action.ROOT,
         INSTALLFABRICCONTEXT);
+  }
+
+  @Override public void logInstallErrorEvent(String packageName, int versionCode, Exception e) {
+    installAnalytics.logInstallErrorEvent(packageName, versionCode, e,
+        rootAvailabilityManager.isRootAvailable()
+            .toBlocking()
+            .value(), ManagerPreferences.allowRootInstallation(sharedPreferences));
   }
 }

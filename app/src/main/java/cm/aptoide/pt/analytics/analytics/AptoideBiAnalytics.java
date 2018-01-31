@@ -45,12 +45,12 @@ public class AptoideBiAnalytics {
   public void setup() {
     subscriptions.add(
         Observable.interval(initialDelay, sendInterval, TimeUnit.MILLISECONDS, timerScheduler)
-        .flatMap(time -> persistence.getAll()
-            .first())
-        .filter(events -> events.size() > 0)
-        .flatMapCompletable(events -> sendEvents(new ArrayList<>(events)))
-        .retry()
-        .subscribe());
+            .flatMap(time -> persistence.getAll()
+                .first())
+            .filter(events -> events.size() > 0)
+            .flatMapCompletable(events -> sendEvents(new ArrayList<>(events)))
+            .retry()
+            .subscribe());
   }
 
   @NonNull private Completable sendEvents(List<Event> events) {

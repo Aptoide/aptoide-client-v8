@@ -22,6 +22,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,7 +39,6 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
@@ -121,7 +121,6 @@ import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
-import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -141,8 +140,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.subjects.PublishSubject;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
-
 /**
  * Created on 04/05/16.
  */
@@ -160,6 +157,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
   @Inject DownloadAnalytics downloadAnalytics;
+  @Inject ConnectivityManager connectivityManager;
+  @Inject TelephonyManager telephonyManager;
+  @Inject InstallAnalytics installAnalytics;
   private AppViewModel appViewModel;
   private AppViewHeader header;
   private InstallManager installManager;
@@ -189,7 +189,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private AccountNavigator accountNavigator;
   private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
   private CrashReport crashReport;
-  private InstallAnalytics installAnalytics;
   private AppSearchSuggestionsView appSearchSuggestionsView;
   private SearchNavigator searchNavigator;
   private TrendingManager trendingManager;
@@ -367,11 +366,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     final TokenInvalidator tokenInvalidator = application.getTokenInvalidator();
     httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    Analytics analytics = Analytics.getInstance();
-
-    installAnalytics =
-        new InstallAnalytics(analytics, AppEventsLogger.newLogger(getApplicationContext()),
-            CrashReport.getInstance(), analyticsManager, navigationTracker);
 
     timelineAnalytics = application.getTimelineAnalytics();
 

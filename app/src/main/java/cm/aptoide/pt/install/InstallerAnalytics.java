@@ -16,4 +16,6 @@ public interface InstallerAnalytics {
   void rootInstallStart();
 
   void installationType(boolean isRootAllowed, boolean isRoot);
+
+  void logInstallErrorEvent(String packageName, int versionCode, Exception e);
 }

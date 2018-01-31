@@ -160,13 +160,13 @@ public class InstallService extends BaseService {
         })
         .first(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
         .doOnNext(download -> {
-          DownloadEvent report =
-              (DownloadEvent) analytics.get(download.getPackageName() + download.getVersionCode(),
-                  DownloadEvent.class);
-          if (report != null) {
-            report.setResultStatus(Result.ResultStatus.SUCC);
-            analytics.sendEvent(report);
-          }
+          //DownloadEvent report =
+          //    (DownloadEvent) analytics.get(download.getPackageName() + download.getVersionCode(),
+          //        DownloadEvent.class);
+          //if (report != null) {
+          //  report.setResultStatus(Result.ResultStatus.SUCC);
+          //  analytics.sendEvent(report);
+          //}
         })
         .flatMap(download -> stopForegroundAndInstall(context, download, true,
             forceDefaultInstall).andThen(sendBackgroundInstallFinishedBroadcast(download))

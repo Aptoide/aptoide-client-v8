@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.ads.AdsRepository;
@@ -26,6 +28,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.Result;
 import cm.aptoide.pt.download.InstallEvent;
 import cm.aptoide.pt.install.rollback.RollbackRepository;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.search.model.SearchAdResult;
@@ -33,7 +36,6 @@ import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.util.ReferrerUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.q.QManager;
-import com.facebook.appevents.AppEventsLogger;
 import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -47,6 +49,9 @@ public class InstalledIntentService extends IntentService {
   private static final String TAG = InstalledIntentService.class.getName();
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
+  @Inject ConnectivityManager connectivityManager;
+  @Inject TelephonyManager telephonyManager;
+  @Inject InstallAnalytics installAnalytics;
   private SharedPreferences sharedPreferences;
   private AdsRepository adsRepository;
   private RollbackRepository repository;
@@ -59,7 +64,6 @@ public class InstalledIntentService extends IntentService {
   private RootAvailabilityManager rootAvailabilityManager;
   private QManager qManager;
   private MinimalAdMapper adMapper;
-  private InstallAnalytics installAnalytics;
   private PackageManager packageManager;
 
   public InstalledIntentService() {
@@ -87,9 +91,6 @@ public class InstalledIntentService extends IntentService {
         ((AptoideApplication) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
     rootAvailabilityManager =
         ((AptoideApplication) getApplicationContext()).getRootAvailabilityManager();
-    installAnalytics =
-        new InstallAnalytics(analytics, AppEventsLogger.newLogger(getApplicationContext()),
-            CrashReport.getInstance(), analyticsManager, navigationTracker);
     packageManager = getPackageManager();
   }
 
@@ -200,7 +201,10 @@ public class InstalledIntentService extends IntentService {
     if (packageInfo != null) {
       InstallEvent event =
           (InstallEvent) analytics.get(packageName + packageInfo.versionCode, InstallEvent.class);
-      installAnalytics.installCompleted(packageName, packageInfo.versionCode);
+      installAnalytics.installCompleted(packageName, packageInfo.versionCode,
+          rootAvailabilityManager.isRootAvailable()
+              .toBlocking()
+              .value(), ManagerPreferences.allowRootInstallation(sharedPreferences));
       if (event != null) {
         event.setPhoneRooted(rootAvailabilityManager.isRootAvailable()
             .toBlocking()

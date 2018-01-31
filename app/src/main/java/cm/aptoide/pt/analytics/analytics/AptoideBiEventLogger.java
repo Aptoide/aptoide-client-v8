@@ -19,16 +19,6 @@ public class AptoideBiEventLogger implements EventLogger {
   public void log(String eventName, Map<String, Object> data, AnalyticsManager.Action action,
       String context) {
     service.log(eventName, data, action, context);
-    Logger.d(TAG, "log() called with: "
-        + "eventName = ["
-        + eventName
-        + "], data = ["
-        + data
-        + "], action = ["
-        + action
-        + "], context = ["
-        + context
-        + "]");
   }
 
   @Override public void setup() {

@@ -60,6 +60,7 @@ import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.file.FileManager;
+import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallFabricEvents;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstallerFactory;
@@ -207,6 +208,7 @@ public abstract class AptoideApplication extends Application {
   @Inject NotificationAnalytics notificationAnalytics;
   @Inject SearchSuggestionManager searchSuggestionManager;
   @Inject AnalyticsManager analyticsManager;
+  @Inject InstallAnalytics installAnalytics;
   private LeakTool leakTool;
   private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
@@ -517,9 +519,10 @@ public abstract class AptoideApplication extends Application {
     if (installManager == null) {
 
       installManager = new InstallManager(getApplicationContext(), getDownloadManager(),
-          new InstallerFactory(new MinimalAdMapper(), new InstallFabricEvents(analyticsManager),
-              getImageCachePath()).create(this, installerType), getRootAvailabilityManager(),
-          getDefaultSharedPreferences(),
+          new InstallerFactory(new MinimalAdMapper(),
+              new InstallFabricEvents(analyticsManager, installAnalytics,
+                  getDefaultSharedPreferences(), rootAvailabilityManager), getImageCachePath()).create(this, installerType),
+          getRootAvailabilityManager(), getDefaultSharedPreferences(),
           SecurePreferencesImplementation.getInstance(getApplicationContext(),
               getDefaultSharedPreferences()),
           RepositoryFactory.getDownloadRepository(getApplicationContext().getApplicationContext()),

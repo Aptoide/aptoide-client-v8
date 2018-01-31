@@ -88,6 +88,7 @@ import cm.aptoide.pt.download.DownloadMirrorEventInterceptor;
 import cm.aptoide.pt.download.PaidAppsDownloadInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
+import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallFabricEvents;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
@@ -217,16 +218,33 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides InstallerAnalytics provideInstallerAnalytics(
-      AnalyticsManager analyticsManager) {
-    return new InstallFabricEvents(analyticsManager);
+      AnalyticsManager analyticsManager, InstallAnalytics installAnalytics,
+      @Named("default") SharedPreferences sharedPreferences,
+      RootAvailabilityManager rootAvailabilityManager) {
+    return new InstallFabricEvents(analyticsManager, installAnalytics, sharedPreferences,
+        rootAvailabilityManager);
   }
 
   @Singleton @Provides DownloadAnalytics provideDownloadAnalytics(AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker) {
-    return new DownloadAnalytics(
-        ((ConnectivityManager) application.getSystemService(Context.CONNECTIVITY_SERVICE)),
-        ((TelephonyManager) application.getSystemService(Context.TELEPHONY_SERVICE)),
-        navigationTracker, analyticsManager);
+      NavigationTracker navigationTracker, ConnectivityManager connectivityManager,
+      TelephonyManager providesSystemService) {
+    return new DownloadAnalytics(connectivityManager, providesSystemService, navigationTracker,
+        analyticsManager);
+  }
+
+  @Singleton @Provides TelephonyManager providesTelephonyManager() {
+    return (TelephonyManager) application.getSystemService(Context.TELEPHONY_SERVICE);
+  }
+
+  @Singleton @Provides ConnectivityManager providesConnectivityManager() {
+    return (ConnectivityManager) application.getSystemService(Context.CONNECTIVITY_SERVICE);
+  }
+
+  @Singleton @Provides InstallAnalytics provideInstallAnalytics(AnalyticsManager analyticsManager,
+      NavigationTracker navigationTracker, ConnectivityManager connectivityManager,
+      TelephonyManager telephonyManager) {
+    return new InstallAnalytics(CrashReport.getInstance(), analyticsManager, navigationTracker,
+        new HashMap<>(), connectivityManager, telephonyManager);
   }
 
   @Singleton @Provides @Named("aptoidePackage") String provideAptoidePackage() {
@@ -236,13 +254,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AptoideDownloadManager provideAptoideDownloadManager(
       DownloadAccessor downloadAccessor, @Named("user-agent") Interceptor userAgentInterceptor,
       CacheHelper cacheHelper, DownloadAnalytics downloadAnalytics,
-      AuthenticationPersistence authenticationPersistence, @Named("cachePath") String cachePath) {
+      AuthenticationPersistence authenticationPersistence, @Named("cachePath") String cachePath,
+      InstallAnalytics installAnalytics) {
     final String apkPath = cachePath + "apks/";
     final String obbPath = cachePath + "obb/";
     final OkHttpClient.Builder httpClientBuilder =
         new OkHttpClient.Builder().addInterceptor(userAgentInterceptor)
             .addInterceptor(new PaidAppsDownloadInterceptor(authenticationPersistence))
-            .addInterceptor(new DownloadMirrorEventInterceptor(downloadAnalytics))
+            .addInterceptor(new DownloadMirrorEventInterceptor(downloadAnalytics, installAnalytics))
             .connectTimeout(20, TimeUnit.SECONDS)
             .writeTimeout(20, TimeUnit.SECONDS)
             .readTimeout(20, TimeUnit.SECONDS);
@@ -796,14 +815,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AdsRepository provideAdsRepository(IdsRepository idsRepository,
       AptoideAccountManager accountManager, @Named("default") OkHttpClient okHttpClient,
       QManager qManager, @Named("default") SharedPreferences defaultSharedPreferences,
-      AdsApplicationVersionCodeProvider adsApplicationVersionCodeProvider) {
+      AdsApplicationVersionCodeProvider adsApplicationVersionCodeProvider,
+      ConnectivityManager connectivityManager) {
     return new AdsRepository(idsRepository, accountManager, okHttpClient,
         WebService.getDefaultConverter(), qManager, defaultSharedPreferences,
-        application.getApplicationContext(),
-        (ConnectivityManager) application.getSystemService(Context.CONNECTIVITY_SERVICE),
-        application.getResources(), adsApplicationVersionCodeProvider,
-        AdNetworkUtils::isGooglePlayServicesAvailable, application::getPartnerId,
-        new MinimalAdMapper());
+        application.getApplicationContext(), connectivityManager, application.getResources(),
+        adsApplicationVersionCodeProvider, AdNetworkUtils::isGooglePlayServicesAvailable,
+        application::getPartnerId, new MinimalAdMapper());
   }
 
   @Singleton @Provides AdsApplicationVersionCodeProvider providesAdsApplicationVersionCodeProvider(
@@ -828,9 +846,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         networkOperatorManager, authenticationPersistence);
   }
 
-  @Singleton @Provides NetworkOperatorManager providesNetworkOperatorManager() {
-    return new NetworkOperatorManager(
-        (TelephonyManager) application.getSystemService(Context.TELEPHONY_SERVICE));
+  @Singleton @Provides NetworkOperatorManager providesNetworkOperatorManager(
+      TelephonyManager telephonyManager) {
+    return new NetworkOperatorManager(telephonyManager);
   }
 
   @Singleton @Provides TrendingManager providesTrendingManager(TrendingService trendingService) {
@@ -967,7 +985,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         TimelineAnalytics.OPEN_STORE_PROFILE, TimelineAnalytics.COMMENT, TimelineAnalytics.SHARE,
         TimelineAnalytics.SHARE_SEND, TimelineAnalytics.COMMENT_SEND, TimelineAnalytics.FAB,
         TimelineAnalytics.SCROLLING_EVENT, TimelineAnalytics.OPEN_TIMELINE_EVENT,
-        AccountAnalytics.APTOIDE_EVENT_NAME, DownloadAnalytics.DOWNLOAD_EVENT);
+        AccountAnalytics.APTOIDE_EVENT_NAME, DownloadAnalytics.DOWNLOAD_EVENT,
+        DownloadAnalytics.DOWNLOAD_EVENT_NAME, InstallAnalytics.INSTALL_EVENT_NAME);
   }
 
   @Singleton @Provides @Named("fabricEvents") Collection<String> provideFabricEvents() {

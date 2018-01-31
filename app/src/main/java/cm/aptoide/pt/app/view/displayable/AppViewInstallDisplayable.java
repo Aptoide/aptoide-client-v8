@@ -15,6 +15,7 @@ import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
+import cm.aptoide.pt.download.DownloadInstallBaseEvent;
 import cm.aptoide.pt.download.InstallType;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
@@ -140,12 +141,12 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
     return installAppRelay;
   }
 
-  public void installAppClicked(InstallType installType) {
+  public void installAppClicked(InstallType installType, DownloadInstallBaseEvent.Origin origin) {
     GetAppMeta.App app = getPojo().getNodes()
         .getMeta()
         .getData();
-    installAnalytics.installStarted(navigationTracker.getPreviousScreen(),
-        navigationTracker.getCurrentScreen(), app.getPackageName(), versionCode, installType,
+    installAnalytics.installStarted(app.getPackageName(), versionCode, installType,
+        AnalyticsManager.Action.INSTALL, DownloadInstallBaseEvent.AppContext.APPVIEW, origin,
         fragments);
     analytics.installClicked(navigationTracker.getPreviousScreen(),
         navigationTracker.getCurrentScreen(), app.getMd5(), app.getPackageName(), app.getFile()
@@ -179,5 +180,9 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 
   public AppViewFragment getAppViewFragment() {
     return this.appViewFragment;
+  }
+
+  public InstallAnalytics getInstallAnalytics() {
+    return installAnalytics;
   }
 }

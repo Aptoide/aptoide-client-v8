@@ -1,29 +1,20 @@
 package cm.aptoide.pt.download.view;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
-import cm.aptoide.pt.dataprovider.WebService;
-import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.download.DownloadAnalytics;
-import cm.aptoide.pt.download.InstallEventConverter;
 import cm.aptoide.pt.install.Install;
+import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.presenter.DownloadsPresenter;
@@ -34,17 +25,14 @@ import cm.aptoide.pt.view.custom.DividerItemDecoration;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import java.util.List;
 import javax.inject.Inject;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
 
 public class DownloadsFragment extends NavigationTrackFragment implements DownloadsView {
 
   @Inject DownloadAnalytics downloadAnalytics;
+  @Inject InstallAnalytics installAnalytics;
   private DownloadsAdapter adapter;
   private View noDownloadsView;
-  private InstallEventConverter installConverter;
   private InstallManager installManager;
-  private Analytics analytics;
   private StoreTabNavigator storeTabNavigator;
   private NavigationTracker navigationTracker;
 
@@ -55,25 +43,10 @@ public class DownloadsFragment extends NavigationTrackFragment implements Downlo
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
-    final OkHttpClient httpClient =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
-    final BodyInterceptor<BaseBody> baseBodyInterceptorV7 =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    final Converter.Factory converterFactory = WebService.getDefaultConverter();
-    final TokenInvalidator tokenInvalidator =
-        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     navigationTracker =
         ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
-    installConverter =
-        new InstallEventConverter(baseBodyInterceptorV7, httpClient, converterFactory,
-            tokenInvalidator, BuildConfig.APPLICATION_ID,
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
-            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-            ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker());
     installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
-    analytics = Analytics.getInstance();
 
     storeTabNavigator = new StoreTabNavigator(getFragmentNavigator());
   }
@@ -102,8 +75,8 @@ public class DownloadsFragment extends NavigationTrackFragment implements Downlo
         new DividerItemDecoration(getContext(), pixelDimen, DividerItemDecoration.ALL);
     downloadsRecyclerView.addItemDecoration(decor);
 
-    adapter = new DownloadsAdapter(installConverter, downloadAnalytics, installManager, analytics,
-        getContext().getResources(), storeTabNavigator, navigationTracker);
+    adapter = new DownloadsAdapter(downloadAnalytics, installManager, getContext().getResources(),
+        storeTabNavigator, navigationTracker, installAnalytics);
     downloadsRecyclerView.setAdapter(adapter);
     noDownloadsView = view.findViewById(R.id.no_apps_downloaded);
 

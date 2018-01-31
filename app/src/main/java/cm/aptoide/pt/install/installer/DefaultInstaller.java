@@ -254,13 +254,7 @@ public class DefaultInstaller implements Installer {
   }
 
   private void sendErrorEvent(String packageName, int versionCode, Exception e) {
-    InstallEvent report =
-        (InstallEvent) analytics.get(packageName + versionCode, InstallEvent.class);
-    if (report != null) {
-      report.setResultStatus(Result.ResultStatus.FAIL);
-      report.setError(e);
-      analytics.sendEvent(report);
-    }
+    installerAnalytics.logInstallErrorEvent(packageName, versionCode, e);
   }
 
   private void startInstallIntent(Context context, File file) {
