@@ -259,11 +259,10 @@ public class AccountAnalytics {
     String error = getWsError(exception);
     String errorDescription = exception.getErrors()
         .get(error);
-    if (error.equals(INVALID_GRANT_CODE)){
+    if (error.equals(INVALID_GRANT_CODE)) {
       sendEvents(LOGIN_EVENT_NAME, loginMethod, SignUpLoginStatus.INVALID, WEB_ERROR, error,
           errorDescription);
-    }
-    else {
+    } else {
       sendEvents(LOGIN_EVENT_NAME, loginMethod, SignUpLoginStatus.FAILED, WEB_ERROR, error,
           errorDescription);
     }
