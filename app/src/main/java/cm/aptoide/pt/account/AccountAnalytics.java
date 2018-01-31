@@ -39,6 +39,7 @@ public class AccountAnalytics {
   public static final String SUCCESS = "Success";
   public static final String WEB_ERROR = "Web";
   public static final int UNKNOWN_STATUS_CODE = 12501;
+  private static final String INVALID_GRANT_CODE = "invalid_grant";
   private static final String STATUS = "Status";
   private static final String LOGIN_EVENT_NAME = "Account_Login_Screen";
   private static final String SIGN_UP_EVENT_NAME = "Account_Signup_Screen";
@@ -258,8 +259,14 @@ public class AccountAnalytics {
     String error = getWsError(exception);
     String errorDescription = exception.getErrors()
         .get(error);
-    sendEvents(LOGIN_EVENT_NAME, loginMethod, SignUpLoginStatus.FAILED, WEB_ERROR, error,
-        errorDescription);
+    if (error.equals(INVALID_GRANT_CODE)){
+      sendEvents(LOGIN_EVENT_NAME, loginMethod, SignUpLoginStatus.INVALID, WEB_ERROR, error,
+          errorDescription);
+    }
+    else {
+      sendEvents(LOGIN_EVENT_NAME, loginMethod, SignUpLoginStatus.FAILED, WEB_ERROR, error,
+          errorDescription);
+    }
   }
 
   private String getWsError(AccountException exception) {
