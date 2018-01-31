@@ -6,9 +6,10 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadAnalytics;
-import cm.aptoide.pt.download.DownloadInstallBaseEvent;
 import cm.aptoide.pt.download.InstallType;
+import cm.aptoide.pt.download.Origin;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
@@ -91,18 +92,18 @@ public class CompletedDownloadDisplayable extends Displayable {
         DownloadAnalytics.AppContext.DOWNLOADS);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         getInstallType(download.getAction()), AnalyticsManager.Action.INSTALL,
-        DownloadInstallBaseEvent.AppContext.DOWNLOADS, getOrigin(download.getAction()));
+        AppContext.DOWNLOADS, getOrigin(download.getAction()));
   }
 
-  private DownloadInstallBaseEvent.Origin getOrigin(int action) {
+  private Origin getOrigin(int action) {
     switch (action) {
       default:
       case Download.ACTION_INSTALL:
-        return DownloadInstallBaseEvent.Origin.INSTALL;
+        return Origin.INSTALL;
       case Download.ACTION_UPDATE:
-        return DownloadInstallBaseEvent.Origin.UPDATE;
+        return Origin.UPDATE;
       case Download.ACTION_DOWNGRADE:
-        return DownloadInstallBaseEvent.Origin.DOWNGRADE;
+        return Origin.DOWNGRADE;
     }
   }
 

@@ -6,8 +6,9 @@ import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.download.DownloadInstallBaseEvent;
+import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.InstallType;
+import cm.aptoide.pt.download.Origin;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.DeepLinkManager;
 import java.util.ArrayList;
@@ -129,22 +130,22 @@ public class InstallAnalytics {
   }
 
   public void installStarted(String packageName, int versionCode, InstallType update,
-      AnalyticsManager.Action action, DownloadInstallBaseEvent.AppContext context,
-      DownloadInstallBaseEvent.Origin origin) {
+      AnalyticsManager.Action action, AppContext context,
+      Origin origin) {
     installStarted(packageName, versionCode, update, Collections.emptyList());
     createInstallEvent(action, context, origin, packageName, versionCode, -1, null);
   }
 
   public void installStarted(String packageName, int versionCode, InstallType update,
-      AnalyticsManager.Action action, DownloadInstallBaseEvent.AppContext context,
-      DownloadInstallBaseEvent.Origin origin, int campaignId, String abTestingGroup) {
+      AnalyticsManager.Action action, AppContext context,
+      Origin origin, int campaignId, String abTestingGroup) {
     installStarted(packageName, versionCode, update, Collections.emptyList());
     createInstallEvent(action, context, origin, packageName, versionCode, campaignId,
         abTestingGroup);
   }
 
   private void createInstallEvent(AnalyticsManager.Action action,
-      DownloadInstallBaseEvent.AppContext context, DownloadInstallBaseEvent.Origin origin,
+      AppContext context, Origin origin,
       String packageName, int installingVersion, int campaignId, String abTestingGroup) {
 
     Map<String, Object> data = new HashMap<>();
@@ -183,8 +184,8 @@ public class InstallAnalytics {
   }
 
   public void installStarted(String packageName, int versionCode, InstallType installType,
-      AnalyticsManager.Action action, DownloadInstallBaseEvent.AppContext context,
-      DownloadInstallBaseEvent.Origin origin, List<String> fragments) {
+      AnalyticsManager.Action action, AppContext context,
+      Origin origin, List<String> fragments) {
     installStarted(packageName, versionCode, installType, fragments);
     createInstallEvent(action, context, origin, packageName, versionCode, -1, null);
   }

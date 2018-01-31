@@ -42,9 +42,10 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadFactory;
-import cm.aptoide.pt.download.DownloadInstallBaseEvent;
 import cm.aptoide.pt.download.InstallType;
+import cm.aptoide.pt.download.Origin;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
@@ -403,7 +404,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
       final Context context = view.getContext();
       final PermissionService permissionRequest = (PermissionService) getContext();
       displayable.installAppClicked(InstallType.DOWNGRADE,
-          DownloadInstallBaseEvent.Origin.DOWNGRADE);
+          Origin.DOWNGRADE);
       permissionRequest.requestAccessToExternalFileSystem(() -> {
 
         showMessageOKCancel(getContext().getResources()
@@ -424,7 +425,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                           .flatMap(success -> installManager.install(appDownload)
                               .toObservable()
                               .doOnSubscribe(() -> setupEvents(appDownload, InstallType.DOWNGRADE,
-                                  DownloadInstallBaseEvent.Origin.DOWNGRADE)))
+                                  Origin.DOWNGRADE)))
                           .observeOn(AndroidSchedulers.mainThread())
                           .subscribe(progress -> {
                             // TODO: 12/07/2017 this code doesnt run
@@ -443,11 +444,11 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
   }
 
   private void setupEvents(Download download, InstallType installType,
-      DownloadInstallBaseEvent.Origin origin) {
+      Origin origin) {
     appViewAnalytics.setupDownloadEvents(download, campaignId, abTestGroup,
         AnalyticsManager.Action.CLICK);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
-        installType, AnalyticsManager.Action.INSTALL, DownloadInstallBaseEvent.AppContext.APPVIEW,
+        installType, AnalyticsManager.Action.INSTALL, AppContext.APPVIEW,
         origin, campaignId, abTestGroup);
   }
 
@@ -491,8 +492,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
         appViewAnalytics.clickOnInstallButton(app);
       }
       displayable.installAppClicked(isUpdate ? InstallType.UPDATE : InstallType.INSTALL,
-          isUpdate ? DownloadInstallBaseEvent.Origin.UPDATE
-              : DownloadInstallBaseEvent.Origin.INSTALL);
+          isUpdate ? Origin.UPDATE
+              : Origin.INSTALL);
 
       showRootInstallWarningPopup(context);
       compositeSubscription.add(permissionManager.requestDownloadAccess(permissionService)
@@ -510,8 +511,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
             return installManager.install(download)
                 .doOnSubscribe(subscription -> setupEvents(download,
                     isUpdate ? InstallType.UPDATE : InstallType.INSTALL,
-                    isUpdate ? DownloadInstallBaseEvent.Origin.UPDATE
-                        : DownloadInstallBaseEvent.Origin.INSTALL))
+                    isUpdate ? Origin.UPDATE
+                        : Origin.INSTALL))
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> {
                   if (accountManager.isLoggedIn() && ManagerPreferences.isShowPreviewDialog(
@@ -635,15 +636,15 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     }
   }
 
-  private DownloadInstallBaseEvent.Origin getOrigin(int action) {
+  private Origin getOrigin(int action) {
     switch (action) {
       default:
       case Download.ACTION_INSTALL:
-        return DownloadInstallBaseEvent.Origin.INSTALL;
+        return Origin.INSTALL;
       case Download.ACTION_UPDATE:
-        return DownloadInstallBaseEvent.Origin.UPDATE;
+        return Origin.UPDATE;
       case Download.ACTION_DOWNGRADE:
-        return DownloadInstallBaseEvent.Origin.DOWNGRADE;
+        return Origin.DOWNGRADE;
     }
   }
 

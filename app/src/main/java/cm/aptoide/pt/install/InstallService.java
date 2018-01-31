@@ -25,9 +25,7 @@ import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Scheduled;
-import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.Result;
 import cm.aptoide.pt.download.DownloadAnalytics;
-import cm.aptoide.pt.download.DownloadEvent;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.repository.RepositoryFactory;
@@ -62,13 +60,13 @@ public class InstallService extends BaseService {
   @Inject @Named("rollback") Installer rollbackInstaller;
   @Inject @Named("default") Installer defaultInstaller;
   @Inject InstalledRepository installedRepository;
+  @Inject DownloadAnalytics downloadAnalytics;
   private InstallManager installManager;
   private CompositeSubscription subscriptions;
   private Notification notification;
   private Map<String, Integer> installerTypeMap;
   private Analytics analytics;
   private String marketName;
-  @Inject DownloadAnalytics downloadAnalytics;
 
   @Override public void onCreate() {
     super.onCreate();
@@ -159,15 +157,6 @@ public class InstallService extends BaseService {
           }
         })
         .first(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
-        .doOnNext(download -> {
-          //DownloadEvent report =
-          //    (DownloadEvent) analytics.get(download.getPackageName() + download.getVersionCode(),
-          //        DownloadEvent.class);
-          //if (report != null) {
-          //  report.setResultStatus(Result.ResultStatus.SUCC);
-          //  analytics.sendEvent(report);
-          //}
-        })
         .flatMap(download -> stopForegroundAndInstall(context, download, true,
             forceDefaultInstall).andThen(sendBackgroundInstallFinishedBroadcast(download))
             .andThen(hasNextDownload()));

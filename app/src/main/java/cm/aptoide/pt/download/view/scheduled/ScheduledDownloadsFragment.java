@@ -22,10 +22,11 @@ import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Scheduled;
+import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
-import cm.aptoide.pt.download.DownloadInstallBaseEvent;
 import cm.aptoide.pt.download.InstallType;
+import cm.aptoide.pt.download.Origin;
 import cm.aptoide.pt.download.ScheduledDownloadRepository;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
@@ -211,18 +212,18 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         getInstallType(download.getAction()),
         action ? AnalyticsManager.Action.AUTO : AnalyticsManager.Action.CLICK,
-        DownloadInstallBaseEvent.AppContext.SCHEDULED, getOrigin(download.getAction()));
+        AppContext.SCHEDULED, getOrigin(download.getAction()));
   }
 
-  private DownloadInstallBaseEvent.Origin getOrigin(int action) {
+  private Origin getOrigin(int action) {
     switch (action) {
       default:
       case Download.ACTION_INSTALL:
-        return DownloadInstallBaseEvent.Origin.INSTALL;
+        return Origin.INSTALL;
       case Download.ACTION_UPDATE:
-        return DownloadInstallBaseEvent.Origin.UPDATE;
+        return Origin.UPDATE;
       case Download.ACTION_DOWNGRADE:
-        return DownloadInstallBaseEvent.Origin.DOWNGRADE;
+        return Origin.DOWNGRADE;
     }
   }
 

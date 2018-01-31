@@ -24,8 +24,6 @@ import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
-import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.Result;
-import cm.aptoide.pt.download.InstallEvent;
 import cm.aptoide.pt.install.rollback.RollbackRepository;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -199,23 +197,10 @@ public class InstalledIntentService extends IntentService {
 
   private void sendInstallEvent(String packageName, PackageInfo packageInfo) {
     if (packageInfo != null) {
-      InstallEvent event =
-          (InstallEvent) analytics.get(packageName + packageInfo.versionCode, InstallEvent.class);
       installAnalytics.installCompleted(packageName, packageInfo.versionCode,
           rootAvailabilityManager.isRootAvailable()
               .toBlocking()
               .value(), ManagerPreferences.allowRootInstallation(sharedPreferences));
-      if (event != null) {
-        event.setPhoneRooted(rootAvailabilityManager.isRootAvailable()
-            .toBlocking()
-            .value());
-        event.setResultStatus(Result.ResultStatus.SUCC);
-        analytics.sendEvent(event);
-        return;
-      }
-
-      CrashReport.getInstance()
-          .log(new NullPointerException("Event is null."));
       return;
     }
 

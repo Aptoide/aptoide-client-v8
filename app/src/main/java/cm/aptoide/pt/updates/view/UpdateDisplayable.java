@@ -13,10 +13,11 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
-import cm.aptoide.pt.download.DownloadInstallBaseEvent;
 import cm.aptoide.pt.download.InstallType;
+import cm.aptoide.pt.download.Origin;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
@@ -197,7 +198,7 @@ public class UpdateDisplayable extends Displayable {
 
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         InstallType.UPDATE, AnalyticsManager.Action.INSTALL,
-        DownloadInstallBaseEvent.AppContext.UPDATE_TAB, DownloadInstallBaseEvent.Origin.UPDATE);
+        AppContext.UPDATE_TAB, Origin.UPDATE);
   }
 
   @Override protected Configs getConfig() {
