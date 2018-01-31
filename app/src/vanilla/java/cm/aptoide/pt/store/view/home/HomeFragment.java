@@ -24,7 +24,6 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DrawerAnalytics;
-import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
@@ -93,7 +92,6 @@ public class HomeFragment extends StoreFragment {
   private InstalledRepository installedRepository;
   private DrawerAnalytics drawerAnalytics;
   private ClickHandler backClickHandler;
-  private PageViewsAnalytics pageViewsAnalytics;
   private String defaultThemeName;
   private String cacheDirectoryPath;
   private AppSearchSuggestionsView appSearchSuggestionsView;
@@ -205,9 +203,6 @@ public class HomeFragment extends StoreFragment {
 
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
-
-    pageViewsAnalytics =
-        new PageViewsAnalytics(analyticsManager);
 
     searchAnalytics = new SearchAnalytics(analyticsManager, navigationTracker);
 

@@ -12,13 +12,11 @@ public class AnalyticsManager {
   private final HttpKnockEventLogger knockEventLogger;
 
   private Map<EventLogger, Collection<String>> eventSenders;
-  private AnalyticsDataSaver analyticsDataSaver;
 
   private AnalyticsManager(HttpKnockEventLogger knockLogger,
-      Map<EventLogger, Collection<String>> eventSenders, AnalyticsDataSaver analyticsDataSaver) {
+      Map<EventLogger, Collection<String>> eventSenders) {
     this.knockEventLogger = knockLogger;
     this.eventSenders = eventSenders;
-    this.analyticsDataSaver = analyticsDataSaver;
   }
 
   public void logEvent(Map<String, Object> data, String eventName, Action action, String context) {
@@ -48,14 +46,6 @@ public class AnalyticsManager {
     }
   }
 
-  public void save(@NonNull String key, @NonNull Event event) {
-    analyticsDataSaver.save(key, event);
-  }
-
-  public Event getEvent(String key) {
-    return analyticsDataSaver.newGet(key);
-  }
-
   public enum Action {
     CLICK, SCROLL, INPUT, AUTO, ROOT, VIEW, INSTALL, OPEN, IMPRESSION, DISMISS
   }
@@ -63,7 +53,6 @@ public class AnalyticsManager {
   public static class Builder {
     private final Map<EventLogger, Collection<String>> eventSenders;
     private HttpKnockEventLogger httpKnockEventLogger;
-    private AnalyticsDataSaver analyticsDataSaver;
 
     public Builder() {
       eventSenders = new HashMap<>();
@@ -79,11 +68,6 @@ public class AnalyticsManager {
       return this;
     }
 
-    public Builder addDataSaver(AnalyticsDataSaver analyticsDataSaver) {
-      this.analyticsDataSaver = analyticsDataSaver;
-      return this;
-    }
-
     public AnalyticsManager build() {
       if (httpKnockEventLogger == null) {
         throw new IllegalArgumentException("Analytics manager need an okhttp client");
@@ -91,7 +75,7 @@ public class AnalyticsManager {
       if (eventSenders.size() < 1) {
         throw new IllegalArgumentException("Analytics manager need at least one logger");
       }
-      return new AnalyticsManager(httpKnockEventLogger, eventSenders, analyticsDataSaver);
+      return new AnalyticsManager(httpKnockEventLogger, eventSenders);
     }
   }
 }

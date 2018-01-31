@@ -5,7 +5,6 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
-import cm.aptoide.pt.analytics.analytics.Event;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.view.DeepLinkManager;
@@ -64,9 +63,6 @@ public class InstallAnalytics {
       data.put("type", installType.name());
       analytics.save(packageName + installingVersion,
           new FacebookEvent(facebook, EDITORS_APPLICATION_INSTALL, bundle)); //TO REMOVE
-      analyticsManager.save(packageName + installingVersion,
-          new Event(EDITORS_APPLICATION_INSTALL, data, AnalyticsManager.Action.INSTALL,
-              getViewName(true), System.currentTimeMillis()));
     } else if (previousScreen == null) {
       if (!fragmentNameList.isEmpty()) {
         crashReport.log(NO_PREVIOUS_SCREEN_ERROR, fragmentNameList.toString());
@@ -81,18 +77,15 @@ public class InstallAnalytics {
       data.put("type", installType.name());
       analytics.save(packageName + installingVersion,
           new FacebookEvent(facebook, NOTIFICATION_APPLICATION_INSTALL, bundle)); //TO REMOVE
-      analyticsManager.save(packageName + installingVersion,
-          new Event(NOTIFICATION_APPLICATION_INSTALL, data, AnalyticsManager.Action.INSTALL,
-              getViewName(true), System.currentTimeMillis()));
     }
   }
 
   public void installCompleted(String packageName, int installingVersion) {
-    Event event = analyticsManager.getEvent(packageName + installingVersion);
-    if (event != null) {
-      analyticsManager.logEvent(event.getData(), event.getEventName(), event.getAction(),
-          event.getContext());
-    }
+    //Event event = analyticsManager.getEvent(packageName + installingVersion);
+    //if (event != null) {
+    //  analyticsManager.logEvent(event.getData(), event.getEventName(), event.getAction(),
+    //      event.getContext());
+    //}
   }
 
   private String getViewName(boolean isCurrent) {

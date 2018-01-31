@@ -40,7 +40,7 @@ public class DownloadCompleteAnalytics {
       Event event =
           new Event(PARTIAL_EVENT_NAME, map, AnalyticsManager.Action.CLICK, getViewName(false),
               System.currentTimeMillis());
-      analyticsManager.save(id + PARTIAL_EVENT_NAME, event);
+     // analyticsManager.save(id + PARTIAL_EVENT_NAME, event);
     }
 
     HashMap<String, Object> downloadMap = new HashMap<>();
@@ -74,17 +74,17 @@ public class DownloadCompleteAnalytics {
         new Event(EVENT_NAME, downloadMap, AnalyticsManager.Action.AUTO, getViewName(false),
             System.currentTimeMillis());
 
-    analyticsManager.save(id + EVENT_NAME, downloadEvent);
+   // analyticsManager.save(id + EVENT_NAME, downloadEvent);
     if (notificationDownloadComplete != null) {
-      analyticsManager.save(id + NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME,
-          notificationDownloadComplete);
+    //  analyticsManager.save(id + NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME,
+      //    notificationDownloadComplete);
     }
   }
 
   public void downloadCompleted(String id) {
-    sendEvent(analyticsManager.getEvent(id + PARTIAL_EVENT_NAME));
-    sendEvent(analyticsManager.getEvent(id + EVENT_NAME));
-    sendEvent(analyticsManager.getEvent(id + NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME));
+    //sendEvent(analyticsManager.getEvent(id + PARTIAL_EVENT_NAME));
+    //sendEvent(analyticsManager.getEvent(id + EVENT_NAME));
+    //sendEvent(analyticsManager.getEvent(id + NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME));
   }
 
   private void sendEvent(Event event) {
