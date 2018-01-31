@@ -28,7 +28,7 @@ public class DrawerAnalytics {
 
   public void drawerInteract(String origin) {
     analyticsManager.logEvent(createMapData("action", origin), DRAWER_INTERACT_EVENT,
-        AnalyticsManager.Action.CLICK, getViewName(true));
+        AnalyticsManager.Action.CLICK, getViewName(false));
   }
 
   private Map<String, Object> createMapData(String key, String value) {
