@@ -10,20 +10,20 @@ public class AnalyticsManager {
   private static final String TAG = AnalyticsManager.class.getSimpleName();
   private final HttpKnockEventLogger knockEventLogger;
 
-  private Map<EventLogger, Collection<String>> eventSenders;
+  private Map<EventLogger, Collection<String>> eventLoggers;
 
   private AnalyticsManager(HttpKnockEventLogger knockLogger,
-      Map<EventLogger, Collection<String>> eventSenders) {
+      Map<EventLogger, Collection<String>> eventLoggers) {
     this.knockEventLogger = knockLogger;
-    this.eventSenders = eventSenders;
+    this.eventLoggers = eventLoggers;
   }
 
   public void logEvent(Map<String, Object> data, String eventName, Action action, String context) {
     int eventsSent = 0;
-    for (Map.Entry<EventLogger, Collection<String>> senderEntry : eventSenders.entrySet()) {
-      if (senderEntry.getValue()
+    for (Map.Entry<EventLogger, Collection<String>> loggerEntry : eventLoggers.entrySet()) {
+      if (loggerEntry.getValue()
           .contains(eventName)) {
-        senderEntry.getKey()
+        loggerEntry.getKey()
             .log(eventName, data, action, context);
         eventsSent++;
       }
@@ -39,8 +39,8 @@ public class AnalyticsManager {
   }
 
   public void setup() {
-    for (Map.Entry<EventLogger, Collection<String>> senderEntry : eventSenders.entrySet()) {
-      senderEntry.getKey()
+    for (Map.Entry<EventLogger, Collection<String>> loggerEntry : eventLoggers.entrySet()) {
+      loggerEntry.getKey()
           .setup();
     }
   }
@@ -50,15 +50,15 @@ public class AnalyticsManager {
   }
 
   public static class Builder {
-    private final Map<EventLogger, Collection<String>> eventSenders;
+    private final Map<EventLogger, Collection<String>> eventLoggers;
     private HttpKnockEventLogger httpKnockEventLogger;
 
     public Builder() {
-      eventSenders = new HashMap<>();
+      eventLoggers = new HashMap<>();
     }
 
     public Builder addLogger(EventLogger eventLogger, Collection<String> supportedEvents) {
-      eventSenders.put(eventLogger, supportedEvents);
+      eventLoggers.put(eventLogger, supportedEvents);
       return this;
     }
 
@@ -71,10 +71,10 @@ public class AnalyticsManager {
       if (httpKnockEventLogger == null) {
         throw new IllegalArgumentException("Analytics manager need an okhttp client");
       }
-      if (eventSenders.size() < 1) {
+      if (eventLoggers.size() < 1) {
         throw new IllegalArgumentException("Analytics manager need at least one logger");
       }
-      return new AnalyticsManager(httpKnockEventLogger, eventSenders);
+      return new AnalyticsManager(httpKnockEventLogger, eventLoggers);
     }
   }
 }
