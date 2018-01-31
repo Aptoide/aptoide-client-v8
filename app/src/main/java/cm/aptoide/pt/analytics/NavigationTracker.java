@@ -90,14 +90,8 @@ public class NavigationTracker {
     try {
       if (isCurrent) {
         viewName = getCurrentViewName();
-        if (viewName.equals("")) {
-          viewName = getPreviousViewName();
-        }
       } else {
         viewName = getPreviousViewName();
-        if (viewName.equals("")) {
-          viewName = getCurrentViewName();
-        }
       }
     } catch (NullPointerException exception) {
     }
