@@ -41,8 +41,6 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
-import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.AnalyticsDataSaver;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.TrackerFilter;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
@@ -283,9 +281,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       InstalledRepository installedRepository, RootAvailabilityManager rootAvailabilityManager,
       InstallerAnalytics installerAnalytics) {
     return new DefaultInstaller(application.getPackageManager(), installationProvider,
-        new FileUtils(), Analytics.getInstance(),
-        ToolboxManager.isDebug(sharedPreferences) || BuildConfig.DEBUG, installedRepository, 180000,
-        rootAvailabilityManager, sharedPreferences, installerAnalytics);
+        new FileUtils(), ToolboxManager.isDebug(sharedPreferences) || BuildConfig.DEBUG,
+        installedRepository, 180000, rootAvailabilityManager, sharedPreferences,
+        installerAnalytics);
   }
 
   @Singleton @Provides @Named("rollback") Installer provideRollbackInstaller(
@@ -1011,7 +1009,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .addLogger(fabricEventLogger, fabricEvents)
         .addLogger(flurryEventLogger, flurryEvents)
         .setKnockLogger(knockEventLogger)
-        .addDataSaver(new AnalyticsDataSaver())
         .build();
   }
 }

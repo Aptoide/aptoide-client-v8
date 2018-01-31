@@ -55,7 +55,6 @@ public class InstalledIntentService extends IntentService {
   private RollbackRepository repository;
   private UpdateRepository updatesRepository;
   private CompositeSubscription subscriptions;
-  private Analytics analytics;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private InstallManager installManager;
@@ -84,7 +83,6 @@ public class InstalledIntentService extends IntentService {
     repository = RepositoryFactory.getRollbackRepository(getApplicationContext());
     updatesRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
     subscriptions = new CompositeSubscription();
-    analytics = Analytics.getInstance();
     installManager =
         ((AptoideApplication) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
     rootAvailabilityManager =

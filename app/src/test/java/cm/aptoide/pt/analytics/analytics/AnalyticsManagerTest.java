@@ -1,6 +1,5 @@
 package cm.aptoide.pt.analytics.analytics;
 
-import cm.aptoide.pt.analytics.AnalyticsDataSaver;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,12 +14,10 @@ public class AnalyticsManagerTest {
     String eventName = "TestEvent";
     EventLogger eventLogger = mock(EventLogger.class);
     HttpKnockEventLogger knockEventLogger = mock(HttpKnockEventLogger.class);
-    AnalyticsDataSaver analyticsDataSaver = mock(AnalyticsDataSaver.class);
 
     AnalyticsManager analyticsManager =
         new AnalyticsManager.Builder().addLogger(eventLogger, Arrays.asList(eventName))
             .setKnockLogger(knockEventLogger)
-            .addDataSaver(analyticsDataSaver)
             .build();
 
     Map<String, Object> data = new HashMap<>();
@@ -34,12 +31,10 @@ public class AnalyticsManagerTest {
     String eventName = "TestEvent";
     EventLogger eventLogger = mock(EventLogger.class);
     HttpKnockEventLogger knockEventLogger = mock(HttpKnockEventLogger.class);
-    AnalyticsDataSaver analyticsDataSaver = mock(AnalyticsDataSaver.class);
 
     AnalyticsManager analyticsManager =
         new AnalyticsManager.Builder().addLogger(eventLogger, Arrays.asList(eventName))
             .setKnockLogger(knockEventLogger)
-            .addDataSaver(analyticsDataSaver)
             .build();
 
     Map<String, Object> data = new HashMap<>();

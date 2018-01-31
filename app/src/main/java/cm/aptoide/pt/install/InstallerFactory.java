@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.ads.MinimalAdMapper;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
@@ -56,10 +55,9 @@ public class InstallerFactory {
   @NonNull private DefaultInstaller getDefaultInstaller(Context context) {
     return new DefaultInstaller(context.getPackageManager(), getInstallationProvider(
         ((AptoideApplication) context.getApplicationContext()).getDownloadManager(),
-        context.getApplicationContext()), new FileUtils(), Analytics.getInstance(),
-        ToolboxManager.isDebug(
-            ((AptoideApplication) context.getApplicationContext()).getDefaultSharedPreferences())
-            || BuildConfig.DEBUG,
+        context.getApplicationContext()), new FileUtils(), ToolboxManager.isDebug(
+        ((AptoideApplication) context.getApplicationContext()).getDefaultSharedPreferences())
+        || BuildConfig.DEBUG,
         RepositoryFactory.getInstalledRepository(context.getApplicationContext()), 180000,
         ((AptoideApplication) context.getApplicationContext()).getRootAvailabilityManager(),
         ((AptoideApplication) context.getApplicationContext()).getDefaultSharedPreferences(),

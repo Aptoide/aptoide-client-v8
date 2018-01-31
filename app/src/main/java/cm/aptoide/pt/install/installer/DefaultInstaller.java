@@ -51,20 +51,18 @@ public class DefaultInstaller implements Installer {
   private final InstallationProvider installationProvider;
   private final SharedPreferences sharedPreferences;
   private FileUtils fileUtils;
-  private Analytics analytics;
   private RootAvailabilityManager rootAvailabilityManager;
   private InstalledRepository installedRepository;
   private InstallerAnalytics installerAnalytics;
 
   public DefaultInstaller(PackageManager packageManager, InstallationProvider installationProvider,
-      FileUtils fileUtils, Analytics analytics, boolean debug,
+      FileUtils fileUtils, boolean debug,
       InstalledRepository installedRepository, int rootTimeout,
       RootAvailabilityManager rootAvailabilityManager, SharedPreferences sharedPreferences,
       InstallerAnalytics installerAnalytics) {
     this.packageManager = packageManager;
     this.installationProvider = installationProvider;
     this.fileUtils = fileUtils;
-    this.analytics = analytics;
     this.installedRepository = installedRepository;
     this.installerAnalytics = installerAnalytics;
     RootShell.debugMode = debug;

@@ -65,7 +65,6 @@ public class InstallService extends BaseService {
   private CompositeSubscription subscriptions;
   private Notification notification;
   private Map<String, Integer> installerTypeMap;
-  private Analytics analytics;
   private String marketName;
 
   @Override public void onCreate() {
@@ -78,7 +77,6 @@ public class InstallService extends BaseService {
     subscriptions = new CompositeSubscription();
     setupNotification();
     installerTypeMap = new HashMap<>();
-    analytics = Analytics.getInstance();
     installedRepository = RepositoryFactory.getInstalledRepository(getApplicationContext());
   }
 

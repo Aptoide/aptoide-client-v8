@@ -3,8 +3,6 @@ package cm.aptoide.pt.analytics;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
@@ -36,35 +34,6 @@ public class Analytics {
   public static final String ACTION = "Action";
   private static final String TAG = Analytics.class.getSimpleName();
   private static final boolean ACTIVATE_FLURRY = true;
-
-  private static Analytics instance;
-
-  private final AnalyticsDataSaver saver;
-
-  private Analytics(AnalyticsDataSaver saver) {
-    this.saver = saver;
-  }
-
-  public static Analytics getInstance() {
-    if (instance == null) {
-      instance = new Analytics(new AnalyticsDataSaver());
-    }
-    return instance;
-  }
-
-  public void save(@NonNull String key, @NonNull Event event) {
-    saver.save(key + event.getClass()
-        .getName(), event);
-  }
-
-  public @Nullable Event get(String key, Class<? extends Event> clazz) {
-    return saver.get(key + clazz.getName());
-  }
-
-  public void sendEvent(Event event) {
-    event.send();
-    saver.remove(event);
-  }
 
   /**
    * This method is dealing with spot and share events only and should be refactored in case
