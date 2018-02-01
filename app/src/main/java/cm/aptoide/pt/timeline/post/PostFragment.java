@@ -34,6 +34,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -53,6 +54,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.List;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
@@ -61,6 +63,7 @@ import rx.Observable;
 public class PostFragment extends FragmentView implements PostView {
   public static final String OPEN_SOURCE = "open_source";
   private static final int MAX_CHARACTERS = 200;
+  @Inject AnalyticsManager analyticsManager;
   private ProgressBar previewLoading;
   private RecyclerView relatedApps;
   private EditText userInput;
@@ -117,6 +120,7 @@ public class PostFragment extends FragmentView implements PostView {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     installedRepository = RepositoryFactory.getInstalledRepository(getContext());
@@ -137,7 +141,7 @@ public class PostFragment extends FragmentView implements PostView {
     analytics = new PostAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
         okHttpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        sharedPreferences, application.getNavigationTracker());
+        sharedPreferences, application.getNavigationTracker(), analyticsManager);
     handleAnalytics();
     setHasOptionsMenu(true);
   }
