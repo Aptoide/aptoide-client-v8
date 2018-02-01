@@ -1,8 +1,8 @@
 package cm.aptoide.pt.account;
 
+import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.preferences.AdultContent;
 import rx.Single;
 
 public class AccountSettingsBodyInterceptorV7 implements BodyInterceptor<BaseBody> {

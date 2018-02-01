@@ -63,7 +63,7 @@ public class ListAppsRequest extends V7<ListApps, ListAppsRequest.Body> {
   }
 
   public enum Sort {
-    latest,
+    latest, trending7d, trending30d,
   }
 
   public static class Body extends BaseBody implements Endless {
@@ -92,6 +92,16 @@ public class ListAppsRequest extends V7<ListApps, ListAppsRequest.Body> {
       this.storeUser = storeCredentials.getUsername();
       this.storePassSha1 = storeCredentials.getPasswordSha1();
       this.limit = limit;
+      setNotApkTags(sharedPreferences);
+    }
+
+    public Body(BaseRequestWithStore.StoreCredentials storeCredentials, int limit,
+        SharedPreferences sharedPreferences, Sort sort) {
+      super();
+      this.storeUser = storeCredentials.getUsername();
+      this.storePassSha1 = storeCredentials.getPasswordSha1();
+      this.limit = limit;
+      this.sort=sort;
       setNotApkTags(sharedPreferences);
     }
 

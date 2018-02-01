@@ -22,11 +22,6 @@ public class WizardPageOneFragment extends BackButtonFragment {
     return new WizardPageOneFragment();
   }
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    pageViewsAnalytics.sendPageViewedEvent();
-  }
-
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     clickHandler = new ClickHandler() {

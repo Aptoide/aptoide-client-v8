@@ -81,6 +81,7 @@ import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -146,6 +147,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private OkHttpClient defaultClient;
   private String marketName;
   private CrashReport crashReport;
+  private String cacheDirectoryPath;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -188,6 +190,9 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     baseBodyInterceptorV7 = application.getAccountSettingsBodyInterceptorPoolV7();
     defaultConverter = WebService.getDefaultConverter();
     defaultClient = application.getDefaultClient();
+    cacheDirectoryPath = getContext().getApplicationContext()
+        .getCacheDir()
+        .getPath();
     accountManager =
         ((AptoideApplication) getActivity().getApplicationContext()).getAccountManager();
     tokenInvalidator = application.getTokenInvalidator();
@@ -582,13 +587,11 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   @Override public Single<String> takeFeedbackScreenShot() {
-    String downloadFolderPath = getContext().getApplicationContext()
-        .getCacheDir()
-        .getPath();
     String screenshotFileName = getActivity().getClass()
         .getSimpleName() + ".jpg";
-    AptoideUtils.ScreenU.takeScreenshot(getActivity(), downloadFolderPath, screenshotFileName);
-    return Single.just(downloadFolderPath + screenshotFileName);
+    File screenshot =
+        AptoideUtils.ScreenU.takeScreenshot(getActivity(), cacheDirectoryPath, screenshotFileName);
+    return Single.just(screenshot.getAbsolutePath());
   }
 
   @Override public void showUserUnsubscribedMessage(String userName) {

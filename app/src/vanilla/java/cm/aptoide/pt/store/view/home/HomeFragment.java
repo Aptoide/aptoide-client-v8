@@ -1,14 +1,11 @@
 package cm.aptoide.pt.store.view.home;
 
 import android.app.Activity;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -17,6 +14,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -33,11 +31,9 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.crashreports.IssuesAnalytics;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.install.InstalledRepository;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.TabNavigation;
@@ -45,7 +41,11 @@ import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.search.SearchNavigator;
-import cm.aptoide.pt.search.view.SearchBuilder;
+import cm.aptoide.pt.search.SuggestionCursorAdapter;
+import cm.aptoide.pt.search.analytics.SearchAnalytics;
+import cm.aptoide.pt.search.suggestions.TrendingManager;
+import cm.aptoide.pt.search.view.AppSearchSuggestionsView;
+import cm.aptoide.pt.search.view.SearchSuggestionsPresenter;
 import cm.aptoide.pt.spotandshare.view.SpotSharePreviewActivity;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.view.StoreFragment;
@@ -53,13 +53,16 @@ import cm.aptoide.pt.store.view.StorePagerAdapter;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.custom.BadgeView;
-import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
+import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
+import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
+import java.io.File;
 import java.text.NumberFormat;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by neuro on 09-05-2016.
@@ -89,9 +92,13 @@ public class HomeFragment extends StoreFragment {
   private DrawerAnalytics drawerAnalytics;
   private ClickHandler backClickHandler;
   private PageViewsAnalytics pageViewsAnalytics;
-  private SearchBuilder searchBuilder;
   private String defaultThemeName;
-  private IssuesAnalytics issuesAnalytics;
+  private String cacheDirectoryPath;
+  private AppSearchSuggestionsView appSearchSuggestionsView;
+  private CrashReport crashReport;
+  private SearchNavigator searchNavigator;
+  private TrendingManager trendingManager;
+  private SearchAnalytics searchAnalytics;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -178,34 +185,38 @@ public class HomeFragment extends StoreFragment {
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-
+    cacheDirectoryPath = getContext().getApplicationContext()
+        .getCacheDir()
+        .getPath();
     defaultThemeName = application.getDefaultThemeName();
-    final SearchManager searchManager =
-        (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
 
-    final SearchNavigator searchNavigator =
-        new SearchNavigator(getFragmentNavigator(), application.getDefaultStoreName());
+    searchNavigator = new SearchNavigator(getFragmentNavigator(), defaultThemeName);
+
+    trendingManager = application.getTrendingManager();
+
+    crashReport = CrashReport.getInstance();
 
     final Analytics analytics = Analytics.getInstance();
-    issuesAnalytics = new IssuesAnalytics(analytics, Answers.getInstance());
-
-    searchBuilder = new SearchBuilder(searchManager, searchNavigator);
 
     drawerAnalytics = new DrawerAnalytics(analytics,
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
+
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
+
     pageViewsAnalytics =
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            analytics, navigationTracker);
+            analytics);
+
+    searchAnalytics = new SearchAnalytics(analytics,
+        AppEventsLogger.newLogger(getContext().getApplicationContext()));
+
     setRegisterFragment(false);
     setHasOptionsMenu(true);
   }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    return super.onCreateView(inflater, container, savedInstanceState);
+  protected boolean hasSearchFromStoreFragment() {
+    return false;
   }
 
   @Override public void onDestroyView() {
@@ -283,31 +294,59 @@ public class HomeFragment extends StoreFragment {
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
-    menu.removeItem(R.id.menu_share);
-    if (searchBuilder != null && searchBuilder.isValid()) {
-      final FragmentActivity activity = getActivity();
-      // from getActivity() "May return null if the fragment is associated with a Context instead."
-      final Context context = getContext();
-      if (activity != null) {
-        searchBuilder.attachSearch(activity, menu.findItem(R.id.action_search));
-        issuesAnalytics.attachSearchSuccess(false);
-        return;
-      } else if (context != null) {
-        searchBuilder.attachSearch(context, menu.findItem(R.id.action_search));
-        issuesAnalytics.attachSearchSuccess(true);
-        return;
-      } else {
-        issuesAnalytics.attachSearchFailed(true);
-        Logger.e(TAG, new IllegalStateException(
-            "Unable to attach search to this fragment due to null parent"));
-      }
-    } else {
-      issuesAnalytics.attachSearchFailed(false);
-      Logger.e(TAG, new IllegalStateException(
-          "Unable to attach search to this fragment due to invalid search builder"));
-    }
+    inflater.inflate(R.menu.fragment_home, menu);
 
-    menu.removeItem(R.id.action_search);
+    final MenuItem menuItem = menu.findItem(R.id.menu_item_search);
+    if (appSearchSuggestionsView != null && menuItem != null) {
+      appSearchSuggestionsView.initialize(menuItem);
+    } else if (menuItem != null) {
+      menuItem.setVisible(false);
+    } else {
+      menu.removeItem(R.id.menu_item_search);
+    }
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    backClickHandler = () -> {
+      if (isDrawerOpened()) {
+        closeDrawer();
+        return true;
+      }
+
+      return false;
+    };
+    registerClickHandler(backClickHandler);
+
+    final SuggestionCursorAdapter suggestionCursorAdapter =
+        new SuggestionCursorAdapter(getContext());
+
+    final Toolbar toolbar = getToolbar();
+    final Observable<MenuItem> toolbarMenuItemClick = RxToolbar.itemClicks(toolbar)
+        .publish()
+        .autoConnect();
+
+    appSearchSuggestionsView =
+        new AppSearchSuggestionsView(this, RxView.clicks(toolbar), crashReport,
+            suggestionCursorAdapter, PublishSubject.create(), toolbarMenuItemClick,
+            searchAnalytics);
+
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+
+    final SearchSuggestionsPresenter searchSuggestionsPresenter =
+        new SearchSuggestionsPresenter(appSearchSuggestionsView,
+            application.getSearchSuggestionManager(), AndroidSchedulers.mainThread(),
+            suggestionCursorAdapter, crashReport, trendingManager, searchNavigator, false,
+            searchAnalytics);
+
+    attachPresenter(searchSuggestionsPresenter);
+  }
+
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    return super.onCreateView(inflater, container, savedInstanceState);
   }
 
   protected boolean displayHomeUpAsEnabled() {
@@ -321,7 +360,6 @@ public class HomeFragment extends StoreFragment {
       drawerLayout.openDrawer(GravityCompat.START);
       drawerAnalytics.drawerOpen();
       navigationTracker.registerScreen(ScreenTagHistory.Builder.build("Drawer"));
-      pageViewsAnalytics.sendPageViewedEvent();
     });
   }
 
@@ -340,21 +378,6 @@ public class HomeFragment extends StoreFragment {
       }
     }
     return null;
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    backClickHandler = new ClickHandler() {
-      @Override public boolean handle() {
-        if (isDrawerOpened()) {
-          closeDrawer();
-          return true;
-        }
-
-        return false;
-      }
-    };
-    registerClickHandler(backClickHandler);
   }
 
   private void setupNavigationView() {
@@ -466,14 +489,12 @@ public class HomeFragment extends StoreFragment {
   }
 
   private void startFeedbackFragment() {
-    String downloadFolderPath = getContext().getApplicationContext()
-        .getCacheDir()
-        .getPath();
     String screenshotFileName = getActivity().getClass()
         .getSimpleName() + ".jpg";
-    AptoideUtils.ScreenU.takeScreenshot(getActivity(), downloadFolderPath, screenshotFileName);
+    File screenshot =
+        AptoideUtils.ScreenU.takeScreenshot(getActivity(), cacheDirectoryPath, screenshotFileName);
     getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-        .newSendFeedbackFragment(downloadFolderPath + screenshotFileName), true);
+        .newSendFeedbackFragment(screenshot.getAbsolutePath()), true);
   }
 
   private void openSocialLink(String packageName, String socialUrl, String pageTitle,
@@ -550,8 +571,6 @@ public class HomeFragment extends StoreFragment {
 
     navigationView = (NavigationView) view.findViewById(R.id.nav_view);
     drawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
-
-    setHasOptionsMenu(true);
   }
 
   private enum BundleKeys {

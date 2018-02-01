@@ -137,10 +137,6 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
     notifyDataSetChanged();
   }
 
-  public Pair<List<SearchAppResult>, List<SearchAdResult>> getState() {
-    return new Pair<>(searchResults, searchAdResults);
-  }
-
   public void restoreState(List<SearchAppResult> apps, List<SearchAdResult> ads) {
     this.searchResults.clear();
     this.searchResults.addAll(apps);
@@ -151,4 +147,5 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
     adsLoaded = true;
     isLoadingMore = false;
   }
+
 }

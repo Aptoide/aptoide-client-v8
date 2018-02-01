@@ -6,19 +6,21 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.search.SearchAnalytics;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.List;
-import rx.Observable;
+import rx.Completable;
 import rx.Scheduler;
+import rx.Single;
 
-public class SearchResultPresenter implements Presenter {
+@SuppressWarnings({ "WeakerAccess", "Convert2MethodRef" }) public class SearchResultPresenter
+    implements Presenter {
 
-  private final SearchView view;
+  private final SearchResultView view;
   private final SearchAnalytics analytics;
   private final SearchNavigator navigator;
   private final CrashReport crashReport;
@@ -31,7 +33,7 @@ public class SearchResultPresenter implements Presenter {
   private final String defaultThemeName;
   private final boolean isMultiStoreSearch;
 
-  public SearchResultPresenter(SearchView view, SearchAnalytics analytics,
+  public SearchResultPresenter(SearchResultView view, SearchAnalytics analytics,
       SearchNavigator navigator, CrashReport crashReport, Scheduler viewScheduler,
       SearchManager searchManager, PublishRelay<SearchAdResult> onAdClickRelay,
       PublishRelay<SearchAppResult> onItemViewClickRelay,
@@ -53,7 +55,7 @@ public class SearchResultPresenter implements Presenter {
 
   @Override public void present() {
     stopLoadingMoreOnDestroy();
-    firstSearchDataLoad();
+    doFirstSearch();
     firstAdsDataLoad();
     handleClickFollowedStoresSearchButton();
     handleClickEverywhereSearchButton();
@@ -63,36 +65,6 @@ public class SearchResultPresenter implements Presenter {
     handleClickOnNoResultsImage();
     handleAllStoresListReachedBottom();
     handleFollowedStoresListReachedBottom();
-    handleTitleBarClick();
-    restoreSelectedTab();
-  }
-
-  private void restoreSelectedTab() {
-    view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .first()
-        .toSingle()
-        .map(__ -> view.getViewModel())
-        .subscribe(viewModel -> {
-          if (viewModel.getAllStoresOffset() > 0 && viewModel.getFollowedStoresOffset() > 0) {
-            if (viewModel.isAllStoresSelected()) {
-              view.showAllStoresResult();
-            } else {
-              view.showFollowedStoresResult();
-            }
-          }
-        }, crashReport::log);
-  }
-
-  private void handleTitleBarClick() {
-    view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .observeOn(viewScheduler)
-        .flatMap(__ -> view.clickTitleBar())
-        .doOnNext(__ -> view.setFocusInSearchView())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, crashReport::log);
   }
 
   private void stopLoadingMoreOnDestroy() {
@@ -101,7 +73,7 @@ public class SearchResultPresenter implements Presenter {
         .first()
         .toSingle()
         .observeOn(viewScheduler)
-        .subscribe(__ -> view.hideLoadingMore(), crashReport::log);
+        .subscribe(__ -> view.hideLoadingMore(), e -> crashReport.log(e));
   }
 
   private void handleAllStoresListReachedBottom() {
@@ -113,22 +85,22 @@ public class SearchResultPresenter implements Presenter {
         .filter(viewModel -> !viewModel.hasReachedBottomOfAllStores())
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showLoadingMore())
-        .flatMap(viewModel -> loadDataForAllNonFollowedStores(viewModel.getCurrentQuery(),
+        .flatMapSingle(viewModel -> loadDataFromNonFollowedStores(viewModel.getCurrentQuery(),
             viewModel.isOnlyTrustedApps(), viewModel.getAllStoresOffset()).onErrorResumeNext(
             err -> {
               crashReport.log(err);
-              return Observable.just(null);
+              return Single.just(null);
             }))
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.hideLoadingMore())
         .filter(data -> data != null)
         .doOnNext(data -> {
-          final SearchView.Model viewModel = view.getViewModel();
+          final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(getItemCount(data));
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, crashReport::log);
+        }, e -> crashReport.log(e));
   }
 
   private int getItemCount(List<SearchAppResult> data) {
@@ -144,28 +116,29 @@ public class SearchResultPresenter implements Presenter {
         .filter(viewModel -> !viewModel.hasReachedBottomOfFollowedStores())
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showLoadingMore())
-        .flatMap(viewModel -> loadDataForAllFollowedStores(viewModel.getCurrentQuery(),
+        .flatMapSingle(viewModel -> loadDataFromFollowedStores(viewModel.getCurrentQuery(),
             viewModel.isOnlyTrustedApps(), viewModel.getFollowedStoresOffset()).onErrorResumeNext(
             err -> {
               crashReport.log(err);
-              return Observable.just(null);
+              return Single.just(null);
             }))
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.hideLoadingMore())
         .filter(data -> data != null)
         .doOnNext(data -> {
-          final SearchView.Model viewModel = view.getViewModel();
+          final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(getItemCount(data));
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, crashReport::log);
+        }, e -> crashReport.log(e));
   }
 
   private void firstAdsDataLoad() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .map(__ -> view.getViewModel())
+        .filter(viewModel -> hasValidQuery(viewModel))
         .filter(viewModel -> !viewModel.hasLoadedAds())
         .flatMap(viewModel -> searchManager.getAdsForQuery(viewModel.getCurrentQuery())
             .onErrorReturn(err -> {
@@ -185,7 +158,12 @@ public class SearchResultPresenter implements Presenter {
             }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, crashReport::log);
+        }, e -> crashReport.log(e));
+  }
+
+  private boolean hasValidQuery(SearchResultView.Model viewModel) {
+    return viewModel.getCurrentQuery() != null && !viewModel.getCurrentQuery()
+        .isEmpty();
   }
 
   private void handleClickToOpenAppViewFromItem() {
@@ -196,7 +174,7 @@ public class SearchResultPresenter implements Presenter {
         .doOnNext(data -> openAppView(data))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, crashReport::log);
+        }, e -> crashReport.log(e));
   }
 
   private void handleClickToOpenAppViewFromAdd() {
@@ -211,7 +189,7 @@ public class SearchResultPresenter implements Presenter {
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, crashReport::log);
+        }, e -> crashReport.log(e));
   }
 
   private void handleClickToOpenPopupMenu() {
@@ -242,7 +220,7 @@ public class SearchResultPresenter implements Presenter {
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, crashReport::log);
+        }, e -> crashReport.log(e));
   }
 
   private void handleClickOnNoResultsImage() {
@@ -255,7 +233,7 @@ public class SearchResultPresenter implements Presenter {
             .getStoreName()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, crashReport::log);
+        }, e -> crashReport.log(e));
   }
 
   private void openAppView(SearchAppResult searchApp) {
@@ -275,7 +253,7 @@ public class SearchResultPresenter implements Presenter {
         .doOnNext(__ -> view.showFollowedStoresResult())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, crashReport::log);
+        }, e -> crashReport.log(e));
   }
 
   private void handleClickEverywhereSearchButton() {
@@ -286,78 +264,91 @@ public class SearchResultPresenter implements Presenter {
         .doOnNext(__ -> view.showAllStoresResult())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, crashReport::log);
+        }, e -> crashReport.log(e));
   }
 
-  private Observable<List<SearchAppResult>> loadData(String query, String storeName,
-      boolean onlyTrustedApps, int offset) {
+  private Single<Integer> loadData(String query, String storeName, boolean onlyTrustedApps) {
 
     if (storeName != null && !storeName.trim()
         .equals("")) {
-      return Observable.fromCallable(() -> {
-        view.setViewWithStoreNameAsSingleTab(storeName);
-        return null;
-      })
-          .flatMap(__ -> loadDataForSpecificStore(query, storeName, offset));
+      return Completable.fromAction(() -> view.setViewWithStoreNameAsSingleTab(storeName))
+          .andThen(loadDataForSpecificStore(query, storeName, 0).map(
+              list -> list != null ? list.size() : 0));
     }
     // search every store. followed and not followed
-    return Observable.merge(loadDataForAllFollowedStores(query, onlyTrustedApps, offset),
-        loadDataForAllNonFollowedStores(query, onlyTrustedApps, offset));
+    return Single.zip(loadDataFromFollowedStores(query, onlyTrustedApps, 0),
+        loadDataFromNonFollowedStores(query, onlyTrustedApps, 0),
+        (followedStoresCount, nonFollowedStoresCount) -> {
+          int result = 0;
+          if (followedStoresCount != null && followedStoresCount.size() > 0) {
+            result += followedStoresCount.size();
+          } else {
+            view.hideFollowedStoresTab();
+          }
+
+          if (nonFollowedStoresCount != null && nonFollowedStoresCount.size() > 0) {
+            result += nonFollowedStoresCount.size();
+          } else {
+            view.hideNonFollowedStoresTab();
+          }
+
+          return result;
+        });
   }
 
-  @NonNull private Observable<List<SearchAppResult>> loadDataForAllNonFollowedStores(String query,
+  @NonNull private Single<List<SearchAppResult>> loadDataFromNonFollowedStores(String query,
       boolean onlyTrustedApps, int offset) {
     return searchManager.searchInNonFollowedStores(query, onlyTrustedApps, offset)
         .observeOn(viewScheduler)
-        .doOnNext(view::addAllStoresResult)
-        .doOnNext(data -> {
-          final SearchView.Model viewModel = view.getViewModel();
+        .doOnSuccess(dataList -> view.addAllStoresResult(dataList))
+        .doOnSuccess(data -> {
+          final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.incrementOffsetAndCheckIfReachedBottomOfAllStores(getItemCount(data));
         });
   }
 
-  @NonNull private Observable<List<SearchAppResult>> loadDataForAllFollowedStores(String query,
+  @NonNull private Single<List<SearchAppResult>> loadDataFromFollowedStores(String query,
       boolean onlyTrustedApps, int offset) {
     return searchManager.searchInFollowedStores(query, onlyTrustedApps, offset)
         .observeOn(viewScheduler)
-        .doOnNext(view::addFollowedStoresResult)
-        .doOnNext(data -> {
-          final SearchView.Model viewModel = view.getViewModel();
+        .doOnSuccess(dataList -> view.addFollowedStoresResult(dataList))
+        .doOnSuccess(data -> {
+          final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(getItemCount(data));
         });
   }
 
   @NonNull
-  private Observable<List<SearchAppResult>> loadDataForSpecificStore(String query, String storeName,
+  private Single<List<SearchAppResult>> loadDataForSpecificStore(String query, String storeName,
       int offset) {
     return searchManager.searchInStore(query, storeName, offset)
         .observeOn(viewScheduler)
-        .doOnNext(view::addFollowedStoresResult)
-        .doOnNext(data -> {
-          final SearchView.Model viewModel = view.getViewModel();
+        .doOnSuccess(dataList -> view.addFollowedStoresResult(dataList))
+        .doOnSuccess(data -> {
+          final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.setAllStoresSelected(false);
           viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(getItemCount(data));
         });
   }
 
-  private void firstSearchDataLoad() {
+  private void doFirstSearch() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .map(__ -> view.getViewModel())
         .filter(viewModel -> viewModel.getAllStoresOffset() == 0
             && viewModel.getFollowedStoresOffset() == 0)
+        .filter(viewModel -> hasValidQuery(viewModel))
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showLoading())
-        .doOnNext(viewModel -> analytics.search(viewModel.getCurrentQuery()))
-        .flatMap(viewModel -> loadData(viewModel.getCurrentQuery(), viewModel.getStoreName(),
-            viewModel.isOnlyTrustedApps(), 0).onErrorResumeNext(err -> {
+        .flatMapSingle(viewModel -> loadData(viewModel.getCurrentQuery(), viewModel.getStoreName(),
+            viewModel.isOnlyTrustedApps()).onErrorResumeNext(err -> {
           crashReport.log(err);
-          return Observable.just(null);
+          return Single.just(Integer.valueOf(0));
         })
             .observeOn(viewScheduler)
-            .doOnNext(__2 -> view.hideLoading())
-            .doOnNext(data -> {
-              if (data == null || getItemCount(data) == 0) {
+            .doOnSuccess(__2 -> view.hideLoading())
+            .doOnSuccess(itemCount -> {
+              if (itemCount == 0) {
                 view.showNoResultsView();
                 analytics.searchNoResults(viewModel.getCurrentQuery());
               } else {
@@ -371,6 +362,6 @@ public class SearchResultPresenter implements Presenter {
             }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, crashReport::log);
+        }, e -> crashReport.log(e));
   }
 }

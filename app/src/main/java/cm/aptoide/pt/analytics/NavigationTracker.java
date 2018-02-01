@@ -1,6 +1,7 @@
 package cm.aptoide.pt.analytics;
 
 import android.support.annotation.Nullable;
+import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.logger.Logger;
 import java.util.Collections;
 import java.util.List;
@@ -10,16 +11,24 @@ public class NavigationTracker {
   private static final String TAG = NavigationTracker.class.getSimpleName();
   private final TrackerFilter trackerFilter;
   private List<ScreenTagHistory> historyList;
+  private PageViewsAnalytics pageViewsAnalytics;
 
-  public NavigationTracker(List<ScreenTagHistory> historyList, TrackerFilter trackerFilter) {
+  public NavigationTracker(List<ScreenTagHistory> historyList, TrackerFilter trackerFilter,
+      PageViewsAnalytics pageViewsAnalytics) {
     this.historyList = historyList;
     this.trackerFilter = trackerFilter;
+    this.pageViewsAnalytics = pageViewsAnalytics;
   }
 
   public void registerScreen(ScreenTagHistory screenTagHistory) {
     if (screenTagHistory != null && filter(screenTagHistory)) {
       historyList.add(screenTagHistory);
-      Logger.d(TAG, "VIEW - " + screenTagHistory);
+      pageViewsAnalytics.sendPageViewedEvent(screenTagHistory.getFragment(),
+          screenTagHistory.getStore());
+      Logger.d(TAG, "NavigationTracker size: "
+          + historyList.size()
+          + "   Registering screen: "
+          + screenTagHistory);
     }
   }
 
@@ -28,6 +37,10 @@ public class NavigationTracker {
       return null;
     }
     return historyList.get(historyList.size() - 1);
+  }
+
+  public List<ScreenTagHistory> getHistoryList() {
+    return historyList;
   }
 
   public @Nullable ScreenTagHistory getPreviousScreen() {

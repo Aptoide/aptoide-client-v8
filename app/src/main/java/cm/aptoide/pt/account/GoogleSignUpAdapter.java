@@ -36,7 +36,8 @@ public class GoogleSignUpAdapter implements SignUpAdapter<GoogleSignInResult> {
     } else {
       return Single.error(new GoogleSignUpException(GoogleSignInStatusCodes.getStatusCodeString(
           result.getStatus()
-              .getStatusCode())));
+              .getStatusCode()), result.getStatus()
+          .getStatusCode()));
     }
   }
 

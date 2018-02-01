@@ -60,10 +60,9 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
         ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
     pageViewsAnalytics =
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), navigationTracker);
+            Analytics.getInstance());
     navigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName()));
-    pageViewsAnalytics.sendPageViewedEvent();
     setHasOptionsMenu(true);
   }
 

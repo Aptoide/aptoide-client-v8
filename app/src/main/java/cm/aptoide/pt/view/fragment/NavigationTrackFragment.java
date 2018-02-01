@@ -29,7 +29,7 @@ public abstract class NavigationTrackFragment extends FragmentView {
     }
     pageViewsAnalytics =
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), navigationTracker);
+            Analytics.getInstance());
     getFragmentExtras();
   }
 
@@ -54,7 +54,6 @@ public abstract class NavigationTrackFragment extends FragmentView {
             + " should be logged to screen history, it has to return a value on method NavigationTrackFragment#getHistoryTracker");
       }
       navigationTracker.registerScreen(historyTracker);
-      pageViewsAnalytics.sendPageViewedEvent();
     }
   }
 

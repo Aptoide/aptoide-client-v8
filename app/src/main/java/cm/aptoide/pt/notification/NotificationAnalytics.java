@@ -26,6 +26,7 @@ public class NotificationAnalytics {
 
   public static final String IMPRESSION_ACTION = "IMPRESSION";
   public static final String NOTIFICATION_BAR_CONTEXT = "NOTIFICATION_BAR";
+  private static final String OPEN_ACTION = "OPEN";
   private static final String NOTIFICATION_RECEIVED = "Aptoide_Push_Notification_Received";
   private static final String NOTIFICATION_IMPRESSION = "Aptoide_Push_Notification_Impression";
   private static final String NOTIFICATION_PRESSED = "Aptoide_Push_Notification_Click";
@@ -107,9 +108,8 @@ public class NotificationAnalytics {
     if (type == AptoideNotification.CAMPAIGN) {
       analytics.sendEvent(
           new AptoideEvent(createCampaignNotificationMap(abTestingGroup, campaignId),
-              NOTIFICATION_EVENT_NAME, NOTIFICATION_PRESSED, NOTIFICATION_BAR_CONTEXT,
-              bodyInterceptor, httpClient, converterFactory, tokenInvalidator, appId,
-              sharedPreferences));
+              NOTIFICATION_EVENT_NAME, OPEN_ACTION, NOTIFICATION_BAR_CONTEXT, bodyInterceptor,
+              httpClient, converterFactory, tokenInvalidator, appId, sharedPreferences));
     }
     analytics.sendEvent(new FacebookEvent(facebook, NOTIFICATION_PRESSED,
         createPushNotificationEventBundle(type, abTestingGroup, campaignId, url)));

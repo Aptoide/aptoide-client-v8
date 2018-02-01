@@ -15,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
 import android.util.SparseArray;
+import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
@@ -77,16 +78,16 @@ import cm.aptoide.pt.notification.NotificationProvider;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.notification.NotificationsCleaner;
 import cm.aptoide.pt.notification.SystemNotificationShower;
-import cm.aptoide.pt.preferences.AdultContent;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.Preferences;
-import cm.aptoide.pt.preferences.RemotePersistenceAdultContent;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.root.RootAvailabilityManager;
+import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
+import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.social.TimelineRepositoryFactory;
 import cm.aptoide.pt.social.data.ReadPostsPersistence;
 import cm.aptoide.pt.social.data.TimelineRepository;
@@ -165,6 +166,7 @@ public abstract class AptoideApplication extends Application {
   @Inject IdsRepository idsRepository;
   @Inject GoogleApiClient googleSignInClient;
   @Inject @Named("default") OkHttpClient defaultClient;
+  @Inject @Named("web-socket") OkHttpClient webSocketClient;
   @Inject @Named("user-agent") Interceptor userAgentInterceptor;
   @Inject AndroidAccountProvider androidAccountProvider;
   @Inject ObjectMapper nonNullObjectMapper;
@@ -183,7 +185,7 @@ public abstract class AptoideApplication extends Application {
   @Inject SyncScheduler alarmSyncScheduler;
   @Inject @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7;
   @Inject @Named("web-v7") BodyInterceptor<BaseBody> bodyInterceptorWebV7;
-  @Inject @Named("defaulInterceptorV3") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody>
+  @Inject @Named("defaultInterceptorV3") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody>
       bodyInterceptorV3;
   @Inject L2Cache httpClientCache;
   @Inject QManager qManager;
@@ -199,6 +201,8 @@ public abstract class AptoideApplication extends Application {
   @Inject PageViewsAnalytics pageViewsAnalytics;
   @Inject @Named("account-settings-pool-v7") BodyInterceptor<BaseBody>
       accountSettingsBodyInterceptorPoolV7;
+  @Inject TrendingManager trendingManager;
+  @Inject SearchSuggestionManager searchSuggestionManager;
   private LeakTool leakTool;
   private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
@@ -754,7 +758,7 @@ public abstract class AptoideApplication extends Application {
   public BodyInterceptor<BaseBody> getAccountSettingsBodyInterceptorWebV7() {
     if (accountSettingsBodyInterceptorWebV7 == null) {
       accountSettingsBodyInterceptorWebV7 =
-          new AccountSettingsBodyInterceptorV7(getBodyInterceptorWebV7(), getLocalAdultContent());
+          new AccountSettingsBodyInterceptorV7(getBodyInterceptorWebV7(), getAdultContent());
     }
     return accountSettingsBodyInterceptorWebV7;
   }
@@ -793,10 +797,6 @@ public abstract class AptoideApplication extends Application {
   }
 
   public AdultContent getAdultContent() {
-    return new RemotePersistenceAdultContent(getLocalAdultContent(), getAccountManager());
-  }
-
-  private AdultContent getLocalAdultContent() {
     return adultContent;
   }
 
@@ -987,6 +987,10 @@ public abstract class AptoideApplication extends Application {
     return alarmSyncScheduler;
   }
 
+  public TrendingManager getTrendingManager() {
+    return trendingManager;
+  }
+
   public NotificationAnalytics getNotificationAnalytics() {
     if (notificationAnalytics == null) {
       notificationAnalytics =
@@ -998,8 +1002,20 @@ public abstract class AptoideApplication extends Application {
     return notificationAnalytics;
   }
 
+  public ObjectMapper getNonNullObjectMapper() {
+    return nonNullObjectMapper;
+  }
+
+  public OkHttpClient getDefaultWebSocketClient() {
+    return webSocketClient;
+  }
+
   public IdsRepository getIdsRepository() {
     return idsRepository;
+  }
+
+  public SearchSuggestionManager getSearchSuggestionManager() {
+    return searchSuggestionManager;
   }
 
   public TimelineAnalytics getTimelineAnalytics() {

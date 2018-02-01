@@ -29,8 +29,4 @@ public class MyStore {
   public boolean isCreateStore() {
     return getHomeMeta == null;
   }
-
-  public boolean isLogged() {
-    return timelineStats != null;
-  }
 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AccountException;
+import cm.aptoide.accountmanager.AccountValidationException;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
@@ -37,6 +38,7 @@ public class AccountAnalytics {
   public static final String GENERAL_ERROR = "General Error";
   public static final String SUCCESS = "Success";
   public static final String WEB_ERROR = "Web";
+  public static final int UNKNOWN_STATUS_CODE = 12501;
   private static final String STATUS = "Status";
   private static final String LOGIN_EVENT_NAME = "Account_Login_Screen";
   private static final String SIGN_UP_EVENT_NAME = "Account_Signup_Screen";
@@ -136,8 +138,14 @@ public class AccountAnalytics {
 
   private void sendGoogleLoginFailEvent(Throwable exception) {
     if (exception instanceof GoogleSignUpException) {
-      sendEvents(LOGIN_EVENT_NAME, LoginMethod.GOOGLE, SignUpLoginStatus.FAILED, SDK_ERROR,
-          LoginMethod.GOOGLE.toString(), ((GoogleSignUpException) exception).getError());
+      GoogleSignUpException googleSignUpException = (GoogleSignUpException) exception;
+      if (googleSignUpException.getStatusCode() == UNKNOWN_STATUS_CODE) {
+        sendEvents(LOGIN_EVENT_NAME, LoginMethod.GOOGLE, SignUpLoginStatus.INVALID, SDK_ERROR,
+            LoginMethod.GOOGLE.toString(), googleSignUpException.getError());
+      } else {
+        sendEvents(LOGIN_EVENT_NAME, LoginMethod.GOOGLE, SignUpLoginStatus.FAILED, SDK_ERROR,
+            LoginMethod.GOOGLE.toString(), googleSignUpException.getError());
+      }
     } else {
       sendWebserviceErrors(LOGIN_EVENT_NAME, LoginMethod.GOOGLE, exception);
     }
@@ -208,12 +216,12 @@ public class AccountAnalytics {
       FacebookSignUpException facebookSignUpException = ((FacebookSignUpException) throwable);
       switch (facebookSignUpException.getCode()) {
         case FacebookSignUpException.MISSING_REQUIRED_PERMISSIONS:
-          sendEvents(LOGIN_EVENT_NAME, LoginMethod.FACEBOOK, SignUpLoginStatus.FAILED,
+          sendEvents(LOGIN_EVENT_NAME, LoginMethod.FACEBOOK, SignUpLoginStatus.INVALID,
               PERMISSIONS_DENIED, String.valueOf(facebookSignUpException.getCode()),
               facebookSignUpException.getFacebookMessage());
           break;
         case FacebookSignUpException.USER_CANCELLED:
-          sendEvents(LOGIN_EVENT_NAME, LoginMethod.FACEBOOK, SignUpLoginStatus.FAILED,
+          sendEvents(LOGIN_EVENT_NAME, LoginMethod.FACEBOOK, SignUpLoginStatus.INVALID,
               USER_CANCELED, String.valueOf(facebookSignUpException.getCode()),
               facebookSignUpException.getFacebookMessage());
           break;
@@ -236,6 +244,9 @@ public class AccountAnalytics {
       sendV3ExceptionEvent(loginMethod, ((AptoideWsV3Exception) throwable));
     } else if (throwable instanceof AccountException) {
       sendV3ExceptionEvent(loginMethod, ((AccountException) throwable));
+    } else if (throwable instanceof AccountValidationException) {
+      sendEvents(eventName, loginMethod, SignUpLoginStatus.INVALID, GENERAL_ERROR, "no_code",
+          throwable.toString());
     } else {
       sendEvents(eventName, loginMethod, SignUpLoginStatus.FAILED, GENERAL_ERROR, "no_code",
           throwable.toString());
@@ -329,7 +340,7 @@ public class AccountAnalytics {
   }
 
   private enum SignUpLoginStatus {
-    SUCCESS("Success"), FAILED("Failed");
+    SUCCESS("Success"), FAILED("Failed"), INVALID("Invalid");
 
     private final String status;
 
