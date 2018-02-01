@@ -5,6 +5,7 @@ import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import cm.aptoide.pt.account.view.user.ManageUserFragment;
 import cm.aptoide.pt.account.view.user.ProfileStepOneFragment;
 import cm.aptoide.pt.addressbook.view.AddressBookFragment;
+import cm.aptoide.pt.timeline.post.PostFragment;
 import cm.aptoide.pt.updates.view.rollback.RollbackFragment;
 import dagger.Subcomponent;
 
@@ -22,4 +23,6 @@ public interface FragmentComponent {
   void inject(ManageStoreFragment manageStoreFragment);
 
   void inject(ProfileStepOneFragment profileStepOneFragment);
+
+  void inject(PostFragment postFragment);
 }
