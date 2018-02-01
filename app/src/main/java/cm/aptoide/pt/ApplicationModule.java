@@ -949,11 +949,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("aptoide") EventLogger providesAptoideEventLogger(
-      EventsPersistence persistence, AptoideBiEventService service) {
+      EventsPersistence persistence, AptoideBiEventService service, CrashReport crashReport) {
     return new AptoideBiEventLogger(
         new AptoideBiAnalytics(persistence, service, new CompositeSubscription(),
             Schedulers.computation(), BuildConfig.ANALYTICS_EVENTS_INITIAL_DELAY_IN_MILLIS,
-            BuildConfig.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS));
+            BuildConfig.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS, crashReport));
   }
 
   @Singleton @Provides @Named("facebook") EventLogger providesFacebookEventLogger(

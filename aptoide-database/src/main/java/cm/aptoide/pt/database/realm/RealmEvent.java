@@ -10,7 +10,7 @@ import io.realm.annotations.PrimaryKey;
 public class RealmEvent extends RealmObject {
   public static String PRIMARY_KEY_NAME = "timestamp";
 
-  @PrimaryKey long timestamp;
+  @PrimaryKey private long timestamp;
   private String eventName;
   private int action;
   private String context;

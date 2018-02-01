@@ -130,13 +130,11 @@ public class MyAccountPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.notificationSelection())
-        .flatMap(notification -> Observable.just(
-            linkFactory.get(LinksHandlerFactory.NOTIFICATION_LINK, notification.getUrl()))
-            .doOnNext(link -> link.launch())
-            .doOnNext(link -> analytics.sendNotificationTouchEvent(
-                notification.getNotificationCenterUrlTrack()))
-            .doOnNext(__ -> navigationTracker.registerScreen(
-                ScreenTagHistory.Builder.build("Notification"))))
+        .doOnNext(notification -> {
+          navigator.navigateToNotification(notification);
+          analytics.sendNotificationTouchEvent(notification.getNotificationCenterUrlTrack());
+          navigationTracker.registerScreen(ScreenTagHistory.Builder.build("Notification"));
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, throwable -> crashReport.log(throwable));

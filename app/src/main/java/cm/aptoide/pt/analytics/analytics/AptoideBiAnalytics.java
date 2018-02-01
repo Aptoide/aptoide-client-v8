@@ -1,6 +1,7 @@
 package cm.aptoide.pt.analytics.analytics;
 
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,19 +21,22 @@ public class AptoideBiAnalytics {
   private final long sendInterval;
   private final Scheduler timerScheduler;
   private final long initialDelay;
+  private final CrashReport crashReport;
 
   /**
    * @param sendInterval max time(in milliseconds) interval between event sends
+   * @param crashReport
    */
   public AptoideBiAnalytics(EventsPersistence persistence, AptoideBiEventService service,
       CompositeSubscription subscriptions, Scheduler timerScheduler, long initialDelay,
-      long sendInterval) {
+      long sendInterval, CrashReport crashReport) {
     this.persistence = persistence;
     this.service = service;
     this.subscriptions = subscriptions;
     this.timerScheduler = timerScheduler;
     this.sendInterval = sendInterval;
     this.initialDelay = initialDelay;
+    this.crashReport = crashReport;
   }
 
   public void log(String eventName, Map<String, Object> data, AnalyticsManager.Action action,
@@ -49,6 +53,7 @@ public class AptoideBiAnalytics {
                 .first())
             .filter(events -> events.size() > 0)
             .flatMapCompletable(events -> sendEvents(new ArrayList<>(events)))
+            .doOnError(throwable -> crashReport.log(throwable))
             .retry()
             .subscribe());
   }
