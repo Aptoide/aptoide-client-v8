@@ -10,7 +10,7 @@ import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
 import cm.aptoide.pt.app.FirstInstallAnalytics;
 import cm.aptoide.pt.billing.BillingAnalytics;
-import cm.aptoide.pt.download.DownloadCompleteAnalytics;
+import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallFabricEvents;
 import cm.aptoide.pt.notification.NotificationAnalytics;
@@ -95,16 +95,17 @@ import javax.inject.Singleton;
 
   @Singleton @Provides @Named("flurryEvents") Collection<String> provideFlurryEvents() {
     List<String> flurryEvents = new LinkedList<>(Arrays.asList(InstallAnalytics.APPLICATION_INSTALL,
-        DownloadCompleteAnalytics.PARTIAL_EVENT_NAME, DownloadCompleteAnalytics.EVENT_NAME,
-        AppViewAnalytics.HOME_PAGE_EDITORS_CHOICE_FLURRY, AppViewAnalytics.APP_VIEW_OPEN_FROM,
-        StoreAnalytics.STORES_TAB_OPEN, StoreAnalytics.STORES_TAB_INTERACT,
-        StoreAnalytics.STORES_OPEN, StoreAnalytics.STORES_INTERACT,
-        AccountAnalytics.SIGN_UP_EVENT_NAME, AccountAnalytics.LOGIN_EVENT_NAME,
-        FirstLaunchAnalytics.FIRST_LAUNCH, AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN,
-        AccountAnalytics.CREATE_USER_PROFILE, AccountAnalytics.PROFILE_SETTINGS,
-        AdultContentAnalytics.ADULT_CONTENT, AppViewAnalytics.DOWNGRADE_DIALOG,
-        DeepLinkAnalytics.APP_LAUNCH, DeepLinkAnalytics.FACEBOOK_APP_LAUNCH,
-        AppViewAnalytics.CLICK_INSTALL, FirstInstallAnalytics.FIRST_INSTALL_POP_UP,
+        DownloadAnalytics.EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME,
+        DownloadAnalytics.DOWNLOAD_COMPLETE_EVENT, AppViewAnalytics.HOME_PAGE_EDITORS_CHOICE_FLURRY,
+        AppViewAnalytics.APP_VIEW_OPEN_FROM, StoreAnalytics.STORES_TAB_OPEN,
+        StoreAnalytics.STORES_TAB_INTERACT, StoreAnalytics.STORES_OPEN,
+        StoreAnalytics.STORES_INTERACT, AccountAnalytics.SIGN_UP_EVENT_NAME,
+        AccountAnalytics.LOGIN_EVENT_NAME, FirstLaunchAnalytics.FIRST_LAUNCH,
+        AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN, AccountAnalytics.CREATE_USER_PROFILE,
+        AccountAnalytics.PROFILE_SETTINGS, AdultContentAnalytics.ADULT_CONTENT,
+        AppViewAnalytics.DOWNGRADE_DIALOG, DeepLinkAnalytics.APP_LAUNCH,
+        DeepLinkAnalytics.FACEBOOK_APP_LAUNCH, AppViewAnalytics.CLICK_INSTALL,
+        FirstInstallAnalytics.FIRST_INSTALL_POP_UP,
         FirstInstallAnalytics.FIRST_INSTALL_CLOSE_WINDOW,
         FirstInstallAnalytics.FIRST_INSTALL_START_DOWNLOAD));
     for (CardType cardType : CardType.values()) {
@@ -123,10 +124,10 @@ import javax.inject.Singleton;
         AddressBookAnalytics.FOLLOW_FRIENDS_APTOIDE_ACCESS,
         AddressBookAnalytics.FOLLOW_FRIENDS_NEW_CONNECTIONS,
         AddressBookAnalytics.FOLLOW_FRIENDS_SET_MY_PHONENUMBER,
-        DownloadCompleteAnalytics.PARTIAL_EVENT_NAME,
-        DownloadCompleteAnalytics.NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME,
-        DownloadCompleteAnalytics.EVENT_NAME, SearchAnalytics.SEARCH, SearchAnalytics.NO_RESULTS,
-        SearchAnalytics.APP_CLICK, SearchAnalytics.SEARCH_START,
+        DownloadAnalytics.EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME,
+        DownloadAnalytics.NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME,
+        DownloadAnalytics.DOWNLOAD_COMPLETE_EVENT, SearchAnalytics.SEARCH,
+        SearchAnalytics.NO_RESULTS, SearchAnalytics.APP_CLICK, SearchAnalytics.SEARCH_START,
         AppViewAnalytics.EDITORS_CHOICE_CLICKS, AppViewAnalytics.APP_VIEW_OPEN_FROM,
         AppViewAnalytics.APP_VIEW_INTERACT, NotificationAnalytics.NOTIFICATION_RECEIVED,
         NotificationAnalytics.NOTIFICATION_PRESSED, NotificationAnalytics.NOTIFICATION_RECEIVED,
