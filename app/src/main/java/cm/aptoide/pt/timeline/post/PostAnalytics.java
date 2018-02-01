@@ -92,7 +92,10 @@ public class PostAnalytics {
   @NonNull
   private AptoideEvent createAptoideEvent(String eventName, boolean success, boolean isExternal) {
     HashMap<String, Object> data = new HashMap<>();
-    data.put("status", success ? "success" : "fail");
+    HashMap<String, Object> result = new HashMap<>();
+
+    result.put("status", success ? "success" : "fail");
+    data.put("result", result);
     data.put("previous_context", navigationTracker.getPreviousScreen()
         .getFragment());
     data.put("store", navigationTracker.getPreviousScreen()

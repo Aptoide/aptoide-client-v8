@@ -89,18 +89,19 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
         tokenInvalidator, sharedPreferences);
   }
 
-  public static ListCommentsRequest ofTimeline(String url, boolean refresh,
+  public static ListCommentsRequest ofTimeline(String url, int offset, int limit, boolean refresh,
       String timelineArticleId, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
 
     ListCommentsRequest.url = url;
 
-    Body body = new Body(refresh, Order.desc);
+    Body body = new Body(limit, refresh, Order.desc);
     //body.setCommentType(CommentType.TIMELINE);
     // since the server side has some limitations with more params than expected, we
     // remove this one. it is not necessary for now.
     body.setCommentType(null);
+    body.setOffset(offset);
     body.setTimelineCardId(timelineArticleId);
 
     return new ListCommentsRequest(body, bodyInterceptor, httpClient, converterFactory,
