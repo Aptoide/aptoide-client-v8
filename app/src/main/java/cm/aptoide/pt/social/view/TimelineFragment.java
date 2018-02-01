@@ -46,12 +46,17 @@ import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.social.AccountNotificationManagerUserProvider;
 import cm.aptoide.pt.social.StatsUserProvider;
 import cm.aptoide.pt.social.TimelineUserProvider;
+import cm.aptoide.pt.social.data.AppUpdate;
 import cm.aptoide.pt.social.data.CardTouchEvent;
+import cm.aptoide.pt.social.data.CardType;
 import cm.aptoide.pt.social.data.CardViewHolderFactory;
 import cm.aptoide.pt.social.data.EmptyStatePost;
+import cm.aptoide.pt.social.data.Media;
 import cm.aptoide.pt.social.data.MinimalCardViewFactory;
 import cm.aptoide.pt.social.data.Post;
 import cm.aptoide.pt.social.data.PostComment;
+import cm.aptoide.pt.social.data.RatedRecommendation;
+import cm.aptoide.pt.social.data.Recommendation;
 import cm.aptoide.pt.social.data.SocialAction;
 import cm.aptoide.pt.social.data.SocialCardTouchEvent;
 import cm.aptoide.pt.social.data.Timeline;
@@ -92,6 +97,8 @@ import rx.Observable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
+
+import static cm.aptoide.pt.timeline.TimelineAnalytics.SOURCE_APTOIDE;
 
 /**
  * Created by jdandrade on 31/05/2017.
@@ -501,7 +508,10 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     FragmentManager fm = getFragmentManager();
     CommentDialogFragment commentDialogFragment =
         CommentDialogFragment.newInstanceTimelineArticleComment(touchEvent.getCard()
-            .getCardId());
+                .getCardId(), touchEvent.getPosition(), touchEvent.getCard()
+                .getType()
+                .toString(), getDataField("source", touchEvent), getDataField("app", touchEvent),
+            getDataField("url", touchEvent));
     commentDialogFragment.setCommentBeforeSubmissionCallbackContract((inputText) -> {
       PostComment postComment =
           new PostComment(touchEvent.getCard(), inputText, touchEvent.getPosition());
@@ -609,6 +619,66 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             getContext().getResources(), userName);
     Snackbar.make(getView(), msg, Snackbar.LENGTH_SHORT)
         .show();
+  }
+
+  private String getDataField(String field, CardTouchEvent event) {
+    final Post post = event.getCard();
+    final CardType postType = post.getType();
+    String source = null;
+    String app = null;
+    String url = null;
+    String result = null;
+    if (postType.isMedia()) {
+      Media card = (Media) post;
+      source = card.getPublisherName();
+      app = card.getRelatedApp()
+          .getPackageName();
+      url = card.getMediaLink()
+          .getUrl();
+    } else if (postType.equals(CardType.RECOMMENDATION)
+        || postType.equals(CardType.SOCIAL_POST_RECOMMENDATION)
+        || postType.equals(CardType.SOCIAL_RECOMMENDATION)
+        || postType.equals(CardType.SIMILAR)
+        || postType.equals(CardType.SOCIAL_INSTALL)
+        || postType.equals(CardType.AGGREGATED_SOCIAL_INSTALL)) {
+      if (post instanceof RatedRecommendation) {
+        RatedRecommendation card = (RatedRecommendation) post;
+        if (card.getPoster()
+            .getStore() != null) {
+          source = card.getPoster()
+              .getStore()
+              .getName();
+        } else {
+          source = card.getPoster()
+              .getPrimaryName();
+        }
+        app = card.getPackageName();
+      } else {
+        Recommendation card = (Recommendation) post;
+        source = card.getPublisherName();
+        app = card.getPackageName();
+      }
+    } else if (postType.equals(CardType.UPDATE)) {
+      AppUpdate card = (AppUpdate) post;
+      source = SOURCE_APTOIDE;
+      app = card.getPackageName();
+    } else if (postType.equals(CardType.STORE)
+        || postType.equals(CardType.SOCIAL_STORE)
+        || postType.equals(CardType.AGGREGATED_SOCIAL_STORE)) {
+      source = SOURCE_APTOIDE;
+    }
+    switch (field) {
+      case "source":
+        result = source;
+        break;
+      case "app":
+        result = app;
+        break;
+      case "url":
+        result = url;
+        break;
+    }
+    return result;
   }
 
   private void handleSharePreviewAnswer() {

@@ -12,6 +12,7 @@ import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.TabNavigation;
 import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.notification.view.InboxFragment;
+import cm.aptoide.pt.social.data.CardTouchEvent;
 import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.timeline.post.PostFragment;
 import cm.aptoide.pt.timeline.view.TimeLineLikesFragment;
@@ -79,9 +80,9 @@ public class TimelineNavigator {
     fragmentNavigator.navigateTo(MyAccountFragment.newInstance(), true);
   }
 
-  public void navigateToCommentsWithCommentDialogOpen(String cardId) {
+  public void navigateToCommentsWithCommentDialogOpen(CardTouchEvent event) {
     fragmentNavigator.navigateTo(
-        CommentListFragment.newInstanceWithCommentDialogOpen(CommentType.TIMELINE, cardId,
+        CommentListFragment.newInstanceWithCommentDialogOpen(CommentType.TIMELINE, event,
             storeContext), true);
   }
 

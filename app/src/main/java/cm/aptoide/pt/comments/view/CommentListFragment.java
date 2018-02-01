@@ -47,6 +47,13 @@ import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.social.data.AppUpdate;
+import cm.aptoide.pt.social.data.CardTouchEvent;
+import cm.aptoide.pt.social.data.CardType;
+import cm.aptoide.pt.social.data.Media;
+import cm.aptoide.pt.social.data.Post;
+import cm.aptoide.pt.social.data.RatedRecommendation;
+import cm.aptoide.pt.social.data.Recommendation;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
@@ -74,6 +81,7 @@ import rx.Single;
 import rx.functions.Action1;
 
 import static cm.aptoide.pt.analytics.Analytics.AppsTimeline.BLANK;
+import static cm.aptoide.pt.timeline.TimelineAnalytics.SOURCE_APTOIDE;
 
 // TODO: 21/12/2016 refactor and split in multiple classes to list comments
 // for each type: store and timeline card
@@ -91,6 +99,11 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private static final String STORE_ANALYTICS_ACTION = "store_analytics_action";
   private static final String STORE_ANALYTICS = "store_analytics";
   private static final String STORE_CONTEXT = "store_context";
+  private static final String POSITION = "position";
+  private static final String CARD_TYPE = "card_type";
+  private static final String SOURCE = "source";
+  private static final String APP = "app";
+  private static final String URL = "url";
   // control setComment retry
   protected long lastTotal;
   //
@@ -161,6 +174,69 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     CommentListFragment fragment = new CommentListFragment();
     fragment.setArguments(args);
     return fragment;
+  }
+
+  public static Fragment newInstanceWithCommentDialogOpen(CommentType commentType,
+      CardTouchEvent event, StoreContext storeContext) {
+    Bundle args = parseEvent(event);
+    args.putString(ELEMENT_ID_AS_STRING, event.getCard()
+        .getCardId());
+    args.putSerializable(STORE_CONTEXT, storeContext);
+    args.putString(COMMENT_TYPE, commentType.name());
+    args.putBoolean(SHOW_INPUT_DIALOG_FIRST_RUN, true);
+    args.putInt(POSITION, event.getPosition());
+    args.putString(CARD_TYPE, event.getCard()
+        .getType()
+        .toString());
+    CommentListFragment fragment = new CommentListFragment();
+    fragment.setArguments(args);
+    return fragment;
+  }
+
+  public static Bundle parseEvent(CardTouchEvent event) {
+    Bundle args = new Bundle();
+    final Post post = event.getCard();
+    final CardType postType = post.getType();
+    if (postType.isMedia()) {
+      Media card = (Media) post;
+      args.putString(SOURCE, card.getPublisherName());
+      args.putString(APP, card.getRelatedApp()
+          .getPackageName());
+      args.putString(URL, card.getMediaLink()
+          .getUrl());
+    } else if (postType.equals(CardType.RECOMMENDATION)
+        || postType.equals(CardType.SOCIAL_POST_RECOMMENDATION)
+        || postType.equals(CardType.SOCIAL_RECOMMENDATION)
+        || postType.equals(CardType.SIMILAR)
+        || postType.equals(CardType.SOCIAL_INSTALL)
+        || postType.equals(CardType.AGGREGATED_SOCIAL_INSTALL)) {
+      if (post instanceof RatedRecommendation) {
+        RatedRecommendation card = (RatedRecommendation) post;
+        if (card.getPoster()
+            .getStore() != null) {
+          args.putString(SOURCE, card.getPoster()
+              .getStore()
+              .getName());
+        } else {
+          args.putString(SOURCE, card.getPoster()
+              .getPrimaryName());
+        }
+        args.putString(APP, card.getPackageName());
+      } else {
+        Recommendation card = (Recommendation) post;
+        args.putString(SOURCE, card.getPublisherName());
+        args.putString(APP, card.getPackageName());
+      }
+    } else if (postType.equals(CardType.UPDATE)) {
+      AppUpdate card = (AppUpdate) post;
+      args.putString(SOURCE, SOURCE_APTOIDE);
+      args.putString(APP, card.getPackageName());
+    } else if (postType.equals(CardType.STORE)
+        || postType.equals(CardType.SOCIAL_STORE)
+        || postType.equals(CardType.AGGREGATED_SOCIAL_STORE)) {
+      args.putString(SOURCE, SOURCE_APTOIDE);
+    }
+    return args;
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -415,9 +491,11 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
             // show fragment CommentDialog
             FragmentManager fm = CommentListFragment.this.getActivity()
                 .getSupportFragmentManager();
+            Bundle args = getArguments();
             CommentDialogFragment commentDialogFragment =
                 CommentDialogFragment.newInstanceTimelineArticleComment(timelineArticleId,
-                    previousCommentId);
+                    args.getInt("POSITION"), args.getString("CARD_TYPE"), args.getString("SOURCE"),
+                    args.getString("APP"), args.getString("URL"), previousCommentId);
             commentDialogFragment.setCommentDialogCallbackContract(this);
 
             return commentDialogFragment.lifecycle()
@@ -429,6 +507,14 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
           return showSignInMessage();
         });
   }
+
+  //
+  // Re-Do: 6/1/2017 create new comment different fragment constructions
+  //
+
+  //
+  // Timeline Articles comments methods
+  //
 
   private Completable createNewCommentFragment(long storeId, long previousCommentId,
       String storeName) {
@@ -455,14 +541,6 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
         });
   }
 
-  //
-  // Re-Do: 6/1/2017 create new comment different fragment constructions
-  //
-
-  //
-  // Timeline Articles comments methods
-  //
-
   private Completable showSignInMessage() {
     return Single.just(floatingActionButton)
         .flatMapCompletable(view -> Completable.fromAction(() -> {
@@ -481,6 +559,10 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     });
   }
 
+  //
+  // Store comments methods
+  //
+
   @Override public void setupViews() {
     super.setupViews();
     setupToolbar();
@@ -498,10 +580,6 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
         });
   }
 
-  //
-  // Store comments methods
-  //
-
   @Override protected RecyclerView.ItemDecoration getItemDecoration() {
     return new HorizontalDividerItemDecoration(getContext(), 0);
   }
@@ -515,8 +593,11 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
             // show fragment CommentDialog
             FragmentManager fm = CommentListFragment.this.getActivity()
                 .getSupportFragmentManager();
+            Bundle args = getArguments();
             CommentDialogFragment commentDialogFragment =
-                CommentDialogFragment.newInstanceTimelineArticleComment(timelineArticleId);
+                CommentDialogFragment.newInstanceTimelineArticleComment(timelineArticleId,
+                    args.getInt("POSITION"), args.getString("CARD_TYPE"), args.getString("SOURCE"),
+                    args.getString("APP"), args.getString("URL"));
             commentDialogFragment.setCommentDialogCallbackContract(this);
 
             return commentDialogFragment.lifecycle()

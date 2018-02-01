@@ -956,8 +956,7 @@ public class TimelinePresenter implements Presenter {
                 }
                 return Completable.fromAction(
                     () -> timelineNavigation.navigateToCommentsWithCommentDialogOpen(
-                        cardTouchEvent.getCard()
-                            .getCardId()))
+                        cardTouchEvent))
                     .andThen(sendCommentEvent(cardTouchEvent));
               }
               return Completable.fromAction(() -> view.showLoginPromptWithAction())
@@ -1121,7 +1120,7 @@ public class TimelinePresenter implements Presenter {
         }, throwable -> {
           crashReport.log(throwable);
           view.showGenericError();
-          timelineAnalytics.sendCommentCompleted(false);
+          timelineAnalytics.sendCommentCompletedError();
         });
   }
 

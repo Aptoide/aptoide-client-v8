@@ -49,6 +49,11 @@ public class CommentDialogFragment
   private static final String RESOURCE_ID_AS_STRING = "resource_id_as_string";
   private static final String COMMENT_TYPE = "comment_type";
   private static final String PREVIOUS_COMMENT_ID = "previous_comment_id";
+  private static final String POSITION = "position";
+  private static final String CARD_TYPE = "card_type";
+  private static final String SOURCE = "source";
+  private static final String APP = "app";
+  private static final String URL = "url";
   private String onEmptyTextError;
   private String appOrStoreName;
   private long idAsLong;
@@ -112,23 +117,32 @@ public class CommentDialogFragment
     return fragment;
   }
 
-  public static CommentDialogFragment newInstanceTimelineArticleComment(String timelineArticleId) {
+  public static CommentDialogFragment newInstanceTimelineArticleComment(String timelineArticleId,
+      int position, String type, String source, String app, String url) {
     Bundle args = new Bundle();
     args.putString(COMMENT_TYPE, CommentType.TIMELINE.name());
     args.putString(RESOURCE_ID_AS_STRING, timelineArticleId);
-
+    args.putInt(POSITION, position);
+    args.putString(CARD_TYPE, type);
+    args.putString(SOURCE, source);
+    args.putString(APP, app);
+    args.putString(URL, url);
     CommentDialogFragment fragment = new CommentDialogFragment();
     fragment.setArguments(args);
     return fragment;
   }
 
   public static CommentDialogFragment newInstanceTimelineArticleComment(String timelineArticleId,
-      long previousCommentId) {
+      int position, String type, String source, String app, String url, long previousCommentId) {
     Bundle args = new Bundle();
     args.putString(COMMENT_TYPE, CommentType.TIMELINE.name());
     args.putString(RESOURCE_ID_AS_STRING, timelineArticleId);
     args.putLong(PREVIOUS_COMMENT_ID, previousCommentId);
-
+    args.putInt(POSITION, position);
+    args.putString(CARD_TYPE, type);
+    args.putString(SOURCE, source);
+    args.putString(APP, app);
+    args.putString(URL, url);
     CommentDialogFragment fragment = new CommentDialogFragment();
     fragment.setArguments(args);
     return fragment;
@@ -173,8 +187,10 @@ public class CommentDialogFragment
     }
 
     Button cancelButton = (Button) view.findViewById(R.id.cancel_button);
+    Bundle args = getArguments();
     cancelButton.setOnClickListener(a -> {
-      logAnalytics(false);
+      logAnalytics(false, args.getInt(POSITION), args.getString(CARD_TYPE), args.getString(SOURCE),
+          args.getString(APP), args.getString(URL));
       CommentDialogFragment.this.dismiss();
     });
 
@@ -207,6 +223,7 @@ public class CommentDialogFragment
   //
 
   private void setupLogic() {
+    Bundle args = getArguments();
 
     textInputLayout.getEditText()
         .addTextChangedListener(new TextWatcher() {
@@ -230,7 +247,8 @@ public class CommentDialogFragment
         .filter(inputText -> {
           if (TextUtils.isEmpty(inputText)) {
             enableError(onEmptyTextError);
-            logAnalytics(false);
+            logAnalytics(false, args.getInt(POSITION), args.getString(CARD_TYPE),
+                args.getString(SOURCE), args.getString(APP), args.getString(URL));
             return false;
           }
           disableError();
@@ -239,7 +257,8 @@ public class CommentDialogFragment
         .flatMap(inputText -> {
           if (commentBeforeSubmissionCallback != null) {
             commentBeforeSubmissionCallback.onCommentBeforeSubmission(inputText);
-            logAnalytics(true);
+            logAnalytics(true, args.getInt(POSITION), args.getString(CARD_TYPE),
+                args.getString(SOURCE), args.getString(APP), args.getString(URL));
             this.dismiss();
             return Observable.empty();
           }
@@ -248,7 +267,8 @@ public class CommentDialogFragment
               .doOnError(e -> {
                 CrashReport.getInstance()
                     .log(e);
-                logAnalytics(false);
+                logAnalytics(false, args.getInt(POSITION), args.getString(CARD_TYPE),
+                    args.getString(SOURCE), args.getString(APP), args.getString(URL));
                 ShowMessage.asSnack(this, R.string.error_occured);
               })
               .retry()
@@ -257,25 +277,29 @@ public class CommentDialogFragment
         .subscribe(resp -> {
           if (resp.isOk()) {
             this.dismiss();
-            logAnalytics(true);
+            logAnalytics(true, args.getInt(POSITION), args.getString(CARD_TYPE),
+                args.getString(SOURCE), args.getString(APP), args.getString(URL));
             if (commentDialogCallbackContract != null) {
               commentDialogCallbackContract.okSelected(resp, idAsLong, previousCommentId,
                   idAsString);
             }
           } else {
             ShowMessage.asSnack(this, R.string.error_occured);
-            logAnalytics(false);
+            logAnalytics(false, args.getInt(POSITION), args.getString(CARD_TYPE),
+                args.getString(SOURCE), args.getString(APP), args.getString(URL));
           }
         }, throwable -> {
-          logAnalytics(false);
+          logAnalytics(false, args.getInt(POSITION), args.getString(CARD_TYPE),
+              args.getString(SOURCE), args.getString(APP), args.getString(URL));
           CrashReport.getInstance()
               .log(throwable);
         });
   }
 
-  private void logAnalytics(boolean success) {
+  private void logAnalytics(boolean success, int position, String type, String source, String app,
+      String url) {
     if (commentType.equals(CommentType.TIMELINE)) {
-      timelineAnalytics.sendCommentCompleted(success);
+      timelineAnalytics.sendCommentCompleted(success, position, type, source, app, url);
     }
   }
 
