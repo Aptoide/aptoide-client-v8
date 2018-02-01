@@ -948,4 +948,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .setKnockLogger(knockEventLogger)
         .build();
   }
+
+  @Singleton @Provides AppShortcutsAnalytics providesAppShortcutsAnalytics(AppEventsLogger logger) {
+    return new AppShortcutsAnalytics(logger, Analytics.getInstance());
+  }
+
+
 }
