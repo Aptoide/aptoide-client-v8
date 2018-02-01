@@ -603,7 +603,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   @Override public void showLastComment(String comment) {
-    Snackbar.make(getView(), comment, Snackbar.LENGTH_LONG).show();
+    // TODO: 01/02/2018 showLastComment on post (after user navigated to post comment list and made a comment and came back) 
   }
 
   @Override public void sendCommentSuccessAnalytics(String postId) {
