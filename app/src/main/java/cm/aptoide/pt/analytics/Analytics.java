@@ -813,15 +813,6 @@ public class Analytics {
     private static final String SETTING_ROOT = "SETTING_ROOT";
     private static final String IS_INSTALLATION_TYPE_EVENT_NAME = "INSTALLATION_TYPE";
 
-    public static void rootInstallCompleted(int exitCode, boolean isInstalled) {
-      Map<String, String> map = new HashMap<>();
-      map.put(EXIT_CODE, String.valueOf(exitCode));
-      map.put(IS_INSTALLED, String.valueOf(isInstalled));
-      map.put(CONCAT, String.valueOf(isInstalled) + "_" + exitCode);
-
-      logFabricEvent(ROOT_INSTALL_EVENT_NAME, map, FABRIC);
-    }
-
     public static void installationType(boolean isRootAllowed, boolean isRoot) {
       Map<String, String> map = new HashMap<>();
       map.put(IS_ROOT, String.valueOf(isRoot));

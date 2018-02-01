@@ -71,7 +71,7 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
             ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker(),
             application.getNotificationAnalytics(),
             new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-                Analytics.getInstance(), navigationTracker), AndroidSchedulers.mainThread()));
+                Analytics.getInstance()), AndroidSchedulers.mainThread()));
   }
 
   @Override public void showNotifications(List<AptoideNotification> notifications) {

@@ -26,6 +26,7 @@ import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.BillingIdManager;
@@ -202,6 +203,7 @@ public abstract class AptoideApplication extends Application {
   @Inject @Named("account-settings-pool-v7") BodyInterceptor<BaseBody>
       accountSettingsBodyInterceptorPoolV7;
   @Inject TrendingManager trendingManager;
+  @Inject AnalyticsManager analytics;
   @Inject SearchSuggestionManager searchSuggestionManager;
   private LeakTool leakTool;
   private String aptoideMd5sum;
@@ -369,6 +371,7 @@ public abstract class AptoideApplication extends Application {
 
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
+    analytics.setup();
   }
 
   public ApplicationComponent getApplicationComponent() {

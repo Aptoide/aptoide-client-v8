@@ -169,7 +169,7 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
         application.getNotificationCenter(), linkFactory, application.getDefaultSharedPreferences(),
         application.getNavigationTracker(), application.getNotificationAnalytics(),
         new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), application.getNavigationTracker())));
+            Analytics.getInstance())));
   }
 
   @Override public int getContentViewId() {

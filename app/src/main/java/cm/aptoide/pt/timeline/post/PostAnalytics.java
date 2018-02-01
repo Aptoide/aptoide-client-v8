@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.analytics.events.AptoideEvent;
 import cm.aptoide.pt.analytics.events.FacebookEvent;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -12,6 +13,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import com.facebook.appevents.AppEventsLogger;
 import java.util.HashMap;
+import java.util.Map;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
@@ -20,7 +22,7 @@ import retrofit2.Converter;
  */
 
 public class PostAnalytics {
-  private static final String OPEN_EVENT_NAME = "New_Post_Open";
+  public static final String OPEN_EVENT_NAME = "New_Post_Open";
   private static final String NEW_POST_EVENT_NAME = "New_Post_Close";
   private static final String POST_COMPLETE = "New_Post_Complete";
   private static final String RELATED_APPS_AVAILABLE = "related_apps_available";
@@ -44,11 +46,13 @@ public class PostAnalytics {
   private final String appId;
   private final SharedPreferences sharedPreferences;
   private final NavigationTracker navigationTracker;
+  private final AnalyticsManager analyticsManager;
 
   public PostAnalytics(Analytics analytics, AppEventsLogger facebook,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator, String appId,
-      SharedPreferences sharedPreferences, NavigationTracker navigationTracker) {
+      SharedPreferences sharedPreferences, NavigationTracker navigationTracker,
+      AnalyticsManager analyticsManager) {
     this.analytics = analytics;
     this.facebook = facebook;
     this.bodyInterceptor = bodyInterceptor;
@@ -58,10 +62,14 @@ public class PostAnalytics {
     this.appId = appId;
     this.sharedPreferences = sharedPreferences;
     this.navigationTracker = navigationTracker;
+    this.analyticsManager = analyticsManager;
   }
 
   public void sendOpenEvent(OpenSource source) {
     Bundle bundle = new Bundle();
+    Map<String, Object> data = new HashMap<>();
+    data.put("source", String.valueOf(source));
+    analyticsManager.logEvent(data, OPEN_EVENT_NAME, AnalyticsManager.Action.OPEN, "Create Post");
     bundle.putString("source", String.valueOf(source));
     analytics.sendEvent(new FacebookEvent(facebook, OPEN_EVENT_NAME, bundle));
   }
