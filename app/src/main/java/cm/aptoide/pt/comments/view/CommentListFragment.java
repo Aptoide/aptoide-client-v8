@@ -24,9 +24,11 @@ import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.comments.CommentDialogCallbackContract;
 import cm.aptoide.pt.comments.CommentNode;
 import cm.aptoide.pt.comments.ComplexComment;
@@ -60,20 +62,18 @@ import cm.aptoide.pt.view.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.view.recycler.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.DisplayableGroup;
-import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
 import rx.functions.Action1;
-
-import static cm.aptoide.pt.analytics.Analytics.AppsTimeline.BLANK;
 
 // TODO: 21/12/2016 refactor and split in multiple classes to list comments
 // for each type: store and timeline card
@@ -89,10 +89,12 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private static final String URL_VAL = "url_val";
   private static final String SHOW_INPUT_DIALOG_FIRST_RUN = "show_input_dialog_first_run";
   private static final String STORE_ANALYTICS_ACTION = "store_analytics_action";
-  private static final String STORE_ANALYTICS = "store_analytics";
   private static final String STORE_CONTEXT = "store_context";
+  private static final String BLANK = "(blank)";
   // control setComment retry
   protected long lastTotal;
+  @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
   //
   // vars
   //
@@ -117,7 +119,6 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private boolean showCommentInputDialogOnFirstRun;
-  private BodyInterceptor<BaseBody> bodyInterceptor;
   private TimelineAnalytics timelineAnalytics;
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
@@ -165,6 +166,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     //this object is used in loadExtras and loadExtras is called in the super
+    getFragmentComponent(savedInstanceState).inject(this);
     AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
     sharedPreferences = application.getDefaultSharedPreferences();
     tokenInvalidator = application.getTokenInvalidator();
@@ -173,8 +175,6 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
             .getApplicationContext()).getDatabase(), Store.class));
     httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     timelineAnalytics =
         ((AptoideApplication) getContext().getApplicationContext()).getTimelineAnalytics();
     super.onCreate(savedInstanceState);
@@ -190,9 +190,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     bodyDecorator =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
-    storeAnalytics =
-        new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance());
+    storeAnalytics = new StoreAnalytics(analyticsManager, navigationTracker);
     return v;
   }
 
@@ -312,8 +310,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
   void caseListSocialTimelineComments(boolean refresh, boolean bypassServerCache) {
     ListCommentsRequest listCommentsRequest =
-        ListCommentsRequest.ofTimeline(url, refresh, elementIdAsString, bodyDecorator, httpClient,
-            converterFactory, tokenInvalidator,
+        ListCommentsRequest.ofTimeline(url, 0, 30, refresh, elementIdAsString, bodyDecorator,
+            httpClient, converterFactory, tokenInvalidator,
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
     Action1<ListComments> listCommentsAction = (listComments -> {
@@ -468,7 +466,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
         .flatMapCompletable(view -> Completable.fromAction(() -> {
           Snackbar.make(view, R.string.you_need_to_be_logged_in, Snackbar.LENGTH_LONG)
               .setAction(R.string.login, snackView -> accountNavigator.navigateToAccountView(
-                  Analytics.Account.AccountOrigins.COMMENT_LIST))
+                  AccountAnalytics.AccountOrigins.COMMENT_LIST))
               .show();
         }));
   }

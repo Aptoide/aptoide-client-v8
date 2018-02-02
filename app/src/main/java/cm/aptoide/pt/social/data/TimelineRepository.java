@@ -45,4 +45,8 @@ public class TimelineRepository {
   public void clearLoading() {
     timelineRemoteDataSource.clearLoading();
   }
+
+  public boolean hasMore() {
+    return timelineRemoteDataSource.hasMorePosts();
+  }
 }

@@ -1,7 +1,7 @@
 package cm.aptoide.pt.view.wizard;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -15,12 +15,14 @@ public class WizardPresenter implements Presenter, AptoideViewPager.OnPageChange
   private final WizardView view;
   private final AptoideAccountManager accountManager;
   private final CrashReport crashReport;
+  private final AccountAnalytics accountAnalytics;
 
   public WizardPresenter(WizardView view, AptoideAccountManager accountManager,
-      CrashReport crashReport) {
+      CrashReport crashReport, AccountAnalytics accountAnalytics) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
+    this.accountAnalytics = accountAnalytics;
   }
 
   private Completable createViewsAndButtons() {
@@ -59,7 +61,7 @@ public class WizardPresenter implements Presenter, AptoideViewPager.OnPageChange
   @Override public void onPageSelected(int position) {
     if (position == 2) {
       //Inside the wizards third page
-      Analytics.Account.enterAccountScreen(Analytics.Account.AccountOrigins.WIZARD);
+      accountAnalytics.enterAccountScreen(AccountAnalytics.AccountOrigins.WIZARD);
     }
 
     view.handleSelectedPage(position);

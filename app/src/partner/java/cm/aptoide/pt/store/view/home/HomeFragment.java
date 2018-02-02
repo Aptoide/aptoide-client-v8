@@ -28,8 +28,10 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DrawerAnalytics;
 import cm.aptoide.pt.PartnerApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -54,11 +56,11 @@ import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.BackButton;
 import cm.aptoide.pt.view.custom.BadgeView;
-import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.text.NumberFormat;
+import javax.inject.Inject;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -72,7 +74,8 @@ public class HomeFragment extends StoreFragment {
   public static final String FACEBOOK_PACKAGE_NAME = "com.facebook.katana";
 
   //private static final int SPOT_SHARE_PERMISSION_REQUEST_CODE = 6531;
-
+  @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
   private DrawerLayout drawerLayout;
   private NavigationView navigationView;
   private BadgeView updatesBadge;
@@ -87,7 +90,6 @@ public class HomeFragment extends StoreFragment {
   private DrawerAnalytics drawerAnalytics;
   private BackButton.ClickHandler backClickHandler;
   private String defaultThemeName;
-
   private AppSearchSuggestionsView appSearchSuggestionsView;
   private CrashReport crashReport;
   private SearchNavigator searchNavigator;
@@ -110,10 +112,6 @@ public class HomeFragment extends StoreFragment {
    */
   public static HomeFragment newInstance(String defaultStore, String defaultTheme) {
     return newInstance(defaultStore, StoreContext.home, defaultTheme);
-  }
-
-  @Override protected boolean hasSearchFromStoreFragment() {
-    return false;
   }
 
   @Override public void onAttach(Activity activity) {
@@ -180,7 +178,7 @@ public class HomeFragment extends StoreFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
+    getFragmentComponent(savedInstanceState).inject(this);
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
 
@@ -189,18 +187,19 @@ public class HomeFragment extends StoreFragment {
 
     defaultThemeName = application.getDefaultThemeName();
 
-    drawerAnalytics = new DrawerAnalytics(Analytics.getInstance(),
-        AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    drawerAnalytics = new DrawerAnalytics(analyticsManager, navigationTracker);
     handleFirstInstall(savedInstanceState);
 
     trendingManager = application.getTrendingManager();
     crashReport = CrashReport.getInstance();
-    final Analytics analytics = Analytics.getInstance();
-    searchAnalytics = new SearchAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    searchAnalytics = new SearchAnalytics(analyticsManager, navigationTracker);
 
     setRegisterFragment(false);
     setHasOptionsMenu(true);
+  }
+
+  @Override protected boolean hasSearchFromStoreFragment() {
+    return false;
   }
 
   @Override public void onDestroyView() {
@@ -362,7 +361,7 @@ public class HomeFragment extends StoreFragment {
         int itemId = menuItem.getItemId();
         if (itemId == R.id.navigation_item_my_account) {
           drawerAnalytics.drawerInteract("My Account");
-          accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.MY_ACCOUNT);
+          accountNavigator.navigateToAccountView(AccountAnalytics.AccountOrigins.MY_ACCOUNT);
         } else {
           final FragmentNavigator navigator = getFragmentNavigator();
           if (itemId == R.id.navigation_item_rollback) {

@@ -17,7 +17,7 @@ import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
@@ -39,6 +39,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   @Inject LoginSignUpCredentialsPresenter presenter;
   @Inject AccountNavigator accountNavigator;
   @Inject ScreenOrientationManager orientationManager;
+  @Inject AccountAnalytics accountAnalytics;
   private ProgressDialog progressDialog;
   private RxAlertDialog facebookEmailRequiredDialog;
   private Button googleLoginButton;
@@ -76,6 +77,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
     marketName = ((AptoideApplication) getActivity().getApplication()).getMarketName();
   }
 
@@ -92,7 +94,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     super.onCreateView(inflater, container, savedInstanceState);
-    getFragmentComponent(savedInstanceState).inject(this);
     return inflater.inflate(R.layout.fragment_login_sign_up_credentials, container, false);
   }
 
@@ -123,7 +124,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   @Override public Observable<Void> googleSignUpEvent() {
     return RxView.clicks(googleLoginButton)
-        .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.CONNECT_GOOGLE,
+        .doOnNext(__ -> accountAnalytics.clickIn(AccountAnalytics.StartupClick.CONNECT_GOOGLE,
             getStartupClickOrigin()));
   }
 
@@ -142,20 +143,20 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   @Override public Observable<Void> facebookSignUpEvent() {
     return RxView.clicks(facebookLoginButton)
-        .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.CONNECT_FACEBOOK,
+        .doOnNext(__ -> accountAnalytics.clickIn(AccountAnalytics.StartupClick.CONNECT_FACEBOOK,
             getStartupClickOrigin()));
   }
 
   @Override public Observable<AptoideCredentials> aptoideLoginEvent() {
     return RxView.clicks(buttonLogin)
-        .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.LOGIN,
+        .doOnNext(__ -> accountAnalytics.clickIn(AccountAnalytics.StartupClick.LOGIN,
             getStartupClickOrigin()))
         .map(click -> getCredentials());
   }
 
   @Override public Observable<AptoideCredentials> aptoideSignUpEvent() {
     return RxView.clicks(buttonSignUp)
-        .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.JOIN_APTOIDE,
+        .doOnNext(__ -> accountAnalytics.clickIn(AccountAnalytics.StartupClick.JOIN_APTOIDE,
             getStartupClickOrigin()))
         .map(click -> getCredentials());
   }
@@ -262,13 +263,13 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
         .toString());
   }
 
-  private Analytics.Account.StartupClickOrigin getStartupClickOrigin() {
+  private AccountAnalytics.StartupClickOrigin getStartupClickOrigin() {
     if (loginArea.getVisibility() == View.VISIBLE) {
-      return Analytics.Account.StartupClickOrigin.LOGIN_UP;
+      return AccountAnalytics.StartupClickOrigin.LOGIN_UP;
     } else if (signUpArea.getVisibility() == View.VISIBLE) {
-      return Analytics.Account.StartupClickOrigin.JOIN_UP;
+      return AccountAnalytics.StartupClickOrigin.JOIN_UP;
     } else {
-      return Analytics.Account.StartupClickOrigin.MAIN;
+      return AccountAnalytics.StartupClickOrigin.MAIN;
     }
   }
 

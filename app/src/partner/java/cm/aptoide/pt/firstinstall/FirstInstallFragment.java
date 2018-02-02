@@ -17,8 +17,9 @@ import cm.aptoide.pt.PartnerApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.ads.MinimalAdMapper;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.app.FirstInstallAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -32,7 +33,6 @@ import cm.aptoide.pt.view.BackButton;
 import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
-import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.List;
 import rx.Observable;
@@ -52,6 +52,8 @@ public class FirstInstallFragment extends AptoideBaseFragment<BaseAdapter>
   private RelativeLayout firstInstallLayout;
   private RelativeLayout titleToolbar;
   private ImageView closeButton;
+  private AnalyticsManager analyticsManager;
+  private NavigationTracker navigationTracker;
 
   public static FirstInstallFragment newInstance() {
     Bundle args = new Bundle();
@@ -87,8 +89,11 @@ public class FirstInstallFragment extends AptoideBaseFragment<BaseAdapter>
     super.onViewCreated(view, savedInstanceState);
     handleOnBackKeyPressed();
 
-    FirstInstallAnalytics firstInstallAnalytics = new FirstInstallAnalytics(Analytics.getInstance(),
-        AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    analyticsManager = ((PartnerApplication) getApplicationContext()).getAnalyticsManager();
+    navigationTracker = ((PartnerApplication) getApplicationContext()).getNavigationTracker();
+
+    FirstInstallAnalytics firstInstallAnalytics =
+        new FirstInstallAnalytics(analyticsManager, navigationTracker);
     firstInstallAnalytics.sendPopupEvent();
 
     attachPresenter(

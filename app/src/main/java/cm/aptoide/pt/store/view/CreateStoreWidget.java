@@ -47,7 +47,7 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
         .doOnNext(click -> getFragmentNavigator().navigateTo(
             ManageStoreFragment.newInstance(new ManageStoreViewModel(), false), true))
         .doOnNext(__ -> displayable.getStoreAnalytics()
-            .sendStoreTabInteractEvent("Login"))
+            .sendStoreTabInteractEvent("Login", false))
         .subscribe(__ -> {
         }, err -> crashReport.log(err)));
   }

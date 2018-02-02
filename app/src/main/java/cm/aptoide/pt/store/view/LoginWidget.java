@@ -3,9 +3,9 @@ package cm.aptoide.pt.store.view;
 import android.support.annotation.NonNull;
 import android.view.View;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.account.view.LoginDisplayable;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.recycler.widget.Widget;
@@ -34,7 +34,7 @@ public class LoginWidget extends Widget<LoginDisplayable> {
 
     compositeSubscription.add(RxView.clicks(loginButton)
         .subscribe(
-            click -> accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.STORE),
+            click -> accountNavigator.navigateToAccountView(AccountAnalytics.AccountOrigins.STORE),
             throwable -> CrashReport.getInstance()
                 .log(throwable)));
   }

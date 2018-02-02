@@ -117,7 +117,7 @@ public class AppViewStoreWidget extends Widget<AppViewStoreDisplayable> {
       displayable.getAppViewAnalytics()
           .sendOpenStoreEvent();
       displayable.getStoreAnalytics()
-          .sendStoreOpenEvent("App View", storeName);
+          .sendStoreOpenEvent("App View", storeName, true);
       getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
           .newStoreFragment(storeName, storeTheme), true);
     };

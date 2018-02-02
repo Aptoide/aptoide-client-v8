@@ -49,10 +49,10 @@ public class GridStoreWidget extends Widget<GridStoreDisplayable> {
       String origin = gridStoreDisplayable.getOrigin();
       if (!origin.isEmpty()) {
         gridStoreDisplayable.getStoreAnalytics()
-            .sendStoreTabInteractEvent(origin);
+            .sendStoreTabInteractEvent(origin, true);
         gridStoreDisplayable.getStoreAnalytics()
             .sendStoreOpenEvent(origin, gridStoreDisplayable.getPojo()
-                .getName());
+                .getName(), true);
       }
       getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
           .newStoreFragment(gridStoreDisplayable.getPojo()

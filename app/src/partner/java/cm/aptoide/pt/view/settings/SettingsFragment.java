@@ -32,7 +32,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PartnerApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.account.AdultContentAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -96,6 +96,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private SharedPreferences sharedPreferences;
   private String marketName;
   private Database database;
+  private AdultContentAnalytics adultContentAnalytics;
 
   private boolean showMatureContent;
   private String defaultThemeName;
@@ -113,6 +114,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         .isEnable();
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
+    adultContentAnalytics = application.getAdultContentAnalytics();
     marketName = application.getMarketName();
     defaultThemeName = application.getDefaultThemeName();
     trackAnalytics = true;
@@ -539,14 +541,14 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private void trackLock() {
     if (trackAnalytics) {
       trackAnalytics = false;
-      Analytics.AdultContent.lock();
+      adultContentAnalytics.lock();
     }
   }
 
   private void trackUnlock() {
     if (trackAnalytics) {
       trackAnalytics = false;
-      Analytics.AdultContent.unlock();
+      adultContentAnalytics.unlock();
     }
   }
 }
