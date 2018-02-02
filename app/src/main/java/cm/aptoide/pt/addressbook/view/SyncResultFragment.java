@@ -34,6 +34,8 @@ public class SyncResultFragment extends UIComponentFragment implements SyncResul
   public static final int SYNCED_LIST_NUMBER_OF_COLUMNS = 2;
   public static final String CONTACTS_JSON = "CONTACTS_JSON";
   private static final String TAG = "TAG";
+  @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
   private SyncResultContract.UserActionsListener mActionsListener;
   private List<Contact> contacts;
   private RecyclerView recyclerView;
@@ -43,8 +45,6 @@ public class SyncResultFragment extends UIComponentFragment implements SyncResul
   private TextView successMessage;
   private String entranceTag;
   private String marketName;
-  @Inject AnalyticsManager analyticsManager;
-  @Inject NavigationTracker navigationTracker;
 
   public static Fragment newInstance(List<Contact> contacts, String tag) {
     SyncResultFragment syncSuccessFragment = new SyncResultFragment();
@@ -80,7 +80,7 @@ public class SyncResultFragment extends UIComponentFragment implements SyncResul
         (AptoideApplication) getContext().getApplicationContext();
     marketName = application.getMarketName();
     mActionsListener = new SyncResultPresenter(this,
-        new AddressBookAnalytics(analyticsManager,navigationTracker),
+        new AddressBookAnalytics(analyticsManager, navigationTracker),
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
             getString(R.string.addressbook_about),
             getString(R.string.addressbook_data_about, marketName)));

@@ -197,8 +197,7 @@ public class UpdateDisplayable extends Displayable {
         DownloadAnalytics.AppContext.UPDATE_TAB);
 
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
-        InstallType.UPDATE, AnalyticsManager.Action.INSTALL,
-        AppContext.UPDATE_TAB, Origin.UPDATE);
+        InstallType.UPDATE, AnalyticsManager.Action.INSTALL, AppContext.UPDATE_TAB, Origin.UPDATE);
   }
 
   @Override protected Configs getConfig() {

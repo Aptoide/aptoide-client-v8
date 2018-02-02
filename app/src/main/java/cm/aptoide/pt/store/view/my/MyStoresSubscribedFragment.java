@@ -49,7 +49,8 @@ import rx.functions.Action1;
 public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStores> {
 
   private static final String USER_NOT_LOGGED_ERROR = "AUTH-5";
-
+  @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
   private AptoideAccountManager accountManager;
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private StoreCredentialsProvider storeCredentialsProvider;
@@ -58,8 +59,6 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
   private TokenInvalidator tokenInvalidator;
   private StoreAnalytics storeAnalytics;
   private WSWidgetsUtils widgetsUtils;
-  @Inject AnalyticsManager analyticsManager;
-  @Inject NavigationTracker navigationTracker;
 
   public static Fragment newInstance() {
     return new MyStoresSubscribedFragment();
@@ -79,8 +78,7 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
         ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    storeAnalytics =
-        new StoreAnalytics(analyticsManager, navigationTracker);
+    storeAnalytics = new StoreAnalytics(analyticsManager, navigationTracker);
     widgetsUtils = new WSWidgetsUtils();
   }
 

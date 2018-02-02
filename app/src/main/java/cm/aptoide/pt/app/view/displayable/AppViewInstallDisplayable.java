@@ -147,8 +147,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
         .getMeta()
         .getData();
     installAnalytics.installStarted(app.getPackageName(), versionCode, installType,
-        AnalyticsManager.Action.INSTALL, AppContext.APPVIEW, origin,
-        fragments);
+        AnalyticsManager.Action.INSTALL, AppContext.APPVIEW, origin, fragments);
     analytics.installClicked(navigationTracker.getPreviousScreen(),
         navigationTracker.getCurrentScreen(), app.getMd5(), app.getPackageName(), app.getFile()
             .getMalware()

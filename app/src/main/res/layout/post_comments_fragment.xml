@@ -3,8 +3,7 @@
   ~ Modified by Neurophobic Animal on 02/06/2016.
   -->
 
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbal_swipe_recycler_coordinator_layout"
     android:layout_width="match_parent"
@@ -44,13 +43,13 @@
       android:visibility="gone"
       />
 
-  <include layout="@layout/app_bar_layout"/>
+  <include layout="@layout/app_bar_layout" />
 
-  <include layout="@layout/partial_view_incl_no_network"/>
+  <include layout="@layout/partial_view_incl_no_network" />
 
-  <include layout="@layout/partial_view_error"/>
+  <include layout="@layout/partial_view_error" />
 
-  <include layout="@layout/partial_view_progress_bar"/>
+  <include layout="@layout/partial_view_progress_bar" />
 
 </android.support.design.widget.CoordinatorLayout>
 

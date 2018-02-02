@@ -86,7 +86,8 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(viewCreated -> view.getLoginClick())
-        .doOnNext(loginClicked -> accountNavigator.navigateToAccountView(AccountAnalytics.AccountOrigins.POST_ON_TIMELINE))
+        .doOnNext(loginClicked -> accountNavigator.navigateToAccountView(
+            AccountAnalytics.AccountOrigins.POST_ON_TIMELINE))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, crashReport::log);
@@ -147,7 +148,8 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.cancelButtonPressed()
-            .doOnNext(click -> analytics.sendClosePostEvent(PostAnalytics.CloseType.X, view.isExternalOpen()))
+            .doOnNext(click -> analytics.sendClosePostEvent(PostAnalytics.CloseType.X,
+                view.isExternalOpen()))
             .doOnNext(__2 -> goBack()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -343,7 +345,8 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
           .getErrors());
       analytics.sendPostCompletedNetworkFailedEvent(postManager.remoteRelatedAppsAvailable(),
           isSelected, packageName, hasComment, hasUrl, url == null ? "" : url,
-          android.view.View.VISIBLE == view.getPreviewVisibility(), errorCodes, view.isExternalOpen());
+          android.view.View.VISIBLE == view.getPreviewVisibility(), errorCodes,
+          view.isExternalOpen());
     } else {
       view.showGenericError();
       analytics.sendPostFailedEvent(postManager.remoteRelatedAppsAvailable(), isSelected,

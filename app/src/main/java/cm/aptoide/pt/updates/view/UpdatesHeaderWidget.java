@@ -40,10 +40,11 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
 
   public UpdatesHeaderWidget(View itemView) {
     super(itemView);
-    final AnalyticsManager analyticsManager = ((AptoideApplication) getContext().getApplicationContext()).getAnalyticsManager();
-    final NavigationTracker navigationTracker = ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
-    updatesAnalytics = new UpdatesAnalytics(analyticsManager,
-        navigationTracker);
+    final AnalyticsManager analyticsManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAnalyticsManager();
+    final NavigationTracker navigationTracker =
+        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
+    updatesAnalytics = new UpdatesAnalytics(analyticsManager, navigationTracker);
   }
 
   @Override protected void assignViews(View itemView) {

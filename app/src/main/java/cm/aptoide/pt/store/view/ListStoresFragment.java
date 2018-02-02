@@ -22,9 +22,9 @@ import rx.functions.Action1;
 
 public class ListStoresFragment extends GetStoreEndlessFragment<ListStores> {
 
-  private StoreAnalytics storeAnalytics;
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
+  private StoreAnalytics storeAnalytics;
 
   public static Fragment newInstance() {
     return new ListStoresFragment();
@@ -33,8 +33,7 @@ public class ListStoresFragment extends GetStoreEndlessFragment<ListStores> {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
-    storeAnalytics =
-        new StoreAnalytics(analyticsManager, navigationTracker);
+    storeAnalytics = new StoreAnalytics(analyticsManager, navigationTracker);
   }
 
   @Override protected V7<ListStores, ? extends Endless> buildRequest(boolean refresh, String url) {

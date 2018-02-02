@@ -24,11 +24,12 @@ public class FirstLaunchAnalytics {
 
   public void sendFirstLaunchEvent(String utmSource, String utmMedium, String utmCampaign,
       String utmContent, String entryPoint) {
-    analyticsManager.logEvent(createFacebookFirstLaunchDataMap(utmSource, utmMedium, utmCampaign, utmContent,
-        entryPoint),FIRST_LAUNCH, AnalyticsManager.Action.OPEN, "Launch");
+    analyticsManager.logEvent(
+        createFacebookFirstLaunchDataMap(utmSource, utmMedium, utmCampaign, utmContent, entryPoint),
+        FIRST_LAUNCH, AnalyticsManager.Action.OPEN, "Launch");
   }
 
-  private Map<String,Object> createFacebookFirstLaunchDataMap(String utmSource, String utmMedium,
+  private Map<String, Object> createFacebookFirstLaunchDataMap(String utmSource, String utmMedium,
       String utmCampaign, String utmContent, String entryPoint) {
     Map<String, Object> data = new HashMap<>();
     data.put(UTM_SOURCE, utmSource);

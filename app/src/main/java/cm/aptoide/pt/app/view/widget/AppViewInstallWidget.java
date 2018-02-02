@@ -403,8 +403,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     return view -> {
       final Context context = view.getContext();
       final PermissionService permissionRequest = (PermissionService) getContext();
-      displayable.installAppClicked(InstallType.DOWNGRADE,
-          Origin.DOWNGRADE);
+      displayable.installAppClicked(InstallType.DOWNGRADE, Origin.DOWNGRADE);
       permissionRequest.requestAccessToExternalFileSystem(() -> {
 
         showMessageOKCancel(getContext().getResources()
@@ -443,13 +442,12 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     };
   }
 
-  private void setupEvents(Download download, InstallType installType,
-      Origin origin) {
+  private void setupEvents(Download download, InstallType installType, Origin origin) {
     appViewAnalytics.setupDownloadEvents(download, campaignId, abTestGroup,
         AnalyticsManager.Action.CLICK);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
-        installType, AnalyticsManager.Action.INSTALL, AppContext.APPVIEW,
-        origin, campaignId, abTestGroup);
+        installType, AnalyticsManager.Action.INSTALL, AppContext.APPVIEW, origin, campaignId,
+        abTestGroup);
   }
 
   private void showRootInstallWarningPopup(Context context) {
@@ -492,8 +490,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
         appViewAnalytics.clickOnInstallButton(app);
       }
       displayable.installAppClicked(isUpdate ? InstallType.UPDATE : InstallType.INSTALL,
-          isUpdate ? Origin.UPDATE
-              : Origin.INSTALL);
+          isUpdate ? Origin.UPDATE : Origin.INSTALL);
 
       showRootInstallWarningPopup(context);
       compositeSubscription.add(permissionManager.requestDownloadAccess(permissionService)
@@ -511,8 +508,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
             return installManager.install(download)
                 .doOnSubscribe(subscription -> setupEvents(download,
                     isUpdate ? InstallType.UPDATE : InstallType.INSTALL,
-                    isUpdate ? Origin.UPDATE
-                        : Origin.INSTALL))
+                    isUpdate ? Origin.UPDATE : Origin.INSTALL))
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> {
                   if (accountManager.isLoggedIn() && ManagerPreferences.isShowPreviewDialog(
