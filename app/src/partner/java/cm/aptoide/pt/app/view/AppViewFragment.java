@@ -7,7 +7,6 @@ package cm.aptoide.pt.app.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -77,6 +76,7 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.AppAction;
 import cm.aptoide.pt.install.InstallAnalytics;
@@ -115,7 +115,6 @@ import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
-import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -150,6 +149,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private final String key_packageName = "packageName";
   private final String key_uname = "uname";
   @Inject AnalyticsManager analyticsManager;
+  @Inject DownloadAnalytics downloadAnalytics;
+  @Inject InstallAnalytics installAnalytics;
   private AppViewModel appViewModel;
   private AppViewHeader header;
   private InstallManager installManager;
@@ -343,7 +344,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     final AptoideApplication application = (AptoideApplication) applicationContext;
     this.appViewModel.setDefaultTheme(application.getDefaultThemeName());
     this.appViewModel.setMarketName(application.getMarketName());
-    Analytics analytics = Analytics.getInstance();
 
     searchNavigator =
         new SearchNavigator(getFragmentNavigator(), application.getDefaultStoreName());
@@ -384,8 +384,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         StoredMinimalAd.class);
     final SpotAndShareAnalytics spotAndShareAnalytics =
         new SpotAndShareAnalytics(analyticsManager, navigationTracker);
-    final SharedPreferences sharedPreferences = application.getDefaultSharedPreferences();
-    appViewAnalytics = new AppViewAnalytics(analyticsManager, navigationTracker);
+    appViewAnalytics = new AppViewAnalytics(downloadAnalytics, installAnalytics, analyticsManager,
+        navigationTracker);
 
     appViewSimilarAppAnalytics =
         new AppViewSimilarAppAnalytics(analyticsManager, navigationTracker);
@@ -397,8 +397,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             application.getDefaultSharedPreferences(),
             application.isCreateStoreUserPrivacyEnabled());
     downloadFactory = new DownloadFactory(getMarketName());
-
-    appViewAnalytics = new AppViewAnalytics(analyticsManager, navigationTracker);
 
     notLoggedInShareAnalytics = application.getNotLoggedInShareAnalytics();
     navigationTracker = application.getNavigationTracker();
@@ -934,9 +932,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       setOpenType(null);
     }
     final Context applicationContext = getContext().getApplicationContext();
-    final InstallAnalytics installAnalytics =
-        new InstallAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(applicationContext),
-            crashReport, analyticsManager, navigationTracker);
 
     final NotificationAnalytics notificationAnalytics =
         ((AptoideApplication) applicationContext).getNotificationAnalytics();
@@ -946,8 +941,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installDisplayable =
         AppViewInstallDisplayable.newInstance(getApp, installManager, getSearchAdResult(),
             shouldInstall, downloadFactory, timelineAnalytics, appViewAnalytics, installAppRelay,
-            this, new DownloadCompleteAnalytics(analyticsManager, navigationTracker),
-            navigationTracker, getEditorsBrickPosition(), installAnalytics,
+            this, downloadAnalytics, navigationTracker, getEditorsBrickPosition(), installAnalytics,
             notificationAnalytics.getCampaignId(app.getPackageName(), app.getId()),
             notificationAnalytics.getAbTestingGroup(app.getPackageName(), app.getId()),
             fragmentNames);

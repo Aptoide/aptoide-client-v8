@@ -310,8 +310,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
   void caseListSocialTimelineComments(boolean refresh, boolean bypassServerCache) {
     ListCommentsRequest listCommentsRequest =
-        ListCommentsRequest.ofTimeline(url, refresh, elementIdAsString, bodyDecorator, httpClient,
-            converterFactory, tokenInvalidator,
+        ListCommentsRequest.ofTimeline(url, 0, 30, refresh, elementIdAsString, bodyDecorator,
+            httpClient, converterFactory, tokenInvalidator,
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
     Action1<ListComments> listCommentsAction = (listComments -> {

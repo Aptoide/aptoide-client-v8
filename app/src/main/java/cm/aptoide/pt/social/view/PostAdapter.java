@@ -128,4 +128,26 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
   public void removePost(Post post) {
     if (posts.remove(post)) notifyDataSetChanged();
   }
+
+  public int getPostPosition(String postId) {
+    int result = -1;
+    for (Post testPost : posts) {
+      if (testPost.getCardId()
+          .equals(postId)) {
+        return posts.indexOf(testPost);
+      }
+    }
+    return result;
+  }
+
+  public Post getPostById(String postId) {
+    Post result = null;
+    for (Post testPost : posts) {
+      if (testPost.getCardId()
+          .equals(postId)) {
+        result = testPost;
+      }
+    }
+    return result;
+  }
 }

@@ -4,14 +4,15 @@ import cm.aptoide.pt.account.view.LoginSignUpFragment;
 import cm.aptoide.pt.account.view.MyAccountFragment;
 import cm.aptoide.pt.addressbook.view.AddressBookFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
-import cm.aptoide.pt.comments.view.CommentListFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
-import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.navigator.CommentsTimelineTabNavigation;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.TabNavigation;
 import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.notification.view.InboxFragment;
+import cm.aptoide.pt.social.commentslist.PostCommentsFragment;
+import cm.aptoide.pt.social.data.PostCommentDataWrapper;
 import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.timeline.post.PostFragment;
 import cm.aptoide.pt.timeline.view.TimeLineLikesFragment;
@@ -80,9 +81,7 @@ public class TimelineNavigator {
   }
 
   public void navigateToCommentsWithCommentDialogOpen(String cardId) {
-    fragmentNavigator.navigateTo(
-        CommentListFragment.newInstanceWithCommentDialogOpen(CommentType.TIMELINE, cardId,
-            storeContext), true);
+    fragmentNavigator.navigateTo(PostCommentsFragment.newInstanceWithCommentDialog(cardId), true);
   }
 
   // FIXME what should happen if storeId <= 0 ?
@@ -127,8 +126,7 @@ public class TimelineNavigator {
   }
 
   public void navigateToComments(String cardId) {
-    fragmentNavigator.navigateTo(
-        CommentListFragment.newInstance(CommentType.TIMELINE, cardId, storeContext), true);
+    fragmentNavigator.navigateTo(PostCommentsFragment.newInstance(cardId), true);
   }
 
   public Observable<String> postNavigation() {
@@ -137,6 +135,16 @@ public class TimelineNavigator {
         .doOnNext(tabNavigation -> tabNavigator.clearNavigation())
         .map(tabNavigation -> tabNavigation.getBundle()
             .getString(AppsTimelineTabNavigation.CARD_ID_KEY));
+  }
+
+  public Observable<PostCommentDataWrapper> commentNavigation() {
+    return tabNavigator.navigation()
+        .filter(tabNavigation -> tabNavigation.getTab() == TabNavigation.COMMENTS)
+        .doOnNext(tabNavigation -> tabNavigator.clearNavigation())
+        .map(tabNavigation -> new PostCommentDataWrapper(tabNavigation.getBundle()
+            .getString(CommentsTimelineTabNavigation.POST_ID), tabNavigation.getBundle()
+            .getString(CommentsTimelineTabNavigation.COMMENT_KEY), tabNavigation.getBundle()
+            .getBoolean(CommentsTimelineTabNavigation.ERROR_STATUS)));
   }
 
   public void navigateToNotificationCenter() {
