@@ -123,6 +123,6 @@ import javax.inject.Singleton;
         AccountAnalytics.PROFILE_SETTINGS, AccountAnalytics.ENTRY,
         DeepLinkAnalytics.FACEBOOK_APP_LAUNCH, AppViewAnalytics.CLICK_INSTALL,
         BillingAnalytics.PAYMENT_AUTH, BillingAnalytics.PAYMENT_LOGIN,
-        BillingAnalytics.PAYMENT_POPUP);
+        BillingAnalytics.PAYMENT_POPUP, AppShortcutsAnalytics.APPS_SHORTCUTS);
   }
 }

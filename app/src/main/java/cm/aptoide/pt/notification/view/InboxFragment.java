@@ -30,10 +30,10 @@ import rx.subjects.PublishSubject;
 
 public class InboxFragment extends BaseToolbarFragment implements InboxView {
 
-  private RecyclerView list;
-  private InboxAdapter adapter;
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
+  private RecyclerView list;
+  private InboxAdapter adapter;
   private PublishSubject<AptoideNotification> notificationSubject;
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -72,8 +72,8 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
             ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
             CrashReport.getInstance(),
             ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker(),
-            application.getNotificationAnalytics(),
-            new PageViewsAnalytics(analyticsManager), AndroidSchedulers.mainThread()));
+            application.getNotificationAnalytics(), new PageViewsAnalytics(analyticsManager),
+            AndroidSchedulers.mainThread()));
   }
 
   @Override public void showNotifications(List<AptoideNotification> notifications) {

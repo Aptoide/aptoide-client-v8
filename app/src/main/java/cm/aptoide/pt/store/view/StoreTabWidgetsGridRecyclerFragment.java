@@ -43,14 +43,15 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
   protected StoreUtilsProxy storeUtilsProxy;
   protected InstalledRepository installedRepository;
   protected StoreAnalytics storeAnalytics;
-  private StoreTabNavigator storeTabNavigator;
-  @Inject AnalyticsManager analyticsManager;
   protected NavigationTracker navigationTracker;
+  @Inject AnalyticsManager analyticsManager;
+  private StoreTabNavigator storeTabNavigator;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
-    navigationTracker = ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
+    navigationTracker =
+        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
     final StoreCredentialsProvider storeCredentialsProvider = new StoreCredentialsProviderImpl(
         AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class));
@@ -69,8 +70,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
-    storeAnalytics =
-        new StoreAnalytics(analyticsManager, navigationTracker);
+    storeAnalytics = new StoreAnalytics(analyticsManager, navigationTracker);
     storeTabNavigator = new StoreTabNavigator(getFragmentNavigator());
   }
 

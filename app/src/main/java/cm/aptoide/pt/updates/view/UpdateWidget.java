@@ -58,10 +58,11 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 
   public UpdateWidget(View itemView) {
     super(itemView);
-    final AnalyticsManager analyticsManager = ((AptoideApplication) getContext().getApplicationContext()).getAnalyticsManager();
-    final NavigationTracker navigationTracker = ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
-    updatesAnalytics = new UpdatesAnalytics(analyticsManager,
-        navigationTracker);
+    final AnalyticsManager analyticsManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAnalyticsManager();
+    final NavigationTracker navigationTracker =
+        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
+    updatesAnalytics = new UpdatesAnalytics(analyticsManager, navigationTracker);
   }
 
   @Override protected void assignViews(View itemView) {

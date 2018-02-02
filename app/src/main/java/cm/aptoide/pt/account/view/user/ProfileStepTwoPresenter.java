@@ -20,7 +20,8 @@ public class ProfileStepTwoPresenter implements Presenter {
   private final AccountAnalytics accountAnalytics;
 
   public ProfileStepTwoPresenter(ProfileStepTwoView view, AptoideAccountManager accountManager,
-      CrashReport crashReport, AccountNavigator accountNavigator, AccountAnalytics accountAnalytics) {
+      CrashReport crashReport, AccountNavigator accountNavigator,
+      AccountAnalytics accountAnalytics) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;

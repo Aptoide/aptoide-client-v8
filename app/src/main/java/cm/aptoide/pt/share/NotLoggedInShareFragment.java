@@ -41,7 +41,7 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
   private static final String APP_NAME = "app_name";
   private static final String APP_ICON = "app_title";
   private static final String APP_RATING = "app_rating";
-
+  @Inject AccountAnalytics accountAnalytics;
   private ProgressDialog progressDialog;
   private Button facebookLoginButton;
   private Button googleLoginButton;
@@ -59,7 +59,6 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
   private View fakeTimeline;
   private PublishRelay<Void> backButtonPress;
   private View outerLayout;
-  @Inject AccountAnalytics accountAnalytics;
 
   public static NotLoggedInShareFragment newInstance(GetAppMeta.App app) {
     NotLoggedInShareFragment fragment = new NotLoggedInShareFragment();

@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import cm.aptoide.pt.AppShortcutsAnalytics;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkAnalytics;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
@@ -36,6 +37,7 @@ import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.store.view.StoreTabFragmentChooser;
+import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.timeline.view.navigation.AppsTimelineTabNavigation;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -44,6 +46,8 @@ import java.util.List;
 import rx.Completable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+
+import static cm.aptoide.pt.DeepLinkIntentReceiver.FROM_SHORTCUT;
 
 public class DeepLinkManager {
 
@@ -62,7 +66,9 @@ public class DeepLinkManager {
   private final PageViewsAnalytics pageViewsAnalytics;
   private final NotificationAnalytics notificationAnalytics;
   private final SearchAnalytics searchAnalytics;
+  private final AppShortcutsAnalytics appShortcutsAnalytics;
   private final DeepLinkAnalytics deepLinkAnalytics;
+  private final TimelineAnalytics timelineAnalytics;
 
   public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, StoreRepository storeRepository,
       FragmentNavigator fragmentNavigator, TabNavigator tabNavigator,
@@ -70,7 +76,8 @@ public class DeepLinkManager {
       StoreAccessor storeAccessor, String defaultTheme, NotificationAnalytics notificationAnalytics,
       NavigationTracker navigationTracker, PageViewsAnalytics pageViewsAnalytics,
       SearchNavigator searchNavigator, SearchAnalytics searchAnalytics,
-      DeepLinkAnalytics deepLinkAnalytics) {
+      AppShortcutsAnalytics appShortcutsAnalytics, DeepLinkAnalytics deepLinkAnalytics,
+      TimelineAnalytics timelineAnalytics) {
     this.storeUtilsProxy = storeUtilsProxy;
     this.storeRepository = storeRepository;
     this.fragmentNavigator = fragmentNavigator;
@@ -85,6 +92,8 @@ public class DeepLinkManager {
     this.searchNavigator = searchNavigator;
     this.searchAnalytics = searchAnalytics;
     this.deepLinkAnalytics = deepLinkAnalytics;
+    this.appShortcutsAnalytics = appShortcutsAnalytics;
+    this.timelineAnalytics = timelineAnalytics;
   }
 
   public boolean showDeepLink(Intent intent) {
@@ -104,7 +113,8 @@ public class DeepLinkManager {
         appViewDeepLinkUname(intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.UNAME));
       }
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.SEARCH_FRAGMENT)) {
-      searchDeepLink(intent.getStringExtra(SearchManager.QUERY));
+      searchDeepLink(intent.getStringExtra(SearchManager.QUERY),
+          intent.getBooleanExtra(FROM_SHORTCUT, false));
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO)) {
       newrepoDeepLink(intent, intent.getExtras()
           .getStringArrayList(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO), storeAccessor);
@@ -165,10 +175,15 @@ public class DeepLinkManager {
         .newAppViewFragment(packageName, storeName, openType), true);
   }
 
-  private void searchDeepLink(String query) {
+  private void searchDeepLink(String query, boolean shortcutNavigation) {
     searchNavigator.navigate(query);
     if (query == null || query.isEmpty()) {
-      searchAnalytics.searchStart(SearchSource.WIDGET, false);
+      if (shortcutNavigation) {
+        searchAnalytics.searchStart(SearchSource.SHORTCUT, false);
+        appShortcutsAnalytics.shortcutNavigation(ShortcutDestinations.SEARCH);
+      } else {
+        searchAnalytics.searchStart(SearchSource.WIDGET, false);
+      }
     } else {
       searchAnalytics.searchStart(SearchSource.DEEP_LINK, false);
     }
@@ -232,7 +247,13 @@ public class DeepLinkManager {
   private void fromTimelineDeepLink(Intent intent) {
     deepLinkAnalytics.timelineNotification();
     String cardId = intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.CARD_ID);
-    tabNavigator.navigate(new AppsTimelineTabNavigation(cardId));
+    if (intent.hasExtra(FROM_SHORTCUT)) {
+      timelineAnalytics.sendTimelineTabOpenedFromShortcut();
+      appShortcutsAnalytics.shortcutNavigation(ShortcutDestinations.TIMELINE);
+      tabNavigator.navigate(new AppsTimelineTabNavigation(cardId));
+    } else {
+      tabNavigator.navigate(new AppsTimelineTabNavigation(cardId));
+    }
   }
 
   private void newUpdatesDeepLink() {
@@ -292,5 +313,10 @@ public class DeepLinkManager {
     void showStoreAlreadyAdded();
 
     void showStoreFollowed(String storeName);
+  }
+
+  private static final class ShortcutDestinations {
+    private static final String TIMELINE = "timeline";
+    private static final String SEARCH = "search";
   }
 }

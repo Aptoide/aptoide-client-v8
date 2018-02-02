@@ -87,7 +87,8 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
     shareAppHelper = new ShareAppHelper(
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext()),
         accountManager, accountNavigator, getContext(),
-        new SpotAndShareAnalytics(analyticsManager, navigationTracker), displayable.getTimelineAnalytics(),
+        new SpotAndShareAnalytics(analyticsManager, navigationTracker),
+        displayable.getTimelineAnalytics(),
         PublishRelay.create(), application.getDefaultSharedPreferences(),
         application.isCreateStoreUserPrivacyEnabled());
     appName = pojo.getName();
