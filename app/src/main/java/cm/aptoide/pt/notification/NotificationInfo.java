@@ -10,7 +10,8 @@ public class NotificationInfo {
   private String notificationUrl;
   private String action;
 
-  public NotificationInfo(String action, int notificationType, String notificationTrackUrl, String notificationUrl) {
+  public NotificationInfo(String action, int notificationType, String notificationTrackUrl,
+      String notificationUrl) {
     this.action = action;
     this.notificationType = notificationType;
     this.notificationTrackUrl = notificationTrackUrl;
