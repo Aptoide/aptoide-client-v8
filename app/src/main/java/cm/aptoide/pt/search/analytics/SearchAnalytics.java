@@ -1,10 +1,8 @@
 package cm.aptoide.pt.search.analytics;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.events.FacebookEvent;
-import com.facebook.appevents.AppEventsLogger;
+import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,12 +11,16 @@ import java.util.Map;
  */
 
 public class SearchAnalytics {
-  private final Analytics analytics;
-  private final AppEventsLogger facebook;
+  public static final String SEARCH = "Search";
+  public static final String NO_RESULTS = "Search_No_Results";
+  public static final String APP_CLICK = "Search_Results_App_View_Click";
+  public static final String SEARCH_START = "Search_Start";
+  private final AnalyticsManager analyticsManager;
+  private final NavigationTracker navigationTracker;
 
-  public SearchAnalytics(Analytics analytics, AppEventsLogger facebook) {
-    this.analytics = analytics;
-    this.facebook = facebook;
+  public SearchAnalytics(AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
+    this.analyticsManager = analyticsManager;
+    this.navigationTracker = navigationTracker;
   }
 
   public void searchFromSuggestion(String query, int suggestionPosition) {
@@ -30,53 +32,40 @@ public class SearchAnalytics {
   }
 
   private void search(String query, boolean isSuggestion, int suggestionPosition) {
-    Map<String, String> map = new HashMap<>();
+    Map<String, Object> map = new HashMap<>();
     map.put(AttributeKey.QUERY, query);
     map.put(AttributeKey.IS_SUGGESTION, Boolean.toString(isSuggestion));
     if (isSuggestion) {
       map.put(AttributeKey.SUGGESTION_POSITION, Integer.toString(suggestionPosition));
     }
-    analytics.sendEvent(
-        new FacebookEvent(facebook, EventName.SEARCH, createComplexBundleData(map)));
+    analyticsManager.logEvent(map, SEARCH, AnalyticsManager.Action.CLICK, getViewName(false));
   }
 
   public void searchNoResults(String query) {
-    analytics.sendEvent(new FacebookEvent(facebook, EventName.NO_RESULTS,
-        createBundleData(AttributeKey.QUERY, query)));
+    analyticsManager.logEvent(createMapData(AttributeKey.QUERY, query), NO_RESULTS,
+        AnalyticsManager.Action.CLICK, getViewName(false));
   }
 
   public void searchAppClick(String query, String packageName) {
-    Map<String, String> map = new HashMap<>();
+    Map<String, Object> map = new HashMap<>();
     map.put(AttributeKey.QUERY, query);
     map.put(AttributeKey.PACKAGE_NAME, packageName);
-    analytics.sendEvent(
-        new FacebookEvent(facebook, EventName.APP_CLICK, createComplexBundleData(map)));
+    analyticsManager.logEvent(map, APP_CLICK, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
-  public void searchStart(@NonNull SearchSource source) {
-    analytics.sendEvent(new FacebookEvent(facebook, EventName.SEARCH_START,
-        createBundleData(AttributeKey.SOURCE, source.getIdentifier())));
+  public void searchStart(@NonNull SearchSource source, boolean isCurrent) {
+    analyticsManager.logEvent(createMapData(AttributeKey.SOURCE, source.getIdentifier()),
+        SEARCH_START, AnalyticsManager.Action.CLICK, getViewName(isCurrent));
   }
 
-  private Bundle createBundleData(String key, String value) {
-    final Bundle data = new Bundle();
-    data.putString(key, value);
+  private Map<String, Object> createMapData(String key, String value) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(key, value);
     return data;
   }
 
-  private Bundle createComplexBundleData(Map<String, String> keyValuePair) {
-    Bundle bundle = new Bundle();
-    for (Map.Entry<String, String> entry : keyValuePair.entrySet()) {
-      bundle.putString(entry.getKey(), entry.getValue());
-    }
-    return bundle;
-  }
-
-  private static final class EventName {
-    private static final String SEARCH = "Search";
-    private static final String NO_RESULTS = "Search_No_Results";
-    private static final String APP_CLICK = "Search_Results_App_View_Click";
-    private static final String SEARCH_START = "Search_Start";
+  private String getViewName(boolean isCurrent) {
+    return navigationTracker.getViewName(isCurrent);
   }
 
   private static final class AttributeKey {

@@ -24,8 +24,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.dataprovider.interfaces.SuccessRequestListener;
@@ -89,7 +89,7 @@ import rx.subscriptions.Subscriptions;
       if (!accountManager.isLoggedIn()) {
         ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
             snackView -> {
-              accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.RATE_DIALOG);
+              accountNavigator.navigateToAccountView(AccountAnalytics.AccountOrigins.RATE_DIALOG);
             }, Snackbar.LENGTH_SHORT);
         subscriber.onNext(GenericDialogs.EResponse.CANCEL);
         subscriber.onCompleted();
@@ -227,7 +227,7 @@ import rx.subscriptions.Subscriptions;
     if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
-            accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.RATE_DIALOG);
+            accountNavigator.navigateToAccountView(AccountAnalytics.AccountOrigins.RATE_DIALOG);
           }, Snackbar.LENGTH_SHORT);
 
       return;

@@ -8,12 +8,12 @@ package cm.aptoide.pt.account.view;
 import android.app.Activity;
 import android.net.Uri;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.FacebookLoginResult;
 import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import cm.aptoide.pt.account.view.store.ManageStoreViewModel;
 import cm.aptoide.pt.account.view.user.ManageUserFragment;
 import cm.aptoide.pt.account.view.user.ProfileStepTwoFragment;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
@@ -47,12 +47,13 @@ public class AccountNavigator {
   private final String recoverPasswordUrl;
   private final String defaultStore;
   private final String defaultTheme;
+  private final AccountAnalytics accountAnalytics;
 
   public AccountNavigator(FragmentNavigator fragmentNavigator, AptoideAccountManager accountManager,
       ActivityNavigator activityNavigator, LoginManager facebookLoginManager,
       CallbackManager callbackManager, GoogleApiClient client,
       PublishRelay<FacebookLoginResult> facebookLoginSubject, String defaultStore,
-      String defaultTheme, String recoverPasswordUrl) {
+      String defaultTheme, String recoverPasswordUrl, AccountAnalytics accountAnalytics) {
     this.fragmentNavigator = fragmentNavigator;
     this.accountManager = accountManager;
     this.activityNavigator = activityNavigator;
@@ -63,17 +64,18 @@ public class AccountNavigator {
     this.defaultStore = defaultStore;
     this.defaultTheme = defaultTheme;
     this.recoverPasswordUrl = recoverPasswordUrl;
+    this.accountAnalytics = accountAnalytics;
   }
 
   public void navigateToRecoverPasswordView() {
     activityNavigator.navigateTo(Uri.parse(recoverPasswordUrl));
   }
 
-  public void navigateToAccountView(Analytics.Account.AccountOrigins accountOrigins) {
+  public void navigateToAccountView(AccountAnalytics.AccountOrigins accountOrigins) {
     if (accountManager.isLoggedIn()) {
       fragmentNavigator.navigateTo(MyAccountFragment.newInstance(), true);
     } else {
-      Analytics.Account.enterAccountScreen(accountOrigins);
+      accountAnalytics.enterAccountScreen(accountOrigins);
       fragmentNavigator.navigateTo(LoginSignUpFragment.newInstance(false, false, false), true);
     }
   }

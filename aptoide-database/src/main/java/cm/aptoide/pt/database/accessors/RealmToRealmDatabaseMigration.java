@@ -356,5 +356,14 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
 
       oldVersion++;
     }
+    if (oldVersion == 8091) {
+      schema.create("RealmEvent")
+          .addField("timestamp", long.class, FieldAttribute.PRIMARY_KEY)
+          .addField("eventName", String.class)
+          .addField("action", int.class)
+          .addField("context", String.class)
+          .addField("data", String.class);
+      oldVersion++;
+    }
   }
 }

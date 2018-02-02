@@ -24,11 +24,12 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DrawerAnalytics;
-import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
@@ -53,12 +54,12 @@ import cm.aptoide.pt.store.view.StorePagerAdapter;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.custom.BadgeView;
-import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.io.File;
 import java.text.NumberFormat;
+import javax.inject.Inject;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -75,8 +76,8 @@ public class HomeFragment extends StoreFragment {
   public static final String TWITTER_PACKAGE_NAME = "com.twitter.android";
   public static final String APTOIDE_TWITTER_URL = "http://www.twitter.com/aptoide";
 
-  //private static final int SPOT_SHARE_PERMISSION_REQUEST_CODE = 6531;
-  private static final String TAG = HomeFragment.class.getName();
+  @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
   private DrawerLayout drawerLayout;
   private NavigationView navigationView;
   private BadgeView updatesBadge;
@@ -91,7 +92,6 @@ public class HomeFragment extends StoreFragment {
   private InstalledRepository installedRepository;
   private DrawerAnalytics drawerAnalytics;
   private ClickHandler backClickHandler;
-  private PageViewsAnalytics pageViewsAnalytics;
   private String defaultThemeName;
   private String cacheDirectoryPath;
   private AppSearchSuggestionsView appSearchSuggestionsView;
@@ -182,7 +182,7 @@ public class HomeFragment extends StoreFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
+    getFragmentComponent(savedInstanceState).inject(this);
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     cacheDirectoryPath = getContext().getApplicationContext()
@@ -196,20 +196,12 @@ public class HomeFragment extends StoreFragment {
 
     crashReport = CrashReport.getInstance();
 
-    final Analytics analytics = Analytics.getInstance();
-
-    drawerAnalytics = new DrawerAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    drawerAnalytics = new DrawerAnalytics(analyticsManager, navigationTracker);
 
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
 
-    pageViewsAnalytics =
-        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            analytics);
-
-    searchAnalytics = new SearchAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    searchAnalytics = new SearchAnalytics(analyticsManager, navigationTracker);
 
     setRegisterFragment(false);
     setHasOptionsMenu(true);
@@ -398,7 +390,7 @@ public class HomeFragment extends StoreFragment {
         int itemId = menuItem.getItemId();
         if (itemId == R.id.navigation_item_my_account) {
           drawerAnalytics.drawerInteract("My Account");
-          accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.MY_ACCOUNT);
+          accountNavigator.navigateToAccountView(AccountAnalytics.AccountOrigins.MY_ACCOUNT);
         } else {
           final FragmentNavigator navigator = getFragmentNavigator();
           if (itemId == R.id.shareapps) {
@@ -546,6 +538,7 @@ public class HomeFragment extends StoreFragment {
       case TabNavigation.STORES:
         return Event.Name.myStores;
       case TabNavigation.TIMELINE:
+      case TabNavigation.COMMENTS:
         return Event.Name.getUserTimeline;
       case TabNavigation.UPDATES:
         return Event.Name.myUpdates;

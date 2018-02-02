@@ -81,10 +81,10 @@ import rx.schedulers.Schedulers;
 
   @FragmentScope @Provides ManageUserPresenter provideManageUserPresenter(
       AptoideAccountManager accountManager, CreateUserErrorMapper errorMapper,
-      ManageUserNavigator manageUserNavigator, UriToPathResolver uriToPathResolver) {
+      ManageUserNavigator manageUserNavigator, UriToPathResolver uriToPathResolver, AccountAnalytics accountAnalytics) {
     return new ManageUserPresenter((ManageUserView) fragment, CrashReport.getInstance(),
         accountManager, errorMapper, manageUserNavigator, arguments.getBoolean("is_edit", false),
-        uriToPathResolver, isCreateStoreUserPrivacyEnabled, savedInstance == null);
+        uriToPathResolver, isCreateStoreUserPrivacyEnabled, savedInstance == null, accountAnalytics);
   }
 
   @FragmentScope @Provides ImageValidator provideImageValidator() {

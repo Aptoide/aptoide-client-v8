@@ -21,8 +21,6 @@ import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.Result;
-import cm.aptoide.pt.download.InstallEvent;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.install.InstallerAnalytics;
@@ -53,20 +51,18 @@ public class DefaultInstaller implements Installer {
   private final InstallationProvider installationProvider;
   private final SharedPreferences sharedPreferences;
   private FileUtils fileUtils;
-  private Analytics analytics;
   private RootAvailabilityManager rootAvailabilityManager;
   private InstalledRepository installedRepository;
   private InstallerAnalytics installerAnalytics;
 
   public DefaultInstaller(PackageManager packageManager, InstallationProvider installationProvider,
-      FileUtils fileUtils, Analytics analytics, boolean debug,
+      FileUtils fileUtils, boolean debug,
       InstalledRepository installedRepository, int rootTimeout,
       RootAvailabilityManager rootAvailabilityManager, SharedPreferences sharedPreferences,
       InstallerAnalytics installerAnalytics) {
     this.packageManager = packageManager;
     this.installationProvider = installationProvider;
     this.fileUtils = fileUtils;
-    this.analytics = analytics;
     this.installedRepository = installedRepository;
     this.installerAnalytics = installerAnalytics;
     RootShell.debugMode = debug;
@@ -88,7 +84,7 @@ public class DefaultInstaller implements Installer {
 
   @Override public Completable install(Context context, String md5, boolean forceDefaultInstall) {
     return rootAvailabilityManager.isRootAvailable()
-        .doOnSuccess(isRoot -> Analytics.RootInstall.installationType(
+        .doOnSuccess(isRoot -> installerAnalytics.installationType(
             ManagerPreferences.allowRootInstallation(sharedPreferences), isRoot))
         .flatMapObservable(isRoot -> installationProvider.getInstallation(md5)
             .first())
@@ -254,13 +250,7 @@ public class DefaultInstaller implements Installer {
   }
 
   private void sendErrorEvent(String packageName, int versionCode, Exception e) {
-    InstallEvent report =
-        (InstallEvent) analytics.get(packageName + versionCode, InstallEvent.class);
-    if (report != null) {
-      report.setResultStatus(Result.ResultStatus.FAIL);
-      report.setError(e);
-      analytics.sendEvent(report);
-    }
+    installerAnalytics.logInstallErrorEvent(packageName, versionCode, e);
   }
 
   private void startInstallIntent(Context context, File file) {

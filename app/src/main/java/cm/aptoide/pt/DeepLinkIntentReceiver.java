@@ -16,7 +16,8 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Base64;
 import cm.aptoide.pt.ads.MinimalAdMapper;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
@@ -74,15 +75,22 @@ public class DeepLinkIntentReceiver extends ActivityView {
   private AsyncTask<String, Void, Void> asyncTask;
   private InstalledRepository installedRepository;
   private MinimalAdMapper adMapper;
+  private AnalyticsManager analyticsManager;
+  private NavigationTracker navigationTracker;
+  private DeepLinkAnalytics deepLinkAnalytics;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    final AptoideApplication application = (AptoideApplication) getApplicationContext();
+    analyticsManager = application.getAnalyticsManager();
+    navigationTracker = application.getNavigationTracker();
+    deepLinkAnalytics = new DeepLinkAnalytics(analyticsManager, navigationTracker);
     installedRepository = RepositoryFactory.getInstalledRepository(getApplicationContext());
 
     adMapper = new MinimalAdMapper();
     TMP_MYAPP_FILE = getCacheDir() + "/myapp.myapp";
     String uri = getIntent().getDataString();
-    Analytics.ApplicationLaunch.website(uri);
+    deepLinkAnalytics.website(uri);
 
     Logger.v(TAG, "uri: " + uri);
 
@@ -282,10 +290,12 @@ public class DeepLinkIntentReceiver extends ActivityView {
         finish();
         return;
       }
-      if("search".equals(parse.getQueryParameter("name"))){
+      if ("search".equals(parse.getQueryParameter("name"))) {
         String query = "";
-        if(parse.getQueryParameterNames().contains("keyword"))
-          query=parse.getQueryParameter("keyword");
+        if (parse.getQueryParameterNames()
+            .contains("keyword")) {
+          query = parse.getQueryParameter("keyword");
+        }
         startFromSearch(query);
         finish();
         return;
@@ -316,7 +326,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     startActivity(i);
 
     // TODO: 10-08-2016 jdandrade
-    Analytics.ApplicationLaunch.newRepo();
+    deepLinkAnalytics.newRepo();
   }
 
   private void parseXmlString(String file) {
@@ -365,8 +375,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
 
   public void aptoidevoiceSearch(String param) {
     // TODO: voiceSearch was used by a foreign app, dunno if still used.
-    
-
 
     //        Cursor c = new AptoideDatabase(Aptoide.getDb()).getSearchResults(param, StoreActivity.Sort.DOWNLOADS);
     //

@@ -19,6 +19,7 @@ import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
+import cm.aptoide.pt.account.AdultContentAnalytics;
 import cm.aptoide.pt.account.AndroidAccountProvider;
 import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.account.view.store.StoreManager;
@@ -26,6 +27,7 @@ import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.BillingIdManager;
@@ -58,6 +60,7 @@ import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.file.FileManager;
+import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallFabricEvents;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstallerFactory;
@@ -116,7 +119,6 @@ import cm.aptoide.pt.view.entry.EntryPointChooser;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
 import com.facebook.CallbackManager;
 import com.facebook.appevents.AppEventsLogger;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -169,7 +171,7 @@ public abstract class AptoideApplication extends Application {
   @Inject @Named("web-socket") OkHttpClient webSocketClient;
   @Inject @Named("user-agent") Interceptor userAgentInterceptor;
   @Inject AndroidAccountProvider androidAccountProvider;
-  @Inject ObjectMapper nonNullObjectMapper;
+  @Inject @Named("default") ObjectMapper nonNullObjectMapper;
   @Inject RequestBodyFactory requestBodyFactory;
   @Inject RootAvailabilityManager rootAvailabilityManager;
   @Inject StoreManager storeManager;
@@ -202,7 +204,11 @@ public abstract class AptoideApplication extends Application {
   @Inject @Named("account-settings-pool-v7") BodyInterceptor<BaseBody>
       accountSettingsBodyInterceptorPoolV7;
   @Inject TrendingManager trendingManager;
+  @Inject AdultContentAnalytics adultContentAnalytics;
+  @Inject NotificationAnalytics notificationAnalytics;
   @Inject SearchSuggestionManager searchSuggestionManager;
+  @Inject AnalyticsManager analyticsManager;
+  @Inject InstallAnalytics installAnalytics;
   private LeakTool leakTool;
   private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
@@ -228,7 +234,6 @@ public abstract class AptoideApplication extends Application {
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
   private NotificationsCleaner notificationsCleaner;
   private TimelineAnalytics timelineAnalytics;
-  private NotificationAnalytics notificationAnalytics;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -297,7 +302,7 @@ public abstract class AptoideApplication extends Application {
     fragmentProvider = createFragmentProvider();
     activityProvider = createActivityProvider();
     displayableWidgetMapping = createDisplayableWidgetMapping();
-    shareApps = new ShareApps(new SpotAndShareAnalytics(Analytics.getInstance()));
+    shareApps = new ShareApps(new SpotAndShareAnalytics(analyticsManager, navigationTracker));
 
     //
     // do not erase this code. it is useful to figure out when someone forgot to attach an error handler when subscribing and the app
@@ -369,15 +374,14 @@ public abstract class AptoideApplication extends Application {
 
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
+    analyticsManager.setup();
   }
 
   public ApplicationComponent getApplicationComponent() {
     if (applicationComponent == null) {
       applicationComponent = DaggerApplicationComponent.builder()
-          .applicationModule(
-              new ApplicationModule(this, getImageCachePath(), getCachePath(), getAccountType(),
-                  getPartnerId(), getMarketName(), getExtraId(), getAptoidePackage(),
-                  getAptoideMd5sum(), getLoginPreferences()))
+          .applicationModule(new ApplicationModule(this, getAptoideMd5sum()))
+          .flavourApplicationModule(new FlavourApplicationModule(this))
           .build();
     }
     return applicationComponent;
@@ -459,11 +463,8 @@ public abstract class AptoideApplication extends Application {
       notificationCenter =
           new NotificationCenter(notificationProvider, getNotificationSyncScheduler(),
               new NotificationPolicyFactory(notificationProvider),
-              new NotificationAnalytics(Analytics.getInstance(),
-                  AppEventsLogger.newLogger(getApplicationContext()), bodyInterceptorPoolV7,
-                  getDefaultClient(), WebService.getDefaultConverter(), tokenInvalidator,
-                  cm.aptoide.pt.dataprovider.BuildConfig.APPLICATION_ID,
-                  getDefaultSharedPreferences(), new AptoideInstallParser()));
+              new NotificationAnalytics(new AptoideInstallParser(), analyticsManager,
+                  navigationTracker));
     }
     return notificationCenter;
   }
@@ -519,9 +520,9 @@ public abstract class AptoideApplication extends Application {
 
       installManager = new InstallManager(getApplicationContext(), getDownloadManager(),
           new InstallerFactory(new MinimalAdMapper(),
-              new InstallFabricEvents(Analytics.getInstance(), Answers.getInstance(),
-                  AppEventsLogger.newLogger(this)), getImageCachePath()).create(this,
-              installerType), getRootAvailabilityManager(), getDefaultSharedPreferences(),
+              new InstallFabricEvents(analyticsManager, installAnalytics,
+                  getDefaultSharedPreferences(), rootAvailabilityManager), getImageCachePath()).create(this, installerType),
+          getRootAvailabilityManager(), getDefaultSharedPreferences(),
           SecurePreferencesImplementation.getInstance(getApplicationContext(),
               getDefaultSharedPreferences()),
           RepositoryFactory.getDownloadRepository(getApplicationContext().getApplicationContext()),
@@ -563,8 +564,7 @@ public abstract class AptoideApplication extends Application {
   public BillingAnalytics getBillingAnalytics() {
     if (billingAnalytics == null) {
       billingAnalytics =
-          new BillingAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(this),
-              getAptoidePackage());
+          new BillingAnalytics(getAptoidePackage(), analyticsManager, navigationTracker);
     }
     return billingAnalytics;
   }
@@ -662,7 +662,7 @@ public abstract class AptoideApplication extends Application {
     return Analytics.Lifecycle.Application.onCreate(this, WebService.getDefaultConverter(),
         getDefaultClient(), getAccountSettingsBodyInterceptorPoolV7(),
         SecurePreferencesImplementation.getInstance(getApplicationContext(),
-            getDefaultSharedPreferences()), getTokenInvalidator());
+            getDefaultSharedPreferences()), getTokenInvalidator(), analyticsManager);
   }
 
   private Completable checkAppSecurity() {
@@ -933,8 +933,7 @@ public abstract class AptoideApplication extends Application {
   public NotLoggedInShareAnalytics getNotLoggedInShareAnalytics() {
     if (notLoggedInShareAnalytics == null) {
       notLoggedInShareAnalytics =
-          new NotLoggedInShareAnalytics(getAccountAnalytics(), AppEventsLogger.newLogger(this),
-              Analytics.getInstance());
+          new NotLoggedInShareAnalytics(analyticsManager, navigationTracker, getAccountAnalytics());
     }
     return notLoggedInShareAnalytics;
   }
@@ -992,13 +991,6 @@ public abstract class AptoideApplication extends Application {
   }
 
   public NotificationAnalytics getNotificationAnalytics() {
-    if (notificationAnalytics == null) {
-      notificationAnalytics =
-          new NotificationAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(this),
-              getBodyInterceptorPoolV7(), getDefaultClient(), WebService.getDefaultConverter(),
-              tokenInvalidator, cm.aptoide.pt.dataprovider.BuildConfig.APPLICATION_ID,
-              getDefaultSharedPreferences(), new AptoideInstallParser());
-    }
     return notificationAnalytics;
   }
 
@@ -1020,13 +1012,18 @@ public abstract class AptoideApplication extends Application {
 
   public TimelineAnalytics getTimelineAnalytics() {
     if (timelineAnalytics == null) {
-      timelineAnalytics =
-          new TimelineAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(this),
-              getBodyInterceptorPoolV7(), getDefaultClient(), WebService.getDefaultConverter(),
-              getTokenInvalidator(), BuildConfig.APPLICATION_ID, getDefaultSharedPreferences(),
-              getNotificationAnalytics(), getNavigationTracker(), getReadPostsPersistence());
+      timelineAnalytics = new TimelineAnalytics(getNotificationAnalytics(), getNavigationTracker(),
+          getReadPostsPersistence(), analyticsManager);
     }
     return timelineAnalytics;
+  }
+
+  public AnalyticsManager getAnalyticsManager() {
+    return analyticsManager;
+  }
+
+  public AdultContentAnalytics getAdultContentAnalytics() {
+    return adultContentAnalytics;
   }
 }
 
