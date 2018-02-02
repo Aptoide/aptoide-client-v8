@@ -1,10 +1,12 @@
 package cm.aptoide.pt.social.data;
 
+import cm.aptoide.pt.dataprovider.model.v7.Comment;
+
 /**
  * Created by jdandrade on 10/07/2017.
  */
 
-public class PostComment {
+public class PostComment extends Comment {
   private final Post post;
   private final String commentText;
   private final int postPosition;

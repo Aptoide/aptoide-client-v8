@@ -26,6 +26,7 @@ import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.store.view.StoreTabWidgetsGridRecyclerFragment;
 import cm.aptoide.pt.store.view.home.HomeFragment;
 import cm.aptoide.pt.store.view.my.MyStoresSubscribedFragment;
+import cm.aptoide.pt.social.commentslist.PostCommentsFragment;
 import cm.aptoide.pt.timeline.post.PostFragment;
 import cm.aptoide.pt.updates.view.UpdatesFragment;
 import cm.aptoide.pt.updates.view.rollback.RollbackFragment;
@@ -44,6 +45,8 @@ public interface FragmentComponent {
 
   void inject(ManageStoreFragment manageStoreFragment);
 
+  void inject(PostCommentsFragment postCommentsFragment);
+  
   void inject(PostFragment postFragment);
 
   void inject(AppViewFragment appViewFragment);
