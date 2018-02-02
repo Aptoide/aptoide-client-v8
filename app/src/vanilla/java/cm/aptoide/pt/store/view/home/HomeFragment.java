@@ -76,8 +76,8 @@ public class HomeFragment extends StoreFragment {
   public static final String TWITTER_PACKAGE_NAME = "com.twitter.android";
   public static final String APTOIDE_TWITTER_URL = "http://www.twitter.com/aptoide";
 
-  //private static final int SPOT_SHARE_PERMISSION_REQUEST_CODE = 6531;
-  private static final String TAG = HomeFragment.class.getName();
+  @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
   private DrawerLayout drawerLayout;
   private NavigationView navigationView;
   private BadgeView updatesBadge;
@@ -99,8 +99,6 @@ public class HomeFragment extends StoreFragment {
   private SearchNavigator searchNavigator;
   private TrendingManager trendingManager;
   private SearchAnalytics searchAnalytics;
-  @Inject AnalyticsManager analyticsManager;
-  @Inject NavigationTracker navigationTracker;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -198,8 +196,7 @@ public class HomeFragment extends StoreFragment {
 
     crashReport = CrashReport.getInstance();
 
-    drawerAnalytics = new DrawerAnalytics(analyticsManager,
-        navigationTracker);
+    drawerAnalytics = new DrawerAnalytics(analyticsManager, navigationTracker);
 
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());

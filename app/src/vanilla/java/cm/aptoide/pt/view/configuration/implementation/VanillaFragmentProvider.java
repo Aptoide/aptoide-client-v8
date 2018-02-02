@@ -17,7 +17,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.download.view.DownloadsFragment;
 import cm.aptoide.pt.download.view.scheduled.ScheduledDownloadsFragment;
 import cm.aptoide.pt.presenter.InviteFriendsContract;
-import cm.aptoide.pt.social.commentslist.PostCommentsFragment;
 import cm.aptoide.pt.reviews.LatestReviewsFragment;
 import cm.aptoide.pt.reviews.ListReviewsFragment;
 import cm.aptoide.pt.reviews.RateAndReviewsFragment;
