@@ -7,17 +7,16 @@ package cm.aptoide.pt.analytics.view;
 
 import android.os.Build;
 import android.os.Bundle;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.permission.PermissionProviderActivity;
-import javax.inject.Inject;
 
 public abstract class AnalyticsActivity extends PermissionProviderActivity {
 
-  @Inject AnalyticsManager analyticsManager;
+  private AnalyticsManager analyticsManager;
   private boolean _resumed = false;
 
   public boolean is_resumed() {
@@ -26,9 +25,7 @@ public abstract class AnalyticsActivity extends PermissionProviderActivity {
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    getActivityComponent().inject(this);
-    Analytics.Lifecycle.Activity.onCreate(this);
-
+    analyticsManager = ((AptoideApplication) getApplicationContext()).getAnalyticsManager();
     if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
       ((CrashlyticsCrashLogger) CrashReport.getInstance()
           .getLogger(CrashlyticsCrashLogger.class)).setLanguage(
@@ -41,18 +38,18 @@ public abstract class AnalyticsActivity extends PermissionProviderActivity {
           .getLanguage());
     }
 
-    Analytics.Dimensions.setGmsPresent(AdNetworkUtils.isGooglePlayServicesAvailable(this));
+    ((AptoideApplication) getApplicationContext()).getFirstLaunchAnalytics()
+        .setGmsPresent(AdNetworkUtils.isGooglePlayServicesAvailable(this));
   }
 
   @Override protected void onStart() {
     super.onStart();
-    Analytics.Lifecycle.Activity.onStart(this);
+    analyticsManager.startSession();
   }
 
   @Override protected void onResume() {
     super.onResume();
     _resumed = true;
-    Analytics.Lifecycle.Activity.onResume(this);
   }
 
   @Override protected void onPause() {
@@ -62,6 +59,6 @@ public abstract class AnalyticsActivity extends PermissionProviderActivity {
 
   @Override protected void onStop() {
     super.onStop();
-    Analytics.Lifecycle.Activity.onStop(this);
+    analyticsManager.endSession();
   }
 }

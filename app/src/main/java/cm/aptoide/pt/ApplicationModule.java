@@ -41,6 +41,7 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
+import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.TrackerFilter;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
@@ -56,6 +57,7 @@ import cm.aptoide.pt.analytics.analytics.HttpKnockEventLogger;
 import cm.aptoide.pt.analytics.analytics.RealmEventMapper;
 import cm.aptoide.pt.analytics.analytics.RealmEventPersistence;
 import cm.aptoide.pt.analytics.analytics.RetrofitAptoideBiService;
+import cm.aptoide.pt.analytics.analytics.SessionLogger;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -948,6 +950,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID, defaultSharedPreferences);
   }
 
+  @Singleton @Provides FirstLaunchAnalytics firstLaunchAnalytics(
+      AnalyticsManager analyticsManager) {
+    return new FirstLaunchAnalytics(analyticsManager);
+  }
+
   @Singleton @Provides @Named("aptoide") EventLogger providesAptoideEventLogger(
       EventsPersistence persistence, AptoideBiEventService service) {
     return new AptoideBiEventLogger(
@@ -962,7 +969,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("flurry") EventLogger providesFlurryEventLogger() {
-    return new FlurryEventLogger();
+    return new FlurryEventLogger(application);
+  }
+
+  @Singleton @Provides @Named("flurry") SessionLogger providesFlurrySessionLogger() {
+    return new FlurryEventLogger(application);
   }
 
   @Singleton @Provides @Named("fabric") EventLogger providesFabricEventLogger(Answers fabric) {
@@ -1002,12 +1013,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("aptoideEvents") Collection<String> aptoideEvents,
       @Named("facebookEvents") Collection<String> facebookEvents,
       @Named("fabricEvents") Collection<String> fabricEvents,
-      @Named("flurryEvents") Collection<String> flurryEvents) {
+      @Named("flurryEvents") Collection<String> flurryEvents,
+      @Named("flurry") SessionLogger flurrySessionLogger) {
 
     return new AnalyticsManager.Builder().addLogger(aptoideBiEventLogger, aptoideEvents)
         .addLogger(facebookEventLogger, facebookEvents)
         .addLogger(fabricEventLogger, fabricEvents)
         .addLogger(flurryEventLogger, flurryEvents)
+        .addSessionLogger(flurrySessionLogger)
         .setKnockLogger(knockEventLogger)
         .build();
   }

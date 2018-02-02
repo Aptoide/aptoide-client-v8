@@ -25,7 +25,7 @@ import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.billing.Billing;
@@ -209,6 +209,7 @@ public abstract class AptoideApplication extends Application {
   @Inject SearchSuggestionManager searchSuggestionManager;
   @Inject AnalyticsManager analyticsManager;
   @Inject InstallAnalytics installAnalytics;
+  @Inject FirstLaunchAnalytics firstLaunchAnalytics;
   private LeakTool leakTool;
   private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
@@ -521,8 +522,9 @@ public abstract class AptoideApplication extends Application {
       installManager = new InstallManager(getApplicationContext(), getDownloadManager(),
           new InstallerFactory(new MinimalAdMapper(),
               new InstallFabricEvents(analyticsManager, installAnalytics,
-                  getDefaultSharedPreferences(), rootAvailabilityManager), getImageCachePath()).create(this, installerType),
-          getRootAvailabilityManager(), getDefaultSharedPreferences(),
+                  getDefaultSharedPreferences(), rootAvailabilityManager),
+              getImageCachePath()).create(this, installerType), getRootAvailabilityManager(),
+          getDefaultSharedPreferences(),
           SecurePreferencesImplementation.getInstance(getApplicationContext(),
               getDefaultSharedPreferences()),
           RepositoryFactory.getDownloadRepository(getApplicationContext().getApplicationContext()),
@@ -659,10 +661,9 @@ public abstract class AptoideApplication extends Application {
   }
 
   private Completable sendAppStartToAnalytics() {
-    return Analytics.Lifecycle.Application.onCreate(this, WebService.getDefaultConverter(),
-        getDefaultClient(), getAccountSettingsBodyInterceptorPoolV7(),
-        SecurePreferencesImplementation.getInstance(getApplicationContext(),
-            getDefaultSharedPreferences()), getTokenInvalidator(), analyticsManager);
+    return firstLaunchAnalytics.sendAppStart(this, defaultSharedPreferences,
+        WebService.getDefaultConverter(), getDefaultClient(),
+        getAccountSettingsBodyInterceptorPoolV7(), getTokenInvalidator());
   }
 
   private Completable checkAppSecurity() {
@@ -1024,6 +1025,10 @@ public abstract class AptoideApplication extends Application {
 
   public AdultContentAnalytics getAdultContentAnalytics() {
     return adultContentAnalytics;
+  }
+
+  public FirstLaunchAnalytics getFirstLaunchAnalytics() {
+    return firstLaunchAnalytics;
   }
 }
 
