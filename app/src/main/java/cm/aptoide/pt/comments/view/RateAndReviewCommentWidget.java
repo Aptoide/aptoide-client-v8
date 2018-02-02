@@ -18,8 +18,8 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.comments.CommentAdder;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -157,7 +157,7 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
             return ShowMessage.asObservableSnack(ratingBar, R.string.you_need_to_be_logged_in,
                 R.string.login, snackView -> {
                   accountNavigator.navigateToAccountView(
-                      Analytics.Account.AccountOrigins.REPLY_REVIEW);
+                      AccountAnalytics.AccountOrigins.REPLY_REVIEW);
                 })
                 .toObservable();
           }
@@ -281,7 +281,7 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
             accountNavigator.navigateToAccountView(
-                Analytics.Account.AccountOrigins.REVIEW_FEEDBACK);
+                AccountAnalytics.AccountOrigins.REVIEW_FEEDBACK);
           }, Snackbar.LENGTH_SHORT);
       setHelpButtonsClickable(true);
     }

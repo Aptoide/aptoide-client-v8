@@ -62,4 +62,6 @@ interface PostView extends View {
   void showInvalidUrlError();
 
   String getExternalUrlToShare();
+
+  boolean isExternalOpen();
 }

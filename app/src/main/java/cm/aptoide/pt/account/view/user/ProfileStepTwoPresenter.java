@@ -2,8 +2,8 @@ package cm.aptoide.pt.account.view.user;
 
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -17,13 +17,15 @@ public class ProfileStepTwoPresenter implements Presenter {
   private final AptoideAccountManager accountManager;
   private final CrashReport crashReport;
   private final AccountNavigator accountNavigator;
+  private final AccountAnalytics accountAnalytics;
 
   public ProfileStepTwoPresenter(ProfileStepTwoView view, AptoideAccountManager accountManager,
-      CrashReport crashReport, AccountNavigator accountNavigator) {
+      CrashReport crashReport, AccountNavigator accountNavigator, AccountAnalytics accountAnalytics) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
     this.accountNavigator = accountNavigator;
+    this.accountAnalytics = accountAnalytics;
   }
 
   @Override public void present() {
@@ -31,7 +33,7 @@ public class ProfileStepTwoPresenter implements Presenter {
         .doOnNext(__ -> view.showWaitDialog())
         .flatMapCompletable(
             externalLogin -> makeAccountPublic().observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(() -> sendAnalytics(Analytics.Account.ProfileAction.CONTINUE))
+                .doOnCompleted(() -> sendAnalytics(AccountAnalytics.ProfileAction.CONTINUE))
                 .doOnCompleted(() -> view.dismissWaitDialog())
                 .doOnCompleted(() -> navigate(externalLogin)))
         .retry()
@@ -41,7 +43,7 @@ public class ProfileStepTwoPresenter implements Presenter {
         .doOnNext(__ -> view.showWaitDialog())
         .flatMapCompletable(
             externalLogin -> makeAccountPrivate().observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(() -> sendAnalytics(Analytics.Account.ProfileAction.PRIVATE_PROFILE))
+                .doOnCompleted(() -> sendAnalytics(AccountAnalytics.ProfileAction.PRIVATE_PROFILE))
                 .doOnCompleted(() -> view.dismissWaitDialog())
                 .doOnCompleted(() -> navigate(externalLogin)))
         .retry()
@@ -71,8 +73,8 @@ public class ProfileStepTwoPresenter implements Presenter {
         });
   }
 
-  private Completable sendAnalytics(Analytics.Account.ProfileAction action) {
-    return Completable.fromAction(() -> Analytics.Account.accountProfileAction(2, action));
+  private Completable sendAnalytics(AccountAnalytics.ProfileAction action) {
+    return Completable.fromAction(() -> accountAnalytics.accountProfileAction(2, action));
   }
 
   private void navigate(boolean externalLogin) {

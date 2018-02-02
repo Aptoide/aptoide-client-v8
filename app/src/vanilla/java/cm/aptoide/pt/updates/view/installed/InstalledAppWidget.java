@@ -9,7 +9,8 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -48,6 +49,8 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
   private AccountNavigator accountNavigator;
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private OkHttpClient httpClient;
+  private NavigationTracker navigationTracker;
+  private AnalyticsManager analyticsManager;
   private Converter.Factory converterFactory;
 
   private ShareAppHelper shareAppHelper;
@@ -67,6 +70,8 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
     final Installed pojo = displayable.getPojo();
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
+    navigationTracker = application.getNavigationTracker();
+    analyticsManager = application.getAnalyticsManager();
     accountManager = application.getAccountManager();
     httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
@@ -82,7 +87,7 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
     shareAppHelper = new ShareAppHelper(
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext()),
         accountManager, accountNavigator, getContext(),
-        new SpotAndShareAnalytics(Analytics.getInstance()), displayable.getTimelineAnalytics(),
+        new SpotAndShareAnalytics(analyticsManager, navigationTracker), displayable.getTimelineAnalytics(),
         PublishRelay.create(), application.getDefaultSharedPreferences(),
         application.isCreateStoreUserPrivacyEnabled());
     appName = pojo.getName();

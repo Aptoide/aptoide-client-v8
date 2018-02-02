@@ -4,8 +4,8 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.UriToPathResolver;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -25,11 +25,12 @@ public class ManageUserPresenter implements Presenter {
   private final UriToPathResolver uriToPathResolver;
   private final boolean showPrivacyConfigs;
   private final boolean isFirstTime;
+  private final AccountAnalytics accountAnalytics;
 
   public ManageUserPresenter(ManageUserView view, CrashReport crashReport,
       AptoideAccountManager accountManager, ThrowableToStringMapper errorMapper,
       ManageUserNavigator navigator, boolean isEditProfile, UriToPathResolver uriToPathResolver,
-      boolean showPrivacyConfigs, boolean isFirstTime) {
+      boolean showPrivacyConfigs, boolean isFirstTime, AccountAnalytics accountAnalytics) {
     this.view = view;
     this.crashReport = crashReport;
     this.accountManager = accountManager;
@@ -39,6 +40,7 @@ public class ManageUserPresenter implements Presenter {
     this.uriToPathResolver = uriToPathResolver;
     this.showPrivacyConfigs = showPrivacyConfigs;
     this.isFirstTime = isFirstTime;
+    this.accountAnalytics = accountAnalytics;
   }
 
   @Override public void present() {
@@ -128,7 +130,7 @@ public class ManageUserPresenter implements Presenter {
   }
 
   private void sendAnalytics(ManageUserFragment.ViewModel userData) {
-    Analytics.Account.createdUserProfile(!TextUtils.isEmpty(userData.getPictureUri()));
+    accountAnalytics.createdUserProfile(!TextUtils.isEmpty(userData.getPictureUri()));
   }
 
   private Completable updateUserAccount(ManageUserFragment.ViewModel userData) {

@@ -8,8 +8,9 @@ import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -26,9 +27,9 @@ import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.view.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.view.recycler.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
-import com.facebook.appevents.AppEventsLogger;
 import java.util.LinkedList;
 import java.util.List;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.functions.Action1;
@@ -48,6 +49,8 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
   private Converter.Factory converterFactory;
   private StoreAnalytics storeAnalytics;
   private StoreContext storeContext;
+  @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
 
   public static LatestReviewsFragment newInstance(long storeId, StoreContext storeContext) {
     LatestReviewsFragment fragment = new LatestReviewsFragment();
@@ -60,6 +63,7 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
     storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
         ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class));
@@ -68,8 +72,7 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     storeAnalytics =
-        new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance());
+        new StoreAnalytics(analyticsManager, navigationTracker);
     setHasOptionsMenu(true);
   }
 

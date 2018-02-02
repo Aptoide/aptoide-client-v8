@@ -6,11 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
-import cm.aptoide.pt.download.DownloadEventConverter;
-import cm.aptoide.pt.download.InstallEventConverter;
+import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.view.active.ActiveDownloadDisplayable;
 import cm.aptoide.pt.download.view.active.ActiveDownloadWidget;
 import cm.aptoide.pt.download.view.active.ActiveDownloadsHeaderDisplayable;
@@ -18,6 +16,7 @@ import cm.aptoide.pt.download.view.active.ActiveDownloadsHeaderWidget;
 import cm.aptoide.pt.download.view.completed.CompletedDownloadDisplayable;
 import cm.aptoide.pt.download.view.completed.CompletedDownloadWidget;
 import cm.aptoide.pt.install.Install;
+import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.store.view.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.store.view.StoreGridHeaderWidget;
@@ -31,29 +30,26 @@ import java.util.List;
 public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Displayable>> {
 
   private final InstallManager installManager;
-  private final Analytics analytics;
-  private final InstallEventConverter installConverter;
-  private final DownloadEventConverter downloadConverter;
+  private final DownloadAnalytics downloadAnalytics;
   private final List<Install> activeDownloads;
   private final List<Install> standByDownloads;
   private final List<Install> completedDownloads;
   private final Resources resources;
   private final StoreTabNavigator storeTabNavigator;
   private final NavigationTracker navigationTracker;
+  private final InstallAnalytics installAnalytics;
 
-  public DownloadsAdapter(InstallEventConverter installConverter,
-      DownloadEventConverter downloadConverter, InstallManager installManager, Analytics analytics,
-      Resources resources, StoreTabNavigator storeTabNavigator,
-      NavigationTracker navigationTracker) {
+  public DownloadsAdapter(DownloadAnalytics downloadAnalytics, InstallManager installManager,
+      Resources resources, StoreTabNavigator storeTabNavigator, NavigationTracker navigationTracker,
+      InstallAnalytics installAnalytics) {
     this.storeTabNavigator = storeTabNavigator;
     this.navigationTracker = navigationTracker;
+    this.installAnalytics = installAnalytics;
     this.activeDownloads = new ArrayList<>();
     this.standByDownloads = new ArrayList<>();
     this.completedDownloads = new ArrayList<>();
     this.installManager = installManager;
-    this.analytics = analytics;
-    this.installConverter = installConverter;
-    this.downloadConverter = downloadConverter;
+    this.downloadAnalytics = downloadAnalytics;
     this.resources = resources;
   }
 
@@ -238,14 +234,14 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
 
   private void bindStandByDownload(Widget holder, Install installation) {
     holder.internalBindView(
-        new CompletedDownloadDisplayable(installation, installManager, downloadConverter, analytics,
-            installConverter));
+        new CompletedDownloadDisplayable(installation, installManager, downloadAnalytics,
+            installAnalytics));
   }
 
   private void bindCompletedDownload(Widget holder, Install installation) {
     holder.internalBindView(
-        new CompletedDownloadDisplayable(installation, installManager, downloadConverter, analytics,
-            installConverter));
+        new CompletedDownloadDisplayable(installation, installManager, downloadAnalytics,
+            installAnalytics));
   }
 
   public void clearAll() {

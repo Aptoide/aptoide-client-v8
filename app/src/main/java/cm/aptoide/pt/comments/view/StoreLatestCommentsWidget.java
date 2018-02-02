@@ -9,8 +9,8 @@ import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.comments.CommentNode;
 import cm.aptoide.pt.comments.ComplexComment;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -169,7 +169,7 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
       return Completable.fromAction(() -> {
         Snackbar.make(view, R.string.you_need_to_be_logged_in, Snackbar.LENGTH_LONG)
             .setAction(R.string.login, snackView -> accountNavigator.navigateToAccountView(
-                Analytics.Account.AccountOrigins.LATEST_COMMENTS_STORE))
+                AccountAnalytics.AccountOrigins.LATEST_COMMENTS_STORE))
             .show();
       });
     }

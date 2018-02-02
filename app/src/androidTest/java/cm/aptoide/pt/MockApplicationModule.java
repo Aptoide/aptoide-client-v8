@@ -42,15 +42,10 @@ import rx.Single;
 public class MockApplicationModule extends ApplicationModule {
 
   private final AptoideApplication application;
-  private final LoginPreferences loginPreferences;
 
-  public MockApplicationModule(AptoideApplication application, String imageCachePath,
-      String cachePath, String accountType, String partnerId, String marketName, String extraId,
-      String aptoidePackage, String aptoideMd5sum, LoginPreferences loginPreferences) {
-    super(application, imageCachePath, cachePath, accountType, partnerId, marketName, extraId,
-        aptoidePackage, aptoideMd5sum, loginPreferences);
+  public MockApplicationModule(AptoideApplication application, String aptoideMd5sum) {
+    super(application, aptoideMd5sum);
     this.application = application;
-    this.loginPreferences = loginPreferences;
   }
 
   @Override AptoideAccountManager provideAptoideAccountManager(AdultContent adultContent,
@@ -58,7 +53,8 @@ public class MockApplicationModule extends ApplicationModule {
       SharedPreferences defaultSharedPreferences,
       AuthenticationPersistence authenticationPersistence,
       AndroidAccountProvider androidAccountProvider, GoogleApiClient googleApiClient,
-      StoreManager storeManager, AccountService accountService, AccountFactory accountFactory) {
+      StoreManager storeManager, AccountService accountService, AccountFactory accountFactory,
+      LoginPreferences loginPreferences) {
 
     FacebookSdk.sdkInitialize(application);
 
