@@ -5,8 +5,10 @@ import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -15,7 +17,6 @@ import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.recycler.widget.Widget;
-import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -35,9 +36,10 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
 
   public RecommendedStoreWidget(View itemView) {
     super(itemView);
+    NavigationTracker navigationTracker = ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
+    AnalyticsManager analyticsManager = ((AptoideApplication) getContext().getApplicationContext()).getAnalyticsManager();
     storeAnalytics =
-        new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance());
+        new StoreAnalytics(analyticsManager, navigationTracker);
   }
 
   @Override protected void assignViews(View itemView) {
@@ -66,11 +68,11 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
           displayable.openStoreFragment(getFragmentNavigator());
           if (!displayable.getOrigin()
               .isEmpty()) {
-            storeAnalytics.sendStoreOpenEvent(displayable.getOrigin(), store.getName());
-            storeAnalytics.sendStoreTabInteractEvent("More Recommended Stores");
+            storeAnalytics.sendStoreOpenEvent(displayable.getOrigin(), store.getName(), false);
+            storeAnalytics.sendStoreTabInteractEvent("More Recommended Stores", false);
           } else {
-            storeAnalytics.sendStoreOpenEvent("Recommended Stores", store.getName());
-            storeAnalytics.sendStoreTabInteractEvent("Open a Recommended Store");
+            storeAnalytics.sendStoreOpenEvent("Recommended Stores", store.getName(), false);
+            storeAnalytics.sendStoreTabInteractEvent("Open a Recommended Store", false);
           }
         }, throwable -> CrashReport.getInstance()
             .log(throwable)));

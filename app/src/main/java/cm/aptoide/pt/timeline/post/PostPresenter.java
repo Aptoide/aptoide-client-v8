@@ -2,8 +2,8 @@ package cm.aptoide.pt.timeline.post;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
@@ -56,7 +56,7 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
   }
 
   @Override public void present() {
-    if (isExternalOpen()) {
+    if (view.isExternalOpen()) {
       showPreviewAppsOnStart();
     } else {
       showCardPreviewAfterTextChanges();
@@ -86,8 +86,7 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(viewCreated -> view.getLoginClick())
-        .doOnNext(loginClicked -> accountNavigator.navigateToAccountView(
-            Analytics.Account.AccountOrigins.POST_ON_TIMELINE))
+        .doOnNext(loginClicked -> accountNavigator.navigateToAccountView(AccountAnalytics.AccountOrigins.POST_ON_TIMELINE))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, crashReport::log);
@@ -95,17 +94,11 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
 
   private void showPreviewAppsOnStart() {
     view.getLifecycle()
-        .filter(event -> event == View.LifecycleEvent.RESUME && isExternalOpen())
+        .filter(event -> event == View.LifecycleEvent.RESUME && view.isExternalOpen())
         .flatMap(__ -> loadPostPreview(view.getExternalUrlToShare()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, crashReport::log);
-  }
-
-  private boolean isExternalOpen() {
-    return view.getExternalUrlToShare() != null && !view.getExternalUrlToShare()
-        .trim()
-        .isEmpty();
   }
 
   private void showRelatedAppsOnStart() {
@@ -115,7 +108,7 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
         .doOnNext(lifecycleEvent -> view.showRelatedAppsLoading())
         .observeOn(Schedulers.io())
         .switchMap(viewResumed -> {
-          if (isExternalOpen()) {
+          if (view.isExternalOpen()) {
             return Observable.merge(postManager.getSuggestionApps(view.getExternalUrlToShare())
                 .toObservable(), postManager.getSuggestionApps()
                 .toObservable())
@@ -136,7 +129,7 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
   }
 
   private boolean getRelatedAppsLifecycleFilter(View.LifecycleEvent event) {
-    return isExternalOpen() ? event.equals(View.LifecycleEvent.RESUME)
+    return view.isExternalOpen() ? event.equals(View.LifecycleEvent.RESUME)
         : event.equals(View.LifecycleEvent.CREATE);
   }
 
@@ -154,7 +147,7 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.cancelButtonPressed()
-            .doOnNext(click -> analytics.sendClosePostEvent(PostAnalytics.CloseType.X))
+            .doOnNext(click -> analytics.sendClosePostEvent(PostAnalytics.CloseType.X, view.isExternalOpen()))
             .doOnNext(__2 -> goBack()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -162,7 +155,7 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
   }
 
   private void goBack() {
-    if (isExternalOpen()) {
+    if (view.isExternalOpen()) {
       view.exit();
     } else {
       fragmentNavigator.popBackStack();
@@ -289,7 +282,7 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
           analytics.sendPostCompleteEvent(postManager.remoteRelatedAppsAvailable(),
               view.getCurrentSelected()
                   .getPackageName(), hasComment, hasUrl, url == null ? "" : url,
-              android.view.View.VISIBLE == view.getPreviewVisibility(), isExternalOpen());
+              android.view.View.VISIBLE == view.getPreviewVisibility(), view.isExternalOpen());
         })
         .doOnSuccess(postId -> tabNavigator.navigate(new AppsTimelineTabNavigation(postId)))
         .doOnSuccess(postId -> goBack())
@@ -298,7 +291,7 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
 
   @Nullable private String getUrl(String textToShare) {
     String url;
-    if (isExternalOpen()) {
+    if (view.isExternalOpen()) {
       url = view.getExternalUrlToShare();
     } else {
       url = urlValidator.containsUrl(textToShare) ? urlValidator.getUrl(textToShare) : null;
@@ -317,31 +310,31 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
           view.showInvalidTextError();
           analytics.sendPostCompleteNoTextEvent(postManager.remoteRelatedAppsAvailable(),
               isSelected, packageName, hasComment, hasUrl, url == null ? "" : url,
-              android.view.View.VISIBLE == view.getPreviewVisibility(), isExternalOpen());
+              android.view.View.VISIBLE == view.getPreviewVisibility(), view.isExternalOpen());
           break;
         case INVALID_PACKAGE:
           view.showInvalidPackageError();
           analytics.sendPostCompleteNoSelectedAppEvent(postManager.remoteRelatedAppsAvailable(),
               hasComment, hasUrl, url == null ? "" : url,
-              android.view.View.VISIBLE == view.getPreviewVisibility(), isExternalOpen());
+              android.view.View.VISIBLE == view.getPreviewVisibility(), view.isExternalOpen());
           break;
         case NO_LOGIN:
           view.showNoLoginError();
           analytics.sendPostCompleteNoLoginEvent(postManager.remoteRelatedAppsAvailable(),
               isSelected, packageName, hasComment, hasUrl, url == null ? "" : url,
-              android.view.View.VISIBLE == view.getPreviewVisibility(), isExternalOpen());
+              android.view.View.VISIBLE == view.getPreviewVisibility(), view.isExternalOpen());
           break;
         case NO_APP_FOUND:
           view.showAppNotFoundError();
           analytics.sendPostCompleteNoAppFoundEvent(postManager.remoteRelatedAppsAvailable(),
               isSelected, packageName, hasComment, hasUrl, url == null ? "" : url,
-              android.view.View.VISIBLE == view.getPreviewVisibility(), isExternalOpen());
+              android.view.View.VISIBLE == view.getPreviewVisibility(), view.isExternalOpen());
           break;
         case INVALID_URL:
           view.showInvalidUrlError();
           analytics.sendPostCompleteNoAppFoundEvent(postManager.remoteRelatedAppsAvailable(),
               isSelected, packageName, hasComment, hasUrl, url == null ? "" : url,
-              android.view.View.VISIBLE == view.getPreviewVisibility(), isExternalOpen());
+              android.view.View.VISIBLE == view.getPreviewVisibility(), view.isExternalOpen());
           break;
       }
     } else if (throwable instanceof AptoideWsV7Exception) {
@@ -350,13 +343,13 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
           .getErrors());
       analytics.sendPostCompletedNetworkFailedEvent(postManager.remoteRelatedAppsAvailable(),
           isSelected, packageName, hasComment, hasUrl, url == null ? "" : url,
-          android.view.View.VISIBLE == view.getPreviewVisibility(), errorCodes, isExternalOpen());
+          android.view.View.VISIBLE == view.getPreviewVisibility(), errorCodes, view.isExternalOpen());
     } else {
       view.showGenericError();
       analytics.sendPostFailedEvent(postManager.remoteRelatedAppsAvailable(), isSelected,
           packageName, hasComment, hasUrl, url == null ? "" : url,
           android.view.View.VISIBLE == view.getPreviewVisibility(), throwable.getClass()
-              .getSimpleName());
+              .getSimpleName(), view.isExternalOpen());
     }
   }
 
@@ -374,7 +367,7 @@ class PostPresenter implements Presenter, BackButton.ClickHandler {
   }
 
   @Override public boolean handle() {
-    analytics.sendClosePostEvent(PostAnalytics.CloseType.BACK);
+    analytics.sendClosePostEvent(PostAnalytics.CloseType.BACK, view.isExternalOpen());
     goBack();
     return true;
   }

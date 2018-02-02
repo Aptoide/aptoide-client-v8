@@ -1,5 +1,6 @@
 package cm.aptoide.pt.analytics.analytics;
 
+import cm.aptoide.pt.logger.Logger;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import java.util.Map;
@@ -10,6 +11,7 @@ import java.util.Set;
  */
 
 public class FabricEventLogger implements EventLogger {
+  private static final String TAG = FabricEventLogger.class.getSimpleName();
   private final Answers fabric;
 
   public FabricEventLogger(Answers fabric) {
@@ -28,7 +30,16 @@ public class FabricEventLogger implements EventLogger {
             .toString());
       }
     }
-
+    Logger.d(TAG, "log() called with: "
+        + "eventName = ["
+        + eventName
+        + "], data = ["
+        + data
+        + "], action = ["
+        + action
+        + "], context = ["
+        + context
+        + "]");
     fabric.logCustom(customEvent);
   }
 

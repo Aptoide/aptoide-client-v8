@@ -9,8 +9,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.DeepLinkAnalytics;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.account.view.ImagePickerNavigator;
 import cm.aptoide.pt.account.view.PhotoFileGenerator;
@@ -18,21 +20,15 @@ import cm.aptoide.pt.account.view.UriToPathResolver;
 import cm.aptoide.pt.account.view.store.ManageStoreNavigator;
 import cm.aptoide.pt.account.view.user.ManageUserNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
-import cm.aptoide.pt.dataprovider.WebService;
-import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
-import cm.aptoide.pt.link.AptoideInstallParser;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.FragmentResultNavigator;
@@ -54,7 +50,6 @@ import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.util.ApkFy;
 import com.facebook.CallbackManager;
-import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.jakewharton.rxrelay.BehaviorRelay;
@@ -63,7 +58,6 @@ import dagger.Module;
 import dagger.Provides;
 import java.util.Map;
 import javax.inject.Named;
-import okhttp3.OkHttpClient;
 
 import static android.content.Context.WINDOW_SERVICE;
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -78,8 +72,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   private final View view;
   private final String defaultTheme;
   private final String defaultStoreName;
-  private boolean firstCreated;
   private final String fileProviderAuthority;
+  private boolean firstCreated;
 
   public ActivityModule(AppCompatActivity activity, Intent intent,
       NotificationSyncScheduler notificationSyncScheduler, String marketName, String autoUpdateUrl,
@@ -121,23 +115,6 @@ import static com.facebook.FacebookSdk.getApplicationContext;
     return activity.getSupportFragmentManager();
   }
 
-  @ActivityScope @Provides NotificationAnalytics provideNotificationAnalytics(
-      @Named("default") OkHttpClient httpClient,
-      @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptorV7,
-      TokenInvalidator tokenInvalidator,
-      @Named("default") SharedPreferences defaultSharedPreferences) {
-    return new NotificationAnalytics(Analytics.getInstance(),
-        AppEventsLogger.newLogger(activity.getApplicationContext()), bodyInterceptorV7, httpClient,
-        WebService.getDefaultConverter(), tokenInvalidator,
-        cm.aptoide.pt.dataprovider.BuildConfig.APPLICATION_ID, defaultSharedPreferences,
-        new AptoideInstallParser());
-  }
-
-  @ActivityScope @Provides SearchAnalytics providesSearchAnalytics() {
-    return new SearchAnalytics(Analytics.getInstance(),
-        AppEventsLogger.newLogger(activity.getApplicationContext()));
-  }
-
   @ActivityScope @Provides SearchNavigator providesSearchNavigator(
       FragmentNavigator fragmentNavigator) {
     return new SearchNavigator(fragmentNavigator, defaultStoreName);
@@ -148,11 +125,12 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       StoreRepository storeRepository, FragmentNavigator fragmentNavigator,
       @Named("default") SharedPreferences sharedPreferences, StoreAccessor storeAccessor,
       NavigationTracker navigationTracker, PageViewsAnalytics pageViewsAnalytics,
-      SearchNavigator searchNavigator, SearchAnalytics searchAnalytics) {
+      SearchNavigator searchNavigator, SearchAnalytics searchAnalytics,
+      DeepLinkAnalytics deepLinkAnalytics) {
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
         (TabNavigator) activity, (DeepLinkManager.DeepLinkMessages) activity, sharedPreferences,
         storeAccessor, defaultTheme, notificationAnalytics, navigationTracker, pageViewsAnalytics,
-        searchNavigator, searchAnalytics);
+        searchNavigator, searchAnalytics, deepLinkAnalytics);
   }
 
   @ActivityScope @Provides Presenter provideMainPresenter(
@@ -172,10 +150,12 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
   @ActivityScope @Provides AccountNavigator provideAccountNavigator(
       FragmentNavigator fragmentNavigator, AptoideAccountManager accountManager,
-      CallbackManager callbackManager, GoogleApiClient googleApiClient) {
+      CallbackManager callbackManager, GoogleApiClient googleApiClient,
+      AccountAnalytics accountAnalytics) {
     return new AccountNavigator(fragmentNavigator, accountManager, ((ActivityNavigator) activity),
         LoginManager.getInstance(), callbackManager, googleApiClient, PublishRelay.create(),
-        defaultStoreName, defaultTheme, "http://m.aptoide.com/account/password-recovery");
+        defaultStoreName, defaultTheme, "http://m.aptoide.com/account/password-recovery",
+        accountAnalytics);
   }
 
   @ActivityScope @Provides ScreenOrientationManager provideScreenOrientationManager() {

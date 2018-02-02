@@ -32,8 +32,9 @@ import android.widget.ProgressBar;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.AdsRepository;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -44,20 +45,19 @@ import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.presenter.CompositePresenter;
-import cm.aptoide.pt.search.SuggestionCursorAdapter;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
-import cm.aptoide.pt.search.suggestions.TrendingManager;
+import cm.aptoide.pt.search.SuggestionCursorAdapter;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchViewModel;
+import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
-import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.view.RxView;
@@ -66,6 +66,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import org.parceler.Parcels;
 import retrofit2.Converter;
@@ -115,6 +116,8 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
   private TrendingManager trendingManager;
   private AppSearchSuggestionsView appSearchSuggestionsView;
   private CrashReport crashReport;
+  @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
 
   public static SearchResultFragment newInstance(String currentQuery, String defaultStoreName) {
     return newInstance(currentQuery, false, defaultStoreName);
@@ -438,7 +441,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
+    getFragmentComponent(savedInstanceState).inject(this);
     crashReport = CrashReport.getInstance();
 
     if (viewModel == null && savedInstanceState != null && savedInstanceState.containsKey(
@@ -465,9 +468,7 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
 
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
 
-    final Analytics analytics = Analytics.getInstance();
-
-    searchAnalytics = new SearchAnalytics(analytics, AppEventsLogger.newLogger(applicationContext));
+    searchAnalytics = new SearchAnalytics(analyticsManager, navigationTracker);
 
     final AptoideApplication application = (AptoideApplication) getActivity().getApplication();
 

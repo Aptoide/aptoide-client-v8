@@ -2,7 +2,6 @@ package cm.aptoide.pt.file;
 
 import cm.aptoide.pt.utils.FileUtils;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import org.junit.Test;

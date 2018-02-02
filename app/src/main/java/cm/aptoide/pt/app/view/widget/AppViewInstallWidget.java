@@ -8,12 +8,10 @@ package cm.aptoide.pt.app.view.widget;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
-import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -23,13 +21,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.app.AppBoughtReceiver;
+import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.displayable.AppViewInstallDisplayable;
@@ -44,14 +42,12 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.download.DownloadCompleteAnalytics;
-import cm.aptoide.pt.download.DownloadEvent;
-import cm.aptoide.pt.download.DownloadEventConverter;
+import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadFactory;
-import cm.aptoide.pt.download.DownloadInstallBaseEvent;
-import cm.aptoide.pt.download.InstallEvent;
-import cm.aptoide.pt.download.InstallEventConverter;
+import cm.aptoide.pt.download.InstallType;
+import cm.aptoide.pt.download.Origin;
 import cm.aptoide.pt.install.Install;
+import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.install.view.InstallWarningDialog;
@@ -96,9 +92,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
   private App trustedVersion;
   private InstallManager installManager;
   private boolean isUpdate;
-  private DownloadEventConverter downloadInstallEventConverter;
-  private Analytics analytics;
-  private InstallEventConverter installConverter;
   private AptoideAccountManager accountManager;
   private AppViewInstallDisplayable displayable;
   private SocialRepository socialRepository;
@@ -115,6 +108,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
   private String defaultStoreName;
   private int campaignId;
   private String abTestGroup;
+  private AppViewAnalytics appViewAnalytics;
+  private InstallAnalytics installAnalytics;
 
   public AppViewInstallWidget(View itemView) {
     super(itemView);
@@ -153,6 +148,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
+    installAnalytics = displayable.getInstallAnalytics();
     isCreateStoreUserPrivacyEnabled = application.isCreateStoreUserPrivacyEnabled();
     marketName = application.getMarketName();
     sharedPreferences = application.getDefaultSharedPreferences();
@@ -165,19 +161,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     BodyInterceptor<BaseBody> bodyInterceptor =
         application.getAccountSettingsBodyInterceptorPoolV7();
     final TokenInvalidator tokenInvalidator = application.getTokenInvalidator();
-    downloadInstallEventConverter =
-        new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            BuildConfig.APPLICATION_ID, sharedPreferences,
-            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
-            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-            application.getNavigationTracker());
-    installConverter =
-        new InstallEventConverter(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            BuildConfig.APPLICATION_ID, sharedPreferences,
-            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
-            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
-            application.getNavigationTracker());
-    analytics = Analytics.getInstance();
+    appViewAnalytics = displayable.getAppViewAnalytics();
     downloadFactory = displayable.getDownloadFactory();
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
@@ -419,7 +403,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     return view -> {
       final Context context = view.getContext();
       final PermissionService permissionRequest = (PermissionService) getContext();
-      displayable.installAppClicked(DownloadCompleteAnalytics.InstallType.DOWNGRADE);
+      displayable.installAppClicked(InstallType.DOWNGRADE,
+          Origin.DOWNGRADE);
       permissionRequest.requestAccessToExternalFileSystem(() -> {
 
         showMessageOKCancel(getContext().getResources()
@@ -439,15 +424,16 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                       new PermissionManager().requestDownloadAccess(permissionRequest)
                           .flatMap(success -> installManager.install(appDownload)
                               .toObservable()
-                              .doOnSubscribe(() -> setupEvents(appDownload)))
+                              .doOnSubscribe(() -> setupEvents(appDownload, InstallType.DOWNGRADE,
+                                  Origin.DOWNGRADE)))
                           .observeOn(AndroidSchedulers.mainThread())
                           .subscribe(progress -> {
                             // TODO: 12/07/2017 this code doesnt run
                             Logger.d(TAG, "Installing");
                           }, throwable -> crashReport.log(throwable)));
-                  Analytics.Rollback.downgradeDialogContinue();
+                  appViewAnalytics.downgradeDialogContinue();
                 } else {
-                  Analytics.Rollback.downgradeDialogCancel();
+                  appViewAnalytics.downgradeDialogCancel();
                 }
               }
             });
@@ -457,21 +443,13 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     };
   }
 
-  private void setupEvents(Download download) {
-    DownloadEvent report =
-        downloadInstallEventConverter.create(download, DownloadEvent.Action.CLICK,
-            DownloadEvent.AppContext.APPVIEW);
-    report.setCampaignId(campaignId);
-    report.setAbTestingGroup(abTestGroup);
-
-    analytics.save(report.getPackageName() + report.getVersionCode(), report);
-
-    InstallEvent installEvent =
-        installConverter.create(download, DownloadInstallBaseEvent.Action.CLICK,
-            DownloadInstallBaseEvent.AppContext.APPVIEW);
-    installEvent.setCampaignId(campaignId);
-    installEvent.setAbTestingGroup(abTestGroup);
-    analytics.save(download.getPackageName() + download.getVersionCode(), installEvent);
+  private void setupEvents(Download download, InstallType installType,
+      Origin origin) {
+    appViewAnalytics.setupDownloadEvents(download, campaignId, abTestGroup,
+        AnalyticsManager.Action.CLICK);
+    installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
+        installType, AnalyticsManager.Action.INSTALL, AppContext.APPVIEW,
+        origin, campaignId, abTestGroup);
   }
 
   private void showRootInstallWarningPopup(Context context) {
@@ -511,10 +489,11 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
       ManagerPreferences.setNotLoggedInInstallClicks(
           ManagerPreferences.getNotLoggedInInstallClicks(sharedPreferences) + 1, sharedPreferences);
       if (installOrUpgradeMsg == R.string.installing_msg) {
-        Analytics.ClickedOnInstallButton.clicked(app);
+        appViewAnalytics.clickOnInstallButton(app);
       }
-      displayable.installAppClicked(isUpdate ? DownloadCompleteAnalytics.InstallType.UPDATE
-          : DownloadCompleteAnalytics.InstallType.INSTALL);
+      displayable.installAppClicked(isUpdate ? InstallType.UPDATE : InstallType.INSTALL,
+          isUpdate ? Origin.UPDATE
+              : Origin.INSTALL);
 
       showRootInstallWarningPopup(context);
       compositeSubscription.add(permissionManager.requestDownloadAccess(permissionService)
@@ -530,7 +509,10 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                   .showSuggestedApps();
             }
             return installManager.install(download)
-                .doOnSubscribe(subscription -> setupEvents(download))
+                .doOnSubscribe(subscription -> setupEvents(download,
+                    isUpdate ? InstallType.UPDATE : InstallType.INSTALL,
+                    isUpdate ? Origin.UPDATE
+                        : Origin.INSTALL))
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> {
                   if (accountManager.isLoggedIn() && ManagerPreferences.isShowPreviewDialog(
@@ -646,10 +628,35 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                 (PermissionService) getContext()))
             .flatMap(success -> installManager.install(download)
                 .toObservable()
-                .doOnSubscribe(() -> setupEvents(download)))
+                .doOnSubscribe(() -> setupEvents(download, getInstallType(download.getAction()),
+                    getOrigin(download.getAction()))))
             .subscribe(downloadProgress -> Logger.d(TAG, "Installing"),
                 err -> crashReport.log(err)));
       });
+    }
+  }
+
+  private Origin getOrigin(int action) {
+    switch (action) {
+      default:
+      case Download.ACTION_INSTALL:
+        return Origin.INSTALL;
+      case Download.ACTION_UPDATE:
+        return Origin.UPDATE;
+      case Download.ACTION_DOWNGRADE:
+        return Origin.DOWNGRADE;
+    }
+  }
+
+  private InstallType getInstallType(int action) {
+    switch (action) {
+      default:
+      case Download.ACTION_INSTALL:
+        return InstallType.INSTALL;
+      case Download.ACTION_UPDATE:
+        return InstallType.UPDATE;
+      case Download.ACTION_DOWNGRADE:
+        return InstallType.DOWNGRADE;
     }
   }
 

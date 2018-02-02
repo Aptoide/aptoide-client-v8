@@ -10,8 +10,8 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.app.view.displayable.AppViewFlagThisDisplayable;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
@@ -166,7 +166,7 @@ public class AppViewFlagThisWidget extends Widget<AppViewFlagThisDisplayable> {
     return v -> {
       if (!accountManager.isLoggedIn()) {
         ShowMessage.asSnack(v, R.string.you_need_to_be_logged_in, R.string.login, snackView -> {
-          accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.APP_VIEW_FLAG);
+          accountNavigator.navigateToAccountView(AccountAnalytics.AccountOrigins.APP_VIEW_FLAG);
         });
         return;
       }

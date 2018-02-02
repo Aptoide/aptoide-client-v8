@@ -7,7 +7,6 @@ package cm.aptoide.pt.app.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -36,9 +35,9 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.app.AppBoughtReceiver;
 import cm.aptoide.pt.app.AppRepository;
 import cm.aptoide.pt.app.AppViewAnalytics;
@@ -77,7 +76,7 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.download.DownloadCompleteAnalytics;
+import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.AppAction;
 import cm.aptoide.pt.install.InstallAnalytics;
@@ -116,8 +115,6 @@ import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
-import com.crashlytics.android.answers.Answers;
-import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -127,6 +124,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import org.parceler.Parcels;
 import retrofit2.Converter;
@@ -150,9 +148,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private final String key_appId = "appId";
   private final String key_packageName = "packageName";
   private final String key_uname = "uname";
-
+  @Inject AnalyticsManager analyticsManager;
+  @Inject DownloadAnalytics downloadAnalytics;
+  @Inject InstallAnalytics installAnalytics;
   private AppViewModel appViewModel;
-
   private AppViewHeader header;
   private InstallManager installManager;
   private Action0 unInstallAction;
@@ -180,7 +179,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private AccountNavigator accountNavigator;
   private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
   private NavigationTracker navigationTracker;
-
   private CrashReport crashReport;
   private SearchNavigator searchNavigator;
   private TrendingManager trendingManager;
@@ -339,20 +337,18 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     appViewModel = new AppViewModel();
 
     super.onCreate(savedInstanceState);
-
+    getFragmentComponent(savedInstanceState).inject(this);
     handleSavedInstance(savedInstanceState);
 
     final Context applicationContext = getContext().getApplicationContext();
     final AptoideApplication application = (AptoideApplication) applicationContext;
     this.appViewModel.setDefaultTheme(application.getDefaultThemeName());
     this.appViewModel.setMarketName(application.getMarketName());
-    Analytics analytics = Analytics.getInstance();
 
     searchNavigator =
         new SearchNavigator(getFragmentNavigator(), application.getDefaultStoreName());
 
-    searchAnalytics = new SearchAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()));
+    searchAnalytics = new SearchAnalytics(analyticsManager, navigationTracker);
 
     adMapper = new MinimalAdMapper();
 
@@ -371,10 +367,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     ReadPostsPersistence readPostsPersistence =
         ((AptoideApplication) applicationContext).getReadPostsPersistence();
     timelineAnalytics =
-        new TimelineAnalytics(analytics, AppEventsLogger.newLogger(applicationContext),
-            bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            BuildConfig.APPLICATION_ID, application.getDefaultSharedPreferences(),
-            application.getNotificationAnalytics(), navigationTracker, readPostsPersistence);
+        new TimelineAnalytics(application.getNotificationAnalytics(), navigationTracker,
+            readPostsPersistence, analyticsManager);
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
             timelineAnalytics, tokenInvalidator, application.getDefaultSharedPreferences());
@@ -388,14 +382,13 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
         ((AptoideApplication) applicationContext.getApplicationContext()).getDatabase(),
         StoredMinimalAd.class);
-    final SpotAndShareAnalytics spotAndShareAnalytics = new SpotAndShareAnalytics(analytics);
-    final SharedPreferences sharedPreferences = application.getDefaultSharedPreferences();
-    appViewAnalytics =
-        new AppViewAnalytics(analytics, AppEventsLogger.newLogger(applicationContext),
-            bodyInterceptor, httpClient, tokenInvalidator, converterFactory, sharedPreferences);
+    final SpotAndShareAnalytics spotAndShareAnalytics =
+        new SpotAndShareAnalytics(analyticsManager, navigationTracker);
+    appViewAnalytics = new AppViewAnalytics(downloadAnalytics, installAnalytics, analyticsManager,
+        navigationTracker);
 
     appViewSimilarAppAnalytics =
-        new AppViewSimilarAppAnalytics(analytics, AppEventsLogger.newLogger(applicationContext));
+        new AppViewSimilarAppAnalytics(analyticsManager, navigationTracker);
 
     installAppRelay = PublishRelay.create();
     shareAppHelper =
@@ -404,10 +397,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             application.getDefaultSharedPreferences(),
             application.isCreateStoreUserPrivacyEnabled());
     downloadFactory = new DownloadFactory(getMarketName());
-
-    appViewAnalytics = new AppViewAnalytics(analytics,
-        AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
-        httpClient, tokenInvalidator, converterFactory, sharedPreferences);
 
     notLoggedInShareAnalytics = application.getNotLoggedInShareAnalytics();
     navigationTracker = application.getNavigationTracker();
@@ -943,9 +932,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       setOpenType(null);
     }
     final Context applicationContext = getContext().getApplicationContext();
-    final InstallAnalytics installAnalytics =
-        new InstallAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(applicationContext),
-            crashReport);
 
     final NotificationAnalytics notificationAnalytics =
         ((AptoideApplication) applicationContext).getNotificationAnalytics();
@@ -955,9 +941,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installDisplayable =
         AppViewInstallDisplayable.newInstance(getApp, installManager, getSearchAdResult(),
             shouldInstall, downloadFactory, timelineAnalytics, appViewAnalytics, installAppRelay,
-            this, new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
-                AppEventsLogger.newLogger(applicationContext)), navigationTracker,
-            getEditorsBrickPosition(), installAnalytics,
+            this, downloadAnalytics, navigationTracker, getEditorsBrickPosition(), installAnalytics,
             notificationAnalytics.getCampaignId(app.getPackageName(), app.getId()),
             notificationAnalytics.getAbTestingGroup(app.getPackageName(), app.getId()),
             fragmentNames);

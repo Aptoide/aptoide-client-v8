@@ -1,11 +1,9 @@
 package cm.aptoide.pt.install;
 
-import android.os.Bundle;
-import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.events.FabricEvent;
-import cm.aptoide.pt.analytics.events.FacebookEvent;
-import com.crashlytics.android.answers.Answers;
-import com.facebook.appevents.AppEventsLogger;
+import android.content.SharedPreferences;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.root.RootAvailabilityManager;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,47 +14,72 @@ import java.util.Map;
 public class InstallFabricEvents implements InstallerAnalytics {
   public static final String ROOT_V2_COMPLETE = "Root_v2_Complete";
   public static final String ROOT_V2_START = "Root_v2_Start";
-  private final AppEventsLogger facebook;
-  private Analytics analytics;
-  private Answers fabric;
+  public static final String IS_INSTALLATION_TYPE_EVENT_NAME = "INSTALLATION_TYPE";
+  private static final String CONCAT = "CONCAT";
+  private static final String IS_ROOT = "IS_ROOT";
+  private static final String SETTING_ROOT = "SETTING_ROOT";
+  private static final String INSTALLFABRICCONTEXT = "Install_Fabric_Event";
+  private final InstallAnalytics installAnalytics;
+  private final AnalyticsManager analyticsManager;
+  private final SharedPreferences sharedPreferences;
+  private final RootAvailabilityManager rootAvailabilityManager;
 
-  public InstallFabricEvents(Analytics analytics, Answers fabric, AppEventsLogger facebook) {
-    this.analytics = analytics;
-    this.fabric = fabric;
-    this.facebook = facebook;
+  public InstallFabricEvents(AnalyticsManager analyticsManager, InstallAnalytics installAnalytics,
+      SharedPreferences sharedPreferences, RootAvailabilityManager rootAvailabilityManager) {
+    this.analyticsManager = analyticsManager;
+    this.installAnalytics = installAnalytics;
+    this.sharedPreferences = sharedPreferences;
+    this.rootAvailabilityManager = rootAvailabilityManager;
   }
 
   @Override public void rootInstallCompleted(int exitcode) {
-    Map<String, String> attributes = new HashMap<>();
+    Map<String, Object> attributes = new HashMap<>();
     attributes.put("Result", "success");
     attributes.put("Exit_Code", String.valueOf(exitcode));
-    analytics.sendEvent(new FabricEvent(fabric, ROOT_V2_COMPLETE, attributes));
+    analyticsManager.logEvent(attributes, ROOT_V2_COMPLETE, AnalyticsManager.Action.ROOT,
+        INSTALLFABRICCONTEXT);
   }
 
   @Override public void rootInstallTimeout() {
-    Map<String, String> attributes = new HashMap<>();
+    Map<String, Object> attributes = new HashMap<>();
     attributes.put("Result", "timeout");
-    analytics.sendEvent(new FabricEvent(fabric, ROOT_V2_COMPLETE, attributes));
+    analyticsManager.logEvent(attributes, ROOT_V2_COMPLETE, AnalyticsManager.Action.ROOT,
+        INSTALLFABRICCONTEXT);
   }
 
   @Override public void rootInstallFail(Exception e) {
-    Map<String, String> attributes = new HashMap<>();
+    Map<String, Object> attributes = new HashMap<>();
     attributes.put("Result", "fail");
     attributes.put("Error", e.getMessage());
-    analytics.sendEvent(new FabricEvent(fabric, ROOT_V2_COMPLETE, attributes));
+    analyticsManager.logEvent(attributes, ROOT_V2_COMPLETE, AnalyticsManager.Action.ROOT,
+        INSTALLFABRICCONTEXT);
   }
 
   @Override public void rootInstallCancelled() {
-    Map<String, String> attributes = new HashMap<>();
-    Bundle bundle = new Bundle();
-    bundle.putString("Result", "cancel");
+    Map<String, Object> attributes = new HashMap<>();
     attributes.put("Result", "cancel");
-    analytics.sendEvent(new FabricEvent(fabric, ROOT_V2_COMPLETE, attributes));
-    analytics.sendEvent(new FacebookEvent(facebook, ROOT_V2_COMPLETE, bundle));
+    analyticsManager.logEvent(attributes, ROOT_V2_COMPLETE, AnalyticsManager.Action.ROOT,
+        INSTALLFABRICCONTEXT);
   }
 
   @Override public void rootInstallStart() {
-    analytics.sendEvent(new FabricEvent(fabric, ROOT_V2_START));
-    analytics.sendEvent(new FacebookEvent(facebook, ROOT_V2_START));
+    analyticsManager.logEvent(null, ROOT_V2_START, AnalyticsManager.Action.ROOT,
+        INSTALLFABRICCONTEXT);
+  }
+
+  @Override public void installationType(boolean isRootAllowed, boolean isRoot) {
+    Map<String, Object> map = new HashMap<>();
+    map.put(IS_ROOT, String.valueOf(isRoot));
+    map.put(SETTING_ROOT, String.valueOf(isRootAllowed));
+    map.put(CONCAT, String.valueOf(isRootAllowed) + "_" + String.valueOf(isRoot));
+    analyticsManager.logEvent(map, IS_INSTALLATION_TYPE_EVENT_NAME, AnalyticsManager.Action.ROOT,
+        INSTALLFABRICCONTEXT);
+  }
+
+  @Override public void logInstallErrorEvent(String packageName, int versionCode, Exception e) {
+    installAnalytics.logInstallErrorEvent(packageName, versionCode, e,
+        rootAvailabilityManager.isRootAvailable()
+            .toBlocking()
+            .value(), ManagerPreferences.allowRootInstallation(sharedPreferences));
   }
 }

@@ -12,8 +12,8 @@ import android.widget.Button;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.store.StoreTheme;
@@ -107,7 +107,7 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
   private Completable showSignInMessage(@NonNull final View view) {
     return ShowMessage.asObservableSnack(view, R.string.you_need_to_be_logged_in, R.string.login,
         snackView -> {
-          accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.STORE_COMMENT);
+          accountNavigator.navigateToAccountView(AccountAnalytics.AccountOrigins.STORE_COMMENT);
         });
   }
 }

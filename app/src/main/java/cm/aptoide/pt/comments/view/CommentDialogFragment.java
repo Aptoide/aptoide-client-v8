@@ -13,7 +13,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.comments.CommentBeforeSubmissionCallback;
 import cm.aptoide.pt.comments.CommentDialogCallbackContract;
 import cm.aptoide.pt.comments.CommentOnErrorCallbackContract;
@@ -29,10 +30,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForTimelineArticle;
 import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.store.StoreAnalytics;
-import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import okhttp3.OkHttpClient;
@@ -42,8 +41,6 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class CommentDialogFragment
     extends com.trello.rxlifecycle.components.support.RxDialogFragment {
-
-  private static final String TAG = CommentDialogFragment.class.getName();
 
   private static final String APP_OR_STORE_NAME = "app_or_store_name";
   private static final String RESOURCE_ID_AS_LONG = "resource_id_as_long";
@@ -68,7 +65,8 @@ public class CommentDialogFragment
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
   private StoreAnalytics storeAnalytics;
-  private TimelineAnalytics timelineAnalytics;
+  private AnalyticsManager analyticsManager;
+  private NavigationTracker navigationTracker;
 
   public static CommentDialogFragment newInstanceStoreCommentReply(long storeId,
       long previousCommentId, String storeName) {
@@ -146,8 +144,8 @@ public class CommentDialogFragment
     converterFactory = WebService.getDefaultConverter();
     onEmptyTextError =
         AptoideUtils.StringU.getResString(R.string.ws_error_MARG_107, getContext().getResources());
-    timelineAnalytics =
-        ((AptoideApplication) getContext().getApplicationContext()).getTimelineAnalytics();
+    analyticsManager = application.getAnalyticsManager();
+    navigationTracker = application.getNavigationTracker();
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -186,9 +184,7 @@ public class CommentDialogFragment
     commentButton = (Button) view.findViewById(R.id.comment_button);
 
     setupLogic();
-    storeAnalytics =
-        new StoreAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance());
+    storeAnalytics = new StoreAnalytics(analyticsManager, navigationTracker);
 
     return view;
   }

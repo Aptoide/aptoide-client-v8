@@ -1,21 +1,14 @@
 package cm.aptoide.pt.app;
 
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import cm.aptoide.pt.BuildConfig;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
-import cm.aptoide.pt.analytics.events.AptoideEvent;
-import cm.aptoide.pt.analytics.events.FacebookEvent;
-import cm.aptoide.pt.analytics.events.FlurryEvent;
-import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import com.facebook.appevents.AppEventsLogger;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
+import cm.aptoide.pt.download.DownloadAnalytics;
+import cm.aptoide.pt.install.InstallAnalytics;
 import java.util.HashMap;
 import java.util.Map;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
 
 /**
  * Created by pedroribeiro on 10/05/17.
@@ -25,40 +18,41 @@ public class AppViewAnalytics {
 
   public static final String EDITORS_CHOICE_CLICKS = "Editors_Choice_Clicks";
   public static final String HOME_PAGE_EDITORS_CHOICE_FLURRY = "Home_Page_Editors_Choice";
+  public static final String APP_VIEW_OPEN_FROM = "App_Viewed_Open_From";
+  public static final String OPEN_APP_VIEW = "OPEN_APP_VIEW";
+  public static final String APP_VIEW_INTERACT = "App_View_Interact";
+  public static final String DOWNGRADE_DIALOG = "Downgrade_Dialog";
+  public static final String CLICK_INSTALL = "Clicked on install button";
+  private static final String APPLICATION_NAME = "Application Name";
+  private static final String APPLICATION_PUBLISHER = "Application Publisher";
   private static final String ACTION = "Action";
-  private static final String APP_VIEW_INTERACT = "App_View_Interact";
-  private Analytics analytics;
-  private AppEventsLogger facebook;
-  private BodyInterceptor<BaseBody> bodyInterceptor;
-  private OkHttpClient httpClient;
-  private TokenInvalidator tokenInvalidator;
-  private Converter.Factory converterFactory;
-  private SharedPreferences sharedPreferences;
+  private static final String DEFAULT_CONTEXT = "AppView";
+  private final DownloadAnalytics downloadAnalytics;
+  private final InstallAnalytics installAnalytics;
+  private AnalyticsManager analyticsManager;
+  private NavigationTracker navigationTracker;
 
-  public AppViewAnalytics(Analytics analytics, AppEventsLogger facebook,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      TokenInvalidator tokenInvalidator, Converter.Factory converterFactory,
-      SharedPreferences sharedPreferences) {
-    this.analytics = analytics;
-    this.facebook = facebook;
-    this.bodyInterceptor = bodyInterceptor;
-    this.httpClient = httpClient;
-    this.tokenInvalidator = tokenInvalidator;
-    this.converterFactory = converterFactory;
-    this.sharedPreferences = sharedPreferences;
+  public AppViewAnalytics(DownloadAnalytics downloadAnalytics, InstallAnalytics installAnalytics,
+      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
+    this.downloadAnalytics = downloadAnalytics;
+    this.installAnalytics = installAnalytics;
+    this.analyticsManager = analyticsManager;
+    this.navigationTracker = navigationTracker;
   }
 
   public void sendEditorsChoiceClickEvent(ScreenTagHistory previousScreen, String packageName,
       String editorsBrickPosition) {
-    analytics.sendEvent(new FacebookEvent(facebook, EDITORS_CHOICE_CLICKS,
-        createEditorsChoiceClickEventBundle(previousScreen, packageName, editorsBrickPosition)));
-    analytics.sendEvent(new FlurryEvent(HOME_PAGE_EDITORS_CHOICE_FLURRY,
-        createEditorsClickEventMap(previousScreen, packageName, editorsBrickPosition)));
+    analyticsManager.logEvent(
+        createEditorsChoiceClickEventMap(previousScreen, packageName, editorsBrickPosition),
+        EDITORS_CHOICE_CLICKS, AnalyticsManager.Action.CLICK, getViewName(false));
+    analyticsManager.logEvent(
+        createEditorsClickEventMap(previousScreen, packageName, editorsBrickPosition),
+        HOME_PAGE_EDITORS_CHOICE_FLURRY, AnalyticsManager.Action.CLICK, getViewName(false));
   }
 
-  private Map<String, String> createEditorsClickEventMap(ScreenTagHistory previousScreen,
+  private Map<String, Object> createEditorsClickEventMap(ScreenTagHistory previousScreen,
       String packageName, String editorsBrickPosition) {
-    Map<String, String> map = new HashMap<>();
+    Map<String, Object> map = new HashMap<>();
     map.put("Application Name", packageName);
     map.put("Search Position", editorsBrickPosition);
     if (previousScreen != null && previousScreen.getFragment() != null) {
@@ -67,28 +61,25 @@ public class AppViewAnalytics {
     return map;
   }
 
-  private Bundle createEditorsChoiceClickEventBundle(ScreenTagHistory previousScreen,
+  private Map<String, Object> createEditorsChoiceClickEventMap(ScreenTagHistory previousScreen,
       String packageName, String editorsBrickPosition) {
-    Bundle bundle = new Bundle();
+    Map<String, Object> map = new HashMap<>();
     if (previousScreen != null && previousScreen.getFragment() != null) {
-      bundle.putString("fragment", previousScreen.getFragment());
+      map.put("fragment", previousScreen.getFragment());
     }
-    bundle.putString("package_name", packageName);
-    bundle.putString("position", editorsBrickPosition);
-    return bundle;
+    map.put("package_name", packageName);
+    map.put("position", editorsBrickPosition);
+    return map;
   }
 
   public void sendAppViewOpenedFromEvent(ScreenTagHistory previousScreen,
       ScreenTagHistory currentScreen, String packageName, String appPublisher, String badge) {
-    analytics.sendEvent(new FacebookEvent(facebook, "App_Viewed_Open_From",
-        createAppViewedFromBundle(previousScreen, currentScreen, packageName, appPublisher,
-            badge)));
-    analytics.sendEvent(new FlurryEvent("App_Viewed_Open_From",
-        createAppViewedFromMap(previousScreen, currentScreen, packageName, appPublisher, badge)));
-    analytics.sendEvent(new AptoideEvent(
+    analyticsManager.logEvent(
+        createAppViewedFromMap(previousScreen, currentScreen, packageName, appPublisher, badge),
+        APP_VIEW_OPEN_FROM, AnalyticsManager.Action.CLICK, getViewName(false));
+    analyticsManager.logEvent(
         createAppViewDataMap(previousScreen.getStore(), currentScreen.getTag(), packageName),
-        "OPEN_APP_VIEW", "CLICK", previousScreen.getFragment(), bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID, sharedPreferences));
+        OPEN_APP_VIEW, AnalyticsManager.Action.CLICK, getViewName(false));
   }
 
   private Map<String, Object> createAppViewDataMap(String store, String tag, String packageName) {
@@ -101,9 +92,10 @@ public class AppViewAnalytics {
     return data;
   }
 
-  private Map<String, String> createAppViewedFromMap(ScreenTagHistory previousScreen,
-      ScreenTagHistory currentScreen, String packageName, String appPublisher, String badge) {
-    Map<String, String> map = new HashMap<>();
+  private HashMap<String, Object> createAppViewedFromMap(ScreenTagHistory previousScreen,
+      ScreenTagHistory currentScreen, String packageName, String appPublisher, String badge)
+      throws NullPointerException {
+    HashMap<String, Object> map = new HashMap<>();
     if (previousScreen != null) {
       if (previousScreen.getFragment() != null) {
         map.put("fragment", previousScreen.getFragment());
@@ -123,109 +115,116 @@ public class AppViewAnalytics {
     return map;
   }
 
-  private Bundle createAppViewedFromBundle(ScreenTagHistory previousScreen,
-      ScreenTagHistory currentScreen, String packageName, String appPublisher, String badge)
-      throws NullPointerException {
-    Bundle bundle = new Bundle();
-    if (previousScreen != null) {
-      if (previousScreen.getFragment() != null) {
-        bundle.putString("fragment", previousScreen.getFragment());
-      }
-      if (previousScreen.getStore() != null) {
-        bundle.putString("store", previousScreen.getStore());
-      }
-    }
-    if (currentScreen != null) {
-      if (currentScreen.getTag() != null) {
-        bundle.putString("tag", currentScreen.getTag());
-      }
-    }
-    bundle.putString("package_name", packageName);
-    bundle.putString("application_publisher", appPublisher);
-    bundle.putString("trusted_badge", badge);
-    return bundle;
-  }
-
   public void sendOpenScreenshotEvent() {
-    analytics.sendEvent(new FacebookEvent(facebook, APP_VIEW_INTERACT,
-        createBundleData(ACTION, "Open Screenshot")));
+    analyticsManager.logEvent(createMapData(ACTION, "Open Screenshot"), APP_VIEW_INTERACT,
+        AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendOpenVideoEvent() {
-    analytics.sendEvent(
-        new FacebookEvent(facebook, APP_VIEW_INTERACT, createBundleData(ACTION, "Open Video")));
+    analyticsManager.logEvent(createMapData(ACTION, "Open Video"), APP_VIEW_INTERACT,
+        AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendRateThisAppEvent() {
-    analytics.sendEvent(
-        new FacebookEvent(facebook, APP_VIEW_INTERACT, createBundleData(ACTION, "Rate This App")));
+    analyticsManager.logEvent(createMapData(ACTION, "Rate This App"), APP_VIEW_INTERACT,
+        AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendReadAllEvent() {
-    analytics.sendEvent(
-        new FacebookEvent(facebook, APP_VIEW_INTERACT, createBundleData(ACTION, "Read All")));
+    analyticsManager.logEvent(createMapData(ACTION, "Read All"), APP_VIEW_INTERACT,
+        AnalyticsManager.Action.VIEW, getViewName(true));
   }
 
   public void sendFollowStoreEvent() {
-    analytics.sendEvent(
-        new FacebookEvent(facebook, APP_VIEW_INTERACT, createBundleData(ACTION, "Follow Store")));
+    analyticsManager.logEvent(createMapData(ACTION, "Follow Store"), APP_VIEW_INTERACT,
+        AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendOpenStoreEvent() {
-    analytics.sendEvent(
-        new FacebookEvent(facebook, APP_VIEW_INTERACT, createBundleData(ACTION, "Open Store")));
+    analyticsManager.logEvent(createMapData(ACTION, "Open Store"), APP_VIEW_INTERACT,
+        AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendOtherVersionsEvent() {
-    analytics.sendEvent(
-        new FacebookEvent(facebook, APP_VIEW_INTERACT, createBundleData(ACTION, "Other Versions")));
+    analyticsManager.logEvent(createMapData(ACTION, "Other Versions"), APP_VIEW_INTERACT,
+        AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendReadMoreEvent() {
-    analytics.sendEvent(
-        new FacebookEvent(facebook, APP_VIEW_INTERACT, createBundleData(ACTION, "Read More")));
-  }
-
-  public void sendOpenRecommendedAppEvent() {
-    analytics.sendEvent(new FacebookEvent(facebook, APP_VIEW_INTERACT,
-        createBundleData(ACTION, "Open Recommended App")));
+    analyticsManager.logEvent(createMapData(ACTION, "Read More"), APP_VIEW_INTERACT,
+        AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendFlagAppEvent(String flagDetail) {
-    analytics.sendEvent(new FacebookEvent(facebook, APP_VIEW_INTERACT,
-        createFlagAppEventData("Flag App", flagDetail)));
+    analyticsManager.logEvent(createFlagAppEventData("Flag App", flagDetail), APP_VIEW_INTERACT,
+        AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
-  private Bundle createFlagAppEventData(String action, String flagDetail) {
-    Bundle bundle = new Bundle();
-    bundle.putString(ACTION, action);
-    bundle.putString("flag_details", flagDetail);
-    return bundle;
+  private Map<String, Object> createFlagAppEventData(String action, String flagDetail) {
+    Map<String, Object> map = new HashMap<>();
+    map.put(ACTION, action);
+    map.put("flag_details", flagDetail);
+    return map;
   }
 
   public void sendBadgeClickEvent() {
-    analytics.sendEvent(
-        new FacebookEvent(facebook, APP_VIEW_INTERACT, createBundleData(ACTION, "Open Badge")));
+    analyticsManager.logEvent(createMapData(ACTION, "Open Badge"), APP_VIEW_INTERACT,
+        AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendAppShareEvent() {
-    analytics.sendEvent(
-        new FacebookEvent(facebook, APP_VIEW_INTERACT, createBundleData(ACTION, "App Share")));
+    analyticsManager.logEvent(createMapData(ACTION, "App Share"), APP_VIEW_INTERACT,
+        AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendScheduleDownloadEvent() {
-    analytics.sendEvent(new FacebookEvent(facebook, APP_VIEW_INTERACT,
-        createBundleData(ACTION, "Schedule Download")));
+    analyticsManager.logEvent(createMapData(ACTION, "Schedule Download"), APP_VIEW_INTERACT,
+        AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendRemoteInstallEvent() {
-    analytics.sendEvent(
-        new FacebookEvent(facebook, APP_VIEW_INTERACT, createBundleData(ACTION, "Install on TV")));
+    analyticsManager.logEvent(createMapData(ACTION, "Install on TV"), APP_VIEW_INTERACT,
+        AnalyticsManager.Action.INSTALL, getViewName(true));
   }
 
-  private Bundle createBundleData(String key, String value) {
-    final Bundle data = new Bundle();
-    data.putString(key, value);
+  public void downgradeDialogContinue() {
+    analyticsManager.logEvent(createMapData(ACTION, "Continue"), DOWNGRADE_DIALOG,
+        AnalyticsManager.Action.CLICK, getViewName(true));
+  }
+
+  public void downgradeDialogCancel() {
+    analyticsManager.logEvent(createMapData(ACTION, "Cancel"), DOWNGRADE_DIALOG,
+        AnalyticsManager.Action.CLICK, getViewName(true));
+  }
+
+  public void clickOnInstallButton(GetAppMeta.App app) {
+    try {
+      HashMap<String, Object> map = new HashMap<>();
+
+      map.put(APPLICATION_NAME, app.getPackageName());
+      map.put(APPLICATION_PUBLISHER, app.getDeveloper()
+          .getName());
+
+      analyticsManager.logEvent(map, CLICK_INSTALL, AnalyticsManager.Action.CLICK,
+          getViewName(true));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  private Map<String, Object> createMapData(String key, String value) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(key, value);
     return data;
+  }
+
+  private String getViewName(boolean isCurrent) {
+    return navigationTracker.getViewName(isCurrent);
+  }
+
+  public void setupDownloadEvents(Download download, int campaignId, String abTestGroup,
+      AnalyticsManager.Action action) {
+    downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
+        DownloadAnalytics.AppContext.APPVIEW, action);
   }
 }
