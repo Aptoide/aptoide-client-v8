@@ -49,6 +49,7 @@ import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.store.StoreUtilsProxy;
+import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.util.ApkFy;
 import com.facebook.CallbackManager;
 import com.facebook.login.LoginManager;
@@ -127,12 +128,13 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       @Named("default") SharedPreferences sharedPreferences, StoreAccessor storeAccessor,
       NavigationTracker navigationTracker, PageViewsAnalytics pageViewsAnalytics,
       SearchNavigator searchNavigator, SearchAnalytics searchAnalytics,
-      DeepLinkAnalytics deepLinkAnalytics,
-      AppShortcutsAnalytics appShortcutsAnalytics, AptoideAccountManager accountManager) {
+      DeepLinkAnalytics deepLinkAnalytics, AppShortcutsAnalytics appShortcutsAnalytics,
+      AptoideAccountManager accountManager, TimelineAnalytics timelineAnalytics) {
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
         (TabNavigator) activity, (DeepLinkManager.DeepLinkMessages) activity, sharedPreferences,
         storeAccessor, defaultTheme, notificationAnalytics, navigationTracker, pageViewsAnalytics,
-        searchNavigator, searchAnalytics, deepLinkAnalytics, appShortcutsAnalytics, accountManager);
+        searchNavigator, searchAnalytics, appShortcutsAnalytics, accountManager, deepLinkAnalytics,
+        timelineAnalytics);
   }
 
   @ActivityScope @Provides Presenter provideMainPresenter(

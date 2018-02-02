@@ -39,7 +39,8 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
   private static final int REVIEWS_LIMIT = 25;
   private static final String STORE_ID = "storeId";
   private static final String STORE_CONTEXT = "STORE_CONTEXT";
-
+  @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
   private long storeId;
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private List<Displayable> displayables;
@@ -49,8 +50,6 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
   private Converter.Factory converterFactory;
   private StoreAnalytics storeAnalytics;
   private StoreContext storeContext;
-  @Inject AnalyticsManager analyticsManager;
-  @Inject NavigationTracker navigationTracker;
 
   public static LatestReviewsFragment newInstance(long storeId, StoreContext storeContext) {
     LatestReviewsFragment fragment = new LatestReviewsFragment();
@@ -71,8 +70,7 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
         ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    storeAnalytics =
-        new StoreAnalytics(analyticsManager, navigationTracker);
+    storeAnalytics = new StoreAnalytics(analyticsManager, navigationTracker);
     setHasOptionsMenu(true);
   }
 

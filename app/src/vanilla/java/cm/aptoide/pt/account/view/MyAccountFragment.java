@@ -59,6 +59,8 @@ import rx.subjects.PublishSubject;
 public class MyAccountFragment extends BaseToolbarFragment implements MyAccountView {
 
   private static final float STROKE_SIZE = 0.04f;
+  @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
   private AptoideAccountManager accountManager;
   private Button logoutButton;
   private TextView usernameTextView;
@@ -74,7 +76,6 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
   private TextView headerText;
   private Button moreNotificationsButton;
   private View userLayout;
-
   private PublishSubject<AptoideNotification> notificationSubject;
   private InboxAdapter adapter;
   private RecyclerView list;
@@ -82,8 +83,6 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
   private OkHttpClient httpClient;
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private CrashReport crashReport;
-  @Inject AnalyticsManager analyticsManager;
-  @Inject NavigationTracker navigationTracker;
 
   public static Fragment newInstance() {
     return new MyAccountFragment();

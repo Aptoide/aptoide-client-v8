@@ -91,8 +91,8 @@ public class CompletedDownloadDisplayable extends Displayable {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
         DownloadAnalytics.AppContext.DOWNLOADS);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
-        getInstallType(download.getAction()), AnalyticsManager.Action.INSTALL,
-        AppContext.DOWNLOADS, getOrigin(download.getAction()));
+        getInstallType(download.getAction()), AnalyticsManager.Action.INSTALL, AppContext.DOWNLOADS,
+        getOrigin(download.getAction()));
   }
 
   private Origin getOrigin(int action) {

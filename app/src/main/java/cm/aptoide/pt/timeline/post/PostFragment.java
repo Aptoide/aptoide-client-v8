@@ -141,7 +141,8 @@ public class PostFragment extends FragmentView implements PostView {
   }
 
   private void handleAnalytics() {
-    analytics.sendOpenEvent((PostAnalytics.OpenSource) getArguments().getSerializable(OPEN_SOURCE), isExternalOpen());
+    analytics.sendOpenEvent((PostAnalytics.OpenSource) getArguments().getSerializable(OPEN_SOURCE),
+        isExternalOpen());
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -409,9 +410,8 @@ public class PostFragment extends FragmentView implements PostView {
     return externalUrlProvider != null ? externalUrlProvider.getUrlToShare() : null;
   }
 
-  @Override public boolean isExternalOpen(){
-    return getExternalUrlToShare() != null && !getExternalUrlToShare()
-        .trim()
+  @Override public boolean isExternalOpen() {
+    return getExternalUrlToShare() != null && !getExternalUrlToShare().trim()
         .isEmpty();
   }
 

@@ -90,7 +90,7 @@ public class AppSearchSuggestionsView implements SearchSuggestionsView {
   private void toolbarClickExpandsSearch() {
     getLifecycle().filter(event -> event == LifecycleEvent.RESUME)
         .flatMap(__ -> toolbarClickObservable)
-        .doOnNext(__ -> searchAnalytics.searchStart(SearchSource.SEARCH_TOOLBAR,true))
+        .doOnNext(__ -> searchAnalytics.searchStart(SearchSource.SEARCH_TOOLBAR, true))
         .doOnNext(__ -> focusInSearchBar())
         .compose(bindUntilEvent(LifecycleEvent.PAUSE))
         .subscribe(__ -> {

@@ -74,6 +74,7 @@ public class TimelineAnalytics {
   private static final String TIMELINE_VERSION = "timeline_version";
   private static final String SOURCE = "source";
   private static final String APPS_SHORTCUTS = "apps_shortcuts";
+  private static final String EXTERNAL = "EXTERNAL";
   private final NotificationAnalytics notificationAnalytics;
   private final NavigationTracker navigationTracker;
   private final ReadPostsPersistence readPostsPersistence;
@@ -215,9 +216,22 @@ public class TimelineAnalytics {
 
   public void sendTimelineTabOpened() {
     Map<String, Object> map = new HashMap<>();
-    analyticsManager.logEvent(map, TIMELINE_OPENED, AnalyticsManager.Action.CLICK,
-        getViewName(false));
+    analyticsManager.logEvent(map, TIMELINE_OPENED, AnalyticsManager.Action.CLICK, getViewName(false));
     map.put(PREVIOUS_CONTEXT, getViewName(false));
+    map.put(SOURCE, navigationTracker.getPreviousScreen());
+    if (version != null) {
+      map.put(TIMELINE_VERSION, version);
+      flushTimelineTabOpenEvents(map);
+    } else {
+      openTimelineEventsData.add(map);
+    }
+  }
+
+  public void sendTimelineTabOpenedFromShortcut() {
+    Map<String, Object> map = new HashMap<>();
+    analyticsManager.logEvent(map, TIMELINE_OPENED, AnalyticsManager.Action.CLICK, EXTERNAL);
+    map.put(SOURCE, APPS_SHORTCUTS);
+    map.put(PREVIOUS_CONTEXT, EXTERNAL);
     if (version != null) {
       map.put(TIMELINE_VERSION, version);
       flushTimelineTabOpenEvents(map);

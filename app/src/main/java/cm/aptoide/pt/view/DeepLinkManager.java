@@ -39,6 +39,7 @@ import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.store.view.StoreTabFragmentChooser;
+import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.timeline.view.navigation.AppsTimelineTabNavigation;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -70,6 +71,7 @@ public class DeepLinkManager {
   private final AppShortcutsAnalytics appShortcutsAnalytics;
   private final AptoideAccountManager accountManager;
   private final DeepLinkAnalytics deepLinkAnalytics;
+  private final TimelineAnalytics timelineAnalytics;
 
   public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, StoreRepository storeRepository,
       FragmentNavigator fragmentNavigator, TabNavigator tabNavigator,
@@ -78,7 +80,7 @@ public class DeepLinkManager {
       NavigationTracker navigationTracker, PageViewsAnalytics pageViewsAnalytics,
       SearchNavigator searchNavigator, SearchAnalytics searchAnalytics,
       AppShortcutsAnalytics appShortcutsAnalytics, AptoideAccountManager accountManager,
-      DeepLinkAnalytics deepLinkAnalytics) {
+      DeepLinkAnalytics deepLinkAnalytics, TimelineAnalytics timelineAnalytics) {
     this.storeUtilsProxy = storeUtilsProxy;
     this.storeRepository = storeRepository;
     this.fragmentNavigator = fragmentNavigator;
@@ -94,6 +96,7 @@ public class DeepLinkManager {
     this.searchAnalytics = searchAnalytics;
     this.appShortcutsAnalytics = appShortcutsAnalytics;
     this.accountManager = accountManager;
+    this.timelineAnalytics = timelineAnalytics;
     this.deepLinkAnalytics = deepLinkAnalytics;
   }
 
@@ -252,6 +255,7 @@ public class DeepLinkManager {
     deepLinkAnalytics.timelineNotification();
     String cardId = intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.CARD_ID);
     if (intent.hasExtra(FROM_SHORTCUT)) {
+      timelineAnalytics.sendTimelineTabOpenedFromShortcut();
       appShortcutsAnalytics.shortcutNavigation(ShortcutDestinations.TIMELINE);
       tabNavigator.navigate(new AppsTimelineTabNavigation(cardId));
     } else {

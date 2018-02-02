@@ -86,6 +86,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   private final int PRIVATE_STORE_REQUEST_CODE = 20;
   protected PagerSlidingTabStrip pagerSlidingTabStrip;
+  @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
   private AptoideAccountManager accountManager;
   private String storeName;
   private String title;
@@ -120,14 +122,11 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private String defaultTheme;
   private Runnable registerViewpagerCurrentItem;
   private SharedPreferences sharedPreferences;
-
   private AppSearchSuggestionsView appSearchSuggestionsView;
   private CrashReport crashReport;
   private SearchNavigator searchNavigator;
   private TrendingManager trendingManager;
   private SearchAnalytics searchAnalytics;
-  @Inject AnalyticsManager analyticsManager;
-  @Inject NavigationTracker navigationTracker;
 
   public static StoreFragment newInstance(long userId, String storeTheme, OpenType openType) {
     return newInstance(userId, storeTheme, null, openType);

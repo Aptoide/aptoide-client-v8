@@ -280,8 +280,7 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
     } else {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
-            accountNavigator.navigateToAccountView(
-                AccountAnalytics.AccountOrigins.REVIEW_FEEDBACK);
+            accountNavigator.navigateToAccountView(AccountAnalytics.AccountOrigins.REVIEW_FEEDBACK);
           }, Snackbar.LENGTH_SHORT);
       setHelpButtonsClickable(true);
     }

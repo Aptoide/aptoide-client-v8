@@ -1,9 +1,9 @@
 package cm.aptoide.pt;
 
-import android.os.Bundle;
-import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.events.FacebookEvent;
-import com.facebook.appevents.AppEventsLogger;
+import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by franciscocalado on 1/24/18.
@@ -11,21 +11,27 @@ import com.facebook.appevents.AppEventsLogger;
 
 public class AppShortcutsAnalytics {
 
+  public static final String APPS_SHORTCUTS = "Apps_Shortcuts";
   private static final String DESTINATION = "destination";
-  private static final String APPS_SHORTCUTS = "apps_shortcuts";
+  private final AnalyticsManager analyticsManager;
+  private final NavigationTracker navigationTracker;
 
-  private final AppEventsLogger facebook;
-  private final Analytics analytics;
-
-  public AppShortcutsAnalytics(AppEventsLogger facebook, Analytics analytics) {
-    this.facebook = facebook;
-    this.analytics = analytics;
+  public AppShortcutsAnalytics(AnalyticsManager analyticsManager,
+      NavigationTracker navigationTracker) {
+    this.analyticsManager = analyticsManager;
+    this.navigationTracker = navigationTracker;
   }
 
   public void shortcutNavigation(String destination) {
-    Bundle bundle = new Bundle();
-    bundle.putString(DESTINATION, destination);
+    Map<String, Object> map = new HashMap<>();
+    map.put(DESTINATION, destination);
 
-    analytics.sendEvent(new FacebookEvent(facebook, APPS_SHORTCUTS, bundle));
+    analyticsManager.logEvent(map, APPS_SHORTCUTS, AnalyticsManager.Action.CLICK,
+        getViewName(true));
   }
+
+  private String getViewName(boolean isCurrent) {
+    return navigationTracker.getViewName(isCurrent);
+  }
+
 }
