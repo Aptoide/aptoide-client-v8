@@ -150,11 +150,11 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       @Named("default") SharedPreferences sharedPreferences, StoreAccessor storeAccessor,
       NavigationTracker navigationTracker, PageViewsAnalytics pageViewsAnalytics,
       SearchNavigator searchNavigator, SearchAnalytics searchAnalytics,
-      AppShortcutsAnalytics appShortcutsAnalytics) {
+      AppShortcutsAnalytics appShortcutsAnalytics, AptoideAccountManager accountManager) {
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
         (TabNavigator) activity, (DeepLinkManager.DeepLinkMessages) activity, sharedPreferences,
         storeAccessor, defaultTheme, notificationAnalytics, navigationTracker, pageViewsAnalytics,
-        searchNavigator, searchAnalytics, appShortcutsAnalytics);
+        searchNavigator, searchAnalytics, appShortcutsAnalytics, accountManager);
   }
 
   @ActivityScope @Provides Presenter provideMainPresenter(

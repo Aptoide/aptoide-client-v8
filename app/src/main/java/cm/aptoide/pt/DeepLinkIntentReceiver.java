@@ -363,6 +363,16 @@ public class DeepLinkIntentReceiver extends ActivityView {
         finish();
         return;
       }
+      if ("myStore".equals(parse.getQueryParameter("name"))) {
+        startFromMyStore();
+        finish();
+        return;
+      }
+      if ("pickApp".equals(parse.getQueryParameter("name"))) {
+        startFromPickApp();
+        finish();
+        return;
+      }
       switch (sURIMatcher.match(parse)) {
         case DEEPLINK_ID:
           startGenericDeepLink(parse);
@@ -546,6 +556,18 @@ public class DeepLinkIntentReceiver extends ActivityView {
     startActivity(intent);
   }
 
+  private void startFromMyStore() {
+    Intent intent = new Intent(this, startClass);
+    intent.putExtra(DeepLinksTargets.MY_STORE_DEEPLINK, true);
+    startActivity(intent);
+  }
+
+  private void startFromPickApp() {
+    Intent intent = new Intent(this, startClass);
+    intent.putExtra(DeepLinksTargets.PICK_APP_DEEPLINK, true);
+    startActivity(intent);
+  }
+
   private void downloadMyAppFile(String myappUri) throws Exception {
     try {
       URL url = new URL(myappUri);
@@ -620,6 +642,8 @@ public class DeepLinkIntentReceiver extends ActivityView {
     public static final String SCHEDULE_DEEPLINK = "schedule_downloads";
     public static final String USER_DEEPLINK = "open_user_profile";
     public static final String TIMELINE_DEEPLINK = "apps_timeline";
+    public static final String MY_STORE_DEEPLINK = "my_store";
+    public static final String PICK_APP_DEEPLINK = "pick_app_deeplink";
   }
 
   public static class DeepLinksKeys {

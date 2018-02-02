@@ -35,4 +35,39 @@
           android:value="true" />
     </intent>
   </shortcut>
+  <shortcut
+      android:enabled="true"
+      android:icon="@drawable/ic_search_icon"
+      android:shortcutId="myStore"
+      android:shortcutShortLabel="@string/my_store_shortcut_short">
+    <intent
+        android:action="android.intent.action.VIEW"
+        android:data="aptoide://cm.aptoide.pt/deeplink?name=myStore"
+        android:targetClass="cm.aptoide.pt.DeepLinkIntentReceiver"
+        android:targetPackage="cm.aptoide.pt.dev">
+      <extra
+          android:name="myStore"
+          android:value="true" />
+    </intent>
+
+  </shortcut>
+
+  <shortcut
+      android:enabled="true"
+      android:icon="@drawable/ic_search_icon"
+      android:shortcutId="pickApps"
+      android:shortcutShortLabel="@string/pick_apps_shortcut_short">
+
+    <intent
+
+        android:action="android.intent.action.VIEW"
+        android:data="aptoide://cm.aptoide.pt/deeplink?name=pickApp"
+        android:targetClass="cm.aptoide.pt.DeepLinkIntentReceiver"
+        android:targetPackage="cm.aptoide.pt.dev">
+      <extra
+          android:name="pickApps"
+          android:value="true" />
+    </intent>
+  </shortcut>
+
 </shortcuts>

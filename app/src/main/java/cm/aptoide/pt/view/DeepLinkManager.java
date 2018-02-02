@@ -6,10 +6,12 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AppShortcutsAnalytics;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.PageViewsAnalytics;
+import cm.aptoide.pt.account.view.LoginSignUpFragment;
 import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
@@ -66,6 +68,7 @@ public class DeepLinkManager {
   private final NotificationAnalytics notificationAnalytics;
   private final SearchAnalytics searchAnalytics;
   private final AppShortcutsAnalytics appShortcutsAnalytics;
+  private final AptoideAccountManager accountManager;
 
   public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, StoreRepository storeRepository,
       FragmentNavigator fragmentNavigator, TabNavigator tabNavigator,
@@ -73,7 +76,7 @@ public class DeepLinkManager {
       StoreAccessor storeAccessor, String defaultTheme, NotificationAnalytics notificationAnalytics,
       NavigationTracker navigationTracker, PageViewsAnalytics pageViewsAnalytics,
       SearchNavigator searchNavigator, SearchAnalytics searchAnalytics,
-      AppShortcutsAnalytics appShortcutsAnalytics) {
+      AppShortcutsAnalytics appShortcutsAnalytics, AptoideAccountManager accountManager) {
     this.storeUtilsProxy = storeUtilsProxy;
     this.storeRepository = storeRepository;
     this.fragmentNavigator = fragmentNavigator;
@@ -88,6 +91,7 @@ public class DeepLinkManager {
     this.searchNavigator = searchNavigator;
     this.searchAnalytics = searchAnalytics;
     this.appShortcutsAnalytics = appShortcutsAnalytics;
+    this.accountManager = accountManager;
   }
 
   public boolean showDeepLink(Intent intent) {
@@ -125,8 +129,11 @@ public class DeepLinkManager {
       scheduleDownloadsDeepLink(
           intent.getParcelableExtra(DeepLinkIntentReceiver.DeepLinksKeys.URI));
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.USER_DEEPLINK)) {
-      openUserProfile(
-          intent.getLongExtra(DeepLinkIntentReceiver.DeepLinksTargets.USER_DEEPLINK, -1));
+      openUserProfile(intent.getLongExtra(DeepLinkIntentReceiver.DeepLinksTargets.USER_DEEPLINK, -1));
+    } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.MY_STORE_DEEPLINK)) {
+      myStoreDeepLink();
+    } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.PICK_APP_DEEPLINK)) {
+      pickAppDeeplink();
     } else {
       Analytics.ApplicationLaunch.launcher();
       return false;
@@ -293,6 +300,32 @@ public class DeepLinkManager {
     }
   }
 
+  private void myStoreDeepLink() {
+    accountManager.accountStatus()
+        .first()
+        .map(account -> {
+          if (account.isLoggedIn()) {
+            return account;
+          } else {
+            return null;
+          }
+        })
+        .subscribe(navigation -> {
+          if (navigation != null) {
+            appShortcutsAnalytics.shortcutNavigation(ShortcutDestinations.MY_STORE);
+            fragmentNavigator.navigateTo(StoreFragment.newInstance(navigation.getStore()
+                .getName(), navigation.getStore()
+                .getTheme(), StoreFragment.OpenType.GetHome), true);
+          } else {
+            appShortcutsAnalytics.shortcutNavigation(ShortcutDestinations.LOGIN);
+            fragmentNavigator.navigateTo(LoginSignUpFragment.newInstance(false, false, true), true);
+          }
+        }, throwable -> Logger.e(TAG, "myStoreDeepLink: " + throwable));
+  }
+
+  private void pickAppDeeplink() {
+  }
+
   private boolean validateDeepLinkRequiredArgs(String queryType, String queryLayout,
       String queryName, String queryAction) {
     return !TextUtils.isEmpty(queryType)
@@ -311,5 +344,7 @@ public class DeepLinkManager {
   private static final class ShortcutDestinations {
     private static final String TIMELINE = "timeline";
     private static final String SEARCH = "search";
+    private static final String MY_STORE = "my_store";
+    private static final String LOGIN = "login";
   }
 }

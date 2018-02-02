@@ -532,5 +532,7 @@
   <!--Strings for shortcuts-->
   <string name="search_shortcut_short">Search</string>
   <string name="timeline_shortcut_short">Timeline</string>
+  <string name="my_store_shortcut_short">My Store</string>
+  <string name="pick_apps_shortcut_short">Pick For Me</string>
 </resources>
 
