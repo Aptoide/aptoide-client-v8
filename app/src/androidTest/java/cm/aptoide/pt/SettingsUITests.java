@@ -19,7 +19,9 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static cm.aptoide.pt.UITests.goToSettings;
 import static cm.aptoide.pt.UITests.skipWizard;
 import static org.hamcrest.Matchers.allOf;
@@ -51,11 +53,6 @@ import static org.hamcrest.Matchers.allOf;
       onView(withText(R.string.yes)).perform(click());
     } catch (NoMatchingViewException e) {
     }
-    if (mature == preferences.getBoolean("matureChkBox", false)) {
-      onView(withId(R.id.action_btn)).perform(click()); //if it's equal fail
-    } else {
-      mature = !mature;
-    }
     pressBackButton();
     goToSettings();
     onView(withId(R.id.list)).perform(RecyclerViewActions.scrollToPosition(11));
@@ -65,8 +62,9 @@ import static org.hamcrest.Matchers.allOf;
     } catch (NoMatchingViewException e) {
     }
     pressBackButton();
-    if (mature == preferences.getBoolean("matureChkBox", false)) {
-      onView(withId(R.id.action_btn)).perform(click()); //if it's equal fail
+    if (mature != preferences.getBoolean("matureChkBox", false)) {
+      onView(withId(R.id.action_btn)).perform(
+          click()); //if it's equal it means the button was not checked/unchecked
     }
   }
 

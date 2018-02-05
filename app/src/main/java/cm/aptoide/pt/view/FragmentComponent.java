@@ -45,8 +45,6 @@ public interface FragmentComponent {
 
   void inject(ManageStoreFragment manageStoreFragment);
 
-  void inject(MyAccountFragment myAccountFragment);
-
   void inject(PostCommentsFragment postCommentsFragment);
 
   void inject(PostFragment postFragment);

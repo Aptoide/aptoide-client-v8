@@ -6,7 +6,7 @@ package cm.aptoide.pt.view;
 
 public class TestType {
   public static TestTypes types = TestTypes.REGULAR;
-  public static TestTypes initialization = TestTypes.REGULAR; //LOGGEDIN / LOGGEDINWITHSTORE
+  public static TestTypes initialization = TestTypes.REGULAR;
 
   public enum TestTypes {
     REGULAR, SIGNSIGNUPTESTS, SIGNINWRONG, LOGGEDIN, USEDEMAIL, INVALIDEMAIL, MATURE, LOGGEDINWITHSTORE, PHOTOSUCCESS, ERRORDECONDINGTEST, MIN_HEIGHTTEST, MIN_WIDTHTEST, MAX_HEIGHTTEST, MAX_WIDTHTEST, MAX_IMAGE_SIZETEST
