@@ -29,11 +29,7 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.SocialLink;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.ImagePickerErrorHandler;
-import cm.aptoide.pt.account.view.ImagePickerNavigator;
 import cm.aptoide.pt.account.view.ImagePickerPresenter;
-import cm.aptoide.pt.account.view.ImageValidator;
-import cm.aptoide.pt.account.view.PhotoFileGenerator;
-import cm.aptoide.pt.account.view.UriToPathResolver;
 import cm.aptoide.pt.account.view.exception.InvalidImageException;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -41,7 +37,6 @@ import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
-import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.CompositePresenter;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -67,13 +62,8 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   private static final String EXTRA_GO_TO_HOME = "go_to_home";
   private static final float STROKE_SIZE = 0.040f;
   private static final float SPACE_BETWEEN = 0.0f;
-  @Inject ImageValidator imageValidator;
-  @Inject ImagePickerNavigator imagePickerNavigator;
-  @Inject UriToPathResolver uriToPathResolver;
-  @Inject AccountPermissionProvider accountPermissionProvider;
   @Inject ImagePickerPresenter imagePickerPresenter;
   @Inject ManageStorePresenter manageStorePresenter;
-  @Inject PhotoFileGenerator photoFileGenerator;
   @Inject ScreenOrientationManager orientationManager;
   private TextView chooseStoreNameTitle;
   private View selectStoreImageButton;
@@ -130,6 +120,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
     currentModel = Parcels.unwrap(getArguments().getParcelable(EXTRA_STORE_MODEL));
     goToHome = getArguments().getBoolean(EXTRA_GO_TO_HOME, true);
     requestCode = getArguments().getInt(FragmentNavigator.REQUEST_CODE_EXTRA);
@@ -356,7 +347,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    getFragmentComponent(savedInstanceState).inject(this);
     return inflater.inflate(R.layout.fragment_manage_store, container, false);
   }
 

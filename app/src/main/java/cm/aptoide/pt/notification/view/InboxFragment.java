@@ -10,7 +10,6 @@ import android.view.View;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -30,10 +29,9 @@ import rx.subjects.PublishSubject;
 
 public class InboxFragment extends BaseToolbarFragment implements InboxView {
 
+  @Inject AnalyticsManager analyticsManager;
   private RecyclerView list;
   private InboxAdapter adapter;
-  @Inject AnalyticsManager analyticsManager;
-  @Inject NavigationTracker navigationTracker;
   private PublishSubject<AptoideNotification> notificationSubject;
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -72,8 +70,8 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
             ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
             CrashReport.getInstance(),
             ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker(),
-            application.getNotificationAnalytics(),
-            new PageViewsAnalytics(analyticsManager), AndroidSchedulers.mainThread()));
+            application.getNotificationAnalytics(), new PageViewsAnalytics(analyticsManager),
+            AndroidSchedulers.mainThread()));
   }
 
   @Override public void showNotifications(List<AptoideNotification> notifications) {

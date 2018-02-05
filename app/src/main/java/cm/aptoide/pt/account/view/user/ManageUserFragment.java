@@ -20,17 +20,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.ImagePickerErrorHandler;
-import cm.aptoide.pt.account.view.ImagePickerNavigator;
 import cm.aptoide.pt.account.view.ImagePickerPresenter;
-import cm.aptoide.pt.account.view.ImageValidator;
-import cm.aptoide.pt.account.view.PhotoFileGenerator;
-import cm.aptoide.pt.account.view.UriToPathResolver;
 import cm.aptoide.pt.account.view.exception.InvalidImageException;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
-import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.CompositePresenter;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.BackButtonFragment;
@@ -50,15 +45,8 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   private static final String EXTRA_USER_MODEL = "user_model";
   private static final String EXTRA_IS_EDIT = "is_edit";
   @DrawableRes private static final int DEFAULT_IMAGE_PLACEHOLDER = R.drawable.create_user_avatar;
-  @Inject ManageUserNavigator navigator;
-  @Inject PhotoFileGenerator photoFileGenerator;
-  @Inject UriToPathResolver uriToPathResolver;
-  @Inject AccountPermissionProvider accountPermissionProvider;
-  @Inject ImageValidator imageValidator;
-  @Inject ImagePickerNavigator imagePickerNavigator;
   @Inject ImagePickerPresenter imagePickerPresenter;
   @Inject ManageUserPresenter manageUserPresenter;
-  @Inject CreateUserErrorMapper errorMapper;
   @Inject ScreenOrientationManager orientationManager;
   private ImageView userPicture;
   private RelativeLayout userPictureLayout;
@@ -92,7 +80,7 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
+    getFragmentComponent(savedInstanceState).inject(this);
     Context context = getContext();
 
     if (savedInstanceState != null && savedInstanceState.containsKey(EXTRA_USER_MODEL)) {
@@ -145,7 +133,6 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    getFragmentComponent(savedInstanceState).inject(this);
     return inflater.inflate(R.layout.fragment_manage_user, container, false);
   }
 

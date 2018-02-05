@@ -47,6 +47,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   private static final String TAG = UpdatesFragment.class.getName();
   @Inject DownloadAnalytics downloadAnalytics;
   @Inject InstallAnalytics installAnalytics;
+  @Inject NavigationTracker navigationTracker;
   private List<Displayable> updatesDisplayablesList;
   private List<Displayable> installedDisplayablesList;
   private InstallManager installManager;
@@ -57,7 +58,6 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   private CrashReport crashReport;
   private String marketName;
   private StoreTabNavigator storeTabNavigator;
-  private NavigationTracker navigationTracker;
 
   @NonNull public static UpdatesFragment newInstance() {
     return new UpdatesFragment();

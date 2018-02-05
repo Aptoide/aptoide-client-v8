@@ -1,6 +1,5 @@
 package cm.aptoide.pt;
 
-import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
@@ -20,12 +19,11 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
 import cm.aptoide.pt.account.AdultContentAnalytics;
-import cm.aptoide.pt.account.AndroidAccountProvider;
 import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.billing.Billing;
@@ -83,7 +81,6 @@ import cm.aptoide.pt.notification.NotificationsCleaner;
 import cm.aptoide.pt.notification.SystemNotificationShower;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.Preferences;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
@@ -119,11 +116,8 @@ import cm.aptoide.pt.view.entry.EntryPointChooser;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import com.crashlytics.android.Crashlytics;
-import com.facebook.CallbackManager;
-import com.facebook.appevents.AppEventsLogger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flurry.android.FlurryAgent;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.nio.charset.Charset;
@@ -159,29 +153,21 @@ public abstract class AptoideApplication extends Application {
   @Inject Database database;
   @Inject AptoideDownloadManager downloadManager;
   @Inject CacheHelper cacheHelper;
-  @Inject AppEventsLogger appEventsLogger;
   @Inject AptoideAccountManager accountManager;
   @Inject Preferences preferences;
   @Inject @Named("secure") cm.aptoide.pt.preferences.SecurePreferences securePreferences;
-  @Inject SecureCoderDecoder secureCodeDecoder;
   @Inject AdultContent adultContent;
   @Inject IdsRepository idsRepository;
-  @Inject GoogleApiClient googleSignInClient;
   @Inject @Named("default") OkHttpClient defaultClient;
   @Inject @Named("web-socket") OkHttpClient webSocketClient;
   @Inject @Named("user-agent") Interceptor userAgentInterceptor;
-  @Inject AndroidAccountProvider androidAccountProvider;
   @Inject @Named("default") ObjectMapper nonNullObjectMapper;
   @Inject RequestBodyFactory requestBodyFactory;
   @Inject RootAvailabilityManager rootAvailabilityManager;
   @Inject StoreManager storeManager;
   @Inject AuthenticationPersistence authenticationPersistence;
-  @Inject CallbackManager facebookCallbackManager;
   @Inject AccountAnalytics accountAnalytics;
-  @Inject InstalledAccessor installedAccessor;
   @Inject Crashlytics crashlytics;
-  @Inject @Named("retrofit-log") Interceptor retrofitLogInterceptor;
-  @Inject AccountManager androidAccountManager;
   @Inject @Named("default") SharedPreferences defaultSharedPreferences;
   @Inject @Named("secureShared") SharedPreferences secureSharedPreferences;
   @Inject SyncScheduler alarmSyncScheduler;
@@ -197,8 +183,6 @@ public abstract class AptoideApplication extends Application {
   @Inject AdsApplicationVersionCodeProvider applicationVersionCodeProvider;
   @Inject AdsRepository adsRepository;
   @Inject SyncStorage syncStorage;
-  @Inject @Named("no-authentication-v3") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody>
-      noAuthorizationBodyInterceptorV3;
   @Inject NavigationTracker navigationTracker;
   @Inject PageViewsAnalytics pageViewsAnalytics;
   @Inject @Named("account-settings-pool-v7") BodyInterceptor<BaseBody>
@@ -209,6 +193,7 @@ public abstract class AptoideApplication extends Application {
   @Inject SearchSuggestionManager searchSuggestionManager;
   @Inject AnalyticsManager analyticsManager;
   @Inject InstallAnalytics installAnalytics;
+  @Inject FirstLaunchAnalytics firstLaunchAnalytics;
   private LeakTool leakTool;
   private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
@@ -521,8 +506,9 @@ public abstract class AptoideApplication extends Application {
       installManager = new InstallManager(getApplicationContext(), getDownloadManager(),
           new InstallerFactory(new MinimalAdMapper(),
               new InstallFabricEvents(analyticsManager, installAnalytics,
-                  getDefaultSharedPreferences(), rootAvailabilityManager), getImageCachePath()).create(this, installerType),
-          getRootAvailabilityManager(), getDefaultSharedPreferences(),
+                  getDefaultSharedPreferences(), rootAvailabilityManager),
+              getImageCachePath()).create(this, installerType), getRootAvailabilityManager(),
+          getDefaultSharedPreferences(),
           SecurePreferencesImplementation.getInstance(getApplicationContext(),
               getDefaultSharedPreferences()),
           RepositoryFactory.getDownloadRepository(getApplicationContext().getApplicationContext()),
@@ -659,10 +645,9 @@ public abstract class AptoideApplication extends Application {
   }
 
   private Completable sendAppStartToAnalytics() {
-    return Analytics.Lifecycle.Application.onCreate(this, WebService.getDefaultConverter(),
-        getDefaultClient(), getAccountSettingsBodyInterceptorPoolV7(),
-        SecurePreferencesImplementation.getInstance(getApplicationContext(),
-            getDefaultSharedPreferences()), getTokenInvalidator(), analyticsManager);
+    return firstLaunchAnalytics.sendAppStart(this, defaultSharedPreferences,
+        WebService.getDefaultConverter(), getDefaultClient(),
+        getAccountSettingsBodyInterceptorPoolV7(), getTokenInvalidator());
   }
 
   private Completable checkAppSecurity() {
@@ -1025,5 +1010,6 @@ public abstract class AptoideApplication extends Application {
   public AdultContentAnalytics getAdultContentAnalytics() {
     return adultContentAnalytics;
   }
+
 }
 
