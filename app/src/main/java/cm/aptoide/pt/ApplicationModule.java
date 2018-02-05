@@ -950,7 +950,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID, defaultSharedPreferences);
   }
 
-  @Singleton @Provides FirstLaunchAnalytics firstLaunchAnalytics(
+  @Singleton @Provides FirstLaunchAnalytics providesFirstLaunchAnalytics(
       AnalyticsManager analyticsManager) {
     return new FirstLaunchAnalytics(analyticsManager);
   }
@@ -972,7 +972,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new FlurryEventLogger(application);
   }
 
-  @Singleton @Provides @Named("flurry") SessionLogger providesFlurrySessionLogger() {
+  @Singleton @Provides @Named("flurrySession") SessionLogger providesFlurrySessionLogger() {
     return new FlurryEventLogger(application);
   }
 
@@ -1014,7 +1014,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("facebookEvents") Collection<String> facebookEvents,
       @Named("fabricEvents") Collection<String> fabricEvents,
       @Named("flurryEvents") Collection<String> flurryEvents,
-      @Named("flurry") SessionLogger flurrySessionLogger) {
+      @Named("flurrySession") SessionLogger flurrySessionLogger) {
 
     return new AnalyticsManager.Builder().addLogger(aptoideBiEventLogger, aptoideEvents)
         .addLogger(facebookEventLogger, facebookEvents)

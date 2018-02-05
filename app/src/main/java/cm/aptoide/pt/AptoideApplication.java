@@ -159,29 +159,21 @@ public abstract class AptoideApplication extends Application {
   @Inject Database database;
   @Inject AptoideDownloadManager downloadManager;
   @Inject CacheHelper cacheHelper;
-  @Inject AppEventsLogger appEventsLogger;
   @Inject AptoideAccountManager accountManager;
   @Inject Preferences preferences;
   @Inject @Named("secure") cm.aptoide.pt.preferences.SecurePreferences securePreferences;
-  @Inject SecureCoderDecoder secureCodeDecoder;
   @Inject AdultContent adultContent;
   @Inject IdsRepository idsRepository;
-  @Inject GoogleApiClient googleSignInClient;
   @Inject @Named("default") OkHttpClient defaultClient;
   @Inject @Named("web-socket") OkHttpClient webSocketClient;
   @Inject @Named("user-agent") Interceptor userAgentInterceptor;
-  @Inject AndroidAccountProvider androidAccountProvider;
   @Inject @Named("default") ObjectMapper nonNullObjectMapper;
   @Inject RequestBodyFactory requestBodyFactory;
   @Inject RootAvailabilityManager rootAvailabilityManager;
   @Inject StoreManager storeManager;
   @Inject AuthenticationPersistence authenticationPersistence;
-  @Inject CallbackManager facebookCallbackManager;
   @Inject AccountAnalytics accountAnalytics;
-  @Inject InstalledAccessor installedAccessor;
   @Inject Crashlytics crashlytics;
-  @Inject @Named("retrofit-log") Interceptor retrofitLogInterceptor;
-  @Inject AccountManager androidAccountManager;
   @Inject @Named("default") SharedPreferences defaultSharedPreferences;
   @Inject @Named("secureShared") SharedPreferences secureSharedPreferences;
   @Inject SyncScheduler alarmSyncScheduler;
@@ -197,8 +189,6 @@ public abstract class AptoideApplication extends Application {
   @Inject AdsApplicationVersionCodeProvider applicationVersionCodeProvider;
   @Inject AdsRepository adsRepository;
   @Inject SyncStorage syncStorage;
-  @Inject @Named("no-authentication-v3") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody>
-      noAuthorizationBodyInterceptorV3;
   @Inject NavigationTracker navigationTracker;
   @Inject PageViewsAnalytics pageViewsAnalytics;
   @Inject @Named("account-settings-pool-v7") BodyInterceptor<BaseBody>
