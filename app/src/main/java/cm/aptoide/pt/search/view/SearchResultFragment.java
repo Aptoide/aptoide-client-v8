@@ -536,7 +536,8 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
             mainThreadScheduler, searchManager, onAdClickRelay, onItemViewClickRelay,
             onOpenPopupMenuClickRelay, isMultiStoreSearch, defaultThemeName, defaultStoreName);
 
-    final SuggestionCursorAdapter suggestionCursorAdapter = new SuggestionCursorAdapter(getContext());
+    final SuggestionCursorAdapter suggestionCursorAdapter =
+        new SuggestionCursorAdapter(getContext());
 
     final Observable<MenuItem> toolbarMenuItemClick = RxToolbar.itemClicks(toolbar)
         .publish()
@@ -550,7 +551,8 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
     } else {
       appSearchSuggestionsView =
           new AppSearchSuggestionsView(this, RxView.clicks(toolbar), crashReport,
-              suggestionCursorAdapter, PublishSubject.create(), toolbarMenuItemClick, searchAnalytics);
+              suggestionCursorAdapter, PublishSubject.create(), toolbarMenuItemClick,
+              searchAnalytics);
     }
 
     final AptoideApplication application =
@@ -558,8 +560,8 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
 
     final SearchSuggestionsPresenter searchSuggestionsPresenter =
         new SearchSuggestionsPresenter(appSearchSuggestionsView,
-            application.getSearchSuggestionManager(), mainThreadScheduler, suggestionCursorAdapter, crashReport, trendingManager, searchNavigator, true,
-            searchAnalytics);
+            application.getSearchSuggestionManager(), mainThreadScheduler, suggestionCursorAdapter,
+            crashReport, trendingManager, searchNavigator, true, searchAnalytics);
 
     attachPresenter(
         new CompositePresenter(Arrays.asList(searchResultPresenter, searchSuggestionsPresenter)));
@@ -591,6 +593,8 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
   }
 
   @Override public void onDestroyView() {
+    allStoresResultList.clearAnimation();
+    followedStoresResultList.clearAnimation();
     setupTheme();
     super.onDestroyView();
   }

@@ -60,6 +60,5 @@ public class GetHomeMetaRequest extends BaseRequestWithStore<GetHomeMeta, GetHom
     public Body(StoreCredentials storeCredentials) {
       super(storeCredentials);
     }
-
   }
 }
