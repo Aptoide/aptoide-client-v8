@@ -217,7 +217,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     this.aptoideMd5sum = aptoideMd5sum;
   }
 
-  @Singleton @Provides InstallerAnalytics provideInstallerAnalytics(
+  @Singleton @Provides InstallerAnalytics providesInstallerAnalytics(
       AnalyticsManager analyticsManager, InstallAnalytics installAnalytics,
       @Named("default") SharedPreferences sharedPreferences,
       RootAvailabilityManager rootAvailabilityManager) {
@@ -225,9 +225,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         rootAvailabilityManager);
   }
 
-  @Singleton @Provides DownloadAnalytics provideDownloadAnalytics(AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker, ConnectivityManager connectivityManager,
-      TelephonyManager providesSystemService) {
+  @Singleton @Provides DownloadAnalytics providesDownloadAnalytics(
+      AnalyticsManager analyticsManager, NavigationTracker navigationTracker,
+      ConnectivityManager connectivityManager, TelephonyManager providesSystemService) {
     return new DownloadAnalytics(connectivityManager, providesSystemService, navigationTracker,
         analyticsManager);
   }

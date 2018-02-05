@@ -30,7 +30,7 @@ public class PostAnalytics {
   private final NavigationTracker navigationTracker;
   private final AnalyticsManager analyticsManager;
 
-  public PostAnalytics(NavigationTracker navigationTracker, AnalyticsManager analyticsManager) {
+  public PostAnalytics(AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
     this.navigationTracker = navigationTracker;
     this.analyticsManager = analyticsManager;
   }

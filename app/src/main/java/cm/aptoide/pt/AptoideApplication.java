@@ -1,6 +1,5 @@
 package cm.aptoide.pt;
 
-import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
@@ -20,7 +19,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
 import cm.aptoide.pt.account.AdultContentAnalytics;
-import cm.aptoide.pt.account.AndroidAccountProvider;
 import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.AdsRepository;
@@ -83,7 +81,6 @@ import cm.aptoide.pt.notification.NotificationsCleaner;
 import cm.aptoide.pt.notification.SystemNotificationShower;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.Preferences;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
@@ -119,11 +116,8 @@ import cm.aptoide.pt.view.entry.EntryPointChooser;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import com.crashlytics.android.Crashlytics;
-import com.facebook.CallbackManager;
-import com.facebook.appevents.AppEventsLogger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flurry.android.FlurryAgent;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.nio.charset.Charset;
@@ -1017,8 +1011,5 @@ public abstract class AptoideApplication extends Application {
     return adultContentAnalytics;
   }
 
-  public FirstLaunchAnalytics getFirstLaunchAnalytics() {
-    return firstLaunchAnalytics;
-  }
 }
 

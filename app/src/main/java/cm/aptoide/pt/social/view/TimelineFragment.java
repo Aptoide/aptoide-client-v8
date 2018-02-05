@@ -181,7 +181,6 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    getFragmentComponent(savedInstanceState).inject(this);
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     marketName = application.getMarketName();

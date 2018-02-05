@@ -7,18 +7,18 @@ package cm.aptoide.pt.analytics.view;
 
 import android.os.Build;
 import android.os.Bundle;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.permission.PermissionProviderActivity;
+import javax.inject.Inject;
 
 public abstract class AnalyticsActivity extends PermissionProviderActivity {
 
-  private AnalyticsManager analyticsManager;
-  private FirstLaunchAnalytics firstLaunchAnalytics;
+  @Inject AnalyticsManager analyticsManager;
+  @Inject FirstLaunchAnalytics firstLaunchAnalytics;
   private boolean _resumed = false;
 
   public boolean is_resumed() {
@@ -27,8 +27,7 @@ public abstract class AnalyticsActivity extends PermissionProviderActivity {
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    analyticsManager = ((AptoideApplication) getApplicationContext()).getAnalyticsManager();
-    firstLaunchAnalytics = ((AptoideApplication) getApplicationContext()).getFirstLaunchAnalytics();
+    getActivityComponent().inject(this);
     if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
       ((CrashlyticsCrashLogger) CrashReport.getInstance()
           .getLogger(CrashlyticsCrashLogger.class)).setLanguage(

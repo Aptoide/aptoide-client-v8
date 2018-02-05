@@ -37,7 +37,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   private static final String USERNAME_KEY = "username_key";
   private static final String PASSWORD_KEY = "password_key";
   @Inject LoginSignUpCredentialsPresenter presenter;
-  @Inject AccountNavigator accountNavigator;
   @Inject ScreenOrientationManager orientationManager;
   @Inject AccountAnalytics accountAnalytics;
   private ProgressDialog progressDialog;

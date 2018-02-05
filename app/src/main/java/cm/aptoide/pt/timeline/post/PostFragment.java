@@ -32,6 +32,7 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -55,6 +56,7 @@ public class PostFragment extends FragmentView implements PostView {
   public static final String OPEN_SOURCE = "open_source";
   private static final int MAX_CHARACTERS = 200;
   @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
   private ProgressBar previewLoading;
   private RecyclerView relatedApps;
   private EditText userInput;
@@ -112,14 +114,12 @@ public class PostFragment extends FragmentView implements PostView {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
-    final AptoideApplication application =
-        (AptoideApplication) getContext().getApplicationContext();
     installedRepository = RepositoryFactory.getInstalledRepository(getContext());
     cancelClick = PublishRelay.create();
     postClick = PublishRelay.create();
     loginAction = PublishRelay.create();
     openUploaderButton = PublishRelay.create();
-    analytics = new PostAnalytics(application.getNavigationTracker(), analyticsManager);
+    analytics = new PostAnalytics(analyticsManager, navigationTracker);
     handleAnalytics();
     setHasOptionsMenu(true);
   }
@@ -141,7 +141,8 @@ public class PostFragment extends FragmentView implements PostView {
   }
 
   private void handleAnalytics() {
-    analytics.sendOpenEvent((PostAnalytics.OpenSource) getArguments().getSerializable(OPEN_SOURCE), isExternalOpen());
+    analytics.sendOpenEvent((PostAnalytics.OpenSource) getArguments().getSerializable(OPEN_SOURCE),
+        isExternalOpen());
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -409,9 +410,8 @@ public class PostFragment extends FragmentView implements PostView {
     return externalUrlProvider != null ? externalUrlProvider.getUrlToShare() : null;
   }
 
-  @Override public boolean isExternalOpen(){
-    return getExternalUrlToShare() != null && !getExternalUrlToShare()
-        .trim()
+  @Override public boolean isExternalOpen() {
+    return getExternalUrlToShare() != null && !getExternalUrlToShare().trim()
         .isEmpty();
   }
 
