@@ -27,17 +27,16 @@ public class InviteFriendsFragment extends UIComponentFragment
     implements InviteFriendsContract.View {
   public static final String OPEN_MODE = "OPEN_MODE";
   public static final String TAG = "TAG";
+  @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
   private InviteFriendsContract.UserActionsListener mActionsListener;
   private OpenMode openMode;
   private String entranceTag;
-
   private Button share;
   private Button allowFind;
   private Button done;
   private TextView message;
   private String marketName;
-  @Inject AnalyticsManager analyticsManager;
-  @Inject NavigationTracker navigationTracker;
 
   public static Fragment newInstance(OpenMode openMode, String tag) {
     InviteFriendsFragment inviteFriendsFragment = new InviteFriendsFragment();
@@ -63,7 +62,7 @@ public class InviteFriendsFragment extends UIComponentFragment
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
             getString(R.string.addressbook_about),
             getString(R.string.addressbook_data_about, marketName)), openMode,
-        new AddressBookAnalytics(analyticsManager,navigationTracker), marketName);
+        new AddressBookAnalytics(analyticsManager, navigationTracker), marketName);
   }
 
   @Override public void loadExtras(Bundle args) {

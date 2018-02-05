@@ -1010,6 +1010,5 @@ public abstract class AptoideApplication extends Application {
   public AdultContentAnalytics getAdultContentAnalytics() {
     return adultContentAnalytics;
   }
-
 }
 

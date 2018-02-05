@@ -124,7 +124,8 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
 
     final AptoideAccountManager accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-    final AccountAnalytics accountAnalytics = ((AptoideApplication) getContext().getApplicationContext()).getAccountAnalytics();
+    final AccountAnalytics accountAnalytics =
+        ((AptoideApplication) getContext().getApplicationContext()).getAccountAnalytics();
     WizardPresenter presenter =
         new WizardPresenter(this, accountManager, CrashReport.getInstance(), accountAnalytics);
     attachPresenter(presenter);
