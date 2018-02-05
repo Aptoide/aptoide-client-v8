@@ -7,7 +7,6 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
-import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -27,7 +26,7 @@ public class TrendingService {
   public TrendingService(StoreCredentialsProvider storeCredentialsProvider,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences){
+      SharedPreferences sharedPreferences) {
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
@@ -36,7 +35,7 @@ public class TrendingService {
     this.sharedPreferences = sharedPreferences;
   }
 
-  public Observable<ListApps> getTrendingApps(int limit, int storeId){
+  public Observable<ListApps> getTrendingApps(int limit, int storeId) {
     ListAppsRequest.Body body =
         new ListAppsRequest.Body(storeCredentialsProvider.get(storeId), limit, sharedPreferences,
             ListAppsRequest.Sort.trending30d);

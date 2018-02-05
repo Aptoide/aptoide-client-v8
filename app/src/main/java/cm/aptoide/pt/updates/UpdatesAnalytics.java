@@ -1,9 +1,9 @@
 package cm.aptoide.pt.updates;
 
-import android.os.Bundle;
-import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.events.FacebookEvent;
-import com.facebook.appevents.AppEventsLogger;
+import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by pedroribeiro on 18/04/17.
@@ -11,21 +11,23 @@ import com.facebook.appevents.AppEventsLogger;
 
 public class UpdatesAnalytics {
 
-  private Analytics analytics;
-  private AppEventsLogger facebook;
+  public final static String UPDATE_EVENT = "Updates";
+  private AnalyticsManager analyticsManager;
+  private NavigationTracker navigationTracker;
 
-  public UpdatesAnalytics(Analytics analytics, AppEventsLogger facebook) {
-    this.analytics = analytics;
-    this.facebook = facebook;
+  public UpdatesAnalytics(AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
+    this.analyticsManager = analyticsManager;
+    this.navigationTracker = navigationTracker;
   }
 
   public void updates(String action) {
-    analytics.sendEvent(new FacebookEvent(facebook, "Updates", createBundleData("action", action)));
+    analyticsManager.logEvent(createMapData("action", action), UPDATE_EVENT,
+        AnalyticsManager.Action.AUTO, navigationTracker.getViewName(true));
   }
 
-  private Bundle createBundleData(String key, String value) {
-    final Bundle data = new Bundle();
-    data.putString(key, value);
+  private Map<String, Object> createMapData(String key, String value) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(key, value);
     return data;
   }
 }

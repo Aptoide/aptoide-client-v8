@@ -7,8 +7,10 @@ import android.provider.Settings;
 import android.support.annotation.WorkerThread;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AccountException;
+import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountPersistence;
 import cm.aptoide.accountmanager.AccountService;
+import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.SocialLink;
 import cm.aptoide.accountmanager.Store;
@@ -28,7 +30,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
 import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.networking.MultipartBodyInterceptor;
-import cm.aptoide.pt.preferences.AdultContent;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.view.TestType;
 import com.facebook.FacebookSdk;
@@ -41,22 +42,16 @@ import java.util.Arrays;
 import java.util.List;
 import javax.inject.Named;
 import okhttp3.OkHttpClient;
-import retrofit2.Converter;
 import rx.Completable;
 import rx.Single;
 
 public class MockApplicationModule extends ApplicationModule {
 
   private final AptoideApplication application;
-  private final LoginPreferences loginPreferences;
 
-  public MockApplicationModule(AptoideApplication application, String imageCachePath,
-      String cachePath, String accountType, String partnerId, String marketName, String extraId,
-      String aptoidePackage, String aptoideMd5sum, LoginPreferences loginPreferences) {
-    super(application, imageCachePath, cachePath, accountType, partnerId, marketName, extraId,
-        aptoidePackage, aptoideMd5sum, loginPreferences);
+  public MockApplicationModule(AptoideApplication application, String aptoideMd5sum) {
+    super(application, aptoideMd5sum);
     this.application = application;
-    this.loginPreferences = loginPreferences;
   }
 
   @Override IdsRepository provideIdsRepository(SharedPreferences defaultSharedPreferences,
@@ -72,15 +67,12 @@ public class MockApplicationModule extends ApplicationModule {
   }
 
   @Override AptoideAccountManager provideAptoideAccountManager(AdultContent adultContent,
-      StoreAccessor storeAccessor, OkHttpClient httpClient, OkHttpClient longTimeoutHttpClient,
-      AccountManager accountManager, SharedPreferences defaultSharedPreferences,
-      AuthenticationPersistence authenticationPersistence, TokenInvalidator tokenInvalidator,
-      BodyInterceptor<BaseBody> bodyInterceptorPoolV7,
-      BodyInterceptor<BaseBody> bodyInterceptorWebV7,
-      MultipartBodyInterceptor multipartBodyInterceptor,
+      StoreAccessor storeAccessor, AccountManager accountManager,
+      SharedPreferences defaultSharedPreferences,
+      AuthenticationPersistence authenticationPersistence,
       AndroidAccountProvider androidAccountProvider, GoogleApiClient googleApiClient,
-      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> noAuthenticationBodyInterceptorV3,
-      ObjectMapper objectMapper, Converter.Factory converterFactory, StoreManager storeManager) {
+      StoreManager storeManager, AccountService accountService, AccountFactory accountFactory,
+      LoginPreferences loginPreferences) {
 
     FacebookSdk.sdkInitialize(application);
 
@@ -146,7 +138,7 @@ public class MockApplicationModule extends ApplicationModule {
         return false;
       }
     };
-    final AccountService accountService = new AccountService() {
+    final AccountService accountServiceMock = new AccountService() {
       @Override public Single<Account> getAccount(String email, String password) {
         List<ErrorResponse> list = new ArrayList<>();
         ErrorResponse errorResponse = new ErrorResponse();
@@ -231,7 +223,8 @@ public class MockApplicationModule extends ApplicationModule {
     };
 
     return new AptoideAccountManager.Builder().setAccountPersistence(accountPersistence)
-        .setAccountService(accountService)
+        .setAccountService(accountServiceMock)
+        .setAdultService(adultContent)
         .registerSignUpAdapter(GoogleSignUpAdapter.TYPE,
             new GoogleSignUpAdapter(googleApiClient, loginPreferences) {
               @Override
@@ -269,7 +262,7 @@ public class MockApplicationModule extends ApplicationModule {
 
   @Override StoreManager provideStoreManager(@Named("default") OkHttpClient okHttpClient,
       @Named("multipart") MultipartBodyInterceptor multipartBodyInterceptor,
-      @Named("defaulInterceptorV3")
+      @Named("defaultInterceptorV3")
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
       @Named("account-settings-pool-v7")
           BodyInterceptor<BaseBody> accountSettingsBodyInterceptorPoolV7,

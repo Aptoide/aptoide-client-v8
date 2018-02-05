@@ -19,9 +19,11 @@ public class MockAptoideApplication extends VanillaApplication {
     if (applicationComponent == null) {
       applicationComponent = DaggerApplicationComponent.builder()
           .applicationModule(
-              new MockApplicationModule(this, getImageCachePath(), getCachePath(), getAccountType(),
-                  getPartnerId(), getMarketName(), getExtraId(), getAptoidePackage(),
-                  getAptoideMd5sum(), getLoginPreferences()))
+              new MockApplicationModule(this,
+                  getAptoideMd5sum()))
+          .flavourApplicationModule(
+              new FlavourApplicationModule(this)
+          )
           .build();
     }
     return applicationComponent;

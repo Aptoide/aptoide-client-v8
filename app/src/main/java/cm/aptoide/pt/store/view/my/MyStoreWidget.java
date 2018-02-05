@@ -13,7 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.StoreAnalytics;
@@ -22,7 +23,6 @@ import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowingFragment;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.spannable.SpannableFactory;
-import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 
 /**
@@ -41,8 +41,10 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
 
   public MyStoreWidget(View itemView) {
     super(itemView);
+    NavigationTracker navigationTracker = ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
+    AnalyticsManager analyticsManager = ((AptoideApplication) getContext().getApplicationContext()).getAnalyticsManager();
     storeAnalytics =
-        new StoreAnalytics(AppEventsLogger.newLogger(getContext()), Analytics.getInstance());
+        new StoreAnalytics(analyticsManager, navigationTracker);
   }
 
   @Override protected void assignViews(View itemView) {
@@ -72,8 +74,8 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
         .subscribe(click -> {
           getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
               .newStoreFragment(store.getName(), storeTheme), true);
-          storeAnalytics.sendStoreTabInteractEvent("View Store");
-          storeAnalytics.sendStoreOpenEvent("View Own Store", store.getName());
+          storeAnalytics.sendStoreTabInteractEvent("View Store", false);
+          storeAnalytics.sendStoreOpenEvent("View Own Store", store.getName(), false);
         }));
 
     SpannableFactory spannableFactory = new SpannableFactory();

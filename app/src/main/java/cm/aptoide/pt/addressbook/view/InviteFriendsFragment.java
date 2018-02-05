@@ -10,14 +10,15 @@ import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.InviteFriendsContract;
 import cm.aptoide.pt.presenter.InviteFriendsPresenter;
 import cm.aptoide.pt.view.fragment.UIComponentFragment;
-import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
+import javax.inject.Inject;
 
 /**
  * Created by jdandrade on 23/02/2017.
@@ -35,6 +36,8 @@ public class InviteFriendsFragment extends UIComponentFragment
   private Button done;
   private TextView message;
   private String marketName;
+  @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
 
   public static Fragment newInstance(OpenMode openMode, String tag) {
     InviteFriendsFragment inviteFriendsFragment = new InviteFriendsFragment();
@@ -52,6 +55,7 @@ public class InviteFriendsFragment extends UIComponentFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     marketName = application.getMarketName();
@@ -59,8 +63,7 @@ public class InviteFriendsFragment extends UIComponentFragment
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
             getString(R.string.addressbook_about),
             getString(R.string.addressbook_data_about, marketName)), openMode,
-        new AddressBookAnalytics(Analytics.getInstance(),
-            AppEventsLogger.newLogger(getContext().getApplicationContext())), marketName);
+        new AddressBookAnalytics(analyticsManager,navigationTracker), marketName);
   }
 
   @Override public void loadExtras(Bundle args) {

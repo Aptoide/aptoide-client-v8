@@ -22,10 +22,12 @@ import android.view.WindowManager;
 import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountPersistence;
 import cm.aptoide.accountmanager.AccountService;
+import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
+import cm.aptoide.pt.account.AdultContentAnalytics;
 import cm.aptoide.pt.account.AndroidAccountDataMigration;
 import cm.aptoide.pt.account.AndroidAccountManagerPersistence;
 import cm.aptoide.pt.account.AndroidAccountProvider;
@@ -39,9 +41,22 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.TrackerFilter;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.pt.analytics.analytics.AptoideBiAnalytics;
+import cm.aptoide.pt.analytics.analytics.AptoideBiEventLogger;
+import cm.aptoide.pt.analytics.analytics.AptoideBiEventService;
+import cm.aptoide.pt.analytics.analytics.EventLogger;
+import cm.aptoide.pt.analytics.analytics.EventsPersistence;
+import cm.aptoide.pt.analytics.analytics.FabricEventLogger;
+import cm.aptoide.pt.analytics.analytics.FacebookEventLogger;
+import cm.aptoide.pt.analytics.analytics.FlurryEventLogger;
+import cm.aptoide.pt.analytics.analytics.HttpKnockEventLogger;
+import cm.aptoide.pt.analytics.analytics.RealmEventMapper;
+import cm.aptoide.pt.analytics.analytics.RealmEventPersistence;
+import cm.aptoide.pt.analytics.analytics.RetrofitAptoideBiService;
+import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
@@ -66,13 +81,13 @@ import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.download.DownloadAnalytics;
-import cm.aptoide.pt.download.DownloadCompleteAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.DownloadInstallationProvider;
 import cm.aptoide.pt.download.DownloadMirrorEventInterceptor;
 import cm.aptoide.pt.download.PaidAppsDownloadInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
+import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallFabricEvents;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
@@ -100,8 +115,7 @@ import cm.aptoide.pt.networking.NoOpTokenInvalidator;
 import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
 import cm.aptoide.pt.notification.NotificationAnalytics;
-import cm.aptoide.pt.notification.NotificationProvider;
-import cm.aptoide.pt.preferences.AdultContent;
+import cm.aptoide.pt.preferences.AdultContentManager;
 import cm.aptoide.pt.preferences.LocalPersistenceAdultContent;
 import cm.aptoide.pt.preferences.Preferences;
 import cm.aptoide.pt.preferences.SecurePreferences;
@@ -113,11 +127,13 @@ import cm.aptoide.pt.repository.DownloadRepository;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootValueSaver;
+import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionRemoteRepository;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionService;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.suggestions.TrendingService;
+import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
@@ -125,6 +141,8 @@ import cm.aptoide.pt.sync.SyncScheduler;
 import cm.aptoide.pt.sync.alarm.AlarmSyncScheduler;
 import cm.aptoide.pt.sync.alarm.AlarmSyncService;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
+import cm.aptoide.pt.timeline.TimelineAnalytics;
+import cm.aptoide.pt.timeline.post.PostAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.q.QManager;
@@ -157,12 +175,17 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -177,6 +200,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import rx.Completable;
 import rx.Single;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 import static android.content.Context.ALARM_SERVICE;
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -185,46 +209,58 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 @Module public class ApplicationModule {
 
   private final AptoideApplication application;
-  private final String imageCachePath;
-  private final String cachePath;
-  private final String accountType;
-  private final String partnerId;
-  private final String marketName;
-  private final String extraId;
-  private final String aptoidePackage;
   private final String aptoideMd5sum;
-  private final LoginPreferences loginPreferences;
 
-  public ApplicationModule(AptoideApplication application, String imageCachePath, String cachePath,
-      String accountType, String partnerId, String marketName, String extraId,
-      String aptoidePackage, String aptoideMd5sum, LoginPreferences loginPreferences) {
+  public ApplicationModule(AptoideApplication application, String aptoideMd5sum) {
     this.application = application;
-    this.imageCachePath = imageCachePath;
-    this.cachePath = cachePath;
-    this.accountType = accountType;
-    this.partnerId = partnerId;
-    this.marketName = marketName;
-    this.extraId = extraId;
-    this.aptoidePackage = aptoidePackage;
     this.aptoideMd5sum = aptoideMd5sum;
-    this.loginPreferences = loginPreferences;
   }
 
-  @Singleton @Provides InstallerAnalytics provideInstallerAnalytics(Answers answers,
-      AppEventsLogger appEventsLogger) {
-    return new InstallFabricEvents(Analytics.getInstance(), answers, appEventsLogger);
+  @Singleton @Provides InstallerAnalytics provideInstallerAnalytics(
+      AnalyticsManager analyticsManager, InstallAnalytics installAnalytics,
+      @Named("default") SharedPreferences sharedPreferences,
+      RootAvailabilityManager rootAvailabilityManager) {
+    return new InstallFabricEvents(analyticsManager, installAnalytics, sharedPreferences,
+        rootAvailabilityManager);
+  }
+
+  @Singleton @Provides DownloadAnalytics provideDownloadAnalytics(AnalyticsManager analyticsManager,
+      NavigationTracker navigationTracker, ConnectivityManager connectivityManager,
+      TelephonyManager providesSystemService) {
+    return new DownloadAnalytics(connectivityManager, providesSystemService, navigationTracker,
+        analyticsManager);
+  }
+
+  @Singleton @Provides TelephonyManager providesTelephonyManager() {
+    return (TelephonyManager) application.getSystemService(Context.TELEPHONY_SERVICE);
+  }
+
+  @Singleton @Provides ConnectivityManager providesConnectivityManager() {
+    return (ConnectivityManager) application.getSystemService(Context.CONNECTIVITY_SERVICE);
+  }
+
+  @Singleton @Provides InstallAnalytics provideInstallAnalytics(AnalyticsManager analyticsManager,
+      NavigationTracker navigationTracker, ConnectivityManager connectivityManager,
+      TelephonyManager telephonyManager) {
+    return new InstallAnalytics(CrashReport.getInstance(), analyticsManager, navigationTracker,
+        new HashMap<>(), connectivityManager, telephonyManager);
+  }
+
+  @Singleton @Provides @Named("aptoidePackage") String provideAptoidePackage() {
+    return BuildConfig.APPLICATION_ID;
   }
 
   @Singleton @Provides AptoideDownloadManager provideAptoideDownloadManager(
-      AppEventsLogger appEventsLogger, DownloadAccessor downloadAccessor,
-      @Named("user-agent") Interceptor userAgentInterceptor, CacheHelper cacheHelper,
-      AuthenticationPersistence authenticationPersistence, Answers answers) {
+      DownloadAccessor downloadAccessor, @Named("user-agent") Interceptor userAgentInterceptor,
+      CacheHelper cacheHelper, DownloadAnalytics downloadAnalytics,
+      AuthenticationPersistence authenticationPersistence, @Named("cachePath") String cachePath,
+      InstallAnalytics installAnalytics) {
     final String apkPath = cachePath + "apks/";
     final String obbPath = cachePath + "obb/";
     final OkHttpClient.Builder httpClientBuilder =
         new OkHttpClient.Builder().addInterceptor(userAgentInterceptor)
             .addInterceptor(new PaidAppsDownloadInterceptor(authenticationPersistence))
-            .addInterceptor(new DownloadMirrorEventInterceptor(Analytics.getInstance()))
+            .addInterceptor(new DownloadMirrorEventInterceptor(downloadAnalytics, installAnalytics))
             .connectTimeout(20, TimeUnit.SECONDS)
             .writeTimeout(20, TimeUnit.SECONDS)
             .readTimeout(20, TimeUnit.SECONDS);
@@ -236,10 +272,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
             new OkHttp3Connection.Creator(httpClientBuilder)));
 
     return new AptoideDownloadManager(downloadAccessor, cacheHelper,
-        new FileUtils(action -> Analytics.File.moveFile(action)),
-        new DownloadAnalytics(Analytics.getInstance(),
-            new DownloadCompleteAnalytics(Analytics.getInstance(), answers, appEventsLogger)),
-        FileDownloader.getImpl(), cachePath, apkPath, obbPath);
+        new FileUtils(downloadAnalytics::moveFile), downloadAnalytics, FileDownloader.getImpl(),
+        cachePath, apkPath, obbPath);
   }
 
   @Singleton @Provides @Named("default") Installer provideDefaultInstaller(
@@ -248,14 +282,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       InstalledRepository installedRepository, RootAvailabilityManager rootAvailabilityManager,
       InstallerAnalytics installerAnalytics) {
     return new DefaultInstaller(application.getPackageManager(), installationProvider,
-        new FileUtils(), Analytics.getInstance(),
-        ToolboxManager.isDebug(sharedPreferences) || BuildConfig.DEBUG, installedRepository, 180000,
-        rootAvailabilityManager, sharedPreferences, installerAnalytics);
+        new FileUtils(), ToolboxManager.isDebug(sharedPreferences) || BuildConfig.DEBUG,
+        installedRepository, 180000, rootAvailabilityManager, sharedPreferences,
+        installerAnalytics);
   }
 
   @Singleton @Provides @Named("rollback") Installer provideRollbackInstaller(
       @Named("default") Installer defaultInstaller, RollbackRepository rollbackRepository,
-      InstallationProvider installationProvider) {
+      InstallationProvider installationProvider, @Named("imageCachePath") String imageCachePath) {
     return new RollbackInstaller(defaultInstaller, rollbackRepository,
         new RollbackFactory(imageCachePath), installationProvider);
   }
@@ -277,7 +311,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides CacheHelper provideCacheHelper(
-      @Named("default") SharedPreferences defaultSharedPreferences) {
+      @Named("default") SharedPreferences defaultSharedPreferences,
+      @Named("cachePath") String cachePath) {
     final List<CacheHelper.FolderToManage> folders = new LinkedList<>();
 
     long month = DateUtils.DAY_IN_MILLIS;
@@ -326,7 +361,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new InstalledRepository(installedAccessor);
   }
 
-  @Singleton @Provides DownloadFactory provideDownloadFactory() {
+  @Singleton @Provides DownloadFactory provideDownloadFactory(
+      @Named("marketName") String marketName) {
     return new DownloadFactory(marketName);
   }
 
@@ -339,7 +375,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("user-agent") Interceptor provideUserAgentInterceptor(
-      AndroidAccountProvider androidAccountProvider, IdsRepository idsRepository) {
+      AndroidAccountProvider androidAccountProvider, IdsRepository idsRepository,
+      @Named("partnerID") String partnerId) {
     return new UserAgentInterceptor(androidAccountProvider, idsRepository, partnerId,
         new DisplayMetrics(), AptoideUtils.SystemU.TERMINAL_INFO,
         AptoideUtils.Core.getDefaultVername(application));
@@ -363,7 +400,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AndroidAccountProvider provideAndroidAccountProvider(
-      AccountManager accountManager) {
+      AccountManager accountManager, @Named("accountType") String accountType) {
     return new AndroidAccountProvider(accountManager, accountType, Schedulers.io());
   }
 
@@ -464,26 +501,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AptoideAccountManager provideAptoideAccountManager(AdultContent adultContent,
-      StoreAccessor storeAccessor, @Named("default") OkHttpClient httpClient,
-      @Named("long-timeout") OkHttpClient longTimeoutHttpClient, AccountManager accountManager,
+      StoreAccessor storeAccessor, AccountManager accountManager,
       @Named("default") SharedPreferences defaultSharedPreferences,
-      AuthenticationPersistence authenticationPersistence, TokenInvalidator tokenInvalidator,
-      @Named("pool-v7")
-          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
-      @Named("web-v7")
-          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorWebV7,
-      @Named("multipart") MultipartBodyInterceptor multipartBodyInterceptor,
+      AuthenticationPersistence authenticationPersistence,
       AndroidAccountProvider androidAccountProvider, GoogleApiClient googleApiClient,
-      @Named("no-authentication-v3") BodyInterceptor<BaseBody> noAuthenticationBodyInterceptorV3,
-      ObjectMapper objectMapper, Converter.Factory converterFactory, StoreManager storeManager) {
+      StoreManager storeManager, AccountService accountService, AccountFactory accountFactory,
+      LoginPreferences loginPreferences) {
     FacebookSdk.sdkInitialize(application);
-    final AccountFactory accountFactory = new AccountFactory();
-
-    final AccountService accountService =
-        new AccountServiceV3(accountFactory, httpClient, longTimeoutHttpClient, converterFactory,
-            objectMapper, defaultSharedPreferences, extraId, tokenInvalidator,
-            authenticationPersistence, noAuthenticationBodyInterceptorV3, multipartBodyInterceptor,
-            bodyInterceptorWebV7, bodyInterceptorPoolV7);
 
     final AndroidAccountDataMigration accountDataMigration = new AndroidAccountDataMigration(
         SecurePreferencesImplementation.getInstance(application, defaultSharedPreferences),
@@ -503,6 +527,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AptoideAccountManager.Builder().setAccountPersistence(
         new MatureContentPersistence(accountPersistence, adultContent))
         .setAccountService(accountService)
+        .setAdultService(adultContent)
         .registerSignUpAdapter(GoogleSignUpAdapter.TYPE,
             new GoogleSignUpAdapter(googleApiClient, loginPreferences))
         .registerSignUpAdapter(FacebookSignUpAdapter.TYPE,
@@ -510,6 +535,29 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
                 loginPreferences))
         .setStoreManager(storeManager)
         .build();
+  }
+
+  @Singleton @Provides AccountFactory provideAccountFactory() {
+    return new AccountFactory();
+  }
+
+  @Singleton @Provides AccountService provideAccountService(
+      @Named("default") OkHttpClient httpClient,
+      @Named("long-timeout") OkHttpClient longTimeoutHttpClient,
+      @Named("default") SharedPreferences defaultSharedPreferences,
+      AuthenticationPersistence authenticationPersistence, TokenInvalidator tokenInvalidator,
+      @Named("pool-v7")
+          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("web-v7")
+          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorWebV7,
+      @Named("multipart") MultipartBodyInterceptor multipartBodyInterceptor,
+      @Named("no-authentication-v3") BodyInterceptor<BaseBody> noAuthenticationBodyInterceptorV3,
+      @Named("default") ObjectMapper objectMapper, Converter.Factory converterFactory,
+      @Named("extraID") String extraId, AccountFactory accountFactory) {
+    return new AccountServiceV3(accountFactory, httpClient, longTimeoutHttpClient, converterFactory,
+        objectMapper, defaultSharedPreferences, extraId, tokenInvalidator,
+        authenticationPersistence, noAuthenticationBodyInterceptorV3, multipartBodyInterceptor,
+        bodyInterceptorWebV7, bodyInterceptorPoolV7);
   }
 
   @Singleton @Provides @Named("default") OkHttpClient provideOkHttpClient(L2Cache httpClientCache,
@@ -576,7 +624,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return okHttpClientBuilder.build();
   }
 
-  @Singleton @Provides public ObjectMapper provideNonNullObjectMapper() {
+  @Singleton @Provides @Named("default") ObjectMapper provideNonNullObjectMapper() {
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     return objectMapper;
@@ -614,14 +662,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") OkHttpClient httpClient,
       @Named("default") SharedPreferences sharedPreferences,
       AuthenticationPersistence authenticationPersistence,
-      @Named("no-authentication-v3") BodyInterceptor<BaseBody> bodyInterceptor) {
+      @Named("no-authentication-v3") BodyInterceptor<BaseBody> bodyInterceptor,
+      @Named("extraID") String extraId) {
     return new RefreshTokenInvalidator(bodyInterceptor, httpClient,
         WebService.getDefaultConverter(), sharedPreferences, extraId, new NoOpTokenInvalidator(),
         authenticationPersistence);
   }
 
   @Singleton @Provides @Named("no-authentication-v3")
-  BodyInterceptor<BaseBody> provideNoAuthenticationBodyInterceptorV3(IdsRepository idsRepository) {
+  BodyInterceptor<BaseBody> provideNoAuthenticationBodyInterceptorV3(IdsRepository idsRepository,
+      @Named("aptoidePackage") String aptoidePackage) {
     return new NoAuthenticationBodyInterceptorV3(idsRepository, aptoideMd5sum, aptoidePackage);
   }
 
@@ -635,8 +685,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides @Named("pool-v7")
   BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> provideBodyInterceptorPoolV7(
       AuthenticationPersistence authenticationPersistence, IdsRepository idsRepository,
-      @Named("default") SharedPreferences sharedPreferences, Resources resources,
-      QManager qManager) {
+      @Named("default") SharedPreferences sharedPreferences, Resources resources, QManager qManager,
+      @Named("aptoidePackage") String aptoidePackage) {
     return new BodyInterceptorV7(idsRepository, authenticationPersistence, aptoideMd5sum,
         aptoidePackage, qManager, Cdn.POOL, sharedPreferences, resources, BuildConfig.VERSION_CODE);
   }
@@ -655,8 +705,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides @Named("web-v7")
   BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> provideBodyInterceptorWebV7(
       AuthenticationPersistence authenticationPersistence, IdsRepository idsRepository,
-      @Named("default") SharedPreferences sharedPreferences, Resources resources,
-      QManager qManager) {
+      @Named("default") SharedPreferences sharedPreferences, Resources resources, QManager qManager,
+      @Named("aptoidePackage") String aptoidePackage) {
     return new BodyInterceptorV7(idsRepository, authenticationPersistence, aptoideMd5sum,
         aptoidePackage, qManager, Cdn.WEB, sharedPreferences, resources, BuildConfig.VERSION_CODE);
   }
@@ -668,9 +718,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         ((WindowManager) application.getSystemService(Context.WINDOW_SERVICE)));
   }
 
-  @Singleton @Provides AdultContent provideLocalAdultContent(Preferences preferences,
-      @Named("secure") SecurePreferences securePreferences) {
+  @Singleton @Provides LocalPersistenceAdultContent provideLocalAdultContent(
+      Preferences preferences, @Named("secure") SecurePreferences securePreferences) {
     return new LocalPersistenceAdultContent(preferences, securePreferences);
+  }
+
+  @Singleton @Provides AdultContent provideAdultContent(
+      LocalPersistenceAdultContent localAdultContent, AccountService accountService) {
+    return new AdultContentManager(localAdultContent, accountService);
   }
 
   @Singleton @Provides Preferences provideDefaultPreferences(
@@ -691,13 +746,25 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new StoreRepository(storeAccessor);
   }
 
-  @Singleton @Provides PageViewsAnalytics providePageViewsAnalytics(AppEventsLogger appEventsLogger,
-      NavigationTracker navigationTracker) {
-    return new PageViewsAnalytics(appEventsLogger, Analytics.getInstance(), navigationTracker);
+  @Singleton @Provides PageViewsAnalytics providePageViewsAnalytics(
+      AnalyticsManager analyticsManager) {
+    return new PageViewsAnalytics(analyticsManager);
   }
 
-  @Singleton @Provides NavigationTracker provideNavigationTracker() {
-    return new NavigationTracker(new ArrayList<>(), new TrackerFilter());
+  @Singleton @Provides NotificationAnalytics provideNotificationAnalytics(
+      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
+    return new NotificationAnalytics(new AptoideInstallParser(), analyticsManager,
+        navigationTracker);
+  }
+
+  @Singleton @Provides SearchAnalytics providesSearchAnalytics(AnalyticsManager analyticsManager,
+      NavigationTracker navigationTracker) {
+    return new SearchAnalytics(analyticsManager, navigationTracker);
+  }
+
+  @Singleton @Provides NavigationTracker provideNavigationTracker(
+      PageViewsAnalytics pageViewsAnalytics) {
+    return new NavigationTracker(new ArrayList<>(), new TrackerFilter(), pageViewsAnalytics);
   }
 
   @Singleton @Provides Database provideDatabase() {
@@ -715,25 +782,30 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new CallbackManagerImpl();
   }
 
-  @Singleton @Provides AccountAnalytics provideAccountAnalytics(@Named("pool-v7")
-      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
-      @Named("default") OkHttpClient defaulClient, TokenInvalidator tokenInvalidator,
-      @Named("default") SharedPreferences defaultSharedPreferences, AppEventsLogger appEventsLogger,
+  @Singleton @Provides AccountAnalytics provideAccountAnalytics(NavigationTracker navigationTracker,
+      AnalyticsManager analyticsManager) {
+    return new AccountAnalytics(navigationTracker, CrashReport.getInstance(), analyticsManager);
+  }
+
+  @Singleton @Provides AdultContentAnalytics provideAdultContentAnalytics(
+      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
+    return new AdultContentAnalytics(analyticsManager, navigationTracker);
+  }
+
+  @Singleton @Provides DeepLinkAnalytics provideDeepLinkAnalytics(AnalyticsManager analyticsManager,
       NavigationTracker navigationTracker) {
-    return new AccountAnalytics(Analytics.getInstance(), bodyInterceptorPoolV7, defaulClient,
-        WebService.getDefaultConverter(), tokenInvalidator, BuildConfig.APPLICATION_ID,
-        defaultSharedPreferences, appEventsLogger, navigationTracker, CrashReport.getInstance());
+    return new DeepLinkAnalytics(analyticsManager, navigationTracker);
   }
 
   @Singleton @Provides StoreManager provideStoreManager(@Named("default") OkHttpClient okHttpClient,
       @Named("multipart") MultipartBodyInterceptor multipartBodyInterceptor,
-      @Named("defaulInterceptorV3")
+      @Named("defaultInterceptorV3")
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
       @Named("account-settings-pool-v7")
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> accountSettingsBodyInterceptorPoolV7,
       @Named("default") SharedPreferences defaultSharedPreferences,
       TokenInvalidator tokenInvalidator, RequestBodyFactory requestBodyFactory,
-      ObjectMapper nonNullObjectMapper) {
+      @Named("default") ObjectMapper nonNullObjectMapper) {
     return new StoreManager(okHttpClient, WebService.getDefaultConverter(),
         multipartBodyInterceptor, bodyInterceptorV3, accountSettingsBodyInterceptorPoolV7,
         defaultSharedPreferences, tokenInvalidator, requestBodyFactory, nonNullObjectMapper);
@@ -742,14 +814,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AdsRepository provideAdsRepository(IdsRepository idsRepository,
       AptoideAccountManager accountManager, @Named("default") OkHttpClient okHttpClient,
       QManager qManager, @Named("default") SharedPreferences defaultSharedPreferences,
-      AdsApplicationVersionCodeProvider adsApplicationVersionCodeProvider) {
+      AdsApplicationVersionCodeProvider adsApplicationVersionCodeProvider,
+      ConnectivityManager connectivityManager) {
     return new AdsRepository(idsRepository, accountManager, okHttpClient,
         WebService.getDefaultConverter(), qManager, defaultSharedPreferences,
-        application.getApplicationContext(),
-        (ConnectivityManager) application.getSystemService(Context.CONNECTIVITY_SERVICE),
-        application.getResources(), adsApplicationVersionCodeProvider,
-        AdNetworkUtils::isGooglePlayServicesAvailable, application::getPartnerId,
-        new MinimalAdMapper());
+        application.getApplicationContext(), connectivityManager, application.getResources(),
+        adsApplicationVersionCodeProvider, AdNetworkUtils::isGooglePlayServicesAvailable,
+        application::getPartnerId, new MinimalAdMapper());
   }
 
   @Singleton @Provides AdsApplicationVersionCodeProvider providesAdsApplicationVersionCodeProvider(
@@ -762,20 +833,21 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new PackageRepository(application.getPackageManager());
   }
 
-  @Singleton @Provides @Named("defaulInterceptorV3")
+  @Singleton @Provides @Named("defaultInterceptorV3")
   BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> providesBodyInterceptorV3(
       IdsRepository idsRepository, QManager qManager,
       @Named("default") SharedPreferences defaultSharedPreferences,
       NetworkOperatorManager networkOperatorManager,
-      AuthenticationPersistence authenticationPersistence) {
+      AuthenticationPersistence authenticationPersistence,
+      @Named("aptoidePackage") String aptoidePackage) {
     return new BodyInterceptorV3(idsRepository, aptoideMd5sum, aptoidePackage, qManager,
         defaultSharedPreferences, BodyInterceptorV3.RESPONSE_MODE_JSON, Build.VERSION.SDK_INT,
         networkOperatorManager, authenticationPersistence);
   }
 
-  @Singleton @Provides NetworkOperatorManager providesNetworkOperatorManager() {
-    return new NetworkOperatorManager(
-        (TelephonyManager) application.getSystemService(Context.TELEPHONY_SERVICE));
+  @Singleton @Provides NetworkOperatorManager providesNetworkOperatorManager(
+      TelephonyManager telephonyManager) {
+    return new NetworkOperatorManager(telephonyManager);
   }
 
   @Singleton @Provides TrendingManager providesTrendingManager(TrendingService trendingService) {
@@ -801,10 +873,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         converterFactory, tokenInvalidator, sharedPreferences);
   }
 
-  @Singleton @Provides @Named("ws-prod-base-url") String providesBaseWebServiceTestsUrl() {
+  @Singleton @Provides @Named("ws-prod-suggestions-base-url") String provideSearchBaseUrl() {
     return "http://"
         + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SEARCH_HOST
-        + "/api/7/";
+        + "/v1/";
   }
 
   @Singleton @Provides @Named("rx") CallAdapter.Factory providesCallAdapterFactory() {
@@ -817,7 +889,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         Schedulers.io());
   }
 
-  @Singleton @Provides Retrofit providesDefaultRetrofit(@Named("ws-prod-base-url") String baseUrl,
+  @Singleton @Provides Retrofit providesSearchSuggestionsRetrofit(
+      @Named("ws-prod-suggestions-base-url") String baseUrl,
       @Named("default") OkHttpClient httpClient, Converter.Factory converterFactory,
       @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
     return new Retrofit.Builder().baseUrl(baseUrl)
@@ -827,8 +900,116 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .build();
   }
 
+  @Singleton @Provides @Named("base-host") String providesBaseHost(
+      @Named("default") SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
+        + "/api/7/";
+  }
+
+  @Singleton @Provides @Named("retrofit-v7") Retrofit providesV7Retrofit(
+      @Named("base-host") String baseHost, @Named("default") OkHttpClient httpClient,
+      Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
+    return new Retrofit.Builder().baseUrl(baseHost)
+        .client(httpClient)
+        .addCallAdapterFactory(rxCallAdapterFactory)
+        .addConverterFactory(converterFactory)
+        .build();
+  }
+
   @Singleton @Provides SearchSuggestionRemoteRepository providesSearchSuggestionRemoteRepository(
       Retrofit retrofit) {
     return retrofit.create(SearchSuggestionRemoteRepository.class);
+  }
+
+  @Singleton @Provides CrashReport providesCrashReports() {
+    return CrashReport.getInstance();
+  }
+
+  @Singleton @Provides RealmEventMapper providesRealmEventMapper(
+      @Named("default") ObjectMapper objectMapper) {
+    return new RealmEventMapper(objectMapper);
+  }
+
+  @Singleton @Provides EventsPersistence providesEventsPersistence(Database database,
+      RealmEventMapper mapper) {
+    return new RealmEventPersistence(database, mapper);
+  }
+
+  @Singleton @Provides AptoideBiEventService providesRetrofitAptoideBiService(@Named("pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient defaultClient, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences defaultSharedPreferences,
+      Converter.Factory converterFactory) {
+    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+    dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+    return new RetrofitAptoideBiService(dateFormat, bodyInterceptorPoolV7, defaultClient,
+        converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID, defaultSharedPreferences);
+  }
+
+  @Singleton @Provides @Named("aptoide") EventLogger providesAptoideEventLogger(
+      EventsPersistence persistence, AptoideBiEventService service, CrashReport crashReport) {
+    return new AptoideBiEventLogger(
+        new AptoideBiAnalytics(persistence, service, new CompositeSubscription(),
+            Schedulers.computation(), BuildConfig.ANALYTICS_EVENTS_INITIAL_DELAY_IN_MILLIS,
+            BuildConfig.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS, crashReport));
+  }
+
+  @Singleton @Provides @Named("facebook") EventLogger providesFacebookEventLogger(
+      AppEventsLogger facebook) {
+    return new FacebookEventLogger(facebook);
+  }
+
+  @Singleton @Provides @Named("flurry") EventLogger providesFlurryEventLogger() {
+    return new FlurryEventLogger();
+  }
+
+  @Singleton @Provides @Named("fabric") EventLogger providesFabricEventLogger(Answers fabric) {
+    return new FabricEventLogger(fabric);
+  }
+
+  @Singleton @Provides HttpKnockEventLogger providesknockEventLogger(
+      @Named("default") OkHttpClient client) {
+    return new HttpKnockEventLogger(client);
+  }
+
+  @Singleton @Provides @Named("aptoideEvents") Collection<String> provideAptoideEvents() {
+    return Arrays.asList(PostAnalytics.OPEN_EVENT_NAME, PostAnalytics.POST,
+        AppViewAnalytics.OPEN_APP_VIEW, NotificationAnalytics.NOTIFICATION_EVENT_NAME,
+        TimelineAnalytics.OPEN_APP, TimelineAnalytics.UPDATE_APP, TimelineAnalytics.OPEN_STORE,
+        TimelineAnalytics.OPEN_ARTICLE, TimelineAnalytics.LIKE, TimelineAnalytics.OPEN_BLOG,
+        TimelineAnalytics.OPEN_VIDEO, TimelineAnalytics.OPEN_CHANNEL,
+        TimelineAnalytics.OPEN_STORE_PROFILE, TimelineAnalytics.COMMENT, TimelineAnalytics.SHARE,
+        TimelineAnalytics.SHARE_SEND, TimelineAnalytics.COMMENT_SEND, TimelineAnalytics.FAB,
+        TimelineAnalytics.SCROLLING_EVENT, TimelineAnalytics.OPEN_TIMELINE_EVENT,
+        AccountAnalytics.APTOIDE_EVENT_NAME, DownloadAnalytics.DOWNLOAD_EVENT,
+        DownloadAnalytics.DOWNLOAD_EVENT_NAME, InstallAnalytics.INSTALL_EVENT_NAME);
+  }
+
+  @Singleton @Provides @Named("fabricEvents") Collection<String> provideFabricEvents() {
+    return Arrays.asList(DownloadAnalytics.DOWNLOAD_COMPLETE_EVENT,
+        SpotAndShareAnalytics.EVENT_NAME_SPOT_SHARE_PERMISSIONS,
+        InstallFabricEvents.ROOT_V2_COMPLETE, InstallFabricEvents.ROOT_V2_START,
+        InstallFabricEvents.IS_INSTALLATION_TYPE_EVENT_NAME);
+  }
+
+  @Singleton @Provides AnalyticsManager providesAnalyticsManager(
+      @Named("aptoide") EventLogger aptoideBiEventLogger,
+      @Named("facebook") EventLogger facebookEventLogger,
+      @Named("fabric") EventLogger fabricEventLogger,
+      @Named("flurry") EventLogger flurryEventLogger, HttpKnockEventLogger knockEventLogger,
+      @Named("aptoideEvents") Collection<String> aptoideEvents,
+      @Named("facebookEvents") Collection<String> facebookEvents,
+      @Named("fabricEvents") Collection<String> fabricEvents,
+      @Named("flurryEvents") Collection<String> flurryEvents) {
+
+    return new AnalyticsManager.Builder().addLogger(aptoideBiEventLogger, aptoideEvents)
+        .addLogger(facebookEventLogger, facebookEvents)
+        .addLogger(fabricEventLogger, fabricEvents)
+        .addLogger(flurryEventLogger, flurryEvents)
+        .setKnockLogger(knockEventLogger)
+        .build();
   }
 }

@@ -5,10 +5,9 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PageViewsAnalytics;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
-import com.facebook.appevents.AppEventsLogger;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 
 /**
  * Created by pedroribeiro on 14/09/17.
@@ -18,6 +17,7 @@ public abstract class NavigationTrackFragment extends FragmentView {
 
   public static final String SHOULD_REGISTER_VIEW = "should_register_view";
   protected NavigationTracker navigationTracker;
+  private AnalyticsManager analyticsManager;
   protected PageViewsAnalytics pageViewsAnalytics;
   protected boolean shouldRegister = true;
 
@@ -27,9 +27,12 @@ public abstract class NavigationTrackFragment extends FragmentView {
       navigationTracker =
           ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
     }
+    if (analyticsManager == null) {
+      analyticsManager =
+          ((AptoideApplication) getContext().getApplicationContext()).getAnalyticsManager();
+    }
     pageViewsAnalytics =
-        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), navigationTracker);
+        new PageViewsAnalytics(analyticsManager);
     getFragmentExtras();
   }
 
@@ -54,7 +57,6 @@ public abstract class NavigationTrackFragment extends FragmentView {
             + " should be logged to screen history, it has to return a value on method NavigationTrackFragment#getHistoryTracker");
       }
       navigationTracker.registerScreen(historyTracker);
-      pageViewsAnalytics.sendPageViewedEvent();
     }
   }
 

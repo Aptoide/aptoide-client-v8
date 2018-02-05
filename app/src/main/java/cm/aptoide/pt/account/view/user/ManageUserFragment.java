@@ -29,6 +29,7 @@ import cm.aptoide.pt.account.view.exception.InvalidImageException;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.CompositePresenter;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -58,6 +59,7 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   @Inject ImagePickerPresenter imagePickerPresenter;
   @Inject ManageUserPresenter manageUserPresenter;
   @Inject CreateUserErrorMapper errorMapper;
+  @Inject ScreenOrientationManager orientationManager;
   private ImageView userPicture;
   private RelativeLayout userPictureLayout;
   private EditText userName;
@@ -201,12 +203,14 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   }
 
   @Override public void showProgressDialog() {
+    orientationManager.lock();
     hideKeyboard();
     uploadWaitDialog.show();
   }
 
   @Override public void hideProgressDialog() {
     uploadWaitDialog.dismiss();
+    orientationManager.unlock();
   }
 
   @Override public Completable showErrorMessage(String error) {

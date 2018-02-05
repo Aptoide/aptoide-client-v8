@@ -10,16 +10,16 @@ import android.content.res.Resources;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.download.DownloadEvent;
-import cm.aptoide.pt.download.DownloadEventConverter;
+import cm.aptoide.pt.download.AppContext;
+import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
-import cm.aptoide.pt.download.DownloadInstallBaseEvent;
-import cm.aptoide.pt.download.InstallEvent;
-import cm.aptoide.pt.download.InstallEventConverter;
+import cm.aptoide.pt.download.InstallType;
+import cm.aptoide.pt.download.Origin;
 import cm.aptoide.pt.install.Install;
+import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -54,12 +54,10 @@ public class UpdateDisplayable extends Displayable {
 
   private Download download;
   private InstallManager installManager;
-  private Analytics analytics;
-  private DownloadEventConverter converter;
-  private InstallEventConverter installConverter;
+  private DownloadAnalytics downloadAnalytics;
   private int updateVersionCode;
   private InstalledRepository installedRepository;
-  private PermissionManager permissionManager;
+  private InstallAnalytics installAnalytics;
 
   public UpdateDisplayable() {
   }
@@ -68,10 +66,8 @@ public class UpdateDisplayable extends Displayable {
       int versionCode, String md5, String apkPath, String alternativeApkPath,
       String updateVersionName, String mainObbName, String mainObbPath, String mainObbMd5,
       String patchObbName, String patchObbPath, String patchObbMd5, Download download,
-      InstallManager installManager, Analytics analytics,
-      DownloadEventConverter downloadInstallEventConverter, InstallEventConverter installConverter,
-      int updateVersionCode, InstalledRepository installedRepository,
-      PermissionManager permissionManager) {
+      InstallManager installManager, DownloadAnalytics downloadAnalytics, int updateVersionCode,
+      InstalledRepository installedRepository, InstallAnalytics installAnalytics) {
     this.packageName = packageName;
     this.appId = appId;
     this.label = label;
@@ -89,26 +85,23 @@ public class UpdateDisplayable extends Displayable {
     this.patchObbMd5 = patchObbMd5;
     this.download = download;
     this.installManager = installManager;
-    this.analytics = analytics;
-    this.converter = downloadInstallEventConverter;
-    this.installConverter = installConverter;
+    this.downloadAnalytics = downloadAnalytics;
     this.updateVersionCode = updateVersionCode;
     this.installedRepository = installedRepository;
-    this.permissionManager = permissionManager;
+    this.installAnalytics = installAnalytics;
   }
 
   public static UpdateDisplayable newInstance(Update update, InstallManager installManager,
-      DownloadFactory downloadFactory, Analytics analytics,
-      DownloadEventConverter downloadInstallEventConverter, InstallEventConverter installConverter,
-      InstalledRepository installedRepository, PermissionManager permissionManager) {
+      DownloadFactory downloadFactory, DownloadAnalytics downloadAnalytics,
+      InstalledRepository installedRepository, InstallAnalytics installAnalytics) {
 
     return new UpdateDisplayable(update.getPackageName(), update.getAppId(), update.getLabel(),
         update.getIcon(), update.getVersionCode(), update.getMd5(), update.getApkPath(),
         update.getAlternativeApkPath(), update.getUpdateVersionName(), update.getMainObbName(),
         update.getMainObbPath(), update.getMainObbMd5(), update.getPatchObbName(),
         update.getPatchObbPath(), update.getPatchObbMd5(), downloadFactory.create(update),
-        installManager, analytics, downloadInstallEventConverter, installConverter,
-        update.getUpdateVersionCode(), installedRepository, permissionManager);
+        installManager, downloadAnalytics, update.getUpdateVersionCode(), installedRepository,
+        installAnalytics);
   }
 
   public String getPackageName() {
@@ -200,13 +193,12 @@ public class UpdateDisplayable extends Displayable {
   }
 
   private void setupEvents(Download download) {
-    DownloadEvent report =
-        converter.create(download, DownloadEvent.Action.CLICK, DownloadEvent.AppContext.UPDATE_TAB);
-    analytics.save(download.getPackageName() + download.getVersionCode(), report);
-    InstallEvent installEvent =
-        installConverter.create(download, DownloadInstallBaseEvent.Action.CLICK,
-            DownloadInstallBaseEvent.AppContext.UPDATE_TAB);
-    analytics.save(download.getPackageName() + download.getVersionCode(), installEvent);
+    downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
+        DownloadAnalytics.AppContext.UPDATE_TAB);
+
+    installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
+        InstallType.UPDATE, AnalyticsManager.Action.INSTALL,
+        AppContext.UPDATE_TAB, Origin.UPDATE);
   }
 
   @Override protected Configs getConfig() {

@@ -12,6 +12,7 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.navigator.TabNavigatorActivity;
@@ -19,7 +20,6 @@ import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxrelay.PublishRelay;
 import javax.inject.Inject;
 import rx.Observable;
@@ -29,6 +29,7 @@ public class MainActivity extends TabNavigatorActivity
 
   private static final int LAYOUT = R.layout.frame_layout;
   @Inject Presenter presenter;
+  @Inject AnalyticsManager analytics;
   private InstallManager installManager;
   private View snackBarLayout;
   private PublishRelay<Void> installErrorsDismissEvent;

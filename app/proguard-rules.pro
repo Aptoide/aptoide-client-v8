@@ -28,6 +28,8 @@
 -keepattributes Signature
 -keepattributes Exceptions
 
+-keepnames class rx.Single
+
 -keepclasseswithmembers class * {
     @retrofit2.http.* <methods>;
 }

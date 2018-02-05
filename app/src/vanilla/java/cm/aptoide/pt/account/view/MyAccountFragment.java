@@ -27,8 +27,9 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
@@ -43,10 +44,10 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.AptoideNotification;
 import cm.aptoide.pt.notification.view.InboxAdapter;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
-import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Collections;
 import java.util.List;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -81,6 +82,8 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
   private OkHttpClient httpClient;
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private CrashReport crashReport;
+  @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
 
   public static Fragment newInstance() {
     return new MyAccountFragment();
@@ -125,6 +128,7 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
     setHasOptionsMenu(true);
     accountManager =
         ((AptoideApplication) getActivity().getApplicationContext()).getAccountManager();
@@ -169,8 +173,7 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
         ((ActivityResultNavigator) getContext()).getMyAccountNavigator(),
         application.getNotificationCenter(), application.getDefaultSharedPreferences(),
         application.getNavigationTracker(), application.getNotificationAnalytics(),
-        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), navigationTracker)));
+        new PageViewsAnalytics(analyticsManager)));
   }
 
   @Override public int getContentViewId() {

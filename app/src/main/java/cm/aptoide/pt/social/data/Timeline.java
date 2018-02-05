@@ -189,5 +189,9 @@ public class Timeline {
     return updateRepository.setExcluded(updatePackageName, true)
         .toCompletable();
   }
+
+  public boolean hasMore() {
+    return timelineRepository.hasMore();
+  }
 }
 

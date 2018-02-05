@@ -2,7 +2,6 @@ package cm.aptoide.pt.timeline.post;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -33,13 +32,9 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.WebService;
-import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.navigator.TabNavigator;
@@ -49,18 +44,17 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.BackButtonActivity;
 import cm.aptoide.pt.view.custom.SimpleDividerItemDecoration;
 import cm.aptoide.pt.view.fragment.FragmentView;
-import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.List;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
+import javax.inject.Inject;
 import rx.Completable;
 import rx.Observable;
 
 public class PostFragment extends FragmentView implements PostView {
   public static final String OPEN_SOURCE = "open_source";
   private static final int MAX_CHARACTERS = 200;
+  @Inject AnalyticsManager analyticsManager;
   private ProgressBar previewLoading;
   private RecyclerView relatedApps;
   private EditText userInput;
@@ -117,6 +111,7 @@ public class PostFragment extends FragmentView implements PostView {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     installedRepository = RepositoryFactory.getInstalledRepository(getContext());
@@ -124,20 +119,7 @@ public class PostFragment extends FragmentView implements PostView {
     postClick = PublishRelay.create();
     loginAction = PublishRelay.create();
     openUploaderButton = PublishRelay.create();
-    SharedPreferences sharedPreferences =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
-    TokenInvalidator tokenInvalidator =
-        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
-    BodyInterceptor<BaseBody> bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    OkHttpClient okHttpClient =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
-    Converter.Factory converterFactory = WebService.getDefaultConverter();
-
-    analytics = new PostAnalytics(Analytics.getInstance(),
-        AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
-        okHttpClient, converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID,
-        sharedPreferences, application.getNavigationTracker());
+    analytics = new PostAnalytics(application.getNavigationTracker(), analyticsManager);
     handleAnalytics();
     setHasOptionsMenu(true);
   }
@@ -159,7 +141,7 @@ public class PostFragment extends FragmentView implements PostView {
   }
 
   private void handleAnalytics() {
-    analytics.sendOpenEvent((PostAnalytics.OpenSource) getArguments().getSerializable(OPEN_SOURCE));
+    analytics.sendOpenEvent((PostAnalytics.OpenSource) getArguments().getSerializable(OPEN_SOURCE), isExternalOpen());
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -425,6 +407,12 @@ public class PostFragment extends FragmentView implements PostView {
 
   @Override public String getExternalUrlToShare() {
     return externalUrlProvider != null ? externalUrlProvider.getUrlToShare() : null;
+  }
+
+  @Override public boolean isExternalOpen(){
+    return getExternalUrlToShare() != null && !getExternalUrlToShare()
+        .trim()
+        .isEmpty();
   }
 
   private void handlePreviewLayout() {

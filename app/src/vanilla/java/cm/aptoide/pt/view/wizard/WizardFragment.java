@@ -13,6 +13,7 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.LoginBottomSheet;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -38,6 +39,7 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
 
   public static final int LAYOUT = R.layout.fragment_wizard;
   private static final String PAGE_INDEX = "page_index";
+  AptoideViewPager.SimpleOnPageChangeListener pageChangeListener;
   private WizardPagerAdapter viewPagerAdapter;
   private AptoideViewPager viewPager;
   private RadioGroup radioGroup;
@@ -46,9 +48,9 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
   private List<RadioButton> wizardButtons;
   private View skipOrNextLayout;
   private LoginBottomSheet loginBottomSheet;
-
   private boolean isInPortraitMode;
   private int currentPosition;
+  private Runnable registerViewpagerCurrentItem;
 
   public static WizardFragment newInstance() {
     return new WizardFragment();
@@ -87,6 +89,18 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
         .getSimpleName());
   }
 
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    pageChangeListener = new AptoideViewPager.SimpleOnPageChangeListener() {
+      @Override public void onPageSelected(int position) {
+        if (position == 0) {
+          navigationTracker.registerScreen(
+              ScreenTagHistory.Builder.build(WizardPageOneFragment.class.getSimpleName(), "0"));
+        }
+      }
+    };
+    super.onViewCreated(view, savedInstanceState);
+  }
+
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
     currentPosition = 0;
@@ -110,13 +124,20 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
 
     final AptoideAccountManager accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+    final AccountAnalytics accountAnalytics = ((AptoideApplication) getContext().getApplicationContext()).getAccountAnalytics();
     WizardPresenter presenter =
-        new WizardPresenter(this, accountManager, CrashReport.getInstance());
+        new WizardPresenter(this, accountManager, CrashReport.getInstance(), accountAnalytics);
     attachPresenter(presenter);
     viewPager.addOnPageChangeListener(presenter);
+    viewPager.addOnPageChangeListener(pageChangeListener);
+    registerViewpagerCurrentItem =
+        () -> pageChangeListener.onPageSelected(viewPager.getCurrentItem());
+    viewPager.post(registerViewpagerCurrentItem);
   }
 
   @Override public void onDestroyView() {
+    viewPager.removeOnPageChangeListener(pageChangeListener);
+    viewPager.removeCallbacks(registerViewpagerCurrentItem);
     skipOrNextLayout = null;
     wizardButtons = null;
     radioGroup = null;

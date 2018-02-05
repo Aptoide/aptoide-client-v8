@@ -1,9 +1,7 @@
 package cm.aptoide.pt.addressbook;
 
-import android.os.Bundle;
-import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.events.FacebookEvent;
-import com.facebook.appevents.AppEventsLogger;
+import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,85 +12,86 @@ import java.util.Map;
 public class AddressBookAnalytics {
 
   public static final String HAS_NEW_CONNECTIONS_SCREEN = "Has New Connections";
-  public static final String NO_NEW_CONNECTIONS_SCREEN = "No New Connections";
-  public static final String NOT_ABLE_TO_CONNECT_SCREEN = "Not Able to Connect";
-  private final Analytics analytics;
-  private final AppEventsLogger facebook;
+  public static final String FOLLOW_FRIENDS_CHOOSE_NETWORK = "Follow_Friends_Choose_Network";
+  public static final String FOLLOW_FRIENDS_HOW_TO = "Follow_Friends_How_To";
+  public static final String FOLLOW_FRIENDS_APTOIDE_ACCESS = "Follow_Friends_Aptoide_Access";
+  public static final String FOLLOW_FRIENDS_NEW_CONNECTIONS = "Follow_Friends_New_Connections";
+  public static final String FOLLOW_FRIENDS_SET_MY_PHONENUMBER =
+      "Follow_Friends_Set_My_Phonenumber";
+  private static final String CHOOSE_NETWORK_ACTION = "choose_network_action";
+  private static final String ACTION = "action";
+  private final AnalyticsManager analyticsManager;
+  private final NavigationTracker navigationTracker;
 
-  public AddressBookAnalytics(Analytics analytics, AppEventsLogger facebook) {
-    this.analytics = analytics;
-    this.facebook = facebook;
+  public AddressBookAnalytics(AnalyticsManager analyticsManager,
+      NavigationTracker navigationTracker) {
+    this.analyticsManager = analyticsManager;
+    this.navigationTracker = navigationTracker;
   }
 
   public void sendSyncFacebookEvent() {
-    analytics.sendEvent(new FacebookEvent(facebook, "Follow_Friends_Choose_Network",
-        createBundleData("choose_network_action", "Facebook")));
+    analyticsManager.logEvent(createMapData(CHOOSE_NETWORK_ACTION, "Facebook"),
+        FOLLOW_FRIENDS_CHOOSE_NETWORK, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendSyncTwitterEvent() {
-    analytics.sendEvent(new FacebookEvent(facebook, "Follow_Friends_Choose_Network",
-        createBundleData("choose_network_action", "Twitter")));
+    analyticsManager.logEvent(createMapData(CHOOSE_NETWORK_ACTION, "Twitter"),
+        FOLLOW_FRIENDS_CHOOSE_NETWORK, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendSyncAddressBookEvent() {
-    analytics.sendEvent(new FacebookEvent(facebook, "Follow_Friends_Choose_Network",
-        createBundleData("choose_network_action", "Sync Address Book")));
+    analyticsManager.logEvent(createMapData(CHOOSE_NETWORK_ACTION, "Sync Address Book"),
+        FOLLOW_FRIENDS_CHOOSE_NETWORK, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendHowAptoideUsesYourDataEvent() {
-    analytics.sendEvent(new FacebookEvent(facebook, "Follow_Friends_How_To"));
+    analyticsManager.logEvent(null, FOLLOW_FRIENDS_HOW_TO, AnalyticsManager.Action.CLICK,
+        getViewName(true));
   }
 
   public void sendAllowAptoideAccessToContactsEvent() {
-    analytics.sendEvent(new FacebookEvent(facebook, "Follow_Friends_Aptoide_Access",
-        createBundleData("action", "Allow")));
+    analyticsManager.logEvent(createMapData(ACTION, "Allow"), FOLLOW_FRIENDS_APTOIDE_ACCESS,
+        AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendDenyAptoideAccessToContactsEvent() {
-    analytics.sendEvent(new FacebookEvent(facebook, "Follow_Friends_Aptoide_Access",
-        createBundleData("action", "Deny")));
+    analyticsManager.logEvent(createMapData(ACTION, "Deny"), FOLLOW_FRIENDS_APTOIDE_ACCESS,
+        AnalyticsManager.Action.OPEN, getViewName(true));
   }
 
   public void sendNewConnectionsAllowFriendsToFindYouEvent(String screen) {
-    analytics.sendEvent(new FacebookEvent(facebook, "Follow_Friends_New_Connections",
-        createScreenBundleData("action", "Allow friend to find you", screen)));
+    Map<String, Object> data = createMapData(ACTION, "Allow friend to find you");
+    data.put("screen", screen);
+    analyticsManager.logEvent(data, FOLLOW_FRIENDS_NEW_CONNECTIONS, AnalyticsManager.Action.CLICK,
+        getViewName(true));
   }
 
   public void sendNewConnectionsDoneEvent(String screen) {
-    analytics.sendEvent(new FacebookEvent(facebook, "Follow_Friends_New_Connections",
-        createScreenBundleData("action", "Done", screen)));
+    Map<String, Object> data = createMapData(ACTION, "Done");
+    data.put("screen", screen);
+    analyticsManager.logEvent(data, FOLLOW_FRIENDS_NEW_CONNECTIONS, AnalyticsManager.Action.CLICK,
+        getViewName(true));
   }
 
   public void sendNewConnectionsShareEvent(String screen) {
-    analytics.sendEvent(new FacebookEvent(facebook, "Follow_Friends_New_Connections",
-        createScreenBundleData("action", "Share", screen)));
+    Map<String, Object> data = createMapData(ACTION, "Share");
+    data.put("screen", screen);
+    analyticsManager.logEvent(data, FOLLOW_FRIENDS_NEW_CONNECTIONS, AnalyticsManager.Action.CLICK,
+        getViewName(true));
   }
 
   public void sendShareYourPhoneSuccessEvent() {
-    analytics.sendEvent(new FacebookEvent(facebook, "Follow_Friends_Set_My_Phonenumber"));
+    analyticsManager.logEvent(null, FOLLOW_FRIENDS_SET_MY_PHONENUMBER,
+        AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
-  private Map<String, String> createScreenMapData(String key, String value, String screen) {
-    final Map<String, String> data = createMapData(key, value);
-    data.put("screen", screen);
-    return data;
-  }
-
-  private Bundle createScreenBundleData(String key, String value, String screen) {
-    final Bundle data = createBundleData(key, value);
-    data.putString("screen", screen);
-    return data;
-  }
-
-  private Bundle createBundleData(String key, String value) {
-    final Bundle data = new Bundle();
-    data.putString(key, value);
-    return data;
-  }
-
-  private Map<String, String> createMapData(String key, String value) {
-    final Map<String, String> data = new HashMap<>();
+  private Map<String, Object> createMapData(String key, String value) {
+    final Map<String, Object> data = new HashMap<>();
     data.put(key, value);
     return data;
+  }
+
+  private String getViewName(boolean isCurrent) {
+    return navigationTracker.getViewName(isCurrent);
   }
 }

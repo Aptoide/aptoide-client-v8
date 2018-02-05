@@ -1,6 +1,5 @@
-package cm.aptoide.pt.analytics.events;
+package cm.aptoide.pt.analytics.analytics;
 
-import cm.aptoide.pt.analytics.Event;
 import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -9,22 +8,17 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by trinkes on 18/09/2017.
+ * Created by trinkes on 11/01/2018.
  */
 
-public class KnockEvent implements Event {
-  private final String url;
+public class HttpKnockEventLogger {
   private final OkHttpClient client;
 
-  public KnockEvent(String url, OkHttpClient client) {
-    this.url = url;
+  public HttpKnockEventLogger(OkHttpClient client) {
     this.client = client;
   }
 
-  @Override public void send() {
-    if (url == null) {
-      return;
-    }
+  public void log(String url) {
     Request click = new Request.Builder().url(url)
         .build();
     client.newCall(click)

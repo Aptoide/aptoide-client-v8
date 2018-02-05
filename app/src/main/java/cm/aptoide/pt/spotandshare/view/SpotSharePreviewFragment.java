@@ -12,18 +12,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.Analytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.presenter.SpotSharePreviewPresenter;
 import cm.aptoide.pt.presenter.SpotSharePreviewView;
 import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.view.fragment.FragmentView;
-import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
+import javax.inject.Inject;
 import rx.Observable;
 
 /**
@@ -32,11 +31,12 @@ import rx.Observable;
 public class SpotSharePreviewFragment extends FragmentView implements SpotSharePreviewView {
 
   private static String SHOW_TOOLBAR_KEY = "SHOW_TOOLBAR_KEY";
+  @Inject NavigationTracker navigationTracker;
+  @Inject AnalyticsManager analyticsManager;
   private Button startButton;
   private Toolbar toolbar;
   private boolean showToolbar;
   private SpotAndShareAnalytics spotAndShareAnalytics;
-  private NavigationTracker navigationTracker;
   private PageViewsAnalytics pageViewsAnalytics;
 
   public static Fragment newInstance(boolean showToolbar) {
@@ -54,16 +54,12 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
     showToolbar = getArguments().getBoolean(SHOW_TOOLBAR_KEY);
-    spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
-    navigationTracker =
-        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
-    pageViewsAnalytics =
-        new PageViewsAnalytics(AppEventsLogger.newLogger(getContext().getApplicationContext()),
-            Analytics.getInstance(), navigationTracker);
+    spotAndShareAnalytics = new SpotAndShareAnalytics(analyticsManager, navigationTracker);
+    pageViewsAnalytics = new PageViewsAnalytics(analyticsManager);
     navigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName()));
-    pageViewsAnalytics.sendPageViewedEvent();
     setHasOptionsMenu(true);
   }
 

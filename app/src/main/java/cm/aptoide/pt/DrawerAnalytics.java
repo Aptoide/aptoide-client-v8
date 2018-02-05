@@ -1,9 +1,9 @@
 package cm.aptoide.pt;
 
-import android.os.Bundle;
-import cm.aptoide.pt.analytics.Analytics;
-import cm.aptoide.pt.analytics.events.FacebookEvent;
-import com.facebook.appevents.AppEventsLogger;
+import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by pedroribeiro on 17/04/17.
@@ -11,26 +11,33 @@ import com.facebook.appevents.AppEventsLogger;
 
 public class DrawerAnalytics {
 
-  private final Analytics analytics;
-  private final AppEventsLogger facebook;
+  public static final String DRAWER_OPEN_EVENT = "Drawer_Opened";
+  public static final String DRAWER_INTERACT_EVENT = "Drawer_Interact";
+  private final AnalyticsManager analyticsManager;
+  private final NavigationTracker navigationTracker;
 
-  public DrawerAnalytics(Analytics analytics, AppEventsLogger facebook) {
-    this.analytics = analytics;
-    this.facebook = facebook;
+  public DrawerAnalytics(AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
+    this.analyticsManager = analyticsManager;
+    this.navigationTracker = navigationTracker;
   }
 
   public void drawerOpen() {
-    analytics.sendEvent(new FacebookEvent(facebook, "Drawer_Opened"));
+    analyticsManager.logEvent(null, DRAWER_OPEN_EVENT, AnalyticsManager.Action.CLICK,
+        getViewName(true));
   }
 
   public void drawerInteract(String origin) {
-    analytics.sendEvent(
-        new FacebookEvent(facebook, "Drawer_Interact", createBundleData("action", origin)));
+    analyticsManager.logEvent(createMapData("action", origin), DRAWER_INTERACT_EVENT,
+        AnalyticsManager.Action.CLICK, getViewName(false));
   }
 
-  private Bundle createBundleData(String key, String value) {
-    final Bundle data = new Bundle();
-    data.putString(key, value);
+  private Map<String, Object> createMapData(String key, String value) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(key, value);
     return data;
+  }
+
+  private String getViewName(boolean isCurrent) {
+    return navigationTracker.getViewName(isCurrent);
   }
 }

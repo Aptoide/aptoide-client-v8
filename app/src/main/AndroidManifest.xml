@@ -375,14 +375,16 @@
         android:name="com.mopub.common.MoPubBrowser"
         android:configChanges="keyboardHidden|orientation|screenSize"/>
 
-    <receiver android:name=".widget.SearchWidgetProvider"
-              android:label="Aptoide Search">
+    <receiver
+        android:name=".widget.SearchWidgetProvider"
+        android:label="Aptoide Search">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
         <action android:name="android.appwidget.action.ACTION_WIDGET_RECEIVER"/>
       </intent-filter>
-      <meta-data android:name="android.appwidget.provider"
-          android:resource="@xml/widget_search_app" />
+      <meta-data
+          android:name="android.appwidget.provider"
+          android:resource="@xml/widget_search_app"/>
     </receiver>
 
   </application>

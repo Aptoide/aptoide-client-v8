@@ -5,12 +5,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
@@ -20,18 +24,17 @@ import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
-import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.Result;
-import cm.aptoide.pt.download.InstallEvent;
 import cm.aptoide.pt.install.rollback.RollbackRepository;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.root.RootAvailabilityManager;
-import cm.aptoide.pt.util.ReferrerUtils;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.updates.UpdateRepository;
+import cm.aptoide.pt.util.ReferrerUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.q.QManager;
-import com.facebook.appevents.AppEventsLogger;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
@@ -42,20 +45,22 @@ import rx.subscriptions.CompositeSubscription;
 public class InstalledIntentService extends IntentService {
 
   private static final String TAG = InstalledIntentService.class.getName();
+  @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
+  @Inject ConnectivityManager connectivityManager;
+  @Inject TelephonyManager telephonyManager;
+  @Inject InstallAnalytics installAnalytics;
   private SharedPreferences sharedPreferences;
-
   private AdsRepository adsRepository;
   private RollbackRepository repository;
   private UpdateRepository updatesRepository;
   private CompositeSubscription subscriptions;
-  private Analytics analytics;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private InstallManager installManager;
   private RootAvailabilityManager rootAvailabilityManager;
   private QManager qManager;
   private MinimalAdMapper adMapper;
-  private InstallAnalytics installAnalytics;
   private PackageManager packageManager;
 
   public InstalledIntentService() {
@@ -64,6 +69,8 @@ public class InstalledIntentService extends IntentService {
 
   @Override public void onCreate() {
     super.onCreate();
+    ((AptoideApplication) getApplicationContext()).getApplicationComponent()
+        .inject(this);
     adMapper = new MinimalAdMapper();
     sharedPreferences =
         ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences();
@@ -75,16 +82,11 @@ public class InstalledIntentService extends IntentService {
     adsRepository = ((AptoideApplication) getApplicationContext()).getAdsRepository();
     repository = RepositoryFactory.getRollbackRepository(getApplicationContext());
     updatesRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
-
     subscriptions = new CompositeSubscription();
-    analytics = Analytics.getInstance();
     installManager =
         ((AptoideApplication) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
     rootAvailabilityManager =
         ((AptoideApplication) getApplicationContext()).getRootAvailabilityManager();
-    installAnalytics =
-        new InstallAnalytics(analytics, AppEventsLogger.newLogger(getApplicationContext()),
-            CrashReport.getInstance());
     packageManager = getPackageManager();
   }
 
@@ -193,20 +195,10 @@ public class InstalledIntentService extends IntentService {
 
   private void sendInstallEvent(String packageName, PackageInfo packageInfo) {
     if (packageInfo != null) {
-      InstallEvent event =
-          (InstallEvent) analytics.get(packageName + packageInfo.versionCode, InstallEvent.class);
-      installAnalytics.installCompleted(packageName, packageInfo.versionCode);
-      if (event != null) {
-        event.setPhoneRooted(rootAvailabilityManager.isRootAvailable()
-            .toBlocking()
-            .value());
-        event.setResultStatus(Result.ResultStatus.SUCC);
-        analytics.sendEvent(event);
-        return;
-      }
-
-      CrashReport.getInstance()
-          .log(new NullPointerException("Event is null."));
+      installAnalytics.installCompleted(packageName, packageInfo.versionCode,
+          rootAvailabilityManager.isRootAvailable()
+              .toBlocking()
+              .value(), ManagerPreferences.allowRootInstallation(sharedPreferences));
       return;
     }
 
@@ -227,7 +219,7 @@ public class InstalledIntentService extends IntentService {
         .first();
 
     if (update != null && update.getPackageName() != null && update.getTrustedBadge() != null) {
-      installAnalytics.sendRepalcedEvent(packageName);
+      installAnalytics.sendReplacedEvent(packageName);
     }
 
     PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName, getPackageManager());

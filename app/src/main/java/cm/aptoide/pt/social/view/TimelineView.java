@@ -33,7 +33,7 @@ public interface TimelineView extends View {
 
   Observable<Void> refreshes();
 
-  Observable<Void> reachesBottom();
+  Observable<Object> reachesBottom();
 
   Observable<CardTouchEvent> postClicked();
 
@@ -104,4 +104,10 @@ public interface TimelineView extends View {
   Single<String> takeFeedbackScreenShot();
 
   void showUserUnsubscribedMessage(String userName);
+
+  void showLastComment(String comment);
+
+  void sendCommentSuccessAnalytics(String postId);
+
+  void sendCommentErrorAnalytics(String postId);
 }

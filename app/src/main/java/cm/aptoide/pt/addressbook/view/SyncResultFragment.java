@@ -12,17 +12,18 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.addressbook.data.Contact;
-import cm.aptoide.pt.analytics.Analytics;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.presenter.SyncResultContract;
 import cm.aptoide.pt.presenter.SyncResultPresenter;
 import cm.aptoide.pt.view.fragment.UIComponentFragment;
-import com.facebook.appevents.AppEventsLogger;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
 
 /**
  * Created by jdandrade on 13/02/2017.
@@ -42,6 +43,8 @@ public class SyncResultFragment extends UIComponentFragment implements SyncResul
   private TextView successMessage;
   private String entranceTag;
   private String marketName;
+  @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
 
   public static Fragment newInstance(List<Contact> contacts, String tag) {
     SyncResultFragment syncSuccessFragment = new SyncResultFragment();
@@ -72,12 +75,12 @@ public class SyncResultFragment extends UIComponentFragment implements SyncResul
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     marketName = application.getMarketName();
     mActionsListener = new SyncResultPresenter(this,
-        new AddressBookAnalytics(Analytics.getInstance(),
-            AppEventsLogger.newLogger(getContext().getApplicationContext())),
+        new AddressBookAnalytics(analyticsManager,navigationTracker),
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
             getString(R.string.addressbook_about),
             getString(R.string.addressbook_data_about, marketName)));
