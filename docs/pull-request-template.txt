@@ -31,11 +31,11 @@
 ** Code Review Checklist **
 
 - [ ] Architecture
-- [ ] Documentation on public interfaces
-- [ ] Database changed? 
-	- [  ] If yes - Database migration?
-- [ ] Remove comments & unused code & forgotten testing Logs
-- [ ] Codestyle
-- [ ] Partners build
-- [ ] Unit tests pass
-- [ ] Functional QA tests pass
+- [ ] Documentation on public interfaces
+- [ ] Database changed?
+- [ ] If yes - Database migration?
+- [ ] Remove comments & unused code & forgotten testing Logs
+- [ ] Codestyle
+- [ ] Partners build
+- [ ] Unit tests pass
+- [ ] Functional QA tests pass
