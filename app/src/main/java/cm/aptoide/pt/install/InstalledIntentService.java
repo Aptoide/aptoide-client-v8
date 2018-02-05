@@ -5,15 +5,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
-import cm.aptoide.pt.analytics.NavigationTracker;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
@@ -44,10 +40,6 @@ import rx.subscriptions.CompositeSubscription;
 public class InstalledIntentService extends IntentService {
 
   private static final String TAG = InstalledIntentService.class.getName();
-  @Inject AnalyticsManager analyticsManager;
-  @Inject NavigationTracker navigationTracker;
-  @Inject ConnectivityManager connectivityManager;
-  @Inject TelephonyManager telephonyManager;
   @Inject InstallAnalytics installAnalytics;
   private SharedPreferences sharedPreferences;
   private AdsRepository adsRepository;

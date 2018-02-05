@@ -55,8 +55,7 @@ public class DefaultInstaller implements Installer {
   private InstallerAnalytics installerAnalytics;
 
   public DefaultInstaller(PackageManager packageManager, InstallationProvider installationProvider,
-      FileUtils fileUtils, boolean debug,
-      InstalledRepository installedRepository, int rootTimeout,
+      FileUtils fileUtils, boolean debug, InstalledRepository installedRepository, int rootTimeout,
       RootAvailabilityManager rootAvailabilityManager, SharedPreferences sharedPreferences,
       InstallerAnalytics installerAnalytics) {
     this.packageManager = packageManager;

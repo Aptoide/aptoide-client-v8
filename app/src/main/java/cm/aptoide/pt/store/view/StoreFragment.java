@@ -235,6 +235,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
       pagerSlidingTabStrip = null;
     }
     viewPager.removeCallbacks(registerViewpagerCurrentItem);
+    viewPager.removeOnPageChangeListener(pageChangeListener);
     super.onDestroyView();
   }
 
@@ -353,7 +354,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    final SuggestionCursorAdapter suggestionCursorAdapter = new SuggestionCursorAdapter(getContext());
+    final SuggestionCursorAdapter suggestionCursorAdapter =
+        new SuggestionCursorAdapter(getContext());
 
     if (hasSearchFromStoreFragment()) {
       final Toolbar toolbar = getToolbar();
@@ -363,7 +365,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
       appSearchSuggestionsView =
           new AppSearchSuggestionsView(this, RxView.clicks(toolbar), crashReport,
-              suggestionCursorAdapter, PublishSubject.create(), toolbarMenuItemClick, searchAnalytics);
+              suggestionCursorAdapter, PublishSubject.create(), toolbarMenuItemClick,
+              searchAnalytics);
 
       final AptoideApplication application =
           (AptoideApplication) getContext().getApplicationContext();

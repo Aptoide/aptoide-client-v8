@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
@@ -37,7 +36,6 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
   private Toolbar toolbar;
   private boolean showToolbar;
   private SpotAndShareAnalytics spotAndShareAnalytics;
-  private PageViewsAnalytics pageViewsAnalytics;
 
   public static Fragment newInstance(boolean showToolbar) {
     Bundle args = new Bundle();
@@ -57,7 +55,6 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
     getFragmentComponent(savedInstanceState).inject(this);
     showToolbar = getArguments().getBoolean(SHOW_TOOLBAR_KEY);
     spotAndShareAnalytics = new SpotAndShareAnalytics(analyticsManager, navigationTracker);
-    pageViewsAnalytics = new PageViewsAnalytics(analyticsManager);
     navigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName()));
     setHasOptionsMenu(true);

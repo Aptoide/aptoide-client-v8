@@ -10,7 +10,6 @@ import android.view.View;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -31,7 +30,6 @@ import rx.subjects.PublishSubject;
 public class InboxFragment extends BaseToolbarFragment implements InboxView {
 
   @Inject AnalyticsManager analyticsManager;
-  @Inject NavigationTracker navigationTracker;
   private RecyclerView list;
   private InboxAdapter adapter;
   private PublishSubject<AptoideNotification> notificationSubject;

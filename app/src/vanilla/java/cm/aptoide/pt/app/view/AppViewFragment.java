@@ -22,7 +22,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -90,7 +89,6 @@ import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.install.view.remote.RemoteInstallDialog;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -157,9 +155,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
   @Inject DownloadAnalytics downloadAnalytics;
-  @Inject ConnectivityManager connectivityManager;
-  @Inject TelephonyManager telephonyManager;
   @Inject InstallAnalytics installAnalytics;
+  @Inject AccountNavigator accountNavigator;
   private AppViewModel appViewModel;
   private AppViewHeader header;
   private InstallManager installManager;
@@ -186,7 +183,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private AppViewSimilarAppAnalytics appViewSimilarAppAnalytics;
   private MinimalAdMapper adMapper;
   private PublishRelay installAppRelay;
-  private AccountNavigator accountNavigator;
   private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
   private CrashReport crashReport;
   private AppSearchSuggestionsView appSearchSuggestionsView;
@@ -344,8 +340,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     appViewModel = new AppViewModel();
-    super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
+    super.onCreate(savedInstanceState);
+
     handleSavedInstance(savedInstanceState);
 
     final AptoideApplication application =
@@ -358,7 +355,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     this.appViewModel.setqManager(application.getQManager());
     purchaseBundleMapper = application.getPurchaseBundleMapper();
     final AptoideAccountManager accountManager = application.getAccountManager();
-    accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
     installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
     final BodyInterceptor<BaseBody> bodyInterceptor =
         application.getAccountSettingsBodyInterceptorPoolV7();

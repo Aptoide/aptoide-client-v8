@@ -44,8 +44,8 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
 
     return new GetAppRequest(getHost(sharedPreferences),
-        new Body(appId, packageName, sharedPreferences), bodyInterceptor,
-        httpClient, converterFactory, tokenInvalidator);
+        new Body(appId, packageName, sharedPreferences), bodyInterceptor, httpClient,
+        converterFactory, tokenInvalidator);
   }
 
   public static GetAppRequest of(String packageName, BodyInterceptor<BaseBody> bodyInterceptor,
@@ -64,8 +64,7 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
 
     return new GetAppRequest(getHost(sharedPreferences), new Body(sharedPreferences, md5),
-        bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator);
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
   }
 
   public static GetAppRequest ofUname(String uname, BodyInterceptor<BaseBody> bodyInterceptor,
@@ -104,8 +103,7 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
     @JsonProperty("store_name") private String storeName;
     private Node nodes;
 
-    public Body(Long appId, String packageName,
-        SharedPreferences sharedPreferences) {
+    public Body(Long appId, String packageName, SharedPreferences sharedPreferences) {
       this(appId, sharedPreferences);
       this.nodes = new Node(appId, packageName);
     }
