@@ -106,7 +106,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
         if (fromShortcut.hasExtra("search")) {
           if (fromShortcut.getBooleanExtra("search", false)) {
             shortcutNavigation = true;
-            Logger.v(TAG, "the search shortcut was used to reach this!");
             if (shortcutManager != null) {
               shortcutManager.reportShortcutUsed("search");
             }
@@ -114,7 +113,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
         } else if (fromShortcut.hasExtra("timeline")) {
           if (fromShortcut.getBooleanExtra("timeline", false)) {
             shortcutNavigation = true;
-            Logger.w(TAG, "the timeline shortcut was used to reach this!");
             if (shortcutManager != null) {
               shortcutManager.reportShortcutUsed("timeline");
             }
