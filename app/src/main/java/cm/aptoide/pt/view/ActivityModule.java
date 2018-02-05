@@ -21,6 +21,7 @@ import cm.aptoide.pt.account.view.UriToPathResolver;
 import cm.aptoide.pt.account.view.store.ManageStoreNavigator;
 import cm.aptoide.pt.account.view.user.ManageUserNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -48,6 +49,7 @@ import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
+import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.util.ApkFy;
@@ -60,6 +62,7 @@ import dagger.Module;
 import dagger.Provides;
 import java.util.Map;
 import javax.inject.Named;
+import rx.subjects.PublishSubject;
 
 import static android.content.Context.WINDOW_SERVICE;
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -129,12 +132,13 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       NavigationTracker navigationTracker, PageViewsAnalytics pageViewsAnalytics,
       SearchNavigator searchNavigator, SearchAnalytics searchAnalytics,
       DeepLinkAnalytics deepLinkAnalytics, AppShortcutsAnalytics appShortcutsAnalytics,
-      AptoideAccountManager accountManager, TimelineAnalytics timelineAnalytics) {
+      AptoideAccountManager accountManager, TimelineAnalytics timelineAnalytics,
+      StoreAnalytics storeAnalytics, AdsRepository adsRepository) {
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
         (TabNavigator) activity, (DeepLinkManager.DeepLinkMessages) activity, sharedPreferences,
         storeAccessor, defaultTheme, notificationAnalytics, navigationTracker, pageViewsAnalytics,
         searchNavigator, searchAnalytics, appShortcutsAnalytics, accountManager, deepLinkAnalytics,
-        timelineAnalytics);
+        timelineAnalytics, storeAnalytics, PublishSubject.create(), adsRepository);
   }
 
   @ActivityScope @Provides Presenter provideMainPresenter(
