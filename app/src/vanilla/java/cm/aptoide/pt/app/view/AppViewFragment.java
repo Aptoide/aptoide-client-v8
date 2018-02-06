@@ -22,7 +22,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -156,8 +155,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
   @Inject DownloadAnalytics downloadAnalytics;
-  @Inject ConnectivityManager connectivityManager;
-  @Inject TelephonyManager telephonyManager;
   @Inject InstallAnalytics installAnalytics;
   @Inject AccountNavigator accountNavigator;
   private AppViewModel appViewModel;

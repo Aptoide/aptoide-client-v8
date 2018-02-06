@@ -30,11 +30,11 @@ public class DownloadsFragment extends NavigationTrackFragment implements Downlo
 
   @Inject DownloadAnalytics downloadAnalytics;
   @Inject InstallAnalytics installAnalytics;
+  @Inject NavigationTracker navigationTracker;
   private DownloadsAdapter adapter;
   private View noDownloadsView;
   private InstallManager installManager;
   private StoreTabNavigator storeTabNavigator;
-  private NavigationTracker navigationTracker;
 
   public static DownloadsFragment newInstance() {
     return new DownloadsFragment();
@@ -43,8 +43,6 @@ public class DownloadsFragment extends NavigationTrackFragment implements Downlo
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
-    navigationTracker =
-        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
     installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
 

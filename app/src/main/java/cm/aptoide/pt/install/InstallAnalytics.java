@@ -130,22 +130,20 @@ public class InstallAnalytics {
   }
 
   public void installStarted(String packageName, int versionCode, InstallType update,
-      AnalyticsManager.Action action, AppContext context,
-      Origin origin) {
+      AnalyticsManager.Action action, AppContext context, Origin origin) {
     installStarted(packageName, versionCode, update, Collections.emptyList());
     createInstallEvent(action, context, origin, packageName, versionCode, -1, null);
   }
 
   public void installStarted(String packageName, int versionCode, InstallType update,
-      AnalyticsManager.Action action, AppContext context,
-      Origin origin, int campaignId, String abTestingGroup) {
+      AnalyticsManager.Action action, AppContext context, Origin origin, int campaignId,
+      String abTestingGroup) {
     installStarted(packageName, versionCode, update, Collections.emptyList());
     createInstallEvent(action, context, origin, packageName, versionCode, campaignId,
         abTestingGroup);
   }
 
-  private void createInstallEvent(AnalyticsManager.Action action,
-      AppContext context, Origin origin,
+  private void createInstallEvent(AnalyticsManager.Action action, AppContext context, Origin origin,
       String packageName, int installingVersion, int campaignId, String abTestingGroup) {
 
     Map<String, Object> data = new HashMap<>();
@@ -184,8 +182,7 @@ public class InstallAnalytics {
   }
 
   public void installStarted(String packageName, int versionCode, InstallType installType,
-      AnalyticsManager.Action action, AppContext context,
-      Origin origin, List<String> fragments) {
+      AnalyticsManager.Action action, AppContext context, Origin origin, List<String> fragments) {
     installStarted(packageName, versionCode, installType, fragments);
     createInstallEvent(action, context, origin, packageName, versionCode, -1, null);
   }

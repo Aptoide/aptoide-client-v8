@@ -27,7 +27,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -59,6 +58,7 @@ import rx.subjects.PublishSubject;
 public class MyAccountFragment extends BaseToolbarFragment implements MyAccountView {
 
   private static final float STROKE_SIZE = 0.04f;
+  @Inject AnalyticsManager analyticsManager;
   private AptoideAccountManager accountManager;
   private Button logoutButton;
   private TextView usernameTextView;
@@ -74,7 +74,6 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
   private TextView headerText;
   private Button moreNotificationsButton;
   private View userLayout;
-
   private PublishSubject<AptoideNotification> notificationSubject;
   private InboxAdapter adapter;
   private RecyclerView list;
@@ -82,8 +81,6 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
   private OkHttpClient httpClient;
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private CrashReport crashReport;
-  @Inject AnalyticsManager analyticsManager;
-  @Inject NavigationTracker navigationTracker;
 
   public static Fragment newInstance() {
     return new MyAccountFragment();

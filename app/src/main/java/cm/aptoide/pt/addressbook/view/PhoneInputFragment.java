@@ -41,6 +41,8 @@ import retrofit2.Converter;
 public class PhoneInputFragment extends UIComponentFragment implements PhoneInputContract.View {
 
   public static final String TAG = "TAG";
+  @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
   private PhoneInputContract.UserActionsListener mActionsListener;
   private TextView mNotNowV;
   private TextView mSharePhoneV;
@@ -51,8 +53,6 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
   private ContactUtils contactUtils;
   private String entranceTag;
   private String marketName;
-  @Inject AnalyticsManager analyticsManager;
-  @Inject NavigationTracker navigationTracker;
 
   public static PhoneInputFragment newInstance(String tag) {
     PhoneInputFragment phoneInputFragment = new PhoneInputFragment();
@@ -83,7 +83,7 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
             (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
             getContext().getContentResolver()), application.getTokenInvalidator(),
             application.getDefaultSharedPreferences()),
-        new AddressBookAnalytics(analyticsManager,navigationTracker),
+        new AddressBookAnalytics(analyticsManager, navigationTracker),
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
             getString(R.string.addressbook_about),
             getString(R.string.addressbook_data_about, marketName)));

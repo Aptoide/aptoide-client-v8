@@ -211,8 +211,8 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
 
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         getInstallType(download.getAction()),
-        action ? AnalyticsManager.Action.AUTO : AnalyticsManager.Action.CLICK,
-        AppContext.SCHEDULED, getOrigin(download.getAction()));
+        action ? AnalyticsManager.Action.AUTO : AnalyticsManager.Action.CLICK, AppContext.SCHEDULED,
+        getOrigin(download.getAction()));
   }
 
   private Origin getOrigin(int action) {

@@ -9,13 +9,15 @@ import java.util.Map;
 public class AnalyticsManager {
   private static final String TAG = AnalyticsManager.class.getSimpleName();
   private final HttpKnockEventLogger knockEventLogger;
+  private final SessionLogger sessionLogger;
 
   private Map<EventLogger, Collection<String>> eventLoggers;
 
   private AnalyticsManager(HttpKnockEventLogger knockLogger,
-      Map<EventLogger, Collection<String>> eventLoggers) {
+      Map<EventLogger, Collection<String>> eventLoggers, SessionLogger sessionLogger) {
     this.knockEventLogger = knockLogger;
     this.eventLoggers = eventLoggers;
+    this.sessionLogger = sessionLogger;
   }
 
   public void logEvent(Map<String, Object> data, String eventName, Action action, String context) {
@@ -55,6 +57,14 @@ public class AnalyticsManager {
     }
   }
 
+  public void startSession() {
+    sessionLogger.startSession();
+  }
+
+  public void endSession() {
+    sessionLogger.endSession();
+  }
+
   public enum Action {
     CLICK, SCROLL, INPUT, AUTO, ROOT, VIEW, INSTALL, OPEN, IMPRESSION, DISMISS
   }
@@ -62,6 +72,7 @@ public class AnalyticsManager {
   public static class Builder {
     private final Map<EventLogger, Collection<String>> eventLoggers;
     private HttpKnockEventLogger httpKnockEventLogger;
+    private SessionLogger sessionLogger;
 
     public Builder() {
       eventLoggers = new HashMap<>();
@@ -69,6 +80,11 @@ public class AnalyticsManager {
 
     public Builder addLogger(EventLogger eventLogger, Collection<String> supportedEvents) {
       eventLoggers.put(eventLogger, supportedEvents);
+      return this;
+    }
+
+    public Builder addSessionLogger(SessionLogger sessionLogger) {
+      this.sessionLogger = sessionLogger;
       return this;
     }
 
@@ -84,7 +100,7 @@ public class AnalyticsManager {
       if (eventLoggers.size() < 1) {
         throw new IllegalArgumentException("Analytics manager need at least one logger");
       }
-      return new AnalyticsManager(httpKnockEventLogger, eventLoggers);
+      return new AnalyticsManager(httpKnockEventLogger, eventLoggers, sessionLogger);
     }
   }
 }

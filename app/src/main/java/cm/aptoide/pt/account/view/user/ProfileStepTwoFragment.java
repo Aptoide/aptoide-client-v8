@@ -27,13 +27,12 @@ import rx.Observable;
 public class ProfileStepTwoFragment extends BaseToolbarFragment implements ProfileStepTwoView {
 
   @LayoutRes private static final int LAYOUT = R.layout.fragment_profile_step_two;
-
+  @Inject AccountAnalytics accountAnalytics;
   private Button continueBtn;
   private Button privateProfileBtn;
   private ProgressDialog waitDialog;
   private boolean externalLogin;
   private AccountNavigator accountNavigator;
-  @Inject AccountAnalytics accountAnalytics;
 
   public static ProfileStepTwoFragment newInstance() {
     return new ProfileStepTwoFragment();

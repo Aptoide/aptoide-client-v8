@@ -36,10 +36,11 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
 
   public RecommendedStoreWidget(View itemView) {
     super(itemView);
-    NavigationTracker navigationTracker = ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
-    AnalyticsManager analyticsManager = ((AptoideApplication) getContext().getApplicationContext()).getAnalyticsManager();
-    storeAnalytics =
-        new StoreAnalytics(analyticsManager, navigationTracker);
+    NavigationTracker navigationTracker =
+        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
+    AnalyticsManager analyticsManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getAnalyticsManager();
+    storeAnalytics = new StoreAnalytics(analyticsManager, navigationTracker);
   }
 
   @Override protected void assignViews(View itemView) {

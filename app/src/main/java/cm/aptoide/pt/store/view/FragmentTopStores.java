@@ -33,6 +33,8 @@ public class FragmentTopStores extends AptoideBaseFragment<BaseAdapter> implemen
 
   public static final int STORES_LIMIT_PER_REQUEST = 10;
   public static String TAG = FragmentTopStores.class.getSimpleName();
+  @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
   private int offset = 0;
   private StoreAnalytics storeAnalytics;
   private SuccessRequestListener<ListStores> listener =
@@ -42,8 +44,6 @@ public class FragmentTopStores extends AptoideBaseFragment<BaseAdapter> implemen
             CrashReport.getInstance()
                 .log(err);
           });
-  @Inject AnalyticsManager analyticsManager;
-  @Inject NavigationTracker navigationTracker;
 
   public static FragmentTopStores newInstance() {
     return new FragmentTopStores();
@@ -52,8 +52,7 @@ public class FragmentTopStores extends AptoideBaseFragment<BaseAdapter> implemen
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
-    storeAnalytics =
-        new StoreAnalytics(analyticsManager, navigationTracker);
+    storeAnalytics = new StoreAnalytics(analyticsManager, navigationTracker);
     setHasOptionsMenu(true);
   }
 
