@@ -86,7 +86,8 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
   private static final String ALL_STORES_SEARCH_LIST_STATE = "all_stores_search_list_state";
   private static final String FOLLOWED_STORES_SEARCH_LIST_STATE =
       "followed_stores_search_list_state";
-
+  @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
   private View noSearchLayout;
   private EditText noSearchLayoutSearchQuery;
   private ImageView noResultsSearchButton;
@@ -95,10 +96,8 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
   private LinearLayout allAndFollowedStoresButtonsLayout;
   private Button followedStoresButton;
   private Button allStoresButton;
-
   private RecyclerView followedStoresResultList;
   private RecyclerView allStoresResultList;
-
   private SearchViewModel viewModel;
   private SearchResultAdapter allStoresResultAdapter;
   private SearchResultAdapter followedStoresResultAdapter;
@@ -116,8 +115,6 @@ public class SearchResultFragment extends BackButtonFragment implements SearchRe
   private TrendingManager trendingManager;
   private AppSearchSuggestionsView appSearchSuggestionsView;
   private CrashReport crashReport;
-  @Inject AnalyticsManager analyticsManager;
-  @Inject NavigationTracker navigationTracker;
 
   public static SearchResultFragment newInstance(String currentQuery, String defaultStoreName) {
     return newInstance(currentQuery, false, defaultStoreName);

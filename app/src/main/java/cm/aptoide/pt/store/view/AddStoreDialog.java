@@ -124,8 +124,7 @@ public class AddStoreDialog extends BaseDialog {
         (AptoideApplication) getContext().getApplicationContext();
     analyticsManager = application.getAnalyticsManager();
     navigationTracker = application.getNavigationTracker();
-    storeAnalytics =
-        new StoreAnalytics(analyticsManager, navigationTracker);
+    storeAnalytics = new StoreAnalytics(analyticsManager, navigationTracker);
 
     searchSuggestionManager = application.getSearchSuggestionManager();
   }

@@ -17,9 +17,9 @@ public abstract class NavigationTrackFragment extends FragmentView {
 
   public static final String SHOULD_REGISTER_VIEW = "should_register_view";
   protected NavigationTracker navigationTracker;
-  private AnalyticsManager analyticsManager;
   protected PageViewsAnalytics pageViewsAnalytics;
   protected boolean shouldRegister = true;
+  private AnalyticsManager analyticsManager;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -31,8 +31,7 @@ public abstract class NavigationTrackFragment extends FragmentView {
       analyticsManager =
           ((AptoideApplication) getContext().getApplicationContext()).getAnalyticsManager();
     }
-    pageViewsAnalytics =
-        new PageViewsAnalytics(analyticsManager);
+    pageViewsAnalytics = new PageViewsAnalytics(analyticsManager);
     getFragmentExtras();
   }
 

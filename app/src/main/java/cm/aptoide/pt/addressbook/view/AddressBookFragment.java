@@ -56,6 +56,8 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
   public static final int TWITTER_REQUEST_CODE = 140;
   public static final int FACEBOOK_REQUEST_CODE = 64206;
   @Inject TwitterAuthClient mTwitterAuthClient;
+  @Inject AnalyticsManager analyticsManager;
+  @Inject NavigationTracker navigationTracker;
   private AddressBookContract.UserActionsListener mActionsListener;
   private Button addressBookSyncButton;
   private Button allowFriendsFindButton;
@@ -72,8 +74,6 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
   private TwitterSession twitterSession;
   private AddressBookAnalytics analytics;
   private String marketName;
-  @Inject AnalyticsManager analyticsManager;
-  @Inject NavigationTracker navigationTracker;
 
   public static AddressBookFragment newInstance() {
     AddressBookFragment addressBookFragment = new AddressBookFragment();
