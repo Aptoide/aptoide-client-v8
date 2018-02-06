@@ -116,7 +116,7 @@ android {
     }
 
     debug {
-      testCoverageEnabled = true
+      testCoverageEnabled = false
       buildConfigField "boolean", "CRASH_REPORTS_DISABLED", "true"
       buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_DEBUG_KEY + "\""
       ext.enableCrashlytics = false
