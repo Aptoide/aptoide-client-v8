@@ -28,7 +28,7 @@
 
 
 
-** Code Review Checklist **
+**Code Review Checklist**
 
 - [ ] Architecture
 - [ ] Documentation on public interfaces
