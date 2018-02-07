@@ -378,6 +378,9 @@ public abstract class AptoideApplication extends Application {
     return applicationComponent;
   }
 
+  /**
+   * Needs to be here, to be mocked for tests. Should be on BaseActivity if there were no tests
+   */
   public ActivityModule getActivityModule(BaseActivity activity, Intent intent,
       NotificationSyncScheduler notificationSyncScheduler, String marketName, String autoUpdateUrl,
       View view, String defaultThemeName, String defaultStoreName, boolean firstCreated, String s) {
@@ -386,6 +389,9 @@ public abstract class AptoideApplication extends Application {
         autoUpdateUrl, view, defaultThemeName, defaultStoreName, firstCreated, s);
   }
 
+  /**
+   * Needs to be here, to be mocked for tests. Should be on BaseFragment if there were no tests
+   */
   public FragmentModule getFragmentModule(BaseFragment baseFragment, Bundle savedInstanceState,
       Bundle arguments, boolean createStoreUserPrivacyEnabled, String packageName) {
     return new FragmentModule(baseFragment, savedInstanceState, arguments,
