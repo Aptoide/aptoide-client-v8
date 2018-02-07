@@ -79,11 +79,11 @@ public class SyncResultFragment extends UIComponentFragment implements SyncResul
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     marketName = application.getMarketName();
-    mActionsListener = new SyncResultPresenter(this,
-        new AddressBookAnalytics(analyticsManager, navigationTracker),
-        new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
-            getString(R.string.addressbook_about),
-            getString(R.string.addressbook_data_about, marketName)));
+    mActionsListener =
+        new SyncResultPresenter(this, new AddressBookAnalytics(analyticsManager, navigationTracker),
+            new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
+                getString(R.string.addressbook_about),
+                getString(R.string.addressbook_data_about, marketName)));
     mListAdapter = new SyncResultAdapter((ArrayList<Contact>) contacts, getContext());
   }
 

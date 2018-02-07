@@ -76,14 +76,14 @@ android {
     internal {
       dimension "mode"
       applicationIdSuffix "internal"
-      versionName "8.6.2." + getDate()
+      versionName "8.6.3." + getDate()
       versionCode project.VERSION_CODE_VANILLA_INTERNAL.toInteger()
     }
 
     dev {
       dimension "mode"
       applicationIdSuffix "dev"
-      versionName "8.6.2." + getDate()
+      versionName "8.6.3." + getDate()
       versionCode project.VERSION_CODE_VANILLA_DEV.toInteger()
     }
 
@@ -98,7 +98,7 @@ android {
     fairy {
       dimension "mode"
       applicationIdSuffix "testfairy"
-      versionName "8.6.2." + getDate()
+      versionName "8.6.3." + getDate()
       versionCode project.VERSION_CODE_VANILLA_DEV.toInteger()
     }
   }
@@ -116,7 +116,7 @@ android {
     }
 
     debug {
-      testCoverageEnabled = true
+      testCoverageEnabled = false
       buildConfigField "boolean", "CRASH_REPORTS_DISABLED", "true"
       buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_DEBUG_KEY + "\""
       ext.enableCrashlytics = false
