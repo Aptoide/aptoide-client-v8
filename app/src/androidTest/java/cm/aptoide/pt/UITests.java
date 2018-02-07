@@ -17,7 +17,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 public class UITests {
 
   /**
-   * if it shows the next_icon button it means the user is opening Aptoide for the first time and it's on the Wizard
+   * if it shows the next_icon button it means the user is opening Aptoide for the first time and
+   * it's on the Wizard
+   *
    * @return
    */
   protected static boolean isFirstTime() {

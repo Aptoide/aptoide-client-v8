@@ -49,7 +49,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * Switch screen orientation to landscape. Perform some action. Switch back again. Perform some action
+   * Switch screen orientation to landscape. Perform some action. Switch back again. Perform some
+   * action
    */
   @Test public void landscapeHomeTab() {
     Activity activity = mActivityRule.getActivity();
@@ -60,7 +61,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * Navigate to settings, press any checkbox there. switch to landscape. press checkbox again to see if it has the different result
+   * Navigate to settings, press any checkbox there. switch to landscape. press checkbox again to
+   * see if it has the different result
    */
   @Test public void landscapeSettings() {
     boolean checked;
@@ -70,7 +72,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.list)).perform(RecyclerViewActions.actionOnItemAtPosition(11, click()));
     try {
       onView(withText(R.string.yes)).perform(click());
-      checked = true; //if it doesn't fail it means that the checkbox was unchecked and is now checked
+      checked =
+          true; //if it doesn't fail it means that the checkbox was unchecked and is now checked
     } catch (Exception e) {
       checked = false;
     }
@@ -112,7 +115,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * User LoggedIn. Navigate to My Account. Presses Edit Profile. Modify name. Switch to landscape. Check if the change is still there
+   * User LoggedIn. Navigate to My Account. Presses Edit Profile. Modify name. Switch to landscape.
+   * Check if the change is still there
    */
   @Test public void landscapeEditProfileName() {
     TestType.initialization = TestType.TestTypes.LOGGEDIN;
@@ -127,7 +131,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * User LoggedIn. Navigate to My Account. Presses Edit Store. Modify store description. Switch to landscape. Check if the change is still there
+   * User LoggedIn. Navigate to My Account. Presses Edit Store. Modify store description. Switch to
+   * landscape. Check if the change is still there
    */
   @Test public void landscapeEditStoreDescription() {
     TestType.initialization = TestType.TestTypes.LOGGEDINWITHSTORE;

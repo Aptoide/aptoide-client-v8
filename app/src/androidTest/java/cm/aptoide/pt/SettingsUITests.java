@@ -51,7 +51,8 @@ import static org.hamcrest.Matchers.allOf;
 
   /**
    * Checks if Mature is turned On, after leaving the settings view.
-   * Navigate to Settings. Press Mature Checkbox. Navigate to HomeFragment. Navigate to Settings. Press Mature Checkbox
+   * Navigate to Settings. Press Mature Checkbox. Navigate to HomeFragment. Navigate to Settings.
+   * Press Mature Checkbox
    */
   @Test public void matureTest() {
     TestType.types = TestType.TestTypes.MATURE;

@@ -52,7 +52,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
 
   /**
    * User LoggedIn
-   * Navigate to My Account. Presses Edit Profile. Presses user profile image. uploads a random image. Navigate to myAccount
+   * Navigate to My Account. Presses Edit Profile. Presses user profile image. uploads a random
+   * image. Navigate to myAccount
    */
   @Test public void profilePhotoSuccess() {
     TestType.types = TestType.TestTypes.PHOTOSUCCESS;
@@ -66,7 +67,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
 
   /**
    * User LoggedIn
-   * Navigate to My Account.Presses Edit Profile. Presses user profile image. uploads 5 images. 5 erros show. Navigate to myAccount
+   * Navigate to My Account.Presses Edit Profile. Presses user profile image. uploads 5 images. 5
+   * erros show. Navigate to myAccount
    */
   @Test public void profilePhotoErrors() {
     TestType.types = TestType.TestTypes.ERRORDECONDINGTEST;
@@ -79,7 +81,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
 
   /**
    * User LoggedIn
-   * Navigate to My Account.Presses Edit Store. Presses user profile image. uploads image. Navigate to myAccount
+   * Navigate to My Account.Presses Edit Store. Presses user profile image. uploads image. Navigate
+   * to myAccount
    */
   @Test public void storePhotoSuccess() {
     TestType.types = TestType.TestTypes.PHOTOSUCCESS;
@@ -95,7 +98,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
 
   /**
    * User LoggedIn
-   * Navigate to My Account.Presses Edit Profile. Presses user profile image. uploads 5 images. 5 erros show. Navigate to myAccount
+   * Navigate to My Account.Presses Edit Profile. Presses user profile image. uploads 5 images. 5
+   * erros show. Navigate to myAccount
    */
   @Test public void storePhotoErrors() {
     TestType.types = TestType.TestTypes.ERRORDECONDINGTEST;
@@ -109,7 +113,6 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   *
    * @param isUser True if it's the edit user view. False if it's the edit store view
    */
   private void uploadImageWithError(boolean isUser) {
@@ -124,6 +127,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
 
   /**
    * Sets up to display the correct errors
+   *
    * @param isUser True if it's the edit user view. False if it's the edit store view
    */
   private void displayErrors(boolean isUser) {
