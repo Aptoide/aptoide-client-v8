@@ -68,6 +68,7 @@ import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
+import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.WebService;

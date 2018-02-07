@@ -39,8 +39,8 @@ public class MainActivity extends TabNavigatorActivity
     super.onCreate(savedInstanceState);
     getActivityComponent().inject(this);
 
-    setContentView(LAYOUT);
     final AptoideApplication application = (AptoideApplication) getApplicationContext();
+    setContentView(LAYOUT);
     installManager = application.getInstallManager(InstallerFactory.DEFAULT);
     snackBarLayout = findViewById(R.id.snackbar_layout);
     installErrorsDismissEvent = PublishRelay.create();

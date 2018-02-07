@@ -1,7 +1,10 @@
 package cm.aptoide.pt;
 
 import android.accounts.AccountManager;
+import android.content.ContentResolver;
 import android.content.SharedPreferences;
+import android.provider.Settings;
+import android.support.annotation.WorkerThread;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AccountException;
 import cm.aptoide.accountmanager.AccountFactory;
@@ -25,7 +28,10 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
+import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.networking.MultipartBodyInterceptor;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.view.TestType;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,6 +52,18 @@ public class MockApplicationModule extends ApplicationModule {
   public MockApplicationModule(AptoideApplication application, String aptoideMd5sum) {
     super(application, aptoideMd5sum);
     this.application = application;
+  }
+
+  @Override IdsRepository provideIdsRepository(SharedPreferences defaultSharedPreferences,
+      ContentResolver contentResolver) {
+    return new IdsRepository(
+        SecurePreferencesImplementation.getInstance(application.getApplicationContext(),
+            defaultSharedPreferences), application,
+        Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)) {
+      @Override @WorkerThread public synchronized String getGoogleAdvertisingId() {
+        return defaultSharedPreferences.getString("googleAdvertisingId", null);
+      }
+    };
   }
 
   @Override AptoideAccountManager provideAptoideAccountManager(AdultContent adultContent,
@@ -88,7 +106,8 @@ public class MockApplicationModule extends ApplicationModule {
       }
 
       @Override public boolean isLoggedIn() {
-        if (TestType.types.equals(TestType.TestTypes.LOGGEDIN)) {
+        if (TestType.initialization.equals(TestType.TestTypes.LOGGEDIN)
+            || TestType.initialization.equals(TestType.TestTypes.LOGGEDINWITHSTORE)) {
           return true;
         } else {
           return false;
@@ -100,7 +119,11 @@ public class MockApplicationModule extends ApplicationModule {
       }
 
       @Override public Store getStore() {
-        return null;
+        if (TestType.initialization.equals(TestType.TestTypes.LOGGEDINWITHSTORE)) {
+          return new Store(0, "", 0, "store", "DEFAULT", "", "", true);
+        } else {
+          return Store.emptyStore();
+        }
       }
 
       @Override public boolean hasStore() {
