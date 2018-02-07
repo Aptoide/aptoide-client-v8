@@ -25,6 +25,9 @@ public class MockFragmentModule extends FragmentModule {
     this.fragment = fragment;
   }
 
+  /**
+   * Mocks the error response
+   */
   @Override ImageValidator provideImageValidator() {
     Scheduler scheduler = Schedulers.computation();
     return new ImageValidator(ImageLoader.with(fragment.getContext()), scheduler) {

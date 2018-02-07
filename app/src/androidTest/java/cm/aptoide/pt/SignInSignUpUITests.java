@@ -30,9 +30,16 @@ import static cm.aptoide.pt.UITests.skipWizard;
 @RunWith(AndroidJUnit4.class) public class SignInSignUpUITests {
   private final String LOGINEMAIL = "jose.messejana@aptoide.com";
   private final String PASS = "aptoide1234";
+  /**
+   * Sets up the activity in which each test opens
+   */
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
 
+  /**
+   * Sets up whick mocks to "activate"
+   * Skips Wizards in case it's the first time opening aptoide
+   */
   @Before public void setUp() {
     TestType.types = TestType.TestTypes.SIGNSIGNUPTESTS;
     TestType.initialization = TestType.TestTypes.REGULAR;
@@ -41,24 +48,40 @@ import static cm.aptoide.pt.UITests.skipWizard;
     }
   }
 
+  /**
+   * User navigates to the LoginSignUpCredentialFragment, presses Login Button, inserts an empty email and random password.
+   * Result: Apropriate error message should be displayed"
+   */
   @Test public void signInEmptyEmail() {
     goToMyAccount();
     performLogin("", PASS);
     onView(withText(R.string.no_email_error_message)).check(matches(isDisplayed()));
   }
 
+  /**
+   * User navigates to the LoginSignUpCredentialFragment, presses Login Button, inserts random valid email and empty password.
+   * Result: Apropriate error message should display
+   */
   @Test public void signInEmptyPasswordSignIn() {
     goToMyAccount();
     performLogin(LOGINEMAIL, "");
     onView(withText(R.string.no_pass_error_message)).check(matches(isDisplayed()));
   }
 
+  /**
+   * User navigates to the LoginSignUpCredentialFragment, presses Login Button, inserts empty email and password.
+   * Result: Apropriate error message should display
+   */
   @Test public void signInEmpty() {
     goToMyAccount();
     performLogin("", "");
     onView(withText(R.string.no_email_and_pass_error_message)).check(matches(isDisplayed()));
   }
 
+  /**
+   * User navigates to the LoginSignUpCredentialFragment, presses Login Button, inserts a random valid email and password. Mock error response
+   * Result: Apropriate error message should display
+   */
   @Test public void signInWrong() {
     TestType.types = TestType.TestTypes.SIGNINWRONG;
     goToMyAccount();
@@ -66,6 +89,10 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withText(R.string.ws_error_invalid_grant)).check(matches(isDisplayed()));
   }
 
+  /**
+   * User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts an email without "@" and a random password.
+   * Result: Apropriate error message should display
+    */
   @Test public void signUpInvalidEmail() {
     TestType.types = TestType.TestTypes.INVALIDEMAIL;
     goToMyAccount();
@@ -73,30 +100,60 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withText(R.string.ws_error_IARG_106)).check(matches(isDisplayed()));
   }
 
-  @Test public void signUpInvalidPassword() {
+  /**
+   * User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts random valid email and a password with less than 8 characters.
+   * Result: Apropriate error message should display
+   */
+  @Test public void signUpInvalidPasswordLength() {
     goToMyAccount();
     performSignUp("randomemail", "igjsi1");
     onView(withText(R.string.password_validation_text)).check(matches(isDisplayed()));
   }
 
+  /**
+   * User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts random valid email and a password with invalid characters combination.
+   * Result: Apropriate error message should display
+   */
+  @Test public void signUpInvalidPasswordCharacters() {
+    goToMyAccount();
+    performSignUp("randomemail", "igjsi1");
+    onView(withText(R.string.password_validation_text)).check(matches(isDisplayed()));
+  }
+
+  /**
+   * User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts empty email and random password
+   * Result: Apropriate error message should display
+   */
   @Test public void signUpEmptyEmail() {
     goToMyAccount();
     performSignUp("", PASS);
     onView(withText(R.string.no_email_error_message)).check(matches(isDisplayed()));
   }
 
+  /**
+   * User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts random valid email and empty password.
+   * Result: Apropriate error message should display
+   */
   @Test public void signUpEmptyPassword() {
     goToMyAccount();
     performSignUp(LOGINEMAIL, "");
     onView(withText(R.string.no_pass_error_message)).check(matches(isDisplayed()));
   }
 
+  /**
+   * User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts empty email and password.
+   * Result: Apropriate error message should display
+   */
   @Test public void signUpEmpty() {
     goToMyAccount();
     performSignUp("", "");
     onView(withText(R.string.no_email_and_pass_error_message)).check(matches(isDisplayed()));
   }
 
+  /**
+   * User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts random valid email and valid password. Mock error response
+   * Result:Apropriate error message should display
+   */
   @Test public void signUpEmailExists() {
     TestType.types = TestType.TestTypes.USEDEMAIL;
     goToMyAccount();
@@ -104,6 +161,10 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withText(R.string.ws_error_WOP_9)).check(matches(isDisplayed()));
   }
 
+  /**
+   * User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts random valid email and random valid password.
+   * Result: Navigate to the necessary views to complete public registration and in the end navigates to HomeFragment.
+   */
   @Test public void signUp() {
     goToMyAccount();
     performSignUp(LOGINEMAIL, PASS);
@@ -111,6 +172,10 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.menu_item_search)).check(matches(isDisplayed()));
   }
 
+  /**
+   * User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts random valid email and random valid password.
+   * Result: Navigate to the necessary views to complete private registration and in the end navigates to HomeFragment.
+   */
   @Test public void signUpPrivateUser() {
     goToMyAccount();
     performSignUp(LOGINEMAIL, PASS);
@@ -118,6 +183,10 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.menu_item_search)).check(matches(isDisplayed()));
   }
 
+  /**
+   * User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts random valid email and random valid password.
+   * Result: Navigate to the necessary views to complete public registration passing through the MoreInfoView and in the end navigates to HomeFragment.
+   */
   @Test public void signUpMoreInfoPublicUser() {
     goToMyAccount();
     performSignUp(LOGINEMAIL, PASS);
@@ -125,6 +194,10 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.menu_item_search)).check(matches(isDisplayed()));
   }
 
+  /**
+   * User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts random valid email and random valid password.
+   * Result: Navigate to the necessary views to complete public registration, pressing create store in the last step and in the end navigates to HomeFragment.
+   */
   @Test public void signUpWithCreateStore() {
     goToMyAccount();
     performSignUp(LOGINEMAIL, PASS);
@@ -132,12 +205,21 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.menu_item_search)).check(matches(isDisplayed()));
   }
 
+  /**
+   * User navigates to the LoginSignUpCredentialFragment, presses Login Button, inserts random valid email and random valid password.
+   * Result: Navigate to HomeFragment
+   */
   @Test public void signIn() {
     goToMyAccount();
     performLogin(LOGINEMAIL, PASS);
     onView(withId(R.id.menu_item_search)).check(matches(isDisplayed()));
   }
 
+  /**
+   * Mock user logged in
+   * User navigates to MyAccount and presses Log Out
+   * Result: Navigate to HomeFragment
+   */
   @Test public void signOut() {
     TestType.initialization = TestType.TestTypes.LOGGEDIN;
     goToMyAccount();
@@ -145,6 +227,10 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.menu_item_search)).check(matches(isDisplayed()));
   }
 
+  /**
+   * First time opening Aptoide, skips first 2 views, presses login in the third one, insert random valid username and password
+   * Result: Navigate to HomeFragment
+   */
   @Test public void signInFromWizard() {
     Activity activity1 = mActivityRule.getActivity();
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity1);
@@ -158,6 +244,10 @@ import static cm.aptoide.pt.UITests.skipWizard;
     performLogin(LOGINEMAIL, PASS);
   }
 
+  /**
+   * First time opening Aptoide, skips first 2 views, presses signUp in the third one, insert random valid username and password
+   * Result: Navigate to the necessary views to complete public registration and in the end navigates to HomeFragment.
+   */
   @Test public void signUpFromWizard() {
     Activity activity1 = mActivityRule.getActivity();
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity1);
@@ -173,6 +263,11 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.menu_item_search)).check(matches(isDisplayed()));
   }
 
+  /**
+   * Presses Login Button. Inserts email and Password
+   * @param email
+   * @param pass
+   */
   private void performLogin(String email, String pass) {
     onView(withId(R.id.show_login_with_aptoide_area)).perform(click());
     onView(withId(R.id.username)).perform(click());
@@ -182,6 +277,11 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.button_login)).perform(click());
   }
 
+  /**
+   * Presses Sign Up Button. Inserts email and Password
+   * @param email
+   * @param pass
+   */
   private void performSignUp(String email, String pass) {
     onView(withId(R.id.show_join_aptoide_area)).perform(click());
     onView(withId(R.id.username)).perform(click());
@@ -191,6 +291,9 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.button_sign_up)).perform(click());
   }
 
+  /**
+   * Goes trough all the minimum necessary views to complete registration
+   */
   private void completeSignUp() {
     onView(withId(R.id.create_user_username_inserted)).perform(replaceText("a1"));
     onView(withId(R.id.create_user_create_profile)).perform(click());
@@ -200,6 +303,10 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.create_store_skip)).perform(click());
   }
 
+  /**
+   * Goes trough all the necessary views to complete private registration.
+   * On second view press More Info and on the next one press private
+   */
   private void completeSignUpPrivate() {
     onView(withId(R.id.create_user_username_inserted)).perform(replaceText("a1"));
     onView(withId(R.id.create_user_create_profile)).perform(click());
@@ -209,6 +316,10 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.create_store_skip)).perform(click());
   }
 
+  /**
+   * Goes trough all the necessary views to complete registration passing by the More Info view.
+   * On second view press More Info and on the next one press continue
+   */
   private void completeSignUpMoreInfoPublic() {
     onView(withId(R.id.create_user_username_inserted)).perform(replaceText("a1"));
     onView(withId(R.id.create_user_create_profile)).perform(click());
@@ -218,6 +329,10 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.create_store_skip)).perform(click());
   }
 
+  /**
+   * Goes through all the minimum necessary views to complete registration.
+   * On the last view (third), press create Store
+   */
   private void completeSignUpWithStore() {
     onView(withId(R.id.create_user_username_inserted)).perform(replaceText("a1"));
     onView(withId(R.id.create_user_create_profile)).perform(click());
@@ -227,6 +342,9 @@ import static cm.aptoide.pt.UITests.skipWizard;
     createStore();
   }
 
+  /**
+   * Choose a random name and click on create Store
+   */
   private void createStore() {
     onView(withId(R.id.create_store_name)).perform(replaceText("a name"));
     onView(withId(R.id.create_store_skip)).perform(scrollTo());

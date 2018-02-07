@@ -25,12 +25,23 @@ import static cm.aptoide.pt.UITests.skipWizard;
  * Created by jose_messejana on 30-11-2017.
  */
 @RunWith(AndroidJUnit4.class) public class MyAccountUITests {
+
+  /**
+   * Sets up the activity in which each test opens
+   */
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
 
+  /**
+   * Grants permission to simulate accessing storage
+   */
   @Rule public GrantPermissionRule grantPermissionRule =
       GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
+  /**
+   * Sets up whick mocks to "activate"
+   * Skips Wizards in case it's the first time opening aptoide
+   */
   @Before public void setUp() {
     TestType.types = TestType.TestTypes.SIGNSIGNUPTESTS;
     TestType.initialization = TestType.TestTypes.LOGGEDIN;
@@ -39,6 +50,10 @@ import static cm.aptoide.pt.UITests.skipWizard;
     }
   }
 
+  /**
+   * User LoggedIn
+   * Navigate to My Account. Presses Edit Profile. Presses user profile image. uploads a random image. Navigate to myAccount
+   */
   @Test public void profilePhotoSuccess() {
     TestType.types = TestType.TestTypes.PHOTOSUCCESS;
     goToMyAccount();
@@ -49,6 +64,10 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.button_logout)).check(matches(isDisplayed()));
   }
 
+  /**
+   * User LoggedIn
+   * Navigate to My Account.Presses Edit Profile. Presses user profile image. uploads 5 images. 5 erros show. Navigate to myAccount
+   */
   @Test public void profilePhotoErrors() {
     TestType.types = TestType.TestTypes.ERRORDECONDINGTEST;
     goToMyAccount();
@@ -58,6 +77,10 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.button_logout)).check(matches(isDisplayed()));
   }
 
+  /**
+   * User LoggedIn
+   * Navigate to My Account.Presses Edit Store. Presses user profile image. uploads image. Navigate to myAccount
+   */
   @Test public void storePhotoSuccess() {
     TestType.types = TestType.TestTypes.PHOTOSUCCESS;
     TestType.initialization = TestType.TestTypes.LOGGEDINWITHSTORE;
@@ -70,6 +93,10 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.button_logout)).check(matches(isDisplayed()));
   }
 
+  /**
+   * User LoggedIn
+   * Navigate to My Account.Presses Edit Profile. Presses user profile image. uploads 5 images. 5 erros show. Navigate to myAccount
+   */
   @Test public void storePhotoErrors() {
     TestType.types = TestType.TestTypes.ERRORDECONDINGTEST;
     TestType.initialization = TestType.TestTypes.LOGGEDINWITHSTORE;
@@ -81,6 +108,10 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withId(R.id.button_logout)).check(matches(isDisplayed()));
   }
 
+  /**
+   *
+   * @param isUser True if it's the edit user view. False if it's the edit store view
+   */
   private void uploadImageWithError(boolean isUser) {
     if (isUser) {
       onView(withId(R.id.create_user_image_action)).perform(click());
@@ -91,6 +122,10 @@ import static cm.aptoide.pt.UITests.skipWizard;
     onView(withText("OK")).perform(click());
   }
 
+  /**
+   * Sets up to display the correct errors
+   * @param isUser True if it's the edit user view. False if it's the edit store view
+   */
   private void displayErrors(boolean isUser) {
     uploadImageWithError(isUser);
     TestType.types = TestType.TestTypes.MIN_HEIGHTTEST;

@@ -54,6 +54,9 @@ public class MockApplicationModule extends ApplicationModule {
     this.application = application;
   }
 
+  /**
+   * Stops inconsistent failed test from happening in Landscape Wizard
+   */
   @Override IdsRepository provideIdsRepository(SharedPreferences defaultSharedPreferences,
       ContentResolver contentResolver) {
     return new IdsRepository(
@@ -66,6 +69,9 @@ public class MockApplicationModule extends ApplicationModule {
     };
   }
 
+  /**
+   * Creates a mocked user
+   */
   @Override AptoideAccountManager provideAptoideAccountManager(AdultContent adultContent,
       StoreAccessor storeAccessor, AccountManager accountManager,
       SharedPreferences defaultSharedPreferences,
@@ -259,6 +265,10 @@ public class MockApplicationModule extends ApplicationModule {
         .setStoreManager(storeManager)
         .build();
   }
+
+  /**
+   * Creates a mocked store
+   */
 
   @Override StoreManager provideStoreManager(@Named("default") OkHttpClient okHttpClient,
       @Named("multipart") MultipartBodyInterceptor multipartBodyInterceptor,

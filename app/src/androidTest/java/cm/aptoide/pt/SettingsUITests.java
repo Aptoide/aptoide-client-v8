@@ -31,9 +31,17 @@ import static org.hamcrest.Matchers.allOf;
  */
 
 @RunWith(AndroidJUnit4.class) public class SettingsUITests {
+
+  /**
+   * Sets up the activity in which each test opens
+   */
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
 
+  /**
+   * Sets up whick mocks to "activate"
+   * Skips Wizards in case it's the first time opening aptoide
+   */
   @Before public void setUp() {
     TestType.types = TestType.TestTypes.REGULAR;
     if (UITests.isFirstTime()) {
@@ -41,6 +49,10 @@ import static org.hamcrest.Matchers.allOf;
     }
   }
 
+  /**
+   * Checks if Mature is turned On, after leaving the settings view.
+   * Navigate to Settings. Press Mature Checkbox. Navigate to HomeFragment. Navigate to Settings. Press Mature Checkbox
+   */
   @Test public void matureTest() {
     TestType.types = TestType.TestTypes.MATURE;
     Activity activity1 = mActivityRule.getActivity();

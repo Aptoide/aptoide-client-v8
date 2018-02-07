@@ -26,6 +26,9 @@ public class MockActivityModule extends ActivityModule {
     this.activity = activity;
   }
 
+  /**
+   * Mocks the navigation to the gallery
+   */
   @Override ImagePickerNavigator provideImagePickerNavigator() {
     return new ImagePickerNavigator((ActivityNavigator) activity) {
 
