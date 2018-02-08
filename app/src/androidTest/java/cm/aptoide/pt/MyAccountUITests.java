@@ -39,7 +39,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
       GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
   /**
-   * Sets up whick mocks to "activate"
+   * Sets up which mocks to "activate"
    * Skips Wizards in case it's the first time opening aptoide
    */
   @Before public void setUp() {
@@ -51,7 +51,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * User LoggedIn
+   * User LoggedIn. Mock navigation to gallery
    * Navigate to My Account. Presses Edit Profile. Presses user profile image. uploads a random
    * image. Navigate to myAccount
    */
@@ -66,7 +66,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * User LoggedIn
+   * User LoggedIn.  Mock navigation to gallery
    * Navigate to My Account.Presses Edit Profile. Presses user profile image. uploads 5 images. 5
    * erros show. Navigate to myAccount
    */
@@ -80,7 +80,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * User LoggedIn
+   * User LoggedIn.  Mock navigation to gallery
    * Navigate to My Account.Presses Edit Store. Presses user profile image. uploads image. Navigate
    * to myAccount
    */
@@ -97,7 +97,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * User LoggedIn
+   * User LoggedIn. Mock navigation to gallery
    * Navigate to My Account.Presses Edit Profile. Presses user profile image. uploads 5 images. 5
    * erros show. Navigate to myAccount
    */

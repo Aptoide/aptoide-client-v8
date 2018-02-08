@@ -37,7 +37,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
       new ActivityTestRule<>(MainActivity.class);
 
   /**
-   * Sets up whick mocks to "activate"
+   * Sets up which mocks to "activate"
    * Skips Wizards in case it's the first time opening aptoide
    */
   @Before public void setUp() {
@@ -51,7 +51,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
   /**
    * User navigates to the LoginSignUpCredentialFragment, presses Login Button, inserts an empty
    * email and random password.
-   * Result: Apropriate error message should be displayed"
+   * Result: Appropriate error message should be displayed"
    */
   @Test public void signInEmptyEmail() {
     goToMyAccount();
@@ -62,7 +62,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
   /**
    * User navigates to the LoginSignUpCredentialFragment, presses Login Button, inserts random valid
    * email and empty password.
-   * Result: Apropriate error message should display
+   * Result: Appropriate error message should display
    */
   @Test public void signInEmptyPasswordSignIn() {
     goToMyAccount();
@@ -73,7 +73,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
   /**
    * User navigates to the LoginSignUpCredentialFragment, presses Login Button, inserts empty email
    * and password.
-   * Result: Apropriate error message should display
+   * Result: Appropriate error message should display
    */
   @Test public void signInEmpty() {
     goToMyAccount();
@@ -84,7 +84,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
   /**
    * User navigates to the LoginSignUpCredentialFragment, presses Login Button, inserts a random
    * valid email and password. Mock error response
-   * Result: Apropriate error message should display
+   * Result: Appropriate error message should display
    */
   @Test public void signInWrong() {
     TestType.types = TestType.TestTypes.SIGNINWRONG;
@@ -95,8 +95,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
 
   /**
    * User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts an email
-   * without "@" and a random password.
-   * Result: Apropriate error message should display
+   * without "@" and a random password. Mock error response
+   * Result: Appropriate error message should display
    */
   @Test public void signUpInvalidEmail() {
     TestType.types = TestType.TestTypes.INVALIDEMAIL;
@@ -108,7 +108,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
   /**
    * User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts random
    * valid email and a password with less than 8 characters.
-   * Result: Apropriate error message should display
+   * Result: Appropriate error message should display
    */
   @Test public void signUpInvalidPasswordLength() {
     goToMyAccount();
@@ -119,7 +119,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
   /**
    * User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts random
    * valid email and a password with invalid characters combination.
-   * Result: Apropriate error message should display
+   * Result: Appropriate error message should display
    */
   @Test public void signUpInvalidPasswordCharacters() {
     goToMyAccount();
@@ -130,7 +130,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
   /**
    * User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts empty email
    * and random password
-   * Result: Apropriate error message should display
+   * Result: Appropriate error message should display
    */
   @Test public void signUpEmptyEmail() {
     goToMyAccount();
@@ -141,7 +141,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
   /**
    * User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts random
    * valid email and empty password.
-   * Result: Apropriate error message should display
+   * Result: Appropriate error message should display
    */
   @Test public void signUpEmptyPassword() {
     goToMyAccount();
@@ -152,7 +152,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
   /**
    * User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts empty email
    * and password.
-   * Result: Apropriate error message should display
+   * Result: Appropriate error message should display
    */
   @Test public void signUpEmpty() {
     goToMyAccount();
@@ -163,7 +163,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
   /**
    * User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts random
    * valid email and valid password. Mock error response
-   * Result:Apropriate error message should display
+   * Result:Appropriate error message should display
    */
   @Test public void signUpEmailExists() {
     TestType.types = TestType.TestTypes.USEDEMAIL;
@@ -288,9 +288,6 @@ import static cm.aptoide.pt.UITests.skipWizard;
 
   /**
    * Presses Login Button. Inserts email and Password
-   *
-   * @param email
-   * @param pass
    */
   private void performLogin(String email, String pass) {
     onView(withId(R.id.show_login_with_aptoide_area)).perform(click());
@@ -303,9 +300,6 @@ import static cm.aptoide.pt.UITests.skipWizard;
 
   /**
    * Presses Sign Up Button. Inserts email and Password
-   *
-   * @param email
-   * @param pass
    */
   private void performSignUp(String email, String pass) {
     onView(withId(R.id.show_join_aptoide_area)).perform(click());

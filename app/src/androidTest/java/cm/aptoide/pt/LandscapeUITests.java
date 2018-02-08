@@ -37,7 +37,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
       new ActivityTestRule<>(MainActivity.class);
 
   /**
-   * Sets up whick mocks to "activate"
+   * Sets up which mocks to "activate"
    * Skips Wizards in case it's the first time opening aptoide
    */
   @Before public void setUp() {
