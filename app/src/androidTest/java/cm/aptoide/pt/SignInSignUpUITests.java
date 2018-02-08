@@ -37,7 +37,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
       new ActivityTestRule<>(MainActivity.class);
 
   /**
-   * Sets up which mocks to "activate"
+   * <p>Sets up which mocks to "activate"</p>
    * Skips Wizards in case it's the first time opening aptoide
    */
   @Before public void setUp() {
@@ -49,8 +49,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * User navigates to the LoginSignUpCredentialFragment, presses Login Button, inserts an empty
-   * email and random password.
+   * <p>User navigates to the LoginSignUpCredentialFragment, presses Login Button, inserts an empty
+   * email and random password.</p>
    * Result: Appropriate error message should be displayed"
    */
   @Test public void signInEmptyEmail() {
@@ -60,8 +60,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * User navigates to the LoginSignUpCredentialFragment, presses Login Button, inserts random valid
-   * email and empty password.
+   * <p>User navigates to the LoginSignUpCredentialFragment, presses Login Button, inserts random valid
+   * email and empty password.</p>
    * Result: Appropriate error message should display
    */
   @Test public void signInEmptyPasswordSignIn() {
@@ -71,8 +71,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * User navigates to the LoginSignUpCredentialFragment, presses Login Button, inserts empty email
-   * and password.
+   * <p>User navigates to the LoginSignUpCredentialFragment, presses Login Button, inserts empty email
+   * and password.</p>
    * Result: Appropriate error message should display
    */
   @Test public void signInEmpty() {
@@ -82,8 +82,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * User navigates to the LoginSignUpCredentialFragment, presses Login Button, inserts a random
-   * valid email and password. Mock error response
+   * <p>User navigates to the LoginSignUpCredentialFragment, presses Login Button, inserts a random
+   * valid email and password. Mock error response </p>
    * Result: Appropriate error message should display
    */
   @Test public void signInWrong() {
@@ -94,8 +94,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts an email
-   * without "@" and a random password. Mock error response
+   * <p> User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts an email
+   * without "@" and a random password. Mock error response </p>
    * Result: Appropriate error message should display
    */
   @Test public void signUpInvalidEmail() {
@@ -106,8 +106,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts random
-   * valid email and a password with less than 8 characters.
+   * <p>User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts random
+   * valid email and a password with less than 8 characters. </p>
    * Result: Appropriate error message should display
    */
   @Test public void signUpInvalidPasswordLength() {
@@ -128,8 +128,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts empty email
-   * and random password
+   * <p>User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts empty email
+   * and random password </p>
    * Result: Appropriate error message should display
    */
   @Test public void signUpEmptyEmail() {
@@ -139,8 +139,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts random
-   * valid email and empty password.
+   * <p> User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts random
+   * valid email and empty password. </p>
    * Result: Appropriate error message should display
    */
   @Test public void signUpEmptyPassword() {
@@ -150,8 +150,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts empty email
-   * and password.
+   * <p> User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts empty email
+   * and password.</p>
    * Result: Appropriate error message should display
    */
   @Test public void signUpEmpty() {
@@ -161,8 +161,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts random
-   * valid email and valid password. Mock error response
+   * <p> User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts random
+   * valid email and valid password. Mock error response </p>
    * Result:Appropriate error message should display
    */
   @Test public void signUpEmailExists() {
@@ -173,8 +173,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts random
-   * valid email and random valid password.
+   * <p> User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts random
+   * valid email and random valid password.</p>
    * Result: Navigate to the necessary views to complete public registration and in the end
    * navigates to HomeFragment.
    */
@@ -186,8 +186,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts random
-   * valid email and random valid password.
+   * <p> User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts random
+   * valid email and random valid password. </p>
    * Result: Navigate to the necessary views to complete private registration and in the end
    * navigates to HomeFragment.
    */
@@ -199,8 +199,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts random
-   * valid email and random valid password.
+   * <p>User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts random
+   * valid email and random valid password.</p>
    * Result: Navigate to the necessary views to complete public registration passing through the
    * MoreInfoView and in the end navigates to HomeFragment.
    */
@@ -212,8 +212,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts random
-   * valid email and random valid password.
+   * <p>User navigates to the LoginSignUpCredentialFragment, presses SignUp Button, inserts random
+   * valid email and random valid password.</p>
    * Result: Navigate to the necessary views to complete public registration, pressing create store
    * in the last step and in the end navigates to HomeFragment.
    */
@@ -225,8 +225,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * User navigates to the LoginSignUpCredentialFragment, presses Login Button, inserts random valid
-   * email and random valid password.
+   * <p> User navigates to the LoginSignUpCredentialFragment, presses Login Button, inserts random valid
+   * email and random valid password. </p>
    * Result: Navigate to HomeFragment
    */
   @Test public void signIn() {
@@ -236,8 +236,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * Mock user logged in
-   * User navigates to MyAccount and presses Log Out
+   * <p>Mock user logged in</p>
+   * <p>User navigates to MyAccount and presses Log Out</p>
    * Result: Navigate to HomeFragment
    */
   @Test public void signOut() {
@@ -248,8 +248,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * First time opening Aptoide, skips first 2 views, presses login in the third one, insert random
-   * valid username and password
+   * <p>First time opening Aptoide, skips first 2 views, presses login in the third one, insert random
+   * valid username and password </p>
    * Result: Navigate to HomeFragment
    */
   @Test public void signInFromWizard() {
@@ -266,8 +266,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * First time opening Aptoide, skips first 2 views, presses signUp in the third one, insert random
-   * valid username and password
+   * <p>First time opening Aptoide, skips first 2 views, presses signUp in the third one, insert random
+   * valid username and password </p>
    * Result: Navigate to the necessary views to complete public registration and in the end
    * navigates to HomeFragment.
    */
@@ -323,7 +323,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * Goes trough all the necessary views to complete private registration.
+   * <p>Goes trough all the necessary views to complete private registration.</p>
    * On second view press More Info and on the next one press private
    */
   private void completeSignUpPrivate() {
@@ -336,7 +336,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * Goes trough all the necessary views to complete registration passing by the More Info view.
+   * <p>Goes trough all the necessary views to complete registration passing by the More Info view.</p>
    * On second view press More Info and on the next one press continue
    */
   private void completeSignUpMoreInfoPublic() {
@@ -349,7 +349,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * Goes through all the minimum necessary views to complete registration.
+   * <p>Goes through all the minimum necessary views to complete registration.</p>
    * On the last view (third), press create Store
    */
   private void completeSignUpWithStore() {

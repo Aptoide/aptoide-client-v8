@@ -37,7 +37,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
       new ActivityTestRule<>(MainActivity.class);
 
   /**
-   * Sets up which mocks to "activate"
+   * <p>Sets up which mocks to "activate"</p>
    * Skips Wizards in case it's the first time opening aptoide
    */
   @Before public void setUp() {
@@ -131,7 +131,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * User LoggedIn. Navigate to My Account. Presses Edit Store. Modify store description. Switch to
+   * <p>Mock User LoggedIn.</p>
+   * Navigate to My Account. Presses Edit Store. Modify store description. Switch to
    * landscape. Check if the change is still there
    */
   @Test public void landscapeEditStoreDescription() {

@@ -39,7 +39,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
       GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
   /**
-   * Sets up which mocks to "activate"
+   * <p>Sets up which mocks to "activate"</p>
    * Skips Wizards in case it's the first time opening aptoide
    */
   @Before public void setUp() {
@@ -51,7 +51,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * User LoggedIn. Mock navigation to gallery
+   * <p>User LoggedIn. Mock navigation to gallery</p>
    * Navigate to My Account. Presses Edit Profile. Presses user profile image. uploads a random
    * image. Navigate to myAccount
    */
@@ -66,7 +66,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * User LoggedIn.  Mock navigation to gallery
+   * <p>User LoggedIn.  Mock navigation to gallery </p>
    * Navigate to My Account.Presses Edit Profile. Presses user profile image. uploads 5 images. 5
    * erros show. Navigate to myAccount
    */
@@ -80,7 +80,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * User LoggedIn.  Mock navigation to gallery
+   * <p>User LoggedIn.  Mock navigation to gallery </p>
    * Navigate to My Account.Presses Edit Store. Presses user profile image. uploads image. Navigate
    * to myAccount
    */
@@ -97,7 +97,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
-   * User LoggedIn. Mock navigation to gallery
+   * <p>User LoggedIn. Mock navigation to gallery </p>
    * Navigate to My Account.Presses Edit Profile. Presses user profile image. uploads 5 images. 5
    * erros show. Navigate to myAccount
    */
@@ -113,6 +113,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
   }
 
   /**
+   * <p>Clicks on image to upload photo</p>
    * @param isUser True if it's the edit user view. False if it's the edit store view
    */
   private void uploadImageWithError(boolean isUser) {

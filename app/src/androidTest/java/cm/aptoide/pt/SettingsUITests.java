@@ -39,7 +39,7 @@ import static org.hamcrest.Matchers.allOf;
       new ActivityTestRule<>(MainActivity.class);
 
   /**
-   * Sets up which mocks to "activate"
+   * <p>Sets up which mocks to "activate"</p>
    * Skips Wizards in case it's the first time opening aptoide
    */
   @Before public void setUp() {
@@ -50,7 +50,7 @@ import static org.hamcrest.Matchers.allOf;
   }
 
   /**
-   * Checks if Mature is turned On, after leaving the settings view.
+   * <p>Checks if Mature is turned On, after leaving the settings view.</p>
    * Navigate to Settings. Press Mature Checkbox. Navigate to HomeFragment. Navigate to Settings.
    * Press Mature Checkbox
    */

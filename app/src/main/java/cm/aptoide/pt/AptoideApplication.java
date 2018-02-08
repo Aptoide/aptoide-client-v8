@@ -379,18 +379,20 @@ public abstract class AptoideApplication extends Application {
   }
 
   /**
-   * Needs to be here, to be mocked for tests. Should be on BaseActivity if there were no tests
+   * <p>Needs to be here, to be mocked for tests. Should be on BaseActivity if there were no tests</p>
+   * @return Returns a new Activity Module for the Activity Component
    */
   public ActivityModule getActivityModule(BaseActivity activity, Intent intent,
       NotificationSyncScheduler notificationSyncScheduler, String marketName, String autoUpdateUrl,
-      View view, String defaultThemeName, String defaultStoreName, boolean firstCreated, String s) {
+      View view, String defaultThemeName, String defaultStoreName, boolean firstCreated, String fileProviderAuthority) {
 
     return new ActivityModule(activity, intent, notificationSyncScheduler, marketName,
-        autoUpdateUrl, view, defaultThemeName, defaultStoreName, firstCreated, s);
+        autoUpdateUrl, view, defaultThemeName, defaultStoreName, firstCreated, fileProviderAuthority);
   }
 
   /**
    * Needs to be here, to be mocked for tests. Should be on BaseFragment if there were no tests
+   * @return Returns a new Fragment Module for the Fragment Component
    */
   public FragmentModule getFragmentModule(BaseFragment baseFragment, Bundle savedInstanceState,
       Bundle arguments, boolean createStoreUserPrivacyEnabled, String packageName) {
