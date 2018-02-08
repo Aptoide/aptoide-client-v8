@@ -530,9 +530,9 @@
   <string name="list_store_apps_fragment_title">Store Apps</string>
 
   <!--Strings for shortcuts-->
-  <string name="search_shortcut_short">Search</string>
-  <string name="timeline_shortcut_short">Timeline</string>
-  <string name="my_store_shortcut_short">My Store</string>
-  <string name="pick_apps_shortcut_short">Pick For Me</string>
+  <string name="shortcut_button_search">Search</string>
+  <string name="shortcut_button_timeline">Timeline</string>
+  <string name="shortcut_button_my_store">My Store</string>
+  <string name="shortcut_button_pick_app">Pick For Me</string>
 </resources>
 

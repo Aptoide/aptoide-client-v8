@@ -6,7 +6,7 @@
       android:enabled="true"
       android:icon="@drawable/ic_shortcut_search"
       android:shortcutId="search"
-      android:shortcutShortLabel="@string/search_shortcut_short">
+      android:shortcutShortLabel="@string/shortcut_button_search">
 
     <intent
         android:action="android.intent.action.VIEW"
@@ -22,7 +22,7 @@
       android:enabled="true"
       android:icon="@drawable/ic_shortcut_timeline"
       android:shortcutId="timeline"
-      android:shortcutShortLabel="@string/timeline_shortcut_short">
+      android:shortcutShortLabel="@string/shortcut_button_timeline">
 
     <intent
 
@@ -39,7 +39,7 @@
       android:enabled="true"
       android:icon="@drawable/ic_shortcut_store"
       android:shortcutId="myStore"
-      android:shortcutShortLabel="@string/my_store_shortcut_short">
+      android:shortcutShortLabel="@string/shortcut_button_my_store">
     <intent
         android:action="android.intent.action.VIEW"
         android:data="aptoide://cm.aptoide.pt/deeplink?name=myStore"
@@ -56,7 +56,7 @@
       android:enabled="true"
       android:icon="@drawable/ic_shortcut_pick_app"
       android:shortcutId="pickApps"
-      android:shortcutShortLabel="@string/pick_apps_shortcut_short">
+      android:shortcutShortLabel="@string/shortcut_button_pick_app">
 
     <intent
 
