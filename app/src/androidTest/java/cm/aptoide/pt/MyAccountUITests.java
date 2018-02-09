@@ -114,6 +114,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
 
   /**
    * <p>Clicks on image to upload photo</p>
+   *
    * @param isUser True if it's the edit user view. False if it's the edit store view
    */
   private void uploadImageWithError(boolean isUser) {

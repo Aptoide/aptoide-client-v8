@@ -61,7 +61,8 @@ public class ManageUserFragment extends BackButtonFragment implements ManageUser
   private ImagePickerDialog dialogFragment;
   private ImagePickerErrorHandler imagePickerErrorHandler;
 
-  public static ManageUserFragment newInstanceToEdit() { return newInstance(true);
+  public static ManageUserFragment newInstanceToEdit() {
+    return newInstance(true);
   }
 
   public static ManageUserFragment newInstanceToCreate() {
