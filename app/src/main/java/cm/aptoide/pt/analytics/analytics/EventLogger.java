@@ -18,7 +18,8 @@ public interface EventLogger {
    * @param action The action done by the user.
    * @param context The context of where the event took place.
    */
-  void log(String eventName, Map<String, Object> data, AnalyticsManager.Action action, String context);
+  void log(String eventName, Map<String, Object> data, AnalyticsManager.Action action,
+      String context);
 
   /**
    * <p>Initializes the environment to log certain events.</p>
