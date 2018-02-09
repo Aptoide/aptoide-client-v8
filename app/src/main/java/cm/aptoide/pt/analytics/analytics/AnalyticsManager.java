@@ -27,7 +27,7 @@ public class AnalyticsManager {
    *
    * Only the events whose {@code eventName} is listed on {@link FlavourApplicationModule} or {@link
    * ApplicationModule
-   * }
+   * } are logged.
    *
    * @param data The attributes of the event
    * @param eventName The name of the event to be logged.
@@ -70,7 +70,7 @@ public class AnalyticsManager {
   }
 
   /**
-   * <p>Setup the Aptoide Bi analytics.</p>
+   * <p>Setup the {@code EventLogger(s)} that need to be setup, like AptoideBiEventLogger</p>
    */
   public void setup() {
     for (Map.Entry<EventLogger, Collection<String>> loggerEntry : eventLoggers.entrySet()) {
