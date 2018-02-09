@@ -23,11 +23,11 @@ public class AnalyticsManager {
   }
 
   /**
-   * Logs the events to the correspondent event loggers.
+   * <p>Logs the events to the correspondent event loggers.</p>
    *
-   * Only the events whose {@code eventName} is listed on {@link FlavourApplicationModule} or {@link
+   *</p> Only the events whose {@code eventName} is listed on {@link FlavourApplicationModule} or {@link
    * ApplicationModule
-   * } are logged.
+   * } are logged.</p>
    *
    * @param data The attributes of the event
    * @param eventName The name of the event to be logged.
