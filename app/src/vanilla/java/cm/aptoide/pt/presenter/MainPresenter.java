@@ -85,6 +85,7 @@ public class MainPresenter implements Presenter {
         }, throwable -> crashReport.log(throwable));
 
     setupInstallErrorsDisplay();
+    shortcutManagement();
   }
 
   private void setupInstallErrorsDisplay() {
@@ -123,6 +124,14 @@ public class MainPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(timeoutErrorsCleaned -> {
         }, throwable -> crashReport.log(throwable));
+  }
+
+  private void shortcutManagement() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.DESTROY))
+        .first()
+        .subscribe(__ -> deepLinkManager.freeSubscriptions(),
+            throwable -> crashReport.log(throwable));
   }
 
   // FIXME we are showing home by default when we should decide were to go here and provide

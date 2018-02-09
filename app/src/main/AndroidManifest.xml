@@ -65,6 +65,9 @@
         <action android:name="android.intent.action.MAIN"/>
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
+      <meta-data
+          android:name="android.app.shortcuts"
+          android:resource="@xml/shortcuts" />
     </activity>
 
     <activity
@@ -384,7 +387,7 @@
       </intent-filter>
       <meta-data
           android:name="android.appwidget.provider"
-          android:resource="@xml/widget_search_app"/>
+          android:resource="@xml/widget_search_app" />
     </receiver>
 
   </application>

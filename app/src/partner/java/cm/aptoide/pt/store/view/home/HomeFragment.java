@@ -22,6 +22,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
+import com.jakewharton.rxbinding.view.RxView;
+import com.trello.rxlifecycle.android.FragmentEvent;
+
+import java.text.NumberFormat;
+
+import javax.inject.Inject;
+
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
@@ -56,11 +65,6 @@ import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.BackButton;
 import cm.aptoide.pt.view.custom.BadgeView;
-import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
-import com.jakewharton.rxbinding.view.RxView;
-import com.trello.rxlifecycle.android.FragmentEvent;
-import java.text.NumberFormat;
-import javax.inject.Inject;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -71,423 +75,435 @@ import rx.subjects.PublishSubject;
  */
 public class HomeFragment extends StoreFragment {
 
-  public static final String FACEBOOK_PACKAGE_NAME = "com.facebook.katana";
+    public static final String FACEBOOK_PACKAGE_NAME = "com.facebook.katana";
 
-  //private static final int SPOT_SHARE_PERMISSION_REQUEST_CODE = 6531;
-  @Inject AnalyticsManager analyticsManager;
-  @Inject NavigationTracker navigationTracker;
-  private DrawerLayout drawerLayout;
-  private NavigationView navigationView;
-  private BadgeView updatesBadge;
-  private BadgeView notificationsBadge;
-  private UpdateRepository updateRepository;
-  private AptoideAccountManager accountManager;
-  private AccountNavigator accountNavigator;
-  private TabNavigator tabNavigator;
-  private TextView userEmail;
-  private TextView userUsername;
-  private ImageView userAvatarImage;
-  private DrawerAnalytics drawerAnalytics;
-  private BackButton.ClickHandler backClickHandler;
-  private String defaultThemeName;
-  private AppSearchSuggestionsView appSearchSuggestionsView;
-  private CrashReport crashReport;
-  private SearchNavigator searchNavigator;
-  private TrendingManager trendingManager;
-  private SearchAnalytics searchAnalytics;
+    //private static final int SPOT_SHARE_PERMISSION_REQUEST_CODE = 6531;
+    @Inject
+    AnalyticsManager analyticsManager;
+    @Inject
+    NavigationTracker navigationTracker;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private BadgeView updatesBadge;
+    private BadgeView notificationsBadge;
+    private UpdateRepository updateRepository;
+    private AptoideAccountManager accountManager;
+    private AccountNavigator accountNavigator;
+    private TabNavigator tabNavigator;
+    private TextView userEmail;
+    private TextView userUsername;
+    private ImageView userAvatarImage;
+    private DrawerAnalytics drawerAnalytics;
+    private BackButton.ClickHandler backClickHandler;
+    private String defaultThemeName;
+    private AppSearchSuggestionsView appSearchSuggestionsView;
+    private CrashReport crashReport;
+    private SearchNavigator searchNavigator;
+    private TrendingManager trendingManager;
+    private SearchAnalytics searchAnalytics;
 
-  public static HomeFragment newInstance(String storeName, StoreContext storeContext,
-      String storeTheme) {
-    Bundle args = new Bundle();
-    args.putString(BundleKeys.STORE_NAME.name(), storeName);
-    args.putSerializable(BundleKeys.STORE_CONTEXT.name(), storeContext);
-    args.putSerializable(BundleKeys.STORE_THEME.name(), storeTheme);
-    HomeFragment fragment = new HomeFragment();
-    fragment.setArguments(args);
-    return fragment;
-  }
-
-  /**
-   * @return {@link HomeFragment} instance with default store, store context and theme
-   */
-  public static HomeFragment newInstance(String defaultStore, String defaultTheme) {
-    return newInstance(defaultStore, StoreContext.home, defaultTheme);
-  }
-
-  @Override public void onAttach(Activity activity) {
-    super.onAttach(activity);
-
-    if (activity instanceof TabNavigator) {
-      tabNavigator = (TabNavigator) activity;
-    } else {
-      throw new IllegalStateException(
-          "Activity must implement " + TabNavigator.class.getSimpleName());
-    }
-  }
-
-  @Override public void onResume() {
-    super.onResume();
-
-    getToolbar().setTitle("");
-
-    if (navigationView == null || navigationView.getVisibility() != View.VISIBLE) {
-      // if the navigation view is not visible do nothing
-      return;
+    public static HomeFragment newInstance(String storeName, StoreContext storeContext,
+                                           String storeTheme) {
+        Bundle args = new Bundle();
+        args.putString(BundleKeys.STORE_NAME.name(), storeName);
+        args.putSerializable(BundleKeys.STORE_CONTEXT.name(), storeContext);
+        args.putSerializable(BundleKeys.STORE_THEME.name(), storeTheme);
+        HomeFragment fragment = new HomeFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
-    View baseHeaderView = navigationView.getHeaderView(0);
-    userEmail = (TextView) baseHeaderView.findViewById(R.id.profile_email_text);
-    userUsername = (TextView) baseHeaderView.findViewById(R.id.profile_name_text);
-    userAvatarImage = (ImageView) baseHeaderView.findViewById(R.id.profile_image);
-
-    baseHeaderView.setBackgroundColor(ContextCompat.getColor(getContext(),
-        StoreTheme.get(defaultThemeName)
-            .getPrimaryColor()));
-
-    accountManager.accountStatus()
-        .observeOn(AndroidSchedulers.mainThread())
-        .compose(bindUntilEvent(FragmentEvent.PAUSE))
-        .subscribe(account -> {
-          if (account == null || !account.isLoggedIn()) {
-            setInvisibleUserImageAndName();
-            return;
-          }
-          setVisibleUserImageAndName(account);
-        }, err -> CrashReport.getInstance()
-            .log(err));
-  }
-
-  private void setInvisibleUserImageAndName() {
-    userEmail.setText("");
-    userUsername.setText("");
-    userEmail.setVisibility(View.GONE);
-    userUsername.setVisibility(View.GONE);
-    ImageLoader.with(getContext())
-        .loadWithCircleTransform(R.drawable.user_account_white, userAvatarImage);
-  }
-
-  private void setVisibleUserImageAndName(Account account) {
-    userEmail.setVisibility(View.VISIBLE);
-    userUsername.setVisibility(View.VISIBLE);
-    userEmail.setText(account.getEmail());
-    userUsername.setText(account.getNickname());
-    ImageLoader.with(getContext())
-        .loadWithCircleTransformAndPlaceHolder(account.getAvatar(), userAvatarImage,
-            R.drawable.user_account_white);
-  }
-
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    getFragmentComponent(savedInstanceState).inject(this);
-    final AptoideApplication application =
-        (AptoideApplication) getContext().getApplicationContext();
-
-    searchNavigator =
-        new SearchNavigator(getFragmentNavigator(), application.getDefaultStoreName());
-
-    defaultThemeName = application.getDefaultThemeName();
-
-    drawerAnalytics = new DrawerAnalytics(analyticsManager, navigationTracker);
-    handleFirstInstall(savedInstanceState);
-
-    trendingManager = application.getTrendingManager();
-    crashReport = CrashReport.getInstance();
-    searchAnalytics = new SearchAnalytics(analyticsManager, navigationTracker);
-
-    setRegisterFragment(false);
-    setHasOptionsMenu(true);
-  }
-
-  @Override protected boolean hasSearchFromStoreFragment() {
-    return false;
-  }
-
-  @Override public void onDestroyView() {
-    userEmail = null;
-    userAvatarImage = null;
-    userUsername = null;
-    updatesBadge = null;
-    navigationView.setNavigationItemSelectedListener(null);
-    navigationView = null;
-    drawerLayout = null;
-    final Toolbar toolbar = getToolbar();
-    if (toolbar != null) {
-      toolbar.setNavigationOnClickListener(null);
-    }
-    unregisterClickHandler(backClickHandler);
-    super.onDestroyView();
-  }
-
-  @Override protected void setupViewPager() {
-    super.setupViewPager();
-
-    StorePagerAdapter adapter = (StorePagerAdapter) viewPager.getAdapter();
-
-    View layout = getTabLayout(adapter, Event.Name.myUpdates);
-    if (layout != null) {
-      updatesBadge = new BadgeView(getContext(), layout);
+    /**
+     * @return {@link HomeFragment} instance with default store, store context and theme
+     */
+    public static HomeFragment newInstance(String defaultStore, String defaultTheme) {
+        return newInstance(defaultStore, StoreContext.home, defaultTheme);
     }
 
-    layout = getTabLayout(adapter, Event.Name.getUserTimeline);
-    if (layout != null) {
-      notificationsBadge = new BadgeView(getContext(), layout);
-    }
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
 
-    ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter()
-        .getUnreadNotifications()
-        .observeOn(Schedulers.computation())
-        .map(aptoideNotifications -> aptoideNotifications.size())
-        .distinctUntilChanged()
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(numberOfNotificationsUnread -> refreshBadge(numberOfNotificationsUnread,
-            notificationsBadge), throwable -> CrashReport.getInstance()
-            .log(throwable));
-
-    updateRepository.getNonExcludedUpdates()
-        .map(updates -> updates.size())
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(size -> refreshBadge(size, updatesBadge), throwable -> {
-          CrashReport.getInstance()
-              .log(throwable);
-        });
-
-    tabNavigator.navigation()
-        .doOnNext(tabNavigation -> viewPager.setCurrentItem(
-            ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(
-                getEventName(tabNavigation.getTab()))))
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(__ -> {
-        }, err -> CrashReport.getInstance()
-            .log(err));
-  }
-
-  @Override public int getContentViewId() {
-    return R.layout.activity_main;
-  }
-
-  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.fragment_home, menu);
-
-    final MenuItem menuItem = menu.findItem(R.id.menu_item_search);
-    if (appSearchSuggestionsView != null && menuItem != null) {
-      appSearchSuggestionsView.initialize(menuItem);
-    } else if (menuItem != null) {
-      menuItem.setVisible(false);
-    } else {
-      menu.removeItem(R.id.menu_item_search);
-    }
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    backClickHandler = () -> {
-      if (isDrawerOpened()) {
-        closeDrawer();
-        return true;
-      }
-
-      return false;
-    };
-    registerClickHandler(backClickHandler);
-
-    final SuggestionCursorAdapter suggestionCursorAdapter =
-        new SuggestionCursorAdapter(getContext());
-
-    final Toolbar toolbar = getToolbar();
-    final Observable<MenuItem> toolbarMenuItemClick = RxToolbar.itemClicks(toolbar)
-        .publish()
-        .autoConnect();
-
-    appSearchSuggestionsView =
-        new AppSearchSuggestionsView(this, RxView.clicks(toolbar), crashReport,
-            suggestionCursorAdapter, PublishSubject.create(), toolbarMenuItemClick,
-            searchAnalytics);
-
-    final AptoideApplication application =
-        (AptoideApplication) getContext().getApplicationContext();
-
-    final SearchSuggestionsPresenter searchSuggestionsPresenter =
-        new SearchSuggestionsPresenter(appSearchSuggestionsView,
-            application.getSearchSuggestionManager(), AndroidSchedulers.mainThread(),
-            suggestionCursorAdapter, crashReport, trendingManager, searchNavigator, false,
-            searchAnalytics);
-
-    attachPresenter(searchSuggestionsPresenter);
-  }
-
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    return super.onCreateView(inflater, container, savedInstanceState);
-  }
-
-  protected boolean displayHomeUpAsEnabled() {
-    return false;
-  }
-
-  @Override public void setupToolbarDetails(Toolbar toolbar) {
-    toolbar.setTitle("");
-    toolbar.setNavigationIcon(R.drawable.ic_drawer);
-    toolbar.setNavigationOnClickListener(v -> {
-      drawerLayout.openDrawer(GravityCompat.START);
-      drawerAnalytics.drawerOpen();
-    });
-  }
-
-  @Override public void setupViews() {
-    super.setupViews();
-    accountManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-    accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
-    setupNavigationView();
-  }
-
-  private View getTabLayout(StorePagerAdapter adapter, Event.Name tab) {
-    for (int i = 0; i < adapter.getCount(); i++) {
-      if (tab.equals(adapter.getEventName(i))) {
-        return ((LinearLayout) pagerSlidingTabStrip.getChildAt(0)).getChildAt(i);
-      }
-    }
-    return null;
-  }
-
-  private void setupNavigationView() {
-    if (navigationView != null) {
-      navigationView.setItemIconTintList(null);
-      navigationView.setNavigationItemSelectedListener(menuItem -> {
-
-        int itemId = menuItem.getItemId();
-        if (itemId == R.id.navigation_item_my_account) {
-          drawerAnalytics.drawerInteract("My Account");
-          accountNavigator.navigateToAccountView(AccountAnalytics.AccountOrigins.MY_ACCOUNT);
+        if (activity instanceof TabNavigator) {
+            tabNavigator = (TabNavigator) activity;
         } else {
-          final FragmentNavigator navigator = getFragmentNavigator();
-          if (itemId == R.id.navigation_item_rollback) {
-            drawerAnalytics.drawerInteract("Rollback");
-            navigator.navigateTo(AptoideApplication.getFragmentProvider()
-                .newRollbackFragment(), true);
-          } else if (itemId == R.id.navigation_item_setting_scheduled_downloads) {
-            drawerAnalytics.drawerInteract("Scheduled Downloads");
-            navigator.navigateTo(AptoideApplication.getFragmentProvider()
-                .newScheduledDownloadsFragment(), true);
-          } else if (itemId == R.id.navigation_item_excluded_updates) {
-            drawerAnalytics.drawerInteract("Excluded Updates");
-            navigator.navigateTo(AptoideApplication.getFragmentProvider()
-                .newExcludedUpdatesFragment(), true);
-          } else if (itemId == R.id.navigation_item_settings) {
-            drawerAnalytics.drawerInteract("Settings");
-            navigator.navigateTo(AptoideApplication.getFragmentProvider()
-                .newSettingsFragment(), true);
-          } else if (itemId == R.id.send_feedback) {
-            drawerAnalytics.drawerInteract("Send Feedback");
-            startFeedbackFragment();
-          }
+            throw new IllegalStateException(
+                    "Activity must implement " + TabNavigator.class.getSimpleName());
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getToolbar().setTitle("");
+
+        if (navigationView == null || navigationView.getVisibility() != View.VISIBLE) {
+            // if the navigation view is not visible do nothing
+            return;
         }
 
-        drawerLayout.closeDrawer(navigationView);
+        View baseHeaderView = navigationView.getHeaderView(0);
+        userEmail = (TextView) baseHeaderView.findViewById(R.id.profile_email_text);
+        userUsername = (TextView) baseHeaderView.findViewById(R.id.profile_name_text);
+        userAvatarImage = (ImageView) baseHeaderView.findViewById(R.id.profile_image);
 
+        baseHeaderView.setBackgroundColor(ContextCompat.getColor(getContext(),
+                StoreTheme.get(defaultThemeName)
+                        .getPrimaryColor()));
+
+        accountManager.accountStatus()
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(bindUntilEvent(FragmentEvent.PAUSE))
+                .subscribe(account -> {
+                    if (account == null || !account.isLoggedIn()) {
+                        setInvisibleUserImageAndName();
+                        return;
+                    }
+                    setVisibleUserImageAndName(account);
+                }, err -> CrashReport.getInstance()
+                        .log(err));
+    }
+
+    private void setInvisibleUserImageAndName() {
+        userEmail.setText("");
+        userUsername.setText("");
+        userEmail.setVisibility(View.GONE);
+        userUsername.setVisibility(View.GONE);
+        ImageLoader.with(getContext())
+                .loadWithCircleTransform(R.drawable.user_account_white, userAvatarImage);
+    }
+
+    private void setVisibleUserImageAndName(Account account) {
+        userEmail.setVisibility(View.VISIBLE);
+        userUsername.setVisibility(View.VISIBLE);
+        userEmail.setText(account.getEmail());
+        userUsername.setText(account.getNickname());
+        ImageLoader.with(getContext())
+                .loadWithCircleTransformAndPlaceHolder(account.getAvatar(), userAvatarImage,
+                        R.drawable.user_account_white);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getFragmentComponent(savedInstanceState).inject(this);
+        final AptoideApplication application =
+                (AptoideApplication) getContext().getApplicationContext();
+
+        searchNavigator =
+                new SearchNavigator(getFragmentNavigator(), application.getDefaultStoreName());
+
+        defaultThemeName = application.getDefaultThemeName();
+
+        drawerAnalytics = new DrawerAnalytics(analyticsManager, navigationTracker);
+        handleFirstInstall(savedInstanceState);
+
+        trendingManager = application.getTrendingManager();
+        crashReport = CrashReport.getInstance();
+        searchAnalytics = new SearchAnalytics(analyticsManager, navigationTracker);
+
+        setRegisterFragment(false);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    protected boolean hasSearchFromStoreFragment() {
         return false;
-      });
-    }
-  }
-
-  private void startFeedbackFragment() {
-    String downloadFolderPath = getContext().getApplicationContext()
-        .getCacheDir()
-        .getPath();
-    String screenshotFileName = getActivity().getClass()
-        .getSimpleName() + ".jpg";
-    AptoideUtils.ScreenU.takeScreenshot(getActivity(), downloadFolderPath, screenshotFileName);
-    getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-        .newSendFeedbackFragment(downloadFolderPath + screenshotFileName), true);
-  }
-
-  public void refreshBadge(int num, BadgeView badgeToUpdate) {
-    // No updates present
-    if (badgeToUpdate == null) {
-      return;
     }
 
-    badgeToUpdate.setTextSize(11);
-
-    if (num > 0) {
-      badgeToUpdate.setText(NumberFormat.getIntegerInstance()
-          .format(num));
-      if (!badgeToUpdate.isShown()) {
-        badgeToUpdate.show(true);
-      }
-    } else {
-      if (badgeToUpdate.isShown()) {
-        badgeToUpdate.hide(true);
-      }
+    @Override
+    public void onDestroyView() {
+        userEmail = null;
+        userAvatarImage = null;
+        userUsername = null;
+        updatesBadge = null;
+        navigationView.setNavigationItemSelectedListener(null);
+        navigationView = null;
+        drawerLayout = null;
+        final Toolbar toolbar = getToolbar();
+        if (toolbar != null) {
+            toolbar.setNavigationOnClickListener(null);
+        }
+        unregisterClickHandler(backClickHandler);
+        super.onDestroyView();
     }
-  }
 
-  private Event.Name getEventName(int tab) {
-    switch (tab) {
-      case TabNavigation.DOWNLOADS:
-        return Event.Name.myDownloads;
-      case TabNavigation.STORES:
-        return Event.Name.myStores;
-      case TabNavigation.TIMELINE:
-        return Event.Name.getUserTimeline;
-      case TabNavigation.UPDATES:
-        return Event.Name.myUpdates;
-      default:
-        throw new IllegalArgumentException("Invalid tab.");
+    @Override
+    protected void setupViewPager() {
+        super.setupViewPager();
+
+        StorePagerAdapter adapter = (StorePagerAdapter) viewPager.getAdapter();
+
+        View layout = getTabLayout(adapter, Event.Name.myUpdates);
+        if (layout != null) {
+            updatesBadge = new BadgeView(getContext(), layout);
+        }
+
+        layout = getTabLayout(adapter, Event.Name.getUserTimeline);
+        if (layout != null) {
+            notificationsBadge = new BadgeView(getContext(), layout);
+        }
+
+        ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter()
+                .getUnreadNotifications()
+                .observeOn(Schedulers.computation())
+                .map(aptoideNotifications -> aptoideNotifications.size())
+                .distinctUntilChanged()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(numberOfNotificationsUnread -> refreshBadge(numberOfNotificationsUnread,
+                        notificationsBadge), throwable -> CrashReport.getInstance()
+                        .log(throwable));
+
+        updateRepository.getNonExcludedUpdates()
+                .map(updates -> updates.size())
+                .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(size -> refreshBadge(size, updatesBadge), throwable -> {
+                    CrashReport.getInstance()
+                            .log(throwable);
+                });
+
+        tabNavigator.navigation()
+                .doOnNext(tabNavigation -> viewPager.setCurrentItem(
+                        ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(
+                                getEventName(tabNavigation.getTab()))))
+                .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+                .subscribe(__ -> {
+                }, err -> CrashReport.getInstance()
+                        .log(err));
     }
-  }
 
-  private boolean isDrawerOpened() {
-    return drawerLayout.isDrawerOpen(Gravity.LEFT);
-  }
-
-  private void closeDrawer() {
-    drawerLayout.closeDrawers();
-  }
-
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
-
-    updateRepository = RepositoryFactory.getUpdateRepository(getContext(),
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
-
-    navigationView = (NavigationView) view.findViewById(R.id.nav_view);
-    drawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
-
-    setHasOptionsMenu(true);
-  }
-
-  /**
-   * show first install fragment with animation
-   */
-  @SuppressLint("PrivateResource") private void handleFirstInstall(Bundle savedInstanceState) {
-    ConnectivityManager connectivityManager =
-        (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-    if (connectivityManager != null) {
-      if (savedInstanceState == null
-          && connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-          .isConnected()
-          && ((PartnerApplication) getContext().getApplicationContext()).getBootConfig()
-          .getPartner()
-          .getSwitches()
-          .getOptions()
-          .getFirstInstall()
-          .isEnable()
-          && !PartnersSecurePreferences.isFirstInstallFinished(
-          ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())) {
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.abc_slide_in_bottom, R.anim.abc_slide_out_bottom);
-        transaction.add(R.id.fragment_placeholder, FirstInstallFragment.newInstance());
-        transaction.addToBackStack(null);
-        transaction.commit();
-      }
+    @Override
+    public int getContentViewId() {
+        return R.layout.activity_main;
     }
-  }
 
-  private enum BundleKeys {
-    STORE_NAME, STORE_CONTEXT, STORE_THEME
-  }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_home, menu);
+
+        final MenuItem menuItem = menu.findItem(R.id.menu_item_search);
+        if (appSearchSuggestionsView != null && menuItem != null) {
+            appSearchSuggestionsView.initialize(menuItem);
+        } else if (menuItem != null) {
+            menuItem.setVisible(false);
+        } else {
+            menu.removeItem(R.id.menu_item_search);
+        }
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        backClickHandler = () -> {
+            if (isDrawerOpened()) {
+                closeDrawer();
+                return true;
+            }
+
+            return false;
+        };
+        registerClickHandler(backClickHandler);
+
+        final SuggestionCursorAdapter suggestionCursorAdapter =
+                new SuggestionCursorAdapter(getContext());
+
+        final Toolbar toolbar = getToolbar();
+        final Observable<MenuItem> toolbarMenuItemClick = RxToolbar.itemClicks(toolbar)
+                .publish()
+                .autoConnect();
+
+        appSearchSuggestionsView =
+                new AppSearchSuggestionsView(this, RxView.clicks(toolbar), crashReport,
+                        suggestionCursorAdapter, PublishSubject.create(), toolbarMenuItemClick,
+                        searchAnalytics);
+
+        final AptoideApplication application =
+                (AptoideApplication) getContext().getApplicationContext();
+
+        final SearchSuggestionsPresenter searchSuggestionsPresenter =
+                new SearchSuggestionsPresenter(appSearchSuggestionsView,
+                        application.getSearchSuggestionManager(), AndroidSchedulers.mainThread(),
+                        suggestionCursorAdapter, crashReport, trendingManager, searchNavigator, false,
+                        searchAnalytics);
+
+        attachPresenter(searchSuggestionsPresenter);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    protected boolean displayHomeUpAsEnabled() {
+        return false;
+    }
+
+    @Override
+    public void setupToolbarDetails(Toolbar toolbar) {
+        toolbar.setTitle("");
+        toolbar.setNavigationIcon(R.drawable.ic_drawer);
+        toolbar.setNavigationOnClickListener(v -> {
+            drawerLayout.openDrawer(GravityCompat.START);
+            drawerAnalytics.drawerOpen();
+        });
+    }
+
+    @Override
+    public void setupViews() {
+        super.setupViews();
+        accountManager =
+                ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
+        accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
+        setupNavigationView();
+    }
+
+    private View getTabLayout(StorePagerAdapter adapter, Event.Name tab) {
+        for (int i = 0; i < adapter.getCount(); i++) {
+            if (tab.equals(adapter.getEventName(i))) {
+                return ((LinearLayout) pagerSlidingTabStrip.getChildAt(0)).getChildAt(i);
+            }
+        }
+        return null;
+    }
+
+    private void setupNavigationView() {
+        if (navigationView != null) {
+            navigationView.setItemIconTintList(null);
+            navigationView.setNavigationItemSelectedListener(menuItem -> {
+
+                int itemId = menuItem.getItemId();
+                if (itemId == R.id.navigation_item_my_account) {
+                    drawerAnalytics.drawerInteract("My Account");
+                    accountNavigator.navigateToAccountView(AccountAnalytics.AccountOrigins.MY_ACCOUNT);
+                } else {
+                    final FragmentNavigator navigator = getFragmentNavigator();
+                    if (itemId == R.id.navigation_item_setting_scheduled_downloads) {
+                        drawerAnalytics.drawerInteract("Scheduled Downloads");
+                        navigator.navigateTo(AptoideApplication.getFragmentProvider()
+                                .newScheduledDownloadsFragment(), true);
+                    } else if (itemId == R.id.navigation_item_excluded_updates) {
+                        drawerAnalytics.drawerInteract("Excluded Updates");
+                        navigator.navigateTo(AptoideApplication.getFragmentProvider()
+                                .newExcludedUpdatesFragment(), true);
+                    } else if (itemId == R.id.navigation_item_settings) {
+                        drawerAnalytics.drawerInteract("Settings");
+                        navigator.navigateTo(AptoideApplication.getFragmentProvider()
+                                .newSettingsFragment(), true);
+                    } else if (itemId == R.id.send_feedback) {
+                        drawerAnalytics.drawerInteract("Send Feedback");
+                        startFeedbackFragment();
+                    }
+                }
+
+                drawerLayout.closeDrawer(navigationView);
+
+                return false;
+            });
+        }
+    }
+
+    private void startFeedbackFragment() {
+        String downloadFolderPath = getContext().getApplicationContext()
+                .getCacheDir()
+                .getPath();
+        String screenshotFileName = getActivity().getClass()
+                .getSimpleName() + ".jpg";
+        AptoideUtils.ScreenU.takeScreenshot(getActivity(), downloadFolderPath, screenshotFileName);
+        getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
+                .newSendFeedbackFragment(downloadFolderPath + screenshotFileName), true);
+    }
+
+    public void refreshBadge(int num, BadgeView badgeToUpdate) {
+        // No updates present
+        if (badgeToUpdate == null) {
+            return;
+        }
+
+        badgeToUpdate.setTextSize(11);
+
+        if (num > 0) {
+            badgeToUpdate.setText(NumberFormat.getIntegerInstance()
+                    .format(num));
+            if (!badgeToUpdate.isShown()) {
+                badgeToUpdate.show(true);
+            }
+        } else {
+            if (badgeToUpdate.isShown()) {
+                badgeToUpdate.hide(true);
+            }
+        }
+    }
+
+    private Event.Name getEventName(int tab) {
+        switch (tab) {
+            case TabNavigation.DOWNLOADS:
+                return Event.Name.myDownloads;
+            case TabNavigation.STORES:
+                return Event.Name.myStores;
+            case TabNavigation.TIMELINE:
+                return Event.Name.getUserTimeline;
+            case TabNavigation.UPDATES:
+                return Event.Name.myUpdates;
+            default:
+                throw new IllegalArgumentException("Invalid tab.");
+        }
+    }
+
+    private boolean isDrawerOpened() {
+        return drawerLayout.isDrawerOpen(Gravity.LEFT);
+    }
+
+    private void closeDrawer() {
+        drawerLayout.closeDrawers();
+    }
+
+    @Override
+    public void bindViews(View view) {
+        super.bindViews(view);
+
+        updateRepository = RepositoryFactory.getUpdateRepository(getContext(),
+                ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
+
+        navigationView = (NavigationView) view.findViewById(R.id.nav_view);
+        drawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
+
+        setHasOptionsMenu(true);
+    }
+
+    /**
+     * show first install fragment with animation
+     */
+    @SuppressLint("PrivateResource")
+    private void handleFirstInstall(Bundle savedInstanceState) {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            if (savedInstanceState == null
+                    && connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+                    .isConnected()
+                    && ((PartnerApplication) getContext().getApplicationContext()).getBootConfig()
+                    .getPartner()
+                    .getSwitches()
+                    .getOptions()
+                    .getFirstInstall()
+                    .isEnable()
+                    && !PartnersSecurePreferences.isFirstInstallFinished(
+                    ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())) {
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.setCustomAnimations(R.anim.abc_slide_in_bottom, R.anim.abc_slide_out_bottom);
+                transaction.add(R.id.fragment_placeholder, FirstInstallFragment.newInstance());
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        }
+    }
+
+    private enum BundleKeys {
+        STORE_NAME, STORE_CONTEXT, STORE_THEME
+    }
 }

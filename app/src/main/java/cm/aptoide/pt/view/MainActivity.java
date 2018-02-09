@@ -10,94 +10,107 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.view.View;
+
+import com.jakewharton.rxrelay.PublishRelay;
+
+import javax.inject.Inject;
+
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.install.InstallManager;
-import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.navigator.TabNavigatorActivity;
 import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import com.jakewharton.rxrelay.PublishRelay;
-import javax.inject.Inject;
 import rx.Observable;
 
 public class MainActivity extends TabNavigatorActivity
-    implements MainView, DeepLinkManager.DeepLinkMessages {
+        implements MainView, DeepLinkManager.DeepLinkMessages {
 
-  private static final int LAYOUT = R.layout.frame_layout;
-  @Inject Presenter presenter;
-  @Inject AnalyticsManager analytics;
-  private InstallManager installManager;
-  private View snackBarLayout;
-  private PublishRelay<Void> installErrorsDismissEvent;
-  private Snackbar snackbar;
+    private static final int LAYOUT = R.layout.frame_layout;
+    @Inject
+    Presenter presenter;
+    @Inject
+    AnalyticsManager analytics;
+    private InstallManager installManager;
+    private View snackBarLayout;
+    private PublishRelay<Void> installErrorsDismissEvent;
+    private Snackbar snackbar;
 
-  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    getActivityComponent().inject(this);
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getActivityComponent().inject(this);
 
-    setContentView(LAYOUT);
-    final AptoideApplication application = (AptoideApplication) getApplicationContext();
-    installManager = application.getInstallManager(InstallerFactory.DEFAULT);
-    snackBarLayout = findViewById(R.id.snackbar_layout);
-    installErrorsDismissEvent = PublishRelay.create();
-    attachPresenter(presenter);
-  }
-
-  @Override public void showInstallationError(int numberOfErrors) {
-    String title;
-    if (numberOfErrors == 1) {
-      title = getString(R.string.generalscreen_short_root_install_single_app_timeout_error_message);
-    } else {
-      title = getString(R.string.generalscreen_short_root_install_timeout_error_message,
-          numberOfErrors);
+        setContentView(LAYOUT);
+        final AptoideApplication application = (AptoideApplication) getApplicationContext();
+        installManager = application.getInstallManager();
+        snackBarLayout = findViewById(R.id.snackbar_layout);
+        installErrorsDismissEvent = PublishRelay.create();
+        attachPresenter(presenter);
     }
 
-    Snackbar.Callback snackbarCallback = new Snackbar.Callback() {
-      @Override public void onDismissed(Snackbar snackbar, int event) {
-        super.onDismissed(snackbar, event);
-        if (event == DISMISS_EVENT_SWIPE) {
-          installErrorsDismissEvent.call(null);
+    @Override
+    public void showInstallationError(int numberOfErrors) {
+        String title;
+        if (numberOfErrors == 1) {
+            title = getString(R.string.generalscreen_short_root_install_single_app_timeout_error_message);
+        } else {
+            title = getString(R.string.generalscreen_short_root_install_timeout_error_message,
+                    numberOfErrors);
         }
-      }
-    };
-    snackbar = Snackbar.make(snackBarLayout, title, Snackbar.LENGTH_INDEFINITE)
-        .setAction(R.string.generalscreen_short_root_install_timeout_error_action,
-            view -> installManager.retryTimedOutInstallations()
-                .andThen(installManager.cleanTimedOutInstalls())
-                .subscribe())
-        .addCallback(snackbarCallback);
-    snackbar.show();
-  }
 
-  @Override public void dismissInstallationError() {
-    if (snackbar != null) {
-      snackbar.dismiss();
+        Snackbar.Callback snackbarCallback = new Snackbar.Callback() {
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                super.onDismissed(snackbar, event);
+                if (event == DISMISS_EVENT_SWIPE) {
+                    installErrorsDismissEvent.call(null);
+                }
+            }
+        };
+        snackbar = Snackbar.make(snackBarLayout, title, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.generalscreen_short_root_install_timeout_error_action,
+                        view -> installManager.retryTimedOutInstallations()
+                                .andThen(installManager.cleanTimedOutInstalls())
+                                .subscribe())
+                .addCallback(snackbarCallback);
+        snackbar.show();
     }
-  }
 
-  @Override public void showInstallationSuccessMessage() {
-    ShowMessage.asSnack(snackBarLayout, R.string.generalscreen_short_root_install_success_install);
-  }
+    @Override
+    public void dismissInstallationError() {
+        if (snackbar != null) {
+            snackbar.dismiss();
+        }
+    }
 
-  @Override public Observable<Void> getInstallErrorsDismiss() {
-    return installErrorsDismissEvent;
-  }
+    @Override
+    public void showInstallationSuccessMessage() {
+        ShowMessage.asSnack(snackBarLayout, R.string.generalscreen_short_root_install_success_install);
+    }
 
-  @Override public Intent getIntentAfterCreate() {
-    return getIntent();
-  }
+    @Override
+    public Observable<Void> getInstallErrorsDismiss() {
+        return installErrorsDismissEvent;
+    }
 
-  @Override public void showStoreAlreadyAdded() {
-    ShowMessage.asLongSnack(this, getString(R.string.store_already_added));
-  }
+    @Override
+    public Intent getIntentAfterCreate() {
+        return getIntent();
+    }
 
-  @Override public void showStoreFollowed(String storeName) {
-    ShowMessage.asLongSnack(this,
-        AptoideUtils.StringU.getFormattedString(R.string.store_followed, getResources(),
-            storeName));
-  }
+    @Override
+    public void showStoreAlreadyAdded() {
+        ShowMessage.asLongSnack(this, getString(R.string.store_already_added));
+    }
+
+    @Override
+    public void showStoreFollowed(String storeName) {
+        ShowMessage.asLongSnack(this,
+                AptoideUtils.StringU.getFormattedString(R.string.store_followed, getResources(),
+                        storeName));
+    }
 }
