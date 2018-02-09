@@ -29,69 +29,67 @@ import cm.aptoide.pt.store.view.home.HomeFragment;
 import cm.aptoide.pt.store.view.my.MyStoresSubscribedFragment;
 import cm.aptoide.pt.timeline.post.PostFragment;
 import cm.aptoide.pt.updates.view.UpdatesFragment;
-import cm.aptoide.pt.updates.view.rollback.RollbackFragment;
 import dagger.Subcomponent;
 
-@FragmentScope @Subcomponent(modules = { FragmentModule.class })
+@FragmentScope
+@Subcomponent(modules = {FragmentModule.class})
 public interface FragmentComponent {
 
-  void inject(AddressBookFragment addressBookFragment);
+    void inject(AddressBookFragment addressBookFragment);
 
-  void inject(RollbackFragment rollbackFragment);
+    void inject(LoginSignUpCredentialsFragment loginSignUpCredentialsFragment);
 
-  void inject(LoginSignUpCredentialsFragment loginSignUpCredentialsFragment);
+    void inject(ManageUserFragment manageUserFragment);
 
-  void inject(ManageUserFragment manageUserFragment);
+    void inject(ManageStoreFragment manageStoreFragment);
 
-  void inject(ManageStoreFragment manageStoreFragment);
+    void inject(PostCommentsFragment postCommentsFragment);
 
-  void inject(PostCommentsFragment postCommentsFragment);
+    void inject(PostFragment postFragment);
 
-  void inject(PostFragment postFragment);
+    void inject(AppViewFragment appViewFragment);
 
-  void inject(AppViewFragment appViewFragment);
+    void inject(HomeFragment homeFragment);
 
-  void inject(HomeFragment homeFragment);
+    void inject(SearchResultFragment searchResultFragment);
 
-  void inject(SearchResultFragment searchResultFragment);
+    void inject(StoreFragment storeFragment);
 
-  void inject(StoreFragment storeFragment);
+    void inject(SyncResultFragment syncResultFragment);
 
-  void inject(SyncResultFragment syncResultFragment);
+    void inject(InviteFriendsFragment inviteFriendsFragment);
 
-  void inject(InviteFriendsFragment inviteFriendsFragment);
+    void inject(PhoneInputFragment phoneInputFragment);
 
-  void inject(PhoneInputFragment phoneInputFragment);
+    void inject(SpotSharePreviewFragment spotSharePreviewFragment);
 
-  void inject(SpotSharePreviewFragment spotSharePreviewFragment);
+    void inject(TimelineFragment timelineFragment);
 
-  void inject(TimelineFragment timelineFragment);
+    void inject(CommentListFragment commentListFragment);
 
-  void inject(CommentListFragment commentListFragment);
+    void inject(FragmentTopStores fragmentTopStores);
 
-  void inject(FragmentTopStores fragmentTopStores);
+    void inject(LatestReviewsFragment latestReviewsFragment);
 
-  void inject(LatestReviewsFragment latestReviewsFragment);
+    void inject(ListStoresFragment listStoresFragment);
 
-  void inject(ListStoresFragment listStoresFragment);
+    void inject(MyStoresSubscribedFragment myStoresSubscribedFragment);
 
-  void inject(MyStoresSubscribedFragment myStoresSubscribedFragment);
+    void inject(StoreTabWidgetsGridRecyclerFragment storeTabWidgetsGridRecyclerFragment);
 
-  void inject(StoreTabWidgetsGridRecyclerFragment storeTabWidgetsGridRecyclerFragment);
+    void inject(InboxFragment inboxFragment);
 
-  void inject(InboxFragment inboxFragment);
+    void inject(MyAccountFragment myAccountFragment);
 
-  void inject(MyAccountFragment myAccountFragment);
+    void inject(NotLoggedInShareFragment notLoggedInShareFragment);
 
-  void inject(NotLoggedInShareFragment notLoggedInShareFragment);
+    void inject(ProfileStepOneFragment profileStepOneFragment);
 
-  void inject(ProfileStepOneFragment profileStepOneFragment);
+    void inject(ProfileStepTwoFragment profileStepTwoFragment);
 
-  void inject(ProfileStepTwoFragment profileStepTwoFragment);
+    void inject(DownloadsFragment downloadsFragment);
 
-  void inject(DownloadsFragment downloadsFragment);
+    void inject(UpdatesFragment updatesFragment);
 
-  void inject(UpdatesFragment updatesFragment);
-
-  void inject(ScheduledDownloadsFragment scheduledDownloadsFragment);
+    void inject(ScheduledDownloadsFragment scheduledDownloadsFragment);
 }

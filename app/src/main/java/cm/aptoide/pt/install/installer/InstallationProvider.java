@@ -12,5 +12,5 @@ import rx.Observable;
  */
 public interface InstallationProvider {
 
-  Observable<RollbackInstallation> getInstallation(String md5);
+    Observable<Installation> getInstallation(String md5);
 }
