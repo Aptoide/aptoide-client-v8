@@ -26,4 +26,6 @@ public interface ManageStoreView extends ImagePickerView {
   void showError(String error);
 
   void showSuccessMessage();
+
+  boolean hasImage();
 }

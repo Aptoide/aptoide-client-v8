@@ -2,6 +2,7 @@ package cm.aptoide.pt.account.view.store;
 
 import android.net.Uri;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.UriToPathResolver;
 import cm.aptoide.pt.account.view.exception.InvalidImageException;
 import cm.aptoide.pt.account.view.exception.SocialLinkException;
@@ -35,11 +36,12 @@ public class ManageStorePresenter implements Presenter {
   private final ManageStoreErrorMapper errorMapper;
   private final AptoideAccountManager accountManager;
   private final int requestCode;
+  private AccountAnalytics accountAnalytics;
 
   public ManageStorePresenter(ManageStoreView view, CrashReport crashReport,
       UriToPathResolver uriToPathResolver, String applicationPackageName,
       ManageStoreNavigator navigator, boolean goBackToHome, ManageStoreErrorMapper errorMapper,
-      AptoideAccountManager accountManager, int requestCode) {
+      AptoideAccountManager accountManager, int requestCode, AccountAnalytics accountAnalytics) {
     this.view = view;
     this.crashReport = crashReport;
     this.uriToPathResolver = uriToPathResolver;
@@ -49,6 +51,7 @@ public class ManageStorePresenter implements Presenter {
     this.errorMapper = errorMapper;
     this.accountManager = accountManager;
     this.requestCode = requestCode;
+    this.accountAnalytics = accountAnalytics;
   }
 
   @Override public void present() {
@@ -61,6 +64,10 @@ public class ManageStorePresenter implements Presenter {
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.cancelClick()
             .doOnNext(__2 -> {
+              if (goBackToHome) {
+                accountAnalytics.createStore(view.hasImage(),
+                    AccountAnalytics.CreateStoreAction.SKIP);
+              }
               navigate(false);
             }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -84,6 +91,12 @@ public class ManageStorePresenter implements Presenter {
         .observeOn(Schedulers.io())
         .andThen(saveData(storeModel))
         .observeOn(AndroidSchedulers.mainThread())
+        .doOnCompleted(() -> {
+          if (goBackToHome) {
+            accountAnalytics.createStore(view.hasImage(),
+                AccountAnalytics.CreateStoreAction.CREATE);
+          }
+        })
         .doOnCompleted(() -> view.dismissWaitProgressBar())
         .doOnCompleted(() -> view.showSuccessMessage())
         .doOnCompleted(() -> navigate(true))

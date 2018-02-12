@@ -34,7 +34,6 @@ import cm.aptoide.pt.account.view.exception.InvalidImageException;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
-import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.presenter.CompositePresenter;
@@ -106,7 +105,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   private ImageView twitterEndRowIcon;
   private ImageView youtubeEndRowIcon;
   private List<Store.SocialChannelType> storeDeleteLinksList;
-  private int requestCode;
 
   public static ManageStoreFragment newInstance(ManageStoreViewModel storeModel, boolean goToHome) {
     Bundle args = new Bundle();
@@ -123,7 +121,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     getFragmentComponent(savedInstanceState).inject(this);
     currentModel = Parcels.unwrap(getArguments().getParcelable(EXTRA_STORE_MODEL));
     goToHome = getArguments().getBoolean(EXTRA_GO_TO_HOME, true);
-    requestCode = getArguments().getInt(FragmentNavigator.REQUEST_CODE_EXTRA);
     dialogFragment =
         new ImagePickerDialog.Builder(getContext()).setViewRes(ImagePickerDialog.LAYOUT)
             .setTitle(R.string.upload_dialog_title)
@@ -292,6 +289,15 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
         .show();
   }
 
+  /**
+   * <p>Has the user inserted any picture</p>
+   * @return <p>Always True if it's used on Edit screen or if user inserts an image when creating store for the first time</p>
+   * False if user doesn't insert a picture when creating store for the first time
+   */
+  @Override public boolean hasImage() {
+    return currentModel.hasPicture();
+  }
+
   private void showEditTextHideTextView(RelativeLayout relativeLayout,
       CustomTextInputLayout customTextInputLayout, EditText editText) {
     relativeLayout.setVisibility(View.GONE);
@@ -453,8 +459,8 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     storeImage = (ImageView) view.findViewById(R.id.create_store_image);
     storeName = (EditText) view.findViewById(R.id.create_store_name);
     storeDescription = (EditText) view.findViewById(R.id.edit_store_description);
-    cancelChangesButton = (Button) view.findViewById(R.id.create_store_skip);
-    saveDataButton = (Button) view.findViewById(R.id.create_store_action);
+    cancelChangesButton = (Button) view.findViewById(R.id.create_store_skip); //
+    saveDataButton = (Button) view.findViewById(R.id.create_store_action); //
     themeSelectorView = (RecyclerView) view.findViewById(R.id.theme_selector);
     socialChannels = (LinearLayout) view.findViewById(R.id.edit_store_social_channels);
     facebookRow = view.findViewById(R.id.edit_store_facebook);
