@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class AccountAnalytics {
   public static final String APTOIDE_EVENT_NAME = "LOGIN";
-  public static final String ACTION = "CLICK";
+  public static final String STORE_ACTION = "Click";
   public static final String STORE = "store";
   public static final String PERMISSIONS_DENIED = "Permissions Denied";
   public static final String SDK_ERROR = "SDK Error";
@@ -35,6 +35,7 @@ public class AccountAnalytics {
   public static final String SOURCE = "Source";
   public static final String LOGIN_EVENT_NAME = "Account_Login_Screen";
   public static final String SIGN_UP_EVENT_NAME = "Account_Signup_Screen";
+  public static final String CREATE_YOUR_STORE = "Account_Create_Your_Store_Screen";
   private static final String INVALID_GRANT_CODE = "invalid_grant";
   private static final String STATUS = "Status";
   private static final String LOGIN_METHOD = "Method";
@@ -311,6 +312,14 @@ public class AccountAnalytics {
         getViewName(true));
   }
 
+  public void createStore(boolean hasPicture, CreateStoreAction action) {
+    HashMap<String, Object> map = new HashMap<>();
+    map.put(STORE_ACTION, action);
+    map.put(HAS_PICTURE, hasPicture ? "True" : "False");
+    analyticsManager.logEvent(map, CREATE_YOUR_STORE, AnalyticsManager.Action.CLICK,
+        getViewName(true));
+  }
+
   public void enterAccountScreen(AccountOrigins sourceValue) {
     Map<String, Object> map = new HashMap<>();
     map.put(SOURCE, sourceValue.getOrigin());
@@ -386,6 +395,20 @@ public class AccountAnalytics {
     private final String action;
 
     ProfileAction(String action) {
+      this.action = action;
+    }
+
+    public String getAction() {
+      return action;
+    }
+  }
+
+  public enum CreateStoreAction {
+    SKIP("Skip"), CREATE("Create store");
+
+    private final String action;
+
+    CreateStoreAction(String action) {
       this.action = action;
     }
 
