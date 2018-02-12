@@ -6,13 +6,10 @@ import java.util.Map;
 
 public interface EventLogger {
   /**
-   * <p>Sends an {@code event} to the {@code EventLogger(s)} where that {@code event} is listed
-   * on.</p>
+   * <p>Sends an {@code event} to the correspondent {@code EventLogger(s)}.</p>
    *
    * <p>Only the events whose {@code eventName} is listed on {@link FlavourApplicationModule} or
-   * {@link
-   * ApplicationModule
-   * } are logged.</p>
+   * {@link ApplicationModule} are logged.</p>
    *
    * @param eventName The name of the event to be logged.
    * @param data The attributes of the event.
@@ -23,7 +20,7 @@ public interface EventLogger {
       String context);
 
   /**
-   * <p>Initializes the environment to log certain events.</p>
+   * <p>Initializes the environment to allow logging this EventLogger's associated events.</p>
    */
   void setup();
 }

@@ -25,9 +25,8 @@ public class AnalyticsManager {
   /**
    * <p>Logs the events to the correspondent event loggers.</p>
    *
-   *</p> Only the events whose {@code eventName} is listed on {@link FlavourApplicationModule} or {@link
-   * ApplicationModule
-   * } are logged.</p>
+   * </p> Only the events whose {@code eventName} is listed on {@link FlavourApplicationModule} or
+   * {@link ApplicationModule} are logged.</p>
    *
    * @param data The attributes of the event
    * @param eventName The name of the event to be logged.
@@ -70,7 +69,7 @@ public class AnalyticsManager {
   }
 
   /**
-   * <p>Setup the {@code EventLogger(s)} that need to be setup, like AptoideBiEventLogger</p>
+   * <p>Setup the required {@code EventLogger(s)}, like AptoideBiEventLogger</p>
    */
   public void setup() {
     for (Map.Entry<EventLogger, Collection<String>> loggerEntry : eventLoggers.entrySet()) {
@@ -80,7 +79,7 @@ public class AnalyticsManager {
   }
 
   /**
-   * <p> Starts the Flurry session allowing to log events to Flurry.</p>
+   * <p> Starts the Flurry session allowing to log events.</p>
    */
   public void startSession() {
     sessionLogger.startSession();
@@ -94,7 +93,7 @@ public class AnalyticsManager {
   }
 
   /**
-   * <p>This represents the different possible actions performed by the user.</p>
+   * <p>Possible actions, that were performed by the user, to log</p>
    */
   public enum Action {
     CLICK, SCROLL, INPUT, AUTO, ROOT, VIEW, INSTALL, OPEN, IMPRESSION, DISMISS
@@ -175,18 +174,19 @@ public class AnalyticsManager {
     }
 
     /**
-     * <p>Creates an AnalyticsManager.</p>
+     * <p>Builds an AnalyticsManager object.</p>
+     *
+     * <p> An AnalyticsManager needs an {@link HttpKnockEventLogger} and at least one {@link
+     * EventLogger}.</p>
      *
      * <p>If this builder was not started ( see {@link #Builder()} ), a
      * {@link NullPointerException} will occur.</p>
      *
-     * <p>An AnalyticsManager needs a {@link HttpKnockEventLogger}, so if no {@link
-     * HttpKnockEventLogger} was added (see {@link
-     * #setKnockLogger(HttpKnockEventLogger)} ) an IllegalArgumentException will be thrown.</p>
-     *
-     * <p>An AnalyticsManager needs at least one {@link EventLogger}, so if no {@link EventLogger}
-     * were added (see {@link #addLogger(EventLogger, Collection)},
+     * <p>If no {@link HttpKnockEventLogger} was added (see {@link #setKnockLogger(HttpKnockEventLogger)})
      * an IllegalArgumentException will be thrown.</p>
+     *
+     * <p>If at least one {@link EventLogger} was not added (see {@link
+     * #addLogger(EventLogger, Collection)}, an IllegalArgumentException will be thrown.</p>
      *
      * @return An AnalyticsManager object with a {@code HttpKnockEventLogger}, {@code EventLogger}
      * and {@code SessionLogger}.
