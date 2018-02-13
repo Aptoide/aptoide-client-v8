@@ -544,8 +544,7 @@
   <string name="iab_button_done">Done</string>
   <string name="iab_button_retry">Retry</string>
   <string name="iab_message_error_general">The purchase couldn\'t be completed</string>
-  <string name="iab_message_error_card">Provide yur card information</string>
-  <string name="iab_title_credit_card">Credit card</string>
+  <string name="iab_message_error_card">Provide your card information</string>
 
   <!--Strings for shortcuts-->
   <string name="shortcut_button_search">Search</string>
