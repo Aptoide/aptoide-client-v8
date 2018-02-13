@@ -384,7 +384,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         StoredMinimalAd.class);
     final SpotAndShareAnalytics spotAndShareAnalytics =
         new SpotAndShareAnalytics(analyticsManager, navigationTracker);
-    appViewAnalytics = new AppViewAnalytics(downloadAnalytics, installAnalytics, analyticsManager,
+    appViewAnalytics = new AppViewAnalytics(downloadAnalytics, analyticsManager,
         navigationTracker);
 
     appViewSimilarAppAnalytics =
