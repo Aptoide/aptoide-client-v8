@@ -9,7 +9,7 @@ public interface ManageStoreView extends ImagePickerView {
 
   Observable<ManageStoreViewModel> saveDataClick();
 
-  Observable<Void> cancelClick();
+  Observable<ManageStoreViewModel> cancelClick();
 
   void showWaitProgressBar();
 
@@ -26,6 +26,4 @@ public interface ManageStoreView extends ImagePickerView {
   void showError(String error);
 
   void showSuccessMessage();
-
-  boolean hasImage();
 }

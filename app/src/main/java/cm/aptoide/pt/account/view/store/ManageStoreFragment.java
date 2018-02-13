@@ -236,8 +236,9 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
         .doOnNext(__ -> hideKeyboard());
   }
 
-  @Override public Observable<Void> cancelClick() {
+  @Override public Observable<ManageStoreViewModel> cancelClick() {
     return RxView.clicks(cancelChangesButton)
+        .map(__ -> currentModel)
         .doOnNext(__ -> hideKeyboard());
   }
 
@@ -287,17 +288,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   @Override public void showSuccessMessage() {
     Snackbar.make(socialChannels, getString(R.string.done), Snackbar.LENGTH_LONG)
         .show();
-  }
-
-  /**
-   * <p>Has the user inserted any picture</p>
-   *
-   * @return <p>Always True if it's used on Edit screen or if user inserts an image when creating
-   * store for the first time</p>
-   * False if user doesn't insert a picture when creating store for the first time
-   */
-  @Override public boolean hasImage() {
-    return currentModel.hasPicture();
   }
 
   private void showEditTextHideTextView(RelativeLayout relativeLayout,
