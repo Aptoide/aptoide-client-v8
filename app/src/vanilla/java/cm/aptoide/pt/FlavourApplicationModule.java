@@ -121,9 +121,9 @@ import javax.inject.Singleton;
         AppViewSimilarAppAnalytics.SIMILAR_APP_INTERACT,
         NotLoggedInShareAnalytics.POP_UP_SHARE_TIMELINE,
         AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN, AccountAnalytics.CREATE_USER_PROFILE,
-        AccountAnalytics.PROFILE_SETTINGS, AccountAnalytics.ENTRY,
-        AccountAnalytics.CREATE_YOUR_STORE, DeepLinkAnalytics.FACEBOOK_APP_LAUNCH,
-        AppViewAnalytics.CLICK_INSTALL, BillingAnalytics.PAYMENT_AUTH,
-        BillingAnalytics.PAYMENT_LOGIN, BillingAnalytics.PAYMENT_POPUP);
+        AccountAnalytics.PROFILE_SETTINGS, AccountAnalytics.ENTRY, AccountAnalytics.CREATE_YOUR_STORE,
+        DeepLinkAnalytics.FACEBOOK_APP_LAUNCH, AppViewAnalytics.CLICK_INSTALL,
+        BillingAnalytics.PAYMENT_AUTH, BillingAnalytics.PAYMENT_LOGIN,
+        BillingAnalytics.PAYMENT_POPUP, AppShortcutsAnalytics.APPS_SHORTCUTS);
   }
 }
