@@ -43,13 +43,13 @@
       android:visibility="gone"
       />
 
-  <include layout="@layout/app_bar_layout" />
+  <include layout="@layout/app_bar_layout"/>
 
-  <include layout="@layout/partial_view_incl_no_network" />
+  <include layout="@layout/partial_view_incl_no_network"/>
 
-  <include layout="@layout/partial_view_error" />
+  <include layout="@layout/partial_view_error"/>
 
-  <include layout="@layout/partial_view_progress_bar" />
+  <include layout="@layout/partial_view_progress_bar"/>
 
 </android.support.design.widget.CoordinatorLayout>
 

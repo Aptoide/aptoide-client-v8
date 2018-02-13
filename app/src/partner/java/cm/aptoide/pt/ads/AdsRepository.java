@@ -105,7 +105,7 @@ public class AdsRepository {
         .map((ad) -> adMapper.map(ad));
   }
 
-  public Observable<MinimalAd> getAdForShortcut(){
+  public Observable<MinimalAd> getAdForShortcut() {
     return Observable.just(null);
   }
 
