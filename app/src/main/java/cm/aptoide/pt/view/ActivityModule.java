@@ -62,7 +62,6 @@ import dagger.Module;
 import dagger.Provides;
 import java.util.Map;
 import javax.inject.Named;
-import rx.subjects.PublishSubject;
 
 import static android.content.Context.WINDOW_SERVICE;
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -129,16 +128,16 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       NotificationAnalytics notificationAnalytics, StoreUtilsProxy storeUtilsProxy,
       StoreRepository storeRepository, FragmentNavigator fragmentNavigator,
       @Named("default") SharedPreferences sharedPreferences, StoreAccessor storeAccessor,
-      NavigationTracker navigationTracker, PageViewsAnalytics pageViewsAnalytics,
+      NavigationTracker navigationTracker,
       SearchNavigator searchNavigator, SearchAnalytics searchAnalytics,
       DeepLinkAnalytics deepLinkAnalytics, AppShortcutsAnalytics appShortcutsAnalytics,
       AptoideAccountManager accountManager, TimelineAnalytics timelineAnalytics,
       StoreAnalytics storeAnalytics, AdsRepository adsRepository) {
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
         (TabNavigator) activity, (DeepLinkManager.DeepLinkMessages) activity, sharedPreferences,
-        storeAccessor, defaultTheme, notificationAnalytics, navigationTracker, pageViewsAnalytics,
-        searchNavigator, searchAnalytics, appShortcutsAnalytics, accountManager, deepLinkAnalytics,
-        timelineAnalytics, storeAnalytics, PublishSubject.create(), adsRepository);
+        storeAccessor, defaultTheme, notificationAnalytics, navigationTracker,
+            searchNavigator, searchAnalytics, appShortcutsAnalytics, accountManager, deepLinkAnalytics,
+        timelineAnalytics, storeAnalytics, adsRepository);
   }
 
   @ActivityScope @Provides Presenter provideMainPresenter(
