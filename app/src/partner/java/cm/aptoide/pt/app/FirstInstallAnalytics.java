@@ -29,13 +29,13 @@ public class FirstInstallAnalytics {
   }
 
   public void sendPopupEvent() {
-    analyticsManager.logEvent(new HashMap<>(), FIRST_INSTALL_POP_UP, AnalyticsManager.Action.CLICK,
+    analyticsManager.logEvent(null, FIRST_INSTALL_POP_UP, AnalyticsManager.Action.CLICK,
         getViewName(true));
   }
 
   public void sendCloseWindowsEvent() {
-    analyticsManager.logEvent(new HashMap<>(), FIRST_INSTALL_CLOSE_WINDOW,
-        AnalyticsManager.Action.CLICK, getViewName(true));
+    analyticsManager.logEvent(null, FIRST_INSTALL_CLOSE_WINDOW, AnalyticsManager.Action.CLICK,
+        getViewName(true));
   }
 
   public void sendStartDownloadEvent(String sponsored, String normal) {

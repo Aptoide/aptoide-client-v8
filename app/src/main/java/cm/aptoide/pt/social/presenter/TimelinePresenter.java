@@ -335,7 +335,10 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> view.postClicked()
             .filter(cardTouchEvent -> cardTouchEvent.getActionType()
                 .equals(CardTouchEvent.Type.ADD_FRIEND))
-            .doOnNext(cardTouchEvent -> timelineNavigation.navigateToAddressBook()))
+            .doOnNext(cardTouchEvent -> {
+              timelineAnalytics.sendFollowFriendsEvent();
+              timelineNavigation.navigateToAddressBook();
+            }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cardTouchEvent -> {
         }, throwable -> crashReport.log(throwable));
@@ -1178,38 +1181,32 @@ public class TimelinePresenter implements Presenter {
               (TimelineStatsTouchEvent) cardTouchEvent;
           TimelineUser timelineStatsPost = (TimelineUser) timelineStatsTouchEvent.getCard();
           if (timelineStatsTouchEvent.getButtonClicked()
-              .equals(TimelineStatsTouchEvent.ButtonClicked.FOLLOWFRIENDS)) {
-            timelineAnalytics.sendFollowFriendsEvent();
-            timelineNavigation.navigateToAddressBook();
+              .equals(TimelineStatsTouchEvent.ButtonClicked.FOLLOWERS)) {
+            String title = AptoideUtils.StringU.getFormattedString(
+                R.string.social_timeline_followers_fragment_title, resources,
+                timelineStatsPost.getFollowers());
+            if (storeContext.equals(StoreContext.home)) {
+              timelineNavigation.navigateToFollowersViewStore(title);
+            } else {
+              if (userId == null || userId <= 0) {
+                timelineNavigation.navigateToFollowersViewStore(storeId, title);
+              } else {
+                timelineNavigation.navigateToFollowersViewUser(userId, title);
+              }
+            }
           } else {
             if (timelineStatsTouchEvent.getButtonClicked()
-                .equals(TimelineStatsTouchEvent.ButtonClicked.FOLLOWERS)) {
+                .equals(TimelineStatsTouchEvent.ButtonClicked.FOLLOWING)) {
               String title = AptoideUtils.StringU.getFormattedString(
-                  R.string.social_timeline_followers_fragment_title, resources,
-                  timelineStatsPost.getFollowers());
+                  R.string.social_timeline_following_fragment_title, resources,
+                  timelineStatsPost.getFollowing());
               if (storeContext.equals(StoreContext.home)) {
-                timelineNavigation.navigateToFollowersViewStore(title);
+                timelineNavigation.navigateToFollowingViewUser(userId, title);
               } else {
                 if (userId == null || userId <= 0) {
-                  timelineNavigation.navigateToFollowersViewStore(storeId, title);
+                  timelineNavigation.navigateToFollowingViewStore(storeId, title);
                 } else {
-                  timelineNavigation.navigateToFollowersViewUser(userId, title);
-                }
-              }
-            } else {
-              if (timelineStatsTouchEvent.getButtonClicked()
-                  .equals(TimelineStatsTouchEvent.ButtonClicked.FOLLOWING)) {
-                String title = AptoideUtils.StringU.getFormattedString(
-                    R.string.social_timeline_following_fragment_title, resources,
-                    timelineStatsPost.getFollowing());
-                if (storeContext.equals(StoreContext.home)) {
                   timelineNavigation.navigateToFollowingViewUser(userId, title);
-                } else {
-                  if (userId == null || userId <= 0) {
-                    timelineNavigation.navigateToFollowingViewStore(storeId, title);
-                  } else {
-                    timelineNavigation.navigateToFollowingViewUser(userId, title);
-                  }
                 }
               }
             }

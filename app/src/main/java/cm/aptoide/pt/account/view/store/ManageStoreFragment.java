@@ -34,7 +34,6 @@ import cm.aptoide.pt.account.view.exception.InvalidImageException;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
-import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.presenter.CompositePresenter;
@@ -106,7 +105,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   private ImageView twitterEndRowIcon;
   private ImageView youtubeEndRowIcon;
   private List<Store.SocialChannelType> storeDeleteLinksList;
-  private int requestCode;
 
   public static ManageStoreFragment newInstance(ManageStoreViewModel storeModel, boolean goToHome) {
     Bundle args = new Bundle();
@@ -123,7 +121,6 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     getFragmentComponent(savedInstanceState).inject(this);
     currentModel = Parcels.unwrap(getArguments().getParcelable(EXTRA_STORE_MODEL));
     goToHome = getArguments().getBoolean(EXTRA_GO_TO_HOME, true);
-    requestCode = getArguments().getInt(FragmentNavigator.REQUEST_CODE_EXTRA);
     dialogFragment =
         new ImagePickerDialog.Builder(getContext()).setViewRes(ImagePickerDialog.LAYOUT)
             .setTitle(R.string.upload_dialog_title)
@@ -239,8 +236,9 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
         .doOnNext(__ -> hideKeyboard());
   }
 
-  @Override public Observable<Void> cancelClick() {
+  @Override public Observable<ManageStoreViewModel> cancelClick() {
     return RxView.clicks(cancelChangesButton)
+        .map(__ -> currentModel)
         .doOnNext(__ -> hideKeyboard());
   }
 
