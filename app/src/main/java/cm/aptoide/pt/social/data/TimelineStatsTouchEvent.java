@@ -18,6 +18,6 @@ public class TimelineStatsTouchEvent extends CardTouchEvent {
   }
 
   public enum ButtonClicked {
-    FOLLOWERS, FOLLOWING, FOLLOWFRIENDS
+    FOLLOWERS, FOLLOWING
   }
 }

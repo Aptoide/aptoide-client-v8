@@ -22,6 +22,7 @@ import cm.aptoide.pt.account.view.user.ManageUserNavigator;
 import cm.aptoide.pt.account.view.user.ManageUserPresenter;
 import cm.aptoide.pt.account.view.user.ManageUserView;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
@@ -73,10 +74,12 @@ import rx.schedulers.Schedulers;
 
   @FragmentScope @Provides ManageStorePresenter provideManageStorePresenter(
       UriToPathResolver uriToPathResolver, ManageStoreNavigator manageStoreNavigator,
-      ManageStoreErrorMapper manageStoreErrorMapper, AptoideAccountManager accountManager) {
+      ManageStoreErrorMapper manageStoreErrorMapper, AptoideAccountManager accountManager,
+      AccountAnalytics accountAnalytics) {
     return new ManageStorePresenter((ManageStoreView) fragment, CrashReport.getInstance(),
         uriToPathResolver, packageName, manageStoreNavigator,
-        arguments.getBoolean("go_to_home", true), manageStoreErrorMapper, accountManager, 394587);
+        arguments.getBoolean("go_to_home", true), manageStoreErrorMapper, accountManager,
+        arguments.getInt(FragmentNavigator.REQUEST_CODE_EXTRA), accountAnalytics);
   }
 
   @FragmentScope @Provides ManageUserPresenter provideManageUserPresenter(

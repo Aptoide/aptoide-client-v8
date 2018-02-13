@@ -130,7 +130,9 @@ public class ManageUserPresenter implements Presenter {
   }
 
   private void sendAnalytics(ManageUserFragment.ViewModel userData) {
-    accountAnalytics.createdUserProfile(!TextUtils.isEmpty(userData.getPictureUri()));
+    if (!isEditProfile) {
+      accountAnalytics.createdUserProfile(!TextUtils.isEmpty(userData.getPictureUri()));
+    }
   }
 
   private Completable updateUserAccount(ManageUserFragment.ViewModel userData) {

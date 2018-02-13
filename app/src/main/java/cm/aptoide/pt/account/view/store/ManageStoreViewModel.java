@@ -104,6 +104,10 @@ import org.parceler.Parcel;
     return newAvatar;
   }
 
+  public boolean hasPicture() {
+    return (!TextUtils.isEmpty(pictureUri));
+  }
+
   public long getStoreId() {
     return storeId;
   }

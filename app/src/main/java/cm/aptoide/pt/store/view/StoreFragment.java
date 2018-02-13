@@ -278,7 +278,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
         StorePagerAdapter adapter = (StorePagerAdapter) viewPager.getAdapter();
         if (Event.Name.getUserTimeline.equals(adapter.getEventName(position))) {
           timelineAnalytics.sendTimelineTabOpened();
-        } else if (Event.Name.getStore.equals(adapter.getEventName(position))
+        } else if (Event.Name.myStores.equals(adapter.getEventName(position))
             && storeContext.equals(StoreContext.home)) {
           storeAnalytics.sendStoreTabOpenedEvent();
         }
