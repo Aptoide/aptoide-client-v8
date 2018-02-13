@@ -546,5 +546,11 @@
   <string name="iab_message_error_general">The purchase couldn\'t be completed</string>
   <string name="iab_message_error_card">Provide yur card information</string>
   <string name="iab_title_credit_card">Credit card</string>
+
+  <!--Strings for shortcuts-->
+  <string name="shortcut_button_search">Search</string>
+  <string name="shortcut_button_timeline">Timeline</string>
+  <string name="shortcut_button_my_store">My Store</string>
+  <string name="shortcut_button_pick_app">Pick For Me</string>
 </resources>
 

@@ -1,7 +1,8 @@
 package cm.aptoide.pt.search.analytics;
 
 public enum SearchSource {
-  WIDGET("widget"), DEEP_LINK("deep_link"), SEARCH_ICON("vanilla"), SEARCH_TOOLBAR("vanilla");
+  WIDGET("widget"), SHORTCUT("shortcut"), DEEP_LINK("deep_link"), SEARCH_ICON(
+      "vanilla"), SEARCH_TOOLBAR("vanilla");
 
   private final String identifier;
 
