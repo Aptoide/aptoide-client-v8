@@ -33,12 +33,10 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AdultContentAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
@@ -103,9 +101,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private Database database;
   private NavigationTracker navigationTracker;
   private UpdateRepository repository;
-  private PageViewsAnalytics pageViewsAnalytics;
   private String defaultThemeName;
-  private AnalyticsManager analyticsManager;
   private AdultContentAnalytics adultContentAnalytics;
 
   public static Fragment newInstance() {
@@ -154,11 +150,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
         ((AptoideApplication) getContext().getApplicationContext()).getNotificationSyncScheduler();
     navigationTracker =
         ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
-    analyticsManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getAnalyticsManager();
     repository = RepositoryFactory.getUpdateRepository(getContext(),
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
-    pageViewsAnalytics = new PageViewsAnalytics(analyticsManager);
     navigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName()));
   }
