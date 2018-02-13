@@ -216,7 +216,8 @@ public class TimelineAnalytics {
 
   public void sendTimelineTabOpened() {
     Map<String, Object> map = new HashMap<>();
-    analyticsManager.logEvent(map, TIMELINE_OPENED, AnalyticsManager.Action.CLICK, getViewName(false));
+    analyticsManager.logEvent(map, TIMELINE_OPENED, AnalyticsManager.Action.CLICK,
+        getViewName(false));
     map.put(PREVIOUS_CONTEXT, getViewName(false));
     map.put(SOURCE, navigationTracker.getPreviousScreen());
     if (version != null) {
