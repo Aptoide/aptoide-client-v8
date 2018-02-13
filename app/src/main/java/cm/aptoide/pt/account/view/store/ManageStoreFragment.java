@@ -291,7 +291,9 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
 
   /**
    * <p>Has the user inserted any picture</p>
-   * @return <p>Always True if it's used on Edit screen or if user inserts an image when creating store for the first time</p>
+   *
+   * @return <p>Always True if it's used on Edit screen or if user inserts an image when creating
+   * store for the first time</p>
    * False if user doesn't insert a picture when creating store for the first time
    */
   @Override public boolean hasImage() {
@@ -459,8 +461,8 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     storeImage = (ImageView) view.findViewById(R.id.create_store_image);
     storeName = (EditText) view.findViewById(R.id.create_store_name);
     storeDescription = (EditText) view.findViewById(R.id.edit_store_description);
-    cancelChangesButton = (Button) view.findViewById(R.id.create_store_skip); //
-    saveDataButton = (Button) view.findViewById(R.id.create_store_action); //
+    cancelChangesButton = (Button) view.findViewById(R.id.create_store_skip);
+    saveDataButton = (Button) view.findViewById(R.id.create_store_action);
     themeSelectorView = (RecyclerView) view.findViewById(R.id.theme_selector);
     socialChannels = (LinearLayout) view.findViewById(R.id.edit_store_social_channels);
     facebookRow = view.findViewById(R.id.edit_store_facebook);
