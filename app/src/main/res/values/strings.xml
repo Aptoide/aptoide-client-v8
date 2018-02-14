@@ -550,6 +550,6 @@
   <string name="shortcut_button_search">Search</string>
   <string name="shortcut_button_timeline">Timeline</string>
   <string name="shortcut_button_my_store">My Store</string>
-  <string name="shortcut_button_pick_app">Pick For Me</string>
+  <string name="shortcut_button_pick_app">Surprise me</string>
 </resources>
 
