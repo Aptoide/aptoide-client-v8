@@ -45,7 +45,7 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
     compositeSubscription.add(RxView.clicks(button)
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(click -> getFragmentNavigator().navigateTo(
-            ManageStoreFragment.newInstance(new ManageStoreViewModel(), false), true))
+            ManageStoreFragment.newInstance(new ManageStoreViewModel(), false, false), true))
         .doOnNext(__ -> displayable.getStoreAnalytics()
             .sendStoreTabInteractEvent("Login", false))
         .subscribe(__ -> {
