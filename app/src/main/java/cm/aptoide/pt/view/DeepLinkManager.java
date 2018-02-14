@@ -11,7 +11,6 @@ import cm.aptoide.pt.AppShortcutsAnalytics;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkAnalytics;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
-import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
@@ -49,7 +48,6 @@ import java.util.List;
 import rx.Completable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
 
 import static cm.aptoide.pt.DeepLinkIntentReceiver.FROM_SHORTCUT;
@@ -57,7 +55,7 @@ import static cm.aptoide.pt.DeepLinkIntentReceiver.FROM_SHORTCUT;
 public class DeepLinkManager {
 
   public static final String DEEPLINK_KEY = "Deeplink";
-  private static final String APPS_SHORTCUTS = "App_Shortcut";
+  private static final String APP_SHORTCUT = "App_Shortcut";
   private static final String TAG = DeepLinkManager.class.getName();
   private final StoreUtilsProxy storeUtilsProxy;
   private final StoreRepository storeRepository;
@@ -69,7 +67,6 @@ public class DeepLinkManager {
   private final String defaultTheme;
   private final SearchNavigator searchNavigator;
   private final NavigationTracker navigationTracker;
-  private final PageViewsAnalytics pageViewsAnalytics;
   private final NotificationAnalytics notificationAnalytics;
   private final SearchAnalytics searchAnalytics;
   private final AppShortcutsAnalytics appShortcutsAnalytics;
@@ -77,7 +74,6 @@ public class DeepLinkManager {
   private final DeepLinkAnalytics deepLinkAnalytics;
   private final TimelineAnalytics timelineAnalytics;
   private final StoreAnalytics storeAnalytics;
-  private final PublishSubject<Boolean> pickAppPublishSubject;
   private final AdsRepository adsRepository;
   private final CompositeSubscription subscriptions;
 
@@ -85,11 +81,10 @@ public class DeepLinkManager {
       FragmentNavigator fragmentNavigator, TabNavigator tabNavigator,
       DeepLinkMessages deepLinkMessages, SharedPreferences sharedPreferences,
       StoreAccessor storeAccessor, String defaultTheme, NotificationAnalytics notificationAnalytics,
-      NavigationTracker navigationTracker, PageViewsAnalytics pageViewsAnalytics,
-      SearchNavigator searchNavigator, SearchAnalytics searchAnalytics,
-      AppShortcutsAnalytics appShortcutsAnalytics, AptoideAccountManager accountManager,
-      DeepLinkAnalytics deepLinkAnalytics, TimelineAnalytics timelineAnalytics,
-      StoreAnalytics storeAnalytics, PublishSubject<Boolean> pickAppPublishSubject,
+      NavigationTracker navigationTracker, SearchNavigator searchNavigator,
+      SearchAnalytics searchAnalytics, AppShortcutsAnalytics appShortcutsAnalytics,
+      AptoideAccountManager accountManager, DeepLinkAnalytics deepLinkAnalytics,
+      TimelineAnalytics timelineAnalytics, StoreAnalytics storeAnalytics,
       AdsRepository adsRepository) {
     this.storeUtilsProxy = storeUtilsProxy;
     this.storeRepository = storeRepository;
@@ -100,7 +95,6 @@ public class DeepLinkManager {
     this.storeAccessor = storeAccessor;
     this.defaultTheme = defaultTheme;
     this.navigationTracker = navigationTracker;
-    this.pageViewsAnalytics = pageViewsAnalytics;
     this.notificationAnalytics = notificationAnalytics;
     this.searchNavigator = searchNavigator;
     this.searchAnalytics = searchAnalytics;
@@ -109,7 +103,6 @@ public class DeepLinkManager {
     this.timelineAnalytics = timelineAnalytics;
     this.deepLinkAnalytics = deepLinkAnalytics;
     this.storeAnalytics = storeAnalytics;
-    this.pickAppPublishSubject = pickAppPublishSubject;
     this.adsRepository = adsRepository;
     this.subscriptions = new CompositeSubscription();
   }
@@ -160,7 +153,9 @@ public class DeepLinkManager {
       return false;
     }
     List<ScreenTagHistory> screenHistory = navigationTracker.getHistoryList();
-    if (screenHistory.get(screenHistory.size() - 1)
+    if (screenHistory.size() == 0) {
+      navigationTracker.registerScreen(ScreenTagHistory.Builder.build(APP_SHORTCUT));
+    } else if (screenHistory.get(screenHistory.size() - 1)
         .getFragment()
         .equals("Notification")) {
       navigationTracker.registerScreen(ScreenTagHistory.Builder.build("Notification"));
@@ -272,10 +267,8 @@ public class DeepLinkManager {
     if (intent.hasExtra(FROM_SHORTCUT)) {
       timelineAnalytics.sendTimelineTabOpenedFromShortcut();
       appShortcutsAnalytics.shortcutNavigation(ShortcutDestinations.TIMELINE);
-      tabNavigator.navigate(new AppsTimelineTabNavigation(cardId));
-    } else {
-      tabNavigator.navigate(new AppsTimelineTabNavigation(cardId));
     }
+    tabNavigator.navigate(new AppsTimelineTabNavigation(cardId));
   }
 
   private void newUpdatesDeepLink() {
@@ -335,13 +328,11 @@ public class DeepLinkManager {
         .subscribe(navigation -> {
           if (navigation != null) {
             appShortcutsAnalytics.shortcutNavigation(ShortcutDestinations.MY_STORE);
-            storeAnalytics.sendStoreOpenEvent(APPS_SHORTCUTS, navigation.getStore()
+            storeAnalytics.sendStoreOpenEvent(APP_SHORTCUT, navigation.getStore()
                 .getName(), false);
-            String theme = navigation.getStore()
-                .getTheme();
-            Logger.v(TAG, theme);
             fragmentNavigator.navigateTo(StoreFragment.newInstance(navigation.getStore()
-                .getName(), theme, StoreFragment.OpenType.GetHome), true);
+                .getName(), navigation.getStore()
+                .getTheme(), StoreFragment.OpenType.GetHome), true);
           } else {
             appShortcutsAnalytics.shortcutNavigation(ShortcutDestinations.MY_STORE_NOT_LOGGED_IN);
             tabNavigator.navigate(new SimpleTabNavigation(TabNavigation.STORES));

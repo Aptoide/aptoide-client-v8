@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2016.
   ~ Modified on 27/06/2016.
   -->
@@ -45,8 +44,7 @@
 
   <uses-sdk
       android:minSdkVersion="15"
-      tools:overrideLibrary="com.paypal.android.sdk.onetouch.core, com.paypal.android.sdk.payments, com.adyen.core, com.adyen.ui, com.braintreepayments.cardform"
-      />
+      tools:overrideLibrary="com.paypal.android.sdk.onetouch.core, com.paypal.android.sdk.payments, com.adyen.core, com.adyen.ui, com.braintreepayments.cardform"/>
 
   <application
       android:allowBackup="false"
@@ -55,8 +53,7 @@
       android:networkSecurityConfig="@xml/network_security_config"
       android:supportsRtl="true"
       android:theme="@style/AptoideThemeDefault"
-      tools:replace="theme, allowBackup"
-      >
+      tools:replace="theme, allowBackup">
 
     <activity
         android:name=".view.entry.EntryActivity"
@@ -67,13 +64,12 @@
       </intent-filter>
       <meta-data
           android:name="android.app.shortcuts"
-          android:resource="@xml/shortcuts" />
+          android:resource="@xml/shortcuts"/>
     </activity>
 
     <activity
         android:name=".view.OpenGLES20Activity"
-        android:theme="@style/Theme.AppCompat.Translucent">
-    </activity>
+        android:theme="@style/Theme.AppCompat.Translucent"></activity>
 
     <activity android:name=".view.MainActivity"/>
 
@@ -99,8 +95,7 @@
     <provider
         android:name="cm.aptoide.pt.toolbox.ToolboxContentProvider"
         android:authorities="${toolboxProviderAuthority}"
-        android:exported="true"
-        />
+        android:exported="true"/>
 
     <provider
         android:name="android.support.v4.content.FileProvider"
@@ -140,8 +135,7 @@
         android:name=".billing.view.BillingActivity"
         android:launchMode="singleInstance"
         android:screenOrientation="sensor"
-        android:theme="@style/AppBaseTheme.NoTitle.Transparent"
-        >
+        android:theme="@style/AppBaseTheme.NoTitle.Transparent">
       <intent-filter>
         <action android:name="android.intent.action.VIEW"/>
 
@@ -160,8 +154,7 @@
 
     <activity
         android:name="com.facebook.FacebookActivity"
-        android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-        />
+        android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"/>
 
     <activity
         android:name=".DeepLinkIntentReceiver"
@@ -368,11 +361,9 @@
 
     <activity
         android:name=".spotandshare.view.TransferRecordActivity"
-        android:configChanges="orientation|keyboardHidden|screenSize">
-    </activity>
+        android:configChanges="orientation|keyboardHidden|screenSize"></activity>
 
-    <activity android:name=".spotandshare.view.ShareAptoideActivity">
-    </activity>
+    <activity android:name=".spotandshare.view.ShareAptoideActivity"></activity>
 
     <activity
         android:name="com.mopub.common.MoPubBrowser"
@@ -387,7 +378,7 @@
       </intent-filter>
       <meta-data
           android:name="android.appwidget.provider"
-          android:resource="@xml/widget_search_app" />
+          android:resource="@xml/widget_search_app"/>
     </receiver>
 
   </application>

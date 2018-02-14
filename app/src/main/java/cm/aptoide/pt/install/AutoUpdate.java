@@ -171,12 +171,9 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
                     .log(throwable);
                 dismissDialog();
               });
-
-          //FlurryAgent.logEvent("Auto_Update_Clicked_On_Yes_Button"); TODO include
         });
     updateSelfDialog.setButton(Dialog.BUTTON_NEGATIVE, activity.getString(android.R.string.no),
         (dialog, arg1) -> {
-          //FlurryAgent.logEvent("Auto_Update_Clicked_On_No_Button");TODO include
           dialog.dismiss();
         });
     if (activity.is_resumed()) {

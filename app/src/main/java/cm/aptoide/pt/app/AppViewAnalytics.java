@@ -6,7 +6,6 @@ import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.download.DownloadAnalytics;
-import cm.aptoide.pt.install.InstallAnalytics;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,16 +25,14 @@ public class AppViewAnalytics {
   private static final String APPLICATION_NAME = "Application Name";
   private static final String APPLICATION_PUBLISHER = "Application Publisher";
   private static final String ACTION = "Action";
-  private static final String DEFAULT_CONTEXT = "AppView";
+  private static final String APP_SHORTCUT = "App_Shortcut";
   private final DownloadAnalytics downloadAnalytics;
-  private final InstallAnalytics installAnalytics;
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
 
-  public AppViewAnalytics(DownloadAnalytics downloadAnalytics, InstallAnalytics installAnalytics,
-      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
+  public AppViewAnalytics(DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
+      NavigationTracker navigationTracker) {
     this.downloadAnalytics = downloadAnalytics;
-    this.installAnalytics = installAnalytics;
     this.analyticsManager = analyticsManager;
     this.navigationTracker = navigationTracker;
   }
@@ -77,18 +74,26 @@ public class AppViewAnalytics {
     analyticsManager.logEvent(
         createAppViewedFromMap(previousScreen, currentScreen, packageName, appPublisher, badge),
         APP_VIEW_OPEN_FROM, AnalyticsManager.Action.CLICK, getViewName(false));
-    analyticsManager.logEvent(
-        createAppViewDataMap(previousScreen.getStore(), currentScreen.getTag(), packageName),
+    analyticsManager.logEvent(createAppViewDataMap(previousScreen, currentScreen, packageName),
         OPEN_APP_VIEW, AnalyticsManager.Action.CLICK, getViewName(false));
   }
 
-  private Map<String, Object> createAppViewDataMap(String store, String tag, String packageName) {
+  private Map<String, Object> createAppViewDataMap(ScreenTagHistory previousScreen,
+      ScreenTagHistory currentScreen, String packageName) {
     Map<String, String> packageMap = new HashMap<>();
     packageMap.put("package", packageName);
     Map<String, Object> data = new HashMap<>();
     data.put("app", packageMap);
-    data.put("previous_store", store);
-    data.put("previous_tag", tag);
+    if (previousScreen != null) {
+      data.put("previous_store", previousScreen.getStore());
+    } else {
+      data.put("previous_store", APP_SHORTCUT);
+    }
+    if (currentScreen != null) {
+      data.put("previous_tag", currentScreen.getTag());
+    } else {
+      data.put("previous_tag", APP_SHORTCUT);
+    }
     return data;
   }
 
