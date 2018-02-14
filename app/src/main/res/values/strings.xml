@@ -309,8 +309,6 @@
   <string name="comment_store">Comment Store</string>
   <string name="comment_store_title">Comments on this Store</string>
   <string name="be_the_first_to_send_feedback_about_this_store">Be the first to send feedback about this store</string>
-
-  <!-- Payments -->
   <string name="reviews_expand_button">%d Replies</string>
   <string name="out_of_space_dialog_title">Out of space</string>
   <string name="out_of_space_dialog_message">Free up some space to continue.</string>
@@ -458,10 +456,6 @@
   <!-- Network -->
   <string name="no_excluded_updates_selected">No excluded updates selected</string>
 
-  <!-- Payments -->
-  <string name="buy">buy</string>
-  <string name="cancel">Cancel</string>
-  <string name="no_payments_available">No payments available.</string>
 
   <string name="rollback_installed">Installed</string>
   <string name="rollback_uninstalled">Uninstalled</string>
@@ -528,5 +522,34 @@
   <string name="storetab_short_followers">Followers\n%s</string>
   <string name="storetab_short_follow_error">An error occurred while following store</string>
   <string name="list_store_apps_fragment_title">Store Apps</string>
+
+  <!-- Payments -->
+  <string name="buy">buy</string>
+  <string name="cancel">Cancel</string>
+  <string name="no_payments_available">No payments available.</string>
+
+  <string name="iab_title_payment_methods">Payment methods</string>
+  <string name="iab_title_add_payment_method">Add payment method</string>
+  <string name="iab_title_add_card">Add card</string>
+  <string name="iab_title_purchase">Purchase</string>
+  <string name="iab_title_delete">Delete</string>
+  <string name="iab_button_next">Next</string>
+  <string name="iab_button_ok">OK</string>
+  <string name="iab_message_cvv">The CVV is the three-number code that appears in the sifnature bar on the back of your card.</string>
+  <string name="iab_title_payment_product_name">You\'re purchasing</string>
+  <string name="iab_title_price">Price</string>
+  <string name="iab_title_payment_method">Payment method</string>
+  <string name="iab_button_change">Change</string>
+  <string name="iab_button_buy">Buy</string>
+  <string name="iab_button_done">Done</string>
+  <string name="iab_button_retry">Retry</string>
+  <string name="iab_message_error_general">The purchase couldn\'t be completed</string>
+  <string name="iab_message_error_card">Provide your card information</string>
+
+  <!--Strings for shortcuts-->
+  <string name="shortcut_button_search">Search</string>
+  <string name="shortcut_button_timeline">Timeline</string>
+  <string name="shortcut_button_my_store">My Store</string>
+  <string name="shortcut_button_pick_app">Pick For Me</string>
 </resources>
 

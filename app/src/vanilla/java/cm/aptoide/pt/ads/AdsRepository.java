@@ -14,11 +14,13 @@ import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
+import cm.aptoide.pt.dataprovider.ws.v2.aptwords.Location;
 import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.q.QManager;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -187,5 +189,30 @@ public class AdsRepository {
                 qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
                 sharedPreferences, connectivityManager, resources, versionCodeProvider)
                 .observe()));
+  }
+
+  public Observable<MinimalAd> getAdForShortcut() {
+    return accountManager.accountStatus()
+        .first()
+        .flatMap(account -> mapRandomAd(
+            GetAdsRequest.of(Location.homepage, "__NULL__", 10, idsRepository.getUniqueIdentifier(),
+                googlePlayServicesAvailabilityChecker.isAvailable(context),
+                partnerIdProvider.getPartnerId(), account.isAdultContentEnabled(), httpClient,
+                converterFactory,
+                qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
+                sharedPreferences, connectivityManager, resources, versionCodeProvider)
+                .observe()));
+  }
+
+  private Observable<MinimalAd> mapRandomAd(Observable<GetAdsResponse> getAdsResponseObservable) {
+    Random rand = new Random();
+    return getAdsResponseObservable.map((getAdsResponse) -> getAdsResponse.getAds())
+        .flatMap(ads -> {
+          if (!validAds(ads)) {
+            return Observable.error(new IllegalStateException("Invalid ads returned from server"));
+          }
+          return Observable.just(ads.get(rand.nextInt(10)));
+        })
+        .map((ad) -> adMapper.map(ad));
   }
 }

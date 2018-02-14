@@ -105,6 +105,10 @@ public class AdsRepository {
         .map((ad) -> adMapper.map(ad));
   }
 
+  public Observable<MinimalAd> getAdForShortcut() {
+    return Observable.just(null);
+  }
+
   public Observable<List<MinimalAd>> getAdsFromHomepageMore(boolean refresh) {
     return accountManager.accountStatus()
         .first()

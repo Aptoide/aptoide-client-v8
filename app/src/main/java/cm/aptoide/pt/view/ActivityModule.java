@@ -8,9 +8,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AppShortcutsAnalytics;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkAnalytics;
-import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
@@ -21,6 +21,7 @@ import cm.aptoide.pt.account.view.UriToPathResolver;
 import cm.aptoide.pt.account.view.store.ManageStoreNavigator;
 import cm.aptoide.pt.account.view.user.ManageUserNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -50,7 +51,9 @@ import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
+import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreUtilsProxy;
+import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.util.ApkFy;
 import com.facebook.CallbackManager;
 import com.facebook.login.LoginManager;
@@ -127,13 +130,16 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       NotificationAnalytics notificationAnalytics, StoreUtilsProxy storeUtilsProxy,
       StoreRepository storeRepository, FragmentNavigator fragmentNavigator,
       @Named("default") SharedPreferences sharedPreferences, StoreAccessor storeAccessor,
-      NavigationTracker navigationTracker, PageViewsAnalytics pageViewsAnalytics,
-      SearchNavigator searchNavigator, SearchAnalytics searchAnalytics,
-      DeepLinkAnalytics deepLinkAnalytics) {
+      NavigationTracker navigationTracker, SearchNavigator searchNavigator,
+      SearchAnalytics searchAnalytics, DeepLinkAnalytics deepLinkAnalytics,
+      AppShortcutsAnalytics appShortcutsAnalytics, AptoideAccountManager accountManager,
+      TimelineAnalytics timelineAnalytics, StoreAnalytics storeAnalytics,
+      AdsRepository adsRepository) {
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
         (TabNavigator) activity, (DeepLinkManager.DeepLinkMessages) activity, sharedPreferences,
-        storeAccessor, defaultTheme, notificationAnalytics, navigationTracker, pageViewsAnalytics,
-        searchNavigator, searchAnalytics, deepLinkAnalytics);
+        storeAccessor, defaultTheme, notificationAnalytics, navigationTracker, searchNavigator,
+        searchAnalytics, appShortcutsAnalytics, accountManager, deepLinkAnalytics,
+        timelineAnalytics, storeAnalytics, adsRepository);
   }
 
   @ActivityScope @Provides Presenter provideMainPresenter(

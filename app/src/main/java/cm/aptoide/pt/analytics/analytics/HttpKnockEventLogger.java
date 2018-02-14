@@ -14,10 +14,21 @@ import okhttp3.Response;
 public class HttpKnockEventLogger {
   private final OkHttpClient client;
 
+  /**
+   * <p> Creates a HttpKnockEventLogger that will allow to log ( {@link #log(String)} ) events
+   * through an {@code url}</p>
+   *
+   * @param client Can be used to send and read HTTP requests.
+   */
   public HttpKnockEventLogger(OkHttpClient client) {
     this.client = client;
   }
 
+  /**
+   * <p>Makes a request (Knock) to the passed {@code url}.</p>
+   *
+   * @param url Corresponds to the url to be requested.
+   */
   public void log(String url) {
     Request click = new Request.Builder().url(url)
         .build();
