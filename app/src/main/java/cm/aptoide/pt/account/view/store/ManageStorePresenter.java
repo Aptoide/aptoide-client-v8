@@ -64,7 +64,7 @@ public class ManageStorePresenter implements Presenter {
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.cancelClick()
             .doOnNext(storeModel -> {
-              if (goBackToHome) {
+              if (!storeModel.storeExists()) {
                 accountAnalytics.createStore(storeModel.hasPicture(),
                     AccountAnalytics.CreateStoreAction.SKIP);
               }
@@ -92,7 +92,7 @@ public class ManageStorePresenter implements Presenter {
         .andThen(saveData(storeModel))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnCompleted(() -> {
-          if (goBackToHome) {
+          if (!storeModel.storeExists()) {
             accountAnalytics.createStore(storeModel.hasPicture(),
                 AccountAnalytics.CreateStoreAction.CREATE);
           }
