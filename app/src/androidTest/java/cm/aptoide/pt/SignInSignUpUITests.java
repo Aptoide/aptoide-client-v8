@@ -65,7 +65,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
    * email and empty password.</p>
    * Result: Appropriate error message should display
    */
-  @Test public void signInEmptyPasswordSignIn() {
+  @Test public void signInEmptyPassword() {
     goToMyAccount();
     performLogin(LOGINEMAIL, "");
     onView(withText(R.string.no_pass_error_message)).check(matches(isDisplayed()));
