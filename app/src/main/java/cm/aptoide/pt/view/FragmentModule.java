@@ -78,7 +78,8 @@ import rx.schedulers.Schedulers;
       AccountAnalytics accountAnalytics) {
     return new ManageStorePresenter((ManageStoreView) fragment, CrashReport.getInstance(),
         uriToPathResolver, packageName, manageStoreNavigator,
-        arguments.getBoolean("go_to_home", true), manageStoreErrorMapper, accountManager,
+        arguments.getBoolean("go_to_home", true), arguments.getBoolean("is_edit", false),
+        manageStoreErrorMapper, accountManager,
         arguments.getInt(FragmentNavigator.REQUEST_CODE_EXTRA), accountAnalytics);
   }
 

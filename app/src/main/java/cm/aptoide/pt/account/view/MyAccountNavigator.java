@@ -35,7 +35,7 @@ public class MyAccountNavigator {
         store.getAppearance()
             .getTheme()), store.getName(), store.getAppearance()
         .getDescription(), store.getAvatar(), store.getSocialChannels());
-    fragmentNavigator.navigateForResult(ManageStoreFragment.newInstance(viewModel, false),
+    fragmentNavigator.navigateForResult(ManageStoreFragment.newInstance(viewModel, false, true),
         requestCode, true);
   }
 

@@ -336,8 +336,8 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     ManageStoreViewModel viewModel =
         new ManageStoreViewModel(storeId, StoreTheme.fromName(storeThemeName), storeName,
             storeDescription, storeImagePath, socialChannels);
-    getFragmentNavigator().navigateForResult(ManageStoreFragment.newInstance(viewModel, false),
-        requestCode, true);
+    getFragmentNavigator().navigateForResult(
+        ManageStoreFragment.newInstance(viewModel, false, true), requestCode, true);
   }
 
   private void showSecondaryName(String secondaryNameString) {

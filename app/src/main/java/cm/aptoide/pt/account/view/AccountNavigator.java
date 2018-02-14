@@ -159,6 +159,6 @@ public class AccountNavigator {
 
   public void navigateToCreateStoreView() {
     fragmentNavigator.navigateToCleaningBackStack(
-        ManageStoreFragment.newInstance(new ManageStoreViewModel(), true), true);
+        ManageStoreFragment.newInstance(new ManageStoreViewModel(), true, false), true);
   }
 }

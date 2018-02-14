@@ -59,6 +59,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
 
   private static final String EXTRA_STORE_MODEL = "store_model";
   private static final String EXTRA_GO_TO_HOME = "go_to_home";
+  private static final String EXTRA_IS_EDIT_STORE = "is_edit";
   private static final float STROKE_SIZE = 0.040f;
   private static final float SPACE_BETWEEN = 0.0f;
   @Inject ImagePickerPresenter imagePickerPresenter;
@@ -76,6 +77,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   private ThemeSelectorViewAdapter themeSelectorAdapter;
   private ManageStoreViewModel currentModel;
   private boolean goToHome;
+  private boolean isEdit;
   private Toolbar toolbar;
   private ImagePickerDialog dialogFragment;
   private ImagePickerErrorHandler imagePickerErrorHandler;
@@ -106,11 +108,12 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
   private ImageView youtubeEndRowIcon;
   private List<Store.SocialChannelType> storeDeleteLinksList;
 
-  public static ManageStoreFragment newInstance(ManageStoreViewModel storeModel, boolean goToHome) {
+  public static ManageStoreFragment newInstance(ManageStoreViewModel storeModel, boolean goToHome,
+      boolean isEdit) {
     Bundle args = new Bundle();
     args.putParcelable(EXTRA_STORE_MODEL, Parcels.wrap(storeModel));
     args.putBoolean(EXTRA_GO_TO_HOME, goToHome);
-
+    args.putBoolean(EXTRA_IS_EDIT_STORE, isEdit);
     ManageStoreFragment fragment = new ManageStoreFragment();
     fragment.setArguments(args);
     return fragment;
@@ -121,6 +124,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     getFragmentComponent(savedInstanceState).inject(this);
     currentModel = Parcels.unwrap(getArguments().getParcelable(EXTRA_STORE_MODEL));
     goToHome = getArguments().getBoolean(EXTRA_GO_TO_HOME, true);
+    isEdit = getArguments().getBoolean(EXTRA_IS_EDIT_STORE, false);
     dialogFragment =
         new ImagePickerDialog.Builder(getContext()).setViewRes(ImagePickerDialog.LAYOUT)
             .setTitle(R.string.upload_dialog_title)
@@ -357,6 +361,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
         currentModel = new ManageStoreViewModel();
       }
       goToHome = savedInstanceState.getBoolean(EXTRA_GO_TO_HOME, true);
+      isEdit = savedInstanceState.getBoolean(EXTRA_IS_EDIT_STORE, false);
     }
   }
 
@@ -364,6 +369,7 @@ public class ManageStoreFragment extends BackButtonFragment implements ManageSto
     super.onSaveInstanceState(outState);
     outState.putParcelable(EXTRA_STORE_MODEL, Parcels.wrap(currentModel));
     outState.putBoolean(EXTRA_GO_TO_HOME, goToHome);
+    outState.putBoolean(EXTRA_IS_EDIT_STORE, isEdit);
   }
 
   @Override public void onDestroyView() {

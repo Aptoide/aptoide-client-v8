@@ -36,18 +36,21 @@ public class ManageStorePresenter implements Presenter {
   private final ManageStoreErrorMapper errorMapper;
   private final AptoideAccountManager accountManager;
   private final int requestCode;
+  private boolean isEdit;
   private AccountAnalytics accountAnalytics;
 
   public ManageStorePresenter(ManageStoreView view, CrashReport crashReport,
       UriToPathResolver uriToPathResolver, String applicationPackageName,
-      ManageStoreNavigator navigator, boolean goBackToHome, ManageStoreErrorMapper errorMapper,
-      AptoideAccountManager accountManager, int requestCode, AccountAnalytics accountAnalytics) {
+      ManageStoreNavigator navigator, boolean goBackToHome, boolean isEdit,
+      ManageStoreErrorMapper errorMapper, AptoideAccountManager accountManager, int requestCode,
+      AccountAnalytics accountAnalytics) {
     this.view = view;
     this.crashReport = crashReport;
     this.uriToPathResolver = uriToPathResolver;
     this.applicationPackageName = applicationPackageName;
     this.navigator = navigator;
     this.goBackToHome = goBackToHome;
+    this.isEdit = isEdit;
     this.errorMapper = errorMapper;
     this.accountManager = accountManager;
     this.requestCode = requestCode;
@@ -64,7 +67,7 @@ public class ManageStorePresenter implements Presenter {
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.cancelClick()
             .doOnNext(storeModel -> {
-              if (goBackToHome) {
+              if (!isEdit) {
                 accountAnalytics.createStore(storeModel.hasPicture(),
                     AccountAnalytics.CreateStoreAction.SKIP);
               }
@@ -92,7 +95,7 @@ public class ManageStorePresenter implements Presenter {
         .andThen(saveData(storeModel))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnCompleted(() -> {
-          if (goBackToHome) {
+          if (!isEdit) {
             accountAnalytics.createStore(storeModel.hasPicture(),
                 AccountAnalytics.CreateStoreAction.CREATE);
           }
