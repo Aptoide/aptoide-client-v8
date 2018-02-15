@@ -21,39 +21,39 @@ android {
   productFlavors {
     internal {
       buildConfigField "String", "APTOIDE_WEB_SERVICES_SCHEME",
-          "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_SCHEME + "\""
+          "\"" + project.APTOIDE_WEB_SERVICES_SCHEME_DEVELOPMENT + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_HOST + "\""
+          "\"" + project.APTOIDE_WEB_SERVICES_HOST_DEVELOPMENT + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_V7_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_V7_HOST + "\""
+          "\"" + project.APTOIDE_WEB_SERVICES_V7_HOST_DEVELOPMENT + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_APTWORDS_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_APTWORDS_HOST + "\""
+          "\"" + project.APTOIDE_WEB_SERVICES_APTWORDS_HOST_DEVELOPMENT + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_WRITE_V7_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_WRITE_V7_HOST + "\""
+          "\"" + project.APTOIDE_WEB_SERVICES_WRITE_V7_HOST_DEVELOPMENT + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_NOTIFICATION_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_NOTIFICATION_HOST + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_READ_V7_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_READ_V7_HOST + "\""
+          "\"" + project.APTOIDE_WEB_SERVICES_READ_V7_HOST_DEVELOPMENT + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_SEARCH_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_SEARCH_HOST + "\""
+          "\"" + project.APTOIDE_WEB_SERVICES_SEARCH_HOST_DEVELOPMENT + "\""
     }
     prod {
       buildConfigField "String", "APTOIDE_WEB_SERVICES_SCHEME",
-          "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_SCHEME + "\""
+          "\"" + project.APTOIDE_WEB_SERVICES_SCHEME_PRODUCTION + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_HOST + "\""
+          "\"" + project.APTOIDE_WEB_SERVICES_HOST_PRODUCTION + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_V7_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_V7_HOST + "\""
+          "\"" + project.APTOIDE_WEB_SERVICES_V7_HOST_PRODUCTION + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_APTWORDS_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_APTWORDS_HOST + "\""
+          "\"" + project.APTOIDE_WEB_SERVICES_APTWORDS_HOST_PRODUCTION + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_WRITE_V7_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_WRITE_V7_HOST + "\""
+          "\"" + project.APTOIDE_WEB_SERVICES_WRITE_V7_HOST_PRODUCTION + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_NOTIFICATION_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_NOTIFICATION_HOST + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_READ_V7_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_READ_V7_HOST + "\""
+          "\"" + project.APTOIDE_WEB_SERVICES_READ_V7_HOST_PRODUCTION + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_SEARCH_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_SEARCH_HOST + "\""
+          "\"" + project.APTOIDE_WEB_SERVICES_SEARCH_HOST_PRODUCTION + "\""
     }
   }
 
