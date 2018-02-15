@@ -29,13 +29,10 @@ public class InstallerFactory {
   public static final int DEFAULT = 0;
   private final MinimalAdMapper adMapper;
   private final InstallerAnalytics installerAnalytics;
-  private final String imagesCachePath;
 
-  public InstallerFactory(MinimalAdMapper adMapper, InstallerAnalytics installerAnalytics,
-      String imagesCachePath) {
+  public InstallerFactory(MinimalAdMapper adMapper, InstallerAnalytics installerAnalytics) {
     this.adMapper = adMapper;
     this.installerAnalytics = installerAnalytics;
-    this.imagesCachePath = imagesCachePath;
   }
 
   public Installer create(Context context) {

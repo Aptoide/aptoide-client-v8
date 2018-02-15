@@ -11,11 +11,9 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Scheduled;
-import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import rx.android.schedulers.AndroidSchedulers;
@@ -30,7 +28,6 @@ public class ScheduledDownloadWidget extends Widget<ScheduledDownloadDisplayable
   private TextView appVersion;
   private CheckBox isSelected;
   private ProgressBar progressBarIsInstalling;
-  private InstallManager installManager;
 
   public ScheduledDownloadWidget(View itemView) {
     super(itemView);
@@ -45,8 +42,6 @@ public class ScheduledDownloadWidget extends Widget<ScheduledDownloadDisplayable
   }
 
   @Override public void bindView(ScheduledDownloadDisplayable displayable) {
-    installManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getInstallManager();
     Scheduled scheduled = displayable.getPojo();
     final FragmentActivity context = getContext();
     ImageLoader.with(context)
