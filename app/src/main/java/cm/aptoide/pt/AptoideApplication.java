@@ -494,27 +494,27 @@ public abstract class AptoideApplication extends Application {
     return downloadManager;
   }
 
-  public InstallManager getInstallManager(int installerType) {
+  public InstallManager getInstallManager() {
 
     if (installManagers == null) {
       installManagers = new SparseArray<>();
     }
 
-    InstallManager installManager = installManagers.get(installerType);
+    InstallManager installManager = installManagers.get(InstallerFactory.DEFAULT);
     if (installManager == null) {
 
       installManager = new InstallManager(getApplicationContext(), getDownloadManager(),
           new InstallerFactory(new MinimalAdMapper(),
               new InstallFabricEvents(analyticsManager, installAnalytics,
                   getDefaultSharedPreferences(), rootAvailabilityManager),
-              getImageCachePath()).create(this, installerType), getRootAvailabilityManager(),
+              getImageCachePath()).create(this), getRootAvailabilityManager(),
           getDefaultSharedPreferences(),
           SecurePreferencesImplementation.getInstance(getApplicationContext(),
               getDefaultSharedPreferences()),
           RepositoryFactory.getDownloadRepository(getApplicationContext().getApplicationContext()),
           RepositoryFactory.getInstalledRepository(
               getApplicationContext().getApplicationContext()));
-      installManagers.put(installerType, installManager);
+      installManagers.put(InstallerFactory.DEFAULT, installManager);
     }
 
     return installManager;
@@ -879,8 +879,8 @@ public abstract class AptoideApplication extends Application {
           new TimelineRepositoryFactory(new HashMap<>(), getAccountSettingsBodyInterceptorPoolV7(),
               getDefaultClient(), getDefaultSharedPreferences(), getTokenInvalidator(),
               new LinksHandlerFactory(this), getPackageRepository(),
-              WebService.getDefaultConverter(), new TimelineResponseCardMapper(accountManager,
-              getInstallManager(InstallerFactory.ROLLBACK), getMarketName()),
+              WebService.getDefaultConverter(),
+              new TimelineResponseCardMapper(accountManager, getInstallManager(), getMarketName()),
               RepositoryFactory.getUpdateRepository(context,
                   ((AptoideApplication) context.getApplicationContext()).getDefaultSharedPreferences()));
     }

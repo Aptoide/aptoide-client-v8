@@ -31,7 +31,6 @@ import cm.aptoide.pt.download.ScheduledDownloadRepository;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
-import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -86,7 +85,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     marketName = application.getMarketName();
-    installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
+    installManager = application.getInstallManager();
     setHasOptionsMenu(true);
   }
 

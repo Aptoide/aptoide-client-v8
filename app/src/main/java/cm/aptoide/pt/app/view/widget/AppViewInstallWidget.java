@@ -49,7 +49,6 @@ import cm.aptoide.pt.download.Origin;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
-import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.install.view.InstallWarningDialog;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
@@ -157,7 +156,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     final OkHttpClient httpClient = application.getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     accountManager = application.getAccountManager();
-    installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
+    installManager = application.getInstallManager();
     BodyInterceptor<BaseBody> bodyInterceptor =
         application.getAccountSettingsBodyInterceptorPoolV7();
     final TokenInvalidator tokenInvalidator = application.getTokenInvalidator();

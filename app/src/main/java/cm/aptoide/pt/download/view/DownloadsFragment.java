@@ -16,7 +16,6 @@ import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
-import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.presenter.DownloadsPresenter;
 import cm.aptoide.pt.presenter.DownloadsView;
 import cm.aptoide.pt.store.view.StoreTabNavigator;
@@ -43,8 +42,8 @@ public class DownloadsFragment extends NavigationTrackFragment implements Downlo
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
-    installManager = ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(
-        InstallerFactory.ROLLBACK);
+    installManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getInstallManager();
 
     storeTabNavigator = new StoreTabNavigator(getFragmentNavigator());
   }

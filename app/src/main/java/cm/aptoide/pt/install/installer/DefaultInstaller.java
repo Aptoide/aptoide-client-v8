@@ -151,7 +151,7 @@ public class DefaultInstaller implements Installer {
   }
 
   private Observable<Installation> startDefaultInstallation(Context context,
-      RollbackInstallation installation) {
+      Installation installation) {
     return defaultInstall(context, installation).doOnNext(installation1 -> installation1.save());
   }
 
@@ -201,7 +201,7 @@ public class DefaultInstaller implements Installer {
     }
   }
 
-  private void moveInstallationFiles(RollbackInstallation installation) {
+  private void moveInstallationFiles(Installation installation) {
     List<FileToDownload> files = installation.getFiles();
     for (int i = 0; i < files.size(); i++) {
       FileToDownload file = files.get(i);

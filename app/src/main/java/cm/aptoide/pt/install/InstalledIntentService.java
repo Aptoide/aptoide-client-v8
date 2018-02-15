@@ -14,12 +14,10 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
-import cm.aptoide.pt.install.rollback.RollbackRepository;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
@@ -43,7 +41,6 @@ public class InstalledIntentService extends IntentService {
   @Inject InstallAnalytics installAnalytics;
   private SharedPreferences sharedPreferences;
   private AdsRepository adsRepository;
-  private RollbackRepository repository;
   private UpdateRepository updatesRepository;
   private CompositeSubscription subscriptions;
   private OkHttpClient httpClient;
@@ -71,11 +68,9 @@ public class InstalledIntentService extends IntentService {
     final SharedPreferences sharedPreferences =
         ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences();
     adsRepository = ((AptoideApplication) getApplicationContext()).getAdsRepository();
-    repository = RepositoryFactory.getRollbackRepository(getApplicationContext());
     updatesRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
     subscriptions = new CompositeSubscription();
-    installManager =
-        ((AptoideApplication) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
+    installManager = ((AptoideApplication) getApplicationContext()).getInstallManager();
     rootAvailabilityManager =
         ((AptoideApplication) getApplicationContext()).getRootAvailabilityManager();
     packageManager = getPackageManager();
@@ -86,8 +81,6 @@ public class InstalledIntentService extends IntentService {
       final String action = intent.getAction();
       final String packageName = intent.getData()
           .getEncodedSchemeSpecificPart();
-
-      confirmAction(packageName, action);
 
       if (!TextUtils.equals(action, Intent.ACTION_PACKAGE_REPLACED) && intent.getBooleanExtra(
           Intent.EXTRA_REPLACING, false)) {
@@ -110,15 +103,6 @@ public class InstalledIntentService extends IntentService {
     }
   }
 
-  private void confirmAction(String packageName, String action) {
-    repository.getNotConfirmedRollback(packageName)
-        .first()
-        .filter(rollback -> shouldConfirmRollback(rollback, action))
-        .subscribe(rollback -> {
-          repository.confirmRollback(rollback);
-        }, throwable -> throwable.printStackTrace());
-  }
-
   protected void onPackageAdded(String packageName) {
     Logger.d(TAG, "Package added: " + packageName);
 
@@ -136,18 +120,6 @@ public class InstalledIntentService extends IntentService {
   protected void onPackageRemoved(String packageName) {
     Logger.d(TAG, "Packaged removed: " + packageName);
     databaseOnPackageRemoved(packageName);
-  }
-
-  private boolean shouldConfirmRollback(Rollback rollback, String action) {
-    return rollback != null && ((rollback.getAction()
-        .equals(Rollback.Action.INSTALL.name()) && action.equals(Intent.ACTION_PACKAGE_ADDED))
-        || (rollback.getAction()
-        .equals(Rollback.Action.UNINSTALL.name())
-        && action.equals(Intent.ACTION_PACKAGE_REMOVED))
-        || (rollback.getAction()
-        .equals(Rollback.Action.UPDATE.name()) && action.equals(Intent.ACTION_PACKAGE_REPLACED))
-        || (rollback.getAction()
-        .equals(Rollback.Action.DOWNGRADE.name()) && action.equals(Intent.ACTION_PACKAGE_ADDED)));
   }
 
   private PackageInfo databaseOnPackageAdded(String packageName) {

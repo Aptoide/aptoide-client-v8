@@ -13,7 +13,6 @@ import cm.aptoide.pt.app.AppRepository;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
@@ -23,7 +22,6 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.download.ScheduledDownloadRepository;
 import cm.aptoide.pt.install.InstalledRepository;
-import cm.aptoide.pt.install.rollback.RollbackRepository;
 import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.timeline.SocialRepository;
@@ -39,11 +37,6 @@ public final class RepositoryFactory {
   public static ScheduledDownloadRepository getScheduledDownloadRepository(Context context) {
     return new ScheduledDownloadRepository(AccessorFactory.getAccessorFor(
         ((AptoideApplication) context.getApplicationContext()).getDatabase(), Scheduled.class));
-  }
-
-  public static RollbackRepository getRollbackRepository(Context context) {
-    return new RollbackRepository(AccessorFactory.getAccessorFor(
-        ((AptoideApplication) context.getApplicationContext()).getDatabase(), Rollback.class));
   }
 
   public static UpdateRepository getUpdateRepository(Context context,

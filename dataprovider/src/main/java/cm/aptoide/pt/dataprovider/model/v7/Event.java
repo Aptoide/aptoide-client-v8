@@ -117,7 +117,7 @@ public class Event {
     getUserTimeline, listReviews, listComments, getMyStoresSubscribed, getStoresRecommended,
 
     // Client
-    myStores, myUpdates, myExcludedUpdates, myScheduledDownloads, myRollbacks, getAds, myDownloads,
+    myStores, myUpdates, myExcludedUpdates, myScheduledDownloads, getAds, myDownloads,
 
     // Displays
     facebook, twitch, twitter, youtube,

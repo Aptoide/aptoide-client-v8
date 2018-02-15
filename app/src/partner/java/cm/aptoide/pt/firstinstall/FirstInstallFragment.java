@@ -25,7 +25,6 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.WebService;
-import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.preferences.PartnersSecurePreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.store.StoreTheme;
@@ -41,7 +40,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by diogoloureiro on 02/10/2017.
- *
+ * <p>
  * First install fragment
  */
 
@@ -108,8 +107,8 @@ public class FirstInstallFragment extends AptoideBaseFragment<BaseAdapter>
             RepositoryFactory.getAppRepository(getContext(),
                 ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()),
             firstInstallAnalytics, new PermissionManager(), this,
-            ((AptoideApplication) getApplicationContext()).getInstallManager(
-                InstallerFactory.ROLLBACK), new MinimalAdMapper(),
+            ((AptoideApplication) getApplicationContext()).getInstallManager(),
+            new MinimalAdMapper(),
             ((AptoideApplication) getApplicationContext()).getDefaultClient(),
             WebService.getDefaultConverter(),
             ((AptoideApplication) getApplicationContext()).getQManager(),
@@ -155,7 +154,7 @@ public class FirstInstallFragment extends AptoideBaseFragment<BaseAdapter>
   /**
    * starts the removing fragment animation
    * once that animation finishes, removes the fragment
-   *
+   * <p>
    * take in mind, this should take in consideration the referrer extraction occurring
    */
   @Override public void removeFragmentAnimation() {

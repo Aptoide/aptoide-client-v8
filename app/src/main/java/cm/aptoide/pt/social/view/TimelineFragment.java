@@ -36,7 +36,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallManager;
-import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.TabNavigator;
@@ -205,7 +204,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             .getResources());
     shareDialogFactory =
         new ShareDialogFactory(getContext(), new SharePostViewSetup(dateCalculator));
-    installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
+    installManager = application.getInstallManager();
 
     timelineRepository =
         application.getTimelineRepository(getArguments().getString(ACTION_KEY), getContext());
@@ -603,7 +602,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   @Override public void showLastComment(String comment) {
-    // TODO: 01/02/2018 showLastComment on post (after user navigated to post comment list and made a comment and came back) 
+    // TODO: 01/02/2018 showLastComment on post (after user navigated to post comment list and made a comment and came back)
   }
 
   @Override public void sendCommentSuccessAnalytics(String postId) {

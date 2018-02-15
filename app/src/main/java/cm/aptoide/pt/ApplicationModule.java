@@ -66,7 +66,6 @@ import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
-import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
@@ -93,16 +92,12 @@ import cm.aptoide.pt.install.InstallFabricEvents;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.install.InstallerAnalytics;
-import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.install.RootInstallNotificationEventReceiver;
 import cm.aptoide.pt.install.installer.DefaultInstaller;
 import cm.aptoide.pt.install.installer.InstallationProvider;
-import cm.aptoide.pt.install.installer.RollbackInstaller;
 import cm.aptoide.pt.install.installer.RootInstallErrorNotificationFactory;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
-import cm.aptoide.pt.install.rollback.RollbackFactory;
-import cm.aptoide.pt.install.rollback.RollbackRepository;
 import cm.aptoide.pt.link.AptoideInstallParser;
 import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
@@ -290,22 +285,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         installerAnalytics);
   }
 
-  @Singleton @Provides @Named("rollback") Installer provideRollbackInstaller(
-      @Named("default") Installer defaultInstaller, RollbackRepository rollbackRepository,
-      InstallationProvider installationProvider, @Named("imageCachePath") String imageCachePath) {
-    return new RollbackInstaller(defaultInstaller, rollbackRepository,
-        new RollbackFactory(imageCachePath), installationProvider);
-  }
-
-  @Singleton @Provides RollbackRepository provideRollbackRepository(
-      RollbackAccessor rollbackAccessor) {
-    return new RollbackRepository(rollbackAccessor);
-  }
-
-  @Singleton @Provides RollbackAccessor provideRollbackAccessor(Database database) {
-    return new RollbackAccessor(database);
-  }
-
   @Singleton @Provides InstallationProvider provideInstallationProvider(
       AptoideDownloadManager downloadManager, DownloadAccessor downloadAccessor,
       InstalledRepository installedRepository, Database database) {
@@ -486,11 +465,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
     int notificationId = 230498;
     return new RootInstallationRetryHandler(notificationId,
-        application.getSystemNotificationShower(),
-        application.getInstallManager(InstallerFactory.ROLLBACK), PublishRelay.create(), 0,
-        application, new RootInstallErrorNotificationFactory(notificationId,
-        BitmapFactory.decodeResource(application.getResources(), R.mipmap.ic_launcher), action,
-        deleteAction));
+        application.getSystemNotificationShower(), application.getInstallManager(),
+        PublishRelay.create(), 0, application,
+        new RootInstallErrorNotificationFactory(notificationId,
+            BitmapFactory.decodeResource(application.getResources(), R.mipmap.ic_launcher), action,
+            deleteAction));
   }
 
   @Singleton @Provides GoogleApiClient provideGoogleApiClient() {

@@ -97,8 +97,6 @@ import cm.aptoide.pt.updates.view.excluded.ExcludedUpdateDisplayable;
 import cm.aptoide.pt.updates.view.excluded.ExcludedUpdateWidget;
 import cm.aptoide.pt.updates.view.installed.InstalledAppDisplayable;
 import cm.aptoide.pt.updates.view.installed.InstalledAppWidget;
-import cm.aptoide.pt.updates.view.rollback.RollbackDisplayable;
-import cm.aptoide.pt.updates.view.rollback.RollbackWidget;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.EmptyDisplayable;
 import cm.aptoide.pt.view.recycler.displayable.FooterDisplayable;
@@ -200,9 +198,6 @@ public class DisplayableWidgetMapping {
         new DisplayableWidgetMapping(ExcludedUpdateWidget.class, ExcludedUpdateDisplayable.class));
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(UpdatesHeaderWidget.class, UpdatesHeaderDisplayable.class));
-
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(RollbackWidget.class, RollbackDisplayable.class));
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(AdultRowWidget.class, AdultRowDisplayable.class));

@@ -6,7 +6,6 @@ import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.NotificationAccessor;
-import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
@@ -14,7 +13,6 @@ import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Notification;
-import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
@@ -38,8 +36,6 @@ import io.realm.RealmObject;
       return (A) new DownloadAccessor(database);
     } else if (clazz.equals(Update.class)) {
       return (A) new UpdateAccessor(database);
-    } else if (clazz.equals(Rollback.class)) {
-      return (A) new RollbackAccessor(database);
     } else if (clazz.equals(Store.class)) {
       return (A) new StoreAccessor(database);
     } else if (clazz.equals(StoredMinimalAd.class)) {
