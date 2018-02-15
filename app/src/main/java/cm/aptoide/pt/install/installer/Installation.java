@@ -6,32 +6,39 @@
 package cm.aptoide.pt.install.installer;
 
 import java.io.File;
+import java.util.List;
+
+import cm.aptoide.pt.database.realm.FileToDownload;
 
 /**
  * Created by marcelobenites on 7/22/16.
  */
 public interface Installation {
 
-  /**
-   * @return installation MD5 sum
-   */
-  String getId();
+    /**
+     * @return installation MD5 sum
+     */
+    String getId();
 
-  String getPackageName();
+    String getPackageName();
 
-  int getVersionCode();
+    int getVersionCode();
 
-  String getVersionName();
+    String getVersionName();
 
-  File getFile();
+    File getFile();
 
-  void save();
+    void save();
 
-  int getStatus();
+    int getStatus();
 
-  void setStatus(int status);
+    void setStatus(int status);
 
-  int getType();
+    int getType();
 
-  void setType(int type);
+    void setType(int type);
+
+    List<FileToDownload> getFiles();
+
+    void saveFileChanges();
 }

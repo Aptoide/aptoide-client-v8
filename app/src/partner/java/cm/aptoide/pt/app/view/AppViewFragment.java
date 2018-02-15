@@ -56,11 +56,9 @@ import cm.aptoide.pt.billing.view.BillingActivity;
 import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
-import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
@@ -357,7 +355,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     final AptoideAccountManager accountManager = application.getAccountManager();
     accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
 
-    installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
+    installManager = application.getInstallManager();
     final BodyInterceptor<BaseBody> bodyInterceptor =
         application.getAccountSettingsBodyInterceptorPoolV7();
     billingAnalytics = application.getBillingAnalytics();
@@ -994,25 +992,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           getAdapter().notifyDataSetChanged();
         });
 
-    // ??
-
-    // For install actions
-    //DeprecatedDatabase.RollbackQ.getAll(realm)
-    //    .asObservable()
-    //    .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-    //    .subscribe(rollbacks -> {
-    //      adapter.notifyDataSetChanged();
-    //    });
-
-    final RollbackAccessor rollbackAccessor = AccessorFactory.getAccessorFor(
-        ((AptoideApplication) getContext().getApplicationContext()
-            .getApplicationContext()).getDatabase(), Rollback.class);
-    rollbackAccessor.getAll()
-        .observeOn(AndroidSchedulers.mainThread())
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(rollbacks -> {
-          getAdapter().notifyDataSetChanged();
-        });
 
     // TODO: 27-05-2016 neuro install actions, not present in v7
   }
