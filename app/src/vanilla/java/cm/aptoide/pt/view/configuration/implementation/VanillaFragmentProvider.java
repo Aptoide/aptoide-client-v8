@@ -39,7 +39,6 @@ import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowingFragment;
 import cm.aptoide.pt.updates.view.UpdatesFragment;
 import cm.aptoide.pt.updates.view.excluded.ExcludedUpdatesFragment;
-import cm.aptoide.pt.updates.view.rollback.RollbackFragment;
 import cm.aptoide.pt.view.FragmentProvider;
 import cm.aptoide.pt.view.feedback.SendFeedbackFragment;
 import cm.aptoide.pt.view.fragment.DescriptionFragment;
@@ -197,10 +196,6 @@ public class VanillaFragmentProvider implements FragmentProvider {
   @Override
   public Fragment newOtherVersionsFragment(String appName, String appImgUrl, String appPackage) {
     return OtherVersionsFragment.newInstance(appName, appImgUrl, appPackage);
-  }
-
-  @Override public Fragment newRollbackFragment() {
-    return RollbackFragment.newInstance();
   }
 
   @Override public Fragment newExcludedUpdatesFragment() {

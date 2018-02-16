@@ -364,11 +364,7 @@ public class HomeFragment extends StoreFragment {
           accountNavigator.navigateToAccountView(AccountAnalytics.AccountOrigins.MY_ACCOUNT);
         } else {
           final FragmentNavigator navigator = getFragmentNavigator();
-          if (itemId == R.id.navigation_item_rollback) {
-            drawerAnalytics.drawerInteract("Rollback");
-            navigator.navigateTo(AptoideApplication.getFragmentProvider()
-                .newRollbackFragment(), true);
-          } else if (itemId == R.id.navigation_item_setting_scheduled_downloads) {
+          if (itemId == R.id.navigation_item_setting_scheduled_downloads) {
             drawerAnalytics.drawerInteract("Scheduled Downloads");
             navigator.navigateTo(AptoideApplication.getFragmentProvider()
                 .newScheduledDownloadsFragment(), true);

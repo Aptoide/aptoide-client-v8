@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
-import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
@@ -20,7 +19,6 @@ import cm.aptoide.pt.install.AppAction;
 import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.social.data.AppUpdate;
 import cm.aptoide.pt.updates.view.UpdateDisplayable;
-import cm.aptoide.pt.utils.IdUtils;
 import io.realm.RealmList;
 
 /**
@@ -263,47 +261,6 @@ public class DownloadFactory {
         update.getMd5(), update.getMainObbPath(), update.getMainObbMd5(), update.getPatchObbPath(),
         update.getPatchObbMd5(), update.getVersionCode(), update.getUpdateVersionName(),
         update.getMainObbName(), update.getPatchObbName()));
-    return download;
-  }
-
-  public Download create(Rollback rollback) {
-    Download download = new Download();
-    if (rollback.getAppId() <= 0) {
-      download.setMd5(IdUtils.randomString());
-    } else {
-      download.setMd5(rollback.getMd5());
-    }
-    download.setIcon(rollback.getIcon());
-    download.setAppName(rollback.getAppName());
-    download.setPackageName(rollback.getPackageName());
-    download.setVersionCode(rollback.getVersionCode());
-    download.setVersionName(rollback.getVersionName());
-
-    String alternativePath = rollback.getAlternativeApkPath();
-    String path = rollback.getApkPath();
-    switch (Rollback.Action.valueOf(rollback.getAction())) {
-      case INSTALL:
-        download.setAction(Download.ACTION_INSTALL);
-        path += INSTALL_ACTION;
-        alternativePath += INSTALL_ACTION;
-        break;
-      case DOWNGRADE:
-        download.setAction(Download.ACTION_DOWNGRADE);
-        path += DOWNGRADE_ACTION;
-        alternativePath += DOWNGRADE_ACTION;
-        break;
-      case UPDATE:
-        download.setAction(Download.ACTION_UPDATE);
-        path += UPDATE_ACTION;
-        alternativePath += UPDATE_ACTION;
-        break;
-    }
-
-    download.setFilesToDownload(
-        createFileList(rollback.getMd5(), rollback.getPackageName(), path, alternativePath,
-            rollback.getMd5(), rollback.getMainObbPath(), rollback.getMainObbMd5(),
-            rollback.getPatchObbPath(), rollback.getPatchObbMd5(), rollback.getVersionCode(),
-            rollback.getVersionName(), rollback.getMainObbName(), rollback.getPatchObbName()));
     return download;
   }
 

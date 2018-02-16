@@ -29,7 +29,6 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
 import cm.aptoide.pt.install.InstallManager;
-import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.navigator.ActivityNavigator;
@@ -106,8 +105,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       PermissionManager permissionManager, Resources resources) {
     final AptoideApplication application = (AptoideApplication) getApplicationContext();
     return new AutoUpdate((ActivityView) activity, downloadFactory, permissionManager,
-        application.getInstallManager(InstallerFactory.ROLLBACK), resources, autoUpdateUrl,
-        R.mipmap.ic_launcher, false, marketName);
+        application.getInstallManager(), resources, autoUpdateUrl, R.mipmap.ic_launcher, false,
+        marketName);
   }
 
   @ActivityScope @Provides FragmentNavigator provideFragmentNavigator(
@@ -148,7 +147,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       FragmentNavigator fragmentNavigator, DeepLinkManager deepLinkManager) {
     final AptoideApplication application = (AptoideApplication) getApplicationContext();
-    InstallManager installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
+    InstallManager installManager = application.getInstallManager();
     return new MainPresenter((MainView) view, installManager, rootInstallationRetryHandler,
         CrashReport.getInstance(), apkFy, autoUpdate, new ContentPuller(activity),
         notificationSyncScheduler,

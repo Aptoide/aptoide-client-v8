@@ -107,8 +107,6 @@ public interface FragmentProvider {
   @Deprecated Fragment newOtherVersionsFragment(String appName, String appImgUrl,
       String appPackage);
 
-  @Deprecated Fragment newRollbackFragment();
-
   @Deprecated Fragment newExcludedUpdatesFragment();
 
   @Deprecated Fragment newScheduledDownloadsFragment();

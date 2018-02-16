@@ -39,7 +39,6 @@ import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowingFragment;
 import cm.aptoide.pt.updates.view.UpdatesFragment;
 import cm.aptoide.pt.updates.view.excluded.ExcludedUpdatesFragment;
-import cm.aptoide.pt.updates.view.rollback.RollbackFragment;
 import cm.aptoide.pt.view.FragmentProvider;
 import cm.aptoide.pt.view.feedback.SendFeedbackFragment;
 import cm.aptoide.pt.view.fragment.DescriptionFragment;
@@ -209,10 +208,6 @@ public class PartnerFragmentProvider implements FragmentProvider {
     } else {
       return OtherVersionsFragment.newInstance(appName, appImgUrl, appPackage, defaultStore);
     }
-  }
-
-  @Override public Fragment newRollbackFragment() {
-    return RollbackFragment.newInstance();
   }
 
   @Override public Fragment newExcludedUpdatesFragment() {

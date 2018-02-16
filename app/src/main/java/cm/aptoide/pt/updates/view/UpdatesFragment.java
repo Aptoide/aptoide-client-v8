@@ -17,7 +17,6 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
-import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.repository.exception.RepositoryItemNotFoundException;
@@ -144,7 +143,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
         (AptoideApplication) getContext().getApplicationContext();
     marketName = application.getMarketName();
     crashReport = CrashReport.getInstance();
-    installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
+    installManager = application.getInstallManager();
     navigationTracker = application.getNavigationTracker();
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());

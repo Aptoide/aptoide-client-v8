@@ -16,8 +16,6 @@ import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.download.DownloadInstallationProvider;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.install.installer.DefaultInstaller;
-import cm.aptoide.pt.install.installer.RollbackInstaller;
-import cm.aptoide.pt.install.rollback.RollbackFactory;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.utils.FileUtils;
@@ -29,27 +27,16 @@ import cm.aptoide.pt.utils.FileUtils;
 public class InstallerFactory {
 
   public static final int DEFAULT = 0;
-  public static final int ROLLBACK = 1;
   private final MinimalAdMapper adMapper;
   private final InstallerAnalytics installerAnalytics;
-  private final String imagesCachePath;
 
-  public InstallerFactory(MinimalAdMapper adMapper, InstallerAnalytics installerAnalytics,
-      String imagesCachePath) {
+  public InstallerFactory(MinimalAdMapper adMapper, InstallerAnalytics installerAnalytics) {
     this.adMapper = adMapper;
     this.installerAnalytics = installerAnalytics;
-    this.imagesCachePath = imagesCachePath;
   }
 
-  public Installer create(Context context, int type) {
-    switch (type) {
-      case DEFAULT:
-        return getDefaultInstaller(context);
-      case ROLLBACK:
-        return getRollbackInstaller(context);
-      default:
-        throw new IllegalArgumentException("Installer not supported: " + type);
-    }
+  public Installer create(Context context) {
+    return getDefaultInstaller(context);
   }
 
   @NonNull private DefaultInstaller getDefaultInstaller(Context context) {
@@ -62,14 +49,6 @@ public class InstallerFactory {
         ((AptoideApplication) context.getApplicationContext()).getRootAvailabilityManager(),
         ((AptoideApplication) context.getApplicationContext()).getDefaultSharedPreferences(),
         installerAnalytics);
-  }
-
-  @NonNull private RollbackInstaller getRollbackInstaller(Context context) {
-    return new RollbackInstaller(getDefaultInstaller(context),
-        RepositoryFactory.getRollbackRepository(context.getApplicationContext()),
-        new RollbackFactory(imagesCachePath), getInstallationProvider(
-        ((AptoideApplication) context.getApplicationContext()).getDownloadManager(),
-        context.getApplicationContext()));
   }
 
   @NonNull private DownloadInstallationProvider getInstallationProvider(

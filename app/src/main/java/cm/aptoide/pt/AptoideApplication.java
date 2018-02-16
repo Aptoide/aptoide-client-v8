@@ -14,7 +14,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
-import android.util.SparseArray;
 import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
@@ -218,7 +217,7 @@ public abstract class AptoideApplication extends Application {
   private BodyInterceptor<BaseBody> accountSettingsBodyInterceptorWebV7;
   private Adyen adyen;
   private PurchaseFactory purchaseFactory;
-  private SparseArray<InstallManager> installManagers;
+  private InstallManager installManager;
   private ApplicationComponent applicationComponent;
   private AppCenter appCenter;
   private ReadPostsPersistence readPostsPersistence;
@@ -519,27 +518,22 @@ public abstract class AptoideApplication extends Application {
     return downloadManager;
   }
 
-  public InstallManager getInstallManager(int installerType) {
+  public InstallManager getInstallManager() {
 
-    if (installManagers == null) {
-      installManagers = new SparseArray<>();
-    }
 
-    InstallManager installManager = installManagers.get(installerType);
     if (installManager == null) {
 
       installManager = new InstallManager(getApplicationContext(), getDownloadManager(),
           new InstallerFactory(new MinimalAdMapper(),
               new InstallFabricEvents(analyticsManager, installAnalytics,
-                  getDefaultSharedPreferences(), rootAvailabilityManager),
-              getImageCachePath()).create(this, installerType), getRootAvailabilityManager(),
+                  getDefaultSharedPreferences(), rootAvailabilityManager)).create(this),
+          getRootAvailabilityManager(),
           getDefaultSharedPreferences(),
           SecurePreferencesImplementation.getInstance(getApplicationContext(),
               getDefaultSharedPreferences()),
           RepositoryFactory.getDownloadRepository(getApplicationContext().getApplicationContext()),
           RepositoryFactory.getInstalledRepository(
               getApplicationContext().getApplicationContext()));
-      installManagers.put(installerType, installManager);
     }
 
     return installManager;
@@ -900,8 +894,8 @@ public abstract class AptoideApplication extends Application {
           new TimelineRepositoryFactory(new HashMap<>(), getAccountSettingsBodyInterceptorPoolV7(),
               getDefaultClient(), getDefaultSharedPreferences(), getTokenInvalidator(),
               new LinksHandlerFactory(this), getPackageRepository(),
-              WebService.getDefaultConverter(), new TimelineResponseCardMapper(accountManager,
-              getInstallManager(InstallerFactory.ROLLBACK), getMarketName()),
+              WebService.getDefaultConverter(),
+              new TimelineResponseCardMapper(accountManager, getInstallManager(), getMarketName()),
               RepositoryFactory.getUpdateRepository(context,
                   ((AptoideApplication) context.getApplicationContext()).getDefaultSharedPreferences()));
     }

@@ -3,21 +3,20 @@
  * Modified by Marcelo Benites on 25/07/2016.
  */
 
-package cm.aptoide.pt.install.rollback;
+package cm.aptoide.pt.install.installer;
 
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.install.InstalledRepository;
-import cm.aptoide.pt.install.installer.RollbackInstallation;
 import java.io.File;
 import java.util.List;
 
 /**
  * Created by marcelobenites on 7/22/16.
  */
-public class DownloadInstallationAdapter implements RollbackInstallation {
+public class DownloadInstallationAdapter implements Installation {
 
   private final Download download;
   private DownloadAccessor downloadAccessor;
@@ -76,14 +75,6 @@ public class DownloadInstallationAdapter implements RollbackInstallation {
 
   @Override public void setType(int type) {
     installed.setType(type);
-  }
-
-  @Override public String getAppName() {
-    return download.getAppName();
-  }
-
-  @Override public String getIcon() {
-    return download.getIcon();
   }
 
   @Override public List<FileToDownload> getFiles() {

@@ -14,7 +14,6 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.install.InstallManager;
-import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.navigator.TabNavigatorActivity;
 import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
@@ -39,9 +38,9 @@ public class MainActivity extends TabNavigatorActivity
     super.onCreate(savedInstanceState);
     getActivityComponent().inject(this);
 
-    final AptoideApplication application = (AptoideApplication) getApplicationContext();
     setContentView(LAYOUT);
-    installManager = application.getInstallManager(InstallerFactory.DEFAULT);
+    final AptoideApplication application = (AptoideApplication) getApplicationContext();
+    installManager = application.getInstallManager();
     snackBarLayout = findViewById(R.id.snackbar_layout);
     installErrorsDismissEvent = PublishRelay.create();
     attachPresenter(presenter);

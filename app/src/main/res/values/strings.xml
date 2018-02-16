@@ -2,7 +2,6 @@
   <!-- NavDrawer List items -->
   <string name="drawer_title_my_account">My Account</string>
   <string name="drawer_title_spot_share">Spot&amp;Share</string>
-  <string name="drawer_title_rollback">Rollback</string>
   <string name="drawer_title_schedule_download">Scheduled Downloads</string>
   <string name="drawer_title_settings">Settings</string>
   <string name="drawer_title_backup_apps">Backup Apps</string>
@@ -92,11 +91,6 @@
   <!-- Excluded Updates Fragment (menu) -->
   <string name="restore_updates">Restore updates</string>
   <string name="open_apps_manager">Open apps manager</string>
-
-  <!-- Rollback Fragment -->
-  <string name="rollback">Rollback</string>
-  <string name="no_rollbacks_msg">Quickly downgrade any app to a previous version and solve incompatibility issues. Keep a log of all your installed
-        apps (via %s) including version and install date.</string>
 
   <string name="zero">0</string>
   <string name="working_well">Works well</string>
@@ -457,10 +451,6 @@
   <string name="no_excluded_updates_selected">No excluded updates selected</string>
 
 
-  <string name="rollback_installed">Installed</string>
-  <string name="rollback_uninstalled">Uninstalled</string>
-  <string name="rollback_updated">Updated</string>
-  <string name="rollback_downgraded">Downgraded</string>
   <string name="at_time">at %s</string>
   <string name="root_access_dialog">It seems you have root. Would you like to allow auto install app after download?</string>
 
