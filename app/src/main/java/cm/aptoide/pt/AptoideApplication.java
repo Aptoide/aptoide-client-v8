@@ -13,7 +13,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
-import android.util.SparseArray;
 import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
@@ -212,7 +211,7 @@ public abstract class AptoideApplication extends Application {
   private BodyInterceptor<BaseBody> accountSettingsBodyInterceptorWebV7;
   private Adyen adyen;
   private PurchaseFactory purchaseFactory;
-  private SparseArray<InstallManager> installManagers;
+  private InstallManager installManager;
   private ApplicationComponent applicationComponent;
   private AppCenter appCenter;
   private ReadPostsPersistence readPostsPersistence;
@@ -496,11 +495,7 @@ public abstract class AptoideApplication extends Application {
 
   public InstallManager getInstallManager() {
 
-    if (installManagers == null) {
-      installManagers = new SparseArray<>();
-    }
 
-    InstallManager installManager = installManagers.get(InstallerFactory.DEFAULT);
     if (installManager == null) {
 
       installManager = new InstallManager(getApplicationContext(), getDownloadManager(),
@@ -514,7 +509,6 @@ public abstract class AptoideApplication extends Application {
           RepositoryFactory.getDownloadRepository(getApplicationContext().getApplicationContext()),
           RepositoryFactory.getInstalledRepository(
               getApplicationContext().getApplicationContext()));
-      installManagers.put(InstallerFactory.DEFAULT, installManager);
     }
 
     return installManager;
