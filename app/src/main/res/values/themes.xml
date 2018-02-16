@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2016.
   ~ Modified on 25/08/2016.
   -->
@@ -97,7 +96,6 @@
     <item name="icRatingFloatDrawable">@drawable/ic_action_important</item>
     <item name="icErrorDrawable">@drawable/cross</item>
     <item name="icMyAccountDrawable">@drawable/ic_action_accounts</item>
-    <item name="icRollbackDrawable">@drawable/ic_action_time</item>
     <item name="icScheduledDrawable">@drawable/ic_drawer_schedule</item>
     <item name="icSpotShare">@drawable/spot_and_share_ic_action_spotshare_grey</item>
     <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel</item>
@@ -118,8 +116,7 @@
     <item name="alertDialogTheme">@style/AlertDialogAptoide</item>
   </style>
 
-  <style name="AptoideThemeDefault" parent="AppBaseTheme">
-  </style>
+  <style name="AptoideThemeDefault" parent="AppBaseTheme"></style>
 
   <style name="AppBaseTheme.NoTitle">
     <item name="android:windowNoTitle">true</item>
@@ -223,7 +220,6 @@
     <item name="icRatingFloatDrawable">@drawable/ic_action_important</item>
     <item name="icErrorDrawable">@drawable/ic_action_cancel</item>
     <item name="icMyAccountDrawable">@drawable/ic_action_accounts</item>
-    <item name="icRollbackDrawable">@drawable/ic_action_time_dark</item>
     <item name="icScheduledDrawable">@drawable/ic_drawer_schedule_light</item>
     <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel_dark</item>
     <item name="icSettingsDrawable">@drawable/ic_action_settings_dark</item>
@@ -244,8 +240,7 @@
 
   </style>
 
-  <style name="AptoideThemeDefaultDark" parent="AppBaseThemeDark">
-  </style>
+  <style name="AptoideThemeDefaultDark" parent="AppBaseThemeDark"></style>
 
   <!-- Non-default themes -->
 

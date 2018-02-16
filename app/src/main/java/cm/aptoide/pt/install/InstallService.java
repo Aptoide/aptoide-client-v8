@@ -28,9 +28,7 @@ import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.repository.RepositoryFactory;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Completable;
@@ -51,19 +49,16 @@ public class InstallService extends BaseService {
   public static final String EXTRA_INSTALLER_TYPE = "INSTALLER_TYPE";
   public static final String EXTRA_FORCE_DEFAULT_INSTALL = "EXTRA_FORCE_DEFAULT_INSTALL";
   public static final int INSTALLER_TYPE_DEFAULT = 0;
-  public static final int INSTALLER_TYPE_ROLLBACK = 1;
 
   private static final int NOTIFICATION_ID = 8;
 
   @Inject AptoideDownloadManager downloadManager;
-  @Inject @Named("rollback") Installer rollbackInstaller;
   @Inject @Named("default") Installer defaultInstaller;
   @Inject InstalledRepository installedRepository;
   @Inject DownloadAnalytics downloadAnalytics;
   private InstallManager installManager;
   private CompositeSubscription subscriptions;
   private Notification notification;
-  private Map<String, Integer> installerTypeMap;
   private String marketName;
 
   @Override public void onCreate() {
@@ -71,11 +66,10 @@ public class InstallService extends BaseService {
     getApplicationComponent().inject(this);
     Logger.d(TAG, "Install service is starting");
     final AptoideApplication application = (AptoideApplication) getApplicationContext();
-    installManager = application.getInstallManager(InstallerFactory.ROLLBACK);
+    installManager = application.getInstallManager();
     marketName = application.getMarketName();
     subscriptions = new CompositeSubscription();
     setupNotification();
-    installerTypeMap = new HashMap<>();
     installedRepository = RepositoryFactory.getInstalledRepository(getApplicationContext());
   }
 
@@ -83,8 +77,6 @@ public class InstallService extends BaseService {
     if (intent != null) {
       String md5 = intent.getStringExtra(EXTRA_INSTALLATION_MD5);
       if (ACTION_START_INSTALL.equals(intent.getAction())) {
-        installerTypeMap.put(md5,
-            intent.getIntExtra(EXTRA_INSTALLER_TYPE, INSTALLER_TYPE_ROLLBACK));
         subscriptions.add(downloadAndInstall(this, md5, intent.getExtras()
             .getBoolean(EXTRA_FORCE_DEFAULT_INSTALL, false)).subscribe(
             hasNext -> treatNext(hasNext), throwable -> removeNotificationAndStop()));
@@ -217,18 +209,7 @@ public class InstallService extends BaseService {
   }
 
   private Installer getInstaller(String md5) {
-    Integer installerType = installerTypeMap.get(md5);
-    Installer installer;
-    switch (installerType) {
-      case INSTALLER_TYPE_DEFAULT:
-        installer = defaultInstaller;
-        break;
-      case INSTALLER_TYPE_ROLLBACK:
-      default:
-        installer = rollbackInstaller;
-        break;
-    }
-    return installer;
+    return defaultInstaller;
   }
 
   private void setupNotification() {

@@ -16,9 +16,9 @@ import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.exception.InstallationException;
+import cm.aptoide.pt.install.installer.DownloadInstallationAdapter;
+import cm.aptoide.pt.install.installer.Installation;
 import cm.aptoide.pt.install.installer.InstallationProvider;
-import cm.aptoide.pt.install.installer.RollbackInstallation;
-import cm.aptoide.pt.install.rollback.DownloadInstallationAdapter;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -44,7 +44,7 @@ public class DownloadInstallationProvider implements InstallationProvider {
     this.installedRepository = installedRepository;
   }
 
-  @Override public Observable<RollbackInstallation> getInstallation(String md5) {
+  @Override public Observable<Installation> getInstallation(String md5) {
     return downloadManager.getDownload(md5)
         .first()
         .flatMap(download -> {

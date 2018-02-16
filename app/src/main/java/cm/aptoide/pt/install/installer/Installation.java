@@ -5,7 +5,9 @@
 
 package cm.aptoide.pt.install.installer;
 
+import cm.aptoide.pt.database.realm.FileToDownload;
 import java.io.File;
+import java.util.List;
 
 /**
  * Created by marcelobenites on 7/22/16.
@@ -34,4 +36,8 @@ public interface Installation {
   int getType();
 
   void setType(int type);
+
+  List<FileToDownload> getFiles();
+
+  void saveFileChanges();
 }
