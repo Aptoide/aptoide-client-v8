@@ -69,11 +69,8 @@ import rx.subjects.PublishSubject;
  */
 public class HomeFragment extends StoreFragment {
 
-  public static final String APTOIDE_FACEBOOK_LINK = "http://www.facebook.com/aptoide";
   public static final String FACEBOOK_PACKAGE_NAME = "com.facebook.katana";
   public static final String BACKUP_APPS_PACKAGE_NAME = "pt.aptoide.backupapps";
-  public static final String TWITTER_PACKAGE_NAME = "com.twitter.android";
-  public static final String APTOIDE_TWITTER_URL = "http://www.twitter.com/aptoide";
 
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
