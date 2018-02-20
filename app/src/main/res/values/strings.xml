@@ -6,9 +6,6 @@
   <string name="drawer_title_settings">Settings</string>
   <string name="drawer_title_backup_apps">Backup Apps</string>
 
-  <string name="drawer_social_media_title">Let\'s stay connected</string>
-  <string name="drawer_title_facebook">Facebook</string>
-  <string name="drawer_title_twitter">Twitter</string>
   <string name="drawer_title_feedback_send_button">Send feedback</string>
 
   <string name="feedback_subject">Subject</string>
