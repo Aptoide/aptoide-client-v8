@@ -33,13 +33,6 @@
       android:orderInCategory="6"
       android:title="@string/drawer_title_settings"/>
 
-  <item
-      android:id="@+id/navigation_item_backup_apps"
-      android:icon="@drawable/ic_action_backup_custom"
-      android:orderInCategory="7"
-      android:title="@string/drawer_title_backup_apps"/>
-
-
   <group android:orderInCategory="8">
 
     <item android:title="@string/drawer_social_media_title">

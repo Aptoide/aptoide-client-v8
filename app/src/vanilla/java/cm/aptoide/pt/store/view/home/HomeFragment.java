@@ -30,7 +30,6 @@ import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
-import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -72,7 +71,6 @@ public class HomeFragment extends StoreFragment {
 
   public static final String APTOIDE_FACEBOOK_LINK = "http://www.facebook.com/aptoide";
   public static final String FACEBOOK_PACKAGE_NAME = "com.facebook.katana";
-  public static final String BACKUP_APPS_PACKAGE_NAME = "pt.aptoide.backupapps";
   public static final String TWITTER_PACKAGE_NAME = "com.twitter.android";
   public static final String APTOIDE_TWITTER_URL = "http://www.twitter.com/aptoide";
 
@@ -414,9 +412,6 @@ public class HomeFragment extends StoreFragment {
           } else if (itemId == R.id.navigation_item_twitter) {
             drawerAnalytics.drawerInteract("Twitter");
             openTwitter();
-          } else if (itemId == R.id.navigation_item_backup_apps) {
-            drawerAnalytics.drawerInteract("Backup Apps");
-            openBackupApps();
           } else if (itemId == R.id.send_feedback) {
             drawerAnalytics.drawerInteract("Send Feedback");
             startFeedbackFragment();
@@ -452,28 +447,6 @@ public class HomeFragment extends StoreFragment {
     openSocialLink(TWITTER_PACKAGE_NAME, APTOIDE_TWITTER_URL,
         getContext().getString(R.string.social_twitter_screen_title),
         Uri.parse(APTOIDE_TWITTER_URL));
-  }
-
-  private void openBackupApps() {
-
-    installedRepository.getInstalled(BACKUP_APPS_PACKAGE_NAME)
-        .first()
-        .observeOn(AndroidSchedulers.mainThread())
-        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
-        .subscribe(installed -> {
-          if (installed == null) {
-            getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-                    .newAppViewFragment(BACKUP_APPS_PACKAGE_NAME, AppViewFragment.OpenType.OPEN_ONLY),
-                true);
-          } else {
-            Intent i = getContext().getPackageManager()
-                .getLaunchIntentForPackage(BACKUP_APPS_PACKAGE_NAME);
-            startActivity(i);
-          }
-        }, err -> {
-          CrashReport.getInstance()
-              .log(err);
-        });
   }
 
   private void startFeedbackFragment() {
