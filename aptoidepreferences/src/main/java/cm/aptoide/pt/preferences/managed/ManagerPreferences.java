@@ -55,10 +55,6 @@ public class ManagerPreferences {
     return sharedPreferences.getBoolean(ManagedKeys.GENERAL_DOWNLOADS_WIFI, true);
   }
 
-  public static boolean scheduledDownloadsEnabled(SharedPreferences sharedPreferences) {
-    return sharedPreferences.getBoolean(ManagedKeys.SCHEDULE_DOWNLOAD_SETTING, true);
-  }
-
   public static boolean getGeneralDownloadsMobile(SharedPreferences sharedPreferences) {
     return sharedPreferences.getBoolean(ManagedKeys.GENERAL_DOWNLOADS_MOBILE, true);
   }

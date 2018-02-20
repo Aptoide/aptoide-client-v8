@@ -426,7 +426,6 @@
   <string name="schDown_installselected">Install selected</string>
   <string name="schDown_removeselected">Remove selected</string>
 
-  <string name="schDwnBtn">Schedule download</string>
   <string name="schDown_install">Do you want to install all scheduled downloads?</string>
 
 
