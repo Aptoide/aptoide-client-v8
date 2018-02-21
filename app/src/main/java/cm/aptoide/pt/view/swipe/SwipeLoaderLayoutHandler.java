@@ -8,7 +8,6 @@ package cm.aptoide.pt.view.swipe;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.view.ReloadInterface;
 import cm.aptoide.pt.view.fragment.GridRecyclerSwipeFragment;
 
@@ -21,14 +20,13 @@ public class SwipeLoaderLayoutHandler extends LoaderLayoutHandler {
 
   private SwipeRefreshLayout swipeContainer;
 
-  public SwipeLoaderLayoutHandler(int baseViewId, ActivityNavigator activityNavigator,
-      ReloadInterface reloadInterface) {
-    super(reloadInterface, activityNavigator, baseViewId);
+  public SwipeLoaderLayoutHandler(int baseViewId, ReloadInterface reloadInterface) {
+    super(reloadInterface, baseViewId);
   }
 
   public SwipeLoaderLayoutHandler(int[] viewsToShowAfterLoadingId,
-      ActivityNavigator activityNavigator, GridRecyclerSwipeFragment reloadInterface) {
-    super(reloadInterface, activityNavigator, viewsToShowAfterLoadingId);
+      GridRecyclerSwipeFragment reloadInterface) {
+    super(reloadInterface, viewsToShowAfterLoadingId);
   }
 
   @Override public void bindViews(View view) {
