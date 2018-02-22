@@ -9,13 +9,11 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
-import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.File;
-import cm.aptoide.pt.install.AppAction;
 import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.social.data.AppUpdate;
 import cm.aptoide.pt.updates.view.UpdateDisplayable;
@@ -276,58 +274,6 @@ public class DownloadFactory {
         createFileList(autoUpdateInfo.md5, null, autoUpdateInfo.path, autoUpdateInfo.md5, null,
             null, autoUpdateInfo.vercode, null));
     return download;
-  }
-
-  public Download create(Scheduled scheduled) {
-    Download download = new Download();
-    download.setAppName(scheduled.getName());
-    download.setPackageName(scheduled.getPackageName());
-    download.setVersionCode(scheduled.getVerCode());
-    download.setVersionName(scheduled.getVersionName());
-    download.setMd5(scheduled.getMd5());
-    download.setIcon(scheduled.getIcon());
-    String path = scheduled.getPath();
-    String alternativePath = scheduled.getAlternativeApkPath();
-    switch (AppAction.valueOf(scheduled.getAppAction())) {
-      case DOWNGRADE:
-        download.setAction(Download.ACTION_DOWNGRADE);
-        path += DOWNGRADE_ACTION;
-        alternativePath += DOWNGRADE_ACTION;
-        break;
-      case UPDATE:
-        download.setAction(Download.ACTION_UPDATE);
-        path += UPDATE_ACTION;
-        alternativePath += UPDATE_ACTION;
-        break;
-      case INSTALL:
-      case OPEN:
-      default:
-        download.setAction(Download.ACTION_INSTALL);
-        path += INSTALL_ACTION;
-        alternativePath += INSTALL_ACTION;
-    }
-    download.setScheduled(true);
-    download.setFilesToDownload(
-        createFileList(scheduled.getMd5(), scheduled.getPackageName(), path, scheduled.getMd5(),
-            extractObb(scheduled), alternativePath, scheduled.getVerCode(),
-            scheduled.getVersionName()));
-    return download;
-  }
-
-  private Obb extractObb(Scheduled scheduled) {
-    Obb obb = new Obb();
-    Obb.ObbItem mainItem = new Obb.ObbItem();
-    mainItem.setFilename(scheduled.getMainObbName());
-    mainItem.setPath(scheduled.getMainObbPath());
-    mainItem.setMd5sum(scheduled.getMainObbMd5());
-    obb.setMain(mainItem);
-
-    Obb.ObbItem patchItem = new Obb.ObbItem();
-    patchItem.setFilename(scheduled.getPatchObbName());
-    patchItem.setPath(scheduled.getPatchObbPath());
-    patchItem.setMd5sum(scheduled.getPatchObbMd5());
-    obb.setPatch(patchItem);
-    return null;
   }
 
   private class ApkPaths {

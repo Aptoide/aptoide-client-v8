@@ -23,12 +23,6 @@
       app:showAsAction="ifRoom"/>
 
   <item
-      android:id="@+id/menu_schedule"
-      android:title="@string/schDwnBtn"
-      android:visible="false"
-      app:showAsAction="never"/>
-
-  <item
       android:id="@+id/menu_remote_install"
       android:title="@string/remote_install_menu_title"
       app:showAsAction="never"/>

@@ -396,10 +396,6 @@ public class HomeFragment extends StoreFragment {
           if (itemId == R.id.shareapps) {
             drawerAnalytics.drawerInteract("Spot&Share");
             getActivityNavigator().navigateTo(SpotSharePreviewActivity.class);
-          } else if (itemId == R.id.navigation_item_setting_scheduled_downloads) {
-            drawerAnalytics.drawerInteract("Scheduled Downloads");
-            navigator.navigateTo(AptoideApplication.getFragmentProvider()
-                .newScheduledDownloadsFragment(), true);
           } else if (itemId == R.id.navigation_item_excluded_updates) {
             drawerAnalytics.drawerInteract("Excluded Updates");
             navigator.navigateTo(AptoideApplication.getFragmentProvider()

@@ -18,11 +18,6 @@
       android:orderInCategory="2"
       android:title="@string/drawer_title_spot_share"/>
   <item
-      android:id="@+id/navigation_item_setting_scheduled_downloads"
-      android:icon="?attr/icScheduledDrawable"
-      android:orderInCategory="4"
-      android:title="@string/drawer_title_schedule_download"/>
-  <item
       android:id="@+id/navigation_item_excluded_updates"
       android:icon="?attr/icExcludedUpdatesDrawable"
       android:orderInCategory="5"

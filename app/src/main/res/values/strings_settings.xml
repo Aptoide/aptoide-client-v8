@@ -44,11 +44,6 @@
   <string name="setting_notifications_sub_section_2">Social notifications</string>
   <string name="setting_notifications_sub_sub_section_2">Social notifications regarding campaigns and timeline</string>
 
-
-  <string name="setting_schdwntitle">Scheduled downloads</string>
-  <string name="setting_schdwninstalltitle">Automatic install</string>
-  <string name="setting_schdwninstallsum">Install scheduled downloads automatically when a Wi-Fi connection is present</string>
-
   <string name="setting_clear_memory">Storage</string>
   <string name="settings_clearcache_title">Clear Storage</string>
   <string name="settings_clear_cache_summary">Deletes icons, images, apk downloaded, obb, webservice data, …</string>
