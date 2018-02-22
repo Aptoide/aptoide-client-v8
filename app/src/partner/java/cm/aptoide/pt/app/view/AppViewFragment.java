@@ -31,8 +31,6 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
-import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.NavigationTracker;
@@ -125,14 +123,12 @@ import retrofit2.Converter;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
 import rx.subjects.PublishSubject;
 
 /**
  * Created on 04/05/16.
  */
-public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
-    implements Scrollable, AppMenuOptions {
+public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements Scrollable {
   public static final int VIEW_ID = R.layout.fragment_app_view;
   public static final int LOGIN_REQUEST_CODE = 13;
   private static final String TAG = AppViewFragment.class.getSimpleName();
@@ -148,8 +144,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private AppViewModel appViewModel;
   private AppViewHeader header;
   private InstallManager installManager;
-  private Action0 unInstallAction;
-  private MenuItem uninstallMenuItem;
   private AppRepository appRepository;
   private Subscription subscription;
   private AdsRepository adsRepository;
@@ -629,8 +623,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     } else {
       menu.removeItem(R.id.menu_item_search);
     }
-
-    uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -656,9 +648,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW, storeId);
 
       appViewAnalytics.sendAppShareEvent();
-      return true;
-    } else if (i == R.id.menu_uninstall && unInstallAction != null) {
-      unInstallAction.call();
       return true;
     }
 
@@ -739,18 +728,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(appAction -> {
           AppViewFragment.this.appViewModel.setAppAction(appAction);
-          if (appAction != AppAction.INSTALL) {
-            setUnInstallMenuOptionVisible(() -> new PermissionManager().requestDownloadAccess(
-                (PermissionService) getContext())
-                .flatMap(success -> installManager.uninstall(getPackageName(), getApp().getFile()
-                    .getVername())
-                    .toObservable())
-                .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-                .subscribe(aVoid -> {
-                }, throwable -> throwable.printStackTrace()));
-          } else {
-            setUnInstallMenuOptionVisible(null);
-          }
         }, err -> {
           CrashReport.getInstance()
               .log(err);
@@ -841,11 +818,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     if (item != null) {
       item.setVisible(visible);
     }
-  }
-
-  @Override public void setUnInstallMenuOptionVisible(@Nullable Action0 unInstallAction) {
-    this.unInstallAction = unInstallAction;
-    showHideOptionsMenu(uninstallMenuItem, unInstallAction != null);
   }
 
   private List<String> createFragmentNameList(List<Fragment> fragments) {

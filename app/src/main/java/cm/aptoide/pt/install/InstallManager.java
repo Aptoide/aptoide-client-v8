@@ -80,10 +80,6 @@ public class InstallManager {
     context.startService(intent);
   }
 
-  public Completable uninstall(String packageName, String versionName) {
-    return installer.uninstall(context, packageName, versionName);
-  }
-
   public Observable<List<Install>> getTimedOutInstallations() {
     return getInstallations().flatMap(installs -> Observable.from(installs)
         .filter(install -> install.getState()
