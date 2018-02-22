@@ -71,18 +71,18 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
 
   private void handleTogglePasswordVisibility() {
     view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.RESUME))
+        .filter(event -> event.equals(View.LifecycleEvent.START))
         .flatMap(resumed -> togglePasswordVisibility())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
   }
 
   private void handleForgotPasswordClick() {
     view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.RESUME))
+        .filter(event -> event.equals(View.LifecycleEvent.START))
         .flatMap(resumed -> forgotPasswordSelection())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
   }
