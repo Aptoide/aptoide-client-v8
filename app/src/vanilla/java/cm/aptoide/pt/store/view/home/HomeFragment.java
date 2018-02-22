@@ -1,7 +1,6 @@
 package cm.aptoide.pt.store.view.home;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -29,7 +28,6 @@ import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
-import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -399,7 +397,7 @@ public class HomeFragment extends StoreFragment {
             drawerAnalytics.drawerInteract("Settings");
             navigator.navigateTo(AptoideApplication.getFragmentProvider()
                 .newSettingsFragment(), true);
-          }  else if (itemId == R.id.send_feedback) {
+          } else if (itemId == R.id.send_feedback) {
             drawerAnalytics.drawerInteract("Send Feedback");
             startFeedbackFragment();
           }
