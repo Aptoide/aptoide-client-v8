@@ -385,9 +385,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
     installAppRelay = PublishRelay.create();
     shareAppHelper =
-        new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
-            spotAndShareAnalytics, timelineAnalytics, installAppRelay, sharedPreferences,
-            application.isCreateStoreUserPrivacyEnabled());
+        new ShareAppHelper(accountManager, accountNavigator, getActivity(), timelineAnalytics,
+            sharedPreferences, application.isCreateStoreUserPrivacyEnabled());
     downloadFactory = new DownloadFactory(getMarketName());
     storeAnalytics = new StoreAnalytics(analyticsManager, navigationTracker);
     notLoggedInShareAnalytics = application.getNotLoggedInShareAnalytics();
@@ -688,8 +687,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     final Long storeId = appHasStore ? getApp().getStore()
         .getId() : null;
     shareAppHelper.shareApp(getAppName(), getPackageName(), appViewModel.getwUrl(),
-        (getApp() == null ? null : getApp().getIcon()), averageRating,
-        SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW, storeId);
+        (getApp() == null ? null : getApp().getIcon()), averageRating, storeId);
     appViewAnalytics.sendAppShareEvent();
   }
 

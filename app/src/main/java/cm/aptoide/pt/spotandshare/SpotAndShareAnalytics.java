@@ -25,8 +25,6 @@ public class SpotAndShareAnalytics implements SpotAndShareAnalyticsInterface {
   public static final String ACTION_SPOT_SHARE_PERM_GRANTED = "Permission granted";
   public static final String ACTION_SPOT_SHARE_PERM_DENIED = "Permission not granted";
   public static final String SPOT_AND_SHARE_START_CLICK_ORIGIN_TAB = "Tab";
-  public static final String SPOT_AND_SHARE_START_CLICK_ORIGIN_UPDATES_TAB = "Updates Tab";
-  public static final String SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW = "AppView";
   public static final String SPOT_AND_SHARE_START_CLICK_ORIGIN_DRAWER = "Drawer";
   public static final String EVENT_NAME_SPOT_SHARE = "Share_Apps_Click_On_Share_Apps";
   public static final String EVENT_NAME_SPOT_SHARE_PERMISSIONS =

@@ -67,10 +67,6 @@
   <!-- AppView developer area-->
   <string name="dialog_version_size">Version: %1$s | Size: %2$s</string>
 
-  <!-- Appview Share"-->
-  <string name="appview_message_install_before_share_spotandshare">Install app first</string>
-  <string name="appview_button_install_before_share_spotandshare">install</string>
-
 
   <string name="uninstall">Uninstall</string>
   <string name="other_versions_downloads_count_text">%1$s   downloads</string>

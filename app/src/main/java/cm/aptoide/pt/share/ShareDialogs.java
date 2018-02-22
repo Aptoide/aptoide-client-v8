@@ -40,54 +40,20 @@ public class ShareDialogs {
     });
   }
 
-  public static Observable<ShareResponse> createAppviewShareWithSpotandShareDialog(Context context,
+  public static Observable<ShareResponse> createInstalledShareDialog(Context context,
       String title) {
     return Observable.create((Subscriber<? super ShareResponse> subscriber) -> {
       final AlertDialog alertDialog = new AlertDialog.Builder(context).setTitle(title)
-          .setItems(R.array.share_options_array_with_spot_and_share, (dialogInterface, i) -> {
+          .setItems(R.array.installed_share_options_array, (dialogInterface, i) -> {
             if (!subscriber.isUnsubscribed()) {
               switch (i) {
                 case 0:
-                  subscriber.onNext(ShareResponse.SHARE_EXTERNAL);
-                  subscriber.onCompleted();
-                  break;
-                case 1:
                   subscriber.onNext(ShareResponse.SHARE_TIMELINE);
-                  subscriber.onCompleted();
-                  break;
-                case 2:
-                  subscriber.onNext(ShareResponse.SHARE_SPOT_AND_SHARE);
                   subscriber.onCompleted();
                   break;
               }
             }
           })
-          .create();
-      // cleaning up
-      subscriber.add(Subscriptions.create(() -> alertDialog.dismiss()));
-      alertDialog.show();
-    });
-  }
-
-  public static Observable<ShareResponse> createInstalledShareWithSpotandShareDialog(
-      Context context, String title) {
-    return Observable.create((Subscriber<? super ShareResponse> subscriber) -> {
-      final AlertDialog alertDialog = new AlertDialog.Builder(context).setTitle(title)
-          .setItems(R.array.installed_share_options_array_with_spot_and_share,
-              (dialogInterface, i) -> {
-                if (!subscriber.isUnsubscribed()) {
-                  switch (i) {
-                    case 0:
-                      subscriber.onNext(ShareResponse.SHARE_TIMELINE);
-                      subscriber.onCompleted();
-                      break;
-                    case 1:
-                      subscriber.onNext(ShareResponse.SHARE_SPOT_AND_SHARE);
-                      subscriber.onCompleted();
-                      break;
-                  }
-                }
-              })
           .create();
       // cleaning up
       subscriber.add(Subscriptions.create(() -> alertDialog.dismiss()));
@@ -132,8 +98,6 @@ public class ShareDialogs {
     SHARE_EXTERNAL,
 
     SHARE_TIMELINE,
-
-    SHARE_SPOT_AND_SHARE,
 
     USING
   }

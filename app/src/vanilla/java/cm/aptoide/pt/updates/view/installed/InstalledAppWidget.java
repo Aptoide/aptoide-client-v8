@@ -18,13 +18,10 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.share.ShareAppHelper;
-import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
-import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Locale;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -49,8 +46,6 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
   private AccountNavigator accountNavigator;
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private OkHttpClient httpClient;
-  private NavigationTracker navigationTracker;
-  private AnalyticsManager analyticsManager;
   private Converter.Factory converterFactory;
 
   private ShareAppHelper shareAppHelper;
@@ -70,8 +65,6 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
     final Installed pojo = displayable.getPojo();
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    navigationTracker = application.getNavigationTracker();
-    analyticsManager = application.getAnalyticsManager();
     accountManager = application.getAccountManager();
     httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
@@ -84,12 +77,9 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
     dialogUtils = new DialogUtils(accountManager, accountNavigator, bodyInterceptor, httpClient,
         converterFactory, displayable.getInstalledRepository(), application.getTokenInvalidator(),
         application.getDefaultSharedPreferences(), getContext().getResources());
-    shareAppHelper = new ShareAppHelper(
-        RepositoryFactory.getInstalledRepository(getContext().getApplicationContext()),
-        accountManager, accountNavigator, getContext(),
-        new SpotAndShareAnalytics(analyticsManager, navigationTracker),
-        displayable.getTimelineAnalytics(), PublishRelay.create(),
-        application.getDefaultSharedPreferences(), application.isCreateStoreUserPrivacyEnabled());
+    shareAppHelper = new ShareAppHelper(accountManager, accountNavigator, getContext(),
+        displayable.getTimelineAnalytics(), application.getDefaultSharedPreferences(),
+        application.isCreateStoreUserPrivacyEnabled());
     appName = pojo.getName();
     packageName = pojo.getPackageName();
 
@@ -101,8 +91,7 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
 
     shareButtonLayout.setVisibility(View.VISIBLE);
     compositeSubscription.add(RxView.clicks(shareButtonLayout)
-        .subscribe(__ -> shareAppHelper.shareApp(appName, packageName, pojo.getIcon(),
-            SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_UPDATES_TAB),
+        .subscribe(__ -> shareAppHelper.shareApp(appName, packageName, pojo.getIcon()),
             err -> CrashReport.getInstance()
                 .log(err)));
   }
