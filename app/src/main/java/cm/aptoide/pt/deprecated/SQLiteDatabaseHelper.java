@@ -15,7 +15,6 @@ import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.deprecated.tables.Downloads;
 import cm.aptoide.pt.deprecated.tables.Excluded;
 import cm.aptoide.pt.deprecated.tables.Repo;
-import cm.aptoide.pt.deprecated.tables.Scheduled;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -103,16 +102,6 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
           ((AptoideApplication) context.getApplicationContext()
               .getApplicationContext()).getDatabase(), Update.class), packageManager,
           context.getApplicationContext());
-    } catch (Exception ex) {
-      logException(ex);
-    }
-
-    try {
-      new Scheduled().migrate(db, AccessorFactory.getAccessorFor(
-          ((AptoideApplication) context.getApplicationContext()
-              .getApplicationContext()).getDatabase(),
-          cm.aptoide.pt.database.realm.Scheduled.class), packageManager,
-          context.getApplicationContext()); // X
     } catch (Exception ex) {
       logException(ex);
     }

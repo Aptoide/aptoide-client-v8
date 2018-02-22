@@ -50,7 +50,6 @@ public class Download extends RealmObject {
   private String packageName;
   private int versionCode;
   private int action;
-  private boolean scheduled;
   private String versionName;
   @Download.DownloadError private int downloadError;
 
@@ -145,14 +144,6 @@ public class Download extends RealmObject {
     this.action = action;
   }
 
-  public boolean isScheduled() {
-    return scheduled;
-  }
-
-  public void setScheduled(boolean scheduled) {
-    this.scheduled = scheduled;
-  }
-
   public String getMd5() {
     return md5;
   }
@@ -180,7 +171,6 @@ public class Download extends RealmObject {
     result = 31 * result + (getPackageName() != null ? getPackageName().hashCode() : 0);
     result = 31 * result + getVersionCode();
     result = 31 * result + getAction();
-    result = 31 * result + (isScheduled() ? 1 : 0);
     result = 31 * result + (getVersionName() != null ? getVersionName().hashCode() : 0);
     result = 31 * result + getDownloadError();
     return result;
@@ -198,7 +188,6 @@ public class Download extends RealmObject {
     if (getDownloadSpeed() != download.getDownloadSpeed()) return false;
     if (getVersionCode() != download.getVersionCode()) return false;
     if (getAction() != download.getAction()) return false;
-    if (isScheduled() != download.isScheduled()) return false;
     if (getDownloadError() != download.getDownloadError()) return false;
     if (!getMd5().equals(download.getMd5())) return false;
     if (getAppName() != null ? !getAppName().equals(download.getAppName())

@@ -19,11 +19,8 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BaseService;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
@@ -177,18 +174,7 @@ public class InstallService extends BaseService {
     return Completable.fromAction(() -> {
       sendBroadcast(
           new Intent(ACTION_INSTALL_FINISHED).putExtra(EXTRA_INSTALLATION_MD5, download.getMd5()));
-      if (download.isScheduled()) {
-        removeFromScheduled(download.getMd5());
-      }
     });
-  }
-
-  private void removeFromScheduled(String md5) {
-    ScheduledAccessor scheduledAccessor = AccessorFactory.getAccessorFor(
-        ((AptoideApplication) getApplicationContext().getApplicationContext()).getDatabase(),
-        Scheduled.class);
-    scheduledAccessor.delete(md5);
-    Logger.d(TAG, "Removing schedulled download with appId " + md5);
   }
 
   private Completable stopForegroundAndInstall(Context context, Download download,

@@ -2,7 +2,6 @@ package cm.aptoide.pt.store.view.home;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -30,6 +29,7 @@ import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -69,10 +69,7 @@ import rx.subjects.PublishSubject;
  */
 public class HomeFragment extends StoreFragment {
 
-  public static final String APTOIDE_FACEBOOK_LINK = "http://www.facebook.com/aptoide";
   public static final String FACEBOOK_PACKAGE_NAME = "com.facebook.katana";
-  public static final String TWITTER_PACKAGE_NAME = "com.twitter.android";
-  public static final String APTOIDE_TWITTER_URL = "http://www.twitter.com/aptoide";
 
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
@@ -394,10 +391,6 @@ public class HomeFragment extends StoreFragment {
           if (itemId == R.id.shareapps) {
             drawerAnalytics.drawerInteract("Spot&Share");
             getActivityNavigator().navigateTo(SpotSharePreviewActivity.class);
-          } else if (itemId == R.id.navigation_item_setting_scheduled_downloads) {
-            drawerAnalytics.drawerInteract("Scheduled Downloads");
-            navigator.navigateTo(AptoideApplication.getFragmentProvider()
-                .newScheduledDownloadsFragment(), true);
           } else if (itemId == R.id.navigation_item_excluded_updates) {
             drawerAnalytics.drawerInteract("Excluded Updates");
             navigator.navigateTo(AptoideApplication.getFragmentProvider()
@@ -406,13 +399,7 @@ public class HomeFragment extends StoreFragment {
             drawerAnalytics.drawerInteract("Settings");
             navigator.navigateTo(AptoideApplication.getFragmentProvider()
                 .newSettingsFragment(), true);
-          } else if (itemId == R.id.navigation_item_facebook) {
-            drawerAnalytics.drawerInteract("Facebook");
-            openFacebook();
-          } else if (itemId == R.id.navigation_item_twitter) {
-            drawerAnalytics.drawerInteract("Twitter");
-            openTwitter();
-          } else if (itemId == R.id.send_feedback) {
+          }  else if (itemId == R.id.send_feedback) {
             drawerAnalytics.drawerInteract("Send Feedback");
             startFeedbackFragment();
           }
@@ -425,29 +412,7 @@ public class HomeFragment extends StoreFragment {
     }
   }
 
-  private void openFacebook() {
 
-    installedRepository.getInstalled(FACEBOOK_PACKAGE_NAME)
-        .first()
-        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(installedFacebook -> {
-          openSocialLink(FACEBOOK_PACKAGE_NAME, APTOIDE_FACEBOOK_LINK,
-              getContext().getString(R.string.social_facebook_screen_title), Uri.parse(
-                  AptoideUtils.SocialLinksU.getFacebookPageURL(
-                      installedFacebook == null ? 0 : installedFacebook.getVersionCode(),
-                      APTOIDE_FACEBOOK_LINK)));
-        }, err -> {
-          CrashReport.getInstance()
-              .log(err);
-        });
-  }
-
-  private void openTwitter() {
-    openSocialLink(TWITTER_PACKAGE_NAME, APTOIDE_TWITTER_URL,
-        getContext().getString(R.string.social_twitter_screen_title),
-        Uri.parse(APTOIDE_TWITTER_URL));
-  }
 
   private void startFeedbackFragment() {
     String screenshotFileName = getActivity().getClass()
@@ -456,27 +421,6 @@ public class HomeFragment extends StoreFragment {
         AptoideUtils.ScreenU.takeScreenshot(getActivity(), cacheDirectoryPath, screenshotFileName);
     getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
         .newSendFeedbackFragment(screenshot.getAbsolutePath()), true);
-  }
-
-  private void openSocialLink(String packageName, String socialUrl, String pageTitle,
-      Uri uriToOpenApp) {
-
-    installedRepository.getInstalled(packageName)
-        .first()
-        .observeOn(AndroidSchedulers.mainThread())
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(installedFacebook -> {
-          if (installedFacebook == null) {
-            getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-                .newSocialFragment(socialUrl, pageTitle), true);
-          } else {
-            Intent sharingIntent = new Intent(Intent.ACTION_VIEW, uriToOpenApp);
-            getContext().startActivity(sharingIntent);
-          }
-        }, err -> {
-          CrashReport.getInstance()
-              .log(err);
-        });
   }
 
   public void refreshBadge(int num, BadgeView badgeToUpdate) {
