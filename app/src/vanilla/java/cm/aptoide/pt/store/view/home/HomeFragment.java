@@ -31,7 +31,6 @@ import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.TabNavigation;
@@ -82,7 +81,6 @@ public class HomeFragment extends StoreFragment {
   private TextView userEmail;
   private TextView userUsername;
   private ImageView userAvatarImage;
-  private InstalledRepository installedRepository;
   private DrawerAnalytics drawerAnalytics;
   private ClickHandler backClickHandler;
   private String defaultThemeName;
@@ -190,10 +188,7 @@ public class HomeFragment extends StoreFragment {
     crashReport = CrashReport.getInstance();
 
     drawerAnalytics = new DrawerAnalytics(analyticsManager, navigationTracker);
-
-    installedRepository =
-        RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
-
+    
     searchAnalytics = new SearchAnalytics(analyticsManager, navigationTracker);
 
     setRegisterFragment(false);
