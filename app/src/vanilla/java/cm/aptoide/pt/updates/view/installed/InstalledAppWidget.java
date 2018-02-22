@@ -34,7 +34,6 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
   private static final Locale LOCALE = Locale.getDefault();
   private static final String TAG = InstalledAppWidget.class.getSimpleName();
   private AptoideAccountManager accountManager;
-  private DialogUtils dialogUtils;
 
   private TextView labelTextView;
   private TextView verNameTextView;
@@ -44,9 +43,6 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
   private String appName;
   private String packageName;
   private AccountNavigator accountNavigator;
-  private BodyInterceptor<BaseBody> bodyInterceptor;
-  private OkHttpClient httpClient;
-  private Converter.Factory converterFactory;
 
   private ShareAppHelper shareAppHelper;
 
@@ -66,17 +62,9 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     accountManager = application.getAccountManager();
-    httpClient = application.getDefaultClient();
-    converterFactory = WebService.getDefaultConverter();
 
-    this.bodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();
+    this.accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
 
-    final AccountNavigator accountNavigator =
-        ((ActivityResultNavigator) getContext()).getAccountNavigator();
-    this.accountNavigator = accountNavigator;
-    dialogUtils = new DialogUtils(accountManager, accountNavigator, bodyInterceptor, httpClient,
-        converterFactory, displayable.getInstalledRepository(), application.getTokenInvalidator(),
-        application.getDefaultSharedPreferences(), getContext().getResources());
     shareAppHelper = new ShareAppHelper(accountManager, accountNavigator, getContext(),
         displayable.getTimelineAnalytics(), application.getDefaultSharedPreferences(),
         application.isCreateStoreUserPrivacyEnabled());
