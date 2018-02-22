@@ -20,25 +20,18 @@
   <item
       android:id="@+id/navigation_item_excluded_updates"
       android:icon="?attr/icExcludedUpdatesDrawable"
-      android:orderInCategory="5"
+      android:orderInCategory="3"
       android:title="@string/excluded_updates"/>
   <item
       android:id="@+id/navigation_item_settings"
       android:icon="?attr/icSettingsDrawable"
-      android:orderInCategory="6"
+      android:orderInCategory="4"
       android:title="@string/drawer_title_settings"/>
-
-  <item
-      android:id="@+id/navigation_item_backup_apps"
-      android:icon="@drawable/ic_action_backup_custom"
-      android:orderInCategory="7"
-      android:title="@string/drawer_title_backup_apps"/>
-
 
   <item
       android:id="@+id/send_feedback"
       android:icon="?attr/icSendFeedbackDrawable"
-      android:orderInCategory="9"
+      android:orderInCategory="5"
       android:title="@string/drawer_title_feedback_send_button"/>
 
 

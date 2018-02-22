@@ -1,7 +1,6 @@
 package cm.aptoide.pt.store.view.home;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -29,11 +28,9 @@ import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
-import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.TabNavigation;
@@ -70,7 +67,6 @@ import rx.subjects.PublishSubject;
 public class HomeFragment extends StoreFragment {
 
   public static final String FACEBOOK_PACKAGE_NAME = "com.facebook.katana";
-  public static final String BACKUP_APPS_PACKAGE_NAME = "pt.aptoide.backupapps";
 
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
@@ -85,7 +81,6 @@ public class HomeFragment extends StoreFragment {
   private TextView userEmail;
   private TextView userUsername;
   private ImageView userAvatarImage;
-  private InstalledRepository installedRepository;
   private DrawerAnalytics drawerAnalytics;
   private ClickHandler backClickHandler;
   private String defaultThemeName;
@@ -193,10 +188,7 @@ public class HomeFragment extends StoreFragment {
     crashReport = CrashReport.getInstance();
 
     drawerAnalytics = new DrawerAnalytics(analyticsManager, navigationTracker);
-
-    installedRepository =
-        RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
-
+    
     searchAnalytics = new SearchAnalytics(analyticsManager, navigationTracker);
 
     setRegisterFragment(false);
@@ -400,9 +392,6 @@ public class HomeFragment extends StoreFragment {
             drawerAnalytics.drawerInteract("Settings");
             navigator.navigateTo(AptoideApplication.getFragmentProvider()
                 .newSettingsFragment(), true);
-          } else if (itemId == R.id.navigation_item_backup_apps) {
-            drawerAnalytics.drawerInteract("Backup Apps");
-            openBackupApps();
           } else if (itemId == R.id.send_feedback) {
             drawerAnalytics.drawerInteract("Send Feedback");
             startFeedbackFragment();
@@ -416,27 +405,7 @@ public class HomeFragment extends StoreFragment {
     }
   }
 
-  private void openBackupApps() {
 
-    installedRepository.getInstalled(BACKUP_APPS_PACKAGE_NAME)
-        .first()
-        .observeOn(AndroidSchedulers.mainThread())
-        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
-        .subscribe(installed -> {
-          if (installed == null) {
-            getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-                    .newAppViewFragment(BACKUP_APPS_PACKAGE_NAME, AppViewFragment.OpenType.OPEN_ONLY),
-                true);
-          } else {
-            Intent i = getContext().getPackageManager()
-                .getLaunchIntentForPackage(BACKUP_APPS_PACKAGE_NAME);
-            startActivity(i);
-          }
-        }, err -> {
-          CrashReport.getInstance()
-              .log(err);
-        });
-  }
 
   private void startFeedbackFragment() {
     String screenshotFileName = getActivity().getClass()
