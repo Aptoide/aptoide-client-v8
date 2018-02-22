@@ -15,7 +15,6 @@ import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.download.view.DownloadsFragment;
-import cm.aptoide.pt.download.view.scheduled.ScheduledDownloadsFragment;
 import cm.aptoide.pt.presenter.InviteFriendsContract;
 import cm.aptoide.pt.reviews.LatestReviewsFragment;
 import cm.aptoide.pt.reviews.ListReviewsFragment;
@@ -212,15 +211,6 @@ public class PartnerFragmentProvider implements FragmentProvider {
 
   @Override public Fragment newExcludedUpdatesFragment() {
     return ExcludedUpdatesFragment.newInstance();
-  }
-
-  @Override public Fragment newScheduledDownloadsFragment() {
-    return ScheduledDownloadsFragment.newInstance();
-  }
-
-  @Override
-  public Fragment newScheduledDownloadsFragment(ScheduledDownloadsFragment.OpenMode openMode) {
-    return ScheduledDownloadsFragment.newInstance(openMode);
   }
 
   @Override public Fragment newRateAndReviewsFragment(long appId, String appName, String storeName,

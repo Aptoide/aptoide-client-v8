@@ -368,6 +368,10 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
 
     if (oldVersion == 8092) {
       realm.delete("Rollback");
+      realm.delete("Scheduled");
+
+      schema.get("Download")
+          .removeField("scheduled");
       oldVersion++;
     }
   }
