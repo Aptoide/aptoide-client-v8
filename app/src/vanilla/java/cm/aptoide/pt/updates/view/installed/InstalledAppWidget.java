@@ -31,8 +31,6 @@ import retrofit2.Converter;
  */
 public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
 
-  private static final Locale LOCALE = Locale.getDefault();
-  private static final String TAG = InstalledAppWidget.class.getSimpleName();
   private AptoideAccountManager accountManager;
 
   private TextView labelTextView;
