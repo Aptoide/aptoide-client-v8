@@ -29,12 +29,6 @@
       app:showAsAction="never"/>
 
   <item
-      android:id="@+id/menu_uninstall"
-      android:title="@string/uninstall"
-      android:visible="false"
-      app:showAsAction="never"/>
-
-  <item
       android:id="@+id/menu_remote_install"
       android:title="@string/remote_install_menu_title"
       app:showAsAction="never"/>

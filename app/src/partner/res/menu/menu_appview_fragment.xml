@@ -28,9 +28,5 @@
       android:visible="false"
       app:showAsAction="never"/>
 
-  <item
-      android:id="@+id/menu_uninstall"
-      android:title="@string/uninstall"
-      android:visible="false"
-      app:showAsAction="never"/>
+
 </menu>
