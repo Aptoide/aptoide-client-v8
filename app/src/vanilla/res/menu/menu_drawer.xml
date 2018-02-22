@@ -35,22 +35,6 @@
       android:title="@string/drawer_title_backup_apps"/>
 
 
-  <group android:orderInCategory="8">
-
-    <item android:title="@string/drawer_social_media_title">
-      <menu>
-        <item
-            android:id="@+id/navigation_item_facebook"
-            android:icon="@drawable/ic_action_facebook"
-            android:title="@string/drawer_title_facebook"/>
-        <item
-            android:id="@+id/navigation_item_twitter"
-            android:icon="@drawable/ic_action_twitter"
-            android:title="@string/drawer_title_twitter"/>
-      </menu>
-    </item>
-  </group>
-
   <item
       android:id="@+id/send_feedback"
       android:icon="?attr/icSendFeedbackDrawable"
