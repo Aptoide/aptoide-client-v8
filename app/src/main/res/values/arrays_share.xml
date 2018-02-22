@@ -5,10 +5,6 @@
     <item name="share_timeline_option">@string/share_options_share_in_timeline</item>
   </string-array>
 
-  <string-array name="installed_share_options_array">
-    <item name="share_timeline_option">@string/share_options_share_in_timeline</item>
-  </string-array>
-
   <string-array name="store_share_options_array">
     <item name="share_external_option">@string/share_options_store_using</item>
   </string-array>

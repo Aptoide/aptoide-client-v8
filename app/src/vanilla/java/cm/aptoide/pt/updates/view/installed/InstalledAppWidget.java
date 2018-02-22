@@ -31,18 +31,9 @@ import retrofit2.Converter;
  */
 public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
 
-  private AptoideAccountManager accountManager;
-
   private TextView labelTextView;
   private TextView verNameTextView;
   private ImageView iconImageView;
-  private ViewGroup shareButtonLayout;
-
-  private String appName;
-  private String packageName;
-  private AccountNavigator accountNavigator;
-
-  private ShareAppHelper shareAppHelper;
 
   public InstalledAppWidget(View itemView) {
     super(itemView);
@@ -52,33 +43,15 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
     labelTextView = (TextView) itemView.findViewById(R.id.name);
     iconImageView = (ImageView) itemView.findViewById(R.id.icon);
     verNameTextView = (TextView) itemView.findViewById(R.id.app_version);
-    shareButtonLayout = (ViewGroup) itemView.findViewById(R.id.shareButtonLayout);
   }
 
   @Override public void bindView(InstalledAppDisplayable displayable) {
     final Installed pojo = displayable.getPojo();
-    final AptoideApplication application =
-        (AptoideApplication) getContext().getApplicationContext();
-    accountManager = application.getAccountManager();
-
-    this.accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
-
-    shareAppHelper = new ShareAppHelper(accountManager, accountNavigator, getContext(),
-        displayable.getTimelineAnalytics(), application.getDefaultSharedPreferences(),
-        application.isCreateStoreUserPrivacyEnabled());
-    appName = pojo.getName();
-    packageName = pojo.getPackageName();
 
     labelTextView.setText(pojo.getName());
     verNameTextView.setText(pojo.getVersionName());
     final FragmentActivity context = getContext();
     ImageLoader.with(context)
         .load(pojo.getIcon(), iconImageView);
-
-    shareButtonLayout.setVisibility(View.VISIBLE);
-    compositeSubscription.add(RxView.clicks(shareButtonLayout)
-        .subscribe(__ -> shareAppHelper.shareApp(appName, packageName, pojo.getIcon()),
-            err -> CrashReport.getInstance()
-                .log(err)));
   }
 }

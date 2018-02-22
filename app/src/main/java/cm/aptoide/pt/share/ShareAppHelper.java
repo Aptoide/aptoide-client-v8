@@ -58,15 +58,6 @@ public class ShareAppHelper {
     }, CrashReport.getInstance()::log);
   }
 
-  public void shareApp(String appName, String packageName, String iconPath) {
-    ShareDialogs.createInstalledShareDialog(activity, activity.getString(R.string.share))
-        .subscribe(shareResponse -> {
-          if (ShareDialogs.ShareResponse.SHARE_TIMELINE == shareResponse) {
-            caseAppsTimelineShare(appName, packageName, iconPath, 0, null);
-          }
-        }, CrashReport.getInstance()::log);
-  }
-
   public void caseDefaultShare(String appName, String wUrl) {
     if (wUrl != null) {
       Intent sharingIntent = new Intent(Intent.ACTION_SEND);
