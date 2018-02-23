@@ -17,7 +17,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.download.view.DownloadsFragment;
 import cm.aptoide.pt.presenter.InviteFriendsContract;
 import cm.aptoide.pt.reviews.LatestReviewsFragment;
-import cm.aptoide.pt.reviews.ListReviewsFragment;
 import cm.aptoide.pt.reviews.RateAndReviewsFragment;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.social.view.TimelineFragment;
@@ -164,10 +163,6 @@ public class VanillaFragmentProvider implements FragmentProvider {
 
   @Override public Fragment newGetStoreWidgetsFragment(boolean addAdultFilter) {
     return GetStoreWidgetsFragment.newInstance(addAdultFilter);
-  }
-
-  @Override public Fragment newListReviewsFragment() {
-    return new ListReviewsFragment();
   }
 
   @Override public Fragment newGetAdsFragment() {

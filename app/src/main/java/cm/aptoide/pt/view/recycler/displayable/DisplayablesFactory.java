@@ -140,11 +140,6 @@ public class DisplayablesFactory {
               fragmentNavigator, storeAccessor, bodyInterceptorV7, client, converter,
               tokenInvalidator, sharedPreferences));
 
-        case REVIEWS_GROUP:
-          return Observable.from(
-              createReviewsGroupDisplayables(widget, windowManager, resources, storeTabNavigator,
-                  navigationTracker));
-
         case MY_STORE_META:
           return Observable.from(
               createMyStoreDisplayables(widget.getViewObject(), storeAnalytics, storeContext,
@@ -358,25 +353,6 @@ public class DisplayablesFactory {
     return Collections.emptyList();
   }
 
-  private static List<Displayable> createReviewsGroupDisplayables(GetStoreWidgets.WSWidget wsWidget,
-      WindowManager windowManager, Resources resources, StoreTabNavigator storeTabNavigator,
-      NavigationTracker navigationTracker) {
-    List<Displayable> displayables = new LinkedList<>();
-
-    ListFullReviews reviewsList = (ListFullReviews) wsWidget.getViewObject();
-    if (reviewsList != null
-        && reviewsList.getDataList() != null
-        && reviewsList.getDataList()
-        .getList()
-        .size() > 0) {
-      displayables.add(
-          new StoreGridHeaderDisplayable(wsWidget, storeTabNavigator, navigationTracker));
-      displayables.add(createReviewsDisplayables(reviewsList, windowManager, resources));
-    }
-
-    return displayables;
-  }
-
   private static List<Displayable> createMyStoreDisplayables(Object viewObject,
       StoreAnalytics storeAnalytics, StoreContext storeContext,
       AptoideAccountManager accountManager) {
@@ -469,17 +445,5 @@ public class DisplayablesFactory {
               return nwStore;
             })
             .toList());
-  }
-
-  private static Displayable createReviewsDisplayables(ListFullReviews listFullReviews,
-      WindowManager windowManager, Resources resources) {
-    List<FullReview> reviews = listFullReviews.getDataList()
-        .getList();
-    final List<Displayable> displayables = new ArrayList<>(reviews.size());
-    for (int i = 0; i < reviews.size(); i++) {
-      displayables.add(new RowReviewDisplayable(reviews.get(i)));
-    }
-
-    return new DisplayableGroup(displayables, windowManager, resources);
   }
 }
