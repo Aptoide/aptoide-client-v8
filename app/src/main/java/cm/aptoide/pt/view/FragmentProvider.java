@@ -89,8 +89,6 @@ public interface FragmentProvider {
 
   @Deprecated Fragment newGetStoreWidgetsFragment(boolean addAdultFilter);
 
-  @Deprecated Fragment newListReviewsFragment();
-
   @Deprecated Fragment newGetAdsFragment();
 
   @Deprecated Fragment newListStoresFragment();
