@@ -34,8 +34,6 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
-import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.NavigationTracker;
@@ -60,10 +58,8 @@ import cm.aptoide.pt.billing.view.BillingActivity;
 import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
-import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -73,7 +69,6 @@ import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.Group;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
-import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -131,14 +126,12 @@ import retrofit2.Converter;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
 import rx.subjects.PublishSubject;
 
 /**
  * Created on 04/05/16.
  */
-public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
-    implements Scrollable, AppMenuOptions {
+public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements Scrollable {
   public static final int VIEW_ID = R.layout.fragment_app_view;
   public static final int LOGIN_REQUEST_CODE = 13;
   private static final String TAG = AppViewFragment.class.getSimpleName();
@@ -156,8 +149,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private AppViewModel appViewModel;
   private AppViewHeader header;
   private InstallManager installManager;
-  private Action0 unInstallAction;
-  private MenuItem uninstallMenuItem;
   private AppRepository appRepository;
   private Subscription subscription;
   private AdsRepository adsRepository;
@@ -631,8 +622,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     } else {
       menu.removeItem(R.id.menu_item_search);
     }
-
-    uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
   }
 
   @Override public String getDefaultTheme() {
@@ -648,16 +637,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           switch (itemId) {
             case R.id.menu_item_share:
               handleShareAppMenuItemClick();
-              break;
-
-            case R.id.menu_schedule:
-              handleScheduleInstallMenuItemClick();
-              break;
-
-            case R.id.menu_uninstall:
-              if (unInstallAction != null) {
-                unInstallAction.call();
-              }
               break;
 
             case R.id.menu_remote_install:
@@ -688,19 +667,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     appViewAnalytics.sendAppShareEvent();
   }
 
-  private void handleScheduleInstallMenuItemClick() {
-    appViewAnalytics.sendScheduleDownloadEvent();
-    final Scheduled scheduled = createScheduled(getApp(), appViewModel.getAppAction());
-
-    ScheduledAccessor scheduledAccessor = AccessorFactory.getAccessorFor(
-        ((AptoideApplication) getContext().getApplicationContext()
-            .getApplicationContext()).getDatabase(), Scheduled.class);
-    scheduledAccessor.insert(scheduled);
-
-    String str = this.getString(R.string.added_to_scheduled);
-    ShowMessage.asSnack(this.getView(), str);
-  }
-
   private void handleRemoteInstallMenuClick() {
     appViewAnalytics.sendRemoteInstallEvent();
     if (AptoideUtils.SystemU.getConnectionType(
@@ -717,44 +683,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       newFragment.show(getActivity().getSupportFragmentManager(),
           RemoteInstallDialog.class.getSimpleName());
     }
-  }
-
-  private Scheduled createScheduled(GetAppMeta.App app, AppAction appAction) {
-
-    String mainObbName = null;
-    String mainObbPath = null;
-    String mainObbMd5 = null;
-
-    String patchObbName = null;
-    String patchObbPath = null;
-    String patchObbMd5 = null;
-
-    Obb obb = app.getObb();
-    if (obb != null) {
-      Obb.ObbItem obbMain = obb.getMain();
-      Obb.ObbItem obbPatch = obb.getPatch();
-
-      if (obbMain != null) {
-        mainObbName = obbMain.getFilename();
-        mainObbPath = obbMain.getPath();
-        mainObbMd5 = obbMain.getMd5sum();
-      }
-
-      if (obbPatch != null) {
-        patchObbName = obbPatch.getFilename();
-        patchObbPath = obbPatch.getPath();
-        patchObbMd5 = obbPatch.getMd5sum();
-      }
-    }
-
-    return new Scheduled(app.getName(), app.getFile()
-        .getVername(), app.getIcon(), app.getFile()
-        .getPath(), app.getFile()
-        .getMd5sum(), app.getFile()
-        .getVercode(), app.getPackageName(), app.getStore()
-        .getName(), app.getFile()
-        .getPathAlt(), mainObbName, mainObbPath, mainObbMd5, patchObbName, patchObbPath,
-        patchObbMd5, false, appAction.name());
   }
 
   private Observable<GetApp> manageOrganicAds(GetApp getApp) {
@@ -807,10 +735,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         .getDataList()
         .getList();
 
-    if (groupsList.size() > 0) {
-      final Group group = groupsList.get(0);
-    }
-
     updateLocalVars(getApp());
     if (getStoreTheme() == null) {
       setStoreTheme(getApp.getNodes()
@@ -825,28 +749,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installAction(getPackageName(), getApp().getFile()
         .getVercode()).observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(appAction -> {
-          AppViewFragment.this.appViewModel.setAppAction(appAction);
-          MenuItem item = menu.findItem(R.id.menu_schedule);
-          if (item != null) {
-            showHideOptionsMenu(item, appAction != AppAction.OPEN);
-          }
-          if (appAction != AppAction.INSTALL) {
-            setUnInstallMenuOptionVisible(() -> new PermissionManager().requestDownloadAccess(
-                (PermissionService) getContext())
-                .flatMap(success -> installManager.uninstall(getPackageName(), getApp().getFile()
-                    .getVername())
-                    .toObservable())
-                .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-                .subscribe(aVoid -> {
-                }, throwable -> throwable.printStackTrace()));
-          } else {
-            setUnInstallMenuOptionVisible(null);
-          }
-        }, err -> {
-          CrashReport.getInstance()
-              .log(err);
-        });
+        .subscribe(appAction -> AppViewFragment.this.appViewModel.setAppAction(appAction),
+            err -> CrashReport.getInstance()
+                .log(err));
 
     header.setup(getApp);
     clearDisplayables().addDisplayables(setupDisplayables(getApp), true);
@@ -933,11 +838,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     if (item != null) {
       item.setVisible(visible);
     }
-  }
-
-  @Override public void setUnInstallMenuOptionVisible(@Nullable Action0 unInstallAction) {
-    this.unInstallAction = unInstallAction;
-    showHideOptionsMenu(uninstallMenuItem, unInstallAction != null);
   }
 
   private List<String> createFragmentNameList(List<Fragment> fragments) {

@@ -3,7 +3,6 @@ package cm.aptoide.pt.store.view;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.app.view.ListAppsFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
-import cm.aptoide.pt.reviews.ListReviewsFragment;
 import cm.aptoide.pt.store.view.ads.GetAdsFragment;
 import cm.aptoide.pt.store.view.my.MyStoresFragment;
 import cm.aptoide.pt.store.view.my.MyStoresSubscribedFragment;
@@ -30,8 +29,6 @@ public class StoreTabFragmentChooser {
         return MyStoresFragment.newInstance();
       case getStoreWidgets:
         return GetStoreWidgetsFragment.newInstance(addAdultFilter);
-      case listReviews:
-        return ListReviewsFragment.newInstance();
       case getAds:
         return GetAdsFragment.newInstance();
       case listStores:

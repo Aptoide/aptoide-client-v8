@@ -22,15 +22,4 @@
       android:title="@string/share"
       app:showAsAction="ifRoom"/>
 
-  <item
-      android:id="@+id/menu_schedule"
-      android:title="@string/schDwnBtn"
-      android:visible="false"
-      app:showAsAction="never"/>
-
-  <item
-      android:id="@+id/menu_uninstall"
-      android:title="@string/uninstall"
-      android:visible="false"
-      app:showAsAction="never"/>
 </menu>

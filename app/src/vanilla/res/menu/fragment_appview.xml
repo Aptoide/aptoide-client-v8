@@ -13,7 +13,7 @@
       android:title="@string/search"
       app:actionLayout="@layout/search_input_text"
       app:actionViewClass="android.support.v7.widget.SearchView"
-      app:showAsAction="always|collapseActionView"/>
+      app:showAsAction="ifRoom|collapseActionView"/>
 
   <item
       android:id="@+id/menu_item_share"
@@ -23,19 +23,9 @@
       app:showAsAction="ifRoom"/>
 
   <item
-      android:id="@+id/menu_schedule"
-      android:title="@string/schDwnBtn"
-      android:visible="false"
-      app:showAsAction="never"/>
-
-  <item
-      android:id="@+id/menu_uninstall"
-      android:title="@string/uninstall"
-      android:visible="false"
-      app:showAsAction="never"/>
-
-  <item
       android:id="@+id/menu_remote_install"
+      android:icon="@drawable/ic_download_tv"
+      android:orderInCategory="3"
       android:title="@string/remote_install_menu_title"
-      app:showAsAction="never"/>
+      app:showAsAction="ifRoom"/>
 </menu>

@@ -15,15 +15,12 @@ import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.Pair;
 import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
-import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.table.ColumnDefinition;
 import cm.aptoide.pt.table.ExcludedTable;
-import cm.aptoide.pt.table.ScheduledTable;
 import cm.aptoide.pt.table.Table;
 import cm.aptoide.pt.table.TableBag;
 import java.util.List;
@@ -101,101 +98,6 @@ import static org.junit.Assert.fail;
         e.printStackTrace();
       } finally {
         db.endTransaction();
-      }
-    }
-  }
-
-  @Test public void scheduledDownloads() {
-    // prepare
-    final Table scheduleTable = tableBag.get(TableBag.TableName.SCHEDULED);
-    final int nr_values = 5;
-    final ContentValues[] insertedValues = new ContentValues[nr_values];
-    final String[] md5s = new String[nr_values];
-    final ScheduledAccessor accessor = AccessorFactory.getAccessorFor(
-        ((AptoideApplication) InstrumentationRegistry.getTargetContext()
-            .getApplicationContext()).getDatabase(), Scheduled.class);
-
-    db.beginTransaction();
-    try {
-
-      for (int i = 0; i < insertedValues.length; i++) {
-        insertedValues[i] = new ContentValues();
-
-        putValues(scheduleTable, insertedValues, i);
-
-        md5s[i] = ScheduledTable.md5.getName() + i;
-
-        db.insertOrThrow(scheduleTable.getName(), null, insertedValues[i]);
-      }
-
-      db.setTransactionSuccessful();
-    } catch (Exception e) {
-      e.printStackTrace();
-    } finally {
-      db.endTransaction();
-    }
-
-    // trigger migration
-    ManagerPreferences.setNeedsSqliteDbMigration(true,
-        ((AptoideApplication) InstrumentationRegistry.getTargetContext()
-            .getApplicationContext()).getDefaultSharedPreferences());
-    int newVersion = dbVersion.incrementAndGet();
-    dbHelper.onUpgrade(db, newVersion - 1, newVersion);
-
-    // main thread ID for asserting purposes
-    final long mainThreadId = Looper.getMainLooper()
-        .getThread()
-        .getId();
-
-    // evaluate
-    for (int i = 0; i < nr_values; i++) {
-      final int finalI = i;
-      String currentMd5 = md5s[finalI];
-
-      TestSubscriber<Scheduled> testSubscriber = TestSubscriber.create();
-      accessor.get(currentMd5)
-          .first()
-          .subscribe(testSubscriber);
-      testSubscriber.awaitTerminalEvent();
-      testSubscriber.assertCompleted();
-      Scheduled scheduled = testSubscriber.getOnNextEvents()
-          .get(0);
-
-      if (scheduled == null) {
-        fail("Scheduled download is null");
-        return;
-      }
-
-      assertNotEquals(mainThreadId, Thread.currentThread()
-          .getId());
-
-      // assert data fields
-      assertEquals(scheduled.getName(), insertedValues[finalI].get(ScheduledTable.name.getName()));
-
-      assertEquals(scheduled.getMd5(), insertedValues[finalI].get(ScheduledTable.md5.getName()));
-
-      assertEquals(scheduled.getIcon(), insertedValues[finalI].get(ScheduledTable.icon.getName()));
-    }
-  }
-
-  private void putValues(Table table, ContentValues[] insertedValues, int i) {
-    String columnName;
-    for (Pair<ColumnDefinition, Table.ColumnType> column : table.getFields()) {
-      columnName = column.first.getName();
-      if (!column.first.hasDefaultValue()) {
-        switch (column.second) {
-          case TEXT: {
-            insertedValues[i].put(columnName, columnName + i);
-            break;
-          }
-          case INTEGER: {
-            insertedValues[i].put(columnName, i);
-            break;
-          }
-          default: {
-            throw new UnsupportedOperationException("Unknown type to insert in DB");
-          }
-        }
       }
     }
   }

@@ -104,13 +104,6 @@
         android:summary="@string/setting_notifications_sub_sub_section_2"
         android:title="@string/setting_notifications_sub_section_2"/>
   </PreferenceCategory>
-
-  <PreferenceCategory android:title="@string/setting_schdwntitle">
-    <CheckBoxPreference
-        android:key="schDwnBox"
-        android:summary="@string/setting_schdwninstallsum"
-        android:title="@string/setting_schdwninstalltitle"/>
-  </PreferenceCategory>
   <PreferenceCategory android:title="@string/setting_clear_memory">
     <Preference
         android:key="clearcache"

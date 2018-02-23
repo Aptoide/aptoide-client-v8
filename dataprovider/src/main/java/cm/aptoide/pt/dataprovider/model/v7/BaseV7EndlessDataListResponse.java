@@ -58,11 +58,7 @@ public class BaseV7EndlessDataListResponse<T> extends BaseV7EndlessResponse {
   public DataList<T> getDataList() {
     return this.dataList;
   }
-
-  public void setDataList(DataList<T> dataList) {
-    this.dataList = dataList;
-  }
-
+  
   public String toString() {
     return "BaseV7EndlessDataListResponse(dataList=" + this.getDataList() + ")";
   }

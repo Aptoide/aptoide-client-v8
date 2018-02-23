@@ -182,11 +182,6 @@ public class AppViewAnalytics {
         AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
-  public void sendScheduleDownloadEvent() {
-    analyticsManager.logEvent(createMapData(ACTION, "Schedule Download"), APP_VIEW_INTERACT,
-        AnalyticsManager.Action.CLICK, getViewName(true));
-  }
-
   public void sendRemoteInstallEvent() {
     analyticsManager.logEvent(createMapData(ACTION, "Install on TV"), APP_VIEW_INTERACT,
         AnalyticsManager.Action.INSTALL, getViewName(true));
