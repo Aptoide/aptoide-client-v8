@@ -130,7 +130,6 @@ import cm.aptoide.pt.search.suggestions.SearchSuggestionService;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.suggestions.TrendingService;
 import cm.aptoide.pt.social.data.ReadPostsPersistence;
-import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
@@ -981,7 +980,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides @Named("fabricEvents") Collection<String> provideFabricEvents() {
     return Arrays.asList(DownloadAnalytics.DOWNLOAD_COMPLETE_EVENT,
-        SpotAndShareAnalytics.EVENT_NAME_SPOT_SHARE_PERMISSIONS,
         InstallFabricEvents.ROOT_V2_COMPLETE, InstallFabricEvents.ROOT_V2_START,
         InstallFabricEvents.IS_INSTALLATION_TYPE_EVENT_NAME);
   }

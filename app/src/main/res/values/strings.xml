@@ -304,7 +304,6 @@
   <string name="out_of_space_dialog_message">Free up some space to continue.</string>
   <string name="create_store_displayable_explore_long_term_button">View store</string>
   <string name="create_store_displayable_empty_description_message">Add a description to your store. A good description helps you to get more followers and interaction.</string>
-  <string name="fragment_spot_share_preview_start_button">Start</string>
 
   <!-- 02/2017 strings for login / sign up -->
   <string name="join_company">Join %s</string>

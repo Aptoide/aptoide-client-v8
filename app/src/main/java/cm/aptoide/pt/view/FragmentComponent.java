@@ -20,7 +20,6 @@ import cm.aptoide.pt.search.view.SearchResultFragment;
 import cm.aptoide.pt.share.NotLoggedInShareFragment;
 import cm.aptoide.pt.social.commentslist.PostCommentsFragment;
 import cm.aptoide.pt.social.view.TimelineFragment;
-import cm.aptoide.pt.spotandshare.view.SpotSharePreviewFragment;
 import cm.aptoide.pt.store.view.FragmentTopStores;
 import cm.aptoide.pt.store.view.ListStoresFragment;
 import cm.aptoide.pt.store.view.StoreFragment;
@@ -59,8 +58,6 @@ public interface FragmentComponent {
   void inject(InviteFriendsFragment inviteFriendsFragment);
 
   void inject(PhoneInputFragment phoneInputFragment);
-
-  void inject(SpotSharePreviewFragment spotSharePreviewFragment);
 
   void inject(TimelineFragment timelineFragment);
 

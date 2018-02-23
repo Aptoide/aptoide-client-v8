@@ -3,5 +3,4 @@
   <integer name="max_username_char_length">63</integer>
   <integer name="minimum_description_lines">4</integer>
   <integer name="nr_small_app_bricks">2</integer>
-  <integer name="spot_and_share_number_of_columns_app_selection">3</integer>
 </resources>

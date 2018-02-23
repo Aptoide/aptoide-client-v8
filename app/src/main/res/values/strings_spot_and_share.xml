@@ -49,12 +49,9 @@
   <string name="upperDelete">DELETE </string>
   <string name="upperResend">RESEND</string>
   <string name="deletedMessage">You deleted this file!</string>
-  <string name="noRecords">There are no apps shared yet</string>
-  <string name="clearHistory">CLEAR HISTORY</string>
   <string name="noRecordsDelete">No apps to delete</string>
 
 
-  <string name="sendApps">Send APPS</string>
 
   <string name="recoveringWifiState">Recovering the Wi-Fi status from when you joined the app</string>
 
@@ -64,8 +61,6 @@
 
   <string name="searching_groups">Searching for groups to join</string>
 
-  <string name="joined_group">Joined group %1$s</string>
-  <string name="created_group">Created group %1$s</string>
 
   <string name="waiting_group_friends">Waiting for friends to join group</string>
   <string name="share_instruction">Share apps or wait for someone in the group to share them.</string>

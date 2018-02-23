@@ -22,7 +22,6 @@ import cm.aptoide.pt.reviews.ListReviewsFragment;
 import cm.aptoide.pt.reviews.RateAndReviewsFragment;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.social.view.TimelineFragment;
-import cm.aptoide.pt.spotandshare.view.SpotSharePreviewFragment;
 import cm.aptoide.pt.store.view.FragmentTopStores;
 import cm.aptoide.pt.store.view.GetStoreFragment;
 import cm.aptoide.pt.store.view.GetStoreWidgetsFragment;
@@ -298,10 +297,6 @@ public class VanillaFragmentProvider implements FragmentProvider {
   @Override public Fragment newInviteFriendsFragment(InviteFriendsContract.View.OpenMode openMode,
       String tag) {
     return InviteFriendsFragment.newInstance(openMode, tag);
-  }
-
-  @Override public Fragment newSpotShareFragment(boolean showToolbar) {
-    return SpotSharePreviewFragment.newInstance(showToolbar);
   }
 
   @Override public Fragment newThankYouConnectingFragment(String tag) {

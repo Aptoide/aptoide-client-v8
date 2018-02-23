@@ -47,7 +47,6 @@ import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.view.AppSearchSuggestionsView;
 import cm.aptoide.pt.search.view.SearchSuggestionsPresenter;
-import cm.aptoide.pt.spotandshare.view.SpotSharePreviewActivity;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.store.view.StorePagerAdapter;
@@ -375,15 +374,6 @@ public class HomeFragment extends StoreFragment {
   private void setupNavigationView() {
     if (navigationView != null) {
 
-      try {
-        //TODO emoji did not work on xml file. this sould be deleted in the next release
-        navigationView.getMenu()
-            .findItem(R.id.shareapps)
-            .setTitle(getString(R.string.spot_share) + new String(" \uD83D\uDD38"));
-      } catch (Exception e) {
-        CrashReport.getInstance()
-            .log(e);
-      }
       navigationView.setItemIconTintList(null);
       navigationView.setNavigationItemSelectedListener(menuItem -> {
 
@@ -393,10 +383,7 @@ public class HomeFragment extends StoreFragment {
           accountNavigator.navigateToAccountView(AccountAnalytics.AccountOrigins.MY_ACCOUNT);
         } else {
           final FragmentNavigator navigator = getFragmentNavigator();
-          if (itemId == R.id.shareapps) {
-            drawerAnalytics.drawerInteract("Spot&Share");
-            getActivityNavigator().navigateTo(SpotSharePreviewActivity.class);
-          } else if (itemId == R.id.navigation_item_setting_scheduled_downloads) {
+          if (itemId == R.id.navigation_item_setting_scheduled_downloads) {
             drawerAnalytics.drawerInteract("Scheduled Downloads");
             navigator.navigateTo(AptoideApplication.getFragmentProvider()
                 .newScheduledDownloadsFragment(), true);
