@@ -122,7 +122,7 @@ public class Event {
     // Displays
     facebook, twitch, twitter, youtube,
 
-    mySpotShare, // v3
+    // v3
     getReviews
   }
 }

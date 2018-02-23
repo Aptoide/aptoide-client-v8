@@ -45,7 +45,7 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
 
     enableAdultContentPinDialog =
         new PinDialog.Builder(getContext()).setMessage(R.string.request_adult_pin)
-            .setPositiveButton(R.string.ok)
+            .setPositiveButton(R.string.all_button_ok)
             .setNegativeButton(R.string.cancel)
             .setView(R.layout.dialog_requestpin)
             .setEditText(R.id.pininput)

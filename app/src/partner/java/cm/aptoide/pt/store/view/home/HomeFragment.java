@@ -73,7 +73,6 @@ public class HomeFragment extends StoreFragment {
 
   public static final String FACEBOOK_PACKAGE_NAME = "com.facebook.katana";
 
-  //private static final int SPOT_SHARE_PERMISSION_REQUEST_CODE = 6531;
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
   private DrawerLayout drawerLayout;

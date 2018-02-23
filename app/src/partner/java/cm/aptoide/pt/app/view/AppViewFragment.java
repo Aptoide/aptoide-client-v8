@@ -90,7 +90,6 @@ import cm.aptoide.pt.search.view.AppSearchSuggestionsView;
 import cm.aptoide.pt.search.view.SearchSuggestionsPresenter;
 import cm.aptoide.pt.share.ShareAppHelper;
 import cm.aptoide.pt.social.data.ReadPostsPersistence;
-import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
@@ -370,8 +369,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
     storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
         ((AptoideApplication) applicationContext.getApplicationContext()).getDatabase(),
         StoredMinimalAd.class);
-    final SpotAndShareAnalytics spotAndShareAnalytics =
-        new SpotAndShareAnalytics(analyticsManager, navigationTracker);
     appViewAnalytics = new AppViewAnalytics(downloadAnalytics, analyticsManager, navigationTracker);
 
     appViewSimilarAppAnalytics =
@@ -379,8 +376,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
 
     installAppRelay = PublishRelay.create();
     shareAppHelper =
-        new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
-            spotAndShareAnalytics, timelineAnalytics, installAppRelay,
+        new ShareAppHelper(accountManager, accountNavigator, getActivity(), timelineAnalytics,
             application.getDefaultSharedPreferences(),
             application.isCreateStoreUserPrivacyEnabled());
     downloadFactory = new DownloadFactory(getMarketName());
@@ -644,8 +640,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
           .getId() : null;
 
       shareAppHelper.shareApp(getAppName(), getPackageName(), appViewModel.getwUrl(),
-          (getApp() == null ? null : getApp().getIcon()), averageRating,
-          SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW, storeId);
+          (getApp() == null ? null : getApp().getIcon()), averageRating, storeId);
 
       appViewAnalytics.sendAppShareEvent();
       return true;
