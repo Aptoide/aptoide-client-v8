@@ -1,6 +1,7 @@
 package cm.aptoide.pt;
 
 import android.Manifest;
+import android.os.SystemClock;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -88,6 +89,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
     TestType.types = TestType.TestTypes.PHOTOSUCCESS;
     TestType.initialization = TestType.TestTypes.LOGGEDINWITHSTORE;
     goToMyAccount();
+    SystemClock.sleep(5000);
     onView(withId(R.id.my_account_edit_user_store)).perform(click());
     onView(withId(R.id.create_store_image)).perform(click());
     onView(withText("Select from gallery")).perform(click());
@@ -105,6 +107,7 @@ import static cm.aptoide.pt.UITests.skipWizard;
     TestType.types = TestType.TestTypes.ERRORDECONDINGTEST;
     TestType.initialization = TestType.TestTypes.LOGGEDINWITHSTORE;
     goToMyAccount();
+    SystemClock.sleep(5000);
     onView(withId(R.id.my_account_edit_user_store)).perform(click());
     displayErrors(false);
     onView(withId(R.id.create_store_action)).perform(scrollTo());
