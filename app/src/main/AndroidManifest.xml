@@ -323,34 +323,6 @@
 
     <service android:name=".install.InstalledIntentService"/>
 
-    <!-- spotandshare -->
-    <activity
-        android:name=".spotandshare.view.RadarActivity"
-        android:screenOrientation="portrait">
-      <intent-filter>
-        <action android:name="android.intent.action.VIEW"/>
-
-        <category android:name="android.intent.category.LAUNCHER"/>
-      </intent-filter>
-      <intent-filter>
-        <action android:name="android.intent.action.SEND"/>
-
-        <category android:name="android.intent.category.DEFAULT"/>
-
-        <data android:mimeType="application/vnd.android.package-archive"/>
-      </intent-filter>
-      <intent-filter>
-        <action android:name="android.intent.action.SEND_MULTIPLE"/>
-
-        <category android:name="android.intent.category.DEFAULT"/>
-
-        <data android:mimeType="application/vnd.android.package-archive"/>
-      </intent-filter>
-    </activity>
-
-
-    <activity android:name=".spotandshare.view.ShareAptoideActivity"></activity>
-
     <activity
         android:name="com.mopub.common.MoPubBrowser"
         android:configChanges="keyboardHidden|orientation|screenSize"/>
