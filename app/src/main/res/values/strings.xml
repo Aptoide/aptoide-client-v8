@@ -2,13 +2,8 @@
   <!-- NavDrawer List items -->
   <string name="drawer_title_my_account">My Account</string>
   <string name="drawer_title_spot_share">Spot&amp;Share</string>
-  <string name="drawer_title_schedule_download">Scheduled Downloads</string>
   <string name="drawer_title_settings">Settings</string>
-  <string name="drawer_title_backup_apps">Backup Apps</string>
 
-  <string name="drawer_social_media_title">Let\'s stay connected</string>
-  <string name="drawer_title_facebook">Facebook</string>
-  <string name="drawer_title_twitter">Twitter</string>
   <string name="drawer_title_feedback_send_button">Send feedback</string>
 
   <string name="feedback_subject">Subject</string>
@@ -72,7 +67,6 @@
   <string name="appview_button_install_before_share_spotandshare">install</string>
 
 
-  <string name="uninstall">Uninstall</string>
   <string name="other_versions_downloads_count_text">%1$s   downloads</string>
 
   <!-- Common (menu) -->
@@ -80,9 +74,6 @@
   <string name="menu_select_all">Select All</string>
   <string name="menu_select_none">Select None</string>
   <string name="clear">Clear</string>
-
-  <!--Scheduled Downloads-->
-  <string name="all_title_schedule_download">Scheduled Downloads</string>
 
   <!-- Excluded Updates Fragment -->
   <string name="excluded_updates">Excluded updates</string>
@@ -127,7 +118,6 @@
   <string name="installing_msg">Installing</string>
   <string name="needs_permission_to_fs">Needs permission to use the external file system</string>
 
-  <string name="added_to_scheduled">Added to Menu &gt; Scheduled Downloads</string>
   <string name="pause_all_downloads">Pause Downloads</string>
   <string name="storage_access_permission_request_message">Allow access to your phone\'s storage so we can download and install this app.</string>
   <string name="camera_access_permission_request_message">Allow access to your phone\'s camera so you can take pictures with this app.</string>
@@ -420,15 +410,6 @@
   <string name="vote_submitted">Your vote was successfully submitted</string>
 
   <string name="reviewed_by">Reviewed by - %s</string>
-
-  <string name="schDown_nodownloadselect">No downloads selected</string>
-  <string name="no_sch_downloads">Don\'t worry about mobile date. Use scheduled downloads to transfer apps later when you\'re on Wi-Fi. Just change your preferences to Wi-Fi on Settings -&gt; Download Options.</string>
-  <string name="schDown_installselected">Install selected</string>
-  <string name="schDown_removeselected">Remove selected</string>
-
-  <string name="schDwnBtn">Schedule download</string>
-  <string name="schDown_install">Do you want to install all scheduled downloads?</string>
-
 
   <!-- Tab names -->
 

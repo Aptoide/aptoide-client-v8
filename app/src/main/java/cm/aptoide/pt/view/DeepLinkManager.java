@@ -23,7 +23,6 @@ import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.download.view.scheduled.ScheduledDownloadsFragment;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.SimpleTabNavigation;
@@ -138,9 +137,6 @@ public class DeepLinkManager {
       newUpdatesDeepLink();
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.GENERIC_DEEPLINK)) {
       genericDeepLink(intent.getParcelableExtra(DeepLinkIntentReceiver.DeepLinksKeys.URI));
-    } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.SCHEDULE_DEEPLINK)) {
-      scheduleDownloadsDeepLink(
-          intent.getParcelableExtra(DeepLinkIntentReceiver.DeepLinksKeys.URI));
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.USER_DEEPLINK)) {
       openUserProfile(
           intent.getLongExtra(DeepLinkIntentReceiver.DeepLinksTargets.USER_DEEPLINK, -1));
@@ -300,17 +296,6 @@ public class DeepLinkManager {
                 defaultTheme, StoreContext.home, true), true);
       } catch (UnsupportedEncodingException | IllegalArgumentException e) {
         e.printStackTrace();
-      }
-    }
-  }
-
-  private void scheduleDownloadsDeepLink(Uri uri) {
-    if (uri != null) {
-      String openMode = uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.OPEN_MODE);
-      if (!TextUtils.isEmpty(openMode)) {
-        fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-                .newScheduledDownloadsFragment(ScheduledDownloadsFragment.OpenMode.valueOf(openMode)),
-            true);
       }
     }
   }
