@@ -12,7 +12,6 @@ import android.widget.ProgressBar;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
-import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.LoadInterface;
 import java.util.ArrayList;

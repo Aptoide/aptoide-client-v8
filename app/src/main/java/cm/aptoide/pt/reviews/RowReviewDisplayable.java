@@ -12,7 +12,6 @@ public class RowReviewDisplayable extends DisplayablePojo<FullReview> {
   public RowReviewDisplayable() {
   }
 
-
   public RowReviewDisplayable(FullReview pojo, StoreAnalytics storeAnalytics) {
     super(pojo);
     this.storeAnalytics = storeAnalytics;

@@ -480,15 +480,13 @@ public abstract class AptoideApplication extends Application {
 
   public InstallManager getInstallManager() {
 
-
     if (installManager == null) {
 
       installManager = new InstallManager(getApplicationContext(), getDownloadManager(),
           new InstallerFactory(new MinimalAdMapper(),
               new InstallFabricEvents(analyticsManager, installAnalytics,
                   getDefaultSharedPreferences(), rootAvailabilityManager)).create(this),
-          getRootAvailabilityManager(),
-          getDefaultSharedPreferences(),
+          getRootAvailabilityManager(), getDefaultSharedPreferences(),
           SecurePreferencesImplementation.getInstance(getApplicationContext(),
               getDefaultSharedPreferences()),
           RepositoryFactory.getDownloadRepository(getApplicationContext().getApplicationContext()),
