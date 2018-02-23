@@ -378,8 +378,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
         ((AptoideApplication) applicationContext.getApplicationContext()).getDatabase(),
         StoredMinimalAd.class);
-    final SpotAndShareAnalytics spotAndShareAnalytics =
-        new SpotAndShareAnalytics(analyticsManager, navigationTracker);
     appViewAnalytics = new AppViewAnalytics(downloadAnalytics, analyticsManager, navigationTracker);
 
     appViewSimilarAppAnalytics =
@@ -387,8 +385,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
     installAppRelay = PublishRelay.create();
     shareAppHelper =
-        new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
-            spotAndShareAnalytics, timelineAnalytics, installAppRelay,
+        new ShareAppHelper(accountManager, accountNavigator, getActivity(), timelineAnalytics,
             application.getDefaultSharedPreferences(),
             application.isCreateStoreUserPrivacyEnabled());
     downloadFactory = new DownloadFactory(getMarketName());
@@ -654,8 +651,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           .getId() : null;
 
       shareAppHelper.shareApp(getAppName(), getPackageName(), appViewModel.getwUrl(),
-          (getApp() == null ? null : getApp().getIcon()), averageRating,
-          SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW, storeId);
+          (getApp() == null ? null : getApp().getIcon()), averageRating, storeId);
 
       appViewAnalytics.sendAppShareEvent();
       return true;

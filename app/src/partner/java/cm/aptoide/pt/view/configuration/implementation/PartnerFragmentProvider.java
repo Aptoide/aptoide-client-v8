@@ -311,10 +311,6 @@ public class PartnerFragmentProvider implements FragmentProvider {
     return InviteFriendsFragment.newInstance(openMode, tag);
   }
 
-  @Override public Fragment newSpotShareFragment(boolean showToolbar) {
-    return SpotSharePreviewFragment.newInstance(showToolbar);
-  }
-
   @Override public Fragment newThankYouConnectingFragment(String tag) {
     return ThankYouConnectingFragment.newInstance(tag);
   }
