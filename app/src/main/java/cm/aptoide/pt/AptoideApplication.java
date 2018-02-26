@@ -93,10 +93,6 @@ import cm.aptoide.pt.social.TimelineRepositoryFactory;
 import cm.aptoide.pt.social.data.ReadPostsPersistence;
 import cm.aptoide.pt.social.data.TimelineRepository;
 import cm.aptoide.pt.social.data.TimelineResponseCardMapper;
-import cm.aptoide.pt.spotandshare.AccountGroupNameProvider;
-import cm.aptoide.pt.spotandshare.ShareApps;
-import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
-import cm.aptoide.pt.spotandshare.group.GroupNameProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
@@ -153,7 +149,6 @@ public abstract class AptoideApplication extends Application {
   private static FragmentProvider fragmentProvider;
   private static ActivityProvider activityProvider;
   private static DisplayableWidgetMapping displayableWidgetMapping;
-  private static ShareApps shareApps;
   private static boolean autoUpdateWasCalled = false;
   @Inject Database database;
   @Inject AptoideDownloadManager downloadManager;
@@ -245,10 +240,6 @@ public abstract class AptoideApplication extends Application {
     AptoideApplication.autoUpdateWasCalled = autoUpdateWasCalled;
   }
 
-  public static ShareApps getShareApps() {
-    return shareApps;
-  }
-
   public LeakTool getLeakTool() {
     if (leakTool == null) {
       leakTool = new LeakTool();
@@ -292,7 +283,6 @@ public abstract class AptoideApplication extends Application {
     fragmentProvider = createFragmentProvider();
     activityProvider = createActivityProvider();
     displayableWidgetMapping = createDisplayableWidgetMapping();
-    shareApps = new ShareApps(new SpotAndShareAnalytics(analyticsManager, navigationTracker));
 
     //
     // do not erase this code. it is useful to figure out when someone forgot to attach an error handler when subscribing and the app
@@ -501,11 +491,6 @@ public abstract class AptoideApplication extends Application {
     return PreferenceManager.getDefaultSharedPreferences(this);
   }
 
-  public GroupNameProvider getGroupNameProvider() {
-    return new AccountGroupNameProvider(getAccountManager(), Build.MANUFACTURER, Build.MODEL,
-        Build.ID);
-  }
-
   public OkHttpClient getDefaultClient() {
     return defaultClient;
   }
@@ -520,15 +505,13 @@ public abstract class AptoideApplication extends Application {
 
   public InstallManager getInstallManager() {
 
-
     if (installManager == null) {
 
       installManager = new InstallManager(getApplicationContext(), getDownloadManager(),
           new InstallerFactory(new MinimalAdMapper(),
               new InstallFabricEvents(analyticsManager, installAnalytics,
                   getDefaultSharedPreferences(), rootAvailabilityManager)).create(this),
-          getRootAvailabilityManager(),
-          getDefaultSharedPreferences(),
+          getRootAvailabilityManager(), getDefaultSharedPreferences(),
           SecurePreferencesImplementation.getInstance(getApplicationContext(),
               getDefaultSharedPreferences()),
           RepositoryFactory.getDownloadRepository(getApplicationContext().getApplicationContext()),

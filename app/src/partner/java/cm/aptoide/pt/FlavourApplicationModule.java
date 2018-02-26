@@ -18,7 +18,6 @@ import cm.aptoide.pt.remotebootconfig.BootConfigJSONUtils;
 import cm.aptoide.pt.remotebootconfig.datamodel.BootConfig;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.social.data.CardType;
-import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.timeline.post.PostAnalytics;
@@ -131,11 +130,6 @@ import javax.inject.Singleton;
         AppViewAnalytics.EDITORS_CHOICE_CLICKS, AppViewAnalytics.APP_VIEW_OPEN_FROM,
         AppViewAnalytics.APP_VIEW_INTERACT, NotificationAnalytics.NOTIFICATION_RECEIVED,
         NotificationAnalytics.NOTIFICATION_PRESSED, NotificationAnalytics.NOTIFICATION_RECEIVED,
-        SpotAndShareAnalytics.EVENT_NAME_SPOT_SHARE,
-        SpotAndShareAnalytics.EVENT_NAME_SPOT_SHARE_JOIN,
-        SpotAndShareAnalytics.EVENT_NAME_SPOT_SHARE_CREATE,
-        SpotAndShareAnalytics.EVENT_NAME_SPOT_SHARE_SEND_APP,
-        SpotAndShareAnalytics.EVENT_NAME_SPOT_SHARE_RECEIVE_APP,
         TimelineAnalytics.SOCIAL_CARD_PREVIEW, TimelineAnalytics.CARD_ACTION,
         TimelineAnalytics.TIMELINE_OPENED, TimelineAnalytics.FOLLOW_FRIENDS,
         StoreAnalytics.STORES_TAB_OPEN, StoreAnalytics.STORES_TAB_INTERACT,
