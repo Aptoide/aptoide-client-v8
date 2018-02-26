@@ -71,7 +71,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
 
   private void handleTogglePasswordVisibility() {
     view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.START))
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(resumed -> togglePasswordVisibility())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -80,7 +80,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
 
   private void handleForgotPasswordClick() {
     view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.START))
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(resumed -> forgotPasswordSelection())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
