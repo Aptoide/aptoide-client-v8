@@ -15,6 +15,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.account.view.ImagePickerNavigator;
+import cm.aptoide.pt.account.view.MyAccountNavigator;
 import cm.aptoide.pt.account.view.PhotoFileGenerator;
 import cm.aptoide.pt.account.view.UriToPathResolver;
 import cm.aptoide.pt.account.view.store.ManageStoreNavigator;
@@ -29,6 +30,7 @@ import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
+import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.FragmentResultNavigator;
@@ -37,6 +39,7 @@ import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.notification.ContentPuller;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
+import cm.aptoide.pt.notification.view.NotificationNavigator;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.permission.PermissionProvider;
@@ -193,5 +196,21 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   @ActivityScope @Provides ManageUserNavigator provideManageUserNavigator(
       FragmentNavigator fragmentNavigator) {
     return new ManageUserNavigator(fragmentNavigator, defaultStoreName, defaultTheme);
+  }
+
+  @ActivityScope @Provides MyAccountNavigator provideMyAccountNavigator(
+      FragmentNavigator fragmentNavigator, AccountNavigator accountNavigator,
+      NotificationNavigator notificationNavigator) {
+    return new MyAccountNavigator(fragmentNavigator, accountNavigator, notificationNavigator);
+  }
+
+  @ActivityScope @Provides NotificationNavigator provideNotificationNavigator(
+      LinksHandlerFactory linksHandlerFactory, FragmentNavigator fragmentNavigator) {
+    return new NotificationNavigator((TabNavigator) activity, linksHandlerFactory,
+        fragmentNavigator);
+  }
+
+  @ActivityScope @Provides LinksHandlerFactory provideLinksHandlerFactory() {
+    return new LinksHandlerFactory(activity);
   }
 }

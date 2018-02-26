@@ -9,6 +9,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.preference.PreferenceManager;
 import cm.aptoide.pt.view.MainActivity;
+import cm.aptoide.pt.view.TestType;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -18,7 +19,9 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static cm.aptoide.pt.UITests.goToSettings;
 import static cm.aptoide.pt.UITests.skipWizard;
 import static org.hamcrest.Matchers.allOf;
@@ -28,9 +31,17 @@ import static org.hamcrest.Matchers.allOf;
  */
 
 @RunWith(AndroidJUnit4.class) public class SettingsUITests {
+
+  /**
+   * Sets up the activity in which each test opens
+   */
   @Rule public ActivityTestRule<MainActivity> mActivityRule =
       new ActivityTestRule<>(MainActivity.class);
 
+  /**
+   * <p>Sets up which mocks to "activate"</p>
+   * Skips Wizards in case it's the first time opening aptoide
+   */
   @Before public void setUp() {
     TestType.types = TestType.TestTypes.REGULAR;
     if (UITests.isFirstTime()) {
@@ -38,6 +49,11 @@ import static org.hamcrest.Matchers.allOf;
     }
   }
 
+  /**
+   * <p>Checks if Mature is turned On, after leaving the settings view.</p>
+   * Navigate to Settings. Press Mature Checkbox. Navigate to HomeFragment. Navigate to Settings.
+   * Press Mature Checkbox
+   */
   @Test public void matureTest() {
     TestType.types = TestType.TestTypes.MATURE;
     Activity activity1 = mActivityRule.getActivity();
@@ -50,11 +66,6 @@ import static org.hamcrest.Matchers.allOf;
       onView(withText(R.string.yes)).perform(click());
     } catch (NoMatchingViewException e) {
     }
-    if (mature == preferences.getBoolean("matureChkBox", false)) {
-      onView(withId(R.id.action_btn)).perform(click()); //if it's equal fail
-    } else {
-      mature = !mature;
-    }
     pressBackButton();
     goToSettings();
     onView(withId(R.id.list)).perform(RecyclerViewActions.scrollToPosition(11));
@@ -64,8 +75,9 @@ import static org.hamcrest.Matchers.allOf;
     } catch (NoMatchingViewException e) {
     }
     pressBackButton();
-    if (mature == preferences.getBoolean("matureChkBox", false)) {
-      onView(withId(R.id.action_btn)).perform(click()); //if it's equal fail
+    if (mature != preferences.getBoolean("matureChkBox", false)) {
+      onView(withId(R.id.action_btn)).perform(
+          click()); //if it's equal it means the button was not checked/unchecked
     }
   }
 

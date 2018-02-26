@@ -9,6 +9,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -83,6 +84,7 @@ import cm.aptoide.pt.preferences.Preferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
+import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
@@ -101,7 +103,11 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.utils.q.QManager;
+import cm.aptoide.pt.view.ActivityModule;
 import cm.aptoide.pt.view.ActivityProvider;
+import cm.aptoide.pt.view.BaseActivity;
+import cm.aptoide.pt.view.BaseFragment;
+import cm.aptoide.pt.view.FragmentModule;
 import cm.aptoide.pt.view.FragmentProvider;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.AppCenterRepository;
@@ -361,6 +367,33 @@ public abstract class AptoideApplication extends Application {
     return applicationComponent;
   }
 
+  /**
+   * <p>Needs to be here, to be mocked for tests. Should be on BaseActivity if there were no
+   * tests</p>
+   *
+   * @return Returns a new Activity Module for the Activity Component
+   */
+  public ActivityModule getActivityModule(BaseActivity activity, Intent intent,
+      NotificationSyncScheduler notificationSyncScheduler, String marketName, String autoUpdateUrl,
+      View view, String defaultThemeName, String defaultStoreName, boolean firstCreated,
+      String fileProviderAuthority) {
+
+    return new ActivityModule(activity, intent, notificationSyncScheduler, marketName,
+        autoUpdateUrl, view, defaultThemeName, defaultStoreName, firstCreated,
+        fileProviderAuthority);
+  }
+
+  /**
+   * Needs to be here, to be mocked for tests. Should be on BaseFragment if there were no tests
+   *
+   * @return Returns a new Fragment Module for the Fragment Component
+   */
+  public FragmentModule getFragmentModule(BaseFragment baseFragment, Bundle savedInstanceState,
+      Bundle arguments, boolean createStoreUserPrivacyEnabled, String packageName) {
+    return new FragmentModule(baseFragment, savedInstanceState, arguments,
+        createStoreUserPrivacyEnabled, packageName);
+  }
+
   @Override protected void attachBaseContext(Context base) {
     super.attachBaseContext(base);
     MultiDex.install(this);
@@ -452,10 +485,6 @@ public abstract class AptoideApplication extends Application {
     return notificationProvider;
   }
 
-  public StoreManager getStoreManager() {
-    return storeManager;
-  }
-
   public abstract NotificationSyncScheduler getNotificationSyncScheduler();
 
   public SharedPreferences getDefaultSharedPreferences() {
@@ -464,10 +493,6 @@ public abstract class AptoideApplication extends Application {
 
   public OkHttpClient getDefaultClient() {
     return defaultClient;
-  }
-
-  public Interceptor getUserAgentInterceptor() {
-    return userAgentInterceptor;
   }
 
   public L2Cache getHttpClientCache() {
@@ -727,10 +752,6 @@ public abstract class AptoideApplication extends Application {
 
   public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getBodyInterceptorV3() {
     return bodyInterceptorV3;
-  }
-
-  public RequestBodyFactory getRequestBodyFactory() {
-    return requestBodyFactory;
   }
 
   public String getAptoideMd5sum() {

@@ -24,14 +24,13 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
   public ActivityComponent getActivityComponent() {
     if (activityComponent == null) {
-      activityComponent = ((AptoideApplication) getApplication()).getApplicationComponent()
-          .plus(new ActivityModule(this, getIntent(),
-              ((AptoideApplication) getApplication()).getNotificationSyncScheduler(),
-              ((AptoideApplication) getApplication()).getMarketName(),
-              ((AptoideApplication) getApplication()).getAutoUpdateUrl(), (View) this,
-              ((AptoideApplication) getApplication()).getDefaultThemeName(),
-              ((AptoideApplication) getApplication()).getDefaultStoreName(), firstCreated,
-              BuildConfig.APPLICATION_ID + ".provider"));
+      AptoideApplication aptoideApplication = ((AptoideApplication) getApplication());
+      activityComponent = aptoideApplication.getApplicationComponent()
+          .plus(aptoideApplication.getActivityModule(this, getIntent(),
+              aptoideApplication.getNotificationSyncScheduler(), aptoideApplication.getMarketName(),
+              aptoideApplication.getAutoUpdateUrl(), (View) this,
+              aptoideApplication.getDefaultThemeName(), aptoideApplication.getDefaultStoreName(),
+              firstCreated, BuildConfig.APPLICATION_ID + ".provider"));
     }
     return activityComponent;
   }
