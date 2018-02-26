@@ -50,7 +50,7 @@ public class PayPalAuthorizationFragment extends PermissionServiceFragment imple
 
     networkErrorDialog =
         new RxAlertDialog.Builder(getContext()).setMessage(R.string.connection_error)
-            .setPositiveButton(R.string.ok)
+            .setPositiveButton(R.string.iab_button_ok)
             .build();
 
     attachPresenter(

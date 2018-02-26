@@ -80,7 +80,6 @@ public class InstallManager {
     context.startService(intent);
   }
 
-
   public Observable<List<Install>> getTimedOutInstallations() {
     return getInstallations().flatMap(installs -> Observable.from(installs)
         .filter(install -> install.getState()

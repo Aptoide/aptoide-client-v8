@@ -117,12 +117,12 @@ public class Event {
     getUserTimeline, listReviews, listComments, getMyStoresSubscribed, getStoresRecommended,
 
     // Client
-    myStores, myUpdates, myExcludedUpdates, myScheduledDownloads, getAds, myDownloads,
+    myStores, myUpdates, myExcludedUpdates, getAds, myDownloads,
 
     // Displays
     facebook, twitch, twitter, youtube,
 
-    mySpotShare, // v3
+    // v3
     getReviews
   }
 }

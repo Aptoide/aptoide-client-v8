@@ -54,10 +54,8 @@ import cm.aptoide.pt.billing.view.BillingActivity;
 import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
-import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -67,7 +65,6 @@ import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.Group;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
-import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -93,7 +90,6 @@ import cm.aptoide.pt.search.view.AppSearchSuggestionsView;
 import cm.aptoide.pt.search.view.SearchSuggestionsPresenter;
 import cm.aptoide.pt.share.ShareAppHelper;
 import cm.aptoide.pt.social.data.ReadPostsPersistence;
-import cm.aptoide.pt.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
@@ -373,8 +369,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
     storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
         ((AptoideApplication) applicationContext.getApplicationContext()).getDatabase(),
         StoredMinimalAd.class);
-    final SpotAndShareAnalytics spotAndShareAnalytics =
-        new SpotAndShareAnalytics(analyticsManager, navigationTracker);
     appViewAnalytics = new AppViewAnalytics(downloadAnalytics, analyticsManager, navigationTracker);
 
     appViewSimilarAppAnalytics =
@@ -382,8 +376,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
 
     installAppRelay = PublishRelay.create();
     shareAppHelper =
-        new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
-            spotAndShareAnalytics, timelineAnalytics, installAppRelay,
+        new ShareAppHelper(accountManager, accountNavigator, getActivity(), timelineAnalytics,
             application.getDefaultSharedPreferences(),
             application.isCreateStoreUserPrivacyEnabled());
     downloadFactory = new DownloadFactory(getMarketName());
@@ -626,7 +619,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
     } else {
       menu.removeItem(R.id.menu_item_search);
     }
-
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -648,22 +640,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
           .getId() : null;
 
       shareAppHelper.shareApp(getAppName(), getPackageName(), appViewModel.getwUrl(),
-          (getApp() == null ? null : getApp().getIcon()), averageRating,
-          SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW, storeId);
+          (getApp() == null ? null : getApp().getIcon()), averageRating, storeId);
 
       appViewAnalytics.sendAppShareEvent();
-      return true;
-    } else if (i == R.id.menu_schedule) {
-      appViewAnalytics.sendScheduleDownloadEvent();
-      final Scheduled scheduled = createScheduled(getApp(), appViewModel.getAppAction());
-
-      ScheduledAccessor scheduledAccessor = AccessorFactory.getAccessorFor(
-          ((AptoideApplication) getContext().getApplicationContext()
-              .getApplicationContext()).getDatabase(), Scheduled.class);
-      scheduledAccessor.insert(scheduled);
-
-      String str = this.getString(R.string.added_to_scheduled);
-      ShowMessage.asSnack(this.getView(), str);
       return true;
     }
 
@@ -672,44 +651,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
 
   @Override public String getDefaultTheme() {
     return appViewModel.getDefaultTheme();
-  }
-
-  private Scheduled createScheduled(GetAppMeta.App app, AppAction appAction) {
-
-    String mainObbName = null;
-    String mainObbPath = null;
-    String mainObbMd5 = null;
-
-    String patchObbName = null;
-    String patchObbPath = null;
-    String patchObbMd5 = null;
-
-    Obb obb = app.getObb();
-    if (obb != null) {
-      Obb.ObbItem obbMain = obb.getMain();
-      Obb.ObbItem obbPatch = obb.getPatch();
-
-      if (obbMain != null) {
-        mainObbName = obbMain.getFilename();
-        mainObbPath = obbMain.getPath();
-        mainObbMd5 = obbMain.getMd5sum();
-      }
-
-      if (obbPatch != null) {
-        patchObbName = obbPatch.getFilename();
-        patchObbPath = obbPatch.getPath();
-        patchObbMd5 = obbPatch.getMd5sum();
-      }
-    }
-
-    return new Scheduled(app.getName(), app.getFile()
-        .getVername(), app.getIcon(), app.getFile()
-        .getPath(), app.getFile()
-        .getMd5sum(), app.getFile()
-        .getVercode(), app.getPackageName(), app.getStore()
-        .getName(), app.getFile()
-        .getPathAlt(), mainObbName, mainObbPath, mainObbMd5, patchObbName, patchObbPath,
-        patchObbMd5, false, appAction.name());
   }
 
   private Observable<GetApp> manageOrganicAds(GetApp getApp) {
@@ -782,10 +723,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(appAction -> {
           AppViewFragment.this.appViewModel.setAppAction(appAction);
-          MenuItem item = menu.findItem(R.id.menu_schedule);
-          if (item != null) {
-            showHideOptionsMenu(item, appAction != AppAction.OPEN);
-          }
         }, err -> {
           CrashReport.getInstance()
               .log(err);

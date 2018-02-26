@@ -13,14 +13,12 @@ import cm.aptoide.pt.addressbook.view.SyncResultFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.comments.view.CommentListFragment;
 import cm.aptoide.pt.download.view.DownloadsFragment;
-import cm.aptoide.pt.download.view.scheduled.ScheduledDownloadsFragment;
 import cm.aptoide.pt.notification.view.InboxFragment;
 import cm.aptoide.pt.reviews.LatestReviewsFragment;
 import cm.aptoide.pt.search.view.SearchResultFragment;
 import cm.aptoide.pt.share.NotLoggedInShareFragment;
 import cm.aptoide.pt.social.commentslist.PostCommentsFragment;
 import cm.aptoide.pt.social.view.TimelineFragment;
-import cm.aptoide.pt.spotandshare.view.SpotSharePreviewFragment;
 import cm.aptoide.pt.store.view.FragmentTopStores;
 import cm.aptoide.pt.store.view.ListStoresFragment;
 import cm.aptoide.pt.store.view.StoreFragment;
@@ -60,8 +58,6 @@ public interface FragmentComponent {
 
   void inject(PhoneInputFragment phoneInputFragment);
 
-  void inject(SpotSharePreviewFragment spotSharePreviewFragment);
-
   void inject(TimelineFragment timelineFragment);
 
   void inject(CommentListFragment commentListFragment);
@@ -89,6 +85,4 @@ public interface FragmentComponent {
   void inject(DownloadsFragment downloadsFragment);
 
   void inject(UpdatesFragment updatesFragment);
-
-  void inject(ScheduledDownloadsFragment scheduledDownloadsFragment);
 }

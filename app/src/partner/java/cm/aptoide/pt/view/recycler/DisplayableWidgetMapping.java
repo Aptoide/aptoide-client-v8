@@ -49,8 +49,6 @@ import cm.aptoide.pt.download.view.active.ActiveDownloadsHeaderDisplayable;
 import cm.aptoide.pt.download.view.active.ActiveDownloadsHeaderWidget;
 import cm.aptoide.pt.download.view.completed.CompletedDownloadDisplayable;
 import cm.aptoide.pt.download.view.completed.CompletedDownloadWidget;
-import cm.aptoide.pt.download.view.scheduled.ScheduledDownloadDisplayable;
-import cm.aptoide.pt.download.view.scheduled.ScheduledDownloadWidget;
 import cm.aptoide.pt.firstinstall.displayable.FirstInstallAdDisplayable;
 import cm.aptoide.pt.firstinstall.displayable.FirstInstallAppDisplayable;
 import cm.aptoide.pt.firstinstall.widget.FirstInstallAdWidget;
@@ -245,9 +243,6 @@ public class DisplayableWidgetMapping {
 
     displayableWidgetMappings.add(new DisplayableWidgetMapping(RateAndReviewCommentWidget.class,
         RateAndReviewCommentDisplayable.class));
-
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(ScheduledDownloadWidget.class,
-        ScheduledDownloadDisplayable.class));
 
     displayableWidgetMappings.add(new DisplayableWidgetMapping(CompletedDownloadWidget.class,
         CompletedDownloadDisplayable.class));

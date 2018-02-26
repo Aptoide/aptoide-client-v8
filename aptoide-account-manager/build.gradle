@@ -20,7 +20,6 @@ android {
   publishNonDefault true
 
   productFlavors {
-    uitest {}
     prod {}
     internal {}
   }

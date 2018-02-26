@@ -6,7 +6,6 @@ import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.download.view.scheduled.ScheduledDownloadsFragment;
 import cm.aptoide.pt.presenter.InviteFriendsContract;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.store.view.StoreFragment;
@@ -90,8 +89,6 @@ public interface FragmentProvider {
 
   @Deprecated Fragment newGetStoreWidgetsFragment(boolean addAdultFilter);
 
-  @Deprecated Fragment newListReviewsFragment();
-
   @Deprecated Fragment newGetAdsFragment();
 
   @Deprecated Fragment newListStoresFragment();
@@ -108,10 +105,6 @@ public interface FragmentProvider {
       String appPackage);
 
   @Deprecated Fragment newExcludedUpdatesFragment();
-
-  @Deprecated Fragment newScheduledDownloadsFragment();
-
-  @Deprecated Fragment newScheduledDownloadsFragment(ScheduledDownloadsFragment.OpenMode openMode);
 
   @Deprecated Fragment newRateAndReviewsFragment(long appId, String appName, String storeName,
       String packageName, String storeTheme);
@@ -158,8 +151,6 @@ public interface FragmentProvider {
 
   @Deprecated Fragment newInviteFriendsFragment(InviteFriendsContract.View.OpenMode openMode,
       String tag);
-
-  @Deprecated Fragment newSpotShareFragment(boolean showToolbar);
 
   @Deprecated Fragment newThankYouConnectingFragment(String tag);
 

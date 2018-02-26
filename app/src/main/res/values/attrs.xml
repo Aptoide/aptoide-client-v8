@@ -35,7 +35,6 @@
   <attr format="reference" name="icMyAccountDrawable"/>
   <attr format="reference" name="icSearchDrawable"/>
   <attr format="reference" name="icScheduledDrawable"/>
-  <attr format="reference" name="icSpotShare"/>
   <attr format="reference" name="icExcludedUpdatesDrawable"/>
   <attr format="reference" name="icSettingsDrawable"/>
   <attr format="reference" name="icSendFeedbackDrawable"/>

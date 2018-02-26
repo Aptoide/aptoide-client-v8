@@ -97,7 +97,6 @@
     <item name="icErrorDrawable">@drawable/cross</item>
     <item name="icMyAccountDrawable">@drawable/ic_action_accounts</item>
     <item name="icScheduledDrawable">@drawable/ic_drawer_schedule</item>
-    <item name="icSpotShare">@drawable/spot_and_share_ic_action_spotshare_grey</item>
     <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel</item>
     <item name="icSettingsDrawable">@drawable/ic_action_settings_light</item>
     <item name="icSendFeedbackDrawable">@drawable/ic_send_feedback</item>
@@ -220,7 +219,6 @@
     <item name="icRatingFloatDrawable">@drawable/ic_action_important</item>
     <item name="icErrorDrawable">@drawable/ic_action_cancel</item>
     <item name="icMyAccountDrawable">@drawable/ic_action_accounts</item>
-    <item name="icScheduledDrawable">@drawable/ic_drawer_schedule_light</item>
     <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel_dark</item>
     <item name="icSettingsDrawable">@drawable/ic_action_settings_dark</item>
     <item name="icSendFeedbackDrawable">@drawable/ic_send_feedback</item>

@@ -12,8 +12,6 @@ import android.widget.ProgressBar;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
-import cm.aptoide.pt.navigator.ActivityNavigator;
-import cm.aptoide.pt.spotandshare.view.SpotSharePreviewActivity;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.LoadInterface;
 import java.util.ArrayList;
@@ -36,23 +34,17 @@ public class LoaderLayoutHandler {
   private View noNetworkConnectionView;
   private View retryErrorView;
   private View retryNoNetworkView;
-  private View spotAndShareButton;
-  private ActivityNavigator activityNavigator;
 
-  public LoaderLayoutHandler(LoadInterface loadInterface, ActivityNavigator activityNavigator,
-      int viewToShowAfterLoadingId) {
-    this.activityNavigator = activityNavigator;
+  public LoaderLayoutHandler(LoadInterface loadInterface, int viewToShowAfterLoadingId) {
     this.viewsToShowAfterLoadingId.add(viewToShowAfterLoadingId);
     this.loadInterface = loadInterface;
   }
 
-  public LoaderLayoutHandler(LoadInterface loadInterface, ActivityNavigator activityNavigator,
-      int... viewsToShowAfterLoadingId) {
+  public LoaderLayoutHandler(LoadInterface loadInterface, int... viewsToShowAfterLoadingId) {
     for (int viewToShowAfterLoadingId : viewsToShowAfterLoadingId) {
       this.viewsToShowAfterLoadingId.add(viewToShowAfterLoadingId);
     }
     this.loadInterface = loadInterface;
-    this.activityNavigator = activityNavigator;
   }
 
   @SuppressWarnings("unchecked") public void bindViews(View view) {
@@ -66,7 +58,6 @@ public class LoaderLayoutHandler {
     noNetworkConnectionView = view.findViewById(R.id.no_network_connection);
     retryErrorView = genericErrorView.findViewById(R.id.retry);
     retryNoNetworkView = noNetworkConnectionView.findViewById(R.id.retry);
-    spotAndShareButton = noNetworkConnectionView.findViewById(R.id.spot_and_share_button);
   }
 
   private void hideViewsToShowAfterLoading() {
@@ -93,9 +84,6 @@ public class LoaderLayoutHandler {
         restoreState();
         loadInterface.load(true, false, null);
       });
-      spotAndShareButton.setOnClickListener(v -> {
-        openSpotAndSharePreview();
-      });
     } else {
       noNetworkConnectionView.setVisibility(View.GONE);
       genericErrorView.setVisibility(View.VISIBLE);
@@ -104,10 +92,6 @@ public class LoaderLayoutHandler {
         loadInterface.load(true, false, null);
       });
     }
-  }
-
-  private void openSpotAndSharePreview() {
-    activityNavigator.navigateTo(SpotSharePreviewActivity.class);
   }
 
   protected void restoreState() {

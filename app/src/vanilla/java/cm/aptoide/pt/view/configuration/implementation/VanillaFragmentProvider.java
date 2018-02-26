@@ -15,14 +15,11 @@ import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.download.view.DownloadsFragment;
-import cm.aptoide.pt.download.view.scheduled.ScheduledDownloadsFragment;
 import cm.aptoide.pt.presenter.InviteFriendsContract;
 import cm.aptoide.pt.reviews.LatestReviewsFragment;
-import cm.aptoide.pt.reviews.ListReviewsFragment;
 import cm.aptoide.pt.reviews.RateAndReviewsFragment;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.social.view.TimelineFragment;
-import cm.aptoide.pt.spotandshare.view.SpotSharePreviewFragment;
 import cm.aptoide.pt.store.view.FragmentTopStores;
 import cm.aptoide.pt.store.view.GetStoreFragment;
 import cm.aptoide.pt.store.view.GetStoreWidgetsFragment;
@@ -167,10 +164,6 @@ public class VanillaFragmentProvider implements FragmentProvider {
     return GetStoreWidgetsFragment.newInstance(addAdultFilter);
   }
 
-  @Override public Fragment newListReviewsFragment() {
-    return new ListReviewsFragment();
-  }
-
   @Override public Fragment newGetAdsFragment() {
     return new GetAdsFragment();
   }
@@ -200,15 +193,6 @@ public class VanillaFragmentProvider implements FragmentProvider {
 
   @Override public Fragment newExcludedUpdatesFragment() {
     return ExcludedUpdatesFragment.newInstance();
-  }
-
-  @Override public Fragment newScheduledDownloadsFragment() {
-    return ScheduledDownloadsFragment.newInstance();
-  }
-
-  @Override
-  public Fragment newScheduledDownloadsFragment(ScheduledDownloadsFragment.OpenMode openMode) {
-    return ScheduledDownloadsFragment.newInstance(openMode);
   }
 
   @Override public Fragment newRateAndReviewsFragment(long appId, String appName, String storeName,
@@ -298,10 +282,6 @@ public class VanillaFragmentProvider implements FragmentProvider {
   @Override public Fragment newInviteFriendsFragment(InviteFriendsContract.View.OpenMode openMode,
       String tag) {
     return InviteFriendsFragment.newInstance(openMode, tag);
-  }
-
-  @Override public Fragment newSpotShareFragment(boolean showToolbar) {
-    return SpotSharePreviewFragment.newInstance(showToolbar);
   }
 
   @Override public Fragment newThankYouConnectingFragment(String tag) {
