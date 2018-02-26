@@ -7,22 +7,22 @@ import rx.Single;
  */
 
 public class AppCenter {
-  private final AppCenterRepository appService;
+  private final AppCenterRepository appCenterRepository;
 
   public AppCenter(AppCenterRepository appRepository) {
 
-    this.appService = appRepository;
+    this.appCenterRepository = appRepository;
   }
 
   public Single<AppsList> loadNextApps(long storeId, int limit) {
-    return appService.loadNextApps(storeId, limit);
+    return appCenterRepository.loadNextApps(storeId, limit);
   }
 
   public Single<AppsList> loadFreshApps(long storeId, int limit) {
-    return appService.loadFreshApps(storeId, limit);
+    return appCenterRepository.loadFreshApps(storeId, limit);
   }
 
   public Single<AppsList> getApps(long storeId, int limit) {
-    return appService.getApplications(storeId, limit);
+    return appCenterRepository.getApplications(storeId, limit);
   }
 }
