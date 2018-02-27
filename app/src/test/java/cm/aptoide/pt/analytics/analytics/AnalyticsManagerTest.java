@@ -14,10 +14,12 @@ public class AnalyticsManagerTest {
     String eventName = "TestEvent";
     EventLogger eventLogger = mock(EventLogger.class);
     HttpKnockEventLogger knockEventLogger = mock(HttpKnockEventLogger.class);
+    AnalyticsNormalizer analyticsNormalizer = mock(AnalyticsNormalizer.class);
 
     AnalyticsManager analyticsManager =
         new AnalyticsManager.Builder().addLogger(eventLogger, Arrays.asList(eventName))
             .setKnockLogger(knockEventLogger)
+            .setAnalyticsNormalizer(analyticsNormalizer)
             .build();
 
     Map<String, Object> data = new HashMap<>();
@@ -31,10 +33,12 @@ public class AnalyticsManagerTest {
     String eventName = "TestEvent";
     EventLogger eventLogger = mock(EventLogger.class);
     HttpKnockEventLogger knockEventLogger = mock(HttpKnockEventLogger.class);
+    AnalyticsNormalizer analyticsNormalizer = mock(AnalyticsNormalizer.class);
 
     AnalyticsManager analyticsManager =
         new AnalyticsManager.Builder().addLogger(eventLogger, Arrays.asList(eventName))
             .setKnockLogger(knockEventLogger)
+            .setAnalyticsNormalizer(analyticsNormalizer)
             .build();
 
     Map<String, Object> data = new HashMap<>();
