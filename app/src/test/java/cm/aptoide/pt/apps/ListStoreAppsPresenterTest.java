@@ -7,6 +7,7 @@ import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.AppsList;
 import cm.aptoide.pt.view.app.ListStoreAppsFragment;
+import cm.aptoide.pt.view.app.ListStoreAppsNavigator;
 import cm.aptoide.pt.view.app.ListStoreAppsPresenter;
 import java.util.ArrayList;
 import org.junit.Before;
@@ -40,6 +41,7 @@ public class ListStoreAppsPresenterTest {
   private ListStoreAppsPresenter listStoreAppsPresenter;
   private AppsList appsModel;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
+  @Mock private ListStoreAppsNavigator listStoreAppsNavigator;
 
   @Before public void setupListStoreAppsPresenter() {
     MockitoAnnotations.initMocks(this);
@@ -51,9 +53,11 @@ public class ListStoreAppsPresenterTest {
     apps.add(new Application("Fit2Gather", "", (float) 5, 100, "com.fijuro.fit2gather", 357));
     appsModel = new AppsList(apps, false, LIMIT_APPS_TEST);
 
+    //listStoreAppsNavigator = new ListStoreAppsNavigator(fragmentNavigator);
+
     listStoreAppsPresenter =
         new ListStoreAppsPresenter(view, STORE_ID_TEST, Schedulers.immediate(), appCenter,
-            crashReporter, fragmentNavigator, LIMIT_APPS_TEST);
+            crashReporter, listStoreAppsNavigator, LIMIT_APPS_TEST);
 
     //simulate view lifecycle event
     when(view.getLifecycle()).thenReturn(lifecycleEvent);
@@ -69,5 +73,24 @@ public class ListStoreAppsPresenterTest {
 
     //Then all LIMIT apps are shown into the UI
     verify(view).setApps(appsModel.getList());
+  }
+
+  @Test public void openAppViewFragmentOnAppClick() {
+    //Given an initialized ListStoreAppsPresenter with a STORE_ID and a limit of apps
+    //When onCreate lifecycle call event happens
+
+    PublishSubject<Application> appClickEvent = PublishSubject.create();
+    Application aptoide = new Application("Aptoide", "", (float) 4.5, 1000, "cm.aptoide.com", 10);
+
+    when(view.getAppClick()).thenReturn(appClickEvent);
+
+    listStoreAppsPresenter.present();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+
+    //And an app is clicked
+    appClickEvent.onNext(aptoide);
+
+    //Then should navigate to app view
+    verify(listStoreAppsNavigator).navigateToAppView(aptoide.getAppId(), aptoide.getPackageName());
   }
 }
