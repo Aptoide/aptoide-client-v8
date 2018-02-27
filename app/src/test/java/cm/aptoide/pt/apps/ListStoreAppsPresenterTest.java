@@ -1,7 +1,6 @@
 package cm.aptoide.pt.apps;
 
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.Application;
@@ -18,6 +17,7 @@ import rx.Single;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -36,10 +36,11 @@ public class ListStoreAppsPresenterTest {
 
   @Mock private CrashReport crashReporter;
 
-  @Mock private FragmentNavigator fragmentNavigator;
-
   private ListStoreAppsPresenter listStoreAppsPresenter;
   private AppsList appsModel;
+  private AppsList appsModelWithGenericError;
+  private AppsList appsModelWithNetworkError;
+  private AppsList appsModelLoading;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   @Mock private ListStoreAppsNavigator listStoreAppsNavigator;
 
@@ -52,8 +53,9 @@ public class ListStoreAppsPresenterTest {
     apps.add(new Application("Aptoide", "", (float) 4.5, 1000, "cm.aptoide.com", 10));
     apps.add(new Application("Fit2Gather", "", (float) 5, 100, "com.fijuro.fit2gather", 357));
     appsModel = new AppsList(apps, false, LIMIT_APPS_TEST);
-
-    //listStoreAppsNavigator = new ListStoreAppsNavigator(fragmentNavigator);
+    appsModelWithGenericError = new AppsList(AppsList.Error.GENERIC);
+    appsModelWithNetworkError = new AppsList(AppsList.Error.NETWORK);
+    appsModelLoading = new AppsList(apps, true, LIMIT_APPS_TEST);
 
     listStoreAppsPresenter =
         new ListStoreAppsPresenter(view, STORE_ID_TEST, Schedulers.immediate(), appCenter,
@@ -92,5 +94,94 @@ public class ListStoreAppsPresenterTest {
 
     //Then should navigate to app view
     verify(listStoreAppsNavigator).navigateToAppView(aptoide.getAppId(), aptoide.getPackageName());
+  }
+
+  @Test public void loadAppsAfterReachingBottomWithSuccess() {
+    //Given an initialized ListStoreAppsPresenter with a STORE_ID and a limit of apps
+    //When onCreate lifecycle call event happens
+    //and the view reaches the bottom
+    PublishSubject<Object> reachedBottomEvent = PublishSubject.create();
+    when(view.reachesBottom()).thenReturn(reachedBottomEvent);
+
+    when(appCenter.loadNextApps(STORE_ID_TEST, LIMIT_APPS_TEST)).thenReturn(Single.just(appsModel));
+
+    listStoreAppsPresenter.present();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    reachedBottomEvent.onNext(null);
+
+    //then should show loading
+    verify(view).showLoading();
+    //and call loadApps
+    verify(appCenter).loadNextApps(STORE_ID_TEST, LIMIT_APPS_TEST);
+    //success - add apps list and hide loading
+    verify(view).addApps(appsModel.getList());
+    verify(view).hideLoading();
+  }
+
+  @Test public void loadAppsAfterReachingBottomWithGenericError() {
+    //Given an initialized ListStoreAppsPresenter with a STORE_ID and a limit of apps
+    //When onCreate lifecycle call event happens
+    //and the view reaches the bottom
+    PublishSubject<Object> reachedBottomEvent = PublishSubject.create();
+    when(view.reachesBottom()).thenReturn(reachedBottomEvent);
+
+    when(appCenter.loadNextApps(STORE_ID_TEST, LIMIT_APPS_TEST)).thenReturn(
+        Single.just(appsModelWithGenericError));
+
+    listStoreAppsPresenter.present();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    reachedBottomEvent.onNext(null);
+
+    //then should show loading
+    verify(view).showLoading();
+    //and call loadApps
+    verify(appCenter).loadNextApps(STORE_ID_TEST, LIMIT_APPS_TEST);
+    //error - handle generic error
+    verify(view).showGenericError();
+  }
+
+  @Test public void loadAppsAfterReachingBottomWithNetworkError() {
+    //Given an initialized ListStoreAppsPresenter with a STORE_ID and a limit of apps
+    //When onCreate lifecycle call event happens
+    //and the view reaches the bottom
+    PublishSubject<Object> reachedBottomEvent = PublishSubject.create();
+    when(view.reachesBottom()).thenReturn(reachedBottomEvent);
+
+    when(appCenter.loadNextApps(STORE_ID_TEST, LIMIT_APPS_TEST)).thenReturn(
+        Single.just(appsModelWithNetworkError));
+
+    listStoreAppsPresenter.present();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    reachedBottomEvent.onNext(null);
+
+    //then should show loading
+    verify(view).showLoading();
+    //and call loadApps
+    verify(appCenter).loadNextApps(STORE_ID_TEST, LIMIT_APPS_TEST);
+    //error - handle Network error
+    verify(view).showNetworkError();
+  }
+
+  @Test public void loadAppsAfterReachingBottomWithLoading() {
+    //Given an initialized ListStoreAppsPresenter with a STORE_ID and a limit of apps
+    //When onCreate lifecycle call event happens
+    //and the view reaches the bottom
+    PublishSubject<Object> reachedBottomEvent = PublishSubject.create();
+    when(view.reachesBottom()).thenReturn(reachedBottomEvent);
+
+    when(appCenter.loadNextApps(STORE_ID_TEST, LIMIT_APPS_TEST)).thenReturn(
+        Single.just(appsModelWithNetworkError));
+
+    listStoreAppsPresenter.present();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    reachedBottomEvent.onNext(null);
+
+    //then should show loading
+    verify(view).showLoading();
+    //and call loadApps
+    verify(appCenter).loadNextApps(STORE_ID_TEST, LIMIT_APPS_TEST);
+    //apps are loading
+    verify(view, never()).addApps(appsModel.getList());
+    verify(view, never()).hideLoading();
   }
 }
