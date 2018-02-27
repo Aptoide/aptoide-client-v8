@@ -1,6 +1,5 @@
 package cm.aptoide.pt.notification.view;
 
-import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -16,7 +15,6 @@ public class InboxPresenter implements Presenter {
   private final InboxNavigator inboxNavigator;
   private final NotificationCenter notificationCenter;
   private final NotificationAnalytics analytics;
-  private final PageViewsAnalytics pageViewsAnalytics;
   private final CrashReport crashReport;
   private final NavigationTracker navigationTracker;
   private final int NUMBER_OF_NOTIFICATIONS = 50;
@@ -25,14 +23,13 @@ public class InboxPresenter implements Presenter {
   public InboxPresenter(InboxView view, InboxNavigator inboxNavigator,
       NotificationCenter notificationCenter, CrashReport crashReport,
       NavigationTracker navigationTracker, NotificationAnalytics analytics,
-      PageViewsAnalytics pageViewsAnalytics, Scheduler viewScheduler) {
+      Scheduler viewScheduler) {
     this.view = view;
     this.inboxNavigator = inboxNavigator;
     this.notificationCenter = notificationCenter;
     this.crashReport = crashReport;
     this.navigationTracker = navigationTracker;
     this.analytics = analytics;
-    this.pageViewsAnalytics = pageViewsAnalytics;
     this.viewScheduler = viewScheduler;
   }
 
