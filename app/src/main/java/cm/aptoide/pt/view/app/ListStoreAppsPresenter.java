@@ -1,9 +1,7 @@
 package cm.aptoide.pt.view.app;
 
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import rx.Scheduler;
@@ -19,18 +17,17 @@ public class ListStoreAppsPresenter implements Presenter {
   private final Scheduler viewScheduler;
   private final AppCenter appCenter;
   private final CrashReport crashReport;
-  private final FragmentNavigator fragmentNavigator;
+  private final ListStoreAppsNavigator navigator;
   private final int limit;
 
   public ListStoreAppsPresenter(ListStoreAppsView view, long storeId, Scheduler viewScheduler,
-      AppCenter appCenter, CrashReport crashReport, FragmentNavigator fragmentNavigator,
-      int limit) {
+      AppCenter appCenter, CrashReport crashReport, ListStoreAppsNavigator navigator, int limit) {
     this.view = view;
     this.storeId = storeId;
     this.viewScheduler = viewScheduler;
     this.appCenter = appCenter;
     this.crashReport = crashReport;
-    this.fragmentNavigator = fragmentNavigator;
+    this.navigator = navigator;
     this.limit = limit;
   }
 
@@ -135,9 +132,7 @@ public class ListStoreAppsPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.getAppClick()
-            .doOnNext(app -> fragmentNavigator.navigateTo(
-                AppViewFragment.newInstance(app.getAppId(), app.getPackageName(),
-                    AppViewFragment.OpenType.OPEN_ONLY, ""), true)))
+            .doOnNext(app -> navigator.navigateToAppView(app.getAppId(), app.getPackageName())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, throwable -> crashReport.log(throwable));
