@@ -12,14 +12,17 @@ public class AnalyticsManager {
   private static final String TAG = AnalyticsManager.class.getSimpleName();
   private final HttpKnockEventLogger knockEventLogger;
   private final SessionLogger sessionLogger;
+  private final AnalyticsNormalizer analyticsNormalizer;
 
   private Map<EventLogger, Collection<String>> eventLoggers;
 
   private AnalyticsManager(HttpKnockEventLogger knockLogger,
-      Map<EventLogger, Collection<String>> eventLoggers, SessionLogger sessionLogger) {
+      Map<EventLogger, Collection<String>> eventLoggers, SessionLogger sessionLogger,
+      AnalyticsNormalizer analyticsNormalizer) {
     this.knockEventLogger = knockLogger;
     this.eventLoggers = eventLoggers;
     this.sessionLogger = sessionLogger;
+    this.analyticsNormalizer = analyticsNormalizer;
   }
 
   /**
@@ -48,6 +51,7 @@ public class AnalyticsManager {
     for (Map.Entry<EventLogger, Collection<String>> loggerEntry : eventLoggers.entrySet()) {
       if (loggerEntry.getValue()
           .contains(eventName)) {
+        data = analyticsNormalizer.normalize(data);
         loggerEntry.getKey()
             .log(eventName, data, action, context);
         eventsSent++;
@@ -107,6 +111,7 @@ public class AnalyticsManager {
     private final Map<EventLogger, Collection<String>> eventLoggers;
     private HttpKnockEventLogger httpKnockEventLogger;
     private SessionLogger sessionLogger;
+    private AnalyticsNormalizer analyticsNormalizer;
 
     /**
      * <p>Start the builder.</p>
@@ -174,6 +179,19 @@ public class AnalyticsManager {
     }
 
     /**
+     * <p>Sets a {@link AnalyticsNormalizer} that will allow to normalize event attributes
+     * according to the normalizer implementation.</p>
+     *
+     * @param analyticsNormalizer The {@code analyticsNormalizer} to normalize the events data.
+     *
+     * @return A builder with the updated {@link AnalyticsNormalizer}
+     */
+    public Builder setAnalyticsNormalizer(AnalyticsNormalizer analyticsNormalizer) {
+      this.analyticsNormalizer = analyticsNormalizer;
+      return this;
+    }
+
+    /**
      * <p>Builds an AnalyticsManager object.</p>
      *
      * <p> An AnalyticsManager needs an {@link HttpKnockEventLogger} and at least one {@link
@@ -200,7 +218,8 @@ public class AnalyticsManager {
       if (eventLoggers.size() < 1) {
         throw new IllegalArgumentException("Analytics manager need at least one logger");
       }
-      return new AnalyticsManager(httpKnockEventLogger, eventLoggers, sessionLogger);
+      return new AnalyticsManager(httpKnockEventLogger, eventLoggers, sessionLogger,
+          analyticsNormalizer);
     }
   }
 }
