@@ -22,8 +22,8 @@ public class AnalyticsNormalizerTest {
 
   @Test public void normalizeNullEventAttributeValuesToEmptyString() {
     String key1 = "key1";
-    String key3 = "key3";
     String key2 = "key2";
+    String key3 = "key3";
 
     //Given a event data Map with non null key attribute
     Map<String, Object> data = new HashMap<>();

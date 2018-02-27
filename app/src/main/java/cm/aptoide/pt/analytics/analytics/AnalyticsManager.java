@@ -48,10 +48,10 @@ public class AnalyticsManager {
         + context
         + "]");
     int eventsSent = 0;
+    data = analyticsNormalizer.normalize(data);
     for (Map.Entry<EventLogger, Collection<String>> loggerEntry : eventLoggers.entrySet()) {
       if (loggerEntry.getValue()
           .contains(eventName)) {
-        data = analyticsNormalizer.normalize(data);
         loggerEntry.getKey()
             .log(eventName, data, action, context);
         eventsSent++;
