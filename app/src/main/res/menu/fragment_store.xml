@@ -13,7 +13,7 @@
 
   <item
       android:id="@+id/menu_item_share"
-      android:icon="@drawable/ic_action_share"
+      android:icon="@drawable/ic_share"
       android:orderInCategory="2"
       android:title="@string/share"
       app:showAsAction="ifRoom"/>
