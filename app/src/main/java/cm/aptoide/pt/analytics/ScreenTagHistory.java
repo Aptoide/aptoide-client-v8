@@ -19,11 +19,11 @@ public class ScreenTagHistory {
   }
 
   public String getStore() {
-    return store;
+    return store != null ? store : "";
   }
 
   public String getFragment() {
-    return fragment;
+    return fragment != null ? fragment : "";
   }
 
   public void setFragment(String fragment) {
@@ -31,7 +31,7 @@ public class ScreenTagHistory {
   }
 
   public String getTag() {
-    return tag;
+    return tag != null ? tag : "";
   }
 
   public void setTag(String tag) {
