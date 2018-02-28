@@ -222,9 +222,10 @@ public class ListStoreAppsPresenterTest {
     verify(view).showLoading();
     //and request the next apps
     verify(appCenter).loadNextApps(STORE_ID_TEST, LIMIT_APPS_TEST);
+    //hide loading
+    verify(view).hideLoading();
     //and should not show new apps in the UI or errors
     verify(view, never()).addApps(appsModelLoading.getList());
-    verify(view, never()).hideLoading();
     verify(view, never()).showGenericError();
     verify(view, never()).showNetworkError();
   }
@@ -245,10 +246,10 @@ public class ListStoreAppsPresenterTest {
 
     //Then when new apps are requested loadFreshApps
     verify(appCenter).loadFreshApps(STORE_ID_TEST, LIMIT_APPS_TEST);
-    //show success - add apps list
-    verify(view).setApps(appsModel.getList());
-    //hide the refresh loading
+    //and hide the refresh loading
     verify(view).hideRefreshLoading();
+    //and show success - add apps list
+    verify(view).setApps(appsModel.getList());
   }
 
   @Test public void loadAppsAfterRefreshWithGenericError() {
@@ -312,11 +313,87 @@ public class ListStoreAppsPresenterTest {
 
     //Then when new apps are requested
     verify(appCenter).loadFreshApps(STORE_ID_TEST, LIMIT_APPS_TEST);
-    // do nothing
+    //and apps model is loading
+    //hide loading
+    verify(view).hideRefreshLoading();
+    //and do nothing else
     verify(view, never()).setApps(appsModelLoading.getList());
     verify(view, never()).showGenericError();
     verify(view, never()).showNetworkError();
   }
 
+  @Test public void getAppsAfterRetryClickWithGenericError() {
+    //Given an initialized ListStoreAppsPresenter with a STORE_ID and a limit of apps
+    //When onCreate lifecycle call event happens
+    //and the user is on the no network view
+    //and clicks on the retry button
 
+    PublishSubject<Void> retryClickEvent = PublishSubject.create();
+    when(view.getRetryEvent()).thenReturn(retryClickEvent);
+    when(appCenter.loadNextApps(STORE_ID_TEST, LIMIT_APPS_TEST)).thenReturn(
+        Single.just(appsModelWithGenericError));
+    listStoreAppsPresenter.present();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    retryClickEvent.onNext(null);
+
+    //then a loading should be shown in the UI
+    verify(view).showStartingLoading();
+    //and a request apps should be done
+    verify(appCenter).loadNextApps(STORE_ID_TEST, LIMIT_APPS_TEST);
+    //and hide loading
+    verify(view).hideLoading();
+    //and generic error should be shown in the UI
+    verify(view).showGenericError();
+  }
+
+  @Test public void getAppsAfterRetryClickWithNetworkError() {
+    //Given an initialized ListStoreAppsPresenter with a STORE_ID and a limit of apps
+    //When onCreate lifecycle call event happens
+    //and the user is on the no network view
+    //and clicks on the retry button
+
+    PublishSubject<Void> retryClickEvent = PublishSubject.create();
+    when(view.getRetryEvent()).thenReturn(retryClickEvent);
+    when(appCenter.loadNextApps(STORE_ID_TEST, LIMIT_APPS_TEST)).thenReturn(
+        Single.just(appsModelWithNetworkError));
+    listStoreAppsPresenter.present();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    retryClickEvent.onNext(null);
+
+    //then a loading should be shown in the UI
+    verify(view).showStartingLoading();
+    //and a request apps should be done
+    verify(appCenter).loadNextApps(STORE_ID_TEST, LIMIT_APPS_TEST);
+    //and hide loading
+    verify(view).hideLoading();
+    //and network error should be shown in the UI
+    verify(view).showNetworkError();
+  }
+
+  @Test public void getAppsAfterRetryClickWithLoading() {
+    //Given an initialized ListStoreAppsPresenter with a STORE_ID and a limit of apps
+    //When onCreate lifecycle call event happens
+    //and the user is on the no network view
+    //and clicks on the retry button
+
+    PublishSubject<Void> retryClickEvent = PublishSubject.create();
+    when(view.getRetryEvent()).thenReturn(retryClickEvent);
+    when(appCenter.loadNextApps(STORE_ID_TEST, LIMIT_APPS_TEST)).thenReturn(
+        Single.just(appsModelLoading));
+    listStoreAppsPresenter.present();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    retryClickEvent.onNext(null);
+
+    //then a loading should be shown in the UI
+    verify(view).showStartingLoading();
+    //and a request apps should be done
+    verify(appCenter).loadNextApps(STORE_ID_TEST, LIMIT_APPS_TEST);
+    //and apps model is loading
+    //hide loading
+    verify(view).hideLoading();
+    //should do nothing else
+    verify(view, never()).showNetworkError();
+    verify(view, never()).showGenericError();
+    verify(view, never()).addApps(appsModelLoading.getList());
+  }
 }
