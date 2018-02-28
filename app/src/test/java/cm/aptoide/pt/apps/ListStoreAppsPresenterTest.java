@@ -77,6 +77,47 @@ public class ListStoreAppsPresenterTest {
     verify(view).setApps(appsModel.getList());
   }
 
+  @Test public void getAppsFromRepositoryWithGenericError() {
+    //Given an initialised ListStoreAppsPresenter with a STORE_ID and LIMIT of apps
+    //When onCreate lifecycle call event happens
+    //And there is a generic error while requesting apps to the app model
+    when(appCenter.getApps(STORE_ID_TEST, LIMIT_APPS_TEST)).thenReturn(
+        Single.just(appsModelWithGenericError));
+    listStoreAppsPresenter.present();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+
+    //Then show generic error on UI
+    verify(view).showGenericError();
+  }
+
+  @Test public void getAppsFromRepositoryWithNetworkError() {
+    //Given an initialised ListStoreAppsPresenter with a STORE_ID and LIMIT of apps
+    //When onCreate lifecycle call event happens
+    //And there is a network error while requesting apps to the app model
+    when(appCenter.getApps(STORE_ID_TEST, LIMIT_APPS_TEST)).thenReturn(
+        Single.just(appsModelWithNetworkError));
+    listStoreAppsPresenter.present();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+
+    //Then show network error on UI
+    verify(view).showNetworkError();
+  }
+
+  @Test public void getAppsFromRepositoryWhileItIsLoading() {
+    //Given an initialised ListStoreAppsPresenter with a STORE_ID and LIMIT of apps
+    //When onCreate lifecycle call event happens
+    //And there app model is loading
+    when(appCenter.getApps(STORE_ID_TEST, LIMIT_APPS_TEST)).thenReturn(
+        Single.just(appsModelLoading));
+    listStoreAppsPresenter.present();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+
+    //then should do nothing
+    verify(view, never()).setApps(appsModelLoading.getList());
+    verify(view, never()).showGenericError();
+    verify(view, never()).showNetworkError();
+  }
+
   @Test public void openAppViewFragmentOnAppClick() {
     //Given an initialized ListStoreAppsPresenter with a STORE_ID and a limit of apps
     //When onCreate lifecycle call event happens
@@ -92,7 +133,7 @@ public class ListStoreAppsPresenterTest {
     //And an app is clicked
     appClickEvent.onNext(aptoide);
 
-    //Then should navigate to app view
+    //Then should navigate to app view of the selected app
     verify(listStoreAppsNavigator).navigateToAppView(aptoide.getAppId(), aptoide.getPackageName());
   }
 
@@ -111,10 +152,11 @@ public class ListStoreAppsPresenterTest {
 
     //then should show loading
     verify(view).showLoading();
-    //and call loadApps
+    //and request for the next apps
     verify(appCenter).loadNextApps(STORE_ID_TEST, LIMIT_APPS_TEST);
-    //success - add apps list and hide loading
+    //and add the new apps to the UI
     verify(view).addApps(appsModel.getList());
+    //and hide the loading
     verify(view).hideLoading();
   }
 
@@ -134,9 +176,9 @@ public class ListStoreAppsPresenterTest {
 
     //then should show loading
     verify(view).showLoading();
-    //and call loadApps
+    //and request the next apps
     verify(appCenter).loadNextApps(STORE_ID_TEST, LIMIT_APPS_TEST);
-    //error - handle generic error
+    //and show generic error
     verify(view).showGenericError();
   }
 
@@ -156,9 +198,9 @@ public class ListStoreAppsPresenterTest {
 
     //then should show loading
     verify(view).showLoading();
-    //and call loadApps
+    //and request for  the next apps
     verify(appCenter).loadNextApps(STORE_ID_TEST, LIMIT_APPS_TEST);
-    //error - handle Network error
+    //and show network error
     verify(view).showNetworkError();
   }
 
@@ -178,11 +220,13 @@ public class ListStoreAppsPresenterTest {
 
     //then should show loading
     verify(view).showLoading();
-    //and call loadApps
+    //and request the next apps
     verify(appCenter).loadNextApps(STORE_ID_TEST, LIMIT_APPS_TEST);
-    //and app model is still loading
+    //and should not show new apps in the UI or errors
     verify(view, never()).addApps(appsModelLoading.getList());
     verify(view, never()).hideLoading();
+    verify(view, never()).showGenericError();
+    verify(view, never()).showNetworkError();
   }
 
   @Test public void loadAppsAfterRefreshWithSuccess() {
@@ -199,10 +243,11 @@ public class ListStoreAppsPresenterTest {
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     refreshEvent.onNext(null);
 
-    //call loadFreshApps
+    //Then when new apps are requested loadFreshApps
     verify(appCenter).loadFreshApps(STORE_ID_TEST, LIMIT_APPS_TEST);
-    //success - add apps list and hide the refresh loading
+    //show success - add apps list
     verify(view).setApps(appsModel.getList());
+    //hide the refresh loading
     verify(view).hideRefreshLoading();
   }
 
@@ -220,11 +265,11 @@ public class ListStoreAppsPresenterTest {
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     refreshEvent.onNext(null);
 
-    //call loadFreshApps
+    //Then when new apps are requested
     verify(appCenter).loadFreshApps(STORE_ID_TEST, LIMIT_APPS_TEST);
     //hide refresh loading
     verify(view).hideRefreshLoading();
-    //error - Generic error- show Generic error
+    // and show Generic error
     verify(view).showGenericError();
   }
 
@@ -242,11 +287,11 @@ public class ListStoreAppsPresenterTest {
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     refreshEvent.onNext(null);
 
-    //call loadFreshApps
+    //Then when new apps are requested
     verify(appCenter).loadFreshApps(STORE_ID_TEST, LIMIT_APPS_TEST);
-    //hide refresh loading
+    //and hide refresh loading
     verify(view).hideRefreshLoading();
-    //error - Generic error- show Generic error
+    //and error - Generic error- show Generic error
     verify(view).showNetworkError();
   }
 
@@ -254,6 +299,7 @@ public class ListStoreAppsPresenterTest {
     //Given an initialized ListStoreAppsPresenter with a STORE_ID and a limit of apps
     //When onCreate lifecycle call event happens
     //and the view is refreshed by the user
+    //and the app model is processing another request
     PublishSubject<Void> refreshEvent = PublishSubject.create();
     when(view.getRefreshEvent()).thenReturn(refreshEvent);
 
@@ -264,9 +310,13 @@ public class ListStoreAppsPresenterTest {
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     refreshEvent.onNext(null);
 
-    //call loadFreshApps
+    //Then when new apps are requested
     verify(appCenter).loadFreshApps(STORE_ID_TEST, LIMIT_APPS_TEST);
-    //app model is still loading
+    // do nothing
     verify(view, never()).setApps(appsModelLoading.getList());
+    verify(view, never()).showGenericError();
+    verify(view, never()).showNetworkError();
   }
+
+
 }

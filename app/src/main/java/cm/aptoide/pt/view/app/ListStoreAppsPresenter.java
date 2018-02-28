@@ -102,16 +102,22 @@ public class ListStoreAppsPresenter implements Presenter {
   private void onCreateLoadApps() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMapSingle(lifecycleEvent -> appCenter.getApps(storeId, limit)
-            .observeOn(viewScheduler)
-            .doOnSuccess(applications -> {
-              if (!applications.isLoading()) {
-                view.setApps(applications.getList());
-              }
-            }))
+        .flatMapSingle(lifecycleEvent -> getApps())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, throwable -> crashReport.log(throwable));
+  }
+
+  @NonNull private Single<AppsList> getApps() {
+    return appCenter.getApps(storeId, limit)
+        .observeOn(viewScheduler)
+        .doOnSuccess(applications -> {
+          if (applications.hasErrors()) {
+            handleError(applications.getError());
+          } else if (!applications.isLoading()) {
+            view.setApps(applications.getList());
+          }
+        });
   }
 
   private void onCreateHandleBottomReached() {
