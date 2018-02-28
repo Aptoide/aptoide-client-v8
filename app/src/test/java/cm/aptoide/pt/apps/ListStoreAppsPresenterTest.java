@@ -170,7 +170,7 @@ public class ListStoreAppsPresenterTest {
     when(view.reachesBottom()).thenReturn(reachedBottomEvent);
 
     when(appCenter.loadNextApps(STORE_ID_TEST, LIMIT_APPS_TEST)).thenReturn(
-        Single.just(appsModelWithNetworkError));
+        Single.just(appsModelLoading));
 
     listStoreAppsPresenter.present();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
@@ -181,7 +181,7 @@ public class ListStoreAppsPresenterTest {
     //and call loadApps
     verify(appCenter).loadNextApps(STORE_ID_TEST, LIMIT_APPS_TEST);
     //apps are loading
-    verify(view, never()).addApps(appsModel.getList());
+    verify(view, never()).addApps(appsModelLoading.getList());
     verify(view, never()).hideLoading();
   }
 
@@ -258,7 +258,7 @@ public class ListStoreAppsPresenterTest {
     when(view.getRefreshEvent()).thenReturn(refreshEvent);
 
     when(appCenter.loadFreshApps(STORE_ID_TEST, LIMIT_APPS_TEST)).thenReturn(
-        Single.just(appsModelWithGenericError));
+        Single.just(appsModelLoading));
 
     listStoreAppsPresenter.present();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
@@ -267,6 +267,6 @@ public class ListStoreAppsPresenterTest {
     //call loadFreshApps
     verify(appCenter).loadFreshApps(STORE_ID_TEST, LIMIT_APPS_TEST);
     //apps are still loading
-    verify(view, never()).setApps(appsModelWithGenericError.getList());
+    verify(view, never()).setApps(appsModelLoading.getList());
   }
 }
