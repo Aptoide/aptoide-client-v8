@@ -198,18 +198,6 @@ public class ManagerPreferences {
         .apply();
   }
 
-  public static void setAddressBookSyncValues(Boolean value, SharedPreferences sharedPreferences) {
-    sharedPreferences.edit()
-        .putBoolean(ManagedKeys.ADDRESS_BOOK_SYNC, value)
-        .apply();
-    sharedPreferences.edit()
-        .putBoolean(ManagedKeys.TWITTER_SYNC, value)
-        .apply();
-    sharedPreferences.edit()
-        .putBoolean(ManagedKeys.FACEBOOK_SYNC, value)
-        .apply();
-  }
-
   public static int getNotLoggedInInstallClicks(SharedPreferences sharedPreferences) {
     return sharedPreferences.getInt(ManagedKeys.NOT_LOGGED_IN_NUMBER_OF_INSTALL_CLICKS, 0);
   }
