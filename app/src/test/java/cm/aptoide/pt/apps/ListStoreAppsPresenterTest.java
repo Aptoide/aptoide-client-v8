@@ -184,4 +184,89 @@ public class ListStoreAppsPresenterTest {
     verify(view, never()).addApps(appsModel.getList());
     verify(view, never()).hideLoading();
   }
+
+  @Test public void loadAppsAfterRefreshWithSuccess() {
+    //Given an initialized ListStoreAppsPresenter with a STORE_ID and a limit of apps
+    //When onCreate lifecycle call event happens
+    //and the view is refreshed by the user
+    PublishSubject<Void> refreshEvent = PublishSubject.create();
+    when(view.getRefreshEvent()).thenReturn(refreshEvent);
+
+    when(appCenter.loadFreshApps(STORE_ID_TEST, LIMIT_APPS_TEST)).thenReturn(
+        Single.just(appsModel));
+
+    listStoreAppsPresenter.present();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    refreshEvent.onNext(null);
+
+    //call loadFreshApps
+    verify(appCenter).loadFreshApps(STORE_ID_TEST, LIMIT_APPS_TEST);
+    //success - add apps list and hide the refresh loading
+    verify(view).setApps(appsModel.getList());
+    verify(view).hideRefreshLoading();
+  }
+
+  @Test public void loadAppsAfterRefreshWithGenericError() {
+    //Given an initialized ListStoreAppsPresenter with a STORE_ID and a limit of apps
+    //When onCreate lifecycle call event happens
+    //and the view is refreshed by the user
+    PublishSubject<Void> refreshEvent = PublishSubject.create();
+    when(view.getRefreshEvent()).thenReturn(refreshEvent);
+
+    when(appCenter.loadFreshApps(STORE_ID_TEST, LIMIT_APPS_TEST)).thenReturn(
+        Single.just(appsModelWithGenericError));
+
+    listStoreAppsPresenter.present();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    refreshEvent.onNext(null);
+
+    //call loadFreshApps
+    verify(appCenter).loadFreshApps(STORE_ID_TEST, LIMIT_APPS_TEST);
+    //hide refresh loading
+    verify(view).hideRefreshLoading();
+    //error - Generic error- show Generic error
+    verify(view).showGenericError();
+  }
+
+  @Test public void loadAppsAfterRefreshWithNetworkError() {
+    //Given an initialized ListStoreAppsPresenter with a STORE_ID and a limit of apps
+    //When onCreate lifecycle call event happens
+    //and the view is refreshed by the user
+    PublishSubject<Void> refreshEvent = PublishSubject.create();
+    when(view.getRefreshEvent()).thenReturn(refreshEvent);
+
+    when(appCenter.loadFreshApps(STORE_ID_TEST, LIMIT_APPS_TEST)).thenReturn(
+        Single.just(appsModelWithNetworkError));
+
+    listStoreAppsPresenter.present();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    refreshEvent.onNext(null);
+
+    //call loadFreshApps
+    verify(appCenter).loadFreshApps(STORE_ID_TEST, LIMIT_APPS_TEST);
+    //hide refresh loading
+    verify(view).hideRefreshLoading();
+    //error - Generic error- show Generic error
+    verify(view).showNetworkError();
+  }
+
+  @Test public void loadAppsAfterRefreshWithLoadingError() {
+    //Given an initialized ListStoreAppsPresenter with a STORE_ID and a limit of apps
+    //When onCreate lifecycle call event happens
+    //and the view is refreshed by the user
+    PublishSubject<Void> refreshEvent = PublishSubject.create();
+    when(view.getRefreshEvent()).thenReturn(refreshEvent);
+
+    when(appCenter.loadFreshApps(STORE_ID_TEST, LIMIT_APPS_TEST)).thenReturn(
+        Single.just(appsModelWithGenericError));
+
+    listStoreAppsPresenter.present();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    refreshEvent.onNext(null);
+
+    //call loadFreshApps
+    verify(appCenter).loadFreshApps(STORE_ID_TEST, LIMIT_APPS_TEST);
+    //apps are still loading
+    verify(view, never()).setApps(appsModelWithGenericError.getList());
+  }
 }

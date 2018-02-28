@@ -87,13 +87,13 @@ public class ListStoreAppsPresenter implements Presenter {
     return appCenter.loadFreshApps(storeId, limit)
         .observeOn(viewScheduler)
         .doOnSuccess(applications -> {
-          view.hideRefreshLoading();
           if (applications.hasErrors()) {
+            view.hideRefreshLoading();
             handleError(applications.getError());
           } else {
             if (!applications.isLoading()) {
               view.setApps(applications.getList());
-              //view.hideRefreshLoading();
+              view.hideRefreshLoading();
             }
           }
         });
