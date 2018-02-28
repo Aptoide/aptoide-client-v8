@@ -55,7 +55,7 @@ public class ListStoreAppsPresenterTest {
     appsModel = new AppsList(apps, false, LIMIT_APPS_TEST);
     appsModelWithGenericError = new AppsList(AppsList.Error.GENERIC);
     appsModelWithNetworkError = new AppsList(AppsList.Error.NETWORK);
-    appsModelLoading = new AppsList(apps, true, LIMIT_APPS_TEST);
+    appsModelLoading = new AppsList(true);
 
     listStoreAppsPresenter =
         new ListStoreAppsPresenter(view, STORE_ID_TEST, Schedulers.immediate(), appCenter,
@@ -180,7 +180,7 @@ public class ListStoreAppsPresenterTest {
     verify(view).showLoading();
     //and call loadApps
     verify(appCenter).loadNextApps(STORE_ID_TEST, LIMIT_APPS_TEST);
-    //apps are loading
+    //and app model is still loading
     verify(view, never()).addApps(appsModelLoading.getList());
     verify(view, never()).hideLoading();
   }
@@ -266,7 +266,7 @@ public class ListStoreAppsPresenterTest {
 
     //call loadFreshApps
     verify(appCenter).loadFreshApps(STORE_ID_TEST, LIMIT_APPS_TEST);
-    //apps are still loading
+    //app model is still loading
     verify(view, never()).setApps(appsModelLoading.getList());
   }
 }
