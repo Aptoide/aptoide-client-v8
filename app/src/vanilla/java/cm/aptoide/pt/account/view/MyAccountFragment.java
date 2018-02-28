@@ -25,10 +25,8 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
@@ -46,10 +44,10 @@ import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Collections;
 import java.util.List;
-import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 
 /**
@@ -58,7 +56,6 @@ import rx.subjects.PublishSubject;
 public class MyAccountFragment extends BaseToolbarFragment implements MyAccountView {
 
   private static final float STROKE_SIZE = 0.04f;
-  @Inject AnalyticsManager analyticsManager;
   private AptoideAccountManager accountManager;
   private Button logoutButton;
   private TextView usernameTextView;
@@ -125,7 +122,6 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    getFragmentComponent(savedInstanceState).inject(this);
     setHasOptionsMenu(true);
     accountManager =
         ((AptoideApplication) getActivity().getApplicationContext()).getAccountManager();
@@ -170,7 +166,7 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
         ((ActivityResultNavigator) getContext()).getMyAccountNavigator(),
         application.getNotificationCenter(), application.getDefaultSharedPreferences(),
         application.getNavigationTracker(), application.getNotificationAnalytics(),
-        new PageViewsAnalytics(analyticsManager)));
+        AndroidSchedulers.mainThread()));
   }
 
   @Override public int getContentViewId() {
@@ -200,11 +196,11 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     return RxView.clicks(moreNotificationsButton);
   }
 
-  @Override public Observable<Void> storeClick() {
+  @Override public Observable<Void> storeLayoutClick() {
     return RxView.clicks(storeLayout);
   }
 
-  @Override public Observable<Void> userClick() {
+  @Override public Observable<Void> userLayoutClick() {
     return RxView.clicks(userLayout);
   }
 
@@ -212,7 +208,7 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     return notificationSubject;
   }
 
-  @Override public void showNotifications(List<AptoideNotification> notifications) {
+  @Override public void updateAdapter(List<AptoideNotification> notifications) {
     adapter.updateNotifications(notifications);
   }
 

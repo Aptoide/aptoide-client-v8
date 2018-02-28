@@ -16,13 +16,13 @@ public interface MyAccountView extends View {
 
   Observable<Void> moreNotificationsClick();
 
-  Observable<Void> storeClick();
+  Observable<Void> storeLayoutClick();
 
-  Observable<Void> userClick();
+  Observable<Void> userLayoutClick();
 
   Observable<AptoideNotification> notificationSelection();
 
-  void showNotifications(List<AptoideNotification> notifications);
+  void updateAdapter(List<AptoideNotification> notifications);
 
   Observable<Void> editStoreClick();
 

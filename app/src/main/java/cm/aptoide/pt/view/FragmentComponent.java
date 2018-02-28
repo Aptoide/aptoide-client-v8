@@ -1,7 +1,6 @@
 package cm.aptoide.pt.view;
 
 import cm.aptoide.pt.account.view.LoginSignUpCredentialsFragment;
-import cm.aptoide.pt.account.view.MyAccountFragment;
 import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import cm.aptoide.pt.account.view.user.ManageUserFragment;
 import cm.aptoide.pt.account.view.user.ProfileStepOneFragment;
@@ -74,8 +73,6 @@ public interface FragmentComponent {
   void inject(StoreTabWidgetsGridRecyclerFragment storeTabWidgetsGridRecyclerFragment);
 
   void inject(InboxFragment inboxFragment);
-
-  void inject(MyAccountFragment myAccountFragment);
 
   void inject(NotLoggedInShareFragment notLoggedInShareFragment);
 
