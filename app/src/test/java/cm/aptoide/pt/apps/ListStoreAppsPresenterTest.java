@@ -34,15 +34,18 @@ public class ListStoreAppsPresenterTest {
 
   @Mock private ListStoreAppsFragment view;
 
+  @Mock private ListStoreAppsNavigator listStoreAppsNavigator;
+
   @Mock private CrashReport crashReporter;
 
   private ListStoreAppsPresenter listStoreAppsPresenter;
+
   private AppsList appsModel;
   private AppsList appsModelWithGenericError;
   private AppsList appsModelWithNetworkError;
   private AppsList appsModelLoading;
+
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
-  @Mock private ListStoreAppsNavigator listStoreAppsNavigator;
 
   @Before public void setupListStoreAppsPresenter() {
     MockitoAnnotations.initMocks(this);
