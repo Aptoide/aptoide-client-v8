@@ -196,11 +196,11 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     return RxView.clicks(moreNotificationsButton);
   }
 
-  @Override public Observable<Void> storeLayoutClick() {
+  @Override public Observable<Void> storeClick() {
     return RxView.clicks(storeLayout);
   }
 
-  @Override public Observable<Void> userLayoutClick() {
+  @Override public Observable<Void> userClick() {
     return RxView.clicks(userLayout);
   }
 
@@ -208,7 +208,7 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     return notificationSubject;
   }
 
-  @Override public void updateAdapter(List<AptoideNotification> notifications) {
+  @Override public void showNotifications(List<AptoideNotification> notifications) {
     adapter.updateNotifications(notifications);
   }
 

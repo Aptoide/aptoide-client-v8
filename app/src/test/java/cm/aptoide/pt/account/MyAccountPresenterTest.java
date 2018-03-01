@@ -223,7 +223,7 @@ public class MyAccountPresenterTest {
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
     //It should show the notifications
-    verify(view).updateAdapter(aptoideNotificationList);
+    verify(view).showNotifications(aptoideNotificationList);
   }
 
   @Test public void handleGetNoNotificationsTest() {
@@ -240,7 +240,7 @@ public class MyAccountPresenterTest {
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
     //It should NOT show the notifications
-    verify(view, never()).updateAdapter(aptoideNotificationList);
+    verify(view, never()).showNotifications(aptoideNotificationList);
   }
 
   @Test public void handleNotificationClickTest() {
@@ -279,7 +279,7 @@ public class MyAccountPresenterTest {
     PublishSubject<Void> clickEvent = PublishSubject.create();
     //Given an initialized MyAccountPresenter
     //And an user Account
-    when(view.userLayoutClick()).thenReturn(clickEvent);
+    when(view.userClick()).thenReturn(clickEvent);
     when(accountManager.accountStatus()).thenReturn(Observable.just(account));
     //When the user clicks the user info
     when(account.getStore()).thenReturn(store);
@@ -297,7 +297,7 @@ public class MyAccountPresenterTest {
     //And an user Account with Store
     //When the user clicks the store info
     PublishSubject<Void> clickEvent = PublishSubject.create();
-    when(view.storeLayoutClick()).thenReturn(clickEvent);
+    when(view.storeClick()).thenReturn(clickEvent);
     when(accountManager.accountStatus()).thenReturn(Observable.just(account));
     when(account.getStore()).thenReturn(store);
 

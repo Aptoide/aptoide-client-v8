@@ -151,7 +151,7 @@ public class MyAccountPresenter implements Presenter {
         .filter(haveNotifications -> haveNotifications)
         .flatMap(viewCreated -> notificationCenter.getInboxNotifications(NUMBER_OF_NOTIFICATIONS))
         .observeOn(viewScheduler)
-        .doOnNext(notifications -> view.updateAdapter(notifications))
+        .doOnNext(notifications -> view.showNotifications(notifications))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notifications -> {
         }, throwable -> crashReport.log(throwable));
@@ -185,7 +185,7 @@ public class MyAccountPresenter implements Presenter {
   private void handleUserLayoutClick() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.userLayoutClick())
+        .flatMap(__ -> view.userClick())
         .flatMap(click -> accountManager.accountStatus()
             .first())
         .doOnNext(account -> navigator.navigateToUserView(account.getId(), account.getStore()
@@ -198,7 +198,7 @@ public class MyAccountPresenter implements Presenter {
   private void handleStoreLayoutClick() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.storeLayoutClick())
+        .flatMap(__ -> view.storeClick())
         .flatMap(click -> accountManager.accountStatus()
             .first())
         .doOnNext(account -> navigator.navigateToStoreView(account.getStore()
