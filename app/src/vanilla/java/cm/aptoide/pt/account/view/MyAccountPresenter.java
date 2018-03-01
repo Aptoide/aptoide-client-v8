@@ -147,6 +147,8 @@ public class MyAccountPresenter implements Presenter {
   private void handleGetNotifications() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(viewCreated -> notificationCenter.haveNotifications())
+        .filter(haveNotifications -> haveNotifications)
         .flatMap(viewCreated -> notificationCenter.getInboxNotifications(NUMBER_OF_NOTIFICATIONS))
         .observeOn(viewScheduler)
         .doOnNext(notifications -> view.updateAdapter(notifications))
@@ -231,18 +233,18 @@ public class MyAccountPresenter implements Presenter {
         .flatMap(click -> accountManager.logout()
             .observeOn(viewScheduler)
             .doOnCompleted(() -> {
-              setAddressBookSyncValues(false);
+              resetAddressBookValues();
               navigator.navigateToHome();
             })
             .doOnError(throwable -> crashReport.log(throwable)).<Void>toObservable())
         .retry();
   }
 
-  private void setAddressBookSyncValues(boolean value) {
+  private void resetAddressBookValues() {
     sharedPreferences.edit()
-        .putBoolean(ManagedKeys.ADDRESS_BOOK_SYNC, value)
-        .putBoolean(ManagedKeys.TWITTER_SYNC, value)
-        .putBoolean(ManagedKeys.FACEBOOK_SYNC, value)
+        .putBoolean(ManagedKeys.ADDRESS_BOOK_SYNC, false)
+        .putBoolean(ManagedKeys.TWITTER_SYNC, false)
+        .putBoolean(ManagedKeys.FACEBOOK_SYNC, false)
         .apply();
   }
 
