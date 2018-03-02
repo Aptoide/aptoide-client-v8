@@ -2,18 +2,16 @@ package cm.aptoide.pt.account.view;
 
 import android.content.SharedPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationCenter;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
+import rx.Scheduler;
 
 public class MyAccountPresenter implements Presenter {
 
@@ -22,28 +20,25 @@ public class MyAccountPresenter implements Presenter {
   private final CrashReport crashReport;
   private final MyAccountNavigator navigator;
   private final NotificationCenter notificationCenter;
-  private final LinksHandlerFactory linkFactory;
   private final int NUMBER_OF_NOTIFICATIONS = 3;
   private final SharedPreferences sharedPreferences;
   private final NotificationAnalytics analytics;
-  private final PageViewsAnalytics pageViewsAnalytics;
   private final NavigationTracker navigationTracker;
+  private Scheduler viewScheduler;
 
   public MyAccountPresenter(MyAccountView view, AptoideAccountManager accountManager,
       CrashReport crashReport, MyAccountNavigator navigator, NotificationCenter notificationCenter,
-      LinksHandlerFactory linkFactory, SharedPreferences sharedPreferences,
-      NavigationTracker navigationTracker, NotificationAnalytics analytics,
-      PageViewsAnalytics pageViewsAnalytics) {
+      SharedPreferences sharedPreferences, NavigationTracker navigationTracker,
+      NotificationAnalytics analytics, Scheduler viewScheduler) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
     this.navigator = navigator;
     this.notificationCenter = notificationCenter;
-    this.linkFactory = linkFactory;
     this.sharedPreferences = sharedPreferences;
     this.navigationTracker = navigationTracker;
     this.analytics = analytics;
-    this.pageViewsAnalytics = pageViewsAnalytics;
+    this.viewScheduler = viewScheduler;
   }
 
   @Override public void present() {
@@ -51,7 +46,7 @@ public class MyAccountPresenter implements Presenter {
     handleSignOutButtonClick();
     handleMoreNotificationsClick();
     handleHeaderVisibility();
-    hangleGetNotifications();
+    handleGetNotifications();
     handleNotificationClick();
     handleUserEditClick();
     markNotificationsRead();
@@ -72,7 +67,7 @@ public class MyAccountPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(resumed -> accountManager.accountStatus()
             .first())
-        .observeOn(AndroidSchedulers.mainThread())
+        .observeOn(viewScheduler)
         .doOnNext(account -> view.showAccount(account))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -102,7 +97,7 @@ public class MyAccountPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> notificationCenter.haveNotifications())
-        .observeOn(AndroidSchedulers.mainThread())
+        .observeOn(viewScheduler)
         .doOnNext(hasNotifications -> {
           if (hasNotifications) {
             view.showHeader();
@@ -115,11 +110,13 @@ public class MyAccountPresenter implements Presenter {
         }, throwable -> crashReport.log(throwable));
   }
 
-  private void hangleGetNotifications() {
+  private void handleGetNotifications() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(viewCreated -> notificationCenter.haveNotifications())
+        .filter(haveNotifications -> haveNotifications)
         .flatMap(viewCreated -> notificationCenter.getInboxNotifications(NUMBER_OF_NOTIFICATIONS))
-        .observeOn(AndroidSchedulers.mainThread())
+        .observeOn(viewScheduler)
         .doOnNext(notifications -> view.showNotifications(notifications))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notifications -> {
@@ -154,12 +151,20 @@ public class MyAccountPresenter implements Presenter {
   private Observable<Void> signOutClick() {
     return view.signOutClick()
         .flatMap(click -> accountManager.logout()
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(viewScheduler)
             .doOnCompleted(() -> {
-              ManagerPreferences.setAddressBookSyncValues(false, sharedPreferences);
+              resetAddressBookValues();
               navigator.navigateToHome();
             })
             .doOnError(throwable -> crashReport.log(throwable)).<Void>toObservable())
         .retry();
+  }
+
+  private void resetAddressBookValues() {
+    sharedPreferences.edit()
+        .putBoolean(ManagedKeys.ADDRESS_BOOK_SYNC, false)
+        .putBoolean(ManagedKeys.TWITTER_SYNC, false)
+        .putBoolean(ManagedKeys.FACEBOOK_SYNC, false)
+        .apply();
   }
 }
