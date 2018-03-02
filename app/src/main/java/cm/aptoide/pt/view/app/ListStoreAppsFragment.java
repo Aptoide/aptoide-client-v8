@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -27,6 +26,7 @@ import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
@@ -40,6 +40,8 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
   public static final String STORE_ID = "cm.aptoide.pt.ListStoreAppsFragment.storeId";
   public static final int LOAD_THRESHOLD = 5;
   private static final String LIST_STATE_KEY = "cm.aptoide.pt.ListStoreAppsFragment.ListState";
+  @Inject ListStoreAppsNavigator listStoreAppsNavigator;
+  @Inject AppCenter appCenter;
   private ListStoreAppsAdapter adapter;
   private long storeId;
   private PublishSubject<Application> appClicks;
@@ -75,6 +77,8 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
         savedInstanceState.putParcelable(LIST_STATE_KEY, null);
       }
     }
+    getFragmentComponent(savedInstanceState).inject(this);
+
     appClicks = PublishSubject.create();
     refreshEvent = PublishSubject.create();
     recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
@@ -113,9 +117,9 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
     });
 
     int limit = spanSize * 10;
-    attachPresenter(new ListStoreAppsPresenter(this, storeId, AndroidSchedulers.mainThread(),
-        ((AptoideApplication) getContext().getApplicationContext()).getAppCenter(),
-        CrashReport.getInstance(), getFragmentNavigator(), limit));
+    attachPresenter(
+        new ListStoreAppsPresenter(this, storeId, AndroidSchedulers.mainThread(), appCenter,
+            CrashReport.getInstance(), listStoreAppsNavigator, limit));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {

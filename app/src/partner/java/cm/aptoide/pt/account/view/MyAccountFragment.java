@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.account.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -25,10 +24,8 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
@@ -37,9 +34,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
-import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.AptoideNotification;
 import cm.aptoide.pt.notification.view.InboxAdapter;
@@ -50,6 +45,7 @@ import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 
 /**
@@ -75,23 +71,9 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
   private OkHttpClient httpClient;
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private CrashReport crashReport;
-  private AccountNavigator accountNavigator;
-  private TabNavigator tabNavigator;
-  private AnalyticsManager analyticsManager;
 
   public static MyAccountFragment newInstance() {
     return new MyAccountFragment();
-  }
-
-  @Override public void onAttach(Activity activity) {
-    super.onAttach(activity);
-
-    if (activity instanceof TabNavigator) {
-      tabNavigator = (TabNavigator) activity;
-    } else {
-      throw new IllegalStateException(
-          "Activity must implement " + TabNavigator.class.getSimpleName());
-    }
   }
 
   @Override public void onDestroy() {
@@ -128,9 +110,6 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);
-    analyticsManager =
-        ((AptoideApplication) getActivity().getApplicationContext()).getAnalyticsManager();
-    accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
     accountManager =
         ((AptoideApplication) getActivity().getApplicationContext()).getAccountManager();
     notificationSubject = PublishSubject.create();
@@ -163,14 +142,13 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     moreNotificationsButton = (Button) view.findViewById(R.id.my_account_notifications_header)
         .findViewById(R.id.more);
 
-    LinksHandlerFactory linkFactory = new LinksHandlerFactory(getContext());
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     attachPresenter(new MyAccountPresenter(this, accountManager, crashReport,
         ((ActivityResultNavigator) getContext()).getMyAccountNavigator(),
-        application.getNotificationCenter(), linkFactory, application.getDefaultSharedPreferences(),
+        application.getNotificationCenter(), application.getDefaultSharedPreferences(),
         application.getNavigationTracker(), application.getNotificationAnalytics(),
-        new PageViewsAnalytics(analyticsManager)));
+        AndroidSchedulers.mainThread()));
   }
 
   @Override public int getContentViewId() {

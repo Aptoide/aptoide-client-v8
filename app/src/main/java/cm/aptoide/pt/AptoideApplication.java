@@ -109,9 +109,6 @@ import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.BaseFragment;
 import cm.aptoide.pt.view.FragmentModule;
 import cm.aptoide.pt.view.FragmentProvider;
-import cm.aptoide.pt.view.app.AppCenter;
-import cm.aptoide.pt.view.app.AppCenterRepository;
-import cm.aptoide.pt.view.app.AppService;
 import cm.aptoide.pt.view.entry.EntryActivity;
 import cm.aptoide.pt.view.entry.EntryPointChooser;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
@@ -214,7 +211,6 @@ public abstract class AptoideApplication extends Application {
   private PurchaseFactory purchaseFactory;
   private InstallManager installManager;
   private ApplicationComponent applicationComponent;
-  private AppCenter appCenter;
   private ReadPostsPersistence readPostsPersistence;
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
   private NotificationsCleaner notificationsCleaner;
@@ -923,17 +919,6 @@ public abstract class AptoideApplication extends Application {
 
   public AccountAnalytics getAccountAnalytics() {
     return accountAnalytics;
-  }
-
-  @NonNull public AppCenter getAppCenter() {
-    if (appCenter == null) {
-      appCenter = new AppCenter(new AppCenterRepository(new AppService(
-          new StoreCredentialsProviderImpl(
-              AccessorFactory.getAccessorFor(getDatabase(), Store.class)),
-          getBodyInterceptorPoolV7(), getDefaultClient(), WebService.getDefaultConverter(),
-          getTokenInvalidator(), getDefaultSharedPreferences()), new HashMap<>()));
-    }
-    return appCenter;
   }
 
   public PurchaseFactory getPurchaseFactory() {

@@ -1,18 +1,18 @@
 package cm.aptoide.pt.account.view;
 
 import android.content.SharedPreferences;
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationCenter;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
+import rx.Scheduler;
 
 public class MyAccountPresenter implements Presenter {
 
@@ -25,13 +25,13 @@ public class MyAccountPresenter implements Presenter {
   private final int NUMBER_OF_NOTIFICATIONS = 3;
   private final SharedPreferences sharedPreferences;
   private final NotificationAnalytics analytics;
-  private final PageViewsAnalytics pageViewsAnalytics;
   private final NavigationTracker navigationTracker;
+  private Scheduler viewScheduler;
 
   public MyAccountPresenter(MyAccountView view, AptoideAccountManager accountManager,
       CrashReport crashReport, MyAccountNavigator navigator, NotificationCenter notificationCenter,
       SharedPreferences sharedPreferences, NavigationTracker navigationTracker,
-      NotificationAnalytics analytics, PageViewsAnalytics pageViewsAnalytics) {
+      NotificationAnalytics analytics, Scheduler viewScheduler) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
@@ -40,7 +40,7 @@ public class MyAccountPresenter implements Presenter {
     this.sharedPreferences = sharedPreferences;
     this.navigationTracker = navigationTracker;
     this.analytics = analytics;
-    this.pageViewsAnalytics = pageViewsAnalytics;
+    this.viewScheduler = viewScheduler;
   }
 
   @Override public void present() {
@@ -74,7 +74,7 @@ public class MyAccountPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(resumed -> accountManager.accountStatus()
             .first())
-        .observeOn(AndroidSchedulers.mainThread())
+        .observeOn(viewScheduler)
         .doOnNext(account -> view.showAccount(account))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -120,7 +120,7 @@ public class MyAccountPresenter implements Presenter {
         .flatMap(__ -> navigator.editStoreResult(EDIT_STORE_REQUEST_CODE))
         .flatMap(__ -> accountManager.accountStatus()
             .first())
-        .observeOn(AndroidSchedulers.mainThread())
+        .observeOn(viewScheduler)
         .doOnNext(account -> view.showAccount(account))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notification -> {
@@ -131,7 +131,7 @@ public class MyAccountPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> notificationCenter.haveNotifications())
-        .observeOn(AndroidSchedulers.mainThread())
+        .observeOn(viewScheduler)
         .doOnNext(hasNotifications -> {
           if (hasNotifications) {
             view.showHeader();
@@ -147,8 +147,10 @@ public class MyAccountPresenter implements Presenter {
   private void handleGetNotifications() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(viewCreated -> notificationCenter.haveNotifications())
+        .filter(haveNotifications -> haveNotifications)
         .flatMap(viewCreated -> notificationCenter.getInboxNotifications(NUMBER_OF_NOTIFICATIONS))
-        .observeOn(AndroidSchedulers.mainThread())
+        .observeOn(viewScheduler)
         .doOnNext(notifications -> view.showNotifications(notifications))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notifications -> {
@@ -186,7 +188,7 @@ public class MyAccountPresenter implements Presenter {
         .flatMap(__ -> view.userClick())
         .flatMap(click -> accountManager.accountStatus()
             .first())
-        .doOnNext(account -> navigateToUser(account.getId(), account.getStore()
+        .doOnNext(account -> navigator.navigateToUserView(account.getId(), account.getStore()
             .getTheme()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(account -> {
@@ -199,7 +201,7 @@ public class MyAccountPresenter implements Presenter {
         .flatMap(__ -> view.storeClick())
         .flatMap(click -> accountManager.accountStatus()
             .first())
-        .doOnNext(account -> navigateToStore(account.getStore()
+        .doOnNext(account -> navigator.navigateToStoreView(account.getStore()
             .getName(), account.getStore()
             .getTheme()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -211,10 +213,9 @@ public class MyAccountPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(lifecycleEvent -> accountManager.accountStatus())
-        .filter(account -> account.getStore() //checking if a store exists in account manager
-            .getId() == 0)
+        .filter(account -> !storeExistsInAccount(account))
         .flatMap(account -> view.getStore()
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(viewScheduler)
             .map(store -> store.getNodes()
                 .getMeta()
                 .getData())
@@ -227,23 +228,28 @@ public class MyAccountPresenter implements Presenter {
             .log(throwable));
   }
 
-  private void navigateToUser(String id, String storeTheme) {
-    navigator.navigateToUserView(id, storeTheme);
-  }
-
-  private void navigateToStore(String storeName, String storeTheme) {
-    navigator.navigateToStoreView(storeName, storeTheme);
-  }
-
   private Observable<Void> signOutClick() {
     return view.signOutClick()
         .flatMap(click -> accountManager.logout()
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(viewScheduler)
             .doOnCompleted(() -> {
-              ManagerPreferences.setAddressBookSyncValues(false, sharedPreferences);
+              resetAddressBookValues();
               navigator.navigateToHome();
             })
             .doOnError(throwable -> crashReport.log(throwable)).<Void>toObservable())
         .retry();
+  }
+
+  private void resetAddressBookValues() {
+    sharedPreferences.edit()
+        .putBoolean(ManagedKeys.ADDRESS_BOOK_SYNC, false)
+        .putBoolean(ManagedKeys.TWITTER_SYNC, false)
+        .putBoolean(ManagedKeys.FACEBOOK_SYNC, false)
+        .apply();
+  }
+
+  private boolean storeExistsInAccount(Account account) {
+    return account.getStore()
+        .getId() != 0;
   }
 }

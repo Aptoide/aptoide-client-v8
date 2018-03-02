@@ -1,7 +1,6 @@
 package cm.aptoide.pt.view;
 
 import cm.aptoide.pt.account.view.LoginSignUpCredentialsFragment;
-import cm.aptoide.pt.account.view.MyAccountFragment;
 import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import cm.aptoide.pt.account.view.user.ManageUserFragment;
 import cm.aptoide.pt.account.view.user.ProfileStepOneFragment;
@@ -27,6 +26,7 @@ import cm.aptoide.pt.store.view.home.HomeFragment;
 import cm.aptoide.pt.store.view.my.MyStoresSubscribedFragment;
 import cm.aptoide.pt.timeline.post.PostFragment;
 import cm.aptoide.pt.updates.view.UpdatesFragment;
+import cm.aptoide.pt.view.app.ListStoreAppsFragment;
 import dagger.Subcomponent;
 
 @FragmentScope @Subcomponent(modules = { FragmentModule.class })
@@ -74,8 +74,6 @@ public interface FragmentComponent {
 
   void inject(InboxFragment inboxFragment);
 
-  void inject(MyAccountFragment myAccountFragment);
-
   void inject(NotLoggedInShareFragment notLoggedInShareFragment);
 
   void inject(ProfileStepOneFragment profileStepOneFragment);
@@ -85,4 +83,6 @@ public interface FragmentComponent {
   void inject(DownloadsFragment downloadsFragment);
 
   void inject(UpdatesFragment updatesFragment);
+
+  void inject(ListStoreAppsFragment listStoreAppsFragment);
 }

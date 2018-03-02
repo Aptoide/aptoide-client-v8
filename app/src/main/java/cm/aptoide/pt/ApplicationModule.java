@@ -143,6 +143,9 @@ import cm.aptoide.pt.timeline.post.PostAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.q.QManager;
+import cm.aptoide.pt.view.app.AppCenter;
+import cm.aptoide.pt.view.app.AppCenterRepository;
+import cm.aptoide.pt.view.app.AppService;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
@@ -1023,5 +1026,23 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides StoreAnalytics providesStoreAnalytics(AnalyticsManager analyticsManager,
       NavigationTracker navigationTracker) {
     return new StoreAnalytics(analyticsManager, navigationTracker);
+  }
+
+  @Singleton @Provides AppService providesAppService(
+      StoreCredentialsProvider storeCredentialsProvider, @Named("pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences sharedPreferences) {
+
+    return new AppService(storeCredentialsProvider, bodyInterceptorPoolV7, okHttpClient,
+        WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences);
+  }
+
+  @Singleton @Provides AppCenterRepository providesAppCenterRepository(AppService appService) {
+    return new AppCenterRepository(appService, new HashMap<>());
+  }
+
+  @Singleton @Provides AppCenter providesAppCenter(AppCenterRepository appCenterRepository) {
+    return new AppCenter(appCenterRepository);
   }
 }
