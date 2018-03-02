@@ -5,17 +5,21 @@ import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallManager;
 import java.util.List;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import rx.Scheduler;
 
 public class DownloadsPresenter implements Presenter {
 
   private final DownloadsView view;
   private final InstallManager installManager;
+  private final Scheduler viewScheduler;
+  private final Scheduler computation;
 
-  public DownloadsPresenter(DownloadsView downloadsView, InstallManager installManager) {
+  public DownloadsPresenter(DownloadsView downloadsView, InstallManager installManager,
+      Scheduler viewScheduler, Scheduler computationScheduler) {
     this.view = downloadsView;
     this.installManager = installManager;
+    this.viewScheduler = viewScheduler;
+    this.computation = computationScheduler;
   }
 
   @Override public void present() {
@@ -23,10 +27,10 @@ public class DownloadsPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.RESUME)
         .first()
-        .observeOn(Schedulers.computation())
+        .observeOn(computation)
         .flatMap(created -> installManager.getInstallations()
             .distinctUntilChanged()
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(viewScheduler)
             .flatMap(installations -> {
               if (installations == null || installations.isEmpty()) {
                 view.showEmptyDownloadList();
@@ -49,7 +53,7 @@ public class DownloadsPresenter implements Presenter {
     return Observable.from(downloads)
         .filter(d -> isInstalling(d))
         .toList()
-        .observeOn(AndroidSchedulers.mainThread())
+        .observeOn(viewScheduler)
         .doOnNext(onGoingDownloads -> view.showActiveDownloads(onGoingDownloads))
         .map(__ -> null);
   }
@@ -58,7 +62,7 @@ public class DownloadsPresenter implements Presenter {
     return Observable.from(downloads)
         .filter(d -> isStandingBy(d))
         .toList()
-        .observeOn(AndroidSchedulers.mainThread())
+        .observeOn(viewScheduler)
         .doOnNext(onGoingDownloads -> view.showStandByDownloads(onGoingDownloads))
         .map(__ -> null);
   }
@@ -67,7 +71,7 @@ public class DownloadsPresenter implements Presenter {
     return Observable.from(downloads)
         .filter(d -> !isInstalling(d) && !isStandingBy(d))
         .toList()
-        .observeOn(AndroidSchedulers.mainThread())
+        .observeOn(viewScheduler)
         .doOnNext(onGoingDownloads -> view.showCompletedDownloads(onGoingDownloads))
         .map(__ -> null);
   }
