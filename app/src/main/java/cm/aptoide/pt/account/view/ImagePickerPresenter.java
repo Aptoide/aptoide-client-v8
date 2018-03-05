@@ -78,17 +78,17 @@ public class ImagePickerPresenter implements Presenter {
    * @return absolute Uri to the public photo
    */
   private Single<String> saveCameraPictureInPublicPhotos(String createdUri) {
-      Bitmap image = imageLoader.loadBitmap(createdUri);
-      if (image != null) {
-        String path = MediaStore.Images.Media.insertImage(contentResolver, image,
-            createdUri.substring(createdUri.lastIndexOf(File.pathSeparator)), null);
-        image.recycle();
-        return Single.just(uriToPathResolver.getCameraStoragePath(Uri.parse(path)))
-            .subscribeOn(Schedulers.io());
-      } else {
-        return Single.just(uriToPathResolver.getCameraStoragePath(Uri.parse(createdUri)))
-            .subscribeOn(Schedulers.io());
-      }
+    Bitmap image = imageLoader.loadBitmap(createdUri);
+    if (image != null) {
+      String path = MediaStore.Images.Media.insertImage(contentResolver, image,
+          createdUri.substring(createdUri.lastIndexOf(File.pathSeparator)), null);
+      image.recycle();
+      return Single.just(uriToPathResolver.getCameraStoragePath(Uri.parse(path)))
+          .subscribeOn(Schedulers.io());
+    } else {
+      return Single.just(uriToPathResolver.getCameraStoragePath(Uri.parse(createdUri)))
+          .subscribeOn(Schedulers.io());
+    }
   }
 
   private void handleCameraSelection() {
