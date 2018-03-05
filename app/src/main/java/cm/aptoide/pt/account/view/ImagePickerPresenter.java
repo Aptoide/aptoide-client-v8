@@ -78,18 +78,17 @@ public class ImagePickerPresenter implements Presenter {
    * @return absolute Uri to the public photo
    */
   private Single<String> saveCameraPictureInPublicPhotos(String createdUri) {
-    return Single.fromCallable(() -> {
-      Bitmap image = imageLoader.loadBitmap(createdUri);
-      if (image != null) {
-        String path = MediaStore.Images.Media.insertImage(contentResolver, image,
-            createdUri.substring(createdUri.lastIndexOf(File.pathSeparator)), null);
-        image.recycle();
-        return uriToPathResolver.getCameraStoragePath(Uri.parse(path));
-      } else {
-        return uriToPathResolver.getCameraStoragePath(Uri.parse(createdUri));
-      }
-    })
-        .subscribeOn(Schedulers.io());
+    Bitmap image = imageLoader.loadBitmap(createdUri);
+    if (image != null) {
+      String path = MediaStore.Images.Media.insertImage(contentResolver, image,
+          createdUri.substring(createdUri.lastIndexOf(File.pathSeparator)), null);
+      image.recycle();
+      return Single.just(uriToPathResolver.getCameraStoragePath(Uri.parse(path)))
+          .subscribeOn(Schedulers.io());
+    } else {
+      return Single.just(uriToPathResolver.getCameraStoragePath(Uri.parse(createdUri)))
+          .subscribeOn(Schedulers.io());
+    }
   }
 
   private void handleCameraSelection() {
@@ -120,13 +119,14 @@ public class ImagePickerPresenter implements Presenter {
             })
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
   }
 
-  @NonNull private Completable loadValidImageOrThrowForGallery(Uri selectedImageUri) {
-    return imageValidator.validateOrGetException(selectedImageUri.toString())
+  @NonNull private Completable loadValidImageOrThrowForGallery(String selectedImageUri) {
+    return imageValidator.validateOrGetException(selectedImageUri)
         .observeOn(uiScheduler)
-        .doOnCompleted(() -> view.loadImage(selectedImageUri.toString()));
+        .doOnCompleted(() -> view.loadImage(selectedImageUri));
   }
 
   private void handleGallerySelection() {
@@ -166,7 +166,8 @@ public class ImagePickerPresenter implements Presenter {
             })
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
   }
 
   @Override public void present() {

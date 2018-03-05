@@ -15,12 +15,13 @@ public class ImagePickerNavigator {
     this.activityNavigator = activityNavigator;
   }
 
-  public Observable<Uri> navigateToGalleryForImageUri(int requestCode) {
+  public Observable<String> navigateToGalleryForImageUri(int requestCode) {
     return activityNavigator.navigateForResult(Intent.ACTION_PICK,
         MediaStore.Images.Media.EXTERNAL_CONTENT_URI, requestCode)
         .filter(result -> result.getResultCode() == Activity.RESULT_OK)
         .map(result -> result.getData()
-            .getData());
+            .getData()
+            .toString());
   }
 
   public Observable<Void> navigateToCameraWithImageUri(int requestCode, Uri fileName) {

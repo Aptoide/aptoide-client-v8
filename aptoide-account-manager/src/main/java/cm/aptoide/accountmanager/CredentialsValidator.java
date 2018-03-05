@@ -1,5 +1,7 @@
 package cm.aptoide.accountmanager;
 
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import rx.Completable;
 
 public class CredentialsValidator {
@@ -12,25 +14,28 @@ public class CredentialsValidator {
    */
   public Completable validate(AptoideCredentials credentials, boolean validatePassword) {
     return Completable.defer(() -> {
-      if (isEmpty(credentials.getEmail()) && isEmpty(credentials.getPassword())) {
-        return Completable.error(
-            new AccountValidationException(AccountValidationException.EMPTY_EMAIL_AND_PASSWORD));
-      } else if (isEmpty(credentials.getPassword())) {
-        return Completable.error(
-            new AccountValidationException(AccountValidationException.EMPTY_PASSWORD));
-      } else if (isEmpty(credentials.getEmail())) {
-        return Completable.error(
-            new AccountValidationException(AccountValidationException.EMPTY_EMAIL));
-      } else if (validatePassword && (credentials.getPassword()
-          .length() < 8 || !has1number1letter(credentials.getPassword()))) {
-        return Completable.error(
-            new AccountValidationException(AccountValidationException.INVALID_PASSWORD));
-      }
+      int x = validateFields(credentials, validatePassword);
+      if (x != -1) return Completable.error(new AccountValidationException(x));
       return Completable.complete();
     });
   }
 
-  private boolean has1number1letter(String password) {
+  @Nullable @VisibleForTesting
+  protected int validateFields(AptoideCredentials credentials, boolean validatePassword) {
+    if (isEmpty(credentials.getEmail()) && isEmpty(credentials.getPassword())) {
+      return AccountValidationException.EMPTY_EMAIL_AND_PASSWORD;
+    } else if (isEmpty(credentials.getPassword())) {
+      return AccountValidationException.EMPTY_PASSWORD;
+    } else if (isEmpty(credentials.getEmail())) {
+      return AccountValidationException.EMPTY_EMAIL;
+    } else if (validatePassword && (credentials.getPassword()
+        .length() < 8 || !has1number1letter(credentials.getPassword()))) {
+      return AccountValidationException.INVALID_PASSWORD;
+    }
+    return -1;
+  }
+
+  @VisibleForTesting protected boolean has1number1letter(String password) {
     boolean hasLetter = false;
     boolean hasNumber = false;
 

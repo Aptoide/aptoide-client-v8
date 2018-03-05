@@ -32,9 +32,8 @@ public class MockActivityModule extends ActivityModule {
   @Override ImagePickerNavigator provideImagePickerNavigator() {
     return new ImagePickerNavigator((ActivityNavigator) activity) {
 
-      @Override public Observable<Uri> navigateToGalleryForImageUri(int requestCode) {
-        Uri uri = Uri.parse("");
-        return Observable.just(uri);
+      @Override public Observable<String> navigateToGalleryForImageUri(int requestCode) {
+        return Observable.just("");
       }
 
       @Override
