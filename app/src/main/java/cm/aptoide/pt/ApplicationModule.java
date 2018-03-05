@@ -1043,7 +1043,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AppCenter providesAppCenter(AppCenterRepository appCenterRepository) {
-
     return new AppCenter(appCenterRepository);
   }
 }

@@ -60,12 +60,12 @@ public class ListStoreAppsPresenter implements Presenter {
     return appCenter.loadNextApps(storeId, limit)
         .observeOn(viewScheduler)
         .doOnSuccess(applications -> {
+          view.hideLoading();
           if (applications.hasErrors()) {
             handleError(applications.getError());
           } else {
             if (!applications.isLoading()) {
               view.addApps(applications.getList());
-              view.hideLoading();
             }
           }
         });
@@ -75,33 +75,48 @@ public class ListStoreAppsPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(lifecycleEvent -> view.getRefreshEvent()
-            .flatMapSingle(refresh -> appCenter.loadFreshApps(storeId, limit)
-                .observeOn(viewScheduler)
-                .doOnSuccess(applications -> {
-                  if (!applications.isLoading()) {
-                    view.setApps(applications.getList());
-                    view.hideRefreshLoading();
-                  }
-                })
-                .retry()))
+            .observeOn(viewScheduler)
+            .flatMapSingle(__ -> loadFreshApps())
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, throwable -> crashReport.log(throwable));
   }
 
+  @NonNull private Single<AppsList> loadFreshApps() {
+    return appCenter.loadFreshApps(storeId, limit)
+        .observeOn(viewScheduler)
+        .doOnSuccess(applications -> {
+          view.hideRefreshLoading();
+          if (applications.hasErrors()) {
+            handleError(applications.getError());
+          } else {
+            if (!applications.isLoading()) {
+              view.setApps(applications.getList());
+            }
+          }
+        });
+  }
+
   private void onCreateLoadApps() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMapSingle(lifecycleEvent -> appCenter.getApps(storeId, limit)
-            .observeOn(viewScheduler)
-            .doOnSuccess(applications -> {
-              if (!applications.isLoading()) {
-                view.setApps(applications.getList());
-              }
-            }))
+        .flatMapSingle(lifecycleEvent -> getApps())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, throwable -> crashReport.log(throwable));
+  }
+
+  @NonNull private Single<AppsList> getApps() {
+    return appCenter.getApps(storeId, limit)
+        .observeOn(viewScheduler)
+        .doOnSuccess(applications -> {
+          if (applications.hasErrors()) {
+            handleError(applications.getError());
+          } else if (!applications.isLoading()) {
+            view.setApps(applications.getList());
+          }
+        });
   }
 
   private void onCreateHandleBottomReached() {

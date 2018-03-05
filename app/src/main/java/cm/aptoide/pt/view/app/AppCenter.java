@@ -10,7 +10,6 @@ public class AppCenter {
   private final AppCenterRepository appCenterRepository;
 
   public AppCenter(AppCenterRepository appRepository) {
-
     this.appCenterRepository = appRepository;
   }
 
