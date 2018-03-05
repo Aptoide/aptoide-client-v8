@@ -24,6 +24,8 @@ import cm.aptoide.pt.view.custom.DividerItemDecoration;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import java.util.List;
 import javax.inject.Inject;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class DownloadsFragment extends NavigationTrackFragment implements DownloadsView {
 
@@ -51,7 +53,8 @@ public class DownloadsFragment extends NavigationTrackFragment implements Downlo
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    attachPresenter(new DownloadsPresenter(this, installManager));
+    attachPresenter(new DownloadsPresenter(this, installManager, AndroidSchedulers.mainThread(),
+        Schedulers.computation()));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
