@@ -61,7 +61,6 @@ public class DownloadsPresenterTest {
     //And when getInstalations is called
     when(installManager.getInstallations()).thenReturn(Observable.just(activeDownloadsList));
     downloadsPresenter.present();
-    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     lifecycleEvent.onNext(View.LifecycleEvent.RESUME);
 
     //the active downloads should be shown in the UI.
