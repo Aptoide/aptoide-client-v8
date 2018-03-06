@@ -32,7 +32,7 @@ public class BottomNavigationFragmentView extends FragmentView
     super.onViewCreated(view, savedInstanceState);
 
     bottomNavigationView = (BottomNavigationView) view.findViewById(R.id.bottom_navigation);
-
+    BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
     bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
       navigationSubject.onNext(item.getItemId());
       return true;

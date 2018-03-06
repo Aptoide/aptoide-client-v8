@@ -75,3 +75,8 @@
 
 ### Adyen ###
 -dontwarn com.adyen.ui.**
+
+### disable shift animation bottom navigation ###
+-keepclassmembers class android.support.design.internal.BottomNavigationMenuView {
+    boolean mShiftingMode;
+}
