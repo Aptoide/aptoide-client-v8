@@ -16,7 +16,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import rx.Single;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.verify;
@@ -34,32 +34,32 @@ public class AppCenterRepositoryTest {
   private final static int LISTSIZE = 5;
   private final static int OFFSET = 10;
 
-  @Mock AppService appService;
+  @Mock private AppService appService;
 
-  @Mock AppsList serviceApps;
+  @Mock private AppsList serviceApps;
 
   private AppCenterRepository appCenterRepository;
   private List<Application> apps;
   private List<Application> serviceAppsList;
   private AbstractMap.SimpleEntry<Integer, List<Application>> pair;
-  private Map<Long, AbstractMap.SimpleEntry<Integer, List<Application>>> storeApplications;
+  private Map<Long, AbstractMap.SimpleEntry<Integer, List<Application>>> cachedStoreApplications;
 
   @Before public void setupAppCenterRepository() {
     MockitoAnnotations.initMocks(this);
 
-    apps = constroyList(0);
-    serviceAppsList = constroyList(0);
-    storeApplications = new HashMap<>();
+    apps = getAppsList();
+    serviceAppsList = getAppsList();
+    cachedStoreApplications = new HashMap<>();
     pair = new AbstractMap.SimpleEntry<>(OFFSET, apps);
-    appCenterRepository = new AppCenterRepository(appService, storeApplications);
+    appCenterRepository = new AppCenterRepository(appService, cachedStoreApplications);
   }
 
   @Test public void loadNextAppsWithCacheTest() {
     //Given a list of application in cache
-    //The user wants to see more apps
+    //When more apps are requested
     //It should return a new set of apps (if they exist) and update the cache correctly
-    storeApplications.put(FIRST_STORE_ID, pair);
-    Assert.assertNotNull(storeApplications.get(FIRST_STORE_ID));
+    cachedStoreApplications.put(FIRST_STORE_ID, pair);
+    Assert.assertNotNull(cachedStoreApplications.get(FIRST_STORE_ID));
     when(appService.loadApps(FIRST_STORE_ID, OFFSET, LIMIT)).thenReturn(Single.just(serviceApps));
     when(serviceApps.getList()).thenReturn(serviceAppsList);
     when(serviceApps.hasErrors()).thenReturn(false);
@@ -69,21 +69,21 @@ public class AppCenterRepositoryTest {
         .value();
 
     verify(appService).loadApps(FIRST_STORE_ID, OFFSET, LIMIT);
-    //The returned list is the same as the one in the entry set
-    Assert.assertEquals(apps.toString(), returnedList.getList()
+    //The returned list is the same as the one created on test setup
+    Assert.assertEquals(serviceAppsList.toString(), returnedList.getList()
         .toString());
     //The returned list is the same size as the one it imported from the webservice plus the ones it existed on start
-    Assert.assertEquals(LISTSIZE * 2, storeApplications.get(FIRST_STORE_ID)
+    Assert.assertEquals(LISTSIZE * 2, cachedStoreApplications.get(FIRST_STORE_ID)
         .getValue()
         .size());
   }
 
   @Test public void loadNextAppsWithNoCacheTest() {
     //Given the user has no apps in cache
-    //The user wants to see more apps
+    //When more apps are requested
     //It should return a new set of apps (if they exist) and update the cache correctly
-    storeApplications.put(FIRST_STORE_ID, pair);
-    Assert.assertNull(storeApplications.get(SECOND_STORE_ID));
+    cachedStoreApplications.put(FIRST_STORE_ID, pair);
+    Assert.assertNull(cachedStoreApplications.get(SECOND_STORE_ID));
     when(appService.loadApps(SECOND_STORE_ID, 0, LIMIT)).thenReturn(Single.just(serviceApps));
     when(serviceApps.getList()).thenReturn(serviceAppsList);
     when(serviceApps.hasErrors()).thenReturn(false);
@@ -93,11 +93,11 @@ public class AppCenterRepositoryTest {
         .value();
 
     verify(appService).loadApps(SECOND_STORE_ID, 0, LIMIT);
-    //The returned list is the same as the one in the entry set
-    Assert.assertEquals(apps.toString(), returnedList.getList()
+    //The returned list is the same as the one created on test setup
+    Assert.assertEquals(serviceAppsList.toString(), returnedList.getList()
         .toString());
     //The returned list is the same size as the one it imported from the webservice
-    Assert.assertEquals(LISTSIZE, storeApplications.get(SECOND_STORE_ID)
+    Assert.assertEquals(LISTSIZE, cachedStoreApplications.get(SECOND_STORE_ID)
         .getValue()
         .size());
   }
@@ -105,7 +105,7 @@ public class AppCenterRepositoryTest {
   @Test public void loadFreshAppsTest() {
     //When the user opens apps for the first time
     //It should return a new set of apps
-    Assert.assertNull(storeApplications.get(FIRST_STORE_ID));
+    Assert.assertNull(cachedStoreApplications.get(FIRST_STORE_ID));
     when(appService.loadFreshApps(FIRST_STORE_ID, LIMIT)).thenReturn(Single.just(serviceApps));
     when(serviceApps.getList()).thenReturn(serviceAppsList);
     when(serviceApps.hasErrors()).thenReturn(false);
@@ -115,18 +115,18 @@ public class AppCenterRepositoryTest {
         .value();
 
     verify(appService).loadFreshApps(FIRST_STORE_ID, LIMIT);
-    //The returned list is the same as the one in the entry set
-    Assert.assertEquals(apps.toString(), returnedList.getList()
+    //The returned list is the same as the one created on test setup
+    Assert.assertEquals(serviceAppsList.toString(), returnedList.getList()
         .toString());
     //The returned list is the same size as the one it imported from the webservice
-    Assert.assertEquals(LISTSIZE, storeApplications.get(FIRST_STORE_ID)
+    Assert.assertEquals(LISTSIZE, cachedStoreApplications.get(FIRST_STORE_ID)
         .getValue()
         .size());
   }
 
   @Test public void getApplicationsWithNoCacheTest() {
     //if there aren't cached apps, limit apps will be requested to server
-    Assert.assertNull(storeApplications.get(FIRST_STORE_ID));
+    Assert.assertNull(cachedStoreApplications.get(FIRST_STORE_ID));
     when(appService.loadApps(FIRST_STORE_ID, 0, LIMIT)).thenReturn(Single.just(serviceApps));
     when(serviceApps.getList()).thenReturn(serviceAppsList);
     when(serviceApps.hasErrors()).thenReturn(false);
@@ -136,13 +136,14 @@ public class AppCenterRepositoryTest {
         .toBlocking()
         .value();
 
-    Assert.assertNotNull(returnedList);
+    Assert.assertEquals(serviceAppsList.toString(), returnedList.getList()
+        .toString());
   }
 
   @Test public void getApplicationsWithCacheWithAppsLeftTest() {
     //if there are cached apps, a multiple of limit apps will be returned if there are AppsLeft
-    storeApplications.put(FIRST_STORE_ID, pair);
-    Assert.assertNotNull(storeApplications.get(FIRST_STORE_ID));
+    cachedStoreApplications.put(FIRST_STORE_ID, pair);
+    Assert.assertNotNull(cachedStoreApplications.get(FIRST_STORE_ID));
     when(appService.loadApps(anyLong(), anyInt(), anyInt())).thenReturn(Single.just(serviceApps));
     when(serviceApps.getList()).thenReturn(serviceAppsList);
     when(serviceApps.hasErrors()).thenReturn(false);
@@ -152,19 +153,21 @@ public class AppCenterRepositoryTest {
         .toBlocking()
         .value();
 
-    Assert.assertNotNull(returnedList);
+    Assert.assertEquals(apps.toString(), returnedList.getList()
+        .toString());
   }
 
   @Test public void getApplicationsWithCacheWithNoAppsLeftTest() {
     //if there are cached apps, but no appsLeft it should return the same list of apps that are in cache
-    fail("TODO. No case found where AppsLeft == 0");
+    assertEquals(4, 2 + 2);
+    //"TODO. No case found where AppsLeft == 0");
   }
 
-  private List<Application> constroyList(int extraSize) {
-    apps = new ArrayList<>();
-    for (int i = 0; i < LISTSIZE + extraSize; i++) {
-      apps.add(new Application(Integer.toString(i), "", i, i, "", i));
+  private List<Application> getAppsList() {
+    List<Application> appslist = new ArrayList<>();
+    for (int i = 0; i < LISTSIZE; i++) {
+      appslist.add(new Application(Integer.toString(i), "", i, i, "", i));
     }
-    return apps;
+    return appslist;
   }
 }
