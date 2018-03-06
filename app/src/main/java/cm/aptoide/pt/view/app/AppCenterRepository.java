@@ -1,6 +1,6 @@
 package cm.aptoide.pt.view.app;
 
-import android.util.Pair;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,19 +12,21 @@ import rx.Single;
 
 public class AppCenterRepository {
   private final AppService appService;
-  private final Map<Long, Pair<Integer, List<Application>>> storeApplications;
+  private final Map<Long, AbstractMap.SimpleEntry<Integer, List<Application>>>
+      cachedStoreApplications;
 
   public AppCenterRepository(AppService appService,
-      Map<Long, Pair<Integer, List<Application>>> storeApplications) {
+      Map<Long, AbstractMap.SimpleEntry<Integer, List<Application>>> cachedStoreApplications) {
     this.appService = appService;
-    this.storeApplications = storeApplications;
+    this.cachedStoreApplications = cachedStoreApplications;
   }
 
   public Single<AppsList> loadNextApps(long storeId, int limit) {
-    Pair<Integer, List<Application>> longListPair = storeApplications.get(storeId);
+    AbstractMap.SimpleEntry<Integer, List<Application>> cache =
+        cachedStoreApplications.get(storeId);
     int offset = 0;
-    if (longListPair != null) {
-      offset = longListPair.first;
+    if (cache != null) {
+      offset = cache.getKey();
     }
     return appService.loadApps(storeId, offset, limit)
         .doOnSuccess(applications -> updateCache(storeId, applications, false))
@@ -47,14 +49,16 @@ public class AppCenterRepository {
 
   private void updateCache(long storeId, AppsList applications, boolean isFresh) {
     if (!applications.hasErrors() && !applications.isLoading()) {
-      Pair<Integer, List<Application>> cache = storeApplications.get(storeId);
+      AbstractMap.SimpleEntry<Integer, List<Application>> cache =
+          cachedStoreApplications.get(storeId);
       if (cache == null || isFresh) {
-        storeApplications.put(storeId,
-            new Pair<>(applications.getOffset(), applications.getList()));
+        cachedStoreApplications.put(storeId,
+            new AbstractMap.SimpleEntry<>(applications.getOffset(), applications.getList()));
       } else {
-        List<Application> list = cache.second;
+        List<Application> list = cache.getValue();
         list.addAll(applications.getList());
-        storeApplications.put(storeId, new Pair<>(applications.getOffset(), list));
+        cachedStoreApplications.put(storeId,
+            new AbstractMap.SimpleEntry<>(applications.getOffset(), list));
       }
     }
   }
@@ -70,16 +74,19 @@ public class AppCenterRepository {
    * <p>&#09;return list's size = 4</p>
    */
   public Single<AppsList> getApplications(long storeId, int limit) {
-    Pair<Integer, List<Application>> pair = storeApplications.get(storeId);
-    if (pair == null || pair.second.isEmpty()) {
+    AbstractMap.SimpleEntry<Integer, List<Application>> cache =
+        cachedStoreApplications.get(storeId);
+    if (cache == null || cache.getValue()
+        .isEmpty()) {
       return loadNextApps(storeId, limit);
     }
-    int appsLeft = limit - pair.second.size() % limit;
+    int appsLeft = limit - cache.getValue()
+        .size() % limit;
     if (appsLeft == 0) {
-      return Single.just(new AppsList(new ArrayList<>(pair.second), false, pair.first));
+      return Single.just(new AppsList(new ArrayList<>(cache.getValue()), false, cache.getKey()));
     } else {
       return loadNextApps(storeId, appsLeft).map(
-          appsList -> new AppsList(new ArrayList<>(pair.second), false, pair.first));
+          appsList -> new AppsList(new ArrayList<>(cache.getValue()), false, cache.getKey()));
     }
   }
 }

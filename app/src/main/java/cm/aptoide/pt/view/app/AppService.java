@@ -42,7 +42,7 @@ public class AppService {
     this.sharedPreferences = sharedPreferences;
   }
 
-  public Single<AppsList> loadApps(long storeId, boolean bypassCache, int offset, int limit,
+  private Single<AppsList> loadApps(long storeId, boolean bypassCache, int offset, int limit,
       boolean bypassServerCache) {
     if (loading) {
       return Single.just(new AppsList(true));
