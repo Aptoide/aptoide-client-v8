@@ -9,7 +9,7 @@ import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.home.BottomNavigationFragmentView;
 import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
@@ -20,7 +20,6 @@ import cm.aptoide.pt.notification.ContentPuller;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import cm.aptoide.pt.store.view.home.HomeFragment;
 import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.view.DeepLinkManager;
 import cm.aptoide.pt.view.wizard.WizardFragment;
@@ -158,7 +157,9 @@ public class MainPresenter implements Presenter {
   }
 
   private void showHome() {
-    Fragment home = HomeFragment.newInstance(defaultStore, StoreContext.home, defaultTheme);
+    //Fragment home = HomeFragment.newInstance(defaultStore, StoreContext.home, defaultTheme);
+    //fragmentNavigator.navigateToWithoutBackSave(home, true);
+    Fragment home = new BottomNavigationFragmentView();
     fragmentNavigator.navigateToWithoutBackSave(home, true);
   }
 
