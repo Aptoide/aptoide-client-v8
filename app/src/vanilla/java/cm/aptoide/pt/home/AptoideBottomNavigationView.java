@@ -7,7 +7,7 @@ import rx.Observable;
  * Created by jdandrade on 05/03/2018.
  */
 
-interface AptoideBottomNavigationView extends View {
+public interface AptoideBottomNavigationView extends View {
 
   Observable<Integer> navigationEvent();
 
