@@ -8,7 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.dataprovider.model.v7.Event;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.store.view.my.MyStoresFragment;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -60,6 +63,8 @@ public class BottomNavigationFragmentView extends FragmentView
       case R.id.action_search:
         break;
       case R.id.action_stores:
+        selectedFragment =
+            MyStoresFragment.newInstance(getStoreEvent(), null, "stores", StoreContext.home);
         break;
       case R.id.action_apps:
         selectedFragment = new BottomHomeFragment();
@@ -70,5 +75,14 @@ public class BottomNavigationFragmentView extends FragmentView
           getFragmentChildNavigator(R.id.fragment_placeholder);
       fragmentChildNavigator.navigateTo(selectedFragment, true);
     }
+  }
+
+  private Event getStoreEvent() {
+    Event event = new Event();
+    event.setAction("https://ws75.aptoide.com/api/7/getStoreWidgets/store_id=15/context=stores");
+    event.setData(null);
+    event.setName(Event.Name.myStores);
+    event.setType(Event.Type.CLIENT);
+    return event;
   }
 }
