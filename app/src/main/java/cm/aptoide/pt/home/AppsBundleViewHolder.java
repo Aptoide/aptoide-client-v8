@@ -19,7 +19,7 @@ class AppsBundleViewHolder extends AppBundleViewHolder {
   private final TextView bundleTitle;
   private final Button moreButton;
   private final RecyclerView appsList;
-  private final AppsAdapter appsAdapter;
+  private final AppsInBundleAdapter appsInBundleAdapter;
   private final PublishSubject<AppBundle> uiEventsListener;
   private final LinearLayoutManager layoutManager;
 
@@ -29,7 +29,7 @@ class AppsBundleViewHolder extends AppBundleViewHolder {
     bundleTitle = (TextView) view.findViewById(R.id.bundle_title);
     moreButton = (Button) view.findViewById(R.id.bundle_more);
     appsList = (RecyclerView) view.findViewById(R.id.apps_list);
-    appsAdapter = new AppsAdapter(new ArrayList<>());
+    appsInBundleAdapter = new AppsInBundleAdapter(new ArrayList<>());
     layoutManager =
         new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
     appsList.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -40,12 +40,12 @@ class AppsBundleViewHolder extends AppBundleViewHolder {
       }
     });
     appsList.setLayoutManager(layoutManager);
-    appsList.setAdapter(appsAdapter);
+    appsList.setAdapter(appsInBundleAdapter);
   }
 
   @Override public void setBundle(AppBundle appBundle, int position) {
     bundleTitle.setText(appBundle.getTitle());
-    appsAdapter.add(appBundle.getApps());
+    appsInBundleAdapter.add(appBundle.getApps());
 
     moreButton.setOnClickListener(v -> uiEventsListener.onNext(appBundle));
   }
