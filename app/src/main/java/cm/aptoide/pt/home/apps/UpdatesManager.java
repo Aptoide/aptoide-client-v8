@@ -1,4 +1,4 @@
-package cm.aptoide.pt.home;
+package cm.aptoide.pt.home.apps;
 
 import cm.aptoide.pt.updates.UpdateRepository;
 import rx.Observable;

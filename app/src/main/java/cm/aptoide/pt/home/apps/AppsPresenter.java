@@ -1,4 +1,4 @@
-package cm.aptoide.pt.home;
+package cm.aptoide.pt.home.apps;
 
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;

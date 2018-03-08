@@ -109,4 +109,10 @@ import rx.schedulers.Schedulers;
   @FragmentScope @Provides ManageStoreErrorMapper provideManageStoreErrorMapper() {
     return new ManageStoreErrorMapper(fragment.getResources(), new ErrorsMapper());
   }
+
+  /**
+   @FragmentScope @Provides AppsPresenter provideAppsPresenter() {
+   return new AppsPresenter( (AppsFragment) fragment, );
+   }
+   **/
 }

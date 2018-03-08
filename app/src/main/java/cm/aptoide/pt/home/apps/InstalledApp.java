@@ -1,4 +1,4 @@
-package cm.aptoide.pt.home;
+package cm.aptoide.pt.home.apps;
 
 /**
  * Created by filipegoncalves on 3/7/18.

@@ -1,11 +1,11 @@
 package cm.aptoide.pt.navigation;
 
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.home.AppsFragment;
-import cm.aptoide.pt.home.AppsManager;
-import cm.aptoide.pt.home.AppsPresenter;
-import cm.aptoide.pt.home.InstalledApp;
-import cm.aptoide.pt.home.UpdateApp;
+import cm.aptoide.pt.home.apps.AppsFragment;
+import cm.aptoide.pt.home.apps.AppsManager;
+import cm.aptoide.pt.home.apps.AppsPresenter;
+import cm.aptoide.pt.home.apps.InstalledApp;
+import cm.aptoide.pt.home.apps.UpdateApp;
 import cm.aptoide.pt.presenter.View;
 import java.util.ArrayList;
 import java.util.List;
