@@ -25,10 +25,17 @@ public class BottomNavigationFragmentView extends FragmentView
 
   protected BottomNavigationView bottomNavigationView;
   private PublishSubject<Integer> navigationSubject;
+  private MyStoresFragment myStoresFragment;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     navigationSubject = PublishSubject.create();
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    navigationSubject = null;
+    myStoresFragment = null;
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -59,15 +66,17 @@ public class BottomNavigationFragmentView extends FragmentView
     switch (menuItemId) {
       case R.id.action_home:
         selectedFragment = new BottomHomeFragment();
+        myStoresFragment = null;
         break;
       case R.id.action_search:
+        myStoresFragment = null;
         break;
       case R.id.action_stores:
-        selectedFragment =
-            MyStoresFragment.newInstance(getStoreEvent(), null, "stores", StoreContext.home);
+        selectedFragment = getMyStoresFragment();
         break;
       case R.id.action_apps:
         selectedFragment = new BottomHomeFragment();
+        myStoresFragment = null;
         break;
     }
     if (selectedFragment != null) {
@@ -84,5 +93,22 @@ public class BottomNavigationFragmentView extends FragmentView
     event.setName(Event.Name.myStores);
     event.setType(Event.Type.CLIENT);
     return event;
+  }
+
+  private MyStoresFragment getMyStoresFragment() {
+    boolean createNew = false;
+    if (myStoresFragment != null) {
+      try {
+        myStoresFragment.scrollToTop();
+      } catch (Exception exception) {
+        createNew = true;
+      }
+    }
+    if (myStoresFragment == null || createNew) {
+      myStoresFragment =
+          MyStoresFragment.newInstance(getStoreEvent(), null, "stores", StoreContext.home);
+      return myStoresFragment;
+    }
+    return null;
   }
 }

@@ -3,6 +3,8 @@ package cm.aptoide.pt.store.view.my;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -117,5 +119,15 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment {
     // remote stores
     //
     super.load(false, true, null);
+  }
+
+  public void scrollToTop() {
+    RecyclerView view = getRecyclerView();
+    LinearLayoutManager layoutManager = ((LinearLayoutManager) view.getLayoutManager());
+    int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+    if (lastVisibleItemPosition > 10) {
+      view.scrollToPosition(10);
+    }
+    view.smoothScrollToPosition(0);
   }
 }
