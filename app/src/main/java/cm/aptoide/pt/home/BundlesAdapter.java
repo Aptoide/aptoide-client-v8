@@ -27,7 +27,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
     switch (viewType) {
       case EDITORS:
         return new EditorsBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(EDITORS, parent, false));
+            .inflate(EDITORS, parent, false), uiEventsListener);
       case APPS:
         return new AppsBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(APPS, parent, false), uiEventsListener);
@@ -44,7 +44,20 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   }
 
   @Override public int getItemViewType(int position) {
-    return APPS;
+    switch (bundles.get(position)
+        .getType()) {
+      case APPS:
+        return APPS;
+      case EDITORS:
+        return EDITORS;
+      case STORE:
+        return STORE;
+      default:
+        throw new IllegalStateException(
+            "Bundle type not supported by the adapter: " + bundles.get(position)
+                .getType()
+                .name());
+    }
   }
 
   @Override public int getItemCount() {

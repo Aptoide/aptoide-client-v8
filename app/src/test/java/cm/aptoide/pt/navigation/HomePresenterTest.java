@@ -40,8 +40,8 @@ public class HomePresenterTest {
     bundles = new ArrayList<>();
 
     List<Application> applications = getAppsList();
-    bundles.add(new AppBundle("Editors choice", applications));
-    bundles.add(new AppBundle("Local Top Apps", applications));
+    bundles.add(new AppBundle("Editors choice", applications, type));
+    bundles.add(new AppBundle("Local Top Apps", applications, type));
 
     when(view.getLifecycle()).thenReturn(lifecycleEvent);
   }

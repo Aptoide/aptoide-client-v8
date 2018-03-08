@@ -9,10 +9,6 @@ import cm.aptoide.pt.view.app.AppViewHolder;
 import cm.aptoide.pt.view.app.Application;
 import rx.subjects.PublishSubject;
 
-/**
- * Created by trinkes on 18/10/2017.
- */
-
 public class AppInBundleViewHolder extends AppViewHolder {
 
   private final TextView nameTextView;

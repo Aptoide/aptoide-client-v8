@@ -61,7 +61,7 @@
             android:layout_width="10dp"
             android:layout_height="10dp"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_star"
+            android:src="@drawable/ic_star_black"
             />
         <TextView
             android:id="@+id/rating_label"
