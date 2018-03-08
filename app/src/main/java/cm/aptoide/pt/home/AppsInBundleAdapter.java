@@ -12,11 +12,11 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 07/03/2018.
  */
 
-class AppsAdapter extends RecyclerView.Adapter<AppInBundleViewHolder> {
+class AppsInBundleAdapter extends RecyclerView.Adapter<AppInBundleViewHolder> {
 
   private List<Application> apps;
 
-  AppsAdapter(List<Application> apps) {
+  AppsInBundleAdapter(List<Application> apps) {
     this.apps = apps;
   }
 
