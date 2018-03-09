@@ -26,6 +26,7 @@ public class BottomNavigationFragmentView extends FragmentView
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     navigationSubject = PublishSubject.create();
+    getFragmentChildNavigator(R.id.fragment_placeholder).navigateTo(new BottomHomeFragment(), true);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
