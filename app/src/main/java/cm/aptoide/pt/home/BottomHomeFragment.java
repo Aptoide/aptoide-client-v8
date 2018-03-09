@@ -11,6 +11,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.FeatureGraphicApplication;
 import cm.aptoide.pt.view.fragment.FragmentView;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -28,10 +29,12 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
   private BundlesAdapter adapter;
   private PublishSubject<AppBundle> uiEventsListener;
   private LinearLayoutManager layoutManager;
+  private DecimalFormat oneDecimalFormatter;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     uiEventsListener = PublishSubject.create();
+    oneDecimalFormatter = new DecimalFormat("#.#");
   }
 
   @Override public void onDestroy() {
@@ -52,7 +55,7 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
     super.onViewCreated(view, savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
     list = (RecyclerView) view.findViewById(R.id.bundles_list);
-    adapter = new BundlesAdapter(new ArrayList<>(), uiEventsListener);
+    adapter = new BundlesAdapter(new ArrayList<>(), uiEventsListener, oneDecimalFormatter);
     layoutManager = new LinearLayoutManager(getContext());
     list.setLayoutManager(layoutManager);
     list.setAdapter(adapter);
@@ -60,7 +63,7 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
   }
 
   @Override public void showHomeBundles(List<AppBundle> bundles) {
-    adapter.add(bundles);
+    adapter.update(bundles);
   }
 
   public List<AppBundle> getFakeBundles() {

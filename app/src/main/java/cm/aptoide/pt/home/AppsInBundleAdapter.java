@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.app.Application;
+import java.text.DecimalFormat;
 import java.util.List;
 import rx.subjects.PublishSubject;
 
@@ -14,15 +15,18 @@ import rx.subjects.PublishSubject;
 
 class AppsInBundleAdapter extends RecyclerView.Adapter<AppInBundleViewHolder> {
 
+  private final DecimalFormat oneDecimalFormatter;
   private List<Application> apps;
 
-  AppsInBundleAdapter(List<Application> apps) {
+  AppsInBundleAdapter(List<Application> apps, DecimalFormat oneDecimalFormatter) {
     this.apps = apps;
+    this.oneDecimalFormatter = oneDecimalFormatter;
   }
 
   @Override public AppInBundleViewHolder onCreateViewHolder(ViewGroup parent, int position) {
     return new AppInBundleViewHolder(LayoutInflater.from(parent.getContext())
-        .inflate(R.layout.app_home_item, parent, false), PublishSubject.create());
+        .inflate(R.layout.app_home_item, parent, false), PublishSubject.create(),
+        oneDecimalFormatter);
   }
 
   @Override public void onBindViewHolder(AppInBundleViewHolder viewHolder, int position) {
@@ -33,8 +37,8 @@ class AppsInBundleAdapter extends RecyclerView.Adapter<AppInBundleViewHolder> {
     return apps.size();
   }
 
-  public void add(List<Application> apps) {
-    this.apps.addAll(apps);
+  public void update(List<Application> apps) {
+    this.apps = apps;
     notifyDataSetChanged();
   }
 }

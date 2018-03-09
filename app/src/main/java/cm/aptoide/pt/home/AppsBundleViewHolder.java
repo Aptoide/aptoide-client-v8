@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.utils.AptoideUtils;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import rx.subjects.PublishSubject;
 
@@ -23,13 +24,14 @@ class AppsBundleViewHolder extends AppBundleViewHolder {
   private final PublishSubject<AppBundle> uiEventsListener;
   private final LinearLayoutManager layoutManager;
 
-  public AppsBundleViewHolder(View view, PublishSubject<AppBundle> uiEventsListener) {
+  public AppsBundleViewHolder(View view, PublishSubject<AppBundle> uiEventsListener,
+      DecimalFormat oneDecimalFormatter) {
     super(view);
     this.uiEventsListener = uiEventsListener;
     bundleTitle = (TextView) view.findViewById(R.id.bundle_title);
     moreButton = (Button) view.findViewById(R.id.bundle_more);
     appsList = (RecyclerView) view.findViewById(R.id.apps_list);
-    appsInBundleAdapter = new AppsInBundleAdapter(new ArrayList<>());
+    appsInBundleAdapter = new AppsInBundleAdapter(new ArrayList<>(), oneDecimalFormatter);
     layoutManager =
         new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
     appsList.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -45,7 +47,7 @@ class AppsBundleViewHolder extends AppBundleViewHolder {
 
   @Override public void setBundle(AppBundle appBundle, int position) {
     bundleTitle.setText(appBundle.getTitle());
-    appsInBundleAdapter.add(appBundle.getApps());
+    appsInBundleAdapter.update(appBundle.getApps());
 
     moreButton.setOnClickListener(v -> uiEventsListener.onNext(appBundle));
   }
