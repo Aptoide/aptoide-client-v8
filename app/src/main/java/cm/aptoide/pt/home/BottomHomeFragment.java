@@ -60,7 +60,7 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
   }
 
   @Override public void showHomeBundles(List<AppBundle> bundles) {
-    adapter.add(getFakeBundles());
+    adapter.add(bundles);
   }
 
   public List<AppBundle> getFakeBundles() {

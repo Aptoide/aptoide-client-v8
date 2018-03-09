@@ -2,7 +2,7 @@ package cm.aptoide.pt.home;
 
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.model.v7.BaseV7EndlessDataListResponse;
+import cm.aptoide.pt.dataprovider.model.v7.BundlesEndlessDataListResponse;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
@@ -16,7 +16,7 @@ import rx.Observable;
  */
 
 public class GetHomeBundlesRequest
-    extends V7<BaseV7EndlessDataListResponse, GetHomeBundlesRequest.Body> {
+    extends V7<BundlesEndlessDataListResponse, GetHomeBundlesRequest.Body> {
   protected GetHomeBundlesRequest(Body body, OkHttpClient httpClient,
       Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
@@ -32,7 +32,7 @@ public class GetHomeBundlesRequest
   }
 
   @Override
-  protected Observable<BaseV7EndlessDataListResponse> loadDataFromNetwork(Interfaces interfaces,
+  protected Observable<BundlesEndlessDataListResponse> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
     return interfaces.getHomeBundles();
   }
