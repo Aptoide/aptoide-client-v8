@@ -8,6 +8,7 @@ import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7EndlessDataListResponse;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
@@ -525,6 +526,8 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
     @POST("user/follower/set/") Observable<BaseV7Response> unfollowUser(
         @Body UnfollowUserRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("home/getBundles/") Observable<BaseV7EndlessDataListResponse> getHomeBundles();
   }
 }
 

@@ -87,6 +87,12 @@ import cm.aptoide.pt.download.DownloadMirrorEventInterceptor;
 import cm.aptoide.pt.download.PaidAppsDownloadInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
+import cm.aptoide.pt.home.BundleDataSource;
+import cm.aptoide.pt.home.BundlesRepository;
+import cm.aptoide.pt.home.BundlesResponseMapper;
+import cm.aptoide.pt.home.Home;
+import cm.aptoide.pt.home.LocalBundleDataSource;
+import cm.aptoide.pt.home.RemoteBundleDataSource;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallFabricEvents;
 import cm.aptoide.pt.install.InstalledRepository;
@@ -1044,5 +1050,33 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides AppCenter providesAppCenter(AppCenterRepository appCenterRepository) {
     return new AppCenter(appCenterRepository);
+  }
+
+  @Singleton @Provides Home providesHome(BundlesRepository bundlesRepository) {
+    return new Home(bundlesRepository);
+  }
+
+  @Singleton @Provides BundlesRepository providesBundleRepository(
+      @Named("remote") BundleDataSource remoteBundleDataSource,
+      @Named("local") BundleDataSource localBundleDataSource) {
+    return new BundlesRepository(remoteBundleDataSource, localBundleDataSource);
+  }
+
+  @Named("remote") @Singleton @Provides BundleDataSource providesRemoteBundleDataSource(
+      @Named("pool-v7")
+          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, Converter.Factory converter,
+      BundlesResponseMapper mapper, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences sharedPreferences) {
+    return new RemoteBundleDataSource(bodyInterceptorPoolV7, okHttpClient, converter, mapper,
+        tokenInvalidator, sharedPreferences);
+  }
+
+  @Named("local") @Singleton @Provides BundleDataSource providesLocalBundleDataSource() {
+    return new LocalBundleDataSource();
+  }
+
+  @Singleton @Provides BundlesResponseMapper providesBundlesMapper() {
+    return new BundlesResponseMapper();
   }
 }

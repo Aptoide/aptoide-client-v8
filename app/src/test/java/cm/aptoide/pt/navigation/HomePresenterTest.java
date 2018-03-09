@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import rx.Single;
+import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
 import static org.mockito.Mockito.verify;
@@ -36,11 +37,11 @@ public class HomePresenterTest {
     MockitoAnnotations.initMocks(this);
 
     lifecycleEvent = PublishSubject.create();
-    presenter = new HomePresenter(view, home);
+    presenter = new HomePresenter(view, home, Schedulers.immediate());
     bundles = new ArrayList<>();
 
     List<Application> applications = getAppsList();
-    bundles.add(new AppBundle("Editors choice", applications, AppBundle.BundleType.APPS));
+    bundles.add(new AppBundle("Editors choice", applications, AppBundle.BundleType.EDITORS));
     bundles.add(new AppBundle("Local Top Apps", applications, AppBundle.BundleType.APPS));
 
     when(view.getLifecycle()).thenReturn(lifecycleEvent);

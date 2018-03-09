@@ -13,6 +13,7 @@ import cm.aptoide.pt.view.app.FeatureGraphicApplication;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
 import rx.subjects.PublishSubject;
 
 /**
@@ -21,10 +22,10 @@ import rx.subjects.PublishSubject;
 
 public class BottomHomeFragment extends FragmentView implements HomeView {
 
+  @Inject Home home;
+  @Inject HomePresenter presenter;
   private RecyclerView list;
-
   private BundlesAdapter adapter;
-
   private PublishSubject<AppBundle> uiEventsListener;
   private LinearLayoutManager layoutManager;
 
@@ -49,13 +50,13 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-
+    getFragmentComponent(savedInstanceState).inject(this);
     list = (RecyclerView) view.findViewById(R.id.bundles_list);
     adapter = new BundlesAdapter(new ArrayList<>(), uiEventsListener);
     layoutManager = new LinearLayoutManager(getContext());
     list.setLayoutManager(layoutManager);
     list.setAdapter(adapter);
-    attachPresenter(new HomePresenter(this, new Home()));
+    attachPresenter(presenter);
   }
 
   @Override public void showHomeBundles(List<AppBundle> bundles) {
