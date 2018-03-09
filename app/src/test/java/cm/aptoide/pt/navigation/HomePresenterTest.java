@@ -47,16 +47,19 @@ public class HomePresenterTest {
     when(view.getLifecycle()).thenReturn(lifecycleEvent);
   }
 
-  @Test public void onCreateShowHome() {
+  @Test public void onCreateShowHomeWithBundles() {
     //Given an initialised HomePresenter
     presenter.present();
     //When the user clicks the Home menu item
     //And loading of bundles are requested
     when(home.getHomeBundles()).thenReturn(Single.just(bundles));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //Then the progress indicator should be hidden
+    verify(view).showLoading();
     //Then the home should be displayed
     verify(view).showHomeBundles(bundles);
     //Then the progress indicator should be hidden
+    verify(view).hideLoading();
   }
 
   private List<Application> getAppsList() {

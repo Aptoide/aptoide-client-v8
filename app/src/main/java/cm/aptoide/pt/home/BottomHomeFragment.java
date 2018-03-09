@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.FeatureGraphicApplication;
@@ -30,6 +31,8 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
   private PublishSubject<AppBundle> uiEventsListener;
   private LinearLayoutManager layoutManager;
   private DecimalFormat oneDecimalFormatter;
+  private View genericError;
+  private ProgressBar progressBar;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -55,6 +58,9 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
     super.onViewCreated(view, savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
     list = (RecyclerView) view.findViewById(R.id.bundles_list);
+    genericError = view.findViewById(R.id.generic_error);
+    progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+
     adapter = new BundlesAdapter(new ArrayList<>(), uiEventsListener, oneDecimalFormatter);
     layoutManager = new LinearLayoutManager(getContext());
     list.setLayoutManager(layoutManager);
@@ -64,6 +70,18 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
 
   @Override public void showHomeBundles(List<AppBundle> bundles) {
     adapter.update(bundles);
+  }
+
+  @Override public void showLoading() {
+    list.setVisibility(View.GONE);
+    genericError.setVisibility(View.GONE);
+    progressBar.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void hideLoading() {
+    list.setVisibility(View.VISIBLE);
+    genericError.setVisibility(View.GONE);
+    progressBar.setVisibility(View.GONE);
   }
 
   public List<AppBundle> getFakeBundles() {

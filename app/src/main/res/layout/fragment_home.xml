@@ -9,4 +9,10 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       />
+
+  <include layout="@layout/partial_view_incl_no_network"/>
+
+  <include layout="@layout/partial_view_error"/>
+
+  <include layout="@layout/partial_view_progress_bar"/>
 </FrameLayout>

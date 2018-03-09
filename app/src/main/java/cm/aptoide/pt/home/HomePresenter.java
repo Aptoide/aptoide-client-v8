@@ -24,9 +24,11 @@ public class HomePresenter implements Presenter {
   @Override public void present() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .doOnNext(created -> view.showLoading())
         .flatMapSingle(created -> home.getHomeBundles())
         .observeOn(viewScheduler)
         .doOnNext(view::showHomeBundles)
+        .doOnNext(bundles -> view.hideLoading())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {
