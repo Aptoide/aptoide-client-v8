@@ -83,4 +83,13 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
     appBundles.add(appBundle2);
     return appBundles;
   }
+
+  public void scrollToTop() {
+    LinearLayoutManager layoutManager = ((LinearLayoutManager) list.getLayoutManager());
+    int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+    if (lastVisibleItemPosition > 10) {
+      list.scrollToPosition(10);
+    }
+    list.smoothScrollToPosition(0);
+  }
 }

@@ -25,7 +25,6 @@ public class BottomNavigationFragmentView extends FragmentView
 
   protected BottomNavigationView bottomNavigationView;
   private PublishSubject<Integer> navigationSubject;
-  private MyStoresFragment myStoresFragment;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -35,7 +34,6 @@ public class BottomNavigationFragmentView extends FragmentView
   @Override public void onDestroy() {
     super.onDestroy();
     navigationSubject = null;
-    myStoresFragment = null;
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -63,25 +61,37 @@ public class BottomNavigationFragmentView extends FragmentView
 
   @Override public void showFragment(Integer menuItemId) {
     Fragment selectedFragment = null;
+    //TODO The scrollToTop method should not be exposed as public. BottomNavigation is unware of fragment lifecycle
+    FragmentNavigator fragmentChildNavigator = getFragmentChildNavigator(R.id.fragment_placeholder);
+    Fragment currentFragment = fragmentChildNavigator.getFragment();
     switch (menuItemId) {
       case R.id.action_home:
-        selectedFragment = new BottomHomeFragment();
-        myStoresFragment = null;
+        if (currentFragment instanceof BottomHomeFragment) {
+          ((BottomHomeFragment) currentFragment).scrollToTop();
+        } else {
+          selectedFragment = new BottomHomeFragment();
+        }
         break;
       case R.id.action_search:
-        myStoresFragment = null;
+        //to be replaced by SearchFragment
         break;
       case R.id.action_stores:
-        selectedFragment = getMyStoresFragment();
+        if (currentFragment instanceof MyStoresFragment) {
+          ((MyStoresFragment) currentFragment).scrollToTop();
+        } else {
+          selectedFragment =
+              MyStoresFragment.newInstance(getStoreEvent(), null, "stores", StoreContext.home);
+        }
         break;
       case R.id.action_apps:
-        selectedFragment = new BottomHomeFragment();
-        myStoresFragment = null;
+        if (currentFragment instanceof BottomHomeFragment) {
+          ((BottomHomeFragment) currentFragment).scrollToTop();
+        } else {
+          selectedFragment = new BottomHomeFragment();
+        }
         break;
     }
     if (selectedFragment != null) {
-      FragmentNavigator fragmentChildNavigator =
-          getFragmentChildNavigator(R.id.fragment_placeholder);
       fragmentChildNavigator.navigateTo(selectedFragment, true);
     }
   }
@@ -93,22 +103,5 @@ public class BottomNavigationFragmentView extends FragmentView
     event.setName(Event.Name.myStores);
     event.setType(Event.Type.CLIENT);
     return event;
-  }
-
-  private MyStoresFragment getMyStoresFragment() {
-    boolean createNew = false;
-    if (myStoresFragment != null) {
-      try {
-        myStoresFragment.scrollToTop();
-      } catch (Exception exception) {
-        createNew = true;
-      }
-    }
-    if (myStoresFragment == null || createNew) {
-      myStoresFragment =
-          MyStoresFragment.newInstance(getStoreEvent(), null, "stores", StoreContext.home);
-      return myStoresFragment;
-    }
-    return null;
   }
 }
