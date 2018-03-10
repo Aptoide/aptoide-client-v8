@@ -47,7 +47,7 @@ public class HomePresenterTest {
     when(view.getLifecycle()).thenReturn(lifecycleEvent);
   }
 
-  @Test public void onCreateShowHomeWithBundles() {
+  @Test public void loadAllBundlesFromRepositoryAndLoadIntoView() {
     //Given an initialised HomePresenter
     presenter.present();
     //When the user clicks the Home menu item
