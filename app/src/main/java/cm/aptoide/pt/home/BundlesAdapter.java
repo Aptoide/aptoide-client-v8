@@ -18,9 +18,9 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private static final int STORE = R.layout.store_bundle_item;
   private final DecimalFormat oneDecimalFormatter;
   private List<AppBundle> bundles;
-  private PublishSubject<AppBundle> uiEventsListener;
+  private PublishSubject<HomeClick> uiEventsListener;
 
-  public BundlesAdapter(List<AppBundle> bundles, PublishSubject<AppBundle> uiEventsListener,
+  public BundlesAdapter(List<AppBundle> bundles, PublishSubject<HomeClick> uiEventsListener,
       DecimalFormat oneDecimalFormatter) {
     this.bundles = bundles;
     this.uiEventsListener = uiEventsListener;

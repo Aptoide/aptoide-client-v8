@@ -21,10 +21,10 @@ class AppsBundleViewHolder extends AppBundleViewHolder {
   private final Button moreButton;
   private final RecyclerView appsList;
   private final AppsInBundleAdapter appsInBundleAdapter;
-  private final PublishSubject<AppBundle> uiEventsListener;
+  private final PublishSubject<HomeClick> uiEventsListener;
   private final LinearLayoutManager layoutManager;
 
-  public AppsBundleViewHolder(View view, PublishSubject<AppBundle> uiEventsListener,
+  public AppsBundleViewHolder(View view, PublishSubject<HomeClick> uiEventsListener,
       DecimalFormat oneDecimalFormatter) {
     super(view);
     this.uiEventsListener = uiEventsListener;
@@ -49,6 +49,7 @@ class AppsBundleViewHolder extends AppBundleViewHolder {
     bundleTitle.setText(appBundle.getTitle());
     appsInBundleAdapter.update(appBundle.getApps());
 
-    moreButton.setOnClickListener(v -> uiEventsListener.onNext(appBundle));
+    moreButton.setOnClickListener(
+        v -> uiEventsListener.onNext(new HomeClick(appBundle, HomeClick.Type.MORE)));
   }
 }

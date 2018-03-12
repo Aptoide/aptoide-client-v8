@@ -16,6 +16,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
+import rx.Observable;
 import rx.subjects.PublishSubject;
 
 /**
@@ -28,7 +29,7 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
   @Inject HomePresenter presenter;
   private RecyclerView list;
   private BundlesAdapter adapter;
-  private PublishSubject<AppBundle> uiEventsListener;
+  private PublishSubject<HomeClick> uiEventsListener;
   private LinearLayoutManager layoutManager;
   private DecimalFormat oneDecimalFormatter;
   private View genericError;
@@ -88,6 +89,11 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
     this.genericError.setVisibility(View.VISIBLE);
     this.list.setVisibility(View.GONE);
     this.progressBar.setVisibility(View.GONE);
+  }
+
+  @Override public Observable<HomeClick> moreClicked() {
+    return uiEventsListener.filter(click -> click.getActionType()
+        .equals(HomeClick.Type.MORE));
   }
 
   public List<AppBundle> getFakeBundles() {
