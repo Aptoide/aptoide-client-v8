@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.fragment.FragmentView;
+import cm.aptoide.pt.view.settings.NewSettingsFragment;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -60,6 +61,7 @@ public class BottomNavigationFragmentView extends FragmentView
       case R.id.action_search:
         break;
       case R.id.action_stores:
+        selectedFragment = new NewSettingsFragment();
         break;
       case R.id.action_apps:
         selectedFragment = new BottomHomeFragment();

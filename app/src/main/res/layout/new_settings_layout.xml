@@ -1,0 +1,870 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      >
+
+    <!-- My Account Header Displayables -->
+
+    <TextView
+        android:id="@+id/my_account_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:text="My Account"
+        android:textColor="@color/black"
+        />
+
+    <LinearLayout
+        android:id="@+id/login_register_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
+
+      <TextView
+          android:id="@+id/sign_in_message"
+          android:layout_width="200dp"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_horizontal"
+          android:layout_marginTop="10dp"
+          android:gravity="center"
+          android:text="Sign in or register to get the most out of Aptoide"
+          android:textColor="@color/black"
+          />
+      <Button
+          android:layout_width="300dp"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_horizontal"
+          android:layout_marginTop="10dp"
+          android:src="@drawable/button_border_amber"
+          android:text="LOGIN/REGISTER"
+          android:textAppearance="@style/TextAppearance.AppCompat.Button"
+          />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/account_displayables"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        android:visibility="visible"
+        >
+      <include
+          layout="@layout/store_profile_account_displayable"
+          android:id="@+id/my_profile"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          />
+
+      <include
+          layout="@layout/store_profile_account_displayable"
+          android:id="@+id/my_store"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="20dp"
+          android:visibility="visible"
+          />
+
+      <TextView
+          android:id="@+id/create_store_message"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_horizontal"
+          android:layout_marginTop="20dp"
+          android:gravity="center"
+          android:text="Create an Aptoide store to share apps with the community."
+          android:textColor="@color/black"
+          android:textSize="17dp"
+          android:visibility="gone"
+          />
+      <Button
+          android:id="@+id/create_store_button"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_horizontal"
+          android:layout_marginEnd="20dp"
+          android:layout_marginRight="20dp"
+          android:layout_marginStart="20dp"
+          android:layout_marginTop="20dp"
+          android:background="@color/grey"
+          android:text="CREATE A STORE"
+          android:visibility="gone"
+          />
+      <Button
+          android:id="@+id/find_friends_button"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_horizontal"
+          android:layout_marginEnd="20dp"
+          android:layout_marginRight="20dp"
+          android:layout_marginStart="20dp"
+          android:layout_marginTop="10dp"
+          android:background="@color/grey"
+          android:text="FIND FRIENDS"
+          />
+      <Button
+          android:id="@+id/logout_button"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_horizontal"
+          android:layout_marginEnd="20dp"
+          android:layout_marginRight="20dp"
+          android:layout_marginStart="20dp"
+          android:layout_marginTop="10dp"
+          android:background="@color/grey"
+          android:text="LOGOUT"
+          />
+    </LinearLayout>
+
+    <!-- General Preferences -->
+
+    <TextView
+        android:id="@+id/general_preferences"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="30dp"
+        android:text="General"
+        android:textColor="@color/black"
+        />
+
+    <RelativeLayout
+        android:id="@+id/compatible_apps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/general_preferences"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        >
+      <TextView
+          android:id="@+id/compatible_apps_main"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:text="Only show compatible apps"
+          android:textColor="@color/black"
+          android:textSize="17dp"
+          />
+      <TextView
+          android:id="@+id/compatible_apps_sub"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/compatible_apps_main"
+          android:layout_marginTop="5dp"
+          android:text="You'll only see apps compatible with your device"
+          android:textColor="@color/grey_700"
+          android:textSize="15dp"
+          />
+      <android.support.v7.widget.SwitchCompat
+          android:id="@+id/compatible_apps_switch"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentEnd="true"
+          android:layout_alignParentRight="true"
+          android:layout_centerVertical="true"
+          android:layout_marginEnd="10dp"
+          android:layout_marginRight="10dp"
+          />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/general_separator"
+        android:layout_width="match_parent"
+        android:layout_height="0.7dp"
+        android:layout_below="@id/compatible_apps"
+        android:layout_marginEnd="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/grey_fog_dark"
+        />
+
+    <RelativeLayout
+        android:id="@+id/download_wifi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/general_separator"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+
+        >
+      <TextView
+          android:id="@+id/download_wifi_main"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:text="Download only over wifi"
+          android:textColor="@color/black"
+          android:textSize="17dp"
+          />
+      <android.support.v7.widget.SwitchCompat
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentEnd="true"
+          android:layout_alignParentRight="true"
+          android:layout_marginEnd="10dp"
+          android:layout_marginRight="10dp"
+          />
+    </RelativeLayout>
+
+    <!-- Updates Preferences -->
+
+    <TextView
+        android:id="@+id/updates"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="30dp"
+        android:text="Updates"
+        android:textColor="@color/black"
+        />
+
+    <RelativeLayout
+        android:id="@+id/beta_versions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        >
+      <TextView
+          android:id="@+id/beta_versions_main"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:text="Beta versions"
+          android:textColor="@color/black"
+          android:textSize="17dp"
+          />
+      <TextView
+          android:id="@+id/beta_versions_sub"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/beta_versions_main"
+          android:layout_marginTop="5dp"
+          android:text="You'll see updates for beta versions"
+          android:textColor="@color/grey_700"
+          android:textSize="15dp"
+          />
+      <android.support.v7.widget.SwitchCompat
+          android:id="@+id/beta_versions_switch"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentEnd="true"
+          android:layout_alignParentRight="true"
+          android:layout_centerVertical="true"
+          android:layout_marginEnd="10dp"
+          android:layout_marginRight="10dp"
+          />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/updates_separator_1"
+        android:layout_width="match_parent"
+        android:layout_height="0.7dp"
+        android:layout_below="@id/beta_versions"
+        android:layout_marginEnd="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/grey_fog_dark"
+        />
+
+    <RelativeLayout
+        android:id="@+id/system_apps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        >
+      <TextView
+          android:id="@+id/system_apps_main"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:text="System apps"
+          android:textColor="@color/black"
+          android:textSize="17dp"
+          />
+      <TextView
+          android:id="@+id/system_apps_sub"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/system_apps_main"
+          android:layout_marginTop="5dp"
+          android:text="You'll see updates for system apps"
+          android:textColor="@color/grey_700"
+          android:textSize="15dp"
+          />
+      <android.support.v7.widget.SwitchCompat
+          android:id="@+id/system_apps_switch"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentEnd="true"
+          android:layout_alignParentRight="true"
+          android:layout_centerVertical="true"
+          android:layout_marginEnd="10dp"
+          android:layout_marginRight="10dp"
+          />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/updates_separator_2"
+        android:layout_width="match_parent"
+        android:layout_height="0.7dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/grey_fog_dark"
+        />
+
+    <TextView
+        android:id="@+id/excluded_updates"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:text="Excluded updates"
+        android:textColor="@color/black"
+        android:textSize="17dp"
+        />
+
+    <!-- Notifications Preferences -->
+
+    <TextView
+        android:id="@+id/notifications"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="30dp"
+        android:text="Notifications"
+        android:textColor="@color/black"
+        />
+
+    <RelativeLayout
+        android:id="@+id/social_events"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        >
+      <TextView
+          android:id="@+id/social_events_main"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:text="Social events"
+          android:textColor="@color/black"
+          android:textSize="17dp"
+          />
+      <TextView
+          android:id="@+id/social_events_sub"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/social_events_main"
+          android:layout_marginTop="5dp"
+          android:text="Show notifications for campaigns and social interactions"
+          android:textColor="@color/grey_700"
+          android:textSize="15dp"
+          />
+      <android.support.v7.widget.SwitchCompat
+          android:id="@+id/social_events_switch"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentEnd="true"
+          android:layout_alignParentRight="true"
+          android:layout_centerVertical="true"
+          android:layout_marginEnd="10dp"
+          android:layout_marginRight="10dp"
+          />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/notifications_separator_1"
+        android:layout_width="match_parent"
+        android:layout_height="0.7dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/grey_fog_dark"
+        />
+
+    <RelativeLayout
+        android:id="@+id/app_updates"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        >
+      <TextView
+          android:id="@+id/app_updates_main"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:text="App updates"
+          android:textColor="@color/black"
+          android:textSize="17dp"
+          />
+      <TextView
+          android:id="@+id/app_updates_sub"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/app_updates_main"
+          android:layout_marginTop="5dp"
+          android:text="Show notifications for app updates"
+          android:textColor="@color/grey_700"
+          android:textSize="15dp"
+          />
+      <android.support.v7.widget.SwitchCompat
+          android:id="@+id/app_updates_switch"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentEnd="true"
+          android:layout_alignParentRight="true"
+          android:layout_centerVertical="true"
+          android:layout_marginEnd="10dp"
+          android:layout_marginRight="10dp"
+          />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/notifications_separator_2"
+        android:layout_width="match_parent"
+        android:layout_height="0.7dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/grey_fog_dark"
+        />
+
+    <RelativeLayout
+        android:id="@+id/update_aptoide"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        >
+      <TextView
+          android:id="@+id/update_aptoide_main"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:text="Update Aptoide"
+          android:textColor="@color/black"
+          android:textSize="17dp"
+          />
+      <TextView
+          android:id="@+id/update_aptoide_sub"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/update_aptoide_main"
+          android:layout_marginTop="5dp"
+          android:text="Periodically check for new versions of Aptoide"
+          android:textColor="@color/grey_700"
+          android:textSize="15dp"
+          />
+      <android.support.v7.widget.SwitchCompat
+          android:id="@+id/update_aptoide_switch"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentEnd="true"
+          android:layout_alignParentRight="true"
+          android:layout_centerVertical="true"
+          android:layout_marginEnd="10dp"
+          android:layout_marginRight="10dp"
+          />
+    </RelativeLayout>
+
+    <!-- Storage Preferences -->
+
+    <TextView
+        android:id="@+id/storage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="30dp"
+        android:text="Storage"
+        android:textColor="@color/black"
+        />
+
+    <RelativeLayout
+        android:id="@+id/clear_cache"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        >
+      <TextView
+          android:id="@+id/clear_cache_main"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:text="Clear cache"
+          android:textColor="@color/black"
+          android:textSize="17dp"
+          />
+      <TextView
+          android:id="@+id/clear_cache_sub"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/clear_cache_main"
+          android:layout_marginTop="5dp"
+          android:text="Delete temporary files"
+          android:textColor="@color/grey_700"
+          android:textSize="15dp"
+          />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/storage_separator"
+        android:layout_width="match_parent"
+        android:layout_height="0.7dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/grey_fog_dark"
+        />
+
+    <RelativeLayout
+        android:id="@+id/max_cache"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        >
+      <TextView
+          android:id="@+id/max_cache_main"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:text="Set max. cache size (MB)"
+          android:textColor="@color/black"
+          android:textSize="17dp"
+          />
+      <TextView
+          android:id="@+id/max_cache_sub"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/max_cache_main"
+          android:layout_marginTop="5dp"
+          android:text="Set a maximum size for your cache"
+          android:textColor="@color/grey_700"
+          android:textSize="15dp"
+          />
+    </RelativeLayout>
+
+    <!-- Adult Content Preferences -->
+
+    <TextView
+        android:id="@+id/adult_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="30dp"
+        android:text="Adult content"
+        android:textColor="@color/black"
+        />
+
+    <RelativeLayout
+        android:id="@+id/show_adult_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        >
+      <TextView
+          android:id="@+id/show_adult_content_main"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:text="Show adult content"
+          android:textColor="@color/black"
+          android:textSize="17dp"
+          />
+      <android.support.v7.widget.SwitchCompat
+          android:id="@+id/show_adult_content_switch"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentEnd="true"
+          android:layout_alignParentRight="true"
+          android:layout_centerVertical="true"
+          android:layout_marginEnd="10dp"
+          android:layout_marginRight="10dp"
+          />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/adult_content_separator"
+        android:layout_width="match_parent"
+        android:layout_height="0.7dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/grey_fog_dark"
+        />
+
+    <RelativeLayout
+        android:id="@+id/adult_pin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        >
+      <TextView
+          android:id="@+id/adult_pin_main"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:text="Set adult content pin"
+          android:textColor="@color/black"
+          android:textSize="17dp"
+          />
+      <TextView
+          android:id="@+id/adult_pin_sub"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/adult_pin_main"
+          android:layout_marginTop="5dp"
+          android:text="Set a pin code to unlock adult content"
+          android:textColor="@color/grey_700"
+          android:textSize="15dp"
+          />
+    </RelativeLayout>
+
+    <!-- Root Preferences -->
+
+    <TextView
+        android:id="@+id/root_options"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="30dp"
+        android:text="Root options"
+        android:textColor="@color/black"
+        />
+
+    <RelativeLayout
+        android:id="@+id/allow_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        >
+      <TextView
+          android:id="@+id/allow_root_main"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:text="Allow root installation"
+          android:textColor="@color/black"
+          android:textSize="17dp"
+          />
+      <android.support.v7.widget.SwitchCompat
+          android:id="@+id/allow_root_switch"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentEnd="true"
+          android:layout_alignParentRight="true"
+          android:layout_centerVertical="true"
+          android:layout_marginEnd="10dp"
+          android:layout_marginRight="10dp"
+          />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/root_separator"
+        android:layout_width="match_parent"
+        android:layout_height="0.7dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/grey_fog_dark"
+        />
+
+    <RelativeLayout
+        android:id="@+id/auto_update"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        >
+      <TextView
+          android:id="@+id/auto_update_main"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:text="Enable auto update"
+          android:textColor="@color/black"
+          android:textSize="17dp"
+          />
+      <TextView
+          android:id="@+id/auto_update_sub"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/auto_update_main"
+          android:layout_marginTop="5dp"
+          android:text="Enable automatic update of apps"
+          android:textColor="@color/grey_700"
+          android:textSize="15dp"
+          />
+      <android.support.v7.widget.SwitchCompat
+          android:id="@+id/auto_update_switch"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentEnd="true"
+          android:layout_alignParentRight="true"
+          android:layout_centerVertical="true"
+          android:layout_marginEnd="10dp"
+          android:layout_marginRight="10dp"
+          />
+    </RelativeLayout>
+
+    <!-- Support -->
+
+    <TextView
+        android:id="@+id/support"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="30dp"
+        android:text="Support"
+        android:textColor="@color/black"
+        />
+
+    <TextView
+        android:id="@+id/send_feedback"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        android:text="Send feedback"
+        android:textColor="@color/black"
+        android:textSize="17dp"
+        />
+
+    <View
+        android:id="@+id/support_separator_1"
+        android:layout_width="match_parent"
+        android:layout_height="0.7dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="15dp"
+        android:background="@color/grey_fog_dark"
+        />
+
+    <TextView
+        android:id="@+id/about_us"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        android:text="About us"
+        android:textColor="@color/black"
+        android:textSize="17dp"
+        />
+
+    <View
+        android:id="@+id/support_separator_2"
+        android:layout_width="match_parent"
+        android:layout_height="0.7dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="15dp"
+        android:background="@color/grey_fog_dark"
+        />
+
+    <TextView
+        android:id="@+id/terms_and_conditions"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        android:text="Terms and Conditions"
+        android:textColor="@color/black"
+        android:textSize="17dp"
+        />
+
+    <View
+        android:id="@+id/support_separator_3"
+        android:layout_width="match_parent"
+        android:layout_height="0.7dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="15dp"
+        android:background="@color/grey_fog_dark"
+        />
+
+    <RelativeLayout
+        android:id="@+id/hardware_specs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        >
+      <TextView
+          android:id="@+id/hardware_specs_main"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:text="Hardware specs"
+          android:textColor="@color/black"
+          android:textSize="17dp"
+          />
+      <TextView
+          android:id="@+id/hardware_specs_sub"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/hardware_specs_main"
+          android:layout_marginTop="5dp"
+          android:text="Hardware info about your phone"
+          android:textColor="@color/grey_700"
+          android:textSize="15dp"
+          />
+    </RelativeLayout>
+
+  </LinearLayout>
+</ScrollView>
