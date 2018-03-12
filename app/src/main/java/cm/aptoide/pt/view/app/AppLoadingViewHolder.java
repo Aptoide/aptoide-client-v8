@@ -11,7 +11,7 @@ public class AppLoadingViewHolder extends AppViewHolder {
     super(itemView);
   }
 
-  @Override void setApp(Application app) {
+  @Override public void setApp(Application app) {
 
   }
 }
