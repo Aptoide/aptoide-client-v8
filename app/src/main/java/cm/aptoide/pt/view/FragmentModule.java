@@ -114,6 +114,7 @@ import rx.schedulers.Schedulers;
   }
 
   @FragmentScope @Provides HomePresenter providesHomePresenter(Home home) {
-    return new HomePresenter((HomeView) fragment, home, AndroidSchedulers.mainThread());
+    return new HomePresenter((HomeView) fragment, home, AndroidSchedulers.mainThread(),
+        CrashReport.getInstance());
   }
 }

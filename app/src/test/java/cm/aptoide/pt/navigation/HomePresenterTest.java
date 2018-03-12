@@ -1,5 +1,6 @@
 package cm.aptoide.pt.navigation;
 
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.AppBundle;
 import cm.aptoide.pt.home.BottomHomeFragment;
 import cm.aptoide.pt.home.Home;
@@ -26,10 +27,10 @@ import static org.mockito.Mockito.when;
 public class HomePresenterTest {
 
   @Mock private BottomHomeFragment view;
+  @Mock private CrashReport crashReporter;
   @Mock private Home home;
 
   private HomePresenter presenter;
-
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private List<AppBundle> bundles;
 
@@ -37,7 +38,7 @@ public class HomePresenterTest {
     MockitoAnnotations.initMocks(this);
 
     lifecycleEvent = PublishSubject.create();
-    presenter = new HomePresenter(view, home, Schedulers.immediate());
+    presenter = new HomePresenter(view, home, Schedulers.immediate(), crashReporter);
     bundles = new ArrayList<>();
 
     List<Application> applications = getAppsList();
@@ -60,6 +61,19 @@ public class HomePresenterTest {
     verify(view).showHomeBundles(bundles);
     //Then the progress indicator should be hidden
     verify(view).hideLoading();
+  }
+
+  @Test public void errorLoadingBundles_ShowsError() {
+    IllegalStateException exception = new IllegalStateException("error test");
+    //Given an initialised HomePresenter
+    presenter.present();
+    //When the loading of bundles is requested
+    //And an unexpected error occured
+    when(home.getHomeBundles()).thenReturn(Single.error(exception));
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //Then the generic error message should be shown in the UI
+    verify(view).showGenericError();
+    verify(crashReporter).log(exception);
   }
 
   private List<Application> getAppsList() {

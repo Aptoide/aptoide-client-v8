@@ -84,6 +84,12 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
     progressBar.setVisibility(View.GONE);
   }
 
+  @Override public void showGenericError() {
+    this.genericError.setVisibility(View.VISIBLE);
+    this.list.setVisibility(View.GONE);
+    this.progressBar.setVisibility(View.GONE);
+  }
+
   public List<AppBundle> getFakeBundles() {
     List<Application> tmp = new ArrayList<>();
     String icon = "https://placeimg.com/640/480/any";

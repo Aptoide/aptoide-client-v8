@@ -13,4 +13,6 @@ public interface HomeView extends View {
   void showLoading();
 
   void hideLoading();
+
+  void showGenericError();
 }

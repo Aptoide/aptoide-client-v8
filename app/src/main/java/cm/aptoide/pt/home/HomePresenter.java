@@ -1,9 +1,9 @@
 package cm.aptoide.pt.home;
 
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import rx.Scheduler;
-import rx.exceptions.OnErrorNotImplementedException;
 
 /**
  * Created by jdandrade on 07/03/2018.
@@ -14,11 +14,14 @@ public class HomePresenter implements Presenter {
   private final HomeView view;
   private final Home home;
   private final Scheduler viewScheduler;
+  private final CrashReport crashReporter;
 
-  public HomePresenter(HomeView view, Home home, Scheduler viewScheduler) {
+  public HomePresenter(HomeView view, Home home, Scheduler viewScheduler,
+      CrashReport crashReporter) {
     this.view = view;
     this.home = home;
     this.viewScheduler = viewScheduler;
+    this.crashReporter = crashReporter;
   }
 
   @Override public void present() {
@@ -32,7 +35,8 @@ public class HomePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
+          view.showGenericError();
+          crashReporter.log(throwable);
         });
   }
 }
