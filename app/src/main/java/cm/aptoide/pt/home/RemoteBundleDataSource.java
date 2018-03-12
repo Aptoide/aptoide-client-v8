@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.home.GetHomeBundlesRequest;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -20,10 +21,12 @@ public class RemoteBundleDataSource implements BundleDataSource {
   private final BundlesResponseMapper mapper;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
+  private final int limit;
 
-  public RemoteBundleDataSource(BodyInterceptor<BaseBody> bodyInterceptor,
+  public RemoteBundleDataSource(int limit, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient okHttpClient, Converter.Factory converterFactory, BundlesResponseMapper mapper,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    this.limit = limit;
     this.bodyInterceptor = bodyInterceptor;
     this.okHttpClient = okHttpClient;
     this.converterFactory = converterFactory;
@@ -33,7 +36,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
   }
 
   @Override public Single<List<AppBundle>> getBundles() {
-    return GetHomeBundlesRequest.of(okHttpClient, converterFactory, bodyInterceptor,
+    return GetHomeBundlesRequest.of(limit, okHttpClient, converterFactory, bodyInterceptor,
         tokenInvalidator, sharedPreferences)
         .observe()
         .map(mapper.map())

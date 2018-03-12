@@ -1068,7 +1068,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converter,
       BundlesResponseMapper mapper, TokenInvalidator tokenInvalidator,
       @Named("default") SharedPreferences sharedPreferences) {
-    return new RemoteBundleDataSource(bodyInterceptorPoolV7, okHttpClient, converter, mapper,
+    return new RemoteBundleDataSource(5, bodyInterceptorPoolV7, okHttpClient, converter, mapper,
         tokenInvalidator, sharedPreferences);
   }
 
