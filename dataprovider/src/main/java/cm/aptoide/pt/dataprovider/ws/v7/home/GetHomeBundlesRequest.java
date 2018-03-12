@@ -14,6 +14,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.dataprovider.ws.v7.store.WidgetsArgs;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -72,10 +73,11 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
       boolean accountMature, String filters, Resources resources, WindowManager windowManager,
       ConnectivityManager connectivityManager,
       AdsApplicationVersionCodeProvider versionCodeProvider) {
-    return new GetHomeBundlesRequest(new Body(limit), httpClient, converterFactory, bodyInterceptor,
-        tokenInvalidator, sharedPreferences, widgetsUtils, storeCredentials, clientUniqueId,
-        isGooglePlayServicesAvailable, partnerId, accountMature, filters, resources, windowManager,
-        connectivityManager, versionCodeProvider);
+    return new GetHomeBundlesRequest(
+        new Body(limit, WidgetsArgs.createDefault(resources, windowManager)), httpClient,
+        converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences, widgetsUtils,
+        storeCredentials, clientUniqueId, isGooglePlayServicesAvailable, partnerId, accountMature,
+        filters, resources, windowManager, connectivityManager, versionCodeProvider);
   }
 
   private Observable<List<GetStoreWidgets.WSWidget>> loadAppsInBundles(
@@ -110,13 +112,15 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
 
   public static class Body extends BaseBody implements Endless {
 
+    private WidgetsArgs widgetsArgs;
     private StoreContext context;
     private Integer limit;
     private long storeId;
     private int offset;
 
-    public Body(Integer limit) {
+    public Body(Integer limit, WidgetsArgs widgetsArgs) {
       this.limit = limit;
+      this.widgetsArgs = widgetsArgs;
       this.context = StoreContext.home;
       this.storeId = 15;
     }
@@ -143,6 +147,14 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
 
     public void setStoreId(long storeId) {
       this.storeId = storeId;
+    }
+
+    public WidgetsArgs getWidgetsArgs() {
+      return widgetsArgs;
+    }
+
+    public void setWidgetsArgs(WidgetsArgs widgetsArgs) {
+      this.widgetsArgs = widgetsArgs;
     }
   }
 }
