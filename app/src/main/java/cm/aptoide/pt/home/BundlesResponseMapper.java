@@ -1,8 +1,10 @@
 package cm.aptoide.pt.home;
 
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.dataprovider.model.v7.BundlesDataList;
-import cm.aptoide.pt.dataprovider.model.v7.BundlesEndlessDataListResponse;
+import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.dataprovider.model.v7.Layout;
+import cm.aptoide.pt.dataprovider.model.v7.ListApps;
+import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.FeatureGraphicApplication;
@@ -16,30 +18,42 @@ import rx.functions.Func1;
  */
 
 public class BundlesResponseMapper {
-  @NonNull Func1<BundlesEndlessDataListResponse, List<AppBundle>> map() {
+  @NonNull Func1<GetStoreWidgets, List<AppBundle>> map() {
     return bundlesResponse -> fromWidgetsToBundles(bundlesResponse.getDataList()
         .getList());
   }
 
-  private List<AppBundle> fromWidgetsToBundles(List<BundlesDataList.Bundle> widgetBundles) {
+  private List<AppBundle> fromWidgetsToBundles(List<GetStoreWidgets.WSWidget> widgetBundles) {
 
     List<AppBundle> appBundles = new ArrayList<>();
 
-    for (BundlesDataList.Bundle widget : widgetBundles) {
-      AppBundle.BundleType type = bundleTypeMapper(widget.getType());
-      appBundles.add(
-          new AppBundle(widget.getTitle(), applicationsToApps(widget.getApps(), type), type));
+    for (GetStoreWidgets.WSWidget widget : widgetBundles) {
+      GetStoreWidgets.WSWidget.Data data = widget.getData();
+      if (data == null) {
+        continue;
+      }
+      AppBundle.BundleType type = bundleTypeMapper(widget.getType(), data.getLayout());
+      if (type.equals(AppBundle.BundleType.APPS) || type.equals(AppBundle.BundleType.EDITORS)) {
+        try {
+          appBundles.add(new AppBundle(widget.getTitle(), applicationsToApps(
+              ((ListApps) widget.getViewObject()).getDataList()
+                  .getList(), type), type));
+        } catch (Exception ignore) {
+        }
+      }
     }
 
     return appBundles;
   }
 
-  private AppBundle.BundleType bundleTypeMapper(String type) {
+  private AppBundle.BundleType bundleTypeMapper(Type type, Layout layout) {
     switch (type) {
-      case "Editors":
-        return AppBundle.BundleType.EDITORS;
-      case "APPS":
-        return AppBundle.BundleType.APPS;
+      case APPS_GROUP:
+        if (layout.equals(Layout.BRICK)) {
+          return AppBundle.BundleType.EDITORS;
+        } else {
+          return AppBundle.BundleType.APPS;
+        }
       default:
         return AppBundle.BundleType.APPS;
     }

@@ -1,5 +1,6 @@
 package cm.aptoide.pt.home;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import java.util.List;
 import rx.Single;
 

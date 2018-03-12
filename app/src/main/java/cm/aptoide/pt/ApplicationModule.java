@@ -67,6 +67,7 @@ import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -78,6 +79,7 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.download.DownloadAnalytics;
@@ -1052,7 +1054,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AppCenter(appCenterRepository);
   }
 
-  @Singleton @Provides Home providesHome(BundlesRepository bundlesRepository) {
+  @Singleton @Provides Home providesHome(BundlesRepository bundlesRepository,
+      AptoideAccountManager accountManager) {
     return new Home(bundlesRepository);
   }
 
@@ -1067,9 +1070,23 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converter,
       BundlesResponseMapper mapper, TokenInvalidator tokenInvalidator,
-      @Named("default") SharedPreferences sharedPreferences) {
+      @Named("default") SharedPreferences sharedPreferences, AptoideAccountManager accountManager) {
     return new RemoteBundleDataSource(5, bodyInterceptorPoolV7, okHttpClient, converter, mapper,
-        tokenInvalidator, sharedPreferences);
+        tokenInvalidator, sharedPreferences, new WSWidgetsUtils(), new StoreCredentialsProviderImpl(
+        AccessorFactory.getAccessorFor(
+            ((AptoideApplication) getApplicationContext().getApplicationContext()).getDatabase(),
+            Store.class)).fromUrl(""),
+        ((AptoideApplication) getApplicationContext()).getIdsRepository()
+            .getUniqueIdentifier(),
+        AdNetworkUtils.isGooglePlayServicesAvailable(getApplicationContext()),
+        ((AptoideApplication) getApplicationContext()).getPartnerId(), accountManager,
+        ((AptoideApplication) getApplicationContext()).getQManager()
+            .getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
+        getApplicationContext().getResources(),
+        (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE),
+        (ConnectivityManager) getApplicationContext().getSystemService(
+            Context.CONNECTIVITY_SERVICE),
+        ((AptoideApplication) getApplicationContext()).getVersionCodeProvider());
   }
 
   @Named("local") @Singleton @Provides BundleDataSource providesLocalBundleDataSource() {
