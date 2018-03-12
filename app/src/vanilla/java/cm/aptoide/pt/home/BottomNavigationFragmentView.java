@@ -7,8 +7,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.search.view.SearchResultFragment;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -37,7 +39,6 @@ public class BottomNavigationFragmentView extends FragmentView
       navigationSubject.onNext(item.getItemId());
       return true;
     });
-
     attachPresenter(new BottomNavPresenter(this));
   }
 
@@ -52,12 +53,16 @@ public class BottomNavigationFragmentView extends FragmentView
   }
 
   @Override public void showFragment(Integer menuItemId) {
+    final AptoideApplication application = (AptoideApplication) getActivity().getApplication();
+
     Fragment selectedFragment = null;
     switch (menuItemId) {
       case R.id.action_home:
         selectedFragment = new BottomHomeFragment();
         break;
       case R.id.action_search:
+        selectedFragment =
+            SearchResultFragment.newInstance("", application.getDefaultStoreName(), true);
         break;
       case R.id.action_stores:
         break;

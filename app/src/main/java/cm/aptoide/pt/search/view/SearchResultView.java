@@ -1,12 +1,13 @@
 package cm.aptoide.pt.search.view;
 
-import cm.aptoide.pt.presenter.View;
+import android.view.MenuItem;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
+import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
 import java.util.List;
 import rx.Observable;
 
-public interface SearchResultView extends View {
+public interface SearchResultView extends SearchSuggestionsView {
 
   void showFollowedStoresResult();
 
@@ -57,6 +58,22 @@ public interface SearchResultView extends View {
   void hideFollowedStoresTab();
 
   void hideNonFollowedStoresTab();
+
+  Observable<Void> searchSetup();
+
+  void toggleSuggestionsView();
+
+  void toggleTrendingView();
+
+  void hideSuggestionsViews();
+
+  boolean isSearchViewExpanded();
+
+  Observable<SearchQueryEvent> listenToSuggestionClick();
+
+  Observable<Void> toolbarClick();
+
+  Observable<MenuItem> searchMenuItemClick();
 
   interface Model {
 
