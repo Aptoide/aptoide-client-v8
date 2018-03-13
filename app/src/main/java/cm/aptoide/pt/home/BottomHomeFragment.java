@@ -30,6 +30,7 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
   private RecyclerView list;
   private BundlesAdapter adapter;
   private PublishSubject<HomeClick> uiEventsListener;
+  private PublishSubject<Application> appClickedEvents;
   private LinearLayoutManager layoutManager;
   private DecimalFormat oneDecimalFormatter;
   private View genericError;
@@ -38,6 +39,7 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     uiEventsListener = PublishSubject.create();
+    appClickedEvents = PublishSubject.create();
     oneDecimalFormatter = new DecimalFormat("#.#");
   }
 
@@ -62,7 +64,8 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
     genericError = view.findViewById(R.id.generic_error);
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
 
-    adapter = new BundlesAdapter(new ArrayList<>(), uiEventsListener, oneDecimalFormatter);
+    adapter = new BundlesAdapter(new ArrayList<>(), uiEventsListener, oneDecimalFormatter,
+        appClickedEvents);
     layoutManager = new LinearLayoutManager(getContext());
     list.setLayoutManager(layoutManager);
     list.setAdapter(adapter);
@@ -94,6 +97,10 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
   @Override public Observable<HomeClick> moreClicked() {
     return uiEventsListener.filter(click -> click.getActionType()
         .equals(HomeClick.Type.MORE));
+  }
+
+  @Override public Observable<Application> appClicked() {
+    return appClickedEvents;
   }
 
   public List<AppBundle> getFakeBundles() {

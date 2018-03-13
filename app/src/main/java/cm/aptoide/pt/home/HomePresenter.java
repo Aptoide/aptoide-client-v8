@@ -3,6 +3,7 @@ package cm.aptoide.pt.home;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import io.reactivex.exceptions.OnErrorNotImplementedException;
 import rx.Scheduler;
 
 /**
@@ -15,13 +16,15 @@ public class HomePresenter implements Presenter {
   private final Home home;
   private final Scheduler viewScheduler;
   private final CrashReport crashReporter;
+  private final HomeNavigator homeNavigator;
 
-  public HomePresenter(HomeView view, Home home, Scheduler viewScheduler,
-      CrashReport crashReporter) {
+  public HomePresenter(HomeView view, Home home, Scheduler viewScheduler, CrashReport crashReporter,
+      HomeNavigator homeNavigator) {
     this.view = view;
     this.home = home;
     this.viewScheduler = viewScheduler;
     this.crashReporter = crashReporter;
+    this.homeNavigator = homeNavigator;
   }
 
   @Override public void present() {
@@ -37,6 +40,17 @@ public class HomePresenter implements Presenter {
         }, throwable -> {
           view.showGenericError();
           crashReporter.log(throwable);
+        });
+
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.appClicked()
+            .doOnNext(app -> homeNavigator.navigateToAppView(app))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(homeClick -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
         });
   }
 }

@@ -22,6 +22,6 @@ public class HomeClick {
   }
 
   public enum Type {
-    MORE
+    APP, MORE
   }
 }

@@ -27,7 +27,7 @@ class EditorsBundleViewHolder extends AppBundleViewHolder {
   private final LinearLayoutManager layoutManager;
 
   public EditorsBundleViewHolder(View view, PublishSubject<HomeClick> uiEventsListener,
-      DecimalFormat oneDecimalFormatter) {
+      DecimalFormat oneDecimalFormatter, PublishSubject<Application> appClickedEvents) {
     super(view);
     this.uiEventsListener = uiEventsListener;
     bundleTitle = (TextView) view.findViewById(R.id.bundle_title);

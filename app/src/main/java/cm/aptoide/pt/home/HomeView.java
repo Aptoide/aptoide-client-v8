@@ -1,6 +1,7 @@
 package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.view.app.Application;
 import java.util.List;
 import rx.Observable;
 
@@ -18,4 +19,6 @@ public interface HomeView extends View {
   void showGenericError();
 
   Observable<HomeClick> moreClicked();
+
+  Observable<Application> appClicked();
 }

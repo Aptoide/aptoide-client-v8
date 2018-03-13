@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.view.app.Application;
 import java.text.DecimalFormat;
 import java.util.List;
 import rx.subjects.PublishSubject;
@@ -18,30 +19,33 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private static final int STORE = R.layout.store_bundle_item;
   private static final int ADS = R.layout.ads_bundle_item;
   private final DecimalFormat oneDecimalFormatter;
+  private final PublishSubject<Application> appClickedEvents;
+  private final PublishSubject<HomeClick> uiEventsListener;
   private List<HomeBundle> bundles;
-  private PublishSubject<HomeClick> uiEventsListener;
 
   public BundlesAdapter(List<HomeBundle> bundles, PublishSubject<HomeClick> uiEventsListener,
-      DecimalFormat oneDecimalFormatter) {
+      DecimalFormat oneDecimalFormatter, PublishSubject<Application> appClickedEvents) {
     this.bundles = bundles;
     this.uiEventsListener = uiEventsListener;
     this.oneDecimalFormatter = oneDecimalFormatter;
+    this.appClickedEvents = appClickedEvents;
   }
 
   @Override public AppBundleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     switch (viewType) {
       case EDITORS:
         return new EditorsBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(EDITORS, parent, false), uiEventsListener, oneDecimalFormatter);
+            .inflate(EDITORS, parent, false), uiEventsListener, oneDecimalFormatter,
+            appClickedEvents);
       case APPS:
         return new AppsBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(APPS, parent, false), uiEventsListener, oneDecimalFormatter);
+            .inflate(APPS, parent, false), uiEventsListener, oneDecimalFormatter, appClickedEvents);
       case STORE:
         return new StoreBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(STORE, parent, false));
       case ADS:
         return new AdsBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(ADS, parent, false), uiEventsListener, oneDecimalFormatter);
+            .inflate(ADS, parent, false), uiEventsListener, oneDecimalFormatter, appClickedEvents);
       default:
         throw new IllegalStateException("Invalid bundle view type");
     }

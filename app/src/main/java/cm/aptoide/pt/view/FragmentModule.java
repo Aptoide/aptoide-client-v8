@@ -23,6 +23,7 @@ import cm.aptoide.pt.account.view.user.ManageUserPresenter;
 import cm.aptoide.pt.account.view.user.ManageUserView;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.Home;
+import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.home.HomePresenter;
 import cm.aptoide.pt.home.HomeView;
 import cm.aptoide.pt.navigator.FragmentNavigator;
@@ -113,8 +114,14 @@ import rx.schedulers.Schedulers;
     return new ManageStoreErrorMapper(fragment.getResources(), new ErrorsMapper());
   }
 
-  @FragmentScope @Provides HomePresenter providesHomePresenter(Home home) {
+  @FragmentScope @Provides HomePresenter providesHomePresenter(Home home,
+      HomeNavigator homeNavigator) {
     return new HomePresenter((HomeView) fragment, home, AndroidSchedulers.mainThread(),
-        CrashReport.getInstance());
+        CrashReport.getInstance(), homeNavigator);
+  }
+
+  @FragmentScope @Provides HomeNavigator providesHomeNavigator(
+      FragmentNavigator fragmentNavigator) {
+    return new HomeNavigator(fragmentNavigator);
   }
 }

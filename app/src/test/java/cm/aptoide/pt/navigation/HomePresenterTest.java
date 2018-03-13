@@ -7,6 +7,7 @@ import cm.aptoide.pt.home.AppBundle;
 import cm.aptoide.pt.home.BottomHomeFragment;
 import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomeBundle;
+import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.home.HomePresenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.view.app.Application;
@@ -32,26 +33,33 @@ public class HomePresenterTest {
 
   @Mock private BottomHomeFragment view;
   @Mock private CrashReport crashReporter;
+  @Mock private HomeNavigator homeNavigator;
   @Mock private Home home;
 
   private HomePresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private List<HomeBundle> bundles;
+  private PublishSubject<Application> appClickEvent;
+  private AppBundle localTopAppsBundle;
+  private Application aptoide;
 
   @Before public void setupHomePresenter() {
     MockitoAnnotations.initMocks(this);
 
     lifecycleEvent = PublishSubject.create();
-    presenter = new HomePresenter(view, home, Schedulers.immediate(), crashReporter);
+    appClickEvent = PublishSubject.create();
+    presenter = new HomePresenter(view, home, Schedulers.immediate(), crashReporter, homeNavigator);
     bundles = new ArrayList<>();
 
     List<Application> applications = getAppsList();
     List<GetAdsResponse.Ad> ads = getAdsList();
     bundles.add(new AppBundle("Editors choice", applications, AppBundle.BundleType.EDITORS));
-    bundles.add(new AppBundle("Local Top Apps", applications, AppBundle.BundleType.APPS));
+    localTopAppsBundle = new AppBundle("Local Top Apps", applications, AppBundle.BundleType.APPS);
+    bundles.add(localTopAppsBundle);
     bundles.add(new AdBundle("Highlighted", ads));
 
     when(view.getLifecycle()).thenReturn(lifecycleEvent);
+    when(view.appClicked()).thenReturn(appClickEvent);
   }
 
   @Test public void loadAllBundlesFromRepositoryAndLoadIntoView() {
@@ -82,11 +90,22 @@ public class HomePresenterTest {
     verify(crashReporter).log(exception);
   }
 
+  @Test public void appClicked_NavigateToAppView() {
+    //Given an initialised HomePresenter
+    presenter.present();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //When an app is clicked
+    appClickEvent.onNext(aptoide);
+    //then it should navigate to the App's detail View
+    verify(homeNavigator).navigateToAppView(aptoide);
+  }
+
   private List<Application> getAppsList() {
     List<Application> tmp = new ArrayList<>();
-    tmp.add(
+    aptoide =
         new Application("Aptoide", "http://via.placeholder.com/350x150", 0, 1000, "cm.aptoide.pt",
-            300));
+            300);
+    tmp.add(aptoide);
     tmp.add(new Application("Facebook", "http://via.placeholder.com/350x150", (float) 4.2, 1000,
         "katana.facebook.com", 30));
     return tmp;

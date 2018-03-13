@@ -16,17 +16,19 @@ import rx.subjects.PublishSubject;
 class AppsInBundleAdapter extends RecyclerView.Adapter<AppInBundleViewHolder> {
 
   private final DecimalFormat oneDecimalFormatter;
+  private final PublishSubject<Application> appClickedEvents;
   private List<Application> apps;
 
-  AppsInBundleAdapter(List<Application> apps, DecimalFormat oneDecimalFormatter) {
+  AppsInBundleAdapter(List<Application> apps, DecimalFormat oneDecimalFormatter,
+      PublishSubject<Application> appClickedEvents) {
     this.apps = apps;
     this.oneDecimalFormatter = oneDecimalFormatter;
+    this.appClickedEvents = appClickedEvents;
   }
 
   @Override public AppInBundleViewHolder onCreateViewHolder(ViewGroup parent, int position) {
     return new AppInBundleViewHolder(LayoutInflater.from(parent.getContext())
-        .inflate(R.layout.app_home_item, parent, false), PublishSubject.create(),
-        oneDecimalFormatter);
+        .inflate(R.layout.app_home_item, parent, false), appClickedEvents, oneDecimalFormatter);
   }
 
   @Override public void onBindViewHolder(AppInBundleViewHolder viewHolder, int position) {

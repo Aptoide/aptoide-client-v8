@@ -27,13 +27,14 @@ class AppsBundleViewHolder extends AppBundleViewHolder {
   private final LinearLayoutManager layoutManager;
 
   public AppsBundleViewHolder(View view, PublishSubject<HomeClick> uiEventsListener,
-      DecimalFormat oneDecimalFormatter) {
+      DecimalFormat oneDecimalFormatter, PublishSubject<Application> appClickedEvents) {
     super(view);
     this.uiEventsListener = uiEventsListener;
     bundleTitle = (TextView) view.findViewById(R.id.bundle_title);
     moreButton = (Button) view.findViewById(R.id.bundle_more);
     appsList = (RecyclerView) view.findViewById(R.id.apps_list);
-    appsInBundleAdapter = new AppsInBundleAdapter(new ArrayList<>(), oneDecimalFormatter);
+    appsInBundleAdapter =
+        new AppsInBundleAdapter(new ArrayList<>(), oneDecimalFormatter, appClickedEvents);
     layoutManager =
         new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
     appsList.addItemDecoration(new RecyclerView.ItemDecoration() {

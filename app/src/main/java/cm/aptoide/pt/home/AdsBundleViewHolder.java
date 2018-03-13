@@ -9,6 +9,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.view.app.Application;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
   private final LinearLayoutManager layoutManager;
 
   public AdsBundleViewHolder(View view, PublishSubject<HomeClick> uiEventsListener,
-      DecimalFormat oneDecimalFormatter) {
+      DecimalFormat oneDecimalFormatter, PublishSubject<Application> appClickedEvents) {
     super(view);
     this.uiEventsListener = uiEventsListener;
     bundleTitle = (TextView) view.findViewById(R.id.bundle_title);
