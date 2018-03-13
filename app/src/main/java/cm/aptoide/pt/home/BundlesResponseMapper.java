@@ -45,7 +45,7 @@ public class BundlesResponseMapper {
         } else if (type.equals(HomeBundle.BundleType.ADS)) {
           appBundles.add(
               new AdBundle(widget.getTitle(), ((GetAdsResponse) widget.getViewObject()).getAds(),
-                  event, widget.getTag()));
+                  new Event().setName(Event.Name.getAds), widget.getTag()));
         }
       } catch (Exception ignore) {
       }

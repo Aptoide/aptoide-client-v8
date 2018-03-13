@@ -98,8 +98,7 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
   }
 
   @Override public Observable<HomeClick> moreClicked() {
-    return uiEventsListener.filter(click -> click.getActionType()
-        .equals(HomeClick.Type.MORE));
+    return uiEventsListener;
   }
 
   @Override public Observable<Application> appClicked() {
