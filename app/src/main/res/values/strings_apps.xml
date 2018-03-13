@@ -4,5 +4,6 @@
   <string name="apps_short_error_download">An error occurred</string>
   <string name="apps_short_download_paused">Download paused</string>
   <string name="apps_short_downloading">Downloading</string>
+  <string name="apps_short_ready_to_install">Ready to install</string>
 
 </resources>

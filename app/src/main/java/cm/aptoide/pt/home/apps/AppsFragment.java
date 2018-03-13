@@ -29,6 +29,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   private PublishSubject<App> pauseDownload;
   private PublishSubject<App> cancelDownload;
   private PublishSubject<App> resumeDownload;
+  private PublishSubject<App> installApp;
 
   public static AppsFragment newInstance() {
     return new AppsFragment();
@@ -51,8 +52,11 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     appListMaterlo.add(
         new DownloadApp("Uploader", "md5", "sdasda", 20, false, 21212, DownloadApp.Status.STANDBY));
 
+    appListMaterlo.add(new DownloadApp("Messenger", "md5", "sadasda", 100, false, 21212,
+        DownloadApp.Status.COMPLETED));
+
     adapter = new AppsAdapter(appListMaterlo,
-        new AppCardViewHolderFactory(pauseDownload, cancelDownload, resumeDownload));
+        new AppCardViewHolderFactory(pauseDownload, cancelDownload, resumeDownload, installApp));
 
     setupRecyclerView();
 

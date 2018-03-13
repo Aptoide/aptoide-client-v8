@@ -20,12 +20,15 @@ public class AppCardViewHolderFactory {
   private PublishSubject<App> pauseDownload;
   private PublishSubject<App> cancelDownload;
   private PublishSubject<App> resumeDownload;
+  private PublishSubject<App> installApp;
 
   public AppCardViewHolderFactory(PublishSubject<App> pauseDownload,
-      PublishSubject<App> cancelDownload, PublishSubject<App> resumeDownload) {
+      PublishSubject<App> cancelDownload, PublishSubject<App> resumeDownload,
+      PublishSubject<App> installApp) {
     this.pauseDownload = pauseDownload;
     this.cancelDownload = cancelDownload;
     this.resumeDownload = resumeDownload;
+    this.installApp = installApp;
   }
 
   public AppsViewHolder createViewHolder(int viewType, ViewGroup parent) {
@@ -46,7 +49,7 @@ public class AppCardViewHolderFactory {
         break;
       case COMPLETED_DOWNLOAD:
         appViewHolder = new CompletedAppDownloadViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.apps_header_item, parent, false));
+            .inflate(R.layout.apps_completed_download_app_item, parent, false), installApp);
         break;
       case ERROR_DOWNLOAD:
         appViewHolder = new ErrorAppDownloadViewHolder(LayoutInflater.from(parent.getContext())
