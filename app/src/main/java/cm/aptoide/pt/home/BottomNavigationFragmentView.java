@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.home.apps.AppsFragment;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import rx.Observable;
@@ -62,7 +63,7 @@ public class BottomNavigationFragmentView extends FragmentView
       case R.id.action_stores:
         break;
       case R.id.action_apps:
-        selectedFragment = new BottomHomeFragment();
+        selectedFragment = new AppsFragment();
         break;
     }
     if (selectedFragment != null) {
