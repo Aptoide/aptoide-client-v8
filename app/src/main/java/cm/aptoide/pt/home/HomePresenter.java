@@ -28,6 +28,25 @@ public class HomePresenter implements Presenter {
   }
 
   @Override public void present() {
+    onCreateLoadBundles();
+
+    handleAppClick();
+  }
+
+  private void handleAppClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.appClicked()
+            .doOnNext(homeNavigator::navigateToAppView)
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(homeClick -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void onCreateLoadBundles() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .doOnNext(created -> view.showLoading())
@@ -40,17 +59,6 @@ public class HomePresenter implements Presenter {
         }, throwable -> {
           view.showGenericError();
           crashReporter.log(throwable);
-        });
-
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.appClicked()
-            .doOnNext(app -> homeNavigator.navigateToAppView(app))
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(homeClick -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
         });
   }
 }
