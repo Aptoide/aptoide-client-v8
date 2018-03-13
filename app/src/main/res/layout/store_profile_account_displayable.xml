@@ -41,6 +41,7 @@
   </LinearLayout>
 
   <Button
+      android:id="@+id/edit_button"
       android:layout_width="70dp"
       android:layout_height="40dp"
       android:layout_alignParentEnd="true"

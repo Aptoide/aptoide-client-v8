@@ -27,6 +27,7 @@ import cm.aptoide.pt.store.view.my.MyStoresSubscribedFragment;
 import cm.aptoide.pt.timeline.post.PostFragment;
 import cm.aptoide.pt.updates.view.UpdatesFragment;
 import cm.aptoide.pt.view.app.ListStoreAppsFragment;
+import cm.aptoide.pt.view.settings.NewSettingsFragment;
 import dagger.Subcomponent;
 
 @FragmentScope @Subcomponent(modules = { FragmentModule.class })
@@ -85,4 +86,6 @@ public interface FragmentComponent {
   void inject(UpdatesFragment updatesFragment);
 
   void inject(ListStoreAppsFragment listStoreAppsFragment);
+
+  void inject(NewSettingsFragment newSettingsFragment);
 }

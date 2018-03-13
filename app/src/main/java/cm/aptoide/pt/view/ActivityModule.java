@@ -55,6 +55,7 @@ import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.view.app.ListStoreAppsNavigator;
+import cm.aptoide.pt.view.settings.NewSettingsNavigator;
 import com.facebook.CallbackManager;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -218,5 +219,11 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   @ActivityScope @Provides ListStoreAppsNavigator provideListStoreAppsNavigator(
       FragmentNavigator fragmentNavigator) {
     return new ListStoreAppsNavigator(fragmentNavigator);
+  }
+
+  @ActivityScope @Provides NewSettingsNavigator provideNewSettingsNavigator(
+      FragmentNavigator fragmentNavigator, MyAccountNavigator myAccountNavigator,
+      AccountNavigator accountNavigator) {
+    return new NewSettingsNavigator(fragmentNavigator, myAccountNavigator, accountNavigator);
   }
 }
