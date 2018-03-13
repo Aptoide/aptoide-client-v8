@@ -16,6 +16,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private static final int EDITORS = R.layout.editors_choice_bundle_item;
   private static final int APPS = R.layout.apps_bundle_item;
   private static final int STORE = R.layout.store_bundle_item;
+  private static final int ADS = R.layout.ads_bundle_item;
   private final DecimalFormat oneDecimalFormatter;
   private List<HomeBundle> bundles;
   private PublishSubject<HomeClick> uiEventsListener;
@@ -38,6 +39,9 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
       case STORE:
         return new StoreBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(STORE, parent, false));
+      case ADS:
+        return new AdsBundleViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(ADS, parent, false), uiEventsListener, oneDecimalFormatter);
       default:
         throw new IllegalStateException("Invalid bundle view type");
     }
@@ -56,6 +60,8 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
         return EDITORS;
       case STORE:
         return STORE;
+      case ADS:
+        return ADS;
       default:
         throw new IllegalStateException(
             "Bundle type not supported by the adapter: " + bundles.get(position)

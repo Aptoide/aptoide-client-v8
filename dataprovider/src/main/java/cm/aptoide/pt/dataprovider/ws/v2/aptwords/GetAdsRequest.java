@@ -9,10 +9,8 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.text.TextUtils;
-import android.view.WindowManager;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
-import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
@@ -73,12 +71,12 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
   public static GetAdsRequest ofHomepage(String clientUniqueId, boolean googlePlayServicesAvailable,
       String oemid, boolean mature, OkHttpClient httpClient, Converter.Factory converterFactory,
       String q, SharedPreferences sharedPreferences, Resources resources,
-      WindowManager windowManager, ConnectivityManager connectivityManager,
-      AdsApplicationVersionCodeProvider versionCodeProvider) {
+      ConnectivityManager connectivityManager,
+      AdsApplicationVersionCodeProvider versionCodeProvider, int limit) {
     // TODO: 09-06-2016 neuro limit based on max colums
-    return of(Location.homepage, Type.ADS.getPerLineCount(resources, windowManager), clientUniqueId,
-        googlePlayServicesAvailable, oemid, mature, httpClient, converterFactory, q,
-        sharedPreferences, connectivityManager, resources, versionCodeProvider);
+    return of(Location.homepage, limit, clientUniqueId, googlePlayServicesAvailable, oemid, mature,
+        httpClient, converterFactory, q, sharedPreferences, connectivityManager, resources,
+        versionCodeProvider);
   }
 
   private static GetAdsRequest of(Location location, Integer limit, String clientUniqueId,

@@ -29,11 +29,10 @@ public class BundlesResponseMapper {
     List<HomeBundle> appBundles = new ArrayList<>();
 
     for (GetStoreWidgets.WSWidget widget : widgetBundles) {
-      GetStoreWidgets.WSWidget.Data data = widget.getData();
-      if (data == null) {
-        continue;
-      }
-      AppBundle.BundleType type = bundleTypeMapper(widget.getType(), data.getLayout());
+      AppBundle.BundleType type = bundleTypeMapper(widget.getType(), widget.getData());
+
+      if (type.equals(HomeBundle.BundleType.ERROR)) continue;
+
       if (type.equals(HomeBundle.BundleType.APPS) || type.equals(HomeBundle.BundleType.EDITORS)) {
         try {
           appBundles.add(new AppBundle(widget.getTitle(), applicationsToApps(
@@ -50,14 +49,23 @@ public class BundlesResponseMapper {
     return appBundles;
   }
 
-  private AppBundle.BundleType bundleTypeMapper(Type type, Layout layout) {
+  private HomeBundle.BundleType bundleTypeMapper(Type type, GetStoreWidgets.WSWidget.Data data) {
+    if (type == null) {
+      return HomeBundle.BundleType.ERROR;
+    }
     switch (type) {
       case APPS_GROUP:
-        if (layout.equals(Layout.BRICK)) {
+        if (data == null) {
+          return HomeBundle.BundleType.ERROR;
+        }
+        if (data.getLayout()
+            .equals(Layout.BRICK)) {
           return HomeBundle.BundleType.EDITORS;
         } else {
           return HomeBundle.BundleType.APPS;
         }
+      case ADS:
+        return HomeBundle.BundleType.ADS;
       default:
         return HomeBundle.BundleType.APPS;
     }
@@ -65,7 +73,7 @@ public class BundlesResponseMapper {
 
   private List<Application> applicationsToApps(List<App> apps, AppBundle.BundleType type) {
     if (apps == null || apps.isEmpty()) {
-      return Collections.EMPTY_LIST;
+      return Collections.emptyList();
     }
     List<Application> applications = new ArrayList<>();
     for (App app : apps) {

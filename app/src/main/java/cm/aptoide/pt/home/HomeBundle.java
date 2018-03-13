@@ -15,6 +15,6 @@ public interface HomeBundle {
   BundleType getType();
 
   enum BundleType {
-    EDITORS, APPS, ADS, STORE
+    EDITORS, APPS, ADS, ERROR, STORE
   }
 }
