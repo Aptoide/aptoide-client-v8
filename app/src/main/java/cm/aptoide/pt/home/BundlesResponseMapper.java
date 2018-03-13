@@ -2,6 +2,7 @@ package cm.aptoide.pt.home;
 
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
+import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.dataprovider.model.v7.ListApps;
@@ -33,20 +34,31 @@ public class BundlesResponseMapper {
 
       if (type.equals(HomeBundle.BundleType.ERROR)) continue;
 
-      if (type.equals(HomeBundle.BundleType.APPS) || type.equals(HomeBundle.BundleType.EDITORS)) {
-        try {
+      Event event = getEvent(widget);
+
+      try {
+        if (type.equals(HomeBundle.BundleType.APPS) || type.equals(HomeBundle.BundleType.EDITORS)) {
+
           appBundles.add(new AppBundle(widget.getTitle(), applicationsToApps(
               ((ListApps) widget.getViewObject()).getDataList()
-                  .getList(), type), type));
-        } catch (Exception ignore) {
+                  .getList(), type), type, event, widget.getTag()));
+        } else if (type.equals(HomeBundle.BundleType.ADS)) {
+          appBundles.add(
+              new AdBundle(widget.getTitle(), ((GetAdsResponse) widget.getViewObject()).getAds(),
+                  event, widget.getTag()));
         }
-      } else if (type.equals(HomeBundle.BundleType.ADS)) {
-        appBundles.add(
-            new AdBundle(widget.getTitle(), ((GetAdsResponse) widget.getViewObject()).getAds()));
+      } catch (Exception ignore) {
       }
     }
 
     return appBundles;
+  }
+
+  private Event getEvent(GetStoreWidgets.WSWidget widget) {
+    return widget.getActions()
+        .size() > 0 ? widget.getActions()
+        .get(0)
+        .getEvent() : null;
   }
 
   private HomeBundle.BundleType bundleTypeMapper(Type type, GetStoreWidgets.WSWidget.Data data) {

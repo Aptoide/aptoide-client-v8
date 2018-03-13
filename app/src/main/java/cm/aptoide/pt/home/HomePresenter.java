@@ -31,19 +31,8 @@ public class HomePresenter implements Presenter {
     onCreateLoadBundles();
 
     handleAppClick();
-  }
 
-  private void handleAppClick() {
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.appClicked()
-            .doOnNext(homeNavigator::navigateToAppView)
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(homeClick -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+    handleMoreClick();
   }
 
   private void onCreateLoadBundles() {
@@ -59,6 +48,32 @@ public class HomePresenter implements Presenter {
         }, throwable -> {
           view.showGenericError();
           crashReporter.log(throwable);
+        });
+  }
+
+  private void handleAppClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.appClicked()
+            .doOnNext(homeNavigator::navigateToAppView)
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(homeClick -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void handleMoreClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.moreClicked()
+            .doOnNext(click -> homeNavigator.navigateWithAction(click))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(homeClick -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
         });
   }
 }

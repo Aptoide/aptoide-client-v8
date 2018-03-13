@@ -135,9 +135,11 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
     tmp1.add(aptoideFeatureGraphic);
     tmp1.add(facebookFeatureGraphic);
     AppBundle appBundle =
-        new AppBundle("As escolhas do filipe", tmp1, AppBundle.BundleType.EDITORS);
-    AppBundle appBundle1 = new AppBundle("piores apps locais", tmp, AppBundle.BundleType.APPS);
-    AppBundle appBundle2 = new AppBundle("um pouco melhor apps", tmp, AppBundle.BundleType.APPS);
+        new AppBundle("As escolhas do filipe", tmp1, AppBundle.BundleType.EDITORS, null, "");
+    AppBundle appBundle1 =
+        new AppBundle("piores apps locais", tmp, AppBundle.BundleType.APPS, null, "");
+    AppBundle appBundle2 =
+        new AppBundle("um pouco melhor apps", tmp, AppBundle.BundleType.APPS, null, "");
 
     List<AppBundle> appBundles = new ArrayList<>();
     appBundles.add(appBundle);

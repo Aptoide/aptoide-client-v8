@@ -7,6 +7,7 @@ import cm.aptoide.pt.home.AppBundle;
 import cm.aptoide.pt.home.BottomHomeFragment;
 import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomeBundle;
+import cm.aptoide.pt.home.HomeClick;
 import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.home.HomePresenter;
 import cm.aptoide.pt.presenter.View;
@@ -40,6 +41,7 @@ public class HomePresenterTest {
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private List<HomeBundle> bundles;
   private PublishSubject<Application> appClickEvent;
+  private PublishSubject<HomeClick> moreClickEvent;
   private AppBundle localTopAppsBundle;
   private Application aptoide;
 
@@ -48,18 +50,23 @@ public class HomePresenterTest {
 
     lifecycleEvent = PublishSubject.create();
     appClickEvent = PublishSubject.create();
+    moreClickEvent = PublishSubject.create();
+
     presenter = new HomePresenter(view, home, Schedulers.immediate(), crashReporter, homeNavigator);
     bundles = new ArrayList<>();
 
     List<Application> applications = getAppsList();
     List<GetAdsResponse.Ad> ads = getAdsList();
-    bundles.add(new AppBundle("Editors choice", applications, AppBundle.BundleType.EDITORS));
-    localTopAppsBundle = new AppBundle("Local Top Apps", applications, AppBundle.BundleType.APPS);
+    bundles.add(
+        new AppBundle("Editors choice", applications, AppBundle.BundleType.EDITORS, null, ""));
+    localTopAppsBundle =
+        new AppBundle("Local Top Apps", applications, AppBundle.BundleType.APPS, null, "");
     bundles.add(localTopAppsBundle);
-    bundles.add(new AdBundle("Highlighted", ads));
+    bundles.add(new AdBundle("Highlighted", ads, null, ""));
 
     when(view.getLifecycle()).thenReturn(lifecycleEvent);
     when(view.appClicked()).thenReturn(appClickEvent);
+    when(view.moreClicked()).thenReturn(moreClickEvent);
   }
 
   @Test public void loadAllBundlesFromRepositoryAndLoadIntoView() {
@@ -98,6 +105,17 @@ public class HomePresenterTest {
     appClickEvent.onNext(aptoide);
     //then it should navigate to the App's detail View
     verify(homeNavigator).navigateToAppView(aptoide);
+  }
+
+  @Test public void moreClicked_NavigateToActionView() {
+    HomeClick click = new HomeClick(localTopAppsBundle, HomeClick.Type.MORE);
+    //Given an initialised HomePresenter
+    presenter.present();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //When more in a bundle is clicked
+    moreClickEvent.onNext(click);
+    //Then it should navigate with the specific action behaviour
+    verify(homeNavigator).navigateWithAction(click);
   }
 
   private List<Application> getAppsList() {

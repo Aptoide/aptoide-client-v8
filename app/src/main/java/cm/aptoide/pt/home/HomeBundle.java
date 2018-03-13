@@ -1,5 +1,6 @@
 package cm.aptoide.pt.home;
 
+import cm.aptoide.pt.dataprovider.model.v7.Event;
 import java.util.List;
 
 /**
@@ -13,6 +14,10 @@ public interface HomeBundle {
   List<?> getContent();
 
   BundleType getType();
+
+  Event getEvent();
+
+  String getTag();
 
   enum BundleType {
     EDITORS, APPS, ADS, ERROR, STORE
