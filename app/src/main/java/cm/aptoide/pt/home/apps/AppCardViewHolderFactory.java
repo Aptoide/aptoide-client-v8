@@ -18,9 +18,14 @@ import static cm.aptoide.pt.home.apps.AppsAdapter.UPDATE;
 public class AppCardViewHolderFactory {
 
   private PublishSubject<App> pauseDownload;
+  private PublishSubject<App> cancelDownload;
+  private PublishSubject<App> resumeDownload;
 
-  public AppCardViewHolderFactory(PublishSubject<App> pauseDownload) {
+  public AppCardViewHolderFactory(PublishSubject<App> pauseDownload,
+      PublishSubject<App> cancelDownload, PublishSubject<App> resumeDownload) {
     this.pauseDownload = pauseDownload;
+    this.cancelDownload = cancelDownload;
+    this.resumeDownload = resumeDownload;
   }
 
   public AppsViewHolder createViewHolder(int viewType, ViewGroup parent) {
@@ -36,7 +41,8 @@ public class AppCardViewHolderFactory {
         break;
       case AppsAdapter.STANDBY_DOWNLOAD:
         appViewHolder = new StandByAppDownloadViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.apps_header_item, parent, false));
+            .inflate(R.layout.apps_standby_download_app_item, parent, false), cancelDownload,
+            resumeDownload);
         break;
       case COMPLETED_DOWNLOAD:
         appViewHolder = new CompletedAppDownloadViewHolder(LayoutInflater.from(parent.getContext())

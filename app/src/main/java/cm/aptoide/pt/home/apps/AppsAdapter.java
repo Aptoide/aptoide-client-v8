@@ -89,9 +89,4 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
     listOfApps.addAll(list);
     notifyDataSetChanged();
   }
-
-  public boolean isPositionHeader(int position) {
-    return listOfApps.get(position)
-        .getType() == App.Type.HEADER;
-  }
 }
