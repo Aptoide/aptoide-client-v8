@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.view.app.Application;
 import java.text.DecimalFormat;
 import java.util.List;
@@ -22,13 +23,16 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private final PublishSubject<Application> appClickedEvents;
   private final PublishSubject<HomeClick> uiEventsListener;
   private List<HomeBundle> bundles;
+  private PublishSubject<GetAdsResponse.Ad> adClickedEvents;
 
   public BundlesAdapter(List<HomeBundle> bundles, PublishSubject<HomeClick> uiEventsListener,
-      DecimalFormat oneDecimalFormatter, PublishSubject<Application> appClickedEvents) {
+      DecimalFormat oneDecimalFormatter, PublishSubject<Application> appClickedEvents,
+      PublishSubject<GetAdsResponse.Ad> adPublishSubject) {
     this.bundles = bundles;
     this.uiEventsListener = uiEventsListener;
     this.oneDecimalFormatter = oneDecimalFormatter;
     this.appClickedEvents = appClickedEvents;
+    this.adClickedEvents = adPublishSubject;
   }
 
   @Override public AppBundleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -45,7 +49,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
             .inflate(STORE, parent, false));
       case ADS:
         return new AdsBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(ADS, parent, false), uiEventsListener, oneDecimalFormatter, appClickedEvents);
+            .inflate(ADS, parent, false), uiEventsListener, oneDecimalFormatter, adClickedEvents);
       default:
         throw new IllegalStateException("Invalid bundle view type");
     }

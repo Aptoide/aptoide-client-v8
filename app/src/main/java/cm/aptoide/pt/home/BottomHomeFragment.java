@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.FeatureGraphicApplication;
 import cm.aptoide.pt.view.fragment.FragmentView;
@@ -31,6 +32,7 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
   private BundlesAdapter adapter;
   private PublishSubject<HomeClick> uiEventsListener;
   private PublishSubject<Application> appClickedEvents;
+  private PublishSubject<GetAdsResponse.Ad> adClickedEvents;
   private LinearLayoutManager layoutManager;
   private DecimalFormat oneDecimalFormatter;
   private View genericError;
@@ -64,8 +66,9 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
     genericError = view.findViewById(R.id.generic_error);
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
 
+    adClickedEvents = PublishSubject.create();
     adapter = new BundlesAdapter(new ArrayList<>(), uiEventsListener, oneDecimalFormatter,
-        appClickedEvents);
+        appClickedEvents, adClickedEvents);
     layoutManager = new LinearLayoutManager(getContext());
     list.setLayoutManager(layoutManager);
     list.setAdapter(adapter);
@@ -101,6 +104,10 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
 
   @Override public Observable<Application> appClicked() {
     return appClickedEvents;
+  }
+
+  @Override public Observable<GetAdsResponse.Ad> adClicked() {
+    return adClickedEvents;
   }
 
   public List<AppBundle> getFakeBundles() {

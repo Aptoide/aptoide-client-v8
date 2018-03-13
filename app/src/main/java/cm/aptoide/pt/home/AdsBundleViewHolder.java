@@ -9,7 +9,6 @@ import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.view.app.Application;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,13 +27,14 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
   private final LinearLayoutManager layoutManager;
 
   public AdsBundleViewHolder(View view, PublishSubject<HomeClick> uiEventsListener,
-      DecimalFormat oneDecimalFormatter, PublishSubject<Application> appClickedEvents) {
+      DecimalFormat oneDecimalFormatter, PublishSubject<GetAdsResponse.Ad> adClickedEvents) {
     super(view);
     this.uiEventsListener = uiEventsListener;
     bundleTitle = (TextView) view.findViewById(R.id.bundle_title);
     moreButton = (Button) view.findViewById(R.id.bundle_more);
     appsList = (RecyclerView) view.findViewById(R.id.apps_list);
-    appsInBundleAdapter = new AdsInBundleAdapter(new ArrayList<>(), oneDecimalFormatter);
+    appsInBundleAdapter =
+        new AdsInBundleAdapter(new ArrayList<>(), oneDecimalFormatter, adClickedEvents);
     layoutManager =
         new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
     appsList.addItemDecoration(new RecyclerView.ItemDecoration() {

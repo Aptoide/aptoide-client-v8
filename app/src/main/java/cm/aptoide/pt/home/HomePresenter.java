@@ -32,6 +32,8 @@ public class HomePresenter implements Presenter {
 
     handleAppClick();
 
+    handleAdClick();
+
     handleMoreClick();
   }
 
@@ -55,7 +57,20 @@ public class HomePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.appClicked()
-            .doOnNext(homeNavigator::navigateToAppView)
+            .doOnNext(app -> homeNavigator.navigateToAppView(app.getAppId(), app.getPackageName()))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(homeClick -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void handleAdClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.adClicked()
+            .doOnNext(ad -> homeNavigator.navigateToAppView(ad))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {

@@ -16,11 +16,14 @@ import rx.subjects.PublishSubject;
 
 class AdsInBundleAdapter extends RecyclerView.Adapter<AdInBundleViewHolder> {
   private final DecimalFormat oneDecimalFormatter;
+  private final PublishSubject<GetAdsResponse.Ad> adClickedEvents;
   private List<GetAdsResponse.Ad> ads;
 
-  public AdsInBundleAdapter(ArrayList<GetAdsResponse.Ad> ads, DecimalFormat oneDecimalFormatter) {
+  public AdsInBundleAdapter(ArrayList<GetAdsResponse.Ad> ads, DecimalFormat oneDecimalFormatter,
+      PublishSubject<GetAdsResponse.Ad> adClickedEvents) {
     this.ads = ads;
     this.oneDecimalFormatter = oneDecimalFormatter;
+    this.adClickedEvents = adClickedEvents;
   }
 
   public void update(List<GetAdsResponse.Ad> ads) {
@@ -30,8 +33,7 @@ class AdsInBundleAdapter extends RecyclerView.Adapter<AdInBundleViewHolder> {
 
   @Override public AdInBundleViewHolder onCreateViewHolder(ViewGroup parent, int position) {
     return new AdInBundleViewHolder(LayoutInflater.from(parent.getContext())
-        .inflate(R.layout.app_home_item, parent, false), PublishSubject.create(),
-        oneDecimalFormatter);
+        .inflate(R.layout.app_home_item, parent, false), adClickedEvents, oneDecimalFormatter);
   }
 
   @Override public void onBindViewHolder(AdInBundleViewHolder viewHolder, int position) {

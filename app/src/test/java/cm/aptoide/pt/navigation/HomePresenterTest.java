@@ -41,6 +41,7 @@ public class HomePresenterTest {
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private List<HomeBundle> bundles;
   private PublishSubject<Application> appClickEvent;
+  private PublishSubject<GetAdsResponse.Ad> adClickEvent;
   private PublishSubject<HomeClick> moreClickEvent;
   private AppBundle localTopAppsBundle;
   private Application aptoide;
@@ -50,6 +51,7 @@ public class HomePresenterTest {
 
     lifecycleEvent = PublishSubject.create();
     appClickEvent = PublishSubject.create();
+    adClickEvent = PublishSubject.create();
     moreClickEvent = PublishSubject.create();
 
     presenter = new HomePresenter(view, home, Schedulers.immediate(), crashReporter, homeNavigator);
@@ -66,6 +68,7 @@ public class HomePresenterTest {
 
     when(view.getLifecycle()).thenReturn(lifecycleEvent);
     when(view.appClicked()).thenReturn(appClickEvent);
+    when(view.adClicked()).thenReturn(adClickEvent);
     when(view.moreClicked()).thenReturn(moreClickEvent);
   }
 
@@ -104,7 +107,17 @@ public class HomePresenterTest {
     //When an app is clicked
     appClickEvent.onNext(aptoide);
     //then it should navigate to the App's detail View
-    verify(homeNavigator).navigateToAppView(aptoide);
+    verify(homeNavigator).navigateToAppView(aptoide.getAppId(), aptoide.getPackageName());
+  }
+
+  @Test public void adClicked_NavigateToAppView() {
+    //Given an initialised HomePresenter
+    presenter.present();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //When an app is clicked
+    adClickEvent.onNext(null);
+    //then it should navigate to the App's detail View
+    verify(homeNavigator).navigateToAppView(null);
   }
 
   @Test public void moreClicked_NavigateToActionView() {
