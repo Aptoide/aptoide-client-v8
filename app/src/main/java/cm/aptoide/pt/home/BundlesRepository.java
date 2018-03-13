@@ -17,7 +17,7 @@ public class BundlesRepository {
     this.localBundleDataSource = localBundleDataSource;
   }
 
-  public Single<List<AppBundle>> getHomeBundles() {
+  public Single<List<HomeBundle>> getHomeBundles() {
     return remoteBundleDataSource.getBundles();
   }
 }

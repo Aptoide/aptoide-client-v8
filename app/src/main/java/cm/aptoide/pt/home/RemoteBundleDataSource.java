@@ -69,7 +69,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
     this.versionCodeProvider = versionCodeProvider;
   }
 
-  @Override public Single<List<AppBundle>> getBundles() {
+  @Override public Single<List<HomeBundle>> getBundles() {
     final boolean adultContentEnabled = accountManager.enabled()
         .first()
         .toSingle()

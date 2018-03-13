@@ -1,6 +1,5 @@
 package cm.aptoide.pt.home;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import java.util.List;
 import rx.Single;
 
@@ -16,7 +15,7 @@ public class Home {
     this.bundlesRepository = bundlesRepository;
   }
 
-  public Single<List<AppBundle>> getHomeBundles() {
+  public Single<List<HomeBundle>> getHomeBundles() {
     return bundlesRepository.getHomeBundles();
   }
 }

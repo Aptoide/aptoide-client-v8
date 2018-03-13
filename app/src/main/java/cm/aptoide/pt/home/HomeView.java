@@ -9,7 +9,7 @@ import rx.Observable;
  */
 
 public interface HomeView extends View {
-  void showHomeBundles(List<AppBundle> bundles);
+  void showHomeBundles(List<HomeBundle> bundles);
 
   void showLoading();
 

@@ -8,8 +8,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.view.app.Application;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 import rx.subjects.PublishSubject;
 
 /**
@@ -45,11 +47,15 @@ class EditorsBundleViewHolder extends AppBundleViewHolder {
     graphicsList.setAdapter(appsAdapter);
   }
 
-  @Override public void setBundle(AppBundle appBundle, int position) {
-    bundleTitle.setText(appBundle.getTitle());
-    appsAdapter.update(appBundle.getApps());
+  @Override public void setBundle(HomeBundle homeBundle, int position) {
+    if (!(homeBundle instanceof AppBundle)) {
+      throw new IllegalStateException(this.getClass()
+          .getName() + " is getting non AppBundle instance!");
+    }
+    bundleTitle.setText(homeBundle.getTitle());
+    appsAdapter.update((List<Application>) homeBundle.getContent());
 
     moreButton.setOnClickListener(
-        v -> uiEventsListener.onNext(new HomeClick(appBundle, HomeClick.Type.MORE)));
+        v -> uiEventsListener.onNext(new HomeClick(homeBundle, HomeClick.Type.MORE)));
   }
 }

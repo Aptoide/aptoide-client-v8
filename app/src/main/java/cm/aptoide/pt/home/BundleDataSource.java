@@ -9,5 +9,5 @@ import rx.Single;
 
 public interface BundleDataSource {
 
-  Single<List<AppBundle>> getBundles();
+  Single<List<HomeBundle>> getBundles();
 }

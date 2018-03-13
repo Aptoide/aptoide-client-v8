@@ -5,15 +5,15 @@ package cm.aptoide.pt.home;
  */
 
 public class HomeClick {
-  private final AppBundle bundle;
+  private final HomeBundle bundle;
   private final Type actionType;
 
-  public HomeClick(AppBundle bundle, Type actionType) {
+  public HomeClick(HomeBundle bundle, Type actionType) {
     this.bundle = bundle;
     this.actionType = actionType;
   }
 
-  public AppBundle getBundle() {
+  public HomeBundle getBundle() {
     return bundle;
   }
 

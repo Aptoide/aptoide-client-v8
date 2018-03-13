@@ -1,6 +1,7 @@
 package cm.aptoide.pt.home;
 
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.dataprovider.model.v7.ListApps;
@@ -18,14 +19,14 @@ import rx.functions.Func1;
  */
 
 public class BundlesResponseMapper {
-  @NonNull Func1<GetStoreWidgets, List<AppBundle>> map() {
+  @NonNull Func1<GetStoreWidgets, List<HomeBundle>> map() {
     return bundlesResponse -> fromWidgetsToBundles(bundlesResponse.getDataList()
         .getList());
   }
 
-  private List<AppBundle> fromWidgetsToBundles(List<GetStoreWidgets.WSWidget> widgetBundles) {
+  private List<HomeBundle> fromWidgetsToBundles(List<GetStoreWidgets.WSWidget> widgetBundles) {
 
-    List<AppBundle> appBundles = new ArrayList<>();
+    List<HomeBundle> appBundles = new ArrayList<>();
 
     for (GetStoreWidgets.WSWidget widget : widgetBundles) {
       GetStoreWidgets.WSWidget.Data data = widget.getData();
@@ -33,13 +34,16 @@ public class BundlesResponseMapper {
         continue;
       }
       AppBundle.BundleType type = bundleTypeMapper(widget.getType(), data.getLayout());
-      if (type.equals(AppBundle.BundleType.APPS) || type.equals(AppBundle.BundleType.EDITORS)) {
+      if (type.equals(HomeBundle.BundleType.APPS) || type.equals(HomeBundle.BundleType.EDITORS)) {
         try {
           appBundles.add(new AppBundle(widget.getTitle(), applicationsToApps(
               ((ListApps) widget.getViewObject()).getDataList()
                   .getList(), type), type));
         } catch (Exception ignore) {
         }
+      } else if (type.equals(HomeBundle.BundleType.ADS)) {
+        appBundles.add(
+            new AdBundle(widget.getTitle(), ((GetAdsResponse) widget.getViewObject()).getAds()));
       }
     }
 
@@ -50,12 +54,12 @@ public class BundlesResponseMapper {
     switch (type) {
       case APPS_GROUP:
         if (layout.equals(Layout.BRICK)) {
-          return AppBundle.BundleType.EDITORS;
+          return HomeBundle.BundleType.EDITORS;
         } else {
-          return AppBundle.BundleType.APPS;
+          return HomeBundle.BundleType.APPS;
         }
       default:
-        return AppBundle.BundleType.APPS;
+        return HomeBundle.BundleType.APPS;
     }
   }
 
@@ -65,7 +69,7 @@ public class BundlesResponseMapper {
     }
     List<Application> applications = new ArrayList<>();
     for (App app : apps) {
-      if (type.equals(AppBundle.BundleType.EDITORS)) {
+      if (type.equals(HomeBundle.BundleType.EDITORS)) {
         applications.add(new FeatureGraphicApplication(app.getName(), app.getIcon(), app.getStats()
             .getRating()
             .getAvg(), app.getStats()

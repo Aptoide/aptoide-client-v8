@@ -7,7 +7,7 @@ import java.util.List;
  * Created by jdandrade on 07/03/2018.
  */
 
-public class AppBundle {
+public class AppBundle implements HomeBundle {
 
   private final String title;
   private final List<Application> apps;
@@ -23,15 +23,15 @@ public class AppBundle {
     return title;
   }
 
-  public List<Application> getApps() {
+  @Override public List<?> getContent() {
     return apps;
   }
 
-  public BundleType getType() {
+  @Override public BundleType getType() {
     return type;
   }
 
-  public enum BundleType {
-    EDITORS, APPS, STORE
+  public List<Application> getApps() {
+    return apps;
   }
 }

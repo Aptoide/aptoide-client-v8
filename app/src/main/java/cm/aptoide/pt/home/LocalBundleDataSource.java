@@ -8,9 +8,9 @@ import rx.Single;
  */
 
 public class LocalBundleDataSource implements BundleDataSource {
-  private List<AppBundle> appBundles;
+  private List<HomeBundle> appBundles;
 
-  @Override public Single<List<AppBundle>> getBundles() {
+  @Override public Single<List<HomeBundle>> getBundles() {
     return Single.just(appBundles);
   }
 }

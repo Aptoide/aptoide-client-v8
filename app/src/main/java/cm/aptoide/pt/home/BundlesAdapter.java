@@ -17,10 +17,10 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private static final int APPS = R.layout.apps_bundle_item;
   private static final int STORE = R.layout.store_bundle_item;
   private final DecimalFormat oneDecimalFormatter;
-  private List<AppBundle> bundles;
+  private List<HomeBundle> bundles;
   private PublishSubject<HomeClick> uiEventsListener;
 
-  public BundlesAdapter(List<AppBundle> bundles, PublishSubject<HomeClick> uiEventsListener,
+  public BundlesAdapter(List<HomeBundle> bundles, PublishSubject<HomeClick> uiEventsListener,
       DecimalFormat oneDecimalFormatter) {
     this.bundles = bundles;
     this.uiEventsListener = uiEventsListener;
@@ -68,7 +68,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
     return bundles.size();
   }
 
-  public void update(List<AppBundle> bundles) {
+  public void update(List<HomeBundle> bundles) {
     this.bundles = bundles;
     notifyDataSetChanged();
   }

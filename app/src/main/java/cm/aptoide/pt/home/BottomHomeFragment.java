@@ -69,7 +69,7 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
     attachPresenter(presenter);
   }
 
-  @Override public void showHomeBundles(List<AppBundle> bundles) {
+  @Override public void showHomeBundles(List<HomeBundle> bundles) {
     adapter.update(bundles);
   }
 
