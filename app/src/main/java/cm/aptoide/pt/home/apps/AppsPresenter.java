@@ -31,6 +31,21 @@ public class AppsPresenter implements Presenter {
     getUpdatesList();
 
     getInstalls();
+
+    getDownloads();
+  }
+
+  private void getDownloads() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(viewScheduler)
+        .flatMap(__ -> appsManager.getDownloadApps())
+        .doOnNext(list -> view.showDownloadsList(list))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          crashReport.log(err);
+        });
   }
 
   private void getInstalls() {

@@ -12,20 +12,35 @@ public class AppsManager {
 
   private UpdatesManager updatesManager;
   private InstallManager installManager;
+  private DownloadAppToInstallMapper downloadAppToInstallMapper;
 
-  public AppsManager(UpdatesManager updatesManager, InstallManager installManager) {
+  public AppsManager(UpdatesManager updatesManager, InstallManager installManager,
+      DownloadAppToInstallMapper downloadsManager) {
     this.updatesManager = updatesManager;
     this.installManager = installManager;
+    this.downloadAppToInstallMapper = downloadsManager;
   }
 
-  public Observable<List<UpdateApp>> getUpdatesList() {
+  public Observable<List<App>> getUpdatesList() {
     //return updatesManager.getUpdatesList()
     //  .map(updatesList ->);
     // TODO: 3/7/18 map Displayables to updateApp
     return null;
   }
 
-  public Observable<List<InstalledApp>> getInstalledApps() {
+  public Observable<List<App>> getInstalledApps() {
     return null;
+  }
+
+  public Observable<List<App>> getDownloadApps() {
+    return installManager.getInstallations()
+        .distinctUntilChanged()
+        .flatMap(installations -> {
+          if (installations == null || installations.isEmpty()) {
+            return Observable.empty();
+          }
+          return Observable.just(installations)
+              .map(installedApps -> downloadAppToInstallMapper.getDownloadApps(installedApps));
+        });
   }
 }

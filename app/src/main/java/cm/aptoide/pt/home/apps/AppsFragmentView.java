@@ -9,7 +9,9 @@ import java.util.List;
 
 public interface AppsFragmentView extends View {
 
-  void showUpdatesList(List<UpdateApp> list);
+  void showUpdatesList(List<App> list);
 
-  void showInstalledApps(List<InstalledApp> installedApps);
+  void showInstalledApps(List<App> installedApps);
+
+  void showDownloadsList(List<App> list);
 }
