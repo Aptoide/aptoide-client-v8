@@ -26,6 +26,7 @@ import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -46,6 +47,7 @@ public class HomePresenterTest {
   private PublishSubject<Application> appClickEvent;
   private PublishSubject<GetAdsResponse.Ad> adClickEvent;
   private PublishSubject<HomeClick> moreClickEvent;
+  private PublishSubject<Object> bottomReachedEvent;
   private AppBundle localTopAppsBundle;
   private Application aptoide;
 
@@ -56,6 +58,7 @@ public class HomePresenterTest {
     appClickEvent = PublishSubject.create();
     adClickEvent = PublishSubject.create();
     moreClickEvent = PublishSubject.create();
+    bottomReachedEvent = PublishSubject.create();
 
     presenter = new HomePresenter(view, home, Schedulers.immediate(), crashReporter, homeNavigator,
         new AdMapper());
@@ -74,6 +77,7 @@ public class HomePresenterTest {
     when(view.appClicked()).thenReturn(appClickEvent);
     when(view.adClicked()).thenReturn(adClickEvent);
     when(view.moreClicked()).thenReturn(moreClickEvent);
+    when(view.reachesBottom()).thenReturn(bottomReachedEvent);
   }
 
   @Test public void loadAllBundlesFromRepositoryAndLoadIntoView() {
@@ -133,6 +137,41 @@ public class HomePresenterTest {
     moreClickEvent.onNext(click);
     //Then it should navigate with the specific action behaviour
     verify(homeNavigator).navigateWithAction(click);
+  }
+
+  @Test public void bottomReached_ShowNextBundles() {
+    //Given an initialised presenter with already loaded bundles into the UI before
+    presenter.present();
+    when(home.getNextHomeBundles()).thenReturn(Single.just(bundles));
+    when(home.hasMore()).thenReturn(true);
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //When scrolling to the end of the view is reached
+    //And there are more bundles available to load
+    bottomReachedEvent.onNext(new Object());
+    //Then it should show the load more progress indicator
+    verify(view).showLoadMore();
+    //Then it should request the next bundles to the bundles repository
+    verify(home).getNextHomeBundles();
+    //Then it should hide the load more progress indicator
+    verify(view).hideShowMore();
+    //Then it should show the view again with old bundles and added bundles, retaining list position
+    verify(view).showMoreHomeBundles(bundles);
+  }
+
+  @Test public void bottomReached_NoMoreBundlesAvailableToShow() {
+    //Given an initialised presenter with already loaded bundles into the UI before
+    presenter.present();
+    when(home.getNextHomeBundles()).thenReturn(Single.just(bundles));
+    when(home.hasMore()).thenReturn(false);
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //When scrolling to the end of the view is reached
+    //And there are no more bundles available to load
+    bottomReachedEvent.onNext(new Object());
+    //Then it should do nothing
+    verify(view, never()).showLoadMore();
+    verify(home, never()).getNextHomeBundles();
+    verify(view, never()).hideShowMore();
+    verify(view, never()).showMoreHomeBundles(bundles);
   }
 
   private List<Application> getAppsList() {

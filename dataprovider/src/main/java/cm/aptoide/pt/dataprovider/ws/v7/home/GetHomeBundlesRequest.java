@@ -66,7 +66,7 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
     this.versionCodeProvider = versionCodeProvider;
   }
 
-  public static GetHomeBundlesRequest of(int limit, OkHttpClient httpClient,
+  public static GetHomeBundlesRequest of(int limit, int offset, OkHttpClient httpClient,
       Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
       WSWidgetsUtils widgetsUtils, BaseRequestWithStore.StoreCredentials storeCredentials,
@@ -75,7 +75,7 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
       ConnectivityManager connectivityManager,
       AdsApplicationVersionCodeProvider versionCodeProvider) {
     return new GetHomeBundlesRequest(
-        new Body(limit, WidgetsArgs.createDefault(resources, windowManager)), httpClient,
+        new Body(limit, offset, WidgetsArgs.createDefault(resources, windowManager)), httpClient,
         converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences, widgetsUtils,
         storeCredentials, clientUniqueId, isGooglePlayServicesAvailable, partnerId, accountMature,
         filters, resources, windowManager, connectivityManager, versionCodeProvider);
@@ -120,8 +120,9 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
     private long storeId;
     private int offset;
 
-    public Body(Integer limit, WidgetsArgs widgetsArgs) {
+    public Body(Integer limit, int offset, WidgetsArgs widgetsArgs) {
       this.limit = limit;
+      this.offset = offset;
       this.widgetsArgs = widgetsArgs;
       this.context = StoreContext.home;
       this.storeId = 15;

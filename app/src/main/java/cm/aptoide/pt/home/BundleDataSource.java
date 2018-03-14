@@ -9,5 +9,9 @@ import rx.Single;
 
 public interface BundleDataSource {
 
-  Single<List<HomeBundle>> getBundles();
+  Single<List<HomeBundle>> getFreshHomeBundles();
+
+  Single<List<HomeBundle>> getNextHomeBundles();
+
+  boolean hasMorePosts();
 }

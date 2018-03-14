@@ -19,9 +19,17 @@ public interface HomeView extends View {
 
   void showGenericError();
 
+  Observable<Object> reachesBottom();
+
   Observable<HomeClick> moreClicked();
 
   Observable<Application> appClicked();
 
   Observable<GetAdsResponse.Ad> adClicked();
+
+  void showLoadMore();
+
+  void hideShowMore();
+
+  void showMoreHomeBundles(List<HomeBundle> bundles);
 }

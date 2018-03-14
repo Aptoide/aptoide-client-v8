@@ -11,8 +11,17 @@ import rx.Single;
  */
 
 public class FakeBundleDataSource implements BundleDataSource {
-  @Override public Single<List<HomeBundle>> getBundles() {
+
+  @Override public Single<List<HomeBundle>> getFreshHomeBundles() {
     return Single.just(getFakeBundles());
+  }
+
+  @Override public Single<List<HomeBundle>> getNextHomeBundles() {
+    return getFreshHomeBundles();
+  }
+
+  @Override public boolean hasMorePosts() {
+    return false;
   }
 
   public List<HomeBundle> getFakeBundles() {

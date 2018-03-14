@@ -1055,8 +1055,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AppCenter(appCenterRepository);
   }
 
-  @Singleton @Provides Home providesHome(BundlesRepository bundlesRepository,
-      AptoideAccountManager accountManager) {
+  @Singleton @Provides Home providesHome(BundlesRepository bundlesRepository) {
     return new Home(bundlesRepository);
   }
 
@@ -1072,9 +1071,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converter,
       BundlesResponseMapper mapper, TokenInvalidator tokenInvalidator,
       @Named("default") SharedPreferences sharedPreferences, AptoideAccountManager accountManager) {
-    return new RemoteBundleDataSource(5, bodyInterceptorPoolV7, okHttpClient, converter, mapper,
-        tokenInvalidator, sharedPreferences, new WSWidgetsUtils(), new StoreCredentialsProviderImpl(
-        AccessorFactory.getAccessorFor(
+    return new RemoteBundleDataSource(5, Integer.MAX_VALUE, bodyInterceptorPoolV7, okHttpClient,
+        converter, mapper, tokenInvalidator, sharedPreferences, new WSWidgetsUtils(),
+        new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
             ((AptoideApplication) getApplicationContext().getApplicationContext()).getDatabase(),
             Store.class)).fromUrl(""),
         ((AptoideApplication) getApplicationContext()).getIdsRepository()

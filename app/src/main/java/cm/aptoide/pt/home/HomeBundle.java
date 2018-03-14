@@ -20,6 +20,6 @@ public interface HomeBundle {
   String getTag();
 
   enum BundleType {
-    EDITORS, APPS, ADS, ERROR, STORE
+    EDITORS, APPS, ADS, ERROR, LOADING, STORE
   }
 }

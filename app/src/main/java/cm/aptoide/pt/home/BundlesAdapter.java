@@ -19,16 +19,20 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private static final int APPS = R.layout.apps_bundle_item;
   private static final int STORE = R.layout.store_bundle_item;
   private static final int ADS = R.layout.ads_bundle_item;
+  private static final int LOADING = R.layout.progress_item;
+  private final ProgressBundle progressBundle;
   private final DecimalFormat oneDecimalFormatter;
   private final PublishSubject<Application> appClickedEvents;
   private final PublishSubject<HomeClick> uiEventsListener;
   private List<HomeBundle> bundles;
   private PublishSubject<GetAdsResponse.Ad> adClickedEvents;
 
-  public BundlesAdapter(List<HomeBundle> bundles, PublishSubject<HomeClick> uiEventsListener,
-      DecimalFormat oneDecimalFormatter, PublishSubject<Application> appClickedEvents,
+  public BundlesAdapter(List<HomeBundle> bundles, ProgressBundle homeBundle,
+      PublishSubject<HomeClick> uiEventsListener, DecimalFormat oneDecimalFormatter,
+      PublishSubject<Application> appClickedEvents,
       PublishSubject<GetAdsResponse.Ad> adPublishSubject) {
     this.bundles = bundles;
+    this.progressBundle = homeBundle;
     this.uiEventsListener = uiEventsListener;
     this.oneDecimalFormatter = oneDecimalFormatter;
     this.appClickedEvents = appClickedEvents;
@@ -50,6 +54,9 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
       case ADS:
         return new AdsBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(ADS, parent, false), uiEventsListener, oneDecimalFormatter, adClickedEvents);
+      case LOADING:
+        return new LoadingBundleViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(LOADING, parent, false));
       default:
         throw new IllegalStateException("Invalid bundle view type");
     }
@@ -70,6 +77,8 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
         return STORE;
       case ADS:
         return ADS;
+      case LOADING:
+        return LOADING;
       default:
         throw new IllegalStateException(
             "Bundle type not supported by the adapter: " + bundles.get(position)
@@ -84,6 +93,23 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
 
   public void update(List<HomeBundle> bundles) {
     this.bundles = bundles;
+    notifyDataSetChanged();
+  }
+
+  public void add(List<HomeBundle> bundles) {
+    this.bundles.addAll(bundles);
+    notifyDataSetChanged();
+  }
+
+  public void addLoadMore() {
+    if (!this.bundles.contains(progressBundle)) {
+      this.bundles.add(progressBundle);
+      notifyDataSetChanged();
+    }
+  }
+
+  public void removeLoadMore() {
+    this.bundles.remove(progressBundle);
     notifyDataSetChanged();
   }
 }

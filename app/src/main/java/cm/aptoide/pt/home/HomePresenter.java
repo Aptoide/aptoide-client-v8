@@ -37,6 +37,8 @@ public class HomePresenter implements Presenter {
     handleAdClick();
 
     handleMoreClick();
+
+    handleBottomReached();
   }
 
   private void onCreateLoadBundles() {
@@ -92,6 +94,25 @@ public class HomePresenter implements Presenter {
         .subscribe(homeClick -> {
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void handleBottomReached() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reachesBottom()
+            .filter(__ -> home.hasMore())
+            .observeOn(viewScheduler)
+            .doOnNext(bottomReached -> view.showLoadMore())
+            .flatMapSingle(bottomReached -> home.getNextHomeBundles())
+            .observeOn(viewScheduler)
+            .doOnNext(view::showMoreHomeBundles)
+            .doOnNext(bundles -> view.hideShowMore())
+            .doOnError(throwable -> view.hideShowMore())
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(bundles -> {
+        }, throwable -> {
         });
   }
 }

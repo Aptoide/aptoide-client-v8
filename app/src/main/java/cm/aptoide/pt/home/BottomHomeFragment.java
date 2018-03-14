@@ -12,6 +12,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.fragment.FragmentView;
+import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,11 @@ import rx.subjects.PublishSubject;
  */
 
 public class BottomHomeFragment extends FragmentView implements HomeView {
+
+  /**
+   * The minimum number of items to have below your current scroll position before loading more.
+   */
+  private final int visibleThreshold = 2;
 
   @Inject Home home;
   @Inject HomePresenter presenter;
@@ -66,8 +72,8 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
 
     adClickedEvents = PublishSubject.create();
-    adapter = new BundlesAdapter(new ArrayList<>(), uiEventsListener, oneDecimalFormatter,
-        appClickedEvents, adClickedEvents);
+    adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), uiEventsListener,
+        oneDecimalFormatter, appClickedEvents, adClickedEvents);
     layoutManager = new LinearLayoutManager(getContext());
     list.setLayoutManager(layoutManager);
     list.setAdapter(adapter);
@@ -96,6 +102,13 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
     this.progressBar.setVisibility(View.GONE);
   }
 
+  @Override public Observable<Object> reachesBottom() {
+    return RxRecyclerView.scrollEvents(list)
+        .distinctUntilChanged()
+        .filter(scroll -> isEndReached())
+        .cast(Object.class);
+  }
+
   @Override public Observable<HomeClick> moreClicked() {
     return uiEventsListener;
   }
@@ -106,5 +119,24 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
 
   @Override public Observable<GetAdsResponse.Ad> adClicked() {
     return adClickedEvents;
+  }
+
+  @Override public void showLoadMore() {
+    adapter.addLoadMore();
+  }
+
+  @Override public void hideShowMore() {
+    if (adapter != null) {
+      adapter.removeLoadMore();
+    }
+  }
+
+  @Override public void showMoreHomeBundles(List<HomeBundle> bundles) {
+    adapter.add(bundles);
+  }
+
+  private boolean isEndReached() {
+    return layoutManager.getItemCount() - layoutManager.findLastVisibleItemPosition()
+        <= visibleThreshold;
   }
 }

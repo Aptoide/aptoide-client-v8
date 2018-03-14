@@ -12,6 +12,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.home.GetHomeBundlesRequest;
+import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -28,7 +29,6 @@ public class RemoteBundleDataSource implements BundleDataSource {
   private final BundlesResponseMapper mapper;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
-  private final int limit;
   private final WSWidgetsUtils widgetsUtils;
   private final BaseRequestWithStore.StoreCredentials storeCredentials;
   private final String clientUniqueId;
@@ -40,9 +40,14 @@ public class RemoteBundleDataSource implements BundleDataSource {
   private final WindowManager windowManager;
   private final ConnectivityManager connectivityManager;
   private final AdsApplicationVersionCodeProvider versionCodeProvider;
+  private final int limit;
+  private int currentOffset;
+  private int total;
+  private boolean loading;
 
-  public RemoteBundleDataSource(int limit, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient okHttpClient, Converter.Factory converterFactory, BundlesResponseMapper mapper,
+  public RemoteBundleDataSource(int limit, int initialTotal,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient okHttpClient,
+      Converter.Factory converterFactory, BundlesResponseMapper mapper,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
       WSWidgetsUtils widgetsUtils, BaseRequestWithStore.StoreCredentials storeCredentials,
       String clientUniqueId, boolean isGooglePlayServicesAvailable, String partnerId,
@@ -50,6 +55,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
       WindowManager windowManager, ConnectivityManager connectivityManager,
       AdsApplicationVersionCodeProvider versionCodeProvider) {
     this.limit = limit;
+    this.total = initialTotal;
     this.bodyInterceptor = bodyInterceptor;
     this.okHttpClient = okHttpClient;
     this.converterFactory = converterFactory;
@@ -69,18 +75,45 @@ public class RemoteBundleDataSource implements BundleDataSource {
     this.versionCodeProvider = versionCodeProvider;
   }
 
-  @Override public Single<List<HomeBundle>> getBundles() {
+  private Single<List<HomeBundle>> getBundles(int offset) {
+    if (loading || (offset >= total)) {
+      return Single.just(Collections.emptyList());
+    }
     final boolean adultContentEnabled = accountManager.enabled()
         .first()
         .toSingle()
         .toBlocking()
         .value();
-    return GetHomeBundlesRequest.of(limit, okHttpClient, converterFactory, bodyInterceptor,
-        tokenInvalidator, sharedPreferences, widgetsUtils, storeCredentials, clientUniqueId,
-        isGooglePlayServicesAvailable, partnerId, adultContentEnabled, filters, resources,
-        windowManager, connectivityManager, versionCodeProvider)
-        .observe(true, true)
-        .map(mapper.map())
-        .toSingle();
+
+    return Single.fromCallable(() -> loading = true)
+        .flatMap(__ -> GetHomeBundlesRequest.of(limit, offset, okHttpClient, converterFactory,
+            bodyInterceptor, tokenInvalidator, sharedPreferences, widgetsUtils, storeCredentials,
+            clientUniqueId, isGooglePlayServicesAvailable, partnerId, adultContentEnabled, filters,
+            resources, windowManager, connectivityManager, versionCodeProvider)
+            .observe(true, true)
+            .toSingle())
+        .flatMap(homeResponse -> {
+          if (homeResponse.isOk()) {
+            this.currentOffset = homeResponse.getNextSize();
+            this.total = homeResponse.getTotal();
+            return Single.just(homeResponse);
+          }
+          return Single.error(new IllegalStateException("Could not obtain timeline from server."));
+        })
+        .doOnError(__ -> loading = false)
+        .doOnSuccess(timelineResponse -> loading = false)
+        .map(mapper.map());
+  }
+
+  @Override public Single<List<HomeBundle>> getFreshHomeBundles() {
+    return getBundles(0);
+  }
+
+  @Override public Single<List<HomeBundle>> getNextHomeBundles() {
+    return getBundles(currentOffset);
+  }
+
+  @Override public boolean hasMorePosts() {
+    return currentOffset < total && !loading;
   }
 }

@@ -18,6 +18,14 @@ public class BundlesRepository {
   }
 
   public Single<List<HomeBundle>> getHomeBundles() {
-    return remoteBundleDataSource.getBundles();
+    return remoteBundleDataSource.getFreshHomeBundles();
+  }
+
+  public Single<List<HomeBundle>> getNextHomeBundles() {
+    return remoteBundleDataSource.getNextHomeBundles();
+  }
+
+  public boolean hasMore() {
+    return remoteBundleDataSource.hasMorePosts();
   }
 }

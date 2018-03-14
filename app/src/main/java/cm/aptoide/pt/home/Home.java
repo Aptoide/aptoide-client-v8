@@ -18,4 +18,12 @@ public class Home {
   public Single<List<HomeBundle>> getHomeBundles() {
     return bundlesRepository.getHomeBundles();
   }
+
+  public Single<List<HomeBundle>> getNextHomeBundles() {
+    return bundlesRepository.getNextHomeBundles();
+  }
+
+  public boolean hasMore() {
+    return bundlesRepository.hasMore();
+  }
 }
