@@ -3,6 +3,7 @@ package cm.aptoide.pt.navigation;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.home.AdBundle;
+import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AppBundle;
 import cm.aptoide.pt.home.BottomHomeFragment;
 import cm.aptoide.pt.home.Home;
@@ -11,6 +12,7 @@ import cm.aptoide.pt.home.HomeClick;
 import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.home.HomePresenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.view.app.Application;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,6 +25,7 @@ import rx.Single;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -38,8 +41,8 @@ public class HomePresenterTest {
   @Mock private Home home;
 
   private HomePresenter presenter;
-  private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private List<HomeBundle> bundles;
+  private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private PublishSubject<Application> appClickEvent;
   private PublishSubject<GetAdsResponse.Ad> adClickEvent;
   private PublishSubject<HomeClick> moreClickEvent;
@@ -55,7 +58,7 @@ public class HomePresenterTest {
     moreClickEvent = PublishSubject.create();
 
     presenter = new HomePresenter(view, home, Schedulers.immediate(), crashReporter, homeNavigator,
-        adMapper);
+        new AdMapper());
     bundles = new ArrayList<>();
 
     List<Application> applications = getAppsList();
@@ -118,7 +121,7 @@ public class HomePresenterTest {
     //When an app is clicked
     adClickEvent.onNext(null);
     //then it should navigate to the App's detail View
-    verify(homeNavigator).navigateToAppView(null);
+    verify(homeNavigator).navigateToAppView(any(SearchAdResult.class));
   }
 
   @Test public void moreClicked_NavigateToActionView() {

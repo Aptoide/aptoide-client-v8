@@ -33,7 +33,7 @@ class EditorsBundleViewHolder extends AppBundleViewHolder {
     bundleTitle = (TextView) view.findViewById(R.id.bundle_title);
     moreButton = (Button) view.findViewById(R.id.bundle_more);
     graphicsList = (RecyclerView) view.findViewById(R.id.featured_graphic_list);
-    appsAdapter = new EditorsAppsAdapter(new ArrayList<>(), oneDecimalFormatter);
+    appsAdapter = new EditorsAppsAdapter(new ArrayList<>(), oneDecimalFormatter, appClickedEvents);
     layoutManager =
         new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
     graphicsList.addItemDecoration(new RecyclerView.ItemDecoration() {

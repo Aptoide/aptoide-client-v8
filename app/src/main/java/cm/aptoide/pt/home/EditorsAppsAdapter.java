@@ -16,18 +16,21 @@ import rx.subjects.PublishSubject;
 
 class EditorsAppsAdapter extends RecyclerView.Adapter<FeatureGraphicInBundleViewHolder> {
   private final DecimalFormat oneDecimalFormatter;
+  private final PublishSubject<Application> appClickedEvents;
   private List<Application> apps;
 
-  public EditorsAppsAdapter(List<Application> apps, DecimalFormat oneDecimalFormatter) {
+  public EditorsAppsAdapter(List<Application> apps, DecimalFormat oneDecimalFormatter,
+      PublishSubject<Application> appClickedEvents) {
     this.apps = apps;
     this.oneDecimalFormatter = oneDecimalFormatter;
+    this.appClickedEvents = appClickedEvents;
   }
 
   @Override
   public FeatureGraphicInBundleViewHolder onCreateViewHolder(ViewGroup parent, int position) {
     return new FeatureGraphicInBundleViewHolder(LayoutInflater.from(parent.getContext())
-        .inflate(R.layout.feature_graphic_home_item, parent, false), PublishSubject.create(),
-        oneDecimalFormatter);
+        .inflate(R.layout.feature_graphic_home_item, parent, false), oneDecimalFormatter,
+        appClickedEvents);
   }
 
   @Override

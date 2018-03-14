@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.FeatureGraphicApplication;
 import java.text.DecimalFormat;
 import rx.subjects.PublishSubject;
@@ -15,17 +16,17 @@ import rx.subjects.PublishSubject;
  */
 
 class FeatureGraphicInBundleViewHolder extends RecyclerView.ViewHolder {
-  private final PublishSubject<FeatureGraphicApplication> appClicks;
   private final DecimalFormat oneDecimalFormatter;
+  private final PublishSubject<Application> appClickedEvents;
   private final TextView nameTextView;
   private final ImageView featureGraphic;
   private final TextView rating;
 
-  public FeatureGraphicInBundleViewHolder(View view,
-      PublishSubject<FeatureGraphicApplication> appClicks, DecimalFormat oneDecimalFormatter) {
+  public FeatureGraphicInBundleViewHolder(View view, DecimalFormat oneDecimalFormatter,
+      PublishSubject<Application> appClickedEvents) {
     super(view);
-    this.appClicks = appClicks;
     this.oneDecimalFormatter = oneDecimalFormatter;
+    this.appClickedEvents = appClickedEvents;
     nameTextView = ((TextView) itemView.findViewById(R.id.app_name));
     featureGraphic = ((ImageView) itemView.findViewById(R.id.featured_graphic));
     rating = (TextView) itemView.findViewById(R.id.rating_label);
@@ -36,6 +37,6 @@ class FeatureGraphicInBundleViewHolder extends RecyclerView.ViewHolder {
     ImageLoader.with(itemView.getContext())
         .load(featureGraphicApplication.getFeatureGraphic(), featureGraphic);
     rating.setText(oneDecimalFormatter.format(featureGraphicApplication.getRating()));
-    itemView.setOnClickListener(v -> appClicks.onNext(featureGraphicApplication));
+    itemView.setOnClickListener(v -> appClickedEvents.onNext(featureGraphicApplication));
   }
 }

@@ -10,6 +10,9 @@ public class AdMapper {
 
   Func1<? super GetAdsResponse.Ad, SearchAdResult> mapAdToSearchAd() {
     return ad -> {
+      if (ad == null) {
+        return new SearchAdResult();
+      }
       String clickUrl = null;
       int networkId = 0;
       if (ad.getPartner() != null) {
