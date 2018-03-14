@@ -43,4 +43,24 @@ public class AppsManager {
               .map(installedApps -> downloadAppToInstallMapper.getDownloadApps(installedApps));
         });
   }
+
+  public void retryDownload(App app) {
+
+  }
+
+  public void installApp(App app) {
+
+  }
+
+  public void cancelDownload(App app) {
+
+  }
+
+  public void resumeDownload(App app) {
+
+  }
+
+  public void pauseDownload(App app) {
+
+  }
 }

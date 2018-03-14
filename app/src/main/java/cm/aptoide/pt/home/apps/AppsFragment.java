@@ -14,6 +14,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import java.util.ArrayList;
 import java.util.List;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
@@ -38,6 +39,12 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    pauseDownload = PublishSubject.create();
+    cancelDownload = PublishSubject.create();
+    resumeDownload = PublishSubject.create();
+    installApp = PublishSubject.create();
+    retryDownload = PublishSubject.create();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -69,8 +76,6 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
         ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(),
         new DownloadAppToInstallMapper()), AndroidSchedulers.mainThread(), Schedulers.computation(),
         CrashReport.getInstance()));
-
-    //adapter.addApps(appListMaterlo);
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -80,10 +85,6 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   private void setupRecyclerView() {
     recyclerView.setAdapter(adapter);
-    setupRecyclerViewLayoutManager();
-  }
-
-  private void setupRecyclerViewLayoutManager() {
     recyclerView.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
   }
@@ -99,11 +100,47 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public void showInstalledApps(List<App> installedApps) {
-    // TODO: 3/7/18 send it to the adapter
     adapter.addApps(installedApps);
   }
 
   @Override public void showDownloadsList(List<App> list) {
-    adapter.addApps(list);
+    if (list != null && !list.isEmpty()) {
+      adapter.addApps(list);
+    }
+  }
+
+  @Override public Observable<App> retryDownload() {
+    return retryDownload;
+  }
+
+  @Override public Observable<App> installApp() {
+    return installApp;
+  }
+
+  @Override public Observable<App> cancelDownload() {
+    return cancelDownload;
+  }
+
+  @Override public Observable<App> resumeDownload() {
+    return resumeDownload;
+  }
+
+  @Override public Observable<App> pauseDownload() {
+    return pauseDownload;
+  }
+
+  @Override public void onDestroy() {
+    installApp = null;
+    retryDownload = null;
+    cancelDownload = null;
+    resumeDownload = null;
+    pauseDownload = null;
+    super.onDestroy();
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    adapter = null;
+    recyclerView = null;
   }
 }
