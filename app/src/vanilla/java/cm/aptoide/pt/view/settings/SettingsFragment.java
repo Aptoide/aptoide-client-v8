@@ -23,6 +23,7 @@ import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.SwitchPreferenceCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
@@ -91,9 +92,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   private Preference pinPreferenceView;
   private Preference removePinPreferenceView;
-  private CheckBoxPreference adultContentPreferenceView;
-  private CheckBoxPreference adultContentWithPinPreferenceView;
-  private CheckBoxPreference socialCampaignNotifications;
+  private SwitchPreferenceCompat adultContentPreferenceView;
+  private SwitchPreferenceCompat adultContentWithPinPreferenceView;
+  private SwitchPreferenceCompat socialCampaignNotifications;
   private boolean trackAnalytics;
   private NotificationSyncScheduler notificationSyncScheduler;
   private SharedPreferences sharedPreferences;
@@ -193,11 +194,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
     }
 
     adultContentPreferenceView =
-        (CheckBoxPreference) findPreference(ADULT_CONTENT_PREFERENCE_VIEW_KEY);
+        (SwitchPreferenceCompat) findPreference(ADULT_CONTENT_PREFERENCE_VIEW_KEY);
     adultContentWithPinPreferenceView =
-        (CheckBoxPreference) findPreference(ADULT_CONTENT_WITH_PIN_PREFERENCE_VIEW_KEY);
+        (SwitchPreferenceCompat) findPreference(ADULT_CONTENT_WITH_PIN_PREFERENCE_VIEW_KEY);
     socialCampaignNotifications =
-        (CheckBoxPreference) findPreference(CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY);
+        (SwitchPreferenceCompat) findPreference(CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY);
     pinPreferenceView = findPreference(ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY);
     removePinPreferenceView = findPreference(REMOVE_ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY);
 
@@ -227,6 +228,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
         ManagedKeys.HWSPECS_FILTER) || key.equals(ManagedKeys.UPDATES_SYSTEM_APPS_KEY);
   }
 
+  private boolean mapToSwitch(Preference pref) {
+    SwitchPreferenceCompat dummy = (SwitchPreferenceCompat) pref;
+    return ((SwitchPreferenceCompat) pref).isChecked();
+  }
   private void setupClickHandlers() {
     //set AppStore name
     findPreference(SettingsConstants.CHECK_AUTO_UPDATE_CATEGORY).setTitle(
@@ -241,8 +246,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
         AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_message,
             getContext().getResources(), marketName));
 
-    subscriptions.add(RxPreference.checks(socialCampaignNotifications)
-        .subscribe(isChecked -> handleSocialNotifications(isChecked)));
+    subscriptions.add(RxPreference.clicks(socialCampaignNotifications)
+        .subscribe(isChecked -> handleSocialNotifications(
+            ((SwitchPreferenceCompat) isChecked).isChecked())));
+
+
 
     subscriptions.add(accountManager.enabled()
         .observeOn(AndroidSchedulers.mainThread())
@@ -260,10 +268,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
         .retry()
         .subscribe());
 
-    subscriptions.add(RxPreference.checks(adultContentPreferenceView)
+    subscriptions.add(RxPreference.clicks(adultContentPreferenceView)
         .flatMap(checked -> {
           rollbackCheck(adultContentPreferenceView);
-          if (checked) {
+          if (((SwitchPreferenceCompat) checked).isChecked()) {
             adultContentConfirmationDialog.show();
             return Observable.empty();
           } else {
@@ -278,10 +286,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
         .retry()
         .subscribe());
 
-    subscriptions.add(RxPreference.checks(adultContentWithPinPreferenceView)
+    subscriptions.add(RxPreference.clicks(adultContentWithPinPreferenceView)
         .flatMap(checked -> {
           rollbackCheck(adultContentWithPinPreferenceView);
-          if (checked) {
+          if (((SwitchPreferenceCompat) checked).isChecked()) {
             enableAdultContentPinDialog.show();
             return Observable.empty();
           } else {
@@ -295,6 +303,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         })
         .retry()
         .subscribe());
+
 
     subscriptions.add(accountManager.pinRequired()
         .observeOn(AndroidSchedulers.mainThread())
@@ -512,7 +521,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     }
   }
 
-  private void rollbackCheck(CheckBoxPreference preference) {
+  private void rollbackCheck(SwitchPreferenceCompat preference) {
     preference.setChecked(!preference.isChecked());
   }
 

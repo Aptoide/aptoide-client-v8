@@ -43,7 +43,7 @@
           android:textColor="@color/black"
           />
       <Button
-          android:id="@+id/poopees"
+          android:id="@+id/login_button"
           android:layout_width="300dp"
           android:layout_height="wrap_content"
           android:layout_gravity="center_horizontal"

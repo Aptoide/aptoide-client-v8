@@ -11,6 +11,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import cm.aptoide.pt.view.settings.NewSettingsFragment;
+import cm.aptoide.pt.view.settings.SettingsFragment;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -59,6 +60,7 @@ public class BottomNavigationFragmentView extends FragmentView
         selectedFragment = new BottomHomeFragment();
         break;
       case R.id.action_search:
+        selectedFragment = SettingsFragment.newInstance();
         break;
       case R.id.action_stores:
         selectedFragment = new NewSettingsFragment();

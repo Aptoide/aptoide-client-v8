@@ -5,8 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.preference.CheckBoxPreference;
-import android.support.v7.preference.Preference;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -62,6 +60,7 @@ public class NewSettingsFragment extends FragmentView
   protected Toolbar toolbar;
   @Inject NavigationTracker navigationTracker;
   @Inject NewSettingsNavigator newSettingsNavigator;
+  private SharedPreferences sharedPreferences;
   private UpdateRepository repository;
   private String defaultThemeName;
   private AdultContentAnalytics adultContentAnalytics;
@@ -75,14 +74,8 @@ public class NewSettingsFragment extends FragmentView
   private EditableTextDialog setPinDialog;
   private EditableTextDialog removePinDialog;
 
-  private Preference pinPreferenceView;
-  private Preference removePinPreferenceView;
-  private CheckBoxPreference adultContentPreferenceView;
-  private CheckBoxPreference adultContentWithPinPreferenceView;
-  private CheckBoxPreference socialCampaignNotifications;
   private boolean trackAnalytics;
   private NotificationSyncScheduler notificationSyncScheduler;
-  private SharedPreferences sharedPreferences;
   private String marketName;
   private Database database;
   private PublishSubject<Void> populateAccountSubject;
@@ -110,6 +103,10 @@ public class NewSettingsFragment extends FragmentView
   private Button createStoreButton;
   private Button editStoreButton;
   private Button editProfileButton;
+
+  //Settings views
+  private View compatibleApps;
+  private View downloadOverWifi;
 
   //TODO: Add string resources to the settings XML and fragment (ALL STRINGS HARDCODED!!!)
 
@@ -176,29 +173,7 @@ public class NewSettingsFragment extends FragmentView
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    myProfileView = view.findViewById(R.id.my_profile);
-    myStoreView = view.findViewById(R.id.my_store);
-    accountView = view.findViewById(R.id.account_displayables);
-    loginView = view.findViewById(R.id.login_register_container);
-
-    myAccountAvatar = (ImageView) myProfileView.findViewById(R.id.user_icon);
-    myAccountName = (TextView) myProfileView.findViewById(R.id.description);
-    myStoreAvatar = (ImageView) myStoreView.findViewById(R.id.user_icon);
-    myStoreName = (TextView) myStoreView.findViewById(R.id.description);
-
-    myStoreTitle = (TextView) myStoreView.findViewById(R.id.name);
-    myStoreTitle.setText("My store");
-
-    myAccountTitle = (TextView) myProfileView.findViewById(R.id.name);
-    myAccountTitle.setText("My account");
-
-    loginButton = (Button) view.findViewById(R.id.poopees);
-    logoutButton = (Button) view.findViewById(R.id.logout_button);
-    createStoreMessage = (TextView) view.findViewById(R.id.create_store_message);
-    findFriendsButton = (Button) view.findViewById(R.id.find_friends_button);
-    createStoreButton = (Button) view.findViewById(R.id.create_store_button);
-    editStoreButton = (Button) myStoreView.findViewById(R.id.edit_button);
-    editProfileButton = (Button) myProfileView.findViewById(R.id.edit_button);
+    setAccountViews(view);
 
     AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
     attachPresenter(new NewSettingsPresenter(this, accountManager, CrashReport.getInstance(),
@@ -335,4 +310,35 @@ public class NewSettingsFragment extends FragmentView
               STROKE_SIZE, R.drawable.my_account_placeholder);
     }
   }
+
+  private void setAccountViews(View view) {
+    myProfileView = view.findViewById(R.id.my_profile);
+    myStoreView = view.findViewById(R.id.my_store);
+    accountView = view.findViewById(R.id.account_displayables);
+    loginView = view.findViewById(R.id.login_register_container);
+
+    myAccountAvatar = (ImageView) myProfileView.findViewById(R.id.user_icon);
+    myAccountName = (TextView) myProfileView.findViewById(R.id.description);
+    myStoreAvatar = (ImageView) myStoreView.findViewById(R.id.user_icon);
+    myStoreName = (TextView) myStoreView.findViewById(R.id.description);
+
+    myStoreTitle = (TextView) myStoreView.findViewById(R.id.name);
+    myStoreTitle.setText("My store");
+
+    myAccountTitle = (TextView) myProfileView.findViewById(R.id.name);
+    myAccountTitle.setText("My account");
+
+    loginButton = (Button) view.findViewById(R.id.login_button);
+    logoutButton = (Button) view.findViewById(R.id.logout_button);
+    createStoreMessage = (TextView) view.findViewById(R.id.create_store_message);
+    findFriendsButton = (Button) view.findViewById(R.id.find_friends_button);
+    createStoreButton = (Button) view.findViewById(R.id.create_store_button);
+    editStoreButton = (Button) myStoreView.findViewById(R.id.edit_button);
+    editProfileButton = (Button) myProfileView.findViewById(R.id.edit_button);
+  }
+
+  private void setSettingsViews(View view) {
+    downloadOverWifi = view.findViewById(R.id.download_wifi);
+  }
+
 }
