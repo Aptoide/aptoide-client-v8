@@ -496,4 +496,12 @@ public class InstallManager {
         .toList()
         .toCompletable();
   }
+
+  public Observable<List<Installed>> fetchInstalled() {
+    return installedRepository.getAllInstalledSorted()
+        .first()
+        .flatMapIterable(list -> list)
+        .filter(item -> !item.isSystemApp())
+        .toList();
+  }
 }

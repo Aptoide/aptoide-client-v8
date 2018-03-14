@@ -12,13 +12,16 @@ public class AppsManager {
 
   private UpdatesManager updatesManager;
   private InstallManager installManager;
-  private DownloadAppToInstallMapper downloadAppToInstallMapper;
+  private InstallToDownloadAppMapper installToDownloadAppMapper;
+  private InstalledToInstalledAppMapper installedToInstalledAppMapper;
 
   public AppsManager(UpdatesManager updatesManager, InstallManager installManager,
-      DownloadAppToInstallMapper downloadsManager) {
+      InstallToDownloadAppMapper downloadsManager,
+      InstalledToInstalledAppMapper installedToInstalledAppMapper) {
     this.updatesManager = updatesManager;
     this.installManager = installManager;
-    this.downloadAppToInstallMapper = downloadsManager;
+    this.installToDownloadAppMapper = downloadsManager;
+    this.installedToInstalledAppMapper = installedToInstalledAppMapper;
   }
 
   public Observable<List<App>> getUpdatesList() {
@@ -29,7 +32,11 @@ public class AppsManager {
   }
 
   public Observable<List<App>> getInstalledApps() {
-    return null;
+    return installManager.fetchInstalled()
+        .flatMapIterable(list -> list)
+        .flatMap(item -> updatesManager.filterUpdates(item))
+        .toList()
+        .map(installeds -> installedToInstalledAppMapper.getInstalledApps(installeds));
   }
 
   public Observable<List<App>> getDownloadApps() {
@@ -40,7 +47,7 @@ public class AppsManager {
             return Observable.empty();
           }
           return Observable.just(installations)
-              .map(installedApps -> downloadAppToInstallMapper.getDownloadApps(installedApps));
+              .map(installedApps -> installToDownloadAppMapper.getDownloadApps(installedApps));
         });
   }
 

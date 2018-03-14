@@ -11,6 +11,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,10 +73,12 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
     setupRecyclerView();
 
-    attachPresenter(new AppsPresenter(this, new AppsManager(new UpdatesManager(),
+    attachPresenter(new AppsPresenter(this, new AppsManager(new UpdatesManager(
+        RepositoryFactory.getUpdateRepository(getContext(),
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
         ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(),
-        new DownloadAppToInstallMapper()), AndroidSchedulers.mainThread(), Schedulers.computation(),
-        CrashReport.getInstance()));
+        new InstallToDownloadAppMapper(), new InstalledToInstalledAppMapper()),
+        AndroidSchedulers.mainThread(), Schedulers.computation(), CrashReport.getInstance()));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -100,6 +103,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public void showInstalledApps(List<App> installedApps) {
+    setInstalledAppsHeader(installedApps);
     adapter.addApps(installedApps);
   }
 
@@ -127,6 +131,11 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public Observable<App> pauseDownload() {
     return pauseDownload;
+  }
+
+  private void setInstalledAppsHeader(List<App> installedApps) {
+    installedApps.add(0,
+        new Header(getResources().getString(R.string.apps_short_installed_apps_header)));
   }
 
   @Override public void onDestroy() {

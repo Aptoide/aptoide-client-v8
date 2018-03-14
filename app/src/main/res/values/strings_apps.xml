@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="apps_short_downloads_header">Downloads</string>
+  <string name="apps_short_installed_apps_header">Installed</string>
   <string name="apps_short_error_download">An error occurred</string>
   <string name="apps_short_download_paused">Download paused</string>
   <string name="apps_short_downloading">Downloading</string>

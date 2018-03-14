@@ -114,7 +114,9 @@ public class AppsPresenter implements Presenter {
   private void getInstalls() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(computation)
         .flatMap(__ -> appsManager.getInstalledApps())
+        .observeOn(viewScheduler)
         .doOnNext(installedApps -> view.showInstalledApps(installedApps))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

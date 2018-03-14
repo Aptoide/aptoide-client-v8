@@ -4,22 +4,22 @@ package cm.aptoide.pt.home.apps;
  * Created by filipegoncalves on 3/7/18.
  */
 
-public class InstalledApp {
+public class InstalledApp implements App {
 
-  private String name;
+  private String appName;
   private String packageName;
   private String version;
   private String icon;
 
-  public InstalledApp(String name, String packageName, String version, String icon) {
-    this.name = name;
+  public InstalledApp(String appName, String packageName, String version, String icon) {
+    this.appName = appName;
     this.packageName = packageName;
     this.version = version;
     this.icon = icon;
   }
 
-  public String getName() {
-    return name;
+  public String getAppName() {
+    return appName;
   }
 
   public String getPackageName() {
@@ -32,5 +32,9 @@ public class InstalledApp {
 
   public String getIcon() {
     return icon;
+  }
+
+  @Override public Type getType() {
+    return Type.INSTALLED;
   }
 }

@@ -63,7 +63,7 @@ public class AppCardViewHolderFactory {
         break;
       case INSTALLED:
         appViewHolder = new InstalledAppViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.apps_header_item, parent, false));
+            .inflate(R.layout.apps_installed_app_item, parent, false));
         break;
       default:
         throw new IllegalStateException("Wrong cardType" + viewType);

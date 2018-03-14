@@ -8,7 +8,7 @@ import java.util.List;
  * Created by filipegoncalves on 3/8/18.
  */
 
-public class DownloadAppToInstallMapper {
+public class InstallToDownloadAppMapper {
 
   public List<App> getDownloadApps(List<Install> installations) {
     List<App> downloadsList = new ArrayList<>();
