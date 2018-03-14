@@ -17,14 +17,16 @@ public class HomePresenter implements Presenter {
   private final Scheduler viewScheduler;
   private final CrashReport crashReporter;
   private final HomeNavigator homeNavigator;
+  private final AdMapper adMapper;
 
   public HomePresenter(HomeView view, Home home, Scheduler viewScheduler, CrashReport crashReporter,
-      HomeNavigator homeNavigator) {
+      HomeNavigator homeNavigator, AdMapper adMapper) {
     this.view = view;
     this.home = home;
     this.viewScheduler = viewScheduler;
     this.crashReporter = crashReporter;
     this.homeNavigator = homeNavigator;
+    this.adMapper = adMapper;
   }
 
   @Override public void present() {
@@ -70,6 +72,7 @@ public class HomePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.adClicked()
+            .map(adMapper.mapAdToSearchAd())
             .doOnNext(homeNavigator::navigateToAppView)
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

@@ -54,7 +54,8 @@ public class HomePresenterTest {
     adClickEvent = PublishSubject.create();
     moreClickEvent = PublishSubject.create();
 
-    presenter = new HomePresenter(view, home, Schedulers.immediate(), crashReporter, homeNavigator);
+    presenter = new HomePresenter(view, home, Schedulers.immediate(), crashReporter, homeNavigator,
+        adMapper);
     bundles = new ArrayList<>();
 
     List<Application> applications = getAppsList();
