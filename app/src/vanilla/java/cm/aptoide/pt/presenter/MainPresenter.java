@@ -9,7 +9,8 @@ import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.home.BottomNavigationFragmentView;
+import cm.aptoide.pt.home.AptoideBottomNavigator;
+import cm.aptoide.pt.home.BottomHomeFragment;
 import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
@@ -25,6 +26,7 @@ import cm.aptoide.pt.view.DeepLinkManager;
 import cm.aptoide.pt.view.wizard.WizardFragment;
 import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.exceptions.OnErrorNotImplementedException;
 
 public class MainPresenter implements Presenter {
 
@@ -37,13 +39,12 @@ public class MainPresenter implements Presenter {
   private final SharedPreferences securePreferences;
   private final FragmentNavigator fragmentNavigator;
   private final DeepLinkManager deepLinkManager;
-  private final String defaultStore;
-  private final String defaultTheme;
   private final NotificationSyncScheduler notificationSyncScheduler;
   private final InstallCompletedNotifier installCompletedNotifier;
   private final ApkFy apkFy;
   private final AutoUpdate autoUpdate;
   private final boolean firstCreated;
+  private final AptoideBottomNavigator aptoideBottomNavigator;
 
   public MainPresenter(MainView view, InstallManager installManager,
       RootInstallationRetryHandler rootInstallationRetryHandler, CrashReport crashReport,
@@ -51,8 +52,8 @@ public class MainPresenter implements Presenter {
       NotificationSyncScheduler notificationSyncScheduler,
       InstallCompletedNotifier installCompletedNotifier, SharedPreferences sharedPreferences,
       SharedPreferences securePreferences, FragmentNavigator fragmentNavigator,
-      DeepLinkManager deepLinkManager, String defaultStore, String defaultTheme,
-      boolean firstCreated) {
+      DeepLinkManager deepLinkManager, boolean firstCreated,
+      AptoideBottomNavigator aptoideBottomNavigator) {
     this.view = view;
     this.installManager = installManager;
     this.rootInstallationRetryHandler = rootInstallationRetryHandler;
@@ -67,8 +68,7 @@ public class MainPresenter implements Presenter {
     this.firstCreated = firstCreated;
     this.sharedPreferences = sharedPreferences;
     this.securePreferences = securePreferences;
-    this.defaultStore = defaultStore;
-    this.defaultTheme = defaultTheme;
+    this.aptoideBottomNavigator = aptoideBottomNavigator;
   }
 
   @Override public void present() {
@@ -82,6 +82,16 @@ public class MainPresenter implements Presenter {
         .doOnNext(__ -> navigate())
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
+
+    view.getLifecycle()
+        .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
+        .flatMap(created -> aptoideBottomNavigator.navigationEvent())
+        .doOnNext(fragmentid -> aptoideBottomNavigator.showFragment(fragmentid))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
 
     setupInstallErrorsDisplay();
     shortcutManagement();
@@ -157,7 +167,7 @@ public class MainPresenter implements Presenter {
   }
 
   private void showHome() {
-    Fragment home = new BottomNavigationFragmentView();
+    Fragment home = new BottomHomeFragment();
     fragmentNavigator.navigateToWithoutBackSave(home, true);
   }
 
