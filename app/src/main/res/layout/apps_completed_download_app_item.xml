@@ -48,6 +48,7 @@
           android:ellipsize="end"
           android:maxLines="1"
           tools:text="Application Name"
+          style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
           />
 
       <TextView
@@ -57,6 +58,7 @@
           android:ellipsize="end"
           android:maxLines="1"
           android:text="@string/apps_short_ready_to_install"
+          style="@style/Aptoide.TextView.Regular.XS.Grey"
           />
 
     </LinearLayout>

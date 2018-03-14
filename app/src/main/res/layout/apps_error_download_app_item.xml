@@ -49,6 +49,7 @@
           android:ellipsize="end"
           android:maxLines="1"
           tools:text="Application Name"
+          style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
           />
 
       <LinearLayout

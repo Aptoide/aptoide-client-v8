@@ -48,6 +48,7 @@
           android:ellipsize="end"
           android:maxLines="1"
           tools:text="Application Name"
+          style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
           />
 
       <ProgressBar
@@ -72,6 +73,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@string/apps_short_download_paused"
+            style="@style/Aptoide.TextView.Regular.XS.Grey"
             />
 
         <TextView
@@ -82,6 +84,7 @@
             android:layout_alignParentRight="true"
             android:layout_gravity="start"
             tools:text="80%"
+            style="@style/Aptoide.TextView.Regular.XS.Grey"
             />
       </RelativeLayout>
 
@@ -98,7 +101,6 @@
         android:layout_weight="1"
         android:gravity="end"
         android:orientation="horizontal"
-
         >
 
       <ImageView
