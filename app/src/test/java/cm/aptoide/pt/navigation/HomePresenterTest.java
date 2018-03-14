@@ -2,6 +2,7 @@ package cm.aptoide.pt.navigation;
 
 import cm.aptoide.pt.home.AppBundle;
 import cm.aptoide.pt.home.BottomHomeFragment;
+import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomePresenter;
 import cm.aptoide.pt.presenter.View;
@@ -26,6 +27,7 @@ public class HomePresenterTest {
 
   @Mock private BottomHomeFragment view;
   @Mock private Home home;
+  @Mock private BottomNavigationActivity aptoideBottomNavigator;
 
   private HomePresenter presenter;
 
@@ -36,7 +38,7 @@ public class HomePresenterTest {
     MockitoAnnotations.initMocks(this);
 
     lifecycleEvent = PublishSubject.create();
-    presenter = new HomePresenter(view, home);
+    presenter = new HomePresenter(view, home, aptoideBottomNavigator);
     bundles = new ArrayList<>();
 
     List<Application> applications = getAppsList();
