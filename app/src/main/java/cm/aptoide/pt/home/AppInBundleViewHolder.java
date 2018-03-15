@@ -31,7 +31,7 @@ public class AppInBundleViewHolder extends AppViewHolder {
   public void setApp(Application app) {
     nameTextView.setText(app.getName());
     ImageLoader.with(itemView.getContext())
-        .load(app.getIcon(), iconView);
+        .loadWithRoundCorners(app.getIcon(), 8, iconView, R.drawable.placeholder_square);
     float rating = app.getRating();
     if (rating == 0) {
       this.rating.setText("- -");

@@ -35,8 +35,8 @@ class AdInBundleViewHolder extends RecyclerView.ViewHolder {
     nameTextView.setText(ad.getData()
         .getName());
     ImageLoader.with(itemView.getContext())
-        .load(ad.getData()
-            .getIcon(), iconView);
+        .loadWithRoundCorners(ad.getData()
+            .getIcon(), 8, iconView, R.drawable.placeholder_square);
     float rating = ad.getData()
         .getStars();
     if (rating == 0) {

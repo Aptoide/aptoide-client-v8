@@ -34,11 +34,9 @@ class FeatureGraphicInBundleViewHolder extends RecyclerView.ViewHolder {
 
   public void setFeatureGraphicApplication(FeatureGraphicApplication featureGraphicApplication) {
     nameTextView.setText(featureGraphicApplication.getName());
-    //ImageLoader.with(itemView.getContext())
-    //    .load(featureGraphicApplication.getFeatureGraphic(), R.drawable.placeholder_brick,
-    //        featureGraphic);
     ImageLoader.with(itemView.getContext())
-        .loadWithRoundCorners(featureGraphicApplication.getFeatureGraphic(), 4, featureGraphic);
+        .load(featureGraphicApplication.getFeatureGraphic(), R.drawable.placeholder_brick,
+            featureGraphic);
 
     float rating = featureGraphicApplication.getRating();
     if (rating == 0) {
