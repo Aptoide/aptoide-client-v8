@@ -17,7 +17,7 @@
       >
 
     <ImageView
-        android:id="@+id/app_downloads_icon"
+        android:id="@+id/apps_updates_app_icon"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_centerVertical="true"
@@ -32,17 +32,17 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
-        android:layout_marginBottom="12dp"
-        android:layout_marginTop="8dp"
-        android:layout_toEndOf="@id/app_downloads_icon"
-        android:layout_toLeftOf="@+id/app_download_pause_button"
-        android:layout_toRightOf="@id/app_downloads_icon"
-        android:layout_toStartOf="@id/app_download_pause_button"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_toEndOf="@id/apps_updates_app_icon"
+        android:layout_toLeftOf="@+id/apps_updates_update_button"
+        android:layout_toRightOf="@id/apps_updates_app_icon"
+        android:layout_toStartOf="@id/apps_updates_update_button"
         android:orientation="vertical"
         >
 
       <TextView
-          android:id="@+id/app_downloads_app_name"
+          android:id="@+id/apps_updates_app_name"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginBottom="4dp"
@@ -53,7 +53,7 @@
           />
 
       <LinearLayout
-          android:id="@+id/app_download_download_info_layout"
+          android:id="@+id/apps_updates_update_info_layout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:orientation="horizontal"
@@ -62,20 +62,19 @@
         <ImageView
             android:layout_width="12dp"
             android:layout_height="12dp"
-            android:layout_gravity="center"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="4dp"
             android:layout_marginRight="4dp"
-            android:src="@drawable/ic_error_outline_red"
+            android:src="@drawable/ic_refresh_orange"
             />
 
         <TextView
-            android:id="@+id/app_download_progress_number"
+            android:id="@+id/apps_updates_app_version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:paddingBottom="2dp"
-            android:paddingTop="2dp"
-            android:text="@string/apps_short_error_download"
-            android:textColor="@color/red_700"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/grey_700"
+            tools:text="1239123ojd"
             style="@style/Aptoide.TextView.Regular.XS"
             />
       </LinearLayout>
@@ -83,7 +82,7 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/app_download_retry_button"
+        android:id="@+id/apps_updates_update_button"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_alignParentEnd="true"

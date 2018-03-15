@@ -16,8 +16,11 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
   protected static final int STANDBY_DOWNLOAD = 3;
   protected static final int COMPLETED_DOWNLOAD = 4;
   protected static final int ERROR_DOWNLOAD = 5;
-  protected static final int UPDATE = 6;
-  protected static final int INSTALLED = 7;
+  protected static final int INSTALLED = 6;
+  protected static final int UPDATE = 7;
+  protected static final int UPDATING = 8;
+  protected static final int STANDBY_UPDATE = 9;
+  protected static final int ERROR_UPDATE = 10;
 
   private List<App> listOfApps;
   private AppCardViewHolderFactory appCardViewHolderFactory;
@@ -49,7 +52,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
         type = getDownloadType(((DownloadApp) item).getDownloadStatus());
         break;
       case UPDATE:
-        type = UPDATE;
+        type = getUpdateType(((UpdateApp) item).getUpdateStatus());
         break;
       case INSTALLED:
         type = INSTALLED;
@@ -65,6 +68,27 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
 
   @Override public int getItemCount() {
     return listOfApps.size();
+  }
+
+  private int getUpdateType(UpdateApp.UpdateStatus updateStatus) {
+    int type;
+    switch (updateStatus) {
+      case UPDATE:
+        type = UPDATE;
+        break;
+      case UPDATING:
+        type = UPDATING;
+        break;
+      case STANDBY:
+        type = STANDBY_UPDATE;
+        break;
+      case ERROR:
+        type = ERROR_UPDATE;
+        break;
+      default:
+        throw new IllegalArgumentException("Wrong download status : " + updateStatus.name());
+    }
+    return type;
   }
 
   private int getDownloadType(DownloadApp.Status downloadStatus) {

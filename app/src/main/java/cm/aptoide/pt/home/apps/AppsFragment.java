@@ -34,6 +34,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   private PublishSubject<App> installApp;
   private PublishSubject<App> retryDownload;
   private PublishSubject<App> updateAllApps;
+  private PublishSubject<App> updateApp;
 
   public static AppsFragment newInstance() {
     return new AppsFragment();
@@ -48,6 +49,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     installApp = PublishSubject.create();
     retryDownload = PublishSubject.create();
     updateAllApps = PublishSubject.create();
+    updateApp = PublishSubject.create();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -55,26 +57,29 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
     recyclerView = (RecyclerView) view.findViewById(R.id.fragment_apps_recycler_view);
 
-    List<App> appListMaterlo = new ArrayList<>();
-    appListMaterlo.add(new Header(
+    List<App> appsList = new ArrayList<>();
+    appsList.add(new Header(
         "Downloads"));// FIXME: 3/15/18 headers should use string resource for translation
-    appListMaterlo.add(
+    appsList.add(
         new DownloadApp("Aptoide", "md5", "sdasda", 20, false, 21212, DownloadApp.Status.ACTIVE));
 
-    appListMaterlo.add(
+    appsList.add(
         new DownloadApp("Uploader", "md5", "sdasda", 20, false, 21212, DownloadApp.Status.STANDBY));
 
-    appListMaterlo.add(new DownloadApp("Messenger", "md5", "sadasda", 100, false, 21212,
+    appsList.add(new DownloadApp("Messenger", "md5", "sadasda", 100, false, 21212,
         DownloadApp.Status.COMPLETED));
 
-    appListMaterlo.add(new DownloadApp("Fit2Gather", "md5", "sadasda", 100, false, 21212,
+    appsList.add(new DownloadApp("Fit2Gather", "md5", "sadasda", 100, false, 21212,
         DownloadApp.Status.ERROR));
 
-    appListMaterlo.add(new UpdatesHeader("upedates heuhue"));
+    appsList.add(new UpdatesHeader("upedates heuhue"));
+    appsList.add(
+        new UpdateApp("BackupApps", "md5", "sdasda", "cm.aptoide.backupapps", 30, false, "31231",
+            UpdateApp.UpdateStatus.UPDATE));
 
-    adapter = new AppsAdapter(appListMaterlo,
+    adapter = new AppsAdapter(appsList,
         new AppCardViewHolderFactory(pauseDownload, cancelDownload, resumeDownload, installApp,
-            retryDownload, updateAllApps));
+            retryDownload, updateAllApps, updateApp));
 
     setupRecyclerView();
 

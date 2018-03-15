@@ -5,12 +5,17 @@ import android.view.ViewGroup;
 import cm.aptoide.pt.R;
 import rx.subjects.PublishSubject;
 
+import static cm.aptoide.pt.home.apps.AppsAdapter.ACTIVE_DOWNLOAD;
 import static cm.aptoide.pt.home.apps.AppsAdapter.COMPLETED_DOWNLOAD;
 import static cm.aptoide.pt.home.apps.AppsAdapter.ERROR_DOWNLOAD;
+import static cm.aptoide.pt.home.apps.AppsAdapter.ERROR_UPDATE;
 import static cm.aptoide.pt.home.apps.AppsAdapter.HEADER;
 import static cm.aptoide.pt.home.apps.AppsAdapter.HEADER_UPDATES;
 import static cm.aptoide.pt.home.apps.AppsAdapter.INSTALLED;
+import static cm.aptoide.pt.home.apps.AppsAdapter.STANDBY_DOWNLOAD;
+import static cm.aptoide.pt.home.apps.AppsAdapter.STANDBY_UPDATE;
 import static cm.aptoide.pt.home.apps.AppsAdapter.UPDATE;
+import static cm.aptoide.pt.home.apps.AppsAdapter.UPDATING;
 
 /**
  * Created by filipegoncalves on 3/12/18.
@@ -24,17 +29,19 @@ public class AppCardViewHolderFactory {
   private PublishSubject<App> installApp;
   private PublishSubject<App> retryDownload;
   private PublishSubject<App> updateAllApps;
+  private PublishSubject<App> updateApp;
 
   public AppCardViewHolderFactory(PublishSubject<App> pauseDownload,
       PublishSubject<App> cancelDownload, PublishSubject<App> resumeDownload,
       PublishSubject<App> installApp, PublishSubject<App> retryDownload,
-      PublishSubject<App> updateAllApps) {
+      PublishSubject<App> updateAllApps, PublishSubject<App> updateApp) {
     this.pauseDownload = pauseDownload;
     this.cancelDownload = cancelDownload;
     this.resumeDownload = resumeDownload;
     this.installApp = installApp;
     this.retryDownload = retryDownload;
     this.updateAllApps = updateAllApps;
+    this.updateApp = updateApp;
   }
 
   public AppsViewHolder createViewHolder(int viewType, ViewGroup parent) {
@@ -48,11 +55,11 @@ public class AppCardViewHolderFactory {
         appViewHolder = new UpdatesHeaderViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.apps_header_updates_item, parent, false), updateAllApps);
         break;
-      case AppsAdapter.ACTIVE_DOWNLOAD:
+      case ACTIVE_DOWNLOAD:
         appViewHolder = new ActiveAppDownloadViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.apps_active_download_app_item, parent, false), pauseDownload);
         break;
-      case AppsAdapter.STANDBY_DOWNLOAD:
+      case STANDBY_DOWNLOAD:
         appViewHolder = new StandByAppDownloadViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.apps_standby_download_app_item, parent, false), cancelDownload,
             resumeDownload);
@@ -67,7 +74,19 @@ public class AppCardViewHolderFactory {
         break;
       case UPDATE:
         appViewHolder = new UpdateAppViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.apps_header_item, parent, false));
+            .inflate(R.layout.apps_update_app_item, parent, false), updateApp);
+        break;
+      case UPDATING:
+        appViewHolder = new UpdateAppViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.apps_header_item, parent, false), updateApp);
+        break;
+      case STANDBY_UPDATE:
+        appViewHolder = new UpdateAppViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.apps_header_item, parent, false), updateApp);
+        break;
+      case ERROR_UPDATE:
+        appViewHolder = new UpdateAppViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.apps_header_item, parent, false), updateApp);
         break;
       case INSTALLED:
         appViewHolder = new InstalledAppViewHolder(LayoutInflater.from(parent.getContext())

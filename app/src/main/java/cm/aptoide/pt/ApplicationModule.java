@@ -456,7 +456,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         PendingIntent.FLAG_UPDATE_CURRENT);
 
     NotificationCompat.Action action =
-        new NotificationCompat.Action(R.drawable.ic_refresh_black_24dp,
+        new NotificationCompat.Action(R.drawable.ic_refresh_black,
             application.getString(R.string.generalscreen_short_root_install_timeout_error_action),
             retryPendingIntent);
 
