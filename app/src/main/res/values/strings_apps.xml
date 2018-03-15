@@ -7,11 +7,10 @@
   <string name="apps_short_downloading">Downloading</string>
   <string name="apps_short_ready_to_install">Ready to install</string>
 
-  <string name="apps_short_download_error_message">An error occurred</string>
-
   <string name="apps_button_update_all">Update all</string>
 
   <string name="apps_short_updating">Updating</string>
   <string name="apps_short_update_paused">Update paused</string>
+  <string name="apps_short_error_update">An error occurred</string>
 
 </resources>

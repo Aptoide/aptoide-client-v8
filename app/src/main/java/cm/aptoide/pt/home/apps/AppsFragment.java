@@ -38,6 +38,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   private PublishSubject<App> pauseUpdate;
   private PublishSubject<App> cancelUpdate;
   private PublishSubject<App> resumeUpdate;
+  private PublishSubject<App> retryUpdate;
 
   public static AppsFragment newInstance() {
     return new AppsFragment();
@@ -90,9 +91,14 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
         new UpdateApp("Clash Royale", "md5", "sdasda", "com.supercell.clashroyale", 100, false,
             "2.1.8", UpdateApp.UpdateStatus.STANDBY));
 
+    appsList.add(
+        new UpdateApp("Facebook", "md5", "sdasda", "com.facebook.katana", 100, false, "165.0.00.33",
+            UpdateApp.UpdateStatus.ERROR));
+
     adapter = new AppsAdapter(appsList,
         new AppCardViewHolderFactory(pauseDownload, cancelDownload, resumeDownload, installApp,
-            retryDownload, updateAllApps, updateApp, pauseUpdate, cancelUpdate, resumeUpdate));
+            retryDownload, updateAllApps, updateApp, pauseUpdate, cancelUpdate, resumeUpdate,
+            retryUpdate));
 
     setupRecyclerView();
 
