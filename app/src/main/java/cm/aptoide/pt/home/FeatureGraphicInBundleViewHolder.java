@@ -36,7 +36,12 @@ class FeatureGraphicInBundleViewHolder extends RecyclerView.ViewHolder {
     nameTextView.setText(featureGraphicApplication.getName());
     ImageLoader.with(itemView.getContext())
         .load(featureGraphicApplication.getFeatureGraphic(), featureGraphic);
-    rating.setText(oneDecimalFormatter.format(featureGraphicApplication.getRating()));
+    float rating = featureGraphicApplication.getRating();
+    if (rating == 0) {
+      this.rating.setText("- -");
+    } else {
+      this.rating.setText(oneDecimalFormatter.format(rating));
+    }
     itemView.setOnClickListener(v -> appClickedEvents.onNext(featureGraphicApplication));
   }
 }

@@ -32,7 +32,12 @@ public class AppInBundleViewHolder extends AppViewHolder {
     nameTextView.setText(app.getName());
     ImageLoader.with(itemView.getContext())
         .load(app.getIcon(), iconView);
-    rating.setText(oneDecimalFormatter.format(app.getRating()));
+    float rating = app.getRating();
+    if (rating == 0) {
+      this.rating.setText("- -");
+    } else {
+      this.rating.setText(oneDecimalFormatter.format(rating));
+    }
     itemView.setOnClickListener(v -> appClicks.onNext(app));
   }
 }

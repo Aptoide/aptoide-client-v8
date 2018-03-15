@@ -37,8 +37,13 @@ class AdInBundleViewHolder extends RecyclerView.ViewHolder {
     ImageLoader.with(itemView.getContext())
         .load(ad.getData()
             .getIcon(), iconView);
-    rating.setText(oneDecimalFormatter.format(ad.getData()
-        .getStars()));
+    float rating = ad.getData()
+        .getStars();
+    if (rating == 0) {
+      this.rating.setText("- -");
+    } else {
+      this.rating.setText(oneDecimalFormatter.format(rating));
+    }
     itemView.setOnClickListener(v -> adClickedEvents.onNext(ad));
   }
 }
