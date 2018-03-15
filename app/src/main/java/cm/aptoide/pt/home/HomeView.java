@@ -32,4 +32,6 @@ public interface HomeView extends View {
   void hideShowMore();
 
   void showMoreHomeBundles(List<HomeBundle> bundles);
+
+  void scrollToTop();
 }

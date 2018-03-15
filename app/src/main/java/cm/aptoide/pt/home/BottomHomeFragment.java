@@ -2,6 +2,7 @@ package cm.aptoide.pt.home;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -133,6 +134,15 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
 
   @Override public void showMoreHomeBundles(List<HomeBundle> bundles) {
     adapter.add(bundles);
+  }
+
+  @UiThread public void scrollToTop() {
+    LinearLayoutManager layoutManager = ((LinearLayoutManager) list.getLayoutManager());
+    int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+    if (lastVisibleItemPosition > 10) {
+      list.scrollToPosition(10);
+    }
+    list.smoothScrollToPosition(0);
   }
 
   private boolean isEndReached() {

@@ -35,6 +35,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.home.AdMapper;
+import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.BundleDataSource;
 import cm.aptoide.pt.home.BundlesRepository;
 import cm.aptoide.pt.home.BundlesResponseMapper;
@@ -141,7 +142,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   @FragmentScope @Provides HomePresenter providesHomePresenter(Home home,
       HomeNavigator homeNavigator, AdMapper adMapper) {
     return new HomePresenter((HomeView) fragment, home, AndroidSchedulers.mainThread(),
-        CrashReport.getInstance(), homeNavigator, adMapper);
+        CrashReport.getInstance(), homeNavigator, adMapper,
+        (AptoideBottomNavigator) fragment.getActivity());
   }
 
   @FragmentScope @Provides HomeNavigator providesHomeNavigator(

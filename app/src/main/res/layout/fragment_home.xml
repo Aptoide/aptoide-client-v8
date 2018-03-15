@@ -4,10 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
+
+  <include layout="@layout/action_bar"/>
+
   <android.support.v7.widget.RecyclerView
       android:id="@+id/bundles_list"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:layout_marginTop="?android:actionBarSize"
       />
 
   <include layout="@layout/partial_view_incl_no_network"/>

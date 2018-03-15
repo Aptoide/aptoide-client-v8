@@ -6,6 +6,7 @@ import cm.aptoide.pt.home.AdBundle;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AppBundle;
 import cm.aptoide.pt.home.BottomHomeFragment;
+import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomeBundle;
 import cm.aptoide.pt.home.HomeClick;
@@ -40,6 +41,7 @@ public class HomePresenterTest {
   @Mock private CrashReport crashReporter;
   @Mock private HomeNavigator homeNavigator;
   @Mock private Home home;
+  @Mock private BottomNavigationActivity aptoideBottomNavigator;
 
   private HomePresenter presenter;
   private List<HomeBundle> bundles;
@@ -61,7 +63,7 @@ public class HomePresenterTest {
     bottomReachedEvent = PublishSubject.create();
 
     presenter = new HomePresenter(view, home, Schedulers.immediate(), crashReporter, homeNavigator,
-        new AdMapper());
+        new AdMapper(), aptoideBottomNavigator);
     bundles = new ArrayList<>();
 
     List<Application> applications = getAppsList();
