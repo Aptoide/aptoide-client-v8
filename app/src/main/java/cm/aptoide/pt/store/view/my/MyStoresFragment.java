@@ -1,18 +1,25 @@
 package cm.aptoide.pt.store.view.my;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.store.view.GridStoreDisplayable;
 import cm.aptoide.pt.store.view.StoreTabWidgetsGridRecyclerFragment;
@@ -29,9 +36,10 @@ import rx.schedulers.Schedulers;
  * Created by trinkes on 13/12/2016.
  */
 
-public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment {
+public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment implements MyStoresView {
 
   private static final String TAG = MyStoresFragment.class.getSimpleName();
+  private AptoideBottomNavigator aptoideBottomNavigator;
 
   public static MyStoresFragment newInstance(Event event, String storeTheme, String tag,
       StoreContext storeContext) {
@@ -46,6 +54,16 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment {
     return new MyStoresFragment();
   }
 
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+    if (activity instanceof AptoideBottomNavigator) {
+      aptoideBottomNavigator = (AptoideBottomNavigator) activity;
+    } else {
+      throw new IllegalStateException(
+          "Activity must implement " + AptoideBottomNavigator.class.getSimpleName());
+    }
+  }
+
   @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url,
       boolean bypassServerCache) {
     return requestFactoryCdnPool.newStoreWidgets(url)
@@ -53,6 +71,22 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment {
         .observeOn(Schedulers.io())
         .flatMap(getStoreWidgets -> parseDisplayables(getStoreWidgets))
         .map(list -> addFollowStoreDisplayable(list));
+  }
+
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    super.onCreateView(inflater, container, savedInstanceState);
+    return inflater.inflate(R.layout.my_stores, container, false);
+  }
+
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return false;
+  }
+
+  @Override public void setupToolbarDetails(Toolbar toolbar) {
+    toolbar.setTitle(null);
+    toolbar.setLogo(null);
   }
 
   private List<Displayable> addFollowStoreDisplayable(List<Displayable> displayables) {
@@ -84,6 +118,11 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment {
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     registerForViewChanges();
+  }
+
+  @Override public void onViewCreated() {
+    super.onViewCreated();
+    attachPresenter(new MyStoresPresenter(this, aptoideBottomNavigator));
   }
 
   private void registerForViewChanges() {
@@ -121,7 +160,7 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment {
     super.load(false, true, null);
   }
 
-  public void scrollToTop() {
+  @Override @UiThread public void scrollToTop() {
     RecyclerView view = getRecyclerView();
     LinearLayoutManager layoutManager = ((LinearLayoutManager) view.getLayoutManager());
     int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();

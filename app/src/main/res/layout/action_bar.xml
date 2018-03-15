@@ -20,7 +20,6 @@
       android:minHeight="112dp"
       android:theme="?attr/toolbarTheme"
       app:layout_collapseMode="pin"
-      app:layout_scrollFlags="scroll|enterAlways"
       app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
       >
 
