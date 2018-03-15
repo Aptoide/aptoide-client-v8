@@ -45,6 +45,8 @@ class EditorsBundleViewHolder extends AppBundleViewHolder {
     });
     graphicsList.setLayoutManager(layoutManager);
     graphicsList.setAdapter(appsAdapter);
+    SnapToStartHelper snapToStartHelper = new SnapToStartHelper();
+    snapToStartHelper.attachToRecyclerView(graphicsList);
   }
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {

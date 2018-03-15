@@ -46,6 +46,8 @@ class AppsBundleViewHolder extends AppBundleViewHolder {
     });
     appsList.setLayoutManager(layoutManager);
     appsList.setAdapter(appsInBundleAdapter);
+    SnapToStartHelper snapToStartHelper = new SnapToStartHelper();
+    snapToStartHelper.attachToRecyclerView(appsList);
   }
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {
