@@ -1,8 +1,13 @@
 package cm.aptoide.pt.view;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
@@ -22,21 +27,39 @@ import cm.aptoide.pt.account.view.user.ManageUserNavigator;
 import cm.aptoide.pt.account.view.user.ManageUserPresenter;
 import cm.aptoide.pt.account.view.user.ManageUserView;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.database.AccessorFactory;
+import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.home.AdMapper;
+import cm.aptoide.pt.home.BundleDataSource;
+import cm.aptoide.pt.home.BundlesRepository;
+import cm.aptoide.pt.home.BundlesResponseMapper;
 import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.home.HomePresenter;
 import cm.aptoide.pt.home.HomeView;
+import cm.aptoide.pt.home.RemoteBundleDataSource;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
+import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import dagger.Module;
 import dagger.Provides;
 import java.util.Arrays;
+import javax.inject.Named;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 @Module public class FragmentModule {
 
@@ -124,5 +147,38 @@ import rx.schedulers.Schedulers;
   @FragmentScope @Provides HomeNavigator providesHomeNavigator(
       FragmentNavigator fragmentNavigator) {
     return new HomeNavigator(fragmentNavigator);
+  }
+
+  @Named("remote") @FragmentScope @Provides BundleDataSource providesRemoteBundleDataSource(
+      @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, Converter.Factory converter,
+      BundlesResponseMapper mapper, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences sharedPreferences, AptoideAccountManager accountManager) {
+    return new RemoteBundleDataSource(5, Integer.MAX_VALUE, bodyInterceptorPoolV7, okHttpClient,
+        converter, mapper, tokenInvalidator, sharedPreferences, new WSWidgetsUtils(),
+        new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
+            ((AptoideApplication) getApplicationContext().getApplicationContext()).getDatabase(),
+            Store.class)).fromUrl(""),
+        ((AptoideApplication) getApplicationContext()).getIdsRepository()
+            .getUniqueIdentifier(),
+        AdNetworkUtils.isGooglePlayServicesAvailable(getApplicationContext()),
+        ((AptoideApplication) getApplicationContext()).getPartnerId(), accountManager,
+        ((AptoideApplication) getApplicationContext()).getQManager()
+            .getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
+        getApplicationContext().getResources(),
+        (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE),
+        (ConnectivityManager) getApplicationContext().getSystemService(
+            Context.CONNECTIVITY_SERVICE),
+        ((AptoideApplication) getApplicationContext()).getVersionCodeProvider());
+  }
+
+  @FragmentScope @Provides BundlesRepository providesBundleRepository(
+      @Named("remote") BundleDataSource remoteBundleDataSource,
+      @Named("local") BundleDataSource localBundleDataSource) {
+    return new BundlesRepository(remoteBundleDataSource, localBundleDataSource);
+  }
+
+  @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository) {
+    return new Home(bundlesRepository);
   }
 }

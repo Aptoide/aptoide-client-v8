@@ -90,7 +90,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
             bodyInterceptor, tokenInvalidator, sharedPreferences, widgetsUtils, storeCredentials,
             clientUniqueId, isGooglePlayServicesAvailable, partnerId, adultContentEnabled, filters,
             resources, windowManager, connectivityManager, versionCodeProvider)
-            .observe(true, true)
+            .observe(false, false)
             .toSingle())
         .flatMap(homeResponse -> {
           if (homeResponse.isOk()) {
@@ -101,7 +101,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
           return Single.error(new IllegalStateException("Could not obtain timeline from server."));
         })
         .doOnError(__ -> loading = false)
-        .doOnSuccess(timelineResponse -> loading = false)
+        .doOnSuccess(__ -> loading = false)
         .map(mapper.map());
   }
 
