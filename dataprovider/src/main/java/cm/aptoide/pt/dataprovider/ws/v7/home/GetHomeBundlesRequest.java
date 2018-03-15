@@ -91,7 +91,7 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
             ((BodyInterceptor<BaseBody>) bodyInterceptor), getHttpClient(), converterFactory,
             filters, getTokenInvalidator(), sharedPreferences, resources, windowManager,
             connectivityManager, versionCodeProvider, bypassServerCache,
-            Type.ADS.getPerLineCount(resources, windowManager) * 2))
+            Type.ADS.getPerLineCount(resources, windowManager) * 3))
         .toList()
         .flatMapIterable(wsWidgets -> getStoreWidgets.getDataList()
             .getList())

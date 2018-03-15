@@ -27,7 +27,7 @@ class AdsInBundleAdapter extends RecyclerView.Adapter<AdInBundleViewHolder> {
   }
 
   public void update(List<GetAdsResponse.Ad> ads) {
-    this.ads.addAll(ads);
+    this.ads = ads;
     notifyDataSetChanged();
   }
 
