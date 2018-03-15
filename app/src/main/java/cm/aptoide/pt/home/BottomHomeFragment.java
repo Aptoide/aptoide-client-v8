@@ -3,6 +3,7 @@ package cm.aptoide.pt.home;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -43,11 +44,13 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
   private DecimalFormat oneDecimalFormatter;
   private View genericError;
   private ProgressBar progressBar;
+  private SwipeRefreshLayout swipeRefreshLayout;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     uiEventsListener = PublishSubject.create();
     appClickedEvents = PublishSubject.create();
+    adClickedEvents = PublishSubject.create();
     oneDecimalFormatter = new DecimalFormat("#.#");
   }
 
@@ -56,6 +59,12 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
     adapter = null;
     uiEventsListener = null;
     layoutManager = null;
+    swipeRefreshLayout = null;
+    genericError = null;
+    progressBar = null;
+    oneDecimalFormatter = null;
+    uiEventsListener = null;
+    appClickedEvents = null;
     super.onDestroy();
   }
 
@@ -71,8 +80,9 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
     list = (RecyclerView) view.findViewById(R.id.bundles_list);
     genericError = view.findViewById(R.id.generic_error);
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
-
-    adClickedEvents = PublishSubject.create();
+    swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
+    swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
+        R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), uiEventsListener,
         oneDecimalFormatter, appClickedEvents, adClickedEvents);
     layoutManager = new LinearLayoutManager(getContext());
@@ -95,12 +105,16 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
     list.setVisibility(View.VISIBLE);
     genericError.setVisibility(View.GONE);
     progressBar.setVisibility(View.GONE);
+    swipeRefreshLayout.setVisibility(View.VISIBLE);
   }
 
   @Override public void showGenericError() {
     this.genericError.setVisibility(View.VISIBLE);
     this.list.setVisibility(View.GONE);
     this.progressBar.setVisibility(View.GONE);
+    if (this.swipeRefreshLayout.isRefreshing()) {
+      this.swipeRefreshLayout.setRefreshing(false);
+    }
   }
 
   @Override public Observable<Object> reachesBottom() {

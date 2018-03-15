@@ -7,13 +7,18 @@
 
   <include layout="@layout/action_bar"/>
 
-  <android.support.v7.widget.RecyclerView
-      android:id="@+id/bundles_list"
+  <android.support.v4.widget.SwipeRefreshLayout
+      android:id="@+id/refresh_layout"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_marginTop="?android:actionBarSize"
-      />
-
+      >
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/bundles_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+  </android.support.v4.widget.SwipeRefreshLayout>
   <include layout="@layout/partial_view_incl_no_network"/>
 
   <include layout="@layout/partial_view_error"/>
