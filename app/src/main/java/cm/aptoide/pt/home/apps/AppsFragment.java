@@ -35,6 +35,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   private PublishSubject<App> retryDownload;
   private PublishSubject<App> updateAllApps;
   private PublishSubject<App> updateApp;
+  private PublishSubject<App> pauseUpdate;
 
   public static AppsFragment newInstance() {
     return new AppsFragment();
@@ -50,6 +51,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     retryDownload = PublishSubject.create();
     updateAllApps = PublishSubject.create();
     updateApp = PublishSubject.create();
+    pauseUpdate = PublishSubject.create();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -77,9 +79,12 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
         new UpdateApp("BackupApps", "md5", "sdasda", "cm.aptoide.backupapps", 30, false, "31231",
             UpdateApp.UpdateStatus.UPDATE));
 
+    appsList.add(new UpdateApp("Caution", "md5", "sdasda", "com.whatsapp", 30, false, "2.18.84",
+        UpdateApp.UpdateStatus.UPDATING));
+
     adapter = new AppsAdapter(appsList,
         new AppCardViewHolderFactory(pauseDownload, cancelDownload, resumeDownload, installApp,
-            retryDownload, updateAllApps, updateApp));
+            retryDownload, updateAllApps, updateApp, pauseUpdate));
 
     setupRecyclerView();
 
