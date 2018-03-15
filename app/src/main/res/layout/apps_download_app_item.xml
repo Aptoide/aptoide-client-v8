@@ -16,54 +16,54 @@
       >
 
     <ImageView
-        android:id="@+id/app_downloads_icon"
+        android:id="@+id/apps_downloads_icon"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_margin="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/app_downloads_app_name"
+        app:layout_constraintRight_toLeftOf="@+id/apps_downloads_app_name"
         app:layout_constraintTop_toTopOf="parent"
         />
 
     <TextView
-        android:id="@id/app_downloads_app_name"
+        android:id="@id/apps_downloads_app_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
-        app:layout_constraintLeft_toRightOf="@id/app_downloads_icon"
-        app:layout_constraintTop_toTopOf="@id/app_downloads_icon"
+        app:layout_constraintLeft_toRightOf="@id/apps_downloads_icon"
+        app:layout_constraintTop_toTopOf="@id/apps_downloads_icon"
         tools:text="Aptoide"
         />
 
     <ProgressBar
-        android:id="@+id/app_downloads_progress_bar"
+        android:id="@+id/apps_downloads_progress_bar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:indeterminate="false"
-        app:layout_constraintLeft_toRightOf="@id/app_downloads_icon"
-        app:layout_constraintTop_toBottomOf="@id/app_downloads_app_name"
+        app:layout_constraintLeft_toRightOf="@id/apps_downloads_icon"
+        app:layout_constraintTop_toBottomOf="@id/apps_downloads_app_name"
         style="?android:attr/progressBarStyleHorizontal"
         />
 
 
     <TextView
-        android:id="@+id/app_downloads_download_state"
+        android:id="@+id/apps_downloads_download_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toRightOf="@id/app_downloads_icon"
-        app:layout_constraintTop_toBottomOf="@id/app_downloads_progress_bar"
+        app:layout_constraintLeft_toRightOf="@id/apps_downloads_icon"
+        app:layout_constraintTop_toBottomOf="@id/apps_downloads_progress_bar"
         tools:text="Downloading"
 
         />
 
     <TextView
-        android:id="@+id/app_download_progress_number"
+        android:id="@+id/apps_download_progress_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintRight_toRightOf="@id/app_downloads_progress_bar"
-        app:layout_constraintTop_toBottomOf="@id/app_downloads_progress_bar"
+        app:layout_constraintRight_toRightOf="@id/apps_downloads_progress_bar"
+        app:layout_constraintTop_toBottomOf="@id/apps_downloads_progress_bar"
         tools:text="40%"
         />
 
@@ -72,8 +72,8 @@
         android:id="@+id/app_downloads_error_icon"
         android:layout_width="10dp"
         android:layout_height="10dp"
-        app:layout_constraintLeft_toRightOf="@+id/app_downloads_icon"
-        app:layout_constraintTop_toBottomOf="@+id/app_downloads_progress_bar"
+        app:layout_constraintLeft_toRightOf="@+id/apps_downloads_icon"
+        app:layout_constraintTop_toBottomOf="@+id/apps_downloads_progress_bar"
         />
 
     <TextView
@@ -85,18 +85,18 @@
         />
 
     <ImageView
-        android:id="@+id/app_download_pause_button"
+        android:id="@+id/apps_download_pause_button"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        app:layout_constraintLeft_toRightOf="@id/app_downloads_progress_bar"
+        app:layout_constraintLeft_toRightOf="@id/apps_downloads_progress_bar"
         app:layout_constraintRight_toRightOf="parent"
         />
 
     <ImageView
-        android:id="@+id/app_download_cancel_button"
+        android:id="@+id/apps_download_cancel_button"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        app:layout_constraintLeft_toRightOf="@id/app_downloads_progress_bar"
+        app:layout_constraintLeft_toRightOf="@id/apps_downloads_progress_bar"
         app:layout_constraintRight_toRightOf="@+id/app_download_play_button"
         />
 
@@ -105,17 +105,17 @@
         android:id="@+id/app_download_play_button"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        app:layout_constraintLeft_toRightOf="@id/app_download_cancel_button"
+        app:layout_constraintLeft_toRightOf="@id/apps_download_cancel_button"
         app:layout_constraintRight_toRightOf="parent"
         />
 
 
     <ImageView
-        android:id="@+id/app_download_retry_button"
+        android:id="@+id/apps_download_retry_button"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:visibility="gone"
-        app:layout_constraintLeft_toRightOf="@id/app_downloads_progress_bar"
+        app:layout_constraintLeft_toRightOf="@id/apps_downloads_progress_bar"
         app:layout_constraintRight_toRightOf="parent"
         />
 

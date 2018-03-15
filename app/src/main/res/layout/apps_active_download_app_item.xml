@@ -17,7 +17,7 @@
       >
 
     <ImageView
-        android:id="@+id/app_downloads_icon"
+        android:id="@+id/apps_downloads_icon"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_centerVertical="true"
@@ -34,15 +34,15 @@
         android:layout_gravity="center_vertical"
         android:layout_marginBottom="12dp"
         android:layout_marginTop="8dp"
-        android:layout_toEndOf="@id/app_downloads_icon"
-        android:layout_toLeftOf="@+id/app_download_pause_button"
-        android:layout_toRightOf="@id/app_downloads_icon"
-        android:layout_toStartOf="@id/app_download_pause_button"
+        android:layout_toEndOf="@id/apps_downloads_icon"
+        android:layout_toLeftOf="@+id/apps_download_pause_button"
+        android:layout_toRightOf="@id/apps_downloads_icon"
+        android:layout_toStartOf="@id/apps_download_pause_button"
         android:orientation="vertical"
         >
 
       <TextView
-          android:id="@+id/app_downloads_app_name"
+          android:id="@+id/apps_downloads_app_name"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginBottom="4dp"
@@ -53,7 +53,7 @@
           />
 
       <ProgressBar
-          android:id="@+id/app_downloads_progress_bar"
+          android:id="@+id/apps_downloads_progress_bar"
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"
           android:layout_marginBottom="4dp"
@@ -62,13 +62,13 @@
           />
 
       <RelativeLayout
-          android:id="@+id/app_download_download_info_layout"
+          android:id="@+id/apps_download_download_info_layout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           >
 
         <TextView
-            android:id="@+id/app_downloads_download_state"
+            android:id="@+id/apps_downloads_download_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -78,7 +78,7 @@
             />
 
         <TextView
-            android:id="@+id/app_download_progress_number"
+            android:id="@+id/apps_download_progress_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -92,7 +92,7 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/app_download_pause_button"
+        android:id="@+id/apps_download_pause_button"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_alignParentEnd="true"

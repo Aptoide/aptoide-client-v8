@@ -20,9 +20,9 @@ class ErrorAppDownloadViewHolder extends AppsViewHolder {
 
   public ErrorAppDownloadViewHolder(View itemView, PublishSubject<App> retryDownload) {
     super(itemView);
-    appName = (TextView) itemView.findViewById(R.id.app_downloads_app_name);
-    appIcon = (ImageView) itemView.findViewById(R.id.app_downloads_icon);
-    retryButton = (ImageView) itemView.findViewById(R.id.app_download_retry_button);
+    appName = (TextView) itemView.findViewById(R.id.apps_downloads_app_name);
+    appIcon = (ImageView) itemView.findViewById(R.id.apps_downloads_icon);
+    retryButton = (ImageView) itemView.findViewById(R.id.apps_download_retry_button);
     this.retryDownload = retryDownload;
   }
 

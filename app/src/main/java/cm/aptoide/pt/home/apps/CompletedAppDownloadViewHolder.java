@@ -21,8 +21,8 @@ class CompletedAppDownloadViewHolder extends AppsViewHolder {
 
   public CompletedAppDownloadViewHolder(View itemView, PublishSubject<App> installApp) {
     super(itemView);
-    appName = (TextView) itemView.findViewById(R.id.app_downloads_app_name);
-    appIcon = (ImageView) itemView.findViewById(R.id.app_downloads_icon);
+    appName = (TextView) itemView.findViewById(R.id.apps_downloads_app_name);
+    appIcon = (ImageView) itemView.findViewById(R.id.apps_downloads_icon);
     card = (CardView) itemView.findViewById(R.id.app_completed_download_card);
     this.installApp = installApp;
   }

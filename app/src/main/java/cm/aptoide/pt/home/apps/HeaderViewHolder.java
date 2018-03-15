@@ -14,7 +14,7 @@ public class HeaderViewHolder extends AppsViewHolder {
 
   public HeaderViewHolder(View itemView) {
     super(itemView);
-    title = (TextView) itemView.findViewById(R.id.app_downloads_header_title);
+    title = (TextView) itemView.findViewById(R.id.apps_downloads_header_title);
   }
 
   @Override public void setApp(App app) {

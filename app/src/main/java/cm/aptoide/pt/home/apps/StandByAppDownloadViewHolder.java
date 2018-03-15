@@ -28,12 +28,12 @@ class StandByAppDownloadViewHolder extends AppsViewHolder {
       PublishSubject<App> resumeDownload) {
     super(itemView);
 
-    appName = (TextView) itemView.findViewById(R.id.app_downloads_app_name);
-    appIcon = (ImageView) itemView.findViewById(R.id.app_downloads_icon);
-    progressBar = (ProgressBar) itemView.findViewById(R.id.app_downloads_progress_bar);
-    downloadProgress = (TextView) itemView.findViewById(R.id.app_download_progress_number);
-    cancelButton = (ImageView) itemView.findViewById(R.id.app_download_cancel_button);
-    resumeButton = (ImageView) itemView.findViewById(R.id.app_download_resume_download);
+    appName = (TextView) itemView.findViewById(R.id.apps_downloads_app_name);
+    appIcon = (ImageView) itemView.findViewById(R.id.apps_downloads_icon);
+    progressBar = (ProgressBar) itemView.findViewById(R.id.apps_downloads_progress_bar);
+    downloadProgress = (TextView) itemView.findViewById(R.id.apps_download_progress_number);
+    cancelButton = (ImageView) itemView.findViewById(R.id.apps_download_cancel_button);
+    resumeButton = (ImageView) itemView.findViewById(R.id.apps_download_resume_download);
     this.cancelDownload = cancelDownload;
     this.resumeDownload = resumeDownload;
   }

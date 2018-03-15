@@ -19,9 +19,9 @@ class InstalledAppViewHolder extends AppsViewHolder {
   public InstalledAppViewHolder(View itemView) {
     super(itemView);
 
-    appVersion = (TextView) itemView.findViewById(R.id.app_installed_app_version);
-    appName = (TextView) itemView.findViewById(R.id.app_installed_app_name);
-    appIcon = (ImageView) itemView.findViewById(R.id.app_installed_icon);
+    appVersion = (TextView) itemView.findViewById(R.id.apps_installed_app_version);
+    appName = (TextView) itemView.findViewById(R.id.apps_installed_app_name);
+    appIcon = (ImageView) itemView.findViewById(R.id.apps_installed_icon);
   }
 
   @Override public void setApp(App app) {

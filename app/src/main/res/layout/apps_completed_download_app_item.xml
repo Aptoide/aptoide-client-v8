@@ -18,7 +18,7 @@
       >
 
     <ImageView
-        android:id="@+id/app_downloads_icon"
+        android:id="@+id/apps_downloads_icon"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_centerVertical="true"
@@ -35,13 +35,13 @@
         android:layout_gravity="center_vertical"
         android:layout_marginBottom="16dp"
         android:layout_marginTop="12dp"
-        android:layout_toEndOf="@id/app_downloads_icon"
-        android:layout_toRightOf="@id/app_downloads_icon"
+        android:layout_toEndOf="@id/apps_downloads_icon"
+        android:layout_toRightOf="@id/apps_downloads_icon"
         android:orientation="vertical"
         >
 
       <TextView
-          android:id="@+id/app_downloads_app_name"
+          android:id="@+id/apps_downloads_app_name"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginBottom="4dp"
@@ -52,7 +52,7 @@
           />
 
       <TextView
-          android:id="@+id/app_downloads_download_state"
+          android:id="@+id/apps_downloads_download_state"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:ellipsize="end"

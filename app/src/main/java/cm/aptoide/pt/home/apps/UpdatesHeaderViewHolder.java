@@ -17,7 +17,7 @@ class UpdatesHeaderViewHolder extends AppsViewHolder {
 
   public UpdatesHeaderViewHolder(View itemView, PublishSubject<App> updateAllApps) {
     super(itemView);
-    title = (TextView) itemView.findViewById(R.id.app_updates_header_title);
+    title = (TextView) itemView.findViewById(R.id.apps_updates_header_title);
     updateAllButton = (TextView) itemView.findViewById(R.id.apps_updates_update_all_button);
     this.updateAllApps = updateAllApps;
   }
