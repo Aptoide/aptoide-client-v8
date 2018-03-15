@@ -48,15 +48,11 @@ import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.search.SearchManager;
-import cm.aptoide.pt.search.SearchNavigator;
-import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchViewModel;
 import cm.aptoide.pt.search.model.Suggestion;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
-import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.view.BackButtonFragment;
@@ -77,8 +73,6 @@ import org.parceler.Parcels;
 import retrofit2.Converter;
 import rx.Emitter;
 import rx.Observable;
-import rx.Scheduler;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 
 public class SearchResultFragment extends BackButtonFragment
@@ -98,6 +92,7 @@ public class SearchResultFragment extends BackButtonFragment
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
   @Inject FragmentNavigator fragmentNavigator;
+  @Inject SearchResultPresenter searchResultPresenter;
   private View noSearchLayout;
   private EditText noSearchLayoutSearchQuery;
   private ImageView noResultsSearchButton;
@@ -121,14 +116,8 @@ public class SearchResultFragment extends BackButtonFragment
   private PublishRelay<SearchAdResult> onAdClickRelay;
   private PublishSubject<SearchQueryEvent> suggestionClickedPublishSubject;
   private PublishSubject<SearchQueryEvent> queryTextChangedPublisher;
-  private SearchManager searchManager;
-  private SearchNavigator searchNavigator;
-  private SearchAnalytics searchAnalytics;
   private float listItemPadding;
   private String defaultThemeName;
-  private boolean isMultiStoreSearch;
-  private String defaultStoreName;
-  private TrendingManager trendingManager;
   private CrashReport crashReport;
   private MenuItem searchMenuItem;
   private SearchView searchView;
@@ -448,6 +437,43 @@ public class SearchResultFragment extends BackButtonFragment
         .filter(item -> item.getItemId() == searchMenuItem.getItemId());
   }
 
+  @Override public Observable<SearchAdResult> onAdClicked() {
+    return onAdClickRelay;
+  }
+
+  @Override public Observable<SearchAppResult> onViewItemClicked() {
+    return onItemViewClickRelay;
+  }
+
+  @Override public Observable<Pair<SearchAppResult, View>> onOpenPopUpMenuClicked() {
+    return onOpenPopupMenuClickRelay;
+  }
+
+  @Override public boolean shouldFocusInSearchBar() {
+    return focusInSearchBar;
+  }
+
+  @Override public void scrollToTop() {
+    RecyclerView list;
+    if (followedStoresResultList.getVisibility() == View.VISIBLE) {
+      list = followedStoresResultList;
+    } else {
+      list = allStoresResultList;
+    }
+    LinearLayoutManager layoutManager = ((LinearLayoutManager) list.getLayoutManager());
+    int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+    if (lastVisibleItemPosition > 10) {
+      list.scrollToPosition(10);
+    }
+    list.smoothScrollToPosition(0);
+  }
+
+  @Override public boolean hasResults() {
+    return (allStoresResultList.getVisibility() == View.VISIBLE
+        || followedStoresResultList.getVisibility() == View.VISIBLE)
+        && !searchMenuItem.isActionViewExpanded();
+  }
+
   public void showSuggestionsView() {
     if (searchView.getQuery()
         .toString()
@@ -568,16 +594,10 @@ public class SearchResultFragment extends BackButtonFragment
       viewModel = Parcels.unwrap(getArguments().getParcelable(VIEW_MODEL));
     }
 
-    if (getArguments().containsKey(FOCUS_IN_SEARCH)) {
-      focusInSearchBar = getArguments().getBoolean(FOCUS_IN_SEARCH);
-    } else {
-      focusInSearchBar = false;
-    }
+    focusInSearchBar =
+        getArguments().containsKey(FOCUS_IN_SEARCH) && getArguments().getBoolean(FOCUS_IN_SEARCH);
 
     if (viewModel != null) currentQuery = viewModel.getCurrentQuery();
-
-    searchNavigator = new SearchNavigator(getFragmentNavigator(), viewModel.getStoreName(),
-        viewModel.getDefaultStoreName());
 
     final AptoideApplication applicationContext =
         (AptoideApplication) getContext().getApplicationContext();
@@ -593,14 +613,10 @@ public class SearchResultFragment extends BackButtonFragment
 
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
 
-    searchAnalytics = new SearchAnalytics(analyticsManager, navigationTracker);
-
     final AptoideApplication application = (AptoideApplication) getActivity().getApplication();
 
     final StoreAccessor storeAccessor =
         AccessorFactory.getAccessorFor(applicationContext.getDatabase(), Store.class);
-
-    trendingManager = application.getTrendingManager();
 
     final HashMapNotNull<String, List<String>> subscribedStoresAuthMap =
         StoreUtils.getSubscribedStoresAuthMap(storeAccessor);
@@ -610,12 +626,6 @@ public class SearchResultFragment extends BackButtonFragment
     final AdsRepository adsRepository = application.getAdsRepository();
 
     defaultThemeName = application.getDefaultThemeName();
-    defaultStoreName = application.getDefaultStoreName();
-    isMultiStoreSearch = application.hasMultiStoreSearch();
-
-    searchManager =
-        new SearchManager(sharedPreferences, tokenInvalidator, bodyInterceptor, httpClient,
-            converterFactory, subscribedStoresAuthMap, subscribedStoresIds, adsRepository);
 
     onItemViewClickRelay = PublishRelay.create();
     onOpenPopupMenuClickRelay = PublishRelay.create();
@@ -669,14 +679,7 @@ public class SearchResultFragment extends BackButtonFragment
               FOLLOWED_STORES_SEARCH_LIST_STATE) : null);
     }
 
-    final AptoideApplication application = (AptoideApplication) getActivity().getApplication();
-
-    final Scheduler mainThreadScheduler = AndroidSchedulers.mainThread();
-
-    attachPresenter(new SearchResultPresenter(this, searchAnalytics, searchNavigator, crashReport,
-            mainThreadScheduler, searchManager, onAdClickRelay, onItemViewClickRelay,
-        onOpenPopupMenuClickRelay, isMultiStoreSearch, defaultThemeName, defaultStoreName,
-        trendingManager, application.getSearchSuggestionManager(), focusInSearchBar));
+    attachPresenter(searchResultPresenter);
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
