@@ -8,6 +8,7 @@ import rx.subjects.PublishSubject;
 import static cm.aptoide.pt.home.apps.AppsAdapter.COMPLETED_DOWNLOAD;
 import static cm.aptoide.pt.home.apps.AppsAdapter.ERROR_DOWNLOAD;
 import static cm.aptoide.pt.home.apps.AppsAdapter.HEADER;
+import static cm.aptoide.pt.home.apps.AppsAdapter.HEADER_UPDATES;
 import static cm.aptoide.pt.home.apps.AppsAdapter.INSTALLED;
 import static cm.aptoide.pt.home.apps.AppsAdapter.UPDATE;
 
@@ -22,15 +23,18 @@ public class AppCardViewHolderFactory {
   private PublishSubject<App> resumeDownload;
   private PublishSubject<App> installApp;
   private PublishSubject<App> retryDownload;
+  private PublishSubject<App> updateAllApps;
 
   public AppCardViewHolderFactory(PublishSubject<App> pauseDownload,
       PublishSubject<App> cancelDownload, PublishSubject<App> resumeDownload,
-      PublishSubject<App> installApp, PublishSubject<App> retryDownload) {
+      PublishSubject<App> installApp, PublishSubject<App> retryDownload,
+      PublishSubject<App> updateAllApps) {
     this.pauseDownload = pauseDownload;
     this.cancelDownload = cancelDownload;
     this.resumeDownload = resumeDownload;
     this.installApp = installApp;
     this.retryDownload = retryDownload;
+    this.updateAllApps = updateAllApps;
   }
 
   public AppsViewHolder createViewHolder(int viewType, ViewGroup parent) {
@@ -39,6 +43,10 @@ public class AppCardViewHolderFactory {
       case HEADER:
         appViewHolder = new HeaderViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.apps_header_item, parent, false));
+        break;
+      case HEADER_UPDATES:
+        appViewHolder = new UpdatesHeaderViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.apps_header_updates_item, parent, false), updateAllApps);
         break;
       case AppsAdapter.ACTIVE_DOWNLOAD:
         appViewHolder = new ActiveAppDownloadViewHolder(LayoutInflater.from(parent.getContext())

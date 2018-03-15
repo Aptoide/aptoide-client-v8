@@ -11,12 +11,13 @@ import java.util.List;
 public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
 
   protected static final int HEADER = 0;
-  protected static final int ACTIVE_DOWNLOAD = 1;
-  protected static final int STANDBY_DOWNLOAD = 2;
-  protected static final int COMPLETED_DOWNLOAD = 3;
-  protected static final int ERROR_DOWNLOAD = 4;
-  protected static final int UPDATE = 5;
-  protected static final int INSTALLED = 6;
+  protected static final int HEADER_UPDATES = 1;
+  protected static final int ACTIVE_DOWNLOAD = 2;
+  protected static final int STANDBY_DOWNLOAD = 3;
+  protected static final int COMPLETED_DOWNLOAD = 4;
+  protected static final int ERROR_DOWNLOAD = 5;
+  protected static final int UPDATE = 6;
+  protected static final int INSTALLED = 7;
 
   private List<App> listOfApps;
   private AppCardViewHolderFactory appCardViewHolderFactory;
@@ -40,6 +41,9 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
     switch (item.getType()) {
       case HEADER:
         type = HEADER;
+        break;
+      case HEADER_UPDATES:
+        type = HEADER_UPDATES;
         break;
       case DOWNLOAD:
         type = getDownloadType(((DownloadApp) item).getDownloadStatus());

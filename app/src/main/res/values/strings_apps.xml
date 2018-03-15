@@ -9,4 +9,6 @@
 
   <string name="apps_short_download_error_message">An error occurred</string>
 
+  <string name="apps_button_update_all">Update all</string>
+
 </resources>

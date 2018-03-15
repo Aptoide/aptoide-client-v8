@@ -33,6 +33,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   private PublishSubject<App> resumeDownload;
   private PublishSubject<App> installApp;
   private PublishSubject<App> retryDownload;
+  private PublishSubject<App> updateAllApps;
 
   public static AppsFragment newInstance() {
     return new AppsFragment();
@@ -46,6 +47,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     resumeDownload = PublishSubject.create();
     installApp = PublishSubject.create();
     retryDownload = PublishSubject.create();
+    updateAllApps = PublishSubject.create();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -54,7 +56,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     recyclerView = (RecyclerView) view.findViewById(R.id.fragment_apps_recycler_view);
 
     List<App> appListMaterlo = new ArrayList<>();
-    appListMaterlo.add(new Header("Downloads"));
+    appListMaterlo.add(new Header(
+        "Downloads"));// FIXME: 3/15/18 headers should use string resource for translation
     appListMaterlo.add(
         new DownloadApp("Aptoide", "md5", "sdasda", 20, false, 21212, DownloadApp.Status.ACTIVE));
 
@@ -67,9 +70,11 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     appListMaterlo.add(new DownloadApp("Fit2Gather", "md5", "sadasda", 100, false, 21212,
         DownloadApp.Status.ERROR));
 
+    appListMaterlo.add(new UpdatesHeader("upedates heuhue"));
+
     adapter = new AppsAdapter(appListMaterlo,
         new AppCardViewHolderFactory(pauseDownload, cancelDownload, resumeDownload, installApp,
-            retryDownload));
+            retryDownload, updateAllApps));
 
     setupRecyclerView();
 
@@ -144,12 +149,13 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     cancelDownload = null;
     resumeDownload = null;
     pauseDownload = null;
+    updateAllApps = null;
     super.onDestroy();
   }
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    adapter = null;
     recyclerView = null;
+    adapter = null;
   }
 }
