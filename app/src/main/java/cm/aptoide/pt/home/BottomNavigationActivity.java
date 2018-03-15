@@ -1,50 +1,35 @@
 package cm.aptoide.pt.home;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.view.fragment.FragmentView;
+import cm.aptoide.pt.navigator.TabNavigatorActivity;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
 /**
- * Created by jdandrade on 03/03/2018.
+ * Created by D01 on 12/03/18.
  */
 
-public class BottomNavigationFragmentView extends FragmentView
-    implements AptoideBottomNavigationView {
+public abstract class BottomNavigationActivity extends TabNavigatorActivity
+    implements AptoideBottomNavigator {
 
+  protected static final int LAYOUT = R.layout.frame_layout;
   protected BottomNavigationView bottomNavigationView;
   private PublishSubject<Integer> navigationSubject;
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+  @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    setContentView(LAYOUT);
     navigationSubject = PublishSubject.create();
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-
-    bottomNavigationView = (BottomNavigationView) view.findViewById(R.id.bottom_navigation);
+    bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
     BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
     bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
       navigationSubject.onNext(item.getItemId());
       return true;
     });
-
-    attachPresenter(new BottomNavPresenter(this));
-  }
-
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.activity_main, container, false);
   }
 
   @Override public Observable<Integer> navigationEvent() {
@@ -52,7 +37,10 @@ public class BottomNavigationFragmentView extends FragmentView
   }
 
   @Override public void showFragment(Integer menuItemId) {
+    Fragment currentFragment = getFragmentNavigator().getFragment();
     Fragment selectedFragment = null;
+    //Each view from the  BottomNavigation has to implement a scrollToTop method when clicked again (see BottomHomeFragment)
+    //Each fragment should implement it's own action bar
     switch (menuItemId) {
       case R.id.action_home:
         selectedFragment = new BottomHomeFragment();
@@ -66,9 +54,10 @@ public class BottomNavigationFragmentView extends FragmentView
         break;
     }
     if (selectedFragment != null) {
-      FragmentNavigator fragmentChildNavigator =
-          getFragmentChildNavigator(R.id.fragment_placeholder);
-      fragmentChildNavigator.navigateTo(selectedFragment, true);
+      if (selectedFragment.getClass() != currentFragment.getClass()) {
+        FragmentNavigator fragmentNavigator = getFragmentNavigator();
+        fragmentNavigator.navigateTo(selectedFragment, true);
+      }
     }
   }
 }

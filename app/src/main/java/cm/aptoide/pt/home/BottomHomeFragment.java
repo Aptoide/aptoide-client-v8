@@ -1,7 +1,9 @@
 package cm.aptoide.pt.home;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,6 +28,17 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
 
   private PublishSubject<AppBundle> uiEventsListener;
   private LinearLayoutManager layoutManager;
+  private AptoideBottomNavigator aptoideBottomNavigator;
+
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+    if (activity instanceof AptoideBottomNavigator) {
+      aptoideBottomNavigator = (AptoideBottomNavigator) activity;
+    } else {
+      throw new IllegalStateException(
+          "Activity must implement " + AptoideBottomNavigator.class.getSimpleName());
+    }
+  }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -54,11 +67,20 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
     layoutManager = new LinearLayoutManager(getContext());
     list.setLayoutManager(layoutManager);
     list.setAdapter(adapter);
-    attachPresenter(new HomePresenter(this, new Home()));
+    attachPresenter(new HomePresenter(this, new Home(), aptoideBottomNavigator));
   }
 
   @Override public void showHomeBundles(List<AppBundle> bundles) {
     adapter.add(getFakeBundles());
+  }
+
+  @UiThread public void scrollToTop() {
+    LinearLayoutManager layoutManager = ((LinearLayoutManager) list.getLayoutManager());
+    int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+    if (lastVisibleItemPosition > 10) {
+      list.scrollToPosition(10);
+    }
+    list.smoothScrollToPosition(0);
   }
 
   public List<AppBundle> getFakeBundles() {

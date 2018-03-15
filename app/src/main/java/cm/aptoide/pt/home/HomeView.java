@@ -9,4 +9,6 @@ import java.util.List;
 
 public interface HomeView extends View {
   void showHomeBundles(List<AppBundle> bundles);
+
+  void scrollToTop();
 }

@@ -29,8 +29,6 @@
       android:layout_marginTop="?attr/actionBarSize"
       />
 
-  <include layout="@layout/bottom_nav_fragment"/>
-
   <android.support.design.widget.AppBarLayout
       android:id="@+id/app_bar_layout"
       android:layout_width="match_parent"
