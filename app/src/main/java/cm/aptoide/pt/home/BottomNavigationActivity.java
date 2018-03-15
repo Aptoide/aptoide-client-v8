@@ -39,7 +39,7 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
   @Override public void showFragment(Integer menuItemId) {
     Fragment currentFragment = getFragmentNavigator().getFragment();
     Fragment selectedFragment = null;
-    //Each view from the fragment should extend the BottomNavigationFragment interface so that it can scrollToTop when clicked again (see BottomHomeFragment)
+    //Each view from the fragment should extend the BottomNavigationView interface so that it can scrollToTop when clicked again (see BottomHomeFragment)
     //Each fragment should implement it's own action bar
     switch (menuItemId) {
       case R.id.action_home:
