@@ -19,7 +19,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
@@ -228,15 +227,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
         ManagedKeys.HWSPECS_FILTER) || key.equals(ManagedKeys.UPDATES_SYSTEM_APPS_KEY);
   }
 
-  private boolean mapToSwitch(Preference pref) {
-    SwitchPreferenceCompat dummy = (SwitchPreferenceCompat) pref;
-    return ((SwitchPreferenceCompat) pref).isChecked();
-  }
   private void setupClickHandlers() {
     //set AppStore name
-    findPreference(SettingsConstants.CHECK_AUTO_UPDATE_CATEGORY).setTitle(
-        AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate,
-            getContext().getResources(), marketName));
+    //findPreference(SettingsConstants.CHECK_AUTO_UPDATE_CATEGORY).setTitle(
+    //    AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate,
+    //        getContext().getResources(), marketName));
 
     Preference autoUpdatepreference = findPreference(SettingsConstants.CHECK_AUTO_UPDATE);
     autoUpdatepreference.setTitle(
@@ -369,7 +364,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         .subscribe());
 
     findPreference(SettingsConstants.FILTER_APPS).setOnPreferenceClickListener(preference -> {
-      final CheckBoxPreference cb = (CheckBoxPreference) preference;
+      final SwitchPreferenceCompat cb = (SwitchPreferenceCompat) preference;
       boolean filterApps = false;
 
       if (cb.isChecked()) {
