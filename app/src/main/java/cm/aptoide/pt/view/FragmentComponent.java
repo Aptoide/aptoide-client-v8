@@ -23,6 +23,7 @@ import cm.aptoide.pt.store.view.ListStoresFragment;
 import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.store.view.StoreTabWidgetsGridRecyclerFragment;
 import cm.aptoide.pt.store.view.home.HomeFragment;
+import cm.aptoide.pt.store.view.my.MyStoresFragment;
 import cm.aptoide.pt.store.view.my.MyStoresSubscribedFragment;
 import cm.aptoide.pt.timeline.post.PostFragment;
 import cm.aptoide.pt.updates.view.UpdatesFragment;
@@ -71,6 +72,8 @@ public interface FragmentComponent {
   void inject(MyStoresSubscribedFragment myStoresSubscribedFragment);
 
   void inject(StoreTabWidgetsGridRecyclerFragment storeTabWidgetsGridRecyclerFragment);
+
+  void inject(MyStoresFragment myStoresFragment);
 
   void inject(InboxFragment inboxFragment);
 

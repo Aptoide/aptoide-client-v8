@@ -1,6 +1,5 @@
 package cm.aptoide.pt.store.view.my;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
@@ -19,7 +18,6 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.store.view.GridStoreDisplayable;
 import cm.aptoide.pt.store.view.StoreTabWidgetsGridRecyclerFragment;
@@ -28,6 +26,7 @@ import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.DisplayableGroup;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.List;
+import javax.inject.Inject;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -39,7 +38,7 @@ import rx.schedulers.Schedulers;
 public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment implements MyStoresView {
 
   private static final String TAG = MyStoresFragment.class.getSimpleName();
-  private AptoideBottomNavigator aptoideBottomNavigator;
+  @Inject MyStoresPresenter myStoresPresenter;
 
   public static MyStoresFragment newInstance(Event event, String storeTheme, String tag,
       StoreContext storeContext) {
@@ -54,14 +53,9 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment implem
     return new MyStoresFragment();
   }
 
-  @Override public void onAttach(Activity activity) {
-    super.onAttach(activity);
-    if (activity instanceof AptoideBottomNavigator) {
-      aptoideBottomNavigator = (AptoideBottomNavigator) activity;
-    } else {
-      throw new IllegalStateException(
-          "Activity must implement " + AptoideBottomNavigator.class.getSimpleName());
-    }
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
   }
 
   @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url,
@@ -122,7 +116,7 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment implem
 
   @Override public void onViewCreated() {
     super.onViewCreated();
-    attachPresenter(new MyStoresPresenter(this, aptoideBottomNavigator));
+    attachPresenter(myStoresPresenter);
   }
 
   private void registerForViewChanges() {
