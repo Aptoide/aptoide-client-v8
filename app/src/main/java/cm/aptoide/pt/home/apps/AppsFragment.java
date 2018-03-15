@@ -36,6 +36,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   private PublishSubject<App> updateAllApps;
   private PublishSubject<App> updateApp;
   private PublishSubject<App> pauseUpdate;
+  private PublishSubject<App> cancelUpdate;
+  private PublishSubject<App> resumeUpdate;
 
   public static AppsFragment newInstance() {
     return new AppsFragment();
@@ -52,6 +54,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     updateAllApps = PublishSubject.create();
     updateApp = PublishSubject.create();
     pauseUpdate = PublishSubject.create();
+    cancelUpdate = PublishSubject.create();
+    resumeUpdate = PublishSubject.create();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -76,15 +80,19 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
     appsList.add(new UpdatesHeader("upedates heuhue"));
     appsList.add(
-        new UpdateApp("BackupApps", "md5", "sdasda", "cm.aptoide.backupapps", 30, false, "31231",
+        new UpdateApp("BackupApps", "md5", "sdasda", "cm.aptoide.backupapps", 1, false, "31231",
             UpdateApp.UpdateStatus.UPDATE));
 
-    appsList.add(new UpdateApp("Caution", "md5", "sdasda", "com.whatsapp", 30, false, "2.18.84",
+    appsList.add(new UpdateApp("Whatsapp", "md5", "sdasda", "com.whatsapp", 0, false, "2.18.84",
         UpdateApp.UpdateStatus.UPDATING));
+
+    appsList.add(
+        new UpdateApp("Clash Royale", "md5", "sdasda", "com.supercell.clashroyale", 100, false,
+            "2.1.8", UpdateApp.UpdateStatus.STANDBY));
 
     adapter = new AppsAdapter(appsList,
         new AppCardViewHolderFactory(pauseDownload, cancelDownload, resumeDownload, installApp,
-            retryDownload, updateAllApps, updateApp, pauseUpdate));
+            retryDownload, updateAllApps, updateApp, pauseUpdate, cancelUpdate, resumeUpdate));
 
     setupRecyclerView();
 

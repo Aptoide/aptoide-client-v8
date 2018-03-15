@@ -31,12 +31,15 @@ public class AppCardViewHolderFactory {
   private PublishSubject<App> updateAllApps;
   private PublishSubject<App> updateApp;
   private PublishSubject<App> pauseUpdate;
+  private PublishSubject<App> cancelUpdate;
+  private PublishSubject<App> resumeUpdate;
 
   public AppCardViewHolderFactory(PublishSubject<App> pauseDownload,
       PublishSubject<App> cancelDownload, PublishSubject<App> resumeDownload,
       PublishSubject<App> installApp, PublishSubject<App> retryDownload,
       PublishSubject<App> updateAllApps, PublishSubject<App> updateApp,
-      PublishSubject<App> pauseUpdate) {
+      PublishSubject<App> pauseUpdate, PublishSubject<App> cancelUpdate,
+      PublishSubject<App> resumeUpdate) {
     this.pauseDownload = pauseDownload;
     this.cancelDownload = cancelDownload;
     this.resumeDownload = resumeDownload;
@@ -45,6 +48,8 @@ public class AppCardViewHolderFactory {
     this.updateAllApps = updateAllApps;
     this.updateApp = updateApp;
     this.pauseUpdate = pauseUpdate;
+    this.cancelUpdate = cancelUpdate;
+    this.resumeUpdate = resumeUpdate;
   }
 
   public AppsViewHolder createViewHolder(int viewType, ViewGroup parent) {
@@ -84,8 +89,9 @@ public class AppCardViewHolderFactory {
             .inflate(R.layout.apps_updating_app_item, parent, false), pauseUpdate);
         break;
       case STANDBY_UPDATE:
-        appViewHolder = new UpdateAppViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.apps_header_item, parent, false), updateApp);
+        appViewHolder = new StandByUpdateAppViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.apps_standby_update_app_item, parent, false), cancelUpdate,
+            resumeUpdate);
         break;
       case ERROR_UPDATE:
         appViewHolder = new UpdateAppViewHolder(LayoutInflater.from(parent.getContext())
