@@ -13,5 +13,7 @@ public interface BundleDataSource {
 
   Single<List<HomeBundle>> getNextHomeBundles();
 
+  Single<List<HomeBundle>> getHomeBundles();
+
   boolean hasMorePosts();
 }

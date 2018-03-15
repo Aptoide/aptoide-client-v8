@@ -18,6 +18,10 @@ public class LocalBundleDataSource implements BundleDataSource {
     return Single.just(appBundles);
   }
 
+  @Override public Single<List<HomeBundle>> getHomeBundles() {
+    return Single.just(appBundles);
+  }
+
   @Override public boolean hasMorePosts() {
     return false;
   }

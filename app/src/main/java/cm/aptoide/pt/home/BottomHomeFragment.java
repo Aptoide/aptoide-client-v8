@@ -14,6 +14,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.fragment.FragmentView;
+import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -117,6 +118,10 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
     }
   }
 
+  @Override public Observable<Void> refreshes() {
+    return RxSwipeRefreshLayout.refreshes(swipeRefreshLayout);
+  }
+
   @Override public Observable<Object> reachesBottom() {
     return RxRecyclerView.scrollEvents(list)
         .distinctUntilChanged()
@@ -157,6 +162,10 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
       list.scrollToPosition(10);
     }
     list.smoothScrollToPosition(0);
+  }
+
+  @Override public void hideRefresh() {
+    swipeRefreshLayout.setRefreshing(false);
   }
 
   private boolean isEndReached() {

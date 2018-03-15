@@ -19,6 +19,10 @@ public class Home {
     return bundlesRepository.getHomeBundles();
   }
 
+  public Single<List<HomeBundle>> getFreshHomeBundles() {
+    return bundlesRepository.getFreshHomeBundles();
+  }
+
   public Single<List<HomeBundle>> getNextHomeBundles() {
     return bundlesRepository.getNextHomeBundles();
   }

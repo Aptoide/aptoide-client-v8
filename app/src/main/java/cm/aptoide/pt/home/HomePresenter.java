@@ -42,6 +42,8 @@ public class HomePresenter implements Presenter {
     handleMoreClick();
 
     handleBottomReached();
+
+    handlePullToRefresh();
   }
 
   private void onCreateLoadBundles() {
@@ -126,6 +128,23 @@ public class HomePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(bundles -> {
         }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void handlePullToRefresh() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.refreshes()
+            .flatMapSingle(refreshed -> home.getFreshHomeBundles())
+            .observeOn(viewScheduler)
+            .doOnNext(view::showHomeBundles)
+            .doOnNext(bundles -> view.hideRefresh())
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(bundles -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
         });
   }
 }

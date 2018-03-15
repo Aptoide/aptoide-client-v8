@@ -18,6 +18,10 @@ public class BundlesRepository {
   }
 
   public Single<List<HomeBundle>> getHomeBundles() {
+    return remoteBundleDataSource.getHomeBundles();
+  }
+
+  public Single<List<HomeBundle>> getFreshHomeBundles() {
     return remoteBundleDataSource.getFreshHomeBundles();
   }
 

@@ -50,6 +50,7 @@ public class HomePresenterTest {
   private PublishSubject<GetAdsResponse.Ad> adClickEvent;
   private PublishSubject<HomeClick> moreClickEvent;
   private PublishSubject<Object> bottomReachedEvent;
+  private PublishSubject<Void> pullToRefreshEvent;
   private AppBundle localTopAppsBundle;
   private Application aptoide;
 
@@ -61,6 +62,7 @@ public class HomePresenterTest {
     adClickEvent = PublishSubject.create();
     moreClickEvent = PublishSubject.create();
     bottomReachedEvent = PublishSubject.create();
+    pullToRefreshEvent = PublishSubject.create();
 
     presenter = new HomePresenter(view, home, Schedulers.immediate(), crashReporter, homeNavigator,
         new AdMapper(), aptoideBottomNavigator);
@@ -80,6 +82,7 @@ public class HomePresenterTest {
     when(view.adClicked()).thenReturn(adClickEvent);
     when(view.moreClicked()).thenReturn(moreClickEvent);
     when(view.reachesBottom()).thenReturn(bottomReachedEvent);
+    when(view.refreshes()).thenReturn(pullToRefreshEvent);
   }
 
   @Test public void loadAllBundlesFromRepositoryAndLoadIntoView() {
@@ -89,7 +92,7 @@ public class HomePresenterTest {
     //And loading of bundles are requested
     when(home.getHomeBundles()).thenReturn(Single.just(bundles));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
-    //Then the progress indicator should be hidden
+    //Then the progress indicator should be shown
     verify(view).showLoading();
     //Then the home should be displayed
     verify(view).showHomeBundles(bundles);
@@ -174,6 +177,20 @@ public class HomePresenterTest {
     verify(home, never()).getNextHomeBundles();
     verify(view, never()).hideShowMore();
     verify(view, never()).showMoreHomeBundles(bundles);
+  }
+
+  @Test public void pullToRefresh_GetFreshBundles() {
+    //Given an initialised presenter with already loaded bundles into the UI before
+    presenter.present();
+    when(home.getFreshHomeBundles()).thenReturn(Single.just(bundles));
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //When pull to refresh is done
+    pullToRefreshEvent.onNext(null);
+    //Then the progress indicator should be shown
+    //Then the home should be displayed
+    verify(view).showHomeBundles(bundles);
+    //Then the progress indicator should be hidden
+    verify(view).hideRefresh();
   }
 
   private List<Application> getAppsList() {

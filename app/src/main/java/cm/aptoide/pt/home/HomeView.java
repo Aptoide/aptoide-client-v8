@@ -19,6 +19,8 @@ public interface HomeView extends View {
 
   void showGenericError();
 
+  Observable<Void> refreshes();
+
   Observable<Object> reachesBottom();
 
   Observable<HomeClick> moreClicked();
@@ -34,4 +36,6 @@ public interface HomeView extends View {
   void showMoreHomeBundles(List<HomeBundle> bundles);
 
   void scrollToTop();
+
+  void hideRefresh();
 }

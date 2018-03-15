@@ -75,7 +75,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
     this.versionCodeProvider = versionCodeProvider;
   }
 
-  private Single<List<HomeBundle>> getBundles(int offset) {
+  private Single<List<HomeBundle>> getBundles(int offset, boolean invalidateHttpCache) {
     if (loading || (offset >= total)) {
       return Single.just(Collections.emptyList());
     }
@@ -90,7 +90,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
             bodyInterceptor, tokenInvalidator, sharedPreferences, widgetsUtils, storeCredentials,
             clientUniqueId, isGooglePlayServicesAvailable, partnerId, adultContentEnabled, filters,
             resources, windowManager, connectivityManager, versionCodeProvider)
-            .observe(false, false)
+            .observe(invalidateHttpCache, false)
             .toSingle())
         .flatMap(homeResponse -> {
           if (homeResponse.isOk()) {
@@ -106,11 +106,15 @@ public class RemoteBundleDataSource implements BundleDataSource {
   }
 
   @Override public Single<List<HomeBundle>> getFreshHomeBundles() {
-    return getBundles(0);
+    return getBundles(0, true);
   }
 
   @Override public Single<List<HomeBundle>> getNextHomeBundles() {
-    return getBundles(currentOffset);
+    return getBundles(currentOffset, false);
+  }
+
+  @Override public Single<List<HomeBundle>> getHomeBundles() {
+    return getBundles(0, false);
   }
 
   @Override public boolean hasMorePosts() {
