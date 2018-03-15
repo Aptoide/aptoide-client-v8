@@ -35,9 +35,9 @@
         android:layout_marginBottom="12dp"
         android:layout_marginTop="8dp"
         android:layout_toEndOf="@id/app_downloads_icon"
-        android:layout_toLeftOf="@+id/app_download_pause_button"
+        android:layout_toLeftOf="@+id/app_download_retry_button"
         android:layout_toRightOf="@id/app_downloads_icon"
-        android:layout_toStartOf="@id/app_download_pause_button"
+        android:layout_toStartOf="@id/app_download_retry_button"
         android:orientation="vertical"
         >
 
