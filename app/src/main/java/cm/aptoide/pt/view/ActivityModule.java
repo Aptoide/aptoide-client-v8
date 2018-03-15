@@ -155,7 +155,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
         notificationSyncScheduler,
         new InstallCompletedNotifier(PublishRelay.create(), installManager,
             CrashReport.getInstance()), sharedPreferences, secureSharedPreferences,
-        fragmentNavigator, deepLinkManager, firstCreated, (AptoideBottomNavigator) activity);
+        fragmentNavigator, deepLinkManager, defaultStoreName, defaultTheme, firstCreated,
+        (AptoideBottomNavigator) activity);
   }
 
   @ActivityScope @Provides AccountNavigator provideAccountNavigator(
