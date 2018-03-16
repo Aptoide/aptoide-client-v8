@@ -25,6 +25,7 @@ import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.view.DeepLinkManager;
 import cm.aptoide.pt.view.wizard.WizardFragment;
 import java.util.List;
+import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.OnErrorNotImplementedException;
 
@@ -45,6 +46,7 @@ public class MainPresenter implements Presenter {
   private final AutoUpdate autoUpdate;
   private final boolean firstCreated;
   private final AptoideBottomNavigator aptoideBottomNavigator;
+  private Scheduler viewScheduler;
 
   public MainPresenter(MainView view, InstallManager installManager,
       RootInstallationRetryHandler rootInstallationRetryHandler, CrashReport crashReport,
@@ -52,8 +54,9 @@ public class MainPresenter implements Presenter {
       NotificationSyncScheduler notificationSyncScheduler,
       InstallCompletedNotifier installCompletedNotifier, SharedPreferences sharedPreferences,
       SharedPreferences securePreferences, FragmentNavigator fragmentNavigator,
-      DeepLinkManager deepLinkManager, boolean firstCreated,
-      AptoideBottomNavigator aptoideBottomNavigator) {
+      DeepLinkManager deepLinkManager, String defaultStoreName, String defaultTheme,
+      boolean firstCreated, AptoideBottomNavigator aptoideBottomNavigator,
+      Scheduler viewScheduler) {
     this.view = view;
     this.installManager = installManager;
     this.rootInstallationRetryHandler = rootInstallationRetryHandler;
@@ -69,6 +72,7 @@ public class MainPresenter implements Presenter {
     this.sharedPreferences = sharedPreferences;
     this.securePreferences = securePreferences;
     this.aptoideBottomNavigator = aptoideBottomNavigator;
+    this.viewScheduler = viewScheduler;
   }
 
   @Override public void present() {
@@ -85,8 +89,10 @@ public class MainPresenter implements Presenter {
 
     view.getLifecycle()
         .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
-        .flatMap(created -> aptoideBottomNavigator.navigationEvent())
-        .doOnNext(fragmentid -> aptoideBottomNavigator.showFragment(fragmentid))
+        .flatMap(created -> aptoideBottomNavigator.navigationEvent()
+            .observeOn(viewScheduler)
+            .doOnNext(fragmentid -> aptoideBottomNavigator.showFragment(fragmentid))
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {
