@@ -10,7 +10,7 @@ import rx.Single;
  */
 
 public class TrendingManager {
-  private static final int SUGGESTION_COUNT = 5;
+  private static final int SUGGESTION_COUNT = 10;
   private static final int SUGGESTION_STORE_ID = 15;
   private final TrendingService trendingService;
 

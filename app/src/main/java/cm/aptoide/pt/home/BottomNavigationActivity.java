@@ -49,7 +49,7 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
         selectedFragment = new BottomHomeFragment();
         break;
       case R.id.action_search:
-        selectedFragment = SearchResultFragment.newInstance("", defaultStoreName, true);
+        selectedFragment = SearchResultFragment.newInstance(defaultStoreName, true);
         break;
       case R.id.action_stores:
         break;

@@ -1,7 +1,6 @@
 package cm.aptoide.pt.search.view;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -34,33 +33,21 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ads.AdsRepository;
-import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.accessors.StoreAccessor;
-import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.dataprovider.WebService;
-import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchViewModel;
 import cm.aptoide.pt.search.model.Suggestion;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
 import cm.aptoide.pt.store.StoreTheme;
-import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
+import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.ArrayList;
@@ -68,9 +55,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
-import okhttp3.OkHttpClient;
 import org.parceler.Parcels;
-import retrofit2.Converter;
 import rx.Emitter;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -89,9 +74,6 @@ public class SearchResultFragment extends BackButtonFragment
   private static final String ALL_STORES_SEARCH_LIST_STATE = "all_stores_search_list_state";
   private static final String FOLLOWED_STORES_SEARCH_LIST_STATE =
       "followed_stores_search_list_state";
-  @Inject AnalyticsManager analyticsManager;
-  @Inject NavigationTracker navigationTracker;
-  @Inject FragmentNavigator fragmentNavigator;
   @Inject SearchResultPresenter searchResultPresenter;
   private View noSearchLayout;
   private EditText noSearchLayoutSearchQuery;
@@ -130,9 +112,9 @@ public class SearchResultFragment extends BackButtonFragment
     return newInstance(currentQuery, false, defaultStoreName);
   }
 
-  public static SearchResultFragment newInstance(String currentQuery, String defaultStoreName,
+  public static SearchResultFragment newInstance(String defaultStoreName,
       boolean focusInSearchBar) {
-    return newInstance(currentQuery, false, defaultStoreName, focusInSearchBar);
+    return newInstance("", false, defaultStoreName, focusInSearchBar);
   }
 
   public static SearchResultFragment newInstance(String currentQuery, boolean onlyTrustedApps,
@@ -449,6 +431,15 @@ public class SearchResultFragment extends BackButtonFragment
     return onOpenPopupMenuClickRelay;
   }
 
+  @Override public Observable<SearchViewQueryTextEvent> queryChanged() {
+    return RxSearchView.queryTextChangeEvents(searchView);
+  }
+
+  @Override public void emmitQueryEvent(SearchViewQueryTextEvent event) {
+    queryTextChangedPublisher.onNext(new SearchQueryEvent(event.queryText()
+        .toString(), event.isSubmitted()));
+  }
+
   @Override public boolean shouldFocusInSearchBar() {
     return focusInSearchBar;
   }
@@ -547,8 +538,8 @@ public class SearchResultFragment extends BackButtonFragment
 
     searchMenuItem = menu.findItem(R.id.menu_item_search);
     searchView = (SearchView) searchMenuItem.getActionView();
-    AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) searchView.findViewById(
-        android.support.v7.appcompat.R.id.search_src_text);
+    AutoCompleteTextView autoCompleteTextView =
+        (AutoCompleteTextView) searchView.findViewById(R.id.search_src_text);
     autoCompleteTextView.setThreshold(COMPLETION_THRESHOLD);
     MenuItemCompat.setOnActionExpandListener(searchMenuItem,
         new MenuItemCompat.OnActionExpandListener() {
@@ -557,8 +548,7 @@ public class SearchResultFragment extends BackButtonFragment
           }
 
           @Override public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-            if (allStoresResultAdapter.getItemCount() > 0
-                || followedStoresResultAdapter.getItemCount() > 0) {
+            if (hasSearchResults()) {
               showResultsView();
             } else {
               showSuggestionsView();
@@ -566,20 +556,17 @@ public class SearchResultFragment extends BackButtonFragment
             return true;
           }
         });
-
-    getLifecycle().filter(event -> event == LifecycleEvent.RESUME)
-        .flatMap(__ -> RxSearchView.queryTextChangeEvents(searchView))
-        .doOnNext(event -> queryTextChangedPublisher.onNext(new SearchQueryEvent(event.queryText()
-            .toString(), event.isSubmitted())))
-        .compose(bindUntilEvent(LifecycleEvent.PAUSE))
-        .subscribe(__ -> {
-        }, e -> crashReport.log(e));
-
+    if (!hasResults()) searchView.setQuery("Search apps & games", false);
     searchSetupPublishSubject.onNext(null);
   }
 
   @Override public String getDefaultTheme() {
     return super.getDefaultTheme();
+  }
+
+  private boolean hasSearchResults() {
+    return allStoresResultAdapter.getItemCount() > 0
+        || followedStoresResultAdapter.getItemCount() > 0;
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -599,31 +586,7 @@ public class SearchResultFragment extends BackButtonFragment
 
     if (viewModel != null) currentQuery = viewModel.getCurrentQuery();
 
-    final AptoideApplication applicationContext =
-        (AptoideApplication) getContext().getApplicationContext();
-
-    final SharedPreferences sharedPreferences = applicationContext.getDefaultSharedPreferences();
-
-    final TokenInvalidator tokenInvalidator = applicationContext.getTokenInvalidator();
-
-    final BodyInterceptor<BaseBody> bodyInterceptor =
-        applicationContext.getAccountSettingsBodyInterceptorPoolV7();
-
-    final OkHttpClient httpClient = applicationContext.getDefaultClient();
-
-    final Converter.Factory converterFactory = WebService.getDefaultConverter();
-
     final AptoideApplication application = (AptoideApplication) getActivity().getApplication();
-
-    final StoreAccessor storeAccessor =
-        AccessorFactory.getAccessorFor(applicationContext.getDatabase(), Store.class);
-
-    final HashMapNotNull<String, List<String>> subscribedStoresAuthMap =
-        StoreUtils.getSubscribedStoresAuthMap(storeAccessor);
-
-    final List<Long> subscribedStoresIds = StoreUtils.getSubscribedStoresIds(storeAccessor);
-
-    final AdsRepository adsRepository = application.getAdsRepository();
 
     defaultThemeName = application.getDefaultThemeName();
 
@@ -801,7 +764,13 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private void setupToolbar() {
-    toolbar.setTitle(viewModel.getCurrentQuery());
+
+    if (viewModel.getCurrentQuery()
+        .isEmpty()) {
+      toolbar.setTitle("Search apps & games");
+    } else {
+      toolbar.setTitle(viewModel.getCurrentQuery());
+    }
 
     final AppCompatActivity activity = (AppCompatActivity) getActivity();
     activity.setSupportActionBar(toolbar);
@@ -818,6 +787,7 @@ public class SearchResultFragment extends BackButtonFragment
 
   @Override public void collapseSearchBar(boolean shouldShowSuggestions) {
     if (searchMenuItem != null) searchMenuItem.collapseActionView();
+    if (!hasResults()) searchView.setQuery("Search apps & games", false);
   }
 
   @Override public String getCurrentQuery() {

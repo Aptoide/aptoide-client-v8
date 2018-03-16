@@ -79,6 +79,7 @@ import rx.exceptions.OnErrorNotImplementedException;
     handleQueryTextChanged();
     handleQueryTextCleaned();
     handleClickOnBottomNav();
+    listenToSearchQueries();
   }
 
   private void focusInSearchBar() {
@@ -497,6 +498,7 @@ import rx.exceptions.OnErrorNotImplementedException;
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> bottomNavigator.navigationEvent())
+        .observeOn(viewScheduler)
         .filter(navigated -> view.hasResults())
         .doOnNext(__ -> view.scrollToTop())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -504,6 +506,17 @@ import rx.exceptions.OnErrorNotImplementedException;
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);
         });
+  }
+
+  private void listenToSearchQueries() {
+    view.getLifecycle()
+        .filter(event -> event == View.LifecycleEvent.RESUME)
+        .flatMap(__ -> view.searchSetup())
+        .flatMap(__ -> view.queryChanged())
+        .doOnNext(event -> view.emmitQueryEvent(event))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
   }
 
   @NonNull private Observable<SearchQueryEvent> getDebouncedQueryChanges() {

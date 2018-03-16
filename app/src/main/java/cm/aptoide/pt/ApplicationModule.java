@@ -874,10 +874,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
       @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
+      Database database,
       AdsRepository adsRepository) {
     return new SearchManager(sharedPreferences, tokenInvalidator, baseBodyBodyInterceptor,
         okHttpClient, converterFactory, StoreUtils.getSubscribedStoresAuthMap(
-        AccessorFactory.getAccessorFor(application.getDatabase(), Store.class)),
+        AccessorFactory.getAccessorFor(database, Store.class)),
         StoreUtils.getSubscribedStoresIds(
             AccessorFactory.getAccessorFor(application.getDatabase(), Store.class)), adsRepository);
   }

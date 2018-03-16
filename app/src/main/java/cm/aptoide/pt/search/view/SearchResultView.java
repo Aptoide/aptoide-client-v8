@@ -6,6 +6,7 @@ import android.view.View;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
+import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import java.util.List;
 import rx.Observable;
 
@@ -82,6 +83,10 @@ public interface SearchResultView extends SearchSuggestionsView {
   Observable<SearchAppResult> onViewItemClicked();
 
   Observable<Pair<SearchAppResult, View>> onOpenPopUpMenuClicked();
+
+  Observable<SearchViewQueryTextEvent> queryChanged();
+
+  void emmitQueryEvent(SearchViewQueryTextEvent event);
 
   boolean shouldFocusInSearchBar();
 
