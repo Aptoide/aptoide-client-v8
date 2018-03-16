@@ -18,8 +18,6 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.account.AdultContentAnalytics;
-import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -30,15 +28,10 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.file.FileManager;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
-import cm.aptoide.pt.repository.RepositoryFactory;
-import cm.aptoide.pt.updates.UpdateRepository;
-import cm.aptoide.pt.view.dialog.EditableTextDialog;
 import cm.aptoide.pt.view.fragment.FragmentView;
-import cm.aptoide.pt.view.rx.RxAlertDialog;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
 import okhttp3.OkHttpClient;
@@ -46,7 +39,6 @@ import retrofit2.Converter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by franciscocalado on 12/03/18.
@@ -58,21 +50,8 @@ public class NewSettingsFragment extends FragmentView
   private static final float STROKE_SIZE = 0.04f;
 
   protected Toolbar toolbar;
-  @Inject NavigationTracker navigationTracker;
   @Inject NewSettingsNavigator newSettingsNavigator;
-  private SharedPreferences sharedPreferences;
-  private UpdateRepository repository;
-  private String defaultThemeName;
-  private AdultContentAnalytics adultContentAnalytics;
-  private Context context;
-  private CompositeSubscription subscriptions;
-  private FileManager fileManager;
   private AptoideAccountManager accountManager;
-
-  private RxAlertDialog adultContentConfirmationDialog;
-  private EditableTextDialog enableAdultContentPinDialog;
-  private EditableTextDialog setPinDialog;
-  private EditableTextDialog removePinDialog;
 
   private boolean trackAnalytics;
   private NotificationSyncScheduler notificationSyncScheduler;
@@ -104,10 +83,6 @@ public class NewSettingsFragment extends FragmentView
   private Button editStoreButton;
   private Button editProfileButton;
 
-  //Settings views
-  private View compatibleApps;
-  private View downloadOverWifi;
-
   //TODO: Add string resources to the settings XML and fragment (ALL STRINGS HARDCODED!!!)
 
   public static Fragment newInstance() {
@@ -122,52 +97,18 @@ public class NewSettingsFragment extends FragmentView
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    adultContentAnalytics = application.getAdultContentAnalytics();
-    defaultThemeName = application.getDefaultThemeName();
     marketName = application.getMarketName();
     trackAnalytics = true;
     database = ((AptoideApplication) getContext().getApplicationContext()).getDatabase();
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-    fileManager = ((AptoideApplication) getContext().getApplicationContext()).getFileManager();
-    subscriptions = new CompositeSubscription();
 
     bodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();
     httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
 
-
-    adultContentConfirmationDialog =
-        new RxAlertDialog.Builder(getContext()).setMessage(R.string.are_you_adult)
-            .setPositiveButton(R.string.yes)
-            .setNegativeButton(R.string.no)
-            .build();
-    enableAdultContentPinDialog =
-        new PinDialog.Builder(getContext()).setMessage(R.string.request_adult_pin)
-            .setPositiveButton(R.string.all_button_ok)
-            .setNegativeButton(R.string.cancel)
-            .setView(R.layout.dialog_requestpin)
-            .setEditText(R.id.pininput)
-            .build();
-    removePinDialog = new PinDialog.Builder(getContext()).setMessage(R.string.request_adult_pin)
-        .setPositiveButton(R.string.all_button_ok)
-        .setNegativeButton(R.string.cancel)
-        .setView(R.layout.dialog_requestpin)
-        .setEditText(R.id.pininput)
-        .build();
-    setPinDialog = new PinDialog.Builder(getContext()).setMessage(R.string.asksetadultpinmessage)
-        .setPositiveButton(R.string.all_button_ok)
-        .setNegativeButton(R.string.cancel)
-        .setView(R.layout.dialog_requestpin)
-        .setEditText(R.id.pininput)
-        .build();
-
     notificationSyncScheduler =
         ((AptoideApplication) getContext().getApplicationContext()).getNotificationSyncScheduler();
-    repository = RepositoryFactory.getUpdateRepository(getContext(),
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
-    //navigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
-    //    .getSimpleName()));
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -335,10 +276,6 @@ public class NewSettingsFragment extends FragmentView
     createStoreButton = (Button) view.findViewById(R.id.create_store_button);
     editStoreButton = (Button) myStoreView.findViewById(R.id.edit_button);
     editProfileButton = (Button) myProfileView.findViewById(R.id.edit_button);
-  }
-
-  private void setSettingsViews(View view) {
-    downloadOverWifi = view.findViewById(R.id.download_wifi);
   }
 
 }
